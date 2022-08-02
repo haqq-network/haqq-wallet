@@ -9,7 +9,7 @@ export const Create2Screen = ({navigation}: Create2ScreenProp) => {
   const wallet = useWallet();
 
   const words = useMemo(() => wallet.getMnemonicWords(), [wallet]);
-  console.log(words.join(' '));
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Create 2 Screen</Text>

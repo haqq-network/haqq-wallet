@@ -1,14 +1,19 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
-import {setGenericPassword, getGenericPassword, resetGenericPassword} from 'react-native-keychain';
+import {
+  setGenericPassword,
+  getGenericPassword,
+  resetGenericPassword,
+} from 'react-native-keychain';
 import {passworder} from '../passworder';
 import * as bip39 from '../bip39';
 import AsyncStorage from '@react-native-community/async-storage';
+import {validateMnemonic} from '../bip39';
 
 class Wallet extends EventEmitter {
   private loaded: boolean;
-  private password: null|string;
-  private mnemonic: null|string;
+  private password: null | string;
+  private mnemonic: null | string;
 
   constructor() {
     super();
@@ -22,7 +27,6 @@ class Wallet extends EventEmitter {
 
   async init(): Promise<string> {
     const creds = await getGenericPassword();
-    console.log('creds', creds);
     this.loaded = true;
     if (!creds || !creds.password) {
       return 'login';
@@ -52,8 +56,24 @@ class Wallet extends EventEmitter {
     this.emit('change');
   }
 
+  async restoreWallet(password: string, mnemonic: string) {
+    if (validateMnemonic(mnemonic)) {
+      this.password = password;
+      await setGenericPassword('username', this.password);
+      this.mnemonic = mnemonic;
+      this.emit('change');
+      return Promise.resolve();
+    }
+
+    return Promise.reject();
+  }
+
   getMnemonicWords() {
     return this.mnemonic?.split(' ') ?? [];
+  }
+
+  getSeed() {
+    return bip39.mnemonicToSeedSync(this.mnemonic ?? '').toString('hex');
   }
 
   async onChange() {

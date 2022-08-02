@@ -1,18 +1,26 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {validateMnemonic} from '../bip39';
+import {useWallet} from '../contexts/wallet';
 
 type RestoreScreenProp = CompositeScreenProps<any, any>;
 
 export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
   const [password, setPassword] = useState('');
   const [mnemonic, setMnemonic] = useState('');
+  const wallet = useWallet();
 
   const checked = useMemo(
     () => password.length && validateMnemonic(mnemonic),
     [password, mnemonic],
   );
+
+  const onDone = useCallback(() => {
+    wallet.restoreWallet(password, mnemonic).then(() => {
+      navigation.navigate('home');
+    });
+  }, [wallet, password, mnemonic]);
 
   return (
     <View style={page.container}>
@@ -30,11 +38,7 @@ export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button
-        disabled={!checked}
-        title="Done"
-        onPress={() => navigation.navigate('home')}
-      />
+      <Button disabled={!checked} title="Done" onPress={onDone} />
       <View style={{flex: 1}} />
     </View>
   );
