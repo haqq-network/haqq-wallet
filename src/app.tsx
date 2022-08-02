@@ -8,15 +8,14 @@
  * @format
  */
 
-import React, {useEffect, useRef, useState} from 'react';
-import * as Keychain from 'react-native-keychain';
+import React, {useEffect} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
-import {AuthContext} from './contexts/auth';
+import {WalletContext, wallet} from './contexts/wallet';
 import {DetailsScreen} from './screens/details';
 import {SplashScreen} from './screens/splash';
 import {LoginScreen} from './screens/login';
@@ -29,34 +28,15 @@ const Stack = createNativeStackNavigator();
 
 export const App = () => {
   const navigator = useNavigationContainerRef();
-  const [credentials, setCredentials] = useState({
-    authorized: false,
-    loaded: false,
-  });
 
   useEffect(() => {
-    Keychain.getGenericPassword().then(creds => {
-      if (creds) {
-        setCredentials({
-          authorized: true,
-          loaded: true,
-          ...creds,
-        });
-
-        navigator.navigate('home');
-      } else {
-        setCredentials({
-          authorized: false,
-          loaded: true,
-        });
-
-        navigator.navigate('login');
-      }
+    wallet.init().then(next => {
+      navigator.navigate(next);
     });
   }, [navigator]);
 
   return (
-    <AuthContext.Provider value={credentials}>
+    <WalletContext.Provider value={wallet}>
       <NavigationContainer ref={navigator}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="splash" component={SplashScreen}/>
@@ -71,6 +51,6 @@ export const App = () => {
           <Stack.Screen name="password" component={PasswordScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
-    </AuthContext.Provider>
+    </WalletContext.Provider>
   );
 };

@@ -1,13 +1,17 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {useWallet} from '../contexts/wallet';
 
 type Create3ScreenProp = CompositeScreenProps<any, any>;
 
-export const Create3Screen = ({navigation, route}: Create3ScreenProp) => {
-  const words = route.params.words as string[];
+export const Create3Screen = ({navigation}: Create3ScreenProp) => {
+  const wallet = useWallet();
+
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState<boolean>(false);
+
+  const words = useMemo(() => wallet.getMnemonicWords(), [wallet]);
   const buttons = useMemo(() => {
     return words
       .map(value => ({value, sort: Math.random()}))
@@ -41,17 +45,16 @@ export const Create3Screen = ({navigation, route}: Create3ScreenProp) => {
           />
         ))}
       </View>
-      <Button disabled={!checked} title="Done" onPress={() => {}} />
+      <Button
+        disabled={!checked}
+        title="Done"
+        onPress={() => navigation.navigate('home')}
+      />
     </View>
   );
 };
 
 const page = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: '#fff',
-  },
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
