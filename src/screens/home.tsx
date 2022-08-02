@@ -1,12 +1,13 @@
+import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, Text, View} from 'react-native';
-import React, {useContext, useEffect} from 'react';
-import {WalletContext} from '../contexts/wallet';
-import {resetGenericPassword} from 'react-native-keychain';
+import {useWallet} from '../contexts/wallet';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
 export const HomeScreen = ({navigation}: HomeScreenProp) => {
+  const wallet = useWallet();
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
@@ -17,7 +18,7 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
       <Button
         title="Logout"
         onPress={() => {
-          resetGenericPassword().then(() => {
+          wallet.clean().then(() => {
             navigation.navigate('login');
           });
         }}

@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
-import {setGenericPassword, getGenericPassword} from 'react-native-keychain';
+import {setGenericPassword, getGenericPassword, resetGenericPassword} from 'react-native-keychain';
 import {passworder} from '../passworder';
 import * as bip39 from '../bip39';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -32,6 +32,13 @@ class Wallet extends EventEmitter {
     const data = await passworder.decrypt(this.password, wallet);
     this.mnemonic = data.mnemonic;
     return 'home';
+  }
+
+  async clean() {
+    this.password = null;
+    await resetGenericPassword();
+    this.mnemonic = null;
+    await AsyncStorage.removeItem('wallet');
   }
 
   async setPassword(password: string) {

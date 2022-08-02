@@ -23,6 +23,7 @@ import {PasswordScreen} from './screens/password';
 import {Create1Screen} from './screens/create-1';
 import {Create2Screen} from './screens/create-2';
 import {Create3Screen} from './screens/create-3';
+import {RestoreScreen} from './screens/restore';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,16 +40,17 @@ export const App = () => {
     <WalletContext.Provider value={wallet}>
       <NavigationContainer ref={navigator}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="splash" component={SplashScreen}/>
-          <Stack.Screen name="home" component={HomeScreen}/>
+          <Stack.Screen name="splash" component={SplashScreen} />
+          <Stack.Screen name="home" component={HomeScreen} />
           <Stack.Group screenOptions={{presentation: 'modal'}}>
-            <Stack.Screen name="details" component={DetailsScreen}/>
+            <Stack.Screen name="details" component={DetailsScreen} />
           </Stack.Group>
-          <Stack.Screen name="login" component={LoginScreen}/>
-          <Stack.Screen name="create-1" component={Create1Screen}/>
-          <Stack.Screen name="create-2" component={Create2Screen}/>
-          <Stack.Screen name="create-3" component={Create3Screen}/>
-          <Stack.Screen name="password" component={PasswordScreen}/>
+          <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="restore" component={RestoreScreen} />
+          <Stack.Screen name="create-1" component={Create1Screen} />
+          <Stack.Screen name="create-2" component={Create2Screen} />
+          <Stack.Screen name="create-3" component={Create3Screen} />
+          <Stack.Screen name="password" component={PasswordScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </WalletContext.Provider>
