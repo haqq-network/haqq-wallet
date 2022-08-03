@@ -14,4 +14,9 @@ module.exports = {
       },
     }),
   },
+  resolver: {
+    extraNodeModules: {
+      crypto: require.resolve('react-native-crypto'),
+    },
+  },
 };

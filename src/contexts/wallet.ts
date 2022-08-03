@@ -9,11 +9,14 @@ import {passworder} from '../passworder';
 import * as bip39 from '../bip39';
 import AsyncStorage from '@react-native-community/async-storage';
 import {validateMnemonic} from '../bip39';
+import {hdkey} from 'ethereumjs-wallet';
+import EWallet from 'ethereumjs-wallet';
 
 class Wallet extends EventEmitter {
   private loaded: boolean;
   private password: null | string;
   private mnemonic: null | string;
+  private wallets: EWallet[] = [];
 
   constructor() {
     super();
@@ -35,6 +38,17 @@ class Wallet extends EventEmitter {
     const wallet = await AsyncStorage.getItem('wallet');
     const data = await passworder.decrypt(this.password, wallet);
     this.mnemonic = data.mnemonic;
+
+    const hdkey1 = hdkey.fromMasterSeed(
+      bip39.mnemonicToSeedSync(this.mnemonic ?? ''),
+    );
+
+    const root = hdkey1.derivePath("m/44'/60'/0'/0");
+
+    const child = root.deriveChild(0);
+
+    this.wallets.push(child.getWallet());
+
     return 'home';
   }
 
@@ -74,6 +88,10 @@ class Wallet extends EventEmitter {
 
   getSeed() {
     return bip39.mnemonicToSeedSync(this.mnemonic ?? '').toString('hex');
+  }
+
+  getWallet(index: number): EWallet {
+    return this.wallets[index];
   }
 
   async onChange() {
