@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.7.0",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
+    "decimal.js": "^10.3.1",
     "ethereumjs-wallet": "^1.0.2",
     "events": "^3.3.0",
     "patch-package": "^6.4.7",
