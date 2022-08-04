@@ -14,7 +14,7 @@ export const Create2Screen = ({navigation}: Create2ScreenProp) => {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Create 2 Screen</Text>
       <Text>{words.join(' ')}</Text>
-      <Button title="Go next" onPress={() => navigation.navigate('create-3')}/>
+      <Button title="Go next" onPress={() => navigation.navigate('create-3')} />
     </View>
   );
 };

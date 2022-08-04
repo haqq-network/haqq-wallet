@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {useWallet} from "../contexts/wallet";
+import {useWallet} from '../contexts/wallet';
 
 export const DetailsScreen = () => {
   const wallet = useWallet();

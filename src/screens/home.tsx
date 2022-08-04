@@ -1,30 +1,30 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, Text, View} from 'react-native';
 import {useWallet} from '../contexts/wallet';
-import {useGrpc} from '../contexts/grpc';
-import Decimal from 'decimal.js';
+import {utils} from 'ethers';
+import {getDefaultNetwork} from '../network';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
 export const HomeScreen = ({navigation}: HomeScreenProp) => {
-  const [balance, setBalance] = useState(new Decimal(0));
+  const [balance, setBalance] = useState(0);
+  const [address, setAddress] = useState('');
   const wallet = useWallet();
-  const grpc = useGrpc();
 
-  const address = useMemo(() => {
-    let address = wallet.getWallet(0).getAddress().toString('hex');
-    return address.startsWith('0x') ? address : `0x${address}`;
+  useEffect(() => {
+    wallet.getWallet(0).getAddress().then(setAddress);
   }, [wallet]);
 
   useEffect(() => {
-    grpc.getBalance(address).then(result => {
-      const newBalance = new Decimal(result.result);
-      // @ts-ignore
-      newBalance.e = newBalance.e - 18;
-      setBalance(newBalance);
-    });
-  }, [address, grpc, setBalance]);
+    if (address) {
+      getDefaultNetwork()
+        .getBalance(address)
+        .then(result => {
+          setBalance(Number(utils.formatEther(result)));
+        });
+    }
+  }, [address, setBalance]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

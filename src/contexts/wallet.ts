@@ -1,5 +1,6 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
+import ethers from 'ethers';
 import {
   setGenericPassword,
   getGenericPassword,
@@ -9,14 +10,13 @@ import {passworder} from '../passworder';
 import * as bip39 from '../bip39';
 import AsyncStorage from '@react-native-community/async-storage';
 import {validateMnemonic} from '../bip39';
-import {hdkey} from 'ethereumjs-wallet';
-import EWallet from 'ethereumjs-wallet';
+import {loadWalletFromMnemonics} from '../wallet';
 
 class Wallet extends EventEmitter {
   private loaded: boolean;
   private password: null | string;
   private mnemonic: null | string;
-  private wallets: EWallet[] = [];
+  private wallets: ethers.Wallet[] = [];
 
   constructor() {
     super();
@@ -35,20 +35,13 @@ class Wallet extends EventEmitter {
       return 'login';
     }
     this.password = creds.password;
-    const wallet = await AsyncStorage.getItem('wallet');
-    const data = await passworder.decrypt(this.password, wallet);
+    const walletData = await AsyncStorage.getItem('wallet');
+    const data = await passworder.decrypt(this.password, walletData);
     this.mnemonic = data.mnemonic;
-
-    const hdkey1 = hdkey.fromMasterSeed(
-      bip39.mnemonicToSeedSync(this.mnemonic ?? ''),
-    );
-
-    const root = hdkey1.derivePath("m/44'/60'/0'/0");
-
-    const child = root.deriveChild(0);
-
-    this.wallets.push(child.getWallet());
-
+    if (this.mnemonic) {
+      const wallet = await loadWalletFromMnemonics(this.mnemonic);
+      this.wallets.push(wallet);
+    }
     return 'home';
   }
 
@@ -90,7 +83,7 @@ class Wallet extends EventEmitter {
     return bip39.mnemonicToSeedSync(this.mnemonic ?? '').toString('hex');
   }
 
-  getWallet(index: number): EWallet {
+  getWallet(index: number): ethers.Wallet {
     return this.wallets[index];
   }
 

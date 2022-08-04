@@ -12,8 +12,8 @@ const WORDLIST_REQUIRED =
   'Please pass a 2048 word array explicitly.';
 
 function pbkdf2Promise(
-  password: string|Buffer,
-  saltMixin: string|Buffer,
+  password: string | Buffer,
+  saltMixin: string | Buffer,
   iterations: number,
   keylen: number,
   digest: string,
@@ -137,7 +137,7 @@ export function mnemonicToEntropy(
 }
 
 export function entropyToMnemonic(
-  entropy: Buffer|string,
+  entropy: Buffer | string,
   wordlist: string[] = DEFAULT_WORDLIST,
 ): string {
   if (!Buffer.isBuffer(entropy)) {
