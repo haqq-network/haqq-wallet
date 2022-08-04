@@ -1,18 +1,19 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
-import ethers from 'ethers';
+import ethers, {Wallet as EthersWallet} from 'ethers';
 import {
-  setGenericPassword,
   getGenericPassword,
   resetGenericPassword,
+  setGenericPassword,
 } from 'react-native-keychain';
-import {passworder} from '../passworder';
 import * as bip39 from '../bip39';
-import AsyncStorage from '@react-native-community/async-storage';
 import {validateMnemonic} from '../bip39';
-import {loadWalletFromMnemonics} from '../wallet';
+import AsyncStorage from '@react-native-community/async-storage';
+import {realm} from '../models';
+import {getDefaultNetwork} from '../network';
+import {Wallet} from '../models/wallet';
 
-class Wallet extends EventEmitter {
+class Wallets extends EventEmitter {
   private loaded: boolean;
   private password: null | string;
   private mnemonic: null | string;
@@ -35,14 +36,45 @@ class Wallet extends EventEmitter {
       return 'login';
     }
     this.password = creds.password;
-    const walletData = await AsyncStorage.getItem('wallet');
-    const data = await passworder.decrypt(this.password, walletData);
-    this.mnemonic = data.mnemonic;
-    if (this.mnemonic) {
-      const wallet = await loadWalletFromMnemonics(this.mnemonic);
+    const wallets = await realm.objects<Wallet>('Wallet');
+    if (wallets.length === 0) {
+      return 'login';
+    }
+    const provider = getDefaultNetwork();
+
+    for (const rawWallet of wallets) {
+      const wallet = await EthersWallet.fromEncryptedJson(
+        rawWallet.data,
+        this.password,
+      );
+
+      wallet.connect(provider);
+
       this.wallets.push(wallet);
     }
+
     return 'home';
+  }
+
+  async addWalletFromMnemonic(mnemonic: string) {
+    if (validateMnemonic(mnemonic) && this.password) {
+      const provider = getDefaultNetwork();
+      const wallet = await EthersWallet.fromMnemonic(mnemonic).connect(
+        provider,
+      );
+
+      this.wallets.push(wallet);
+
+      const encrypted = await wallet.encrypt(this.password);
+
+      realm.write(() => {
+        realm.create('Wallet', {
+          address: wallet.address,
+          name: 'Account',
+          data: encrypted,
+        });
+      });
+    }
   }
 
   async clean() {
@@ -55,24 +87,15 @@ class Wallet extends EventEmitter {
   async setPassword(password: string) {
     this.password = password;
     await setGenericPassword('username', this.password);
-    this.generateMnemonic();
   }
 
   generateMnemonic() {
-    this.mnemonic = bip39.generateMnemonic();
-    this.emit('change');
+    return bip39.generateMnemonic();
   }
 
   async restoreWallet(password: string, mnemonic: string) {
-    if (validateMnemonic(mnemonic)) {
-      this.password = password;
-      await setGenericPassword('username', this.password);
-      this.mnemonic = mnemonic;
-      this.emit('change');
-      return Promise.resolve();
-    }
-
-    return Promise.reject();
+    await this.setPassword(password);
+    await this.addWalletFromMnemonic(mnemonic);
   }
 
   getMnemonicWords() {
@@ -87,15 +110,14 @@ class Wallet extends EventEmitter {
     return this.wallets[index];
   }
 
-  async onChange() {
-    const data = await passworder.encrypt(this.password, {
-      mnemonic: this.mnemonic,
-    });
-    await AsyncStorage.setItem('wallet', data);
+  getWallets() {
+    return this.wallets;
   }
+
+  async onChange() {}
 }
 
-export const wallet = new Wallet();
+export const wallet = new Wallets();
 
 export const WalletContext = createContext(wallet);
 

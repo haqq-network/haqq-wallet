@@ -15,7 +15,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
-import {WalletContext, wallet} from './contexts/wallet';
+import {wallet, WalletContext} from './contexts/wallet';
 import {DetailsScreen} from './screens/details';
 import {SplashScreen} from './screens/splash';
 import {LoginScreen} from './screens/login';

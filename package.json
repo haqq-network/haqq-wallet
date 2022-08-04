@@ -36,6 +36,7 @@
     "react-native-safe-area-context": "^4.3.1",
     "react-native-screens": "^3.15.0",
     "readable-stream": "^4.1.0",
+    "realm": "^10.19.5",
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",
     "vm-browserify": "0.0.4"

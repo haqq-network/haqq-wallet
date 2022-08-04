@@ -1,36 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useMemo} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, Text, View} from 'react-native';
 import {useWallet} from '../contexts/wallet';
-import {utils} from 'ethers';
-import {getDefaultNetwork} from '../network';
+import {Balance} from '../components/balance';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
 export const HomeScreen = ({navigation}: HomeScreenProp) => {
-  const [balance, setBalance] = useState(0);
-  const [address, setAddress] = useState('');
   const wallet = useWallet();
-
-  useEffect(() => {
-    wallet.getWallet(0).getAddress().then(setAddress);
-  }, [wallet]);
-
-  useEffect(() => {
-    if (address) {
-      getDefaultNetwork()
-        .getBalance(address)
-        .then(result => {
-          setBalance(Number(utils.formatEther(result)));
-        });
-    }
-  }, [address, setBalance]);
+  const wallets = useMemo(() => wallet.getWallets(), [wallet]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
-      <Text>{address}</Text>
-      <Text>{balance.toFixed(8)} ISLM</Text>
+      {wallets.map(w => (
+        <Balance wallet={w} key={w.address} />
+      ))}
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate('details')}

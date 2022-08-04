@@ -8,13 +8,16 @@ type Create2ScreenProp = CompositeScreenProps<any, any>;
 export const Create2Screen = ({navigation}: Create2ScreenProp) => {
   const wallet = useWallet();
 
-  const words = useMemo(() => wallet.getMnemonicWords(), [wallet]);
+  const mnemonic = useMemo(() => wallet.generateMnemonic(), [wallet]);
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Create 2 Screen</Text>
-      <Text>{words.join(' ')}</Text>
-      <Button title="Go next" onPress={() => navigation.navigate('create-3')} />
+      <Text>{mnemonic.split(' ')}</Text>
+      <Button
+        title="Go next"
+        onPress={() => navigation.navigate('create-3', {mnemonic})}
+      />
     </View>
   );
 };

@@ -9,8 +9,7 @@ import {JsonRpcProvider} from '@ethersproject/providers';
 
 function getResult(payload) {
   if (payload.error) {
-    // @TODO: not any
-    var error = new Error(payload.error.message);
+    const error = new Error(payload.error.message);
     error.code = payload.error.code;
     error.data = payload.error.data;
     throw error;
@@ -26,7 +25,10 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     jsonrpc: '2.0',
   };
 
-  console.log(this.connection);
+  const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
+  if (cache && this._cache[method]) {
+    return this._cache[method];
+  }
 
   const req = await fetch(`${this.connection.url}`, {
     method: 'POST',
@@ -37,8 +39,15 @@ JsonRpcProvider.prototype.send = async function (method, params) {
   });
 
   const resp = await req.json();
+  const result = getResult(resp);
+  if (cache) {
+    this._cache[method] = result;
+    setTimeout(() => {
+      this._cache[method] = null;
+    }, 0);
+  }
 
-  return getResult(resp);
+  return result;
 };
 
 AppRegistry.registerComponent(appName, () => App);

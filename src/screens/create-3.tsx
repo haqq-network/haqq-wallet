@@ -1,17 +1,18 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useWallet} from '../contexts/wallet';
 
 type Create3ScreenProp = CompositeScreenProps<any, any>;
 
-export const Create3Screen = ({navigation}: Create3ScreenProp) => {
+export const Create3Screen = ({navigation, route}: Create3ScreenProp) => {
+  const {mnemonic} = route.params;
   const wallet = useWallet();
 
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState<boolean>(false);
 
-  const words = useMemo(() => wallet.getMnemonicWords(), [wallet]);
+  const words = useMemo<string[]>(() => mnemonic.split(' '), [mnemonic]);
   const buttons = useMemo(() => {
     return words
       .map(value => ({value, sort: Math.random()}))
@@ -21,6 +22,12 @@ export const Create3Screen = ({navigation}: Create3ScreenProp) => {
         key,
       }));
   }, [words]);
+
+  const onDone = useCallback(() => {
+    wallet.addWalletFromMnemonic(mnemonic).then(() => {
+      navigation.navigate('home');
+    });
+  }, [mnemonic, navigation, wallet]);
 
   useEffect(() => {
     setChecked(
@@ -45,11 +52,7 @@ export const Create3Screen = ({navigation}: Create3ScreenProp) => {
           />
         ))}
       </View>
-      <Button
-        disabled={!checked}
-        title="Done"
-        onPress={() => navigation.navigate('home')}
-      />
+      <Button disabled={!checked} title="Done" onPress={onDone} />
     </View>
   );
 };
