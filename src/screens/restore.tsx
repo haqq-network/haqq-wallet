@@ -2,14 +2,14 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {validateMnemonic} from '../bip39';
-import {useWallet} from '../contexts/wallet';
+import {useWallets} from '../contexts/wallets';
 
 type RestoreScreenProp = CompositeScreenProps<any, any>;
 
 export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
   const [password, setPassword] = useState('');
   const [mnemonic, setMnemonic] = useState('');
-  const wallet = useWallet();
+  const wallet = useWallets();
 
   const checked = useMemo(
     () => password.length && validateMnemonic(mnemonic),

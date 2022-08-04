@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallet} from '../contexts/wallet';
+import {useWallets} from '../contexts/wallets';
 
 type Create3ScreenProp = CompositeScreenProps<any, any>;
 
 export const Create3Screen = ({navigation, route}: Create3ScreenProp) => {
   const {mnemonic} = route.params;
-  const wallet = useWallet();
+  const wallet = useWallets();
 
   const [selected, setSelected] = useState<string[]>([]);
   const [checked, setChecked] = useState<boolean>(false);

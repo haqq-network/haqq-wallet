@@ -15,7 +15,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
-import {wallet, WalletContext} from './contexts/wallet';
+import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
 import {SplashScreen} from './screens/splash';
 import {LoginScreen} from './screens/login';
@@ -24,6 +24,7 @@ import {Create1Screen} from './screens/create-1';
 import {Create2Screen} from './screens/create-2';
 import {Create3Screen} from './screens/create-3';
 import {RestoreScreen} from './screens/restore';
+import {ImportWalletScreen} from './screens/import-wallet';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,19 +32,20 @@ export const App = () => {
   const navigator = useNavigationContainerRef();
 
   useEffect(() => {
-    wallet.init().then(next => {
+    wallets.init().then(next => {
       navigator.navigate(next);
     });
   }, [navigator]);
 
   return (
-    <WalletContext.Provider value={wallet}>
+    <WalletsContext.Provider value={wallets}>
       <NavigationContainer ref={navigator}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="splash" component={SplashScreen} />
           <Stack.Screen name="home" component={HomeScreen} />
           <Stack.Group screenOptions={{presentation: 'modal'}}>
             <Stack.Screen name="details" component={DetailsScreen} />
+            <Stack.Screen name="import-wallet" component={ImportWalletScreen} />
           </Stack.Group>
           <Stack.Screen name="login" component={LoginScreen} />
           <Stack.Screen name="restore" component={RestoreScreen} />
@@ -53,6 +55,6 @@ export const App = () => {
           <Stack.Screen name="password" component={PasswordScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    </WalletContext.Provider>
+    </WalletsContext.Provider>
   );
 };

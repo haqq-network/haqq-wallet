@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react';
 import {Button, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallet} from '../contexts/wallet';
+import {useWallets} from '../contexts/wallets';
 
 type Create2ScreenProp = CompositeScreenProps<any, any>;
 
 export const Create2Screen = ({navigation}: Create2ScreenProp) => {
-  const wallet = useWallet();
+  const wallet = useWallets();
 
   const mnemonic = useMemo(() => wallet.generateMnemonic(), [wallet]);
 

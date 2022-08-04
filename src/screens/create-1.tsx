@@ -1,13 +1,13 @@
 import React, {useCallback, useState} from 'react';
 import {Button, Text, TextInput, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallet} from '../contexts/wallet';
+import {useWallets} from '../contexts/wallets';
 
 type Create1ScreenProp = CompositeScreenProps<any, any>;
 
 export const Create1Screen = ({navigation}: Create1ScreenProp) => {
   const [password, setPassword] = useState<string>('');
-  const wallet = useWallet();
+  const wallet = useWallets();
 
   const onNext = useCallback(() => {
     wallet.setPassword(password).then(() => {

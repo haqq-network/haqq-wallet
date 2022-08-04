@@ -17,16 +17,13 @@ class Wallets extends EventEmitter {
   private loaded: boolean;
   private password: null | string;
   private mnemonic: null | string;
-  private wallets: ethers.Wallet[] = [];
+  private wallets: Map<string, ethers.Wallet>;
 
   constructor() {
     super();
-
+    this.wallets = new Map();
     this.loaded = false;
-    this.mnemonic = null;
     this.password = null;
-
-    this.on('change', this.onChange.bind(this));
   }
 
   async init(): Promise<string> {
@@ -50,7 +47,7 @@ class Wallets extends EventEmitter {
 
       wallet.connect(provider);
 
-      this.wallets.push(wallet);
+      this.wallets.set(wallet.address, wallet);
     }
 
     return 'home';
@@ -63,25 +60,53 @@ class Wallets extends EventEmitter {
         provider,
       );
 
-      this.wallets.push(wallet);
+      this.wallets.set(wallet.address, wallet);
 
-      const encrypted = await wallet.encrypt(this.password);
+      await this.saveWallet(wallet);
+      this.emit('wallets');
+    }
+  }
 
+  async addWalletFromPrivateKey(privateKey: string) {
+    const provider = getDefaultNetwork();
+    const wallet = new EthersWallet(privateKey, provider);
+
+    this.wallets.set(wallet.address, wallet);
+
+    await this.saveWallet(wallet);
+    this.emit('wallets');
+  }
+
+  async removeWallet(address: string) {
+    this.wallets.delete(address);
+
+    const wallets = await realm.objects<Wallet>('Wallet');
+    const filtered = wallets.filtered(`address = '${address}'`);
+    if (filtered.length > 0) {
       realm.write(() => {
-        realm.create('Wallet', {
-          address: wallet.address,
-          name: 'Account',
-          data: encrypted,
-        });
+        realm.delete(filtered[0]);
       });
     }
+    this.emit('wallets');
+  }
+
+  async saveWallet(wallet: EthersWallet) {
+    const encrypted = await wallet.encrypt(this.password!);
+
+    realm.write(() => {
+      realm.create('Wallet', {
+        address: wallet.address,
+        name: 'Account',
+        data: encrypted,
+      });
+    });
   }
 
   async clean() {
     this.password = null;
     await resetGenericPassword();
     this.mnemonic = null;
-    await AsyncStorage.removeItem('wallet');
+    await AsyncStorage.removeItem('wallets');
   }
 
   async setPassword(password: string) {
@@ -106,23 +131,23 @@ class Wallets extends EventEmitter {
     return bip39.mnemonicToSeedSync(this.mnemonic ?? '').toString('hex');
   }
 
-  getWallet(index: number): ethers.Wallet {
-    return this.wallets[index];
+  getWallet(address: string): ethers.Wallet | undefined {
+    return this.wallets.get(address);
   }
 
-  getWallets() {
-    return this.wallets;
+  getWallets(): ethers.Wallet[] {
+    return Array.from(this.wallets.values());
   }
 
   async onChange() {}
 }
 
-export const wallet = new Wallets();
+export const wallets = new Wallets();
 
-export const WalletContext = createContext(wallet);
+export const WalletsContext = createContext(wallets);
 
-export function useWallet() {
-  const context = useContext(WalletContext);
+export function useWallets() {
+  const context = useContext(WalletsContext);
 
   return context;
 }
