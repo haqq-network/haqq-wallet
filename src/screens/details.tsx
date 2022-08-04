@@ -33,7 +33,11 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Details Screen</Text>
       <Text>{address}</Text>
-
+      <Button
+        title="Send transaction"
+        onPress={() => navigation.navigate('send-transaction', {from: address})}
+      />
+      <View style={{flex: 1}} />
       <Button title="Remove account" onPress={onRemove} />
     </View>
   );

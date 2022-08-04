@@ -25,6 +25,8 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     jsonrpc: '2.0',
   };
 
+  console.log(JSON.stringify(request));
+
   const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
   if (cache && this._cache[method]) {
     return this._cache[method];
