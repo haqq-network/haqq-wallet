@@ -5,6 +5,7 @@ import {
   getGenericPassword,
   resetGenericPassword,
   setGenericPassword,
+  STORAGE_TYPE,
 } from 'react-native-keychain';
 import * as bip39 from '../bip39';
 import {validateMnemonic} from '../bip39';
@@ -27,14 +28,18 @@ class Wallets extends EventEmitter {
   async init(): Promise<string> {
     const creds = await getGenericPassword();
     this.loaded = true;
+    console.log(0, creds);
     if (!creds || !creds.password) {
       return 'login';
     }
+    console.log(1);
     this.password = creds.password;
     const wallets = await realm.objects<Wallet>('Wallet');
+    console.log(2);
     if (wallets.length === 0) {
       return 'login';
     }
+    console.log(3);
     const provider = getDefaultNetwork();
 
     for (const rawWallet of wallets) {
@@ -105,7 +110,9 @@ class Wallets extends EventEmitter {
 
   async setPassword(password: string) {
     this.password = password;
-    await setGenericPassword('username', this.password);
+    await setGenericPassword('username', this.password, {
+      storage: STORAGE_TYPE.FB,
+    });
   }
 
   generateMnemonic() {

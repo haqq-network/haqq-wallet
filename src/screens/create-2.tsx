@@ -13,7 +13,7 @@ export const Create2Screen = ({navigation}: Create2ScreenProp) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Create 2 Screen</Text>
-      <Text>{mnemonic.split(' ')}</Text>
+      <Text>{mnemonic}</Text>
       <Button
         title="Go next"
         onPress={() => navigation.navigate('create-3', {mnemonic})}
