@@ -375,6 +375,12 @@ PODS:
   - RNScreens (3.15.0):
     - React-Core
     - React-RCTImage
+  - RNSentry (5.0.0-alpha.1):
+    - React-Core
+    - Sentry (= 7.21.0)
+  - Sentry (7.21.0):
+    - Sentry/Core (= 7.21.0)
+  - Sentry/Core (7.21.0)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -444,6 +450,7 @@ DEPENDENCIES:
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -462,6 +469,7 @@ SPEC REPOS:
     - GCDWebServer
     - libevent
     - OpenSSL-Universal
+    - Sentry
     - SocketRocket
     - YogaKit
 
@@ -544,6 +552,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-os"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -601,6 +611,8 @@ SPEC CHECKSUMS:
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
+  RNSentry: 3fe837b57904d35e69e3bf94591ea045fc181ddd
+  Sentry: 194d0a2d4d6ef92c9c08c98d998340b0a63efd81
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 44c64131616253fa83366295acdbce3d14926041
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
