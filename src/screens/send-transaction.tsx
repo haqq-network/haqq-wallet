@@ -6,8 +6,10 @@ import {CompositeScreenProps} from '@react-navigation/native';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
-export const SendTransactionScreen = ({route}: SendTransactionScreenProp) => {
-  console.log(route.params);
+export const SendTransactionScreen = ({
+  route,
+  navigation,
+}: SendTransactionScreenProp) => {
   const wallets = useWallets();
   const [from, setFrom] = useState(route.params.from ?? '');
   const [to, setTo] = useState('');
@@ -22,6 +24,7 @@ export const SendTransactionScreen = ({route}: SendTransactionScreenProp) => {
   const onDone = useCallback(() => {
     wallets.sendTransaction(from, to, parseFloat(amount)).then(result => {
       console.log(result);
+      navigation.goBack();
     });
   }, [amount, from, to, wallets]);
 

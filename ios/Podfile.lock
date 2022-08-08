@@ -287,6 +287,8 @@ PODS:
   - React-jsinspector (0.69.3)
   - React-logger (0.69.3):
     - glog
+  - react-native-cameraroll (4.1.2):
+    - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
   - react-native-safe-area-context (4.3.1):
@@ -366,9 +368,13 @@ PODS:
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
+  - RNCClipboard (1.10.0):
+    - React-Core
+  - RNFS (2.20.0):
+    - React-Core
   - RNKeychain (8.1.1):
     - React-Core
-  - RNOS (1.2.6):
+  - RNOS (1.2.7):
     - React
   - RNScreens (3.15.0):
     - React-Core
@@ -376,6 +382,8 @@ PODS:
   - RNSentry (5.0.0-alpha.1):
     - React-Core
     - Sentry (= 7.21.0)
+  - RNSVG (12.4.3):
+    - React-Core
   - Sentry (7.21.0):
     - Sentry/Core (= 7.21.0)
   - Sentry/Core (7.21.0)
@@ -428,6 +436,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -444,10 +453,13 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RealmJS (from `../node_modules/realm`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -509,6 +521,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-cameraroll:
+    :path: "../node_modules/@react-native-community/cameraroll"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -541,6 +555,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/realm"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNOS:
@@ -549,6 +567,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -586,6 +606,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 1842ca163b160aeb224d2c65b2a60c393b273c67
   React-jsinspector: bb2605f98aada5d81f3494690da3ef3b4ff3b716
   React-logger: 23a50ef4c18bf9adbb51e2c979318e6b3a2e44a1
+  react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   React-perflogger: 39d2ba8cbcac54d1bb1d9a980dab348e96aef467
@@ -602,10 +623,13 @@ SPEC CHECKSUMS:
   ReactCommon: af7636436b382db7cde4583bbd642f0978e6e3ed
   RealmJS: 400aac2267a47b25fcc2b6321e8a419282719d16
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
-  RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
+  RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
   RNSentry: 3fe837b57904d35e69e3bf94591ea045fc181ddd
+  RNSVG: f3b60aeeaa81960e2e0536c3a9eef50b667ef3a9
   Sentry: 194d0a2d4d6ef92c9c08c98d998340b0a63efd81
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 44c64131616253fa83366295acdbce3d14926041

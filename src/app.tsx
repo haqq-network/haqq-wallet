@@ -26,6 +26,7 @@ import {Create3Screen} from './screens/create-3';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
 import {SendTransactionScreen} from './screens/send-transaction';
+import {DetailsQrScreen} from './screens/details-qr';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,7 @@ export const App = () => {
           <Stack.Screen name="home" component={HomeScreen} />
           <Stack.Group screenOptions={{presentation: 'modal'}}>
             <Stack.Screen name="details" component={DetailsScreen} />
+            <Stack.Screen name="details-qr" component={DetailsQrScreen} />
             <Stack.Screen name="import-wallet" component={ImportWalletScreen} />
             <Stack.Screen
               name="send-transaction"

@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
-import {Alert, Button, Text, View} from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {useWallets} from '../contexts/wallets';
 
 type DetailsScreenProp = CompositeScreenProps<any, any>;
@@ -32,10 +33,16 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Details Screen</Text>
-      <Text>{address}</Text>
+      <TouchableOpacity onPress={() => Clipboard.setString(address)}>
+        <Text>{address}</Text>
+      </TouchableOpacity>
       <Button
         title="Send transaction"
         onPress={() => navigation.navigate('send-transaction', {from: address})}
+      />
+      <Button
+        title="Show qr"
+        onPress={() => navigation.navigate('details-qr', {address: address})}
       />
       <View style={{flex: 1}} />
       <Button title="Remove account" onPress={onRemove} />
