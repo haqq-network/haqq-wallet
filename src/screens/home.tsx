@@ -30,6 +30,7 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
       {wallets.map(w => (
         <Balance wallet={w} key={w.address} />
       ))}
+      <Button title="Scan qr" onPress={() => navigation.navigate('scan-qr')} />
       <Button
         title="Send transaction"
         onPress={() => navigation.navigate('send-transaction')}

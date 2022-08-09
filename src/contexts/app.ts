@@ -24,12 +24,16 @@ class App extends EventEmitter {
 
   async init(): Promise<string> {
     const creds = await getGenericPassword();
+
+    console.log('creds', creds);
     if (!creds || !creds.password) {
       return 'login';
     }
+
     this.password = creds.password;
 
     this.user = await this.loadUser(creds.username);
+    console.log('user', this.user);
     if (!this.user) {
       return 'login';
     }

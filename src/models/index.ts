@@ -4,7 +4,7 @@ import {User} from './user';
 
 export const realm = new Realm({
   schema: [Wallet, User],
-  schemaVersion: 2,
+  schemaVersion: 3,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');

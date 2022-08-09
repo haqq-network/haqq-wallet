@@ -28,6 +28,8 @@
   <string>This app requires access to the photo library.</string>
   <key>NSFaceIDUsageDescription</key>
   <string>Allow $(PRODUCT_NAME) to use FaceID</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Your message to user when the camera is accessed for the first time</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

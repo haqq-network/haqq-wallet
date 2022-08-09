@@ -28,6 +28,7 @@ import {app, AppContext} from './contexts/app';
 import {PinScreen} from './screens/pin';
 import {SettingsScreen} from './screens/settings';
 import {SetPinScreen} from './screens/set-pin';
+import {ScanQrScreen} from './screens/scan-qr';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ export const App = () => {
             <Stack.Group screenOptions={{presentation: 'modal'}}>
               <Stack.Screen name="details" component={DetailsScreen} />
               <Stack.Screen name="details-qr" component={DetailsQrScreen} />
+              <Stack.Screen name="scan-qr" component={ScanQrScreen} />
               <Stack.Screen
                 name="import-wallet"
                 component={ImportWalletScreen}
