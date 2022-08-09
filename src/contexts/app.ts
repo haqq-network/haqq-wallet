@@ -56,7 +56,7 @@ class App extends EventEmitter {
     return this.password!;
   }
 
-  async loadUser(username: string) {
+  async loadUser(username: string = 'username') {
     const users = await realm.objects<User>('User');
     const filtered = users.filtered(`username = '${username}'`);
 
@@ -81,8 +81,7 @@ class App extends EventEmitter {
       realm.create('User', {
         username,
         pin: '',
-        touchId: false,
-        faceId: false,
+        biometry: false,
       });
     });
 

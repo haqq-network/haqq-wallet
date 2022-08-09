@@ -9,6 +9,7 @@ type SplashScreenProp = CompositeScreenProps<any, any>;
 export const SplashScreen = ({navigation}: SplashScreenProp) => {
   useEffect(() => {
     app.init().then(next => {
+      console.log('next', next);
       switch (next) {
         case 'login':
         case 'pin':

@@ -11,7 +11,10 @@ export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
 
   const onNext = useCallback(async () => {
     await app.setPassword(password);
-    await app.createUser();
+    const user = await app.loadUser();
+    if (!user) {
+      await app.createUser();
+    }
     navigation.navigate('create-wallet');
   }, [password, app, navigation]);
 

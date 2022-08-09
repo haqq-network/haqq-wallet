@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import CameraRoll from '@react-native-community/cameraroll';
+
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
 
 export const DetailsQrScreen = ({route}: DetailsQrScreenProp) => {
@@ -19,24 +20,22 @@ export const DetailsQrScreen = ({route}: DetailsQrScreenProp) => {
   const {width} = useWindowDimensions();
 
   const onSaveQR = useCallback(() => {
-    console.log(
-      svg.current?.toDataURL(data => {
-        RNFS.writeFile(
-          RNFS.CachesDirectoryPath + '/some-name.png',
-          data,
-          'base64',
-        )
-          .then(success => {
-            return CameraRoll.saveToCameraRoll(
-              RNFS.CachesDirectoryPath + '/some-name.png',
-              'photo',
-            );
-          })
-          .then(() => {
-            console.log('saved');
-          });
-      }),
-    );
+    svg.current?.toDataURL(data => {
+      RNFS.writeFile(
+        RNFS.CachesDirectoryPath + '/some-name.png',
+        data,
+        'base64',
+      )
+        .then(success => {
+          return CameraRoll.save(
+            RNFS.CachesDirectoryPath + '/some-name.png',
+            'photo',
+          );
+        })
+        .then(() => {
+          console.log('saved');
+        });
+    });
   }, [svg]);
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

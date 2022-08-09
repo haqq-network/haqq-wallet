@@ -26,13 +26,18 @@ class Wallets extends EventEmitter {
     const provider = getDefaultNetwork();
     const wallets = await realm.objects<Wallet>('Wallet');
 
-    for (const rawWallet of wallets) {
-      const wallet = await EthersWallet.fromEncryptedJson(
-        rawWallet.data,
-        app.getPassword(),
-      ).then(w => w.connect(provider));
+    console.log('pass', app.getPassword());
 
-      this.wallets.set(wallet.address, wallet);
+    for (const rawWallet of wallets) {
+      try {
+        const wallet = await EthersWallet.fromEncryptedJson(
+          rawWallet.data,
+          app.getPassword(),
+        ).then(w => w.connect(provider));
+        this.wallets.set(wallet.address, wallet);
+      } catch (e) {
+        console.log(rawWallet, e.message);
+      }
     }
 
     this.initialized = true;
@@ -77,6 +82,7 @@ class Wallets extends EventEmitter {
   }
 
   async saveWallet(wallet: EthersWallet) {
+    console.log('saveWallet', app.getPassword());
     const encrypted = await wallet.encrypt(app.getPassword());
 
     realm.write(() => {
