@@ -1,66 +1,51 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
 import ethers, {utils, Wallet as EthersWallet} from 'ethers';
-import {
-  getGenericPassword,
-  resetGenericPassword,
-  setGenericPassword,
-  STORAGE_TYPE,
-} from 'react-native-keychain';
 import * as bip39 from '../bip39';
 import {validateMnemonic} from '../bip39';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
 import {Wallet} from '../models/wallet';
+import {app} from './app';
 
 class Wallets extends EventEmitter {
-  private loaded: boolean;
   private password: null | string;
   private wallets: Map<string, ethers.Wallet>;
+  private initialized: boolean = false;
 
   constructor() {
     super();
     this.wallets = new Map();
-    this.loaded = false;
     this.password = null;
   }
 
-  async init(): Promise<string> {
-    const creds = await getGenericPassword();
-    this.loaded = true;
-    console.log(0, creds);
-    if (!creds || !creds.password) {
-      return 'login';
+  async init(): Promise<void> {
+    if (this.initialized) {
+      return;
     }
-    console.log(1);
-    this.password = creds.password;
-    const wallets = await realm.objects<Wallet>('Wallet');
-    console.log(2);
-    if (wallets.length === 0) {
-      return 'login';
-    }
-    console.log(3);
     const provider = getDefaultNetwork();
+    const wallets = await realm.objects<Wallet>('Wallet');
 
     for (const rawWallet of wallets) {
       const wallet = await EthersWallet.fromEncryptedJson(
         rawWallet.data,
-        this.password,
+        app.getPassword(),
       ).then(w => w.connect(provider));
 
       this.wallets.set(wallet.address, wallet);
     }
 
-    return 'home';
+    this.initialized = true;
   }
 
   async addWalletFromMnemonic(mnemonic: string) {
-    if (validateMnemonic(mnemonic) && this.password) {
+    if (validateMnemonic(mnemonic)) {
       const provider = getDefaultNetwork();
       const wallet = await EthersWallet.fromMnemonic(mnemonic).connect(
         provider,
       );
 
+      console.log(wallet);
       this.wallets.set(wallet.address, wallet);
 
       await this.saveWallet(wallet);
@@ -92,7 +77,7 @@ class Wallets extends EventEmitter {
   }
 
   async saveWallet(wallet: EthersWallet) {
-    const encrypted = await wallet.encrypt(this.password!);
+    const encrypted = await wallet.encrypt(app.getPassword());
 
     realm.write(() => {
       realm.create('Wallet', {
@@ -104,24 +89,19 @@ class Wallets extends EventEmitter {
   }
 
   async clean() {
-    this.password = null;
-    await resetGenericPassword();
-  }
+    this.wallets = new Map();
 
-  async setPassword(password: string) {
-    this.password = password;
-    await setGenericPassword('username', this.password, {
-      storage: STORAGE_TYPE.FB,
-    });
+    const wallets = await realm.objects<Wallet>('Wallet');
+
+    for (const wallet of wallets) {
+      realm.write(() => {
+        realm.delete(wallet);
+      });
+    }
   }
 
   generateMnemonic() {
     return bip39.generateMnemonic();
-  }
-
-  async restoreWallet(password: string, mnemonic: string) {
-    await this.setPassword(password);
-    await this.addWalletFromMnemonic(mnemonic);
   }
 
   getWallet(address: string): ethers.Wallet | undefined {

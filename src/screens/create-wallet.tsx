@@ -5,7 +5,7 @@ import {useWallets} from '../contexts/wallets';
 
 type Create2ScreenProp = CompositeScreenProps<any, any>;
 
-export const Create2Screen = ({navigation}: Create2ScreenProp) => {
+export const CreateWalletScreen = ({navigation}: Create2ScreenProp) => {
   const wallet = useWallets();
 
   const mnemonic = useMemo(() => wallet.generateMnemonic(), [wallet]);
@@ -16,7 +16,7 @@ export const Create2Screen = ({navigation}: Create2ScreenProp) => {
       <Text>{mnemonic}</Text>
       <Button
         title="Go next"
-        onPress={() => navigation.navigate('create-3', {mnemonic})}
+        onPress={() => navigation.navigate('create-wallet-verify', {mnemonic})}
       />
     </View>
   );

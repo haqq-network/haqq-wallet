@@ -9,12 +9,12 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Login Screen</Text>
       <Button
-        title="Restore exists wallets"
+        title="Restore exists wallet"
         onPress={() => navigation.navigate('restore')}
       />
       <Button
-        title="Create new wallets"
-        onPress={() => navigation.navigate('create-1')}
+        title="Create new wallet"
+        onPress={() => navigation.navigate('register')}
       />
     </View>
   );

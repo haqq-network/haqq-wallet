@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, Text, View} from 'react-native';
+import {Button, SafeAreaView, Text, View} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {Balance} from '../components/balance';
+import {Spacer} from '../components/spacer';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
@@ -23,7 +24,8 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
   }, [wallet]);
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <SafeAreaView
+      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
       {wallets.map(w => (
         <Balance wallet={w} key={w.address} />
@@ -36,14 +38,11 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
         title="Import wallet"
         onPress={() => navigation.navigate('import-wallet')}
       />
+      <Spacer />
       <Button
-        title="Logout"
-        onPress={() => {
-          wallet.clean().then(() => {
-            navigation.navigate('login');
-          });
-        }}
+        title="Settings"
+        onPress={() => navigation.navigate('settings')}
       />
-    </View>
+    </SafeAreaView>
   );
 };

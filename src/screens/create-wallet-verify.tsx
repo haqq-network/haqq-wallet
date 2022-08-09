@@ -5,7 +5,10 @@ import {useWallets} from '../contexts/wallets';
 
 type Create3ScreenProp = CompositeScreenProps<any, any>;
 
-export const Create3Screen = ({navigation, route}: Create3ScreenProp) => {
+export const CreateWalletVerifyScreen = ({
+  navigation,
+  route,
+}: Create3ScreenProp) => {
   const {mnemonic} = route.params;
   const wallet = useWallets();
 
