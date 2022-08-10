@@ -1,14 +1,27 @@
 import React from 'react';
-import {Button, Text, View} from 'react-native';
+import {Image} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
+import {Container} from '../components/container';
+import {View} from 'react-native';
 
 type LoginScreenProp = CompositeScreenProps<any, any>;
 
+const logoImage = require('../../assets/images/logo-empty.png');
+
 export const LoginScreen = ({navigation}: LoginScreenProp) => {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Login Screen</Text>
+    <Container>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Image source={logoImage} style={{marginBottom: 28}} />
+        <Title style={{marginBottom: 4}}>No wallet is connected</Title>
+        <Paragraph style={{textAlign: 'center'}}>
+          You can create a new wallet or connect any existing one
+        </Paragraph>
+      </View>
       <Button
+        style={{marginBottom: 16}}
+        variant={ButtonVariant.contained}
         title="Restore exists wallet"
         onPress={() => navigation.navigate('restore')}
       />
@@ -16,6 +29,6 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
         title="Create new wallet"
         onPress={() => navigation.navigate('register')}
       />
-    </View>
+    </Container>
   );
 };

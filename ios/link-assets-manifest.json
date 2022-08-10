@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/ElMessiri-Bold.ttf",
+      "sha1": "8690f6c5ba92e8157bdb64f0c45ab3b347bbfe53"
+    },
+    {
+      "path": "assets/fonts/ElMessiri-Medium.ttf",
+      "sha1": "c63754492bfb1233918e4e320d85c87a51070edd"
+    },
+    {
+      "path": "assets/fonts/ElMessiri-Regular.ttf",
+      "sha1": "8adae1f5aa458ff4278391649419786b27127251"
+    },
+    {
+      "path": "assets/fonts/ElMessiri-SemiBold.ttf",
+      "sha1": "eb873c670c09a561b6c56b397d395b70c1738c71"
+    },
+    {
+      "path": "assets/images/logo-empty.png",
+      "sha1": "300decd99701800b8b6957377536306035d71025"
+    },
+    {
+      "path": "assets/images/logo-empty@2x.png",
+      "sha1": "509d00f159cf7e88ee01a01c35b120e5af5afd90"
+    },
+    {
+      "path": "assets/images/logo-empty@3x.png",
+      "sha1": "9db33e31b5dc0b041060749b2da6a7dddf4bb1f0"
+    }
+  ]
+}
