@@ -13,10 +13,12 @@ module.exports = {
         inlineRequires: true,
       },
     }),
+    minifierPath: 'metro-minify-terser',
+    // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
-  resolver: {
-    extraNodeModules: {
-      crypto: require.resolve('react-native-crypto'),
-    },
-  },
+  // resolver: {
+  //   extraNodeModules: {
+  //     crypto: require.resolve('react-native-crypto'),
+  //   },
+  // },
 };
