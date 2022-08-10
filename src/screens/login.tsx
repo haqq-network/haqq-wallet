@@ -19,15 +19,17 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
           You can create a new wallet or connect any existing one
         </Paragraph>
       </View>
+
       <Button
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
-        title="Restore exists wallet"
-        onPress={() => navigation.navigate('restore')}
+        title="Create a wallet"
+        onPress={() => navigation.navigate('register')}
       />
       <Button
-        title="Create new wallet"
-        onPress={() => navigation.navigate('register')}
+        style={{marginBottom: 16}}
+        title="I already have a wallet"
+        onPress={() => navigation.navigate('restore')}
       />
     </Container>
   );
