@@ -1,18 +1,31 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
+import Lottie from 'lottie-react-native';
 import {Container} from '../components/container';
 import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
+import {Dimensions} from 'react-native';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
-
+const windowWidth = Dimensions.get('window').width;
 export const SignInAgreementScreen = ({
   navigation,
   route,
 }: SignInAgreementScreenProp) => {
   return (
     <Container>
-      <Spacer />
+      <Spacer>
+        <Lottie
+          style={{
+            position: 'absolute',
+            width: windowWidth - 30,
+            height: windowWidth - 30,
+          }}
+          source={require('../../assets/animations/first-screen-animation.json')}
+          autoPlay
+          loop
+        />
+      </Spacer>
       <Title style={{marginBottom: 4}}>Islm - DeFi Wallet</Title>
       <Paragraph style={{marginBottom: 58, textAlign: 'center'}}>
         Islm Wallet does not store, transfer, transmit, convert, hold, or
