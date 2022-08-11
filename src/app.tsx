@@ -29,6 +29,7 @@ import {PinScreen} from './screens/pin';
 import {SettingsScreen} from './screens/settings';
 import {SetPinScreen} from './screens/set-pin';
 import {ScanQrScreen} from './screens/scan-qr';
+import {SignInScreen} from './screens/signin';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,7 @@ export const App = () => {
               />
               <Stack.Screen name="settings" component={SettingsScreen} />
               <Stack.Screen name="set-pin" component={SetPinScreen} />
+              <Stack.Screen name="signin" component={SignInScreen} />
             </Stack.Group>
             <Stack.Screen name="login" component={LoginScreen} />
             <Stack.Screen name="restore" component={RestoreScreen} />

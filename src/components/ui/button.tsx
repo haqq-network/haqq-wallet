@@ -1,9 +1,10 @@
 import {StyleSheet, Text, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
+  disabled?: boolean;
   variant?: ButtonVariant;
   onPress: () => void;
 };
@@ -18,8 +19,16 @@ export const Button = ({
   title,
   variant = ButtonVariant.text,
   style,
+  disabled,
+  onPress,
   ...props
 }: ButtonProps) => {
+  const onPressButton = useCallback(() => {
+    if (!disabled) {
+      onPress();
+    }
+  }, [disabled, onPress]);
+
   const containerStyle = useMemo(
     () => [page.container, page[`${variant}Container`] ?? null, style],
     [style, variant],
@@ -31,7 +40,7 @@ export const Button = ({
   );
 
   return (
-    <TouchableOpacity style={containerStyle} {...props}>
+    <TouchableOpacity style={containerStyle} onPress={onPressButton} {...props}>
       <Text style={textStyle}>{title}</Text>
     </TouchableOpacity>
   );

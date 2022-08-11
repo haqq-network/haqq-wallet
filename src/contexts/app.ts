@@ -9,6 +9,7 @@ import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
 import {User} from '../models/user';
+import Keychain from 'react-native-keychain';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
@@ -71,6 +72,7 @@ class App extends EventEmitter {
     this.password = password;
     await setGenericPassword('username', this.password, {
       storage: STORAGE_TYPE.AES,
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
 
@@ -98,9 +100,11 @@ class App extends EventEmitter {
     });
   }
 
-  setPin(pin: string) {
-    realm.write(() => {
-      this.user.pin = pin;
+  async setPin(pin: string) {
+    this.password = pin;
+    await setGenericPassword('username', this.password, {
+      storage: STORAGE_TYPE.AES,
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
 

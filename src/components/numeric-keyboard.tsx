@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Icon, IconButton} from './ui';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -14,62 +9,68 @@ export type NumericKeyboardProps = {
 export const NumericKeyboard = ({onPress}: NumericKeyboardProps) => {
   return (
     <View style={page.container}>
-      <RoundButton value={1} onPress={onPress} />
-      <RoundButton value={2} onPress={onPress} />
-      <RoundButton value={3} onPress={onPress} />
-      <RoundButton value={4} onPress={onPress} />
-      <RoundButton value={5} onPress={onPress} />
-      <RoundButton value={6} onPress={onPress} />
-      <RoundButton value={7} onPress={onPress} />
-      <RoundButton value={8} onPress={onPress} />
-      <RoundButton value={9} onPress={onPress} />
+      <IconButton style={page.button} onPress={() => onPress(1)}>
+        <Text style={page.buttonText}>1</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(2)}>
+        <Text style={page.buttonText}>2</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(3)}>
+        <Text style={page.buttonText}>3</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(4)}>
+        <Text style={page.buttonText}>4</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(5)}>
+        <Text style={page.buttonText}>5</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(6)}>
+        <Text style={page.buttonText}>6</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(7)}>
+        <Text style={page.buttonText}>7</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(8)}>
+        <Text style={page.buttonText}>8</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(9)}>
+        <Text style={page.buttonText}>9</Text>
+      </IconButton>
       <View style={page.spacer} />
-      <RoundButton value={0} onPress={onPress} />
-      <RoundButton value={-1} onPress={onPress} />
+      <IconButton style={page.button} onPress={() => onPress(0)}>
+        <Text style={page.buttonText}>0</Text>
+      </IconButton>
+      <IconButton style={page.button} onPress={() => onPress(-1)}>
+        <Icon name={'clear'} />
+      </IconButton>
     </View>
   );
 };
 
-const RoundButton = ({
-  onPress,
-  value,
-}: {
-  onPress: (value: number) => void;
-  value: number;
-}) => {
-  return (
-    <TouchableOpacity
-      style={page.button}
-      onPress={() => {
-        onPress(value);
-      }}>
-      <Text style={page.roundButton}>{value}</Text>
-    </TouchableOpacity>
-  );
-};
 const windowWidth = Dimensions.get('window').width;
 const page = StyleSheet.create({
   container: {
-    flex: 1,
+    width: 264,
     justifyContent: 'space-between',
     padding: 10,
-    gap: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   button: {
-    padding: 10,
-    borderColor: '#000000',
-    borderWidth: 1,
     marginTop: 20,
     marginBottom: 20,
-    width: windowWidth / 4,
-    height: windowWidth / 4,
-    borderRadius: windowWidth / 8,
+    width: 72,
+    height: 72,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  roundButton: {},
+  buttonText: {
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 36,
+    lineHeight: 43,
+    letterSpacing: 0.38,
+  },
   spacer: {
     width: windowWidth / 4,
     height: windowWidth / 4,

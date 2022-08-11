@@ -23,12 +23,12 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
         title="Create a wallet"
-        onPress={() => navigation.navigate('register')}
+        onPress={() => navigation.navigate('signin', {next: 'create'})}
       />
       <Button
         style={{marginBottom: 16}}
         title="I already have a wallet"
-        onPress={() => navigation.navigate('restore')}
+        onPress={() => navigation.navigate('signin', {next: 'restore'})}
       />
     </Container>
   );
