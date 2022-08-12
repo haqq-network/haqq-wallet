@@ -7,9 +7,9 @@ import {Spacer} from '../components/spacer';
 import {Container} from '../components/container';
 import SwitchToggle from 'react-native-switch-toggle';
 
-type SettingsScreenProp = CompositeScreenProps<any, any>;
+type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 
-export const SettingsScreen = ({navigation}: SettingsScreenProp) => {
+export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
   const wallet = useWallets();
   const app = useApp();
   const [biometry, setBiometry] = useState(app.biometry);
@@ -20,25 +20,22 @@ export const SettingsScreen = ({navigation}: SettingsScreenProp) => {
         await app.biometryAuth();
         setBiometry(true);
       } catch (e) {
-        console.log(e.message);
         setBiometry(false);
       }
     } else {
       setBiometry(false);
     }
-  }, [app]);
+  }, [app, biometry]);
 
   useEffect(() => {
     app.biometry = biometry;
-  }, [biometry]);
+  }, [app, biometry]);
 
   const onLogout = useCallback(async () => {
     await wallet.clean();
     await app.clean();
     navigation.replace('login');
   }, [wallet, app, navigation]);
-
-  console.log('biometry', biometry);
 
   return (
     <Container>

@@ -25,7 +25,6 @@ import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
 import {PinScreen} from './screens/pin';
-import {SettingsScreen} from './screens/settings';
 import {SetPinScreen} from './screens/set-pin';
 import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
@@ -52,7 +51,6 @@ export const App = () => {
                   name="import-wallet"
                   component={ImportWalletScreen}
                 />
-                <Stack.Screen name="settings" component={SettingsScreen} />
                 <Stack.Screen name="set-pin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
                 <Stack.Screen
