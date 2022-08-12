@@ -33,21 +33,25 @@ export const SignInRepeatPinScreen = ({
 
   useEffect(() => {
     if (pin.length === 6 && pin === currentPin) {
-      app.setPin(pin);
-      TouchID.isSupported(optionalConfigObject)
-        .then(biometryType => {
-          navigation.navigate('signin-biometry', {
-            next: route.params.next,
-            biometryType: biometryType,
-          });
-        })
-        .catch(_error => {
-          if (route.params.next === 'create') {
-            navigation.navigate('signin-create-wallet');
-          } else {
-            navigation.navigate('signin-restore-wallet');
-          }
-        });
+      app
+        .setPin(pin)
+        .then(() => app.createUser())
+        .then(() =>
+          TouchID.isSupported(optionalConfigObject)
+            .then(biometryType => {
+              navigation.navigate('signin-biometry', {
+                next: route.params.next,
+                biometryType: biometryType,
+              });
+            })
+            .catch(_error => {
+              if (route.params.next === 'create') {
+                navigation.navigate('signin-create-wallet');
+              } else {
+                navigation.navigate('signin-restore-wallet');
+              }
+            }),
+        );
     }
   }, [pin, currentPin, app, navigation, route.params.next]);
 

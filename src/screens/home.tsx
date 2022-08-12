@@ -21,7 +21,7 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
     return () => {
       wallet.off('wallets', updateWallets);
     };
-  }, [wallet]);
+  }, [updateWallets, wallet]);
 
   return (
     <SafeAreaView
@@ -31,10 +31,6 @@ export const HomeScreen = ({navigation}: HomeScreenProp) => {
         <Balance wallet={w} key={w.address} />
       ))}
       <Button title="Scan qr" onPress={() => navigation.navigate('scan-qr')} />
-      <Button
-        title="Send transaction"
-        onPress={() => navigation.navigate('send-transaction')}
-      />
       <Button
         title="Import wallet"
         onPress={() => navigation.navigate('import-wallet')}

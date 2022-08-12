@@ -17,7 +17,7 @@ export const SignInFinishScreen = ({navigation}: SignInFinishScreenProp) => {
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
         title="Finish"
-        onPress={() => navigation.navigate('home')}
+        onPress={() => navigation.replace('home')}
       />
     </Container>
   );

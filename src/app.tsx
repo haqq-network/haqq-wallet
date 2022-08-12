@@ -30,46 +30,52 @@ import {SettingsScreen} from './screens/settings';
 import {SetPinScreen} from './screens/set-pin';
 import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
+import {transactions, TransactionsContext} from './contexts/transactions';
 
 const Stack = createNativeStackNavigator();
 
 export const App = () => {
   return (
     <AppContext.Provider value={app}>
-      <WalletsContext.Provider value={wallets}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="splash" component={SplashScreen} />
-            <Stack.Screen name="pin" component={PinScreen} />
-            <Stack.Screen name="home" component={HomeScreen} />
-            <Stack.Group screenOptions={{presentation: 'modal'}}>
-              <Stack.Screen name="details" component={DetailsScreen} />
-              <Stack.Screen name="details-qr" component={DetailsQrScreen} />
-              <Stack.Screen name="scan-qr" component={ScanQrScreen} />
+      <TransactionsContext.Provider value={transactions}>
+        <WalletsContext.Provider value={wallets}>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="splash" component={SplashScreen} />
+              <Stack.Screen name="pin" component={PinScreen} />
+              <Stack.Screen name="home" component={HomeScreen} />
+              <Stack.Group screenOptions={{presentation: 'modal'}}>
+                <Stack.Screen name="details" component={DetailsScreen} />
+                <Stack.Screen name="details-qr" component={DetailsQrScreen} />
+                <Stack.Screen name="scan-qr" component={ScanQrScreen} />
+                <Stack.Screen
+                  name="import-wallet"
+                  component={ImportWalletScreen}
+                />
+                <Stack.Screen
+                  name="send-transaction"
+                  component={SendTransactionScreen}
+                />
+                <Stack.Screen name="settings" component={SettingsScreen} />
+                <Stack.Screen name="set-pin" component={SetPinScreen} />
+                <Stack.Screen name="signin" component={SignInScreen} />
+              </Stack.Group>
+              <Stack.Screen name="login" component={LoginScreen} />
+              <Stack.Screen name="restore" component={RestoreScreen} />
+              <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen
-                name="import-wallet"
-                component={ImportWalletScreen}
+                name="create-wallet"
+                component={CreateWalletScreen}
               />
               <Stack.Screen
-                name="send-transaction"
-                component={SendTransactionScreen}
+                name="create-wallet-verify"
+                component={CreateWalletVerifyScreen}
               />
-              <Stack.Screen name="settings" component={SettingsScreen} />
-              <Stack.Screen name="set-pin" component={SetPinScreen} />
-              <Stack.Screen name="signin" component={SignInScreen} />
-            </Stack.Group>
-            <Stack.Screen name="login" component={LoginScreen} />
-            <Stack.Screen name="restore" component={RestoreScreen} />
-            <Stack.Screen name="register" component={RegisterScreen} />
-            <Stack.Screen name="create-wallet" component={CreateWalletScreen} />
-            <Stack.Screen
-              name="create-wallet-verify"
-              component={CreateWalletVerifyScreen}
-            />
-            <Stack.Screen name="password" component={PasswordScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </WalletsContext.Provider>
+              <Stack.Screen name="password" component={PasswordScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </WalletsContext.Provider>
+      </TransactionsContext.Provider>
     </AppContext.Provider>
   );
 };
