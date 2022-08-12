@@ -22,7 +22,6 @@ import {CreateWalletScreen} from './screens/create-wallet';
 import {CreateWalletVerifyScreen} from './screens/create-wallet-verify';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
-import {SendTransactionScreen} from './screens/send-transaction';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
 import {PinScreen} from './screens/pin';
@@ -31,6 +30,7 @@ import {SetPinScreen} from './screens/set-pin';
 import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
+import {TransactionScreen} from './screens/transaction';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,13 +52,13 @@ export const App = () => {
                   name="import-wallet"
                   component={ImportWalletScreen}
                 />
-                <Stack.Screen
-                  name="send-transaction"
-                  component={SendTransactionScreen}
-                />
                 <Stack.Screen name="settings" component={SettingsScreen} />
                 <Stack.Screen name="set-pin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
+                <Stack.Screen
+                  name="transaction"
+                  component={TransactionScreen}
+                />
               </Stack.Group>
               <Stack.Screen name="login" component={LoginScreen} />
               <Stack.Screen name="restore" component={RestoreScreen} />

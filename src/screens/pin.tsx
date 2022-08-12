@@ -5,8 +5,9 @@ import {useApp} from '../contexts/app';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container} from '../components/container';
 import {wallets} from '../contexts/wallets';
-import {Paragraph, Title} from '../components/ui';
+import {Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
+import {transactions} from '../contexts/transactions';
 
 type PinScreenProp = CompositeScreenProps<any, any>;
 
@@ -27,13 +28,14 @@ export const PinScreen = ({navigation}: PinScreenProp) => {
         navigation.replace('create-wallet');
       } else {
         navigation.replace('home');
+        transactions.init();
       }
     });
   }, [navigation]);
 
   useEffect(() => {
     if (pin.length === 6 && app.comparePin(pin)) {
-      onSuccess();
+      requestAnimationFrame(onSuccess);
     }
   }, [pin, onSuccess]);
 
