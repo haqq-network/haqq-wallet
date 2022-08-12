@@ -82,7 +82,6 @@ class Wallets extends EventEmitter {
   }
 
   async saveWallet(wallet: EthersWallet) {
-    console.log('saveWallet', app.getPassword());
     const encrypted = await wallet.encrypt(app.getPassword());
 
     realm.write(() => {
@@ -116,6 +115,11 @@ class Wallets extends EventEmitter {
 
   getWallets(): ethers.Wallet[] {
     return Array.from(this.wallets.values());
+  }
+
+  async getBalance(address: string) {
+    const balance = await getDefaultNetwork().getBalance(address);
+    return Number(utils.formatEther(balance));
   }
 
   async sendTransaction(from: string, to: string, amount: number) {

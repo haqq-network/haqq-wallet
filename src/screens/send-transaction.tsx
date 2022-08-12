@@ -1,8 +1,9 @@
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
-import {useWallets} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {useTransactions} from '../contexts/transactions';
+import {useWallets} from '../contexts/wallets';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -10,6 +11,7 @@ export const SendTransactionScreen = ({
   route,
   navigation,
 }: SendTransactionScreenProp) => {
+  const transactions = useTransactions();
   const wallets = useWallets();
   const [from, setFrom] = useState(route.params.from ?? '');
   const [to, setTo] = useState('');
@@ -21,12 +23,11 @@ export const SendTransactionScreen = ({
     [from, to, amount],
   );
 
-  const onDone = useCallback(() => {
-    wallets.sendTransaction(from, to, parseFloat(amount)).then(result => {
-      console.log(result);
-      navigation.goBack();
-    });
-  }, [amount, from, to, wallets]);
+  const onDone = useCallback(async () => {
+    await transactions.sendTransaction(from, to, parseFloat(amount));
+    wallets.emit('balance', {address: from});
+    navigation.goBack();
+  }, [amount, from, to, transactions]);
 
   return (
     <View style={page.container}>

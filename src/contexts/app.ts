@@ -26,7 +26,6 @@ class App extends EventEmitter {
   async init(): Promise<string> {
     const creds = await getGenericPassword();
 
-    console.log('creds', creds);
     if (!creds || !creds.password) {
       return 'login';
     }
@@ -41,6 +40,7 @@ class App extends EventEmitter {
 
     if (this.user.biometry && !this.authentificated) {
       try {
+        console.log('biometry');
         await this.biometryAuth();
         this.authentificated = true;
       } catch (error) {
@@ -48,7 +48,8 @@ class App extends EventEmitter {
       }
     }
 
-    if (this.user.pin && !this.authentificated) {
+    if (this.password && !this.authentificated) {
+      console.log('show pin');
       return 'pin';
     }
 
@@ -109,11 +110,7 @@ class App extends EventEmitter {
   }
 
   comparePin(pin: string) {
-    return this.user.pin === pin;
-  }
-
-  lengthPin() {
-    return this.user.pin.length;
+    return this.password === pin;
   }
 
   get biometry() {

@@ -1,25 +1,35 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
-import {getDefaultNetwork} from '../network';
-import ethers, {utils} from 'ethers';
+import ethers from 'ethers';
 import {useNavigation} from '@react-navigation/native';
+import {useWallets} from '../contexts/wallets';
 
 export type BalanceProps = {
   wallet: ethers.Wallet;
 };
 export const Balance = ({wallet}: BalanceProps) => {
   const navigation = useNavigation();
+  const wallets = useWallets();
   const [balance, setBalance] = useState(0);
 
-  useEffect(() => {
-    if (wallet.address) {
-      getDefaultNetwork()
-        .getBalance(wallet.address)
-        .then(result => {
-          setBalance(Number(utils.formatEther(result)));
+  const updateBalance = useCallback(
+    async ({address}: {address: string}) => {
+      if (address && address === wallet.address) {
+        wallets.getBalance(address).then(result => {
+          setBalance(result);
         });
-    }
-  }, [wallet, setBalance]);
+      }
+    },
+    [wallets, wallet.address],
+  );
+
+  useEffect(() => {
+    wallets.on('balance', updateBalance);
+    updateBalance({address: wallet.address});
+    return () => {
+      wallets.off('balance', updateBalance);
+    };
+  }, [updateBalance, wallet.address, wallets]);
 
   const onPressBalance = useCallback(() => {
     navigation.navigate('details', {
