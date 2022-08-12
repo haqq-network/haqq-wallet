@@ -3,9 +3,13 @@ import {createContext, useContext} from 'react';
 import {getDefaultNetwork} from '../network';
 import {utils} from 'ethers';
 import {wallets} from './wallets';
-import {TransactionResponse} from '@ethersproject/abstract-provider';
+import {
+  TransactionRequest,
+  TransactionResponse,
+} from '@ethersproject/abstract-provider';
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
+import {Deferrable} from '@ethersproject/properties';
 
 class Transactions extends EventEmitter {
   private transactions: Realm.Results<Transaction & Realm.Object>;
@@ -76,6 +80,23 @@ class Transactions extends EventEmitter {
     }
 
     return null;
+  }
+
+  async estimateTransaction(from: string, to: string, amount: number) {
+    const result = await Promise.all([
+      getDefaultNetwork().getFeeData(),
+      getDefaultNetwork().estimateGas({
+        from,
+        to,
+        amount,
+      } as Deferrable<TransactionRequest>),
+    ]);
+
+    return (
+      Number(utils.formatEther(result[0].maxFeePerGas!)) *
+      Number(utils.formatEther(result[1])) *
+      1000000000000000000
+    );
   }
 }
 

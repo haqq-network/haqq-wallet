@@ -1,33 +1,37 @@
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useTransactions} from '../contexts/transactions';
-import {useWallets} from '../contexts/wallets';
+import {Button, ButtonVariant} from '../components/ui';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
-export const SendTransactionScreen = ({
+export const TransactionFormScreen = ({
   route,
   navigation,
 }: SendTransactionScreenProp) => {
-  const transactions = useTransactions();
-  const wallets = useWallets();
   const [from, setFrom] = useState(route.params.from ?? '');
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
 
   const checked = useMemo(
     () =>
-      utils.isAddress(from) && utils.isAddress(to) && parseFloat(amount) > 0,
+      utils.isAddress(from.trim()) &&
+      utils.isAddress(to.trim()) &&
+      parseFloat(amount) > 0,
     [from, to, amount],
   );
 
   const onDone = useCallback(async () => {
-    await transactions.sendTransaction(from, to, parseFloat(amount));
-    wallets.emit('balance', {address: from});
-    navigation.goBack();
-  }, [amount, from, to, transactions]);
+    navigation.navigate('transaction-confirmation', {
+      from: from.trim(),
+      to: to.trim(),
+      amount: parseFloat(amount),
+    });
+  }, [amount, from, navigation, to]);
+
+  console.log(checked);
 
   return (
     <View style={page.container}>
@@ -51,7 +55,12 @@ export const SendTransactionScreen = ({
         onChangeText={setAmount}
         keyboardType="numeric"
       />
-      <Button disabled={!checked} title="Send" onPress={onDone} />
+      <Button
+        disabled={!checked}
+        variant={ButtonVariant.contained}
+        title="Send"
+        onPress={onDone}
+      />
     </View>
   );
 };

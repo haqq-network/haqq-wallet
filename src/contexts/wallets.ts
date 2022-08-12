@@ -26,8 +26,6 @@ class Wallets extends EventEmitter {
     const provider = getDefaultNetwork();
     const wallets = await realm.objects<Wallet>('Wallet');
 
-    console.log('pass', app.getPassword());
-
     for (const rawWallet of wallets) {
       try {
         const wallet = await EthersWallet.fromEncryptedJson(

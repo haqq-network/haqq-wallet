@@ -19,7 +19,7 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
     transactions.getTransactions(address).then(result => {
       return setTransactionsList(result);
     });
-  }, [address]);
+  }, [address, transactions]);
 
   const onRemove = useCallback(() => {
     return Alert.alert(
@@ -49,7 +49,7 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
       </TouchableOpacity>
       <Button
         title="Send transaction"
-        onPress={() => navigation.navigate('send-transaction', {from: address})}
+        onPress={() => navigation.navigate('transaction', {from: address})}
       />
       <Button
         title="Show qr"
