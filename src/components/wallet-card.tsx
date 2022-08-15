@@ -54,9 +54,11 @@ export const WalletCard = ({wallet}: BalanceProps) => {
     navigation.navigate('details-qr', {address: wallet.address});
   }, [navigation, wallet.address]);
 
+  const onClickBackup = useCallback(() => {}, []);
+
   return (
     <View style={page.container}>
-      <View style={page.topNav}>
+      <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
         <Text style={[page.text, {opacity: 0.8}]}>{wallet.name}</Text>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
@@ -67,6 +69,11 @@ export const WalletCard = ({wallet}: BalanceProps) => {
           <Copy color="#FFFFFF" />
         </IconButton>
       </View>
+      {!wallet.mnemonic_saved && (
+        <IconButton onPress={onClickBackup} style={page.cacheButton}>
+          <Text style={page.cacheText}>Without backup</Text>
+        </IconButton>
+      )}
       <Text style={page.balance}>{balance.toFixed(4)} ISLM</Text>
       <View style={page.buttonsContainer}>
         <IconButton style={page.button} onPress={onPressSend}>
@@ -132,4 +139,17 @@ const page = StyleSheet.create({
     marginLeft: 4,
   },
   qrButton: {},
+  cacheButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    backgroundColor: 'rgba(225, 99, 99, 0.8)',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  cacheText: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#FFFFFF',
+  },
 });

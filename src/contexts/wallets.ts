@@ -2,7 +2,6 @@ import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
-import * as bip39 from '../bip39';
 import {getDefaultNetwork} from '../network';
 import {Wallet, WalletType} from '../models/wallet';
 import {app} from './app';
@@ -33,6 +32,8 @@ class Wallets extends EventEmitter {
           app.getPassword(),
         );
 
+        console.log(wallet);
+
         this.wallets.set(wallet.address, wallet);
       } catch (e) {
         if (e instanceof Error) {
@@ -44,17 +45,14 @@ class Wallets extends EventEmitter {
     this.initialized = true;
   }
 
-  async addWalletFromMnemonic(mnemonic: string) {
-    if (bip39.validateMnemonic(mnemonic)) {
-      const provider = getDefaultNetwork();
-      const wallet = await Wallet.fromMnemonic(mnemonic, provider);
+  async addWalletFromMnemonic(mnemonic: string, name?: string) {
+    const provider = getDefaultNetwork();
+    const wallet = await Wallet.fromMnemonic(mnemonic, provider);
+    wallet.name = name ?? wallet.name;
+    this.wallets.set(wallet.address, wallet);
 
-      console.log(wallet);
-      this.wallets.set(wallet.address, wallet);
-
-      await this.saveWallet(wallet);
-      this.emit('wallets');
-    }
+    await this.saveWallet(wallet);
+    this.emit('wallets');
   }
 
   async addWalletFromPrivateKey(privateKey: string) {
@@ -98,10 +96,6 @@ class Wallets extends EventEmitter {
         realm.delete(wallet);
       });
     }
-  }
-
-  generateMnemonic() {
-    return bip39.generateMnemonic();
   }
 
   getWallet(address: string): Wallet | undefined {

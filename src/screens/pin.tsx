@@ -23,13 +23,8 @@ export const PinScreen = ({navigation}: PinScreenProp) => {
   }, []);
 
   const onSuccess = useCallback(() => {
-    wallets.init().then(() => {
-      if (wallets.getWallets().length === 0) {
-        navigation.replace('create-wallet');
-      } else {
-        navigation.replace('home');
-        transactions.init();
-      }
+    Promise.all([wallets.init(), transactions.init()]).then(() => {
+      navigation.replace('home');
     });
   }, [navigation]);
 

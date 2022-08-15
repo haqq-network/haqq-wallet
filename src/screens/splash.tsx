@@ -16,14 +16,8 @@ export const SplashScreen = ({navigation}: SplashScreenProp) => {
           navigation.replace(next);
           break;
         case 'home': {
-          wallets.init().then(() => {
-            if (wallets.getWallets().length === 0) {
-              navigation.replace('create-wallet');
-            } else {
-              transactions.init().then(() => {
-                navigation.replace('home');
-              });
-            }
+          Promise.all([wallets.init(), transactions.init()]).then(() => {
+            navigation.replace('home');
           });
         }
       }

@@ -6,7 +6,7 @@ import {utils} from 'ethers';
 
 export const realm = new Realm({
   schema: [WalletSchema, User, Transaction],
-  schemaVersion: 4,
+  schemaVersion: 5,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -29,6 +29,15 @@ export const realm = new Realm({
         newObject.value = Number(utils.formatEther(data.value));
         newObject.fee = 0;
         newObject.confirmed = false;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 5) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects('Wallet');
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.mnemonic_saved = true;
       }
     }
   },
