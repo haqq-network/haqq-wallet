@@ -10,7 +10,7 @@ export const QrScannerButton = () => {
         navigation.navigate('scan-qr');
       }}
       style={{marginRight: 12}}>
-      <QRScanner style={{color: '#2F2F2F'}} />
+      <QRScanner color="#2F2F2F" />
     </IconButton>
   );
 };
