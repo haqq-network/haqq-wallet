@@ -1,9 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {validateMnemonic} from '../bip39';
 import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
+import {utils} from 'ethers';
 
 type RestoreScreenProp = CompositeScreenProps<any, any>;
 
@@ -14,7 +14,7 @@ export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
   const app = useApp();
 
   const checked = useMemo(
-    () => password.length && validateMnemonic(mnemonic),
+    () => password.length && utils.isValidMnemonic(mnemonic),
     [password, mnemonic],
   );
 

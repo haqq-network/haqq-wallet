@@ -11,6 +11,7 @@
     "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto --yarn --hack"
   },
   "dependencies": {
+    "@ethersproject/shims": "^5.6.0",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/async-storage": "1.12.1",
     "@react-native-community/cameraroll": "^4.1.2",
@@ -38,6 +39,7 @@
     "react-native-camera": "^4.2.1",
     "react-native-crypto": "^2.2.0",
     "react-native-fs": "^2.20.0",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-keychain": "^8.1.1",
     "react-native-os": "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17",
     "react-native-qrcode-svg": "^6.1.2",

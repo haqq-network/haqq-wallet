@@ -18,8 +18,6 @@ import {SplashScreen} from './screens/splash';
 import {LoginScreen} from './screens/login';
 import {PasswordScreen} from './screens/password';
 import {RegisterScreen} from './screens/register';
-import {CreateWalletScreen} from './screens/create-wallet';
-import {CreateWalletVerifyScreen} from './screens/create-wallet-verify';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
@@ -61,14 +59,6 @@ export const App = () => {
               <Stack.Screen name="login" component={LoginScreen} />
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
-              <Stack.Screen
-                name="create-wallet"
-                component={CreateWalletScreen}
-              />
-              <Stack.Screen
-                name="create-wallet-verify"
-                component={CreateWalletVerifyScreen}
-              />
               <Stack.Screen name="password" component={PasswordScreen} />
             </Stack.Navigator>
           </NavigationContainer>

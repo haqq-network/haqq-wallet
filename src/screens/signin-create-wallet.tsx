@@ -1,9 +1,8 @@
-import React, {useMemo} from 'react';
-import {Button, Text} from 'react-native';
+import React, {useEffect} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
-import {Title} from '../components/ui';
+import {utils} from 'ethers';
+import {View} from 'react-native';
 
 type SignInCreateWalletScreenProp = CompositeScreenProps<any, any>;
 
@@ -12,18 +11,16 @@ export const SignInCreateWalletScreen = ({
 }: SignInCreateWalletScreenProp) => {
   const wallet = useWallets();
 
-  const mnemonic = useMemo(() => wallet.generateMnemonic(), [wallet]);
+  useEffect(() => {
+    wallet
+      .addWalletFromMnemonic(
+        utils.entropyToMnemonic(utils.randomBytes(16)),
+        'Main account',
+      )
+      .then(() => {
+        navigation.navigate('signin-finish');
+      });
+  }, []);
 
-  return (
-    <Container>
-      <Title>Create 2 Screen</Title>
-      <Text>{mnemonic}</Text>
-      <Button
-        title="Go next"
-        onPress={() =>
-          navigation.navigate('signin-create-wallet-verify', {mnemonic})
-        }
-      />
-    </Container>
-  );
+  return <View />;
 };
