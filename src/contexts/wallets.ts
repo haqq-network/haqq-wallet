@@ -1,16 +1,15 @@
 import {createContext, useContext} from 'react';
 import {EventEmitter} from 'events';
-import ethers, {utils, Wallet as EthersWallet} from 'ethers';
-import * as bip39 from '../bip39';
-import {validateMnemonic} from '../bip39';
+import {utils} from 'ethers';
 import {realm} from '../models';
+import * as bip39 from '../bip39';
 import {getDefaultNetwork} from '../network';
-import {Wallet} from '../models/wallet';
+import {Wallet, WalletType} from '../models/wallet';
 import {app} from './app';
 
 class Wallets extends EventEmitter {
   private password: null | string;
-  private wallets: Map<string, ethers.Wallet>;
+  private wallets: Map<string, Wallet>;
   private initialized: boolean = false;
 
   constructor() {
@@ -24,17 +23,21 @@ class Wallets extends EventEmitter {
       return;
     }
     const provider = getDefaultNetwork();
-    const wallets = await realm.objects<Wallet>('Wallet');
+    const wallets = realm.objects<WalletType>('Wallet');
 
     for (const rawWallet of wallets) {
       try {
-        const wallet = await EthersWallet.fromEncryptedJson(
-          rawWallet.data,
+        const wallet = await Wallet.fromCache(
+          rawWallet,
+          provider,
           app.getPassword(),
-        ).then(w => w.connect(provider));
+        );
+
         this.wallets.set(wallet.address, wallet);
       } catch (e) {
-        console.log(rawWallet, e.message);
+        if (e instanceof Error) {
+          console.log(rawWallet, e.message);
+        }
       }
     }
 
@@ -42,11 +45,9 @@ class Wallets extends EventEmitter {
   }
 
   async addWalletFromMnemonic(mnemonic: string) {
-    if (validateMnemonic(mnemonic)) {
+    if (bip39.validateMnemonic(mnemonic)) {
       const provider = getDefaultNetwork();
-      const wallet = await EthersWallet.fromMnemonic(mnemonic).connect(
-        provider,
-      );
+      const wallet = await Wallet.fromMnemonic(mnemonic, provider);
 
       console.log(wallet);
       this.wallets.set(wallet.address, wallet);
@@ -58,7 +59,7 @@ class Wallets extends EventEmitter {
 
   async addWalletFromPrivateKey(privateKey: string) {
     const provider = getDefaultNetwork();
-    const wallet = new EthersWallet(privateKey, provider);
+    const wallet = await Wallet.fromPrivateKey(privateKey, provider);
 
     this.wallets.set(wallet.address, wallet);
 
@@ -69,7 +70,7 @@ class Wallets extends EventEmitter {
   async removeWallet(address: string) {
     this.wallets.delete(address);
 
-    const wallets = await realm.objects<Wallet>('Wallet');
+    const wallets = await realm.objects<WalletType>('Wallet');
     const filtered = wallets.filtered(`address = '${address}'`);
     if (filtered.length > 0) {
       realm.write(() => {
@@ -79,22 +80,18 @@ class Wallets extends EventEmitter {
     this.emit('wallets');
   }
 
-  async saveWallet(wallet: EthersWallet) {
-    const encrypted = await wallet.encrypt(app.getPassword());
+  async saveWallet(wallet: Wallet) {
+    const serialized = await wallet.serialize(app.getPassword());
 
     realm.write(() => {
-      realm.create('Wallet', {
-        address: wallet.address,
-        name: 'Account',
-        data: encrypted,
-      });
+      realm.create('Wallet', serialized);
     });
   }
 
   async clean() {
     this.wallets = new Map();
 
-    const wallets = await realm.objects<Wallet>('Wallet');
+    const wallets = await realm.objects<WalletType>('Wallet');
 
     for (const wallet of wallets) {
       realm.write(() => {
@@ -107,35 +104,17 @@ class Wallets extends EventEmitter {
     return bip39.generateMnemonic();
   }
 
-  getWallet(address: string): ethers.Wallet | undefined {
+  getWallet(address: string): Wallet | undefined {
     return this.wallets.get(address);
   }
 
-  getWallets(): ethers.Wallet[] {
+  getWallets(): Wallet[] {
     return Array.from(this.wallets.values());
   }
 
   async getBalance(address: string) {
     const balance = await getDefaultNetwork().getBalance(address);
     return Number(utils.formatEther(balance));
-  }
-
-  async sendTransaction(from: string, to: string, amount: number) {
-    const provider = getDefaultNetwork();
-    const wallet = this.getWallet(from);
-    if (wallet) {
-      await wallet.connect(provider);
-
-      const transaction = await wallet.sendTransaction({
-        to,
-        value: utils.parseEther(amount.toString()),
-        chainId: provider.chainId,
-      });
-      console.log(transaction);
-      return transaction;
-    }
-
-    return null;
   }
 }
 

@@ -2,7 +2,6 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useTransactions} from '../contexts/transactions';
 import {Button, ButtonVariant} from '../components/ui';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;

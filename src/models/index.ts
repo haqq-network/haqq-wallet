@@ -1,11 +1,11 @@
 import Realm from 'realm';
-import {Wallet} from './wallet';
+import {WalletSchema} from './wallet';
 import {User} from './user';
 import {Transaction} from './transaction';
 import {utils} from 'ethers';
 
 export const realm = new Realm({
-  schema: [Wallet, User, Transaction],
+  schema: [WalletSchema, User, Transaction],
   schemaVersion: 4,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
