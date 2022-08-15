@@ -52,34 +52,29 @@ export const WalletCard = ({wallet}: BalanceProps) => {
 
   const onPressQR = useCallback(() => {
     navigation.navigate('details-qr', {address: wallet.address});
-  }, [wallet.address]);
+  }, [navigation, wallet.address]);
 
   return (
     <View style={page.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          marginBottom: 30,
-        }}>
+      <View style={page.topNav}>
         <Text style={[page.text, {opacity: 0.8}]}>{wallet.name}</Text>
-        <View style={{flex: 1}} />
+        <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
-          <QRCode style={page.qrButtonIcon} />
+          <QRCode color="#FFFFFF" />
         </IconButton>
         <IconButton onPress={onPressCopy} style={page.copyButton}>
           <Text style={page.text}>{formattedAddress}</Text>
-          <Copy style={page.buttonIcon} />
+          <Copy color="#FFFFFF" />
         </IconButton>
       </View>
       <Text style={page.balance}>{balance.toFixed(4)} ISLM</Text>
       <View style={page.buttonsContainer}>
         <IconButton style={page.button} onPress={onPressSend}>
-          <ArrowSend style={page.buttonIcon} />
+          <ArrowSend color="#FFFFFF" />
           <Text style={page.buttonText}>Send</Text>
         </IconButton>
         <IconButton style={page.button} onPress={onPressSend}>
-          <ArrowReceive style={page.buttonIcon} />
+          <ArrowReceive color="#FFFFFF" />
           <Text style={page.buttonText}>Receive</Text>
         </IconButton>
       </View>
@@ -94,6 +89,12 @@ const page = StyleSheet.create({
     backgroundColor: '#03BF77',
     borderRadius: 16,
   },
+  topNav: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 30,
+  },
+  spacer: {flex: 1},
   text: {
     fontStyle: 'normal',
     fontWeight: '700',
@@ -125,16 +126,10 @@ const page = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
   },
-  buttonIcon: {
-    color: '#FFFFFF',
-  },
   copyButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 4,
   },
   qrButton: {},
-  qrButtonIcon: {
-    color: '#FFFFFF',
-  },
 });
