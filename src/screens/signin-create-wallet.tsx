@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Button, Text, View} from 'react-native';
+import {Button, Text} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';

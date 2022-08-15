@@ -1,5 +1,5 @@
 import {EventEmitter} from 'events';
-import {
+import Keychain, {
   getGenericPassword,
   resetGenericPassword,
   setGenericPassword,
@@ -9,7 +9,6 @@ import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
 import {User} from '../models/user';
-import Keychain from 'react-native-keychain';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
