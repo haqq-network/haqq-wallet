@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
+  DefaultTheme,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
@@ -29,6 +30,7 @@ import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {LoginScreen} from './screens/login';
+import {SignInFinishScreen} from './screens/signin-finish';
 // import {BackupScreen} from './screens/backup';
 
 const Stack = createNativeStackNavigator();
@@ -61,6 +63,15 @@ const Stack = createNativeStackNavigator();
 //   }),
 // };
 
+const AppTheme = {
+  dark: false,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#04D484',
+    background: '#fff',
+  },
+};
+
 export const App = () => {
   const navigator = useNavigationContainerRef();
   const [appLoading, setAppLoading] = useState(true);
@@ -80,7 +91,7 @@ export const App = () => {
     <AppContext.Provider value={app}>
       <TransactionsContext.Provider value={transactions}>
         <WalletsContext.Provider value={wallets}>
-          <NavigationContainer ref={navigator}>
+          <NavigationContainer ref={navigator} theme={AppTheme}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="login" component={LoginScreen} />
