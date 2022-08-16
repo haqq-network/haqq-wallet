@@ -19,7 +19,7 @@ export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
   );
 
   const onDone = useCallback(async () => {
-    await app.setPassword(password);
+    await app.setPin(password);
     await app.createUser();
     await wallet.addWalletFromMnemonic(mnemonic);
 

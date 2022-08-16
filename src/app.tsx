@@ -68,11 +68,11 @@ export const App = () => {
     app
       .init()
       .then(() => Promise.all([wallets.init(), transactions.init()]))
-      .then(() => {
-        setAppLoading(false);
-      })
       .catch(() => {
         navigator.navigate('login');
+      })
+      .finally(() => {
+        setAppLoading(false);
       });
   }, [navigator]);
 

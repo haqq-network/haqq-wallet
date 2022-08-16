@@ -40,7 +40,7 @@ export class Wallet {
     const tmp = new EthersWallet(privateKey, provider);
 
     return new Wallet(
-      {address: tmp.address, data: '', name: '', mnemonic: true},
+      {address: tmp.address, data: '', name: '', mnemonic_saved: true},
       tmp,
     );
   }
