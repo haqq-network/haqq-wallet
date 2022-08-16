@@ -11,6 +11,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
 
 export enum ButtonVariant {
   text = 'text',
+  error = 'error',
   contained = 'contained',
   outlined = 'outlined',
 }
@@ -60,6 +61,7 @@ const page = StyleSheet.create({
     borderRadius: 16,
   },
   textContainer: {},
+  errorContainer: {},
   outlinedContainer: {
     borderColor: '#04D484',
     borderRadius: 16,
@@ -74,4 +76,7 @@ const page = StyleSheet.create({
   },
   textText: {},
   outlinedText: {},
+  errorText: {
+    color: '#E16363',
+  },
 });

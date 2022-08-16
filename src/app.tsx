@@ -28,8 +28,37 @@ import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
+// import {BackupScreen} from './screens/backup';
 
 const Stack = createNativeStackNavigator();
+
+// const horizontalAnimation = {
+//   headerShown: false,
+//   cardStyle: {
+//     backgroundColor: 'green',
+//   },
+//   presentation: 'transparentModal',
+//   cardOverlayEnabled: true,
+//   animationEnabled: false,
+//   overlayStyle: {
+//     backgroundColor: 'tomato',
+//   },
+//   cardStyleInterpolator: ({current: {progress}}) => ({
+//     cardStyle: {
+//       opacity: progress.interpolate({
+//         inputRange: [0, 0.5, 0.9, 1],
+//         outputRange: [0, 0.25, 0.7, 1],
+//       }),
+//     },
+//     overlayStyle: {
+//       opacity: progress.interpolate({
+//         inputRange: [0, 1],
+//         outputRange: [0, 0.5],
+//         extrapolate: 'clamp',
+//       }),
+//     },
+//   }),
+// };
 
 export const App = () => {
   return (
@@ -56,6 +85,9 @@ export const App = () => {
                   component={TransactionScreen}
                 />
               </Stack.Group>
+              {/*<Stack.Group screenOptions={horizontalAnimation}>*/}
+              {/*  <Stack.Screen name="backup" component={BackupScreen} />*/}
+              {/*</Stack.Group>*/}
               <Stack.Screen name="login" component={LoginScreen} />
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />

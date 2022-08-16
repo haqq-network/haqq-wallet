@@ -54,7 +54,9 @@ export const WalletCard = ({wallet}: BalanceProps) => {
     navigation.navigate('details-qr', {address: wallet.address});
   }, [navigation, wallet.address]);
 
-  const onClickBackup = useCallback(() => {}, []);
+  const onClickBackup = useCallback(() => {
+    // navigation.navigate('backup', {address: wallet.address});
+  }, [navigation, wallet.address]);
 
   return (
     <View style={page.container}>
