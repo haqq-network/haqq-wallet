@@ -1,38 +1,107 @@
-import {Text, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {app} from '../contexts/app';
-import {wallets} from '../contexts/wallets';
-import {transactions} from '../contexts/transactions';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Modal, StyleSheet, Text, View} from 'react-native';
+import {useApp} from '../contexts/app';
+import {Container} from '../components/container';
+import {Title} from '../components/ui';
+import {Spacer} from '../components/spacer';
+import {NumericKeyboard} from '../components/numeric-keyboard';
 
-type SplashScreenProp = CompositeScreenProps<any, any>;
+type SplashScreenProp = {
+  visible: boolean;
+};
 
-export const SplashScreen = ({navigation}: SplashScreenProp) => {
+export const SplashScreen = ({visible}: SplashScreenProp) => {
+  const app = useApp();
+  const [showPin, setShowPin] = useState(false);
+
+  const [pin, setPin] = useState('');
+
+  const modalVisible = visible || showPin;
+
   useEffect(() => {
-    app.init().then(next => {
-      switch (next) {
-        case 'login':
-        case 'pin':
-          navigation.replace(next);
-          break;
-        case 'home': {
-          Promise.all([wallets.init(), transactions.init()]).then(() => {
-            navigation.replace('home');
-          });
-        }
+    const subscription = (state: boolean) => {
+      if (state !== showPin) {
+        setPin('');
+        setShowPin(state);
       }
-    });
-  }, [navigation]);
+    };
+
+    app.on('showPin', subscription);
+
+    return () => {
+      app.off('showPin', subscription);
+    };
+  }, [app, showPin]);
+
+  const onKeyboard = useCallback((value: number) => {
+    if (value > -1) {
+      setPin(p => `${p}${value}`);
+    } else {
+      setPin(p => p.slice(0, p.length - 1));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (pin.length === 6) {
+      app
+        .comparePin(pin)
+        .then(() => {
+          requestAnimationFrame(() => app.emit('enterPin', pin));
+        })
+        .catch(() => {
+          setPin('');
+        });
+    }
+  }, [pin, app]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#04D484',
-      }}>
-      <Text>Splash Screen</Text>
-    </View>
+    <Modal animationType="fade" visible={modalVisible}>
+      {showPin ? (
+        <Container style={{alignItems: 'center'}}>
+          <Title>Enter 6-digital pin code</Title>
+          <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={page.dots}>
+              <View style={[page.dot, pin.length >= 1 && page.active]} />
+              <View style={[page.dot, pin.length >= 2 && page.active]} />
+              <View style={[page.dot, pin.length >= 3 && page.active]} />
+              <View style={[page.dot, pin.length >= 4 && page.active]} />
+              <View style={[page.dot, pin.length >= 5 && page.active]} />
+              <View style={[page.dot, pin.length >= 6 && page.active]} />
+            </View>
+          </Spacer>
+          <NumericKeyboard onPress={onKeyboard} />
+        </Container>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#04D484',
+          }}>
+          <Text>Splash Screen</Text>
+        </View>
+      )}
+    </Modal>
   );
 };
+
+const page = StyleSheet.create({
+  dots: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  dot: {
+    width: 18,
+    height: 18,
+    backgroundColor: '#CFD1DB',
+    margin: 5,
+    borderRadius: 9,
+    transform: [{scale: 0.66}],
+  },
+  active: {
+    backgroundColor: '#04D484',
+    transform: [{scale: 1}],
+  },
+});

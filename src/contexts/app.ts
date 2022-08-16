@@ -17,67 +17,48 @@ const optionalConfigObject = {
 };
 
 class App extends EventEmitter {
-  password: string | null = null;
-  loaded: boolean = false;
   private user: User & Realm.Object;
-  authentificated: boolean = false;
+  private authenticated: boolean = false;
 
-  async init(): Promise<string> {
+  async init(): Promise<void> {
+    this.user = await this.loadUser('username');
+    console.log('user', this.user);
+    if (!this.user) {
+      return Promise.reject();
+    }
+
+    await this.auth();
+
+    this.authenticated = true;
+
+    return Promise.resolve();
+  }
+
+  async getPassword() {
     const creds = await getGenericPassword();
 
     if (!creds || !creds.password) {
-      return 'login';
+      return Promise.reject();
     }
 
-    this.password = creds.password;
-
-    this.user = await this.loadUser(creds.username);
-    console.log('user', this.user);
-    if (!this.user) {
-      return 'login';
-    }
-
-    if (this.user.biometry && !this.authentificated) {
-      try {
-        console.log('biometry');
-        await this.biometryAuth();
-        this.authentificated = true;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (this.password && !this.authentificated) {
-      console.log('show pin');
-      return 'pin';
-    }
-
-    this.authentificated = true;
-
-    return 'home';
-  }
-
-  getPassword() {
-    return this.password!;
+    return creds.password;
   }
 
   async loadUser(username: string = 'username') {
-    const users = await realm.objects<User>('User');
+    const users = realm.objects<User>('User');
     const filtered = users.filtered(`username = '${username}'`);
 
     return filtered[0];
   }
 
   async setPassword(password: string) {
-    this.password = password;
-    await setGenericPassword('username', this.password, {
+    await setGenericPassword('username', password, {
       storage: STORAGE_TYPE.AES,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
 
   async clean() {
-    this.password = null;
     await resetGenericPassword();
     await this.removeUser();
   }
@@ -100,16 +81,16 @@ class App extends EventEmitter {
     });
   }
 
-  async setPin(pin: string) {
-    this.password = pin;
-    await setGenericPassword('username', this.password, {
+  async setPin(password: string) {
+    await setGenericPassword('username', password, {
       storage: STORAGE_TYPE.AES,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
 
-  comparePin(pin: string) {
-    return this.password === pin;
+  async comparePin(pin: string) {
+    const password = await this.getPassword();
+    return password === pin ? Promise.resolve() : Promise.reject();
   }
 
   get biometry() {
@@ -122,11 +103,47 @@ class App extends EventEmitter {
     });
   }
 
+  async auth() {
+    if (this.user.biometry) {
+      try {
+        console.log('biometry');
+        await this.biometryAuth();
+        this.authenticated = true;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (!this.authenticated) {
+      await this.pinAuth();
+      this.authenticated = true;
+    }
+  }
+
   biometryAuth() {
     return TouchID.authenticate(
       'to demo this react-native component',
       optionalConfigObject,
     );
+  }
+
+  pinAuth() {
+    return new Promise<void>(async (resolve, reject) => {
+      this.emit('showPin', true);
+      const password = await this.getPassword();
+
+      const callback = (value: string) => {
+        if (password === value) {
+          this.off('enterPin', callback);
+          this.emit('showPin', false);
+          resolve();
+        } else {
+          this.emit('errorPin', 'not match');
+        }
+      };
+
+      this.on('enterPin', callback);
+    });
   }
 }
 

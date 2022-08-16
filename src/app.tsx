@@ -8,26 +8,27 @@
  * @format
  */
 
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
 import {SplashScreen} from './screens/splash';
-import {LoginScreen} from './screens/login';
-import {PasswordScreen} from './screens/password';
 import {RegisterScreen} from './screens/register';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
-import {PinScreen} from './screens/pin';
 import {SetPinScreen} from './screens/set-pin';
 import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
+import {LoginScreen} from './screens/login';
 // import {BackupScreen} from './screens/backup';
 
 const Stack = createNativeStackNavigator();
@@ -61,15 +62,29 @@ const Stack = createNativeStackNavigator();
 // };
 
 export const App = () => {
+  const navigator = useNavigationContainerRef();
+  const [appLoading, setAppLoading] = useState(true);
+  useEffect(() => {
+    app
+      .init()
+      .then(() => Promise.all([wallets.init(), transactions.init()]))
+      .then(() => {
+        setAppLoading(false);
+      })
+      .catch(() => {
+        navigator.navigate('login');
+      });
+  }, [navigator]);
+
   return (
     <AppContext.Provider value={app}>
       <TransactionsContext.Provider value={transactions}>
         <WalletsContext.Provider value={wallets}>
-          <NavigationContainer>
+          <NavigationContainer ref={navigator}>
             <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="splash" component={SplashScreen} />
-              <Stack.Screen name="pin" component={PinScreen} />
               <Stack.Screen name="home" component={HomeScreen} />
+              <Stack.Screen name="login" component={LoginScreen} />
+
               <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="details" component={DetailsScreen} />
                 <Stack.Screen name="details-qr" component={DetailsQrScreen} />
@@ -88,12 +103,11 @@ export const App = () => {
               {/*<Stack.Group screenOptions={horizontalAnimation}>*/}
               {/*  <Stack.Screen name="backup" component={BackupScreen} />*/}
               {/*</Stack.Group>*/}
-              <Stack.Screen name="login" component={LoginScreen} />
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
-              <Stack.Screen name="password" component={PasswordScreen} />
             </Stack.Navigator>
           </NavigationContainer>
+          <SplashScreen visible={appLoading} />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>

@@ -7,15 +7,8 @@ import {Wallet, WalletType} from '../models/wallet';
 import {app} from './app';
 
 class Wallets extends EventEmitter {
-  private password: null | string;
-  private wallets: Map<string, Wallet>;
+  private wallets: Map<string, Wallet> = new Map();
   private initialized: boolean = false;
-
-  constructor() {
-    super();
-    this.wallets = new Map();
-    this.password = null;
-  }
 
   async init(): Promise<void> {
     if (this.initialized) {
@@ -23,17 +16,10 @@ class Wallets extends EventEmitter {
     }
     const provider = getDefaultNetwork();
     const wallets = realm.objects<WalletType>('Wallet');
-
+    const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
-        const wallet = await Wallet.fromCache(
-          rawWallet,
-          provider,
-          app.getPassword(),
-        );
-
-        console.log(wallet);
-
+        const wallet = await Wallet.fromCache(rawWallet, provider, password);
         this.wallets.set(wallet.address, wallet);
       } catch (e) {
         if (e instanceof Error) {
@@ -41,6 +27,8 @@ class Wallets extends EventEmitter {
         }
       }
     }
+
+    this.emit('wallets', this.wallets.values());
 
     this.initialized = true;
   }
@@ -79,7 +67,8 @@ class Wallets extends EventEmitter {
   }
 
   async saveWallet(wallet: Wallet) {
-    const serialized = await wallet.serialize(app.getPassword());
+    const password = await app.getPassword();
+    const serialized = await wallet.serialize(password);
 
     realm.write(() => {
       realm.create('Wallet', serialized);
