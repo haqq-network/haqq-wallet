@@ -10,7 +10,7 @@ export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
   const app = useApp();
 
   const onNext = useCallback(async () => {
-    await app.setPassword(password);
+    await app.setPin(password);
     const user = await app.loadUser();
     if (!user) {
       await app.createUser();

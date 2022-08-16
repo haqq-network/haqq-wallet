@@ -8,7 +8,8 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
-import {User} from '../models/user';
+import {User, UserType} from '../models/user';
+import {AppState} from 'react-native';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
@@ -16,20 +17,36 @@ const optionalConfigObject = {
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
 };
 
+enum AppStatus {
+  inactive,
+  active,
+}
+
+function getAppStatus() {
+  return AppState.currentState === 'active'
+    ? AppStatus.active
+    : AppStatus.inactive;
+}
+
 class App extends EventEmitter {
-  private user: User & Realm.Object;
+  private user: User | undefined;
   private authenticated: boolean = false;
+  private appStatus: AppStatus = AppStatus.inactive;
 
   async init(): Promise<void> {
     this.user = await this.loadUser('username');
     console.log('user', this.user);
-    if (!this.user) {
+    if (!this.user.isLoaded) {
       return Promise.reject();
     }
 
     await this.auth();
 
     this.authenticated = true;
+
+    this.appStatus = getAppStatus();
+
+    AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
     return Promise.resolve();
   }
@@ -45,17 +62,10 @@ class App extends EventEmitter {
   }
 
   async loadUser(username: string = 'username') {
-    const users = realm.objects<User>('User');
+    const users = realm.objects<UserType>('User');
     const filtered = users.filtered(`username = '${username}'`);
 
-    return filtered[0];
-  }
-
-  async setPassword(password: string) {
-    await setGenericPassword('username', password, {
-      storage: STORAGE_TYPE.AES,
-      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    });
+    return new User(filtered[0]);
   }
 
   async clean() {
@@ -72,12 +82,12 @@ class App extends EventEmitter {
       });
     });
 
-    this.user = this.loadUser(username);
+    this.user = await this.loadUser(username);
   }
 
   async removeUser() {
     realm.write(() => {
-      realm.delete(this.user);
+      realm.delete(this.user?.raw);
     });
   }
 
@@ -94,19 +104,21 @@ class App extends EventEmitter {
   }
 
   get biometry() {
-    return this.user.biometry;
+    return this.user?.biometry || false;
   }
 
   set biometry(value) {
     realm.write(() => {
-      this.user.biometry = value;
+      if (this.user) {
+        this.user.raw.biometry = value;
+      }
     });
   }
 
   async auth() {
-    if (this.user.biometry) {
+    console.log('auth');
+    if (this.biometry) {
       try {
-        console.log('biometry');
         await this.biometryAuth();
         this.authenticated = true;
       } catch (error) {
@@ -128,7 +140,7 @@ class App extends EventEmitter {
   }
 
   pinAuth() {
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, _reject) => {
       this.emit('showPin', true);
       const password = await this.getPassword();
 
@@ -144,6 +156,25 @@ class App extends EventEmitter {
 
       this.on('enterPin', callback);
     });
+  }
+
+  async onAppStatusChanged() {
+    const appStatus = getAppStatus();
+    if (this.appStatus !== appStatus) {
+      switch (appStatus) {
+        case AppStatus.active:
+          if (this.user?.isOutdatedLastActivity()) {
+            this.authenticated = false;
+            await this.auth();
+          }
+          break;
+        case AppStatus.inactive:
+          this.user?.touchLastActivity();
+          break;
+      }
+
+      this.appStatus = appStatus;
+    }
   }
 }
 
