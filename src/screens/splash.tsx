@@ -5,6 +5,7 @@ import {Container} from '../components/container';
 import {Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {NumericKeyboard} from '../components/numeric-keyboard';
+import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
 type SplashScreenProp = {
   visible: boolean;
@@ -95,13 +96,13 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: '#CFD1DB',
+    backgroundColor: GRAPHIC_BASE_4,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: '#04D484',
+    backgroundColor: TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
 });

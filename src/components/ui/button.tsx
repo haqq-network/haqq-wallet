@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
+import {GRAPHIC_GREEN_1, TEXT_BASE_3, TEXT_RED_1} from '../../variables';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
@@ -57,13 +58,13 @@ const page = StyleSheet.create({
     paddingRight: 28,
   },
   containedContainer: {
-    backgroundColor: '#04D484',
+    backgroundColor: GRAPHIC_GREEN_1,
     borderRadius: 16,
   },
   textContainer: {},
   errorContainer: {},
   outlinedContainer: {
-    borderColor: '#04D484',
+    borderColor: GRAPHIC_GREEN_1,
     borderRadius: 16,
   },
   text: {
@@ -72,11 +73,11 @@ const page = StyleSheet.create({
     lineHeight: 24,
   },
   containedText: {
-    color: '#FFFFFF',
+    color: TEXT_BASE_3,
   },
   textText: {},
   outlinedText: {},
   errorText: {
-    color: '#E16363',
+    color: TEXT_RED_1,
   },
 });
