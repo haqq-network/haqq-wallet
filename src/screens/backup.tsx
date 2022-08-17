@@ -1,49 +1,32 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Button, ButtonVariant, H3, Paragraph} from '../components/ui';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {PopupHeader} from '../components/popup-header';
+import {BackupCreateScreen} from './backup-create';
+import {BackupFinishScreen} from './backup-finish';
+import {BackupVerifyScreen} from './backup-verify';
 
+const BackupStack = createNativeStackNavigator();
 type BackupScreenProp = CompositeScreenProps<any, any>;
 
-export const BackupScreen = ({navigation}: BackupScreenProp) => {
-  const fadeOut = () => {
-    navigation.goBack();
-  };
+export const BackupScreen = ({route}: BackupScreenProp) => {
+  console.log('route', route);
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'flex-end',
-      }}>
-      <View
-        style={{
-          marginHorizontal: 16,
-          marginVertical: 42,
-          backgroundColor: '#FFFFFF',
-          flex: 0,
-          padding: 24,
-          borderRadius: 16,
-        }}>
-        <H3 style={{marginBottom: 8}}>
-          Backup your wallet, keep your assets safe
-        </H3>
-        <Paragraph style={{marginBottom: 28, textAlign: 'center'}}>
-          If your recovery phrase is misplaced or stolen, it's the equivalent of
-          losing your wallet. It's the only way to access your wallet if you
-          forget your account password.
-        </Paragraph>
-        <Button
-          title="Backup now"
-          variant={ButtonVariant.contained}
-          onPress={fadeOut}
-          style={{marginBottom: 8}}
-        />
-        <Button
-          title="I will risk it"
-          variant={ButtonVariant.error}
-          onPress={fadeOut}
-        />
-      </View>
-    </View>
+    <BackupStack.Navigator
+      screenOptions={{header: PopupHeader, title: 'Backup wallet'}}>
+      <BackupStack.Screen
+        name={'backupCreate'}
+        component={BackupCreateScreen}
+        initialParams={{address: route.params.address}}
+      />
+      <BackupStack.Screen
+        name={'backupVerify'}
+        component={BackupVerifyScreen}
+      />
+      <BackupStack.Screen
+        name={'backupFinish'}
+        component={BackupFinishScreen}
+      />
+    </BackupStack.Navigator>
   );
 };

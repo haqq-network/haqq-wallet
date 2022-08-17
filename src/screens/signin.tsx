@@ -6,7 +6,6 @@ import {PopupHeader} from '../components/popup-header';
 import {SignInRepeatPinScreen} from './signin-repeat-pin';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {SignInCreateWalletScreen} from './signin-create-wallet';
-import {SignInCreateWalletVerifyScreen} from './signin-create-wallet-verify';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {SignInFinishScreen} from './signin-finish';
 import {SignInBiometryScreen} from './signin-biometry';
@@ -45,11 +44,6 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
       <SignInStack.Screen
         name={'signin-create-wallet'}
         component={SignInCreateWalletScreen}
-        options={{title}}
-      />
-      <SignInStack.Screen
-        name={'signin-create-wallet-verify'}
-        component={SignInCreateWalletVerifyScreen}
         options={{title}}
       />
       <SignInStack.Screen

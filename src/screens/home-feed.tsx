@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {FlatList, Modal} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
-import {BackupScreen} from './backup-anim';
+import {BackupScreen} from './backup-notification';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionPreview} from '../components/transaction-preview';
 import {Wallets} from '../components/wallets';
 import {prepareTransactions} from '../utils';
 import {TransactionList} from '../types';
+import {Wallet} from '../models/wallet';
 
 type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 
@@ -23,26 +24,35 @@ export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
     ),
   );
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [backupMnemonic, setBackupMnemonic] = useState<Wallet | null>(null);
+
+  const onTransactionList = useCallback(() => {
+    setTransactionsList(
+      prepareTransactions(
+        wallets.getMain()?.address ?? '',
+        transactions.getTransactions(wallets.getMain()?.address ?? ''),
+      ),
+    );
+  }, [transactions, wallets]);
+
+  const onBackupMnemonic = useCallback((wallet: Wallet) => {
+    setBackupMnemonic(wallet);
+  }, []);
 
   useEffect(() => {
-    const callback = () => {
-      setTransactionsList(
-        prepareTransactions(
-          wallets.getMain()?.address ?? '',
-          transactions.getTransactions(wallets.getMain()?.address ?? ''),
-        ),
-      );
-    };
+    transactions.on('transactions', onTransactionList);
+    wallets.on('wallets', onTransactionList);
 
-    transactions.on('transactions', callback);
-    wallets.on('wallets', callback);
+    wallets.on('backupMnemonic', onBackupMnemonic);
 
     return () => {
-      transactions.off('transactions', callback);
-      wallets.off('wallets', callback);
+      transactions.off('transactions', onTransactionList);
+      wallets.off('wallets', onTransactionList);
+      wallets.off('backupMnemonic', onBackupMnemonic);
     };
   }, [transactions, wallets]);
+
+  useEffect(() => {}, [wallets]);
 
   return (
     <Container>
@@ -56,13 +66,14 @@ export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={modalVisible}
+        visible={Boolean(backupMnemonic)}
         onRequestClose={() => {
-          setModalVisible(false);
+          setBackupMnemonic(null);
         }}>
         <BackupScreen
+          wallet={backupMnemonic}
           onClose={() => {
-            setModalVisible(false);
+            setBackupMnemonic(null);
           }}
         />
       </Modal>

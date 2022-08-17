@@ -32,37 +32,9 @@ import {TransactionScreen} from './screens/transaction';
 import {LoginScreen} from './screens/login';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {RootStackParamList} from './types';
-// import {BackupScreen} from './screens/backup';
+import {BackupScreen} from './screens/backup';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-// const horizontalAnimation = {
-//   headerShown: false,
-//   cardStyle: {
-//     backgroundColor: 'green',
-//   },
-//   presentation: 'transparentModal',
-//   cardOverlayEnabled: true,
-//   animationEnabled: false,
-//   overlayStyle: {
-//     backgroundColor: 'tomato',
-//   },
-//   cardStyleInterpolator: ({current: {progress}}) => ({
-//     cardStyle: {
-//       opacity: progress.interpolate({
-//         inputRange: [0, 0.5, 0.9, 1],
-//         outputRange: [0, 0.25, 0.7, 1],
-//       }),
-//     },
-//     overlayStyle: {
-//       opacity: progress.interpolate({
-//         inputRange: [0, 1],
-//         outputRange: [0, 0.5],
-//         extrapolate: 'clamp',
-//       }),
-//     },
-//   }),
-// };
 
 const AppTheme = {
   dark: false,
@@ -98,6 +70,7 @@ export const App = () => {
               <Stack.Screen name="login" component={LoginScreen} />
 
               <Stack.Group screenOptions={{presentation: 'modal'}}>
+                <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="details" component={DetailsScreen} />
                 <Stack.Screen name="detailsQr" component={DetailsQrScreen} />
                 <Stack.Screen name="scanQr" component={ScanQrScreen} />
@@ -112,9 +85,6 @@ export const App = () => {
                   component={TransactionScreen}
                 />
               </Stack.Group>
-              {/*<Stack.Group screenOptions={horizontalAnimation}>*/}
-              {/*  <Stack.Screen name="backup" component={BackupScreen} />*/}
-              {/*</Stack.Group>*/}
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
             </Stack.Navigator>
