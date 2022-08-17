@@ -3,24 +3,32 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
+import {Container} from '../components/container';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
 export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
   const [privateKey, setPrivateKey] = useState('');
+  const [name, setName] = useState('');
   const wallet = useWallets();
 
   const checked = useMemo(() => isHexString(privateKey, 32), [privateKey]);
 
   const onDone = useCallback(() => {
-    wallet.addWalletFromPrivateKey(privateKey).then(() => {
+    wallet.addWalletFromPrivateKey(privateKey, name).then(() => {
       navigation.navigate('home');
     });
-  }, [wallet, privateKey, navigation]);
+  }, [wallet, privateKey, name, navigation]);
 
   return (
-    <View style={page.container}>
+    <Container>
       <Text>Import Wallet Screen</Text>
+      <TextInput
+        style={page.input}
+        placeholder={'Name'}
+        onChangeText={setName}
+      />
+
       <TextInput
         style={page.input}
         placeholder={'Private key'}
@@ -28,7 +36,7 @@ export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
         multiline
       />
       <Button disabled={!checked} title="Done" onPress={onDone} />
-    </View>
+    </Container>
   );
 };
 

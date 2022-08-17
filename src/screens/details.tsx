@@ -5,6 +5,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {useWallets} from '../contexts/wallets';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionPreview} from '../components/transaction-preview';
+import {Container} from '../components/container';
 
 type DetailsScreenProp = CompositeScreenProps<any, any>;
 
@@ -16,9 +17,7 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
   const [transactionsList, setTransactionsList] = useState([]);
 
   useEffect(() => {
-    transactions.getTransactions(address).then(result => {
-      return setTransactionsList(result);
-    });
+    setTransactionsList(transactions.getTransactions(address));
   }, [address, transactions]);
 
   const onRemove = useCallback(() => {
@@ -42,7 +41,7 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
   }, [wallets, address, navigation]);
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <Container>
       <Text>Details Screen</Text>
       <TouchableOpacity onPress={() => Clipboard.setString(address)}>
         <Text>{address}</Text>
@@ -56,10 +55,10 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
         onPress={() => navigation.navigate('details-qr', {address: address})}
       />
       {transactionsList.map(transaction => (
-        <TransactionPreview transaction={transaction} key={transaction.hash} />
+        <TransactionPreview item={transaction} key={transaction.hash} />
       ))}
       <View style={{flex: 1}} />
       <Button title="Remove account" onPress={onRemove} />
-    </View>
+    </Container>
   );
 };

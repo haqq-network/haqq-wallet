@@ -8,6 +8,7 @@ import {app} from './app';
 
 class Wallets extends EventEmitter {
   private wallets: Map<string, Wallet> = new Map();
+  private main: Wallet | null;
   private initialized: boolean = false;
 
   async init(): Promise<void> {
@@ -20,7 +21,12 @@ class Wallets extends EventEmitter {
     for (const rawWallet of wallets) {
       try {
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
+        console.log(wallet);
         this.wallets.set(wallet.address, wallet);
+
+        if (wallet.main) {
+          this.main = wallet;
+        }
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
@@ -41,12 +47,14 @@ class Wallets extends EventEmitter {
 
     await this.saveWallet(wallet);
     this.emit('wallets');
+
+    return wallet;
   }
 
-  async addWalletFromPrivateKey(privateKey: string) {
+  async addWalletFromPrivateKey(privateKey: string, name = '') {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
-
+    wallet.name = name;
     this.wallets.set(wallet.address, wallet);
 
     await this.saveWallet(wallet);
@@ -93,6 +101,10 @@ class Wallets extends EventEmitter {
 
   getWallets(): Wallet[] {
     return Array.from(this.wallets.values());
+  }
+
+  getMain() {
+    return this.main;
   }
 
   async getBalance(address: string) {

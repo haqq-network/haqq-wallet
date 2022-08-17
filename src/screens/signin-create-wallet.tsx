@@ -17,7 +17,8 @@ export const SignInCreateWalletScreen = ({
         utils.entropyToMnemonic(utils.randomBytes(16)),
         'Main account',
       )
-      .then(() => {
+      .then(w => {
+        w.updateWallet({main: true});
         navigation.navigate('signin-finish');
       });
   }, []);

@@ -45,6 +45,11 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         <Text>Use biometry</Text>
         <SwitchToggle switchOn={app.biometry} onPress={onToggleBiometry} />
       </View>
+      <Button
+        title="Import wallet"
+        onPress={() => navigation.navigate('import-wallet')}
+      />
+
       <Spacer />
       <Button title="Logout" onPress={onLogout} />
     </Container>

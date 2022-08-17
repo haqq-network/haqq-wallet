@@ -1,4 +1,4 @@
-export const Transaction = {
+export const TransactionSchema = {
   name: 'Transaction',
   properties: {
     hash: 'string',
@@ -12,4 +12,16 @@ export const Transaction = {
     confirmed: 'bool',
   },
   primaryKey: 'hash',
+};
+
+export type TransactionType = {
+  hash: string;
+  account: string;
+  raw: string;
+  from: string;
+  to: string;
+  value: number;
+  fee: number;
+  createdAt: Date;
+  confirmed: boolean;
 };
