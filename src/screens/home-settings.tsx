@@ -39,15 +39,14 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
 
   return (
     <Container>
-      <Text>Settings Screen</Text>
-      <Button title="Set pin" onPress={() => navigation.push('set-pin')} />
+      <Button title="Set pin" onPress={() => navigation.push('setPin')} />
       <View>
         <Text>Use biometry</Text>
         <SwitchToggle switchOn={app.biometry} onPress={onToggleBiometry} />
       </View>
       <Button
         title="Import wallet"
-        onPress={() => navigation.navigate('import-wallet')}
+        onPress={() => navigation.navigate('importWallet')}
       />
 
       <Spacer />

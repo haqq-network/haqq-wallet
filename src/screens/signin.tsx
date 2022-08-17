@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SignInAgreementScreen} from './signin-agreement';
 import {SignInPinScreen} from './signin-pin';
-import {Header} from '../components/header';
+import {PopupHeader} from '../components/popup-header';
 import {SignInRepeatPinScreen} from './signin-repeat-pin';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {SignInCreateWalletScreen} from './signin-create-wallet';
@@ -21,7 +21,7 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
     [route.params.next],
   );
   return (
-    <SignInStack.Navigator screenOptions={{header: Header}}>
+    <SignInStack.Navigator screenOptions={{header: PopupHeader}}>
       <SignInStack.Screen
         name={'signin-agreement'}
         component={SignInAgreementScreen}

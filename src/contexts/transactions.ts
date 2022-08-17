@@ -12,7 +12,7 @@ import {TransactionType} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
 
 class Transactions extends EventEmitter {
-  private transactions: Realm.Results<TransactionType>;
+  private transactions: Realm.Results<TransactionType> | undefined;
 
   async init(): Promise<void> {
     this.transactions = realm.objects<TransactionType>('Transaction');
@@ -73,6 +73,7 @@ class Transactions extends EventEmitter {
       const transaction = await wallet.wallet.sendTransaction({
         to,
         value: utils.parseEther(amount.toString()),
+        // @ts-ignore
         chainId: provider.chainId,
       });
 

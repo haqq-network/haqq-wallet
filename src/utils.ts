@@ -1,6 +1,5 @@
 import {
   TransactionList,
-  TransactionListPreview,
   TransactionListReceive,
   TransactionListSend,
   TransactionSource,

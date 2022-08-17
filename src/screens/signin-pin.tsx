@@ -5,7 +5,7 @@ import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container} from '../components/container';
 import {Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
-import {GRAPHIC_BASE_3, GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
 type SignInPinScreenProp = CompositeScreenProps<any, any>;
 

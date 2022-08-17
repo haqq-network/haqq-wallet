@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Button, StyleSheet, Text, TextInput} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
 import {Container} from '../components/container';

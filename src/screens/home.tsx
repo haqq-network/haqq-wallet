@@ -6,7 +6,7 @@ import {HomeSettingsScreen} from './home-settings';
 import {HomeMarketScreen} from './home-market';
 import {HomeSwapScreen} from './home-swap';
 import {QrScannerButton} from '../components/qr-scanner-button';
-import {H3} from '../components/ui';
+import {TabHeader} from '../components/tab-header';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 const Tab = createBottomTabNavigator();
@@ -14,7 +14,7 @@ export const HomeScreen = ({}: HomeScreenProp) => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerTitle: props => <H3>{props.headerTitle}</H3>,
+        headerTitle: TabHeader,
         headerStyle: {
           backgroundColor: 'transparent',
         },
@@ -31,17 +31,17 @@ export const HomeScreen = ({}: HomeScreenProp) => {
       <Tab.Screen
         name="home-market"
         component={HomeMarketScreen}
-        options={{title: 'Market'}}
+        options={{title: 'Market', headerTitle: 'Market screen'}}
       />
       <Tab.Screen
         name="home-swap"
         component={HomeSwapScreen}
-        options={{title: 'Swap'}}
+        options={{title: 'Swap', headerTitle: 'Swap screen'}}
       />
       <Tab.Screen
         name="home-settings"
         component={HomeSettingsScreen}
-        options={{title: 'Settings'}}
+        options={{title: 'Settings', headerTitle: 'Settings'}}
       />
     </Tab.Navigator>
   );

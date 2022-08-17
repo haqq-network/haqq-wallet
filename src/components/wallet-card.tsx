@@ -1,17 +1,18 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigationContainerRef} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {ArrowReceive, ArrowSend, Copy, IconButton, QRCode} from './ui';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import {RootStackParamList} from '../types';
 
 export type BalanceProps = {
   wallet: Wallet;
 };
 export const WalletCard = ({wallet}: BalanceProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigationContainerRef<RootStackParamList>();
   const wallets = useWallets();
   const [balance, setBalance] = useState(0);
 
@@ -52,7 +53,7 @@ export const WalletCard = ({wallet}: BalanceProps) => {
   }, [wallet.address]);
 
   const onPressQR = useCallback(() => {
-    navigation.navigate('details-qr', {address: wallet.address});
+    navigation.navigate('detailsQr', {address: wallet.address});
   }, [navigation, wallet.address]);
 
   const onClickBackup = useCallback(() => {
