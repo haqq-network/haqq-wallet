@@ -21,16 +21,21 @@ export const TransactionReceive = ({item}: TransactionPreviewProps) => {
         <ArrowReceive color={GRAPHIC_BASE_1} />
       </View>
       <View style={page.infoContainer}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={page.infoRow}>
           <Text style={{color: TEXT_BASE_1}}>Receive</Text>
           <Text style={page.sum}>{`+${item.value.toFixed(2)} ISLM`}</Text>
         </View>
-        <Text style={{color: TEXT_BASE_2}}>
-          {`from ${item.from.slice(0, 5)}•••${item.from.slice(
-            item.from.length - 5,
-            item.from.length,
-          )}`}
-        </Text>
+        <View style={page.infoRow}>
+          <Text style={{color: TEXT_BASE_2}}>
+            {`from ${item.from.slice(0, 5)}•••${item.from.slice(
+              item.from.length - 5,
+              item.from.length,
+            )}`}
+          </Text>
+          <Text style={{color: TEXT_BASE_2}}>{`+${item.value.toFixed(
+            2,
+          )} $`}</Text>
+        </View>
       </View>
     </View>
   );
@@ -43,6 +48,11 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   infoContainer: {marginLeft: 16, flex: 1},
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 1,
+  },
   sum: {
     color: TEXT_GREEN_1,
   },

@@ -1,23 +1,26 @@
-import React, {useEffect, useRef} from 'react';
-import {Animated, Dimensions, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef} from 'react';
+import {Alert, Animated, Dimensions, View} from 'react-native';
 import {Button, ButtonVariant, H3, Paragraph} from '../components/ui';
+import {Wallet} from '../models/wallet';
 
 type BackupScreenProp = {
   onClose: () => void;
+  wallet: Wallet | null;
 };
 
-export const BackupScreen = ({onClose}: BackupScreenProp) => {
+export const BackupScreen = ({onClose, wallet}: BackupScreenProp) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-
+  const navigation = useNavigation();
   useEffect(() => {
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
       duration: 250,
     }).start();
-  }, []);
+  }, [fadeAnim]);
 
-  const fadeOut = () => {
+  const fadeOut = useCallback(() => {
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 0,
@@ -25,7 +28,36 @@ export const BackupScreen = ({onClose}: BackupScreenProp) => {
     }).start(() => {
       onClose();
     });
-  };
+  }, [fadeAnim, onClose]);
+
+  const onClickBackup = useCallback(() => {
+    if (wallet) {
+      onClose();
+      navigation.navigate('backup', {
+        address: wallet.address,
+      });
+    }
+  }, [navigation, wallet, fadeOut]);
+
+  const onClickSkip = useCallback(() => {
+    return Alert.alert(
+      'Proceed withut backup?',
+      'If you lose access to your wallet, we will not be able to restore your wallet if you do not make a backup',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Accept',
+          onPress: fadeOut,
+        },
+      ],
+    );
+  }, [fadeOut]);
+
+  if (!wallet) {
+    return null;
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -73,13 +105,13 @@ export const BackupScreen = ({onClose}: BackupScreenProp) => {
           <Button
             title="Backup now"
             variant={ButtonVariant.contained}
-            onPress={fadeOut}
+            onPress={onClickBackup}
             style={{marginBottom: 8}}
           />
           <Button
             title="I will risk it"
             variant={ButtonVariant.error}
-            onPress={fadeOut}
+            onPress={onClickSkip}
           />
         </View>
       </Animated.View>

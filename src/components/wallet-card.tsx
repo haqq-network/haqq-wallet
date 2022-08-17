@@ -1,6 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useNavigationContainerRef} from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {ArrowReceive, ArrowSend, Copy, IconButton, QRCode} from './ui';
@@ -12,7 +15,7 @@ export type BalanceProps = {
   wallet: Wallet;
 };
 export const WalletCard = ({wallet}: BalanceProps) => {
-  const navigation = useNavigationContainerRef<RootStackParamList>();
+  const navigation = useNavigation();
   const wallets = useWallets();
   const [balance, setBalance] = useState(0);
 

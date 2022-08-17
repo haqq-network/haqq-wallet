@@ -8,7 +8,6 @@ export const PopupHeader = ({
   options,
   back,
   navigation,
-  ...params
 }: NativeStackHeaderProps) => {
   return (
     <View style={page.container}>

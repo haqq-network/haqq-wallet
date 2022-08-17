@@ -1,6 +1,8 @@
 import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useState} from 'react';
 import {WalletCard} from './wallet-card';
+import {H2} from './ui';
+import {View} from 'react-native';
 
 export const Wallets = () => {
   const wallet = useWallets();
@@ -22,5 +24,12 @@ export const Wallets = () => {
     return null;
   }
 
-  return <WalletCard wallet={wallets[0]} />;
+  return (
+    <>
+      <View style={{marginBottom: 24}}>
+        <WalletCard wallet={wallets[0]} />
+      </View>
+      <H2 style={{marginVertical: 12, textAlign: 'left'}}>Transactions</H2>
+    </>
+  );
 };

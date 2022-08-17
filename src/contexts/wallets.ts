@@ -20,8 +20,8 @@ class Wallets extends EventEmitter {
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
+        console.log(rawWallet);
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
-        console.log(wallet);
         this.wallets.set(wallet.address, wallet);
 
         if (wallet.main) {
@@ -34,7 +34,17 @@ class Wallets extends EventEmitter {
       }
     }
 
-    this.emit('wallets', this.wallets.values());
+    this.emit('wallets');
+
+    const backupMnemonic = Array.from(this.wallets.values()).find(
+      w => !w.mnemonic_saved,
+    );
+
+    if (backupMnemonic) {
+      setTimeout(() => {
+        this.emit('backupMnemonic', backupMnemonic);
+      }, 5000);
+    }
 
     this.initialized = true;
   }
@@ -43,6 +53,7 @@ class Wallets extends EventEmitter {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
     wallet.name = name ?? wallet.name;
+    wallet.main = this.wallets.size === 0;
     this.wallets.set(wallet.address, wallet);
 
     await this.saveWallet(wallet);

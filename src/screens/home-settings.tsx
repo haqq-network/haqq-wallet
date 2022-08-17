@@ -6,6 +6,7 @@ import {useApp} from '../contexts/app';
 import {Spacer} from '../components/spacer';
 import {Container} from '../components/container';
 import SwitchToggle from 'react-native-switch-toggle';
+import {utils} from 'ethers';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 
@@ -37,6 +38,17 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
     navigation.replace('login');
   }, [wallet, app, navigation]);
 
+  const onPressCreateWallet = useCallback(() => {
+    wallet
+      .addWalletFromMnemonic(
+        utils.entropyToMnemonic(utils.randomBytes(16)),
+        'Addition account',
+      )
+      .then(wallet => {
+        console.log('done', wallet);
+      });
+  }, [wallet]);
+
   return (
     <Container>
       <Button title="Set pin" onPress={() => navigation.push('setPin')} />
@@ -44,6 +56,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         <Text>Use biometry</Text>
         <SwitchToggle switchOn={app.biometry} onPress={onToggleBiometry} />
       </View>
+      <Button title="create wallet" onPress={onPressCreateWallet} />
       <Button
         title="Import wallet"
         onPress={() => navigation.navigate('importWallet')}

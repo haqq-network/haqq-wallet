@@ -85,13 +85,16 @@ export class Wallet {
     return this.wallet.encrypt(password);
   }
 
-  async serialize(password: Bytes | string) {
+  async serialize(
+    password: Bytes | string,
+  ): Promise<Record<keyof WalletType, any>> {
     const wallet = await this.encrypt(password);
     return {
       address: this.address,
       name: this.name,
       data: wallet,
       mnemonic_saved: this.mnemonic_saved,
+      main: this.main,
     };
   }
 
