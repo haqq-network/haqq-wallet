@@ -31,9 +31,10 @@ import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {LoginScreen} from './screens/login';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
+import {RootStackParamList} from './types';
 // import {BackupScreen} from './screens/backup';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // const horizontalAnimation = {
 //   headerShown: false,
@@ -73,7 +74,7 @@ const AppTheme = {
 };
 
 export const App = () => {
-  const navigator = useNavigationContainerRef();
+  const navigator = useNavigationContainerRef<RootStackParamList>();
   const [appLoading, setAppLoading] = useState(true);
   useEffect(() => {
     app
@@ -98,13 +99,13 @@ export const App = () => {
 
               <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="details" component={DetailsScreen} />
-                <Stack.Screen name="details-qr" component={DetailsQrScreen} />
-                <Stack.Screen name="scan-qr" component={ScanQrScreen} />
+                <Stack.Screen name="detailsQr" component={DetailsQrScreen} />
+                <Stack.Screen name="scanQr" component={ScanQrScreen} />
                 <Stack.Screen
-                  name="import-wallet"
+                  name="importWallet"
                   component={ImportWalletScreen}
                 />
-                <Stack.Screen name="set-pin" component={SetPinScreen} />
+                <Stack.Screen name="setPin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
                 <Stack.Screen
                   name="transaction"

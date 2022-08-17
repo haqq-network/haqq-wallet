@@ -4,7 +4,7 @@ import {Icon, IconButton} from './ui';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {TEXT_BASE_1} from '../variables';
 
-export const Header = ({
+export const PopupHeader = ({
   options,
   back,
   navigation,

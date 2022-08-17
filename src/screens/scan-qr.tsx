@@ -1,12 +1,17 @@
 import React, {useCallback, useState} from 'react';
-import {RNCamera} from 'react-native-camera';
+import {
+  BarCodeReadEvent,
+  CameraStatus,
+  RecordAudioPermissionStatus,
+  RNCamera,
+} from 'react-native-camera';
 import {Text} from 'react-native';
 
 export const ScanQrScreen = () => {
   const [code, setCode] = useState('');
 
   const onSuccess = useCallback(
-    e => {
+    (e: BarCodeReadEvent) => {
       if (e.data && e.data !== code) {
         setCode(e.data);
       }
@@ -14,9 +19,15 @@ export const ScanQrScreen = () => {
     [code],
   );
 
-  const onStatusChange = useCallback(e => {
-    console.log('onStatusChange', e);
-  }, []);
+  const onStatusChange = useCallback(
+    (e: {
+      cameraStatus: keyof CameraStatus;
+      recordAudioPermissionStatus: keyof RecordAudioPermissionStatus;
+    }) => {
+      console.log('onStatusChange', e);
+    },
+    [],
+  );
 
   return (
     <RNCamera

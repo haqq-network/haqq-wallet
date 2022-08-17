@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Header} from '../components/header';
+import {PopupHeader} from '../components/popup-header';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {TransactionFormScreen} from './transaction-form';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
@@ -11,7 +11,7 @@ type TransactionScreenProp = CompositeScreenProps<any, any>;
 
 export const TransactionScreen = ({route}: TransactionScreenProp) => {
   return (
-    <TransactionStack.Navigator screenOptions={{header: Header}}>
+    <TransactionStack.Navigator screenOptions={{header: PopupHeader}}>
       <TransactionStack.Screen
         name={'transaction-form'}
         component={TransactionFormScreen}

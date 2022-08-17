@@ -8,7 +8,7 @@ import {app} from './app';
 
 class Wallets extends EventEmitter {
   private wallets: Map<string, Wallet> = new Map();
-  private main: Wallet | null;
+  private main: Wallet | null = null;
   private initialized: boolean = false;
 
   async init(): Promise<void> {

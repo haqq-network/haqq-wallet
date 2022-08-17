@@ -25,3 +25,21 @@ export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
   | TransactionListDate;
+
+export type RootStackParamList = {
+  home: undefined;
+  login: undefined;
+  scanQr: undefined;
+  signin: undefined;
+  setPin: undefined;
+  restore: undefined;
+  register: undefined;
+  transaction:
+    | undefined
+    | {
+        from: string;
+      };
+  importWallet: undefined;
+  details: {address: string};
+  detailsQr: {address: string};
+};

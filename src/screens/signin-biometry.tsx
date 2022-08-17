@@ -20,7 +20,6 @@ export const SignInBiometryScreen = ({
   route,
 }: SignInRepeatPinScreen) => {
   const {biometryType} = route.params;
-  console.log(biometryType);
   const app = useApp();
   const [error, setError] = useState('');
 
@@ -37,7 +36,9 @@ export const SignInBiometryScreen = ({
       await app.biometryAuth();
       onClickSkip();
     } catch (e) {
-      setError(e.message);
+      if (e instanceof Error) {
+        setError(e.message);
+      }
     }
   }, [app, onClickSkip]);
 
