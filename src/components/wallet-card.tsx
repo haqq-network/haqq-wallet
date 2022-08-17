@@ -5,6 +5,7 @@ import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {ArrowReceive, ArrowSend, Copy, IconButton, QRCode} from './ui';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
 
 export type BalanceProps = {
   wallet: Wallet;
@@ -71,11 +72,11 @@ export const WalletCard = ({wallet}: BalanceProps) => {
         </IconButton>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
-          <QRCode color="#FFFFFF" />
+          <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
         <IconButton onPress={onPressCopy} style={page.copyButton}>
           <Text style={page.text}>{formattedAddress}</Text>
-          <Copy color="#FFFFFF" />
+          <Copy color={GRAPHIC_BASE_3} />
         </IconButton>
       </View>
       {!wallet.mnemonic_saved && (
@@ -86,11 +87,11 @@ export const WalletCard = ({wallet}: BalanceProps) => {
       <Text style={page.balance}>{balance.toFixed(4)} ISLM</Text>
       <View style={page.buttonsContainer}>
         <IconButton style={page.button} onPress={onPressSend}>
-          <ArrowSend color="#FFFFFF" />
+          <ArrowSend color={GRAPHIC_BASE_3} />
           <Text style={page.buttonText}>Send</Text>
         </IconButton>
         <IconButton style={page.button} onPress={onPressSend}>
-          <ArrowReceive color="#FFFFFF" />
+          <ArrowReceive color={GRAPHIC_BASE_3} />
           <Text style={page.buttonText}>Receive</Text>
         </IconButton>
       </View>
@@ -116,7 +117,7 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
     lineHeight: 18,
-    color: '#FFFFFF',
+    color: TEXT_BASE_3,
   },
   balance: {
     fontFamily: 'El Messiri',
@@ -125,7 +126,7 @@ const page = StyleSheet.create({
     fontSize: 40,
     lineHeight: 54,
     marginBottom: 16,
-    color: '#FFFFFF',
+    color: TEXT_BASE_3,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -135,12 +136,12 @@ const page = StyleSheet.create({
   button: {
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: 'rgba(4, 212, 132, 0.5)',
+    backgroundColor: BG_4,
     borderRadius: 16,
     padding: 6,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: TEXT_BASE_3,
   },
   copyButton: {
     flexDirection: 'row',
@@ -151,7 +152,7 @@ const page = StyleSheet.create({
   cacheButton: {
     alignSelf: 'flex-start',
     marginBottom: 8,
-    backgroundColor: 'rgba(225, 99, 99, 0.8)',
+    backgroundColor: BG_5,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -159,6 +160,6 @@ const page = StyleSheet.create({
   cacheText: {
     fontSize: 12,
     lineHeight: 16,
-    color: '#FFFFFF',
+    color: TEXT_BASE_3,
   },
 });

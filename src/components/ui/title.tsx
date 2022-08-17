@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TextProps} from 'react-native';
 import * as React from 'react';
 import {useMemo} from 'react';
+import {TEXT_BASE_1} from '../../variables';
 
 export const Title = ({style, children, ...props}: TextProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
@@ -20,6 +21,6 @@ const page = StyleSheet.create({
     fontSize: 28,
     lineHeight: 38,
     textAlign: 'center',
-    color: '#2F2F2F',
+    color: TEXT_BASE_1,
   },
 });

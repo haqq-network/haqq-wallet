@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Icon, IconButton} from './ui';
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
+import {TEXT_BASE_1} from '../variables';
 
 export const Header = ({
   options,
@@ -40,7 +41,7 @@ const page = StyleSheet.create({
     fontSize: 18,
     lineHeight: 24,
     textAlign: 'center',
-    color: '#2F2F2F',
+    color: TEXT_BASE_1,
   },
   spacer: {
     width: 24,

@@ -10,9 +10,9 @@
 
 import React, {useEffect, useState} from 'react';
 import {
+  DefaultTheme,
   NavigationContainer,
   useNavigationContainerRef,
-  DefaultTheme,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {HomeScreen} from './screens/home';
@@ -30,7 +30,7 @@ import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {LoginScreen} from './screens/login';
-import {SignInFinishScreen} from './screens/signin-finish';
+import {BG_1, GRAPHIC_GREEN_1} from './variables';
 // import {BackupScreen} from './screens/backup';
 
 const Stack = createNativeStackNavigator();
@@ -67,8 +67,8 @@ const AppTheme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#04D484',
-    background: '#fff',
+    primary: GRAPHIC_GREEN_1,
+    background: BG_1,
   },
 };
 
