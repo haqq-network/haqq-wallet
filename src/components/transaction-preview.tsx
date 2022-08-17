@@ -1,20 +1,24 @@
 import React from 'react';
-import {Transaction} from '../models/transaction';
-import {Text, View} from 'react-native';
+import {TransactionList, TransactionSource} from '../types';
+import {TransactionDate} from './transactions/date';
+import {TransactionSend} from './transactions/send';
+import {TransactionReceive} from './transactions/receive';
 
 export type TransactionPreviewProps = {
-  transaction: Transaction & Realm.Object;
+  item: TransactionList;
 };
 
-export const TransactionPreview = ({transaction}: TransactionPreviewProps) => {
-  return (
-    <View style={{padding: 5}}>
-      <Text>{transaction.from}</Text>
-      <Text>{transaction.to}</Text>
-      <Text>
-        {(transaction.value + transaction.fee).toFixed(8)} (
-        {transaction.confirmed ? 'confirmed' : 'wait for confirmation'})
-      </Text>
-    </View>
-  );
+export const TransactionPreview = ({item}: TransactionPreviewProps) => {
+  console.log(item);
+
+  switch (item.source) {
+    case TransactionSource.date:
+      return <TransactionDate item={item} />;
+    case TransactionSource.send:
+      return <TransactionSend item={item} />;
+    case TransactionSource.receive:
+      return <TransactionReceive item={item} />;
+    default:
+      return null;
+  }
 };

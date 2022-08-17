@@ -61,7 +61,14 @@ export const WalletCard = ({wallet}: BalanceProps) => {
   return (
     <View style={page.container}>
       <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
-        <Text style={[page.text, {opacity: 0.8}]}>{wallet.name}</Text>
+        <IconButton
+          onPress={() =>
+            navigation.navigate('details', {address: wallet.address})
+          }>
+          <Text style={[page.text, {opacity: 0.8}]}>
+            {wallet.name || 'name'}
+          </Text>
+        </IconButton>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color="#FFFFFF" />

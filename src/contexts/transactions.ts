@@ -8,17 +8,17 @@ import {
   TransactionResponse,
 } from '@ethersproject/abstract-provider';
 import {realm} from '../models';
-import {Transaction} from '../models/transaction';
+import {TransactionType} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
 
 class Transactions extends EventEmitter {
-  private transactions: Realm.Results<Transaction & Realm.Object>;
+  private transactions: Realm.Results<TransactionType>;
 
   async init(): Promise<void> {
-    this.transactions = await realm.objects<Transaction>('Transaction');
+    this.transactions = realm.objects<TransactionType>('Transaction');
 
     for (const row of this.transactions) {
-      if (row.confirmed === false) {
+      if (!row.confirmed) {
         const receipt = await getDefaultNetwork().getTransactionReceipt(
           row.hash,
         );
@@ -35,8 +35,12 @@ class Transactions extends EventEmitter {
     }
   }
 
-  async getTransactions(account: string) {
-    return this.transactions.filtered(`account = '${account}'`);
+  getTransactions(account: string) {
+    if (!this.transactions) {
+      return [];
+    }
+
+    return Array.from(this.transactions.filtered(`account = '${account}'`));
   }
 
   async saveTransaction(
@@ -64,9 +68,9 @@ class Transactions extends EventEmitter {
     const provider = getDefaultNetwork();
     const wallet = wallets.getWallet(from);
     if (wallet) {
-      await wallet.connect(provider);
+      await wallet.wallet.connect(provider);
 
-      const transaction = await wallet.sendTransaction({
+      const transaction = await wallet.wallet.sendTransaction({
         to,
         value: utils.parseEther(amount.toString()),
         chainId: provider.chainId,

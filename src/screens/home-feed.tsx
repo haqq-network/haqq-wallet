@@ -1,51 +1,56 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, Modal} from 'react-native';
+import {FlatList, Modal} from 'react-native';
 import {useWallets} from '../contexts/wallets';
-import {WalletCard} from '../components/wallet-card';
 import {Container} from '../components/container';
-import {utils} from 'ethers';
 import {BackupScreen} from './backup-anim';
+import {useTransactions} from '../contexts/transactions';
+import {TransactionPreview} from '../components/transaction-preview';
+import {Wallets} from '../components/wallets';
+import {prepareTransactions} from '../utils';
+import {TransactionList} from '../types';
 
 type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 
-export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
-  const wallet = useWallets();
-  const [wallets, setWallets] = useState(wallet.getWallets());
+export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
+  const wallets = useWallets();
+  const transactions = useTransactions();
+
+  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
+    prepareTransactions(
+      wallets.getMain()?.address ?? '',
+      transactions.getTransactions(wallets.getMain()?.address ?? ''),
+    ),
+  );
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  const updateWallets = useCallback(() => {
-    setWallets(wallet.getWallets());
-  }, [wallet]);
-
-  const onPressCreateWallet = useCallback(() => {
-    const bytes = utils.randomBytes(16);
-    console.log(bytes);
-    wallet
-      .addWalletFromMnemonic(utils.entropyToMnemonic(bytes), 'Main account')
-      .then(() => {
-        console.log('done');
-      });
-  }, []);
-
   useEffect(() => {
-    wallet.on('wallets', updateWallets);
+    const callback = () => {
+      setTransactionsList(
+        prepareTransactions(
+          wallets.getMain()?.address ?? '',
+          transactions.getTransactions(wallets.getMain()?.address ?? ''),
+        ),
+      );
+    };
+
+    transactions.on('transactions', callback);
+    wallets.on('wallets', callback);
 
     return () => {
-      wallet.off('wallets', updateWallets);
+      transactions.off('transactions', callback);
+      wallets.off('wallets', callback);
     };
-  }, [updateWallets, wallet]);
+  }, [transactions, wallets]);
 
   return (
     <Container>
-      {wallets.map(w => (
-        <WalletCard wallet={w} key={w.address} />
-      ))}
-      <Button title="create wallet" onPress={onPressCreateWallet} />
-      <Button title="show modal" onPress={() => setModalVisible(true)} />
-      <Button
-        title="Import wallet"
-        onPress={() => navigation.navigate('import-wallet')}
+      <FlatList
+        ListHeaderComponent={Wallets}
+        data={transactionsList}
+        renderItem={TransactionPreview}
+        keyExtractor={item => item.hash}
       />
 
       <Modal
