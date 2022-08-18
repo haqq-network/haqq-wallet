@@ -12,16 +12,18 @@ export const SignInCreateWalletScreen = ({
   const wallet = useWallets();
 
   useEffect(() => {
-    wallet
-      .addWalletFromMnemonic(
-        utils.entropyToMnemonic(utils.randomBytes(16)),
-        'Main account',
-      )
-      .then(w => {
-        w.updateWallet({main: true});
-        navigation.navigate('signin-finish');
-      });
-  }, []);
+    requestAnimationFrame(() => {
+      wallet
+        .addWalletFromMnemonic(
+          utils.entropyToMnemonic(utils.randomBytes(16)),
+          'Main account',
+        )
+        .then(w => {
+          w.updateWallet({main: true});
+          navigation.navigate('signin-finish');
+        });
+    });
+  }, [navigation, wallet]);
 
   return <View />;
 };

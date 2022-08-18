@@ -77,8 +77,6 @@ class Transactions extends EventEmitter {
         chainId: provider.chainId,
       });
 
-      console.log(transaction);
-
       await this.saveTransaction(transaction, from, to, amount);
 
       return transaction;
