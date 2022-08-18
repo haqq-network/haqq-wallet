@@ -24,11 +24,13 @@ export const SignInBiometryScreen = ({
   const [error, setError] = useState('');
 
   const onClickSkip = useCallback(() => {
-    if (route.params.next === 'create') {
-      navigation.navigate('signin-create-wallet');
-    } else {
-      navigation.navigate('signin-restore-wallet');
-    }
+    requestAnimationFrame(() => {
+      if (route.params.next === 'create') {
+        navigation.navigate('signin-create-wallet');
+      } else {
+        navigation.navigate('signin-restore-wallet');
+      }
+    });
   }, [navigation, route.params.next]);
 
   const onClickEnable = useCallback(async () => {

@@ -15,7 +15,9 @@ class Transactions extends EventEmitter {
   private transactions: Realm.Results<TransactionType> | undefined;
 
   async init(): Promise<void> {
+    console.log('Transactions init');
     this.transactions = realm.objects<TransactionType>('Transaction');
+    console.log('Transactions loaded');
 
     for (const row of this.transactions) {
       if (!row.confirmed) {
@@ -33,6 +35,7 @@ class Transactions extends EventEmitter {
         }
       }
     }
+    console.log('Transactions done');
   }
 
   getTransactions(account: string) {

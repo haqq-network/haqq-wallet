@@ -3,6 +3,7 @@ import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
+import {decrypt, encrypt} from '../passworder';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -32,7 +33,9 @@ export class Wallet {
   main: boolean;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
+    console.log('Wallet fromMnemonic init');
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
+    console.log('Wallet fromMnemonic generated');
 
     return new Wallet(
       {
@@ -66,10 +69,11 @@ export class Wallet {
     provider: Provider,
     password: string,
   ) {
-    const tmp = await EthersWallet.fromEncryptedJson(data.data, password).then(
-      w => w.connect(provider),
-    );
-
+    console.log('Wallet fromCache init');
+    const decrypted = await decrypt(password, data.data);
+    console.log('Wallet fromCache decrypted');
+    const tmp = new EthersWallet(decrypted.privateKey, provider);
+    console.log('Wallet fromCache connected');
     return new Wallet(data, tmp);
   }
 
@@ -81,14 +85,15 @@ export class Wallet {
     this.main = data.main;
   }
 
-  encrypt(password: Bytes | string) {
-    return this.wallet.encrypt(password);
-  }
-
   async serialize(
     password: Bytes | string,
   ): Promise<Record<keyof WalletType, any>> {
-    const wallet = await this.encrypt(password);
+    console.log('Wallet serialize');
+    const wallet = await encrypt(password, {
+      privateKey: this.wallet.privateKey,
+      mnemonic: this.wallet.mnemonic,
+    });
+    console.log('Wallet serialize encrypted');
     return {
       address: this.address,
       name: this.name,

@@ -1,4 +1,4 @@
-import {Button, Text, View} from 'react-native';
+import {Alert, Button, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useWallets} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
@@ -46,6 +46,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
       )
       .then(wallet => {
         console.log('done', wallet);
+        Alert.prompt('wallet created', wallet.name);
       });
   }, [wallet]);
 
