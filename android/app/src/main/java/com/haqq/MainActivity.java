@@ -1,4 +1,4 @@
-package com.haqq;
+package com.haqq.testapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
