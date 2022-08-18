@@ -45,7 +45,6 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         'Addition account',
       )
       .then(wallet => {
-        console.log('done', wallet);
         Alert.prompt('wallet created', wallet.name);
       });
   }, [wallet]);

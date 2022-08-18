@@ -12,19 +12,15 @@ class Wallets extends EventEmitter {
   private initialized: boolean = false;
 
   async init(): Promise<void> {
-    console.log('Wallets init');
     if (this.initialized) {
       return;
     }
-    console.log('Wallets postinit');
+
     const provider = getDefaultNetwork();
-    console.log('Wallets start');
     const wallets = realm.objects<WalletType>('Wallet');
-    console.log('Wallets loaded', JSON.stringify(wallets));
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
-        console.log('Wallets rawWallet', rawWallet);
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
         this.wallets.set(wallet.address, wallet);
 
@@ -37,34 +33,30 @@ class Wallets extends EventEmitter {
         }
       }
     }
-    console.log('Wallets done');
     this.emit('wallets');
 
     const backupMnemonic = Array.from(this.wallets.values()).find(
       w => !w.mnemonic_saved,
     );
-    console.log('Wallets backup');
+
     if (backupMnemonic) {
       setTimeout(() => {
         this.emit('backupMnemonic', backupMnemonic);
       }, 5000);
     }
-    console.log('Wallets finish');
+
     this.initialized = true;
   }
 
   async addWalletFromMnemonic(mnemonic: string, name?: string) {
-    console.log('addWalletFromMnemonic init');
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
-    console.log('addWalletFromMnemonic created');
 
     wallet.name = name ?? wallet.name;
     wallet.main = this.wallets.size === 0;
     this.wallets.set(wallet.address, wallet);
 
     await this.saveWallet(wallet);
-    console.log('addWalletFromMnemonic saved');
 
     this.emit('wallets');
 
