@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "427318688544",
+    "project_id": "haqq-9558c",
+    "storage_bucket": "haqq-9558c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427318688544:android:588ac7ad45e488cf07f545",
+        "android_client_info": {
+          "package_name": "com.haqq.testapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427318688544-8s8vg0aotl2ehlm9kjaju26tq7ui5gma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV2-uaATbkeEUn4cH4TK3ZTx4YZP9JJts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427318688544-8s8vg0aotl2ehlm9kjaju26tq7ui5gma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

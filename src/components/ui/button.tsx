@@ -1,7 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
-import {GRAPHIC_GREEN_1, TEXT_BASE_3, TEXT_RED_1} from '../../variables';
+import {
+  GRAPHIC_GREEN_1,
+  GRAPHIC_SECOND_1,
+  TEXT_BASE_3,
+  TEXT_RED_1,
+  TEXT_SECOND_1,
+} from '../../variables';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
@@ -32,13 +38,26 @@ export const Button = ({
   }, [disabled, onPress]);
 
   const containerStyle = useMemo(
-    () => [page.container, page[`${variant}Container`] ?? null, style],
-    [style, variant],
+    () => [
+      page.container,
+      page[`${variant}Container`] ?? null,
+      disabled && `${variant}DisabledContainer` in page
+        ? page[`${variant}DisabledContainer`]
+        : null,
+      style,
+    ],
+    [disabled, style, variant],
   );
 
   const textStyle = useMemo(
-    () => [page.text, page[`${variant}Text`] ?? null],
-    [variant],
+    () => [
+      page.text,
+      page[`${variant}Text`] ?? null,
+      disabled && `${variant}DisabledText` in page
+        ? page[`${variant}DisabledText`]
+        : null,
+    ],
+    [disabled, variant],
   );
 
   return (
@@ -61,6 +80,9 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_GREEN_1,
     borderRadius: 16,
   },
+  containedDisabledContainer: {
+    backgroundColor: GRAPHIC_SECOND_1,
+  },
   textContainer: {},
   errorContainer: {},
   outlinedContainer: {
@@ -74,6 +96,9 @@ const page = StyleSheet.create({
   },
   containedText: {
     color: TEXT_BASE_3,
+  },
+  containedDisabledText: {
+    color: TEXT_SECOND_1,
   },
   textText: {},
   outlinedText: {},
