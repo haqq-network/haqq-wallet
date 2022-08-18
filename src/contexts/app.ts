@@ -35,7 +35,7 @@ class App extends EventEmitter {
 
   async init(): Promise<void> {
     this.user = await this.loadUser('username');
-    console.log('user', this.user);
+    console.log('user', JSON.stringify(this.user));
     if (!this.user.isLoaded) {
       return Promise.reject();
     }
@@ -116,7 +116,6 @@ class App extends EventEmitter {
   }
 
   async auth() {
-    console.log('auth');
     if (this.biometry) {
       try {
         await this.biometryAuth();

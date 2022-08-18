@@ -15,12 +15,12 @@ class Wallets extends EventEmitter {
     if (this.initialized) {
       return;
     }
+
     const provider = getDefaultNetwork();
     const wallets = realm.objects<WalletType>('Wallet');
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
-        console.log(rawWallet);
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
         this.wallets.set(wallet.address, wallet);
 
@@ -33,7 +33,6 @@ class Wallets extends EventEmitter {
         }
       }
     }
-
     this.emit('wallets');
 
     const backupMnemonic = Array.from(this.wallets.values()).find(
@@ -52,11 +51,13 @@ class Wallets extends EventEmitter {
   async addWalletFromMnemonic(mnemonic: string, name?: string) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
+
     wallet.name = name ?? wallet.name;
     wallet.main = this.wallets.size === 0;
     this.wallets.set(wallet.address, wallet);
 
     await this.saveWallet(wallet);
+
     this.emit('wallets');
 
     return wallet;

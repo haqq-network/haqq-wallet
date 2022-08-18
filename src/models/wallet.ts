@@ -3,6 +3,7 @@ import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
+import {decrypt, encrypt} from '../passworder';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -66,10 +67,8 @@ export class Wallet {
     provider: Provider,
     password: string,
   ) {
-    const tmp = await EthersWallet.fromEncryptedJson(data.data, password).then(
-      w => w.connect(provider),
-    );
-
+    const decrypted = await decrypt(password, data.data);
+    const tmp = new EthersWallet(decrypted.privateKey, provider);
     return new Wallet(data, tmp);
   }
 
@@ -81,14 +80,14 @@ export class Wallet {
     this.main = data.main;
   }
 
-  encrypt(password: Bytes | string) {
-    return this.wallet.encrypt(password);
-  }
-
   async serialize(
     password: Bytes | string,
   ): Promise<Record<keyof WalletType, any>> {
-    const wallet = await this.encrypt(password);
+    const wallet = await encrypt(password, {
+      privateKey: this.wallet.privateKey,
+      mnemonic: this.wallet.mnemonic,
+    });
+
     return {
       address: this.address,
       name: this.name,

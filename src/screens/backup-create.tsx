@@ -12,7 +12,6 @@ export const BackupCreateScreen = ({
   navigation,
   route,
 }: BackupCreateScreenProp) => {
-  console.log('create', route);
   const wallets = useWallets();
   const wallet = useMemo(
     () => wallets.getWallet(route.params.address),

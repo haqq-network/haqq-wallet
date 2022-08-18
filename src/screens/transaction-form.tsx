@@ -30,8 +30,6 @@ export const TransactionFormScreen = ({
     });
   }, [amount, from, navigation, to]);
 
-  console.log(checked);
-
   return (
     <View style={page.container}>
       <Text>Send transaction Screen</Text>

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Modal, StyleSheet, Text, View} from 'react-native';
+import {Modal, StyleSheet, Text, Vibration, View} from 'react-native';
 import {useApp} from '../contexts/app';
 import {Container} from '../components/container';
 import {Title} from '../components/ui';
@@ -35,6 +35,7 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
   }, [app, showPin]);
 
   const onKeyboard = useCallback((value: number) => {
+    Vibration.vibrate();
     if (value > -1) {
       setPin(p => `${p}${value}`);
     } else {

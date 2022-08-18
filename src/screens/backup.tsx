@@ -10,7 +10,6 @@ const BackupStack = createNativeStackNavigator();
 type BackupScreenProp = CompositeScreenProps<any, any>;
 
 export const BackupScreen = ({route}: BackupScreenProp) => {
-  console.log('route', route);
   return (
     <BackupStack.Navigator
       screenOptions={{header: PopupHeader, title: 'Backup wallet'}}>
