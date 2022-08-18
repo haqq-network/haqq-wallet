@@ -21,23 +21,17 @@ const _keyFromPassword = (password: string, salt: string) => {
 };
 const _encryptWithKey = async (text: string, keyBase64: string) => {
   try {
-    console.log('_encryptWithKey enter');
     const iv = await Aes.randomKey(16);
-    console.log('_encryptWithKey iv', text, iv, keyBase64);
-    return Aes.encrypt(text, keyBase64, iv, 'aes-256-cbc')
-      .then(cipher => ({
-        cipher,
-        iv,
-      }))
-      .catch(e => {
-        console.log('_encryptWithKey encrypt', e, e.message);
-      });
+    return Aes.encrypt(text, keyBase64, iv, 'aes-256-cbc').then(cipher => ({
+      cipher,
+      iv,
+    }));
   } catch (e) {
     console.log('_encryptWithKey catch', e);
   }
 };
 
-const _decryptWithKey = (encryptedData, key) =>
+const _decryptWithKey = (encryptedData, key: string) =>
   Aes.decrypt(encryptedData.cipher, key, encryptedData.iv, 'aes-256-cbc');
 
 /**
@@ -48,15 +42,10 @@ const _decryptWithKey = (encryptedData, key) =>
  * @returns - Promise resolving to stringified data
  */
 export const encrypt = async (password, object) => {
-  console.log('encrypt');
   const salt = _generateSalt(16);
-  console.log('encrypt salt');
   const key = await _keyFromPassword(password, salt);
-  console.log('encrypt key');
   const result = await _encryptWithKey(JSON.stringify(object), key);
-  console.log('encrypt result');
   result.salt = salt;
-  result.lib = 'original';
   return JSON.stringify(result);
 };
 
@@ -69,12 +58,8 @@ export const encrypt = async (password, object) => {
  * @returns - Promise resolving to decrypted data object
  */
 export const decrypt = async (password: string, encryptedString: string) => {
-  console.log('decrypt');
   const encryptedData = JSON.parse(encryptedString);
-  console.log('decrypt data');
   const key = await _keyFromPassword(password, encryptedData.salt);
-  console.log('decrypt key');
   const data = await _decryptWithKey(encryptedData, key);
-  console.log('decrypt result');
   return JSON.parse(data);
 };

@@ -40,7 +40,6 @@
     "react-native-aes-crypto": "^2.1.0",
     "react-native-camera": "^4.2.1",
     "react-native-crypto": "^2.2.0",
-    "react-native-fast-pbkdf2": "^0.3.1",
     "react-native-fs": "^2.20.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-keychain": "^8.1.1",

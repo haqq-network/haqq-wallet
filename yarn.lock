@@ -7769,11 +7769,6 @@ react-native-aes-crypto@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.1.0.tgz#9482fe914cae411f10ec43a53b2439a41b78cbbd"
   integrity sha512-2zvvQXMW2Qeg9B/VDetoB2w/cyVncPuEsoW1iUhZP12jAx+zbxsdf+A7inSf2XKMcRURfpsfUshQTb2beYUVhA==
 
-react-native-aes-gcm-crypto@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-aes-gcm-crypto/-/react-native-aes-gcm-crypto-0.2.2.tgz#e2c355e94a88ef52179dc22ae81988637b9ba7f1"
-  integrity sha512-vUwkh2zBiIQMRY191IfZhDmhHVT+nV4sxet/A0V8J35lVShCA4kuFzBL+QVB06RM2EF8oZSnNMt/uvFkKAx6QQ==
-
 react-native-camera@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-4.2.1.tgz#caf74081f055e89d7e9b0cd5108965d808c60e90"
@@ -7806,11 +7801,6 @@ react-native-crypto@^2.2.0:
     pbkdf2 "3.0.8"
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
-
-react-native-fast-pbkdf2@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-fast-pbkdf2/-/react-native-fast-pbkdf2-0.3.1.tgz#aa5a6750ba3aa8fe31c2bdd1e7fe7c19d3bf8be4"
-  integrity sha512-G+1EdQs+w7RhgZKXbodbGPy6zKxX3qdSe1YSh9B7x6qZLTd3dDI15R33faWoiQjrESepbfvX3M64UevBT6SDDA==
 
 react-native-fs@^2.20.0:
   version "2.20.0"
