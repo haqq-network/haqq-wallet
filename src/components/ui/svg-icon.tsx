@@ -70,6 +70,23 @@ export const Copy = ({style, color}: SvgProps) => (
   </Svg>
 );
 
+export const CopyConfirmation = ({style, color}: SvgProps) => (
+  <Svg
+    width="72"
+    height="72"
+    viewBox="0 0 72 72"
+    fill="none"
+    style={style}
+    color={color}>
+    <Path
+      d="M10 37.2L29.2298 57.4788C29.4873 57.7502 29.9277 57.7225 30.149 57.4208L62 14"
+      stroke="currentColor"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
+  </Svg>
+);
+
 export const QRCode = ({style, color}: SvgProps) => (
   <Svg
     width="16"

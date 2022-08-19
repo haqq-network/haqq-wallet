@@ -1,5 +1,6 @@
 export * from './button';
 export * from './checkbox';
+export * from './copy-button';
 export * from './h2';
 export * from './h3';
 export * from './icon';

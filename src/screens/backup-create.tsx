@@ -7,6 +7,7 @@ import {
   ButtonVariant,
   Checkbox,
   Copy,
+  CopyButton,
   IconButton,
   InfoBlock,
   InfoBlockType,
@@ -32,10 +33,6 @@ export const BackupCreateScreen = ({
     () => wallets.getWallet(route.params.address),
     [route.params.address, wallets],
   );
-
-  const onPressCopy = useCallback(() => {
-    Clipboard.setString(wallet?.wallet.mnemonic.phrase ?? '');
-  }, [wallet]);
 
   return (
     <Container>
@@ -63,13 +60,13 @@ export const BackupCreateScreen = ({
               ))}
           </View>
         </View>
-        <IconButton
-          onPress={onPressCopy}
+        <CopyButton
+          value={wallet?.wallet.mnemonic.phrase ?? ''}
           style={{
-            flexDirection: 'row',
             paddingVertical: 12,
             paddingHorizontal: 32,
             marginHorizontal: 4,
+            alignSelf: 'center',
           }}>
           <Copy color={TEXT_GREEN_1} />
           <Text
@@ -82,7 +79,7 @@ export const BackupCreateScreen = ({
             }}>
             Copy
           </Text>
-        </IconButton>
+        </CopyButton>
       </Spacer>
       <InfoBlock type={InfoBlockType.warning} style={{marginBottom: 20}}>
         If you lose your recovery phrase, you will be unable to access your
