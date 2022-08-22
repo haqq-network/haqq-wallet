@@ -68,7 +68,11 @@ export class Wallet {
     password: string,
   ) {
     const decrypted = await decrypt(password, data.data);
-    const tmp = new EthersWallet(decrypted.privateKey, provider);
+    const tmp = decrypted.mnemonic
+      ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
+          provider,
+        )
+      : new EthersWallet(decrypted.privateKey, provider);
     return new Wallet(data, tmp);
   }
 

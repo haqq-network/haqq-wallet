@@ -10,7 +10,10 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
   return (
     <Container>
       <Spacer />
-      <Title style={{marginBottom: 76}}>Congratulations!</Title>
+      <Title>Сongratulations!</Title>
+      <Title style={{marginBottom: 56}}>
+        You've successfully protected your wallet.
+      </Title>
       <Button
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}

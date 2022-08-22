@@ -1,15 +1,17 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {
-  useNavigation,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
-import {ArrowReceive, ArrowSend, Copy, IconButton, QRCode} from './ui';
-import Clipboard from '@react-native-clipboard/clipboard';
+import {
+  ArrowReceive,
+  ArrowSend,
+  Copy,
+  CopyButton,
+  IconButton,
+  QRCode,
+} from './ui';
 import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
-import {RootStackParamList} from '../types';
 
 export type BalanceProps = {
   wallet: Wallet;
@@ -51,10 +53,6 @@ export const WalletCard = ({wallet}: BalanceProps) => {
     navigation.navigate('transaction', {from: wallet.address});
   }, [wallet, navigation]);
 
-  const onPressCopy = useCallback(() => {
-    Clipboard.setString(wallet.address);
-  }, [wallet.address]);
-
   const onPressQR = useCallback(() => {
     navigation.navigate('detailsQr', {address: wallet.address});
   }, [navigation, wallet.address]);
@@ -78,10 +76,10 @@ export const WalletCard = ({wallet}: BalanceProps) => {
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
-        <IconButton onPress={onPressCopy} style={page.copyButton}>
+        <CopyButton style={page.copyButton} value={wallet.address}>
           <Text style={page.text}>{formattedAddress}</Text>
           <Copy color={GRAPHIC_BASE_3} />
-        </IconButton>
+        </CopyButton>
       </View>
       {!wallet.mnemonic_saved && (
         <IconButton onPress={onClickBackup} style={page.cacheButton}>
