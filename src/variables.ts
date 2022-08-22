@@ -15,6 +15,7 @@ export const GRAPHIC_GREEN_1 = '#04D484';
 export const GRAPHIC_SECOND_1 = '#EFEFEF';
 
 export const BG_1 = '#FFFFFF';
+export const BG_2 = '#EEF9F5';
 export const BG_3 = '#F4F8F8';
 export const BG_4 = 'rgba(4, 212, 132, 0.5)';
 export const BG_5 = 'rgba(225, 99, 99, 0.8)';

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Container} from '../components/container';
@@ -8,7 +8,6 @@ import {
   Checkbox,
   Copy,
   CopyButton,
-  IconButton,
   InfoBlock,
   InfoBlockType,
   Paragraph,
@@ -18,7 +17,6 @@ import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {MnemonicWord} from '../components/mnemonic-word';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 type BackupCreateScreenProp = CompositeScreenProps<any, any>;
 
