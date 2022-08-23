@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
+  StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -60,8 +61,8 @@ export const App = () => {
       });
 
     app.on('resetWallet', () => {
+      navigator.dispatch(StackActions.replace('login'));
       app.emit('showPin', false);
-      navigator.navigate('login');
       setAppLoading(false);
     });
   }, [navigator]);
@@ -94,8 +95,8 @@ export const App = () => {
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
             </Stack.Navigator>
-            <SplashScreen visible={appLoading} />
           </NavigationContainer>
+          <SplashScreen visible={appLoading} />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>
