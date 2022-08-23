@@ -68,9 +68,9 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
   return (
     <Modal animationType="fade" visible={modalVisible}>
       {showPin ? (
-        <Container style={{alignItems: 'center'}}>
-          <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Title style={{marginBottom: 60}}>Welcome to ISLM Wallet</Title>
+        <Container style={page.container}>
+          <Spacer style={page.spacer}>
+            <Title style={page.title}>Welcome to ISLM Wallet</Title>
             <View style={page.dots}>
               <View style={[page.dot, pin.length >= 1 && page.active]} />
               <View style={[page.dot, pin.length >= 2 && page.active]} />
@@ -109,14 +109,8 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
 };
 
 const page = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 10,
-  },
+  container: {alignItems: 'center'},
+  spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -147,4 +141,5 @@ const page = StyleSheet.create({
     textAlign: 'center',
     padding: 2,
   },
+  title: {marginBottom: 60},
 });
