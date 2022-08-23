@@ -58,6 +58,12 @@ export const App = () => {
       .finally(() => {
         setAppLoading(false);
       });
+
+    app.on('resetWallet', () => {
+      app.emit('showPin', false);
+      navigator.navigate('login');
+      setAppLoading(false);
+    });
   }, [navigator]);
 
   return (
@@ -88,8 +94,8 @@ export const App = () => {
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
             </Stack.Navigator>
+            <SplashScreen visible={appLoading} />
           </NavigationContainer>
-          <SplashScreen visible={appLoading} />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>
