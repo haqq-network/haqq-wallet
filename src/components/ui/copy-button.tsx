@@ -1,9 +1,16 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, } from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { Container } from '../container';
-import { CopyConfirmation } from './svg-icon';
-import { GRAPHIC_BASE_2 } from '../../variables';
+import {Container} from '../container';
+import {CopyConfirmation} from './svg-icon';
+import {GRAPHIC_BASE_2} from '../../variables';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;
@@ -52,7 +59,7 @@ const page = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  overlay: { justifyContent: 'center', alignItems: 'center', flex: 1 },
+  overlay: {justifyContent: 'center', alignItems: 'center', flex: 1},
   background: {
     backgroundColor: 'rgba(229, 229, 234, 0.82)',
     width: 155,
@@ -61,7 +68,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
   },
-  icon: { marginBottom: 19 },
+  icon: {marginBottom: 19},
   text: {
     fontWeight: '600',
     fontSize: 16,

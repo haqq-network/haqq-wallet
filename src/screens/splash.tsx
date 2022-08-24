@@ -1,18 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, Vibration, View, } from 'react-native';
-import { useApp } from '../contexts/app';
-import { Container } from '../components/container';
-import { Title } from '../components/ui';
-import { Spacer } from '../components/spacer';
-import { NumericKeyboard } from '../components/numeric-keyboard';
-import { GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1 } from '../variables';
-import { RestorePassword } from '../components/restore-password';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Vibration,
+  View,
+} from 'react-native';
+import {useApp} from '../contexts/app';
+import {Container} from '../components/container';
+import {Title} from '../components/ui';
+import {Spacer} from '../components/spacer';
+import {NumericKeyboard} from '../components/numeric-keyboard';
+import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {RestorePassword} from '../components/restore-password';
 
 type SplashScreenProp = {
   visible: boolean;
 };
 
-export const SplashScreen = ({ visible }: SplashScreenProp) => {
+export const SplashScreen = ({visible}: SplashScreenProp) => {
   const app = useApp();
   const [showPin, setShowPin] = useState(false);
   const [showRestore, setShowRestore] = useState(false);
@@ -102,8 +109,8 @@ export const SplashScreen = ({ visible }: SplashScreenProp) => {
 };
 
 const page = StyleSheet.create({
-  container: { alignItems: 'center' },
-  spacer: { justifyContent: 'center', alignItems: 'center' },
+  container: {alignItems: 'center'},
+  spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -115,11 +122,11 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_BASE_4,
     margin: 5,
     borderRadius: 9,
-    transform: [{ scale: 0.66 }],
+    transform: [{scale: 0.66}],
   },
   active: {
     backgroundColor: TEXT_GREEN_1,
-    transform: [{ scale: 1 }],
+    transform: [{scale: 1}],
   },
   additionButton: {
     flex: 1,
@@ -134,5 +141,5 @@ const page = StyleSheet.create({
     textAlign: 'center',
     padding: 2,
   },
-  title: { marginBottom: 60 },
+  title: {marginBottom: 60},
 });

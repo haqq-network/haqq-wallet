@@ -1,8 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { Alert, Animated, Dimensions, Image, View } from 'react-native';
-import { Button, ButtonVariant, H3, Paragraph } from '../components/ui';
-import { Wallet } from '../models/wallet';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef} from 'react';
+import {Alert, Animated, Dimensions, Image, View} from 'react-native';
+import {Button, ButtonVariant, H3, Paragraph} from '../components/ui';
+import {Wallet} from '../models/wallet';
 
 type BackupScreenProp = {
   onClose: () => void;
@@ -10,7 +10,7 @@ type BackupScreenProp = {
 };
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 
-export const BackupScreen = ({ onClose, wallet }: BackupScreenProp) => {
+export const BackupScreen = ({onClose, wallet}: BackupScreenProp) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   useEffect(() => {
@@ -61,7 +61,7 @@ export const BackupScreen = ({ onClose, wallet }: BackupScreenProp) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <Animated.View
         style={{
           position: 'absolute',
@@ -97,12 +97,12 @@ export const BackupScreen = ({ onClose, wallet }: BackupScreenProp) => {
           }}>
           <Image
             source={warningImage}
-            style={{ width: Dimensions.get('window').width - 80 }}
+            style={{width: Dimensions.get('window').width - 80}}
           />
-          <H3 style={{ marginBottom: 8 }}>
+          <H3 style={{marginBottom: 8}}>
             Backup your wallet, keep your assets safe
           </H3>
-          <Paragraph style={{ marginBottom: 28, textAlign: 'center' }}>
+          <Paragraph style={{marginBottom: 28, textAlign: 'center'}}>
             If your recovery phrase is misplaced or stolen, it's the equivalent
             of losing your wallet. It's the only way to access your wallet if
             you forget your account password.
@@ -111,7 +111,7 @@ export const BackupScreen = ({ onClose, wallet }: BackupScreenProp) => {
             title="Backup now"
             variant={ButtonVariant.contained}
             onPress={onClickBackup}
-            style={{ marginBottom: 8 }}
+            style={{marginBottom: 8}}
           />
           <Button
             title="I will risk it"

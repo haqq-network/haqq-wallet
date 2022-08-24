@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Icon, IconButton } from './ui';
+import {StyleSheet, Text, View} from 'react-native';
+import {Icon, IconButton} from './ui';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;

@@ -1,6 +1,6 @@
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 
-const { Aes } = NativeModules;
+const {Aes} = NativeModules;
 
 /**
  * Class that exposes two public methods: Encrypt and Decrypt

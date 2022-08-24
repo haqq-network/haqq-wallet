@@ -1,6 +1,11 @@
-import { TransactionList, TransactionListReceive, TransactionListSend, TransactionSource, } from './types';
-import { TransactionType } from './models/transaction';
-import { formatISO } from 'date-fns';
+import {
+  TransactionList,
+  TransactionListReceive,
+  TransactionListSend,
+  TransactionSource,
+} from './types';
+import {TransactionType} from './models/transaction';
+import {formatISO} from 'date-fns';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -20,7 +25,7 @@ export function prepareTransactions(
     new Map();
 
   for (const row of transactions) {
-    const result = formatISO(row.createdAt, { representation: 'date' });
+    const result = formatISO(row.createdAt, {representation: 'date'});
 
     hash.set(
       result,
@@ -38,13 +43,13 @@ export function prepareTransactions(
     .map(d => new Date(d))
     .sort((a, b) => +b - +b)
     .reduce((memo: TransactionList[], key) => {
-      const k = formatISO(key, { representation: 'date' });
+      const k = formatISO(key, {representation: 'date'});
       const tmp = (hash.get(k) ?? []).sort(
         (a, b) => +b.createdAt - +a.createdAt,
       );
 
       return memo.concat(
-        { date: key, source: TransactionSource.date, hash: k },
+        {date: key, source: TransactionSource.date, hash: k},
         ...tmp,
       );
     }, []);

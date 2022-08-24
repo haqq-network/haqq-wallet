@@ -1,9 +1,9 @@
-import { Text } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { Container } from '../components/container';
-import { Button, ButtonVariant } from '../components/ui';
-import { useTransactions } from '../contexts/transactions';
+import {Text} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {Container} from '../components/container';
+import {Button, ButtonVariant} from '../components/ui';
+import {useTransactions} from '../contexts/transactions';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -12,7 +12,7 @@ export const TransactionConfirmationScreen = ({
   route,
 }: SendTransactionScreenProp) => {
   const transactions = useTransactions();
-  const { from, to, amount } = route.params;
+  const {from, to, amount} = route.params;
 
   const [estimateFee, setEstimateFee] = useState(0);
 

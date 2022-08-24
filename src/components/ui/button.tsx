@@ -1,6 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity, ViewProps } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
-import { useCallback, useMemo } from 'react';
+import {useCallback, useMemo} from 'react';
 import {
   BG_2,
   GRAPHIC_GREEN_1,

@@ -1,17 +1,23 @@
-import React, { useCallback, useRef } from 'react';
+import React, {useCallback, useRef} from 'react';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { Button, Text, TouchableOpacity, useWindowDimensions, View, } from 'react-native';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {
+  Button,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import CameraRoll from '@react-native-community/cameraroll';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
 
-export const DetailsQrScreen = ({ route }: DetailsQrScreenProp) => {
+export const DetailsQrScreen = ({route}: DetailsQrScreenProp) => {
   const svg = useRef();
-  const { address } = route.params;
-  const { width } = useWindowDimensions();
+  const {address} = route.params;
+  const {width} = useWindowDimensions();
 
   const onSaveQR = useCallback(() => {
     svg.current?.toDataURL(data => {
@@ -32,7 +38,7 @@ export const DetailsQrScreen = ({ route }: DetailsQrScreenProp) => {
     });
   }, [svg]);
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <QRCode
         value={address}
         size={width - 30}

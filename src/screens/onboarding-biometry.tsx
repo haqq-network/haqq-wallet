@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { Container } from '../components/container';
-import { Button, ButtonVariant, Icon, Paragraph, Title } from '../components/ui';
-import { Spacer } from '../components/spacer';
-import { useApp } from '../contexts/app';
+import React, {useCallback, useState} from 'react';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {Container} from '../components/container';
+import {Button, ButtonVariant, Icon, Paragraph, Title} from '../components/ui';
+import {Spacer} from '../components/spacer';
+import {useApp} from '../contexts/app';
 
 type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
 
@@ -19,7 +19,7 @@ export const OnboardingBiometryScreen = ({
   navigation,
   route,
 }: OnboardingBiometryScreenProps) => {
-  const { biometryType } = route.params;
+  const {biometryType} = route.params;
   const app = useApp();
   const [error, setError] = useState('');
 
@@ -42,23 +42,23 @@ export const OnboardingBiometryScreen = ({
 
   return (
     <Container>
-      <Spacer style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
         {biometryIcons[biometryType] && (
-          <Icon name={biometryIcons[biometryType]} style={{ marginBottom: 40 }} />
+          <Icon name={biometryIcons[biometryType]} style={{marginBottom: 40}} />
         )}
-        <Title style={{ marginBottom: 12 }}>
+        <Title style={{marginBottom: 12}}>
           Enable {biometryTypes[biometryType]}
         </Title>
-        <Paragraph style={{ textAlign: 'center' }}>Safe and fast</Paragraph>
+        <Paragraph style={{textAlign: 'center'}}>Safe and fast</Paragraph>
         {error && <Paragraph>{error}</Paragraph>}
       </Spacer>
       <Button
-        style={{ marginBottom: 16 }}
+        style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
         title={`Enable ${biometryTypes[biometryType]}`}
         onPress={onClickEnable}
       />
-      <Button style={{ marginBottom: 16 }} title="Skip" onPress={onClickSkip} />
+      <Button style={{marginBottom: 16}} title="Skip" onPress={onClickSkip} />
     </Container>
   );
 };

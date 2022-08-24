@@ -1,6 +1,6 @@
-import { StyleSheet, TouchableOpacity, ViewProps } from 'react-native';
+import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
-import { useCallback, useMemo } from 'react';
+import {useCallback, useMemo} from 'react';
 
 export type IconButtonProps = ViewProps & {
   onPress: () => void;

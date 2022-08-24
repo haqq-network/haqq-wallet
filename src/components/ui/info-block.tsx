@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { BG_6, TEXT_YELLOW_1 } from '../../variables';
+import React, {useMemo} from 'react';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {BG_6, TEXT_YELLOW_1} from '../../variables';
 
 export enum InfoBlockType {
   warning = 'warning',
@@ -13,7 +13,7 @@ export type InfoBlockProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export const InfoBlock = ({ children, icon, type, style }: InfoBlockProps) => {
+export const InfoBlock = ({children, icon, type, style}: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [page.container, page[`${type}Container`], style],
     [style, type],
@@ -41,7 +41,7 @@ const page = StyleSheet.create({
   warningContainer: {
     backgroundColor: BG_6,
   },
-  iconText: { marginLeft: 12 },
+  iconText: {marginLeft: 12},
   text: {
     flex: 1,
     fontSize: 14,

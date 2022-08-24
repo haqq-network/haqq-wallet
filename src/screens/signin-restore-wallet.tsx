@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { utils } from 'ethers';
-import { useWallets } from '../contexts/wallets';
-import { Container } from '../components/container';
-import { Button, ButtonVariant, Paragraph, Textarea } from '../components/ui';
+import React, {useCallback, useMemo, useState} from 'react';
+import {KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {utils} from 'ethers';
+import {useWallets} from '../contexts/wallets';
+import {Container} from '../components/container';
+import {Button, ButtonVariant, Paragraph, Textarea} from '../components/ui';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInRestoreScreen = ({ navigation }: SignInRestoreScreenProp) => {
+export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
   const [seed, setSeed] = useState('');
   const wallets = useWallets();
 
@@ -21,10 +21,10 @@ export const SignInRestoreScreen = ({ navigation }: SignInRestoreScreenProp) => 
     const wallet = utils.isValidMnemonic(seed.trim())
       ? await wallets.addWalletFromMnemonic(seed.trim(), 'Main account', false)
       : await wallets.addWalletFromPrivateKey(
-        seed.trim(),
-        'Main account',
-        false,
-      );
+          seed.trim(),
+          'Main account',
+          false,
+        );
     wallet.mnemonic_saved = true;
     navigation.replace('onboarding-setup-pin');
   }, [seed, wallets, navigation]);

@@ -1,8 +1,8 @@
 import Realm from 'realm';
-import { WalletSchema } from './wallet';
-import { UserSchema } from './user';
-import { TransactionSchema } from './transaction';
-import { utils } from 'ethers';
+import {WalletSchema} from './wallet';
+import {UserSchema} from './user';
+import {TransactionSchema} from './transaction';
+import {utils} from 'ethers';
 
 export const realm = new Realm({
   schema: [WalletSchema, UserSchema, TransactionSchema],

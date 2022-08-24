@@ -1,4 +1,4 @@
-import { TransactionType } from './models/transaction';
+import {TransactionType} from './models/transaction';
 
 export enum TransactionSource {
   unknown,
@@ -41,9 +41,9 @@ export type RootStackParamList = {
   transaction:
     | undefined
     | {
-    from: string;
-  };
+        from: string;
+      };
   importWallet: undefined;
-  details: { address: string };
-  detailsQr: { address: string };
+  details: {address: string};
+  detailsQr: {address: string};
 };

@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
-import { BG_8, TEXT_BASE_1, TEXT_BASE_2 } from '../../variables';
+import React, {useMemo} from 'react';
+import {StyleSheet, Text, TextInput, TextInputProps, View} from 'react-native';
+import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
 
 type TextareaProps = Omit<TextInputProps, 'multiline'>;
 

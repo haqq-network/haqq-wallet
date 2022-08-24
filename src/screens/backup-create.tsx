@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { Container } from '../components/container';
+import React, {useMemo, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
@@ -13,10 +13,10 @@ import {
   Paragraph,
   Title,
 } from '../components/ui';
-import { Spacer } from '../components/spacer';
-import { useWallets } from '../contexts/wallets';
-import { BG_3, TEXT_BASE_2, TEXT_GREEN_1 } from '../variables';
-import { MnemonicWord } from '../components/mnemonic-word';
+import {Spacer} from '../components/spacer';
+import {useWallets} from '../contexts/wallets';
+import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {MnemonicWord} from '../components/mnemonic-word';
 
 type BackupCreateScreenProp = CompositeScreenProps<any, any>;
 
@@ -39,7 +39,7 @@ export const BackupCreateScreen = ({
         Write down or copy these words in the right order and save them
         somewhere safe.
       </Paragraph>
-      <Spacer style={{ justifyContent: 'center' }}>
+      <Spacer style={{justifyContent: 'center'}}>
         <View style={page.mnemonics}>
           <View style={page.column}>
             {wallet?.wallet.mnemonic.phrase
@@ -79,11 +79,11 @@ export const BackupCreateScreen = ({
           </Text>
         </CopyButton>
       </Spacer>
-      <InfoBlock type={InfoBlockType.warning} style={{ marginBottom: 20 }}>
+      <InfoBlock type={InfoBlockType.warning} style={{marginBottom: 20}}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
-      <View style={{ marginBottom: 20, flexDirection: 'row' }}>
+      <View style={{marginBottom: 20, flexDirection: 'row'}}>
         <Checkbox value={checked} onPress={setChecked} />
         <Text
           style={{
@@ -103,7 +103,7 @@ export const BackupCreateScreen = ({
         variant={ButtonVariant.contained}
         disabled={!checked}
         onPress={() =>
-          navigation.navigate('backupVerify', { address: route.params.address })
+          navigation.navigate('backupVerify', {address: route.params.address})
         }
       />
     </Container>
@@ -117,5 +117,5 @@ const page = StyleSheet.create({
     padding: 20,
     borderRadius: 16,
   },
-  column: { flex: 1 },
+  column: {flex: 1},
 });
