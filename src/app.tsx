@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
+  StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -58,6 +59,12 @@ export const App = () => {
       .finally(() => {
         setAppLoading(false);
       });
+
+    app.on('resetWallet', () => {
+      navigator.dispatch(StackActions.replace('login'));
+      app.emit('showPin', false);
+      setAppLoading(false);
+    });
   }, [navigator]);
 
   return (
