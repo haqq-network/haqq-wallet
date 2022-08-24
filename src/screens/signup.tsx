@@ -45,6 +45,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         name="onboarding-finish"
         component={OnboardingFinishScreen}
         options={{title}}
+        initialParams={{action: 'create'}}
       />
     </SignUpStack.Navigator>
   );

@@ -55,6 +55,7 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
         name="onboarding-finish"
         component={OnboardingFinishScreen}
         options={{title}}
+        initialParams={{action: 'restore'}}
       />
     </SignInStack.Navigator>
   );
