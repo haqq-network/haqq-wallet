@@ -18,7 +18,7 @@ export const Loading = () => {
       app.off('loading', subscription);
     };
   }, [app]);
-  console.log('modal', modal, !!modal);
+
   return (
     <Modal visible={!!modal} animationType="fade">
       <View
