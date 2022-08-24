@@ -31,6 +31,7 @@ export type RootStackParamList = {
   login: undefined;
   scanQr: undefined;
   signin: undefined;
+  signup: undefined;
   setPin: undefined;
   restore: undefined;
   register: undefined;

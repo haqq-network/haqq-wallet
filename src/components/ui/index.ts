@@ -5,6 +5,7 @@ export * from './h2';
 export * from './h3';
 export * from './icon';
 export * from './icon-button';
+export * from './textarea';
 export * from './title';
 export * from './info-block';
 export * from './paragraph';

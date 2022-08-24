@@ -20,3 +20,6 @@ export const BG_3 = '#F4F8F8';
 export const BG_4 = 'rgba(4, 212, 132, 0.5)';
 export const BG_5 = 'rgba(225, 99, 99, 0.8)';
 export const BG_6 = 'rgba(247, 193, 90, 0.3)';
+export const BG_8 = '#F4F5F8';
+
+export const MAIN_ACCOUNT_NAME = 'Main account';

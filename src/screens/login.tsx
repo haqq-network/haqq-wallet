@@ -23,7 +23,7 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
         title="Create a wallet"
-        onPress={() => navigation.navigate('signin', {next: 'create'})}
+        onPress={() => navigation.navigate('signup', {next: 'create'})}
       />
       <Button
         style={{marginBottom: 16}}

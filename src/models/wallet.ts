@@ -31,6 +31,7 @@ export class Wallet {
   mnemonic_saved: boolean;
   wallet: ethers.Wallet;
   main: boolean;
+  saved: boolean = false;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);

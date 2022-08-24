@@ -5,7 +5,7 @@ import {Button, ButtonVariant, Icon, Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {useApp} from '../contexts/app';
 
-type SignInRepeatPinScreen = CompositeScreenProps<any, any>;
+type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
 
 const biometryTypes: Record<string, string> = {
   FaceID: 'Face ID',
@@ -15,23 +15,19 @@ const biometryIcons: Record<string, string> = {
   FaceID: 'face-id',
 };
 
-export const SignInBiometryScreen = ({
+export const OnboardingBiometryScreen = ({
   navigation,
   route,
-}: SignInRepeatPinScreen) => {
+}: OnboardingBiometryScreenProps) => {
   const {biometryType} = route.params;
   const app = useApp();
   const [error, setError] = useState('');
 
   const onClickSkip = useCallback(() => {
     requestAnimationFrame(() => {
-      if (route.params.next === 'create') {
-        navigation.navigate('signin-create-wallet');
-      } else {
-        navigation.navigate('signin-restore-wallet');
-      }
+      navigation.navigate('onboarding-store-wallet');
     });
-  }, [navigation, route.params.next]);
+  }, [navigation]);
 
   const onClickEnable = useCallback(async () => {
     try {
