@@ -22,6 +22,7 @@ class Wallets extends EventEmitter {
     for (const rawWallet of wallets) {
       try {
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
+        wallet.saved = true;
         this.wallets.set(wallet.address, wallet);
 
         if (wallet.main) {
