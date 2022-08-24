@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useApp} from '../contexts/app';
 import {Container} from '../components/container';
-import {Title} from '../components/ui';
+import {Title, Waiting} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
@@ -93,14 +93,8 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
           />
         </Container>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#04D484',
-          }}>
-          <Text>Splash Screen</Text>
+        <View style={page.splash}>
+          <Waiting />
         </View>
       )}
       {showRestore && <RestorePassword onClose={() => setShowRestore(false)} />}
@@ -109,6 +103,12 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
 };
 
 const page = StyleSheet.create({
+  splash: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#04D484',
+  },
   container: {alignItems: 'center'},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
