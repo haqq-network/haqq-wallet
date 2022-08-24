@@ -1,34 +1,42 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {KeyboardAvoidingView, StyleSheet, TextInput} from 'react-native';
+import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
-import {Button, ButtonVariant, Title} from '../components/ui';
+import {Button, ButtonVariant, Paragraph, Textarea} from '../components/ui';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 
 export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
-  const [mnemonic, setMnemonic] = useState('');
-  const wallet = useWallets();
+  const [seed, setSeed] = useState('');
+  const wallets = useWallets();
 
-  const checked = useMemo(() => utils.isValidMnemonic(mnemonic), [mnemonic]);
+  const checked = useMemo(
+    () => utils.isValidMnemonic(seed.trim()) || utils.isHexString(seed.trim()),
+    [seed],
+  );
 
   const onDone = useCallback(async () => {
-    await wallet.addWalletFromMnemonic(mnemonic);
-
-    navigation.replace('signin-finish');
-  }, [wallet, mnemonic, navigation]);
+    const wallet = utils.isValidMnemonic(seed.trim())
+      ? await wallets.addWalletFromMnemonic(seed.trim(), 'Main account', false)
+      : await wallets.addWalletFromPrivateKey(
+          seed.trim(),
+          'Main account',
+          false,
+        );
+    wallet.mnemonic_saved = true;
+    navigation.replace('onboarding-setup-pin');
+  }, [seed, wallets, navigation]);
 
   return (
-    <Container style={{justifyContent: 'center'}}>
+    <Container>
+      <Paragraph style={page.intro}>Recovery phrase or Private key</Paragraph>
       <KeyboardAvoidingView behavior="height">
-        <Title>Restore Screen</Title>
-        <TextInput
+        <Textarea
           style={page.input}
-          placeholder={'Mnemonic'}
-          onChangeText={setMnemonic}
-          multiline
+          placeholder="Backup phrase"
+          onChangeText={setSeed}
         />
         <Button
           disabled={!checked}
@@ -42,12 +50,10 @@ export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
 };
 
 const page = StyleSheet.create({
+  intro: {
+    marginBottom: 32,
+  },
   input: {
-    padding: 10,
-    borderColor: '#000000',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 8,
   },
 });

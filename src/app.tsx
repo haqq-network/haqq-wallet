@@ -34,6 +34,7 @@ import {LoginScreen} from './screens/login';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
+import {SignUpScreen} from './screens/signup';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -87,6 +88,7 @@ export const App = () => {
                 />
                 <Stack.Screen name="setPin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
+                <Stack.Screen name="signup" component={SignUpScreen} />
                 <Stack.Screen
                   name="transaction"
                   component={TransactionScreen}

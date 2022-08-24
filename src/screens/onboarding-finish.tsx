@@ -5,9 +5,11 @@ import {Button, ButtonVariant, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import Lottie from 'lottie-react-native';
 
-type SignInFinishScreenProp = CompositeScreenProps<any, any>;
+type OnboardingFinishScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInFinishScreen = ({navigation}: SignInFinishScreenProp) => {
+export const OnboardingFinishScreen = ({
+  navigation,
+}: OnboardingFinishScreenProp) => {
   return (
     <Container>
       <Spacer>

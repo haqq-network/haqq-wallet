@@ -48,7 +48,11 @@ class Wallets extends EventEmitter {
     this.initialized = true;
   }
 
-  async addWalletFromMnemonic(mnemonic: string, name?: string) {
+  async addWalletFromMnemonic(
+    mnemonic: string,
+    name?: string,
+    save: boolean = true,
+  ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
 
@@ -56,21 +60,31 @@ class Wallets extends EventEmitter {
     wallet.main = this.wallets.size === 0;
     this.wallets.set(wallet.address, wallet);
 
-    await this.saveWallet(wallet);
+    if (save) {
+      await this.saveWallet(wallet);
+    }
 
     this.emit('wallets');
 
     return wallet;
   }
 
-  async addWalletFromPrivateKey(privateKey: string, name = '') {
+  async addWalletFromPrivateKey(
+    privateKey: string,
+    name = '',
+    save: boolean = true,
+  ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
     wallet.name = name;
-    this.wallets.set(wallet.address, wallet);
 
-    await this.saveWallet(wallet);
+    this.wallets.set(wallet.address, wallet);
+    if (save) {
+      await this.saveWallet(wallet);
+    }
     this.emit('wallets');
+
+    return wallet;
   }
 
   async removeWallet(address: string) {
@@ -93,6 +107,8 @@ class Wallets extends EventEmitter {
     realm.write(() => {
       realm.create('Wallet', serialized);
     });
+
+    wallet.saved = true;
   }
 
   async clean() {

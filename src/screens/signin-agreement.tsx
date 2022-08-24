@@ -1,17 +1,21 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+import {Dimensions} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import Lottie from 'lottie-react-native';
 import {Container} from '../components/container';
 import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
-import {Dimensions} from 'react-native';
+import Lottie from 'lottie-react-native';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
 const windowWidth = Dimensions.get('window').width;
+
 export const SignInAgreementScreen = ({
   navigation,
-  route,
 }: SignInAgreementScreenProp) => {
+  const onDone = useCallback(() => {
+    navigation.navigate('signin-restore-wallet');
+  }, [navigation]);
+
   return (
     <Container>
       <Spacer>
@@ -21,26 +25,24 @@ export const SignInAgreementScreen = ({
             width: windowWidth - 30,
             height: windowWidth - 30,
           }}
-          source={require('../../assets/animations/first-screen-animation.json')}
+          source={require('../../assets/animations/success-animation.json')}
           autoPlay
-          loop
+          loop={false}
         />
       </Spacer>
-      <Title style={{marginBottom: 4}}>Islm - DeFi Wallet</Title>
+      <Title style={{marginBottom: 4}}>
+        Do you have your recovery phrase or private key?
+      </Title>
       <Paragraph style={{marginBottom: 58, textAlign: 'center'}}>
-        Islm Wallet does not store, transfer, transmit, convert, hold, or
-        otherwise interact with any of the Virtual Currencies you may use with
-        the Islm Wallet App. Any transfer or transaction occurs on the Haqq
-        Network(s). Islm Wallet cannot block, freeze or take any kind of control
-        over your Virtual Currency.
+        The recovery phrase is a 12-word phrase that you received when you
+        created the wallet. A private key is a key created by you in the
+        application
       </Paragraph>
       <Button
         style={{marginBottom: 16}}
         variant={ButtonVariant.contained}
         title="Agree"
-        onPress={() =>
-          navigation.navigate('signin-pin', {next: route.params.next})
-        }
+        onPress={onDone}
       />
       <Paragraph>
         By clicking Agree you agree to the Terms of Service and Privacy Policy
