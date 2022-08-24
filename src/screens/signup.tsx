@@ -1,62 +1,52 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SignUpAgreementScreen} from './signup-agreement';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {PopupHeader} from '../components/popup-header';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {SignInRestoreScreen} from './signin-restore-wallet';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
-import {SignInAgreementScreen} from './signin-agreement';
 import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 
-const SignInStack = createNativeStackNavigator();
-type SignInScreenProp = CompositeScreenProps<any, any>;
+const SignUpStack = createNativeStackNavigator();
+type SignUpScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInScreen = ({route}: SignInScreenProp) => {
-  const title = 'Restore wallet';
+export const SignUpScreen = ({route}: SignUpScreenProp) => {
+  const title = 'Create a wallet';
   return (
-    <SignInStack.Navigator
-      screenOptions={{
-        header: PopupHeader,
-      }}>
-      <SignInStack.Screen
-        name="signin-restore-intro"
-        component={SignInAgreementScreen}
-        options={{title}}
+    <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
+      <SignUpStack.Screen
+        name="signin-agreement"
+        component={SignUpAgreementScreen}
         initialParams={{next: route.params.next}}
       />
-      <SignInStack.Screen
-        name="signin-restore-wallet"
-        component={SignInRestoreScreen}
-        options={{title}}
-      />
-      <SignInStack.Screen
+      <SignUpStack.Screen
         name="onboarding-setup-pin"
         component={OnboardingSetupPinScreen}
         options={{title}}
       />
-      <SignInStack.Screen
+      <SignUpStack.Screen
         name="onboarding-repeat-pin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
       />
-      <SignInStack.Screen
+      <SignUpStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
         options={{title}}
       />
-      <SignInStack.Screen
+      <SignUpStack.Screen
         name="onboarding-store-wallet"
         component={OnboardingStoreWalletScreen}
         options={{title}}
       />
-      <SignInStack.Screen
+      <SignUpStack.Screen
         name="onboarding-finish"
         component={OnboardingFinishScreen}
         options={{title}}
-        initialParams={{action: 'restore'}}
+        initialParams={{action: 'create'}}
       />
-    </SignInStack.Navigator>
+    </SignUpStack.Navigator>
   );
 };

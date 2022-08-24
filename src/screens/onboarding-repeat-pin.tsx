@@ -9,17 +9,17 @@ import TouchID from 'react-native-touch-id';
 import {useApp} from '../contexts/app';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
-type SignInRepeatPinScreen = CompositeScreenProps<any, any>;
+type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
 
 const optionalConfigObject = {
   unifiedErrors: false,
   passcodeFallback: false,
 };
 
-export const SignInRepeatPinScreen = ({
+export const OnboardingRepeatPinScreen = ({
   navigation,
   route,
-}: SignInRepeatPinScreen) => {
+}: OnboardingRepeatPinScreenProps) => {
   const app = useApp();
   const {currentPin} = route.params;
   const [pin, setPin] = useState('');
@@ -40,17 +40,12 @@ export const SignInRepeatPinScreen = ({
         .then(() =>
           TouchID.isSupported(optionalConfigObject)
             .then(biometryType => {
-              navigation.navigate('signin-biometry', {
-                next: route.params.next,
+              navigation.navigate('onboarding-biometry', {
                 biometryType: biometryType,
               });
             })
             .catch(_error => {
-              if (route.params.next === 'create') {
-                navigation.navigate('signin-create-wallet');
-              } else {
-                navigation.navigate('signin-restore-wallet');
-              }
+              navigation.navigate('onboarding-store-wallet');
             }),
         );
     }

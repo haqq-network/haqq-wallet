@@ -7,9 +7,11 @@ import {Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
-type SignInPinScreenProp = CompositeScreenProps<any, any>;
+type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInPinScreen = ({navigation, route}: SignInPinScreenProp) => {
+export const OnboardingSetupPinScreen = ({
+  navigation,
+}: OnboardingSetupPinScreenProp) => {
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
     Vibration.vibrate();
@@ -22,12 +24,11 @@ export const SignInPinScreen = ({navigation, route}: SignInPinScreenProp) => {
 
   useEffect(() => {
     if (pin.length === 6) {
-      navigation.navigate('signin-repeat-pin', {
+      navigation.navigate('onboarding-repeat-pin', {
         currentPin: pin,
-        next: route.params.next,
       });
     }
-  }, [pin]);
+  }, [navigation, pin]);
 
   return (
     <Container style={{alignItems: 'center'}}>
