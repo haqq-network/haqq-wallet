@@ -5,6 +5,7 @@ import {utils} from 'ethers';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
 import {Button, ButtonVariant, Paragraph, Textarea} from '../components/ui';
+import {MAIN_ACCOUNT_NAME} from '../variables';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 
@@ -19,10 +20,14 @@ export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
 
   const onDone = useCallback(async () => {
     const wallet = utils.isValidMnemonic(seed.trim())
-      ? await wallets.addWalletFromMnemonic(seed.trim(), 'Main account', false)
+      ? await wallets.addWalletFromMnemonic(
+          seed.trim(),
+          MAIN_ACCOUNT_NAME,
+          false,
+        )
       : await wallets.addWalletFromPrivateKey(
           seed.trim(),
-          'Main account',
+          MAIN_ACCOUNT_NAME,
           false,
         );
     wallet.mnemonic_saved = true;

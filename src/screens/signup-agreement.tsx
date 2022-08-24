@@ -7,6 +7,7 @@ import {Spacer} from '../components/spacer';
 import {Dimensions} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {utils} from 'ethers';
+import {MAIN_ACCOUNT_NAME} from '../variables';
 
 type SignUpAgreementScreenProp = CompositeScreenProps<any, any>;
 const windowWidth = Dimensions.get('window').width;
@@ -19,7 +20,7 @@ export const SignUpAgreementScreen = ({
     requestAnimationFrame(() => {
       wallets.addWalletFromMnemonic(
         utils.entropyToMnemonic(utils.randomBytes(16)),
-        'Main account',
+        MAIN_ACCOUNT_NAME,
         false,
       );
     });
