@@ -1,9 +1,9 @@
 import ethers from 'ethers';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {Provider} from '@ethersproject/abstract-provider';
-import {Bytes} from '@ethersproject/bytes';
-import {realm} from './index';
-import {decrypt, encrypt} from '../passworder';
+import { Wallet as EthersWallet } from '@ethersproject/wallet';
+import { Provider } from '@ethersproject/abstract-provider';
+import { Bytes } from '@ethersproject/bytes';
+import { realm } from './index';
+import { decrypt, encrypt } from '../passworder';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -71,8 +71,8 @@ export class Wallet {
     const decrypted = await decrypt(password, data.data);
     const tmp = decrypted.mnemonic
       ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
-          provider,
-        )
+        provider,
+      )
       : new EthersWallet(decrypted.privateKey, provider);
     return new Wallet(data, tmp);
   }

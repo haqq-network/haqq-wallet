@@ -1,13 +1,13 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
-import {utils} from 'ethers';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { useWallets } from '../contexts/wallets';
+import { useApp } from '../contexts/app';
+import { utils } from 'ethers';
 
 type RestoreScreenProp = CompositeScreenProps<any, any>;
 
-export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
+export const RestoreScreen = ({ navigation }: RestoreScreenProp) => {
   const [password, setPassword] = useState('');
   const [mnemonic, setMnemonic] = useState('');
   const wallet = useWallets();
@@ -28,7 +28,7 @@ export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
 
   return (
     <View style={page.container}>
-      <View style={{flex: 1}} />
+      <View style={{ flex: 1 }} />
       <Text>Restore Screen</Text>
       <TextInput
         style={page.input}
@@ -43,7 +43,7 @@ export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
         secureTextEntry
       />
       <Button disabled={!checked} title="Done" onPress={onDone} />
-      <View style={{flex: 1}} />
+      <View style={{ flex: 1 }} />
     </View>
   );
 };

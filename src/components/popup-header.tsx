@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Icon, IconButton} from './ui';
-import {NativeStackHeaderProps} from '@react-navigation/native-stack';
-import {TEXT_BASE_1} from '../variables';
+import { StyleSheet, Text, View } from 'react-native';
+import { Icon, IconButton } from './ui';
+import { NativeStackHeaderProps } from '@react-navigation/native-stack';
+import { TEXT_BASE_1 } from '../variables';
 
 export const PopupHeader = ({
   options,
@@ -14,7 +14,7 @@ export const PopupHeader = ({
       {back ? (
         <IconButton
           onPress={navigation.goBack}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <Icon name={'arrow-back'} />
         </IconButton>
       ) : (

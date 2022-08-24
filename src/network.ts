@@ -1,4 +1,4 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 const provider = new ethers.providers.StaticJsonRpcProvider(
   'http://159.69.6.222:8545',

@@ -1,15 +1,12 @@
-import {EventEmitter} from 'events';
-import {createContext, useContext} from 'react';
-import {getDefaultNetwork} from '../network';
-import {utils} from 'ethers';
-import {wallets} from './wallets';
-import {
-  TransactionRequest,
-  TransactionResponse,
-} from '@ethersproject/abstract-provider';
-import {realm} from '../models';
-import {TransactionType} from '../models/transaction';
-import {Deferrable} from '@ethersproject/properties';
+import { EventEmitter } from 'events';
+import { createContext, useContext } from 'react';
+import { getDefaultNetwork } from '../network';
+import { utils } from 'ethers';
+import { wallets } from './wallets';
+import { TransactionRequest, TransactionResponse, } from '@ethersproject/abstract-provider';
+import { realm } from '../models';
+import { TransactionType } from '../models/transaction';
+import { Deferrable } from '@ethersproject/properties';
 
 class Transactions extends EventEmitter {
   private transactions: Realm.Results<TransactionType> | undefined;

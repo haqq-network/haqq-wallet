@@ -1,13 +1,13 @@
-import React, {useCallback, useState} from 'react';
-import {Button, Text} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container} from '../components/container';
-import {useApp} from '../contexts/app';
+import React, { useCallback, useState } from 'react';
+import { Button, Text } from 'react-native';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { NumericKeyboard } from '../components/numeric-keyboard';
+import { Container } from '../components/container';
+import { useApp } from '../contexts/app';
 
 type PinScreenProp = CompositeScreenProps<any, any>;
 
-export const SetPinScreen = ({navigation}: PinScreenProp) => {
+export const SetPinScreen = ({ navigation }: PinScreenProp) => {
   const app = useApp();
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {

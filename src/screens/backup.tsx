@@ -1,23 +1,23 @@
 import React from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {PopupHeader} from '../components/popup-header';
-import {BackupCreateScreen} from './backup-create';
-import {BackupFinishScreen} from './backup-finish';
-import {BackupVerifyScreen} from './backup-verify';
-import {BackupWarningScreen} from './backup-warning';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { PopupHeader } from '../components/popup-header';
+import { BackupCreateScreen } from './backup-create';
+import { BackupFinishScreen } from './backup-finish';
+import { BackupVerifyScreen } from './backup-verify';
+import { BackupWarningScreen } from './backup-warning';
 
 const BackupStack = createNativeStackNavigator();
 type BackupScreenProp = CompositeScreenProps<any, any>;
 
-export const BackupScreen = ({route}: BackupScreenProp) => {
+export const BackupScreen = ({ route }: BackupScreenProp) => {
   return (
     <BackupStack.Navigator
-      screenOptions={{header: PopupHeader, title: 'Backup wallet'}}>
+      screenOptions={{ header: PopupHeader, title: 'Backup wallet' }}>
       <BackupStack.Screen
         name={'backupWarning'}
         component={BackupWarningScreen}
-        initialParams={{address: route.params.address}}
+        initialParams={{ address: route.params.address }}
       />
       <BackupStack.Screen
         name={'backupCreate'}

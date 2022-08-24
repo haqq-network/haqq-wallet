@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
-import {TEXT_BASE_2} from '../variables';
+import { StyleSheet, Text, View } from 'react-native';
+import { TEXT_BASE_2 } from '../variables';
 import React from 'react';
 
 export type MnemonicWordProps = {
@@ -7,7 +7,7 @@ export type MnemonicWordProps = {
   index: number;
 };
 
-export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
+export const MnemonicWord = ({ word, index }: MnemonicWordProps) => {
   return (
     <View style={page.container}>
       <Text style={page.index}>{index}</Text>

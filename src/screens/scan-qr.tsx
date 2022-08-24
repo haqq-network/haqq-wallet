@@ -1,11 +1,6 @@
-import React, {useCallback, useState} from 'react';
-import {
-  BarCodeReadEvent,
-  CameraStatus,
-  RecordAudioPermissionStatus,
-  RNCamera,
-} from 'react-native-camera';
-import {Text} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { BarCodeReadEvent, CameraStatus, RecordAudioPermissionStatus, RNCamera, } from 'react-native-camera';
+import { Text } from 'react-native';
 
 export const ScanQrScreen = () => {
   const [code, setCode] = useState('');
@@ -31,7 +26,7 @@ export const ScanQrScreen = () => {
 
   return (
     <RNCamera
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       captureAudio={false}
       type={RNCamera.Constants.Type.back}
       onBarCodeRead={onSuccess}

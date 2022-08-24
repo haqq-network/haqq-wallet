@@ -1,11 +1,11 @@
-import React, {useCallback, useState} from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {useApp} from '../contexts/app';
+import React, { useCallback, useState } from 'react';
+import { Button, Text, TextInput, View } from 'react-native';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { useApp } from '../contexts/app';
 
 type Create1ScreenProp = CompositeScreenProps<any, any>;
 
-export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
+export const RegisterScreen = ({ navigation }: Create1ScreenProp) => {
   const [password, setPassword] = useState<string>('');
   const app = useApp();
 
@@ -19,7 +19,7 @@ export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
   }, [password, app, navigation]);
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Create 1 Screen</Text>
       <TextInput
         placeholder={'Password'}

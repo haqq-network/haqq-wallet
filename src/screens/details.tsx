@@ -1,14 +1,14 @@
-import React, {useCallback} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { Alert, Button, Text, TouchableOpacity, View } from 'react-native';
+import { CompositeScreenProps } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
+import { useWallets } from '../contexts/wallets';
+import { Container } from '../components/container';
 
 type DetailsScreenProp = CompositeScreenProps<any, any>;
 
-export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
-  const {address} = route.params;
+export const DetailsScreen = ({ navigation, route }: DetailsScreenProp) => {
+  const { address } = route.params;
   const wallets = useWallets();
 
   const onRemove = useCallback(() => {
@@ -39,13 +39,13 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
       </TouchableOpacity>
       <Button
         title="Send transaction"
-        onPress={() => navigation.navigate('transaction', {from: address})}
+        onPress={() => navigation.navigate('transaction', { from: address })}
       />
       <Button
         title="Show qr"
-        onPress={() => navigation.navigate('detailsQr', {address: address})}
+        onPress={() => navigation.navigate('detailsQr', { address: address })}
       />
-      <View style={{flex: 1}} />
+      <View style={{ flex: 1 }} />
       <Button title="Remove account" onPress={onRemove} />
     </Container>
   );

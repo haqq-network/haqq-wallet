@@ -1,16 +1,16 @@
-import {Alert, Button, Text, View} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useWallets} from '../contexts/wallets';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {useApp} from '../contexts/app';
-import {Spacer} from '../components/spacer';
-import {Container} from '../components/container';
+import { Alert, Button, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useWallets } from '../contexts/wallets';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { useApp } from '../contexts/app';
+import { Spacer } from '../components/spacer';
+import { Container } from '../components/container';
 import SwitchToggle from 'react-native-switch-toggle';
-import {utils} from 'ethers';
+import { utils } from 'ethers';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 
-export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
+export const HomeSettingsScreen = ({ navigation }: HomeSettingsScreenProp) => {
   const wallet = useWallets();
   const app = useApp();
   const [biometry, setBiometry] = useState(app.biometry);

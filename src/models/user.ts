@@ -1,4 +1,4 @@
-import {addMinutes} from 'date-fns';
+import { addMinutes } from 'date-fns';
 
 export const UserSchema = {
   name: 'User',

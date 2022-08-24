@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, ImageProps, Omit} from 'react-native';
+import { Image, ImageProps, Omit } from 'react-native';
 
 const icons = {
   'arrow-back': require('../../../assets/images/arrow-back.png'),
@@ -11,6 +11,6 @@ const icons = {
 export type IconProps = Omit<ImageProps, 'source'> & {
   name: keyof typeof icons;
 };
-export const Icon = ({name, ...props}: IconProps) => {
+export const Icon = ({ name, ...props }: IconProps) => {
   return <Image source={icons[name]} {...props} />;
 };

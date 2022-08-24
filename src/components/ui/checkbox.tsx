@@ -1,15 +1,15 @@
-import React, {useCallback} from 'react';
-import Svg, {Circle, Path} from 'react-native-svg';
-import {TouchableOpacity} from 'react-native';
-import {GRAPHIC_GREEN_1} from '../../variables';
+import React, { useCallback } from 'react';
+import Svg, { Circle, Path } from 'react-native-svg';
+import { TouchableOpacity } from 'react-native';
+import { GRAPHIC_GREEN_1 } from '../../variables';
 
-const CheckboxEmpty = ({color}: {color: string}) => (
+const CheckboxEmpty = ({ color }: { color: string }) => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>
     <Circle cx="12" cy="12" r="11.5" stroke="currentColor" />
   </Svg>
 );
 
-const CheckboxFilled = ({color}: {color: string}) => (
+const CheckboxFilled = ({ color }: { color: string }) => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>
     <Circle cx="12" cy="12" r="12" fill="currentColor" />
     <Path
@@ -24,7 +24,7 @@ export type CheckboxProps = {
   onPress: (value: boolean) => void;
 };
 
-export const Checkbox = ({value, onPress}: CheckboxProps) => {
+export const Checkbox = ({ value, onPress }: CheckboxProps) => {
   const onPressCheckbox = useCallback(() => {
     onPress(!value);
   }, [value, onPress]);

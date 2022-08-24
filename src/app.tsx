@@ -8,33 +8,28 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
-import {
-  DefaultTheme,
-  NavigationContainer,
-  StackActions,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen} from './screens/home';
-import {wallets, WalletsContext} from './contexts/wallets';
-import {DetailsScreen} from './screens/details';
-import {SplashScreen} from './screens/splash';
-import {RegisterScreen} from './screens/register';
-import {RestoreScreen} from './screens/restore';
-import {ImportWalletScreen} from './screens/import-wallet';
-import {DetailsQrScreen} from './screens/details-qr';
-import {app, AppContext} from './contexts/app';
-import {SetPinScreen} from './screens/set-pin';
-import {ScanQrScreen} from './screens/scan-qr';
-import {SignInScreen} from './screens/signin';
-import {transactions, TransactionsContext} from './contexts/transactions';
-import {TransactionScreen} from './screens/transaction';
-import {LoginScreen} from './screens/login';
-import {BG_1, GRAPHIC_GREEN_1} from './variables';
-import {RootStackParamList} from './types';
-import {BackupScreen} from './screens/backup';
-import {SignUpScreen} from './screens/signup';
+import React, { useEffect, useState } from 'react';
+import { DefaultTheme, NavigationContainer, StackActions, useNavigationContainerRef, } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeScreen } from './screens/home';
+import { wallets, WalletsContext } from './contexts/wallets';
+import { DetailsScreen } from './screens/details';
+import { SplashScreen } from './screens/splash';
+import { RegisterScreen } from './screens/register';
+import { RestoreScreen } from './screens/restore';
+import { ImportWalletScreen } from './screens/import-wallet';
+import { DetailsQrScreen } from './screens/details-qr';
+import { app, AppContext } from './contexts/app';
+import { SetPinScreen } from './screens/set-pin';
+import { ScanQrScreen } from './screens/scan-qr';
+import { SignInScreen } from './screens/signin';
+import { transactions, TransactionsContext } from './contexts/transactions';
+import { TransactionScreen } from './screens/transaction';
+import { LoginScreen } from './screens/login';
+import { BG_1, GRAPHIC_GREEN_1 } from './variables';
+import { RootStackParamList } from './types';
+import { BackupScreen } from './screens/backup';
+import { SignUpScreen } from './screens/signup';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -73,11 +68,11 @@ export const App = () => {
       <TransactionsContext.Provider value={transactions}>
         <WalletsContext.Provider value={wallets}>
           <NavigationContainer ref={navigator} theme={AppTheme}>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="login" component={LoginScreen} />
 
-              <Stack.Group screenOptions={{presentation: 'modal'}}>
+              <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="details" component={DetailsScreen} />
                 <Stack.Screen name="detailsQr" component={DetailsQrScreen} />

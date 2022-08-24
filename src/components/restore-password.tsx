@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Alert,
   Animated,
@@ -10,10 +10,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {BG_1, GRAPHIC_BASE_4, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
-import {Button, ButtonVariant, CloseCircle, IconButton} from './ui';
-import {useWallets} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
+import { BG_1, GRAPHIC_BASE_4, TEXT_BASE_1, TEXT_BASE_2 } from '../variables';
+import { Button, ButtonVariant, CloseCircle, IconButton } from './ui';
+import { useWallets } from '../contexts/wallets';
+import { useApp } from '../contexts/app';
 
 const h = Dimensions.get('window').height;
 
@@ -21,7 +21,7 @@ type RestorePasswordProps = {
   onClose: () => void;
 };
 
-export const RestorePassword = ({onClose}: RestorePasswordProps) => {
+export const RestorePassword = ({ onClose }: RestorePasswordProps) => {
   const wallet = useWallets();
   const app = useApp();
   const pan = useRef(new Animated.Value(1)).current;
@@ -111,14 +111,14 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         style={[
           {
             flex: 1,
-            transform: [{translateY: Animated.multiply(pan, h)}],
+            transform: [{ translateY: Animated.multiply(pan, h) }],
             justifyContent: 'flex-end',
           },
         ]}
         {...panResponder.panHandlers}>
-        <View style={{flex: 1}}>
-          <TouchableWithoutFeedback style={{flex: 1}} onPress={onClosePopup}>
-            <View style={{flex: 1}} />
+        <View style={{ flex: 1 }}>
+          <TouchableWithoutFeedback style={{ flex: 1 }} onPress={onClosePopup}>
+            <View style={{ flex: 1 }} />
           </TouchableWithoutFeedback>
           <SafeAreaView style={page.box}>
             <View style={page.boxInner}>

@@ -1,10 +1,10 @@
-import {createContext, useContext} from 'react';
-import {EventEmitter} from 'events';
-import {utils} from 'ethers';
-import {realm} from '../models';
-import {getDefaultNetwork} from '../network';
-import {Wallet, WalletType} from '../models/wallet';
-import {app} from './app';
+import { createContext, useContext } from 'react';
+import { EventEmitter } from 'events';
+import { utils } from 'ethers';
+import { realm } from '../models';
+import { getDefaultNetwork } from '../network';
+import { Wallet, WalletType } from '../models/wallet';
+import { app } from './app';
 
 class Wallets extends EventEmitter {
   private wallets: Map<string, Wallet> = new Map();

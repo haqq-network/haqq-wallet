@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
-import {View} from 'react-native';
+import React, { useEffect } from 'react';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { useWallets } from '../contexts/wallets';
+import { View } from 'react-native';
 
 type OnboardingStoreWalletScreenProp = CompositeScreenProps<any, any>;
 

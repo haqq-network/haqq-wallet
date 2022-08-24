@@ -1,15 +1,15 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {FlatList, Modal} from 'react-native';
-import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
-import {BackupScreen} from './backup-notification';
-import {useTransactions} from '../contexts/transactions';
-import {TransactionPreview} from '../components/transaction-preview';
-import {Wallets} from '../components/wallets';
-import {prepareTransactions} from '../utils';
-import {TransactionList} from '../types';
-import {Wallet} from '../models/wallet';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { FlatList, Modal } from 'react-native';
+import { useWallets } from '../contexts/wallets';
+import { Container } from '../components/container';
+import { BackupScreen } from './backup-notification';
+import { useTransactions } from '../contexts/transactions';
+import { TransactionPreview } from '../components/transaction-preview';
+import { Wallets } from '../components/wallets';
+import { prepareTransactions } from '../utils';
+import { TransactionList } from '../types';
+import { Wallet } from '../models/wallet';
 
 type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 
@@ -52,7 +52,8 @@ export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
     };
   }, [transactions, wallets]);
 
-  useEffect(() => {}, [wallets]);
+  useEffect(() => {
+  }, [wallets]);
 
   return (
     <Container>

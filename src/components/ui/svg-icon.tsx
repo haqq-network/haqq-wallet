@@ -1,8 +1,8 @@
 import React from 'react';
-import Svg, {Path} from 'react-native-svg';
-import {SvgProps} from 'react-native-svg/src/elements/Svg';
+import Svg, { Path } from 'react-native-svg';
+import { SvgProps } from 'react-native-svg/src/elements/Svg';
 
-export const Alert = ({style, color}: SvgProps) => (
+export const Alert = ({ style, color }: SvgProps) => (
   <Svg
     width="24"
     height="24"
@@ -19,7 +19,7 @@ export const Alert = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const ArrowSend = ({style, color}: SvgProps) => (
+export const ArrowSend = ({ style, color }: SvgProps) => (
   <Svg
     width="25"
     height="24"
@@ -36,7 +36,7 @@ export const ArrowSend = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const ArrowReceive = ({style, color}: SvgProps) => (
+export const ArrowReceive = ({ style, color }: SvgProps) => (
   <Svg
     width="25"
     height="24"
@@ -53,7 +53,7 @@ export const ArrowReceive = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const CloseCircle = ({style, color}: SvgProps) => (
+export const CloseCircle = ({ style, color }: SvgProps) => (
   <Svg
     width="24"
     height="24"
@@ -69,7 +69,7 @@ export const CloseCircle = ({style, color}: SvgProps) => (
     />
   </Svg>
 );
-export const Copy = ({style, color}: SvgProps) => (
+export const Copy = ({ style, color }: SvgProps) => (
   <Svg
     width="16"
     height="16"
@@ -86,7 +86,7 @@ export const Copy = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const CopyConfirmation = ({style, color}: SvgProps) => (
+export const CopyConfirmation = ({ style, color }: SvgProps) => (
   <Svg
     width="72"
     height="72"
@@ -103,7 +103,7 @@ export const CopyConfirmation = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const QRCode = ({style, color}: SvgProps) => (
+export const QRCode = ({ style, color }: SvgProps) => (
   <Svg
     width="16"
     height="16"
@@ -118,7 +118,7 @@ export const QRCode = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const QRScanner = ({style, color}: SvgProps) => (
+export const QRScanner = ({ style, color }: SvgProps) => (
   <Svg
     width="24"
     height="24"

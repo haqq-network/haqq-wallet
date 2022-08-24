@@ -1,9 +1,9 @@
-import {StyleSheet, Text, TextProps} from 'react-native';
+import { StyleSheet, Text, TextProps } from 'react-native';
 import * as React from 'react';
-import {useMemo} from 'react';
-import {TEXT_BASE_2} from '../../variables';
+import { useMemo } from 'react';
+import { TEXT_BASE_2 } from '../../variables';
 
-export const Paragraph = ({style, children, ...props}: TextProps) => {
+export const Paragraph = ({ style, children, ...props }: TextProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
 
   return (

@@ -1,13 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Vibration, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container} from '../components/container';
-import {Paragraph, Title} from '../components/ui';
-import {Spacer} from '../components/spacer';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Vibration, View } from 'react-native';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { NumericKeyboard } from '../components/numeric-keyboard';
+import { Container } from '../components/container';
+import { Paragraph, Title } from '../components/ui';
+import { Spacer } from '../components/spacer';
 import TouchID from 'react-native-touch-id';
-import {useApp} from '../contexts/app';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import { useApp } from '../contexts/app';
+import { GRAPHIC_BASE_4, TEXT_GREEN_1 } from '../variables';
 
 type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
 
@@ -21,7 +21,7 @@ export const OnboardingRepeatPinScreen = ({
   route,
 }: OnboardingRepeatPinScreenProps) => {
   const app = useApp();
-  const {currentPin} = route.params;
+  const { currentPin } = route.params;
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
     Vibration.vibrate();
@@ -52,10 +52,10 @@ export const OnboardingRepeatPinScreen = ({
   }, [pin, currentPin, app, navigation, route.params.next]);
 
   return (
-    <Container style={{alignItems: 'center'}}>
+    <Container style={{ alignItems: 'center' }}>
       <Title>Please repeat pin code</Title>
       <Paragraph>For security, we don't have a “Restore pin” button.</Paragraph>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Spacer style={{ justifyContent: 'center', alignItems: 'center' }}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />
           <View style={[page.dot, pin.length >= 2 && page.active]} />
@@ -82,10 +82,10 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_BASE_4,
     margin: 5,
     borderRadius: 9,
-    transform: [{scale: 0.66}],
+    transform: [{ scale: 0.66 }],
   },
   active: {
     backgroundColor: TEXT_GREEN_1,
-    transform: [{scale: 1}],
+    transform: [{ scale: 1 }],
   },
 });

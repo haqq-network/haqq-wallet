@@ -1,22 +1,15 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
-import {Wallet} from '../models/wallet';
-import {
-  ArrowReceive,
-  ArrowSend,
-  Copy,
-  CopyButton,
-  IconButton,
-  QRCode,
-} from './ui';
-import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useWallets } from '../contexts/wallets';
+import { Wallet } from '../models/wallet';
+import { ArrowReceive, ArrowSend, Copy, CopyButton, IconButton, QRCode, } from './ui';
+import { BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3 } from '../variables';
 
 export type BalanceProps = {
   wallet: Wallet;
 };
-export const WalletCard = ({wallet}: BalanceProps) => {
+export const WalletCard = ({ wallet }: BalanceProps) => {
   const navigation = useNavigation();
   const wallets = useWallets();
   const [balance, setBalance] = useState(0);
@@ -31,7 +24,7 @@ export const WalletCard = ({wallet}: BalanceProps) => {
   );
 
   const updateBalance = useCallback(
-    async ({address}: {address: string}) => {
+    async ({ address }: { address: string }) => {
       if (address && address === wallet.address) {
         wallets.getBalance(address).then(result => {
           setBalance(result);
@@ -43,18 +36,18 @@ export const WalletCard = ({wallet}: BalanceProps) => {
 
   useEffect(() => {
     wallets.on('balance', updateBalance);
-    updateBalance({address: wallet.address});
+    updateBalance({ address: wallet.address });
     return () => {
       wallets.off('balance', updateBalance);
     };
   }, [updateBalance, wallet.address, wallets]);
 
   const onPressSend = useCallback(() => {
-    navigation.navigate('transaction', {from: wallet.address});
+    navigation.navigate('transaction', { from: wallet.address });
   }, [wallet, navigation]);
 
   const onPressQR = useCallback(() => {
-    navigation.navigate('detailsQr', {address: wallet.address});
+    navigation.navigate('detailsQr', { address: wallet.address });
   }, [navigation, wallet.address]);
 
   const onClickBackup = useCallback(() => {
@@ -63,12 +56,12 @@ export const WalletCard = ({wallet}: BalanceProps) => {
 
   return (
     <View style={page.container}>
-      <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
+      <View style={[page.topNav, !wallet.mnemonic_saved && { marginBottom: 4 }]}>
         <IconButton
           onPress={() =>
-            navigation.navigate('details', {address: wallet.address})
+            navigation.navigate('details', { address: wallet.address })
           }>
-          <Text style={[page.text, {opacity: 0.8}]}>
+          <Text style={[page.text, { opacity: 0.8 }]}>
             {wallet.name || 'name'}
           </Text>
         </IconButton>
@@ -113,7 +106,7 @@ const page = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 30,
   },
-  spacer: {flex: 1},
+  spacer: { flex: 1 },
   text: {
     fontStyle: 'normal',
     fontWeight: '700',
