@@ -1,12 +1,16 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Icon, IconButton} from './ui';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
+  additionButton?: React.ReactNode;
 };
 
-export const NumericKeyboard = ({onPress}: NumericKeyboardProps) => {
+export const NumericKeyboard = ({
+  onPress,
+  additionButton,
+}: NumericKeyboardProps) => {
   return (
     <View style={page.container}>
       <IconButton style={page.button} onPress={() => onPress(1)}>
@@ -36,7 +40,7 @@ export const NumericKeyboard = ({onPress}: NumericKeyboardProps) => {
       <IconButton style={page.button} onPress={() => onPress(9)}>
         <Text style={page.buttonText}>9</Text>
       </IconButton>
-      <View style={page.spacer} />
+      <View style={page.button}>{additionButton}</View>
       <IconButton style={page.button} onPress={() => onPress(0)}>
         <Text style={page.buttonText}>0</Text>
       </IconButton>
@@ -47,7 +51,6 @@ export const NumericKeyboard = ({onPress}: NumericKeyboardProps) => {
   );
 };
 
-const windowWidth = Dimensions.get('window').width;
 const page = StyleSheet.create({
   container: {
     width: 264,
@@ -57,8 +60,8 @@ const page = StyleSheet.create({
     flexWrap: 'wrap',
   },
   button: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical: 12,
+    marginHorizontal: 2,
     width: 72,
     height: 72,
     justifyContent: 'center',
@@ -70,9 +73,5 @@ const page = StyleSheet.create({
     fontSize: 36,
     lineHeight: 43,
     letterSpacing: 0.38,
-  },
-  spacer: {
-    width: windowWidth / 4,
-    height: windowWidth / 4,
   },
 });

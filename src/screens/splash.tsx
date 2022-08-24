@@ -1,11 +1,19 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Modal, StyleSheet, Text, Vibration, View} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Vibration,
+  View,
+} from 'react-native';
 import {useApp} from '../contexts/app';
 import {Container} from '../components/container';
 import {Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {RestorePassword} from '../components/restore-password';
 
 type SplashScreenProp = {
   visible: boolean;
@@ -14,6 +22,7 @@ type SplashScreenProp = {
 export const SplashScreen = ({visible}: SplashScreenProp) => {
   const app = useApp();
   const [showPin, setShowPin] = useState(false);
+  const [showRestore, setShowRestore] = useState(false);
 
   const [pin, setPin] = useState('');
 
@@ -59,9 +68,9 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
   return (
     <Modal animationType="fade" visible={modalVisible}>
       {showPin ? (
-        <Container style={{alignItems: 'center'}}>
-          <Title>Enter 6-digital pin code</Title>
-          <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Container style={page.container}>
+          <Spacer style={page.spacer}>
+            <Title style={page.title}>Welcome to ISLM Wallet</Title>
             <View style={page.dots}>
               <View style={[page.dot, pin.length >= 1 && page.active]} />
               <View style={[page.dot, pin.length >= 2 && page.active]} />
@@ -71,7 +80,17 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
               <View style={[page.dot, pin.length >= 6 && page.active]} />
             </View>
           </Spacer>
-          <NumericKeyboard onPress={onKeyboard} />
+          <NumericKeyboard
+            onPress={onKeyboard}
+            additionButton={
+              <TouchableOpacity
+                style={page.additionButton}
+                onPress={() => setShowRestore(true)}>
+                <Text style={page.additionButtonText}>Forgot</Text>
+                <Text style={page.additionButtonText}>the code</Text>
+              </TouchableOpacity>
+            }
+          />
         </Container>
       ) : (
         <View
@@ -84,11 +103,14 @@ export const SplashScreen = ({visible}: SplashScreenProp) => {
           <Text>Splash Screen</Text>
         </View>
       )}
+      {showRestore && <RestorePassword onClose={() => setShowRestore(false)} />}
     </Modal>
   );
 };
 
 const page = StyleSheet.create({
+  container: {alignItems: 'center'},
+  spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -106,4 +128,18 @@ const page = StyleSheet.create({
     backgroundColor: TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
+  additionButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  additionButtonText: {
+    color: TEXT_BASE_2,
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 16,
+    textAlign: 'center',
+    padding: 2,
+  },
+  title: {marginBottom: 60},
 });
