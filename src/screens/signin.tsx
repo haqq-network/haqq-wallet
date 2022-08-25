@@ -49,7 +49,11 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
       <SignInStack.Screen
         name="onboarding-store-wallet"
         component={OnboardingStoreWalletScreen}
-        options={{title}}
+        options={{
+          title,
+          header: () => null,
+        }}
+        initialParams={{action: 'restore'}}
       />
       <SignInStack.Screen
         name="onboarding-finish"

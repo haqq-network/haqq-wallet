@@ -35,6 +35,7 @@ import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
+import {Loading} from './screens/loading';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -99,6 +100,7 @@ export const App = () => {
             </Stack.Navigator>
           </NavigationContainer>
           <SplashScreen visible={appLoading} />
+          <Loading />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>
