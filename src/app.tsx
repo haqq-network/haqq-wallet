@@ -36,6 +36,7 @@ import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
 import {createStackNavigator} from '@react-navigation/stack';
+import {BackupNotificationScreen} from './screens/backup-notification';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -105,6 +106,11 @@ export const App = () => {
               <Stack.Screen
                 name="detailsQr"
                 component={DetailsQrScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="backupNotification"
+                component={BackupNotificationScreen}
                 options={actionsSheet}
               />
             </Stack.Navigator>

@@ -1,18 +1,22 @@
-import {useNavigation} from '@react-navigation/native';
+import {CompositeScreenProps} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, Image, View} from 'react-native';
 import {Button, ButtonVariant, H3, Paragraph} from '../components/ui';
-import {Wallet} from '../models/wallet';
 
-type BackupScreenProp = {
-  onClose: () => void;
-  wallet: Wallet | null;
-};
+// type BackupNotificationScreenProp = {
+//   onClose: () => void;
+//   wallet: Wallet | null;
+// };
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 
-export const BackupScreen = ({onClose, wallet}: BackupScreenProp) => {
+type BackupNotificationScreenProp = CompositeScreenProps<any, any>;
+
+export const BackupNotificationScreen = ({
+  navigation,
+  route,
+}: BackupNotificationScreenProp) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const navigation = useNavigation();
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       useNativeDriver: true,
@@ -27,18 +31,18 @@ export const BackupScreen = ({onClose, wallet}: BackupScreenProp) => {
       toValue: 0,
       duration: 250,
     }).start(() => {
-      onClose();
+      navigation.goBack();
     });
-  }, [fadeAnim, onClose]);
+  }, [fadeAnim, navigation]);
 
   const onClickBackup = useCallback(() => {
-    if (wallet) {
-      onClose();
+    if (route.params.address) {
+      navigation.goBack();
       navigation.navigate('backup', {
-        address: wallet.address,
+        address: route.params.address,
       });
     }
-  }, [navigation, wallet, fadeOut]);
+  }, [navigation, route]);
 
   const onClickSkip = useCallback(() => {
     return Alert.alert(
@@ -55,10 +59,6 @@ export const BackupScreen = ({onClose, wallet}: BackupScreenProp) => {
       ],
     );
   }, [fadeOut]);
-
-  if (!wallet) {
-    return null;
-  }
 
   return (
     <View style={{flex: 1}}>
