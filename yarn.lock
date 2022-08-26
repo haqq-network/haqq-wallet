@@ -7802,11 +7802,6 @@ react-native-crypto@^2.2.0:
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
 
-react-native-detector@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-detector/-/react-native-detector-0.2.2.tgz#30fc5daaab56e11925f9fcff43e89fa879357622"
-  integrity sha512-QZ+TZVmTQjYWbSccrs8qqSNDtIjwPKekofLEcAfmCmls5PEEdfteNMQhra3PFUyncvJnWKuBmwCLhgAOIKokcA==
-
 react-native-fs@^2.20.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.20.0.tgz#05a9362b473bfc0910772c0acbb73a78dbc810f6"

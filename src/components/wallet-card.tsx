@@ -92,7 +92,7 @@ export const WalletCard = ({wallet}: BalanceProps) => {
           <ArrowSend color={GRAPHIC_BASE_3} />
           <Text style={page.buttonText}>Send</Text>
         </IconButton>
-        <IconButton style={page.button} onPress={onPressSend}>
+        <IconButton style={page.button} onPress={onPressQR}>
           <ArrowReceive color={GRAPHIC_BASE_3} />
           <Text style={page.buttonText}>Receive</Text>
         </IconButton>
