@@ -36,8 +36,7 @@ import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
-import {Loading} from './screens/loading';
-import {ConfirmationBadge} from './components/confirmation-badge';
+import {Modals} from './screens/modals';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -58,8 +57,9 @@ const actionsSheet = {
 
 export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
-  const [appLoading, setAppLoading] = useState(true);
   useEffect(() => {
+    app.emit('modal', {type: 'splash'});
+
     app
       .init()
       .then(() => Promise.all([wallets.init(), transactions.init()]))
@@ -67,13 +67,12 @@ export const App = () => {
         navigator.navigate('login');
       })
       .finally(() => {
-        setAppLoading(false);
+        app.emit('modal', null);
       });
 
     app.on('resetWallet', () => {
       navigator.dispatch(StackActions.replace('login'));
-      app.emit('showPin', false);
-      setAppLoading(false);
+      app.emit('modal', null);
     });
   }, [navigator]);
 
@@ -111,9 +110,7 @@ export const App = () => {
               />
             </Stack.Navigator>
           </NavigationContainer>
-          <SplashScreen visible={appLoading} />
-          <Loading />
-          <ConfirmationBadge />
+          <Modals />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>
