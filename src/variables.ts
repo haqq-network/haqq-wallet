@@ -6,6 +6,7 @@ export const TEXT_GREEN_1 = '#01B26E';
 export const TEXT_RED_1 = '#E16363';
 export const TEXT_YELLOW_1 = '#B26F1D';
 export const TEXT_SECOND_1 = '#B2B4BB';
+export const TEXT_SECOND_2 = 'rgba(255, 255, 255, 0.8)';
 
 export const GRAPHIC_BASE_1 = '#2F2F2F';
 export const GRAPHIC_BASE_2 = '#8E8E8E';
