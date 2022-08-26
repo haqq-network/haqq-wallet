@@ -16,6 +16,7 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -36,6 +37,7 @@ import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Loading} from './screens/loading';
+import {ConfirmationBadge} from './components/confirmation-badge';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -46,6 +48,12 @@ const AppTheme = {
     primary: GRAPHIC_GREEN_1,
     background: BG_1,
   },
+};
+
+const actionsSheet = {
+  presentation: 'transparentModal',
+  animation: 'fade',
+  animationDuration: 0,
 };
 
 export const App = () => {
@@ -81,7 +89,6 @@ export const App = () => {
               <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="details" component={DetailsScreen} />
-                <Stack.Screen name="detailsQr" component={DetailsQrScreen} />
                 <Stack.Screen name="scanQr" component={ScanQrScreen} />
                 <Stack.Screen
                   name="importWallet"
@@ -97,10 +104,16 @@ export const App = () => {
               </Stack.Group>
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
+              <Stack.Screen
+                name="detailsQr"
+                component={DetailsQrScreen}
+                options={actionsSheet}
+              />
             </Stack.Navigator>
           </NavigationContainer>
           <SplashScreen visible={appLoading} />
           <Loading />
+          <ConfirmationBadge />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>

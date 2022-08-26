@@ -1,16 +1,11 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
-  Modal,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
-  View,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Container} from '../container';
-import {CopyConfirmation} from './svg-icon';
-import {GRAPHIC_BASE_2} from '../../variables';
+import {useApp} from '../../contexts/app';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;
@@ -22,35 +17,18 @@ export const CopyButton = ({
   style,
   ...props
 }: CopyButtonProps) => {
-  const [showNotification, setSShowNotification] = useState(false);
+  const app = useApp();
   const onPress = useCallback(() => {
     Clipboard.setString(value);
-    setSShowNotification(true);
-    setTimeout(() => {
-      setSShowNotification(false);
-    }, 5000);
+    app.emit('confirmation', 'copied');
   }, [value]);
 
   const containerStyle = useMemo(() => [page.container, style], [style]);
 
   return (
-    <>
-      <TouchableOpacity onPress={onPress} style={containerStyle} {...props}>
-        {children}
-      </TouchableOpacity>
-      <Modal animationType="fade" visible={showNotification} transparent={true}>
-        <Container>
-          <TouchableOpacity
-            onPress={() => setSShowNotification(false)}
-            style={page.overlay}>
-            <View style={page.background}>
-              <CopyConfirmation color={GRAPHIC_BASE_2} style={page.icon} />
-              <Text style={page.text}>Copied</Text>
-            </View>
-          </TouchableOpacity>
-        </Container>
-      </Modal>
-    </>
+    <TouchableOpacity onPress={onPress} style={containerStyle} {...props}>
+      {children}
+    </TouchableOpacity>
   );
 };
 
