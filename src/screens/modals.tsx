@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Modal} from 'react-native';
+import {Modal, StyleSheet, View} from 'react-native';
 import {
   ConfirmationModal,
   ConfirmationModalProps,
@@ -67,6 +67,14 @@ export const Modals = () => {
         return null;
     }
   }, [modal]);
+
+  console.log('modal', modal);
+  //
+  // if (!modal) {
+  //   return null;
+  // }
+  //
+  // return <View style={[StyleSheet.absoluteFill, {zIndex: 1000}]}>{entry}</View>;
 
   return (
     <Modal animationType="fade" visible={!!modal} transparent={true}>

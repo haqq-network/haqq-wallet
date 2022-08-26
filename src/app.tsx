@@ -8,19 +8,17 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
   StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
-import {SplashScreen} from './screens/splash';
 import {RegisterScreen} from './screens/register';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
@@ -37,8 +35,9 @@ import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AppTheme = {
   dark: false,

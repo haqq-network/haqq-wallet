@@ -68,10 +68,8 @@ export const PinModal = () => {
             </TouchableOpacity>
           }
         />
-        {showRestore && (
-          <RestorePassword onClose={() => setShowRestore(false)} />
-        )}
       </Container>
+      {showRestore && <RestorePassword onClose={() => setShowRestore(false)} />}
     </View>
   );
 };

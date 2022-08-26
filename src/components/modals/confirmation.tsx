@@ -28,7 +28,7 @@ export const ConfirmationModal = ({
   const timer = useRef(
     setTimeout(() => {
       onCloseModal();
-    }, 5000),
+    }, 500000),
   );
 
   return (
