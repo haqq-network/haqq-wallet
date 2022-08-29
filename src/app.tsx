@@ -8,17 +8,17 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
+  StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
-import {SplashScreen} from './screens/splash';
 import {RegisterScreen} from './screens/register';
 import {RestoreScreen} from './screens/restore';
 import {ImportWalletScreen} from './screens/import-wallet';
@@ -33,8 +33,12 @@ import {LoginScreen} from './screens/login';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
+import {SignUpScreen} from './screens/signup';
+import {Modals} from './screens/modals';
+import {createStackNavigator} from '@react-navigation/stack';
+import {BackupNotificationScreen} from './screens/backup-notification';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AppTheme = {
   dark: false,
@@ -45,10 +49,17 @@ const AppTheme = {
   },
 };
 
+const actionsSheet = {
+  presentation: 'transparentModal',
+  animation: 'fade',
+  animationDuration: 0,
+};
+
 export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
-  const [appLoading, setAppLoading] = useState(true);
   useEffect(() => {
+    app.emit('modal', {type: 'splash'});
+
     app
       .init()
       .then(() => Promise.all([wallets.init(), transactions.init()]))
@@ -56,8 +67,13 @@ export const App = () => {
         navigator.navigate('login');
       })
       .finally(() => {
-        setAppLoading(false);
+        app.emit('modal', null);
       });
+
+    app.on('resetWallet', () => {
+      navigator.dispatch(StackActions.replace('login'));
+      app.emit('modal', null);
+    });
   }, [navigator]);
 
   return (
@@ -72,7 +88,6 @@ export const App = () => {
               <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="details" component={DetailsScreen} />
-                <Stack.Screen name="detailsQr" component={DetailsQrScreen} />
                 <Stack.Screen name="scanQr" component={ScanQrScreen} />
                 <Stack.Screen
                   name="importWallet"
@@ -80,6 +95,7 @@ export const App = () => {
                 />
                 <Stack.Screen name="setPin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
+                <Stack.Screen name="signup" component={SignUpScreen} />
                 <Stack.Screen
                   name="transaction"
                   component={TransactionScreen}
@@ -87,9 +103,19 @@ export const App = () => {
               </Stack.Group>
               <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
+              <Stack.Screen
+                name="detailsQr"
+                component={DetailsQrScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="backupNotification"
+                component={BackupNotificationScreen}
+                options={actionsSheet}
+              />
             </Stack.Navigator>
           </NavigationContainer>
-          <SplashScreen visible={appLoading} />
+          <Modals />
         </WalletsContext.Provider>
       </TransactionsContext.Provider>
     </AppContext.Provider>

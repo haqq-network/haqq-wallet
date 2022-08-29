@@ -5,6 +5,7 @@ import {PopupHeader} from '../components/popup-header';
 import {BackupCreateScreen} from './backup-create';
 import {BackupFinishScreen} from './backup-finish';
 import {BackupVerifyScreen} from './backup-verify';
+import {BackupWarningScreen} from './backup-warning';
 
 const BackupStack = createNativeStackNavigator();
 type BackupScreenProp = CompositeScreenProps<any, any>;
@@ -14,9 +15,13 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
     <BackupStack.Navigator
       screenOptions={{header: PopupHeader, title: 'Backup wallet'}}>
       <BackupStack.Screen
+        name={'backupWarning'}
+        component={BackupWarningScreen}
+        initialParams={{address: route.params.address}}
+      />
+      <BackupStack.Screen
         name={'backupCreate'}
         component={BackupCreateScreen}
-        initialParams={{address: route.params.address}}
       />
       <BackupStack.Screen
         name={'backupVerify'}

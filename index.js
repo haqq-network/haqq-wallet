@@ -8,9 +8,10 @@ import {App} from './src/app';
 import {name as appName} from './app.json';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-console.log('init app');
+import {SENTRY_DSN} from '@env';
+
 Sentry.init({
-  dsn: 'https://7a89fad62ad7450fbf03fa4426d14a92@o1347520.ingest.sentry.io/6626256',
+  dsn: SENTRY_DSN,
   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
   // We recommend adjusting this value in production.
   tracesSampleRate: 1.0,

@@ -62,4 +62,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 /tmp/*
+
 google-services.json
+.env
