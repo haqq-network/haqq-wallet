@@ -63,4 +63,5 @@ buck-out/
 /vendor/bundle/
 /tmp/*
 
+google-services.json
 .env
