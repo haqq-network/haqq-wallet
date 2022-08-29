@@ -62,7 +62,7 @@ class App extends EventEmitter {
   }
 
   async loadUser(username: string = 'username') {
-    const users = realm.objects<UserType>('User');
+    const users = await realm.objects<UserType>('User');
     const filtered = users.filtered(`username = '${username}'`);
 
     return new User(filtered[0]);

@@ -6,18 +6,8 @@ import {utils} from 'ethers';
 
 export const realm = new Realm({
   schema: [WalletSchema, UserSchema, TransactionSchema],
-  schemaVersion: 7,
+  schemaVersion: 8,
   migration: (oldRealm, newRealm) => {
-    if (oldRealm.schemaVersion < 2) {
-      const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects('User');
-      for (const objectIndex in oldObjects) {
-        const oldObject = oldObjects[objectIndex];
-        const newObject = newObjects[objectIndex];
-        newObject.biometry = oldObject.touchId;
-      }
-    }
-
     if (oldRealm.schemaVersion < 4) {
       const oldObjects = oldRealm.objects('Transaction');
       const newObjects = newRealm.objects('Transaction');
@@ -41,15 +31,6 @@ export const realm = new Realm({
       }
     }
 
-    if (oldRealm.schemaVersion < 6) {
-      const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects('User');
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        delete newObject.pin;
-      }
-    }
-
     if (oldRealm.schemaVersion < 7) {
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects('Wallet');
@@ -60,6 +41,16 @@ export const realm = new Realm({
         const newObject = newObjects[objectIndex];
         newObject.main = !hasMain;
         hasMain = true;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 8) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.type = 'storage';
       }
     }
   },

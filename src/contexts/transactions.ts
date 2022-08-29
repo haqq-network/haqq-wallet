@@ -10,6 +10,7 @@ import {
 import {realm} from '../models';
 import {TransactionType} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
+import {WalletTypes} from '../models/wallet';
 
 class Transactions extends EventEmitter {
   private transactions: Realm.Results<TransactionType> | undefined;
@@ -65,10 +66,9 @@ class Transactions extends EventEmitter {
   }
 
   async sendTransaction(from: string, to: string, amount: number) {
-    const provider = getDefaultNetwork();
     const wallet = wallets.getWallet(from);
-    if (wallet) {
-      await wallet.wallet.connect(provider);
+    if (wallet && wallet.type === WalletTypes.storage && wallet.wallet) {
+      await wallet.wallet.connect(getDefaultNetwork());
 
       const transaction = await wallet.wallet.sendTransaction({
         to,

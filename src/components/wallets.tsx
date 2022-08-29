@@ -24,10 +24,14 @@ export const Wallets = () => {
     return null;
   }
 
+  console.log('JSON.stringify(wallets)', JSON.stringify(wallets));
+
   return (
     <>
       <View style={{marginBottom: 24}}>
-        <WalletCard wallet={wallets[0]} />
+        {wallets.map(w => (
+          <WalletCard wallet={w} key={w.address} />
+        ))}
       </View>
       <H2 style={{marginVertical: 12, textAlign: 'left'}}>Transactions</H2>
     </>

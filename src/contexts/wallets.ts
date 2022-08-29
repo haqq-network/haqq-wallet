@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
-import {Wallet, WalletType} from '../models/wallet';
+import {Wallet, WalletType, WalletTypes} from '../models/wallet';
 import {app} from './app';
 
 class Wallets extends EventEmitter {
@@ -17,12 +17,11 @@ class Wallets extends EventEmitter {
     }
 
     const provider = getDefaultNetwork();
-    const wallets = realm.objects<WalletType>('Wallet');
+    const wallets = await realm.objects<WalletType>('Wallet');
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
-        wallet.saved = true;
         this.wallets.set(wallet.address, wallet);
 
         if (wallet.main) {
@@ -34,6 +33,7 @@ class Wallets extends EventEmitter {
         }
       }
     }
+
     this.emit('wallets');
 
     const backupMnemonic = Array.from(this.wallets.values()).find(
@@ -78,6 +78,25 @@ class Wallets extends EventEmitter {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
     wallet.name = name;
+
+    this.wallets.set(wallet.address, wallet);
+    if (save) {
+      await this.saveWallet(wallet);
+    }
+    this.emit('wallets');
+
+    return wallet;
+  }
+
+  async addWalletFromLedger(address: string, save: boolean = true) {
+    const wallet = new Wallet({
+      address: address,
+      data: '',
+      name: '',
+      mnemonic_saved: true,
+      main: false,
+      type: WalletTypes.ledger,
+    });
 
     this.wallets.set(wallet.address, wallet);
     if (save) {

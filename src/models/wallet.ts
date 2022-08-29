@@ -13,9 +13,15 @@ export const WalletSchema = {
     data: 'string',
     mnemonic_saved: 'bool',
     main: 'bool',
+    type: 'string',
   },
   primaryKey: 'address',
 };
+
+export enum WalletTypes {
+  storage = 'storage',
+  ledger = 'ledger',
+}
 
 export type WalletType = {
   address: string;
@@ -23,44 +29,50 @@ export type WalletType = {
   data: string;
   main: boolean;
   mnemonic_saved: boolean;
+  type: WalletTypes;
 };
 
 export class Wallet {
   address: string;
   name: string;
   mnemonic_saved: boolean;
-  wallet: ethers.Wallet;
+  wallet?: ethers.Wallet;
   main: boolean;
   saved: boolean = false;
+  type: WalletTypes;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
 
-    return new Wallet(
-      {
-        address: tmp.address,
-        data: '',
-        name: '',
-        mnemonic_saved: false,
-        main: false,
-      },
-      tmp,
-    );
+    const wallet = new Wallet({
+      address: tmp.address,
+      data: '',
+      name: '',
+      mnemonic_saved: false,
+      main: false,
+      type: WalletTypes.storage,
+    });
+
+    wallet.attach_wallet(tmp);
+
+    return wallet;
   }
 
   static async fromPrivateKey(privateKey: string, provider: Provider) {
     const tmp = new EthersWallet(privateKey, provider);
 
-    return new Wallet(
-      {
-        address: tmp.address,
-        data: '',
-        name: '',
-        mnemonic_saved: true,
-        main: false,
-      },
-      tmp,
-    );
+    const wallet = new Wallet({
+      address: tmp.address,
+      data: '',
+      name: '',
+      mnemonic_saved: true,
+      main: false,
+      type: WalletTypes.storage,
+    });
+
+    wallet.attach_wallet(tmp);
+
+    return wallet;
   }
 
   static async fromCache(
@@ -68,30 +80,46 @@ export class Wallet {
     provider: Provider,
     password: string,
   ) {
-    const decrypted = await decrypt(password, data.data);
-    const tmp = decrypted.mnemonic
-      ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
-          provider,
-        )
-      : new EthersWallet(decrypted.privateKey, provider);
-    return new Wallet(data, tmp);
+    const wallet = new Wallet(data);
+
+    if (wallet.type === WalletTypes.storage) {
+      const decrypted = await decrypt(password, data.data);
+      const tmp = decrypted.mnemonic
+        ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
+            provider,
+          )
+        : new EthersWallet(decrypted.privateKey, provider);
+
+      wallet.attach_wallet(tmp);
+    }
+
+    wallet.saved = true;
+
+    return wallet;
   }
 
-  constructor(data: WalletType, wallet: ethers.Wallet) {
+  constructor(data: WalletType) {
     this.address = data.address;
     this.name = data.name;
-    this.wallet = wallet;
     this.mnemonic_saved = data.mnemonic_saved;
     this.main = data.main;
+    this.type = data.type;
+  }
+
+  attach_wallet(wallet: ethers.Wallet) {
+    this.wallet = wallet;
   }
 
   async serialize(
     password: Bytes | string,
   ): Promise<Record<keyof WalletType, any>> {
-    const wallet = await encrypt(password, {
-      privateKey: this.wallet.privateKey,
-      mnemonic: this.wallet.mnemonic,
-    });
+    const wallet =
+      this.type === WalletTypes.storage && this.wallet
+        ? await encrypt(password, {
+            privateKey: this.wallet.privateKey,
+            mnemonic: this.wallet.mnemonic,
+          })
+        : '';
 
     return {
       address: this.address,
@@ -99,6 +127,7 @@ export class Wallet {
       data: wallet,
       mnemonic_saved: this.mnemonic_saved,
       main: this.main,
+      type: this.type,
     };
   }
 

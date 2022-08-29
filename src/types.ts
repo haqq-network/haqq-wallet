@@ -35,6 +35,7 @@ export type RootStackParamList = {
   setPin: undefined;
   restore: undefined;
   register: undefined;
+  ledgerHid: undefined;
   backup: {
     address: string;
   };

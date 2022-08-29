@@ -37,6 +37,7 @@ import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
 import {createStackNavigator} from '@react-navigation/stack';
 import {BackupNotificationScreen} from './screens/backup-notification';
+import {LedgerHid} from './screens/ledger-hid';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -96,6 +97,7 @@ export const App = () => {
                 <Stack.Screen name="setPin" component={SetPinScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
                 <Stack.Screen name="signup" component={SignUpScreen} />
+                <Stack.Screen name="ledgerHid" component={LedgerHid} />
                 <Stack.Screen
                   name="transaction"
                   component={TransactionScreen}

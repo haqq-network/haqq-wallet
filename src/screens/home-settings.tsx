@@ -62,6 +62,11 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         onPress={() => navigation.navigate('importWallet')}
       />
 
+      <Button
+        title="Ledger HID"
+        onPress={() => navigation.navigate('ledgerHid')}
+      />
+
       <Spacer />
       <Button title="Logout" onPress={onLogout} />
     </Container>

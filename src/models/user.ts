@@ -37,6 +37,6 @@ export class User {
   }
 
   isOutdatedLastActivity() {
-    return this.last_activity < addMinutes(new Date(), 1);
+    return this.last_activity < addMinutes(new Date(), 15);
   }
 }

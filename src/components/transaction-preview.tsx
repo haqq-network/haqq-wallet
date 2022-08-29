@@ -9,7 +9,7 @@ export type TransactionPreviewProps = {
 };
 
 export const TransactionPreview = ({item}: TransactionPreviewProps) => {
-  console.log(item);
+  console.log('transaction', JSON.stringify(item));
 
   switch (item.source) {
     case TransactionSource.date:
