@@ -15,19 +15,24 @@ export const TransactionConfirmationScreen = ({
   const {from, to, amount} = route.params;
 
   const [estimateFee, setEstimateFee] = useState(0);
+  const [error, setError] = useState('');
 
   const onDone = useCallback(async () => {
-    const transaction = await transactions.sendTransaction(
-      from,
-      to,
-      parseFloat(amount),
-    );
+    try {
+      const transaction = await transactions.sendTransaction(
+        from,
+        to,
+        parseFloat(amount),
+      );
 
-    if (transaction) {
-      navigation.navigate('transaction-finish', {
-        hash: transaction.hash,
-      });
-      transactions.emit('transactions');
+      if (transaction) {
+        navigation.navigate('transaction-finish', {
+          hash: transaction.hash,
+        });
+        transactions.emit('transactions');
+      }
+    } catch (e) {
+      setError(e.message);
     }
   }, [transactions, from, to, amount, navigation]);
 
@@ -49,6 +54,7 @@ export const TransactionConfirmationScreen = ({
         title="Send"
         onPress={onDone}
       />
+      {error && <Text>{error}</Text>}
     </Container>
   );
 };

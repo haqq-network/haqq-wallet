@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
-import {getDefaultNetwork} from '../network';
+import {getChainId, getDefaultNetwork} from '../network';
 import {utils} from 'ethers';
 import {wallets} from './wallets';
 import {
@@ -73,8 +73,7 @@ class Transactions extends EventEmitter {
       const transaction = await wallet.wallet.sendTransaction({
         to,
         value: utils.parseEther(amount.toString()),
-        // @ts-ignore
-        chainId: provider.chainId,
+        chainId: getChainId(),
       });
 
       await this.saveTransaction(transaction, from, to, amount);
