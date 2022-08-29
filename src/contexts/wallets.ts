@@ -43,7 +43,7 @@ class Wallets extends EventEmitter {
     if (backupMnemonic) {
       setTimeout(() => {
         this.emit('backupMnemonic', backupMnemonic);
-      }, 5000);
+      }, 1000);
     }
 
     this.initialized = true;

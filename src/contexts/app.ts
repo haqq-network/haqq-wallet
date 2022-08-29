@@ -140,13 +140,13 @@ class App extends EventEmitter {
 
   pinAuth() {
     return new Promise<void>(async (resolve, _reject) => {
-      this.emit('showPin', true);
+      this.emit('modal', {type: 'pin'});
       const password = await this.getPassword();
 
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
-          this.emit('showPin', false);
+          this.emit('modal', {type: 'splash'});
           resolve();
         } else {
           this.emit('errorPin', 'not match');

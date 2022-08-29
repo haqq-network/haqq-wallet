@@ -3,7 +3,6 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {FlatList, Modal} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
-import {BackupScreen} from './backup-notification';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionPreview} from '../components/transaction-preview';
 import {Wallets} from '../components/wallets';
@@ -13,7 +12,7 @@ import {Wallet} from '../models/wallet';
 
 type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 
-export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
+export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
   const wallets = useWallets();
   const transactions = useTransactions();
 
@@ -35,9 +34,12 @@ export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
     );
   }, [transactions, wallets]);
 
-  const onBackupMnemonic = useCallback((wallet: Wallet) => {
-    setBackupMnemonic(wallet);
-  }, []);
+  const onBackupMnemonic = useCallback(
+    (wallet: Wallet) => {
+      navigation.navigate('backupNotification', {address: wallet.address});
+    },
+    [navigation],
+  );
 
   useEffect(() => {
     transactions.on('transactions', onTransactionList);
@@ -69,14 +71,8 @@ export const HomeFeedScreen = ({}: HomeFeedScreenProp) => {
         visible={Boolean(backupMnemonic)}
         onRequestClose={() => {
           setBackupMnemonic(null);
-        }}>
-        <BackupScreen
-          wallet={backupMnemonic}
-          onClose={() => {
-            setBackupMnemonic(null);
-          }}
-        />
-      </Modal>
+        }}
+      />
     </Container>
   );
 };

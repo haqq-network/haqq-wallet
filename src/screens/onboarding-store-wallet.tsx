@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
-import {Title, Waiting} from '../components/ui';
-import {TEXT_BASE_3} from '../variables';
+import {useApp} from '../contexts/app';
 
 type OnboardingStoreWalletScreenProp = CompositeScreenProps<any, any>;
 
@@ -11,8 +10,17 @@ export const OnboardingStoreWalletScreen = ({
   navigation,
   route,
 }: OnboardingStoreWalletScreenProp) => {
-  const [modal, setModal] = useState(true);
+  const app = useApp();
   const wallets = useWallets();
+
+  useEffect(() => {
+    const text =
+      route.params.action === 'create'
+        ? 'Creating a wallet'
+        : 'Wallet recovery in progress';
+
+    app.emit('modal', {type: 'loading', text});
+  }, [app, route.params.action]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -27,33 +35,11 @@ export const OnboardingStoreWalletScreen = ({
         }),
       );
 
-      Promise.all(actions)
-        .then(() => {
-          navigation.navigate('onboarding-finish');
-        })
-        .finally(() => {
-          setModal(false);
-        });
+      Promise.all(actions).then(() => {
+        navigation.navigate('onboarding-finish');
+      });
     });
   }, [navigation, route.params.action, wallets]);
 
-  const title =
-    route.params.action === 'create'
-      ? 'Creating a wallet'
-      : 'Wallet recovery in progress';
-
-  return (
-    <Modal visible={modal} animationType="none">
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          flex: 1,
-          backgroundColor: '#04D484',
-        }}>
-        <Waiting style={{marginBottom: 40}} />
-        <Title style={{color: TEXT_BASE_3}}>{title}</Title>
-      </View>
-    </Modal>
-  );
+  return <View />;
 };
