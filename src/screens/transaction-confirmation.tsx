@@ -27,6 +27,7 @@ export const TransactionConfirmationScreen = ({
       navigation.navigate('transaction-finish', {
         hash: transaction.hash,
       });
+      transactions.emit('transactions');
     }
   }, [transactions, from, to, amount, navigation]);
 
