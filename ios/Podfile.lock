@@ -77,7 +77,7 @@ PODS:
   - GCDWebServer/Core (3.5.4)
   - glog (0.3.5)
   - libevent (2.1.12)
-  - lottie-ios (3.4.1)
+  - lottie-ios (3.4.3)
   - lottie-react-native (5.1.4):
     - lottie-ios (~> 3.4.0)
     - React-Core
@@ -307,11 +307,11 @@ PODS:
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.3.1):
+  - react-native-safe-area-context (4.3.3):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
+    - React-Core
     - ReactCommon/turbomodule/core
   - React-perflogger (0.69.3)
   - React-RCTActionSheet (0.69.3):
@@ -379,12 +379,12 @@ PODS:
     - React-jsi (= 0.69.3)
     - React-logger (= 0.69.3)
     - React-perflogger (= 0.69.3)
-  - RealmJS (10.19.5):
+  - RealmJS (10.20.0):
     - GCDWebServer
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
-  - RNCClipboard (1.10.0):
+  - RNCClipboard (1.11.0):
     - React-Core
   - RNFS (2.20.0):
     - React-Core
@@ -394,7 +394,7 @@ PODS:
     - React-Core
   - RNOS (1.2.7):
     - React
-  - RNScreens (3.15.0):
+  - RNScreens (3.17.0):
     - React-Core
     - React-RCTImage
   - RNSentry (5.0.0-alpha.1):
@@ -632,7 +632,7 @@ SPEC CHECKSUMS:
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   glog: 3d02b25ca00c2d456734d0bcff864cbc62f6ae1a
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  lottie-ios: 016449b5d8be0c3dcbcfa0a9988469999cd04c5d
+  lottie-ios: 9ae750cdc7820fecbd3c2f0cfc493038208fcdc4
   lottie-react-native: b702fab740cdb952a8e2354713d3beda63ff97b0
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: b9d9fe1fc70114b751c076104e52f3b1b5e5a95a
@@ -654,7 +654,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
+  react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
   React-perflogger: 39d2ba8cbcac54d1bb1d9a980dab348e96aef467
   React-RCTActionSheet: b1ad907a2c8f8e4d037148ca507b7f2d6ab1c66d
   React-RCTAnimation: 914a9ba46fb6e7376f7709c7ce825d53b47ca2ee
@@ -667,14 +667,14 @@ SPEC CHECKSUMS:
   React-RCTVibration: dd8099eb46e9cee4692934bc8cbe5e9a4f5e8d31
   React-runtimeexecutor: 607eb048e22a16388c908ee1f6644200e8d1e19b
   ReactCommon: af7636436b382db7cde4583bbd642f0978e6e3ed
-  RealmJS: 400aac2267a47b25fcc2b6321e8a419282719d16
+  RealmJS: 50ed14de48cf542be1ebad3bc75587ce59bc8571
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
-  RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
+  RNCClipboard: 4b8bec7c195e27bcec746f52dff7601161683249
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
-  RNScreens: 4a1af06327774490d97342c00aee0c2bafb497b7
+  RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSentry: 3fe837b57904d35e69e3bf94591ea045fc181ddd
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
   Sentry: 194d0a2d4d6ef92c9c08c98d998340b0a63efd81
