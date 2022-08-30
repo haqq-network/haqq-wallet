@@ -1,17 +1,8 @@
 diff --git a/node_modules/realm/react-native/android/src/main/java/io/realm/react/RealmReactModule.java b/node_modules/realm/react-native/android/src/main/java/io/realm/react/RealmReactModule.java
-index ce9ba7a..46c00b6 100644
+index e45e03e..19d1af2 100644
 --- a/node_modules/realm/react-native/android/src/main/java/io/realm/react/RealmReactModule.java
 +++ b/node_modules/realm/react-native/android/src/main/java/io/realm/react/RealmReactModule.java
-@@ -99,7 +99,7 @@ class RealmReactModule extends ReactContextBaseJavaModule {
-         if (isRunningOnEmulator()) {
-             hosts = Arrays.asList("localhost");
-         } else {
--            hosts = getIPAddresses();
-+            hosts = Arrays.asList("localhost");
-         }
- 
-         HashMap<String, Object> constants = new HashMap<String, Object>();
-@@ -215,13 +215,13 @@ class RealmReactModule extends ReactContextBaseJavaModule {
+@@ -248,13 +248,13 @@ class RealmReactModule extends ReactContextBaseJavaModule {
              final String json = map.get("postData");
              if (json == null) {
                  Response response = newFixedLengthResponse("");
