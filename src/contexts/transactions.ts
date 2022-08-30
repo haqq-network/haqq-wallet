@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
 import {getChainId, getDefaultNetwork} from '../network';
-import {utils} from 'ethers';
+import {BigNumberish, utils} from 'ethers';
 import {wallets} from './wallets';
 import {
   TransactionRequest,
@@ -15,7 +15,7 @@ class Transactions extends EventEmitter {
   private transactions: Realm.Results<TransactionType> | undefined;
 
   async init(): Promise<void> {
-    this.transactions = realm.objects<TransactionType>('Transaction');
+    this.transactions = await realm.objects<TransactionType>('Transaction');
 
     for (const row of this.transactions) {
       if (!row.confirmed) {
@@ -25,10 +25,10 @@ class Transactions extends EventEmitter {
         if (receipt.confirmations > 0) {
           realm.write(() => {
             row.confirmed = true;
-            row.fee =
-              Number(utils.formatEther(receipt.cumulativeGasUsed)) *
-              Number(utils.formatEther(receipt.effectiveGasPrice)) *
-              1000000000000000000;
+            row.fee = calcFee(
+              receipt.cumulativeGasUsed,
+              receipt.effectiveGasPrice,
+            );
           });
         }
       }
@@ -65,10 +65,9 @@ class Transactions extends EventEmitter {
   }
 
   async sendTransaction(from: string, to: string, amount: number) {
-    const provider = getDefaultNetwork();
     const wallet = wallets.getWallet(from);
     if (wallet) {
-      await wallet.wallet.connect(provider);
+      await wallet.wallet.connect(getDefaultNetwork());
 
       const transaction = await wallet.wallet.sendTransaction({
         to,
@@ -94,12 +93,16 @@ class Transactions extends EventEmitter {
       } as Deferrable<TransactionRequest>),
     ]);
 
-    return (
-      Number(utils.formatEther(result[0].maxFeePerGas!)) *
-      Number(utils.formatEther(result[1])) *
-      1000000000000000000
-    );
+    return calcFee(result[0].maxFeePerGas!, result[1]);
   }
+}
+
+function calcFee(gasPrice: BigNumberish, gasUsed: BigNumberish): number {
+  return (
+    Number(utils.formatEther(gasPrice)) *
+    Number(utils.formatEther(gasUsed)) *
+    1000000000000000000
+  );
 }
 
 export const transactions = new Transactions();

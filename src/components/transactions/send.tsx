@@ -15,6 +15,10 @@ export type TransactionPreviewProps = {
 };
 
 export const TransactionSend = ({item}: TransactionPreviewProps) => {
+  if (!item.value) {
+    return null;
+  }
+
   return (
     <View style={page.container}>
       <View style={page.iconWrapper}>
