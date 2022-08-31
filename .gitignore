@@ -42,7 +42,7 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
-
+!xcshareddata
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
@@ -64,4 +64,5 @@ buck-out/
 /tmp/*
 
 google-services.json
+GoogleService-Info.plist
 .env
