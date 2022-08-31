@@ -60,7 +60,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
           }}>
           <QRCode
             logo={logo}
-            value={address}
+            value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}
             logoSize={width / 5.86}
