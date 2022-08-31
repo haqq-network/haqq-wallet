@@ -98,17 +98,23 @@ class Transactions extends EventEmitter {
         const local = await this.getTransaction(transaction?.hash);
 
         if (local) {
-          const receipt = await getDefaultNetwork().getTransactionReceipt(
-            local.hash,
-          );
-          if (receipt.confirmations > 0) {
-            realm.write(() => {
-              local.confirmed = true;
-              local.fee = calcFee(
-                receipt.cumulativeGasUsed,
-                receipt.effectiveGasPrice,
-              );
-            });
+          try {
+            const receipt = await getDefaultNetwork().getTransactionReceipt(
+              local.hash,
+            );
+            if (receipt && receipt.confirmations > 0) {
+              realm.write(() => {
+                local.confirmed = true;
+                local.fee = calcFee(
+                  receipt.cumulativeGasUsed,
+                  receipt.effectiveGasPrice,
+                );
+              });
+            }
+          } catch (e) {
+            if (e instanceof Error) {
+              console.log('sendTransaction', e.message);
+            }
           }
         }
       });

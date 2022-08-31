@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {FlatList, Modal} from 'react-native';
+import {FlatList} from 'react-native';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionPreview} from '../components/transaction-preview';
 import {Wallets} from '../components/wallets';
@@ -22,8 +21,6 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
       transactions.getTransactions(wallets.getMain()?.address ?? ''),
     ),
   );
-
-  const [backupMnemonic, setBackupMnemonic] = useState<Wallet | null>(null);
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
@@ -52,27 +49,17 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
       wallets.off('wallets', onTransactionList);
       wallets.off('backupMnemonic', onBackupMnemonic);
     };
-  }, [transactions, wallets]);
+  }, [onBackupMnemonic, onTransactionList, transactions, wallets]);
 
   useEffect(() => {}, [wallets]);
 
   return (
-    <Container>
-      <FlatList
-        ListHeaderComponent={Wallets}
-        data={transactionsList}
-        renderItem={TransactionPreview}
-        keyExtractor={item => item.hash}
-      />
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={Boolean(backupMnemonic)}
-        onRequestClose={() => {
-          setBackupMnemonic(null);
-        }}
-      />
-    </Container>
+    <FlatList
+      style={{flex: 1}}
+      ListHeaderComponent={Wallets}
+      data={transactionsList}
+      renderItem={TransactionPreview}
+      keyExtractor={item => item.hash}
+    />
   );
 };

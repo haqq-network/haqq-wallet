@@ -123,5 +123,7 @@ const page = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  input: {},
+  input: {
+    marginBottom: 12,
+  },
 });

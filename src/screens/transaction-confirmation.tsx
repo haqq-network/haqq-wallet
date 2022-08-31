@@ -13,6 +13,7 @@ import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {Spacer} from '../components/spacer';
 import {useContacts} from '../contexts/contacts';
+import {useWallets} from '../contexts/wallets';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -22,6 +23,7 @@ export const TransactionConfirmationScreen = ({
 }: SendTransactionScreenProp) => {
   const contacts = useContacts();
   const transactions = useTransactions();
+  const wallets = useWallets();
   const {from, to, amount, fee} = route.params;
 
   const [estimateFee, setEstimateFee] = useState(fee ?? 0);
@@ -46,6 +48,7 @@ export const TransactionConfirmationScreen = ({
           hash: transaction.hash,
         });
         transactions.emit('transactions');
+        wallets.emit('balance', {address: from});
       }
     } catch (e) {
       if (e instanceof Error) {

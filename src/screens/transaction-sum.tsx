@@ -81,19 +81,22 @@ export const TransactionSumScreen = ({
     setAmount(balance.toFixed(8));
   }, [balance]);
 
-  const onChangeValue = useCallback((value: string) => {
-    setAmount(value);
-    setError(() => {
-      if (!value.match(numbersRegExp)) {
-        return 'Wrong symbol';
-      }
-      if (parseFloat(value) > balance) {
-        return "You don't have enough funds";
-      }
+  const onChangeValue = useCallback(
+    (value: string) => {
+      setAmount(value);
+      setError(() => {
+        if (!value.match(numbersRegExp)) {
+          return 'Wrong symbol';
+        }
+        if (parseFloat(value) > balance) {
+          return "You don't have enough funds";
+        }
 
-      return '';
-    });
-  }, []);
+        return '';
+      });
+    },
+    [balance],
+  );
 
   const onPressSwap = () => {};
 
@@ -110,9 +113,11 @@ export const TransactionSumScreen = ({
         </LabeledBlock>
         <Text style={page.subtitle}>ISLM</Text>
         <View style={page.sum}>
-          <IconButton onPress={onPressSwap} style={page.swapButton}>
-            <Swap color={GRAPHIC_GREEN_1} />
-          </IconButton>
+          <View style={page.swap}>
+            <IconButton onPress={onPressSwap} style={page.swapButton}>
+              <Swap color={GRAPHIC_GREEN_1} />
+            </IconButton>
+          </View>
           <TextInput
             style={page.input}
             value={amount}
@@ -121,12 +126,14 @@ export const TransactionSumScreen = ({
             keyboardType="numeric"
             placeholderTextColor={TEXT_BASE_2}
           />
-          <Button
-            title="Max"
-            onPress={onPressMax}
-            variant={ButtonVariant.second}
-            size={ButtonSize.small}
-          />
+          <View style={page.max}>
+            <Button
+              title="Max"
+              onPress={onPressMax}
+              variant={ButtonVariant.second}
+              size={ButtonSize.small}
+            />
+          </View>
         </View>
         {error ? (
           <Text style={[page.help, page.error]}>{error}</Text>
@@ -153,8 +160,22 @@ const page = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '700',
     fontSize: 34,
-    lineHeight: 46,
+    lineHeight: 42,
     color: TEXT_BASE_1,
+    paddingVertical: 2,
+    alignItems: 'center',
+  },
+  swap: {
+    height: 46,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  max: {
+    height: 46,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   swapButton: {
     backgroundColor: BG_2,
