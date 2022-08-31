@@ -1,4 +1,4 @@
-import {addMinutes} from 'date-fns';
+import {subMinutes} from 'date-fns';
 
 export const UserSchema = {
   name: 'User',
@@ -37,6 +37,6 @@ export class User {
   }
 
   isOutdatedLastActivity() {
-    return this.last_activity < addMinutes(new Date(), 1);
+    return this.last_activity < subMinutes(new Date(), 15);
   }
 }
