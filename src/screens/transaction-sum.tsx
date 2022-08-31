@@ -139,7 +139,7 @@ export const TransactionSumScreen = ({
           <Text style={[page.help, page.error]}>{error}</Text>
         ) : (
           <Text style={[page.help, page.available]}>
-            Available: ${balance.toFixed(8)} ISLM
+            Available: {balance.toFixed(8)} ISLM
           </Text>
         )}
         <Spacer />
