@@ -94,13 +94,13 @@ export const TransactionAddressScreen = ({
         }
       />
       <Spacer>
-        {contactsList && (
+        {contactsList.length ? (
           <FlatList
             data={contactsList}
             renderItem={AddressRow}
             ListHeaderComponent={AddressHeader}
           />
-        )}
+        ) : null}
       </Spacer>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
