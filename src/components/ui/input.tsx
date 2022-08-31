@@ -5,11 +5,12 @@ import {LabeledBlock} from './labeled-block';
 
 export type InputProps = TextInputProps & {
   label: string;
+  rightAction?: React.ReactNode;
 };
 
-export const Input = ({style, label, ...props}: InputProps) => {
+export const Input = ({style, label, rightAction, ...props}: InputProps) => {
   return (
-    <LabeledBlock label={label} style={style}>
+    <LabeledBlock label={label} style={style} rightAction={rightAction}>
       <TextInput style={page.input} {...props} />
     </LabeledBlock>
   );

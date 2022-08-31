@@ -44,8 +44,8 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         utils.entropyToMnemonic(utils.randomBytes(16)),
         'Addition account',
       )
-      .then(wallet => {
-        Alert.prompt('wallet created', wallet.name);
+      .then(w => {
+        Alert.alert('wallet created', w.name);
       });
   }, [wallet]);
 
@@ -68,7 +68,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
       {/*    navigation.navigate('transaction', {*/}
       {/*      screen: 'transactionFinish',*/}
       {/*      params: {*/}
-      {/*        hash: '0xaff27ee05ebe95f3aee19a4ac25289a8b0d26eb23abc6aa55d40da586e9cfed2',*/}
+      {/*        hash: '0x1af25044b5c0426441cecda2b858c9367201feee177a9d2186e7a6ebc1e2b1f7',*/}
       {/*      },*/}
       {/*    })*/}
       {/*  }*/}

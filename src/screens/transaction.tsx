@@ -1,13 +1,14 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PopupHeader} from '../components/popup-header';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
 import {TransactionFinishScreen} from './transaction-finish';
 import {TransactionAddressScreen} from './transaction-address';
 import {TransactionSumScreen} from './transaction-sum';
+import {createStackNavigator} from '@react-navigation/stack';
+import {ScanQrScreen} from './scan-qr';
 
-const TransactionStack = createNativeStackNavigator();
+const TransactionStack = createStackNavigator();
 type TransactionScreenProp = CompositeScreenProps<any, any>;
 
 export const TransactionScreen = ({route}: TransactionScreenProp) => {
@@ -33,6 +34,7 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
         name="transactionFinish"
         component={TransactionFinishScreen}
       />
+      <TransactionStack.Screen name="transactionQR" component={ScanQrScreen} />
     </TransactionStack.Navigator>
   );
 };

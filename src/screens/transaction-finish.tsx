@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   BlockIcon,
@@ -20,9 +20,11 @@ import {
   TEXT_GREEN_1,
 } from '../variables';
 import {Spacer} from '../components/spacer';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';
+import {useContacts} from '../contexts/contacts';
+import {shortAddress} from '../models/contact';
 
 type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
 
@@ -30,6 +32,7 @@ export const TransactionFinishScreen = ({
   navigation,
   route,
 }: TransactionFinishScreenProp) => {
+  const contacts = useContacts();
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<TransactionType | null>(null);
 
@@ -37,16 +40,33 @@ export const TransactionFinishScreen = ({
     transactions.getTransaction(route.params.hash).then(resp => {
       setTransaction(resp);
     });
-  }, [route.params.hash]);
+  }, [route.params.hash, transactions]);
 
-  const shortAddress = useMemo(
-    () =>
-      `${transaction?.to.slice(0, 8)}...${transaction?.to.slice(
-        transaction?.to.length - 8,
-        transaction?.to.length,
-      )}`,
+  const short = useMemo(
+    () => shortAddress(transaction?.to ?? ''),
     [transaction?.to],
   );
+
+  const contact = useMemo(
+    () => contacts.getContact(transaction?.to ?? ''),
+    [contacts, transaction?.to],
+  );
+
+  const onPressContact = useCallback(() => {
+    if (transaction?.to) {
+      Alert.prompt(
+        contact ? 'Edit contact' : 'Add contact',
+        `Address: ${short}`,
+        value => {
+          if (contact) {
+            contacts.updateContact(transaction.to, value);
+          } else {
+            contacts.createContact(transaction.to, value);
+          }
+        },
+      );
+    }
+  }, [transaction?.to, contact, short, contacts]);
 
   const onPress = () => {};
 
@@ -62,7 +82,7 @@ export const TransactionFinishScreen = ({
             - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
           </Text>
         )}
-        <Text style={page.address}>{shortAddress}</Text>
+        <Text style={page.address}>{short}</Text>
         <Text style={page.fee}>
           Network Fee: {transaction?.fee.toFixed(8)} ISLM
         </Text>
@@ -72,9 +92,11 @@ export const TransactionFinishScreen = ({
           <InvoiceIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
           <Text style={page.buttonText}>Details</Text>
         </IconButton>
-        <IconButton onPress={onPress} style={page.button}>
+        <IconButton onPress={onPressContact} style={page.button}>
           <PenIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Text style={page.buttonText}>Edit Contact</Text>
+          <Text style={page.buttonText}>
+            {contact ? 'Edit Contact' : 'Add Contact'}
+          </Text>
         </IconButton>
         <IconButton onPress={onPress} style={page.button}>
           <BlockIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
