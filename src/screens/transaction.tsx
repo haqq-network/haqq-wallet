@@ -1,30 +1,40 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {PopupHeader} from '../components/popup-header';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {TransactionFormScreen} from './transaction-form';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
 import {TransactionFinishScreen} from './transaction-finish';
+import {TransactionAddressScreen} from './transaction-address';
+import {TransactionSumScreen} from './transaction-sum';
+import {createStackNavigator} from '@react-navigation/stack';
+import {ScanQrScreen} from './scan-qr';
 
-const TransactionStack = createNativeStackNavigator();
+const TransactionStack = createStackNavigator();
 type TransactionScreenProp = CompositeScreenProps<any, any>;
 
 export const TransactionScreen = ({route}: TransactionScreenProp) => {
   return (
     <TransactionStack.Navigator screenOptions={{header: PopupHeader}}>
       <TransactionStack.Screen
-        name={'transaction-form'}
-        component={TransactionFormScreen}
+        name="transactionAddress"
+        component={TransactionAddressScreen}
         initialParams={route.params ?? {}}
+        options={{title: 'Address'}}
       />
       <TransactionStack.Screen
-        name={'transaction-confirmation'}
+        name="transactionSum"
+        component={TransactionSumScreen}
+        options={{title: 'Send'}}
+      />
+      <TransactionStack.Screen
+        name="transactionConfirmation"
         component={TransactionConfirmationScreen}
+        options={{title: 'Preview'}}
       />
       <TransactionStack.Screen
-        name={'transaction-finish'}
+        name="transactionFinish"
         component={TransactionFinishScreen}
       />
+      <TransactionStack.Screen name="transactionQR" component={ScanQrScreen} />
     </TransactionStack.Navigator>
   );
 };

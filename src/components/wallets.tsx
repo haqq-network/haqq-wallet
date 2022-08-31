@@ -25,11 +25,11 @@ export const Wallets = () => {
   }
 
   return (
-    <>
+    <View style={{paddingHorizontal: 20}}>
       <View style={{marginBottom: 24}}>
         <WalletCard wallet={wallets[0]} />
       </View>
       <H2 style={{marginVertical: 12, textAlign: 'left'}}>Transactions</H2>
-    </>
+    </View>
   );
 };
