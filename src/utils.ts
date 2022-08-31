@@ -30,6 +30,7 @@ export function prepareTransactions(
 
     const newRow = {
       ...cloned,
+      createdAt: row.createdAt,
       source:
         row.from === source
           ? TransactionSource.send
@@ -41,7 +42,7 @@ export function prepareTransactions(
 
   return Array.from(hash.keys())
     .map(d => new Date(d))
-    .sort((a, b) => +b - +b)
+    .sort((a, b) => +b - +a)
     .reduce((memo: TransactionList[], key) => {
       const k = formatISO(key, {representation: 'date'});
       const tmp = (hash.get(k) ?? []).sort(

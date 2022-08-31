@@ -46,6 +46,7 @@ const page = StyleSheet.create({
     paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   infoContainer: {marginLeft: 16, flex: 1},
   infoRow: {

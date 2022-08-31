@@ -21,6 +21,7 @@ export const TransactionDate = ({item}: TransactionDate) => {
 const page = StyleSheet.create({
   container: {
     paddingVertical: 12,
+    paddingHorizontal: 20,
   },
   text: {
     fontWeight: '600',

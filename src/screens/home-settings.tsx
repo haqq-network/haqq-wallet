@@ -44,8 +44,8 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         utils.entropyToMnemonic(utils.randomBytes(16)),
         'Addition account',
       )
-      .then(wallet => {
-        Alert.prompt('wallet created', wallet.name);
+      .then(w => {
+        Alert.alert('wallet created', w.name);
       });
   }, [wallet]);
 
@@ -61,6 +61,18 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         title="Import wallet"
         onPress={() => navigation.navigate('importWallet')}
       />
+
+      {/*<Button*/}
+      {/*  title="Transaction finish"*/}
+      {/*  onPress={() =>*/}
+      {/*    navigation.navigate('transaction', {*/}
+      {/*      screen: 'transactionFinish',*/}
+      {/*      params: {*/}
+      {/*        hash: '0xaff27ee05ebe95f3aee19a4ac25289a8b0d26eb23abc6aa55d40da586e9cfed2',*/}
+      {/*      },*/}
+      {/*    })*/}
+      {/*  }*/}
+      {/*/>*/}
 
       <Spacer />
       <Button title="Logout" onPress={onLogout} />

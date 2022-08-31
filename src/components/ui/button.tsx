@@ -87,8 +87,8 @@ const page = StyleSheet.create({
     paddingHorizontal: 28,
   },
   smallContainer: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   containedContainer: {
     backgroundColor: GRAPHIC_GREEN_1,
