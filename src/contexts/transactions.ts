@@ -48,6 +48,7 @@ class Transactions extends EventEmitter {
     from: string,
     to: string,
     amount: number,
+    estimateFee: number,
   ) {
     realm.write(() => {
       realm.create('Transaction', {
@@ -58,13 +59,29 @@ class Transactions extends EventEmitter {
         from,
         to,
         value: amount,
-        fee: 0,
+        fee: estimateFee,
         confirmed: false,
       });
     });
   }
 
-  async sendTransaction(from: string, to: string, amount: number) {
+  async getTransaction(hash: string): Promise<TransactionType | null> {
+    const transactions = await realm.objects<TransactionType>('Transaction');
+    const transaction = transactions.filtered(`hash = '${hash}'`);
+
+    if (!transaction.length) {
+      return null;
+    }
+
+    return transaction[0];
+  }
+
+  async sendTransaction(
+    from: string,
+    to: string,
+    amount: number,
+    estimateFee: number,
+  ) {
     const wallet = wallets.getWallet(from);
     if (wallet) {
       await wallet.wallet.connect(getDefaultNetwork());
@@ -75,7 +92,26 @@ class Transactions extends EventEmitter {
         chainId: getChainId(),
       });
 
-      await this.saveTransaction(transaction, from, to, amount);
+      await this.saveTransaction(transaction, from, to, amount, estimateFee);
+
+      requestAnimationFrame(async () => {
+        const local = await this.getTransaction(transaction?.hash);
+
+        if (local) {
+          const receipt = await getDefaultNetwork().getTransactionReceipt(
+            local.hash,
+          );
+          if (receipt.confirmations > 0) {
+            realm.write(() => {
+              local.confirmed = true;
+              local.fee = calcFee(
+                receipt.cumulativeGasUsed,
+                receipt.effectiveGasPrice,
+              );
+            });
+          }
+        }
+      });
 
       return transaction;
     }

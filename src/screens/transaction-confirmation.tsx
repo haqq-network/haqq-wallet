@@ -31,6 +31,7 @@ export const TransactionConfirmationScreen = ({
         from,
         to,
         parseFloat(amount),
+        estimateFee,
       );
 
       if (transaction) {
@@ -44,7 +45,7 @@ export const TransactionConfirmationScreen = ({
         setError(e.message);
       }
     }
-  }, [transactions, from, to, amount, navigation]);
+  }, [transactions, from, to, amount, estimateFee, navigation]);
 
   useEffect(() => {
     transactions

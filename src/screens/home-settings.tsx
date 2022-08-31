@@ -62,6 +62,18 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         onPress={() => navigation.navigate('importWallet')}
       />
 
+      {/*<Button*/}
+      {/*  title="Transaction finish"*/}
+      {/*  onPress={() =>*/}
+      {/*    navigation.navigate('transaction', {*/}
+      {/*      screen: 'transactionFinish',*/}
+      {/*      params: {*/}
+      {/*        hash: '0xaff27ee05ebe95f3aee19a4ac25289a8b0d26eb23abc6aa55d40da586e9cfed2',*/}
+      {/*      },*/}
+      {/*    })*/}
+      {/*  }*/}
+      {/*/>*/}
+
       <Spacer />
       <Button title="Logout" onPress={onLogout} />
     </Container>
