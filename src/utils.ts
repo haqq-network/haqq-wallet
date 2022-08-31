@@ -25,18 +25,18 @@ export function prepareTransactions(
     new Map();
 
   for (const row of transactions) {
+    const cloned = JSON.parse(JSON.stringify(row));
     const result = formatISO(row.createdAt, {representation: 'date'});
 
-    hash.set(
-      result,
-      (hash.get(result) ?? []).concat({
-        ...row,
-        source:
-          row.from === source
-            ? TransactionSource.send
-            : TransactionSource.receive,
-      }),
-    );
+    const newRow = {
+      ...cloned,
+      source:
+        row.from === source
+          ? TransactionSource.send
+          : TransactionSource.receive,
+    };
+
+    hash.set(result, (hash.get(result) ?? []).concat(newRow));
   }
 
   return Array.from(hash.keys())
