@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Container} from '../components/container';
 import {
@@ -12,6 +12,7 @@ import {
 import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {Spacer} from '../components/spacer';
+import {useContacts} from '../contexts/contacts';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -19,11 +20,17 @@ export const TransactionConfirmationScreen = ({
   navigation,
   route,
 }: SendTransactionScreenProp) => {
+  const contacts = useContacts();
   const transactions = useTransactions();
   const {from, to, amount, fee} = route.params;
 
   const [estimateFee, setEstimateFee] = useState(fee ?? 0);
   const [error, setError] = useState('');
+
+  const contact = useMemo(
+    () => contacts.getContact(route.params.to),
+    [contacts, route.params.to],
+  );
 
   const onDone = useCallback(async () => {
     try {
@@ -60,7 +67,15 @@ export const TransactionConfirmationScreen = ({
       <Paragraph style={page.subtitle}>Total Amount</Paragraph>
       <Text style={page.sum}>{(amount + estimateFee).toFixed(8)} ISLM</Text>
       <Paragraph style={page.subtitle}>Send to</Paragraph>
-      <Paragraph style={page.address}>{to}</Paragraph>
+      <Paragraph style={page.address}>
+        {contact && (
+          <Text style={{fontWeight: '600'}}>
+            {contact.name}
+            {'\n'}
+          </Text>
+        )}
+        {to}
+      </Paragraph>
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">

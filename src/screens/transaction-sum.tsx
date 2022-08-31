@@ -16,20 +16,43 @@ import {
   Paragraph,
   Swap,
 } from '../components/ui';
-import {BG_2, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {
+  BG_2,
+  GRAPHIC_GREEN_1,
+  TEXT_BASE_1,
+  TEXT_BASE_2,
+  TEXT_RED_1,
+} from '../variables';
 import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
+import {useContacts} from '../contexts/contacts';
+import {shortAddress} from '../models/contact';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
-
+const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
 export const TransactionSumScreen = ({
   route,
   navigation,
 }: TransactionSumScreenProp) => {
+  const contacts = useContacts();
   const wallets = useWallets();
   const [amount, setAmount] = useState('');
   const [balance, setBalance] = useState(0);
+  const [error, setError] = useState('');
+
+  const contact = useMemo(
+    () => contacts.getContact(route.params.to),
+    [contacts, route.params.to],
+  );
+
+  const formattedAddress = useMemo(
+    () =>
+      contact
+        ? `${contact.name} ${route.params.to}`
+        : shortAddress(route.params.to),
+    [contact, route.params.to],
+  );
 
   useEffect(() => {
     wallets.getBalance(route.params.from).then(result => {
@@ -37,7 +60,14 @@ export const TransactionSumScreen = ({
     });
   }, [route.params.from, wallets]);
 
-  const checked = useMemo(() => parseFloat(amount) > 0, [amount]);
+  const checked = useMemo(
+    () =>
+      parseFloat(amount) > 0 &&
+      balance > 0 &&
+      parseFloat(amount) < balance &&
+      !error,
+    [error, amount, balance],
+  );
 
   const onDone = useCallback(async () => {
     navigation.navigate('transactionConfirmation', {
@@ -48,8 +78,22 @@ export const TransactionSumScreen = ({
   }, [amount, navigation, route.params.from, route.params.to]);
 
   const onPressMax = useCallback(() => {
-    setAmount(balance.toFixed(2));
+    setAmount(balance.toFixed(8));
   }, [balance]);
+
+  const onChangeValue = useCallback((value: string) => {
+    setAmount(value);
+    setError(() => {
+      if (!value.match(numbersRegExp)) {
+        return 'Wrong symbol';
+      }
+      if (parseFloat(value) > balance) {
+        return "You don't have enough funds";
+      }
+
+      return '';
+    });
+  }, []);
 
   const onPressSwap = () => {};
 
@@ -57,7 +101,12 @@ export const TransactionSumScreen = ({
     <Container>
       <KeyboardAvoidingView style={{flex: 1, justifyContent: 'space-between'}}>
         <LabeledBlock label="Send to" style={{marginBottom: 50}}>
-          <Paragraph style={{color: TEXT_BASE_1}}>{route.params.to}</Paragraph>
+          <Paragraph
+            style={{color: TEXT_BASE_1}}
+            numberOfLines={1}
+            ellipsizeMode="middle">
+            {formattedAddress}
+          </Paragraph>
         </LabeledBlock>
         <Text style={page.subtitle}>ISLM</Text>
         <View style={page.sum}>
@@ -68,7 +117,7 @@ export const TransactionSumScreen = ({
             style={page.input}
             value={amount}
             placeholder="0"
-            onChangeText={setAmount}
+            onChangeText={onChangeValue}
             keyboardType="numeric"
             placeholderTextColor={TEXT_BASE_2}
           />
@@ -79,9 +128,13 @@ export const TransactionSumScreen = ({
             size={ButtonSize.small}
           />
         </View>
-        <Text style={page.available}>
-          Available: ${balance.toFixed(8)} ISLM
-        </Text>
+        {error ? (
+          <Text style={[page.help, page.error]}>{error}</Text>
+        ) : (
+          <Text style={[page.help, page.available]}>
+            Available: ${balance.toFixed(8)} ISLM
+          </Text>
+        )}
         <Spacer />
         <Button
           disabled={!checked}
@@ -124,10 +177,15 @@ const page = StyleSheet.create({
     marginBottom: 10,
   },
   available: {
+    color: TEXT_BASE_2,
+  },
+  error: {
+    color: TEXT_RED_1,
+  },
+  help: {
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 18,
     textAlign: 'center',
-    color: TEXT_BASE_2,
   },
 });
