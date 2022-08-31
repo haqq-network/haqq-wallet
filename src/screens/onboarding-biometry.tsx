@@ -32,6 +32,7 @@ export const OnboardingBiometryScreen = ({
   const onClickEnable = useCallback(async () => {
     try {
       await app.biometryAuth();
+      app.biometry = true;
       onClickSkip();
     } catch (e) {
       if (e instanceof Error) {
