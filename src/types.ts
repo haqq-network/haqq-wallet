@@ -48,6 +48,8 @@ export type RootStackParamList = {
   detailsQr: {address: string};
   backupNotification: undefined;
   settingsAccounts: undefined;
+  settingsAccountDetail: {address: string};
+  settingsAccountStyle: {address: string};
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
   settingsSecurity: undefined;

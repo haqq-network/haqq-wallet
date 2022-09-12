@@ -1,9 +1,10 @@
 import React from 'react';
-import {ContactType, shortAddress} from '../models/contact';
+import {ContactType} from '../models/contact';
 import {Text, TouchableWithoutFeedback, View} from 'react-native';
 import {BG_8} from '../variables';
 import {Paragraph} from './ui';
 import {app} from '../contexts/app';
+import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
   item: ContactType;

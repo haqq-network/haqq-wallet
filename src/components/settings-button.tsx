@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {ArrowForwardIcon, Paragraph} from './ui';
-import {Spacer} from './spacer';
-import {GRAPHIC_SECOND_3, TEXT_BASE_1} from '../variables';
+import {StyleSheet, View} from 'react-native';
+import {MenuNavigationButton, Paragraph} from './ui';
+import {TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {
   next?: string;
@@ -15,26 +14,21 @@ export type SettingsButtonProps = {
 export const SettingsButton = ({
   icon,
   title,
-  children,
   onPress,
   next,
 }: SettingsButtonProps) => {
   return (
-    <TouchableWithoutFeedback onPress={() => onPress(next)}>
+    <MenuNavigationButton onPress={() => onPress(next)}>
       <View style={page.container}>
         {icon}
         <Paragraph style={page.text}>{title}</Paragraph>
-        <Spacer />
-        {children}
-        <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
       </View>
-    </TouchableWithoutFeedback>
+    </MenuNavigationButton>
   );
 };
 
 const page = StyleSheet.create({
   container: {
-    paddingVertical: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',

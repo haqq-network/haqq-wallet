@@ -44,6 +44,8 @@ import {SettingsLanguageScreen} from './screens/settings-language';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsAboutScreen} from './screens/settings-about';
+import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
+import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -133,6 +135,20 @@ export const App = () => {
                   component={SettingsAccountsScreen}
                   options={{
                     title: 'Manage accounts',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAccountDetail"
+                  component={SettingsAccountDetailScreen}
+                  options={{
+                    title: 'Account details',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAccountStyle"
+                  component={SettingsAccountStyleScreen}
+                  options={{
+                    title: 'Change style',
                   }}
                 />
                 <Stack.Screen

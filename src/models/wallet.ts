@@ -13,6 +13,8 @@ export const WalletSchema = {
     data: 'string',
     mnemonic_saved: 'bool',
     main: 'bool',
+    cardStyle: 'string',
+    isHidden: 'bool',
   },
   primaryKey: 'address',
 };
@@ -23,7 +25,13 @@ export type WalletType = {
   data: string;
   main: boolean;
   mnemonic_saved: boolean;
+  cardStyle: string;
+  isHidden: boolean;
 };
+
+export enum WalletCardStyle {
+  default = 'default',
+}
 
 export class Wallet {
   address: string;
@@ -32,6 +40,8 @@ export class Wallet {
   wallet: ethers.Wallet;
   main: boolean;
   saved: boolean = false;
+  cardStyle: WalletCardStyle = WalletCardStyle.default;
+  isHidden: boolean = false;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
@@ -43,6 +53,8 @@ export class Wallet {
         name: '',
         mnemonic_saved: false,
         main: false,
+        cardStyle: WalletCardStyle.default,
+        isHidden: false,
       },
       tmp,
     );
@@ -58,6 +70,8 @@ export class Wallet {
         name: '',
         mnemonic_saved: true,
         main: false,
+        cardStyle: WalletCardStyle.default,
+        isHidden: false,
       },
       tmp,
     );
@@ -83,6 +97,7 @@ export class Wallet {
     this.wallet = wallet;
     this.mnemonic_saved = data.mnemonic_saved;
     this.main = data.main;
+    this.isHidden = data.isHidden;
   }
 
   async serialize(
@@ -99,21 +114,44 @@ export class Wallet {
       data: wallet,
       mnemonic_saved: this.mnemonic_saved,
       main: this.main,
+      cardStyle: this.cardStyle,
+      isHidden: this.isHidden,
     };
   }
 
-  updateWallet(data: Partial<Pick<WalletType, 'main' | 'mnemonic_saved'>>) {
+  updateWallet(
+    data: Partial<
+      Pick<
+        WalletType,
+        'main' | 'mnemonic_saved' | 'cardStyle' | 'isHidden' | 'name'
+      >
+    >,
+  ) {
     const wallets = realm.objects<WalletType>('Wallet');
     const filtered = wallets.filtered(`address = '${this.address}'`);
     if (filtered.length > 0) {
       realm.write(() => {
-        filtered[0].main = data.main || filtered[0].main;
+        filtered[0].name = data.name || filtered[0].name;
+        this.name = filtered[0].name;
 
+        filtered[0].main = data.main || filtered[0].main;
         this.main = filtered[0].main;
+
         filtered[0].mnemonic_saved =
-          data.mnemonic_saved || filtered[0].mnemonic_saved;
+          typeof data.mnemonic_saved !== 'undefined'
+            ? data.mnemonic_saved
+            : filtered[0].mnemonic_saved;
 
         this.mnemonic_saved = filtered[0].mnemonic_saved;
+
+        filtered[0].cardStyle = data.cardStyle || filtered[0].cardStyle;
+        this.cardStyle = filtered[0].cardStyle as WalletCardStyle;
+
+        filtered[0].isHidden =
+          typeof data.isHidden !== 'undefined'
+            ? data.isHidden
+            : filtered[0].isHidden;
+        this.isHidden = filtered[0].isHidden;
       });
     }
   }

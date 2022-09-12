@@ -24,7 +24,7 @@ import {Alert, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
-import {shortAddress} from '../models/contact';
+import {shortAddress} from '../utils';
 
 type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
 
