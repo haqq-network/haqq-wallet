@@ -37,6 +37,13 @@ import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
 import {createStackNavigator} from '@react-navigation/stack';
 import {BackupNotificationScreen} from './screens/backup-notification';
+import {SettingsAccountsScreen} from './screens/settings-accounts';
+import {PopupHeader} from './components/popup-header';
+import {SettingsAddressBookScreen} from './screens/settings-address-book';
+import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsSecurityScreen} from './screens/settings-security';
+import {SettingsFAQScreen} from './screens/settings-faq';
+import {SettingsAboutScreen} from './screens/settings-about';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -113,6 +120,57 @@ export const App = () => {
                 component={BackupNotificationScreen}
                 options={actionsSheet}
               />
+              <Stack.Group
+                screenOptions={{
+                  headerShown: true,
+                  header: PopupHeader,
+                  headerStyle: {
+                    height: 56,
+                  },
+                }}>
+                <Stack.Screen
+                  name="settingsAccounts"
+                  component={SettingsAccountsScreen}
+                  options={{
+                    title: 'Manage accounts',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAddressBook"
+                  component={SettingsAddressBookScreen}
+                  options={{
+                    title: 'Address book',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsLanguage"
+                  component={SettingsLanguageScreen}
+                  options={{
+                    title: 'Language',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsSecurity"
+                  component={SettingsSecurityScreen}
+                  options={{
+                    title: 'Security',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsFaq"
+                  component={SettingsFAQScreen}
+                  options={{
+                    title: 'Security',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAbout"
+                  component={SettingsAboutScreen}
+                  options={{
+                    title: 'About',
+                  }}
+                />
+              </Stack.Group>
             </Stack.Navigator>
           </NavigationContainer>
           <Modals />

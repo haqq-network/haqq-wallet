@@ -46,4 +46,11 @@ export type RootStackParamList = {
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
+  backupNotification: undefined;
+  settingsAccounts: undefined;
+  settingsAddressBook: undefined;
+  settingsLanguage: undefined;
+  settingsSecurity: undefined;
+  settingsFaq: undefined;
+  settingsAbout: undefined;
 };
