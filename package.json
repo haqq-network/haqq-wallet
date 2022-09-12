@@ -19,7 +19,7 @@
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
     "@react-navigation/stack": "^6.2.3",
-    "@sentry/react-native": "5.0.0-alpha.1",
+    "@sentry/react-native": "5.0.0-alpha.3",
     "@tradle/react-native-http": "^2.0.0",
     "assert": "^2.0.0",
     "big-integer": "^1.6.51",

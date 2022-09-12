@@ -397,14 +397,14 @@ PODS:
   - RNScreens (3.17.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (5.0.0-alpha.1):
+  - RNSentry (5.0.0-alpha.3):
     - React-Core
-    - Sentry (= 7.21.0)
+    - Sentry (= 7.24.1)
   - RNSVG (12.4.4):
     - React-Core
-  - Sentry (7.21.0):
-    - Sentry/Core (= 7.21.0)
-  - Sentry/Core (7.21.0)
+  - Sentry (7.24.1):
+    - Sentry/Core (= 7.24.1)
+  - Sentry/Core (7.24.1)
   - SocketRocket (0.6.0)
   - TouchID (4.4.1):
     - React
@@ -675,9 +675,9 @@ SPEC CHECKSUMS:
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
-  RNSentry: 3fe837b57904d35e69e3bf94591ea045fc181ddd
+  RNSentry: 2569f6b6065d3fee890f26e9ceb775221419eba8
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
-  Sentry: 194d0a2d4d6ef92c9c08c98d998340b0a63efd81
+  Sentry: 1ed2d3f2973658bf6ab7ed43857c8e321a1625dd
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 44c64131616253fa83366295acdbce3d14926041
