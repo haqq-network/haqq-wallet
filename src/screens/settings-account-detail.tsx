@@ -2,11 +2,18 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {Container} from '../components/container';
 import {useWallets} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {StyleSheet, Switch, View} from 'react-native';
+import {Dimensions, StyleSheet, Switch, View} from 'react-native';
 import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
-import {MenuNavigationButton, Paragraph, ParagraphSize} from '../components/ui';
+import {
+  Card,
+  CardMask,
+  MenuNavigationButton,
+  Paragraph,
+  ParagraphSize,
+} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import prompt from 'react-native-prompt-android';
+
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;
 
 export const SettingsAccountDetailScreen = ({
@@ -56,6 +63,9 @@ export const SettingsAccountDetailScreen = ({
   return (
     <Container>
       <View style={page.header}>
+        <Card width={Dimensions.get('window').width - 72} style={page.card}>
+          <CardMask style={{width: Dimensions.get('window').width - 112}} />
+        </Card>
         <Paragraph style={page.headerName}>{name}</Paragraph>
         <Paragraph size={ParagraphSize.s} style={page.headerAddress}>
           {wallet?.address}
@@ -92,6 +102,9 @@ export const SettingsAccountDetailScreen = ({
 };
 
 const page = StyleSheet.create({
+  card: {
+    marginBottom: 12,
+  },
   header: {
     backgroundColor: BG_8,
     borderRadius: 16,
