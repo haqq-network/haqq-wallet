@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Container} from '../components/container';
 import {useWallets} from '../contexts/wallets';
 import {FlatList} from 'react-native';
@@ -12,6 +12,21 @@ export const SettingsAccountsScreen = ({
   navigation,
 }: SettingsAccountsScreenProps) => {
   const wallets = useWallets();
+  const [rows, setRows] = useState(wallets.getWallets());
+
+  useEffect(() => {
+    setRows(wallets.getWallets());
+
+    const callback = () => {
+      setRows(wallets.getWallets());
+    };
+
+    wallets.on('wallets', callback);
+    return () => {
+      wallets.off('wallets', callback);
+    };
+  }, [wallets]);
+
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate('settingsAccountDetail', {
@@ -23,7 +38,7 @@ export const SettingsAccountsScreen = ({
   return (
     <Container>
       <FlatList
-        data={wallets.getWallets()}
+        data={rows}
         renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
         keyExtractor={(wallet: Wallet) => wallet.address}
       />

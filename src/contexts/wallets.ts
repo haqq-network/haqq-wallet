@@ -18,13 +18,13 @@ class Wallets extends EventEmitter {
 
     const provider = getDefaultNetwork();
     const wallets = realm.objects<WalletType>('Wallet');
-    console.log(JSON.stringify(wallets));
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
         wallet.saved = true;
-        this.wallets.set(wallet.address, wallet);
+
+        this.attachWallet(wallet);
 
         if (wallet.main) {
           this.main = wallet;
@@ -50,6 +50,20 @@ class Wallets extends EventEmitter {
     this.initialized = true;
   }
 
+  attachWallet(wallet: Wallet) {
+    wallet.addListener('change', this.onChangeWallet);
+    this.wallets.set(wallet.address, wallet);
+  }
+
+  deAttachWallet(wallet: Wallet) {
+    wallet.removeListener('change', this.onChangeWallet);
+    this.wallets.delete(wallet.address);
+  }
+
+  onChangeWallet = () => {
+    this.emit('wallets');
+  };
+
   async addWalletFromMnemonic(
     mnemonic: string,
     name?: string,
@@ -60,7 +74,8 @@ class Wallets extends EventEmitter {
 
     wallet.name = name ?? wallet.name;
     wallet.main = this.wallets.size === 0;
-    this.wallets.set(wallet.address, wallet);
+
+    this.attachWallet(wallet);
 
     if (save) {
       await this.saveWallet(wallet);
@@ -80,7 +95,7 @@ class Wallets extends EventEmitter {
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
     wallet.name = name;
 
-    this.wallets.set(wallet.address, wallet);
+    this.attachWallet(wallet);
     if (save) {
       await this.saveWallet(wallet);
     }
@@ -91,17 +106,17 @@ class Wallets extends EventEmitter {
 
   async removeWallet(address: string) {
     const wallet = this.wallets.get(address);
-    this.wallets.delete(address);
+    if (wallet) {
+      const wallets = await realm.objects<WalletType>('Wallet');
+      const filtered = wallets.filtered(`address = '${address}'`);
+      if (filtered.length > 0) {
+        realm.write(() => {
+          realm.delete(filtered[0]);
+        });
 
-    const wallets = await realm.objects<WalletType>('Wallet');
-    const filtered = wallets.filtered(`address = '${address}'`);
-    if (filtered.length > 0) {
-      realm.write(() => {
-        realm.delete(filtered[0]);
-      });
-
-      this.emit('wallets');
-      wallet?.emit('change');
+        wallet?.emit('change');
+        this.deAttachWallet(wallet);
+      }
     }
   }
 
@@ -157,15 +172,17 @@ export function useWallets() {
 }
 
 export function useWallet(address: string) {
-  const [wallet, setWallet] = useState(wallets.getWallet(address));
+  const [_date, setDate] = useState(new Date());
+
+  const wallet = wallets.getWallet(address);
 
   useEffect(() => {
-    setWallet(wallets.getWallet(address));
+    setDate(new Date());
   }, [address]);
 
   useEffect(() => {
     const subscription = () => {
-      setWallet(wallets.getWallet(address));
+      setDate(new Date());
     };
 
     wallet?.on('change', subscription);
@@ -175,5 +192,6 @@ export function useWallet(address: string) {
     };
   }, [wallet, address]);
 
+  console.log('updated wallet', wallet);
   return wallet;
 }

@@ -16,6 +16,9 @@ import prompt from 'react-native-prompt-android';
 
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;
 
+const cardMaskWidth = Dimensions.get('window').width - 112;
+const cardMaskHeight = cardMaskWidth * 0.547528517;
+
 export const SettingsAccountDetailScreen = ({
   navigation,
   route,
@@ -66,8 +69,13 @@ export const SettingsAccountDetailScreen = ({
   return (
     <Container>
       <View style={page.header}>
-        <Card width={Dimensions.get('window').width - 72} style={page.card}>
-          <CardMask style={{width: Dimensions.get('window').width - 112}} />
+        <Card
+          width={Dimensions.get('window').width - 72}
+          style={page.card}
+          variant={wallet.cardStyle}>
+          <CardMask
+            style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
+          />
         </Card>
         <Paragraph style={page.headerName}>{name}</Paragraph>
         <Paragraph size={ParagraphSize.s} style={page.headerAddress}>

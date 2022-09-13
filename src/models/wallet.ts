@@ -26,12 +26,15 @@ export type WalletType = {
   data: string;
   main: boolean;
   mnemonic_saved: boolean;
-  cardStyle: string;
+  cardStyle: WalletCardStyle;
   isHidden: boolean;
 };
 
 export enum WalletCardStyle {
-  default = 'default',
+  defaultGreen = 'defaultGreen',
+  defaultYellow = 'defaultYellow',
+  defaultBlue = 'defaultBlue',
+  defaultBlack = 'defaultBlack',
 }
 
 export class Wallet extends EventEmitter {
@@ -41,7 +44,7 @@ export class Wallet extends EventEmitter {
   wallet: ethers.Wallet;
   main: boolean;
   saved: boolean = false;
-  cardStyle: WalletCardStyle = WalletCardStyle.default;
+  cardStyle: WalletCardStyle;
   isHidden: boolean = false;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
@@ -54,7 +57,7 @@ export class Wallet extends EventEmitter {
         name: '',
         mnemonic_saved: false,
         main: false,
-        cardStyle: WalletCardStyle.default,
+        cardStyle: WalletCardStyle.defaultGreen,
         isHidden: false,
       },
       tmp,
@@ -71,7 +74,7 @@ export class Wallet extends EventEmitter {
         name: '',
         mnemonic_saved: true,
         main: false,
-        cardStyle: WalletCardStyle.default,
+        cardStyle: WalletCardStyle.defaultGreen,
         isHidden: false,
       },
       tmp,
@@ -100,6 +103,7 @@ export class Wallet extends EventEmitter {
     this.mnemonic_saved = data.mnemonic_saved;
     this.main = data.main;
     this.isHidden = data.isHidden;
+    this.cardStyle = data.cardStyle as WalletCardStyle;
   }
 
   async serialize(
@@ -155,6 +159,8 @@ export class Wallet extends EventEmitter {
             : filtered[0].isHidden;
         this.isHidden = filtered[0].isHidden;
       });
+
+      this.emit('change');
     }
   }
 }

@@ -114,6 +114,23 @@ export const BlockIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
+export const CheckIcon = ({style, color}: SvgProps) => (
+  <Svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    style={style}
+    color={color}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.1729 3.52075C13.4991 3.8003 13.5369 4.29132 13.2573 4.61746L6.59065 12.3952C6.44288 12.5676 6.22717 12.6668 6.00011 12.6668C5.77306 12.6668 5.55735 12.5676 5.40958 12.3952L2.74292 9.28412C2.46337 8.95797 2.50114 8.46696 2.82728 8.18741C3.15343 7.90786 3.64444 7.94563 3.92399 8.27178L6.00012 10.6939L12.0762 3.60512C12.3558 3.27897 12.8468 3.2412 13.1729 3.52075Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const CloseCircle = ({style, color}: SvgProps) => (
   <Svg
     width="24"
