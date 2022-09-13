@@ -46,6 +46,7 @@ import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
 import {SettingsAccountStyleScreen} from './screens/settings-account-style';
+import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -142,6 +143,9 @@ export const App = () => {
                   component={SettingsAccountDetailScreen}
                   options={{
                     title: 'Account details',
+                    headerRight: props => (
+                      <SettingsAccountRemoveButton {...props} />
+                    ),
                   }}
                 />
                 <Stack.Screen

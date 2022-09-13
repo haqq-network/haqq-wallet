@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Container} from '../components/container';
-import {useWallets} from '../contexts/wallets';
+import {useWallet} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
 import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
@@ -20,11 +20,7 @@ export const SettingsAccountDetailScreen = ({
   navigation,
   route,
 }: SettingsAccountDetailScreenProps) => {
-  const wallets = useWallets();
-  const wallet = useMemo(
-    () => wallets.getWallet(route.params.address),
-    [wallets, route.params.address],
-  );
+  const wallet = useWallet(route.params.address);
   const [isHidden, setIsHidden] = useState(wallet?.isHidden);
   const [name, setName] = useState(wallet?.name ?? '');
 
@@ -39,7 +35,10 @@ export const SettingsAccountDetailScreen = ({
         },
         {
           text: 'Save',
-          onPress: n => setName(n),
+          onPress: n => {
+            wallet?.updateWallet({name: n});
+            setName(n);
+          },
         },
       ],
       {
@@ -59,6 +58,10 @@ export const SettingsAccountDetailScreen = ({
     wallet?.updateWallet({isHidden: !wallet?.isHidden});
     setIsHidden(wallet?.isHidden);
   }, [wallet]);
+
+  if (!wallet) {
+    return null;
+  }
 
   return (
     <Container>

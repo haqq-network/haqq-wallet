@@ -4,6 +4,7 @@ import {Provider} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
+import {EventEmitter} from 'events';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -33,7 +34,7 @@ export enum WalletCardStyle {
   default = 'default',
 }
 
-export class Wallet {
+export class Wallet extends EventEmitter {
   address: string;
   name: string;
   mnemonic_saved: boolean;
@@ -92,6 +93,7 @@ export class Wallet {
   }
 
   constructor(data: WalletType, wallet: ethers.Wallet) {
+    super();
     this.address = data.address;
     this.name = data.name;
     this.wallet = wallet;

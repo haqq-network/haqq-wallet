@@ -1,14 +1,15 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {Icon, IconButton} from './ui';
-import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {TEXT_BASE_1} from '../variables';
+import {StackHeaderProps} from '@react-navigation/stack';
 
 export const PopupHeader = ({
   options,
   back,
   navigation,
-}: NativeStackHeaderProps) => {
+  route,
+}: StackHeaderProps) => {
   return (
     <SafeAreaView>
       <View style={page.container}>
@@ -22,7 +23,11 @@ export const PopupHeader = ({
           <View style={page.spacer} />
         )}
         <Text style={page.title}>{options.title}</Text>
-        <View style={page.spacer} />
+        {options.headerRight ? (
+          options.headerRight(route.params)
+        ) : (
+          <View style={page.spacer} />
+        )}
       </View>
     </SafeAreaView>
   );

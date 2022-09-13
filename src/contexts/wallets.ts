@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
@@ -18,6 +18,7 @@ class Wallets extends EventEmitter {
 
     const provider = getDefaultNetwork();
     const wallets = realm.objects<WalletType>('Wallet');
+    console.log(JSON.stringify(wallets));
     const password = await app.getPassword();
     for (const rawWallet of wallets) {
       try {
@@ -89,6 +90,7 @@ class Wallets extends EventEmitter {
   }
 
   async removeWallet(address: string) {
+    const wallet = this.wallets.get(address);
     this.wallets.delete(address);
 
     const wallets = await realm.objects<WalletType>('Wallet');
@@ -97,8 +99,10 @@ class Wallets extends EventEmitter {
       realm.write(() => {
         realm.delete(filtered[0]);
       });
+
+      this.emit('wallets');
+      wallet?.emit('change');
     }
-    this.emit('wallets');
   }
 
   async saveWallet(wallet: Wallet) {
@@ -150,4 +154,26 @@ export function useWallets() {
   const context = useContext(WalletsContext);
 
   return context;
+}
+
+export function useWallet(address: string) {
+  const [wallet, setWallet] = useState(wallets.getWallet(address));
+
+  useEffect(() => {
+    setWallet(wallets.getWallet(address));
+  }, [address]);
+
+  useEffect(() => {
+    const subscription = () => {
+      setWallet(wallets.getWallet(address));
+    };
+
+    wallet?.on('change', subscription);
+
+    return () => {
+      wallet?.off('change', subscription);
+    };
+  }, [wallet, address]);
+
+  return wallet;
 }
