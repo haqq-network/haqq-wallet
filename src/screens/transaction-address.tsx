@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {utils} from 'ethers';
@@ -29,7 +30,6 @@ export const TransactionAddressScreen = ({
   route,
   navigation,
 }: TransactionAddressScreenProp) => {
-  console.log('route', route);
   const app = useApp();
   const contacts = useContacts();
   const [to, setTo] = useState('');
@@ -67,7 +67,7 @@ export const TransactionAddressScreen = ({
   }, []);
 
   return (
-    <Container>
+    <View style={{flex: 1}}>
       <Input
         label="Send to"
         style={page.input}
@@ -104,15 +104,16 @@ export const TransactionAddressScreen = ({
       </Spacer>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{height: 70}}>
+        style={{height: 70, marginBottom: 40}}>
         <Button
           disabled={!checked}
           variant={ButtonVariant.contained}
           title="Continue"
           onPress={onDone}
+          style={page.button}
         />
       </KeyboardAvoidingView>
-    </Container>
+    </View>
   );
 };
 
@@ -125,5 +126,9 @@ const page = StyleSheet.create({
   },
   input: {
     marginBottom: 12,
+    marginHorizontal: 20,
+  },
+  button: {
+    marginHorizontal: 20,
   },
 });

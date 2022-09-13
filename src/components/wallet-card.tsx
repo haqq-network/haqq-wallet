@@ -13,7 +13,7 @@ import {
   IconButton,
   QRCode,
 } from './ui';
-import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
 import {RootStackParamList} from '../types';
 
 export type BalanceProps = {
@@ -70,14 +70,7 @@ export const WalletCard = ({wallet}: BalanceProps) => {
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
-        <IconButton
-          onPress={() =>
-            navigation.navigate('details', {address: wallet.address})
-          }>
-          <Text style={[page.text, {opacity: 0.8}]}>
-            {wallet.name || 'name'}
-          </Text>
-        </IconButton>
+        <Text style={[page.text, {opacity: 0.8}]}>{wallet.name || 'name'}</Text>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />

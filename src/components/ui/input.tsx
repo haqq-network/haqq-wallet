@@ -10,7 +10,10 @@ export type InputProps = TextInputProps & {
 
 export const Input = ({style, label, rightAction, ...props}: InputProps) => {
   return (
-    <LabeledBlock label={label} style={style} rightAction={rightAction}>
+    <LabeledBlock
+      label={label}
+      style={[page.wrapper, style]}
+      rightAction={rightAction}>
       <TextInput style={page.input} {...props} />
     </LabeledBlock>
   );
@@ -21,5 +24,9 @@ const page = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: TEXT_BASE_1,
+  },
+  wrapper: {
+    minHeight: 58,
+    alignItems: 'center',
   },
 });

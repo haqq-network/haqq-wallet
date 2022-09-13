@@ -7,6 +7,8 @@ export enum ParagraphSize {
   xs = 'xs',
   s = 's',
   m = 'm',
+  l = 'l',
+  xl = 'xl',
 }
 
 export type ParagraphProps = TextProps & {
@@ -48,5 +50,13 @@ const page = StyleSheet.create({
   m: {
     fontSize: 16,
     lineHeight: 22,
+  },
+  l: {
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  xl: {
+    fontSize: 22,
+    lineHeight: 30,
   },
 });
