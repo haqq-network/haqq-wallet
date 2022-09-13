@@ -53,6 +53,12 @@ export type RootStackParamList = {
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
   settingsSecurity: undefined;
+  settingsSecurityPin: undefined;
+  settingsSecurityPinRepeat: {
+    pin: string;
+  };
   settingsFaq: undefined;
   settingsAbout: undefined;
 };
+
+export type BiometryType = 'FaceID' | 'TouchID' | null;

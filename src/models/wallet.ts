@@ -125,6 +125,21 @@ export class Wallet extends EventEmitter {
     };
   }
 
+  async updateWalletData(pin: string) {
+    const wallet = await encrypt(pin, {
+      privateKey: this.wallet.privateKey,
+      mnemonic: this.wallet.mnemonic,
+    });
+
+    const wallets = realm.objects<WalletType>('Wallet');
+    const filtered = wallets.filtered(`address = '${this.address}'`);
+    if (filtered.length > 0) {
+      realm.write(() => {
+        filtered[0].data = wallet;
+      });
+    }
+  }
+
   updateWallet(
     data: Partial<
       Pick<

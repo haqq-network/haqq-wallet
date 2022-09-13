@@ -143,6 +143,12 @@ class Wallets extends EventEmitter {
     }
   }
 
+  async updateWalletsData(pin: string) {
+    for (const wallet of this.wallets.values()) {
+      await wallet.updateWalletData(pin);
+    }
+  }
+
   getWallet(address: string): Wallet | undefined {
     return this.wallets.get(address);
   }

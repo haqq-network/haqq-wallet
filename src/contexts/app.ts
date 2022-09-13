@@ -10,11 +10,13 @@ import {createContext, useContext} from 'react';
 import {realm} from '../models';
 import {User, UserType} from '../models/user';
 import {AppState} from 'react-native';
+import {BiometryType} from '../types';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
   color: '#e00606', // Android,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+  // unifiedErrors: false,
 };
 
 enum AppStatus {
@@ -32,8 +34,15 @@ class App extends EventEmitter {
   private user: User | undefined;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
+  private _biometryType: BiometryType = null;
 
   async init(): Promise<void> {
+    try {
+      this._biometryType = await TouchID.isSupported(optionalConfigObject);
+    } catch (_e) {
+      this._biometryType = null;
+    }
+
     this.user = await this.loadUser('username');
 
     if (!this.user.isLoaded) {
@@ -98,9 +107,20 @@ class App extends EventEmitter {
     });
   }
 
+  async updatePin(pin: string) {
+    await setGenericPassword('username', pin, {
+      storage: STORAGE_TYPE.AES,
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    });
+  }
+
   async comparePin(pin: string) {
     const password = await this.getPassword();
     return password === pin ? Promise.resolve() : Promise.reject();
+  }
+
+  get biometryType() {
+    return this._biometryType;
   }
 
   get biometry() {

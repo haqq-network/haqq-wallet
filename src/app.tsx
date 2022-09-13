@@ -47,6 +47,8 @@ import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
 import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
+import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsSecurityPinRepeatScreen} from './screens/settings-security-pin-repeat';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -174,6 +176,13 @@ export const App = () => {
                   component={SettingsSecurityScreen}
                   options={{
                     title: 'Security',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsSecurityPin"
+                  component={SettingsSecurityPinScreen}
+                  options={{
+                    title: 'Change PIN',
                   }}
                 />
                 <Stack.Screen
