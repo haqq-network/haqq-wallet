@@ -92,9 +92,9 @@ export const SettingsAccountDetailScreen = ({
       </MenuNavigationButton>
       <MenuNavigationButton onPress={onPressRename} hideArrow>
         <View>
-          <Paragraph style={page.title}>Change style</Paragraph>
+          <Paragraph style={page.title}>Hide account</Paragraph>
           <Paragraph size={ParagraphSize.s} style={page.subtitle}>
-            Change the picture of the account
+            Will be hidden from the general list
           </Paragraph>
         </View>
         <Spacer />
