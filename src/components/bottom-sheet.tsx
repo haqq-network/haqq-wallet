@@ -7,23 +7,28 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {BG_1} from '../variables';
+import {BG_1, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
+import {CloseCircle, IconButton, Paragraph, ParagraphSize} from './ui';
+import {Spacer} from './spacer';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
+  title?: string;
   onClose: () => void;
 };
 
 const h = Dimensions.get('window').height;
 
-export const BottomSheet = ({children, onClose}: BottomSheetProps) => {
+export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
   const pan = useRef(new Animated.Value(1)).current;
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gestureState) => {
-        pan.setValue(gestureState.dy / h);
+        if (gestureState.dy >= 0) {
+          pan.setValue(gestureState.dy / h);
+        }
       },
       onPanResponderRelease: (event, gestureState) => {
         if (gestureState.dy > h / 3) {
@@ -36,15 +41,17 @@ export const BottomSheet = ({children, onClose}: BottomSheetProps) => {
   ).current;
 
   const onClosePopup = useCallback(() => {
-    Animated.spring(pan, {
+    Animated.timing(pan, {
       toValue: 1,
+      duration: 250,
       useNativeDriver: false,
     }).start(onClose);
   }, [pan, onClose]);
 
   const onOpenPopup = useCallback(() => {
-    Animated.spring(pan, {
+    Animated.timing(pan, {
       toValue: 0,
+      duration: 250,
       useNativeDriver: false,
     }).start();
   }, [pan]);
@@ -77,7 +84,20 @@ export const BottomSheet = ({children, onClose}: BottomSheetProps) => {
           justifyContent: 'flex-end',
         }}
         {...panResponder.panHandlers}>
-        <View style={page.content}>{children}</View>
+        <View style={page.content}>
+          <View style={page.header}>
+            <Paragraph
+              size={ParagraphSize.xl}
+              style={{fontWeight: '600', color: TEXT_BASE_1}}>
+              {title}
+            </Paragraph>
+            <Spacer />
+            <IconButton onPress={onClosePopup}>
+              <CloseCircle color={GRAPHIC_SECOND_2} />
+            </IconButton>
+          </View>
+          {children}
+        </View>
       </Animated.View>
     </View>
   );
@@ -96,5 +116,11 @@ const page = StyleSheet.create({
     borderTopRightRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    height: 44,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

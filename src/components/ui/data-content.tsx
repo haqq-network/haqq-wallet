@@ -4,13 +4,24 @@ import {Paragraph, ParagraphSize} from './paragraph';
 import {TEXT_BASE_1} from '../../variables';
 
 export type DataContentProps = {
-  title: string;
+  title: React.ReactNode;
   subtitle?: string;
   style?: ViewStyle;
+  reversed?: boolean;
 };
-export const DataContent = ({title, subtitle, style}: DataContentProps) => {
+export const DataContent = ({
+  title,
+  subtitle,
+  style,
+  reversed,
+}: DataContentProps) => {
   return (
-    <View style={[page.container, style]}>
+    <View
+      style={[
+        page.container,
+        reversed && {flexDirection: 'column-reverse'},
+        style,
+      ]}>
       <Paragraph style={page.title}>{title}</Paragraph>
       <Paragraph size={ParagraphSize.s} style={page.subtitle}>
         {subtitle}
@@ -20,6 +31,6 @@ export const DataContent = ({title, subtitle, style}: DataContentProps) => {
 };
 const page = StyleSheet.create({
   container: {},
-  title: {color: TEXT_BASE_1, marginBottom: 2},
+  title: {color: TEXT_BASE_1, marginBottom: 2, alignItems: 'center'},
   subtitle: {},
 });
