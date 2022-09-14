@@ -1,8 +1,7 @@
 import React, {useMemo} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {Card, MenuNavigationButton, Paragraph} from './ui';
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {Card, DataContent, MenuNavigationButton} from './ui';
 import {Wallet} from '../models/wallet';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {shortAddress} from '../utils';
 
 export type WalletRowProps = {
@@ -20,10 +19,11 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
   return (
     <MenuNavigationButton onPress={() => onPress(item.address)} style={style}>
       <Card width={78} borderRadius={8} variant={item.cardStyle} />
-      <View style={page.info}>
-        <Paragraph style={page.title}>{item.name}</Paragraph>
-        <Text style={page.address}>{shortAddress(item.address)}</Text>
-      </View>
+      <DataContent
+        style={page.info}
+        title={item.name}
+        subtitle={shortAddress(item.address)}
+      />
     </MenuNavigationButton>
   );
 };
@@ -37,13 +37,5 @@ const page = StyleSheet.create({
   },
   info: {
     marginLeft: 12,
-  },
-  title: {
-    color: TEXT_BASE_1,
-  },
-  address: {
-    fontSize: 14,
-    lineHeight: 18,
-    color: TEXT_BASE_2,
   },
 });

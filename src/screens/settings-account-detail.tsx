@@ -7,6 +7,7 @@ import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {
   Card,
   CardMask,
+  DataContent,
   MenuNavigationButton,
   Paragraph,
   ParagraphSize,
@@ -68,7 +69,7 @@ export const SettingsAccountDetailScreen = ({
 
   return (
     <Container>
-      <View style={page.header}>
+      <View style={[page.header, wallet.isHidden && {opacity: 0.5}]}>
         <Card
           width={Dimensions.get('window').width - 72}
           style={page.card}
@@ -83,28 +84,22 @@ export const SettingsAccountDetailScreen = ({
         </Paragraph>
       </View>
       <MenuNavigationButton onPress={onPressRename}>
-        <View>
-          <Paragraph style={page.title}>Rename account</Paragraph>
-          <Paragraph size={ParagraphSize.s} style={page.subtitle}>
-            Change the account display name
-          </Paragraph>
-        </View>
+        <DataContent
+          title="Rename account"
+          subtitle="Change the account display name"
+        />
       </MenuNavigationButton>
       <MenuNavigationButton onPress={onPressStyle}>
-        <View>
-          <Paragraph style={page.title}>Change style</Paragraph>
-          <Paragraph size={ParagraphSize.s} style={page.subtitle}>
-            Change the picture of the account
-          </Paragraph>
-        </View>
+        <DataContent
+          title="Change style"
+          subtitle="Change the picture of the account"
+        />
       </MenuNavigationButton>
       <MenuNavigationButton onPress={onPressRename} hideArrow>
-        <View>
-          <Paragraph style={page.title}>Hide account</Paragraph>
-          <Paragraph size={ParagraphSize.s} style={page.subtitle}>
-            Will be hidden from the general list
-          </Paragraph>
-        </View>
+        <DataContent
+          title="Hide account"
+          subtitle="Will be hidden from the general list"
+        />
         <Spacer />
         <Switch value={isHidden} onChange={onToggleIsHidden} />
       </MenuNavigationButton>

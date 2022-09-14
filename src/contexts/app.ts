@@ -8,7 +8,7 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
-import {User, UserType} from '../models/user';
+import {Language, User, UserType} from '../models/user';
 import {AppState} from 'react-native';
 import {BiometryType} from '../types';
 
@@ -131,6 +131,18 @@ class App extends EventEmitter {
     realm.write(() => {
       if (this.user) {
         this.user.raw.biometry = value;
+      }
+    });
+  }
+
+  get language() {
+    return this.user?.language || Language.en;
+  }
+
+  set language(value) {
+    realm.write(() => {
+      if (this.user) {
+        this.user.raw.language = value;
       }
     });
   }

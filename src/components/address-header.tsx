@@ -15,7 +15,6 @@ const page = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     fontWeight: '600',
-    lineHeight: 30,
     color: TEXT_BASE_1,
   },
 });

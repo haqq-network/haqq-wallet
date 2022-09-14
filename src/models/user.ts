@@ -4,13 +4,20 @@ export const UserSchema = {
   name: 'User',
   properties: {
     username: 'string',
+    language: 'string',
     biometry: 'bool',
   },
   primaryKey: 'username',
 };
 
+export enum Language {
+  en = 'en',
+  ar = 'ar',
+}
+
 export type UserType = {
   username: string;
+  language: Language;
   biometry: boolean;
 };
 
@@ -30,6 +37,10 @@ export class User {
 
   get biometry() {
     return this.raw.biometry;
+  }
+
+  get language() {
+    return this.raw.language as Language;
   }
 
   touchLastActivity() {

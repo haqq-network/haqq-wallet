@@ -7,7 +7,7 @@ import {ContactSchema} from './contact';
 
 export const realm = new Realm({
   schema: [WalletSchema, UserSchema, TransactionSchema, ContactSchema],
-  schemaVersion: 9,
+  schemaVersion: 10,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -72,6 +72,16 @@ export const realm = new Realm({
         const newObject = newObjects[objectIndex];
         newObject.isHidden = false;
         newObject.cardStyle = 'defaultGreen';
+      }
+    }
+
+    if (oldRealm.schemaVersion < 10) {
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects('User');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.language = 'en';
       }
     }
   },

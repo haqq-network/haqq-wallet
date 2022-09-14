@@ -1,8 +1,8 @@
 import React from 'react';
 import {ContactType} from '../models/contact';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {BG_8, TEXT_BASE_1} from '../variables';
-import {Paragraph} from './ui';
+import {BG_8} from '../variables';
+import {DataContent} from './ui';
 import {app} from '../contexts/app';
 import {shortAddress} from '../utils';
 
@@ -19,12 +19,11 @@ export const AddressRow = ({item}: AddressRowProps) => {
         <View style={page.badge}>
           <Text>{item.name.slice(0, 1)}</Text>
         </View>
-        <View style={page.info}>
-          <Paragraph style={{flex: 1, color: TEXT_BASE_1}}>
-            {item.name}
-          </Paragraph>
-          <Paragraph style={{flex: 1}}>{shortAddress(item.account)}</Paragraph>
-        </View>
+        <DataContent
+          style={page.info}
+          title={item.name}
+          subtitle={shortAddress(item.account)}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

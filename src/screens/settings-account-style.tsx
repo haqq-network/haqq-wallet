@@ -31,7 +31,7 @@ export const SettingsAccountStyleScreen = ({
           key={v}
           onPress={() => {
             wallet?.updateWallet({
-              cardStyle: v,
+              cardStyle: v as WalletCardStyle,
             });
             navigation.goBack();
           }}>
