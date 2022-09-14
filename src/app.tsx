@@ -48,7 +48,7 @@ import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
 import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
-import {SettingsSecurityPinRepeatScreen} from './screens/settings-security-pin-repeat';
+import {TransactionDetailScreen} from './screens/transaction-detail';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -123,6 +123,11 @@ export const App = () => {
               <Stack.Screen
                 name="backupNotification"
                 component={BackupNotificationScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="transactionDetail"
+                component={TransactionDetailScreen}
                 options={actionsSheet}
               />
               <Stack.Group

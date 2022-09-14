@@ -3,7 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {FlatList} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {useTransactions} from '../contexts/transactions';
-import {TransactionPreview} from '../components/transaction-preview';
+import {TransactionRow} from '../components/transaction-row';
 import {Wallets} from '../components/wallets';
 import {prepareTransactions} from '../utils';
 import {TransactionList} from '../types';
@@ -38,6 +38,15 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
     [navigation],
   );
 
+  const onPressRow = useCallback(
+    (hash: string) => {
+      navigation.navigate('transactionDetail', {
+        hash,
+      });
+    },
+    [navigation],
+  );
+
   useEffect(() => {
     transactions.on('transactions', onTransactionList);
     wallets.on('wallets', onTransactionList);
@@ -58,7 +67,9 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
       style={{flex: 1}}
       ListHeaderComponent={Wallets}
       data={transactionsList}
-      renderItem={TransactionPreview}
+      renderItem={({item}) => (
+        <TransactionRow item={item} onPress={onPressRow} />
+      )}
       keyExtractor={item => item.hash}
     />
   );

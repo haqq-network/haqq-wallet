@@ -6,18 +6,17 @@ import {TransactionReceive} from './transactions/receive';
 
 export type TransactionPreviewProps = {
   item: TransactionList;
+  onPress: (hash: string) => void;
 };
 
-export const TransactionPreview = ({item}: TransactionPreviewProps) => {
-  console.log('TransactionPreview', JSON.stringify(item));
-
+export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
   switch (item.source) {
     case TransactionSource.date:
       return <TransactionDate item={item} />;
     case TransactionSource.send:
-      return <TransactionSend item={item} />;
+      return <TransactionSend item={item} onPress={onPress} />;
     case TransactionSource.receive:
-      return <TransactionReceive item={item} />;
+      return <TransactionReceive item={item} onPress={onPress} />;
     default:
       return null;
   }
