@@ -266,14 +266,8 @@ export const InvoiceIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const ISLMIcon = ({style, color}: SvgProps) => (
-  <Svg
-    width="65"
-    height="64"
-    viewBox="0 0 65 64"
-    fill="none"
-    style={style}
-    color={color}>
+export const ISLMIcon = (props: SvgProps) => (
+  <Svg width="65" height="64" viewBox="0 0 65 64" fill="none" {...props}>
     <Rect x="0.5" width="64" height="64" rx="16" fill="currentColor" />
     <Path
       fillRule="evenodd"

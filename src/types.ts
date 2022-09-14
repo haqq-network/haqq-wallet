@@ -43,6 +43,9 @@ export type RootStackParamList = {
     | {
         from: string;
       };
+  transactionDetail: {
+    hash: string;
+  };
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
