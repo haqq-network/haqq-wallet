@@ -1,17 +1,20 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {TEXT_BASE_1} from '../variables';
+import {Paragraph, ParagraphSize} from './ui';
 
 export const AddressHeader = () => {
-  return <Text style={page.container}>My contacts</Text>;
+  return (
+    <Paragraph size={ParagraphSize.xl} style={page.container}>
+      My contacts
+    </Paragraph>
+  );
 };
 
 const page = StyleSheet.create({
   container: {
-    marginVertical: 12,
+    marginHorizontal: 20,
     fontWeight: '600',
-    fontSize: 22,
-    lineHeight: 30,
     color: TEXT_BASE_1,
   },
 });

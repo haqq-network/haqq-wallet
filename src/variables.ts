@@ -14,6 +14,7 @@ export const GRAPHIC_BASE_3 = '#FFFFFF';
 export const GRAPHIC_BASE_4 = '#CFD1DB';
 export const GRAPHIC_GREEN_1 = '#01B26E';
 export const GRAPHIC_SECOND_1 = '#EFEFEF';
+export const GRAPHIC_SECOND_3 = '#CCCDD2';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';

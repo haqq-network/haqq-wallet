@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
@@ -23,7 +23,8 @@ class Wallets extends EventEmitter {
       try {
         const wallet = await Wallet.fromCache(rawWallet, provider, password);
         wallet.saved = true;
-        this.wallets.set(wallet.address, wallet);
+
+        this.attachWallet(wallet);
 
         if (wallet.main) {
           this.main = wallet;
@@ -49,6 +50,20 @@ class Wallets extends EventEmitter {
     this.initialized = true;
   }
 
+  attachWallet(wallet: Wallet) {
+    wallet.addListener('change', this.onChangeWallet);
+    this.wallets.set(wallet.address, wallet);
+  }
+
+  deAttachWallet(wallet: Wallet) {
+    wallet.removeListener('change', this.onChangeWallet);
+    this.wallets.delete(wallet.address);
+  }
+
+  onChangeWallet = () => {
+    this.emit('wallets');
+  };
+
   async addWalletFromMnemonic(
     mnemonic: string,
     name?: string,
@@ -59,7 +74,8 @@ class Wallets extends EventEmitter {
 
     wallet.name = name ?? wallet.name;
     wallet.main = this.wallets.size === 0;
-    this.wallets.set(wallet.address, wallet);
+
+    this.attachWallet(wallet);
 
     if (save) {
       await this.saveWallet(wallet);
@@ -79,7 +95,7 @@ class Wallets extends EventEmitter {
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
     wallet.name = name;
 
-    this.wallets.set(wallet.address, wallet);
+    this.attachWallet(wallet);
     if (save) {
       await this.saveWallet(wallet);
     }
@@ -89,16 +105,19 @@ class Wallets extends EventEmitter {
   }
 
   async removeWallet(address: string) {
-    this.wallets.delete(address);
+    const wallet = this.wallets.get(address);
+    if (wallet) {
+      const wallets = await realm.objects<WalletType>('Wallet');
+      const filtered = wallets.filtered(`address = '${address}'`);
+      if (filtered.length > 0) {
+        realm.write(() => {
+          realm.delete(filtered[0]);
+        });
 
-    const wallets = await realm.objects<WalletType>('Wallet');
-    const filtered = wallets.filtered(`address = '${address}'`);
-    if (filtered.length > 0) {
-      realm.write(() => {
-        realm.delete(filtered[0]);
-      });
+        wallet?.emit('change');
+        this.deAttachWallet(wallet);
+      }
     }
-    this.emit('wallets');
   }
 
   async saveWallet(wallet: Wallet) {
@@ -121,6 +140,12 @@ class Wallets extends EventEmitter {
       realm.write(() => {
         realm.delete(wallet);
       });
+    }
+  }
+
+  async updateWalletsData(pin: string) {
+    for (const wallet of this.wallets.values()) {
+      await wallet.updateWalletData(pin);
     }
   }
 
@@ -150,4 +175,29 @@ export function useWallets() {
   const context = useContext(WalletsContext);
 
   return context;
+}
+
+export function useWallet(address: string) {
+  const [_date, setDate] = useState(new Date());
+
+  const wallet = wallets.getWallet(address);
+
+  useEffect(() => {
+    setDate(new Date());
+  }, [address]);
+
+  useEffect(() => {
+    const subscription = () => {
+      setDate(new Date());
+    };
+
+    wallet?.on('change', subscription);
+
+    return () => {
+      wallet?.off('change', subscription);
+    };
+  }, [wallet, address]);
+
+  console.log('updated wallet', wallet);
+  return wallet;
 }

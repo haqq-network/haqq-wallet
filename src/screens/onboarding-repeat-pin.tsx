@@ -5,16 +5,10 @@ import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container} from '../components/container';
 import {Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
-import TouchID from 'react-native-touch-id';
 import {useApp} from '../contexts/app';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
 type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
-
-const optionalConfigObject = {
-  unifiedErrors: false,
-  passcodeFallback: false,
-};
 
 export const OnboardingRepeatPinScreen = ({
   navigation,
@@ -37,17 +31,15 @@ export const OnboardingRepeatPinScreen = ({
       app
         .setPin(pin)
         .then(() => app.createUser())
-        .then(() =>
-          TouchID.isSupported(optionalConfigObject)
-            .then(biometryType => {
-              navigation.navigate('onboarding-biometry', {
-                biometryType: biometryType,
-              });
-            })
-            .catch(_error => {
-              navigation.navigate('onboarding-store-wallet');
-            }),
-        );
+        .then(() => {
+          if (app.biometryType !== null) {
+            navigation.navigate('onboarding-biometry', {
+              biometryType: app.biometryType,
+            });
+          } else {
+            navigation.navigate('onboarding-store-wallet');
+          }
+        });
     }
   }, [pin, currentPin, app, navigation, route.params.next]);
 

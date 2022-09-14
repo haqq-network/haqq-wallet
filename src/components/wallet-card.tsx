@@ -1,23 +1,26 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {NavigationProp} from '@react-navigation/core/src/types';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {
   ArrowReceive,
   ArrowSend,
+  Card,
   Copy,
   CopyButton,
   IconButton,
   QRCode,
 } from './ui';
-import {BG_4, BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import {RootStackParamList} from '../types';
 
 export type BalanceProps = {
   wallet: Wallet;
 };
 export const WalletCard = ({wallet}: BalanceProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const wallets = useWallets();
   const [balance, setBalance] = useState(0);
 
@@ -58,20 +61,16 @@ export const WalletCard = ({wallet}: BalanceProps) => {
   }, [navigation, wallet.address]);
 
   const onClickBackup = useCallback(() => {
-    // navigation.navigate('backup', {address: wallet.address});
+    navigation.navigate('backup', {address: wallet.address});
   }, [navigation, wallet.address]);
 
   return (
-    <View style={page.container}>
+    <Card
+      variant={wallet.cardStyle}
+      style={page.container}
+      width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
-        <IconButton
-          onPress={() =>
-            navigation.navigate('details', {address: wallet.address})
-          }>
-          <Text style={[page.text, {opacity: 0.8}]}>
-            {wallet.name || 'name'}
-          </Text>
-        </IconButton>
+        <Text style={[page.text, {opacity: 0.8}]}>{wallet.name || 'name'}</Text>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
@@ -97,16 +96,13 @@ export const WalletCard = ({wallet}: BalanceProps) => {
           <Text style={page.buttonText}>Receive</Text>
         </IconButton>
       </View>
-    </View>
+    </Card>
   );
 };
 
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
-    padding: 20,
-    backgroundColor: '#03BF77',
-    borderRadius: 16,
   },
   topNav: {
     flexDirection: 'row',
@@ -138,7 +134,7 @@ const page = StyleSheet.create({
   button: {
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: BG_4,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 6,
   },

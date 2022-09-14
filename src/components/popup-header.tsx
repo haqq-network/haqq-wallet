@@ -1,28 +1,35 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {Icon, IconButton} from './ui';
-import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {TEXT_BASE_1} from '../variables';
+import {StackHeaderProps} from '@react-navigation/stack';
 
 export const PopupHeader = ({
   options,
   back,
   navigation,
-}: NativeStackHeaderProps) => {
+  route,
+}: StackHeaderProps) => {
   return (
-    <View style={page.container}>
-      {back ? (
-        <IconButton
-          onPress={navigation.goBack}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-          <Icon name={'arrow-back'} />
-        </IconButton>
-      ) : (
-        <View style={page.spacer} />
-      )}
-      <Text style={page.title}>{options.title}</Text>
-      <View style={page.spacer} />
-    </View>
+    <SafeAreaView>
+      <View style={page.container}>
+        {back ? (
+          <IconButton
+            onPress={navigation.goBack}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+            <Icon name={'arrow-back'} />
+          </IconButton>
+        ) : (
+          <View style={page.spacer} />
+        )}
+        <Text style={page.title}>{options.title}</Text>
+        {options.headerRight ? (
+          options.headerRight(route.params)
+        ) : (
+          <View style={page.spacer} />
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 

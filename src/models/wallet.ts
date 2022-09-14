@@ -4,6 +4,7 @@ import {Provider} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
+import {EventEmitter} from 'events';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -13,6 +14,8 @@ export const WalletSchema = {
     data: 'string',
     mnemonic_saved: 'bool',
     main: 'bool',
+    cardStyle: 'string',
+    isHidden: 'bool',
   },
   primaryKey: 'address',
 };
@@ -23,15 +26,26 @@ export type WalletType = {
   data: string;
   main: boolean;
   mnemonic_saved: boolean;
+  cardStyle: WalletCardStyle;
+  isHidden: boolean;
 };
 
-export class Wallet {
+export enum WalletCardStyle {
+  defaultGreen = 'defaultGreen',
+  defaultYellow = 'defaultYellow',
+  defaultBlue = 'defaultBlue',
+  defaultBlack = 'defaultBlack',
+}
+
+export class Wallet extends EventEmitter {
   address: string;
   name: string;
   mnemonic_saved: boolean;
   wallet: ethers.Wallet;
   main: boolean;
   saved: boolean = false;
+  cardStyle: WalletCardStyle;
+  isHidden: boolean = false;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
@@ -43,6 +57,8 @@ export class Wallet {
         name: '',
         mnemonic_saved: false,
         main: false,
+        cardStyle: WalletCardStyle.defaultGreen,
+        isHidden: false,
       },
       tmp,
     );
@@ -58,6 +74,8 @@ export class Wallet {
         name: '',
         mnemonic_saved: true,
         main: false,
+        cardStyle: WalletCardStyle.defaultGreen,
+        isHidden: false,
       },
       tmp,
     );
@@ -78,11 +96,14 @@ export class Wallet {
   }
 
   constructor(data: WalletType, wallet: ethers.Wallet) {
+    super();
     this.address = data.address;
     this.name = data.name;
     this.wallet = wallet;
     this.mnemonic_saved = data.mnemonic_saved;
     this.main = data.main;
+    this.isHidden = data.isHidden;
+    this.cardStyle = data.cardStyle as WalletCardStyle;
   }
 
   async serialize(
@@ -99,22 +120,62 @@ export class Wallet {
       data: wallet,
       mnemonic_saved: this.mnemonic_saved,
       main: this.main,
+      cardStyle: this.cardStyle,
+      isHidden: this.isHidden,
     };
   }
 
-  updateWallet(data: Partial<Pick<WalletType, 'main' | 'mnemonic_saved'>>) {
+  async updateWalletData(pin: string) {
+    const wallet = await encrypt(pin, {
+      privateKey: this.wallet.privateKey,
+      mnemonic: this.wallet.mnemonic,
+    });
+
     const wallets = realm.objects<WalletType>('Wallet');
     const filtered = wallets.filtered(`address = '${this.address}'`);
     if (filtered.length > 0) {
       realm.write(() => {
-        filtered[0].main = data.main || filtered[0].main;
+        filtered[0].data = wallet;
+      });
+    }
+  }
 
+  updateWallet(
+    data: Partial<
+      Pick<
+        WalletType,
+        'main' | 'mnemonic_saved' | 'cardStyle' | 'isHidden' | 'name'
+      >
+    >,
+  ) {
+    const wallets = realm.objects<WalletType>('Wallet');
+    const filtered = wallets.filtered(`address = '${this.address}'`);
+    if (filtered.length > 0) {
+      realm.write(() => {
+        filtered[0].name = data.name || filtered[0].name;
+        this.name = filtered[0].name;
+
+        filtered[0].main = data.main || filtered[0].main;
         this.main = filtered[0].main;
+
         filtered[0].mnemonic_saved =
-          data.mnemonic_saved || filtered[0].mnemonic_saved;
+          typeof data.mnemonic_saved !== 'undefined'
+            ? data.mnemonic_saved
+            : filtered[0].mnemonic_saved;
 
         this.mnemonic_saved = filtered[0].mnemonic_saved;
+
+        filtered[0].cardStyle = data.cardStyle || filtered[0].cardStyle;
+        this.cardStyle = filtered[0].cardStyle as WalletCardStyle;
+
+        filtered[0].isHidden =
+          typeof data.isHidden !== 'undefined'
+            ? data.isHidden
+            : filtered[0].isHidden;
+        this.isHidden = filtered[0].isHidden;
       });
+
+      this.emit('change');
     }
   }
 }

@@ -37,6 +37,18 @@ import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
 import {createStackNavigator} from '@react-navigation/stack';
 import {BackupNotificationScreen} from './screens/backup-notification';
+import {SettingsAccountsScreen} from './screens/settings-accounts';
+import {PopupHeader} from './components/popup-header';
+import {SettingsAddressBookScreen} from './screens/settings-address-book';
+import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsSecurityScreen} from './screens/settings-security';
+import {SettingsFAQScreen} from './screens/settings-faq';
+import {SettingsAboutScreen} from './screens/settings-about';
+import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
+import {SettingsAccountStyleScreen} from './screens/settings-account-style';
+import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
+import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsSecurityPinRepeatScreen} from './screens/settings-security-pin-repeat';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -113,6 +125,81 @@ export const App = () => {
                 component={BackupNotificationScreen}
                 options={actionsSheet}
               />
+              <Stack.Group
+                screenOptions={{
+                  headerShown: true,
+                  header: PopupHeader,
+                  headerStyle: {
+                    height: 56,
+                  },
+                }}>
+                <Stack.Screen
+                  name="settingsAccounts"
+                  component={SettingsAccountsScreen}
+                  options={{
+                    title: 'Manage accounts',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAccountDetail"
+                  component={SettingsAccountDetailScreen}
+                  options={{
+                    title: 'Account details',
+                    headerRight: props => (
+                      <SettingsAccountRemoveButton {...props} />
+                    ),
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAccountStyle"
+                  component={SettingsAccountStyleScreen}
+                  options={{
+                    title: 'Change style',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAddressBook"
+                  component={SettingsAddressBookScreen}
+                  options={{
+                    title: 'Address book',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsLanguage"
+                  component={SettingsLanguageScreen}
+                  options={{
+                    title: 'Language',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsSecurity"
+                  component={SettingsSecurityScreen}
+                  options={{
+                    title: 'Security',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsSecurityPin"
+                  component={SettingsSecurityPinScreen}
+                  options={{
+                    title: 'Change PIN',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsFaq"
+                  component={SettingsFAQScreen}
+                  options={{
+                    title: 'Security',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsAbout"
+                  component={SettingsAboutScreen}
+                  options={{
+                    title: 'About',
+                  }}
+                />
+              </Stack.Group>
             </Stack.Navigator>
           </NavigationContainer>
           <Modals />
