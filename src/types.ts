@@ -46,4 +46,19 @@ export type RootStackParamList = {
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
+  backupNotification: undefined;
+  settingsAccounts: undefined;
+  settingsAccountDetail: {address: string};
+  settingsAccountStyle: {address: string};
+  settingsAddressBook: undefined;
+  settingsLanguage: undefined;
+  settingsSecurity: undefined;
+  settingsSecurityPin: undefined;
+  settingsSecurityPinRepeat: {
+    pin: string;
+  };
+  settingsFaq: undefined;
+  settingsAbout: undefined;
 };
+
+export type BiometryType = 'FaceID' | 'TouchID' | null;

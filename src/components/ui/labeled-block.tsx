@@ -18,7 +18,7 @@ export const LabeledBlock = ({
   return (
     <View style={containerStyle} {...props}>
       <View style={{flex: 1}}>
-        <Text style={page.placeholder}>{label}</Text>
+        {label && <Text style={page.placeholder}>{label}</Text>}
         <View style={page.inner}>{children}</View>
       </View>
       {rightAction && (

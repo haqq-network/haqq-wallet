@@ -27,7 +27,7 @@ import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/container';
 import {useContacts} from '../contexts/contacts';
-import {shortAddress} from '../models/contact';
+import {shortAddress} from '../utils';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
