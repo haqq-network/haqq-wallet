@@ -16,7 +16,6 @@ import {
   Input,
   QRScanner,
 } from '../components/ui';
-import {Container} from '../components/container';
 import {Spacer} from '../components/spacer';
 import {useContacts} from '../contexts/contacts';
 import {AddressRow} from '../components/address-row';
@@ -36,19 +35,6 @@ export const TransactionAddressScreen = ({
   const contactsList = contacts.getContacts();
   const checked = useMemo(() => utils.isAddress(to.trim()), [to]);
 
-  useEffect(() => {
-    const subscription = (value: string) => {
-      if (utils.isAddress(value.trim())) {
-        setTo(value.trim());
-      }
-    };
-    app.on('address', subscription);
-
-    return () => {
-      app.off('address', subscription);
-    };
-  }, [app]);
-
   const onDone = useCallback(async () => {
     navigation.navigate('transactionSum', {
       from: route.params.from,
@@ -57,10 +43,18 @@ export const TransactionAddressScreen = ({
   }, [navigation, route.params.from, to]);
 
   const onPressQR = useCallback(() => {
-    navigation.navigate('transactionQR', {
-      key: route.key,
-    });
-  }, [navigation, route.key]);
+    const subscription = (value: string) => {
+      if (utils.isAddress(value.trim())) {
+        setTo(value.trim());
+        app.off('address', subscription);
+        app.emit('modal', null);
+      }
+    };
+
+    app.on('address', subscription);
+
+    app.emit('modal', {type: 'qr'});
+  }, [app]);
 
   const onPressClear = useCallback(() => {
     setTo('');
@@ -78,17 +72,11 @@ export const TransactionAddressScreen = ({
         rightAction={
           to === '' ? (
             <IconButton onPress={onPressQR}>
-              <QRScanner
-                color={GRAPHIC_GREEN_1}
-                style={{width: 20, height: 20}}
-              />
+              <QRScanner color={GRAPHIC_GREEN_1} width={20} height={20} />
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <CloseCircle
-                color={GRAPHIC_BASE_2}
-                style={{width: 20, height: 20}}
-              />
+              <CloseCircle color={GRAPHIC_BASE_2} width={20} height={20} />
             </IconButton>
           )
         }
