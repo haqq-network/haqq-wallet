@@ -25,7 +25,6 @@ import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
 import {SetPinScreen} from './screens/set-pin';
-import {ScanQrScreen} from './screens/scan-qr';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
@@ -100,7 +99,6 @@ export const App = () => {
               <Stack.Group screenOptions={{presentation: 'modal'}}>
                 <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="details" component={DetailsScreen} />
-                <Stack.Screen name="scanQr" component={ScanQrScreen} />
                 <Stack.Screen
                   name="importWallet"
                   component={ImportWalletScreen}

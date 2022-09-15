@@ -48,6 +48,17 @@ export const Alert = ({style, color}: SvgProps) => (
   </Svg>
 );
 
+export const ArrowBackIcon = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M0 11.9941C0 12.2627 0.0966797 12.499 0.300781 12.7031L8.81934 21.0283C9.00195 21.2217 9.23828 21.3184 9.51758 21.3184C10.0762 21.3184 10.5059 20.8994 10.5059 20.3408C10.5059 20.0615 10.3877 19.8252 10.2158 19.6426L2.39551 11.9941L10.2158 4.3457C10.3877 4.16309 10.5059 3.91602 10.5059 3.64746C10.5059 3.08887 10.0762 2.66992 9.51758 2.66992C9.23828 2.66992 9.00195 2.7666 8.81934 2.94922L0.300781 11.2852C0.0966797 11.4785 0 11.7256 0 11.9941Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const ArrowForwardIcon = ({style, color}: SvgProps) => (
   <Svg
     width="24"
@@ -131,14 +142,8 @@ export const CheckIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const CloseCircle = ({style, color}: SvgProps) => (
-  <Svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    style={style}
-    color={color}>
+export const CloseCircle = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -215,6 +220,17 @@ export const DiscordIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
+export const FlashLightIcon = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M7 4.09022H17V3.66146C17 2.53595 16.3874 2 15.2016 2H8.79842C7.61265 2 7 2.53595 7 3.66146V4.09022ZM10.8142 22H13.1858C14.3715 22 14.9743 21.464 14.9743 20.3385V10.8522C14.9743 9.91425 15.2213 9.23537 15.5968 8.71728L16.2391 7.85976C16.6937 7.22555 17 6.62707 17 5.8678V5.13533H7V5.8678C7 6.62707 7.30632 7.22555 7.76087 7.85976L8.39328 8.71728C8.77866 9.23537 9.01581 9.91425 9.01581 10.8522V20.3385C9.01581 21.464 9.62846 22 10.8142 22ZM12 15.1309C11.1897 15.1309 10.666 14.5949 10.666 13.8446V11.3971C10.666 10.6378 11.1897 10.1286 12 10.1465C12.8004 10.1554 13.334 10.6646 13.334 11.3971V13.8446C13.334 14.5949 12.8004 15.1309 12 15.1309ZM12 14.4967C12.4348 14.4967 12.8103 14.1661 12.8103 13.7642C12.8103 13.3622 12.4348 13.0228 12 13.0228C11.5553 13.0228 11.1798 13.3622 11.1798 13.7642C11.1798 14.1661 11.5553 14.4967 12 14.4967Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const GlobalIcon = ({style, color}: SvgProps) => (
   <Svg
     width="24"
@@ -244,6 +260,17 @@ export const HelpSettingsIcon = ({style, color}: SvgProps) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 4C13.8487 4 15.551 4.62708 16.9056 5.68014L14.7574 7.8284C13.967 7.30488 13.0191 7 12 7C10.9809 7 10.033 7.30488 9.24261 7.8284L7.09436 5.68014C8.44904 4.62708 10.1513 4 12 4ZM16.1716 9.24261L18.3199 7.09436C19.3729 8.44904 20 10.1513 20 12C20 13.8487 19.3729 15.551 18.3199 16.9056L16.1716 14.7574C16.6951 13.967 17 13.0191 17 12C17 10.9809 16.6951 10.033 16.1716 9.24261ZM7.09436 18.3199C8.44904 19.3729 10.1513 20 12 20C13.8487 20 15.551 19.3729 16.9056 18.3199L14.7574 16.1716C13.967 16.6951 13.0191 17 12 17C10.9809 17 10.033 16.6951 9.24261 16.1716L7.09436 18.3199ZM7.8284 14.7574L5.68014 16.9056C4.62708 15.551 4 13.8487 4 12C4 10.1513 4.62708 8.44904 5.68014 7.09436L7.8284 9.24261C7.30488 10.033 7 10.9809 7 12C7 13.0191 7.30488 13.967 7.8284 14.7574ZM15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
+export const ImageIcon = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M6 2H18C20.2091 2 22 3.79086 22 6V18C22 20.2091 20.2091 22 18 22H6C3.79086 22 2 20.2091 2 18V6C2 3.79086 3.79086 2 6 2ZM20 6V11.1978L4 14.7534V6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6ZM4 16.8022L20 13.2466V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V16.8022ZM6 8C6 9.10457 6.89543 10 8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8Z"
       fill="currentColor"
     />
   </Svg>
@@ -432,14 +459,8 @@ export const QRCode = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const QRScanner = ({style, color}: SvgProps) => (
-  <Svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    style={style}
-    color={color}>
+export const QRScanner = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"

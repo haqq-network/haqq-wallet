@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Modal, StyleSheet, View} from 'react-native';
+import {Modal} from 'react-native';
 import {
   ConfirmationModal,
   ConfirmationModalProps,
@@ -11,6 +11,7 @@ import {
   SplashModalProps,
 } from '../components/modals';
 import {useApp} from '../contexts/app';
+import {QRModal, QRModalProps} from '../components/modals/qr';
 
 type Loading = {
   type: 'loading';
@@ -28,7 +29,11 @@ type Pin = {
   type: 'pin' & PinModalProps;
 };
 
-type ModalState = Loading | Confirmation | Splash | Pin | null;
+type QR = {
+  type: 'qr' & QRModalProps;
+};
+
+type ModalState = Loading | Confirmation | Splash | Pin | QR | null;
 
 export const Modals = () => {
   const app = useApp();
@@ -63,18 +68,12 @@ export const Modals = () => {
         return <PinModal />;
       case 'splash':
         return <SplashModal />;
+      case 'qr':
+        return <QRModal onClose={onClose} />;
       default:
         return null;
     }
   }, [modal]);
-
-  console.log('modal', modal);
-  //
-  // if (!modal) {
-  //   return null;
-  // }
-  //
-  // return <View style={[StyleSheet.absoluteFill, {zIndex: 1000}]}>{entry}</View>;
 
   return (
     <Modal animationType="fade" visible={!!modal} transparent={true}>

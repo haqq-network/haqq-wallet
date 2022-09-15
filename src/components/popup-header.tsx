@@ -1,7 +1,7 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {Icon, IconButton} from './ui';
-import {TEXT_BASE_1} from '../variables';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {ArrowBackIcon, IconButton, Paragraph, ParagraphSize} from './ui';
+import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 
 export const PopupHeader = ({
@@ -17,12 +17,14 @@ export const PopupHeader = ({
           <IconButton
             onPress={navigation.goBack}
             hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-            <Icon name={'arrow-back'} />
+            <ArrowBackIcon color={GRAPHIC_BASE_1} />
           </IconButton>
         ) : (
           <View style={page.spacer} />
         )}
-        <Text style={page.title}>{options.title}</Text>
+        <Paragraph size={ParagraphSize.l} style={page.title}>
+          {options.title}
+        </Paragraph>
         {options.headerRight ? (
           options.headerRight(route.params)
         ) : (
@@ -42,10 +44,7 @@ const page = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
-    fontStyle: 'normal',
     fontWeight: '600',
-    fontSize: 18,
-    lineHeight: 24,
     textAlign: 'center',
     color: TEXT_BASE_1,
   },
