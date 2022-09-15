@@ -6,7 +6,6 @@ import {TransactionFinishScreen} from './transaction-finish';
 import {TransactionAddressScreen} from './transaction-address';
 import {TransactionSumScreen} from './transaction-sum';
 import {createStackNavigator} from '@react-navigation/stack';
-import {ScanQrScreen} from './scan-qr';
 
 const TransactionStack = createStackNavigator();
 type TransactionScreenProp = CompositeScreenProps<any, any>;
@@ -34,7 +33,6 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
         name="transactionFinish"
         component={TransactionFinishScreen}
       />
-      <TransactionStack.Screen name="transactionQR" component={ScanQrScreen} />
     </TransactionStack.Navigator>
   );
 };

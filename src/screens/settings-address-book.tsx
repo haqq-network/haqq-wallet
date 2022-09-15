@@ -7,67 +7,76 @@ import {CloseCircle, IconButton, Input, QRScanner} from '../components/ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 import {Container} from '../components/container';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {utils} from 'ethers';
+import {useApp} from '../contexts/app';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
-export const SettingsAddressBookScreen = ({
-  navigation,
-  route,
-}: SettingsAddressBookScreenProps) => {
-  const [search, setSearch] = useState('');
-  const contacts = useContacts();
-  const contactsList = useMemo(
-    () =>
-      contacts
-        .getContacts()
-        .filter(
-          contact =>
-            !!`${contact.account} ${contact.name}`
-              .toLowerCase()
-              .match(search.toLowerCase()),
-        ),
-    [contacts, search],
-  );
+export const SettingsAddressBookScreen =
+  ({}: SettingsAddressBookScreenProps) => {
+    const app = useApp();
+    const [search, setSearch] = useState('');
+    const contacts = useContacts();
+    const contactsList = useMemo(
+      () =>
+        contacts
+          .getContacts()
+          .filter(
+            contact =>
+              !!`${contact.account} ${contact.name}`
+                .toLowerCase()
+                .match(search.toLowerCase()),
+          ),
+      [contacts, search],
+    );
 
-  const onPressQR = useCallback(() => {
-    navigation.navigate('transactionQR', {
-      key: route.key,
-    });
-  }, [navigation, route.key]);
-
-  const onPressClear = useCallback(() => {
-    setSearch('');
-  }, []);
-
-  return (
-    <Container style={{margin: 0}}>
-      <Input
-        label=""
-        style={page.input}
-        placeholder="Search or add a contact"
-        onChangeText={setSearch}
-        value={search}
-        multiline={true}
-        rightAction={
-          search === '' ? (
-            <IconButton onPress={onPressQR}>
-              <QRScanner color={GRAPHIC_GREEN_1} style={page.icon} />
-            </IconButton>
-          ) : (
-            <IconButton onPress={onPressClear}>
-              <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
-            </IconButton>
-          )
+    const onPressQR = useCallback(() => {
+      const subscription = (value: string) => {
+        if (utils.isAddress(value.trim())) {
+          setSearch(value.trim());
+          app.off('address', subscription);
+          app.emit('modal', null);
         }
-      />
-      <FlatList
-        data={contactsList}
-        renderItem={AddressRow}
-        ListHeaderComponent={AddressHeader}
-      />
-    </Container>
-  );
-};
+      };
+
+      app.on('address', subscription);
+
+      app.emit('modal', {type: 'qr'});
+    }, [app]);
+
+    const onPressClear = useCallback(() => {
+      setSearch('');
+    }, []);
+
+    return (
+      <Container style={{margin: 0}}>
+        <Input
+          label=""
+          style={page.input}
+          placeholder="Search or add a contact"
+          onChangeText={setSearch}
+          value={search}
+          multiline={true}
+          rightAction={
+            search === '' ? (
+              <IconButton onPress={onPressQR}>
+                <QRScanner color={GRAPHIC_GREEN_1} style={page.icon} />
+              </IconButton>
+            ) : (
+              <IconButton onPress={onPressClear}>
+                <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
+              </IconButton>
+            )
+          }
+        />
+        <FlatList
+          data={contactsList}
+          renderItem={AddressRow}
+          ListHeaderComponent={AddressHeader}
+        />
+      </Container>
+    );
+  };
 
 const page = StyleSheet.create({
   container: {
