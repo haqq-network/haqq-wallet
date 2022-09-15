@@ -88,6 +88,7 @@ class App extends EventEmitter {
         username,
         pin: '',
         biometry: false,
+        language: 'en',
       });
     });
 
