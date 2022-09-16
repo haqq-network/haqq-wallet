@@ -1,7 +1,12 @@
 import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, Paragraph, ParagraphSize} from './ui';
-import {GRAPHIC_SECOND_1, MAGIC_CARD_HEIGHT, TEXT_GREEN_1} from '../variables';
+import {
+  BG_1,
+  GRAPHIC_SECOND_1,
+  MAGIC_CARD_HEIGHT,
+  TEXT_GREEN_1,
+} from '../variables';
 import {useNavigation} from '@react-navigation/native';
 
 export type BalanceProps = {};
@@ -46,6 +51,7 @@ const page = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
+    backgroundColor: BG_1,
     shadowColor: 'rgba(25, 26, 28, 0.08)',
     shadowOffset: {
       width: 0,
