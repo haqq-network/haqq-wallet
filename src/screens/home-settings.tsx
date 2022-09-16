@@ -8,7 +8,7 @@ import {
   ISLMSettingsIcon,
   LanguageSettingsIcon,
   ShieldSettingsIcon,
-  WalletSettingsIcon,
+  WalletIcon,
 } from '../components/ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {Spacer} from '../components/spacer';
@@ -25,7 +25,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
   return (
     <Container>
       <SettingsButton
-        icon={<WalletSettingsIcon color={GRAPHIC_BASE_1} />}
+        icon={<WalletIcon color={GRAPHIC_BASE_1} />}
         title="Manage accounts"
         onPress={onClickButton}
         next="settingsAccounts"

@@ -14,7 +14,7 @@ import {
   IconButton,
   LabeledBlock,
   Paragraph,
-  Swap,
+  SwapVerticalIcon,
 } from '../components/ui';
 import {
   BG_2,
@@ -115,7 +115,7 @@ export const TransactionSumScreen = ({
         <View style={page.sum}>
           <View style={page.swap}>
             <IconButton onPress={onPressSwap} style={page.swapButton}>
-              <Swap color={GRAPHIC_GREEN_1} />
+              <SwapVerticalIcon color={GRAPHIC_GREEN_1} />
             </IconButton>
           </View>
           <TextInput
