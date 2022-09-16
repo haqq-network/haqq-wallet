@@ -1,7 +1,14 @@
 import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {H2, PlusIcon} from './ui';
-import {Animated, Dimensions, PanResponder, View} from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  GestureResponderEvent,
+  PanResponder,
+  PanResponderGestureState,
+  View,
+} from 'react-native';
 import {GRAPHIC_BASE_1, MAGIC_CARD_HEIGHT} from '../variables';
 import {CarouselItem} from './carousel-item';
 import {WalletCard} from './wallet-card';
@@ -11,30 +18,37 @@ const cardWidth = Dimensions.get('window').width - 40;
 const cardHeight = cardWidth * MAGIC_CARD_HEIGHT;
 
 export const Wallets = () => {
-  const wallet = useWallets();
-  const [wallets, setWallets] = useState(wallet.getWallets());
+  const wallets = useWallets();
+  const [visibleRows, setVisibleRows] = useState(
+    wallets.getWallets().filter(w => !w.isHidden),
+  );
+
   const progress = useRef(new Animated.Value(0)).current;
   const pan = useRef(new Animated.Value(0)).current;
   const current = Animated.add(progress, pan);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        const dist =
-          Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
+  const onPanResponderMove = useCallback(
+    (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+      const dist = Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
 
-        if (
-          progress._value + dist > 0 &&
-          progress._value + dist < wallet.getSize()
-        ) {
-          pan.setValue(dist);
-        }
-      },
-      onPanResponderRelease: (event, gestureState) => {
-        const dist =
-          Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
-        const delta = Math.round(dist);
+      if (
+        progress._value + dist > 0 &&
+        progress._value + dist < visibleRows.length
+      ) {
+        pan.setValue(dist);
+      }
+    },
+    [pan, progress, visibleRows],
+  );
+
+  const onPanResponderRelease = useCallback(
+    (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+      const dist = Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
+      const delta = Math.round(dist);
+      if (
+        progress._value + dist > 0 &&
+        progress._value + dist < wallets.getSize()
+      ) {
         Animated.spring(pan, {
           toValue: delta,
           useNativeDriver: false,
@@ -42,23 +56,32 @@ export const Wallets = () => {
           progress.setValue(progress._value + delta);
           pan.setValue(0);
         });
-      },
+      }
+    },
+    [],
+  );
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove,
+      onPanResponderRelease,
     }),
   ).current;
 
   const updateWallets = useCallback(() => {
-    setWallets(wallet.getWallets());
-  }, [wallet]);
+    setVisibleRows(wallets.getWallets().filter(w => !w.isHidden));
+  }, [wallets]);
 
   useEffect(() => {
-    wallet.on('wallets', updateWallets);
+    wallets.on('wallets', updateWallets);
 
     return () => {
-      wallet.off('wallets', updateWallets);
+      wallets.off('wallets', updateWallets);
     };
-  }, [updateWallets, wallet]);
+  }, [updateWallets, wallets]);
 
-  if (!wallets.length) {
+  if (!visibleRows.length) {
     return null;
   }
 
@@ -71,7 +94,7 @@ export const Wallets = () => {
           overflow: 'hidden',
           position: 'relative',
         }}>
-        {wallets.map((w, i) => (
+        {visibleRows.map((w, i) => (
           <CarouselItem
             height={cardWidth * MAGIC_CARD_HEIGHT}
             index={i}
@@ -82,7 +105,7 @@ export const Wallets = () => {
         ))}
         <CarouselItem
           height={cardWidth * MAGIC_CARD_HEIGHT}
-          index={wallets.length}
+          index={visibleRows.length}
           pan={current}>
           <WalletCreate />
         </CarouselItem>
@@ -96,7 +119,7 @@ export const Wallets = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {wallets.map((w, i) => (
+          {visibleRows.map((w, i) => (
             <Animated.View
               key={w.address}
               style={{
@@ -119,7 +142,7 @@ export const Wallets = () => {
               height: 6,
               margin: 3,
               opacity: current.interpolate({
-                inputRange: [wallet.getSize() - 1, wallet.getSize()],
+                inputRange: [wallets.getSize() - 1, wallets.getSize()],
                 outputRange: [0.5, 1],
                 extrapolate: 'clamp',
               }),
