@@ -87,7 +87,7 @@ class Wallets extends EventEmitter {
       await this.saveWallet(wallet);
     }
 
-    this.emit('wallets');
+    this.onChangeWallet();
 
     return wallet;
   }
@@ -109,7 +109,7 @@ class Wallets extends EventEmitter {
     if (save) {
       await this.saveWallet(wallet);
     }
-    this.emit('wallets');
+    this.onChangeWallet();
 
     return wallet;
   }
