@@ -1,14 +1,7 @@
 import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {H2, PlusIcon} from './ui';
-import {
-  Animated,
-  Dimensions,
-  GestureResponderEvent,
-  PanResponder,
-  PanResponderGestureState,
-  View,
-} from 'react-native';
+import {Animated, Dimensions, PanResponder, View} from 'react-native';
 import {GRAPHIC_BASE_1, MAGIC_CARD_HEIGHT} from '../variables';
 import {CarouselItem} from './carousel-item';
 import {WalletCard} from './wallet-card';
@@ -19,58 +12,48 @@ const cardHeight = cardWidth * MAGIC_CARD_HEIGHT;
 
 export const Wallets = () => {
   const wallets = useWallets();
-  const [visibleRows, setVisibleRows] = useState(
-    wallets.getWallets().filter(w => !w.isHidden),
-  );
+  const [visibleRows, setVisibleRows] = useState(wallets.visible);
 
   const progress = useRef(new Animated.Value(0)).current;
   const pan = useRef(new Animated.Value(0)).current;
   const current = Animated.add(progress, pan);
 
-  const onPanResponderMove = useCallback(
-    (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-      const dist = Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
-
-      if (
-        progress._value + dist > 0 &&
-        progress._value + dist < visibleRows.length
-      ) {
-        pan.setValue(dist);
-      }
-    },
-    [pan, progress, visibleRows],
-  );
-
-  const onPanResponderRelease = useCallback(
-    (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-      const dist = Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
-      const delta = Math.round(dist);
-      if (
-        progress._value + dist > 0 &&
-        progress._value + dist < wallets.getSize()
-      ) {
-        Animated.spring(pan, {
-          toValue: delta,
-          useNativeDriver: false,
-        }).start(() => {
-          progress.setValue(progress._value + delta);
-          pan.setValue(0);
-        });
-      }
-    },
-    [],
-  );
-
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove,
-      onPanResponderRelease,
+      onPanResponderMove: (event, gestureState) => {
+        const dist =
+          Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
+
+        if (
+          progress._value + dist > 0 &&
+          progress._value + dist < wallets.visible.length
+        ) {
+          pan.setValue(dist);
+        }
+      },
+      onPanResponderRelease: (event, gestureState) => {
+        const dist =
+          Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
+        const delta = Math.round(dist);
+        if (
+          progress._value + dist > 0 &&
+          progress._value + dist < wallets.visible.length
+        ) {
+          Animated.spring(pan, {
+            toValue: delta,
+            useNativeDriver: false,
+          }).start(() => {
+            progress.setValue(progress._value + delta);
+            pan.setValue(0);
+          });
+        }
+      },
     }),
   ).current;
 
   const updateWallets = useCallback(() => {
-    setVisibleRows(wallets.getWallets().filter(w => !w.isHidden));
+    setVisibleRows(wallets.visible);
   }, [wallets]);
 
   useEffect(() => {

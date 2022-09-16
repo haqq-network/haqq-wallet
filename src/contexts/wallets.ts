@@ -10,6 +10,7 @@ class Wallets extends EventEmitter {
   private wallets: Map<string, Wallet> = new Map();
   private main: Wallet | null = null;
   private initialized: boolean = false;
+  private _visible: Wallet[] = [];
 
   async init(): Promise<void> {
     if (this.initialized) {
@@ -35,7 +36,7 @@ class Wallets extends EventEmitter {
         }
       }
     }
-    this.emit('wallets');
+    this.onChangeWallet();
 
     const backupMnemonic = Array.from(this.wallets.values()).find(
       w => !w.mnemonic_saved,
@@ -62,6 +63,7 @@ class Wallets extends EventEmitter {
   }
 
   onChangeWallet = () => {
+    this._visible = Array.from(this.wallets.values()).filter(w => !w.isHidden);
     this.emit('wallets');
   };
 
@@ -167,6 +169,10 @@ class Wallets extends EventEmitter {
 
   getSize() {
     return this.wallets.size;
+  }
+
+  get visible() {
+    return this._visible;
   }
 
   getMain() {
