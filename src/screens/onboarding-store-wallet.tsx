@@ -25,7 +25,7 @@ export const OnboardingStoreWalletScreen = ({
   }, [app, route.params.action]);
 
   useEffect(() => {
-    requestAnimationFrame(async () => {
+    setTimeout(async () => {
       if (route.params.action === 'create') {
         await wallets.addWalletFromMnemonic(
           utils.entropyToMnemonic(utils.randomBytes(16)),
@@ -50,8 +50,8 @@ export const OnboardingStoreWalletScreen = ({
       Promise.all(actions).then(() => {
         navigation.navigate(route.params.nextScreen ?? 'onboarding-finish');
       });
-    });
-  }, [navigation, route.params.action, wallets]);
+    }, 250);
+  }, [navigation, route.params.action, route.params.nextScreen, wallets]);
 
   return <View />;
 };
