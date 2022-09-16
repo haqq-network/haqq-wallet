@@ -54,7 +54,7 @@ export const Pin = forwardRef(
 
     return (
       <Container style={page.container}>
-        <Title>{title}</Title>
+        <Title style={{marginTop: 40}}>{title}</Title>
         {error && <Paragraph>{error}</Paragraph>}
         {subtitle && !error && <Paragraph>{subtitle}</Paragraph>}
         <Spacer style={page.spacer}>
