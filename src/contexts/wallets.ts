@@ -157,6 +157,10 @@ class Wallets extends EventEmitter {
     return Array.from(this.wallets.values());
   }
 
+  getSize() {
+    return this.wallets.size;
+  }
+
   getMain() {
     return this.main;
   }
