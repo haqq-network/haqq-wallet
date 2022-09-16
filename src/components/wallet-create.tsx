@@ -32,8 +32,18 @@ const page = StyleSheet.create({
     width: Dimensions.get('window').width - 40,
     height: cardWidth * MAGIC_CARD_HEIGHT,
     borderColor: GRAPHIC_SECOND_1,
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
+    shadowColor: 'rgba(25, 26, 28, 0.08)',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowRadius: 16,
+    shadowOpacity: 1,
+    elevation: 13,
   },
   title: {
     fontWeight: '600',

@@ -374,6 +374,13 @@ export const PenIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
+export const PlusIcon = (props: SvgProps) => (
+  <Svg width="6" height="6" viewBox="0 0 6 6" fill="none" {...props}>
+    <Rect x="2.75" width="0.5" height="6" rx="0.25" fill="currentColor" />
+    <Rect y="2.75" width="6" height="0.5" rx="0.25" fill="currentColor" />
+  </Svg>
+);
+
 export const ShieldSettingsIcon = ({style, color}: SvgProps) => (
   <Svg
     width="24"
