@@ -35,13 +35,18 @@ export const Wallets = () => {
         const dist =
           Math.max(Math.min(1, gestureState.dy / cardHeight), -1) * -1;
         const delta = Math.round(dist);
-        Animated.spring(pan, {
-          toValue: delta,
-          useNativeDriver: false,
-        }).start(() => {
-          progress.setValue(progress._value + delta);
-          pan.setValue(0);
-        });
+        if (
+          progress._value + dist > 0 &&
+          progress._value + dist < wallet.getSize()
+        ) {
+          Animated.spring(pan, {
+            toValue: delta,
+            useNativeDriver: false,
+          }).start(() => {
+            progress.setValue(progress._value + delta);
+            pan.setValue(0);
+          });
+        }
       },
     }),
   ).current;
