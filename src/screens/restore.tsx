@@ -46,7 +46,7 @@ export const RestoreScreen = ({}: RestoreScreenProp) => {
         name="restoreFinish"
         component={OnboardingFinishScreen}
         options={{title}}
-        initialParams={{action: 'restore'}}
+        initialParams={{action: 'restore', hide: true}}
       />
     </SignInStack.Navigator>
   );

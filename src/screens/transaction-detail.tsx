@@ -76,8 +76,13 @@ export const TransactionDetailScreen = ({
         <DataContent
           title={
             <>
-              <ISLMIcon width={16} height={16} color={GRAPHIC_GREEN_1} />
-              <Text style={{marginLeft: 4}}>
+              <ISLMIcon
+                width={16}
+                height={16}
+                color={GRAPHIC_GREEN_1}
+                style={{marginRight: 4}}
+              />
+              <Text>
                 Islamic coin <Text style={{color: TEXT_BASE_2}}>(ISLM)</Text>
               </Text>
             </>

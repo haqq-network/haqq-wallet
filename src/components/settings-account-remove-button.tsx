@@ -3,9 +3,11 @@ import {IconButton, TrashIcon} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export const SettingsAccountRemoveButton = ({address}: {address: string}) => {
   const wallets = useWallets();
+  const navigation = useNavigation();
   const onClickRemove = () => {
     Alert.alert(
       'Attention. You may lose all your funds! Are you sure you want to delete your account?',
@@ -16,9 +18,10 @@ export const SettingsAccountRemoveButton = ({address}: {address: string}) => {
         },
         {
           style: 'destructive',
-          text: 'Reset',
+          text: 'Delete',
           onPress: async () => {
             await wallets.removeWallet(address);
+            navigation.goBack();
           },
         },
       ],

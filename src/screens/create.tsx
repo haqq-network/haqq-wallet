@@ -31,7 +31,7 @@ export const CreateScreen = ({}: CreateScreenProp) => {
         name="restoreFinish"
         component={OnboardingFinishScreen}
         options={{title}}
-        initialParams={{action: 'create'}}
+        initialParams={{action: 'create', hide: true}}
       />
     </SignUpStack.Navigator>
   );

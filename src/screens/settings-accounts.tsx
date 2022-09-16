@@ -18,6 +18,7 @@ export const SettingsAccountsScreen = ({
     setRows(wallets.getWallets());
 
     const callback = () => {
+      console.log('wallets', wallets.getSize());
       setRows(wallets.getWallets());
     };
 
