@@ -26,3 +26,5 @@ export const BG_6 = 'rgba(247, 193, 90, 0.3)';
 export const BG_8 = '#F4F5F8';
 
 export const MAIN_ACCOUNT_NAME = 'Main account';
+
+export const MAGIC_CARD_HEIGHT = 0.632835821;

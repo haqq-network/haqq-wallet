@@ -20,7 +20,7 @@ import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
 import {RegisterScreen} from './screens/register';
-import {RestoreScreen} from './screens/restore';
+import {CreateScreen} from './screens/create';
 import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
@@ -48,6 +48,7 @@ import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {TransactionDetailScreen} from './screens/transaction-detail';
+import {RestoreScreen} from './screens/restore';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -110,8 +111,9 @@ export const App = () => {
                   name="transaction"
                   component={TransactionScreen}
                 />
+                <Stack.Screen name="restore" component={RestoreScreen} />
+                <Stack.Screen name="create" component={CreateScreen} />
               </Stack.Group>
-              <Stack.Screen name="restore" component={RestoreScreen} />
               <Stack.Screen name="register" component={RegisterScreen} />
               <Stack.Screen
                 name="detailsQr"
