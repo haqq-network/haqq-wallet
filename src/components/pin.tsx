@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import {StyleSheet, Vibration, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Container} from './container';
 import {Paragraph, Title} from './ui';
 import {Spacer} from './spacer';
@@ -38,7 +38,7 @@ export const Pin = forwardRef(
     }));
 
     const onKeyboard = useCallback((value: number) => {
-      Vibration.vibrate();
+      // Vibration.vibrate();
       if (value > -1) {
         setPin(p => `${p}${value}`.slice(0, 6));
       } else {

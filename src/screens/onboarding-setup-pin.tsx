@@ -14,7 +14,7 @@ export const OnboardingSetupPinScreen = ({
 }: OnboardingSetupPinScreenProp) => {
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
-    Vibration.vibrate();
+    // Vibration.vibrate();
     if (value > -1) {
       setPin(p => `${p}${value}`.slice(0, 6));
     } else {
