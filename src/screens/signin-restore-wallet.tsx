@@ -9,7 +9,10 @@ import {MAIN_ACCOUNT_NAME} from '../variables';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
+export const SignInRestoreScreen = ({
+  navigation,
+  route,
+}: SignInRestoreScreenProp) => {
   const [seed, setSeed] = useState('');
   const wallets = useWallets();
 
@@ -19,19 +22,15 @@ export const SignInRestoreScreen = ({navigation}: SignInRestoreScreenProp) => {
   );
 
   const onDone = useCallback(async () => {
+    let name =
+      wallets.getSize() === 0
+        ? MAIN_ACCOUNT_NAME
+        : `Account #${wallets.getSize() + 1}`;
     const wallet = utils.isValidMnemonic(seed.trim())
-      ? await wallets.addWalletFromMnemonic(
-          seed.trim(),
-          MAIN_ACCOUNT_NAME,
-          false,
-        )
-      : await wallets.addWalletFromPrivateKey(
-          seed.trim(),
-          MAIN_ACCOUNT_NAME,
-          false,
-        );
+      ? await wallets.addWalletFromMnemonic(seed.trim(), name, false)
+      : await wallets.addWalletFromPrivateKey(seed.trim(), name, false);
     wallet.mnemonic_saved = true;
-    navigation.replace('onboarding-setup-pin');
+    navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin');
   }, [seed, wallets, navigation]);
 
   return (

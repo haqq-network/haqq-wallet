@@ -2,9 +2,12 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, Paragraph, ParagraphSize} from './ui';
 import {GRAPHIC_SECOND_1, MAGIC_CARD_HEIGHT, TEXT_GREEN_1} from '../variables';
+import {useNavigation} from '@react-navigation/native';
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
+  const navigation = useNavigation();
+
   return (
     <View style={page.container}>
       <Paragraph style={page.title} size={ParagraphSize.l}>
@@ -16,10 +19,17 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Button
         variant={ButtonVariant.contained}
         title="Create new"
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('create');
+        }}
         style={page.create}
       />
-      <Button title="Import an existing one" onPress={() => {}} />
+      <Button
+        title="Import an existing one"
+        onPress={() => {
+          navigation.navigate('restore');
+        }}
+      />
     </View>
   );
 };

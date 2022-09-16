@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
-import {Wallet, WalletType} from '../models/wallet';
+import {Wallet, WalletCardStyle, WalletType} from '../models/wallet';
 import {app} from './app';
 
 class Wallets extends EventEmitter {
@@ -71,9 +71,12 @@ class Wallets extends EventEmitter {
   ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
-
+    const cards = [...Object.keys(WalletCardStyle)];
     wallet.name = name ?? wallet.name;
     wallet.main = this.wallets.size === 0;
+    wallet.cardStyle = cards[
+      this.wallets.size % cards.length
+    ] as WalletCardStyle;
 
     this.attachWallet(wallet);
 
@@ -93,7 +96,11 @@ class Wallets extends EventEmitter {
   ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
+    const cards = [...Object.keys(WalletCardStyle)];
     wallet.name = name;
+    wallet.cardStyle = cards[
+      this.wallets.size % cards.length
+    ] as WalletCardStyle;
 
     this.attachWallet(wallet);
     if (save) {

@@ -21,13 +21,15 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
         header: PopupHeader,
       }}>
       <SignInStack.Screen
-        name="signin-restore-intro"
+        name="signin-agreement"
         component={SignInAgreementScreen}
         options={{title}}
-        initialParams={{next: route.params.next}}
+        initialParams={{
+          nextScreen: 'signinRestoreWallet',
+        }}
       />
       <SignInStack.Screen
-        name="signin-restore-wallet"
+        name="signinRestoreWallet"
         component={SignInRestoreScreen}
         options={{title}}
       />

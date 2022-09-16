@@ -5,9 +5,6 @@ import {Container} from '../components/container';
 import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
 import {Spacer} from '../components/spacer';
 import {Dimensions} from 'react-native';
-import {useWallets} from '../contexts/wallets';
-import {utils} from 'ethers';
-import {MAIN_ACCOUNT_NAME} from '../variables';
 
 type SignUpAgreementScreenProp = CompositeScreenProps<any, any>;
 const windowWidth = Dimensions.get('window').width;
@@ -15,26 +12,17 @@ export const SignUpAgreementScreen = ({
   navigation,
   route,
 }: SignUpAgreementScreenProp) => {
-  const wallets = useWallets();
   const onPressAgree = useCallback(() => {
-    requestAnimationFrame(() => {
-      wallets.addWalletFromMnemonic(
-        utils.entropyToMnemonic(utils.randomBytes(16)),
-        MAIN_ACCOUNT_NAME,
-        false,
-      );
-    });
-
-    navigation.navigate('onboarding-setup-pin', {next: route.params.next});
-  }, []);
+    navigation.navigate(route.params.nextScreen ?? 'onboarding-setup-pin');
+  }, [navigation, route.params.nextScreen]);
   return (
     <Container>
       <Spacer>
         <Lottie
           style={{
             position: 'absolute',
-            width: windowWidth - 30,
-            height: windowWidth - 30,
+            width: windowWidth - 40,
+            height: windowWidth - 40,
           }}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
