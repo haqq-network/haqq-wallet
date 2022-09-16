@@ -58,6 +58,7 @@ class Wallets extends EventEmitter {
   deAttachWallet(wallet: Wallet) {
     wallet.removeListener('change', this.onChangeWallet);
     this.wallets.delete(wallet.address);
+    this.onChangeWallet();
   }
 
   onChangeWallet = () => {
