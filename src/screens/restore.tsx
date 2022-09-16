@@ -1,66 +1,53 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
+import {PopupHeader} from '../components/popup-header';
+import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
-import {utils} from 'ethers';
+import {SignInRestoreScreen} from './signin-restore-wallet';
+import {OnboardingBiometryScreen} from './onboarding-biometry';
+import {SignInAgreementScreen} from './signin-agreement';
+import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
+import {OnboardingFinishScreen} from './onboarding-finish';
+import {createStackNavigator} from '@react-navigation/stack';
 
+const SignInStack = createStackNavigator();
 type RestoreScreenProp = CompositeScreenProps<any, any>;
 
-export const RestoreScreen = ({navigation}: RestoreScreenProp) => {
-  const [password, setPassword] = useState('');
-  const [mnemonic, setMnemonic] = useState('');
-  const wallet = useWallets();
-  const app = useApp();
-
-  const checked = useMemo(
-    () => password.length && utils.isValidMnemonic(mnemonic),
-    [password, mnemonic],
-  );
-
-  const onDone = useCallback(async () => {
-    await app.setPin(password);
-    await app.createUser();
-    await wallet.addWalletFromMnemonic(mnemonic);
-
-    navigation.replace('home');
-  }, [wallet, password, mnemonic]);
-
+export const RestoreScreen = ({}: RestoreScreenProp) => {
+  const title = 'Restore wallet';
   return (
-    <View style={page.container}>
-      <View style={{flex: 1}} />
-      <Text>Restore Screen</Text>
-      <TextInput
-        style={page.input}
-        placeholder={'Mnemonic'}
-        onChangeText={setMnemonic}
-        multiline
+    <SignInStack.Navigator
+      screenOptions={{
+        header: PopupHeader,
+      }}>
+      <SignInStack.Screen
+        name="restoreAgreement"
+        component={SignInAgreementScreen}
+        options={{title}}
+        initialParams={{nextScreen: 'restorePhrase'}}
       />
-      <TextInput
-        style={page.input}
-        placeholder={'Password'}
-        onChangeText={setPassword}
-        secureTextEntry
+      <SignInStack.Screen
+        name="restorePhrase"
+        component={SignInRestoreScreen}
+        options={{title}}
+        initialParams={{nextScreen: 'restoreStoreWallet'}}
       />
-      <Button disabled={!checked} title="Done" onPress={onDone} />
-      <View style={{flex: 1}} />
-    </View>
+      <SignInStack.Screen
+        name="restoreStoreWallet"
+        component={OnboardingStoreWalletScreen}
+        options={{
+          title,
+          header: () => null,
+        }}
+        initialParams={{action: 'restore', nextScreen: 'restoreFinish'}}
+      />
+      <SignInStack.Screen
+        name="restoreFinish"
+        component={OnboardingFinishScreen}
+        options={{title}}
+        initialParams={{action: 'restore'}}
+      />
+    </SignInStack.Navigator>
   );
 };
-
-const page = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 10,
-    gap: 10,
-  },
-  input: {
-    padding: 10,
-    borderColor: '#000000',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginTop: 20,
-    marginBottom: 20,
-  },
-});

@@ -11,10 +11,11 @@ const windowWidth = Dimensions.get('window').width;
 
 export const SignInAgreementScreen = ({
   navigation,
+  route,
 }: SignInAgreementScreenProp) => {
   const onDone = useCallback(() => {
-    navigation.navigate('signin-restore-wallet');
-  }, [navigation]);
+    navigation.navigate(route.params.nextScreen ?? 'signinRestoreWallet');
+  }, [navigation, route.params.nextScreen]);
 
   return (
     <Container>
