@@ -27,7 +27,7 @@ export const PinModal = () => {
   );
 
   return (
-    <View style={{backgroundColor: '#ffffff', flex: 1}}>
+    <View style={{backgroundColor: '#ffffff', flex: 1, paddingTop: 110}}>
       <Pin
         ref={pinRef}
         title="Welcome to ISLM Wallet"
