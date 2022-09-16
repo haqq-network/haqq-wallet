@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Path, Rect} from 'react-native-svg';
+import Svg, {Circle, Path, Rect} from 'react-native-svg';
 import {SvgProps} from 'react-native-svg/src/elements/Svg';
 
 export const AddressBookSettingsIcon = ({style, color}: SvgProps) => (
@@ -375,6 +375,57 @@ export const MarketIcon = (props: SvgProps) => (
       d="M17.625 9C17.625 8.44772 18.0727 8 18.625 8C19.1773 8 19.625 8.44772 19.625 9V19C19.625 19.5523 19.1773 20 18.625 20C18.0727 20 17.625 19.5523 17.625 19V9Z"
       fill="currentColor"
     />
+  </Svg>
+);
+
+export const NoAssetsIcon = (props: SvgProps) => (
+  <Svg width="81" height="80" viewBox="0 0 81 80" fill="none" {...props}>
+    <Path
+      d="M77.9372 29.4881C78.5301 29.3216 79.1473 29.6671 79.2971 30.2644C81.3888 38.5994 80.7425 47.3979 77.4369 55.3515C73.9884 63.6488 67.8467 70.5433 60.0015 74.9241C52.1564 79.3048 43.0648 80.9165 34.1918 79.4995C25.3189 78.0824 17.1815 73.7192 11.091 67.1129C5.00047 60.5066 1.31167 52.0421 0.619022 43.0834C-0.0736249 34.1248 2.27023 25.1939 7.27287 17.7299C12.2755 10.2659 19.6455 4.70372 28.1952 1.93963C36.3908 -0.70997 45.2127 -0.640485 53.3506 2.1204C53.9337 2.31824 54.228 2.96143 54.014 3.53885C53.8 4.11626 53.1587 4.40915 52.5752 4.21226C44.9074 1.62491 36.6001 1.566 28.8812 4.0615C20.8082 6.67149 13.849 11.9236 9.12528 18.9715C4.40155 26.0193 2.18836 34.4523 2.84239 42.9115C3.49642 51.3707 6.97958 59.3634 12.7305 65.6013C18.4815 71.8393 26.1652 75.9593 34.5435 77.2974C42.9218 78.6354 51.5065 77.1135 58.9143 72.977C66.3221 68.8406 72.1214 62.3304 75.3776 54.4956C78.491 47.0046 79.1061 38.7199 77.1493 30.8674C77.0004 30.2699 77.3443 29.6545 77.9372 29.4881Z"
+      fill="currentColor"
+    />
+    <Path
+      d="M69.5 3V23"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <Path
+      d="M79.5 13L59.5 13"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <Circle cx="40.5" cy="40" r="21" stroke="currentColor" strokeWidth="2" />
+    <Path
+      d="M38.3787 29.5355C39.5503 28.364 41.4497 28.364 42.6213 29.5355L50.9645 37.8787C52.136 39.0503 52.136 40.9497 50.9645 42.1213L42.6213 50.4645C41.4497 51.636 39.5503 51.636 38.3787 50.4645L30.0355 42.1213C28.864 40.9497 28.864 39.0503 30.0355 37.8787L38.3787 29.5355Z"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+  </Svg>
+);
+
+export const NoTransactionsIcon = (props: SvgProps) => (
+  <Svg width="81" height="80" viewBox="0 0 81 80" fill="none" {...props}>
+    <Rect
+      x="7.5"
+      y="1"
+      width="66"
+      height="78"
+      rx="7"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <Rect x="26.5" y="12" width="40" height="2" rx="1" fill="currentColor" />
+    <Rect x="14.5" y="12" width="8" height="2" rx="1" fill="currentColor" />
+    <Rect x="26.5" y="22" width="40" height="2" rx="1" fill="currentColor" />
+    <Rect x="14.5" y="22" width="8" height="2" rx="1" fill="currentColor" />
+    <Rect x="26.5" y="32" width="40" height="2" rx="1" fill="currentColor" />
+    <Rect x="14.5" y="32" width="8" height="2" rx="1" fill="currentColor" />
+    <Rect x="26.5" y="42" width="40" height="2" rx="1" fill="currentColor" />
+    <Rect x="14.5" y="42" width="8" height="2" rx="1" fill="currentColor" />
+    <Rect x="26.5" y="52" width="40" height="2" rx="1" fill="currentColor" />
+    <Rect x="14.5" y="52" width="8" height="2" rx="1" fill="currentColor" />
   </Svg>
 );
 
