@@ -1,10 +1,11 @@
-import ethers from 'ethers';
+import ethers, {utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
+import {wsProvider} from '../network';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -46,6 +47,7 @@ export class Wallet extends EventEmitter {
   saved: boolean = false;
   cardStyle: WalletCardStyle;
   isHidden: boolean = false;
+  private _balance: number = 0;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
@@ -104,6 +106,29 @@ export class Wallet extends EventEmitter {
     this.main = data.main;
     this.isHidden = data.isHidden;
     this.cardStyle = data.cardStyle as WalletCardStyle;
+
+    setInterval(this.checkBalance, 15000);
+
+    this.on('checkBalance', this.checkBalance);
+
+    this.checkBalance();
+  }
+
+  checkBalance = () => {
+    console.log('check balance for', this.address);
+    wsProvider.getBalance(this.address).then(balance => {
+      this.balance = Number(utils.formatEther(balance));
+      console.log('new balance for', this.address, this.balance);
+    });
+  };
+
+  set balance(value: number) {
+    this._balance = value;
+    this.emit('balance', {balance: this.balance});
+  }
+
+  get balance() {
+    return this._balance;
   }
 
   async serialize(
