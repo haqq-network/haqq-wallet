@@ -138,7 +138,6 @@ export class Wallet extends EventEmitter {
   }
 
   get isEncrypted() {
-    console.log('isDecrypted', this._encrypted !== '');
     return this._encrypted !== '';
   }
 
