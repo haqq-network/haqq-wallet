@@ -83,7 +83,7 @@ export const Wallets = () => {
             index={i}
             pan={current}
             key={w.address}>
-            <WalletCard wallet={w} />
+            <WalletCard address={w.address} />
           </CarouselItem>
         ))}
         <CarouselItem

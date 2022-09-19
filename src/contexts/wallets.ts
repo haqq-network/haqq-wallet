@@ -183,6 +183,10 @@ class Wallets extends EventEmitter {
     const balance = await getDefaultNetwork().getBalance(address);
     return Number(utils.formatEther(balance));
   }
+
+  get addressList() {
+    return Array.from(this.wallets.keys());
+  }
 }
 
 export const wallets = new Wallets();

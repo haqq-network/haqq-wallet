@@ -2,8 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {NavigationProp} from '@react-navigation/core/src/types';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
-import {Wallet} from '../models/wallet';
+import {useWallet} from '../contexts/wallets';
 import {
   ArrowReceive,
   ArrowSend,
@@ -15,58 +14,52 @@ import {
 } from './ui';
 import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
 import {RootStackParamList} from '../types';
+import {shortAddress} from '../utils';
 
 export type BalanceProps = {
-  wallet: Wallet;
+  address: string;
 };
-export const WalletCard = ({wallet}: BalanceProps) => {
+
+export const WalletCard = ({address}: BalanceProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const wallets = useWallets();
-  const [balance, setBalance] = useState(0);
+  const wallet = useWallet(address);
+  const [balance, setBalance] = useState(wallet?.balance ?? 0);
 
   const formattedAddress = useMemo(
-    () =>
-      `${wallet.address.slice(0, 5)}...${wallet.address.slice(
-        wallet.address.length - 3,
-        wallet.address.length,
-      )}`,
-    [wallet.address],
+    () => shortAddress(wallet?.address ?? ''),
+    [wallet?.address],
   );
 
-  const updateBalance = useCallback(
-    async ({address}: {address: string}) => {
-      if (address && address === wallet.address) {
-        wallets.getBalance(address).then(result => {
-          setBalance(result);
-        });
-      }
-    },
-    [wallets, wallet.address],
-  );
+  const updateBalance = useCallback(({balance}: {balance: number}) => {
+    setBalance(balance);
+  }, []);
 
   useEffect(() => {
-    wallets.on('balance', updateBalance);
-    updateBalance({address: wallet.address});
+    wallet?.on('balance', updateBalance);
     return () => {
-      wallets.off('balance', updateBalance);
+      wallet?.off('balance', updateBalance);
     };
-  }, [updateBalance, wallet.address, wallets]);
+  }, [updateBalance, wallet]);
 
   const onPressSend = useCallback(() => {
-    navigation.navigate('transaction', {from: wallet.address});
+    navigation.navigate('transaction', {from: address});
   }, [wallet, navigation]);
 
   const onPressQR = useCallback(() => {
-    navigation.navigate('detailsQr', {address: wallet.address});
-  }, [navigation, wallet.address]);
+    navigation.navigate('detailsQr', {address: address});
+  }, [navigation, address]);
 
   const onClickBackup = useCallback(() => {
-    navigation.navigate('backup', {address: wallet.address});
-  }, [navigation, wallet.address]);
+    navigation.navigate('backup', {address: address});
+  }, [navigation, address]);
+
+  if (!wallet) {
+    return null;
+  }
 
   return (
     <Card
-      variant={wallet.cardStyle}
+      variant={wallet?.cardStyle}
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>

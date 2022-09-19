@@ -17,18 +17,12 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
   const transactions = useTransactions();
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(
-      wallets.getMain()?.address ?? '',
-      transactions.getTransactions(wallets.getMain()?.address ?? ''),
-    ),
+    prepareTransactions(wallets.addressList, transactions.transactions),
   );
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
-      prepareTransactions(
-        wallets.getMain()?.address ?? '',
-        transactions.getTransactions(wallets.getMain()?.address ?? ''),
-      ),
+      prepareTransactions(wallets.addressList, transactions.transactions),
     );
   }, [transactions, wallets]);
 
@@ -50,13 +44,10 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
 
   useEffect(() => {
     transactions.on('transactions', onTransactionList);
-    wallets.on('wallets', onTransactionList);
-
     wallets.on('backupMnemonic', onBackupMnemonic);
 
     return () => {
       transactions.off('transactions', onTransactionList);
-      wallets.off('wallets', onTransactionList);
       wallets.off('backupMnemonic', onBackupMnemonic);
     };
   }, [onBackupMnemonic, onTransactionList, transactions, wallets]);
