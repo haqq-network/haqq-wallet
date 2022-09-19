@@ -2,7 +2,6 @@ import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
 import {getChainId, getDefaultNetwork} from '../network';
 import {BigNumberish, utils} from 'ethers';
-import {wallets} from './wallets';
 import {
   TransactionRequest,
   TransactionResponse,
@@ -10,43 +9,28 @@ import {
 import {realm} from '../models';
 import {TransactionType} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
+import {Wallet} from '../models/wallet';
 
 class Transactions extends EventEmitter {
-  private _transactions: Realm.Results<TransactionType> | undefined;
+  private _transactions: Realm.Results<TransactionType>;
+
+  constructor() {
+    super();
+    this._transactions = realm.objects<TransactionType>('Transaction');
+  }
 
   async init(): Promise<void> {
-    this._transactions = await realm.objects<TransactionType>('Transaction');
-
-    for (const row of this._transactions) {
-      if (!row.confirmed) {
-        const receipt = await getDefaultNetwork().getTransactionReceipt(
-          row.hash,
-        );
-        if (receipt.confirmations > 0) {
-          realm.write(() => {
-            row.confirmed = true;
-            row.fee = calcFee(
-              receipt.cumulativeGasUsed,
-              receipt.effectiveGasPrice,
-            );
-          });
-        }
-      }
-    }
+    await Promise.all(
+      Array.from(this._transactions)
+        .filter(t => !t.confirmed)
+        .map(row => this.checkTransaction(row.hash)),
+    );
 
     this.emit('transactions');
   }
 
   get transactions() {
     return Array.from(this._transactions ?? []);
-  }
-
-  getTransactions(account: string) {
-    if (!this._transactions) {
-      return [];
-    }
-
-    return Array.from(this._transactions.filtered(`account = '${account}'`));
   }
 
   async saveTransaction(
@@ -70,12 +54,12 @@ class Transactions extends EventEmitter {
       });
     });
 
-    this._transactions = await realm.objects<TransactionType>('Transaction');
+    this._transactions = realm.objects<TransactionType>('Transaction');
     this.emit('transactions');
   }
 
-  async getTransaction(hash: string): Promise<TransactionType | null> {
-    const transactions = await realm.objects<TransactionType>('Transaction');
+  getTransaction(hash: string): TransactionType | null {
+    const transactions = realm.objects<TransactionType>('Transaction');
     const transaction = transactions.filtered(`hash = '${hash}'`);
 
     if (!transaction.length) {
@@ -85,53 +69,59 @@ class Transactions extends EventEmitter {
     return transaction[0];
   }
 
+  async checkTransaction(hash: string) {
+    const local = this.getTransaction(hash);
+
+    if (local) {
+      try {
+        const receipt = await getDefaultNetwork().getTransactionReceipt(
+          local.hash,
+        );
+        if (receipt && receipt.confirmations > 0) {
+          realm.write(() => {
+            local.confirmed = true;
+            local.fee = calcFee(
+              receipt.cumulativeGasUsed,
+              receipt.effectiveGasPrice,
+            );
+          });
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log('sendTransaction', e.message);
+        }
+      }
+    }
+  }
+
   async sendTransaction(
     from: string,
     to: string,
     amount: number,
     estimateFee: number,
+    wallet: Wallet,
   ) {
-    const wallet = wallets.getWallet(from);
-    if (wallet) {
-      await wallet.wallet.connect(getDefaultNetwork());
+    console.log('sendTransaction', from, to, amount, estimateFee);
 
-      const transaction = await wallet.wallet.sendTransaction({
-        to,
-        value: utils.parseEther(amount.toString()),
-        chainId: getChainId(),
-      });
+    const transaction = await wallet.sendTransaction({
+      to,
+      value: utils.parseEther(amount.toString()),
+      chainId: getChainId(),
+    });
 
-      await this.saveTransaction(transaction, from, to, amount, estimateFee);
+    console.log('sendTransaction transaction', transaction?.hash);
 
-      requestAnimationFrame(async () => {
-        const local = await this.getTransaction(transaction?.hash);
-
-        if (local) {
-          try {
-            const receipt = await getDefaultNetwork().getTransactionReceipt(
-              local.hash,
-            );
-            if (receipt && receipt.confirmations > 0) {
-              realm.write(() => {
-                local.confirmed = true;
-                local.fee = calcFee(
-                  receipt.cumulativeGasUsed,
-                  receipt.effectiveGasPrice,
-                );
-              });
-            }
-          } catch (e) {
-            if (e instanceof Error) {
-              console.log('sendTransaction', e.message);
-            }
-          }
-        }
-      });
-
-      return transaction;
+    if (!transaction) {
+      return null;
     }
 
-    return null;
+    await this.saveTransaction(transaction, from, to, amount, estimateFee);
+
+    requestAnimationFrame(async () => {
+      await this.checkTransaction(transaction.hash);
+    });
+
+    return transaction;
   }
 
   async estimateTransaction(from: string, to: string, amount: number) {

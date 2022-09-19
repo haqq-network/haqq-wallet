@@ -7,38 +7,46 @@ import {Wallet, WalletCardStyle, WalletType} from '../models/wallet';
 import {app} from './app';
 
 class Wallets extends EventEmitter {
-  private wallets: Map<string, Wallet> = new Map();
-  private main: Wallet | null = null;
-  private initialized: boolean = false;
+  private _wallets: Map<string, Wallet>;
+  private _initialized: boolean = false;
   private _visible: Wallet[] = [];
 
-  async init(): Promise<void> {
-    if (this.initialized) {
-      return;
-    }
-
-    const provider = getDefaultNetwork();
+  constructor() {
+    super();
+    this._wallets = new Map();
     const wallets = realm.objects<WalletType>('Wallet');
-    const password = await app.getPassword();
+
     for (const rawWallet of wallets) {
       try {
-        const wallet = await Wallet.fromCache(rawWallet, provider, password);
+        const wallet = Wallet.fromCache(rawWallet);
         wallet.saved = true;
 
         this.attachWallet(wallet);
-
-        if (wallet.main) {
-          this.main = wallet;
-        }
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
         }
       }
     }
+  }
+
+  async init(): Promise<void> {
+    if (this._initialized) {
+      return;
+    }
+
+    const provider = getDefaultNetwork();
+    const password = await app.getPassword();
+
+    await Promise.all(
+      Array.from(this._wallets.values())
+        .filter(w => w.isEncrypted)
+        .map(w => w.decrypt(password, provider)),
+    );
+
     this.onChangeWallet();
 
-    const backupMnemonic = Array.from(this.wallets.values()).find(
+    const backupMnemonic = Array.from(this._wallets.values()).find(
       w => !w.mnemonic_saved,
     );
 
@@ -48,22 +56,22 @@ class Wallets extends EventEmitter {
       }, 1000);
     }
 
-    this.initialized = true;
+    this._initialized = true;
   }
 
   attachWallet(wallet: Wallet) {
     wallet.addListener('change', this.onChangeWallet);
-    this.wallets.set(wallet.address, wallet);
+    this._wallets.set(wallet.address, wallet);
   }
 
   deAttachWallet(wallet: Wallet) {
     wallet.removeListener('change', this.onChangeWallet);
-    this.wallets.delete(wallet.address);
+    this._wallets.delete(wallet.address);
     this.onChangeWallet();
   }
 
   onChangeWallet = () => {
-    this._visible = Array.from(this.wallets.values()).filter(w => !w.isHidden);
+    this._visible = Array.from(this._wallets.values()).filter(w => !w.isHidden);
     this.emit('wallets');
   };
 
@@ -76,9 +84,9 @@ class Wallets extends EventEmitter {
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
     const cards = [...Object.keys(WalletCardStyle)];
     wallet.name = name ?? wallet.name;
-    wallet.main = this.wallets.size === 0;
+    wallet.main = this._wallets.size === 0;
     wallet.cardStyle = cards[
-      this.wallets.size % cards.length
+      this._wallets.size % cards.length
     ] as WalletCardStyle;
 
     this.attachWallet(wallet);
@@ -102,7 +110,7 @@ class Wallets extends EventEmitter {
     const cards = [...Object.keys(WalletCardStyle)];
     wallet.name = name;
     wallet.cardStyle = cards[
-      this.wallets.size % cards.length
+      this._wallets.size % cards.length
     ] as WalletCardStyle;
 
     this.attachWallet(wallet);
@@ -115,7 +123,7 @@ class Wallets extends EventEmitter {
   }
 
   async removeWallet(address: string) {
-    const wallet = this.wallets.get(address);
+    const wallet = this._wallets.get(address);
     if (wallet) {
       const wallets = await realm.objects<WalletType>('Wallet');
       const filtered = wallets.filtered(`address = '${address}'`);
@@ -142,7 +150,7 @@ class Wallets extends EventEmitter {
   }
 
   async clean() {
-    this.wallets = new Map();
+    this._wallets = new Map();
 
     const wallets = await realm.objects<WalletType>('Wallet');
 
@@ -154,21 +162,21 @@ class Wallets extends EventEmitter {
   }
 
   async updateWalletsData(pin: string) {
-    for (const wallet of this.wallets.values()) {
+    for (const wallet of this._wallets.values()) {
       await wallet.updateWalletData(pin);
     }
   }
 
   getWallet(address: string): Wallet | undefined {
-    return this.wallets.get(address);
+    return this._wallets.get(address);
   }
 
   getWallets(): Wallet[] {
-    return Array.from(this.wallets.values());
+    return Array.from(this._wallets.values());
   }
 
   getSize() {
-    return this.wallets.size;
+    return this._wallets.size;
   }
 
   get visible() {
@@ -185,7 +193,7 @@ class Wallets extends EventEmitter {
   }
 
   get addressList() {
-    return Array.from(this.wallets.keys());
+    return Array.from(this._wallets.keys());
   }
 }
 
