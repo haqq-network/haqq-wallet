@@ -32,6 +32,9 @@ export const SignInScreen = ({route}: SignInScreenProp) => {
         name="signinRestoreWallet"
         component={SignInRestoreScreen}
         options={{title}}
+        initialParams={{
+          nextScreen: 'onboarding-setup-pin',
+        }}
       />
       <SignInStack.Screen
         name="onboarding-setup-pin"
