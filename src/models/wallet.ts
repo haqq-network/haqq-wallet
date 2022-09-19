@@ -124,10 +124,7 @@ export class Wallet extends EventEmitter {
   }
 
   async decrypt(password: string, provider: Provider) {
-    console.log('decrypt', this.address);
     if (this._encrypted !== '') {
-      console.log('decrypt start', this.address);
-
       const decrypted = await decrypt(password, this._encrypted);
       const tmp = decrypted.mnemonic
         ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
@@ -137,7 +134,6 @@ export class Wallet extends EventEmitter {
 
       this.setWallet(tmp);
       this._encrypted = '';
-      console.log('decrypt wallet');
     }
   }
 

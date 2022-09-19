@@ -101,15 +101,11 @@ class Transactions extends EventEmitter {
     estimateFee: number,
     wallet: Wallet,
   ) {
-    console.log('sendTransaction', from, to, amount, estimateFee);
-
     const transaction = await wallet.sendTransaction({
       to,
       value: utils.parseEther(amount.toString()),
       chainId: getChainId(),
     });
-
-    console.log('sendTransaction transaction', transaction?.hash);
 
     if (!transaction) {
       return null;
