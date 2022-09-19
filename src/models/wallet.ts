@@ -5,7 +5,7 @@ import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
-import {wsProvider} from '../network';
+import {getDefaultNetwork, wsProvider} from '../network';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -111,7 +111,11 @@ export class Wallet extends EventEmitter {
 
     this.on('checkBalance', this.checkBalance);
 
-    this.checkBalance();
+    getDefaultNetwork()
+      .getBalance(this.address)
+      .then(balance => {
+        this.balance = Number(utils.formatEther(balance));
+      });
   }
 
   checkBalance = () => {
