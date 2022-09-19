@@ -13,7 +13,7 @@ import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {Spacer} from '../components/spacer';
 import {useContacts} from '../contexts/contacts';
-import {useWallets} from '../contexts/wallets';
+import {useWallet} from '../contexts/wallets';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -21,10 +21,10 @@ export const TransactionConfirmationScreen = ({
   navigation,
   route,
 }: SendTransactionScreenProp) => {
+  const {from, to, amount, fee} = route.params;
   const contacts = useContacts();
   const transactions = useTransactions();
-  const wallets = useWallets();
-  const {from, to, amount, fee} = route.params;
+  const wallet = useWallet(from);
 
   const [estimateFee, setEstimateFee] = useState(fee ?? 0);
   const [error, setError] = useState('');
@@ -35,27 +35,29 @@ export const TransactionConfirmationScreen = ({
   );
 
   const onDone = useCallback(async () => {
-    try {
-      const transaction = await transactions.sendTransaction(
-        from,
-        to,
-        parseFloat(amount),
-        estimateFee,
-      );
+    if (wallet) {
+      try {
+        const transaction = await transactions.sendTransaction(
+          from,
+          to,
+          parseFloat(amount),
+          estimateFee,
+          wallet,
+        );
 
-      if (transaction) {
-        navigation.navigate('transactionFinish', {
-          hash: transaction.hash,
-        });
-        transactions.emit('transactions');
-        wallets.emit('balance', {address: from});
-      }
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
+        if (transaction) {
+          navigation.navigate('transactionFinish', {
+            hash: transaction.hash,
+          });
+          wallet.emit('checkBalance');
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          setError(e.message);
+        }
       }
     }
-  }, [transactions, from, to, amount, estimateFee, navigation]);
+  }, [wallet, transactions, from, to, amount, estimateFee, navigation]);
 
   useEffect(() => {
     transactions

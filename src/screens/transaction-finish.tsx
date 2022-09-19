@@ -34,12 +34,12 @@ export const TransactionFinishScreen = ({
 }: TransactionFinishScreenProp) => {
   const contacts = useContacts();
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<TransactionType | null>(null);
+  const [transaction, setTransaction] = useState<TransactionType | null>(
+    transactions.getTransaction(route.params.hash),
+  );
 
   useEffect(() => {
-    transactions.getTransaction(route.params.hash).then(resp => {
-      setTransaction(resp);
-    });
+    setTransaction(transactions.getTransaction(route.params.hash));
   }, [route.params.hash, transactions]);
 
   const short = useMemo(

@@ -1,11 +1,12 @@
 import ethers, {utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {Provider} from '@ethersproject/abstract-provider';
+import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
 import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork, wsProvider} from '../network';
+import {Deferrable} from '@ethersproject/properties';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -42,66 +43,62 @@ export class Wallet extends EventEmitter {
   address: string;
   name: string;
   mnemonic_saved: boolean;
-  wallet: ethers.Wallet;
+  wallet: ethers.Wallet | null = null;
   main: boolean;
   saved: boolean = false;
   cardStyle: WalletCardStyle;
   isHidden: boolean = false;
   private _balance: number = 0;
+  private _encrypted: string = '';
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
 
-    return new Wallet(
-      {
-        address: tmp.address,
-        data: '',
-        name: '',
-        mnemonic_saved: false,
-        main: false,
-        cardStyle: WalletCardStyle.defaultGreen,
-        isHidden: false,
-      },
-      tmp,
-    );
+    const wallet = new Wallet({
+      address: tmp.address,
+      data: '',
+      name: '',
+      mnemonic_saved: false,
+      main: false,
+      cardStyle: WalletCardStyle.defaultGreen,
+      isHidden: false,
+    });
+
+    wallet.setWallet(tmp);
+
+    return wallet;
   }
 
   static async fromPrivateKey(privateKey: string, provider: Provider) {
     const tmp = new EthersWallet(privateKey, provider);
 
-    return new Wallet(
-      {
-        address: tmp.address,
-        data: '',
-        name: '',
-        mnemonic_saved: true,
-        main: false,
-        cardStyle: WalletCardStyle.defaultGreen,
-        isHidden: false,
-      },
-      tmp,
-    );
+    const wallet = new Wallet({
+      address: tmp.address,
+      data: '',
+      name: '',
+      mnemonic_saved: true,
+      main: false,
+      cardStyle: WalletCardStyle.defaultGreen,
+      isHidden: false,
+    });
+
+    wallet.setWallet(tmp);
+
+    return wallet;
   }
 
-  static async fromCache(
-    data: WalletType,
-    provider: Provider,
-    password: string,
-  ) {
-    const decrypted = await decrypt(password, data.data);
-    const tmp = decrypted.mnemonic
-      ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
-          provider,
-        )
-      : new EthersWallet(decrypted.privateKey, provider);
-    return new Wallet(data, tmp);
+  static fromCache(data: WalletType) {
+    const wallet = new Wallet(data);
+
+    wallet.setEncrypted(data.data);
+
+    return wallet;
   }
 
-  constructor(data: WalletType, wallet: ethers.Wallet) {
+  constructor(data: WalletType) {
     super();
     this.address = data.address;
     this.name = data.name;
-    this.wallet = wallet;
     this.mnemonic_saved = data.mnemonic_saved;
     this.main = data.main;
     this.isHidden = data.isHidden;
@@ -116,6 +113,32 @@ export class Wallet extends EventEmitter {
       .then(balance => {
         this.balance = Number(utils.formatEther(balance));
       });
+  }
+
+  setWallet(wallet: ethers.Wallet) {
+    this.wallet = wallet;
+  }
+
+  setEncrypted(encrypted: string) {
+    this._encrypted = encrypted;
+  }
+
+  async decrypt(password: string, provider: Provider) {
+    if (this._encrypted !== '') {
+      const decrypted = await decrypt(password, this._encrypted);
+      const tmp = decrypted.mnemonic
+        ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
+            provider,
+          )
+        : new EthersWallet(decrypted.privateKey, provider);
+
+      this.setWallet(tmp);
+      this._encrypted = '';
+    }
+  }
+
+  get isEncrypted() {
+    return this._encrypted !== '';
   }
 
   checkBalance = () => {
@@ -135,13 +158,27 @@ export class Wallet extends EventEmitter {
     return this._balance;
   }
 
+  connect(provider: Provider) {
+    if (this.wallet) {
+      this.wallet = this.wallet.connect(provider);
+    }
+  }
+
+  async sendTransaction(transaction: Deferrable<TransactionRequest>) {
+    if (this.wallet) {
+      return this.wallet.sendTransaction(transaction);
+    }
+  }
+
   async serialize(
     password: Bytes | string,
   ): Promise<Record<keyof WalletType, any>> {
-    const wallet = await encrypt(password, {
-      privateKey: this.wallet.privateKey,
-      mnemonic: this.wallet.mnemonic,
-    });
+    const wallet = this.wallet
+      ? await encrypt(password, {
+          privateKey: this.wallet.privateKey,
+          mnemonic: this.wallet.mnemonic,
+        })
+      : '';
 
     return {
       address: this.address,
@@ -155,10 +192,12 @@ export class Wallet extends EventEmitter {
   }
 
   async updateWalletData(pin: string) {
-    const wallet = await encrypt(pin, {
-      privateKey: this.wallet.privateKey,
-      mnemonic: this.wallet.mnemonic,
-    });
+    const wallet = this.wallet
+      ? await encrypt(pin, {
+          privateKey: this.wallet.privateKey,
+          mnemonic: this.wallet.mnemonic,
+        })
+      : '';
 
     const wallets = realm.objects<WalletType>('Wallet');
     const filtered = wallets.filtered(`address = '${this.address}'`);

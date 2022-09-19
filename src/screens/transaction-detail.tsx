@@ -31,13 +31,13 @@ export const TransactionDetailScreen = ({
   navigation,
 }: TransactionDetailScreenProp) => {
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<TransactionType | null>(null);
+  const [transaction, setTransaction] = useState<TransactionType | null>(
+    transactions.getTransaction(route.params.hash),
+  );
 
   useEffect(() => {
-    transactions.getTransaction(route.params.hash).then(t => {
-      setTransaction(t);
-    });
-  }, [route.params.hash, transactions]);
+    setTransaction(transactions.getTransaction(route.params.hash));
+  }, [route.params.hash]);
 
   const onPressInfo = useCallback(async () => {
     const url = `${NETWORK_EXPLORER}tx/${transaction?.hash}/internal-transactions`;
