@@ -10,7 +10,7 @@ export const wsProvider = new ethers.providers.WebSocketProvider(
   PROVIDER_WS_NETWORK,
 );
 
-wsProvider.on('debug', resp => console.log('debug', JSON.stringify(resp)));
+// wsProvider.on('debug', resp => console.log('debug', JSON.stringify(resp)));
 
 provider.getBalance = provider.getBalance.bind(provider);
 

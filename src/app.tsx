@@ -74,7 +74,8 @@ export const App = () => {
 
     app
       .init()
-      .then(() => Promise.all([wallets.init(), transactions.init()]))
+      .then(() => wallets.init())
+      .then(() => transactions.init())
       .catch(() => {
         navigator.navigate('login');
       })

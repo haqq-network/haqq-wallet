@@ -12,12 +12,12 @@ import {TransactionType} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
 
 class Transactions extends EventEmitter {
-  private transactions: Realm.Results<TransactionType> | undefined;
+  private _transactions: Realm.Results<TransactionType> | undefined;
 
   async init(): Promise<void> {
-    this.transactions = await realm.objects<TransactionType>('Transaction');
+    this._transactions = await realm.objects<TransactionType>('Transaction');
 
-    for (const row of this.transactions) {
+    for (const row of this._transactions) {
       if (!row.confirmed) {
         const receipt = await getDefaultNetwork().getTransactionReceipt(
           row.hash,
@@ -33,14 +33,21 @@ class Transactions extends EventEmitter {
         }
       }
     }
+
+    this.emit('transactions');
+  }
+
+  get transactions() {
+    console.log('get transactions()', JSON.stringify(this._transactions));
+    return Array.from(this._transactions ?? []);
   }
 
   getTransactions(account: string) {
-    if (!this.transactions) {
+    if (!this._transactions) {
       return [];
     }
 
-    return Array.from(this.transactions.filtered(`account = '${account}'`));
+    return Array.from(this._transactions.filtered(`account = '${account}'`));
   }
 
   async saveTransaction(
@@ -63,6 +70,9 @@ class Transactions extends EventEmitter {
         confirmed: false,
       });
     });
+
+    this._transactions = await realm.objects<TransactionType>('Transaction');
+    this.emit('transactions');
   }
 
   async getTransaction(hash: string): Promise<TransactionType | null> {

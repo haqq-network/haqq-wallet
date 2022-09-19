@@ -18,11 +18,16 @@ export function isHexString(value: any, length?: number): boolean {
 }
 
 export function prepareTransactions(
-  source: string,
+  source: string[],
   transactions: TransactionType[],
 ): TransactionList[] {
   const hash: Map<string, (TransactionListSend | TransactionListReceive)[]> =
     new Map();
+
+  const addressList = new Set(source);
+
+  console.log('prepareTransactions', JSON.stringify(transactions));
+  console.log('prepareTransactions addressList', JSON.stringify(addressList));
 
   for (const row of transactions) {
     const cloned = JSON.parse(JSON.stringify(row));
@@ -31,14 +36,15 @@ export function prepareTransactions(
     const newRow = {
       ...cloned,
       createdAt: row.createdAt,
-      source:
-        row.from === source
-          ? TransactionSource.send
-          : TransactionSource.receive,
+      source: addressList.has(row.from)
+        ? TransactionSource.send
+        : TransactionSource.receive,
     };
 
     hash.set(result, (hash.get(result) ?? []).concat(newRow));
   }
+
+  console.log('prepareTransactions hash', JSON.stringify(hash));
 
   return Array.from(hash.keys())
     .map(d => new Date(d))
