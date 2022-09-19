@@ -26,9 +26,6 @@ export function prepareTransactions(
 
   const addressList = new Set(source);
 
-  console.log('prepareTransactions', JSON.stringify(transactions));
-  console.log('prepareTransactions addressList', JSON.stringify(addressList));
-
   for (const row of transactions) {
     const cloned = JSON.parse(JSON.stringify(row));
     const result = formatISO(row.createdAt, {representation: 'date'});
@@ -43,8 +40,6 @@ export function prepareTransactions(
 
     hash.set(result, (hash.get(result) ?? []).concat(newRow));
   }
-
-  console.log('prepareTransactions hash', JSON.stringify(hash));
 
   return Array.from(hash.keys())
     .map(d => new Date(d))

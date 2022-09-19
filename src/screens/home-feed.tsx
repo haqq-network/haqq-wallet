@@ -54,8 +54,6 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
 
   useEffect(() => {}, [wallets]);
 
-  console.log('HomeFeedScreen', transactionsList);
-
   return (
     <FlatList
       style={{flex: 1}}

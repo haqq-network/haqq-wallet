@@ -38,7 +38,6 @@ class Transactions extends EventEmitter {
   }
 
   get transactions() {
-    console.log('get transactions()', JSON.stringify(this._transactions));
     return Array.from(this._transactions ?? []);
   }
 
