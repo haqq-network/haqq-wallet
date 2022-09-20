@@ -71,6 +71,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
       isShowScanBar={false}
       cornerColor={GRAPHIC_BASE_3}
       cornerWidth={7}
+      zoom={0}
       renderTopView={() => (
         <SafeAreaView>
           <View style={page.headerContainer}>
