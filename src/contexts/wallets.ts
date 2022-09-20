@@ -183,10 +183,6 @@ class Wallets extends EventEmitter {
     return this._visible;
   }
 
-  getMain() {
-    return this.main;
-  }
-
   async getBalance(address: string) {
     const balance = await getDefaultNetwork().getBalance(address);
     return Number(utils.formatEther(balance));
