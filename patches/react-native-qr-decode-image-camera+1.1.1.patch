@@ -1,3 +1,22 @@
+diff --git a/node_modules/react-native-qr-decode-image-camera/android/build.gradle b/node_modules/react-native-qr-decode-image-camera/android/build.gradle
+index 4882f81..bcdf9f2 100644
+--- a/node_modules/react-native-qr-decode-image-camera/android/build.gradle
++++ b/node_modules/react-native-qr-decode-image-camera/android/build.gradle
+@@ -25,12 +25,12 @@ buildscript {
+ apply plugin: 'com.android.library'
+
+ android {
+-    compileSdkVersion 28
++    compileSdkVersion 31
+     buildToolsVersion "28.0.3"
+
+     defaultConfig {
+         minSdkVersion 16
+-        targetSdkVersion 28
++        targetSdkVersion 31
+         versionCode 1
+         versionName computeVersionName()
+     }
 diff --git a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js b/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
 index 93f2d16..31797a4 100644
 --- a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
