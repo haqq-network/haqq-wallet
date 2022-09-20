@@ -69,6 +69,7 @@ export const TransactionAddressScreen = ({
         onChangeText={setTo}
         value={to}
         multiline={true}
+        autoFocus={true}
         rightAction={
           to === '' ? (
             <IconButton onPress={onPressQR}>
@@ -92,7 +93,7 @@ export const TransactionAddressScreen = ({
       </Spacer>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{height: 70, marginBottom: 40}}>
+        style={{height: 70, marginBottom: 330}}>
         <Button
           disabled={!checked}
           variant={ButtonVariant.contained}

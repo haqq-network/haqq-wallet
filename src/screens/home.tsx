@@ -35,7 +35,7 @@ export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="home-market"
         component={HomeMarketScreen}
         options={{
@@ -56,7 +56,7 @@ export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
             <SwapIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="home-settings"
         component={HomeSettingsScreen}
