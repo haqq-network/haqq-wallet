@@ -12,7 +12,7 @@ import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 const Tab = createBottomTabNavigator();
-export const HomeScreen = ({}: HomeScreenProp) => {
+export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -27,7 +27,9 @@ export const HomeScreen = ({}: HomeScreenProp) => {
         options={{
           title: 'Wallet',
           headerTitle: 'Your wallets',
-          headerRight: () => <QrScannerButton />,
+          headerRight: () => (
+            <QrScannerButton navigation={navigation} route={route} />
+          ),
           tabBarIcon: ({focused}) => (
             <WalletIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),

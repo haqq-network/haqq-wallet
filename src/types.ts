@@ -42,7 +42,8 @@ export type RootStackParamList = {
   transaction:
     | undefined
     | {
-        from: string;
+        from?: string;
+        to?: string;
       };
   transactionDetail: {
     hash: string;

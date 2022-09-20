@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -31,7 +31,7 @@ export const TransactionAddressScreen = ({
 }: TransactionAddressScreenProp) => {
   const app = useApp();
   const contacts = useContacts();
-  const [to, setTo] = useState('');
+  const [to, setTo] = useState(route.params.to ?? '');
   const contactsList = contacts.getContacts();
   const checked = useMemo(() => utils.isAddress(to.trim()), [to]);
 
