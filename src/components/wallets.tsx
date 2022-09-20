@@ -64,10 +64,6 @@ export const Wallets = () => {
     };
   }, [updateWallets, wallets]);
 
-  if (!visibleRows.length) {
-    return null;
-  }
-
   return (
     <View>
       <Animated.View
