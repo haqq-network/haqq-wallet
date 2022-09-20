@@ -1,17 +1,32 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {IconButton, QRScanner} from './ui';
-import {useNavigationContainerRef} from '@react-navigation/native';
 import {GRAPHIC_BASE_1} from '../variables';
-import {RootStackParamList} from '../types';
+import {utils} from 'ethers';
+import {useApp} from '../contexts/app';
+import {CompositeScreenProps} from '@react-navigation/native';
 
-export const QrScannerButton = () => {
-  const navigator = useNavigationContainerRef<RootStackParamList>();
+export type QrScannerButtonProps = CompositeScreenProps<any, any>;
+
+export const QrScannerButton = ({navigation}: QrScannerButtonProps) => {
+  const app = useApp();
+
+  const onPressQR = useCallback(() => {
+    const subscription = (value: string) => {
+      if (utils.isAddress(value.trim())) {
+        app.emit('modal', null);
+
+        navigation.navigate('transaction', {
+          to: value.trim(),
+        });
+      }
+    };
+
+    app.on('address', subscription);
+    app.emit('modal', {type: 'qr'});
+  }, [app, navigation]);
+
   return (
-    <IconButton
-      onPress={() => {
-        navigator.navigate('scanQr');
-      }}
-      style={{marginRight: 12}}>
+    <IconButton onPress={onPressQR} style={{marginRight: 12}}>
       <QRScanner color={GRAPHIC_BASE_1} />
     </IconButton>
   );
