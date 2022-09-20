@@ -15,6 +15,7 @@ import {
   StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
+import {StatusBar} from 'react-native';
 
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
@@ -91,6 +92,7 @@ export const App = () => {
 
   return (
     <AppContext.Provider value={app}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <TransactionsContext.Provider value={transactions}>
         <WalletsContext.Provider value={wallets}>
           <NavigationContainer ref={navigator} theme={AppTheme}>
