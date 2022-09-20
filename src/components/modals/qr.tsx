@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Dimensions, SafeAreaView, StyleSheet, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
@@ -14,7 +14,7 @@ import {
   Paragraph,
   ParagraphSize,
 } from '../ui';
-import {GRAPHIC_BASE_3, TEXT_BASE_3} from '../../variables';
+import {GRAPHIC_BASE_3, GRAPHIC_RED_1, TEXT_BASE_3} from '../../variables';
 
 export type QRModalProps = {
   onClose: () => void;
@@ -22,6 +22,7 @@ export type QRModalProps = {
 
 export const QRModal = ({onClose}: QRModalProps) => {
   const [code, setCode] = useState('');
+  const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
 
   const onSuccess = useCallback(
@@ -34,17 +35,29 @@ export const QRModal = ({onClose}: QRModalProps) => {
     [code],
   );
 
+  const checkAddress = useCallback(address => {
+    if (utils.isAddress(address)) {
+      app.emit('address', address);
+    } else {
+      setError(true);
+
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
+  }, []);
+
   useEffect(() => {
-    if (code.startsWith('haqq:') && utils.isAddress(code.slice(5))) {
-      app.emit('address', code.slice(5));
+    if (code.startsWith('haqq:')) {
+      checkAddress(code.slice(5));
       return;
     }
 
-    if (code.startsWith('etherium:') && utils.isAddress(code.slice(9))) {
-      app.emit('address', code.slice(9));
+    if (code.startsWith('etherium:')) {
+      checkAddress(code.slice(9));
       return;
     }
-  }, [code]);
+  }, [checkAddress, code]);
 
   const onClickGallery = useCallback(async () => {
     const response = await launchImageLibrary({mediaType: 'photo'});
@@ -69,7 +82,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
       flashMode={flashMode}
       hintText=""
       isShowScanBar={false}
-      cornerColor={GRAPHIC_BASE_3}
+      cornerColor={error ? GRAPHIC_RED_1 : GRAPHIC_BASE_3}
       cornerWidth={7}
       zoom={0}
       renderTopView={() => (
@@ -86,7 +99,15 @@ export const QRModal = ({onClose}: QRModalProps) => {
         </SafeAreaView>
       )}
       renderBottomView={() => (
-        <SafeAreaView>
+        <SafeAreaView style={page.bottomContainer}>
+          {error && (
+            <View style={page.bottomErrorContainer}>
+              <Paragraph size={ParagraphSize.l} style={page.bottomErrorText}>
+                Invalid code
+              </Paragraph>
+            </View>
+          )}
+
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <IconButton
               onPress={onClickGallery}
@@ -137,4 +158,16 @@ const page = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  bottomContainer: {
+    alignItems: 'center',
+  },
+  bottomErrorContainer: {
+    position: 'absolute',
+    backgroundColor: GRAPHIC_RED_1,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    bottom: Dimensions.get('window').height / 4,
+    borderRadius: 30,
+  },
+  bottomErrorText: {color: TEXT_BASE_3, fontWeight: '600'},
 });
