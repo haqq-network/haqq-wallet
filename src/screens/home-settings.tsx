@@ -1,17 +1,17 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
-import {SettingsButton} from '../components/settings-button';
 import {
   AddressBookSettingsIcon,
+  Container,
   HelpSettingsIcon,
   ISLMSettingsIcon,
   LanguageSettingsIcon,
   ShieldSettingsIcon,
+  Spacer,
   WalletIcon,
 } from '../components/ui';
+import {SettingsButton} from '../components/settings-button';
 import {GRAPHIC_BASE_1} from '../variables';
-import {Spacer} from '../components/spacer';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 

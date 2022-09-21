@@ -1,10 +1,4 @@
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -12,8 +6,10 @@ import {
   ButtonSize,
   ButtonVariant,
   IconButton,
+  KeyboardSafeArea,
   LabeledBlock,
   Paragraph,
+  Spacer,
   SwapVerticalIcon,
 } from '../components/ui';
 import {
@@ -23,9 +19,7 @@ import {
   TEXT_BASE_2,
   TEXT_RED_1,
 } from '../variables';
-import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 
@@ -101,56 +95,56 @@ export const TransactionSumScreen = ({
   const onPressSwap = () => {};
 
   return (
-    <Container>
-      <KeyboardAvoidingView style={{flex: 1, justifyContent: 'space-between'}}>
-        <LabeledBlock label="Send to" style={{marginBottom: 50}}>
-          <Paragraph
-            style={{color: TEXT_BASE_1}}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {formattedAddress}
-          </Paragraph>
-        </LabeledBlock>
-        <Text style={page.subtitle}>ISLM</Text>
-        <View style={page.sum}>
-          <View style={page.swap}>
-            <IconButton onPress={onPressSwap} style={page.swapButton}>
-              <SwapVerticalIcon color={GRAPHIC_GREEN_1} />
-            </IconButton>
-          </View>
-          <TextInput
-            style={page.input}
-            value={amount}
-            placeholder="0"
-            onChangeText={onChangeValue}
-            keyboardType="numeric"
-            placeholderTextColor={TEXT_BASE_2}
-          />
-          <View style={page.max}>
-            <Button
-              title="Max"
-              onPress={onPressMax}
-              variant={ButtonVariant.second}
-              size={ButtonSize.small}
-            />
-          </View>
+    <KeyboardSafeArea
+      style={{justifyContent: 'space-between', paddingHorizontal: 20}}>
+      <LabeledBlock label="Send to" style={{marginBottom: 50}}>
+        <Paragraph
+          style={{color: TEXT_BASE_1}}
+          numberOfLines={1}
+          ellipsizeMode="middle">
+          {formattedAddress}
+        </Paragraph>
+      </LabeledBlock>
+      <Text style={page.subtitle}>ISLM</Text>
+      <View style={page.sum}>
+        <View style={page.swap}>
+          <IconButton onPress={onPressSwap} style={page.swapButton}>
+            <SwapVerticalIcon color={GRAPHIC_GREEN_1} />
+          </IconButton>
         </View>
-        {error ? (
-          <Text style={[page.help, page.error]}>{error}</Text>
-        ) : (
-          <Text style={[page.help, page.available]}>
-            Available: {balance.toFixed(8)} ISLM
-          </Text>
-        )}
-        <Spacer />
-        <Button
-          disabled={!checked}
-          variant={ButtonVariant.contained}
-          title="Preview"
-          onPress={onDone}
+        <TextInput
+          style={page.input}
+          value={amount}
+          placeholder="0"
+          onChangeText={onChangeValue}
+          keyboardType="numeric"
+          placeholderTextColor={TEXT_BASE_2}
         />
-      </KeyboardAvoidingView>
-    </Container>
+        <View style={page.max}>
+          <Button
+            title="Max"
+            onPress={onPressMax}
+            variant={ButtonVariant.second}
+            size={ButtonSize.small}
+          />
+        </View>
+      </View>
+      {error ? (
+        <Text style={[page.help, page.error]}>{error}</Text>
+      ) : (
+        <Text style={[page.help, page.available]}>
+          Available: {balance.toFixed(8)} ISLM
+        </Text>
+      )}
+      <Spacer />
+      <Button
+        style={page.submit}
+        disabled={!checked}
+        variant={ButtonVariant.contained}
+        title="Preview"
+        onPress={onDone}
+      />
+    </KeyboardSafeArea>
   );
 };
 
@@ -208,5 +202,8 @@ const page = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
     textAlign: 'center',
+  },
+  submit: {
+    marginVertical: 16,
   },
 });

@@ -3,7 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, StyleSheet, Text, TextInput} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 

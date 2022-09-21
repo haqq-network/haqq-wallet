@@ -1,19 +1,20 @@
 import React, {useCallback} from 'react';
-import {Container} from '../components/container';
-import {Spacer} from '../components/spacer';
 import {
   ArrowForwardIcon,
+  Container,
   DiscordIcon,
   DocIcon,
   GlobalIcon,
   IconButton,
   Paragraph,
   ParagraphSize,
+  Spacer,
   StarIcon,
 } from '../components/ui';
 import {Dimensions, Linking, StyleSheet, View} from 'react-native';
 import {BG_3, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import Lottie from 'lottie-react-native';
+
 const windowWidth = Dimensions.get('window').width;
 
 export const SettingsAboutScreen = () => {

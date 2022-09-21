@@ -4,13 +4,14 @@ import {
   BlockIcon,
   Button,
   ButtonVariant,
+  Container,
   IconButton,
   InvoiceIcon,
   ISLMIcon,
   PenIcon,
+  Spacer,
   Title,
 } from '../components/ui';
-import {Container} from '../components/container';
 import {
   BG_8,
   GRAPHIC_BASE_2,
@@ -19,7 +20,6 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {Spacer} from '../components/spacer';
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';

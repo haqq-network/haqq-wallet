@@ -1,16 +1,16 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Alert,
   Button,
   ButtonVariant,
+  Container,
   InfoBlock,
   InfoBlockType,
   Paragraph,
+  Spacer,
   Title,
 } from '../components/ui';
-import {Spacer} from '../components/spacer';
 import {Image} from 'react-native';
 import {TEXT_YELLOW_1} from '../variables';
 

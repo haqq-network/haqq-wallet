@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 
 type TransactionAccountScreenProp = CompositeScreenProps<any, any>;
 

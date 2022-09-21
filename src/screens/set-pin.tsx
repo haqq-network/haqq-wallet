@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {Button, Text} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 import {useApp} from '../contexts/app';
 
 type PinScreenProp = CompositeScreenProps<any, any>;

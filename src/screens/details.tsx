@@ -3,7 +3,7 @@ import {Alert, Button, Text, TouchableOpacity, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 
 type DetailsScreenProp = CompositeScreenProps<any, any>;
 

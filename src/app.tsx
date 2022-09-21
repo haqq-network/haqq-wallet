@@ -16,6 +16,7 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
@@ -91,128 +92,130 @@ export const App = () => {
   }, [navigator]);
 
   return (
-    <AppContext.Provider value={app}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      <TransactionsContext.Provider value={transactions}>
-        <WalletsContext.Provider value={wallets}>
-          <NavigationContainer ref={navigator} theme={AppTheme}>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="home" component={HomeScreen} />
-              <Stack.Screen name="login" component={LoginScreen} />
+    <SafeAreaProvider>
+      <AppContext.Provider value={app}>
+        <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+        <TransactionsContext.Provider value={transactions}>
+          <WalletsContext.Provider value={wallets}>
+            <NavigationContainer ref={navigator} theme={AppTheme}>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="home" component={HomeScreen} />
+                <Stack.Screen name="login" component={LoginScreen} />
 
-              <Stack.Group screenOptions={{presentation: 'modal'}}>
-                <Stack.Screen name="backup" component={BackupScreen} />
-                <Stack.Screen name="details" component={DetailsScreen} />
+                <Stack.Group screenOptions={{presentation: 'modal'}}>
+                  <Stack.Screen name="backup" component={BackupScreen} />
+                  <Stack.Screen name="details" component={DetailsScreen} />
+                  <Stack.Screen
+                    name="importWallet"
+                    component={ImportWalletScreen}
+                  />
+                  <Stack.Screen name="setPin" component={SetPinScreen} />
+                  <Stack.Screen name="signin" component={SignInScreen} />
+                  <Stack.Screen name="signup" component={SignUpScreen} />
+                  <Stack.Screen
+                    name="transaction"
+                    component={TransactionScreen}
+                  />
+                  <Stack.Screen name="restore" component={RestoreScreen} />
+                  <Stack.Screen name="create" component={CreateScreen} />
+                </Stack.Group>
+                <Stack.Screen name="register" component={RegisterScreen} />
                 <Stack.Screen
-                  name="importWallet"
-                  component={ImportWalletScreen}
-                />
-                <Stack.Screen name="setPin" component={SetPinScreen} />
-                <Stack.Screen name="signin" component={SignInScreen} />
-                <Stack.Screen name="signup" component={SignUpScreen} />
-                <Stack.Screen
-                  name="transaction"
-                  component={TransactionScreen}
-                />
-                <Stack.Screen name="restore" component={RestoreScreen} />
-                <Stack.Screen name="create" component={CreateScreen} />
-              </Stack.Group>
-              <Stack.Screen name="register" component={RegisterScreen} />
-              <Stack.Screen
-                name="detailsQr"
-                component={DetailsQrScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="backupNotification"
-                component={BackupNotificationScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="transactionDetail"
-                component={TransactionDetailScreen}
-                options={actionsSheet}
-              />
-              <Stack.Group
-                screenOptions={{
-                  headerShown: true,
-                  header: PopupHeader,
-                  headerStyle: {
-                    height: 56,
-                  },
-                }}>
-                <Stack.Screen
-                  name="settingsAccounts"
-                  component={SettingsAccountsScreen}
-                  options={{
-                    title: 'Manage accounts',
-                  }}
+                  name="detailsQr"
+                  component={DetailsQrScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="settingsAccountDetail"
-                  component={SettingsAccountDetailScreen}
-                  options={{
-                    title: 'Account details',
-                    headerRight: props => (
-                      <SettingsAccountRemoveButton {...props} />
-                    ),
-                  }}
+                  name="backupNotification"
+                  component={BackupNotificationScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="settingsAccountStyle"
-                  component={SettingsAccountStyleScreen}
-                  options={{
-                    title: 'Change style',
-                  }}
+                  name="transactionDetail"
+                  component={TransactionDetailScreen}
+                  options={actionsSheet}
                 />
-                <Stack.Screen
-                  name="settingsAddressBook"
-                  component={SettingsAddressBookScreen}
-                  options={{
-                    title: 'Address book',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsLanguage"
-                  component={SettingsLanguageScreen}
-                  options={{
-                    title: 'Language',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsSecurity"
-                  component={SettingsSecurityScreen}
-                  options={{
-                    title: 'Security',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsSecurityPin"
-                  component={SettingsSecurityPinScreen}
-                  options={{
-                    title: 'Change PIN',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsFaq"
-                  component={SettingsFAQScreen}
-                  options={{
-                    title: 'Security',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAbout"
-                  component={SettingsAboutScreen}
-                  options={{
-                    title: 'About',
-                  }}
-                />
-              </Stack.Group>
-            </Stack.Navigator>
-          </NavigationContainer>
-          <Modals />
-        </WalletsContext.Provider>
-      </TransactionsContext.Provider>
-    </AppContext.Provider>
+                <Stack.Group
+                  screenOptions={{
+                    headerShown: true,
+                    header: PopupHeader,
+                    headerStyle: {
+                      height: 56,
+                    },
+                  }}>
+                  <Stack.Screen
+                    name="settingsAccounts"
+                    component={SettingsAccountsScreen}
+                    options={{
+                      title: 'Manage accounts',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountDetail"
+                    component={SettingsAccountDetailScreen}
+                    options={{
+                      title: 'Account details',
+                      headerRight: props => (
+                        <SettingsAccountRemoveButton {...props} />
+                      ),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountStyle"
+                    component={SettingsAccountStyleScreen}
+                    options={{
+                      title: 'Change style',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAddressBook"
+                    component={SettingsAddressBookScreen}
+                    options={{
+                      title: 'Address book',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsLanguage"
+                    component={SettingsLanguageScreen}
+                    options={{
+                      title: 'Language',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    component={SettingsSecurityScreen}
+                    options={{
+                      title: 'Security',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurityPin"
+                    component={SettingsSecurityPinScreen}
+                    options={{
+                      title: 'Change PIN',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsFaq"
+                    component={SettingsFAQScreen}
+                    options={{
+                      title: 'Security',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAbout"
+                    component={SettingsAboutScreen}
+                    options={{
+                      title: 'About',
+                    }}
+                  />
+                </Stack.Group>
+              </Stack.Navigator>
+            </NavigationContainer>
+            <Modals />
+          </WalletsContext.Provider>
+        </TransactionsContext.Provider>
+      </AppContext.Provider>
+    </SafeAreaProvider>
   );
 };

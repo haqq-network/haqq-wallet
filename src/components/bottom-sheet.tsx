@@ -8,8 +8,7 @@ import {
   View,
 } from 'react-native';
 import {BG_1, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
-import {CloseCircle, IconButton, Paragraph, ParagraphSize} from './ui';
-import {Spacer} from './spacer';
+import {CloseCircle, IconButton, Paragraph, ParagraphSize, Spacer} from './ui';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
