@@ -11,9 +11,11 @@ import {
   Copy,
   CopyButton,
   IconButton,
+  Paragraph,
+  ParagraphSize,
   QRCode,
 } from './ui';
-import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3} from '../variables';
+import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3, TEXT_SECOND_2} from '../variables';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
 
@@ -64,14 +66,18 @@ export const WalletCard = ({address}: BalanceProps) => {
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
-        <Text style={[page.text, {opacity: 0.8}]}>{wallet.name || 'name'}</Text>
+        <Paragraph size={ParagraphSize.s} style={page.name}>
+          {wallet.name || 'name'}
+        </Paragraph>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
         <CopyButton style={page.copyButton} value={wallet.address}>
-          <Text style={page.text}>{formattedAddress}</Text>
-          <Copy color={GRAPHIC_BASE_3} />
+          <Paragraph size={ParagraphSize.s} style={page.address}>
+            {formattedAddress}
+          </Paragraph>
+          <Copy color={GRAPHIC_BASE_3} style={{marginLeft: 4}} />
         </CopyButton>
       </View>
       {!wallet.mnemonic_saved && (
@@ -104,11 +110,15 @@ const page = StyleSheet.create({
     marginBottom: 30,
   },
   spacer: {flex: 1},
-  text: {
-    fontStyle: 'normal',
+  name: {
     fontWeight: '700',
-    fontSize: 14,
-    lineHeight: 18,
+    color: TEXT_SECOND_2,
+  },
+  text: {
+    fontWeight: '700',
+    color: TEXT_SECOND_2,
+  },
+  address: {
     color: TEXT_BASE_3,
   },
   balance: {
@@ -138,7 +148,7 @@ const page = StyleSheet.create({
   copyButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: 4,
+    marginLeft: 12,
   },
   qrButton: {},
   cacheButton: {
