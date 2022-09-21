@@ -19,6 +19,7 @@ export const SettingsAccountRemoveButton = ({
       [
         {
           text: 'Cancel',
+          style: 'cancel',
         },
         {
           style: 'destructive',

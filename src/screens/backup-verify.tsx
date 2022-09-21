@@ -104,9 +104,9 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i + 6 ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Text style={[page.cellText, page.cellTextFilled]}>
+                  <Paragraph style={page.cellTextFilled}>
                     {words.get(selected[i + 6])}
-                  </Text>
+                  </Paragraph>
                 </View>
               ) : (
                 <View
@@ -116,9 +116,7 @@ export const BackupVerifyScreen = ({
                     selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Text style={[page.cellText, page.cellTextEmpty]}>
-                    #{i + 7}
-                  </Text>
+                  <Paragraph style={page.cellTextEmpty}>#{i + 7}</Paragraph>
                 </View>
               ),
             )}
@@ -145,6 +143,7 @@ export const BackupVerifyScreen = ({
         variant={ButtonVariant.contained}
         title="Check"
         onPress={onDone}
+        style={{marginVertical: 16}}
       />
     </Container>
   );
@@ -171,13 +170,8 @@ const page = StyleSheet.create({
   },
   cellEmpty: {backgroundColor: BG_3},
   cellFilled: {backgroundColor: GRAPHIC_GREEN_1},
-  cellText: {
-    fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  cellTextEmpty: {color: TEXT_SECOND_1, textAlign: 'center'},
-  cellTextFilled: {color: TEXT_BASE_3, textAlign: 'center'},
+  cellTextEmpty: {fontWeight: '600', color: TEXT_SECOND_1, textAlign: 'center'},
+  cellTextFilled: {fontWeight: '600', color: TEXT_BASE_3, textAlign: 'center'},
   error: {
     fontWeight: '600',
     fontSize: 16,

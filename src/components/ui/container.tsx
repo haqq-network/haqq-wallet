@@ -14,6 +14,6 @@ const page = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    margin: 20,
+    marginHorizontal: 20,
   },
 });

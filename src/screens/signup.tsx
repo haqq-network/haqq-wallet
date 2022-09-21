@@ -22,7 +22,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         component={SignUpAgreementScreen}
         options={{
           headerRight: DismissPopupButton,
-          headerBackVisible: false,
+          headerBackHidden: true,
         }}
         initialParams={{next: route.params.next}}
       />
@@ -53,8 +53,8 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
       <SignUpStack.Screen
         name="onboarding-finish"
         component={OnboardingFinishScreen}
-        options={{title}}
         initialParams={{action: 'create'}}
+        options={{title: '', headerBackHidden: true}}
       />
     </SignUpStack.Navigator>
   );

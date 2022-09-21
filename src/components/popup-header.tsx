@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {ArrowBackIcon, IconButton, Paragraph, ParagraphSize} from './ui';
 import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export const PopupHeader = ({
   options,
@@ -10,9 +11,11 @@ export const PopupHeader = ({
   navigation,
   route,
 }: StackHeaderProps) => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={page.container}>
-      {back && options.headerBackVisible ? (
+    <View style={[page.container, options.tab && {marginTop: insets.top}]}>
+      {back && !options.headerBackHidden ? (
         <IconButton
           onPress={navigation.goBack}
           hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>

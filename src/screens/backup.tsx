@@ -30,6 +30,10 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
       <BackupStack.Screen
         name={'backupFinish'}
         component={BackupFinishScreen}
+        options={{
+          title: '',
+          headerBackHidden: true,
+        }}
       />
     </BackupStack.Navigator>
   );

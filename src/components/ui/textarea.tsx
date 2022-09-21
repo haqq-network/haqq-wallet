@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
-import {StyleSheet, Text, TextInput, TextInputProps, View} from 'react-native';
+import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
 import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
+import {Paragraph, ParagraphSize} from './paragraph';
 
 type TextareaProps = Omit<TextInputProps, 'multiline'>;
 
@@ -15,7 +16,9 @@ export const Textarea = ({
 
   return (
     <View style={containerStyle}>
-      <Text style={page.placeholder}>{placeholder}</Text>
+      <Paragraph size={ParagraphSize.s} style={page.placeholder}>
+        {placeholder}
+      </Paragraph>
       <TextInput
         onChangeText={onChangeText}
         value={value}
@@ -30,13 +33,11 @@ export const Textarea = ({
 const page = StyleSheet.create({
   container: {
     backgroundColor: BG_8,
-    paddingVertical: 8,
+    paddingVertical: 18,
     paddingHorizontal: 16,
     borderRadius: 16,
   },
   placeholder: {
-    fontSize: 14,
-    lineHeight: 18,
     color: TEXT_BASE_2,
   },
   input: {
