@@ -1,10 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
+  Container,
   DataView,
   ISLMIcon,
   Paragraph,

@@ -2,11 +2,11 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
+  Container,
   Paragraph,
   Spacer,
   Title,

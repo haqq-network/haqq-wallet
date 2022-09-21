@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
+  Container,
   Icon,
   Paragraph,
   Spacer,

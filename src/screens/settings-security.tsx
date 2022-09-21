@@ -1,12 +1,12 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {Container} from '../components/container';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {
+  Container,
   MenuNavigationButton,
   Paragraph,
   ParagraphSize,
   Spacer,
 } from '../components/ui';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {Alert, StyleSheet, Switch, View} from 'react-native';
 import {
   GRAPHIC_BASE_4,

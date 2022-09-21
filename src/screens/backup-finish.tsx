@@ -1,7 +1,12 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, ButtonVariant, Spacer, Title} from '../components/ui';
-import {Container} from '../components/container';
+import {
+  Button,
+  ButtonVariant,
+  Container,
+  Spacer,
+  Title,
+} from '../components/ui';
 import Lottie from 'lottie-react-native';
 import {Dimensions} from 'react-native';
 

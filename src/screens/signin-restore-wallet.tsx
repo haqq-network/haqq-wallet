@@ -3,8 +3,13 @@ import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/container';
-import {Button, ButtonVariant, Paragraph, Textarea} from '../components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Container,
+  Paragraph,
+  Textarea,
+} from '../components/ui';
 import {MAIN_ACCOUNT_NAME} from '../variables';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;

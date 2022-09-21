@@ -1,10 +1,10 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Alert,
   Button,
   ButtonVariant,
+  Container,
   InfoBlock,
   InfoBlockType,
   Paragraph,

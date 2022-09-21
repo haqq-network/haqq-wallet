@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
+  Container,
   Paragraph,
   Spacer,
   Title,

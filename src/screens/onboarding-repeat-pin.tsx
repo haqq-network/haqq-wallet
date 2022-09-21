@@ -2,8 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container} from '../components/container';
-import {Paragraph, Spacer, Title} from '../components/ui';
+import {Container, Paragraph, Spacer, Title} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 

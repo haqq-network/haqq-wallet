@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
-import {Container} from '../components/container';
 import {
   ArrowForwardIcon,
+  Container,
   DiscordIcon,
   DocIcon,
   GlobalIcon,

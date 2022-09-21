@@ -1,11 +1,11 @@
 import React, {useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
   Checkbox,
+  Container,
   Copy,
   CopyButton,
   InfoBlock,

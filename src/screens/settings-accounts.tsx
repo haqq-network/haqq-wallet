@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 import {useWallets} from '../contexts/wallets';
 import {FlatList} from 'react-native';
 import {WalletRow} from '../components/wallet-row';

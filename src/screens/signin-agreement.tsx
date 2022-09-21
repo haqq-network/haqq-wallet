@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
 import {Dimensions} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
 import {
   Button,
   ButtonVariant,
+  Container,
   Paragraph,
   Spacer,
   Title,

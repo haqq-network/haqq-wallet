@@ -4,6 +4,7 @@ import {
   BlockIcon,
   Button,
   ButtonVariant,
+  Container,
   IconButton,
   InvoiceIcon,
   ISLMIcon,
@@ -11,7 +12,6 @@ import {
   Spacer,
   Title,
 } from '../components/ui';
-import {Container} from '../components/container';
 import {
   BG_8,
   GRAPHIC_BASE_2,

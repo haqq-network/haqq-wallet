@@ -1,8 +1,13 @@
 import React from 'react';
 import {Image, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
-import {Container} from '../components/container';
+import {
+  Button,
+  ButtonVariant,
+  Container,
+  Paragraph,
+  Title,
+} from '../components/ui';
 
 type LoginScreenProp = CompositeScreenProps<any, any>;
 
