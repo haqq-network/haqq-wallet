@@ -35,10 +35,10 @@ export const SettingsAccountDetailScreen = ({
       [
         {
           text: 'Cancel',
-          style: 'cancel',
         },
         {
           text: 'Save',
+          style: 'cancel',
           onPress: n => {
             wallet?.updateWallet({name: n});
             setName(n);

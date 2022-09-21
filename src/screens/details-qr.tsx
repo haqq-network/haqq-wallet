@@ -43,7 +43,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
   };
 
   return (
-    <BottomSheet onClose={navigation.goBack}>
+    <BottomSheet onClose={navigation.goBack} title="Receive">
       <InfoBlock
         type={InfoBlockType.warning}
         style={{marginBottom: 16}}

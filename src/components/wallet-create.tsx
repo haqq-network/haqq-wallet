@@ -1,21 +1,32 @@
 import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {Button, ButtonVariant, Paragraph, ParagraphSize} from './ui';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/core';
+import {
+  Button,
+  ButtonVariant,
+  Paragraph,
+  ParagraphFont,
+  ParagraphSize,
+} from './ui';
 import {
   BG_1,
   GRAPHIC_SECOND_1,
   MAGIC_CARD_HEIGHT,
   TEXT_GREEN_1,
 } from '../variables';
-import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <View style={page.container}>
-      <Paragraph style={page.title} size={ParagraphSize.l}>
+      <Paragraph
+        style={page.title}
+        size={ParagraphSize.l}
+        font={ParagraphFont.text}>
         Add accounts
       </Paragraph>
       <Paragraph style={page.subtitle}>
@@ -31,6 +42,7 @@ export const WalletCreate = ({}: BalanceProps) => {
       />
       <Button
         title="Import an existing one"
+        style={page.create}
         onPress={() => {
           navigation.navigate('restore');
         }}
@@ -73,5 +85,9 @@ const page = StyleSheet.create({
   },
   create: {
     marginBottom: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    fontSize: 16,
+    lineHeight: 22,
   },
 });

@@ -11,6 +11,7 @@ import {
   InfoBlock,
   InfoBlockType,
   Paragraph,
+  ParagraphSize,
   Spacer,
   Title,
 } from '../components/ui';
@@ -85,18 +86,17 @@ export const BackupCreateScreen = ({
       </InfoBlock>
       <View style={{marginBottom: 20, flexDirection: 'row'}}>
         <Checkbox value={checked} onPress={setChecked} />
-        <Text
+        <Paragraph
+          size={ParagraphSize.s}
           style={{
             flex: 1,
             color: TEXT_BASE_2,
             fontWeight: '600',
-            fontSize: 14,
-            lineHeight: 18,
             marginLeft: 12,
           }}>
           I understand that if I lose my recovery phrase, I will not be able to
           restore access to my account
-        </Text>
+        </Paragraph>
       </View>
       <Button
         title="Continue"

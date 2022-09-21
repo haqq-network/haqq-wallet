@@ -53,15 +53,15 @@ export const NumericKeyboard = ({
 
 const page = StyleSheet.create({
   container: {
-    width: 264,
-    justifyContent: 'space-between',
+    width: '100%',
+    justifyContent: 'center',
     padding: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   button: {
-    marginVertical: 12,
-    marginHorizontal: 2,
+    marginHorizontal: 12,
+    marginVertical: 2,
     width: 72,
     height: 72,
     justifyContent: 'center',

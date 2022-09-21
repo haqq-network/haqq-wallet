@@ -137,6 +137,8 @@ export const App = () => {
                 />
                 <Stack.Group
                   screenOptions={{
+                    tab: true,
+                    headerBackVisible: true,
                     headerShown: true,
                     header: PopupHeader,
                     headerStyle: {

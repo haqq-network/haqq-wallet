@@ -12,7 +12,12 @@ import {
   StarIcon,
 } from '../components/ui';
 import {Dimensions, Linking, StyleSheet, View} from 'react-native';
-import {BG_3, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
+import {
+  BG_3,
+  GRAPHIC_BASE_1,
+  GRAPHIC_SECOND_3,
+  TEXT_BASE_1,
+} from '../variables';
 import Lottie from 'lottie-react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -65,13 +70,13 @@ export const SettingsAboutScreen = () => {
           <StarIcon color={GRAPHIC_BASE_1} />
           <Paragraph style={page.buttonText}>Rate ISLM wallet App</Paragraph>
           <Spacer />
-          <ArrowForwardIcon />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
         <IconButton onPress={onPressSite} style={page.button}>
           <GlobalIcon color={GRAPHIC_BASE_1} />
           <Paragraph style={page.buttonText}>Visit islamiccoin.net</Paragraph>
           <Spacer />
-          <ArrowForwardIcon />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Paragraph size={ParagraphSize.s} style={page.title}>
@@ -82,7 +87,7 @@ export const SettingsAboutScreen = () => {
           <DocIcon color={GRAPHIC_BASE_1} />
           <Paragraph style={page.buttonText}>Terms & Conditions</Paragraph>
           <Spacer />
-          <ArrowForwardIcon />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Paragraph size={ParagraphSize.s} style={page.title}>
@@ -93,7 +98,7 @@ export const SettingsAboutScreen = () => {
           <DiscordIcon color={GRAPHIC_BASE_1} />
           <Paragraph style={page.buttonText}>Discord</Paragraph>
           <Spacer />
-          <ArrowForwardIcon />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Paragraph style={page.terms}>

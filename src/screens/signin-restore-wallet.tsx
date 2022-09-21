@@ -1,13 +1,14 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useWallets} from '../contexts/wallets';
 import {
   Button,
   ButtonVariant,
-  Container,
+  KeyboardSafeArea,
   Paragraph,
+  Spacer,
   Textarea,
 } from '../components/ui';
 import {MAIN_ACCOUNT_NAME} from '../variables';
@@ -39,22 +40,21 @@ export const SignInRestoreScreen = ({
   }, [seed, wallets, navigation]);
 
   return (
-    <Container>
+    <KeyboardSafeArea>
       <Paragraph style={page.intro}>Recovery phrase or Private key</Paragraph>
-      <KeyboardAvoidingView behavior="height">
-        <Textarea
-          style={page.input}
-          placeholder="Backup phrase"
-          onChangeText={setSeed}
-        />
-        <Button
-          disabled={!checked}
-          title="Done"
-          onPress={onDone}
-          variant={ButtonVariant.contained}
-        />
-      </KeyboardAvoidingView>
-    </Container>
+      <Textarea
+        style={page.input}
+        placeholder="Backup phrase"
+        onChangeText={setSeed}
+      />
+      <Spacer />
+      <Button
+        disabled={!checked}
+        title="Recovery"
+        onPress={onDone}
+        variant={ButtonVariant.contained}
+      />
+    </KeyboardSafeArea>
   );
 };
 

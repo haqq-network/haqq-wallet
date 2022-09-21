@@ -14,6 +14,7 @@ export const AddressHeader = () => {
 const page = StyleSheet.create({
   container: {
     marginHorizontal: 20,
+    marginVertical: 12,
     fontWeight: '600',
     color: TEXT_BASE_1,
   },

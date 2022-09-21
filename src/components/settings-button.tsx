@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {MenuNavigationButton, Paragraph} from './ui';
 import {TEXT_BASE_1} from '../variables';
 
@@ -9,6 +9,7 @@ export type SettingsButtonProps = {
   title: string;
   onPress: (screen?: string) => void;
   children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const SettingsButton = ({
@@ -16,10 +17,11 @@ export const SettingsButton = ({
   title,
   onPress,
   next,
+  style,
 }: SettingsButtonProps) => {
   return (
     <MenuNavigationButton onPress={() => onPress(next)}>
-      <View style={page.container}>
+      <View style={[page.container, style]}>
         {icon}
         <Paragraph style={page.text}>{title}</Paragraph>
       </View>
