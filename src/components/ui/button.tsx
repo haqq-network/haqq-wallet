@@ -111,6 +111,8 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_SECOND_1,
   },
   text: {
+    fontFamily: 'SF Pro Display',
+    fontStyle: 'normal',
     fontWeight: '600',
     fontSize: 18,
     lineHeight: 24,

@@ -59,6 +59,10 @@
 		<string>SF-Pro-Display-Regular.ttf</string>
 		<string>SF-Pro-Display-Semibold.ttf</string>
 		<string>SF-Pro-Display-Thin.ttf</string>
+		<string>SF-ProText-Bold.ttf</string>
+		<string>SF-ProText-Medium.ttf</string>
+		<string>SF-ProText-Regular.ttf</string>
+		<string>SF-ProText-Semibold.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

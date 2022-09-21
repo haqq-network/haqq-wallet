@@ -62,6 +62,10 @@
 		E046FA128BC54C538D47A78A /* mnemonic-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = BF34339DCC6443B98293697D /* mnemonic-warning.png */; };
 		482B270C56E6443284081A8F /* mnemonic-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */; };
 		69D7C6A606CC4B8E80A1B7DE /* mnemonic-warning@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B88E85A653224DBE840A8E52 /* mnemonic-warning@3x.png */; };
+		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
+		69201C9A86064BF191BEB50E /* SF-ProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */; };
+		BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */; };
+		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +144,10 @@
 		BF34339DCC6443B98293697D /* mnemonic-warning.png */ = {isa = PBXFileReference; name = "mnemonic-warning.png"; path = "../assets/images/mnemonic-warning.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */ = {isa = PBXFileReference; name = "mnemonic-warning@2x.png"; path = "../assets/images/mnemonic-warning@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B88E85A653224DBE840A8E52 /* mnemonic-warning@3x.png */ = {isa = PBXFileReference; name = "mnemonic-warning@3x.png"; path = "../assets/images/mnemonic-warning@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */ = {isa = PBXFileReference; name = "SF-ProText-Bold.ttf"; path = "../assets/fonts/SF-ProText-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */ = {isa = PBXFileReference; name = "SF-ProText-Regular.ttf"; path = "../assets/fonts/SF-ProText-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */ = {isa = PBXFileReference; name = "SF-ProText-Semibold.ttf"; path = "../assets/fonts/SF-ProText-Semibold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,6 +304,10 @@
 				BF34339DCC6443B98293697D /* mnemonic-warning.png */,
 				F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */,
 				B88E85A653224DBE840A8E52 /* mnemonic-warning@3x.png */,
+				01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */,
+				A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */,
+				5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */,
+				83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -448,6 +460,10 @@
 				E046FA128BC54C538D47A78A /* mnemonic-warning.png in Resources */,
 				482B270C56E6443284081A8F /* mnemonic-warning@2x.png in Resources */,
 				69D7C6A606CC4B8E80A1B7DE /* mnemonic-warning@3x.png in Resources */,
+				2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */,
+				69201C9A86064BF191BEB50E /* SF-ProText-Medium.ttf in Resources */,
+				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
+				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
