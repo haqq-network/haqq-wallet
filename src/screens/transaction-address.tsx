@@ -1,27 +1,14 @@
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
-import {utils} from 'ethers';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {
-  Button,
-  ButtonVariant,
-  CloseCircle,
-  IconButton,
-  Input,
-  QRScanner,
-} from '../components/ui';
+import { FlatList, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { utils } from 'ethers';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { Button, ButtonVariant, CloseCircle, IconButton, Input, KeyboardSafeArea, QRScanner, } from '../components/ui';
+import { useContacts } from '../contexts/contacts';
+import { AddressRow } from '../components/address-row';
+import { useApp } from '../contexts/app';
+import { AddressHeader } from '../components/address-header';
+import { GRAPHIC_BASE_2, GRAPHIC_GREEN_1 } from '../variables';
 import {Spacer} from '../components/spacer';
-import {useContacts} from '../contexts/contacts';
-import {AddressRow} from '../components/address-row';
-import {useApp} from '../contexts/app';
-import {AddressHeader} from '../components/address-header';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 
 type TransactionAddressScreenProp = CompositeScreenProps<any, any>;
 
@@ -53,7 +40,7 @@ export const TransactionAddressScreen = ({
 
     app.on('address', subscription);
 
-    app.emit('modal', {type: 'qr'});
+    app.emit('modal', { type: 'qr' });
   }, [app]);
 
   const onPressClear = useCallback(() => {
@@ -61,7 +48,7 @@ export const TransactionAddressScreen = ({
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <KeyboardSafeArea>
       <Input
         label="Send to"
         style={page.input}
@@ -91,33 +78,24 @@ export const TransactionAddressScreen = ({
           />
         ) : null}
       </Spacer>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{height: 70, marginBottom: 330}}>
-        <Button
-          disabled={!checked}
-          variant={ButtonVariant.contained}
-          title="Continue"
-          onPress={onDone}
-          style={page.button}
-        />
-      </KeyboardAvoidingView>
-    </View>
+      <Button
+        disabled={!checked}
+        variant={ButtonVariant.contained}
+        title="Continue"
+        onPress={onDone}
+        style={page.button}
+      />
+    </KeyboardSafeArea>
   );
 };
 
 const page = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 10,
-    gap: 10,
-  },
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
   },
   button: {
     marginHorizontal: 20,
+    marginVertical: 16,
   },
 });

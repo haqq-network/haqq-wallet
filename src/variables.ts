@@ -1,3 +1,5 @@
+import {Platform} from 'react-native';
+
 export const TEXT_BASE_1 = '#2F2F2F';
 export const TEXT_BASE_2 = '#8E8E8E';
 export const TEXT_BASE_3 = '#FFFFFF';
@@ -29,3 +31,5 @@ export const BG_8 = '#F4F5F8';
 export const MAIN_ACCOUNT_NAME = 'Main account';
 
 export const MAGIC_CARD_HEIGHT = 0.632835821;
+
+export const IS_ANDROID = Platform.OS === 'android';

@@ -9,6 +9,7 @@ export * from './h3';
 export * from './icon';
 export * from './icon-button';
 export * from './input';
+export * from './keyboard-safe-area';
 export * from './labeled-block';
 export * from './menu-navigation-button';
 export * from './textarea';
