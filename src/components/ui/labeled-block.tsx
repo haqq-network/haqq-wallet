@@ -22,7 +22,9 @@ export const LabeledBlock = ({
         <View style={page.inner}>{children}</View>
       </View>
       {rightAction && (
-        <View style={{justifyContent: 'center'}}>{rightAction}</View>
+        <View style={{justifyContent: 'center', marginLeft: 12}}>
+          {rightAction}
+        </View>
       )}
     </View>
   );

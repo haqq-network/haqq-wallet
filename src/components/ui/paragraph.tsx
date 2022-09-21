@@ -11,19 +11,26 @@ export enum ParagraphSize {
   xl = 'xl',
 }
 
+export enum ParagraphFont {
+  display = 'display',
+  text = 'text',
+}
+
 export type ParagraphProps = TextProps & {
   size?: ParagraphSize;
+  font?: ParagraphFont;
 };
 
 export const Paragraph = ({
   style,
   children,
   size = ParagraphSize.m,
+  font = ParagraphFont.display,
   ...props
 }: ParagraphProps) => {
   const containerStyle = useMemo(
-    () => [page.container, style, page[size]],
-    [size, style],
+    () => [page.container, style, page[size], page[`${font}Font`]],
+    [font, size, style],
   );
 
   return (
@@ -35,6 +42,7 @@ export const Paragraph = ({
 
 const page = StyleSheet.create({
   container: {
+    fontFamily: 'SF Pro Display',
     fontStyle: 'normal',
     fontWeight: '400',
     color: TEXT_BASE_2,
@@ -58,5 +66,11 @@ const page = StyleSheet.create({
   xl: {
     fontSize: 22,
     lineHeight: 30,
+  },
+  displayFont: {
+    fontFamily: 'SF Pro Display',
+  },
+  textFont: {
+    fontFamily: 'SF Pro Text',
   },
 });

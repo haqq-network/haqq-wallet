@@ -20,7 +20,7 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
         <Image source={logoImage} style={{marginBottom: 28}} />
         <Title style={{marginBottom: 4}}>No wallet is connected</Title>
         <Paragraph style={{textAlign: 'center'}}>
-          You can create a new wallet or connect any existing one
+          You can create a new wallet or connect any existing{'\u00A0'}one
         </Paragraph>
       </View>
 

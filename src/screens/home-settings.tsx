@@ -50,6 +50,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         title="Security"
         onPress={onClickButton}
         next="settingsSecurity"
+        style={{marginBottom: 20}}
       />
 
       <SettingsButton

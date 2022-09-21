@@ -73,6 +73,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
       [
         {
           text: 'Cancel',
+          style: 'cancel',
         },
         {
           style: 'destructive',

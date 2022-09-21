@@ -1,6 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {
-  Container,
   MenuNavigationButton,
   Paragraph,
   ParagraphSize,
@@ -65,7 +64,7 @@ export const SettingsSecurityScreen = ({
   }
 
   return (
-    <Container>
+    <View style={{marginHorizontal: 20, flex: 1}}>
       <MenuNavigationButton
         onPress={() => navigation.navigate('settingsSecurityPin')}>
         <View>
@@ -90,7 +89,7 @@ export const SettingsSecurityScreen = ({
         </MenuNavigationButton>
       )}
       <Spacer />
-    </Container>
+    </View>
   );
 };
 

@@ -29,13 +29,13 @@ export const OnboardingSetupPinScreen = ({
   }, [navigation, pin]);
 
   return (
-    <Container style={{alignItems: 'center'}}>
-      <Title>Set 6-digital pin code</Title>
-      <Paragraph>
+    <Container style={page.container}>
+      <Title style={page.title}>Set 6-digital pin code</Title>
+      <Paragraph style={page.description}>
         Project your wallet. PIN code for increases wallet security in the event
-        your phone is stolen
+        your phone{'\u00A0'}is{'\u00A0'}stolen
       </Paragraph>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Spacer style={page.spacer}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />
           <View style={[page.dot, pin.length >= 2 && page.active]} />
@@ -51,6 +51,10 @@ export const OnboardingSetupPinScreen = ({
 };
 
 const page = StyleSheet.create({
+  container: {alignItems: 'center', marginTop: 48, paddingBottom: 16},
+  title: {marginBottom: 12},
+  description: {textAlign: 'center'},
+  spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',

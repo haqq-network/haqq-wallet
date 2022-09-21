@@ -1,6 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
 import React from 'react';
+import {Paragraph, ParagraphSize} from './ui';
 
 export type MnemonicWordProps = {
   word: string;
@@ -10,8 +11,10 @@ export type MnemonicWordProps = {
 export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
   return (
     <View style={page.container}>
-      <Text style={page.index}>{index}</Text>
-      <Text style={page.word}>{word}</Text>
+      <Paragraph size={ParagraphSize.s} style={page.index}>
+        {index}
+      </Paragraph>
+      <Paragraph style={page.word}>{word}</Paragraph>
     </View>
   );
 };
@@ -26,13 +29,8 @@ const page = StyleSheet.create({
   index: {
     marginRight: 8,
     color: TEXT_BASE_2,
-    fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 18,
   },
   word: {
     fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 22,
   },
 });

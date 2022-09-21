@@ -18,6 +18,9 @@ export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
         headerStyle: {
           backgroundColor: 'transparent',
         },
+        tabBarStyle: {
+          borderTopColor: 'transparent',
+        },
       }}>
       <Tab.Screen
         name="home-feed"
