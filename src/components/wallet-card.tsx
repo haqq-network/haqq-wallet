@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {NavigationProp} from '@react-navigation/core/src/types';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
 import {useWallet} from '../contexts/wallets';
 import {
   ArrowReceive,
@@ -125,9 +126,9 @@ const page = StyleSheet.create({
     marginHorizontal: -6,
   },
   button: {
+    height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 6,
   },
