@@ -7,8 +7,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import Svg, {G, Path, Rect} from 'react-native-svg';
-import {SvgProps} from 'react-native-svg/src/elements/Svg';
 import {WalletCardStyle} from '../../models/wallet';
 
 export type CardProps = {

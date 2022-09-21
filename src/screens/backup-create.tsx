@@ -11,9 +11,9 @@ import {
   InfoBlock,
   InfoBlockType,
   Paragraph,
+  Spacer,
   Title,
 } from '../components/ui';
-import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {MnemonicWord} from '../components/mnemonic-word';

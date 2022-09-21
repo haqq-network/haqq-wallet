@@ -8,10 +8,10 @@ import {
   ISLMSettingsIcon,
   LanguageSettingsIcon,
   ShieldSettingsIcon,
+  Spacer,
   WalletIcon,
 } from '../components/ui';
 import {GRAPHIC_BASE_1} from '../variables';
-import {Spacer} from '../components/spacer';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 

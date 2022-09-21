@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {GRAPHIC_SECOND_3} from '../../variables';
 import {ArrowForwardIcon} from './svg-icon';
-import {Spacer} from '../spacer';
+import {Spacer} from './spacer';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;

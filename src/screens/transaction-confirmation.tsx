@@ -8,10 +8,10 @@ import {
   DataView,
   ISLMIcon,
   Paragraph,
+  Spacer,
 } from '../components/ui';
 import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
-import {Spacer} from '../components/spacer';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 

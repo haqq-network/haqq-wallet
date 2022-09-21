@@ -11,8 +11,8 @@ import {
   MenuNavigationButton,
   Paragraph,
   ParagraphSize,
+  Spacer,
 } from '../components/ui';
-import {Spacer} from '../components/spacer';
 import prompt from 'react-native-prompt-android';
 
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;

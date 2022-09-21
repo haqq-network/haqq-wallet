@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Container} from '../components/container';
-import {Button, ButtonVariant, Title} from '../components/ui';
-import {Spacer} from '../components/spacer';
+import {Button, ButtonVariant, Spacer, Title} from '../components/ui';
 import Lottie from 'lottie-react-native';
 import {useApp} from '../contexts/app';
 

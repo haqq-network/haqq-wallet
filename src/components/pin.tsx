@@ -7,8 +7,7 @@ import React, {
 } from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Container} from './container';
-import {Paragraph, Title} from './ui';
-import {Spacer} from './spacer';
+import {Paragraph, Spacer, Title} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 

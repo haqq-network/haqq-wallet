@@ -9,6 +9,7 @@ import {
   KeyboardSafeArea,
   LabeledBlock,
   Paragraph,
+  Spacer,
   SwapVerticalIcon,
 } from '../components/ui';
 import {
@@ -18,7 +19,6 @@ import {
   TEXT_BASE_2,
   TEXT_RED_1,
 } from '../variables';
-import {Spacer} from '../components/spacer';
 import {useWallets} from '../contexts/wallets';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';

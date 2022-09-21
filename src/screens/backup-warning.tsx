@@ -8,9 +8,9 @@ import {
   InfoBlock,
   InfoBlockType,
   Paragraph,
+  Spacer,
   Title,
 } from '../components/ui';
-import {Spacer} from '../components/spacer';
 import {Image} from 'react-native';
 import {TEXT_YELLOW_1} from '../variables';
 
