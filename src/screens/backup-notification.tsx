@@ -1,7 +1,14 @@
 import {CompositeScreenProps} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, Image, View} from 'react-native';
-import {Button, ButtonVariant, H3, Paragraph} from '../components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Paragraph,
+  ParagraphFont,
+  ParagraphSize,
+} from '../components/ui';
+import {TEXT_BASE_1} from '../variables';
 
 // type BackupNotificationScreenProp = {
 //   onClose: () => void;
@@ -51,9 +58,11 @@ export const BackupNotificationScreen = ({
       [
         {
           text: 'Cancel',
+          style: 'cancel',
         },
         {
           text: 'Accept',
+          style: 'destructive',
           onPress: fadeOut,
         },
       ],
@@ -94,15 +103,26 @@ export const BackupNotificationScreen = ({
             flex: 0,
             padding: 24,
             borderRadius: 16,
+            paddingBottom: 16,
           }}>
           <Image
             source={warningImage}
             style={{width: Dimensions.get('window').width - 80}}
           />
-          <H3 style={{marginBottom: 8}}>
+          <Paragraph
+            size={ParagraphSize.l}
+            font={ParagraphFont.text}
+            style={{
+              marginBottom: 8,
+              color: TEXT_BASE_1,
+              fontWeight: '700',
+              textAlign: 'center',
+            }}>
             Backup your wallet, keep your assets safe
-          </H3>
-          <Paragraph style={{marginBottom: 28, textAlign: 'center'}}>
+          </Paragraph>
+          <Paragraph
+            size={ParagraphSize.s}
+            style={{marginBottom: 28, textAlign: 'center'}}>
             If your recovery phrase is misplaced or stolen, it's the equivalent
             of losing your wallet. It's the only way to access your wallet if
             you forget your account password.

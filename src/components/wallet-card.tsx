@@ -139,6 +139,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 6,
   },
