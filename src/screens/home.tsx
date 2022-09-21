@@ -3,11 +3,9 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
-import {HomeMarketScreen} from './home-market';
-import {HomeSwapScreen} from './home-swap';
 import {QrScannerButton} from '../components/qr-scanner-button';
 import {TabHeader} from '../components/tab-header';
-import {MarketIcon, SettingsIcon, SwapIcon, WalletIcon} from '../components/ui';
+import {SettingsIcon, WalletIcon} from '../components/ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;

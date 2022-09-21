@@ -1,8 +1,14 @@
 import React, {useCallback, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
-import {Button, ButtonVariant, Icon, Paragraph, Title} from '../components/ui';
-import {Spacer} from '../components/spacer';
+import {
+  Button,
+  ButtonVariant,
+  Container,
+  Icon,
+  Paragraph,
+  Spacer,
+  Title,
+} from '../components/ui';
 import {useApp} from '../contexts/app';
 
 type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;

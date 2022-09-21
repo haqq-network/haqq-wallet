@@ -3,9 +3,14 @@ import {useContacts} from '../contexts/contacts';
 import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from '../components/address-row';
 import {AddressHeader} from '../components/address-header';
-import {CloseCircle, IconButton, Input, QRScanner} from '../components/ui';
+import {
+  CloseCircle,
+  Container,
+  IconButton,
+  Input,
+  QRScanner,
+} from '../components/ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
-import {Container} from '../components/container';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';

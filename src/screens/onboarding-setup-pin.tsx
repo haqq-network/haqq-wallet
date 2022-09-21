@@ -1,10 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Vibration, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container} from '../components/container';
-import {Paragraph, Title} from '../components/ui';
-import {Spacer} from '../components/spacer';
+import {Container, Paragraph, Spacer, Title} from '../components/ui';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 
 type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;

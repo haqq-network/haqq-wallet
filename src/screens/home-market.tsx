@@ -1,6 +1,6 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Container} from '../components/container';
+import {Container} from '../components/ui';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 

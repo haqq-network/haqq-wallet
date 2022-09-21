@@ -1,18 +1,18 @@
 import React, {useCallback, useState} from 'react';
-import {Container} from '../components/container';
-import {useWallet} from '../contexts/wallets';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {
   Card,
   CardMask,
+  Container,
   DataContent,
   MenuNavigationButton,
   Paragraph,
   ParagraphSize,
+  Spacer,
 } from '../components/ui';
-import {Spacer} from '../components/spacer';
+import {useWallet} from '../contexts/wallets';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import prompt from 'react-native-prompt-android';
 
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;

@@ -1,9 +1,14 @@
 import React, {useCallback} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
-import {Container} from '../components/container';
-import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
-import {Spacer} from '../components/spacer';
+import {
+  Button,
+  ButtonVariant,
+  Container,
+  Paragraph,
+  Spacer,
+  Title,
+} from '../components/ui';
 import {Dimensions} from 'react-native';
 
 type SignUpAgreementScreenProp = CompositeScreenProps<any, any>;

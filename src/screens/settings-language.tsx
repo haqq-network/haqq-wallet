@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {Container} from '../components/container';
+import {CheckIcon, Container, DataContent, IconButton} from '../components/ui';
 import {useApp} from '../contexts/app';
-import {CheckIcon, DataContent, IconButton} from '../components/ui';
 import {Language} from '../models/user';
 import {GRAPHIC_GREEN_1} from '../variables';
 import {StyleSheet} from 'react-native';
