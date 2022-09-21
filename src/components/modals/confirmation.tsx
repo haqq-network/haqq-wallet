@@ -28,7 +28,7 @@ export const ConfirmationModal = ({
   const timer = useRef(
     setTimeout(() => {
       onCloseModal();
-    }, 500000),
+    }, 2000),
   );
 
   return (
@@ -58,5 +58,6 @@ const page = StyleSheet.create({
     lineHeight: 21,
     textAlign: 'center',
     letterSpacing: -0.32,
+    color: '#65666A',
   },
 });

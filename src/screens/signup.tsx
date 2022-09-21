@@ -8,6 +8,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
+import {DismissPopupButton} from '../components/dismiss-popup-button';
 
 const SignUpStack = createNativeStackNavigator();
 type SignUpScreenProp = CompositeScreenProps<any, any>;
@@ -19,6 +20,10 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
       <SignUpStack.Screen
         name="signin-agreement"
         component={SignUpAgreementScreen}
+        options={{
+          headerRight: DismissPopupButton,
+          headerBackVisible: false,
+        }}
         initialParams={{next: route.params.next}}
       />
       <SignUpStack.Screen

@@ -35,6 +35,7 @@ export const Paragraph = ({
 
 const page = StyleSheet.create({
   container: {
+    fontFamily: 'SF Pro Display',
     fontStyle: 'normal',
     fontWeight: '400',
     color: TEXT_BASE_2,

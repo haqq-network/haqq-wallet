@@ -18,6 +18,134 @@
       "sha1": "eb873c670c09a561b6c56b397d395b70c1738c71"
     },
     {
+      "path": "assets/fonts/SF-Pro-Display-Bold.ttf",
+      "sha1": "e0ecfacacf74fb463fa524cc77645128f7a6fb6b"
+    },
+    {
+      "path": "assets/fonts/SF-Pro-Display-Medium.ttf",
+      "sha1": "992d8b224fe727c70fc445544d2224a239f35851"
+    },
+    {
+      "path": "assets/fonts/SF-Pro-Display-Regular.ttf",
+      "sha1": "1d80a2dca593fc5e77ec417b516595eb26767a83"
+    },
+    {
+      "path": "assets/fonts/SF-Pro-Display-Semibold.ttf",
+      "sha1": "12ce7625b348fb156b40754fd6388de46ad6b844"
+    },
+    {
+      "path": "assets/fonts/SF-Pro-Display-Thin.ttf",
+      "sha1": "91692f319cae58b2db9ade01d059859ff3549917"
+    },
+    {
+      "path": "assets/images/arrow-back.png",
+      "sha1": "aacccd744d00c5305e93f43e60f5a55bbdd27312"
+    },
+    {
+      "path": "assets/images/arrow-back@2x.png",
+      "sha1": "d4014790c0e54a6fbc6225b104e056815cc34870"
+    },
+    {
+      "path": "assets/images/arrow-back@3x.png",
+      "sha1": "3a4c8458e39ac2597d59ca8550c4eb3427e69b1d"
+    },
+    {
+      "path": "assets/images/card-black.png",
+      "sha1": "27206de420d1e1ef2fbe71b32f4ca39683e077d9"
+    },
+    {
+      "path": "assets/images/card-black@2x.png",
+      "sha1": "7e807920eea20cc5525845fead62fb4e8c9e7e54"
+    },
+    {
+      "path": "assets/images/card-black@3x.png",
+      "sha1": "aa31243031abc9dc131b269f1309ef31c20c7dd3"
+    },
+    {
+      "path": "assets/images/card-blue.png",
+      "sha1": "f1f16c172ae4a9e945818f54cbb838320b72456d"
+    },
+    {
+      "path": "assets/images/card-blue@2x.png",
+      "sha1": "3061f94c8099d7ccc3cc92662a2cee2be78016b0"
+    },
+    {
+      "path": "assets/images/card-blue@3x.png",
+      "sha1": "3f820c637c12aa8c473017d90ee0d51667c4dfc9"
+    },
+    {
+      "path": "assets/images/card-default.png",
+      "sha1": "d869ed68a3314bde5b11df01a8a89d2bd0dee264"
+    },
+    {
+      "path": "assets/images/card-default@2x.png",
+      "sha1": "42dd67fd1fcc18b308ae60766f7b6c99c081ebe9"
+    },
+    {
+      "path": "assets/images/card-default@3x.png",
+      "sha1": "4a04c7f685a34024a559f9139c6d78bd0a685e52"
+    },
+    {
+      "path": "assets/images/card-green.png",
+      "sha1": "e7628d8767b8479ab18fc4eecd9b26670b3c8174"
+    },
+    {
+      "path": "assets/images/card-green@2x.png",
+      "sha1": "9b4fd1a7a4ca7d76eab39226733f4f997afb438c"
+    },
+    {
+      "path": "assets/images/card-green@3x.png",
+      "sha1": "9a1248cf5cc5b3f39a174f87150ea1b91dfd8894"
+    },
+    {
+      "path": "assets/images/card-maks.png",
+      "sha1": "37d3edec914cb4fec2d964b8b772196206e1479a"
+    },
+    {
+      "path": "assets/images/card-maks@2x.png",
+      "sha1": "2da16f7506b997d7d672814425c515a911fbc9ba"
+    },
+    {
+      "path": "assets/images/card-maks@3x.png",
+      "sha1": "31ed3918c919cf3c1c855f02b63f7053b4b46c6e"
+    },
+    {
+      "path": "assets/images/card-yellow.png",
+      "sha1": "3fd43ce0bf8bf370c49af43726d8263f8238cd19"
+    },
+    {
+      "path": "assets/images/card-yellow@2x.png",
+      "sha1": "9d9aaf9306ef061757c7d8f24ec85e4813266fb6"
+    },
+    {
+      "path": "assets/images/card-yellow@3x.png",
+      "sha1": "d15050aefce96ef6b8336e6bcd1afc42921dcc86"
+    },
+    {
+      "path": "assets/images/clear.png",
+      "sha1": "6e5ae3f7b6e67e8510ce57e60a570988642e441b"
+    },
+    {
+      "path": "assets/images/clear@2x.png",
+      "sha1": "6a6a05ef6cb605f4bb087913bdfc893ff52e9c72"
+    },
+    {
+      "path": "assets/images/clear@3x.png",
+      "sha1": "6270793462ecbbf14067c60a1bdc2c30d7ec7e74"
+    },
+    {
+      "path": "assets/images/face-id.png",
+      "sha1": "b409768200af285101836667180f81669693e341"
+    },
+    {
+      "path": "assets/images/face-id@2x.png",
+      "sha1": "efc54ac620dbc53dd93561ef74a1953f06d6bfcb"
+    },
+    {
+      "path": "assets/images/face-id@3x.png",
+      "sha1": "d5b05a587bc75834fd9ef96ce972243e53ad0a5d"
+    },
+    {
       "path": "assets/images/logo-empty.png",
       "sha1": "300decd99701800b8b6957377536306035d71025"
     },
@@ -28,6 +156,42 @@
     {
       "path": "assets/images/logo-empty@3x.png",
       "sha1": "9db33e31b5dc0b041060749b2da6a7dddf4bb1f0"
+    },
+    {
+      "path": "assets/images/logo.png",
+      "sha1": "89e1ccf78c0e55c8c6cd962faa55785493ba73aa"
+    },
+    {
+      "path": "assets/images/logo@2x.png",
+      "sha1": "91735dd0ae481cc4d31e7a2e3e961a6e1093bc0f"
+    },
+    {
+      "path": "assets/images/logo@3x.png",
+      "sha1": "53150351152cea2140a1e92d806a30eeb6002378"
+    },
+    {
+      "path": "assets/images/mnemonic-notify.png",
+      "sha1": "7a7300223411f0ff092c800ee53f6e7129a55764"
+    },
+    {
+      "path": "assets/images/mnemonic-notify@2x.png",
+      "sha1": "51c6a81242dd148e7ab8bc838b717df99cc7fdcc"
+    },
+    {
+      "path": "assets/images/mnemonic-notify@3x.png",
+      "sha1": "f66f0e1965b85795f8e472d37d3413450566d02a"
+    },
+    {
+      "path": "assets/images/mnemonic-warning.png",
+      "sha1": "5fb56e953a65ccbdd2b90f14d2ad153fcc75919f"
+    },
+    {
+      "path": "assets/images/mnemonic-warning@2x.png",
+      "sha1": "c76cf8f49ff304f96e8efd75d6a2f085a17b2417"
+    },
+    {
+      "path": "assets/images/mnemonic-warning@3x.png",
+      "sha1": "07e0595fb74d9352b1dbb0e94c2cc0e9f37318d5"
     }
   ]
 }
