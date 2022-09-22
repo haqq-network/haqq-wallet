@@ -81,7 +81,7 @@ export const App = () => {
       .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())
-      .catch(error => {
+      .catch(() => {
         navigator.navigate('login');
       })
       .finally(() => {

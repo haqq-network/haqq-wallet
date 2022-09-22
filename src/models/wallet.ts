@@ -89,7 +89,6 @@ export class Wallet extends EventEmitter {
 
   static fromCache(data: WalletType) {
     const wallet = new Wallet(data);
-    console.log('data.data', data.data);
     wallet.setEncrypted(data.data);
 
     return wallet;
@@ -126,7 +125,6 @@ export class Wallet extends EventEmitter {
   async decrypt(password: string, provider: Provider) {
     if (this._encrypted !== '') {
       const decrypted = await decrypt(password, this._encrypted);
-      console.log('decrypted', decrypted);
       const tmp = decrypted.mnemonic
         ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
             provider,
