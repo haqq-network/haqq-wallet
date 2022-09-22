@@ -13,6 +13,7 @@
 		02CA530EC3F143AFAE0B65EF /* card-maks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 591592406D9C4AC3B7C7165F /* card-maks@2x.png */; };
 		04388F7FE7174816A37E70A8 /* card-yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = 07DF2BBA81A543B5986F07B2 /* card-yellow.png */; };
 		0C80B921A6F3F58F76C31292 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-haqq.a */; };
+		0FAAFB828AF24E93BC7D4125 /* splash-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A01757CA427E49E1A57660DF /* splash-image@2x.png */; };
 		1020F1E7279547A99EC0A154 /* logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAE0614604984D2CBB2DA9F1 /* logo@3x.png */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -21,11 +22,15 @@
 		17F5D67167C5425FBEAB229E /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD4BF65C3D8F4812A58B909F /* SF-Pro-Display-Medium.ttf */; };
 		1815B8C14DD44182B5BBF36A /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1845597FB92F4A1AAD056E8C /* logo@2x.png */; };
 		1BFF98E646594B19BB5C3FB9 /* mnemonic-notify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 72BFF8B9B7A245238E0CC28E /* mnemonic-notify@2x.png */; };
+		210AE02428DC693F008D739C /* Encryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210AE02328DC693F008D739C /* Encryption.swift */; };
+		210AE02628DC6A8A008D739C /* Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 210AE02528DC6A8A008D739C /* Encryption.m */; };
+		210AE02A28DC7A80008D739C /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 210AE02928DC7A80008D739C /* CryptoSwift */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		2E5D459518A44E1D95D06839 /* mnemonic-notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 093F7D3C80D54C028B10F9B3 /* mnemonic-notify.png */; };
 		2E8F73377F234395B52F32B7 /* arrow-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A66B99EEB3A4CB5920B1B26 /* arrow-back@2x.png */; };
 		2EC465ACFC764EA8A5F5B282 /* face-id.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EB2E379E96A4820BAFBFDFF /* face-id.png */; };
 		36EF7B1A413D41EC8F672314 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B62F68B77BB844B9B19878FB /* logo-empty@2x.png */; };
+		41B27C090B304B8FAB1B9F82 /* splash-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E6E044838314BFAA875EE6A /* splash-image.png */; };
 		4300E88FC52C433B870029CF /* arrow-back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = BADD46ED8F0E4A239E6FB40D /* arrow-back@3x.png */; };
 		482B270C56E6443284081A8F /* mnemonic-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */; };
 		4A2969855A534849BB8EF4F0 /* logo-empty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E00656D896F2482F98B67D83 /* logo-empty@3x.png */; };
@@ -43,6 +48,7 @@
 		78478FC719E746D0B4BCDFF9 /* arrow-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EEE50FBF8C54C90B9BE7F31 /* arrow-back.png */; };
 		786597BC6C14437E83C19201 /* card-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C67D7BC7A354FC18E3C76C4 /* card-default.png */; };
 		797009A4179D41278A50DE1A /* card-blue@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D123AA34E32741B2A45C37E8 /* card-blue@3x.png */; };
+		7F9BD1B7A5624289B079B25E /* splash-image@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0A154873CD4CA0849DCB9E /* splash-image@3x.png */; };
 		80E2A27A19044B798ECBF26C /* card-blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C97849C363E24A19A911D703 /* card-blue@2x.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8B9C891CD96F4E90AAF8BC12 /* card-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D523FC4544064C26BBB88245 /* card-default@2x.png */; };
@@ -66,9 +72,6 @@
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
 		F5C40C5DCB474549B3B0FFBB /* card-green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 980DA9AC03E14DBB8D833242 /* card-green@2x.png */; };
-		41B27C090B304B8FAB1B9F82 /* splash-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E6E044838314BFAA875EE6A /* splash-image.png */; };
-		0FAAFB828AF24E93BC7D4125 /* splash-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A01757CA427E49E1A57660DF /* splash-image@2x.png */; };
-		7F9BD1B7A5624289B079B25E /* splash-image@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0A154873CD4CA0849DCB9E /* splash-image@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,12 +104,16 @@
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BA5C3B62DB74521BA03D28B /* face-id@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "face-id@3x.png"; path = "../assets/images/face-id@3x.png"; sourceTree = "<group>"; };
 		1F0F236437C74ACE8C45F953 /* logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = logo.png; path = ../assets/images/logo.png; sourceTree = "<group>"; };
+		210AE02228DC693F008D739C /* haqq-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqq-Bridging-Header.h"; sourceTree = "<group>"; };
+		210AE02328DC693F008D739C /* Encryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
+		210AE02528DC6A8A008D739C /* Encryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Encryption.m; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		257C451198CA425EA1AA53D2 /* card-green.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-green.png"; path = "../assets/images/card-green.png"; sourceTree = "<group>"; };
 		2A2B792A9CCD4FCFA754995A /* card-black@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-black@2x.png"; path = "../assets/images/card-black@2x.png"; sourceTree = "<group>"; };
 		2E3811F5AA38431B91CA409D /* card-blue.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-blue.png"; path = "../assets/images/card-blue.png"; sourceTree = "<group>"; };
 		3A7A49E745AF49AF93202561 /* card-yellow@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-yellow@2x.png"; path = "../assets/images/card-yellow@2x.png"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
+		3E6E044838314BFAA875EE6A /* splash-image.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "splash-image.png"; path = "../assets/images/splash-image.png"; sourceTree = "<group>"; };
 		4B2120DF5B304888949EC8D5 /* card-yellow@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-yellow@3x.png"; path = "../assets/images/card-yellow@3x.png"; sourceTree = "<group>"; };
 		50B69DDC52A44B5F929EDD17 /* logo-empty.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty.png"; path = "../assets/images/logo-empty.png"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
@@ -128,6 +135,7 @@
 		93FCDB04C0264A779D1F806D /* card-maks@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks@3x.png"; path = "../assets/images/card-maks@3x.png"; sourceTree = "<group>"; };
 		980DA9AC03E14DBB8D833242 /* card-green@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-green@2x.png"; path = "../assets/images/card-green@2x.png"; sourceTree = "<group>"; };
 		9D873BDE961E4AC3BBF823AF /* mnemonic-notify@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify@3x.png"; path = "../assets/images/mnemonic-notify@3x.png"; sourceTree = "<group>"; };
+		A01757CA427E49E1A57660DF /* splash-image@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "splash-image@2x.png"; path = "../assets/images/splash-image@2x.png"; sourceTree = "<group>"; };
 		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; };
 		A15634DE0AAF4BC0A20518EC /* card-default@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-default@3x.png"; path = "../assets/images/card-default@3x.png"; sourceTree = "<group>"; };
 		AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.ttf"; path = "../assets/fonts/SF-Pro-Display-Bold.ttf"; sourceTree = "<group>"; };
@@ -137,6 +145,7 @@
 		BADD46ED8F0E4A239E6FB40D /* arrow-back@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "arrow-back@3x.png"; path = "../assets/images/arrow-back@3x.png"; sourceTree = "<group>"; };
 		BF34339DCC6443B98293697D /* mnemonic-warning.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-warning.png"; path = "../assets/images/mnemonic-warning.png"; sourceTree = "<group>"; };
 		C97849C363E24A19A911D703 /* card-blue@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-blue@2x.png"; path = "../assets/images/card-blue@2x.png"; sourceTree = "<group>"; };
+		CA0A154873CD4CA0849DCB9E /* splash-image@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "splash-image@3x.png"; path = "../assets/images/splash-image@3x.png"; sourceTree = "<group>"; };
 		CAE0614604984D2CBB2DA9F1 /* logo@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo@3x.png"; path = "../assets/images/logo@3x.png"; sourceTree = "<group>"; };
 		D123AA34E32741B2A45C37E8 /* card-blue@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-blue@3x.png"; path = "../assets/images/card-blue@3x.png"; sourceTree = "<group>"; };
 		D35B5E77C48142A29F3DBC95 /* card-maks.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks.png"; path = "../assets/images/card-maks.png"; sourceTree = "<group>"; };
@@ -151,9 +160,6 @@
 		F2E08D5961284A3EBD30EC37 /* face-id@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "face-id@2x.png"; path = "../assets/images/face-id@2x.png"; sourceTree = "<group>"; };
 		F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-warning@2x.png"; path = "../assets/images/mnemonic-warning@2x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
-		3E6E044838314BFAA875EE6A /* splash-image.png */ = {isa = PBXFileReference; name = "splash-image.png"; path = "../assets/images/splash-image.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A01757CA427E49E1A57660DF /* splash-image@2x.png */ = {isa = PBXFileReference; name = "splash-image@2x.png"; path = "../assets/images/splash-image@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CA0A154873CD4CA0849DCB9E /* splash-image@3x.png */ = {isa = PBXFileReference; name = "splash-image@3x.png"; path = "../assets/images/splash-image@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-haqq.a in Frameworks */,
+				210AE02A28DC7A80008D739C /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +209,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				210AE02328DC693F008D739C /* Encryption.swift */,
+				210AE02228DC693F008D739C /* haqq-Bridging-Header.h */,
+				210AE02528DC6A8A008D739C /* Encryption.m */,
 			);
 			name = haqq;
 			sourceTree = "<group>";
@@ -364,6 +374,9 @@
 			dependencies = (
 			);
 			name = haqq;
+			packageProductDependencies = (
+				210AE02928DC7A80008D739C /* CryptoSwift */,
+			);
 			productName = haqq;
 			productReference = 13B07F961A680F5B00A75B9A /* haqq.app */;
 			productType = "com.apple.product-type.application";
@@ -381,7 +394,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1400;
 					};
 				};
 			};
@@ -396,6 +409,7 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
 				21DDB21D28BF6705004EE724 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -658,7 +672,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				210AE02628DC6A8A008D739C /* Encryption.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,6 +694,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-haqq-haqqTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -705,6 +722,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-haqq-haqqTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = haqqTests/Info.plist;
@@ -732,7 +750,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 12;
-				DEVELOPMENT_TEAM = HZ6BA3Y93A;
+				DEVELOPMENT_TEAM = FPVUY5QMAK;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -744,8 +762,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = haqqdevwallet;
+				PRODUCT_BUNDLE_IDENTIFIER = haqqdevwalletvivalaakam;
 				PRODUCT_NAME = haqq;
+				SWIFT_OBJC_BRIDGING_HEADER = "haqq-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -759,7 +778,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 12;
-				DEVELOPMENT_TEAM = HZ6BA3Y93A;
+				DEVELOPMENT_TEAM = FPVUY5QMAK;
 				INFOPLIST_FILE = haqq/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -770,8 +789,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = haqqdevwallet;
+				PRODUCT_BUNDLE_IDENTIFIER = haqqdevwalletvivalaakam;
 				PRODUCT_NAME = haqq;
+				SWIFT_OBJC_BRIDGING_HEADER = "haqq-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -947,6 +967,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		21DDB21D28BF6705004EE724 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -956,6 +984,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		210AE02928DC7A80008D739C /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

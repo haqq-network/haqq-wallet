@@ -53,6 +53,7 @@ import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {RestoreScreen} from './screens/restore';
 import {sleep} from './utils';
+import {SettingsTestScreen} from './screens/settings-test';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -211,6 +212,13 @@ export const App = () => {
                     component={SettingsAboutScreen}
                     options={{
                       title: 'About',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsTest"
+                    component={SettingsTestScreen}
+                    options={{
+                      title: 'Test',
                     }}
                   />
                 </Stack.Group>
