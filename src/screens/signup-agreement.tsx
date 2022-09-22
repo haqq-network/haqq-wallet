@@ -1,10 +1,15 @@
 import React, {useCallback} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
-import {Button, ButtonVariant, Paragraph, Title} from '../components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Paragraph,
+  PopupContainer,
+  Title,
+} from '../components/ui';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type SignUpAgreementScreenProp = CompositeScreenProps<any, any>;
 const windowWidth = Dimensions.get('window').width;
@@ -19,18 +24,12 @@ export const SignUpAgreementScreen = ({
     navigation.navigate(route.params.nextScreen ?? 'onboarding-setup-pin');
   }, [navigation, route.params.nextScreen]);
 
-  const insets = useSafeAreaInsets();
   return (
     <>
       <View pointerEvents="none" style={page.animation}>
         <Lottie source={animation} autoPlay loop />
       </View>
-      <View
-        style={{
-          flex: 1,
-          marginBottom: 18 + insets.bottom,
-          justifyContent: 'flex-end',
-        }}>
+      <PopupContainer style={page.container}>
         <Title style={page.title}>Islm - DeFi Wallet</Title>
         <Paragraph style={page.disclaimer}>
           Islm Wallet does not store, transfer, transmit, convert, hold, or
@@ -48,12 +47,15 @@ export const SignUpAgreementScreen = ({
         <Paragraph style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
         </Paragraph>
-      </View>
+      </PopupContainer>
     </>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    justifyContent: 'flex-end',
+  },
   animation: {
     position: 'absolute',
     width: windowWidth,
@@ -68,5 +70,5 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {textAlign: 'center', marginHorizontal: 20},
+  agreement: {textAlign: 'center', marginHorizontal: 20, marginBottom: 16},
 });

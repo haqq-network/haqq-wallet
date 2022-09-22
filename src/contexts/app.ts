@@ -51,6 +51,7 @@ class App extends EventEmitter {
   }
 
   async init(): Promise<void> {
+    console.log('this.user', JSON.stringify(this.user));
     if (!this.user?.isLoaded) {
       return Promise.reject();
     }
