@@ -16,8 +16,9 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {StatusBar} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import SplashScreen from 'react-native-splash-screen';
 
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -75,6 +76,7 @@ export const App = () => {
   useEffect(() => {
     app.emit('modal', {type: 'splash'});
     sleep(150)
+      .then(() => SplashScreen.hide())
       .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())
