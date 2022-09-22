@@ -142,7 +142,6 @@ export const QRModal = ({onClose}: QRModalProps) => {
 
 const page = StyleSheet.create({
   headerContainer: {
-    backgroundColor: '#0000004D',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
@@ -160,6 +159,7 @@ const page = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
+    backgroundColor: '#0000004D',
   },
   bottomErrorContainer: {
     position: 'absolute',
