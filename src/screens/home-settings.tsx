@@ -38,12 +38,12 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         next="settingsAddressBook"
       />
 
-      <SettingsButton
-        icon={<LanguageSettingsIcon color={GRAPHIC_BASE_1} />}
-        title="Language"
-        onPress={onClickButton}
-        next="settingsLanguage"
-      />
+      {/*<SettingsButton*/}
+      {/*  icon={<LanguageSettingsIcon color={GRAPHIC_BASE_1} />}*/}
+      {/*  title="Language"*/}
+      {/*  onPress={onClickButton}*/}
+      {/*  next="settingsLanguage"*/}
+      {/*/>*/}
 
       <SettingsButton
         icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
@@ -53,12 +53,12 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         style={{marginBottom: 20}}
       />
 
-      <SettingsButton
-        icon={<HelpSettingsIcon color={GRAPHIC_BASE_1} />}
-        title="FAQ"
-        onPress={onClickButton}
-        next="settingsFaq"
-      />
+      {/*<SettingsButton*/}
+      {/*  icon={<HelpSettingsIcon color={GRAPHIC_BASE_1} />}*/}
+      {/*  title="FAQ"*/}
+      {/*  onPress={onClickButton}*/}
+      {/*  next="settingsFaq"*/}
+      {/*/>*/}
 
       <SettingsButton
         icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}

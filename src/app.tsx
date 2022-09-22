@@ -16,8 +16,9 @@ import {
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {StatusBar} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import SplashScreen from 'react-native-splash-screen';
 
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -51,6 +52,7 @@ import {SettingsAccountRemoveButton} from './components/settings-account-remove-
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {RestoreScreen} from './screens/restore';
+import {sleep} from './utils';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -73,9 +75,9 @@ export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
   useEffect(() => {
     app.emit('modal', {type: 'splash'});
-
-    app
-      .init()
+    sleep(150)
+      .then(() => SplashScreen.hide())
+      .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())
       .catch(() => {
@@ -214,7 +216,7 @@ export const App = () => {
                 </Stack.Group>
               </Stack.Navigator>
             </NavigationContainer>
-            <Modals />
+            <Modals initialModal={{type: 'splash'}} />
           </WalletsContext.Provider>
         </TransactionsContext.Provider>
       </AppContext.Provider>

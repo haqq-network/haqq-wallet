@@ -36,16 +36,23 @@ class App extends EventEmitter {
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType = null;
 
+  constructor() {
+    super();
+
+    TouchID.isSupported(optionalConfigObject)
+      .then(biometryType => {
+        this._biometryType = biometryType;
+      })
+      .catch(() => {
+        this._biometryType = null;
+      });
+
+    this.user = this.loadUser('username');
+  }
+
   async init(): Promise<void> {
-    try {
-      this._biometryType = await TouchID.isSupported(optionalConfigObject);
-    } catch (_e) {
-      this._biometryType = null;
-    }
-
-    this.user = await this.loadUser('username');
-
-    if (!this.user.isLoaded) {
+    console.log('this.user', JSON.stringify(this.user));
+    if (!this.user?.isLoaded) {
       return Promise.reject();
     }
 
@@ -70,7 +77,7 @@ class App extends EventEmitter {
     return creds.password;
   }
 
-  async loadUser(username: string = 'username') {
+  loadUser(username: string = 'username'): User {
     const users = realm.objects<UserType>('User');
     const filtered = users.filtered(`username = '${username}'`);
 

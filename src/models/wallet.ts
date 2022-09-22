@@ -142,12 +142,25 @@ export class Wallet extends EventEmitter {
   }
 
   checkBalance = () => {
-    console.log('check balance for', this.address);
+    console.log(new Date().toString(), 'check balance for', this.address);
     wsProvider.getBalance(this.address).then(balance => {
       this.balance = Number(utils.formatEther(balance));
-      console.log('new balance for', this.address, this.balance);
+      console.log(
+        new Date().toString(),
+        'new balance for',
+        this.address,
+        this.balance,
+      );
     });
   };
+
+  get mnemonic() {
+    if (!this.wallet) {
+      return '';
+    }
+
+    return this.wallet.mnemonic.phrase ?? '';
+  }
 
   set balance(value: number) {
     this._balance = value;

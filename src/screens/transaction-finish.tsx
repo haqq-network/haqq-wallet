@@ -9,6 +9,7 @@ import {
   InvoiceIcon,
   ISLMIcon,
   PenIcon,
+  PopupContainer,
   Spacer,
   Title,
 } from '../components/ui';
@@ -71,7 +72,7 @@ export const TransactionFinishScreen = ({
   const onPress = () => {};
 
   return (
-    <Container>
+    <PopupContainer>
       <Spacer style={{justifyContent: 'center'}}>
         <Title style={{marginBottom: 34, color: TEXT_GREEN_1}}>
           Sending Completed!
@@ -111,7 +112,7 @@ export const TransactionFinishScreen = ({
           navigation.getParent()?.goBack();
         }}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 

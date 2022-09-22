@@ -208,6 +208,18 @@
     {
       "path": "assets/images/mnemonic-warning@3x.png",
       "sha1": "07e0595fb74d9352b1dbb0e94c2cc0e9f37318d5"
+    },
+    {
+      "path": "assets/images/splash-image.png",
+      "sha1": "89366605454aef7807e232ddb75163bdeff78eea"
+    },
+    {
+      "path": "assets/images/splash-image@2x.png",
+      "sha1": "a2100441f876d3a84a7bf2d180018be7690105be"
+    },
+    {
+      "path": "assets/images/splash-image@3x.png",
+      "sha1": "8eb1e75eb974bed1bab06ca9e53f05d0c16aa667"
     }
   ]
 }

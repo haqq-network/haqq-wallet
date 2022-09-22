@@ -17,6 +17,7 @@ export * from './textarea';
 export * from './title';
 export * from './info-block';
 export * from './paragraph';
+export * from './popup-container';
 export * from './spacer';
 export * from './svg-icon';
 export * from './waiting';

@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {BG_6, TEXT_YELLOW_1} from '../../variables';
+import {Paragraph, ParagraphSize} from './paragraph';
 
 export enum InfoBlockType {
   warning = 'warning',
@@ -11,9 +12,16 @@ export type InfoBlockProps = {
   icon?: React.ReactNode;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  textSize?: ParagraphSize;
 };
 
-export const InfoBlock = ({children, icon, type, style}: InfoBlockProps) => {
+export const InfoBlock = ({
+  children,
+  icon,
+  type,
+  style,
+  textSize = ParagraphSize.s,
+}: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [page.container, page[`${type}Container`], style],
     [style, type],
@@ -26,7 +34,9 @@ export const InfoBlock = ({children, icon, type, style}: InfoBlockProps) => {
   return (
     <View style={containerStyle}>
       {icon}
-      <Text style={textStyle}>{children}</Text>
+      <Paragraph size={textSize} style={textStyle}>
+        {children}
+      </Paragraph>
     </View>
   );
 };
@@ -44,8 +54,6 @@ const page = StyleSheet.create({
   iconText: {marginLeft: 12},
   text: {
     flex: 1,
-    fontSize: 14,
-    lineHeight: 18,
   },
   warningText: {
     color: TEXT_YELLOW_1,
