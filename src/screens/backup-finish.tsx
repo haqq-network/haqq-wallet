@@ -25,12 +25,12 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
           loop={false}
         />
       </Spacer>
-      <Title>Сongratulations!</Title>
-      <Title style={{marginBottom: 56}}>
+      <Title>Congratulations!</Title>
+      <Title style={{marginBottom: 40}}>
         You've successfully protected your wallet.
       </Title>
       <Button
-        style={{marginBottom: 16}}
+        style={{marginVertical: 16}}
         variant={ButtonVariant.contained}
         title="Finish"
         onPress={() => {

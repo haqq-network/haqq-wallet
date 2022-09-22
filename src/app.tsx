@@ -72,10 +72,9 @@ const actionsSheet = {
 export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
   useEffect(() => {
-    app.emit('modal', {type: 'splash'});
-
-    app
-      .init()
+    Promise.resolve()
+      .then(() => app.emit('modal', {type: 'splash'}))
+      .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())
       .catch(() => {

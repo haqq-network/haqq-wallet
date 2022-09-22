@@ -551,6 +551,15 @@ export const SwapIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const SwiperIcon = (props: SvgProps) => (
+  <Svg width="33" height="4" viewBox="0 0 33 4" fill="none" {...props}>
+    <Path
+      d="M0.5 2C0.5 0.895431 1.39543 0 2.5 0H30.5C31.6046 0 32.5 0.895431 32.5 2C32.5 3.10457 31.6046 4 30.5 4H2.5C1.39543 4 0.5 3.10457 0.5 2Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const TrashIcon = ({style, color}: SvgProps) => (
   <Svg
     width="24"

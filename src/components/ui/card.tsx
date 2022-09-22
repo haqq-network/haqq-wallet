@@ -24,6 +24,15 @@ const cards = {
   [WalletCardStyle.defaultYellow]: require('../../../assets/images/card-yellow.png'),
 };
 
+// yellow: [#E8D06F, #B59235]
+// blue: [#125BCA, #1D63A5]
+export const CARD_COLORS = {
+  [WalletCardStyle.defaultGreen]: ['#03BF77', '#03BF77'],
+  [WalletCardStyle.defaultBlack]: ['#383838', '#383838'],
+  [WalletCardStyle.defaultBlue]: ['#125BCA', '#1D63A5'],
+  [WalletCardStyle.defaultYellow]: ['#E8D06F', '#B59235'],
+};
+
 export const Card = ({
   children,
   width,

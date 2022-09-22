@@ -8,7 +8,15 @@ import {
   View,
 } from 'react-native';
 import {BG_1, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
-import {CloseCircle, IconButton, Paragraph, ParagraphSize, Spacer} from './ui';
+import {
+  CloseCircle,
+  IconButton,
+  Paragraph,
+  ParagraphSize,
+  Spacer,
+  SwiperIcon,
+} from './ui';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -20,7 +28,7 @@ const h = Dimensions.get('window').height;
 
 export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
   const pan = useRef(new Animated.Value(1)).current;
-
+  const insets = useSafeAreaInsets();
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -83,11 +91,12 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
           justifyContent: 'flex-end',
         }}
         {...panResponder.panHandlers}>
-        <View style={page.content}>
+        <View style={[page.content, {paddingBottom: insets.bottom}]}>
+          <View style={page.swipe}>
+            <SwiperIcon color={GRAPHIC_SECOND_2} />
+          </View>
           <View style={page.header}>
-            <Paragraph
-              size={ParagraphSize.xl}
-              style={{fontWeight: '600', color: TEXT_BASE_1}}>
+            <Paragraph size={ParagraphSize.xl} style={page.title}>
               {title}
             </Paragraph>
             <Spacer />
@@ -108,18 +117,24 @@ const page = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  swipe: {
+    alignItems: 'center',
+    paddingVertical: 6,
+    marginBottom: 2,
+  },
   content: {
     width: Dimensions.get('window').width,
     backgroundColor: BG_1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 20,
-    paddingVertical: 16,
   },
   header: {
     flexDirection: 'row',
-    height: 44,
+    height: 30,
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 16,
   },
+  title: {fontWeight: '600', color: TEXT_BASE_1},
 });

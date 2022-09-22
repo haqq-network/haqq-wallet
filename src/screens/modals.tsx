@@ -42,6 +42,7 @@ export const Modals = () => {
   useEffect(() => {
     const subscription = (event: ModalState) => {
       setModal(event);
+      console.log('modal', JSON.stringify(event));
     };
 
     app.on('modal', subscription);

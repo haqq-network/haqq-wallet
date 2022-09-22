@@ -1,13 +1,14 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallets} from '../contexts/wallets';
+import {useWallet, useWallets} from '../contexts/wallets';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
   Container,
   Paragraph,
+  ParagraphSize,
   Spacer,
   Title,
 } from '../components/ui';
@@ -26,18 +27,18 @@ export const BackupVerifyScreen = ({
   route,
 }: BackupVerifyScreenProp) => {
   const wallets = useWallets();
-  const mnemonic = useMemo(
-    () => wallets.getWallet(route.params.address)?.wallet.mnemonic.phrase ?? '',
-    [route.params.address, wallets],
-  );
+
+  const wallet = useWallet(route.params.address);
 
   const [selected, setSelected] = useState<string[]>([]);
   const [error, setError] = useState<boolean>(false);
 
   const words = useMemo(
     () =>
-      new Map(mnemonic.split(' ').map((value, pos) => [String(pos), value])),
-    [mnemonic],
+      new Map(
+        wallet?.mnemonic.split(' ').map((value, pos) => [String(pos), value]),
+      ),
+    [wallet],
   );
 
   const buttons = useMemo(
@@ -46,9 +47,7 @@ export const BackupVerifyScreen = ({
   );
 
   const onDone = useCallback(() => {
-    if (selected.map(v => words.get(v)).join(' ') === mnemonic) {
-      const wallet = wallets.getWallet(route.params.address);
-
+    if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
       wallet?.updateWallet({
         mnemonic_saved: true,
       });
@@ -58,7 +57,7 @@ export const BackupVerifyScreen = ({
       setSelected([]);
       setError(true);
     }
-  }, [mnemonic, navigation, route.params.address, selected, wallets, words]);
+  }, [wallet, navigation, route.params.address, selected, wallets, words]);
 
   return (
     <Container>
@@ -79,9 +78,9 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Text style={[page.cellText, page.cellTextFilled]}>
+                  <Paragraph size={ParagraphSize.s} style={page.cellTextFilled}>
                     {words.get(selected[i])}
-                  </Text>
+                  </Paragraph>
                 </View>
               ) : (
                 <View
@@ -91,9 +90,9 @@ export const BackupVerifyScreen = ({
                     selected.length === i && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Text style={[page.cellText, page.cellTextEmpty]}>
+                  <Paragraph size={ParagraphSize.s} style={page.cellTextEmpty}>
                     #{i + 1}
-                  </Text>
+                  </Paragraph>
                 </View>
               ),
             )}
@@ -104,7 +103,7 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i + 6 ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph style={page.cellTextFilled}>
+                  <Paragraph size={ParagraphSize.s} style={page.cellTextFilled}>
                     {words.get(selected[i + 6])}
                   </Paragraph>
                 </View>
@@ -116,7 +115,9 @@ export const BackupVerifyScreen = ({
                     selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph style={page.cellTextEmpty}>#{i + 7}</Paragraph>
+                  <Paragraph size={ParagraphSize.s} style={page.cellTextEmpty}>
+                    #{i + 7}
+                  </Paragraph>
                 </View>
               ),
             )}
@@ -156,12 +157,16 @@ const page = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 28,
   },
-  cells: {flexDirection: 'row', marginHorizontal: -8, marginBottom: 28},
+  cells: {
+    flexDirection: 'row',
+    marginHorizontal: -8,
+    marginBottom: 28,
+  },
   cell: {
     width: (Dimensions.get('window').width - 56) / 2,
     paddingHorizontal: 20,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 8,
     marginHorizontal: 8,
     marginVertical: 4,
     borderStyle: 'solid',

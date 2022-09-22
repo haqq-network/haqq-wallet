@@ -29,6 +29,7 @@ export enum ButtonVariant {
 
 export enum ButtonSize {
   small = 'small',
+  middle = 'middle',
   large = 'large',
 }
 
@@ -90,6 +91,10 @@ const page = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
   },
+  middleContainer: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
   containedContainer: {
     backgroundColor: GRAPHIC_GREEN_1,
     borderRadius: 12,
@@ -121,6 +126,11 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
     lineHeight: 18,
+  },
+  middleText: {
+    fontWeight: '700',
+    fontSize: 16,
+    lineHeight: 22,
   },
   containedText: {
     color: TEXT_BASE_3,
