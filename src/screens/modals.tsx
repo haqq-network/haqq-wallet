@@ -35,13 +35,18 @@ type QR = {
 
 type ModalState = Loading | Confirmation | Splash | Pin | QR | null;
 
-export const Modals = () => {
+export type ModalProps = {
+  initialModal?: ModalState;
+};
+
+export const Modals = ({initialModal = null}: ModalProps) => {
   const app = useApp();
-  const [modal, setModal] = useState<ModalState>(null);
+  const [modal, setModal] = useState<ModalState>(initialModal);
 
   useEffect(() => {
     const subscription = (event: ModalState) => {
       setModal(event);
+      console.log('modal', JSON.stringify(event));
     };
 
     app.on('modal', subscription);

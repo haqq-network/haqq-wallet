@@ -1,13 +1,14 @@
 import React from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {PopupHeader} from '../components/popup-header';
 import {BackupCreateScreen} from './backup-create';
 import {BackupFinishScreen} from './backup-finish';
 import {BackupVerifyScreen} from './backup-verify';
 import {BackupWarningScreen} from './backup-warning';
+import {DismissPopupButton} from '../components/dismiss-popup-button';
 
-const BackupStack = createNativeStackNavigator();
+const BackupStack = createStackNavigator();
 type BackupScreenProp = CompositeScreenProps<any, any>;
 
 export const BackupScreen = ({route}: BackupScreenProp) => {
@@ -18,6 +19,11 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
         name={'backupWarning'}
         component={BackupWarningScreen}
         initialParams={{address: route.params.address}}
+        options={{
+          title: '',
+          headerRight: DismissPopupButton,
+          headerBackHidden: true,
+        }}
       />
       <BackupStack.Screen
         name={'backupCreate'}
@@ -33,6 +39,7 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
         options={{
           title: '',
           headerBackHidden: true,
+          headerRight: DismissPopupButton,
         }}
       />
     </BackupStack.Navigator>

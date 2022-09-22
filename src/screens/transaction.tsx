@@ -8,6 +8,7 @@ import {TransactionSumScreen} from './transaction-sum';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TransactionAccountScreen} from './transaction-account';
 import {useWallets} from '../contexts/wallets';
+import {DismissPopupButton} from '../components/dismiss-popup-button';
 
 const TransactionStack = createStackNavigator();
 type TransactionScreenProp = CompositeScreenProps<any, any>;
@@ -26,25 +27,38 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
         name="transactionAddress"
         component={TransactionAddressScreen}
         initialParams={{from: wallets.visible[0].address, ...route.params}}
-        options={{title: 'Address'}}
+        options={{
+          title: 'Address',
+          headerBackHidden: route.params.from || wallets.visible.length === 1,
+          headerRight: DismissPopupButton,
+        }}
       />
       <TransactionStack.Screen
         name="transactionSum"
         component={TransactionSumScreen}
-        options={{title: 'Send'}}
+        options={{title: 'Send', headerRight: DismissPopupButton}}
       />
       <TransactionStack.Screen
         name="transactionConfirmation"
         component={TransactionConfirmationScreen}
-        options={{title: 'Preview'}}
+        options={{title: 'Preview', headerRight: DismissPopupButton}}
       />
       <TransactionStack.Screen
         name="transactionFinish"
         component={TransactionFinishScreen}
+        options={{
+          title: '',
+          headerBackHidden: true,
+          headerRight: DismissPopupButton,
+        }}
       />
       <TransactionStack.Screen
         name="transactionAccount"
         component={TransactionAccountScreen}
+        options={{
+          headerBackHidden: true,
+          headerRight: DismissPopupButton,
+        }}
       />
     </TransactionStack.Navigator>
   );
