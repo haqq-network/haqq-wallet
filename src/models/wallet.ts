@@ -124,16 +124,20 @@ export class Wallet extends EventEmitter {
   }
 
   async decrypt(password: string, provider: Provider) {
-    if (this._encrypted !== '') {
-      const decrypted = await decrypt(password, this._encrypted);
-      const tmp = decrypted.mnemonic
-        ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
-            provider,
-          )
-        : new EthersWallet(decrypted.privateKey, provider);
+    try {
+      if (this._encrypted !== '') {
+        const decrypted = await decrypt(password, this._encrypted);
+        const tmp = decrypted.mnemonic
+          ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
+              provider,
+            )
+          : new EthersWallet(decrypted.privateKey, provider);
 
-      this.setWallet(tmp);
-      this._encrypted = '';
+        this.setWallet(tmp);
+        this._encrypted = '';
+      }
+    } catch (e) {
+      console.log(e.message);
     }
   }
 
