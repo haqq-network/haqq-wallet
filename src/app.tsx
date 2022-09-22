@@ -51,6 +51,7 @@ import {SettingsAccountRemoveButton} from './components/settings-account-remove-
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {RestoreScreen} from './screens/restore';
+import {sleep} from './utils';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -73,7 +74,7 @@ export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
   useEffect(() => {
     app.emit('modal', {type: 'splash'});
-    Promise.resolve()
+    sleep(150)
       .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())

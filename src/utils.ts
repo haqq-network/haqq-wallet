@@ -63,3 +63,9 @@ export function shortAddress(address: string) {
     address.length,
   )}`;
 }
+
+export function sleep(duration: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, duration);
+  });
+}
