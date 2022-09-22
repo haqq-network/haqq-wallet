@@ -14,7 +14,7 @@ enum RNEncryptionError: Error {
   case keyFromPassword;
 }
 
-enum RNEncryptionMethod: Codable {
+enum RNEncryptionMethod: String, Codable {
   case js;
   case aes;
   case crypto;
