@@ -89,6 +89,7 @@ export class Wallet extends EventEmitter {
 
   static fromCache(data: WalletType) {
     const wallet = new Wallet(data);
+
     wallet.setEncrypted(data.data);
 
     return wallet;

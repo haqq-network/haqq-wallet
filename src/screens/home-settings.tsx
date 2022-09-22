@@ -67,12 +67,12 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         next="settingsAbout"
       />
 
-      <SettingsButton
-        icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}
-        title="Test"
-        onPress={onClickButton}
-        next="settingsTest"
-      />
+      {/*<SettingsButton*/}
+      {/*  icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}*/}
+      {/*  title="Test"*/}
+      {/*  onPress={onClickButton}*/}
+      {/*  next="settingsTest"*/}
+      {/*/>*/}
 
       <Spacer />
     </Container>
