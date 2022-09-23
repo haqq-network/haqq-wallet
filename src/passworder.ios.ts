@@ -49,7 +49,7 @@ export const decrypt = async (password: string, encryptedString: string) => {
   switch (encryptedData.method) {
     case 'js':
       return decryptJS(password, encryptedString);
-    case 'crypto':
+    case 'chacha':
     case 'aes':
       return RNEncryption.decrypt(password, encryptedString).then(
         (resp: string) => JSON.parse(resp),
