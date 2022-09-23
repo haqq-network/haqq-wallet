@@ -12,12 +12,16 @@ enum RNEncryptionError: Error {
   case randomKey;
   case pbfdk2;
   case keyFromPassword;
+  case params;
+  case encodeJson;
+  case decodeJson;
+  case decrypt;
 }
 
 enum RNEncryptionMethod: String, Codable {
   case js;
   case aes;
-  case crypto;
+  case chacha;
 }
 
 struct EncryptedResult: Codable {
@@ -38,8 +42,12 @@ class RNEncryption: NSObject {
   }
   
   @objc
-  public func encrypt(_ password: String, data: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+  public func encrypt(_ password: Optional<String>, data: Optional<String>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     do {
+      guard let password = password, let data = data else {
+        throw RNEncryptionError.params;
+      }
+      
       guard let salt = randomKey(count: 16) else {
         throw RNEncryptionError.randomKey;
       }
@@ -52,12 +60,19 @@ class RNEncryption: NSObject {
       
       let jsonEncoder = JSONEncoder();
 
-      let encryptedResult = EncryptedResult(cipher: result.0, iv: result.1, salt: salt, method: .aes);
+      let encryptedResult = EncryptedResult(cipher: result.0, iv: result.1, salt: salt, method: .chacha);
       
-      let encode = try jsonEncoder.encode(encryptedResult)
-      let endcodeString = String(data: encode, encoding: .utf8)!
+      guard let encode = try? jsonEncoder.encode(encryptedResult) else {
+        throw RNEncryptionError.encodeJson;
+      }
       
-      resolve(endcodeString);
+      guard let resp = String(data: encode, encoding: .utf8) else {
+        throw RNEncryptionError.encodeJson;
+      }
+      
+      print("\(resp)")
+      
+      resolve(resp);
     } catch {
       print("encrypt \(error)")
       reject("0", "encrypt error", nil)
@@ -74,7 +89,9 @@ class RNEncryption: NSObject {
       guard let key = try keyFromPassword(password: password, salt: decodedResult.salt) else {
         throw RNEncryptionError.keyFromPassword;
       }
-      let result = try decryptWithKey(key: key, cipher: decodedResult.cipher, iv: decodedResult.iv);
+      guard let result = try decryptWithKey(key: key, cipher: decodedResult.cipher, iv: decodedResult.iv) else {
+        throw RNEncryptionError.decrypt;
+      }
       
       resolve(result);
     } catch {
@@ -97,24 +114,23 @@ class RNEncryption: NSObject {
   }
   
   func encryptWithKey(key: [UInt8], data: String) throws -> (String, String) {
-    let iv = AES.randomIV(AES.blockSize)
-    
-    let aes = try AES(key: key, blockMode: CBC(iv: iv), padding: .pkcs7)
-    let cipher = try aes.encrypt(Array(data.utf8))
+    let iv = ChaCha20.randomIV(12)
+    let chacha = try ChaCha20(key: key, iv: iv)
+    let cipher = try chacha.encrypt(Array(data.utf8))
     
     return (Data(cipher).base64EncodedString(), Data(iv).base64EncodedString())
   }
   
-  func decryptWithKey(key: [UInt8], cipher: String, iv: String) throws -> String {
+  func decryptWithKey(key: [UInt8], cipher: String, iv: String) throws -> String? {
     let iv = Data(base64Encoded: iv, options: .ignoreUnknownCharacters)!;
     
-    let aes = try AES(key: key, blockMode: CBC(iv: iv.bytes), padding: .pkcs7)
+    let chacha = try ChaCha20(key: key, iv: iv.bytes)
 
     let cipher = Data(base64Encoded: cipher, options: .ignoreUnknownCharacters)!
     
-    let result = try aes.decrypt(cipher.bytes);
+    let result = try chacha.decrypt(cipher.bytes);
     
-    return String(data: Data(result), encoding: .utf8) ?? "3";
+    return String(data: Data(result), encoding: .utf8);
   }
   
   func keyFromPassword(password: String, salt: String) throws -> [UInt8]? {

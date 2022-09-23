@@ -31,6 +31,7 @@ class Wallets extends EventEmitter {
   }
 
   async init(): Promise<void> {
+    console.log('wallet init');
     if (this._initialized) {
       return;
     }

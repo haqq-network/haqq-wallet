@@ -68,3 +68,9 @@ export type RootStackParamList = {
 };
 
 export type BiometryType = 'FaceID' | 'TouchID' | null;
+
+export type Mnemonic = {
+  phrase: string;
+  path: string;
+  locale: string;
+};
