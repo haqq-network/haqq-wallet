@@ -146,15 +146,15 @@ export class Wallet extends EventEmitter {
   }
 
   checkBalance = () => {
-    console.log(new Date().toString(), 'check balance for', this.address);
+    // console.log(new Date().toString(), 'check balance for', this.address);
     wsProvider.getBalance(this.address).then(balance => {
       this.balance = Number(utils.formatEther(balance));
-      console.log(
-        new Date().toString(),
-        'new balance for',
-        this.address,
-        this.balance,
-      );
+      // console.log(
+      //   new Date().toString(),
+      //   'new balance for',
+      //   this.address,
+      //   this.balance,
+      // );
     });
   };
 
