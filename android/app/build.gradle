@@ -1,5 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "com.google.gms.google-services"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
 
 import com.android.build.OutputFile
 
@@ -138,7 +140,7 @@ android {
   compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    applicationId "com.haqq.testapp"
+    applicationId "com.haqq"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 1
@@ -273,7 +275,7 @@ dependencies {
 
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
-
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
   implementation 'com.google.firebase:firebase-analytics'
   implementation platform('com.google.firebase:firebase-bom:30.3.2')
