@@ -2,6 +2,7 @@ apply plugin: "com.android.application"
 apply plugin: "com.google.gms.google-services"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
+apply plugin: 'kotlinx-serialization'
 
 import com.android.build.OutputFile
 
@@ -276,8 +277,9 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-  implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+  implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
   implementation 'com.google.firebase:firebase-analytics'
+  implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
   implementation platform('com.google.firebase:firebase-bom:30.3.2')
 
   debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

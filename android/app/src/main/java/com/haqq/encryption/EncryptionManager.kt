@@ -1,31 +1,76 @@
 package com.haqq.encryption
 
 import com.facebook.react.bridge.*
+import com.google.android.gms.common.util.Base64Utils
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.nio.charset.Charset
 import java.security.SecureRandom
 import java.security.spec.KeySpec
+import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
+
+
+fun ByteArray.toBase64(): String =
+  String(Base64.getEncoder().encode(this))
+
+@Serializable
+data class EncryptedResult(val cipher: String, val iv: String, val salt: String, val method: String)
 
 class EncryptionManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
   override fun getName() = "RNEncryption"
 
+  private val ENCRYPT_ALGO = "ChaCha20-Poly1305"
+  private val NONCE_LEN = 12 // 96 bits, 12 bytes
+
   @ReactMethod
   fun encrypt(password: String, data: String, promise: Promise) {
-    val key = randomKey();
+    val salt: ByteArray = randomKey(16)
+    val nonce = getNonce();
+    val key = keyFromPassword(password, salt)
 
-    promise.resolve("Create encrypt called with password: $password and data: $data")
+    key ?.let {
+      val encrypted = encryptWithKey(key, data, nonce);
+
+      val result = Json.encodeToString(
+        EncryptedResult(
+          cipher = encrypted.toBase64(),
+          iv = nonce.toBase64(),
+          salt = salt.toBase64(),
+          method = "chacha"
+        )
+      )
+      promise.resolve(result)
+    }
+    promise.reject("0", "encrypt")
   }
 
   @ReactMethod
   fun decrypt(password: String, data: String, promise: Promise) {
-    promise.resolve("Create decrypt called with password: $password and data: $data")
+    val obj = Json.decodeFromString<EncryptedResult>(data)
+    val key = keyFromPassword(password, Base64.getDecoder().decode(obj.salt))
+
+    key ?.let {
+      val decrypted = decryptWithKey(key, obj.cipher, Base64.getDecoder().decode(obj.iv));
+      if (decrypted != null) {
+        return promise.resolve(decrypted.toString(Charsets.UTF_8))
+      }
+    }
+
+    promise.reject("0", "decrypt")
   }
 
-  fun keyFromPassword(password: String, salt: ByteArray): ByteArray? {
+  private fun keyFromPassword(password: String, salt: ByteArray): SecretKey? {
     val algorithm = "PBKDF2withHmacSHA256"
 
-    val derivedKeyLength = 32
+    val derivedKeyLength = 256
 
     val iterations = 4096
 
@@ -33,15 +78,42 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
 
     val f: SecretKeyFactory = SecretKeyFactory.getInstance(algorithm)
 
-    return f.generateSecret(spec).getEncoded()
+    return f.generateSecret(spec)
   }
 
-  fun randomKey(len: Int): ByteArray {
+  private fun randomKey(len: Int): ByteArray {
     val random: SecureRandom = SecureRandom.getInstance("SHA1PRNG")
 
     val key = ByteArray(len)
     random.nextBytes(key)
 
     return key
+  }
+
+  private fun encryptWithKey(key: SecretKey, data: String, nonce: ByteArray): ByteArray {
+    val cipher: Cipher = Cipher.getInstance(ENCRYPT_ALGO)
+
+    val iv = IvParameterSpec(nonce)
+    cipher.init(Cipher.ENCRYPT_MODE, key, iv)
+
+    return cipher.doFinal(data.toByteArray())
+  }
+
+  private fun decryptWithKey(key: SecretKey, data: String, nonce: ByteArray): ByteArray? {
+    val cipher = Cipher.getInstance(ENCRYPT_ALGO)
+
+    val iv = IvParameterSpec(nonce)
+
+    cipher.init(Cipher.DECRYPT_MODE, key, iv)
+
+    val data = Base64.getDecoder().decode(data)
+
+    return cipher.doFinal(data)
+  }
+
+  private fun getNonce(): ByteArray {
+    val nonce = ByteArray(NONCE_LEN)
+    SecureRandom().nextBytes(nonce)
+    return nonce
   }
 }
