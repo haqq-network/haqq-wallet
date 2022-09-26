@@ -57,9 +57,9 @@ export const TransactionDetailScreen = ({
       <Paragraph size={ParagraphSize.xl} style={page.sum}>
         - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
       </Paragraph>
-      <Paragraph size={ParagraphSize.s} style={page.subSum}>
-        - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
-      </Paragraph>
+      {/*<Paragraph size={ParagraphSize.s} style={page.subSum}>*/}
+      {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
+      {/*</Paragraph>*/}
       <View style={page.infoContainer}>
         <DataContent
           title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
@@ -109,7 +109,7 @@ export const TransactionDetailScreen = ({
         />
         <DataContent
           title={`${transaction.fee.toFixed(8)} ISLM`}
-          subtitle="Fee"
+          subtitle="Network Fee"
           reversed
           style={page.info}
         />
@@ -129,7 +129,7 @@ export const TransactionDetailScreen = ({
 
 const page = StyleSheet.create({
   sum: {
-    marginBottom: 2,
+    marginBottom: 20,
     fontWeight: '700',
     color: TEXT_RED_1,
   },

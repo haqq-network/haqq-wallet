@@ -49,13 +49,13 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
         options={{
           title: '',
           headerBackHidden: true,
-          headerRight: DismissPopupButton,
         }}
       />
       <TransactionStack.Screen
         name="transactionAccount"
         component={TransactionAccountScreen}
         options={{
+          title: 'Send funds from',
           headerBackHidden: true,
           headerRight: DismissPopupButton,
         }}

@@ -29,7 +29,7 @@ export const WalletCard = ({address}: BalanceProps) => {
   const [balance, setBalance] = useState(wallet?.balance ?? 0);
 
   const formattedAddress = useMemo(
-    () => shortAddress(wallet?.address ?? ''),
+    () => shortAddress(wallet?.address ?? '', '•'),
     [wallet?.address],
   );
 

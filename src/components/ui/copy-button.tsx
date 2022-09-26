@@ -21,7 +21,7 @@ export const CopyButton = ({
   const onPress = useCallback(() => {
     Clipboard.setString(value);
     app.emit('modal', {type: 'confirmation', action: 'copied'});
-  }, [value]);
+  }, [app, value]);
 
   const containerStyle = useMemo(() => [page.container, style], [style]);
 
