@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {Card, DataContent, MenuNavigationButton} from './ui';
+import {Card, CardSmall, DataContent, MenuNavigationButton} from './ui';
 import {Wallet} from '../models/wallet';
 import {shortAddress} from '../utils';
 
@@ -18,7 +18,7 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
 
   return (
     <MenuNavigationButton onPress={() => onPress(item.address)} style={style}>
-      <Card width={78} borderRadius={8} variant={item.cardStyle} />
+      <CardSmall width={78} borderRadius={8} variant={item.cardStyle} />
       <DataContent
         style={page.info}
         title={item.name}

@@ -31,6 +31,12 @@ export const DataContent = ({
 };
 const page = StyleSheet.create({
   container: {},
-  title: {color: TEXT_BASE_1, marginBottom: 2, alignItems: 'center'},
+  title: {
+    color: TEXT_BASE_1,
+    marginBottom: 2,
+    alignItems: 'center',
+    minHeight: 22,
+    flexDirection: 'row',
+  },
   subtitle: {},
 });

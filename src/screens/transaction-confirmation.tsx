@@ -4,16 +4,17 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
-  Container,
   DataView,
   ISLMIcon,
   Paragraph,
+  PopupContainer,
   Spacer,
 } from '../components/ui';
 import {useTransactions} from '../contexts/transactions';
-import {BG_3, GRAPHIC_GREEN_1, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
+import {splitAddress} from '../utils';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -33,6 +34,8 @@ export const TransactionConfirmationScreen = ({
     () => contacts.getContact(route.params.to),
     [contacts, route.params.to],
   );
+
+  const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   const onDone = useCallback(async () => {
     if (wallet) {
@@ -66,20 +69,17 @@ export const TransactionConfirmationScreen = ({
   }, [from, to, amount, transactions]);
 
   return (
-    <Container>
-      <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
+    <PopupContainer style={page.container}>
+      <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
 
       <Paragraph style={page.subtitle}>Total Amount</Paragraph>
       <Text style={page.sum}>{(amount + estimateFee).toFixed(8)} ISLM</Text>
       <Paragraph style={page.subtitle}>Send to</Paragraph>
+      {contact && <Paragraph style={page.contact}>{contact.name}</Paragraph>}
       <Paragraph style={page.address}>
-        {contact && (
-          <Text style={{fontWeight: '600'}}>
-            {contact.name}
-            {'\n'}
-          </Text>
-        )}
-        {to}
+        <Text>{splittedTo[0]}</Text>
+        <Text style={{color: TEXT_BASE_2}}>{splittedTo[1]}</Text>
+        <Text>{splittedTo[2]}</Text>
       </Paragraph>
 
       <View style={page.info}>
@@ -104,21 +104,40 @@ export const TransactionConfirmationScreen = ({
           </Paragraph>
         </DataView>
       </View>
-      <Spacer />
       {error && <Text>{error}</Text>}
+      <Spacer />
       <Button
         disabled={estimateFee === 0}
         variant={ButtonVariant.contained}
         title="Send"
         onPress={onDone}
+        style={page.submit}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
-  address: {marginBottom: 40, textAlign: 'center', color: TEXT_BASE_1},
-  subtitle: {textAlign: 'center', marginBottom: 4},
+  container: {
+    paddingTop: 24,
+    paddingHorizontal: 20,
+  },
+  contact: {
+    textAlign: 'center',
+    color: TEXT_BASE_1,
+    marginHorizontal: 27.5,
+    fontWeight: '600',
+  },
+  address: {
+    marginBottom: 40,
+    textAlign: 'center',
+    color: TEXT_BASE_1,
+    marginHorizontal: 27.5,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: 4,
+  },
   icon: {marginBottom: 16, alignSelf: 'center'},
   info: {borderRadius: 16, backgroundColor: BG_3},
   sum: {
@@ -128,5 +147,8 @@ const page = StyleSheet.create({
     lineHeight: 38,
     textAlign: 'center',
     color: TEXT_BASE_1,
+  },
+  submit: {
+    marginVertical: 16,
   },
 });

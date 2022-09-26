@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Image,
   ImageProps,
@@ -56,6 +56,37 @@ export const Card = ({
         source={cards[variant]}
         style={[
           {width: width, height: width * 0.632835821},
+          StyleSheet.absoluteFillObject,
+        ]}
+      />
+      {children}
+    </View>
+  );
+};
+
+export const CardSmall = ({
+  children,
+  width,
+  style,
+  variant = WalletCardStyle.defaultGreen,
+  borderRadius = 16,
+}: CardProps) => {
+  return (
+    <View
+      style={[
+        {
+          width: width,
+          height: width * 0.692307692,
+          padding: 16,
+          borderRadius,
+          overflow: 'hidden',
+        },
+        style,
+      ]}>
+      <Image
+        source={cards[variant]}
+        style={[
+          {width: width, height: width * 0.692307692},
           StyleSheet.absoluteFillObject,
         ]}
       />
