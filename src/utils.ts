@@ -7,7 +7,6 @@ import {
 import {TransactionType} from './models/transaction';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
-import Value = Animated.Value;
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -84,7 +83,7 @@ export function sleep(duration: number) {
   });
 }
 
-export const asyncTiming = (pan: Value, toValue: number) => {
+export const asyncTiming = (pan: Animated.Value, toValue: number) => {
   return new Promise(resolve => {
     Animated.timing(pan, {
       toValue,
