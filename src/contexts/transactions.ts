@@ -20,7 +20,6 @@ class Transactions extends EventEmitter {
   }
 
   async init(): Promise<void> {
-    console.log('transactions init');
     Promise.all(
       Array.from(this._transactions)
         .filter(t => !t.confirmed)
