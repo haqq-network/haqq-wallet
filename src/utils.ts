@@ -6,6 +6,8 @@ import {
 } from './types';
 import {TransactionType} from './models/transaction';
 import {formatISO} from 'date-fns';
+import {Animated} from 'react-native';
+import Value = Animated.Value;
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -79,5 +81,25 @@ export function splitAddress(address: string) {
 export function sleep(duration: number) {
   return new Promise(resolve => {
     setTimeout(resolve, duration);
+  });
+}
+
+export const asyncTiming = (pan: Value, toValue: number) => {
+  return new Promise(resolve => {
+    Animated.timing(pan, {
+      toValue,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      return resolve();
+    });
+  });
+};
+
+export function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
   });
 }

@@ -4,6 +4,7 @@ import {GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {Alert} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {app} from '../contexts/app';
 
 type SettingsAccountRemoveButtonProp = CompositeScreenProps<any, any>;
 
@@ -27,6 +28,7 @@ export const SettingsAccountRemoveButton = ({
           onPress: async () => {
             await wallets.removeWallet(route.params.address);
             navigation.goBack();
+            app.emit('notification', 'The account has been deleted');
           },
         },
       ],

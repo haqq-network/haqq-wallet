@@ -15,7 +15,7 @@ import {
   StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {StatusBar} from 'react-native';
+import {Platform, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -54,6 +54,7 @@ import {TransactionDetailScreen} from './screens/transaction-detail';
 import {RestoreScreen} from './screens/restore';
 import {sleep} from './utils';
 import {SettingsTestScreen} from './screens/settings-test';
+import {Notifications} from './components/notifications';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -81,7 +82,8 @@ export const App = () => {
       .then(() => app.init())
       .then(() => wallets.init())
       .then(() => transactions.init())
-      .catch(() => {
+      .catch(e => {
+        console.log('e.message', e.message);
         navigator.navigate('login');
       })
       .finally(() => {
@@ -97,7 +99,9 @@ export const App = () => {
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
-        <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+        {Platform.OS === 'ios' && (
+          <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+        )}
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
@@ -225,6 +229,7 @@ export const App = () => {
               </Stack.Navigator>
             </NavigationContainer>
             <Modals initialModal={{type: 'splash'}} />
+            <Notifications />
           </WalletsContext.Provider>
         </TransactionsContext.Provider>
       </AppContext.Provider>

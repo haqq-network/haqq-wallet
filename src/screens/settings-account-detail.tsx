@@ -14,6 +14,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
 import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import prompt from 'react-native-prompt-android';
+import {app} from '../contexts/app';
 
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;
 
@@ -50,7 +51,7 @@ export const SettingsAccountDetailScreen = ({
         defaultValue: wallet?.name,
       },
     );
-  }, [wallet?.name]);
+  }, [wallet]);
 
   const onPressStyle = useCallback(() => {
     navigation.navigate('settingsAccountStyle', {
@@ -60,6 +61,9 @@ export const SettingsAccountDetailScreen = ({
 
   const onToggleIsHidden = useCallback(() => {
     wallet?.updateWallet({isHidden: !wallet?.isHidden});
+    if (wallet?.isHidden) {
+      app.emit('notification', 'The account was hidden');
+    }
     setIsHidden(wallet?.isHidden);
   }, [wallet]);
 
