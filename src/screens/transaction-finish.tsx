@@ -26,6 +26,7 @@ import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
+import prompt from 'react-native-prompt-android';
 
 type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
 
@@ -57,7 +58,7 @@ export const TransactionFinishScreen = ({
 
   const onPressContact = useCallback(() => {
     if (transaction?.to) {
-      Alert.prompt(
+      prompt(
         contact ? 'Edit contact' : 'Add contact',
         `Address: ${short}`,
         value => {
@@ -66,6 +67,9 @@ export const TransactionFinishScreen = ({
           } else {
             contacts.createContact(transaction.to, value);
           }
+        },
+        {
+          defaultValue: contact?.name ?? '',
         },
       );
     }
