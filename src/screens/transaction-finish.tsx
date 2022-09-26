@@ -4,7 +4,6 @@ import {
   BlockIcon,
   Button,
   ButtonVariant,
-  Container,
   IconButton,
   InvoiceIcon,
   ISLMIcon,
@@ -12,6 +11,7 @@ import {
   PopupContainer,
   Spacer,
   Title,
+  UserIcon,
 } from '../components/ui';
 import {
   BG_8,
@@ -21,13 +21,15 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 
 type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
+
+const icon = require('../../assets/images/transaction-finish.png');
 
 export const TransactionFinishScreen = ({
   navigation,
@@ -72,29 +74,40 @@ export const TransactionFinishScreen = ({
   const onPress = () => {};
 
   return (
-    <PopupContainer>
-      <Spacer style={{justifyContent: 'center'}}>
-        <Title style={{marginBottom: 34, color: TEXT_GREEN_1}}>
-          Sending Completed!
-        </Title>
-        <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
-        {transaction && (
-          <Text style={page.sum}>
-            - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
-          </Text>
-        )}
-        <Text style={page.address}>{short}</Text>
-        <Text style={page.fee}>
-          Network Fee: {transaction?.fee.toFixed(8)} ISLM
+    <PopupContainer style={page.container}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: 12,
+        }}>
+        <Image source={icon} style={{width: 140, height: 140}} />
+      </View>
+      <Title style={{marginBottom: 34, color: TEXT_GREEN_1}}>
+        Sending Completed!
+      </Title>
+      <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
+      {transaction && (
+        <Text style={page.sum}>
+          - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
         </Text>
-      </Spacer>
+      )}
+      <Text style={page.address}>{short}</Text>
+      <Text style={page.fee}>
+        Network Fee: {transaction?.fee.toFixed(8)} ISLM
+      </Text>
+      <Spacer />
       <View style={page.buttons}>
         <IconButton onPress={onPress} style={page.button}>
           <InvoiceIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
           <Text style={page.buttonText}>Details</Text>
         </IconButton>
         <IconButton onPress={onPressContact} style={page.button}>
-          <PenIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+          {contact ? (
+            <PenIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+          ) : (
+            <UserIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+          )}
           <Text style={page.buttonText}>
             {contact ? 'Edit Contact' : 'Add Contact'}
           </Text>
@@ -117,6 +130,9 @@ export const TransactionFinishScreen = ({
 };
 
 const page = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+  },
   icon: {marginBottom: 16, alignSelf: 'center'},
   sum: {
     marginBottom: 8,

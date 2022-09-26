@@ -5,18 +5,17 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
-  IconButton,
   KeyboardSafeArea,
   LabeledBlock,
   Paragraph,
+  ParagraphSize,
   Spacer,
-  SwapVerticalIcon,
 } from '../components/ui';
 import {
   BG_2,
-  GRAPHIC_GREEN_1,
   TEXT_BASE_1,
   TEXT_BASE_2,
+  TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
 import {useWallets} from '../contexts/wallets';
@@ -32,6 +31,7 @@ export const TransactionSumScreen = ({
   const contacts = useContacts();
   const wallets = useWallets();
   const [amount, setAmount] = useState('');
+  const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
   const [error, setError] = useState('');
 
@@ -54,6 +54,10 @@ export const TransactionSumScreen = ({
     });
   }, [route.params.from, wallets]);
 
+  useEffect(() => {
+    setAmountUsd(amount === '' ? '0' : amount);
+  }, [amount]);
+
   const checked = useMemo(
     () =>
       parseFloat(amount) > 0 &&
@@ -72,17 +76,18 @@ export const TransactionSumScreen = ({
   }, [amount, navigation, route.params.from, route.params.to]);
 
   const onPressMax = useCallback(() => {
-    setAmount(balance.toFixed(8));
+    setAmount(balance.toFixed(8).replace(/0+$/g, ''));
   }, [balance]);
 
   const onChangeValue = useCallback(
     (value: string) => {
-      setAmount(value);
+      const sum = value.replace(/,/g, '.');
+      setAmount(sum);
       setError(() => {
-        if (!value.match(numbersRegExp)) {
+        if (!sum.match(numbersRegExp)) {
           return 'Wrong symbol';
         }
-        if (parseFloat(value) > balance) {
+        if (parseFloat(sum) > balance) {
           return "You don't have enough funds";
         }
 
@@ -92,7 +97,7 @@ export const TransactionSumScreen = ({
     [balance],
   );
 
-  const onPressSwap = () => {};
+  // const onPressSwap = () => {};
 
   return (
     <KeyboardSafeArea
@@ -108,9 +113,9 @@ export const TransactionSumScreen = ({
       <Text style={page.subtitle}>ISLM</Text>
       <View style={page.sum}>
         <View style={page.swap}>
-          <IconButton onPress={onPressSwap} style={page.swapButton}>
-            <SwapVerticalIcon color={GRAPHIC_GREEN_1} />
-          </IconButton>
+          {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
+          {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
+          {/*</IconButton>*/}
         </View>
         <TextInput
           style={page.input}
@@ -121,19 +126,27 @@ export const TransactionSumScreen = ({
           placeholderTextColor={TEXT_BASE_2}
         />
         <View style={page.max}>
-          <Button
-            title="Max"
-            onPress={onPressMax}
-            variant={ButtonVariant.second}
-            size={ButtonSize.small}
-          />
+          {balance > 0 && (
+            <Button
+              title="Max"
+              onPress={onPressMax}
+              variant={ButtonVariant.second}
+              size={ButtonSize.small}
+            />
+          )}
         </View>
+      </View>
+      <View style={page.amount}>
+        <Paragraph size={ParagraphSize.xs}>$ {amountUsd}</Paragraph>
       </View>
       {error ? (
         <Text style={[page.help, page.error]}>{error}</Text>
       ) : (
         <Text style={[page.help, page.available]}>
-          Available: {balance.toFixed(8)} ISLM
+          Available:{' '}
+          <Text style={{color: TEXT_GREEN_1}}>
+            {balance.toFixed(8).replace(/0+$/g, '')} ISLM
+          </Text>
         </Text>
       )}
       <Spacer />
@@ -189,7 +202,11 @@ const page = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  amount: {
     marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   available: {
     color: TEXT_BASE_2,

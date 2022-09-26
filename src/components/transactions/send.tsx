@@ -9,6 +9,7 @@ import {
   TEXT_BASE_2,
   TEXT_RED_1,
 } from '../../variables';
+import {shortAddress} from '../../utils';
 
 export type TransactionPreviewProps = {
   item: TransactionListSend;
@@ -28,16 +29,13 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
             <Text style={{color: TEXT_BASE_1}}>Sent</Text>
-            <Text style={page.sum}>{`-${item.value.toFixed(2)} ISLM`}</Text>
+            <Text style={page.sum}>{`- ${item.value.toFixed(2)} ISLM`}</Text>
           </View>
           <View style={page.infoRow}>
             <Text style={{color: TEXT_BASE_2}}>
-              {`to ${item.to.slice(0, 5)}•••${item.to.slice(
-                item.to.length - 5,
-                item.to.length,
-              )}`}
+              {`to ${shortAddress(item.to, '•')}`}
             </Text>
-            <Text style={{color: TEXT_BASE_2}}>{`-${item.value.toFixed(
+            <Text style={{color: TEXT_BASE_2}}>{`- ${item.value.toFixed(
               2,
             )} $`}</Text>
           </View>

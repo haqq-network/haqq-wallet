@@ -57,11 +57,23 @@ export function prepareTransactions(
     }, []);
 }
 
-export function shortAddress(address: string) {
-  return `${address.slice(0, 4)}...${address.slice(
+export function shortAddress(address: string, delimiter: string = '.') {
+  return `${address.slice(0, 4)}${delimiter.repeat(4)}${address.slice(
     address.length - 4,
     address.length,
   )}`;
+}
+
+const regex = /(0x\w{2})(.*)(\w{4})$/gm;
+
+export function splitAddress(address: string) {
+  const result = regex.exec(address);
+
+  if (!result) {
+    return [];
+  }
+
+  return [result[1], result[2], result[3]];
 }
 
 export function sleep(duration: number) {
