@@ -61,6 +61,7 @@ const page = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_2,
+    marginBottom: 2,
   },
   errorPlaceholder: {
     color: TEXT_RED_1,

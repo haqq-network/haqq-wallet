@@ -32,6 +32,7 @@ const page = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: TEXT_BASE_1,
+    paddingTop: 0,
   },
   wrapper: {
     minHeight: 58,
