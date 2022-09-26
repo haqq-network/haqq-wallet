@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -9,6 +9,8 @@ import {
   IconButton,
   Input,
   KeyboardSafeArea,
+  Paragraph,
+  ParagraphSize,
   QRScanner,
   Spacer,
 } from '../components/ui';
@@ -16,9 +18,11 @@ import {useContacts} from '../contexts/contacts';
 import {AddressRow} from '../components/address-row';
 import {useApp} from '../contexts/app';
 import {AddressHeader} from '../components/address-header';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
+import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, TEXT_RED_1} from '../variables';
 
 type TransactionAddressScreenProp = CompositeScreenProps<any, any>;
+
+const isValidAddress = /^0x[a-fA-F0-9]+$/;
 
 export const TransactionAddressScreen = ({
   route,
@@ -27,8 +31,31 @@ export const TransactionAddressScreen = ({
   const app = useApp();
   const contacts = useContacts();
   const [to, setTo] = useState(route.params.to ?? '');
+  const [error, setError] = useState(false);
   const contactsList = contacts.getContacts();
   const checked = useMemo(() => utils.isAddress(to.trim()), [to]);
+
+  useEffect(() => {
+    const toTrim = to.trim();
+
+    if (toTrim.length >= 2 && !toTrim.startsWith('0x')) {
+      return setError(true);
+    }
+
+    if (toTrim.length > 2 && !isValidAddress.exec(toTrim)) {
+      return setError(true);
+    }
+
+    if (toTrim.length < 42) {
+      return setError(false);
+    }
+
+    if (!utils.isAddress(toTrim.trim())) {
+      return setError(true);
+    }
+
+    setError(false);
+  }, [to]);
 
   const onDone = useCallback(async () => {
     navigation.navigate('transactionSum', {
@@ -63,6 +90,7 @@ export const TransactionAddressScreen = ({
         placeholder="Enter Address or contact name"
         onChangeText={setTo}
         value={to}
+        error={error}
         multiline={true}
         autoFocus={true}
         rightAction={
@@ -77,6 +105,13 @@ export const TransactionAddressScreen = ({
           )
         }
       />
+      {error && (
+        <Paragraph
+          size={ParagraphSize.s}
+          style={{color: TEXT_RED_1, marginHorizontal: 20}}>
+          Incorrect address
+        </Paragraph>
+      )}
       <Spacer>
         {contactsList.length ? (
           <FlatList

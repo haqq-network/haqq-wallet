@@ -1,9 +1,15 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, Text, View, ViewProps} from 'react-native';
-import {BG_8, TEXT_BASE_2} from '../../variables';
+import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
+
+export enum LabelBlockVariant {
+  default = 'default',
+  error = 'error',
+}
 
 export type LabeledBlockProps = ViewProps & {
   label: string;
+  variant?: LabelBlockVariant;
   rightAction?: React.ReactNode;
 };
 
@@ -12,13 +18,23 @@ export const LabeledBlock = ({
   style,
   label,
   rightAction,
+  variant = LabelBlockVariant.default,
   ...props
 }: LabeledBlockProps) => {
-  const containerStyle = useMemo(() => [page.container, style], [style]);
+  const containerStyle = useMemo(
+    () => [page.container, page[`${variant}Container`], style],
+    [style, variant],
+  );
+
+  const placeholderStyle = useMemo(
+    () => [page.placeholder, page[`${variant}Placeholder`]],
+    [variant],
+  );
+
   return (
     <View style={containerStyle} {...props}>
       <View style={{flex: 1}}>
-        {label && <Text style={page.placeholder}>{label}</Text>}
+        {label && <Text style={placeholderStyle}>{label}</Text>}
         <View style={page.inner}>{children}</View>
       </View>
       {rightAction && (
@@ -38,10 +54,16 @@ const page = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
   },
+  errorContainer: {
+    backgroundColor: BG_7,
+  },
   placeholder: {
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_2,
+  },
+  errorPlaceholder: {
+    color: TEXT_RED_1,
   },
   inner: {
     flexDirection: 'row',
