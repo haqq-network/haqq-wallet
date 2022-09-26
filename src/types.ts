@@ -52,6 +52,7 @@ export type RootStackParamList = {
   details: {address: string};
   detailsQr: {address: string};
   backupNotification: undefined;
+  settingsTest: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
   settingsAccountStyle: {address: string};
@@ -67,3 +68,9 @@ export type RootStackParamList = {
 };
 
 export type BiometryType = 'FaceID' | 'TouchID' | null;
+
+export type Mnemonic = {
+  phrase: string;
+  path: string;
+  locale: string;
+};

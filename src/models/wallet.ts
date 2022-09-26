@@ -7,6 +7,7 @@ import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
+import {Mnemonic} from '../types';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -50,6 +51,7 @@ export class Wallet extends EventEmitter {
   isHidden: boolean = false;
   private _balance: number = 0;
   private _encrypted: string = '';
+  private _mnemonic: Mnemonic | undefined;
 
   static async fromMnemonic(mnemonic: string, provider: Provider) {
     const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
@@ -124,16 +126,21 @@ export class Wallet extends EventEmitter {
   }
 
   async decrypt(password: string, provider: Provider) {
-    if (this._encrypted !== '') {
-      const decrypted = await decrypt(password, this._encrypted);
-      const tmp = decrypted.mnemonic
-        ? await EthersWallet.fromMnemonic(decrypted.mnemonic.phrase).connect(
-            provider,
-          )
-        : new EthersWallet(decrypted.privateKey, provider);
+    try {
+      if (this._encrypted !== '') {
+        const decrypted = await decrypt(password, this._encrypted);
+        console.log('decrypted', decrypted);
+        const tmp = new EthersWallet(decrypted.privateKey, provider);
 
-      this.setWallet(tmp);
-      this._encrypted = '';
+        this.setWallet(tmp);
+        this._encrypted = '';
+
+        if (decrypted.mnemonic) {
+          this._mnemonic = decrypted.mnemonic;
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
     }
   }
 
@@ -142,24 +149,17 @@ export class Wallet extends EventEmitter {
   }
 
   checkBalance = () => {
-    console.log(new Date().toString(), 'check balance for', this.address);
     wsProvider.getBalance(this.address).then(balance => {
       this.balance = Number(utils.formatEther(balance));
-      console.log(
-        new Date().toString(),
-        'new balance for',
-        this.address,
-        this.balance,
-      );
     });
   };
 
   get mnemonic() {
-    if (!this.wallet) {
+    if (!this._mnemonic) {
       return '';
     }
 
-    return this.wallet.mnemonic.phrase ?? '';
+    return this._mnemonic.phrase ?? '';
   }
 
   set balance(value: number) {
@@ -189,7 +189,7 @@ export class Wallet extends EventEmitter {
     const wallet = this.wallet
       ? await encrypt(password, {
           privateKey: this.wallet.privateKey,
-          mnemonic: this.wallet.mnemonic,
+          mnemonic: this._mnemonic || this.wallet.mnemonic,
         })
       : '';
 
@@ -208,7 +208,7 @@ export class Wallet extends EventEmitter {
     const wallet = this.wallet
       ? await encrypt(pin, {
           privateKey: this.wallet.privateKey,
-          mnemonic: this.wallet.mnemonic,
+          mnemonic: this._mnemonic || this.wallet.mnemonic,
         })
       : '';
 

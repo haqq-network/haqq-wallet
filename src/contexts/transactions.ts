@@ -20,7 +20,7 @@ class Transactions extends EventEmitter {
   }
 
   async init(): Promise<void> {
-    await Promise.all(
+    Promise.all(
       Array.from(this._transactions)
         .filter(t => !t.confirmed)
         .map(row => this.checkTransaction(row.hash)),

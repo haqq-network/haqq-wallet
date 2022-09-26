@@ -1,4 +1,4 @@
-package com.haqq.testapp.newarchitecture.modules;
+package com.haqq.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
