@@ -54,7 +54,11 @@ export const SettingsAddressBookScreen =
     }, []);
 
     return (
-      <Container style={{margin: 0}}>
+      <Container
+        style={{
+          marginVertical: 0,
+          marginHorizontal: 0,
+        }}>
         <Input
           label=""
           style={page.input}
@@ -76,7 +80,7 @@ export const SettingsAddressBookScreen =
         />
         <FlatList
           data={contactsList}
-          renderItem={AddressRow}
+          renderItem={({item}) => <AddressRow item={item} onPress={() => {}} />}
           ListHeaderComponent={AddressHeader}
         />
       </Container>

@@ -81,7 +81,14 @@ export const TransactionAddressScreen = ({
         {contactsList.length ? (
           <FlatList
             data={contactsList}
-            renderItem={AddressRow}
+            renderItem={({item}) => (
+              <AddressRow
+                item={item}
+                onPress={address => {
+                  setTo(address);
+                }}
+              />
+            )}
             ListHeaderComponent={AddressHeader}
           />
         ) : null}
