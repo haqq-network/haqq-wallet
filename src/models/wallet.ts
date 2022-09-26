@@ -129,16 +129,15 @@ export class Wallet extends EventEmitter {
     try {
       if (this._encrypted !== '') {
         const decrypted = await decrypt(password, this._encrypted);
+        console.log('decrypted', decrypted);
         const tmp = new EthersWallet(decrypted.privateKey, provider);
 
         this.setWallet(tmp);
         this._encrypted = '';
 
-        requestAnimationFrame(() => {
-          if (decrypted.mnemonic) {
-            this._mnemonic = decrypted.mnemonic;
-          }
-        });
+        if (decrypted.mnemonic) {
+          this._mnemonic = decrypted.mnemonic;
+        }
       }
     } catch (e) {
       console.log(e.message);
@@ -209,7 +208,7 @@ export class Wallet extends EventEmitter {
     const wallet = this.wallet
       ? await encrypt(pin, {
           privateKey: this.wallet.privateKey,
-          mnemonic: this.wallet.mnemonic,
+          mnemonic: this._mnemonic || this.wallet.mnemonic,
         })
       : '';
 
