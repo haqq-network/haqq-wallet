@@ -3,17 +3,17 @@ import {ContactType} from '../models/contact';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {BG_8} from '../variables';
 import {DataContent} from './ui';
-import {app} from '../contexts/app';
 import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
   item: ContactType;
+  onPress: (address: string) => void;
 };
-export const AddressRow = ({item}: AddressRowProps) => {
+export const AddressRow = ({item, onPress}: AddressRowProps) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        app.emit('address', item.account);
+        onPress(item.account);
       }}>
       <View style={page.container}>
         <View style={page.badge}>
