@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {TransactionListDate} from '../../types';
 import {StyleSheet, Text, View} from 'react-native';
-import {format, formatISO, isSameYear, isToday} from 'date-fns';
+import {format, isSameYear, isToday} from 'date-fns';
 import {TEXT_BASE_2} from '../../variables';
 
 export type TransactionDate = {

@@ -3,9 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {
   AddressBookSettingsIcon,
   Container,
-  HelpSettingsIcon,
   ISLMSettingsIcon,
-  LanguageSettingsIcon,
   ShieldSettingsIcon,
   Spacer,
   WalletIcon,

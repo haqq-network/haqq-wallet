@@ -13,6 +13,8 @@ import {
   ButtonVariant,
   Card,
   CARD_COLORS,
+  GRADIENT_END,
+  GRADIENT_START,
   InfoBlock,
   InfoBlockType,
   Paragraph,
@@ -26,11 +28,11 @@ import {
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
-import {WalletCardStyle} from '../models/wallet';
+import {WalletCardStyle} from '../types';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
 
-const logo = require('../../assets/images/logo.png');
+const logo = require('../../assets/images/qr-logo.png');
 
 export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
   const svg = useRef();
@@ -61,9 +63,14 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
         icon={<Alert color={TEXT_YELLOW_1} />}>
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
-      <LinearGradient colors={containerColors} style={page.qrContainer}>
+      <LinearGradient
+        colors={containerColors}
+        style={page.qrContainer}
+        start={GRADIENT_START}
+        end={GRADIENT_END}>
         <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
           <Card
+            transparent
             width={width - 113}
             variant={wallet?.cardStyle ?? WalletCardStyle.defaultGreen}
           />
@@ -81,6 +88,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
             size={width - 169}
             getRef={c => (svg.current = c)}
             logoSize={width / 5.86}
+            logoBorderRadius={8}
           />
         </View>
         <Paragraph size={ParagraphSize.s} style={page.title}>
