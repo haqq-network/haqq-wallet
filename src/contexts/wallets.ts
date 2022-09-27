@@ -47,7 +47,7 @@ class Wallets extends EventEmitter {
     this.onChangeWallet();
 
     const backupMnemonic = Array.from(this._wallets.values()).find(
-      w => !w.mnemonic_saved,
+      w => !w.mnemonic_saved && !w.isHidden,
     );
 
     if (backupMnemonic) {
