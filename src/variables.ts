@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+import {WalletCardStyle} from './types';
 
 export const TEXT_BASE_1 = '#2F2F2F';
 export const TEXT_BASE_2 = '#8E8E8E';
@@ -36,3 +37,12 @@ export const MAIN_ACCOUNT_NAME = 'Main account';
 export const MAGIC_CARD_HEIGHT = 0.632835821;
 
 export const IS_ANDROID = Platform.OS === 'android';
+
+export const CARD_COLORS = {
+  [WalletCardStyle.defaultGreen]: ['#03BF77', '#03BF77'],
+  [WalletCardStyle.defaultBlack]: ['#383838', '#383838'],
+  [WalletCardStyle.defaultBlue]: ['#125BCA', '#1D63A5'],
+  [WalletCardStyle.defaultYellow]: ['#E8D06F', '#B59235'],
+};
+export const GRADIENT_START = {x: 0.014851485, y: 0};
+export const GRADIENT_END = {x: 1.022643564, y: 0.939510417};

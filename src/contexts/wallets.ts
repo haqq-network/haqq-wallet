@@ -3,8 +3,9 @@ import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
-import {Wallet, WalletCardStyle, WalletType} from '../models/wallet';
+import {Wallet, WalletType} from '../models/wallet';
 import {app} from './app';
+import {WalletCardStyle} from '../types';
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;

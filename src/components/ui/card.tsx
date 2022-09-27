@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {
   Image,
   ImageProps,
@@ -7,7 +7,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {WalletCardStyle} from '../../models/wallet';
+import LinearGradient from 'react-native-linear-gradient';
+import {CARD_COLORS, GRADIENT_END, GRADIENT_START} from '../../variables';
+import {WalletCardStyle} from '../../types';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -15,6 +17,7 @@ export type CardProps = {
   style?: StyleProp<ViewStyle> | undefined;
   variant?: WalletCardStyle;
   borderRadius?: number;
+  transparent?: boolean;
 };
 
 const cards = {
@@ -24,24 +27,45 @@ const cards = {
   [WalletCardStyle.defaultYellow]: require('../../../assets/images/card-yellow.png'),
 };
 
-// yellow: [#E8D06F, #B59235]
-// blue: [#125BCA, #1D63A5]
-export const CARD_COLORS = {
-  [WalletCardStyle.defaultGreen]: ['#03BF77', '#03BF77'],
-  [WalletCardStyle.defaultBlack]: ['#383838', '#383838'],
-  [WalletCardStyle.defaultBlue]: ['#125BCA', '#1D63A5'],
-  [WalletCardStyle.defaultYellow]: ['#E8D06F', '#B59235'],
-};
-
 export const Card = ({
   children,
   width,
   style,
   variant = WalletCardStyle.defaultGreen,
   borderRadius = 16,
+  transparent = false,
 }: CardProps) => {
+  if (transparent) {
+    return (
+      <View
+        style={[
+          {
+            width: width,
+            height: width * 0.632835821,
+            padding: 16,
+            borderRadius,
+            overflow: 'hidden',
+            position: 'relative',
+          },
+          style,
+        ]}>
+        <Image
+          source={cards[variant]}
+          style={[
+            {width: width, height: width * 0.632835821, zIndex: -1},
+            StyleSheet.absoluteFillObject,
+          ]}
+        />
+        {children}
+      </View>
+    );
+  }
+
   return (
-    <View
+    <LinearGradient
+      colors={CARD_COLORS[variant]}
+      start={GRADIENT_START}
+      end={GRADIENT_END}
       style={[
         {
           width: width,
@@ -61,7 +85,7 @@ export const Card = ({
         ]}
       />
       {children}
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -73,7 +97,10 @@ export const CardSmall = ({
   borderRadius = 16,
 }: CardProps) => {
   return (
-    <View
+    <LinearGradient
+      colors={CARD_COLORS[variant]}
+      start={GRADIENT_START}
+      end={GRADIENT_END}
       style={[
         {
           width: width,
@@ -92,7 +119,7 @@ export const CardSmall = ({
         ]}
       />
       {children}
-    </View>
+    </LinearGradient>
   );
 };
 

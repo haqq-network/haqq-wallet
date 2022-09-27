@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WalletCardStyle} from '../models/wallet';
 import {Card, CheckIcon, Paragraph, ParagraphSize} from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {TEXT_BASE_1} from '../variables';
+import {WalletCardStyle} from '../types';
 
 type SettingsAccountStyleScreenProps = CompositeScreenProps<any, any>;
 

@@ -24,3 +24,6 @@ export * from './svg-icon';
 export * from './swipeable-button';
 export * from './swipeable-row';
 export * from './waiting';
+export {GRADIENT_END} from '../../variables';
+export {GRADIENT_START} from '../../variables';
+export {CARD_COLORS} from '../../variables';

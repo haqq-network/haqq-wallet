@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {Card, CardSmall, DataContent, MenuNavigationButton} from './ui';
+import {CardSmall, DataContent, MenuNavigationButton} from './ui';
 import {Wallet} from '../models/wallet';
 import {shortAddress} from '../utils';
 
