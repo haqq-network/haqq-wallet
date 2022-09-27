@@ -43,6 +43,16 @@ export const CARD_COLORS = {
   [WalletCardStyle.defaultBlack]: ['#383838', '#383838'],
   [WalletCardStyle.defaultBlue]: ['#125BCA', '#1D63A5'],
   [WalletCardStyle.defaultYellow]: ['#E8D06F', '#B59235'],
+  [WalletCardStyle.defaultViolet]: ['#965cb8', '#6e2c94'],
 };
+
+export const CARD_PATTERN = {
+  [WalletCardStyle.defaultGreen]: '#0DAC6F',
+  [WalletCardStyle.defaultBlack]: '#4E4E4E',
+  [WalletCardStyle.defaultBlue]: '#0E57AC',
+  [WalletCardStyle.defaultYellow]: '#BA9C43',
+  [WalletCardStyle.defaultViolet]: '#663285',
+};
+
 export const GRADIENT_START = {x: 0.014851485, y: 0};
 export const GRADIENT_END = {x: 1.022643564, y: 0.939510417};
