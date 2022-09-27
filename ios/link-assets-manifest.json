@@ -67,51 +67,39 @@
     },
     {
       "path": "assets/images/card-black.png",
-      "sha1": "27206de420d1e1ef2fbe71b32f4ca39683e077d9"
+      "sha1": "e8b6300d375718f9b42bf77b9500bae712e9e5ae"
     },
     {
       "path": "assets/images/card-black@2x.png",
-      "sha1": "7e807920eea20cc5525845fead62fb4e8c9e7e54"
+      "sha1": "e915909ea2b1ca832f6b287d1868d4334df09164"
     },
     {
       "path": "assets/images/card-black@3x.png",
-      "sha1": "aa31243031abc9dc131b269f1309ef31c20c7dd3"
+      "sha1": "32b4f733235770ddceb4d351288c067fe8887f9f"
     },
     {
       "path": "assets/images/card-blue.png",
-      "sha1": "f1f16c172ae4a9e945818f54cbb838320b72456d"
+      "sha1": "9f649f95994c11ff9734276aeb57e80e20de0915"
     },
     {
       "path": "assets/images/card-blue@2x.png",
-      "sha1": "3061f94c8099d7ccc3cc92662a2cee2be78016b0"
+      "sha1": "f39eb012bdf5643d38a71900ea822213f5ff81f6"
     },
     {
       "path": "assets/images/card-blue@3x.png",
-      "sha1": "3f820c637c12aa8c473017d90ee0d51667c4dfc9"
-    },
-    {
-      "path": "assets/images/card-default.png",
-      "sha1": "d869ed68a3314bde5b11df01a8a89d2bd0dee264"
-    },
-    {
-      "path": "assets/images/card-default@2x.png",
-      "sha1": "42dd67fd1fcc18b308ae60766f7b6c99c081ebe9"
-    },
-    {
-      "path": "assets/images/card-default@3x.png",
-      "sha1": "4a04c7f685a34024a559f9139c6d78bd0a685e52"
+      "sha1": "ba384d86523169c6805531c8fe309fed34ddb097"
     },
     {
       "path": "assets/images/card-green.png",
-      "sha1": "e7628d8767b8479ab18fc4eecd9b26670b3c8174"
+      "sha1": "2a5ac6699f007d049ec1df24064a9f453e3d7518"
     },
     {
       "path": "assets/images/card-green@2x.png",
-      "sha1": "9b4fd1a7a4ca7d76eab39226733f4f997afb438c"
+      "sha1": "816ae210c3c3e0795f635227addcfcf953cdfde9"
     },
     {
       "path": "assets/images/card-green@3x.png",
-      "sha1": "9a1248cf5cc5b3f39a174f87150ea1b91dfd8894"
+      "sha1": "5f1689e88e8a48414580b80fa4fd7ead65deeded"
     },
     {
       "path": "assets/images/card-maks.png",
@@ -127,15 +115,15 @@
     },
     {
       "path": "assets/images/card-yellow.png",
-      "sha1": "3fd43ce0bf8bf370c49af43726d8263f8238cd19"
+      "sha1": "7d644ed7557fa8d98a535edbc865fe10e1936ba8"
     },
     {
       "path": "assets/images/card-yellow@2x.png",
-      "sha1": "9d9aaf9306ef061757c7d8f24ec85e4813266fb6"
+      "sha1": "03f4985f5fe38b3af4cfb8ae3ecbe4f78ebf70c0"
     },
     {
       "path": "assets/images/card-yellow@3x.png",
-      "sha1": "d15050aefce96ef6b8336e6bcd1afc42921dcc86"
+      "sha1": "8cbb79c50e835a97277f9ed4c49f370716c68001"
     },
     {
       "path": "assets/images/clear.png",
@@ -210,6 +198,18 @@
       "sha1": "07e0595fb74d9352b1dbb0e94c2cc0e9f37318d5"
     },
     {
+      "path": "assets/images/qr-logo.png",
+      "sha1": "537a7c398b827e0a9923e9ade920e94503c27073"
+    },
+    {
+      "path": "assets/images/qr-logo@2x.png",
+      "sha1": "8ddb1d79cf59c46735a74f59593d77ed76269d08"
+    },
+    {
+      "path": "assets/images/qr-logo@3x.png",
+      "sha1": "6dbe55e9e26e8c568afdd03e100e41212416a194"
+    },
+    {
       "path": "assets/images/splash-image.png",
       "sha1": "89366605454aef7807e232ddb75163bdeff78eea"
     },
@@ -220,6 +220,18 @@
     {
       "path": "assets/images/splash-image@3x.png",
       "sha1": "8eb1e75eb974bed1bab06ca9e53f05d0c16aa667"
+    },
+    {
+      "path": "assets/images/transaction-finish.png",
+      "sha1": "9725da122baca1b1d08aa35b50f843a440777f83"
+    },
+    {
+      "path": "assets/images/transaction-finish@2x.png",
+      "sha1": "b8426739685a8c893c3facba4fcb62fe11fc7c3f"
+    },
+    {
+      "path": "assets/images/transaction-finish@3x.png",
+      "sha1": "0a74fa76a33964e1b223c228e01726606b037b3b"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {
   Image,
   ImageProps,
@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {WalletCardStyle} from '../../models/wallet';
+import LinearGradient from 'react-native-linear-gradient';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -15,6 +16,7 @@ export type CardProps = {
   style?: StyleProp<ViewStyle> | undefined;
   variant?: WalletCardStyle;
   borderRadius?: number;
+  transparent?: boolean;
 };
 
 const cards = {
@@ -39,9 +41,39 @@ export const Card = ({
   style,
   variant = WalletCardStyle.defaultGreen,
   borderRadius = 16,
+  transparent = false,
 }: CardProps) => {
+  if (transparent) {
+    return (
+      <View
+        style={[
+          {
+            width: width,
+            height: width * 0.632835821,
+            padding: 16,
+            borderRadius,
+            overflow: 'hidden',
+            position: 'relative',
+          },
+          style,
+        ]}>
+        <Image
+          source={cards[variant]}
+          style={[
+            {width: width, height: width * 0.632835821, zIndex: -1},
+            StyleSheet.absoluteFillObject,
+          ]}
+        />
+        {children}
+      </View>
+    );
+  }
+
   return (
-    <View
+    <LinearGradient
+      colors={CARD_COLORS[variant]}
+      start={{x: 0.014851485, y: 0}}
+      end={{x: 1.022643564, y: 0.939510417}}
       style={[
         {
           width: width,
@@ -61,7 +93,7 @@ export const Card = ({
         ]}
       />
       {children}
-    </View>
+    </LinearGradient>
   );
 };
 
