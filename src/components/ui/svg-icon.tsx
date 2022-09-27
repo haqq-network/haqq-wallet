@@ -417,6 +417,26 @@ export const NoAssetsIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const NoContactsIcon = (props: SvgProps) => (
+  <Svg width="81" height="80" viewBox="0 0 81 80" fill="none" {...props}>
+    <Rect
+      x="3.5"
+      y="3"
+      width="74"
+      height="74"
+      rx="15"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M53.5 39V33C53.5 25.8203 47.6797 20 40.5 20C33.3203 20 27.5 25.8203 27.5 33V39C27.5 46.1797 33.3203 52 40.5 52C47.6797 52 53.5 46.1797 53.5 39ZM40.5 18C32.2157 18 25.5 24.7157 25.5 33V39C25.5 42.1874 26.4942 45.1427 28.1894 47.5725C23.0433 50.0937 19.5 55.3831 19.5 61.5H21.5C21.5 56.0107 24.7762 51.2866 29.4799 49.1765C32.2204 52.1426 36.1433 54 40.5 54C44.8567 54 48.7796 52.1426 51.5201 49.1765C56.2238 51.2866 59.5 56.0107 59.5 61.5H61.5C61.5 55.3831 57.9567 50.0937 52.8106 47.5725C54.5058 45.1427 55.5 42.1874 55.5 39V33C55.5 24.7157 48.7843 18 40.5 18Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const NoTransactionsIcon = (props: SvgProps) => (
   <Svg width="81" height="80" viewBox="0 0 81 80" fill="none" {...props}>
     <Rect
@@ -459,9 +479,11 @@ export const PenIcon = ({style, color}: SvgProps) => (
 );
 
 export const PlusIcon = (props: SvgProps) => (
-  <Svg width="6" height="6" viewBox="0 0 6 6" fill="none" {...props}>
-    <Rect x="2.75" width="0.5" height="6" rx="0.25" fill="currentColor" />
-    <Rect y="2.75" width="6" height="0.5" rx="0.25" fill="currentColor" />
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      d="M6 11C5.44772 11 5 11.4477 5 12C5 12.5523 5.44772 13 6 13V11ZM18 13C18.5523 13 19 12.5523 19 12C19 11.4477 18.5523 11 18 11V13ZM13 6C13 5.44772 12.5523 5 12 5C11.4477 5 11 5.44772 11 6L13 6ZM11 18C11 18.5523 11.4477 19 12 19C12.5523 19 13 18.5523 13 18H11ZM6 13H18V11H6V13ZM11 6L11 18H13L13 6L11 6Z"
+      fill="currentColor"
+    />
   </Svg>
 );
 

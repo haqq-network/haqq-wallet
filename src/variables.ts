@@ -20,6 +20,7 @@ export const GRAPHIC_GREEN_2 = '#04D484';
 export const GRAPHIC_SECOND_1 = '#EFEFEF';
 export const GRAPHIC_SECOND_2 = '#CFD1DB';
 export const GRAPHIC_SECOND_3 = '#CCCDD2';
+export const GRAPHIC_SECOND_4 = '#AAABB2';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';

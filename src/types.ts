@@ -1,4 +1,5 @@
 import {TransactionType} from './models/transaction';
+import React from 'react';
 
 export enum TransactionSource {
   unknown,
@@ -73,4 +74,11 @@ export type Mnemonic = {
   phrase: string;
   path: string;
   locale: string;
+};
+
+export type SwipeableAction<T> = {
+  icon: React.ReactNode;
+  backgroundColor: string;
+  onPress: (item: T) => void;
+  key: string;
 };

@@ -70,6 +70,7 @@ export const TransactionFinishScreen = ({
         },
         {
           defaultValue: contact?.name ?? '',
+          placeholder: 'Contact name',
         },
       );
     }

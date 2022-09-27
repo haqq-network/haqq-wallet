@@ -8,7 +8,7 @@ import {Wallets} from '../components/wallets';
 import {prepareTransactions} from '../utils';
 import {TransactionList} from '../types';
 import {Wallet} from '../models/wallet';
-import {NoTransactions} from '../components/no-transactions';
+import {TransactionEmpty} from '../components/transaction-empty';
 
 type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 
@@ -58,7 +58,7 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
     <FlatList
       style={{flex: 1}}
       ListHeaderComponent={Wallets}
-      ListEmptyComponent={NoTransactions}
+      ListEmptyComponent={TransactionEmpty}
       data={transactionsList}
       renderItem={({item}) => (
         <TransactionRow item={item} onPress={onPressRow} />

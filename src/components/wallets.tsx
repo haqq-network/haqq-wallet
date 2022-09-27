@@ -117,16 +117,15 @@ export const Wallets = () => {
           ))}
           <Animated.View
             style={{
-              width: 6,
-              height: 6,
-              margin: 3,
+              width: 12,
+              height: 12,
               opacity: current.interpolate({
                 inputRange: [wallets.getSize() - 1, wallets.getSize()],
                 outputRange: [0.5, 1],
                 extrapolate: 'clamp',
               }),
             }}>
-            <PlusIcon color={GRAPHIC_BASE_1} />
+            <PlusIcon color={GRAPHIC_BASE_1} width={12} height={12} />
           </Animated.View>
         </View>
       </Animated.View>
