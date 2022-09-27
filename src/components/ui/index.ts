@@ -21,7 +21,6 @@ export * from './paragraph';
 export * from './popup-container';
 export * from './spacer';
 export * from './svg-icon';
+export * from './swipeable-button';
 export * from './swipeable-row';
 export * from './waiting';
-export {SwipeableButton} from './swipeable-button';
-export {SwipeableAction} from '../../types';
