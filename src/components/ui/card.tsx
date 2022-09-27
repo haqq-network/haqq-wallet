@@ -105,7 +105,10 @@ export const CardSmall = ({
   borderRadius = 16,
 }: CardProps) => {
   return (
-    <View
+    <LinearGradient
+      colors={CARD_COLORS[variant]}
+      start={{x: 0.014851485, y: 0}}
+      end={{x: 1.022643564, y: 0.939510417}}
       style={[
         {
           width: width,
@@ -124,7 +127,7 @@ export const CardSmall = ({
         ]}
       />
       {children}
-    </View>
+    </LinearGradient>
   );
 };
 
