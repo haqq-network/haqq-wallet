@@ -8,7 +8,12 @@ import {
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {CARD_COLORS, GRADIENT_END, GRADIENT_START} from '../../variables';
+import {
+  CARD_COLORS,
+  CARD_PATTERN,
+  GRADIENT_END,
+  GRADIENT_START,
+} from '../../variables';
 import {WalletCardStyle} from '../../types';
 
 export type CardProps = {
@@ -20,12 +25,7 @@ export type CardProps = {
   transparent?: boolean;
 };
 
-const cards = {
-  [WalletCardStyle.defaultGreen]: require('../../../assets/images/card-green.png'),
-  [WalletCardStyle.defaultBlack]: require('../../../assets/images/card-black.png'),
-  [WalletCardStyle.defaultBlue]: require('../../../assets/images/card-blue.png'),
-  [WalletCardStyle.defaultYellow]: require('../../../assets/images/card-yellow.png'),
-};
+const pattern = require('../../../assets/images/card-pattern.png');
 
 export const Card = ({
   children,
@@ -50,9 +50,14 @@ export const Card = ({
           style,
         ]}>
         <Image
-          source={cards[variant]}
+          source={pattern}
           style={[
-            {width: width, height: width * 0.632835821, zIndex: -1},
+            {
+              width: width,
+              height: width * 0.632835821,
+              zIndex: -1,
+              tintColor: CARD_PATTERN[variant],
+            },
             StyleSheet.absoluteFillObject,
           ]}
         />
@@ -78,9 +83,14 @@ export const Card = ({
         style,
       ]}>
       <Image
-        source={cards[variant]}
+        source={pattern}
         style={[
-          {width: width, height: width * 0.632835821, zIndex: -1},
+          {
+            width: width,
+            height: width * 0.632835821,
+            zIndex: -1,
+            tintColor: CARD_PATTERN[variant],
+          },
           StyleSheet.absoluteFillObject,
         ]}
       />
@@ -112,9 +122,13 @@ export const CardSmall = ({
         style,
       ]}>
       <Image
-        source={cards[variant]}
+        source={pattern}
         style={[
-          {width: width, height: width * 0.692307692},
+          {
+            width: width,
+            height: width * 0.692307692,
+            tintColor: CARD_PATTERN[variant],
+          },
           StyleSheet.absoluteFillObject,
         ]}
       />
