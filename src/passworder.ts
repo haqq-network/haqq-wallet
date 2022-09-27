@@ -45,8 +45,8 @@ export const encrypt = async (
  */
 export const decrypt = async (password: string, encryptedString: string) => {
   const encryptedData = JSON.parse(encryptedString);
-  console.log('encryptedData', encryptedString);
-  switch (encryptedData.method) {
+
+  switch (encryptedData.method.toLowerCase()) {
     case 'chacha':
     case 'aes':
       return RNEncryption.decrypt(password, encryptedString).then(
