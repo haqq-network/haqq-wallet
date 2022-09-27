@@ -83,7 +83,6 @@ export const App = () => {
       .then(() => wallets.init())
       .then(() => transactions.init())
       .catch(e => {
-        console.log('e.message', e.message);
         navigator.navigate('login');
       })
       .finally(() => {
