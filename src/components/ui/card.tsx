@@ -49,13 +49,14 @@ export const Card = ({
           padding: 16,
           borderRadius,
           overflow: 'hidden',
+          position: 'relative',
         },
         style,
       ]}>
       <Image
         source={cards[variant]}
         style={[
-          {width: width, height: width * 0.632835821},
+          {width: width, height: width * 0.632835821, zIndex: -1},
           StyleSheet.absoluteFillObject,
         ]}
       />
