@@ -1,0 +1,39 @@
+import React, {useMemo} from 'react';
+import {Swipeable} from 'react-native-gesture-handler';
+import {Animated, View} from 'react-native';
+import {SwipeableButton} from './swipeable-button';
+import {SwipeableAction} from '../../types';
+
+export type SwipeableRowProps<T> = {
+  children: React.ReactNode;
+  item: T;
+  rightActions: SwipeableAction<T>[];
+};
+
+export const SwipeableRow = ({
+  children,
+  item,
+  rightActions,
+}: SwipeableRowProps<any>) => {
+  const rActions = useMemo(
+    () => (progress: Animated.AnimatedInterpolation) =>
+      (
+        <View style={{width: rightActions.length * 74, flexDirection: 'row'}}>
+          {rightActions.map((action, i) => (
+            <SwipeableButton
+              backgroundColor={action.backgroundColor}
+              progress={progress}
+              x={(rightActions.length - i) * 74}
+              key={action.key}
+              item={item}
+              icon={action.icon}
+              onPress={action.onPress}
+            />
+          ))}
+        </View>
+      ),
+    [item, rightActions],
+  );
+
+  return <Swipeable renderRightActions={rActions}>{children}</Swipeable>;
+};

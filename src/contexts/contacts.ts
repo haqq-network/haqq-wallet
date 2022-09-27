@@ -17,6 +17,8 @@ class Contacts extends EventEmitter {
         account: address,
         name: name,
       });
+
+      this.emit('contacts');
     });
   }
 
@@ -26,6 +28,20 @@ class Contacts extends EventEmitter {
       realm.write(() => {
         contact.name = name;
       });
+
+      this.emit('contacts');
+    }
+  }
+
+  removeContact(address: string) {
+    const contact = this.getContact(address);
+
+    if (contact) {
+      realm.write(() => {
+        realm.delete(contact);
+      });
+
+      this.emit('contacts');
     }
   }
 

@@ -126,7 +126,7 @@ export const Wallets = () => {
                 extrapolate: 'clamp',
               }),
             }}>
-            <PlusIcon color={GRAPHIC_BASE_1} />
+            <PlusIcon color={GRAPHIC_BASE_1} width={6} height={6} />
           </Animated.View>
         </View>
       </Animated.View>
