@@ -2,33 +2,22 @@ import {Animated} from 'react-native';
 import React from 'react';
 
 export type CarouselItemProps = {
-  height: number;
   index: number;
   pan: Animated.Value;
   children: React.ReactNode;
 };
 
-export const CarouselItem = ({
-  children,
-  pan,
-  height,
-  index,
-}: CarouselItemProps) => {
+export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
   return (
     <Animated.View
       style={{
-        position: 'absolute',
-        top: 24,
-        left: 20,
-        opacity: pan.interpolate({
-          inputRange: [index - 1, index, index + 1],
-          outputRange: [0, 1, 0],
-        }),
+        paddingHorizontal: 20,
+        paddingVertical: 24,
         transform: [
           {
-            translateY: pan.interpolate({
+            translateX: pan.interpolate({
               inputRange: [index - 1, index, index + 1],
-              outputRange: [height * 0.95, 0, height * -0.95],
+              outputRange: [-50, 0, 50],
             }),
           },
           {
