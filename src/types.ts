@@ -82,3 +82,10 @@ export type SwipeableAction<T> = {
   onPress: (item: T) => void;
   key: string;
 };
+
+export enum WalletCardStyle {
+  defaultGreen = 'defaultGreen',
+  defaultYellow = 'defaultYellow',
+  defaultBlue = 'defaultBlue',
+  defaultBlack = 'defaultBlack',
+}

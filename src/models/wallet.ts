@@ -7,7 +7,7 @@ import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
-import {Mnemonic} from '../types';
+import {Mnemonic, WalletCardStyle} from '../types';
 
 export const WalletSchema = {
   name: 'Wallet',
@@ -32,13 +32,6 @@ export type WalletType = {
   cardStyle: WalletCardStyle;
   isHidden: boolean;
 };
-
-export enum WalletCardStyle {
-  defaultGreen = 'defaultGreen',
-  defaultYellow = 'defaultYellow',
-  defaultBlue = 'defaultBlue',
-  defaultBlack = 'defaultBlack',
-}
 
 export class Wallet extends EventEmitter {
   address: string;

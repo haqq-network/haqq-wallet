@@ -21,7 +21,7 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionType} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';

@@ -7,8 +7,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {WalletCardStyle} from '../../models/wallet';
 import LinearGradient from 'react-native-linear-gradient';
+import {CARD_COLORS, GRADIENT_END, GRADIENT_START} from '../../variables';
+import {WalletCardStyle} from '../../types';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -24,15 +25,6 @@ const cards = {
   [WalletCardStyle.defaultBlack]: require('../../../assets/images/card-black.png'),
   [WalletCardStyle.defaultBlue]: require('../../../assets/images/card-blue.png'),
   [WalletCardStyle.defaultYellow]: require('../../../assets/images/card-yellow.png'),
-};
-
-// yellow: [#E8D06F, #B59235]
-// blue: [#125BCA, #1D63A5]
-export const CARD_COLORS = {
-  [WalletCardStyle.defaultGreen]: ['#03BF77', '#03BF77'],
-  [WalletCardStyle.defaultBlack]: ['#383838', '#383838'],
-  [WalletCardStyle.defaultBlue]: ['#125BCA', '#1D63A5'],
-  [WalletCardStyle.defaultYellow]: ['#E8D06F', '#B59235'],
 };
 
 export const Card = ({
@@ -72,8 +64,8 @@ export const Card = ({
   return (
     <LinearGradient
       colors={CARD_COLORS[variant]}
-      start={{x: 0.014851485, y: 0}}
-      end={{x: 1.022643564, y: 0.939510417}}
+      start={GRADIENT_START}
+      end={GRADIENT_END}
       style={[
         {
           width: width,
@@ -107,8 +99,8 @@ export const CardSmall = ({
   return (
     <LinearGradient
       colors={CARD_COLORS[variant]}
-      start={{x: 0.014851485, y: 0}}
-      end={{x: 1.022643564, y: 0.939510417}}
+      start={GRADIENT_START}
+      end={GRADIENT_END}
       style={[
         {
           width: width,

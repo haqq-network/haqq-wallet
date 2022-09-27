@@ -13,6 +13,8 @@ import {
   ButtonVariant,
   Card,
   CARD_COLORS,
+  GRADIENT_END,
+  GRADIENT_START,
   InfoBlock,
   InfoBlockType,
   Paragraph,
@@ -26,7 +28,7 @@ import {
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
-import {WalletCardStyle} from '../models/wallet';
+import {WalletCardStyle} from '../types';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
 
@@ -64,8 +66,8 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
       <LinearGradient
         colors={containerColors}
         style={page.qrContainer}
-        start={{x: 0.014851485, y: 0}}
-        end={{x: 1.022643564, y: 0.939510417}}>
+        start={GRADIENT_START}
+        end={GRADIENT_END}>
         <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
           <Card
             transparent
