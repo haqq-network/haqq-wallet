@@ -88,4 +88,5 @@ export enum WalletCardStyle {
   defaultYellow = 'defaultYellow',
   defaultBlue = 'defaultBlue',
   defaultBlack = 'defaultBlack',
+  defaultViolet = 'defaultViolet',
 }

@@ -66,42 +66,6 @@
       "sha1": "3a4c8458e39ac2597d59ca8550c4eb3427e69b1d"
     },
     {
-      "path": "assets/images/card-black.png",
-      "sha1": "e8b6300d375718f9b42bf77b9500bae712e9e5ae"
-    },
-    {
-      "path": "assets/images/card-black@2x.png",
-      "sha1": "e915909ea2b1ca832f6b287d1868d4334df09164"
-    },
-    {
-      "path": "assets/images/card-black@3x.png",
-      "sha1": "32b4f733235770ddceb4d351288c067fe8887f9f"
-    },
-    {
-      "path": "assets/images/card-blue.png",
-      "sha1": "9f649f95994c11ff9734276aeb57e80e20de0915"
-    },
-    {
-      "path": "assets/images/card-blue@2x.png",
-      "sha1": "f39eb012bdf5643d38a71900ea822213f5ff81f6"
-    },
-    {
-      "path": "assets/images/card-blue@3x.png",
-      "sha1": "ba384d86523169c6805531c8fe309fed34ddb097"
-    },
-    {
-      "path": "assets/images/card-green.png",
-      "sha1": "2a5ac6699f007d049ec1df24064a9f453e3d7518"
-    },
-    {
-      "path": "assets/images/card-green@2x.png",
-      "sha1": "816ae210c3c3e0795f635227addcfcf953cdfde9"
-    },
-    {
-      "path": "assets/images/card-green@3x.png",
-      "sha1": "5f1689e88e8a48414580b80fa4fd7ead65deeded"
-    },
-    {
       "path": "assets/images/card-maks.png",
       "sha1": "37d3edec914cb4fec2d964b8b772196206e1479a"
     },
@@ -114,16 +78,16 @@
       "sha1": "31ed3918c919cf3c1c855f02b63f7053b4b46c6e"
     },
     {
-      "path": "assets/images/card-yellow.png",
-      "sha1": "7d644ed7557fa8d98a535edbc865fe10e1936ba8"
+      "path": "assets/images/card-pattern.png",
+      "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
     {
-      "path": "assets/images/card-yellow@2x.png",
-      "sha1": "03f4985f5fe38b3af4cfb8ae3ecbe4f78ebf70c0"
+      "path": "assets/images/card-pattern@2x.png",
+      "sha1": "feda635085147d7d17a44dd74277631af0283833"
     },
     {
-      "path": "assets/images/card-yellow@3x.png",
-      "sha1": "8cbb79c50e835a97277f9ed4c49f370716c68001"
+      "path": "assets/images/card-pattern@3x.png",
+      "sha1": "db5a983c4bbdf1a950718b5da07318d2fce58090"
     },
     {
       "path": "assets/images/clear.png",
