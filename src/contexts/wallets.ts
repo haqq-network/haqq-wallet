@@ -36,6 +36,8 @@ class Wallets extends EventEmitter {
       return;
     }
 
+    this._initialized = true;
+
     const provider = getDefaultNetwork();
     const password = await app.getPassword();
 
@@ -56,8 +58,6 @@ class Wallets extends EventEmitter {
         this.emit('backupMnemonic', backupMnemonic);
       }, 1000);
     }
-
-    this._initialized = true;
   }
 
   attachWallet(wallet: Wallet) {
