@@ -54,5 +54,5 @@ export const CARD_PATTERN = {
   [WalletCardStyle.defaultViolet]: '#663285',
 };
 
-export const GRADIENT_START = {x: 0.014851485, y: 0};
-export const GRADIENT_END = {x: 1.022643564, y: 0.939510417};
+export const GRADIENT_START = {x: 0, y: 0};
+export const GRADIENT_END = {x: 1, y: 1};
