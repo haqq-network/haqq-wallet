@@ -141,7 +141,11 @@ class Wallets extends EventEmitter {
       const wallet = new Wallet(result);
       this.attachWallet(wallet);
       this.onChangeWallet();
+
+      return wallet;
     }
+
+    return null;
   }
 
   async removeWallet(address: string) {
