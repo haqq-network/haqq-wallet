@@ -4,7 +4,7 @@ import {NETWORK_EXPLORER} from '@env';
 import {format} from 'date-fns';
 
 import {useTransactions} from '../contexts/transactions';
-import {TransactionType} from '../models/transaction';
+import {Transaction} from '../models/transaction';
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
@@ -31,7 +31,7 @@ export const TransactionDetailScreen = ({
   navigation,
 }: TransactionDetailScreenProp) => {
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<TransactionType | null>(
+  const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),
   );
 

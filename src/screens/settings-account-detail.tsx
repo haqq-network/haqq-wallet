@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   Card,
   CardMask,
@@ -26,8 +26,6 @@ export const SettingsAccountDetailScreen = ({
   route,
 }: SettingsAccountDetailScreenProps) => {
   const wallet = useWallet(route.params.address);
-  const [isHidden, setIsHidden] = useState(wallet?.isHidden);
-  const [name, setName] = useState(wallet?.name ?? '');
 
   const onPressRename = useCallback(() => {
     prompt(
@@ -36,13 +34,14 @@ export const SettingsAccountDetailScreen = ({
       [
         {
           text: 'Cancel',
+          style: 'cancel',
         },
         {
           text: 'Save',
-          style: 'cancel',
           onPress: n => {
-            wallet?.updateWallet({name: n});
-            setName(n);
+            if (wallet) {
+              wallet.name = n;
+            }
           },
         },
       ],
@@ -60,11 +59,13 @@ export const SettingsAccountDetailScreen = ({
   }, [navigation, route.params.address]);
 
   const onToggleIsHidden = useCallback(() => {
-    wallet?.updateWallet({isHidden: !wallet?.isHidden});
-    if (wallet?.isHidden) {
-      app.emit('notification', 'The account was hidden');
+    if (wallet) {
+      wallet.isHidden = !wallet.isHidden;
+
+      if (wallet.isHidden) {
+        app.emit('notification', 'The account was hidden');
+      }
     }
-    setIsHidden(wallet?.isHidden);
   }, [wallet]);
 
   if (!wallet) {
@@ -84,7 +85,7 @@ export const SettingsAccountDetailScreen = ({
             style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
           />
         </Card>
-        <Paragraph style={page.headerName}>{name}</Paragraph>
+        <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
         <Paragraph size={ParagraphSize.s} style={page.headerAddress}>
           {wallet?.address}
         </Paragraph>
@@ -107,7 +108,7 @@ export const SettingsAccountDetailScreen = ({
           subtitle="Will be hidden from the general list"
         />
         <Spacer />
-        <Switch value={isHidden} onChange={onToggleIsHidden} />
+        <Switch value={wallet.isHidden} onChange={onToggleIsHidden} />
       </MenuNavigationButton>
     </Container>
   );

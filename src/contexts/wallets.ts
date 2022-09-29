@@ -1,14 +1,28 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import {utils} from 'ethers';
+import ethers, {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
-import {Wallet, WalletType} from '../models/wallet';
+import {Wallet, WalletRealm, WalletType} from '../models/wallet';
 import {app} from './app';
 import {WalletCardStyle} from '../types';
-import {generateFlatColors, generateGradientColors, HSBToHEX} from '../utils';
+import {generateFlatColors, generateGradientColors, sleep} from '../utils';
+import {Wallet as EthersWallet} from '@ethersproject/wallet';
+import {encrypt} from '../passworder';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
+
+const defaultData = {
+  data: '',
+  name: '',
+  mnemonic_saved: true,
+  isHidden: false,
+  cardStyle: WalletCardStyle.flat,
+  colorFrom: '#03BF77',
+  colorTo: '#03BF77',
+  colorPattern: '#0DAC6F',
+  pattern: 'card-pattern-0',
+};
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -18,14 +32,11 @@ class Wallets extends EventEmitter {
   constructor() {
     super();
     this._wallets = new Map();
-    const wallets = realm.objects<WalletType>('Wallet');
+    const wallets = realm.objects<WalletRealm>('Wallet');
 
     for (const rawWallet of wallets) {
       try {
-        const wallet = Wallet.fromCache(rawWallet);
-        wallet.saved = true;
-
-        this.attachWallet(wallet);
+        this.attachWallet(new Wallet(rawWallet));
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
@@ -53,19 +64,19 @@ class Wallets extends EventEmitter {
     this.onChangeWallet();
 
     const backupMnemonic = Array.from(this._wallets.values()).find(
-      w => !w.mnemonic_saved && !w.isHidden,
+      w => !w.mnemonicSaved && !w.isHidden,
     );
 
     if (backupMnemonic) {
-      setTimeout(() => {
-        this.emit('backupMnemonic', backupMnemonic);
-      }, 1000);
+      await sleep(1000);
+      this.emit('backupMnemonic', backupMnemonic);
     }
   }
 
   attachWallet(wallet: Wallet) {
     wallet.addListener('change', this.onChangeWallet);
     this._wallets.set(wallet.address, wallet);
+    this.onChangeWallet();
   }
 
   deAttachWallet(wallet: Wallet) {
@@ -79,80 +90,70 @@ class Wallets extends EventEmitter {
     this.emit('wallets');
   };
 
-  async addWalletFromMnemonic(
-    mnemonic: string,
-    name?: string,
-    save: boolean = true,
-  ) {
+  async addWalletFromMnemonic(mnemonic: string, name?: string) {
     const provider = getDefaultNetwork();
-    const wallet = await Wallet.fromMnemonic(mnemonic, provider);
+    const eWallet = EthersWallet.fromMnemonic(mnemonic).connect(provider);
 
-    wallet.name = name ?? wallet.name;
-    wallet.main = this._wallets.size === 0;
-
-    wallet.cardStyle = cards[
-      this._wallets.size % cards.length
-    ] as WalletCardStyle;
-
-    const colors =
-      wallet.cardStyle === WalletCardStyle.flat
-        ? generateFlatColors()
-        : generateGradientColors();
-
-    wallet.colorFrom = colors[0];
-    wallet.colorTo = colors[1];
-    wallet.colorPattern = colors[2];
-
-    this.attachWallet(wallet);
-
-    if (save) {
-      await this.saveWallet(wallet);
-    }
-
-    this.onChangeWallet();
-
-    return wallet;
+    return this.addWallet(eWallet, name);
   }
 
-  async addWalletFromPrivateKey(
-    privateKey: string,
-    name = '',
-    save: boolean = true,
-  ) {
+  async addWalletFromPrivateKey(privateKey: string, name = '') {
     const provider = getDefaultNetwork();
-    const wallet = await Wallet.fromPrivateKey(privateKey, provider);
+    const eWallet = new EthersWallet(privateKey, provider);
 
-    wallet.name = name;
-    wallet.cardStyle = cards[
+    return this.addWallet(eWallet, name);
+  }
+
+  async addWallet(eWallet: ethers.Wallet, name = '') {
+    const password = await app.getPassword();
+
+    const data = await encrypt(password, {
+      privateKey: eWallet.privateKey,
+      mnemonic: eWallet.mnemonic,
+    });
+
+    const cardStyle = cards[
       this._wallets.size % cards.length
     ] as WalletCardStyle;
 
     const colors =
-      wallet.cardStyle === WalletCardStyle.flat
+      cardStyle === WalletCardStyle.flat
         ? generateFlatColors()
         : generateGradientColors();
 
-    wallet.colorFrom = colors[0];
-    wallet.colorTo = colors[1];
-    wallet.colorPattern = colors[2];
+    let result = null;
 
-    this.attachWallet(wallet);
-    if (save) {
-      await this.saveWallet(wallet);
+    realm.write(() => {
+      result = realm.create<WalletRealm>('Wallet', {
+        ...defaultData,
+        data: data,
+        address: eWallet.address,
+        mnemonic_saved: !eWallet.mnemonic,
+        name: name ?? defaultData.name,
+        cardStyle,
+        colorFrom: colors[0],
+        colorTo: colors[1],
+        colorPattern: colors[2],
+      });
+    });
+
+    if (result) {
+      const wallet = new Wallet(result);
+      this.attachWallet(wallet);
+      this.onChangeWallet();
     }
-    this.onChangeWallet();
-
-    return wallet;
   }
 
   async removeWallet(address: string) {
     const wallet = this._wallets.get(address);
     if (wallet) {
-      const wallets = await realm.objects<WalletType>('Wallet');
-      const filtered = wallets.filtered(`address = '${address}'`);
-      if (filtered.length > 0) {
+      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
+        'Wallet',
+        address,
+      );
+      if (realmWallet) {
         realm.write(() => {
-          realm.delete(filtered[0]);
+          realm.delete(realmWallet);
         });
 
         wallet?.emit('change');
@@ -161,21 +162,10 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async saveWallet(wallet: Wallet) {
-    const password = await app.getPassword();
-    const serialized = await wallet.serialize(password);
-
-    realm.write(() => {
-      realm.create('Wallet', serialized);
-    });
-
-    wallet.saved = true;
-  }
-
   async clean() {
     this._wallets = new Map();
 
-    const wallets = await realm.objects<WalletType>('Wallet');
+    const wallets = await realm.objects<WalletRealm>('Wallet');
 
     for (const wallet of wallets) {
       realm.write(() => {

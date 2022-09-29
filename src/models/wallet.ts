@@ -1,7 +1,6 @@
 import ethers, {utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
-import {Bytes} from '@ethersproject/bytes';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
@@ -9,124 +8,56 @@ import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
 import {Mnemonic, WalletCardStyle} from '../types';
 
-export const WalletSchema = {
-  name: 'Wallet',
-  properties: {
-    address: 'string',
-    name: 'string',
-    data: 'string',
-    mnemonic_saved: 'bool',
-    main: 'bool',
-    cardStyle: 'string',
-    isHidden: 'bool',
-    colorFrom: 'string',
-    colorTo: 'string',
-    colorPattern: 'string',
-    pattern: 'string',
-  },
-  primaryKey: 'address',
-};
+export class WalletRealm extends Realm.Object {
+  address!: string;
+  name!: string;
+  data!: string;
+  mnemonic_saved!: boolean;
+  cardStyle!: WalletCardStyle;
+  colorFrom!: string;
+  colorTo!: string;
+  colorPattern!: string;
+  pattern!: string;
+  isHidden!: boolean;
 
-export type WalletType = {
-  address: string;
-  name: string;
-  data: string;
-  main: boolean;
-  mnemonic_saved: boolean;
-  cardStyle: WalletCardStyle;
-  colorFrom: string;
-  colorTo: string;
-  colorPattern: string;
-  pattern: string;
-  isHidden: boolean;
-};
+  static schema = {
+    name: 'Wallet',
+    properties: {
+      address: 'string',
+      name: 'string',
+      data: 'string',
+      mnemonic_saved: 'bool',
+      cardStyle: 'string',
+      isHidden: 'bool',
+      colorFrom: 'string',
+      colorTo: 'string',
+      colorPattern: 'string',
+      pattern: 'string',
+    },
+    primaryKey: 'address',
+  };
+}
 
 export class Wallet extends EventEmitter {
-  address: string;
-  name: string;
-  mnemonic_saved: boolean;
-  wallet: ethers.Wallet | null = null;
-  main: boolean;
-  saved: boolean = false;
-  cardStyle: WalletCardStyle;
-  colorFrom: string;
-  colorTo: string;
-  colorPattern: string;
-  pattern: string;
-  isHidden: boolean = false;
+  private _wallet: ethers.Wallet | null = null;
+  private _raw: WalletRealm;
   private _balance: number = 0;
-  private _encrypted: string = '';
+  private _encrypted: boolean;
   private _mnemonic: Mnemonic | undefined;
 
-  static async fromMnemonic(mnemonic: string, provider: Provider) {
-    const tmp = await EthersWallet.fromMnemonic(mnemonic).connect(provider);
-
-    const wallet = new Wallet({
-      address: tmp.address,
-      data: '',
-      name: '',
-      mnemonic_saved: false,
-      main: false,
-      isHidden: false,
-      cardStyle: WalletCardStyle.flat,
-      colorFrom: '#03BF77',
-      colorTo: '#03BF77',
-      colorPattern: '#0DAC6F',
-      pattern: 'card-patern-0',
-    });
-
-    wallet.setWallet(tmp);
-
-    return wallet;
-  }
-
-  static async fromPrivateKey(privateKey: string, provider: Provider) {
-    const tmp = new EthersWallet(privateKey, provider);
-
-    const wallet = new Wallet({
-      address: tmp.address,
-      data: '',
-      name: '',
-      mnemonic_saved: true,
-      main: false,
-      isHidden: false,
-      cardStyle: WalletCardStyle.flat,
-      colorFrom: '#03BF77',
-      colorTo: '#03BF77',
-      colorPattern: '#0DAC6F',
-      pattern: 'card-patern-0',
-    });
-
-    wallet.setWallet(tmp);
-
-    return wallet;
-  }
-
-  static fromCache(data: WalletType) {
-    const wallet = new Wallet(data);
-
-    wallet.setEncrypted(data.data);
-
-    return wallet;
-  }
-
-  constructor(data: WalletType) {
+  constructor(data: WalletRealm) {
     super();
-    this.address = data.address;
-    this.name = data.name;
-    this.mnemonic_saved = data.mnemonic_saved;
-    this.main = data.main;
-    this.isHidden = data.isHidden;
-    this.cardStyle = data.cardStyle as WalletCardStyle;
 
-    this.colorFrom = data.colorFrom;
-    this.colorTo = data.colorTo;
-    this.colorPattern = data.colorPattern;
-    this.pattern = data.pattern;
+    this._raw = data;
+    this._encrypted = data.data !== '';
 
     setInterval(this.checkBalance, 15000);
 
     this.on('checkBalance', this.checkBalance);
+
+    this._raw.addListener((_object, _changes) => {
+      this.emit('change');
+    });
 
     getDefaultNetwork()
       .getBalance(this.address)
@@ -136,21 +67,17 @@ export class Wallet extends EventEmitter {
   }
 
   setWallet(wallet: ethers.Wallet) {
-    this.wallet = wallet;
-  }
-
-  setEncrypted(encrypted: string) {
-    this._encrypted = encrypted;
+    this._wallet = wallet;
   }
 
   async decrypt(password: string, provider: Provider) {
     try {
-      if (this._encrypted !== '') {
-        const decrypted = await decrypt(password, this._encrypted);
+      if (this._encrypted) {
+        const decrypted = await decrypt(password, this._raw.data);
         const tmp = new EthersWallet(decrypted.privateKey, provider);
 
         this.setWallet(tmp);
-        this._encrypted = '';
+        this._encrypted = false;
 
         if (decrypted.mnemonic) {
           this._mnemonic = decrypted.mnemonic;
@@ -161,8 +88,92 @@ export class Wallet extends EventEmitter {
     }
   }
 
+  get address() {
+    return this._raw.address;
+  }
+
+  get name() {
+    return this._raw.name;
+  }
+
+  set name(value) {
+    realm.write(() => {
+      this._raw.name = value;
+    });
+  }
+
+  get mnemonicSaved() {
+    return this._raw.mnemonic_saved;
+  }
+
+  set mnemonicSaved(value) {
+    realm.write(() => {
+      this._raw.mnemonic_saved = value;
+    });
+  }
+
+  get isHidden() {
+    return this._raw.isHidden;
+  }
+
+  set isHidden(value) {
+    realm.write(() => {
+      this._raw.isHidden = value;
+    });
+  }
+
+  get cardStyle() {
+    return this._raw.cardStyle as WalletCardStyle;
+  }
+
+  set cardStyle(value) {
+    realm.write(() => {
+      this._raw.cardStyle = value;
+    });
+  }
+
+  get colorFrom() {
+    return this._raw.colorFrom;
+  }
+
+  set colorFrom(value) {
+    realm.write(() => {
+      this._raw.colorFrom = value;
+    });
+  }
+
+  get colorTo() {
+    return this._raw.colorTo;
+  }
+
+  set colorTo(value) {
+    realm.write(() => {
+      this._raw.colorTo = value;
+    });
+  }
+
+  get colorPattern() {
+    return this._raw.colorPattern;
+  }
+
+  set colorPattern(value) {
+    realm.write(() => {
+      this._raw.colorPattern = value;
+    });
+  }
+
+  get pattern() {
+    return this._raw.pattern;
+  }
+
+  set pattern(value) {
+    realm.write(() => {
+      this._raw.pattern = value;
+    });
+  }
+
   get isEncrypted() {
-    return this._encrypted !== '';
+    return this._encrypted;
   }
 
   checkBalance = () => {
@@ -189,112 +200,33 @@ export class Wallet extends EventEmitter {
   }
 
   connect(provider: Provider) {
-    if (this.wallet) {
-      this.wallet = this.wallet.connect(provider);
+    if (this._wallet) {
+      this._wallet = this._wallet.connect(provider);
     }
   }
 
   async sendTransaction(transaction: Deferrable<TransactionRequest>) {
-    if (this.wallet) {
-      return this.wallet.sendTransaction(transaction);
+    if (this._wallet) {
+      return this._wallet.sendTransaction(transaction);
     }
-  }
-
-  async serialize(
-    password: Bytes | string,
-  ): Promise<Record<keyof WalletType, any>> {
-    const wallet = this.wallet
-      ? await encrypt(password, {
-          privateKey: this.wallet.privateKey,
-          mnemonic: this._mnemonic || this.wallet.mnemonic,
-        })
-      : '';
-
-    return {
-      address: this.address,
-      name: this.name,
-      data: wallet,
-      mnemonic_saved: this.mnemonic_saved,
-      main: this.main,
-      cardStyle: this.cardStyle,
-      isHidden: this.isHidden,
-      colorFrom: this.colorFrom,
-      colorTo: this.colorTo,
-      colorPattern: this.colorPattern,
-      pattern: this.pattern,
-    };
   }
 
   async updateWalletData(pin: string) {
-    const wallet = this.wallet
+    const data = this._wallet
       ? await encrypt(pin, {
-          privateKey: this.wallet.privateKey,
-          mnemonic: this._mnemonic || this.wallet.mnemonic,
+          privateKey: this._wallet.privateKey,
+          mnemonic: this._mnemonic || this._wallet.mnemonic,
         })
       : '';
 
-    const wallets = realm.objects<WalletType>('Wallet');
-    const filtered = wallets.filtered(`address = '${this.address}'`);
-    if (filtered.length > 0) {
+    const wallet = realm.objectForPrimaryKey<WalletRealm>(
+      'Wallet',
+      this.address,
+    );
+    if (wallet) {
       realm.write(() => {
-        filtered[0].data = wallet;
+        wallet.data = data;
       });
-    }
-  }
-
-  updateWallet(
-    data: Partial<
-      Pick<
-        WalletType,
-        | 'main'
-        | 'mnemonic_saved'
-        | 'cardStyle'
-        | 'isHidden'
-        | 'name'
-        | 'colorFrom'
-        | 'colorTo'
-        | 'colorPattern'
-      >
-    >,
-  ) {
-    const wallets = realm.objects<WalletType>('Wallet');
-    const filtered = wallets.filtered(`address = '${this.address}'`);
-    if (filtered.length > 0) {
-      realm.write(() => {
-        filtered[0].name = data.name || filtered[0].name;
-        this.name = filtered[0].name;
-
-        filtered[0].main = data.main || filtered[0].main;
-        this.main = filtered[0].main;
-
-        filtered[0].mnemonic_saved =
-          typeof data.mnemonic_saved !== 'undefined'
-            ? data.mnemonic_saved
-            : filtered[0].mnemonic_saved;
-
-        this.mnemonic_saved = filtered[0].mnemonic_saved;
-
-        filtered[0].cardStyle = data.cardStyle || filtered[0].cardStyle;
-        this.cardStyle = filtered[0].cardStyle as WalletCardStyle;
-
-        filtered[0].isHidden =
-          typeof data.isHidden !== 'undefined'
-            ? data.isHidden
-            : filtered[0].isHidden;
-        this.isHidden = filtered[0].isHidden;
-
-        filtered[0].colorFrom = data.colorFrom || filtered[0].colorFrom;
-        this.colorFrom = filtered[0].colorFrom;
-
-        filtered[0].colorTo = data.colorTo || filtered[0].colorTo;
-        this.colorTo = filtered[0].colorTo;
-
-        filtered[0].colorPattern =
-          data.colorPattern || filtered[0].colorPattern;
-        this.colorPattern = filtered[0].colorPattern;
-      });
-
-      this.emit('change');
     }
   }
 }

@@ -1,14 +1,14 @@
 import Realm from 'realm';
 import {utils} from 'ethers';
-import {WalletSchema} from './wallet';
+import {WalletRealm} from './wallet';
 import {UserSchema} from './user';
-import {TransactionSchema} from './transaction';
-import {ContactSchema} from './contact';
+import {Transaction} from './transaction';
+import {Contact} from './contact';
 import {CARD_COLORS, CARD_PATTERN} from '../variables';
 
 export const realm = new Realm({
-  schema: [WalletSchema, UserSchema, TransactionSchema, ContactSchema],
-  schemaVersion: 12,
+  schema: [WalletRealm, UserSchema, Transaction, Contact],
+  schemaVersion: 13,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');

@@ -28,7 +28,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
 import prompt from 'react-native-prompt-android';
-import {ContactType} from '../models/contact';
+import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
@@ -57,7 +57,7 @@ export const SettingsAddressBookScreen =
     const contactsList = useMemo(
       () =>
         rows.filter(
-          (contact: ContactType) =>
+          (contact: Contact) =>
             !!`${contact.account} ${contact.name}`
               .toLowerCase()
               .match(search.toLowerCase()),
@@ -116,7 +116,7 @@ export const SettingsAddressBookScreen =
     }, [contacts, search]);
 
     const onPressEdit = useCallback(
-      (item: ContactType) => {
+      (item: Contact) => {
         prompt(
           'Edit contact',
           `Address: ${item.account}`,
@@ -141,7 +141,7 @@ export const SettingsAddressBookScreen =
       [contacts],
     );
 
-    const onPressRemove = useCallback((item: ContactType) => {
+    const onPressRemove = useCallback((item: Contact) => {
       Alert.alert(
         'Delete Contact',
         'Are you sure you want to delete the selected contact?',

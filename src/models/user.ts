@@ -23,24 +23,24 @@ export type UserType = {
 
 export class User {
   private last_activity: Date;
-  raw: UserType & Realm.Object;
+  private _raw: UserType & Realm.Object;
 
   constructor(user: UserType & Realm.Object) {
     this.last_activity = new Date();
 
-    this.raw = user;
+    this._raw = user;
   }
 
   get isLoaded() {
-    return !!this.raw;
+    return !!this._raw;
   }
 
   get biometry() {
-    return this.raw.biometry;
+    return this._raw.biometry;
   }
 
   get language() {
-    return this.raw.language as Language;
+    return this._raw.language as Language;
   }
 
   touchLastActivity() {

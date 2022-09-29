@@ -2,13 +2,13 @@ import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
 
 import {realm} from '../models';
-import {ContactType} from '../models/contact';
+import {Contact} from '../models/contact';
 
 class Contacts extends EventEmitter {
   async init(): Promise<void> {}
 
   getContacts() {
-    return realm.objects<ContactType>('Contact');
+    return realm.objects<Contact>('Contact');
   }
 
   createContact(address: string, name: string) {
@@ -45,8 +45,8 @@ class Contacts extends EventEmitter {
     }
   }
 
-  getContact(address: string): ContactType | null {
-    const contacts = realm.objects<ContactType>('Contact');
+  getContact(address: string): Contact | null {
+    const contacts = realm.objects<Contact>('Contact');
     const contact = contacts.filtered(`account = '${address}'`);
 
     if (!contact.length) {

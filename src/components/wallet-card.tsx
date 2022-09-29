@@ -67,7 +67,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       colorPattern={wallet?.colorPattern}
       style={page.container}
       width={Dimensions.get('window').width - 40}>
-      <View style={[page.topNav, !wallet.mnemonic_saved && {marginBottom: 4}]}>
+      <View style={[page.topNav, !wallet.mnemonicSaved && {marginBottom: 4}]}>
         <Paragraph size={ParagraphSize.s} style={page.name}>
           {wallet.name || 'name'}
         </Paragraph>
@@ -82,7 +82,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           <Copy color={GRAPHIC_BASE_3} style={{marginLeft: 4}} />
         </CopyButton>
       </View>
-      {!wallet.mnemonic_saved && (
+      {!wallet.mnemonicSaved && (
         <IconButton onPress={onClickBackup} style={page.cacheButton}>
           <Text style={page.cacheText}>Without backup</Text>
         </IconButton>
