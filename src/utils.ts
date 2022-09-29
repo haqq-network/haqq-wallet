@@ -25,21 +25,10 @@ export function prepareTransactions(
   const hash: Map<string, (TransactionListSend | TransactionListReceive)[]> =
     new Map();
 
-  const addressList = new Set(source);
-
   for (const row of transactions) {
-    const cloned = JSON.parse(JSON.stringify(row));
     const result = formatISO(row.createdAt, {representation: 'date'});
 
-    const newRow = {
-      ...cloned,
-      createdAt: row.createdAt,
-      source: addressList.has(row.from)
-        ? TransactionSource.send
-        : TransactionSource.receive,
-    };
-
-    hash.set(result, (hash.get(result) ?? []).concat(newRow));
+    hash.set(result, (hash.get(result) ?? []).concat(row));
   }
 
   return Array.from(hash.keys())
@@ -147,3 +136,10 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
     Math.round(255 * f(3)),
   )}${componentToHex(Math.round(255 * f(1)))}`;
 };
+
+export function cleanNumber(number: string) {
+  return number
+    .trim()
+    .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
+    .replace(/^(\d+)\.0*$/g, '$1');
+}

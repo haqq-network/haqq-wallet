@@ -87,6 +87,15 @@ export const App = () => {
       })
       .finally(() => {
         app.emit('modal', null);
+        requestAnimationFrame(() => {
+          Promise.all(
+            wallets.addressList.map(address =>
+              transactions.loadTransactionsFromExplorer(address),
+            ),
+          ).then(() => {
+            console.log('transaction synced');
+          });
+        });
       });
 
     app.on('resetWallet', () => {

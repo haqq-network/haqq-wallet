@@ -5,6 +5,7 @@ import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {utils} from 'ethers';
 import {MAIN_ACCOUNT_NAME} from '../variables';
+import {sleep} from '../utils';
 
 type OnboardingStoreWalletScreenProp = CompositeScreenProps<any, any>;
 
@@ -26,26 +27,18 @@ export const OnboardingStoreWalletScreen = ({
 
   useEffect(() => {
     setTimeout(async () => {
+      const actions = [];
+
       if (route.params.action === 'create') {
         await wallets.addWalletFromMnemonic(
           utils.entropyToMnemonic(utils.randomBytes(16)),
           wallets.getSize() === 0
             ? MAIN_ACCOUNT_NAME
             : `Account #${wallets.getSize() + 1}`,
-          false,
         );
       }
 
-      const actions = wallets
-        .getWallets()
-        .filter(w => !w.saved)
-        .map(w => wallets.saveWallet(w));
-
-      actions.push(
-        new Promise(resolve => {
-          setTimeout(() => resolve(), 4000);
-        }),
-      );
+      actions.push(sleep(4000));
 
       Promise.all(actions).then(() => {
         navigation.navigate(route.params.nextScreen ?? 'onboarding-finish');

@@ -4,7 +4,7 @@ import {NETWORK_EXPLORER} from '@env';
 import {format} from 'date-fns';
 
 import {useTransactions} from '../contexts/transactions';
-import {TransactionType} from '../models/transaction';
+import {Transaction} from '../models/transaction';
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
@@ -21,8 +21,10 @@ import {
   GRAPHIC_GREEN_1,
   TEXT_BASE_1,
   TEXT_BASE_2,
+  TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
+import {TransactionSource} from '../types';
 
 type TransactionDetailScreenProp = CompositeScreenProps<any, any>;
 
@@ -31,31 +33,43 @@ export const TransactionDetailScreen = ({
   navigation,
 }: TransactionDetailScreenProp) => {
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<TransactionType | null>(
+  const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),
   );
 
   useEffect(() => {
     setTransaction(transactions.getTransaction(route.params.hash));
-  }, [route.params.hash]);
+  }, [route.params.hash, transactions]);
 
   const onPressInfo = useCallback(async () => {
-    const url = `${NETWORK_EXPLORER}tx/${transaction?.hash}/internal-transactions`;
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    try {
+      const url = `${NETWORK_EXPLORER}tx/${transaction?.hash}/internal-transactions`;
+      await Linking.canOpenURL(url);
+      await Linking.openURL(url);
+    } catch (_e) {}
   }, [transaction?.hash]);
+
+  const title =
+    transaction?.source === TransactionSource.send ? 'Send' : 'Receive';
 
   if (!transaction) {
     return null;
   }
 
   return (
-    <BottomSheet onClose={navigation.goBack} title="Sent">
+    <BottomSheet onClose={navigation.goBack} title={title}>
       <Paragraph size={ParagraphSize.s} style={{marginBottom: 2}}>
         Total amount
       </Paragraph>
-      <Paragraph size={ParagraphSize.xl} style={page.sum}>
-        - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
+      <Paragraph
+        size={ParagraphSize.xl}
+        style={[
+          page.sum,
+          transaction.source === TransactionSource.send
+            ? page.sumSent
+            : page.sumReceive,
+        ]}>
+        {transaction.totalFormatted} ISLM
       </Paragraph>
       {/*<Paragraph size={ParagraphSize.s} style={page.subSum}>*/}
       {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
@@ -102,13 +116,13 @@ export const TransactionDetailScreen = ({
           style={page.info}
         />
         <DataContent
-          title={`${transaction.value.toFixed(8)} ISLM`}
+          title={`${transaction.valueFormatted} ISLM`}
           subtitle="Amount"
           reversed
           style={page.info}
         />
         <DataContent
-          title={`${transaction.fee.toFixed(8)} ISLM`}
+          title={`${transaction.feeFormatted} ISLM`}
           subtitle="Network Fee"
           reversed
           style={page.info}
@@ -132,6 +146,12 @@ const page = StyleSheet.create({
     marginBottom: 20,
     fontWeight: '700',
     color: TEXT_RED_1,
+  },
+  sumSent: {
+    color: TEXT_RED_1,
+  },
+  sumReceive: {
+    color: TEXT_GREEN_1,
   },
   subSum: {
     color: TEXT_BASE_2,

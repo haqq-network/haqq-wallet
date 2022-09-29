@@ -37,10 +37,12 @@ export const SignInRestoreScreen = ({
         ? MAIN_ACCOUNT_NAME
         : `Account #${wallets.getSize() + 1}`;
     const wallet = utils.isValidMnemonic(seed.trim())
-      ? await wallets.addWalletFromMnemonic(seed.trim(), name, false)
-      : await wallets.addWalletFromPrivateKey(seed.trim(), name, false);
-    wallet.mnemonic_saved = true;
-    navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin');
+      ? await wallets.addWalletFromMnemonic(seed.trim(), name)
+      : await wallets.addWalletFromPrivateKey(seed.trim(), name);
+    if (wallet) {
+      wallet.mnemonicSaved = true;
+      navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin');
+    }
   }, [wallets, seed, navigation, route.params.nextScreen]);
 
   const onPressPaste = useCallback(async () => {
