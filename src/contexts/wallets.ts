@@ -6,6 +6,9 @@ import {getDefaultNetwork} from '../network';
 import {Wallet, WalletType} from '../models/wallet';
 import {app} from './app';
 import {WalletCardStyle} from '../types';
+import {generateFlatColors, generateGradientColors, HSBToHEX} from '../utils';
+
+const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -83,12 +86,22 @@ class Wallets extends EventEmitter {
   ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromMnemonic(mnemonic, provider);
-    const cards = [...Object.keys(WalletCardStyle)];
+
     wallet.name = name ?? wallet.name;
     wallet.main = this._wallets.size === 0;
+
     wallet.cardStyle = cards[
       this._wallets.size % cards.length
     ] as WalletCardStyle;
+
+    const colors =
+      wallet.cardStyle === WalletCardStyle.flat
+        ? generateFlatColors()
+        : generateGradientColors();
+
+    wallet.colorFrom = colors[0];
+    wallet.colorTo = colors[1];
+    wallet.colorPattern = colors[2];
 
     this.attachWallet(wallet);
 
@@ -108,11 +121,20 @@ class Wallets extends EventEmitter {
   ) {
     const provider = getDefaultNetwork();
     const wallet = await Wallet.fromPrivateKey(privateKey, provider);
-    const cards = [...Object.keys(WalletCardStyle)];
+
     wallet.name = name;
     wallet.cardStyle = cards[
       this._wallets.size % cards.length
     ] as WalletCardStyle;
+
+    const colors =
+      wallet.cardStyle === WalletCardStyle.flat
+        ? generateFlatColors()
+        : generateGradientColors();
+
+    wallet.colorFrom = colors[0];
+    wallet.colorTo = colors[1];
+    wallet.colorPattern = colors[2];
 
     this.attachWallet(wallet);
     if (save) {
@@ -225,6 +247,5 @@ export function useWallet(address: string) {
     };
   }, [wallet, address]);
 
-  console.log('updated wallet', wallet);
   return wallet;
 }

@@ -18,7 +18,13 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
 
   return (
     <MenuNavigationButton onPress={() => onPress(item.address)} style={style}>
-      <CardSmall width={78} borderRadius={8} variant={item.cardStyle} />
+      <CardSmall
+        width={78}
+        borderRadius={8}
+        colorFrom={item.colorFrom}
+        colorTo={item.colorTo}
+        colorPattern={item.colorPattern}
+      />
       <DataContent
         style={page.info}
         title={item.name}

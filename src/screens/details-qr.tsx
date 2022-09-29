@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useRef} from 'react';
 import QRCode from 'react-native-qrcode-svg';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Share, StyleSheet, useWindowDimensions, View} from 'react-native';
@@ -12,15 +12,14 @@ import {
   ButtonSize,
   ButtonVariant,
   Card,
-  CARD_COLORS,
-  GRADIENT_END,
-  GRADIENT_START,
   InfoBlock,
   InfoBlockType,
   Paragraph,
   ParagraphSize,
 } from '../components/ui';
 import {
+  GRADIENT_END,
+  GRADIENT_START,
   GRAPHIC_BASE_3,
   TEXT_BASE_3,
   TEXT_SECOND_2,
@@ -29,6 +28,7 @@ import {
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {WalletCardStyle} from '../types';
+import {Wallet} from '../models/wallet';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
 
@@ -37,14 +37,9 @@ const logo = require('../../assets/images/qr-logo.png');
 export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
   const svg = useRef();
   const app = useApp();
-  const wallet = useWallet(route.params.address);
+  const wallet = useWallet(route.params.address) as Wallet;
   const {address} = route.params;
   const {width} = useWindowDimensions();
-
-  const containerColors = useMemo(
-    () => CARD_COLORS[wallet?.cardStyle ?? WalletCardStyle.defaultGreen],
-    [wallet],
-  );
 
   const onCopy = () => {
     Clipboard.setString(address);
@@ -64,7 +59,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
       <LinearGradient
-        colors={containerColors}
+        colors={[wallet?.colorFrom, wallet?.colorTo]}
         style={page.qrContainer}
         start={GRADIENT_START}
         end={GRADIENT_END}>
@@ -72,7 +67,9 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
           <Card
             transparent
             width={width - 113}
-            variant={wallet?.cardStyle ?? WalletCardStyle.defaultGreen}
+            colorFrom={wallet?.colorFrom}
+            colorTo={wallet?.colorTo}
+            colorPattern={wallet?.colorPattern}
           />
         </View>
         <View
