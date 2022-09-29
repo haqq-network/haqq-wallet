@@ -42,7 +42,7 @@ export const SettingsAccountStyleScreen = ({
   ]);
 
   const onChangeType = useCallback(
-    value => {
+    (value: WalletCardStyle) => {
       if (value !== cardStyle) {
         setCardStyle(value);
         const newColors =
@@ -50,9 +50,7 @@ export const SettingsAccountStyleScreen = ({
             ? generateFlatColors()
             : generateGradientColors();
 
-        setColors(
-          newColors.map(color => HSBToHEX(color[0], color[1], color[2])),
-        );
+        setColors(newColors);
       }
     },
     [cardStyle],
@@ -64,7 +62,7 @@ export const SettingsAccountStyleScreen = ({
         ? generateFlatColors()
         : generateGradientColors();
 
-    setColors(newColors.map(color => HSBToHEX(color[0], color[1], color[2])));
+    setColors(newColors);
   }, [cardStyle]);
 
   const onPressApply = useCallback(() => {

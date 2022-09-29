@@ -113,7 +113,7 @@ export const generateFlatColors = () => {
     [h, 76, b],
     [h, 76, b],
     [h, 76, b - (dark ? -20 : 10)],
-  ];
+  ].map(color => HSBToHEX(color[0], color[1], color[2]));
 };
 
 export const generateGradientColors = () => {
@@ -126,7 +126,7 @@ export const generateGradientColors = () => {
     [h, 50, b],
     [h, 70, b - 14],
     [h, 62, b - (dark ? -16 : 20)],
-  ];
+  ].map(color => HSBToHEX(color[0], color[1], color[2]));
 };
 
 function randomNumber(min: number, max: number) {

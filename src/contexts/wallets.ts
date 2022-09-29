@@ -99,9 +99,9 @@ class Wallets extends EventEmitter {
         ? generateFlatColors()
         : generateGradientColors();
 
-    wallet.colorFrom = HSBToHEX(colors[0][0], colors[0][1], colors[0][2]);
-    wallet.colorTo = HSBToHEX(colors[1][0], colors[1][1], colors[1][2]);
-    wallet.colorPattern = HSBToHEX(colors[2][0], colors[2][1], colors[2][2]);
+    wallet.colorFrom = colors[0];
+    wallet.colorTo = colors[1];
+    wallet.colorPattern = colors[2];
 
     this.attachWallet(wallet);
 
@@ -132,9 +132,9 @@ class Wallets extends EventEmitter {
         ? generateFlatColors()
         : generateGradientColors();
 
-    wallet.colorFrom = HSBToHEX(colors[0][0], colors[0][1], colors[0][2]);
-    wallet.colorTo = HSBToHEX(colors[1][0], colors[1][1], colors[1][2]);
-    wallet.colorPattern = HSBToHEX(colors[2][0], colors[2][1], colors[2][2]);
+    wallet.colorFrom = colors[0];
+    wallet.colorTo = colors[1];
+    wallet.colorPattern = colors[2];
 
     this.attachWallet(wallet);
     if (save) {
