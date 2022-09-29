@@ -139,6 +139,11 @@ class Wallets extends EventEmitter {
 
     if (result) {
       const wallet = new Wallet(result);
+
+      if (wallet.isEncrypted) {
+        const provider = getDefaultNetwork();
+        await wallet.decrypt(password, provider);
+      }
       this.attachWallet(wallet);
       this.onChangeWallet();
 
