@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-qr-decode-image-camera/android/build.gradle b/node_modules/react-native-qr-decode-image-camera/android/build.gradle
-index 4882f81..bcdf9f2 100644
+index 4882f81..b446759 100644
 --- a/node_modules/react-native-qr-decode-image-camera/android/build.gradle
 +++ b/node_modules/react-native-qr-decode-image-camera/android/build.gradle
 @@ -25,12 +25,12 @@ buildscript {
@@ -11,12 +11,37 @@ index 4882f81..bcdf9f2 100644
      buildToolsVersion "28.0.3"
 
      defaultConfig {
-         minSdkVersion 16
+-        minSdkVersion 16
 -        targetSdkVersion 28
++        minSdkVersion 21
 +        targetSdkVersion 31
          versionCode 1
          versionName computeVersionName()
      }
+diff --git a/node_modules/react-native-qr-decode-image-camera/android/src/test/java/com/lewin/qrcode/ExampleUnitTest.java b/node_modules/react-native-qr-decode-image-camera/android/src/test/java/com/lewin/qrcode/ExampleUnitTest.java
+deleted file mode 100644
+index 2d36045..0000000
+--- a/node_modules/react-native-qr-decode-image-camera/android/src/test/java/com/lewin/qrcode/ExampleUnitTest.java
++++ /dev/null
+@@ -1,17 +0,0 @@
+-package com.lewin.qrcode;
+-
+-import org.junit.Test;
+-
+-import static org.junit.Assert.*;
+-
+-/**
+- * Example local unit test, which will execute on the development machine (host).
+- *
+- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+- */
+-public class ExampleUnitTest {
+-    @Test
+-    public void addition_isCorrect() throws Exception {
+-        assertEquals(4, 2 + 2);
+-    }
+-}
+\ No newline at end of file
 diff --git a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js b/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
 index 93f2d16..31797a4 100644
 --- a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
