@@ -77,7 +77,9 @@ export const SettingsAccountDetailScreen = ({
         <Card
           width={Dimensions.get('window').width - 72}
           style={page.card}
-          variant={wallet.cardStyle}>
+          colorFrom={wallet.colorFrom}
+          colorTo={wallet.colorTo}
+          colorPattern={wallet.colorPattern}>
           <CardMask
             style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
           />

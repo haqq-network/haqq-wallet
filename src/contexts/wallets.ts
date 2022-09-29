@@ -225,6 +225,5 @@ export function useWallet(address: string) {
     };
   }, [wallet, address]);
 
-  console.log('updated wallet', wallet);
   return wallet;
 }

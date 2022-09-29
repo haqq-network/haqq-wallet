@@ -19,6 +19,10 @@ export const WalletSchema = {
     main: 'bool',
     cardStyle: 'string',
     isHidden: 'bool',
+    colorFrom: 'string',
+    colorTo: 'string',
+    colorPattern: 'string',
+    pattern: 'string',
   },
   primaryKey: 'address',
 };
@@ -30,6 +34,10 @@ export type WalletType = {
   main: boolean;
   mnemonic_saved: boolean;
   cardStyle: WalletCardStyle;
+  colorFrom: string;
+  colorTo: string;
+  colorPattern: string;
+  pattern: string;
   isHidden: boolean;
 };
 
@@ -41,6 +49,10 @@ export class Wallet extends EventEmitter {
   main: boolean;
   saved: boolean = false;
   cardStyle: WalletCardStyle;
+  colorFrom: string;
+  colorTo: string;
+  colorPattern: string;
+  pattern: string;
   isHidden: boolean = false;
   private _balance: number = 0;
   private _encrypted: string = '';
@@ -55,8 +67,12 @@ export class Wallet extends EventEmitter {
       name: '',
       mnemonic_saved: false,
       main: false,
-      cardStyle: WalletCardStyle.defaultGreen,
       isHidden: false,
+      cardStyle: WalletCardStyle.flat,
+      colorFrom: '#03BF77',
+      colorTo: '#03BF77',
+      colorPattern: '#0DAC6F',
+      pattern: 'card-patern-0',
     });
 
     wallet.setWallet(tmp);
@@ -73,8 +89,12 @@ export class Wallet extends EventEmitter {
       name: '',
       mnemonic_saved: true,
       main: false,
-      cardStyle: WalletCardStyle.defaultGreen,
       isHidden: false,
+      cardStyle: WalletCardStyle.flat,
+      colorFrom: '#03BF77',
+      colorTo: '#03BF77',
+      colorPattern: '#0DAC6F',
+      pattern: 'card-patern-0',
     });
 
     wallet.setWallet(tmp);
@@ -98,6 +118,11 @@ export class Wallet extends EventEmitter {
     this.main = data.main;
     this.isHidden = data.isHidden;
     this.cardStyle = data.cardStyle as WalletCardStyle;
+
+    this.colorFrom = data.colorFrom;
+    this.colorTo = data.colorTo;
+    this.colorPattern = data.colorPattern;
+    this.pattern = data.pattern;
 
     setInterval(this.checkBalance, 15000);
 
@@ -193,6 +218,10 @@ export class Wallet extends EventEmitter {
       main: this.main,
       cardStyle: this.cardStyle,
       isHidden: this.isHidden,
+      colorFrom: this.colorFrom,
+      colorTo: this.colorTo,
+      colorPattern: this.colorPattern,
+      pattern: this.pattern,
     };
   }
 
@@ -217,7 +246,14 @@ export class Wallet extends EventEmitter {
     data: Partial<
       Pick<
         WalletType,
-        'main' | 'mnemonic_saved' | 'cardStyle' | 'isHidden' | 'name'
+        | 'main'
+        | 'mnemonic_saved'
+        | 'cardStyle'
+        | 'isHidden'
+        | 'name'
+        | 'colorFrom'
+        | 'colorTo'
+        | 'colorPattern'
       >
     >,
   ) {
@@ -246,6 +282,16 @@ export class Wallet extends EventEmitter {
             ? data.isHidden
             : filtered[0].isHidden;
         this.isHidden = filtered[0].isHidden;
+
+        filtered[0].colorFrom = data.colorFrom || filtered[0].colorFrom;
+        this.colorFrom = filtered[0].colorFrom;
+
+        filtered[0].colorTo = data.colorTo || filtered[0].colorTo;
+        this.colorTo = filtered[0].colorTo;
+
+        filtered[0].colorPattern =
+          data.colorPattern || filtered[0].colorPattern;
+        this.colorPattern = filtered[0].colorPattern;
       });
 
       this.emit('change');
