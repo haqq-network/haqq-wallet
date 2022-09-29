@@ -4,10 +4,11 @@ import {WalletSchema} from './wallet';
 import {UserSchema} from './user';
 import {TransactionSchema} from './transaction';
 import {ContactSchema} from './contact';
+import {CARD_COLORS, CARD_PATTERN} from '../variables';
 
 export const realm = new Realm({
   schema: [WalletSchema, UserSchema, TransactionSchema, ContactSchema],
-  schemaVersion: 11,
+  schemaVersion: 12,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -96,6 +97,29 @@ export const realm = new Realm({
           ...existsData,
           method: 'js',
         });
+      }
+    }
+
+    if (oldRealm.schemaVersion < 12) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        newObject.colorFrom = CARD_COLORS[oldObjects[objectIndex].cardStyle][0];
+        newObject.colorTo = CARD_COLORS[oldObjects[objectIndex].cardStyle][1];
+        newObject.colorPattern =
+          CARD_PATTERN[oldObjects[objectIndex].cardStyle];
+        newObject.pattern = 'card-pattern-0';
+
+        switch (oldObjects[objectIndex].cardStyle) {
+          case 'defaultGreen':
+          case 'defaultBlack':
+            newObject.cardStyle = 'flat';
+          default:
+            newObject.cardStyle = 'gradient';
+        }
       }
     }
   },

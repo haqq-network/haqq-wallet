@@ -30,7 +30,7 @@ async function decryptJS(password: string, encryptedString: string) {
  */
 export const encrypt = async (
   password: string,
-  object: Record<string, string>,
+  object: Record<string, any>,
 ) => {
   return RNEncryption.encrypt(password, JSON.stringify(object));
 };

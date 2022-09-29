@@ -45,7 +45,6 @@ export const SignInRestoreScreen = ({
 
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();
-    console.log('text', text);
     setSeed(text);
   }, []);
 
