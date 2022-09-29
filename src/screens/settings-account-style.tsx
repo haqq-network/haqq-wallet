@@ -15,7 +15,7 @@ import {useWallet} from '../contexts/wallets';
 import {WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
 import {TEXT_BASE_1} from '../variables';
-import {generateFlatColors, generateGradientColors, HSBToHEX} from '../utils';
+import {generateFlatColors, generateGradientColors} from '../utils';
 
 type SettingsAccountStyleScreenProps = CompositeScreenProps<any, any>;
 
@@ -66,14 +66,12 @@ export const SettingsAccountStyleScreen = ({
   }, [cardStyle]);
 
   const onPressApply = useCallback(() => {
-    wallet.updateWallet({
-      colorFrom: colors[0],
-      colorTo: colors[1],
-      colorPattern: colors[2],
-      cardStyle: cardStyle,
-    });
+    wallet.cardStyle = cardStyle;
+    wallet.colorFrom = colors[0];
+    wallet.colorTo = colors[1];
+    wallet.colorPattern = colors[2];
     navigation.goBack();
-  }, [cardStyle, colors, wallet]);
+  }, [cardStyle, colors, navigation, wallet]);
 
   return (
     <Container>

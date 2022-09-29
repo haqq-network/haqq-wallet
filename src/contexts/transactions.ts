@@ -7,16 +7,17 @@ import {
   TransactionResponse,
 } from '@ethersproject/abstract-provider';
 import {realm} from '../models';
-import {TransactionType} from '../models/transaction';
+import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
 import {Wallet} from '../models/wallet';
+import {NETWORK_EXPLORER} from '@env';
 
 class Transactions extends EventEmitter {
-  private _transactions: Realm.Results<TransactionType>;
+  private _transactions: Realm.Results<Transaction>;
 
   constructor() {
     super();
-    this._transactions = realm.objects<TransactionType>('Transaction');
+    this._transactions = realm.objects<Transaction>('Transaction');
   }
 
   async init(): Promise<void> {
@@ -54,12 +55,12 @@ class Transactions extends EventEmitter {
       });
     });
 
-    this._transactions = realm.objects<TransactionType>('Transaction');
+    this._transactions = realm.objects<Transaction>('Transaction');
     this.emit('transactions');
   }
 
-  getTransaction(hash: string): TransactionType | null {
-    const transactions = realm.objects<TransactionType>('Transaction');
+  getTransaction(hash: string): Transaction | null {
+    const transactions = realm.objects<Transaction>('Transaction');
     const transaction = transactions.filtered(`hash = '${hash}'`);
 
     if (!transaction.length) {
@@ -131,6 +132,50 @@ class Transactions extends EventEmitter {
     ]);
 
     return calcFee(result[0].maxFeePerGas!, result[1]);
+  }
+
+  async loadTransactionsFromExplorer(address: string) {
+    try {
+      console.log(
+        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
+      );
+
+      const txlist = await fetch(
+        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
+        {
+          headers: {
+            accept: 'application/json',
+          },
+        },
+      );
+
+      const rows = await txlist.json();
+
+      for (const row of rows.result) {
+        const exists = realm.objectForPrimaryKey<Transaction>(
+          'Transaction',
+          row.hash,
+        );
+
+        if (!exists) {
+          realm.write(() => {
+            realm.create('Transaction', {
+              hash: row.hash,
+              account: address,
+              raw: JSON.stringify(row),
+              createdAt: new Date(parseInt(row.timeStamp) * 1000),
+              from: row.from,
+              to: row.to,
+              value: Number(utils.formatEther(row.value)),
+              fee: calcFee(row.gasPrice, row.gasUsed),
+              confirmed: parseInt(row.confirmations) > 10,
+            });
+          });
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 }
 

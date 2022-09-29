@@ -1,11 +1,11 @@
 import React from 'react';
-import {ContactType} from '../models/contact';
+import {Contact} from '../models/contact';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {Box, DataContent} from './ui';
 import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
-  item: ContactType;
+  item: Contact;
   onPress: (address: string) => void;
 };
 export const AddressRow = ({item, onPress}: AddressRowProps) => {

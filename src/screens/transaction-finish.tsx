@@ -23,7 +23,7 @@ import {
 } from '../variables';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
-import {TransactionType} from '../models/transaction';
+import {Transaction} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 import prompt from 'react-native-prompt-android';
@@ -38,7 +38,7 @@ export const TransactionFinishScreen = ({
 }: TransactionFinishScreenProp) => {
   const contacts = useContacts();
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<TransactionType | null>(
+  const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),
   );
 

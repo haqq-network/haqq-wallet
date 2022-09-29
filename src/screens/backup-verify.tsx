@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useWallet, useWallets} from '../contexts/wallets';
+import {useWallet} from '../contexts/wallets';
 import {
   Button,
   ButtonSize,
@@ -26,8 +26,6 @@ export const BackupVerifyScreen = ({
   navigation,
   route,
 }: BackupVerifyScreenProp) => {
-  const wallets = useWallets();
-
   const wallet = useWallet(route.params.address);
 
   const [selected, setSelected] = useState<string[]>([]);
@@ -48,16 +46,16 @@ export const BackupVerifyScreen = ({
 
   const onDone = useCallback(() => {
     if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
-      wallet?.updateWallet({
-        mnemonic_saved: true,
-      });
+      if (wallet) {
+        wallet.mnemonicSaved = true;
+      }
 
       navigation.navigate('backupFinish');
     } else {
       setSelected([]);
       setError(true);
     }
-  }, [wallet, navigation, route.params.address, selected, wallets, words]);
+  }, [wallet, navigation, selected, words]);
 
   return (
     <Container>
