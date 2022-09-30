@@ -1,15 +1,32 @@
 import React from 'react';
 import {Button, Container} from '../components/ui';
-import {useApp} from '../contexts/app';
+import {HapticEffects, vibrate} from '../services/haptic';
 
 export const SettingsTestScreen = () => {
-  const app = useApp();
   return (
     <Container>
       <Button
-        title="Test"
+        title="Selection"
         onPress={() => {
-          app.emit('notification', 'test message');
+          vibrate(HapticEffects.selection);
+        }}
+      />
+      <Button
+        title="Success"
+        onPress={() => {
+          vibrate(HapticEffects.success);
+        }}
+      />
+      <Button
+        title="Warning"
+        onPress={() => {
+          vibrate(HapticEffects.warning);
+        }}
+      />
+      <Button
+        title="Error"
+        onPress={() => {
+          vibrate(HapticEffects.error);
         }}
       />
     </Container>

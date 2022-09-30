@@ -9,6 +9,7 @@ import {StyleSheet, View} from 'react-native';
 import {Container, Paragraph, Spacer, Title} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {vibrate} from '../services/haptic';
 
 export type PinProps = {
   title: string;
@@ -36,7 +37,7 @@ export const Pin = forwardRef(
     }));
 
     const onKeyboard = useCallback((value: number) => {
-      // Vibration.vibrate();
+      vibrate();
       if (value > -1) {
         setPin(p => `${p}${value}`.slice(0, 6));
       } else {
