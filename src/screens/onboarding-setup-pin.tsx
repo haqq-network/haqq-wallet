@@ -4,6 +4,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Paragraph, Spacer, Title} from '../components/ui';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {vibrate} from '../services/haptic';
 
 type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;
 
@@ -12,7 +13,7 @@ export const OnboardingSetupPinScreen = ({
 }: OnboardingSetupPinScreenProp) => {
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
-    // Vibration.vibrate();
+    vibrate();
     if (value > -1) {
       setPin(p => `${p}${value}`.slice(0, 6));
     } else {
