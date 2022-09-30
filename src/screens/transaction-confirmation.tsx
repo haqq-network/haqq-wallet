@@ -29,6 +29,7 @@ export const TransactionConfirmationScreen = ({
 
   const [estimateFee, setEstimateFee] = useState(fee ?? 0);
   const [error, setError] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const contact = useMemo(
     () => contacts.getContact(route.params.to),
@@ -40,6 +41,7 @@ export const TransactionConfirmationScreen = ({
   const onDone = useCallback(async () => {
     if (wallet) {
       try {
+        setDisabled(true);
         const transaction = await transactions.sendTransaction(
           from,
           to,
@@ -47,17 +49,19 @@ export const TransactionConfirmationScreen = ({
           estimateFee,
           wallet,
         );
-
+        console.log('transaction', transaction);
         if (transaction) {
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,
           });
-          wallet.emit('checkBalance');
         }
       } catch (e) {
+        console.log('onDone', e);
         if (e instanceof Error) {
           setError(e.message);
         }
+      } finally {
+        setDisabled(false);
       }
     }
   }, [wallet, transactions, from, to, amount, estimateFee, navigation]);
@@ -107,7 +111,7 @@ export const TransactionConfirmationScreen = ({
       {error && <Text>{error}</Text>}
       <Spacer />
       <Button
-        disabled={estimateFee === 0}
+        disabled={estimateFee === 0 && !disabled}
         variant={ButtonVariant.contained}
         title="Send"
         onPress={onDone}
