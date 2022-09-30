@@ -1,14 +1,14 @@
 import Realm from 'realm';
 import {utils} from 'ethers';
-import {Wallet} from './wallet';
+import {WalletRealm} from './wallet';
 import {UserSchema} from './user';
 import {Transaction} from './transaction';
 import {Contact} from './contact';
 import {CARD_COLORS, CARD_PATTERN} from '../variables';
 
 export const realm = new Realm({
-  schema: [Wallet, UserSchema, Transaction, Contact],
-  schemaVersion: 14,
+  schema: [WalletRealm, UserSchema, Transaction, Contact],
+  schemaVersion: 13,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -120,17 +120,6 @@ export const realm = new Realm({
           default:
             newObject.cardStyle = 'gradient';
         }
-      }
-    }
-
-    if (oldRealm.schemaVersion < 14) {
-      const oldObjects = oldRealm.objects('Wallet');
-      const newObjects = newRealm.objects('Wallet');
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-
-        newObject.mnemonicSaved = oldObjects[objectIndex].mnemonic_saved;
       }
     }
   },

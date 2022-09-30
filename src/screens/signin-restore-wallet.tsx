@@ -40,7 +40,7 @@ export const SignInRestoreScreen = ({
       ? await wallets.addWalletFromMnemonic(seed.trim(), name)
       : await wallets.addWalletFromPrivateKey(seed.trim(), name);
     if (wallet) {
-      wallet.setMnemonicSaved(true);
+      wallet.mnemonicSaved = true;
       navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin');
     }
   }, [wallets, seed, navigation, route.params.nextScreen]);

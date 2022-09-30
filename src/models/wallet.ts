@@ -1,16 +1,18 @@
-import ethers from 'ethers';
+import ethers, {utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
+import {EventEmitter} from 'events';
+import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
 import {Mnemonic, WalletCardStyle} from '../types';
 
-export class Wallet extends Realm.Object {
+export class WalletRealm extends Realm.Object {
   address!: string;
   name!: string;
   data!: string;
-  mnemonicSaved!: boolean;
+  mnemonic_saved!: boolean;
   cardStyle!: WalletCardStyle;
   colorFrom!: string;
   colorTo!: string;
@@ -24,7 +26,7 @@ export class Wallet extends Realm.Object {
       address: 'string',
       name: 'string',
       data: 'string',
-      mnemonicSaved: 'bool',
+      mnemonic_saved: 'bool',
       cardStyle: 'string',
       isHidden: 'bool',
       colorFrom: 'string',
@@ -34,15 +36,34 @@ export class Wallet extends Realm.Object {
     },
     primaryKey: 'address',
   };
+}
 
+export class Wallet extends EventEmitter {
   private _wallet: ethers.Wallet | null = null;
-  private _encrypted: boolean = true;
+  private _raw: WalletRealm;
+  private _balance: number = 0;
+  private _encrypted: boolean;
   private _mnemonic: Mnemonic | undefined;
 
-  constructor(realm: Realm, values: Unmanaged<unknown>) {
-    super(realm, values);
+  constructor(data: WalletRealm) {
+    super();
 
-    this._encrypted = this.data !== '';
+    this._raw = data;
+    this._encrypted = data.data !== '';
+
+    setInterval(this.checkBalance, 15000);
+
+    this.on('checkBalance', this.checkBalance);
+
+    this._raw.addListener((_object, _changes) => {
+      this.emit('change');
+    });
+
+    getDefaultNetwork()
+      .getBalance(this.address)
+      .then(balance => {
+        this.balance = Number(utils.formatEther(balance));
+      });
   }
 
   setWallet(wallet: ethers.Wallet) {
@@ -52,7 +73,7 @@ export class Wallet extends Realm.Object {
   async decrypt(password: string, provider: Provider) {
     try {
       if (this._encrypted) {
-        const decrypted = await decrypt(password, this.data);
+        const decrypted = await decrypt(password, this._raw.data);
         const tmp = new EthersWallet(decrypted.privateKey, provider);
 
         this.setWallet(tmp);
@@ -67,35 +88,87 @@ export class Wallet extends Realm.Object {
     }
   }
 
-  setName(value: string) {
+  get address() {
+    return this._raw.address;
+  }
+
+  get name() {
+    return this._raw.name;
+  }
+
+  set name(value) {
     realm.write(() => {
-      this.name = value;
+      this._raw.name = value;
     });
   }
 
-  setMnemonicSaved(value: boolean) {
+  get mnemonicSaved() {
+    return this._raw.mnemonic_saved;
+  }
+
+  set mnemonicSaved(value) {
     realm.write(() => {
-      this.mnemonicSaved = value;
+      this._raw.mnemonic_saved = value;
     });
   }
 
-  setIsHidden(value: boolean) {
+  get isHidden() {
+    return this._raw.isHidden;
+  }
+
+  set isHidden(value) {
     realm.write(() => {
-      this.isHidden = value;
+      this._raw.isHidden = value;
     });
   }
 
-  setCardStyle(
-    cardStyle: WalletCardStyle,
-    colorFrom: string,
-    colorTo: string,
-    colorPattern: string,
-  ) {
+  get cardStyle() {
+    return this._raw.cardStyle as WalletCardStyle;
+  }
+
+  set cardStyle(value) {
     realm.write(() => {
-      this.cardStyle = cardStyle;
-      this.colorFrom = cardStyle;
-      this.colorTo = colorTo;
-      this.colorPattern = colorPattern;
+      this._raw.cardStyle = value;
+    });
+  }
+
+  get colorFrom() {
+    return this._raw.colorFrom;
+  }
+
+  set colorFrom(value) {
+    realm.write(() => {
+      this._raw.colorFrom = value;
+    });
+  }
+
+  get colorTo() {
+    return this._raw.colorTo;
+  }
+
+  set colorTo(value) {
+    realm.write(() => {
+      this._raw.colorTo = value;
+    });
+  }
+
+  get colorPattern() {
+    return this._raw.colorPattern;
+  }
+
+  set colorPattern(value) {
+    realm.write(() => {
+      this._raw.colorPattern = value;
+    });
+  }
+
+  get pattern() {
+    return this._raw.pattern;
+  }
+
+  set pattern(value) {
+    realm.write(() => {
+      this._raw.pattern = value;
     });
   }
 
@@ -103,12 +176,27 @@ export class Wallet extends Realm.Object {
     return this._encrypted;
   }
 
+  checkBalance = () => {
+    wsProvider.getBalance(this.address).then(balance => {
+      this.balance = Number(utils.formatEther(balance));
+    });
+  };
+
   get mnemonic() {
     if (!this._mnemonic) {
       return '';
     }
 
     return this._mnemonic.phrase ?? '';
+  }
+
+  set balance(value: number) {
+    this._balance = value;
+    this.emit('balance', {balance: this.balance});
+  }
+
+  get balance() {
+    return this._balance;
   }
 
   connect(provider: Provider) {
@@ -131,8 +219,14 @@ export class Wallet extends Realm.Object {
         })
       : '';
 
-    realm.write(() => {
-      this.data = data;
-    });
+    const wallet = realm.objectForPrimaryKey<WalletRealm>(
+      'Wallet',
+      this.address,
+    );
+    if (wallet) {
+      realm.write(() => {
+        wallet.data = data;
+      });
+    }
   }
 }
