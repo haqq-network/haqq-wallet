@@ -66,10 +66,7 @@ export const SettingsAccountStyleScreen = ({
   }, [cardStyle]);
 
   const onPressApply = useCallback(() => {
-    wallet.cardStyle = cardStyle;
-    wallet.colorFrom = colors[0];
-    wallet.colorTo = colors[1];
-    wallet.colorPattern = colors[2];
+    wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2]);
     navigation.goBack();
   }, [cardStyle, colors, navigation, wallet]);
 
