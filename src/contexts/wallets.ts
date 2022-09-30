@@ -128,7 +128,7 @@ class Wallets extends EventEmitter {
         ...defaultData,
         data: data,
         address: eWallet.address,
-        mnemonic_saved: !eWallet.mnemonic,
+        mnemonicSaved: !eWallet.mnemonic,
         name: name ?? defaultData.name,
         cardStyle,
         colorFrom: colors[0],
