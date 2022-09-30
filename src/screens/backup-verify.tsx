@@ -47,7 +47,7 @@ export const BackupVerifyScreen = ({
   const onDone = useCallback(() => {
     if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
       if (wallet) {
-        wallet.mnemonicSaved = true;
+        wallet.setMnemonicSaved(true);
       }
 
       navigation.navigate('backupFinish');
