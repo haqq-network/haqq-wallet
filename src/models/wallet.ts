@@ -103,6 +103,9 @@ export class Wallet extends EventEmitter {
   }
 
   get mnemonicSaved() {
+    if (!this._mnemonic?.phrase) {
+      return true;
+    }
     return this._raw.mnemonicSaved;
   }
 
