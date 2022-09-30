@@ -5,6 +5,7 @@ import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Paragraph, Spacer, Title} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {vibrate} from '../services/haptic';
 
 type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
 
@@ -16,7 +17,7 @@ export const OnboardingRepeatPinScreen = ({
   const {currentPin} = route.params;
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
-    // Vibration.vibrate();
+    vibrate();
     if (value > -1) {
       setPin(p => `${p}${value}`.slice(0, 6));
     } else {
