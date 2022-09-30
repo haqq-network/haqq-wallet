@@ -12,7 +12,7 @@ export class WalletRealm extends Realm.Object {
   address!: string;
   name!: string;
   data!: string;
-  mnemonic_saved!: boolean;
+  mnemonicSaved!: boolean;
   cardStyle!: WalletCardStyle;
   colorFrom!: string;
   colorTo!: string;
@@ -26,7 +26,7 @@ export class WalletRealm extends Realm.Object {
       address: 'string',
       name: 'string',
       data: 'string',
-      mnemonic_saved: 'bool',
+      mnemonicSaved: 'bool',
       cardStyle: 'string',
       isHidden: 'bool',
       colorFrom: 'string',
@@ -103,12 +103,12 @@ export class Wallet extends EventEmitter {
   }
 
   get mnemonicSaved() {
-    return this._raw.mnemonic_saved;
+    return this._raw.mnemonicSaved;
   }
 
   set mnemonicSaved(value) {
     realm.write(() => {
-      this._raw.mnemonic_saved = value;
+      this._raw.mnemonicSaved = value;
     });
   }
 

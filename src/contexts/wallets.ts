@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 import ethers, {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
-import {Wallet, WalletRealm, WalletType} from '../models/wallet';
+import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
 import {WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors, sleep} from '../utils';
