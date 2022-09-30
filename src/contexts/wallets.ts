@@ -1,9 +1,15 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {EventEmitter} from 'events';
 import ethers, {utils} from 'ethers';
 import {realm} from '../models';
-import {getDefaultNetwork} from '../network';
-import {Wallet, WalletRealm, WalletType} from '../models/wallet';
+import {getDefaultNetwork, wsProvider} from '../network';
+import {Wallet} from '../models/wallet';
 import {app} from './app';
 import {WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors, sleep} from '../utils';
@@ -15,7 +21,7 @@ const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const defaultData = {
   data: '',
   name: '',
-  mnemonic_saved: true,
+  mnemonicSaved: true,
   isHidden: false,
   cardStyle: WalletCardStyle.flat,
   colorFrom: '#03BF77',
@@ -32,11 +38,11 @@ class Wallets extends EventEmitter {
   constructor() {
     super();
     this._wallets = new Map();
-    const wallets = realm.objects<WalletRealm>('Wallet');
+    const wallets = realm.objects<Wallet>('Wallet');
 
     for (const rawWallet of wallets) {
       try {
-        this.attachWallet(new Wallet(rawWallet));
+        this.attachWallet(rawWallet);
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
@@ -74,13 +80,13 @@ class Wallets extends EventEmitter {
   }
 
   attachWallet(wallet: Wallet) {
-    wallet.addListener('change', this.onChangeWallet);
+    wallet.addListener(this.onChangeWallet);
     this._wallets.set(wallet.address, wallet);
     this.onChangeWallet();
   }
 
   deAttachWallet(wallet: Wallet) {
-    wallet.removeListener('change', this.onChangeWallet);
+    wallet.removeListener(this.onChangeWallet);
     this._wallets.delete(wallet.address);
     this.onChangeWallet();
   }
@@ -121,10 +127,8 @@ class Wallets extends EventEmitter {
         ? generateFlatColors()
         : generateGradientColors();
 
-    let result = null;
-
     realm.write(() => {
-      result = realm.create<WalletRealm>('Wallet', {
+      realm.create('Wallet', {
         ...defaultData,
         data: data,
         address: eWallet.address,
@@ -137,9 +141,8 @@ class Wallets extends EventEmitter {
       });
     });
 
-    if (result) {
-      const wallet = new Wallet(result);
-
+    const wallet = realm.objectForPrimaryKey<Wallet>('Wallet', eWallet.address);
+    if (wallet) {
       if (wallet.isEncrypted) {
         const provider = getDefaultNetwork();
         await wallet.decrypt(password, provider);
@@ -156,17 +159,13 @@ class Wallets extends EventEmitter {
   async removeWallet(address: string) {
     const wallet = this._wallets.get(address);
     if (wallet) {
-      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        'Wallet',
-        address,
-      );
+      this.deAttachWallet(wallet);
+
+      const realmWallet = realm.objectForPrimaryKey<Wallet>('Wallet', address);
       if (realmWallet) {
         realm.write(() => {
           realm.delete(realmWallet);
         });
-
-        wallet?.emit('change');
-        this.deAttachWallet(wallet);
       }
     }
   }
@@ -174,7 +173,7 @@ class Wallets extends EventEmitter {
   async clean() {
     this._wallets = new Map();
 
-    const wallets = await realm.objects<WalletRealm>('Wallet');
+    const wallets = await realm.objects<Wallet>('Wallet');
 
     for (const wallet of wallets) {
       realm.write(() => {
@@ -225,6 +224,28 @@ export function useWallets() {
   return context;
 }
 
+export function useWalletBalance(address: string) {
+  const [balance, setBalance] = useState(0);
+
+  const onBalance = useCallback((value: ethers.ethers.BigNumberish) => {
+    setBalance(Number(utils.formatEther(value)));
+  }, []);
+
+  useEffect(() => {
+    getDefaultNetwork().getBalance(address).then(onBalance);
+
+    const interval = setInterval(() => {
+      wsProvider.getBalance(address).then(onBalance);
+    }, 15000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [address, onBalance]);
+
+  return balance;
+}
+
 export function useWallet(address: string) {
   const [_date, setDate] = useState(new Date());
 
@@ -239,10 +260,10 @@ export function useWallet(address: string) {
       setDate(new Date());
     };
 
-    wallet?.on('change', subscription);
+    wallet?.addListener(subscription);
 
     return () => {
-      wallet?.off('change', subscription);
+      wallet?.removeListener(subscription);
     };
   }, [wallet, address]);
 
