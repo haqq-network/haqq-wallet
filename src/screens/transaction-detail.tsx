@@ -81,12 +81,21 @@ export const TransactionDetailScreen = ({
           reversed
           style={page.info}
         />
-        <DataContent
-          title={transaction.to}
-          subtitle="Send to"
-          reversed
-          style={page.info}
-        />
+        {transaction?.source === TransactionSource.send ? (
+          <DataContent
+            title={transaction.to}
+            subtitle="Send to"
+            reversed
+            style={page.info}
+          />
+        ) : (
+          <DataContent
+            title={transaction.from}
+            subtitle="Received from"
+            reversed
+            style={page.info}
+          />
+        )}
         <DataContent
           title={
             <>

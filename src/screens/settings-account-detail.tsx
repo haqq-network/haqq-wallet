@@ -40,7 +40,7 @@ export const SettingsAccountDetailScreen = ({
           text: 'Save',
           onPress: n => {
             if (wallet) {
-              wallet.setName(n);
+              wallet.name = n;
             }
           },
         },
@@ -60,7 +60,7 @@ export const SettingsAccountDetailScreen = ({
 
   const onToggleIsHidden = useCallback(() => {
     if (wallet) {
-      wallet.setIsHidden(!wallet.isHidden);
+      wallet.isHidden = !wallet.isHidden;
 
       if (wallet.isHidden) {
         app.emit('notification', 'The account was hidden');

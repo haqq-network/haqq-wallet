@@ -1,9 +1,9 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {NavigationProp} from '@react-navigation/core/src/types';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {useWallet, useWalletBalance} from '../contexts/wallets';
+import {useWallet} from '../contexts/wallets';
 import {
   ArrowReceive,
   ArrowSend,
@@ -26,15 +26,27 @@ export type BalanceProps = {
 export const WalletCard = ({address}: BalanceProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const wallet = useWallet(address);
-  const balance = useWalletBalance(address);
+  const [balance, setBalance] = useState(wallet?.balance ?? 0);
+
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
     [wallet?.address],
   );
 
+  const updateBalance = useCallback(({balance}: {balance: number}) => {
+    setBalance(balance);
+  }, []);
+
+  useEffect(() => {
+    wallet?.on('balance', updateBalance);
+    return () => {
+      wallet?.off('balance', updateBalance);
+    };
+  }, [updateBalance, wallet]);
+
   const onPressSend = useCallback(() => {
     navigation.navigate('transaction', {from: address});
-  }, [navigation, address]);
+  }, [wallet, navigation]);
 
   const onPressQR = useCallback(() => {
     navigation.navigate('detailsQr', {address: address});
