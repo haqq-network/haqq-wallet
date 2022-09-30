@@ -15,7 +15,7 @@ const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const defaultData = {
   data: '',
   name: '',
-  mnemonic_saved: true,
+  mnemonicSaved: true,
   isHidden: false,
   cardStyle: WalletCardStyle.flat,
   colorFrom: '#03BF77',
