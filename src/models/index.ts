@@ -122,5 +122,15 @@ export const realm = new Realm({
         }
       }
     }
+
+    if (oldRealm.schemaVersion < 14) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.mnemonicSaved = oldObjects[objectIndex].mnemonic_saved;
+      }
+    }
   },
 });
