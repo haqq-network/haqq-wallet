@@ -210,19 +210,10 @@
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				210DBD2628E6CBD70036A851 /* Encryption */,
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
-				210DBD1E28E6A8AF0036A851 /* Encryption */,
 			);
 			path = services;
-			sourceTree = "<group>";
-		};
-		210DBD1E28E6A8AF0036A851 /* Encryption */ = {
-			isa = PBXGroup;
-			children = (
-				210AE02328DC693F008D739C /* Encryption.swift */,
-				210AE02528DC6A8A008D739C /* Encryption.m */,
-			);
-			name = Encryption;
 			sourceTree = "<group>";
 		};
 		210DBD1F28E6A8BE0036A851 /* Haptic */ = {
@@ -232,6 +223,15 @@
 				210DBD2228E6A8E70036A851 /* Haptic.swift */,
 			);
 			path = Haptic;
+			sourceTree = "<group>";
+		};
+		210DBD2628E6CBD70036A851 /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				210AE02328DC693F008D739C /* Encryption.swift */,
+				210AE02528DC6A8A008D739C /* Encryption.m */,
+			);
+			path = Encryption;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
