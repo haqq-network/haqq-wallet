@@ -163,16 +163,18 @@ class Transactions extends EventEmitter {
               hash: row.hash,
               account: address,
               raw: JSON.stringify(row),
-              createdAt: new Date(parseInt(row.timeStamp) * 1000),
+              createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
               from: row.from,
               to: row.to,
               value: Number(utils.formatEther(row.value)),
               fee: calcFee(row.gasPrice, row.gasUsed),
-              confirmed: parseInt(row.confirmations) > 10,
+              confirmed: parseInt(row.confirmations, 10) > 10,
             });
           });
         }
       }
+
+      this.emit('transactions');
     } catch (e) {
       console.log(e.message);
     }
