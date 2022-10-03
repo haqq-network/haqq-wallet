@@ -5,12 +5,14 @@ import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
-import {WalletCardStyle} from '../types';
+import {WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors, sleep} from '../utils';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
+import {FLAT_PRESETS, GRADIENT_PRESETS} from '../variables';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
+const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
 
 const defaultData = {
   data: '',
@@ -21,7 +23,7 @@ const defaultData = {
   colorFrom: '#03BF77',
   colorTo: '#03BF77',
   colorPattern: '#0DAC6F',
-  pattern: 'card-pattern-0',
+  pattern: WalletCardPattern.circle,
 };
 
 class Wallets extends EventEmitter {
@@ -116,10 +118,24 @@ class Wallets extends EventEmitter {
       this._wallets.size % cards.length
     ] as WalletCardStyle;
 
-    const colors =
+    const pattern = patterns[this._wallets.size % cards.length];
+
+    const usedColors = new Set(
+      [...this._wallets.values()].map(w => w.colorFrom),
+    );
+
+    let availableColors = (
+      cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
+    ).filter(c => !usedColors.has(c[0]));
+
+    const generatedColors =
       cardStyle === WalletCardStyle.flat
         ? generateFlatColors()
         : generateGradientColors();
+
+    const colors = availableColors.length
+      ? availableColors[Math.floor(Math.random() * availableColors.length)]
+      : generatedColors;
 
     let result = null;
 
@@ -130,6 +146,7 @@ class Wallets extends EventEmitter {
         address: eWallet.address,
         mnemonicSaved: !eWallet.mnemonic,
         name: name ?? defaultData.name,
+        pattern,
         cardStyle,
         colorFrom: colors[0],
         colorTo: colors[1],

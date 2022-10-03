@@ -5,10 +5,11 @@ import {UserSchema} from './user';
 import {Transaction} from './transaction';
 import {Contact} from './contact';
 import {CARD_COLORS, CARD_PATTERN} from '../variables';
+import {WalletCardPattern} from '../types';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact],
-  schemaVersion: 14,
+  schemaVersion: 15,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -130,6 +131,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.mnemonicSaved = oldObjects[objectIndex].mnemonic_saved;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 15) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.pattern = WalletCardPattern.circle;
       }
     }
   },
