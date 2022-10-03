@@ -6,8 +6,6 @@ import {
   GRADIENT_END,
   GRADIENT_START,
 } from '../../variables';
-import {WalletCardPattern} from '../../types';
-import {PATTERNS_SOURCE} from '@env';
 import {getPatternName} from '../../utils';
 
 export type CardProps = {
@@ -33,23 +31,7 @@ export const Card = ({
   transparent = false,
   pattern = CARD_DEFAULT_STYLE,
 }: CardProps) => {
-  const image = useMemo(
-    () => (
-      <Image
-        source={{uri: getPatternName(pattern)}}
-        style={[
-          {
-            width: width,
-            height: width * 0.632835821,
-            zIndex: -1,
-            tintColor: colorPattern,
-          },
-          StyleSheet.absoluteFillObject,
-        ]}
-      />
-    ),
-    [colorPattern, pattern, width],
-  );
+  const uri = useMemo(() => ({uri: getPatternName(pattern)}), [pattern]);
   if (transparent) {
     return (
       <View
@@ -64,7 +46,18 @@ export const Card = ({
           },
           style,
         ]}>
-        {image}
+        <Image
+          source={uri}
+          style={[
+            {
+              width: width,
+              height: width * 0.632835821,
+              zIndex: -1,
+              tintColor: colorPattern,
+            },
+            StyleSheet.absoluteFillObject,
+          ]}
+        />
         {children}
       </View>
     );
@@ -86,7 +79,18 @@ export const Card = ({
         },
         style,
       ]}>
-      {image}
+      <Image
+        source={uri}
+        style={[
+          {
+            width: width,
+            height: width * 0.632835821,
+            zIndex: -1,
+            tintColor: colorPattern,
+          },
+          StyleSheet.absoluteFillObject,
+        ]}
+      />
       {children}
     </LinearGradient>
   );
