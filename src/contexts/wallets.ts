@@ -6,7 +6,12 @@ import {getDefaultNetwork} from '../network';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
 import {WalletCardPattern, WalletCardStyle} from '../types';
-import {generateFlatColors, generateGradientColors, sleep} from '../utils';
+import {
+  generateFlatColors,
+  generateGradientColors,
+  getPatternName,
+  sleep,
+} from '../utils';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
 import {
@@ -17,6 +22,7 @@ import {
   GRADIENT_PRESETS,
 } from '../variables';
 import {isAfter} from 'date-fns';
+import {Image} from 'react-native';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
@@ -69,6 +75,14 @@ class Wallets extends EventEmitter {
         .filter(w => w.isEncrypted)
         .map(w => w.decrypt(password, provider)),
     );
+
+    Promise.all(
+      Array.from(this._wallets.values()).map(w =>
+        Image.prefetch(getPatternName(w.pattern)),
+      ),
+    ).then(() => {
+      console.log('image prefetched');
+    });
 
     this.onChangeWallet();
 

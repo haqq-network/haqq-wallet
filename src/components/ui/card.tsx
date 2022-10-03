@@ -8,6 +8,7 @@ import {
 } from '../../variables';
 import {WalletCardPattern} from '../../types';
 import {PATTERNS_SOURCE} from '@env';
+import {getPatternName} from '../../utils';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -35,7 +36,7 @@ export const Card = ({
   const image = useMemo(
     () => (
       <Image
-        source={{uri: `${PATTERNS_SOURCE}${pattern}@3x.png`}}
+        source={{uri: getPatternName(pattern)}}
         style={[
           {
             width: width,
