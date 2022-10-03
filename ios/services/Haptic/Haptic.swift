@@ -18,14 +18,14 @@ enum RNHapticEffect: String
 
 @objc(RNHaptic)
 class RNHaptic: NSObject {
-  static let notification = {
+  static let notification: UINotificationFeedbackGenerator = {
     let generator = UINotificationFeedbackGenerator()
     generator.prepare();
     
     return generator;
   }()
   
-  static let selection = {
+  static let selection: UISelectionFeedbackGenerator = {
     let generator = UISelectionFeedbackGenerator()
     generator.prepare();
     
