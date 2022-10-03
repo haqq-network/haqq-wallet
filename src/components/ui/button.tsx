@@ -74,7 +74,11 @@ export const Button = ({
   );
 
   return (
-    <TouchableOpacity style={containerStyle} onPress={onPressButton} {...props}>
+    <TouchableOpacity
+      style={containerStyle}
+      onPress={onPressButton}
+      activeOpacity={0.7}
+      {...props}>
       <Text style={textStyle}>{title}</Text>
     </TouchableOpacity>
   );
