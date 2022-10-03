@@ -83,7 +83,7 @@ export const App = () => {
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
       .catch(e => {
-        console.log(e.message);
+//         console.log(e.message);
         navigator.navigate('login');
       })
       .finally(() => {
