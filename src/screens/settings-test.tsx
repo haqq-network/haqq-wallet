@@ -1,37 +1,45 @@
 import React, {useState} from 'react';
 import {Button, Container, Paragraph} from '../components/ui';
 import {Dimensions, Image} from 'react-native';
-import {ImageResolution} from '../types';
-import {usePattern} from '../hooks/usePattern';
+import {
+  CARD_CIRCLE_TOTAL,
+  CARD_DEFAULT_STYLE,
+  CARD_RHOMBUS_TOTAL,
+} from '../variables';
+import {PATTERNS_SOURCE} from '@env';
+import {WalletCardPattern} from '../types';
 
 const width = Dimensions.get('window').width - 60;
 
 export const SettingsTestScreen = () => {
-  const [pattern, setPattern] = useState('card-circles-0');
-
-  const preset = usePattern(pattern, ImageResolution.x2);
+  const [pattern, setPattern] = useState(CARD_DEFAULT_STYLE);
 
   return (
     <Container>
       <Button
         title="Toggle"
         onPress={() => {
-          setPattern(p =>
-            p === 'card-circles-0' ? 'card-rhombus-0' : 'card-circles-0',
-          );
+          setPattern((p: string) => {
+            if (p.startsWith(WalletCardPattern.circle)) {
+              return `${WalletCardPattern.rhombus}-${Math.floor(
+                Math.random() * CARD_RHOMBUS_TOTAL,
+              )}`;
+            }
+            return `${WalletCardPattern.circle}-${Math.floor(
+              Math.random() * CARD_CIRCLE_TOTAL,
+            )}`;
+          });
         }}
       />
       <Paragraph>{pattern}</Paragraph>
-      {preset && (
-        <Image
-          style={{
-            width: width,
-            height: width * 0.632835821,
-            tintColor: 'tomato',
-          }}
-          source={preset}
-        />
-      )}
+      <Image
+        style={{
+          width: width,
+          height: width * 0.632835821,
+          tintColor: 'tomato',
+        }}
+        source={{uri: `${PATTERNS_SOURCE}${pattern}@3x.png`}}
+      />
     </Container>
   );
 };

@@ -94,12 +94,6 @@ export enum WalletCardStyle {
 }
 
 export enum WalletCardPattern {
-  circle = 'card-circle-0',
-  rhombus = 'card-rhombus-0',
-}
-
-export enum ImageResolution {
-  x1 = '',
-  x2 = '@2x',
-  x3 = '@3x',
+  circle = 'card-circle',
+  rhombus = 'card-rhombus',
 }

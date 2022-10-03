@@ -9,7 +9,13 @@ import {WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors, sleep} from '../utils';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
-import {FLAT_PRESETS, GRADIENT_PRESETS} from '../variables';
+import {
+  CARD_CIRCLE_TOTAL,
+  CARD_DEFAULT_STYLE,
+  CARD_RHOMBUS_TOTAL,
+  FLAT_PRESETS,
+  GRADIENT_PRESETS,
+} from '../variables';
 import {isAfter} from 'date-fns';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
@@ -24,7 +30,7 @@ const defaultData = {
   colorFrom: '#03BF77',
   colorTo: '#03BF77',
   colorPattern: '#0DAC6F',
-  pattern: WalletCardPattern.circle,
+  pattern: CARD_DEFAULT_STYLE,
 };
 
 class Wallets extends EventEmitter {
@@ -121,7 +127,14 @@ class Wallets extends EventEmitter {
       this._wallets.size % cards.length
     ] as WalletCardStyle;
 
-    const pattern = patterns[this._wallets.size % cards.length];
+    const patternVariant = patterns[this._wallets.size % cards.length];
+
+    const pattern = `${patternVariant}-${Math.floor(
+      Math.random() *
+        (patternVariant === WalletCardPattern.circle
+          ? CARD_CIRCLE_TOTAL
+          : CARD_RHOMBUS_TOTAL),
+    )}`;
 
     const usedColors = new Set(
       [...this._wallets.values()].map(w => w.colorFrom),

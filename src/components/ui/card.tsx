@@ -1,8 +1,13 @@
 import React, {useMemo} from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {GRADIENT_END, GRADIENT_START} from '../../variables';
+import {
+  CARD_DEFAULT_STYLE,
+  GRADIENT_END,
+  GRADIENT_START,
+} from '../../variables';
 import {WalletCardPattern} from '../../types';
+import {PATTERNS_SOURCE} from '@env';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -13,15 +18,8 @@ export type CardProps = {
   colorFrom: string;
   colorTo: string;
   colorPattern: string;
-  pattern: WalletCardPattern;
+  pattern: string;
 };
-
-const patterns = {
-  [WalletCardPattern.circle]: require('../../../assets/images/card-circles-0.png'),
-  [WalletCardPattern.rhombus]: require('../../../assets/images/card-rhombus-0.png'),
-};
-
-console.log('patterns', patterns);
 
 export const Card = ({
   children,
@@ -32,12 +30,12 @@ export const Card = ({
   colorPattern,
   borderRadius = 16,
   transparent = false,
-  pattern = WalletCardPattern.circle,
+  pattern = CARD_DEFAULT_STYLE,
 }: CardProps) => {
   const image = useMemo(
     () => (
       <Image
-        source={patterns[pattern]}
+        source={{uri: `${PATTERNS_SOURCE}${pattern}@3x.png`}}
         style={[
           {
             width: width,

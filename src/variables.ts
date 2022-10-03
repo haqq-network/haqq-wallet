@@ -93,5 +93,6 @@ export const GRADIENT_PRESETS = [
   ['#8A4545', '#661F1F', '#19330F'],
 ];
 
-export const CARD_CIRCLES_TOTAL = 217;
+export const CARD_CIRCLE_TOTAL = 217;
 export const CARD_RHOMBUS_TOTAL = 17;
+export const CARD_DEFAULT_STYLE = 'card-circle-0';

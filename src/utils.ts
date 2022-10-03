@@ -1,5 +1,4 @@
 import {
-  ImageResolution,
   TransactionList,
   TransactionListReceive,
   TransactionListSend,
@@ -8,8 +7,6 @@ import {
 import {TransactionType} from './models/transaction';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
-import RNFS from 'react-native-fs';
-import {PATTERNS_SOURCE} from '@env';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -145,23 +142,4 @@ export function cleanNumber(number: string) {
     .trim()
     .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
     .replace(/^(\d+)\.0*$/g, '$1');
-}
-
-export async function getImage(
-  filename: string,
-  resolution: ImageResolution = ImageResolution.x1,
-) {
-  let file = null;
-  const path = `${RNFS.CachesDirectoryPath}/${filename}.png`;
-  try {
-    file = await RNFS.readFile(path, 'base64');
-  } catch (e) {
-    await RNFS.downloadFile({
-      fromUrl: `${PATTERNS_SOURCE}${filename}${resolution}.png`,
-      toFile: path,
-    }).promise;
-    file = await RNFS.readFile(path, 'base64');
-  }
-
-  return file;
 }
