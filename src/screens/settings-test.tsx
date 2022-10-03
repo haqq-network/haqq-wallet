@@ -1,34 +1,37 @@
-import React from 'react';
-import {Button, Container} from '../components/ui';
-import {HapticEffects, vibrate} from '../services/haptic';
+import React, {useState} from 'react';
+import {Button, Container, Paragraph} from '../components/ui';
+import {Dimensions, Image} from 'react-native';
+import {ImageResolution} from '../types';
+import {usePattern} from '../hooks/usePattern';
+
+const width = Dimensions.get('window').width - 60;
 
 export const SettingsTestScreen = () => {
+  const [pattern, setPattern] = useState('card-circles-0');
+
+  const preset = usePattern(pattern, ImageResolution.x2);
+
   return (
     <Container>
       <Button
-        title="Selection"
+        title="Toggle"
         onPress={() => {
-          vibrate(HapticEffects.selection);
+          setPattern(p =>
+            p === 'card-circles-0' ? 'card-rhombus-0' : 'card-circles-0',
+          );
         }}
       />
-      <Button
-        title="Success"
-        onPress={() => {
-          vibrate(HapticEffects.success);
-        }}
-      />
-      <Button
-        title="Warning"
-        onPress={() => {
-          vibrate(HapticEffects.warning);
-        }}
-      />
-      <Button
-        title="Error"
-        onPress={() => {
-          vibrate(HapticEffects.error);
-        }}
-      />
+      <Paragraph>{pattern}</Paragraph>
+      {preset && (
+        <Image
+          style={{
+            width: width,
+            height: width * 0.632835821,
+            tintColor: 'tomato',
+          }}
+          source={preset}
+        />
+      )}
     </Container>
   );
 };
