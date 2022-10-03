@@ -1,13 +1,13 @@
 import React from 'react';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {GRADIENT_END, GRADIENT_START} from '../../variables';
+import {
+  CARD_DEFAULT_STYLE,
+  GRADIENT_END,
+  GRADIENT_START,
+} from '../../variables';
 import {WalletCardPattern} from '../../types';
-
-const patterns = {
-  [WalletCardPattern.circle]: require('../../../assets/images/card-circles-0.png'),
-  [WalletCardPattern.rhombus]: require('../../../assets/images/card-rhombus-0.png'),
-};
+import {PATTERNS_SOURCE} from '@env';
 
 export type CardSmallProps = {
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ export type CardSmallProps = {
   colorFrom: string;
   colorTo: string;
   colorPattern: string;
-  pattern: WalletCardPattern;
+  pattern: string;
 };
 
 export const CardSmall = ({
@@ -29,7 +29,7 @@ export const CardSmall = ({
   colorTo,
   colorPattern,
   borderRadius = 16,
-  pattern = WalletCardPattern.circle,
+  pattern = CARD_DEFAULT_STYLE,
 }: CardSmallProps) => {
   return (
     <LinearGradient
@@ -47,7 +47,7 @@ export const CardSmall = ({
         style,
       ]}>
       <Image
-        source={patterns[pattern]}
+        source={{uri: `${PATTERNS_SOURCE}${pattern}.png`}}
         style={[
           {
             width: width,

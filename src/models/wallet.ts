@@ -17,7 +17,7 @@ export class WalletRealm extends Realm.Object {
   colorFrom!: string;
   colorTo!: string;
   colorPattern!: string;
-  pattern!: WalletCardPattern;
+  pattern!: string;
   isHidden!: boolean;
 
   static schema = {
@@ -134,7 +134,7 @@ export class Wallet extends EventEmitter {
     colorFrom: string,
     colorTo: string,
     colorPattern: string,
-    pattern: WalletCardPattern,
+    pattern: string,
   ) {
     realm.write(() => {
       this._raw.cardStyle = cardStyle;
