@@ -92,3 +92,8 @@ export enum WalletCardStyle {
   flat = 'flat',
   gradient = 'gradient',
 }
+
+export enum WalletCardPattern {
+  circle = 'cardCircle0',
+  rhombus = 'cardRhombus0',
+}

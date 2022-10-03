@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {GRADIENT_END, GRADIENT_START} from '../../variables';
+import {WalletCardPattern} from '../../types';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -12,9 +13,15 @@ export type CardProps = {
   colorFrom: string;
   colorTo: string;
   colorPattern: string;
+  pattern: WalletCardPattern;
 };
 
-const pattern = require('../../../assets/images/card-pattern.png');
+const patterns = {
+  [WalletCardPattern.circle]: require('../../../assets/images/card-circles-0.png'),
+  [WalletCardPattern.rhombus]: require('../../../assets/images/card-rhombus-0.png'),
+};
+
+console.log('patterns', patterns);
 
 export const Card = ({
   children,
@@ -25,7 +32,25 @@ export const Card = ({
   colorPattern,
   borderRadius = 16,
   transparent = false,
+  pattern = WalletCardPattern.circle,
 }: CardProps) => {
+  const image = useMemo(
+    () => (
+      <Image
+        source={patterns[pattern]}
+        style={[
+          {
+            width: width,
+            height: width * 0.632835821,
+            zIndex: -1,
+            tintColor: colorPattern,
+          },
+          StyleSheet.absoluteFillObject,
+        ]}
+      />
+    ),
+    [colorPattern, pattern, width],
+  );
   if (transparent) {
     return (
       <View
@@ -40,18 +65,7 @@ export const Card = ({
           },
           style,
         ]}>
-        <Image
-          source={pattern}
-          style={[
-            {
-              width: width,
-              height: width * 0.632835821,
-              zIndex: -1,
-              tintColor: colorPattern,
-            },
-            StyleSheet.absoluteFillObject,
-          ]}
-        />
+        {image}
         {children}
       </View>
     );
@@ -73,18 +87,7 @@ export const Card = ({
         },
         style,
       ]}>
-      <Image
-        source={pattern}
-        style={[
-          {
-            width: width,
-            height: width * 0.632835821,
-            zIndex: -1,
-            tintColor: colorPattern,
-          },
-          StyleSheet.absoluteFillObject,
-        ]}
-      />
+      {image}
       {children}
     </LinearGradient>
   );

@@ -5,12 +5,13 @@ import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
-import {WalletCardStyle} from '../types';
+import {WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors, sleep} from '../utils';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
+const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
 
 const defaultData = {
   data: '',
@@ -21,7 +22,7 @@ const defaultData = {
   colorFrom: '#03BF77',
   colorTo: '#03BF77',
   colorPattern: '#0DAC6F',
-  pattern: 'card-pattern-0',
+  pattern: WalletCardPattern.circle,
 };
 
 class Wallets extends EventEmitter {
@@ -116,6 +117,8 @@ class Wallets extends EventEmitter {
       this._wallets.size % cards.length
     ] as WalletCardStyle;
 
+    const pattern = patterns[this._wallets.size % cards.length];
+
     const colors =
       cardStyle === WalletCardStyle.flat
         ? generateFlatColors()
@@ -130,6 +133,7 @@ class Wallets extends EventEmitter {
         address: eWallet.address,
         mnemonicSaved: !eWallet.mnemonic,
         name: name ?? defaultData.name,
+        pattern,
         cardStyle,
         colorFrom: colors[0],
         colorTo: colors[1],
