@@ -14,7 +14,7 @@ import {
 import {useWallet} from '../contexts/wallets';
 import {WalletCardPattern, WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
-import {TEXT_BASE_1} from '../variables';
+import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
 import {generateFlatColors, generateGradientColors} from '../utils';
 
 type SettingsAccountStyleScreenProps = CompositeScreenProps<any, any>;
@@ -39,10 +39,12 @@ export const SettingsAccountStyleScreen = ({
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
     wallet.cardStyle || WalletCardStyle.flat,
   );
-
-  const [pattern, setPattern] = useState<WalletCardPattern>(
-    wallet.pattern || WalletCardPattern.circle,
+  const [patternStyle, setPatternStyle] = useState<WalletCardPattern>(
+    wallet.pattern.startsWith(WalletCardPattern.circle)
+      ? WalletCardPattern.circle
+      : WalletCardPattern.rhombus,
   );
+  const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [colors, setColors] = useState([
     wallet.colorFrom,
@@ -68,7 +70,16 @@ export const SettingsAccountStyleScreen = ({
   const onChangePattern = useCallback(
     (value: WalletCardPattern) => {
       if (pattern !== value) {
-        setPattern(value);
+        setPatternStyle(value);
+
+        const newPattern = `${value}-${Math.floor(
+          Math.random() *
+            (value === WalletCardPattern.circle
+              ? CARD_CIRCLE_TOTAL
+              : CARD_RHOMBUS_TOTAL),
+        )}`;
+
+        setPattern(newPattern);
       }
     },
     [pattern],
@@ -80,8 +91,17 @@ export const SettingsAccountStyleScreen = ({
         ? generateFlatColors()
         : generateGradientColors();
 
+    const newPattern = `${patternStyle}-${Math.floor(
+      Math.random() *
+        (patternStyle === WalletCardPattern.circle
+          ? CARD_CIRCLE_TOTAL
+          : CARD_RHOMBUS_TOTAL),
+    )}`;
+
+    setPattern(newPattern);
+
     setColors(newColors);
-  }, [cardStyle]);
+  }, [cardStyle, patternStyle]);
 
   const onPressApply = useCallback(() => {
     wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2], pattern);
@@ -107,7 +127,7 @@ export const SettingsAccountStyleScreen = ({
       />
       <Paragraph style={page.title}>Choose color style</Paragraph>
       <SegmentedControl
-        value={pattern}
+        value={patternStyle}
         values={patternVariants}
         onChange={onChangePattern}
       />
