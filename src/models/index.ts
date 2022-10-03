@@ -9,7 +9,7 @@ import {WalletCardPattern} from '../types';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact],
-  schemaVersion: 15,
+  schemaVersion: 17,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -141,6 +141,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.pattern = WalletCardPattern.circle;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 17) {
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects('User');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.snoozeBackup = null;
       }
     }
   },

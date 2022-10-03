@@ -80,9 +80,10 @@ export const App = () => {
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => app.init())
-      .then(() => wallets.init())
+      .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
       .catch(e => {
+        console.log(e.message);
         navigator.navigate('login');
       })
       .finally(() => {

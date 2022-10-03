@@ -11,6 +11,7 @@ import {realm} from '../models';
 import {Language, User, UserType} from '../models/user';
 import {AppState} from 'react-native';
 import {BiometryType} from '../types';
+import {subMinutes} from 'date-fns';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
@@ -51,7 +52,6 @@ class App extends EventEmitter {
   }
 
   async init(): Promise<void> {
-    console.log('this.user', JSON.stringify(this.user));
     if (!this.user?.isLoaded) {
       return Promise.reject();
     }
@@ -136,11 +136,9 @@ class App extends EventEmitter {
   }
 
   set biometry(value) {
-    realm.write(() => {
-      if (this.user) {
-        this.user.raw.biometry = value;
-      }
-    });
+    if (this.user) {
+      this.user.biometry = value;
+    }
   }
 
   get language() {
@@ -148,11 +146,13 @@ class App extends EventEmitter {
   }
 
   set language(value) {
-    realm.write(() => {
-      if (this.user) {
-        this.user.raw.language = value;
-      }
-    });
+    if (this.user) {
+      this.user.language = value;
+    }
+  }
+
+  get snoozeBackup(): Date {
+    return this.user?.snoozeBackup || subMinutes(new Date(), 1);
   }
 
   async auth() {
@@ -214,6 +214,10 @@ class App extends EventEmitter {
 
       this.appStatus = appStatus;
     }
+  }
+
+  setSnoozeBackup() {
+    return this.user?.setSnoozeBackup();
   }
 }
 

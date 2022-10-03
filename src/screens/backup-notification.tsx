@@ -9,6 +9,7 @@ import {
   ParagraphSize,
 } from '../components/ui';
 import {TEXT_BASE_1} from '../variables';
+import {useApp} from '../contexts/app';
 
 // type BackupNotificationScreenProp = {
 //   onClose: () => void;
@@ -22,6 +23,7 @@ export const BackupNotificationScreen = ({
   navigation,
   route,
 }: BackupNotificationScreenProp) => {
+  const app = useApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -63,7 +65,10 @@ export const BackupNotificationScreen = ({
         {
           text: 'Accept',
           style: 'destructive',
-          onPress: fadeOut,
+          onPress: () => {
+            app.setSnoozeBackup();
+            fadeOut();
+          },
         },
       ],
     );
