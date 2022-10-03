@@ -83,8 +83,15 @@ export const App = () => {
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
       .catch(e => {
-//         console.log(e.message);
-        navigator.navigate('login');
+        switch (e) {
+          case 'user_not_found':
+            navigator.navigate('login');
+            break;
+          default:
+            if (e instanceof Error) {
+              console.log('Error', e.name, e.message);
+            }
+        }
       })
       .finally(() => {
         app.emit('modal', null);
