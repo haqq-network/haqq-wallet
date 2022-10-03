@@ -65,6 +65,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       colorFrom={wallet?.colorFrom}
       colorTo={wallet?.colorTo}
       colorPattern={wallet?.colorPattern}
+      pattern={wallet?.pattern}
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonicSaved && {marginBottom: 4}]}>

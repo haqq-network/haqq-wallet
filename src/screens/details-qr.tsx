@@ -67,6 +67,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
           <Card
             transparent
             width={width - 113}
+            pattern={wallet?.pattern}
             colorFrom={wallet?.colorFrom}
             colorTo={wallet?.colorTo}
             colorPattern={wallet?.colorPattern}

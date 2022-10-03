@@ -12,16 +12,21 @@ import {
   Spacer,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
-import {WalletCardStyle} from '../types';
+import {WalletCardPattern, WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
 import {TEXT_BASE_1} from '../variables';
 import {generateFlatColors, generateGradientColors} from '../utils';
 
 type SettingsAccountStyleScreenProps = CompositeScreenProps<any, any>;
 
-const variants = [
+const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},
   {value: WalletCardStyle.gradient, name: 'Gradient'},
+];
+
+const patternVariants = [
+  {value: WalletCardPattern.circle, name: 'Circle'},
+  {value: WalletCardPattern.rhombus, name: 'Rhombus'},
 ];
 
 const cardWidth = Dimensions.get('window').width - 72;
@@ -33,6 +38,10 @@ export const SettingsAccountStyleScreen = ({
   const wallet = useWallet(route.params.address) as Wallet;
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
     wallet.cardStyle || WalletCardStyle.flat,
+  );
+
+  const [pattern, setPattern] = useState<WalletCardPattern>(
+    wallet.pattern || WalletCardPattern.circle,
   );
 
   const [colors, setColors] = useState([
@@ -56,6 +65,15 @@ export const SettingsAccountStyleScreen = ({
     [cardStyle],
   );
 
+  const onChangePattern = useCallback(
+    (value: WalletCardPattern) => {
+      if (pattern !== value) {
+        setPattern(value);
+      }
+    },
+    [pattern],
+  );
+
   const onPressGenerate = useCallback(() => {
     const newColors =
       cardStyle === WalletCardStyle.flat
@@ -66,17 +84,15 @@ export const SettingsAccountStyleScreen = ({
   }, [cardStyle]);
 
   const onPressApply = useCallback(() => {
-    wallet.cardStyle = cardStyle;
-    wallet.colorFrom = colors[0];
-    wallet.colorTo = colors[1];
-    wallet.colorPattern = colors[2];
+    wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2], pattern);
     navigation.goBack();
-  }, [cardStyle, colors, navigation, wallet]);
+  }, [cardStyle, colors, navigation, wallet, pattern]);
 
   return (
     <Container>
       <Card
         width={cardWidth}
+        pattern={pattern}
         colorFrom={colors[0]}
         colorTo={colors[1]}
         colorPattern={colors[2]}
@@ -85,8 +101,15 @@ export const SettingsAccountStyleScreen = ({
       <Paragraph style={page.title}>Choose color style</Paragraph>
       <SegmentedControl
         value={cardStyle}
-        values={variants}
+        values={cardStyleVariants}
         onChange={onChangeType}
+        style={{marginBottom: 32}}
+      />
+      <Paragraph style={page.title}>Choose color style</Paragraph>
+      <SegmentedControl
+        value={pattern}
+        values={patternVariants}
+        onChange={onChangePattern}
       />
       <Spacer />
       <Button

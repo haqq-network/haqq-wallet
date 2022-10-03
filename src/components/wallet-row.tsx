@@ -21,6 +21,7 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
       <CardSmall
         width={78}
         borderRadius={8}
+        pattern={item.pattern}
         colorFrom={item.colorFrom}
         colorTo={item.colorTo}
         colorPattern={item.colorPattern}

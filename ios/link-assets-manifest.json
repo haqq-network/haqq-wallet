@@ -66,6 +66,18 @@
       "sha1": "3a4c8458e39ac2597d59ca8550c4eb3427e69b1d"
     },
     {
+      "path": "assets/images/card-circles-0.png",
+      "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
+    },
+    {
+      "path": "assets/images/card-circles-0@2x.png",
+      "sha1": "feda635085147d7d17a44dd74277631af0283833"
+    },
+    {
+      "path": "assets/images/card-circles-0@3x.png",
+      "sha1": "db5a983c4bbdf1a950718b5da07318d2fce58090"
+    },
+    {
       "path": "assets/images/card-maks.png",
       "sha1": "37d3edec914cb4fec2d964b8b772196206e1479a"
     },
@@ -78,16 +90,16 @@
       "sha1": "31ed3918c919cf3c1c855f02b63f7053b4b46c6e"
     },
     {
-      "path": "assets/images/card-pattern.png",
-      "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
+      "path": "assets/images/card-rhombus-0.png",
+      "sha1": "34c35a298252e029d6bad1b54e4917e6d0ec952a"
     },
     {
-      "path": "assets/images/card-pattern@2x.png",
-      "sha1": "feda635085147d7d17a44dd74277631af0283833"
+      "path": "assets/images/card-rhombus-0@2x.png",
+      "sha1": "a9678f8d21f87879805c5fbf536e48389cdb3ffe"
     },
     {
-      "path": "assets/images/card-pattern@3x.png",
-      "sha1": "db5a983c4bbdf1a950718b5da07318d2fce58090"
+      "path": "assets/images/card-rhombus-0@3x.png",
+      "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
     },
     {
       "path": "assets/images/clear.png",

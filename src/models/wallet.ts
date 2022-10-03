@@ -6,7 +6,7 @@ import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
-import {Mnemonic, WalletCardStyle} from '../types';
+import {Mnemonic, WalletCardPattern, WalletCardStyle} from '../types';
 
 export class WalletRealm extends Realm.Object {
   address!: string;
@@ -17,7 +17,7 @@ export class WalletRealm extends Realm.Object {
   colorFrom!: string;
   colorTo!: string;
   colorPattern!: string;
-  pattern!: string;
+  pattern!: WalletCardPattern;
   isHidden!: boolean;
 
   static schema = {
@@ -129,9 +129,19 @@ export class Wallet extends EventEmitter {
     return this._raw.cardStyle as WalletCardStyle;
   }
 
-  set cardStyle(value) {
+  setCardStyle(
+    cardStyle: WalletCardStyle,
+    colorFrom: string,
+    colorTo: string,
+    colorPattern: string,
+    pattern: WalletCardPattern,
+  ) {
     realm.write(() => {
-      this._raw.cardStyle = value;
+      this._raw.cardStyle = cardStyle;
+      this._raw.colorFrom = colorFrom;
+      this._raw.colorTo = colorTo;
+      this._raw.colorPattern = colorPattern;
+      this._raw.pattern = pattern;
     });
   }
 
@@ -139,30 +149,12 @@ export class Wallet extends EventEmitter {
     return this._raw.colorFrom;
   }
 
-  set colorFrom(value) {
-    realm.write(() => {
-      this._raw.colorFrom = value;
-    });
-  }
-
   get colorTo() {
     return this._raw.colorTo;
   }
 
-  set colorTo(value) {
-    realm.write(() => {
-      this._raw.colorTo = value;
-    });
-  }
-
   get colorPattern() {
     return this._raw.colorPattern;
-  }
-
-  set colorPattern(value) {
-    realm.write(() => {
-      this._raw.colorPattern = value;
-    });
   }
 
   get pattern() {
