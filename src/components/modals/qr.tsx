@@ -15,6 +15,7 @@ import {
   ParagraphSize,
 } from '../ui';
 import {GRAPHIC_BASE_3, GRAPHIC_RED_1, TEXT_BASE_3} from '../../variables';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type QRModalProps = {
   onClose: () => void;
@@ -24,7 +25,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
-
+  const insets = useSafeAreaInsets();
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
       console.log(e);
@@ -86,7 +87,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
       cornerWidth={7}
       zoom={0}
       renderTopView={() => (
-        <SafeAreaView>
+        <View style={{paddingTop: insets.top}}>
           <View style={page.headerContainer}>
             <IconButton onPress={onClose}>
               <ArrowBackIcon color={GRAPHIC_BASE_3} />
@@ -96,10 +97,10 @@ export const QRModal = ({onClose}: QRModalProps) => {
             </Paragraph>
             <View style={page.headerSpacer} />
           </View>
-        </SafeAreaView>
+        </View>
       )}
       renderBottomView={() => (
-        <SafeAreaView style={page.bottomContainer}>
+        <View style={[page.bottomContainer, {paddingBottom: insets.bottom}]}>
           {error && (
             <View style={page.bottomErrorContainer}>
               <Paragraph size={ParagraphSize.l} style={page.bottomErrorText}>
@@ -134,7 +135,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
               <FlashLightIcon color={GRAPHIC_BASE_3} />
             </IconButton>
           </View>
-        </SafeAreaView>
+        </View>
       )}
     />
   );
