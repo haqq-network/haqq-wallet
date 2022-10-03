@@ -6,12 +6,12 @@
     "ios": {
       "type": "ios.app",
       "binaryPath": "ios/build/Build/Products/Release-iphoneos/haqq.app",
-      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -destination 'generic/platform=iOS' -sdk iphonesimulator -derivedDataPath ios/build"
+      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -destination 'id=61378F5F-7A14-4144-BD74-BE9CD75FFAAD' -sdk iphonesimulator -derivedDataPath ios/build"
     },
     "ios:debug": {
       "type": "ios.app",
       "binaryPath": "ios/build/Build/Products/Debug-iphoneos/haqq.app",
-      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -configuration Debug -destination 'generic/platform=iOS' -sdk iphonesimulator -derivedDataPath ios/build"
+      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -configuration Debug -destination 'id=61378F5F-7A14-4144-BD74-BE9CD75FFAAD' -sdk iphonesimulator -derivedDataPath ios/build"
     },
     "android": {
       "type": "android.apk",
