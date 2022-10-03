@@ -38,7 +38,7 @@ export const MAGIC_CARD_HEIGHT = 0.632835821;
 
 export const IS_ANDROID = Platform.OS === 'android';
 
-export const SNOOZE_WALLET_BACKUP_MINUTES = 15;
+export const SNOOZE_WALLET_BACKUP_MINUTES = 1440;
 
 export const CARD_COLORS = {
   [WalletCardStyle.defaultGreen]: ['#03BF77', '#03BF77'],
