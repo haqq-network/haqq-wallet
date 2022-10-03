@@ -53,9 +53,9 @@ class App extends EventEmitter {
 
   async init(): Promise<void> {
     if (!this.user?.isLoaded) {
-      return Promise.reject();
+      return Promise.reject('user_not_found');
     }
-
+    return Promise.reject('user_not_found');
     await this.auth();
 
     this.authenticated = true;
