@@ -4,7 +4,7 @@ import {WalletRealm} from './wallet';
 import {UserSchema} from './user';
 import {Transaction} from './transaction';
 import {Contact} from './contact';
-import {CARD_COLORS, CARD_PATTERN} from '../variables';
+import {CARD_COLORS, CARD_DEFAULT_STYLE, CARD_PATTERN} from '../variables';
 import {WalletCardPattern} from '../types';
 
 export const realm = new Realm({
@@ -140,7 +140,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.pattern = WalletCardPattern.circle;
+        newObject.pattern = CARD_DEFAULT_STYLE;
       }
     }
 

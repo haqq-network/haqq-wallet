@@ -7,6 +7,7 @@ import {
 import {TransactionType} from './models/transaction';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
+import {PATTERNS_SOURCE} from '@env';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -142,4 +143,8 @@ export function cleanNumber(number: string) {
     .trim()
     .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
     .replace(/^(\d+)\.0*$/g, '$1');
+}
+
+export function getPatternName(pattern: string) {
+  return `${PATTERNS_SOURCE}${pattern}@3x.png`;
 }
