@@ -1,4 +1,6 @@
-import {subMinutes} from 'date-fns';
+import {addMinutes, subMinutes} from 'date-fns';
+import {realm} from './index';
+import {SNOOZE_WALLET_BACKUP_MINUTES} from '../variables';
 
 export const UserSchema = {
   name: 'User',
@@ -6,6 +8,7 @@ export const UserSchema = {
     username: 'string',
     language: 'string',
     biometry: 'bool',
+    snoozeBackup: 'date?',
   },
   primaryKey: 'username',
 };
@@ -19,6 +22,7 @@ export type UserType = {
   username: string;
   language: Language;
   biometry: boolean;
+  snoozeBackup: Date | null;
 };
 
 export class User {
@@ -39,8 +43,24 @@ export class User {
     return this._raw.biometry;
   }
 
+  set biometry(biometry) {
+    realm.write(() => {
+      this._raw.biometry = biometry;
+    });
+  }
+
   get language() {
     return this._raw.language as Language;
+  }
+
+  set language(language) {
+    realm.write(() => {
+      this._raw.language = language;
+    });
+  }
+
+  get snoozeBackup() {
+    return this._raw.snoozeBackup;
   }
 
   touchLastActivity() {
@@ -49,5 +69,14 @@ export class User {
 
   isOutdatedLastActivity() {
     return this.last_activity < subMinutes(new Date(), 15);
+  }
+
+  setSnoozeBackup() {
+    realm.write(() => {
+      this._raw.snoozeBackup = addMinutes(
+        new Date(),
+        SNOOZE_WALLET_BACKUP_MINUTES,
+      );
+    });
   }
 }

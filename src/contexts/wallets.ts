@@ -10,6 +10,7 @@ import {generateFlatColors, generateGradientColors, sleep} from '../utils';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
 import {FLAT_PRESETS, GRADIENT_PRESETS} from '../variables';
+import {isAfter} from 'date-fns';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
@@ -47,7 +48,7 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async init(): Promise<void> {
+  async init(snoozeBackup: Date): Promise<void> {
     if (this._initialized) {
       return;
     }
@@ -65,13 +66,15 @@ class Wallets extends EventEmitter {
 
     this.onChangeWallet();
 
-    const backupMnemonic = Array.from(this._wallets.values()).find(
-      w => !w.mnemonicSaved && !w.isHidden,
-    );
+    if (isAfter(new Date(), snoozeBackup)) {
+      const backupMnemonic = Array.from(this._wallets.values()).find(
+        w => !w.mnemonicSaved && !w.isHidden,
+      );
 
-    if (backupMnemonic) {
-      await sleep(1000);
-      this.emit('backupMnemonic', backupMnemonic);
+      if (backupMnemonic) {
+        await sleep(1000);
+        this.emit('backupMnemonic', backupMnemonic);
+      }
     }
   }
 
