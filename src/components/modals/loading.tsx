@@ -9,7 +9,7 @@ export type LoadingModalProps = {
 export const LoadingModal = ({text}: LoadingModalProps) => {
   return (
     <View style={page.container}>
-      <Waiting style={{marginBottom: 40}} />
+      <Waiting style={page.waiting} />
       {text && <Title style={{color: TEXT_BASE_3}}>{text}</Title>}
     </View>
   );
@@ -23,4 +23,5 @@ const page = StyleSheet.create({
     backgroundColor: '#04D484',
   },
   text: {color: TEXT_BASE_3},
+  waiting: {marginBottom: 40},
 });

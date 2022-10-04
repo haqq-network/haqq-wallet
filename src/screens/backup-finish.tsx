@@ -6,9 +6,9 @@ import {
   Container,
   Spacer,
   Title,
+  LottieWrap,
 } from '../components/ui';
-import Lottie from 'lottie-react-native';
-import {Dimensions} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 type BackupFinishScreenProp = CompositeScreenProps<any, any>;
 
@@ -17,8 +17,8 @@ const animationSize = Dimensions.get('window').width - 116;
 export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
   return (
     <Container>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Lottie
+      <Spacer style={page.container}>
+        <LottieWrap
           style={{width: animationSize, height: animationSize}}
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
@@ -26,11 +26,11 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
         />
       </Spacer>
       <Title>Congratulations!</Title>
-      <Title style={{marginBottom: 40}}>
+      <Title style={page.title}>
         You've successfully protected your wallet.
       </Title>
       <Button
-        style={{marginVertical: 16}}
+        style={page.button}
         variant={ButtonVariant.contained}
         title="Finish"
         onPress={() => {
@@ -40,3 +40,9 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  container: {justifyContent: 'center', alignItems: 'center'},
+  title: {marginBottom: 40},
+  button: {marginVertical: 16},
+});

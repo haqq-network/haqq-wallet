@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Dimensions} from 'react-native';
 import {
   ArrowForwardIcon,
   Container,
@@ -11,6 +11,7 @@ import {
   ParagraphSize,
   Spacer,
   StarIcon,
+  LottieWrap,
 } from '../components/ui';
 import {
   BG_3,
@@ -18,32 +19,28 @@ import {
   GRAPHIC_SECOND_3,
   TEXT_BASE_1,
 } from '../variables';
-import Lottie from 'lottie-react-native';
+
 import {openURL} from '../helpers';
-import {useIsFocused} from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 
 export const SettingsAboutScreen = () => {
-  const isFocused = useIsFocused();
-  console.log('isFocused', isFocused);
-
-  const onPressRate = useCallback(async () => {
+  const onPressRate = useCallback(() => {
     const url = 'https://example.com';
     openURL(url);
   }, []);
 
-  const onPressSite = useCallback(async () => {
+  const onPressSite = useCallback(() => {
     const url = 'https://islamiccoin.net';
     openURL(url);
   }, []);
 
-  const onPressDoc = useCallback(async () => {
+  const onPressDoc = useCallback(() => {
     const url = 'https://islamiccoin.net';
     openURL(url);
   }, []);
 
-  const onPressDiscord = useCallback(async () => {
+  const onPressDiscord = useCallback(() => {
     const url = 'https://discord.com/invite/aZMm8pekhZ';
     openURL(url);
   }, []);
@@ -51,20 +48,13 @@ export const SettingsAboutScreen = () => {
   return (
     <Container>
       <Spacer>
-        <Lottie
-          style={[
-            page.imageStyle,
-            {
-              width: windowWidth - 40,
-              height: windowWidth - 40,
-            },
-          ]}
+        <LottieWrap
+          style={page.imageStyle}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
           loop
         />
       </Spacer>
-
       <Paragraph size={ParagraphSize.s} style={page.title}>
         About App
       </Paragraph>
@@ -112,10 +102,6 @@ export const SettingsAboutScreen = () => {
 };
 
 const page = StyleSheet.create({
-  imageStyle: {
-    position: 'absolute',
-    top: -20,
-  },
   title: {
     marginBottom: 8,
   },
@@ -136,5 +122,11 @@ const page = StyleSheet.create({
   terms: {
     color: TEXT_BASE_1,
     marginBottom: 10,
+  },
+  imageStyle: {
+    position: 'absolute',
+    top: -20,
+    width: windowWidth - 40,
+    height: windowWidth - 40,
   },
 });

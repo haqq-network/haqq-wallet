@@ -7,8 +7,8 @@ import {
   Paragraph,
   PopupContainer,
   Title,
+  LottieWrap,
 } from '../components/ui';
-import Lottie from 'lottie-react-native';
 import {TEXT_BASE_2} from '../variables';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
@@ -25,7 +25,7 @@ export const SignInAgreementScreen = ({
   return (
     <>
       <View style={page.animation}>
-        <Lottie
+        <LottieWrap
           source={require('../../assets/animations/success-animation.json')}
           autoPlay
           loop={false}
