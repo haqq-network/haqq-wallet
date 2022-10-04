@@ -51,12 +51,16 @@ export class Wallet extends EventEmitter {
     this._raw = data;
     this._encrypted = data.data !== '';
 
-    setInterval(this.checkBalance, 15000);
+    const interval = setInterval(this.checkBalance, 15000);
 
     this.on('checkBalance', this.checkBalance);
 
-    this._raw.addListener((_object, _changes) => {
-      this.emit('change');
+    this._raw.addListener((_object, changes) => {
+      if (changes.deleted) {
+        clearInterval(interval);
+      } else {
+        this.emit('change');
+      }
     });
 
     getDefaultNetwork()

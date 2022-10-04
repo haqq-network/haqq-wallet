@@ -42,7 +42,6 @@ const defaultData = {
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
   private _initialized: boolean = false;
-  private _visible: Wallet[] = [];
 
   constructor() {
     super();
@@ -111,7 +110,6 @@ class Wallets extends EventEmitter {
   }
 
   onChangeWallet = () => {
-    this._visible = Array.from(this._wallets.values()).filter(w => !w.isHidden);
     this.emit('wallets');
   };
 
@@ -203,6 +201,8 @@ class Wallets extends EventEmitter {
   async removeWallet(address: string) {
     const wallet = this._wallets.get(address);
     if (wallet) {
+      this.deAttachWallet(wallet);
+
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
         'Wallet',
         address,
@@ -211,9 +211,6 @@ class Wallets extends EventEmitter {
         realm.write(() => {
           realm.delete(realmWallet);
         });
-
-        wallet?.emit('change');
-        this.deAttachWallet(wallet);
       }
     }
   }
@@ -249,7 +246,7 @@ class Wallets extends EventEmitter {
   }
 
   get visible() {
-    return this._visible;
+    return Array.from(this._wallets.values()).filter(w => !w.isHidden);
   }
 
   async getBalance(address: string) {
