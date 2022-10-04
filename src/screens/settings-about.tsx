@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {
   ArrowForwardIcon,
   Container,
@@ -11,7 +12,6 @@ import {
   Spacer,
   StarIcon,
 } from '../components/ui';
-import {Dimensions, Linking, StyleSheet, View} from 'react-native';
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -19,49 +19,52 @@ import {
   TEXT_BASE_1,
 } from '../variables';
 import Lottie from 'lottie-react-native';
+import {openURL} from '../helpers';
+import {useIsFocused} from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 
 export const SettingsAboutScreen = () => {
+  const isFocused = useIsFocused();
+  console.log('isFocused', isFocused);
+
   const onPressRate = useCallback(async () => {
     const url = 'https://example.com';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
   const onPressSite = useCallback(async () => {
     const url = 'https://islamiccoin.net';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
   const onPressDoc = useCallback(async () => {
     const url = 'https://islamiccoin.net';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
   const onPressDiscord = useCallback(async () => {
     const url = 'https://discord.com/invite/aZMm8pekhZ';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
   return (
     <Container>
       <Spacer>
         <Lottie
-          style={{
-            position: 'absolute',
-            width: windowWidth - 40,
-            height: windowWidth - 40,
-            top: -20,
-          }}
+          style={[
+            page.imageStyle,
+            {
+              width: windowWidth - 40,
+              height: windowWidth - 40,
+            },
+          ]}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
           loop
         />
       </Spacer>
+
       <Paragraph size={ParagraphSize.s} style={page.title}>
         About App
       </Paragraph>
@@ -109,6 +112,10 @@ export const SettingsAboutScreen = () => {
 };
 
 const page = StyleSheet.create({
+  imageStyle: {
+    position: 'absolute',
+    top: -20,
+  },
   title: {
     marginBottom: 8,
   },
