@@ -8,7 +8,7 @@ import {CARD_COLORS, CARD_DEFAULT_STYLE, CARD_PATTERN} from '../variables';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact],
-  schemaVersion: 17,
+  schemaVersion: 18,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');

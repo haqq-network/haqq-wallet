@@ -1,6 +1,11 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../../variables';
+import {
+  GRAPHIC_BASE_4,
+  PIN_BANNED_ATTEMPTS,
+  TEXT_BASE_2,
+  TEXT_GREEN_1,
+} from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';
 import {Pin, PinInterface} from '../pin';
@@ -12,15 +17,29 @@ export const PinModal = () => {
   const pinRef = useRef<PinInterface>();
   const [showRestore, setShowRestore] = useState(false);
 
+  useEffect(() => {
+    if (app.pinBanned) {
+      pinRef?.current?.locked(app.pinBanned);
+    }
+  }, [app, pinRef]);
+
   const onPin = useCallback(
     (pin: string) => {
       app
         .comparePin(pin)
         .then(() => {
+          app.successEnter();
           requestAnimationFrame(() => app.emit('enterPin', pin));
         })
         .catch(() => {
-          pinRef.current?.reset('wrong pin');
+          app.failureEnter();
+          if (app.canEnter) {
+            pinRef.current?.reset(
+              `wrong pin ${PIN_BANNED_ATTEMPTS - app.pinAttempts} left`,
+            );
+          } else {
+            pinRef.current?.locked(app.pinBanned);
+          }
         });
     },
     [app, pinRef],
