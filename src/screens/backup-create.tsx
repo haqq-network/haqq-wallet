@@ -60,13 +60,13 @@ export const BackupCreateScreen = ({
           </Paragraph>
         </CopyButton>
       </Spacer>
-      <InfoBlock h4 type={InfoBlockType.warning} style={page.marginBottom}>
+      <InfoBlock p4 type={InfoBlockType.warning} style={page.marginBottom}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
         <Checkbox value={checked} onPress={setChecked} />
-        <Paragraph h3 style={page.agreeText}>
+        <Paragraph p3 style={page.agreeText}>
           I understand that if I lose my recovery phrase, I will not be able to
           restore access to my account
         </Paragraph>

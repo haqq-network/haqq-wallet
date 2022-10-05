@@ -24,7 +24,7 @@ export const PopupHeader = ({
       ) : (
         <View style={page.spacer} />
       )}
-      <Paragraph h1 style={page.title}>
+      <Paragraph p1 style={page.title}>
         {options.title}
       </Paragraph>
       {options.headerRight ? (

@@ -89,7 +89,7 @@ export const SettingsAccountDetailScreen = ({
           />
         </Card>
         <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
-        <Paragraph h3 style={page.headerAddress}>
+        <Paragraph p3 style={page.headerAddress}>
           {wallet?.address}
         </Paragraph>
       </View>

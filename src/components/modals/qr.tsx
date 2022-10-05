@@ -97,7 +97,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
             <IconButton onPress={onClose}>
               <ArrowBackIcon color={GRAPHIC_BASE_3} />
             </IconButton>
-            <Paragraph h1 style={page.headerTitle}>
+            <Paragraph p1 style={page.headerTitle}>
               Scan QR Code
             </Paragraph>
             <View style={page.headerSpacer} />
@@ -108,7 +108,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
         <View style={[page.bottomContainer, {paddingBottom: insets.bottom}]}>
           {error && (
             <View style={page.bottomErrorContainer}>
-              <Paragraph h1 style={page.bottomErrorText}>
+              <Paragraph p1 style={page.bottomErrorText}>
                 Invalid code
               </Paragraph>
             </View>

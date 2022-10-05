@@ -18,7 +18,7 @@ export const WalletCreate = ({}: BalanceProps) => {
 
   return (
     <View style={page.container}>
-      <Paragraph h1 style={page.title} font={ParagraphFont.text}>
+      <Paragraph p1 style={page.title} font={ParagraphFont.text}>
         Add accounts
       </Paragraph>
       <Paragraph style={page.subtitle}>

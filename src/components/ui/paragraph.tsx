@@ -3,20 +3,12 @@ import * as React from 'react';
 import {useMemo} from 'react';
 import {TEXT_BASE_2} from '../../variables';
 
-export enum ParagraphSize {
-  xl = 'xl', //h0
-  l = 'l', //h1
-  m = 'm', //h2
-  s = 's', //h3
-  xs = 'xs', //h4
-}
-
 interface TxtT {
-  h0?: boolean;
-  h1?: boolean;
-  h2?: boolean;
-  h3?: boolean;
-  h4?: boolean;
+  p0?: boolean;
+  p1?: boolean;
+  p2?: boolean;
+  p3?: boolean;
+  p4?: boolean;
   clean?: boolean;
   numberOfLines?: number;
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
@@ -34,11 +26,11 @@ export type ParagraphProps = TextProps &
   };
 
 export const Paragraph = ({
-  h0,
-  h1,
-  h2,
-  h3,
-  h4,
+  p0,
+  p1,
+  p2,
+  p3,
+  p4,
   style,
   children,
   font = ParagraphFont.display,
@@ -61,11 +53,11 @@ export const Paragraph = ({
           ellipsizeMode={ellipsizeMode}
           style={[
             containerStyle,
-            h0 && StyleSheet.flatten([page.h0Style, containerStyle]),
-            h1 && StyleSheet.flatten([page.h1Style, containerStyle]),
-            h2 && StyleSheet.flatten([page.h2Style, containerStyle]),
-            h3 && StyleSheet.flatten([page.h3Style, containerStyle]),
-            h4 && StyleSheet.flatten([page.h4Style, containerStyle]),
+            p0 && StyleSheet.flatten([page.h0Style, containerStyle]),
+            p1 && StyleSheet.flatten([page.h1Style, containerStyle]),
+            p2 && StyleSheet.flatten([page.h2Style, containerStyle]),
+            p3 && StyleSheet.flatten([page.h3Style, containerStyle]),
+            p4 && StyleSheet.flatten([page.h4Style, containerStyle]),
           ]}
           {...props}>
           {children}

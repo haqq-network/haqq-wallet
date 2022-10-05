@@ -18,7 +18,7 @@ export const DataContent = ({
   return (
     <View style={[reversed && page.reverse, style]}>
       <Paragraph style={page.title}>{title}</Paragraph>
-      <Paragraph h3>{subtitle}</Paragraph>
+      <Paragraph p3>{subtitle}</Paragraph>
     </View>
   );
 };

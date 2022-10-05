@@ -75,7 +75,7 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph h3 style={page.cellTextFilled}>
+                  <Paragraph p3 style={page.cellTextFilled}>
                     {words.get(selected[i])}
                   </Paragraph>
                 </View>
@@ -87,7 +87,7 @@ export const BackupVerifyScreen = ({
                     selected.length === i && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph h3 style={page.cellTextEmpty}>
+                  <Paragraph p3 style={page.cellTextEmpty}>
                     #{i + 1}
                   </Paragraph>
                 </View>
@@ -100,7 +100,7 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i + 6 ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph h3 style={page.cellTextFilled}>
+                  <Paragraph p3 style={page.cellTextFilled}>
                     {words.get(selected[i + 6])}
                   </Paragraph>
                 </View>
@@ -112,7 +112,7 @@ export const BackupVerifyScreen = ({
                     selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph h3 style={page.cellTextEmpty}>
+                  <Paragraph p3 style={page.cellTextEmpty}>
                     #{i + 7}
                   </Paragraph>
                 </View>

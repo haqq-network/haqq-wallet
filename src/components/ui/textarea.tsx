@@ -16,7 +16,7 @@ export const Textarea = ({
 
   return (
     <View style={containerStyle}>
-      <Paragraph h3 style={page.placeholder}>
+      <Paragraph p3 style={page.placeholder}>
         {placeholder}
       </Paragraph>
       <TextInput

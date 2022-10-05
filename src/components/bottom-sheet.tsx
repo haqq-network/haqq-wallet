@@ -90,7 +90,7 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
             <SwiperIcon color={GRAPHIC_SECOND_2} />
           </View>
           <View style={page.header}>
-            <Paragraph h0 style={page.title}>
+            <Paragraph p0 style={page.title}>
               {title}
             </Paragraph>
             <Spacer />

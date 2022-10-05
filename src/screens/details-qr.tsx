@@ -81,7 +81,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
             logoBorderRadius={8}
           />
         </View>
-        <Paragraph h3 style={page.title}>
+        <Paragraph p3 style={page.title}>
           {wallet?.name}
         </Paragraph>
         <Paragraph style={page.address}>{address}</Paragraph>

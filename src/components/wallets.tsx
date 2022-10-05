@@ -86,7 +86,7 @@ export const Wallets = () => {
           <PlusIcon color={GRAPHIC_BASE_1} width={12} height={12} />
         </Animated.View>
       </View>
-      <Paragraph h0 style={page.h0}>
+      <Paragraph p0 style={page.p0}>
         Transactions
       </Paragraph>
     </View>
@@ -114,7 +114,7 @@ const page = StyleSheet.create({
     width: 12,
     height: 12,
   },
-  h0: {
+  p0: {
     marginVertical: 12,
     textAlign: 'left',
     paddingHorizontal: 20,

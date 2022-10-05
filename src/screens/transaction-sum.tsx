@@ -131,7 +131,7 @@ export const TransactionSumScreen = ({
         </View>
       </View>
       <View style={page.amount}>
-        <Paragraph h4>$ {amountUsd}</Paragraph>
+        <Paragraph p4>$ {amountUsd}</Paragraph>
       </View>
       {error ? (
         <Paragraph clean style={[page.help, page.error]}>

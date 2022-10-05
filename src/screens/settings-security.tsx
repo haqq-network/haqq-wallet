@@ -59,7 +59,7 @@ export const SettingsSecurityScreen = ({
         onPress={() => navigation.navigate('settingsSecurityPin')}>
         <View>
           <Paragraph style={page.menuTitle}>Change PIN</Paragraph>
-          <Paragraph h3 style={page.menuSubtitle}>
+          <Paragraph p3 style={page.menuSubtitle}>
             Enter new pin
           </Paragraph>
         </View>
@@ -70,7 +70,7 @@ export const SettingsSecurityScreen = ({
             <Paragraph style={page.menuTitle}>
               {biometryName[app.biometryType]}
             </Paragraph>
-            <Paragraph h3 style={page.menuSubtitle}>
+            <Paragraph p3 style={page.menuSubtitle}>
               Use {biometryName[app.biometryType]} to unlock the app
             </Paragraph>
           </View>

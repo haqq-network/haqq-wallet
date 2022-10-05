@@ -37,7 +37,7 @@ export const SegmentedControl = ({
           }}>
           <View style={[page.item, v.value === value && page.itemActive]}>
             <Paragraph
-              h3
+              p3
               style={[page.text, v.value === value && page.textActive]}>
               {v.name}
             </Paragraph>

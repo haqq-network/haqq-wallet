@@ -61,7 +61,7 @@ export const SettingsAboutScreen = () => {
           loop
         />
       </Spacer>
-      <Paragraph h3 style={page.title}>
+      <Paragraph p3 style={page.title}>
         About App
       </Paragraph>
       <View style={page.buttons}>
@@ -78,7 +78,7 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph h3 style={page.title}>
+      <Paragraph p3 style={page.title}>
         Legal Documents
       </Paragraph>
       <View style={page.buttons}>
@@ -89,7 +89,7 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph h3 style={page.title}>
+      <Paragraph p3 style={page.title}>
         Our Socials
       </Paragraph>
       <View style={page.buttons}>

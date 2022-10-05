@@ -57,11 +57,11 @@ export const TransactionDetailScreen = ({
 
   return (
     <BottomSheet onClose={navigation.goBack} title={title}>
-      <Paragraph h3 style={page.h3}>
+      <Paragraph p3 style={page.p3}>
         Total amount
       </Paragraph>
       <Paragraph
-        h0
+        p0
         style={[
           page.sum,
           transaction.source === TransactionSource.send
@@ -70,7 +70,7 @@ export const TransactionDetailScreen = ({
         ]}>
         {transaction.totalFormatted} ISLM
       </Paragraph>
-      {/*<Paragraph h3 style={page.subSum}>*/}
+      {/*<Paragraph p3 style={page.subSum}>*/}
       {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
       {/*</Paragraph>*/}
       <View style={page.infoContainer}>
@@ -172,7 +172,7 @@ const page = StyleSheet.create({
   info: {
     marginVertical: 8,
   },
-  h3: {marginBottom: 2},
+  p3: {marginBottom: 2},
   icon: {marginRight: 4},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8, color: TEXT_BASE_1, fontWeight: '700'},

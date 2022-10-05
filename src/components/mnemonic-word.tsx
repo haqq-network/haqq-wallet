@@ -11,7 +11,7 @@ export type MnemonicWordProps = {
 export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
   return (
     <View style={page.container}>
-      <Paragraph h3 style={page.index}>
+      <Paragraph p3 style={page.index}>
         {index}
       </Paragraph>
       <Paragraph style={page.word}>{word}</Paragraph>

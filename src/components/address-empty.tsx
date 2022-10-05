@@ -7,7 +7,7 @@ export const AddressEmpty = () => {
   return (
     <View style={page.container}>
       <NoContactsIcon color={GRAPHIC_SECOND_3} style={page.icon} />
-      <Paragraph h3 style={{color: TEXT_SECOND_1}}>
+      <Paragraph p3 style={{color: TEXT_SECOND_1}}>
         No contacts
       </Paragraph>
     </View>

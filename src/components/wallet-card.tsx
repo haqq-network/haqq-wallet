@@ -74,7 +74,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
-        <Paragraph h3 style={page.name}>
+        <Paragraph p3 style={page.name}>
           {wallet.name || 'name'}
         </Paragraph>
         <View style={page.spacer} />
@@ -82,7 +82,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
         <CopyButton style={page.copyButton} value={wallet.address}>
-          <Paragraph h3 style={page.address}>
+          <Paragraph p3 style={page.address}>
             {formattedAddress}
           </Paragraph>
           <Copy color={GRAPHIC_BASE_3} style={page.marginLeft} />

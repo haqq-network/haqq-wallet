@@ -105,7 +105,7 @@ export const TransactionAddressScreen = ({
         }
       />
       {error && (
-        <Paragraph h3 style={page.h3}>
+        <Paragraph p3 style={page.p3}>
           Incorrect address
         </Paragraph>
       )}
@@ -145,5 +145,5 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
-  h3: {color: TEXT_RED_1, marginHorizontal: 20},
+  p3: {color: TEXT_RED_1, marginHorizontal: 20},
 });

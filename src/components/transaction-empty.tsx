@@ -7,7 +7,7 @@ export const TransactionEmpty = () => {
   return (
     <View style={page.container}>
       <NoTransactionsIcon color={GRAPHIC_SECOND_3} style={page.space} />
-      <Paragraph h3 style={{color: TEXT_SECOND_1}}>
+      <Paragraph p3 style={{color: TEXT_SECOND_1}}>
         No transactions
       </Paragraph>
     </View>

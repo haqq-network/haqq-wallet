@@ -5,7 +5,7 @@ import {Paragraph} from './ui';
 
 export const AddressHeader = () => {
   return (
-    <Paragraph h0 style={page.container}>
+    <Paragraph p0 style={page.container}>
       My contacts
     </Paragraph>
   );

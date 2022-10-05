@@ -109,10 +109,10 @@ export const BackupNotificationScreen = ({
             source={warningImage}
             style={{width: Dimensions.get('window').width - 80}}
           />
-          <Paragraph h1 font={ParagraphFont.text} style={page.h1}>
+          <Paragraph p1 font={ParagraphFont.text} style={page.p1}>
             Backup your wallet, keep your assets safe
           </Paragraph>
-          <Paragraph h3 style={page.h3}>
+          <Paragraph p3 style={page.p3}>
             If your recovery phrase is misplaced or stolen, it's the equivalent
             of losing your wallet. It's the only way to access your wallet if
             you forget your account password.
@@ -157,13 +157,13 @@ const page = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  h1: {
+  p1: {
     marginBottom: 8,
     color: TEXT_BASE_1,
     fontWeight: '700',
     textAlign: 'center',
   },
-  h3: {
+  p3: {
     marginBottom: 28,
     textAlign: 'center',
   },

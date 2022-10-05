@@ -49,7 +49,7 @@ export const NotificationMessage = ({
             opacity: pan,
           },
         ]}>
-        <Paragraph h3 style={page.h3}>
+        <Paragraph p3 style={page.p3}>
           {message}
         </Paragraph>
       </Animated.View>
@@ -76,5 +76,5 @@ const page = StyleSheet.create({
     elevation: 5,
   },
   flex: {flex: 1},
-  h3: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
+  p3: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
 });

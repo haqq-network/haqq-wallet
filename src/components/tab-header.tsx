@@ -7,14 +7,14 @@ import {TEXT_BASE_1} from '../variables';
 // @ts-ignore
 export const TabHeader = ({headerTitle}: HeaderTitleProps) => {
   return (
-    <Paragraph h1 style={page.h1}>
+    <Paragraph p1 style={page.p1}>
       {headerTitle}
     </Paragraph>
   );
 };
 
 const page = StyleSheet.create({
-  h1: {
+  p1: {
     fontStyle: 'normal',
     fontWeight: '600',
     textAlign: 'center',

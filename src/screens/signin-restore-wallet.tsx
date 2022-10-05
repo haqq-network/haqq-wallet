@@ -74,7 +74,7 @@ export const SignInRestoreScreen = ({
         onChangeText={setSeed}
       />
       <IconButton onPress={onPressPaste} style={page.icon}>
-        <Paragraph h3 style={page.h3}>
+        <Paragraph p3 style={page.p3}>
           Paste from Clipboard
         </Paragraph>
       </IconButton>
@@ -97,6 +97,6 @@ const page = StyleSheet.create({
   input: {
     marginBottom: 8,
   },
-  h3: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
+  p3: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   icon: {alignSelf: 'flex-start'},
 });
