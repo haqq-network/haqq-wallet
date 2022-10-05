@@ -1,7 +1,7 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Pin, PinInterface} from '../components/pin';
-import {app, useApp} from '../contexts/app';
+import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 
 type SettingsSecurityPinScreenProps = CompositeScreenProps<any, any>;
