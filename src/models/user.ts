@@ -87,7 +87,7 @@ export class User {
         this._raw.pinAttempts = 0;
       });
     }
-    console.log('canEnter', this.pinAttempts, PIN_BANNED_ATTEMPTS);
+
     return this.pinAttempts < PIN_BANNED_ATTEMPTS;
   }
 
@@ -103,8 +103,6 @@ export class User {
       this._raw.pinAttempts = this._raw.pinAttempts
         ? this._raw.pinAttempts + 1
         : 1;
-
-      console.log('this._raw.pinAttempts', this._raw.pinAttempts);
 
       if (this._raw.pinAttempts === PIN_BANNED_ATTEMPTS) {
         this._raw.pinBanned = addSeconds(
