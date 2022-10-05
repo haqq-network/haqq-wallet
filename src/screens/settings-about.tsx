@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {StyleSheet, View, Dimensions} from 'react-native';
 import {
   ArrowForwardIcon,
   Container,
@@ -10,53 +11,45 @@ import {
   ParagraphSize,
   Spacer,
   StarIcon,
+  LottieWrap,
 } from '../components/ui';
-import {Dimensions, Linking, StyleSheet, View} from 'react-native';
 import {
   BG_3,
   GRAPHIC_BASE_1,
   GRAPHIC_SECOND_3,
   TEXT_BASE_1,
 } from '../variables';
-import Lottie from 'lottie-react-native';
+
+import {openURL} from '../helpers';
 
 const windowWidth = Dimensions.get('window').width;
 
 export const SettingsAboutScreen = () => {
-  const onPressRate = useCallback(async () => {
+  const onPressRate = useCallback(() => {
     const url = 'https://example.com';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
-  const onPressSite = useCallback(async () => {
+  const onPressSite = useCallback(() => {
     const url = 'https://islamiccoin.net';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
-  const onPressDoc = useCallback(async () => {
+  const onPressDoc = useCallback(() => {
     const url = 'https://islamiccoin.net';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
-  const onPressDiscord = useCallback(async () => {
+  const onPressDiscord = useCallback(() => {
     const url = 'https://discord.com/invite/aZMm8pekhZ';
-    await Linking.canOpenURL(url);
-    await Linking.openURL(url);
+    openURL(url);
   }, []);
 
   return (
     <Container>
       <Spacer>
-        <Lottie
-          style={{
-            position: 'absolute',
-            width: windowWidth - 40,
-            height: windowWidth - 40,
-            top: -20,
-          }}
+        <LottieWrap
+          style={page.imageStyle}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
           loop
@@ -129,5 +122,11 @@ const page = StyleSheet.create({
   terms: {
     color: TEXT_BASE_1,
     marginBottom: 10,
+  },
+  imageStyle: {
+    position: 'absolute',
+    top: -20,
+    width: windowWidth - 40,
+    height: windowWidth - 40,
   },
 });
