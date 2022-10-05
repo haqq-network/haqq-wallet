@@ -1,6 +1,6 @@
 import React from 'react';
-import Lottie from 'lottie-react-native';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {LottieWrap} from './';
 
 type WaitingProps = {
   style?: StyleProp<ViewStyle>;
@@ -8,11 +8,11 @@ type WaitingProps = {
 
 export const Waiting = ({style}: WaitingProps) => {
   return (
-    <Lottie
+    <LottieWrap
       style={[page.container, style]}
       source={require('../../../assets/animations/waiting.json')}
       autoPlay
-      loop={true}
+      loop
     />
   );
 };
