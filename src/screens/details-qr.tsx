@@ -27,7 +27,6 @@ import {
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
-import {WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;

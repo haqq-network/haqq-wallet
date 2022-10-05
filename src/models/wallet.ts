@@ -6,7 +6,7 @@ import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork, wsProvider} from '../network';
 import {Deferrable} from '@ethersproject/properties';
-import {Mnemonic, WalletCardPattern, WalletCardStyle} from '../types';
+import {Mnemonic, WalletCardStyle} from '../types';
 
 export class WalletRealm extends Realm.Object {
   address!: string;

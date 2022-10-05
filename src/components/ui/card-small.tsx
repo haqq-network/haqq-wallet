@@ -6,7 +6,6 @@ import {
   GRADIENT_END,
   GRADIENT_START,
 } from '../../variables';
-import {WalletCardPattern} from '../../types';
 import {PATTERNS_SOURCE} from '@env';
 
 export type CardSmallProps = {
