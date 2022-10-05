@@ -78,7 +78,7 @@ export const BackupNotificationScreen = ({
         },
       ],
     );
-  }, [fadeOut]);
+  }, [app, fadeOut]);
 
   return (
     <View style={page.container}>

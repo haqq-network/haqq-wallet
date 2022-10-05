@@ -4,7 +4,6 @@ import {FlatList} from 'react-native';
 import {WalletRow} from '../components/wallet-row';
 import {Wallet} from '../models/wallet';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type SettingsAccountsScreenProps = CompositeScreenProps<any, any>;
 
@@ -13,7 +12,6 @@ export const SettingsAccountsScreen = ({
 }: SettingsAccountsScreenProps) => {
   const wallets = useWallets();
   const [rows, setRows] = useState(wallets.getWallets());
-  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     setRows(wallets.getWallets());
