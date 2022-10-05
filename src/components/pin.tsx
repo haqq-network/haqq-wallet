@@ -15,7 +15,6 @@ import {isBefore} from 'date-fns';
 export type PinProps = {
   title: string;
   subtitle?: string;
-  error?: string | null;
   onPin: (pin: string) => void;
   additionButton?: React.ReactNode;
 };
@@ -98,7 +97,7 @@ export const Pin = forwardRef(
 
     return (
       <Container style={page.container}>
-        <Title style={{marginTop: 40, marginBottom: 12}}>{title}</Title>
+        <Title style={page.title}>{title}</Title>
         {error && <Paragraph style={page.error}>{error}</Paragraph>}
         {subtitle && !error && <Paragraph>{subtitle}</Paragraph>}
         <Spacer style={page.spacer}>
@@ -141,4 +140,5 @@ const page = StyleSheet.create({
     color: TEXT_RED_1,
     fontWeight: '600',
   },
+  title: {marginTop: 40, marginBottom: 12},
 });
