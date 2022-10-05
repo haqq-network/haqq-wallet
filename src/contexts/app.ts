@@ -123,8 +123,12 @@ class App extends EventEmitter {
   }
 
   async comparePin(pin: string) {
-    const password = await this.getPassword();
-    return password === pin ? Promise.resolve() : Promise.reject();
+    if (this.canEnter) {
+      const password = await this.getPassword();
+      return password === pin ? Promise.resolve() : Promise.reject();
+    }
+
+    return Promise.reject();
   }
 
   get biometryType() {
@@ -195,6 +199,26 @@ class App extends EventEmitter {
 
       this.on('enterPin', callback);
     });
+  }
+
+  get canEnter() {
+    return this.user?.canEnter;
+  }
+
+  get pinBanned() {
+    return this.user?.pinBanned;
+  }
+
+  get pinAttempts() {
+    return this.user?.pinAttempts ?? 0;
+  }
+
+  successEnter() {
+    return this.user?.successEnter();
+  }
+
+  failureEnter() {
+    return this.user?.failureEnter();
   }
 
   async onAppStatusChanged() {
