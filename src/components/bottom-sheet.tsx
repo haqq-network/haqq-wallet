@@ -7,15 +7,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {BG_1, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
-import {
-  CloseCircle,
-  IconButton,
-  Paragraph,
-  ParagraphSize,
-  Spacer,
-  SwiperIcon,
-} from './ui';
+import {BG_1, BG_9, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
+import {CloseCircle, IconButton, Paragraph, Spacer, SwiperIcon} from './ui';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type BottomSheetProps = {
@@ -68,12 +61,12 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
   }, [onOpenPopup]);
 
   return (
-    <View style={[StyleSheet.absoluteFill, {justifyContent: 'flex-end'}]}>
+    <View style={[StyleSheet.absoluteFill, page.container]}>
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
+          page.background,
           {
-            backgroundColor: '#000000',
             opacity: pan.interpolate({
               inputRange: [0, 1],
               outputRange: [0.5, 0],
@@ -82,21 +75,22 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
         ]}
       />
       <TouchableWithoutFeedback onPress={onClosePopup}>
-        <View style={{flex: 1}} />
+        <View style={page.space} />
       </TouchableWithoutFeedback>
       <Animated.View
-        style={{
-          flex: 1,
-          transform: [{translateY: Animated.multiply(pan, h)}],
-          justifyContent: 'flex-end',
-        }}
+        style={[
+          page.animateView,
+          {
+            transform: [{translateY: Animated.multiply(pan, h)}],
+          },
+        ]}
         {...panResponder.panHandlers}>
         <View style={[page.content, {paddingBottom: insets.bottom}]}>
           <View style={page.swipe}>
             <SwiperIcon color={GRAPHIC_SECOND_2} />
           </View>
           <View style={page.header}>
-            <Paragraph size={ParagraphSize.xl} style={page.title}>
+            <Paragraph h0 style={page.title}>
               {title}
             </Paragraph>
             <Spacer />
@@ -112,10 +106,14 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
 };
 
 const page = StyleSheet.create({
-  container: {
+  container: {justifyContent: 'flex-end'},
+  space: {flex: 1},
+  background: {
+    backgroundColor: BG_9,
+  },
+  animateView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   swipe: {
     alignItems: 'center',

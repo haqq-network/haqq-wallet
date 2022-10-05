@@ -123,7 +123,7 @@ export const SettingsAccountStyleScreen = ({
         value={cardStyle}
         values={cardStyleVariants}
         onChange={onChangeType}
-        style={{marginBottom: 32}}
+        style={page.margin}
       />
       <Paragraph style={page.title}>Choose color style</Paragraph>
       <SegmentedControl
@@ -164,4 +164,5 @@ const page = StyleSheet.create({
   button: {
     marginVertical: 8,
   },
+  margin: {marginBottom: 32},
 });

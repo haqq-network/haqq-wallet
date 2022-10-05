@@ -8,7 +8,6 @@ import {
   ButtonVariant,
   Container,
   Paragraph,
-  ParagraphSize,
   Spacer,
   Title,
 } from '../components/ui';
@@ -59,13 +58,13 @@ export const BackupVerifyScreen = ({
 
   return (
     <Container>
-      <Title style={{marginBottom: 4}}>Verify backup phrase</Title>
+      <Title style={page.title}>Verify backup phrase</Title>
       {error ? (
         <Paragraph style={page.error}>
           Ooops, mistake in one of the words
         </Paragraph>
       ) : (
-        <Paragraph style={{textAlign: 'center', marginBottom: 16}}>
+        <Paragraph style={page.textStyle}>
           Please choose the correct backup phrase according to the serial number
         </Paragraph>
       )}
@@ -76,7 +75,7 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph size={ParagraphSize.s} style={page.cellTextFilled}>
+                  <Paragraph h3 style={page.cellTextFilled}>
                     {words.get(selected[i])}
                   </Paragraph>
                 </View>
@@ -88,7 +87,7 @@ export const BackupVerifyScreen = ({
                     selected.length === i && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph size={ParagraphSize.s} style={page.cellTextEmpty}>
+                  <Paragraph h3 style={page.cellTextEmpty}>
                     #{i + 1}
                   </Paragraph>
                 </View>
@@ -101,7 +100,7 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i + 6 ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph size={ParagraphSize.s} style={page.cellTextFilled}>
+                  <Paragraph h3 style={page.cellTextFilled}>
                     {words.get(selected[i + 6])}
                   </Paragraph>
                 </View>
@@ -113,7 +112,7 @@ export const BackupVerifyScreen = ({
                     selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph size={ParagraphSize.s} style={page.cellTextEmpty}>
+                  <Paragraph h3 style={page.cellTextEmpty}>
                     #{i + 7}
                   </Paragraph>
                 </View>
@@ -128,7 +127,7 @@ export const BackupVerifyScreen = ({
             variant={ButtonVariant.second}
             disabled={selected.includes(val)}
             key={val}
-            style={{margin: 6}}
+            style={page.buttonStyle}
             title={words.get(val) ?? ''}
             onPress={() => {
               setSelected(sel => sel.concat(val));
@@ -142,13 +141,15 @@ export const BackupVerifyScreen = ({
         variant={ButtonVariant.contained}
         title="Check"
         onPress={onDone}
-        style={{marginVertical: 16}}
+        style={page.margin}
       />
     </Container>
   );
 };
 
 const page = StyleSheet.create({
+  title: {marginBottom: 4},
+  textStyle: {textAlign: 'center', marginBottom: 16},
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -184,4 +185,6 @@ const page = StyleSheet.create({
     marginBottom: 16,
     color: TEXT_RED_1,
   },
+  buttonStyle: {margin: 6},
+  margin: {marginVertical: 16},
 });

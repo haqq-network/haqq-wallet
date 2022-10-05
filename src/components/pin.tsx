@@ -53,7 +53,7 @@ export const Pin = forwardRef(
 
     return (
       <Container style={page.container}>
-        <Title style={{marginTop: 40}}>{title}</Title>
+        <Title style={page.title}>{title}</Title>
         {error && <Paragraph>{error}</Paragraph>}
         {subtitle && !error && <Paragraph>{subtitle}</Paragraph>}
         <Spacer style={page.spacer}>
@@ -74,6 +74,7 @@ export const Pin = forwardRef(
 
 const page = StyleSheet.create({
   container: {alignItems: 'center'},
+  title: {marginTop: 40},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',

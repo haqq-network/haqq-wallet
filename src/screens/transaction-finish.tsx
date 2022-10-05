@@ -7,6 +7,7 @@ import {
   IconButton,
   InvoiceIcon,
   ISLMIcon,
+  Paragraph,
   PenIcon,
   PopupContainer,
   Spacer,
@@ -21,7 +22,7 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
@@ -80,32 +81,29 @@ export const TransactionFinishScreen = ({
 
   return (
     <PopupContainer style={page.container}>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginVertical: 12,
-        }}>
-        <Image source={icon} style={{width: 140, height: 140}} />
+      <View style={page.sub}>
+        <Image source={icon} style={page.image} />
       </View>
-      <Title style={{marginBottom: 34, color: TEXT_GREEN_1}}>
-        Sending Completed!
-      </Title>
+      <Title style={page.title}>Sending Completed!</Title>
       <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
       {transaction && (
-        <Text style={page.sum}>
+        <Paragraph clean style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
-        </Text>
+        </Paragraph>
       )}
-      <Text style={page.address}>{short}</Text>
-      <Text style={page.fee}>
+      <Paragraph clean style={page.address}>
+        {short}
+      </Paragraph>
+      <Paragraph clean style={page.fee}>
         Network Fee: {transaction?.fee.toFixed(8)} ISLM
-      </Text>
+      </Paragraph>
       <Spacer />
       <View style={page.buttons}>
         <IconButton onPress={onPress} style={page.button}>
           <InvoiceIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Text style={page.buttonText}>Details</Text>
+          <Paragraph clean style={page.buttonText}>
+            Details
+          </Paragraph>
         </IconButton>
         <IconButton onPress={onPressContact} style={page.button}>
           {contact ? (
@@ -113,17 +111,19 @@ export const TransactionFinishScreen = ({
           ) : (
             <UserIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
           )}
-          <Text style={page.buttonText}>
+          <Paragraph clean style={page.buttonText}>
             {contact ? 'Edit Contact' : 'Add Contact'}
-          </Text>
+          </Paragraph>
         </IconButton>
         <IconButton onPress={onPress} style={page.button}>
           <BlockIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Text style={page.buttonText}>Hash</Text>
+          <Paragraph clean style={page.buttonText}>
+            Hash
+          </Paragraph>
         </IconButton>
       </View>
       <Button
-        style={{marginBottom: 16}}
+        style={page.margin}
         variant={ButtonVariant.contained}
         title="Done"
         onPress={() => {
@@ -138,6 +138,13 @@ const page = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
+  sub: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  image: {width: 140, height: 140},
+  title: {marginBottom: 34, color: TEXT_GREEN_1},
   icon: {marginBottom: 16, alignSelf: 'center'},
   sum: {
     marginBottom: 8,
@@ -182,4 +189,5 @@ const page = StyleSheet.create({
     textAlign: 'center',
     color: TEXT_BASE_2,
   },
+  margin: {marginBottom: 16},
 });

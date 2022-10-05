@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -75,26 +75,35 @@ export const TransactionConfirmationScreen = ({
   return (
     <PopupContainer style={page.container}>
       <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
-
       <Paragraph style={page.subtitle}>Total Amount</Paragraph>
-      <Text style={page.sum}>{(amount + estimateFee).toFixed(8)} ISLM</Text>
+      <Paragraph clean style={page.sum}>
+        {(amount + estimateFee).toFixed(8)} ISLM
+      </Paragraph>
       <Paragraph style={page.subtitle}>Send to</Paragraph>
       {contact && <Paragraph style={page.contact}>{contact.name}</Paragraph>}
       <Paragraph style={page.address}>
-        <Text>{splittedTo[0]}</Text>
-        <Text style={{color: TEXT_BASE_2}}>{splittedTo[1]}</Text>
-        <Text>{splittedTo[2]}</Text>
+        <Paragraph clean>{splittedTo[0]}</Paragraph>
+        <Paragraph clean style={{color: TEXT_BASE_2}}>
+          {splittedTo[1]}
+        </Paragraph>
+        <Paragraph clean>{splittedTo[2]}</Paragraph>
       </Paragraph>
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
           <Paragraph style={{color: TEXT_BASE_1}}>
-            Islamic coin <Text style={{color: TEXT_BASE_2}}>(ISLM)</Text>
+            Islamic coin{' '}
+            <Paragraph clean style={{color: TEXT_BASE_2}}>
+              (ISLM)
+            </Paragraph>
           </Paragraph>
         </DataView>
         <DataView label="Network">
           <Paragraph style={{color: TEXT_BASE_1}}>
-            HAQQ blockchain <Text style={{color: TEXT_BASE_2}}>(HQ)</Text>
+            HAQQ blockchain{' '}
+            <Paragraph clean style={{color: TEXT_BASE_2}}>
+              (HQ)
+            </Paragraph>
           </Paragraph>
         </DataView>
         <DataView label="Amount">
@@ -108,7 +117,7 @@ export const TransactionConfirmationScreen = ({
           </Paragraph>
         </DataView>
       </View>
-      {error && <Text>{error}</Text>}
+      {error && <Paragraph clean>{error}</Paragraph>}
       <Spacer />
       <Button
         disabled={estimateFee === 0 && !disabled}

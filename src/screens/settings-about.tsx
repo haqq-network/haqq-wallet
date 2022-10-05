@@ -7,7 +7,6 @@ import {
   GlobalIcon,
   IconButton,
   Paragraph,
-  ParagraphSize,
   Spacer,
   StarIcon,
 } from '../components/ui';
@@ -53,16 +52,16 @@ export const SettingsAboutScreen = () => {
         <Lottie
           style={{
             position: 'absolute',
+            top: -20,
             width: windowWidth - 40,
             height: windowWidth - 40,
-            top: -20,
           }}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
           loop
         />
       </Spacer>
-      <Paragraph size={ParagraphSize.s} style={page.title}>
+      <Paragraph h3 style={page.title}>
         About App
       </Paragraph>
       <View style={page.buttons}>
@@ -79,7 +78,7 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph size={ParagraphSize.s} style={page.title}>
+      <Paragraph h3 style={page.title}>
         Legal Documents
       </Paragraph>
       <View style={page.buttons}>
@@ -90,7 +89,7 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph size={ParagraphSize.s} style={page.title}>
+      <Paragraph h3 style={page.title}>
         Our Socials
       </Paragraph>
       <View style={page.buttons}>

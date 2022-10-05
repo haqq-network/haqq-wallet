@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
 import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
-import {Paragraph, ParagraphSize} from './paragraph';
+import {Paragraph} from './paragraph';
 
 type TextareaProps = Omit<TextInputProps, 'multiline'>;
 
@@ -16,7 +16,7 @@ export const Textarea = ({
 
   return (
     <View style={containerStyle}>
-      <Paragraph size={ParagraphSize.s} style={page.placeholder}>
+      <Paragraph h3 style={page.placeholder}>
         {placeholder}
       </Paragraph>
       <TextInput

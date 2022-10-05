@@ -1,15 +1,16 @@
-import {StyleSheet, Text, TextProps} from 'react-native';
+import {StyleSheet, TextProps} from 'react-native';
 import * as React from 'react';
 import {useMemo} from 'react';
 import {TEXT_BASE_1} from '../../variables';
+import {Paragraph} from './paragraph';
 
 export const Title = ({style, children, ...props}: TextProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
 
   return (
-    <Text style={containerStyle} {...props}>
+    <Paragraph clean style={containerStyle} {...props}>
       {children}
-    </Text>
+    </Paragraph>
   );
 };
 

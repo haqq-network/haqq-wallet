@@ -1,7 +1,7 @@
 import React from 'react';
 import {Contact} from '../models/contact';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {Box, DataContent} from './ui';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Box, DataContent, Paragraph} from './ui';
 import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
@@ -16,7 +16,7 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
       }}>
       <View style={page.container}>
         <Box style={page.badge}>
-          <Text>{item.name.slice(0, 1)}</Text>
+          <Paragraph clean>{item.name.slice(0, 1)}</Paragraph>
         </Box>
         <DataContent
           style={page.info}

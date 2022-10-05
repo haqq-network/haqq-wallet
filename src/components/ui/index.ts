@@ -8,8 +8,6 @@ export * from './container';
 export * from './copy-button';
 export * from './data-content';
 export * from './data-view';
-export * from './h2';
-export * from './h3';
 export * from './icon';
 export * from './icon-button';
 export * from './input';

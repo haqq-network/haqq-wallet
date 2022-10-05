@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
-import {StyleSheet, Text, View, ViewProps} from 'react-native';
+import {StyleSheet, View, ViewProps} from 'react-native';
 import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
+import {Paragraph} from './paragraph';
 
 export enum LabelBlockVariant {
   default = 'default',
@@ -33,15 +35,15 @@ export const LabeledBlock = ({
 
   return (
     <View style={containerStyle} {...props}>
-      <View style={{flex: 1}}>
-        {label && <Text style={placeholderStyle}>{label}</Text>}
+      <View style={page.flex}>
+        {label && (
+          <Paragraph clean style={placeholderStyle}>
+            {label}
+          </Paragraph>
+        )}
         <View style={page.inner}>{children}</View>
       </View>
-      {rightAction && (
-        <View style={{justifyContent: 'center', marginLeft: 12}}>
-          {rightAction}
-        </View>
-      )}
+      {rightAction && <View style={page.sub}>{rightAction}</View>}
     </View>
   );
 };
@@ -54,20 +56,22 @@ const page = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
   },
-  errorContainer: {
-    backgroundColor: BG_7,
-  },
+  sub: {justifyContent: 'center', marginLeft: 12},
+  flex: {flex: 1},
   placeholder: {
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_2,
     marginBottom: 2,
   },
-  errorPlaceholder: {
-    color: TEXT_RED_1,
-  },
   inner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  errorPlaceholder: {
+    color: TEXT_RED_1,
+  },
+  errorContainer: {
+    backgroundColor: BG_7,
   },
 });

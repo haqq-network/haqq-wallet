@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {CopyConfirmation} from '../ui';
-import {GRAPHIC_BASE_2} from '../../variables';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {CopyConfirmation, Paragraph} from '../ui';
+import {BG_14, GRAPHIC_BASE_2, TEXT_SECOND_3} from '../../variables';
 
 export enum ConfirmationBadgeActions {
   copied = 'copied',
@@ -35,7 +35,9 @@ export const ConfirmationModal = ({
     <TouchableOpacity onPress={onCloseModal} style={page.overlay}>
       <View style={page.background}>
         <CopyConfirmation color={GRAPHIC_BASE_2} style={page.icon} />
-        <Text style={page.text}>{texts[action ?? '']}</Text>
+        <Paragraph clean style={page.text}>
+          {texts[action ?? '']}
+        </Paragraph>
       </View>
     </TouchableOpacity>
   );
@@ -44,7 +46,7 @@ export const ConfirmationModal = ({
 const page = StyleSheet.create({
   overlay: {justifyContent: 'center', alignItems: 'center', flex: 1},
   background: {
-    backgroundColor: 'rgba(229, 229, 234, 0.82)',
+    backgroundColor: BG_14,
     width: 155,
     height: 155,
     justifyContent: 'center',
@@ -58,6 +60,6 @@ const page = StyleSheet.create({
     lineHeight: 21,
     textAlign: 'center',
     letterSpacing: -0.32,
-    color: '#65666A',
+    color: TEXT_SECOND_3,
   },
 });

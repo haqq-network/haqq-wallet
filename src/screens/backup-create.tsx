@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
@@ -10,7 +10,6 @@ import {
   InfoBlock,
   InfoBlockType,
   Paragraph,
-  ParagraphSize,
   PopupContainer,
   Spacer,
   Title,
@@ -35,7 +34,7 @@ export const BackupCreateScreen = ({
         Write down or copy these words in the right order and save them
         somewhere safe.
       </Paragraph>
-      <Spacer style={{justifyContent: 'center'}}>
+      <Spacer style={page.space}>
         <View style={page.mnemonics}>
           <View style={page.column}>
             {wallet?.mnemonic
@@ -56,19 +55,18 @@ export const BackupCreateScreen = ({
         </View>
         <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
           <Copy color={TEXT_GREEN_1} />
-          <Text style={page.copyText}>Copy</Text>
+          <Paragraph clean style={page.copyText}>
+            Copy
+          </Paragraph>
         </CopyButton>
       </Spacer>
-      <InfoBlock
-        type={InfoBlockType.warning}
-        style={{marginBottom: 20}}
-        textSize={ParagraphSize.xs}>
+      <InfoBlock h4 type={InfoBlockType.warning} style={page.marginBottom}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
         <Checkbox value={checked} onPress={setChecked} />
-        <Paragraph size={ParagraphSize.s} style={page.agreeText}>
+        <Paragraph h3 style={page.agreeText}>
           I understand that if I lose my recovery phrase, I will not be able to
           restore access to my account
         </Paragraph>
@@ -98,6 +96,8 @@ const page = StyleSheet.create({
     borderRadius: 16,
   },
   column: {flex: 1},
+  marginBottom: {marginBottom: 20},
+  space: {justifyContent: 'center'},
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,

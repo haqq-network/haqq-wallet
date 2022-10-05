@@ -43,10 +43,10 @@ export const OnboardingRepeatPinScreen = ({
   }, [pin, currentPin, app, navigation, route.params.next]);
 
   return (
-    <Container style={{alignItems: 'center'}}>
+    <Container style={page.container}>
       <Title>Please repeat pin code</Title>
       <Paragraph>For security, we don't have a “Restore pin” button.</Paragraph>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Spacer style={page.space}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />
           <View style={[page.dot, pin.length >= 2 && page.active]} />
@@ -62,6 +62,8 @@ export const OnboardingRepeatPinScreen = ({
 };
 
 const page = StyleSheet.create({
+  container: {alignItems: 'center'},
+  space: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',

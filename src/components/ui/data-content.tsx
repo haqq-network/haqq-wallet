@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {Paragraph, ParagraphSize} from './paragraph';
+import {Paragraph} from './paragraph';
 import {TEXT_BASE_1} from '../../variables';
 
 export type DataContentProps = {
@@ -16,21 +16,13 @@ export const DataContent = ({
   reversed,
 }: DataContentProps) => {
   return (
-    <View
-      style={[
-        page.container,
-        reversed && {flexDirection: 'column-reverse'},
-        style,
-      ]}>
+    <View style={[reversed && page.reverse, style]}>
       <Paragraph style={page.title}>{title}</Paragraph>
-      <Paragraph size={ParagraphSize.s} style={page.subtitle}>
-        {subtitle}
-      </Paragraph>
+      <Paragraph h3>{subtitle}</Paragraph>
     </View>
   );
 };
 const page = StyleSheet.create({
-  container: {},
   title: {
     color: TEXT_BASE_1,
     marginBottom: 2,
@@ -38,5 +30,5 @@ const page = StyleSheet.create({
     minHeight: 22,
     flexDirection: 'row',
   },
-  subtitle: {},
+  reverse: {flexDirection: 'column-reverse'},
 });

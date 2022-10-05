@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
 import React from 'react';
-import {Paragraph, ParagraphSize} from './ui';
+import {Paragraph} from './ui';
 
 export type MnemonicWordProps = {
   word: string;
@@ -11,7 +11,7 @@ export type MnemonicWordProps = {
 export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
   return (
     <View style={page.container}>
-      <Paragraph size={ParagraphSize.s} style={page.index}>
+      <Paragraph h3 style={page.index}>
         {index}
       </Paragraph>
       <Paragraph style={page.word}>{word}</Paragraph>

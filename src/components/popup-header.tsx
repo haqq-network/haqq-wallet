@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ArrowBackIcon, IconButton, Paragraph, ParagraphSize} from './ui';
+import {ArrowBackIcon, IconButton, Paragraph} from './ui';
 import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -24,7 +24,7 @@ export const PopupHeader = ({
       ) : (
         <View style={page.spacer} />
       )}
-      <Paragraph size={ParagraphSize.l} style={page.title}>
+      <Paragraph h1 style={page.title}>
         {options.title}
       </Paragraph>
       {options.headerRight ? (

@@ -15,7 +15,6 @@ import {
   InfoBlock,
   InfoBlockType,
   Paragraph,
-  ParagraphSize,
 } from '../components/ui';
 import {
   GRADIENT_END,
@@ -27,7 +26,6 @@ import {
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
-import {WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
@@ -54,7 +52,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
     <BottomSheet onClose={navigation.goBack} title="Receive">
       <InfoBlock
         type={InfoBlockType.warning}
-        style={{marginBottom: 16}}
+        style={page.info}
         icon={<Alert color={TEXT_YELLOW_1} />}>
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
@@ -63,7 +61,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
         style={page.qrContainer}
         start={GRADIENT_START}
         end={GRADIENT_END}>
-        <View style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
+        <View style={page.card}>
           <Card
             transparent
             width={width - 113}
@@ -73,13 +71,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
             colorPattern={wallet?.colorPattern}
           />
         </View>
-        <View
-          style={{
-            padding: 12,
-            backgroundColor: GRAPHIC_BASE_3,
-            borderRadius: 12,
-            marginBottom: 20,
-          }}>
+        <View style={page.qrStyle}>
           <QRCode
             logo={logo}
             value={`haqq:${address}`}
@@ -89,7 +81,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
             logoBorderRadius={8}
           />
         </View>
-        <Paragraph size={ParagraphSize.s} style={page.title}>
+        <Paragraph h3 style={page.title}>
           {wallet?.name}
         </Paragraph>
         <Paragraph style={page.address}>{address}</Paragraph>
@@ -139,5 +131,13 @@ const page = StyleSheet.create({
   },
   button: {
     flex: 1,
+  },
+  info: {marginBottom: 16},
+  card: {position: 'absolute', bottom: 0, left: 0, right: 0},
+  qrStyle: {
+    padding: 12,
+    backgroundColor: GRAPHIC_BASE_3,
+    borderRadius: 12,
+    marginBottom: 20,
   },
 });

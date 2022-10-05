@@ -6,13 +6,12 @@ import {
   DataContent,
   MenuNavigationButton,
   Paragraph,
-  ParagraphSize,
   Spacer,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {BG_8, TEXT_BASE_1} from '../variables';
 import prompt from 'react-native-prompt-android';
 import {app} from '../contexts/app';
 
@@ -74,7 +73,7 @@ export const SettingsAccountDetailScreen = ({
 
   return (
     <Container>
-      <View style={[page.header, wallet.isHidden && {opacity: 0.5}]}>
+      <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={Dimensions.get('window').width - 72}
           style={page.card}
@@ -83,11 +82,14 @@ export const SettingsAccountDetailScreen = ({
           colorTo={wallet.colorTo}
           colorPattern={wallet.colorPattern}>
           <CardMask
-            style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
+            style={[
+              page.cardMask,
+              {width: cardMaskWidth, height: cardMaskHeight},
+            ]}
           />
         </Card>
         <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
-        <Paragraph size={ParagraphSize.s} style={page.headerAddress}>
+        <Paragraph h3 style={page.headerAddress}>
           {wallet?.address}
         </Paragraph>
       </View>
@@ -134,11 +136,6 @@ const page = StyleSheet.create({
   headerAddress: {
     color: TEXT_BASE_1,
   },
-  subtitle: {
-    color: TEXT_BASE_2,
-  },
-  title: {
-    color: TEXT_BASE_1,
-    marginBottom: 2,
-  },
+  opacity: {opacity: 0.5},
+  cardMask: {margin: 4},
 });

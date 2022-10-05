@@ -6,12 +6,17 @@ import {
   PanResponder,
   SafeAreaView,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {BG_1, GRAPHIC_BASE_4, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
-import {Button, ButtonVariant, CloseCircle, IconButton} from './ui';
+import {
+  BG_1,
+  BG_9,
+  GRAPHIC_BASE_4,
+  TEXT_BASE_1,
+  TEXT_BASE_2,
+} from '../variables';
+import {Button, ButtonVariant, CloseCircle, IconButton, Paragraph} from './ui';
 import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 
@@ -100,7 +105,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         style={[
           StyleSheet.absoluteFill,
           {
-            backgroundColor: '#000000',
+            backgroundColor: BG_9,
             opacity: pan.interpolate({
               inputRange: [0, 1],
               outputRange: [0.5, 0],
@@ -110,32 +115,33 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
       />
       <Animated.View
         style={[
+          page.animateView,
           {
-            flex: 1,
             transform: [{translateY: Animated.multiply(pan, h)}],
-            justifyContent: 'flex-end',
           },
         ]}
         {...panResponder.panHandlers}>
-        <View style={{flex: 1}}>
-          <TouchableWithoutFeedback style={{flex: 1}} onPress={onClosePopup}>
-            <View style={{flex: 1}} />
+        <View style={page.flex}>
+          <TouchableWithoutFeedback style={page.flex} onPress={onClosePopup}>
+            <View style={page.flex} />
           </TouchableWithoutFeedback>
           <SafeAreaView style={page.box}>
             <View style={page.boxInner}>
               <View style={page.titleBlock}>
-                <Text style={page.title}>Forgot the code?</Text>
+                <Paragraph clean style={page.title}>
+                  Forgot the code?
+                </Paragraph>
                 <IconButton onPress={onClosePopup}>
                   <CloseCircle color={GRAPHIC_BASE_4} />
                 </IconButton>
               </View>
-              <Text style={page.warning}>
+              <Paragraph clean style={page.warning}>
                 Unfortunately, the password cannot be reset. Try to wait a bit
                 and remember the password. If it does not work, then click the
                 ‘Reset wallet button and use the backup phrase to restore the
                 wallet. If there is no backup phrase, then you will not be able
                 to restore the wallet
-              </Text>
+              </Paragraph>
               <Button
                 variant={ButtonVariant.error}
                 title="Reset wallet"
@@ -150,10 +156,10 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
 };
 
 const page = StyleSheet.create({
-  container: {
+  flex: {flex: 1},
+  animateView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   box: {
     width: Dimensions.get('window').width,

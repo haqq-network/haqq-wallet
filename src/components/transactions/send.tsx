@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {ArrowSend} from '../ui';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {ArrowSend, Paragraph} from '../ui';
 import {TransactionListSend} from '../../types';
 import {
   BG_3,
@@ -28,16 +28,20 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
-            <Text style={{color: TEXT_BASE_1}}>Sent</Text>
-            <Text style={page.sum}>{`- ${item.value.toFixed(2)} ISLM`}</Text>
+            <Paragraph clean style={{color: TEXT_BASE_1}}>
+              Sent
+            </Paragraph>
+            <Paragraph clean style={page.sum}>
+              {`- ${item.value.toFixed(2)} ISLM`}
+            </Paragraph>
           </View>
           <View style={page.infoRow}>
-            <Text style={{color: TEXT_BASE_2}}>
+            <Paragraph clean style={{color: TEXT_BASE_2}}>
               {`to ${shortAddress(item.to, '•')}`}
-            </Text>
-            <Text style={{color: TEXT_BASE_2}}>{`- ${item.value.toFixed(
-              2,
-            )} $`}</Text>
+            </Paragraph>
+            <Paragraph clean style={{color: TEXT_BASE_2}}>
+              {`- ${item.value.toFixed(2)} $`}
+            </Paragraph>
           </View>
         </View>
       </View>

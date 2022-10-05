@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
@@ -49,23 +50,29 @@ export const OnboardingBiometryScreen = ({
 
   return (
     <Container>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Spacer style={page.space}>
         {biometryIcons[biometryType] && (
-          <Icon name={biometryIcons[biometryType]} style={{marginBottom: 40}} />
+          <Icon name={biometryIcons[biometryType]} style={page.icon} />
         )}
-        <Title style={{marginBottom: 12}}>
-          Enable {biometryTypes[biometryType]}
-        </Title>
-        <Paragraph style={{textAlign: 'center'}}>Safe and fast</Paragraph>
+        <Title style={page.title}>Enable {biometryTypes[biometryType]}</Title>
+        <Paragraph style={page.textStyle}>Safe and fast</Paragraph>
         {error && <Paragraph>{error}</Paragraph>}
       </Spacer>
       <Button
-        style={{marginBottom: 16}}
+        style={page.margin}
         variant={ButtonVariant.contained}
         title={`Enable ${biometryTypes[biometryType]}`}
         onPress={onClickEnable}
       />
-      <Button style={{marginBottom: 16}} title="Skip" onPress={onClickSkip} />
+      <Button style={page.margin} title="Skip" onPress={onClickSkip} />
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  title: {marginBottom: 12},
+  space: {justifyContent: 'center', alignItems: 'center'},
+  icon: {marginBottom: 40},
+  textStyle: {textAlign: 'center'},
+  margin: {marginBottom: 16},
+});

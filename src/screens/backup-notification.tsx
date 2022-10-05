@@ -1,14 +1,20 @@
 import {CompositeScreenProps} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {Alert, Animated, Dimensions, Image, View} from 'react-native';
+import {
+  StyleSheet,
+  Alert,
+  Animated,
+  Dimensions,
+  Image,
+  View,
+} from 'react-native';
 import {
   Button,
   ButtonVariant,
   Paragraph,
   ParagraphFont,
-  ParagraphSize,
 } from '../components/ui';
-import {TEXT_BASE_1} from '../variables';
+import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 
 // type BackupNotificationScreenProp = {
@@ -75,59 +81,38 @@ export const BackupNotificationScreen = ({
   }, [fadeOut]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={page.container}>
       <Animated.View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: '#000000',
-          opacity: Animated.multiply(fadeAnim, 0.5),
-        }}
+        style={[
+          page.animateView,
+          {
+            opacity: Animated.multiply(fadeAnim, 0.5),
+          },
+        ]}
       />
       <Animated.View
-        style={{
-          flex: 1,
-          justifyContent: 'flex-end',
-          transform: [
-            {
-              translateY: fadeAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [Dimensions.get('window').height, 0],
-              }),
-            },
-          ],
-        }}>
-        <View
-          style={{
-            marginHorizontal: 16,
-            marginVertical: 42,
-            backgroundColor: '#FFFFFF',
-            flex: 0,
-            padding: 24,
-            borderRadius: 16,
-            paddingBottom: 16,
-          }}>
+        style={[
+          page.animateViewFade,
+          {
+            transform: [
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [Dimensions.get('window').height, 0],
+                }),
+              },
+            ],
+          },
+        ]}>
+        <View style={page.sub}>
           <Image
             source={warningImage}
             style={{width: Dimensions.get('window').width - 80}}
           />
-          <Paragraph
-            size={ParagraphSize.l}
-            font={ParagraphFont.text}
-            style={{
-              marginBottom: 8,
-              color: TEXT_BASE_1,
-              fontWeight: '700',
-              textAlign: 'center',
-            }}>
+          <Paragraph h1 font={ParagraphFont.text} style={page.h1}>
             Backup your wallet, keep your assets safe
           </Paragraph>
-          <Paragraph
-            size={ParagraphSize.s}
-            style={{marginBottom: 28, textAlign: 'center'}}>
+          <Paragraph h3 style={page.h3}>
             If your recovery phrase is misplaced or stolen, it's the equivalent
             of losing your wallet. It's the only way to access your wallet if
             you forget your account password.
@@ -136,7 +121,7 @@ export const BackupNotificationScreen = ({
             title="Backup now"
             variant={ButtonVariant.contained}
             onPress={onClickBackup}
-            style={{marginBottom: 8}}
+            style={page.margin}
           />
           <Button
             title="I will risk it"
@@ -148,3 +133,39 @@ export const BackupNotificationScreen = ({
     </View>
   );
 };
+
+const page = StyleSheet.create({
+  container: {flex: 1},
+  sub: {
+    marginHorizontal: 16,
+    marginVertical: 42,
+    backgroundColor: BG_1,
+    flex: 0,
+    padding: 24,
+    borderRadius: 16,
+    paddingBottom: 16,
+  },
+  animateView: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: BG_9,
+  },
+  animateViewFade: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  h1: {
+    marginBottom: 8,
+    color: TEXT_BASE_1,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  h3: {
+    marginBottom: 28,
+    textAlign: 'center',
+  },
+  margin: {marginBottom: 8},
+});

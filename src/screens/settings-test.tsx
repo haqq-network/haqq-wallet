@@ -5,6 +5,7 @@ import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
+  GRAPHIC_RED_2,
 } from '../variables';
 import {PATTERNS_SOURCE} from '@env';
 import {WalletCardPattern} from '../types';
@@ -36,7 +37,7 @@ export const SettingsTestScreen = () => {
         style={{
           width: width,
           height: width * 0.632835821,
-          tintColor: 'tomato',
+          tintColor: GRAPHIC_RED_2,
         }}
         source={{uri: `${PATTERNS_SOURCE}${pattern}@3x.png`}}
       />

@@ -5,8 +5,8 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Paragraph, ParagraphSize} from './ui';
-import {TEXT_BASE_1} from '../variables';
+import {Paragraph} from './ui';
+import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
 import {asyncTiming, sleep} from '../utils';
 
 export type NotificationMessageProps = {
@@ -33,7 +33,7 @@ export const NotificationMessage = ({
   }, [close, pan]);
 
   return (
-    <TouchableWithoutFeedback style={{flex: 1}} onPress={close}>
+    <TouchableWithoutFeedback style={page.flex} onPress={close}>
       <Animated.View
         style={[
           page.container,
@@ -49,9 +49,7 @@ export const NotificationMessage = ({
             opacity: pan,
           },
         ]}>
-        <Paragraph
-          size={ParagraphSize.s}
-          style={{fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'}}>
+        <Paragraph h3 style={page.h3}>
           {message}
         </Paragraph>
       </Animated.View>
@@ -66,9 +64,9 @@ const page = StyleSheet.create({
     maxWidth: Dimensions.get('window').width - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: BG_1,
     borderRadius: 24,
-    shadowColor: '#000',
+    shadowColor: BG_9,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -77,4 +75,6 @@ const page = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  flex: {flex: 1},
+  h3: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
 });

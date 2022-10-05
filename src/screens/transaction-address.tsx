@@ -10,7 +10,6 @@ import {
   Input,
   KeyboardSafeArea,
   Paragraph,
-  ParagraphSize,
   QRScanner,
   Spacer,
 } from '../components/ui';
@@ -106,9 +105,7 @@ export const TransactionAddressScreen = ({
         }
       />
       {error && (
-        <Paragraph
-          size={ParagraphSize.s}
-          style={{color: TEXT_RED_1, marginHorizontal: 20}}>
+        <Paragraph h3 style={page.h3}>
           Incorrect address
         </Paragraph>
       )}
@@ -148,4 +145,5 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
+  h3: {color: TEXT_RED_1, marginHorizontal: 20},
 });
