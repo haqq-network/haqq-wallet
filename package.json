@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "prettier:check": "prettier --check ./src",
     "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto --yarn --hack"
   },
   "dependencies": {
