@@ -1,7 +1,7 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Pin, PinInterface} from '../components/pin';
-import {useApp} from '../contexts/app';
+import {app, useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 
 type SettingsSecurityPinScreenProps = CompositeScreenProps<any, any>;
@@ -24,6 +24,7 @@ export const SettingsSecurityPinScreen = ({
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
         app.emit('modal', null);
+        app.emit('notification', 'The pin has been changed');
         navigation.goBack();
       } else {
         pinRef.current?.reset('pin not matched');
