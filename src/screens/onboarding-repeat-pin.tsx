@@ -69,7 +69,7 @@ export const OnboardingRepeatPinScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center'},
+  container: {alignItems: 'center', marginTop: 40, paddingBottom: 16},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',

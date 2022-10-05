@@ -53,7 +53,7 @@ export const OnboardingSetupPinScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center', marginTop: 48, paddingBottom: 16},
+  container: {alignItems: 'center', marginTop: 40, paddingBottom: 16},
   title: {marginBottom: 12},
   description: {textAlign: 'center'},
   spacer: {justifyContent: 'center', alignItems: 'center'},
