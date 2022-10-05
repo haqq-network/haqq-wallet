@@ -31,7 +31,7 @@ export const OnboardingFinishScreen = ({
     } else {
       navigation.replace('home');
     }
-  }, []);
+  }, [navigation, route]);
 
   useEffect(() => {
     app.emit('modal', null);

@@ -13,7 +13,7 @@ import {OnboardingFinishScreen} from './onboarding-finish';
 const SignInStack = createNativeStackNavigator();
 type SignInScreenProp = CompositeScreenProps<any, any>;
 
-export const SignInScreen = ({route}: SignInScreenProp) => {
+export const SignInScreen = ({}: SignInScreenProp) => {
   const title = 'Restore wallet';
   return (
     <SignInStack.Navigator
