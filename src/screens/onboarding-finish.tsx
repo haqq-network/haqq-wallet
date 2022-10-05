@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
@@ -6,8 +7,8 @@ import {
   Container,
   Spacer,
   Title,
+  LottieWrap,
 } from '../components/ui';
-import Lottie from 'lottie-react-native';
 import {useApp} from '../contexts/app';
 
 type OnboardingFinishScreenProp = CompositeScreenProps<any, any>;
@@ -40,15 +41,15 @@ export const OnboardingFinishScreen = ({
   return (
     <Container>
       <Spacer>
-        <Lottie
+        <LottieWrap
           source={require('../../assets/animations/success-animation.json')}
           autoPlay
           loop={false}
         />
       </Spacer>
-      <Title style={{marginBottom: 76}}>{title}</Title>
+      <Title style={page.title}>{title}</Title>
       <Button
-        style={{marginBottom: 16}}
+        style={page.button}
         variant={ButtonVariant.contained}
         title="Finish"
         onPress={onEnd}
@@ -56,3 +57,9 @@ export const OnboardingFinishScreen = ({
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  container: {justifyContent: 'center', alignItems: 'center'},
+  title: {marginBottom: 76},
+  button: {marginBottom: 16},
+});
