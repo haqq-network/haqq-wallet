@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Alert,
@@ -12,7 +13,6 @@ import {
   Spacer,
   Title,
 } from '../components/ui';
-import {Image, StyleSheet} from 'react-native';
 import {TEXT_YELLOW_1} from '../variables';
 
 type BackupWarningScreenProp = CompositeScreenProps<any, any>;
