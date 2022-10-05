@@ -33,8 +33,8 @@ export const WalletCard = ({address}: BalanceProps) => {
     [wallet?.address],
   );
 
-  const updateBalance = useCallback(({balance}: {balance: number}) => {
-    setBalance(balance);
+  const updateBalance = useCallback((e: {balance: number}) => {
+    setBalance(e.balance);
   }, []);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export const WalletCard = ({address}: BalanceProps) => {
 
   const onPressSend = useCallback(() => {
     navigation.navigate('transaction', {from: address});
-  }, [wallet, navigation]);
+  }, [navigation, address]);
 
   const onPressQR = useCallback(() => {
     navigation.navigate('detailsQr', {address: address});

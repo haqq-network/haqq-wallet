@@ -14,9 +14,9 @@ export const SetPinScreen = ({navigation}: PinScreenProp) => {
   const onKeyboard = useCallback((value: number) => {
     vibrate();
     if (value > -1) {
-      setPin(pin => `${pin}${value}`);
+      setPin(p => `${p}${value}`);
     } else {
-      setPin(pin => pin.slice(0, pin.length - 1));
+      setPin(p => p.slice(0, p.length - 1));
     }
   }, []);
 

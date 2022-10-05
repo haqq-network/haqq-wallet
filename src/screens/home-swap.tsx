@@ -4,6 +4,6 @@ import {Container} from '../components/ui';
 
 type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
 
-export const HomeSwapScreen = ({navigation}: HomeSettingsScreenProp) => {
+export const HomeSwapScreen = ({}: HomeSettingsScreenProp) => {
   return <Container />;
 };

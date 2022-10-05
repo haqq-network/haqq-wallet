@@ -141,22 +141,25 @@ export const SettingsAddressBookScreen =
       [contacts],
     );
 
-    const onPressRemove = useCallback((item: Contact) => {
-      Alert.alert(
-        'Delete Contact',
-        'Are you sure you want to delete the selected contact?',
-        [
-          {text: 'Cancel', style: 'cancel'},
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: () => {
-              contacts.removeContact(item.account);
+    const onPressRemove = useCallback(
+      (item: Contact) => {
+        Alert.alert(
+          'Delete Contact',
+          'Are you sure you want to delete the selected contact?',
+          [
+            {text: 'Cancel', style: 'cancel'},
+            {
+              text: 'Delete',
+              style: 'destructive',
+              onPress: () => {
+                contacts.removeContact(item.account);
+              },
             },
-          },
-        ],
-      );
-    }, []);
+          ],
+        );
+      },
+      [contacts],
+    );
 
     return (
       <Container
