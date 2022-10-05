@@ -57,6 +57,7 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
   return (
     <FlatList
       style={{flex: 1}}
+      scrollEnabled={Boolean(transactionsList.length)}
       ListHeaderComponent={Wallets}
       ListEmptyComponent={TransactionEmpty}
       data={transactionsList}
