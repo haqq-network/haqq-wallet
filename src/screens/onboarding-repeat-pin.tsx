@@ -39,14 +39,14 @@ export const OnboardingRepeatPinScreen = ({
                 biometryType: app.biometryType,
               });
             } else {
-              navigation.navigate('onboarding-store-wallet');
+              navigation.navigate('signupStoreWallet');
             }
           });
       } else {
         setError('Invalid code. Try again');
       }
     }
-  }, [pin, currentPin, app, navigation, route.params.next]);
+  }, [pin, currentPin, app, navigation, route.params.nextScreen]);
 
   return (
     <Container style={page.container}>

@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import Sentry from '@sentry/react-native';
+import * as Sentry from '@sentry/react-native';
 
 import {utils} from 'ethers';
 import {useWallets} from '../contexts/wallets';
@@ -18,6 +18,7 @@ import {
 } from '../components/ui';
 import {MAIN_ACCOUNT_NAME, TEXT_GREEN_1} from '../variables';
 import {useTransactions} from '../contexts/transactions';
+import {useApp} from '../contexts/app';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 
@@ -25,6 +26,7 @@ export const SignInRestoreScreen = ({
   navigation,
   route,
 }: SignInRestoreScreenProp) => {
+  const app = useApp();
   const [seed, setSeed] = useState('');
   const [disabled, setDisabled] = useState(false);
   const wallets = useWallets();
@@ -37,6 +39,7 @@ export const SignInRestoreScreen = ({
 
   const onDone = useCallback(() => {
     setDisabled(true);
+    app.emit('modal', {type: 'loading', text: 'Wallet recovery in progress'});
     requestAnimationFrame(async () => {
       try {
         let name =
@@ -49,6 +52,7 @@ export const SignInRestoreScreen = ({
         if (wallet) {
           wallet.mnemonicSaved = true;
           await transactions.loadTransactionsFromExplorer(wallet.address);
+          console.log('wallet', wallet);
           navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin');
         }
       } catch (e) {
@@ -56,9 +60,10 @@ export const SignInRestoreScreen = ({
         Sentry.captureException(e);
       } finally {
         setDisabled(false);
+        app.emit('modal', null);
       }
     });
-  }, [wallets, seed, transactions, navigation, route.params.nextScreen]);
+  }, [app, wallets, seed, transactions, navigation, route]);
 
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();

@@ -6,7 +6,7 @@ import {PopupHeader} from '../components/popup-header';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
-import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
+import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
 
@@ -18,7 +18,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
   return (
     <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
       <SignUpStack.Screen
-        name="signin-agreement"
+        name="signupAgreement"
         component={SignUpAgreementScreen}
         options={{
           headerRight: DismissPopupButton,
@@ -42,8 +42,8 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         options={{title}}
       />
       <SignUpStack.Screen
-        name="onboarding-store-wallet"
-        component={OnboardingStoreWalletScreen}
+        name="signupStoreWallet"
+        component={SignupStoreWalletScreen}
         options={{
           title,
           header: () => null,

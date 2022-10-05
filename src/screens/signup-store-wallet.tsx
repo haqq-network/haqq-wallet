@@ -7,22 +7,17 @@ import {utils} from 'ethers';
 import {MAIN_ACCOUNT_NAME} from '../variables';
 import {sleep} from '../utils';
 
-type OnboardingStoreWalletScreenProp = CompositeScreenProps<any, any>;
+type SignupStoreWalletScreenProp = CompositeScreenProps<any, any>;
 
-export const OnboardingStoreWalletScreen = ({
+export const SignupStoreWalletScreen = ({
   navigation,
   route,
-}: OnboardingStoreWalletScreenProp) => {
+}: SignupStoreWalletScreenProp) => {
   const app = useApp();
   const wallets = useWallets();
 
   useEffect(() => {
-    const text =
-      route.params.action === 'create'
-        ? 'Creating a wallet'
-        : 'Wallet recovery in progress';
-
-    app.emit('modal', {type: 'loading', text});
+    app.emit('modal', {type: 'loading', text: 'Creating a wallet'});
   }, [app, route.params.action]);
 
   useEffect(() => {
