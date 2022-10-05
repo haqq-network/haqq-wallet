@@ -26,6 +26,7 @@ export const OnboardingSetupPinScreen = ({
       navigation.navigate('onboarding-repeat-pin', {
         currentPin: pin,
       });
+      setPin('');
     }
   }, [navigation, pin]);
 
