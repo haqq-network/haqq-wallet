@@ -1,6 +1,11 @@
-import {addMinutes, subMinutes} from 'date-fns';
+import {addMinutes, addSeconds, isAfter} from 'date-fns';
 import {realm} from './index';
-import {SNOOZE_WALLET_BACKUP_MINUTES} from '../variables';
+import {
+  PIN_BANNED_ATTEMPTS,
+  PIN_BANNED_TIMEOUT_SECONDS,
+  SNOOZE_WALLET_BACKUP_MINUTES,
+  USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
+} from '../variables';
 
 export const UserSchema = {
   name: 'User',
@@ -9,6 +14,8 @@ export const UserSchema = {
     language: 'string',
     biometry: 'bool',
     snoozeBackup: 'date?',
+    pinAttempts: 'int?',
+    pinBanned: 'date?',
   },
   primaryKey: 'username',
 };
@@ -23,6 +30,8 @@ export type UserType = {
   language: Language;
   biometry: boolean;
   snoozeBackup: Date | null;
+  pinAttempts: number | null;
+  pinBanned: Date | null;
 };
 
 export class User {
@@ -63,12 +72,56 @@ export class User {
     return this._raw.snoozeBackup;
   }
 
+  get pinBanned() {
+    return this._raw.pinBanned;
+  }
+
+  get pinAttempts() {
+    return this._raw.pinAttempts ?? 0;
+  }
+
+  get canEnter() {
+    if (this.pinBanned && isAfter(new Date(), this.pinBanned)) {
+      realm.write(() => {
+        this._raw.pinBanned = null;
+        this._raw.pinAttempts = 0;
+      });
+    }
+
+    return this.pinAttempts < PIN_BANNED_ATTEMPTS;
+  }
+
+  successEnter() {
+    realm.write(() => {
+      this._raw.pinBanned = null;
+      this._raw.pinAttempts = 0;
+    });
+  }
+
+  failureEnter() {
+    realm.write(() => {
+      this._raw.pinAttempts = this._raw.pinAttempts
+        ? this._raw.pinAttempts + 1
+        : 1;
+
+      if (this._raw.pinAttempts === PIN_BANNED_ATTEMPTS) {
+        this._raw.pinBanned = addSeconds(
+          new Date(),
+          PIN_BANNED_TIMEOUT_SECONDS,
+        );
+      }
+    });
+  }
+
   touchLastActivity() {
     this.last_activity = new Date();
   }
 
   isOutdatedLastActivity() {
-    return this.last_activity < subMinutes(new Date(), 15);
+    return (
+      this.last_activity <
+      addSeconds(new Date(), USER_LAST_ACTIVITY_TIMEOUT_SECONDS)
+    );
   }
 
   setSnoozeBackup() {
