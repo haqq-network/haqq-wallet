@@ -6,6 +6,7 @@ import {
   ButtonVariant,
   InfoBlock,
   InfoBlockType,
+  LottieWrap,
   Paragraph,
   PopupContainer,
   Spacer,
@@ -16,7 +17,7 @@ import {TEXT_YELLOW_1} from '../variables';
 
 type BackupWarningScreenProp = CompositeScreenProps<any, any>;
 
-const warningImage = require('../../assets/images/mnemonic-warning.png');
+const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const BackupWarningScreen = ({
   navigation,
@@ -24,8 +25,8 @@ export const BackupWarningScreen = ({
 }: BackupWarningScreenProp) => {
   return (
     <PopupContainer style={page.container}>
-      <Spacer style={page.image}>
-        <Image source={warningImage} />
+      <Spacer style={page.imageContainer}>
+        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </Spacer>
       <Title style={page.title}>Important about backup</Title>
       <Paragraph style={page.paragraph}>
@@ -62,7 +63,8 @@ const page = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
-  image: {justifyContent: 'center', alignItems: 'center'},
+  imageContainer: {justifyContent: 'center', alignItems: 'center'},
+  image: {width: 200, height: 200},
   title: {marginBottom: 4},
   paragraph: {marginBottom: 20, textAlign: 'center'},
   infoBlock1: {marginBottom: 20},

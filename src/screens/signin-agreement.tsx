@@ -1,9 +1,10 @@
 import React, {useCallback} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
+  LottieWrap,
   Paragraph,
   PopupContainer,
   Title,
@@ -12,7 +13,7 @@ import {TEXT_BASE_2} from '../variables';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
 
-const warningImage = require('../../assets/images/mnemonic-warning.png');
+const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const SignInAgreementScreen = ({
   navigation,
@@ -25,7 +26,7 @@ export const SignInAgreementScreen = ({
   return (
     <>
       <View style={page.animation}>
-        <Image source={warningImage} style={page.image} />
+        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </View>
       <PopupContainer style={page.container}>
         <Title style={page.title}>
