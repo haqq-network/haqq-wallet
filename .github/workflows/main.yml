@@ -16,6 +16,6 @@ jobs:
         with:
           node-version: "16"
           cache: 'yarn'
-      - run: yarn ci
+      - run: yarn install --frozen-lockfile
       - run: yarn run lint
       - run: yarn run prettier:check
