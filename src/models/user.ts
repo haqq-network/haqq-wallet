@@ -1,4 +1,4 @@
-import {addMinutes, addSeconds, isAfter, isBefore} from 'date-fns';
+import {addMinutes, addSeconds, isAfter} from 'date-fns';
 import {realm} from './index';
 import {
   PIN_BANNED_ATTEMPTS,
