@@ -12,12 +12,15 @@ export const TransactionAccountScreen = ({
   navigation,
 }: TransactionAccountScreenProp) => {
   const wallets = useWallets();
-  const onPressRow = useCallback((address: string) => {
-    navigation.navigate('transactionAddress', {
-      ...route.params,
-      from: address,
-    });
-  }, []);
+  const onPressRow = useCallback(
+    (address: string) => {
+      navigation.navigate('transactionAddress', {
+        ...route.params,
+        from: address,
+      });
+    },
+    [navigation, route.params],
+  );
 
   const [rows, setRows] = useState(wallets.getWallets());
 
