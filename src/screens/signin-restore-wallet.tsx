@@ -54,7 +54,7 @@ export const SignInRestoreScreen = ({
   }, []);
 
   return (
-    <KeyboardSafeArea style={{paddingHorizontal: 20}}>
+    <KeyboardSafeArea style={page.container}>
       <Paragraph style={page.intro}>Recovery phrase or Private key</Paragraph>
       <Textarea
         style={page.input}
@@ -62,10 +62,8 @@ export const SignInRestoreScreen = ({
         placeholder="Backup phrase"
         onChangeText={setSeed}
       />
-      <IconButton onPress={onPressPaste} style={{alignSelf: 'flex-start'}}>
-        <Paragraph
-          size={ParagraphSize.s}
-          style={{color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'}}>
+      <IconButton onPress={onPressPaste} style={page.button}>
+        <Paragraph size={ParagraphSize.s} style={page.buttonText}>
           Paste from Clipboard
         </Paragraph>
       </IconButton>
@@ -75,16 +73,23 @@ export const SignInRestoreScreen = ({
         title="Recovery"
         onPress={onDone}
         variant={ButtonVariant.contained}
+        style={page.submit}
       />
     </KeyboardSafeArea>
   );
 };
 
 const page = StyleSheet.create({
+  container: {paddingHorizontal: 20, paddingTop: 20},
+  button: {alignSelf: 'flex-start'},
+  buttonText: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   intro: {
     marginBottom: 32,
   },
   input: {
     marginBottom: 8,
+  },
+  submit: {
+    marginVertical: 16,
   },
 });
