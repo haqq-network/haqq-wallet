@@ -36,12 +36,6 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
 };
 
 const page = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    paddingVertical: 16,
-  },
   info: {
     marginLeft: 12,
   },

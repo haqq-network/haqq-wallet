@@ -2,15 +2,10 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {
-  Button,
-  ButtonVariant,
-  Paragraph,
-  ParagraphFont,
-  ParagraphSize,
-} from './ui';
+import {Button, ButtonVariant, Text} from './ui';
 import {
   BG_1,
+  GRAPHIC_SECOND_7,
   GRAPHIC_SECOND_1,
   MAGIC_CARD_HEIGHT,
   TEXT_GREEN_1,
@@ -23,15 +18,10 @@ export const WalletCreate = ({}: BalanceProps) => {
 
   return (
     <View style={page.container}>
-      <Paragraph
-        style={page.title}
-        size={ParagraphSize.l}
-        font={ParagraphFont.text}>
+      <Text t8 style={page.title}>
         Add accounts
-      </Paragraph>
-      <Paragraph style={page.subtitle}>
-        Import and create new accounts
-      </Paragraph>
+      </Text>
+      <Text style={page.subtitle}>Import and create new accounts</Text>
       <Button
         variant={ButtonVariant.contained}
         title="Create new"
@@ -64,7 +54,7 @@ const page = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 28,
     backgroundColor: BG_1,
-    shadowColor: 'rgba(25, 26, 28, 0.08)',
+    shadowColor: GRAPHIC_SECOND_7,
     shadowOffset: {
       width: 0,
       height: 6,

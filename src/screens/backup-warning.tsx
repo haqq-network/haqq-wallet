@@ -7,11 +7,10 @@ import {
   ButtonVariant,
   InfoBlock,
   InfoBlockType,
-  LottieWrap,
-  Paragraph,
+  Text,
   PopupContainer,
   Spacer,
-  Title,
+  LottieWrap,
 } from '../components/ui';
 import {TEXT_YELLOW_1} from '../variables';
 
@@ -28,11 +27,13 @@ export const BackupWarningScreen = ({
       <Spacer style={page.imageContainer}>
         <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </Spacer>
-      <Title style={page.title}>Important about backup</Title>
-      <Paragraph style={page.paragraph}>
+      <Text t4 style={page.title}>
+        Important about backup
+      </Text>
+      <Text style={page.paragraph}>
         A backup is a restoring phrase of 12 words. It is better to write down
         the phrase on paper and not keep it online.
-      </Paragraph>
+      </Text>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock1}

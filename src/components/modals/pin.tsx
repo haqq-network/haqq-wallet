@@ -1,14 +1,10 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {
-  GRAPHIC_BASE_4,
-  PIN_BANNED_ATTEMPTS,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-} from '../../variables';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {BG_1, TEXT_BASE_2} from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';
 import {Pin, PinInterface} from '../pin';
+import {Text} from '../ui';
 
 export type PinModalProps = {};
 
@@ -46,7 +42,7 @@ export const PinModal = () => {
   );
 
   return (
-    <View style={{backgroundColor: '#ffffff', flex: 1, paddingTop: 110}}>
+    <View style={page.container}>
       <Pin
         ref={pinRef}
         title="Welcome to ISLM Wallet"
@@ -55,8 +51,12 @@ export const PinModal = () => {
           <TouchableOpacity
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
-            <Text style={page.additionButtonText}>Forgot</Text>
-            <Text style={page.additionButtonText}>the code</Text>
+            <Text clean style={page.additionButtonText}>
+              Forgot
+            </Text>
+            <Text clean style={page.additionButtonText}>
+              the code
+            </Text>
           </TouchableOpacity>
         }
       />
@@ -66,25 +66,7 @@ export const PinModal = () => {
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center'},
-  spacer: {justifyContent: 'center', alignItems: 'center'},
-  dots: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  dot: {
-    width: 18,
-    height: 18,
-    backgroundColor: GRAPHIC_BASE_4,
-    margin: 5,
-    borderRadius: 9,
-    transform: [{scale: 0.66}],
-  },
-  active: {
-    backgroundColor: TEXT_GREEN_1,
-    transform: [{scale: 1}],
-  },
+  container: {backgroundColor: BG_1, flex: 1, paddingTop: 110},
   additionButton: {
     flex: 1,
     justifyContent: 'center',
@@ -98,5 +80,4 @@ const page = StyleSheet.create({
     textAlign: 'center',
     padding: 2,
   },
-  title: {marginBottom: 60},
 });

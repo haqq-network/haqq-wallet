@@ -117,6 +117,7 @@ export const realm = new Realm({
           case 'defaultGreen':
           case 'defaultBlack':
             newObject.cardStyle = 'flat';
+            break;
           default:
             newObject.cardStyle = 'gradient';
         }
