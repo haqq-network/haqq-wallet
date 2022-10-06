@@ -33,9 +33,10 @@ export const MenuNavigationButton = ({
     </TouchableWithoutFeedback>
   );
 };
+
 const page = StyleSheet.create({
   container: {
-    paddingVertical: 16,
+    paddingVertical: 13,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
