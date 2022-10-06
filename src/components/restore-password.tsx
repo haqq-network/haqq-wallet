@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
+import * as Sentry from '@sentry/react-native';
 import {TEXT_BASE_2} from '../variables';
 import {Button, ButtonVariant, Text} from './ui';
 import {useWallets} from '../contexts/wallets';
@@ -56,9 +57,9 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
           text: 'Reset',
           onPress: async () => {
             try {
-              // wallet.clean();
-              // transactions.clean();
-              // contacts.clean();
+              wallet.clean();
+              transactions.clean();
+              contacts.clean();
               await app.clean();
               Animated.timing(pan, {
                 toValue: 1,
@@ -68,7 +69,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
                 app.emit('resetWallet');
               });
             } catch (e) {
-              console.log(e.message);
+              Sentry.captureException(e);
             }
           },
         },

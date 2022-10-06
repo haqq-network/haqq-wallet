@@ -12,7 +12,6 @@ import {Language, User, UserType} from '../models/user';
 import {AppState} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
-import {Transaction} from '../models/transaction';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
