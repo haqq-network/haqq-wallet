@@ -55,17 +55,21 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
           style: 'destructive',
           text: 'Reset',
           onPress: async () => {
-            wallet.clean();
-            transactions.clean();
-            contacts.clean();
-            await app.clean();
-            Animated.timing(pan, {
-              toValue: 1,
-              duration: 250,
-              useNativeDriver: true,
-            }).start(() => {
-              app.emit('resetWallet');
-            });
+            try {
+              // wallet.clean();
+              // transactions.clean();
+              // contacts.clean();
+              await app.clean();
+              Animated.timing(pan, {
+                toValue: 1,
+                duration: 250,
+                useNativeDriver: true,
+              }).start(() => {
+                app.emit('resetWallet');
+              });
+            } catch (e) {
+              console.log(e.message);
+            }
           },
         },
       ],
