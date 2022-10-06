@@ -84,7 +84,10 @@ class Wallets extends EventEmitter {
     });
 
     this.onChangeWallet();
+    await this.checkForBackup(snoozeBackup);
+  }
 
+  async checkForBackup(snoozeBackup: Date) {
     if (isAfter(new Date(), snoozeBackup)) {
       const backupMnemonic = Array.from(this._wallets.values()).find(
         w => !w.mnemonicSaved && !w.isHidden,
