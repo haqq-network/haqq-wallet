@@ -10,8 +10,7 @@ import {
   ButtonVariant,
   IconButton,
   KeyboardSafeArea,
-  Paragraph,
-  ParagraphSize,
+  Text,
   Spacer,
   Textarea,
 } from '../components/ui';
@@ -55,7 +54,7 @@ export const SignInRestoreScreen = ({
 
   return (
     <KeyboardSafeArea style={page.container}>
-      <Paragraph style={page.intro}>Recovery phrase or Private key</Paragraph>
+      <Text style={page.intro}>Recovery phrase or Private key</Text>
       <Textarea
         style={page.input}
         value={seed}
@@ -63,9 +62,9 @@ export const SignInRestoreScreen = ({
         onChangeText={setSeed}
       />
       <IconButton onPress={onPressPaste} style={page.button}>
-        <Paragraph size={ParagraphSize.s} style={page.buttonText}>
+        <Text t14 style={page.t14}>
           Paste from Clipboard
-        </Paragraph>
+        </Text>
       </IconButton>
       <Spacer />
       <Button
@@ -82,13 +81,13 @@ export const SignInRestoreScreen = ({
 const page = StyleSheet.create({
   container: {paddingHorizontal: 20, paddingTop: 20},
   button: {alignSelf: 'flex-start'},
-  buttonText: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   intro: {
     marginBottom: 32,
   },
   input: {
     marginBottom: 8,
   },
+  t14: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   submit: {
     marginVertical: 16,
   },

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {NavigationProp} from '@react-navigation/core/src/types';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {useWallet} from '../contexts/wallets';
@@ -11,11 +11,16 @@ import {
   Copy,
   CopyButton,
   IconButton,
-  Paragraph,
-  ParagraphSize,
+  Text,
   QRCode,
 } from './ui';
-import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3, TEXT_SECOND_2} from '../variables';
+import {
+  GRAPHIC_SECOND_6,
+  BG_5,
+  GRAPHIC_BASE_3,
+  TEXT_BASE_3,
+  TEXT_SECOND_2,
+} from '../variables';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
 
@@ -68,35 +73,43 @@ export const WalletCard = ({address}: BalanceProps) => {
       pattern={wallet?.pattern}
       style={page.container}
       width={Dimensions.get('window').width - 40}>
-      <View style={[page.topNav, !wallet.mnemonicSaved && {marginBottom: 4}]}>
-        <Paragraph size={ParagraphSize.s} style={page.name}>
+      <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
+        <Text t14 style={page.name}>
           {wallet.name || 'name'}
-        </Paragraph>
+        </Text>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
         <CopyButton style={page.copyButton} value={wallet.address}>
-          <Paragraph size={ParagraphSize.s} style={page.address}>
+          <Text t14 style={page.address}>
             {formattedAddress}
-          </Paragraph>
-          <Copy color={GRAPHIC_BASE_3} style={{marginLeft: 4}} />
+          </Text>
+          <Copy color={GRAPHIC_BASE_3} style={page.marginLeft} />
         </CopyButton>
       </View>
       {!wallet.mnemonicSaved && (
         <IconButton onPress={onClickBackup} style={page.cacheButton}>
-          <Text style={page.cacheText}>Without backup</Text>
+          <Text clean style={page.cacheText}>
+            Without backup
+          </Text>
         </IconButton>
       )}
-      <Text style={page.balance}>{balance.toFixed(4)} ISLM</Text>
+      <Text clean style={page.balance}>
+        {balance.toFixed(4)} ISLM
+      </Text>
       <View style={page.buttonsContainer}>
         <IconButton style={page.button} onPress={onPressSend}>
           <ArrowSend color={GRAPHIC_BASE_3} />
-          <Text style={page.buttonText}>Send</Text>
+          <Text clean style={page.buttonText}>
+            Send
+          </Text>
         </IconButton>
         <IconButton style={page.button} onPress={onPressQR}>
           <ArrowReceive color={GRAPHIC_BASE_3} />
-          <Text style={page.buttonText}>Receive</Text>
+          <Text clean style={page.buttonText}>
+            Receive
+          </Text>
         </IconButton>
       </View>
     </Card>
@@ -113,11 +126,9 @@ const page = StyleSheet.create({
     marginBottom: 30,
   },
   spacer: {flex: 1},
+  marginLeft: {marginLeft: 4},
+  marginBottom: {marginBottom: 4},
   name: {
-    fontWeight: '700',
-    color: TEXT_SECOND_2,
-  },
-  text: {
     fontWeight: '700',
     color: TEXT_SECOND_2,
   },
@@ -142,7 +153,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: GRAPHIC_SECOND_6,
     borderRadius: 16,
     padding: 6,
   },

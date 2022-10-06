@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import {WalletCardStyle} from './types';
 
-export const TEXT_BASE_1 = '#2F2F2F';
+export const TEXT_BASE_1 = '#2E312D';
 export const TEXT_BASE_2 = '#8E8E8E';
 export const TEXT_BASE_3 = '#FFFFFF';
 
@@ -10,18 +10,29 @@ export const TEXT_RED_1 = '#E16363';
 export const TEXT_YELLOW_1 = '#B26F1D';
 export const TEXT_SECOND_1 = '#B2B4BB';
 export const TEXT_SECOND_2 = 'rgba(255, 255, 255, 0.8)';
+export const TEXT_SECOND_3 = '#65666A';
 
 export const GRAPHIC_BASE_1 = '#2F2F2F';
 export const GRAPHIC_BASE_2 = '#8E8E8E';
 export const GRAPHIC_BASE_3 = '#FFFFFF';
 export const GRAPHIC_BASE_4 = '#CFD1DB';
 export const GRAPHIC_RED_1 = '#E16363';
+export const GRAPHIC_RED_2 = '#FF6347';
+
 export const GRAPHIC_GREEN_1 = '#01B26E';
 export const GRAPHIC_GREEN_2 = '#04D484';
+export const GRAPHIC_GREEN_3 = '#03BF77';
+export const GRAPHIC_GREEN_4 = '#0DAC6F';
 export const GRAPHIC_SECOND_1 = '#EFEFEF';
 export const GRAPHIC_SECOND_2 = '#CFD1DB';
 export const GRAPHIC_SECOND_3 = '#CCCDD2';
 export const GRAPHIC_SECOND_4 = '#AAABB2';
+export const GRAPHIC_SECOND_5 = '#000000';
+export const GRAPHIC_SECOND_6 = 'rgba(255, 255, 255, 0.15)';
+export const GRAPHIC_SECOND_7 = 'rgba(25, 26, 28, 0.08)';
+export const GRAPHIC_SECOND_8 = '#0000004D';
+export const GRAPHIC_SECOND_9 = 'rgba(255, 255, 255, 0.3)';
+export const GRAPHIC_SECOND_10 = 'rgba(229, 229, 234, 0.82)';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';

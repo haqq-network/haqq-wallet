@@ -1,4 +1,5 @@
-import {StyleSheet, Text, TouchableOpacity, ViewProps} from 'react-native';
+/* eslint-disable react-native/no-unused-styles */
+import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 import {
@@ -10,6 +11,7 @@ import {
   TEXT_RED_1,
   TEXT_SECOND_1,
 } from '../../variables';
+import {Text} from './text';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
@@ -79,7 +81,9 @@ export const Button = ({
       onPress={onPressButton}
       activeOpacity={0.7}
       {...props}>
-      <Text style={textStyle}>{title}</Text>
+      <Text clean style={textStyle}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

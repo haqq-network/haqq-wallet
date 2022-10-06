@@ -1,9 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, StyleSheet, Text, TextInput} from 'react-native';
+import {Button, StyleSheet, TextInput} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
-import {Container} from '../components/ui';
+import {Container, Text} from '../components/ui';
+import {GRAPHIC_SECOND_5} from '../variables';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
@@ -22,7 +23,7 @@ export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
 
   return (
     <Container>
-      <Text>Import Wallet Screen</Text>
+      <Text clean>Import Wallet Screen</Text>
       <TextInput
         style={page.input}
         placeholder={'Name'}
@@ -41,15 +42,9 @@ export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
 };
 
 const page = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 10,
-    gap: 10,
-  },
   input: {
     padding: 10,
-    borderColor: '#000000',
+    borderColor: GRAPHIC_SECOND_5,
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 20,

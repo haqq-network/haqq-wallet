@@ -1,8 +1,9 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, ButtonVariant} from '../components/ui';
+import {Button, ButtonVariant, Text} from '../components/ui';
+import {GRAPHIC_SECOND_5} from '../variables';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -32,7 +33,7 @@ export const TransactionFormScreen = ({
 
   return (
     <View style={page.container}>
-      <Text>Send transaction Screen</Text>
+      <Text clean>Send transaction Screen</Text>
       <TextInput
         value={from}
         style={page.input}
@@ -71,7 +72,7 @@ const page = StyleSheet.create({
   },
   input: {
     padding: 10,
-    borderColor: '#000000',
+    borderColor: GRAPHIC_SECOND_5,
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 20,

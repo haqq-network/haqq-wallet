@@ -11,10 +11,9 @@ import {
   DataContent,
   IconButton,
   ISLMIcon,
-  Paragraph,
-  ParagraphSize,
+  Text,
 } from '../components/ui';
-import {Linking, StyleSheet, Text, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -58,11 +57,11 @@ export const TransactionDetailScreen = ({
 
   return (
     <BottomSheet onClose={navigation.goBack} title={title}>
-      <Paragraph size={ParagraphSize.s} style={{marginBottom: 2}}>
+      <Text t14 style={page.t14}>
         Total amount
-      </Paragraph>
-      <Paragraph
-        size={ParagraphSize.xl}
+      </Text>
+      <Text
+        t6
         style={[
           page.sum,
           transaction.source === TransactionSource.send
@@ -70,10 +69,10 @@ export const TransactionDetailScreen = ({
             : page.sumReceive,
         ]}>
         {transaction.totalFormatted} ISLM
-      </Paragraph>
-      {/*<Paragraph size={ParagraphSize.s} style={page.subSum}>*/}
+      </Text>
+      {/*<Text t14 style={page.subSum}>*/}
       {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
-      {/*</Paragraph>*/}
+      {/*</Text>*/}
       <View style={page.infoContainer}>
         <DataContent
           title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
@@ -103,10 +102,13 @@ export const TransactionDetailScreen = ({
                 width={16}
                 height={16}
                 color={GRAPHIC_GREEN_1}
-                style={{marginRight: 4}}
+                style={page.icon}
               />
-              <Text>
-                Islamic coin <Text style={{color: TEXT_BASE_2}}>(ISLM)</Text>
+              <Text clean>
+                Islamic coin{' '}
+                <Text clean style={{color: TEXT_BASE_2}}>
+                  (ISLM)
+                </Text>
               </Text>
             </>
           }
@@ -117,7 +119,10 @@ export const TransactionDetailScreen = ({
         <DataContent
           title={
             <>
-              HAQQ blockchain <Text style={{color: TEXT_BASE_2}}>(HQ)</Text>
+              HAQQ blockchain{' '}
+              <Text clean style={{color: TEXT_BASE_2}}>
+                (HQ)
+              </Text>
             </>
           }
           subtitle="Network"
@@ -137,14 +142,9 @@ export const TransactionDetailScreen = ({
           style={page.info}
         />
       </View>
-      <IconButton
-        onPress={onPressInfo}
-        style={{flexDirection: 'row', marginBottom: 50}}>
+      <IconButton onPress={onPressInfo} style={page.iconButton}>
         <BlockIcon color={GRAPHIC_BASE_1} />
-        <Paragraph
-          style={{marginLeft: 8, color: TEXT_BASE_1, fontWeight: '700'}}>
-          View on block explorer
-        </Paragraph>
+        <Text style={page.textStyle}>View on block explorer</Text>
       </IconButton>
     </BottomSheet>
   );
@@ -162,11 +162,6 @@ const page = StyleSheet.create({
   sumReceive: {
     color: TEXT_GREEN_1,
   },
-  subSum: {
-    color: TEXT_BASE_2,
-    marginBottom: 20,
-    fontWeight: '600',
-  },
   infoContainer: {
     paddingHorizontal: 20,
     paddingVertical: 4,
@@ -177,4 +172,8 @@ const page = StyleSheet.create({
   info: {
     marginVertical: 8,
   },
+  t14: {marginBottom: 2},
+  icon: {marginRight: 4},
+  iconButton: {flexDirection: 'row', marginBottom: 50},
+  textStyle: {marginLeft: 8, color: TEXT_BASE_1, fontWeight: '700'},
 });
