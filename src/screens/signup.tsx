@@ -51,7 +51,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         initialParams={{action: 'create'}}
       />
       <SignUpStack.Screen
-        name="onboarding-finish"
+        name="onboardingFinish"
         component={OnboardingFinishScreen}
         initialParams={{action: 'create'}}
         options={{title: '', headerBackHidden: true}}

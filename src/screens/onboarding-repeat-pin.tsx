@@ -30,16 +30,21 @@ export const OnboardingRepeatPinScreen = ({
   useEffect(() => {
     if (pin.length === 6) {
       if (pin === currentPin) {
+        const {nextScreen, ...params} = route.params;
+
         app
           .setPin(pin)
           .then(() => app.createUser())
           .then(() => {
             if (app.biometryType !== null) {
               navigation.navigate('onboarding-biometry', {
+                ...params,
                 biometryType: app.biometryType,
               });
             } else {
-              navigation.navigate('signupStoreWallet');
+              navigation.navigate(nextScreen ?? 'signupStoreWallet', {
+                ...params,
+              });
             }
           });
       } else {

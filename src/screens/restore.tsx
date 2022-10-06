@@ -6,6 +6,7 @@ import {SignInAgreementScreen} from './signin-agreement';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {SigninStoreWalletScreen} from './signin-store-wallet';
 
 const SignInStack = createStackNavigator();
 type RestoreScreenProp = CompositeScreenProps<any, any>;
@@ -31,6 +32,12 @@ export const RestoreScreen = ({}: RestoreScreenProp) => {
         name="restorePhrase"
         component={SignInRestoreScreen}
         options={{title}}
+        initialParams={{nextScreen: 'restoreStore'}}
+      />
+      <SignInStack.Screen
+        name="restoreStore"
+        component={SigninStoreWalletScreen}
+        options={{title: '', headerBackHidden: true}}
         initialParams={{nextScreen: 'restoreFinish'}}
       />
       <SignInStack.Screen
