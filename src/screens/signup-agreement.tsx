@@ -27,7 +27,7 @@ export const SignUpAgreementScreen = ({
   return (
     <>
       <View pointerEvents="none" style={page.animation}>
-        <LottieWrap source={animation} autoPlay loop />
+        <LottieWrap source={animation} autoPlay loop={false} />
       </View>
       <PopupContainer style={page.container}>
         <Title style={page.title}>Islm - DeFi Wallet</Title>
