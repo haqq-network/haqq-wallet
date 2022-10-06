@@ -9,7 +9,7 @@ import {
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
-import {Wallet} from '../models/wallet';
+import {Wallet, WalletRealm} from '../models/wallet';
 import {NETWORK_EXPLORER} from '@env';
 
 class Transactions extends EventEmitter {
@@ -92,6 +92,16 @@ class Transactions extends EventEmitter {
           console.log('sendTransaction', e.message);
         }
       }
+    }
+  }
+
+  clean() {
+    const transactions = realm.objects<Transaction>('Transaction');
+
+    for (const transaction of transactions) {
+      realm.write(() => {
+        realm.delete(transaction);
+      });
     }
   }
 

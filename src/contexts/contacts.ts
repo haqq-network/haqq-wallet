@@ -3,6 +3,7 @@ import {createContext, useContext} from 'react';
 
 import {realm} from '../models';
 import {Contact} from '../models/contact';
+import {Transaction} from '../models/transaction';
 
 class Contacts extends EventEmitter {
   async init(): Promise<void> {}
@@ -54,6 +55,16 @@ class Contacts extends EventEmitter {
     }
 
     return contact[0];
+  }
+
+  clean() {
+    const contacts = realm.objects<Contact>('Contact');
+
+    for (const contact of contacts) {
+      realm.write(() => {
+        realm.delete(contact);
+      });
+    }
   }
 }
 

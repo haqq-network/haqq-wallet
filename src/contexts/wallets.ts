@@ -220,10 +220,10 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async clean() {
+  clean() {
     this._wallets = new Map();
 
-    const wallets = await realm.objects<WalletRealm>('Wallet');
+    const wallets = realm.objects<WalletRealm>('Wallet');
 
     for (const wallet of wallets) {
       realm.write(() => {

@@ -20,11 +20,18 @@ export type BottomSheetProps = {
   children: React.ReactNode;
   title?: string;
   onClose: () => void;
+  closeDistance?: number;
 };
 
 const h = Dimensions.get('window').height;
+const defaultCloseDistance = h / 3;
 
-export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
+export const BottomSheet = ({
+  children,
+  onClose,
+  title,
+  closeDistance = defaultCloseDistance,
+}: BottomSheetProps) => {
   const pan = useRef(new Animated.Value(1)).current;
   const insets = useSafeAreaInsets();
   const panResponder = useRef(
@@ -36,7 +43,7 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
         }
       },
       onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > h / 3) {
+        if (gestureState.dy > closeDistance) {
           onClosePopup();
         } else {
           onOpenPopup();
