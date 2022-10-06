@@ -24,4 +24,5 @@ export * from './spacer';
 export * from './svg-icon';
 export * from './swipeable-button';
 export * from './swipeable-row';
-export * from './waiting';
+export * from '../lottie/waiting';
+export * from '../lottie';

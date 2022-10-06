@@ -122,11 +122,13 @@ const page = StyleSheet.create({
     marginBottom: 12,
   },
   header: {
+    height: 298,
+    marginTop: 15,
     backgroundColor: BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   headerName: {
     fontWeight: '600',

@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import Lottie from 'lottie-react-native';
 import {
   Button,
   ButtonVariant,
   Paragraph,
   PopupContainer,
   Title,
+  LottieWrap,
 } from '../components/ui';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
@@ -27,7 +27,7 @@ export const SignUpAgreementScreen = ({
   return (
     <>
       <View pointerEvents="none" style={page.animation}>
-        <Lottie source={animation} autoPlay loop />
+        <LottieWrap source={animation} autoPlay loop />
       </View>
       <PopupContainer style={page.container}>
         <Title style={page.title}>Islm - DeFi Wallet</Title>
