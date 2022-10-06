@@ -14,7 +14,7 @@ type BackupScreenProp = CompositeScreenProps<any, any>;
 export const BackupScreen = ({route}: BackupScreenProp) => {
   return (
     <BackupStack.Navigator
-      screenOptions={{header: PopupHeader, title: 'Backup wallet'}}>
+      screenOptions={{header: PopupHeader, title: 'Backup phrase'}}>
       <BackupStack.Screen
         name={'backupWarning'}
         component={BackupWarningScreen}

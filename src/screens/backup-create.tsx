@@ -27,11 +27,11 @@ export const BackupCreateScreen = ({
 }: BackupCreateScreenProp) => {
   const [checked, setChecked] = useState(false);
   const wallet = useWallet(route.params.address);
-
+  const setPhrase = () => setChecked(prevState => !prevState);
   return (
     <PopupContainer style={page.container}>
       <Title>Your recovery phrase</Title>
-      <Paragraph>
+      <Paragraph style={page.description}>
         Write down or copy these words in the right order and save them
         somewhere safe.
       </Paragraph>
@@ -67,11 +67,15 @@ export const BackupCreateScreen = ({
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
-        <Checkbox value={checked} onPress={setChecked} />
-        <Paragraph size={ParagraphSize.s} style={page.agreeText}>
-          I understand that if I lose my recovery phrase, I will not be able to
-          restore access to my account
-        </Paragraph>
+        <Checkbox value={checked} onPress={setChecked}>
+          <Paragraph
+            size={ParagraphSize.s}
+            style={page.agreeText}
+            onPress={setPhrase}>
+            I understand that if I lose my recovery phrase, I will not be able
+            to restore access to my account
+          </Paragraph>
+        </Checkbox>
       </View>
       <Button
         title="Continue"
@@ -98,12 +102,14 @@ const page = StyleSheet.create({
     borderRadius: 16,
   },
   column: {flex: 1},
+  description: {textAlign: 'center'},
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,
     color: TEXT_BASE_2,
     fontWeight: '600',
     marginLeft: 12,
+    marginBottom: 4,
   },
   submit: {marginVertical: 16},
   copy: {
