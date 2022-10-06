@@ -6,6 +6,8 @@ import type AnimatedLottieViewProps from 'lottie-react-native';
 
 interface AnimatedLottie extends AnimatedLottieViewProps {
   source: string;
+  autoPlay: boolean;
+  loop: boolean;
 }
 export const LottieWrap = (props: AnimatedLottie) => {
   const ref = useRef<AnimatedLottieView>(null);

@@ -6,7 +6,7 @@ import {
   ButtonVariant,
   Container,
   Spacer,
-  Title,
+  Text,
   LottieWrap,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
@@ -52,7 +52,9 @@ export const OnboardingFinishScreen = ({
           loop={false}
         />
       </Spacer>
-      <Title style={page.title}>{title}</Title>
+      <Text t4 style={page.title}>
+        {title}
+      </Text>
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
@@ -64,7 +66,6 @@ export const OnboardingFinishScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 76},
   button: {marginBottom: 16},
 });

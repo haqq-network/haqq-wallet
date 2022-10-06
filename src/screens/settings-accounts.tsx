@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {StyleSheet, FlatList} from 'react-native';
 import {useWallets} from '../contexts/wallets';
-import {FlatList} from 'react-native';
 import {WalletRow} from '../components/wallet-row';
 import {Wallet} from '../models/wallet';
 import {CompositeScreenProps} from '@react-navigation/native';
@@ -39,7 +39,11 @@ export const SettingsAccountsScreen = ({
       data={rows}
       renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
       keyExtractor={(wallet: Wallet) => wallet.address}
-      style={{paddingHorizontal: 20, flex: 1}}
+      style={page.container}
     />
   );
 };
+
+const page = StyleSheet.create({
+  container: {paddingHorizontal: 20, flex: 1},
+});

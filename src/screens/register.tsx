@@ -1,7 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Button, TextInput, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useApp} from '../contexts/app';
+import {Text} from '../components/ui';
 
 type Create1ScreenProp = CompositeScreenProps<any, any>;
 
@@ -19,8 +20,8 @@ export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
   }, [password, app, navigation]);
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Create 1 Screen</Text>
+    <View style={page.container}>
+      <Text clean>Create 1 Screen</Text>
       <TextInput
         placeholder={'Password'}
         onChangeText={setPassword}
@@ -30,3 +31,7 @@ export const RegisterScreen = ({navigation}: Create1ScreenProp) => {
     </View>
   );
 };
+
+const page = StyleSheet.create({
+  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+});

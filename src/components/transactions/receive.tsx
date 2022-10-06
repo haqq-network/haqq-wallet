@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {ArrowReceive} from '../ui';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {ArrowReceive, Text} from '../ui';
 import {TransactionListReceive} from '../../types';
 import {
   BG_3,
@@ -30,19 +30,23 @@ export const TransactionReceive = ({
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
-            <Text style={{color: TEXT_BASE_1}}>Receive</Text>
-            <Text style={page.sum}>{`+${item.value.toFixed(2)} ISLM`}</Text>
+            <Text clean style={{color: TEXT_BASE_1}}>
+              Receive
+            </Text>
+            <Text clean style={page.sum}>
+              {`+${item.value.toFixed(2)} ISLM`}
+            </Text>
           </View>
           <View style={page.infoRow}>
-            <Text style={{color: TEXT_BASE_2}}>
+            <Text clean style={{color: TEXT_BASE_2}}>
               {`from ${item.from.slice(0, 5)}•••${item.from.slice(
                 item.from.length - 5,
                 item.from.length,
               )}`}
             </Text>
-            <Text style={{color: TEXT_BASE_2}}>{`+${item.value.toFixed(
-              2,
-            )} $`}</Text>
+            <Text clean style={{color: TEXT_BASE_2}}>
+              {`+${item.value.toFixed(2)} $`}
+            </Text>
           </View>
         </View>
       </View>

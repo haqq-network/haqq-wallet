@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -6,7 +6,7 @@ import {
   ButtonVariant,
   DataView,
   ISLMIcon,
-  Paragraph,
+  Text,
   PopupContainer,
   Spacer,
 } from '../components/ui';
@@ -75,40 +75,47 @@ export const TransactionConfirmationScreen = ({
   return (
     <PopupContainer style={page.container}>
       <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
-
-      <Paragraph style={page.subtitle}>Total Amount</Paragraph>
-      <Text style={page.sum}>{(amount + estimateFee).toFixed(8)} ISLM</Text>
-      <Paragraph style={page.subtitle}>Send to</Paragraph>
-      {contact && <Paragraph style={page.contact}>{contact.name}</Paragraph>}
-      <Paragraph style={page.address}>
-        <Text>{splittedTo[0]}</Text>
-        <Text style={{color: TEXT_BASE_2}}>{splittedTo[1]}</Text>
-        <Text>{splittedTo[2]}</Text>
-      </Paragraph>
+      <Text style={page.subtitle}>Total Amount</Text>
+      <Text clean style={page.sum}>
+        {(amount + estimateFee).toFixed(8)} ISLM
+      </Text>
+      <Text style={page.subtitle}>Send to</Text>
+      {contact && <Text style={page.contact}>{contact.name}</Text>}
+      <Text style={page.address}>
+        <Text clean>{splittedTo[0]}</Text>
+        <Text clean style={{color: TEXT_BASE_2}}>
+          {splittedTo[1]}
+        </Text>
+        <Text clean>{splittedTo[2]}</Text>
+      </Text>
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
-          <Paragraph style={{color: TEXT_BASE_1}}>
-            Islamic coin <Text style={{color: TEXT_BASE_2}}>(ISLM)</Text>
-          </Paragraph>
+          <Text style={{color: TEXT_BASE_1}}>
+            Islamic coin{' '}
+            <Text clean style={{color: TEXT_BASE_2}}>
+              (ISLM)
+            </Text>
+          </Text>
         </DataView>
         <DataView label="Network">
-          <Paragraph style={{color: TEXT_BASE_1}}>
-            HAQQ blockchain <Text style={{color: TEXT_BASE_2}}>(HQ)</Text>
-          </Paragraph>
+          <Text style={{color: TEXT_BASE_1}}>
+            HAQQ blockchain{' '}
+            <Text clean style={{color: TEXT_BASE_2}}>
+              (HQ)
+            </Text>
+          </Text>
         </DataView>
         <DataView label="Amount">
-          <Paragraph style={{color: TEXT_BASE_1}}>
-            {amount.toFixed(8)} ISLM
-          </Paragraph>
+          <Text style={{color: TEXT_BASE_1}}>{amount.toFixed(8)} ISLM</Text>
         </DataView>
         <DataView label="Network Fee">
-          <Paragraph style={{color: TEXT_BASE_1}}>
+          <Text style={{color: TEXT_BASE_1}}>
             {estimateFee.toFixed(8)} ISLM
-          </Paragraph>
+          </Text>
         </DataView>
       </View>
-      {error && <Text>{error}</Text>}
+      {error && <Text clean>{error}</Text>}
       <Spacer />
       <Button
         disabled={estimateFee === 0 && !disabled}

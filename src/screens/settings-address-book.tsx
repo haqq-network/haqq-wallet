@@ -9,7 +9,7 @@ import {
   Container,
   IconButton,
   Input,
-  Paragraph,
+  Text,
   PenIcon,
   PlusIcon,
   QRScanner,
@@ -162,11 +162,7 @@ export const SettingsAddressBookScreen =
     );
 
     return (
-      <Container
-        style={{
-          marginVertical: 0,
-          marginHorizontal: 0,
-        }}>
+      <Container style={page.container}>
         <Input
           label=""
           style={page.input}
@@ -191,7 +187,7 @@ export const SettingsAddressBookScreen =
             <Box style={page.badge}>
               <PlusIcon color={GRAPHIC_BASE_2} />
             </Box>
-            <Paragraph style={{color: TEXT_BASE_1}}>Add Contact</Paragraph>
+            <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
           </IconButton>
         )}
         <FlatList
@@ -226,16 +222,11 @@ export const SettingsAddressBookScreen =
 
 const page = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    padding: 10,
-    gap: 10,
+    marginVertical: 0,
+    marginHorizontal: 0,
   },
   input: {
     marginBottom: 12,
-    marginHorizontal: 20,
-  },
-  button: {
     marginHorizontal: 20,
   },
   icon: {width: 20, height: 20},
