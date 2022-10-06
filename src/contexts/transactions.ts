@@ -95,6 +95,16 @@ class Transactions extends EventEmitter {
     }
   }
 
+  clean() {
+    const transactions = realm.objects<Transaction>('Transaction');
+
+    for (const transaction of transactions) {
+      realm.write(() => {
+        realm.delete(transaction);
+      });
+    }
+  }
+
   async sendTransaction(
     from: string,
     to: string,

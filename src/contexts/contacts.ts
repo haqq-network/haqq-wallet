@@ -55,6 +55,16 @@ class Contacts extends EventEmitter {
 
     return contact[0];
   }
+
+  clean() {
+    const contacts = realm.objects<Contact>('Contact');
+
+    for (const contact of contacts) {
+      realm.write(() => {
+        realm.delete(contact);
+      });
+    }
+  }
 }
 
 export const contacts = new Contacts();
