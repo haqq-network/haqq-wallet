@@ -36,23 +36,22 @@ export const Card = ({
     return (
       <View
         style={[
+          page.container,
           {
             width: width,
             height: width * 0.632835821,
-            padding: 16,
             borderRadius,
-            overflow: 'hidden',
-            position: 'relative',
           },
           style,
         ]}>
         <Image
           source={uri}
           style={[
+            page.index,
             {
               width: width,
               height: width * 0.632835821,
-              zIndex: -1,
+
               tintColor: colorPattern,
             },
             StyleSheet.absoluteFillObject,
@@ -69,23 +68,22 @@ export const Card = ({
       start={GRADIENT_START}
       end={GRADIENT_END}
       style={[
+        page.container,
         {
           width: width,
-          height: width * 0.632835821,
-          padding: 16,
+          height: width * 0.612835821,
           borderRadius,
-          overflow: 'hidden',
-          position: 'relative',
         },
         style,
       ]}>
       <Image
         source={uri}
         style={[
+          page.index,
           {
             width: width,
             height: width * 0.632835821,
-            zIndex: -1,
+
             tintColor: colorPattern,
           },
           StyleSheet.absoluteFillObject,
@@ -95,3 +93,12 @@ export const Card = ({
     </LinearGradient>
   );
 };
+
+const page = StyleSheet.create({
+  container: {
+    padding: 16,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  index: {zIndex: -1},
+});
