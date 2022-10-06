@@ -118,7 +118,9 @@ export const BottomSheet = ({
 };
 
 const page = StyleSheet.create({
-  container: {justifyContent: 'flex-end'},
+  container: {
+    justifyContent: 'flex-end',
+  },
   space: {flex: 1},
   background: {
     backgroundColor: GRAPHIC_SECOND_5,

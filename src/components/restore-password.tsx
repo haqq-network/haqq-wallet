@@ -70,7 +70,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         },
       ],
     );
-  }, [app, pan, wallet]);
+  }, [app, contacts, pan, transactions, wallet]);
 
   return (
     <BottomSheet

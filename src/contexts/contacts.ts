@@ -3,7 +3,6 @@ import {createContext, useContext} from 'react';
 
 import {realm} from '../models';
 import {Contact} from '../models/contact';
-import {Transaction} from '../models/transaction';
 
 class Contacts extends EventEmitter {
   async init(): Promise<void> {}

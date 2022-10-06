@@ -9,7 +9,7 @@ import {
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
-import {Wallet, WalletRealm} from '../models/wallet';
+import {Wallet} from '../models/wallet';
 import {NETWORK_EXPLORER} from '@env';
 
 class Transactions extends EventEmitter {
