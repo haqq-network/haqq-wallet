@@ -74,7 +74,7 @@ export const SettingsAccountDetailScreen = ({
 
   return (
     <Container>
-      <View style={[page.header, wallet.isHidden && {opacity: 0.5}]}>
+      <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={Dimensions.get('window').width - 72}
           style={page.card}
@@ -83,7 +83,10 @@ export const SettingsAccountDetailScreen = ({
           colorTo={wallet.colorTo}
           colorPattern={wallet.colorPattern}>
           <CardMask
-            style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
+            style={[
+              page.margin,
+              {width: cardMaskWidth, height: cardMaskHeight},
+            ]}
           />
         </Card>
         <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
@@ -120,11 +123,13 @@ const page = StyleSheet.create({
     marginBottom: 12,
   },
   header: {
+    height: 298,
+    marginTop: 15,
     backgroundColor: BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   headerName: {
     fontWeight: '600',
@@ -141,4 +146,6 @@ const page = StyleSheet.create({
     color: TEXT_BASE_1,
     marginBottom: 2,
   },
+  opacity: {opacity: 0.5},
+  margin: {margin: 4},
 });
