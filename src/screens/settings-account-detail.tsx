@@ -138,6 +138,6 @@ const page = StyleSheet.create({
   headerAddress: {
     color: TEXT_BASE_1,
   },
-  opacity: {opacity: 0.5},
   cardMask: {margin: 4},
+  opacity: {opacity: 0.5},
 });

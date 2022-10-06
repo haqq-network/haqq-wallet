@@ -8,7 +8,7 @@ import {
   Image,
   View,
 } from 'react-native';
-import {Button, ButtonVariant, Text, ParagraphFont} from '../components/ui';
+import {Button, ButtonVariant, Text} from '../components/ui';
 import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 
@@ -104,7 +104,7 @@ export const BackupNotificationScreen = ({
             source={warningImage}
             style={{width: Dimensions.get('window').width - 80}}
           />
-          <Text t8 font={ParagraphFont.text} style={page.t8}>
+          <Text t8 style={page.t8}>
             Backup your wallet, keep your assets safe
           </Text>
           <Text t14 style={page.t14}>
