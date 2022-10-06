@@ -51,7 +51,7 @@ export const OnboardingRepeatPinScreen = ({
         setError('Invalid code. Try again');
       }
     }
-  }, [pin, currentPin, app, navigation, route.params.nextScreen]);
+  }, [pin, currentPin, app, navigation, route]);
 
   return (
     <Container style={page.container}>

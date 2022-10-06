@@ -52,7 +52,7 @@ export const SigninStoreWalletScreen = ({
           }
         });
     });
-  }, [navigation, route, wallets]);
+  }, [navigation, route, transactions, wallets]);
 
   return <View />;
 };

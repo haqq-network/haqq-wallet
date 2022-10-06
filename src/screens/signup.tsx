@@ -35,11 +35,13 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         name="onboarding-repeat-pin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
+        initialParams={{nextScreen: 'signupStoreWallet'}}
       />
       <SignUpStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
         options={{title}}
+        initialParams={{nextScreen: 'signupStoreWallet'}}
       />
       <SignUpStack.Screen
         name="signupStoreWallet"

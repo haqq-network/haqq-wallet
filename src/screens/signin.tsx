@@ -45,16 +45,16 @@ export const SignInScreen = ({}: SignInScreenProp) => {
         name="onboarding-repeat-pin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
-        initialParams={{nextScreen: 'signinStore'}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
         options={{title}}
-        initialParams={{nextScreen: 'signinStore'}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen
-        name="signinStore"
+        name="signinStoreWallet"
         component={SigninStoreWalletScreen}
         options={{title: '', headerBackHidden: true}}
         initialParams={{action: 'restore'}}
