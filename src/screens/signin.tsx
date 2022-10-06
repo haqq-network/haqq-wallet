@@ -7,8 +7,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {SignInAgreementScreen} from './signin-agreement';
-import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
+import {SigninStoreWalletScreen} from './signin-store-wallet';
 
 const SignInStack = createNativeStackNavigator();
 type SignInScreenProp = CompositeScreenProps<any, any>;
@@ -21,7 +21,7 @@ export const SignInScreen = ({}: SignInScreenProp) => {
         header: PopupHeader,
       }}>
       <SignInStack.Screen
-        name="signin-agreement"
+        name="signinAgreement"
         component={SignInAgreementScreen}
         options={{title}}
         initialParams={{
@@ -45,23 +45,22 @@ export const SignInScreen = ({}: SignInScreenProp) => {
         name="onboarding-repeat-pin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
         options={{title}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen
-        name="onboarding-store-wallet"
-        component={OnboardingStoreWalletScreen}
-        options={{
-          title,
-          header: () => null,
-        }}
+        name="signinStoreWallet"
+        component={SigninStoreWalletScreen}
+        options={{title: '', headerBackHidden: true}}
         initialParams={{action: 'restore'}}
       />
       <SignInStack.Screen
-        name="onboarding-finish"
+        name="onboardingFinish"
         component={OnboardingFinishScreen}
         options={{title: '', headerBackHidden: true}}
         initialParams={{action: 'restore'}}
