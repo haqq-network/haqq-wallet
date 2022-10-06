@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {BG_1, TEXT_BASE_2} from '../../variables';
 import {useApp} from '../../contexts/app';
@@ -13,15 +13,29 @@ export const PinModal = () => {
   const pinRef = useRef<PinInterface>();
   const [showRestore, setShowRestore] = useState(false);
 
+  useEffect(() => {
+    if (app.pinBanned) {
+      pinRef?.current?.locked(app.pinBanned);
+    }
+  }, [app, pinRef]);
+
   const onPin = useCallback(
     (pin: string) => {
       app
         .comparePin(pin)
         .then(() => {
+          app.successEnter();
           requestAnimationFrame(() => app.emit('enterPin', pin));
         })
         .catch(() => {
-          pinRef.current?.reset('wrong pin');
+          app.failureEnter();
+          if (app.canEnter) {
+            pinRef.current?.reset(
+              `wrong pin ${PIN_BANNED_ATTEMPTS - app.pinAttempts} left`,
+            );
+          } else {
+            pinRef.current?.locked(app.pinBanned);
+          }
         });
     },
     [app, pinRef],

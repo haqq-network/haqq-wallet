@@ -26,7 +26,7 @@ export const SignUpAgreementScreen = ({
   return (
     <>
       <View pointerEvents="none" style={page.animation}>
-        <LottieWrap source={animation} autoPlay loop />
+        <LottieWrap source={animation} autoPlay loop={false} />
       </View>
       <PopupContainer style={page.container}>
         <Text t4 style={page.title}>

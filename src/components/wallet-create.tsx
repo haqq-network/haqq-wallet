@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {Button, ButtonVariant, Text, ParagraphFont} from './ui';
+import {Button, ButtonVariant, Text} from './ui';
 import {
   BG_1,
   BG_11,

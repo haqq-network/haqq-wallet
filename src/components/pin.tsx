@@ -8,8 +8,9 @@ import React, {
 import {StyleSheet, View} from 'react-native';
 import {Container, Spacer, Text} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
-import {vibrate} from '../services/haptic';
+import {GRAPHIC_BASE_4, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+import {HapticEffects, vibrate} from '../services/haptic';
+import {isBefore} from 'date-fns';
 
 export type PinProps = {
   title: string;
@@ -20,30 +21,73 @@ export type PinProps = {
 
 export interface PinInterface {
   reset: (message?: string) => void;
+  locked: (until?: Date | null) => void;
 }
 
 export const Pin = forwardRef(
   ({title, subtitle, onPin, additionButton}: PinProps, ref) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
+    const [locked, setLocked] = useState<Date | null>(null);
+
+    useEffect(() => {
+      if (locked !== null) {
+        const timer = setInterval(() => {
+          if (isBefore(new Date(), locked)) {
+            const interval = Math.round((+locked - +new Date()) / 1000);
+            const left = `${String(Math.floor(interval / 60)).padStart(
+              2,
+              '0',
+            )}:${String(interval % 60).padStart(2, '0')}`;
+
+            setError(
+              'Too many attempts, please wait for {timer}'.replace(
+                '{timer}',
+                left,
+              ),
+            );
+          } else {
+            clearInterval(timer);
+            setLocked(null);
+            setError('');
+          }
+        }, 1000);
+
+        return () => {
+          clearInterval(timer);
+        };
+      }
+    }, [locked]);
 
     useImperativeHandle(ref, () => ({
       reset(message?: string) {
         if (message) {
+          vibrate(HapticEffects.error);
           setError(message);
         }
         setPin('');
       },
+      locked(until: Date | null) {
+        setLocked(until);
+        setPin('');
+      },
     }));
 
-    const onKeyboard = useCallback((value: number) => {
-      vibrate();
-      if (value > -1) {
-        setPin(p => `${p}${value}`.slice(0, 6));
-      } else {
-        setPin(p => p.slice(0, p.length - 1));
-      }
-    }, []);
+    const onKeyboard = useCallback(
+      (value: number) => {
+        if (!locked) {
+          vibrate();
+          if (value > -1) {
+            setPin(p => `${p}${value}`.slice(0, 6));
+          } else {
+            setPin(p => p.slice(0, p.length - 1));
+          }
+        } else {
+          vibrate(HapticEffects.error);
+        }
+      },
+      [locked],
+    );
 
     useEffect(() => {
       if (pin.length === 6) {
@@ -53,11 +97,16 @@ export const Pin = forwardRef(
 
     return (
       <Container style={page.container}>
-        <Text t3 style={page.title}>
+        <Text t4 style={page.title}>
           {title}
         </Text>
         {error && <Text clean>{error}</Text>}
-        {subtitle && !error && <Text clean>{subtitle}</Text>}
+        {subtitle && !error && (
+          <Text clean style={page.error}>
+            {subtitle}
+          </Text>
+        )}
+
         <Spacer style={page.spacer}>
           <View style={page.dots}>
             <View style={[page.dot, pin.length >= 1 && page.active]} />
@@ -76,7 +125,6 @@ export const Pin = forwardRef(
 
 const page = StyleSheet.create({
   container: {alignItems: 'center'},
-  title: {marginTop: 40},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
@@ -95,4 +143,9 @@ const page = StyleSheet.create({
     backgroundColor: TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
+  error: {
+    color: TEXT_RED_1,
+    fontWeight: '600',
+  },
+  title: {marginTop: 40, marginBottom: 12},
 });
