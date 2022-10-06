@@ -30,23 +30,28 @@ export const OnboardingRepeatPinScreen = ({
   useEffect(() => {
     if (pin.length === 6) {
       if (pin === currentPin) {
+        const {nextScreen, ...params} = route.params;
+
         app
           .setPin(pin)
           .then(() => app.createUser())
           .then(() => {
             if (app.biometryType !== null) {
               navigation.navigate('onboarding-biometry', {
+                ...params,
                 biometryType: app.biometryType,
               });
             } else {
-              navigation.navigate('onboarding-store-wallet');
+              navigation.navigate(nextScreen ?? 'signupStoreWallet', {
+                ...params,
+              });
             }
           });
       } else {
         setError('Invalid code. Try again');
       }
     }
-  }, [pin, currentPin, app, navigation, route.params.next]);
+  }, [pin, currentPin, app, navigation, route]);
 
   return (
     <Container style={page.container}>

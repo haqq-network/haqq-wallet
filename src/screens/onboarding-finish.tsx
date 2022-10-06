@@ -10,6 +10,7 @@ import {
   LottieWrap,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {useWallets} from '../contexts/wallets';
 
 type OnboardingFinishScreenProp = CompositeScreenProps<any, any>;
 
@@ -18,6 +19,7 @@ export const OnboardingFinishScreen = ({
   route,
 }: OnboardingFinishScreenProp) => {
   const app = useApp();
+  const wallets = useWallets();
   const title = useMemo(
     () =>
       route.params.action === 'create'
@@ -32,7 +34,10 @@ export const OnboardingFinishScreen = ({
     } else {
       navigation.replace('home');
     }
-  }, [navigation, route]);
+    requestAnimationFrame(async () => {
+      await wallets.checkForBackup(app.snoozeBackup);
+    });
+  }, [app, navigation, route, wallets]);
 
   useEffect(() => {
     app.emit('modal', null);

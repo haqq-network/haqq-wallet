@@ -31,9 +31,10 @@ export const OnboardingBiometryScreen = ({
 
   const onClickSkip = useCallback(() => {
     requestAnimationFrame(() => {
-      navigation.navigate('onboarding-store-wallet');
+      const {nextScreen, ...params} = route.params;
+      navigation.navigate(nextScreen ?? 'signupStoreWallet', params);
     });
-  }, [navigation]);
+  }, [route, navigation]);
 
   const onClickEnable = useCallback(async () => {
     try {

@@ -9,6 +9,7 @@ import {vibrate} from '../services/haptic';
 type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;
 
 export const OnboardingSetupPinScreen = ({
+  route,
   navigation,
 }: OnboardingSetupPinScreenProp) => {
   const [pin, setPin] = useState('');
@@ -24,11 +25,12 @@ export const OnboardingSetupPinScreen = ({
   useEffect(() => {
     if (pin.length === 6) {
       navigation.navigate('onboarding-repeat-pin', {
+        ...route.params,
         currentPin: pin,
       });
       setPin('');
     }
-  }, [navigation, pin]);
+  }, [navigation, pin, route]);
 
   return (
     <Container style={page.container}>
