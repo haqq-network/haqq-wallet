@@ -1,8 +1,8 @@
 import React from 'react';
+import {StyleSheet, Alert} from 'react-native';
 import {IconButton, TrashIcon} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
-import {Alert} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {app} from '../contexts/app';
 
@@ -36,8 +36,12 @@ export const SettingsAccountRemoveButton = ({
   };
 
   return (
-    <IconButton style={{width: 24, height: 24}} onPress={onClickRemove}>
+    <IconButton style={page.container} onPress={onClickRemove}>
       <TrashIcon color={GRAPHIC_BASE_1} />
     </IconButton>
   );
 };
+
+const page = StyleSheet.create({
+  container: {width: 24, height: 24},
+});

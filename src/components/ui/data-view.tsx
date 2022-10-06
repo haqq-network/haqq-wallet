@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {Paragraph} from './paragraph';
+import {Text} from './text';
 
 export type DataViewProps = {
   label: string;
@@ -12,7 +12,7 @@ export const DataView = ({label, children, style}: DataViewProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
   return (
     <View style={containerStyle}>
-      <Paragraph>{label}</Paragraph>
+      <Text clean>{label}</Text>
       {children}
     </View>
   );

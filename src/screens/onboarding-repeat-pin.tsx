@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container, Paragraph, Spacer, Title} from '../components/ui';
+import {Container, Text, Spacer} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {vibrate} from '../services/haptic';
@@ -55,8 +55,8 @@ export const OnboardingRepeatPinScreen = ({
 
   return (
     <Container style={page.container}>
-      <Title>Please repeat pin code</Title>
-      <Paragraph>For security, we don't have a “Restore pin” button.</Paragraph>
+      <Text t4>Please repeat pin code</Text>
+      <Text clean>For security, we don't have a “Restore pin” button.</Text>
       <Spacer style={page.spacer}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />
@@ -66,7 +66,9 @@ export const OnboardingRepeatPinScreen = ({
           <View style={[page.dot, pin.length >= 5 && page.active]} />
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
-        <Paragraph style={page.error}>{error}</Paragraph>
+        <Text clean style={page.error}>
+          {error}
+        </Text>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
     </Container>

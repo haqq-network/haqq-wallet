@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Container, Paragraph, Spacer, Title} from './ui';
+import {Container, Spacer, Text} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {HapticEffects, vibrate} from '../services/haptic';
@@ -97,9 +97,16 @@ export const Pin = forwardRef(
 
     return (
       <Container style={page.container}>
-        <Title style={page.title}>{title}</Title>
-        {error && <Paragraph style={page.error}>{error}</Paragraph>}
-        {subtitle && !error && <Paragraph>{subtitle}</Paragraph>}
+        <Text t4 style={page.title}>
+          {title}
+        </Text>
+        {error && <Text clean>{error}</Text>}
+        {subtitle && !error && (
+          <Text clean style={page.error}>
+            {subtitle}
+          </Text>
+        )}
+
         <Spacer style={page.spacer}>
           <View style={page.dots}>
             <View style={[page.dot, pin.length >= 1 && page.active]} />

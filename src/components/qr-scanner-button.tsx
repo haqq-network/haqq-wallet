@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {StyleSheet} from 'react-native';
 import {IconButton, QRScanner} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {utils} from 'ethers';
@@ -26,8 +27,12 @@ export const QrScannerButton = ({navigation}: QrScannerButtonProps) => {
   }, [app, navigation]);
 
   return (
-    <IconButton onPress={onPressQR} style={{marginRight: 12}}>
+    <IconButton onPress={onPressQR} style={page.container}>
       <QRScanner color={GRAPHIC_BASE_1} />
     </IconButton>
   );
 };
+
+const page = StyleSheet.create({
+  container: {marginRight: 12},
+});

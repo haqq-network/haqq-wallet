@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {Swipeable} from 'react-native-gesture-handler';
-import {Animated, View} from 'react-native';
+import {StyleSheet, Animated, View} from 'react-native';
 import {SwipeableButton} from './swipeable-button';
 import {SwipeableAction} from '../../types';
 
@@ -18,7 +18,7 @@ export const SwipeableRow = ({
   const rActions = useMemo(
     () => (progress: Animated.AnimatedInterpolation) =>
       (
-        <View style={{width: rightActions.length * 74, flexDirection: 'row'}}>
+        <View style={[page.container, {width: rightActions.length * 74}]}>
           {rightActions.map((action, i) => (
             <SwipeableButton
               backgroundColor={action.backgroundColor}
@@ -37,3 +37,9 @@ export const SwipeableRow = ({
 
   return <Swipeable renderRightActions={rActions}>{children}</Swipeable>;
 };
+
+const page = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+  },
+});

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
@@ -9,11 +9,9 @@ import {
   CopyButton,
   InfoBlock,
   InfoBlockType,
-  Paragraph,
-  ParagraphSize,
+  Text,
   PopupContainer,
   Spacer,
-  Title,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
@@ -30,12 +28,12 @@ export const BackupCreateScreen = ({
 
   return (
     <PopupContainer style={page.container}>
-      <Title>Your recovery phrase</Title>
-      <Paragraph>
+      <Text t4>Your recovery phrase</Text>
+      <Text clean>
         Write down or copy these words in the right order and save them
         somewhere safe.
-      </Paragraph>
-      <Spacer style={{justifyContent: 'center'}}>
+      </Text>
+      <Spacer style={page.space}>
         <View style={page.mnemonics}>
           <View style={page.column}>
             {wallet?.mnemonic
@@ -56,22 +54,21 @@ export const BackupCreateScreen = ({
         </View>
         <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
           <Copy color={TEXT_GREEN_1} />
-          <Text style={page.copyText}>Copy</Text>
+          <Text clean style={page.copyText}>
+            Copy
+          </Text>
         </CopyButton>
       </Spacer>
-      <InfoBlock
-        type={InfoBlockType.warning}
-        style={{marginBottom: 20}}
-        textSize={ParagraphSize.xs}>
+      <InfoBlock t15 type={InfoBlockType.warning} style={page.marginBottom}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
         <Checkbox value={checked} onPress={setChecked} />
-        <Paragraph size={ParagraphSize.s} style={page.agreeText}>
+        <Text t14 style={page.agreeText}>
           I understand that if I lose my recovery phrase, I will not be able to
           restore access to my account
-        </Paragraph>
+        </Text>
       </View>
       <Button
         title="Continue"
@@ -98,6 +95,8 @@ const page = StyleSheet.create({
     borderRadius: 16,
   },
   column: {flex: 1},
+  marginBottom: {marginBottom: 20},
+  space: {justifyContent: 'center'},
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {CopyConfirmation} from './ui';
-import {GRAPHIC_BASE_2} from '../variables';
+import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {CopyConfirmation, Text} from './ui';
+import {GRAPHIC_SECOND_10, GRAPHIC_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 
 export enum ConfirmationBadgeActions {
@@ -46,7 +46,9 @@ export const ConfirmationBadge = () => {
           {showNotification && (
             <>
               <CopyConfirmation color={GRAPHIC_BASE_2} style={page.icon} />
-              <Text style={page.text}>{texts[showNotification ?? '']}</Text>
+              <Text clean style={page.text}>
+                {texts[showNotification ?? '']}
+              </Text>
             </>
           )}
         </View>
@@ -58,7 +60,7 @@ export const ConfirmationBadge = () => {
 const page = StyleSheet.create({
   overlay: {justifyContent: 'center', alignItems: 'center', flex: 1},
   background: {
-    backgroundColor: 'rgba(229, 229, 234, 0.82)',
+    backgroundColor: GRAPHIC_SECOND_10,
     width: 155,
     height: 155,
     justifyContent: 'center',
