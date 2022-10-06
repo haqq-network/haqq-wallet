@@ -4,7 +4,7 @@ import {
   TransactionListSend,
   TransactionSource,
 } from './types';
-import {TransactionType} from './models/transaction';
+import {Transaction} from './models/transaction';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
 import {PATTERNS_SOURCE} from '@env';
@@ -21,7 +21,7 @@ export function isHexString(value: any, length?: number): boolean {
 
 export function prepareTransactions(
   source: string[],
-  transactions: TransactionType[],
+  transactions: Transaction[],
 ): TransactionList[] {
   const hash: Map<string, (TransactionListSend | TransactionListReceive)[]> =
     new Map();

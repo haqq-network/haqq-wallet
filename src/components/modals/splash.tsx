@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {GRAPHIC_GREEN_2} from '../../variables';
 import {Waiting} from '../ui';
 
 export type SplashModalProps = {};
@@ -16,6 +17,6 @@ const page = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#04D484',
+    backgroundColor: GRAPHIC_GREEN_2,
   },
 });

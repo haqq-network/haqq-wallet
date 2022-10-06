@@ -59,7 +59,6 @@ export const OnboardingFinishScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 76},
   button: {marginBottom: 16},
 });

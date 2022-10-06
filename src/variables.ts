@@ -21,6 +21,8 @@ export const GRAPHIC_RED_2 = '#FF6347';
 
 export const GRAPHIC_GREEN_1 = '#01B26E';
 export const GRAPHIC_GREEN_2 = '#04D484';
+export const GRAPHIC_GREEN_3 = '#03BF77';
+export const GRAPHIC_GREEN_4 = '#0DAC6F';
 export const GRAPHIC_SECOND_1 = '#EFEFEF';
 export const GRAPHIC_SECOND_2 = '#CFD1DB';
 export const GRAPHIC_SECOND_3 = '#CCCDD2';
