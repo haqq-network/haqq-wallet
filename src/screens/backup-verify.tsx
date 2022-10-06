@@ -12,6 +12,7 @@ import {
 } from '../components/ui';
 import {
   BG_3,
+  GRAPHIC_BASE_2,
   GRAPHIC_GREEN_1,
   TEXT_BASE_3,
   TEXT_RED_1,
@@ -61,9 +62,11 @@ export const BackupVerifyScreen = ({
         Verify backup phrase
       </Text>
       {error ? (
-        <Text style={page.error}>Ooops, mistake in one of the words</Text>
+        <Text t11 style={page.error}>
+          Ooops, mistake in one of the words
+        </Text>
       ) : (
-        <Text style={page.textStyle}>
+        <Text t11 style={page.textStyle}>
           Please choose the correct backup phrase according to the serial number
         </Text>
       )}
@@ -147,8 +150,12 @@ export const BackupVerifyScreen = ({
 };
 
 const page = StyleSheet.create({
-  title: {marginBottom: 4},
-  textStyle: {textAlign: 'center', marginBottom: 16},
+  title: {marginTop: 20, marginBottom: 4, textAlign: 'center'},
+  textStyle: {
+    textAlign: 'center',
+    marginBottom: 16,
+    color: GRAPHIC_BASE_2,
+  },
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -162,6 +169,7 @@ const page = StyleSheet.create({
   },
   cell: {
     width: (Dimensions.get('window').width - 56) / 2,
+    height: 30,
     paddingHorizontal: 20,
     paddingVertical: 6,
     borderRadius: 8,
