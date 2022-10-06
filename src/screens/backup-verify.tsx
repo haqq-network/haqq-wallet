@@ -38,10 +38,12 @@ export const BackupVerifyScreen = ({
     [wallet],
   );
 
-  const buttons = useMemo(
+  const shuffleWords = useCallback(
     () => Array.from(words.keys()).sort(() => 0.5 - Math.random()),
     [words],
   );
+
+  const [buttons, setButton] = useState(shuffleWords());
 
   const onDone = useCallback(() => {
     if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
@@ -53,8 +55,9 @@ export const BackupVerifyScreen = ({
     } else {
       setSelected([]);
       setError(true);
+      setButton(shuffleWords);
     }
-  }, [wallet, navigation, selected, words]);
+  }, [selected, wallet, words, navigation, shuffleWords]);
 
   return (
     <Container>
