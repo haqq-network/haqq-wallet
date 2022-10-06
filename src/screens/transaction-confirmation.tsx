@@ -6,7 +6,7 @@ import {
   ButtonVariant,
   DataView,
   ISLMIcon,
-  Paragraph,
+  Text,
   PopupContainer,
   Spacer,
 } from '../components/ui';
@@ -75,49 +75,47 @@ export const TransactionConfirmationScreen = ({
   return (
     <PopupContainer style={page.container}>
       <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
-      <Paragraph style={page.subtitle}>Total Amount</Paragraph>
-      <Paragraph clean style={page.sum}>
+      <Text style={page.subtitle}>Total Amount</Text>
+      <Text clean style={page.sum}>
         {(amount + estimateFee).toFixed(8)} ISLM
-      </Paragraph>
-      <Paragraph style={page.subtitle}>Send to</Paragraph>
-      {contact && <Paragraph style={page.contact}>{contact.name}</Paragraph>}
-      <Paragraph style={page.address}>
-        <Paragraph clean>{splittedTo[0]}</Paragraph>
-        <Paragraph clean style={{color: TEXT_BASE_2}}>
+      </Text>
+      <Text style={page.subtitle}>Send to</Text>
+      {contact && <Text style={page.contact}>{contact.name}</Text>}
+      <Text style={page.address}>
+        <Text clean>{splittedTo[0]}</Text>
+        <Text clean style={{color: TEXT_BASE_2}}>
           {splittedTo[1]}
-        </Paragraph>
-        <Paragraph clean>{splittedTo[2]}</Paragraph>
-      </Paragraph>
+        </Text>
+        <Text clean>{splittedTo[2]}</Text>
+      </Text>
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
-          <Paragraph style={{color: TEXT_BASE_1}}>
+          <Text style={{color: TEXT_BASE_1}}>
             Islamic coin{' '}
-            <Paragraph clean style={{color: TEXT_BASE_2}}>
+            <Text clean style={{color: TEXT_BASE_2}}>
               (ISLM)
-            </Paragraph>
-          </Paragraph>
+            </Text>
+          </Text>
         </DataView>
         <DataView label="Network">
-          <Paragraph style={{color: TEXT_BASE_1}}>
+          <Text style={{color: TEXT_BASE_1}}>
             HAQQ blockchain{' '}
-            <Paragraph clean style={{color: TEXT_BASE_2}}>
+            <Text clean style={{color: TEXT_BASE_2}}>
               (HQ)
-            </Paragraph>
-          </Paragraph>
+            </Text>
+          </Text>
         </DataView>
         <DataView label="Amount">
-          <Paragraph style={{color: TEXT_BASE_1}}>
-            {amount.toFixed(8)} ISLM
-          </Paragraph>
+          <Text style={{color: TEXT_BASE_1}}>{amount.toFixed(8)} ISLM</Text>
         </DataView>
         <DataView label="Network Fee">
-          <Paragraph style={{color: TEXT_BASE_1}}>
+          <Text style={{color: TEXT_BASE_1}}>
             {estimateFee.toFixed(8)} ISLM
-          </Paragraph>
+          </Text>
         </DataView>
       </View>
-      {error && <Paragraph clean>{error}</Paragraph>}
+      {error && <Text clean>{error}</Text>}
       <Spacer />
       <Button
         disabled={estimateFee === 0 && !disabled}

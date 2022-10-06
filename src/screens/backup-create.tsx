@@ -9,10 +9,9 @@ import {
   CopyButton,
   InfoBlock,
   InfoBlockType,
-  Paragraph,
+  Text,
   PopupContainer,
   Spacer,
-  Title,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
@@ -29,11 +28,11 @@ export const BackupCreateScreen = ({
 
   return (
     <PopupContainer style={page.container}>
-      <Title>Your recovery phrase</Title>
-      <Paragraph>
+      <Text t4>Your recovery phrase</Text>
+      <Text clean>
         Write down or copy these words in the right order and save them
         somewhere safe.
-      </Paragraph>
+      </Text>
       <Spacer style={page.space}>
         <View style={page.mnemonics}>
           <View style={page.column}>
@@ -55,21 +54,21 @@ export const BackupCreateScreen = ({
         </View>
         <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
           <Copy color={TEXT_GREEN_1} />
-          <Paragraph clean style={page.copyText}>
+          <Text clean style={page.copyText}>
             Copy
-          </Paragraph>
+          </Text>
         </CopyButton>
       </Spacer>
-      <InfoBlock p4 type={InfoBlockType.warning} style={page.marginBottom}>
+      <InfoBlock t15 type={InfoBlockType.warning} style={page.marginBottom}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
         <Checkbox value={checked} onPress={setChecked} />
-        <Paragraph p3 style={page.agreeText}>
+        <Text t14 style={page.agreeText}>
           I understand that if I lose my recovery phrase, I will not be able to
           restore access to my account
-        </Paragraph>
+        </Text>
       </View>
       <Button
         title="Continue"

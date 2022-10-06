@@ -7,7 +7,7 @@ import {
   ButtonVariant,
   KeyboardSafeArea,
   LabeledBlock,
-  Paragraph,
+  Text,
   Spacer,
 } from '../components/ui';
 import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
@@ -95,16 +95,16 @@ export const TransactionSumScreen = ({
   return (
     <KeyboardSafeArea style={page.container}>
       <LabeledBlock label="Send to" style={page.label}>
-        <Paragraph
+        <Text
           style={{color: TEXT_BASE_1}}
           numberOfLines={1}
           ellipsizeMode="middle">
           {formattedAddress}
-        </Paragraph>
+        </Text>
       </LabeledBlock>
-      <Paragraph clean style={page.subtitle}>
+      <Text clean style={page.subtitle}>
         ISLM
-      </Paragraph>
+      </Text>
       <View style={page.sum}>
         <View style={page.swap}>
           {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
@@ -131,19 +131,19 @@ export const TransactionSumScreen = ({
         </View>
       </View>
       <View style={page.amount}>
-        <Paragraph p4>$ {amountUsd}</Paragraph>
+        <Text t15>$ {amountUsd}</Text>
       </View>
       {error ? (
-        <Paragraph clean style={[page.help, page.error]}>
+        <Text clean style={[page.help, page.error]}>
           {error}
-        </Paragraph>
+        </Text>
       ) : (
-        <Paragraph clean style={[page.help, page.available]}>
+        <Text clean style={[page.help, page.available]}>
           Available:{' '}
-          <Paragraph clean style={{color: TEXT_GREEN_1}}>
+          <Text clean style={{color: TEXT_GREEN_1}}>
             {balance.toFixed(8).replace(/0+$/g, '')} ISLM
-          </Paragraph>
-        </Paragraph>
+          </Text>
+        </Text>
       )}
       <Spacer />
       <Button

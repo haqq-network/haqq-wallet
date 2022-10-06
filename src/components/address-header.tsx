@@ -1,13 +1,13 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TEXT_BASE_1} from '../variables';
-import {Paragraph} from './ui';
+import {Text} from './ui';
 
 export const AddressHeader = () => {
   return (
-    <Paragraph p0 style={page.container}>
+    <Text t6 style={page.container}>
       My contacts
-    </Paragraph>
+    </Text>
   );
 };
 

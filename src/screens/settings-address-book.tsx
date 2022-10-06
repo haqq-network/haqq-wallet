@@ -9,7 +9,7 @@ import {
   Container,
   IconButton,
   Input,
-  Paragraph,
+  Text,
   PenIcon,
   PlusIcon,
   QRScanner,
@@ -187,7 +187,7 @@ export const SettingsAddressBookScreen =
             <Box style={page.badge}>
               <PlusIcon color={GRAPHIC_BASE_2} />
             </Box>
-            <Paragraph style={{color: TEXT_BASE_1}}>Add Contact</Paragraph>
+            <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
           </IconButton>
         )}
         <FlatList

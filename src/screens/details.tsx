@@ -3,7 +3,7 @@ import {Alert, Button, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useWallets} from '../contexts/wallets';
-import {Container, Paragraph} from '../components/ui';
+import {Container, Text} from '../components/ui';
 
 type DetailsScreenProp = CompositeScreenProps<any, any>;
 
@@ -33,9 +33,9 @@ export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
 
   return (
     <Container>
-      <Paragraph clean>Details Screen</Paragraph>
+      <Text clean>Details Screen</Text>
       <TouchableOpacity onPress={() => Clipboard.setString(address)}>
-        <Paragraph clean>{address}</Paragraph>
+        <Text clean>{address}</Text>
       </TouchableOpacity>
       <Button
         title="Send transaction"

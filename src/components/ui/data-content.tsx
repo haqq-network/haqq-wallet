@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {Paragraph} from './paragraph';
+import {Text} from './text';
 import {TEXT_BASE_1} from '../../variables';
 
 export type DataContentProps = {
@@ -17,8 +17,8 @@ export const DataContent = ({
 }: DataContentProps) => {
   return (
     <View style={[reversed && page.reverse, style]}>
-      <Paragraph style={page.title}>{title}</Paragraph>
-      <Paragraph p3>{subtitle}</Paragraph>
+      <Text style={page.title}>{title}</Text>
+      <Text t14>{subtitle}</Text>
     </View>
   );
 };

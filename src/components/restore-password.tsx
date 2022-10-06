@@ -16,7 +16,7 @@ import {
   TEXT_BASE_1,
   TEXT_BASE_2,
 } from '../variables';
-import {Button, ButtonVariant, CloseCircle, IconButton, Paragraph} from './ui';
+import {Button, ButtonVariant, CloseCircle, IconButton, Text} from './ui';
 import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 
@@ -128,20 +128,20 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
           <SafeAreaView style={page.box}>
             <View style={page.boxInner}>
               <View style={page.titleBlock}>
-                <Paragraph clean style={page.title}>
+                <Text clean style={page.title}>
                   Forgot the code?
-                </Paragraph>
+                </Text>
                 <IconButton onPress={onClosePopup}>
                   <CloseCircle color={GRAPHIC_BASE_4} />
                 </IconButton>
               </View>
-              <Paragraph clean style={page.warning}>
+              <Text clean style={page.warning}>
                 Unfortunately, the password cannot be reset. Try to wait a bit
                 and remember the password. If it does not work, then click the
                 ‘Reset wallet button and use the backup phrase to restore the
                 wallet. If there is no backup phrase, then you will not be able
                 to restore the wallet
-              </Paragraph>
+              </Text>
               <Button
                 variant={ButtonVariant.error}
                 title="Reset wallet"

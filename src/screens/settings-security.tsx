@@ -1,5 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {MenuNavigationButton, Paragraph, Spacer} from '../components/ui';
+import {MenuNavigationButton, Text, Spacer} from '../components/ui';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Alert, StyleSheet, Switch, View} from 'react-native';
 import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
@@ -58,21 +58,19 @@ export const SettingsSecurityScreen = ({
       <MenuNavigationButton
         onPress={() => navigation.navigate('settingsSecurityPin')}>
         <View>
-          <Paragraph style={page.menuTitle}>Change PIN</Paragraph>
-          <Paragraph p3 style={page.menuSubtitle}>
+          <Text style={page.menuTitle}>Change PIN</Text>
+          <Text t14 style={page.menuSubtitle}>
             Enter new pin
-          </Paragraph>
+          </Text>
         </View>
       </MenuNavigationButton>
       {app.biometryType !== null && (
         <MenuNavigationButton hideArrow onPress={() => {}}>
           <View>
-            <Paragraph style={page.menuTitle}>
-              {biometryName[app.biometryType]}
-            </Paragraph>
-            <Paragraph p3 style={page.menuSubtitle}>
+            <Text style={page.menuTitle}>{biometryName[app.biometryType]}</Text>
+            <Text t14 style={page.menuSubtitle}>
               Use {biometryName[app.biometryType]} to unlock the app
-            </Paragraph>
+            </Text>
           </View>
           <Spacer />
           <Switch value={biometry} onChange={onToggleBiometry} />

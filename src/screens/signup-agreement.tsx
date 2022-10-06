@@ -3,9 +3,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
-  Paragraph,
+  Text,
   PopupContainer,
-  Title,
   LottieWrap,
 } from '../components/ui';
 import {Dimensions, StyleSheet, View} from 'react-native';
@@ -30,23 +29,25 @@ export const SignUpAgreementScreen = ({
         <LottieWrap source={animation} autoPlay loop />
       </View>
       <PopupContainer style={page.container}>
-        <Title style={page.title}>Islm - DeFi Wallet</Title>
-        <Paragraph style={page.disclaimer}>
+        <Text t4 style={page.title}>
+          Islm - DeFi Wallet
+        </Text>
+        <Text style={page.disclaimer}>
           Islm Wallet does not store, transfer, transmit, convert, hold, or
           otherwise interact with any of the Virtual Currencies you may use with
           the Islm Wallet App. Any transfer or transaction occurs on the Haqq
           Network(s). Islm Wallet cannot block, freeze or take any kind of
           control over your Virtual Currency.
-        </Paragraph>
+        </Text>
         <Button
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
           onPress={onPressAgree}
         />
-        <Paragraph style={page.agreement}>
+        <Text style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
-        </Paragraph>
+        </Text>
       </PopupContainer>
     </>
   );

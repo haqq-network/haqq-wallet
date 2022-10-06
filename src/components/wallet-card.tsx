@@ -11,7 +11,7 @@ import {
   Copy,
   CopyButton,
   IconButton,
-  Paragraph,
+  Text,
   QRCode,
 } from './ui';
 import {
@@ -74,42 +74,42 @@ export const WalletCard = ({address}: BalanceProps) => {
       style={page.container}
       width={Dimensions.get('window').width - 40}>
       <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
-        <Paragraph p3 style={page.name}>
+        <Text t14 style={page.name}>
           {wallet.name || 'name'}
-        </Paragraph>
+        </Text>
         <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
         <CopyButton style={page.copyButton} value={wallet.address}>
-          <Paragraph p3 style={page.address}>
+          <Text t14 style={page.address}>
             {formattedAddress}
-          </Paragraph>
+          </Text>
           <Copy color={GRAPHIC_BASE_3} style={page.marginLeft} />
         </CopyButton>
       </View>
       {!wallet.mnemonicSaved && (
         <IconButton onPress={onClickBackup} style={page.cacheButton}>
-          <Paragraph clean style={page.cacheText}>
+          <Text clean style={page.cacheText}>
             Without backup
-          </Paragraph>
+          </Text>
         </IconButton>
       )}
-      <Paragraph clean style={page.balance}>
+      <Text clean style={page.balance}>
         {balance.toFixed(4)} ISLM
-      </Paragraph>
+      </Text>
       <View style={page.buttonsContainer}>
         <IconButton style={page.button} onPress={onPressSend}>
           <ArrowSend color={GRAPHIC_BASE_3} />
-          <Paragraph clean style={page.buttonText}>
+          <Text clean style={page.buttonText}>
             Send
-          </Paragraph>
+          </Text>
         </IconButton>
         <IconButton style={page.button} onPress={onPressQR}>
           <ArrowReceive color={GRAPHIC_BASE_3} />
-          <Paragraph clean style={page.buttonText}>
+          <Text clean style={page.buttonText}>
             Receive
-          </Paragraph>
+          </Text>
         </IconButton>
       </View>
     </Card>

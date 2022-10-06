@@ -2,7 +2,7 @@ import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {Button, ButtonVariant, Paragraph} from '../components/ui';
+import {Button, ButtonVariant, Text} from '../components/ui';
 import {BG_9} from '../variables';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
@@ -33,7 +33,7 @@ export const TransactionFormScreen = ({
 
   return (
     <View style={page.container}>
-      <Paragraph clean>Send transaction Screen</Paragraph>
+      <Text clean>Send transaction Screen</Text>
       <TextInput
         value={from}
         style={page.input}

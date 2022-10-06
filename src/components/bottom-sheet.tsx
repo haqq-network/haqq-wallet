@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {BG_1, BG_9, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
-import {CloseCircle, IconButton, Paragraph, Spacer, SwiperIcon} from './ui';
+import {CloseCircle, IconButton, Text, Spacer, SwiperIcon} from './ui';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type BottomSheetProps = {
@@ -90,9 +90,9 @@ export const BottomSheet = ({children, onClose, title}: BottomSheetProps) => {
             <SwiperIcon color={GRAPHIC_SECOND_2} />
           </View>
           <View style={page.header}>
-            <Paragraph p0 style={page.title}>
+            <Text t6 style={page.title}>
               {title}
-            </Paragraph>
+            </Text>
             <Spacer />
             <IconButton onPress={onClosePopup}>
               <CloseCircle color={GRAPHIC_SECOND_2} />

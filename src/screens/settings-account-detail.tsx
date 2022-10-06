@@ -5,7 +5,7 @@ import {
   Container,
   DataContent,
   MenuNavigationButton,
-  Paragraph,
+  Text,
   Spacer,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
@@ -88,10 +88,10 @@ export const SettingsAccountDetailScreen = ({
             ]}
           />
         </Card>
-        <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
-        <Paragraph p3 style={page.headerAddress}>
+        <Text style={page.headerName}>{wallet.name}</Text>
+        <Text t14 style={page.headerAddress}>
           {wallet?.address}
-        </Paragraph>
+        </Text>
       </View>
       <MenuNavigationButton onPress={onPressRename}>
         <DataContent

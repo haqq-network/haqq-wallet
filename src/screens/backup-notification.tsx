@@ -8,12 +8,7 @@ import {
   Image,
   View,
 } from 'react-native';
-import {
-  Button,
-  ButtonVariant,
-  Paragraph,
-  ParagraphFont,
-} from '../components/ui';
+import {Button, ButtonVariant, Text, ParagraphFont} from '../components/ui';
 import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 
@@ -109,14 +104,14 @@ export const BackupNotificationScreen = ({
             source={warningImage}
             style={{width: Dimensions.get('window').width - 80}}
           />
-          <Paragraph p1 font={ParagraphFont.text} style={page.p1}>
+          <Text t8 font={ParagraphFont.text} style={page.t8}>
             Backup your wallet, keep your assets safe
-          </Paragraph>
-          <Paragraph p3 style={page.p3}>
+          </Text>
+          <Text t14 style={page.t14}>
             If your recovery phrase is misplaced or stolen, it's the equivalent
             of losing your wallet. It's the only way to access your wallet if
             you forget your account password.
-          </Paragraph>
+          </Text>
           <Button
             title="Backup now"
             variant={ButtonVariant.contained}
@@ -157,13 +152,13 @@ const page = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  p1: {
+  t8: {
     marginBottom: 8,
     color: TEXT_BASE_1,
     fontWeight: '700',
     textAlign: 'center',
   },
-  p3: {
+  t14: {
     marginBottom: 28,
     textAlign: 'center',
   },

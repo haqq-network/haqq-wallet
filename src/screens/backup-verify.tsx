@@ -7,9 +7,8 @@ import {
   ButtonSize,
   ButtonVariant,
   Container,
-  Paragraph,
+  Text,
   Spacer,
-  Title,
 } from '../components/ui';
 import {
   BG_3,
@@ -58,15 +57,15 @@ export const BackupVerifyScreen = ({
 
   return (
     <Container>
-      <Title style={page.title}>Verify backup phrase</Title>
+      <Text t4 style={page.title}>
+        Verify backup phrase
+      </Text>
       {error ? (
-        <Paragraph style={page.error}>
-          Ooops, mistake in one of the words
-        </Paragraph>
+        <Text style={page.error}>Ooops, mistake in one of the words</Text>
       ) : (
-        <Paragraph style={page.textStyle}>
+        <Text style={page.textStyle}>
           Please choose the correct backup phrase according to the serial number
-        </Paragraph>
+        </Text>
       )}
       <View style={page.cells}>
         <View>
@@ -75,9 +74,9 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph p3 style={page.cellTextFilled}>
+                  <Text t14 style={page.cellTextFilled}>
                     {words.get(selected[i])}
-                  </Paragraph>
+                  </Text>
                 </View>
               ) : (
                 <View
@@ -87,9 +86,9 @@ export const BackupVerifyScreen = ({
                     selected.length === i && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph p3 style={page.cellTextEmpty}>
+                  <Text t14 style={page.cellTextEmpty}>
                     #{i + 1}
-                  </Paragraph>
+                  </Text>
                 </View>
               ),
             )}
@@ -100,9 +99,9 @@ export const BackupVerifyScreen = ({
             .map((k, i) =>
               selected.length > i + 6 ? (
                 <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Paragraph p3 style={page.cellTextFilled}>
+                  <Text t14 style={page.cellTextFilled}>
                     {words.get(selected[i + 6])}
-                  </Paragraph>
+                  </Text>
                 </View>
               ) : (
                 <View
@@ -112,9 +111,9 @@ export const BackupVerifyScreen = ({
                     selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
                   ]}
                   key={`${k}_empty`}>
-                  <Paragraph p3 style={page.cellTextEmpty}>
+                  <Text t14 style={page.cellTextEmpty}>
                     #{i + 7}
-                  </Paragraph>
+                  </Text>
                 </View>
               ),
             )}

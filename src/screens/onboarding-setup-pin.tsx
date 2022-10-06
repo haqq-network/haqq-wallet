@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container, Paragraph, Spacer, Title} from '../components/ui';
+import {Container, Text, Spacer} from '../components/ui';
 import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
 import {vibrate} from '../services/haptic';
 
@@ -31,11 +31,13 @@ export const OnboardingSetupPinScreen = ({
 
   return (
     <Container style={page.container}>
-      <Title style={page.title}>Set 6-digital pin code</Title>
-      <Paragraph style={page.description}>
+      <Text t4 style={page.title}>
+        Set 6-digital pin code
+      </Text>
+      <Text style={page.description}>
         Project your wallet. PIN code for increases wallet security in the event
         your phone{'\u00A0'}is{'\u00A0'}stolen
-      </Paragraph>
+      </Text>
       <Spacer style={page.spacer}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />

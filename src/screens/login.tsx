@@ -1,13 +1,7 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {
-  Button,
-  ButtonVariant,
-  Container,
-  Paragraph,
-  Title,
-} from '../components/ui';
+import {Button, ButtonVariant, Container, Text} from '../components/ui';
 
 type LoginScreenProp = CompositeScreenProps<any, any>;
 
@@ -18,10 +12,12 @@ export const LoginScreen = ({navigation}: LoginScreenProp) => {
     <Container>
       <View style={page.container}>
         <Image source={logoImage} style={page.image} />
-        <Title style={page.title}>No wallet is connected</Title>
-        <Paragraph style={page.textStyle}>
+        <Text t4 style={page.title}>
+          No wallet is connected
+        </Text>
+        <Text style={page.textStyle}>
           You can create a new wallet or connect any existing{'\u00A0'}one
-        </Paragraph>
+        </Text>
       </View>
 
       <Button

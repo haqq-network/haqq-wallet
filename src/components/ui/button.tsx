@@ -11,7 +11,7 @@ import {
   TEXT_RED_1,
   TEXT_SECOND_1,
 } from '../../variables';
-import {Paragraph} from './paragraph';
+import {Text} from './text';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
@@ -81,9 +81,9 @@ export const Button = ({
       onPress={onPressButton}
       activeOpacity={0.7}
       {...props}>
-      <Paragraph clean style={textStyle}>
+      <Text clean style={textStyle}>
         {title}
-      </Paragraph>
+      </Text>
     </TouchableOpacity>
   );
 };

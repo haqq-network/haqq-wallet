@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CopyConfirmation, Paragraph} from './ui';
+import {CopyConfirmation, Text} from './ui';
 import {BG_14, GRAPHIC_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 
@@ -46,9 +46,9 @@ export const ConfirmationBadge = () => {
           {showNotification && (
             <>
               <CopyConfirmation color={GRAPHIC_BASE_2} style={page.icon} />
-              <Paragraph clean style={page.text}>
+              <Text clean style={page.text}>
                 {texts[showNotification ?? '']}
-              </Paragraph>
+              </Text>
             </>
           )}
         </View>

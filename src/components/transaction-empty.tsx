@@ -1,15 +1,15 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {NoTransactionsIcon, Paragraph} from './ui';
+import {NoTransactionsIcon, Text} from './ui';
 import {GRAPHIC_SECOND_3, TEXT_SECOND_1} from '../variables';
 
 export const TransactionEmpty = () => {
   return (
     <View style={page.container}>
       <NoTransactionsIcon color={GRAPHIC_SECOND_3} style={page.space} />
-      <Paragraph p3 style={{color: TEXT_SECOND_1}}>
+      <Text t14 style={{color: TEXT_SECOND_1}}>
         No transactions
-      </Paragraph>
+      </Text>
     </View>
   );
 };

@@ -9,7 +9,7 @@ import {
   IconButton,
   Input,
   KeyboardSafeArea,
-  Paragraph,
+  Text,
   QRScanner,
   Spacer,
 } from '../components/ui';
@@ -105,9 +105,9 @@ export const TransactionAddressScreen = ({
         }
       />
       {error && (
-        <Paragraph p3 style={page.p3}>
+        <Text t14 style={page.t14}>
           Incorrect address
-        </Paragraph>
+        </Text>
       )}
       <Spacer>
         {contactsList.length ? (
@@ -145,5 +145,5 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
-  p3: {color: TEXT_RED_1, marginHorizontal: 20},
+  t14: {color: TEXT_RED_1, marginHorizontal: 20},
 });

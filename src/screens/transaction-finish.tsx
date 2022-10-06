@@ -7,11 +7,10 @@ import {
   IconButton,
   InvoiceIcon,
   ISLMIcon,
-  Paragraph,
+  Text,
   PenIcon,
   PopupContainer,
   Spacer,
-  Title,
   UserIcon,
 } from '../components/ui';
 import {
@@ -84,26 +83,28 @@ export const TransactionFinishScreen = ({
       <View style={page.sub}>
         <Image source={icon} style={page.image} />
       </View>
-      <Title style={page.title}>Sending Completed!</Title>
+      <Text t4 style={page.title}>
+        Sending Completed!
+      </Text>
       <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
       {transaction && (
-        <Paragraph clean style={page.sum}>
+        <Text clean style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
-        </Paragraph>
+        </Text>
       )}
-      <Paragraph clean style={page.address}>
+      <Text clean style={page.address}>
         {short}
-      </Paragraph>
-      <Paragraph clean style={page.fee}>
+      </Text>
+      <Text clean style={page.fee}>
         Network Fee: {transaction?.fee.toFixed(8)} ISLM
-      </Paragraph>
+      </Text>
       <Spacer />
       <View style={page.buttons}>
         <IconButton onPress={onPress} style={page.button}>
           <InvoiceIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Paragraph clean style={page.buttonText}>
+          <Text clean style={page.buttonText}>
             Details
-          </Paragraph>
+          </Text>
         </IconButton>
         <IconButton onPress={onPressContact} style={page.button}>
           {contact ? (
@@ -111,15 +112,15 @@ export const TransactionFinishScreen = ({
           ) : (
             <UserIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
           )}
-          <Paragraph clean style={page.buttonText}>
+          <Text clean style={page.buttonText}>
             {contact ? 'Edit Contact' : 'Add Contact'}
-          </Paragraph>
+          </Text>
         </IconButton>
         <IconButton onPress={onPress} style={page.button}>
           <BlockIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Paragraph clean style={page.buttonText}>
+          <Text clean style={page.buttonText}>
             Hash
-          </Paragraph>
+          </Text>
         </IconButton>
       </View>
       <Button

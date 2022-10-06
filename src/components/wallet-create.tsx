@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {Button, ButtonVariant, Paragraph, ParagraphFont} from './ui';
+import {Button, ButtonVariant, Text, ParagraphFont} from './ui';
 import {
   BG_1,
   BG_11,
@@ -18,12 +18,10 @@ export const WalletCreate = ({}: BalanceProps) => {
 
   return (
     <View style={page.container}>
-      <Paragraph p1 style={page.title} font={ParagraphFont.text}>
+      <Text t8 style={page.title}>
         Add accounts
-      </Paragraph>
-      <Paragraph style={page.subtitle}>
-        Import and create new accounts
-      </Paragraph>
+      </Text>
+      <Text style={page.subtitle}>Import and create new accounts</Text>
       <Button
         variant={ButtonVariant.contained}
         title="Create new"

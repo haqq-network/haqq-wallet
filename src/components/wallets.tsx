@@ -1,12 +1,11 @@
 import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {PlusIcon} from './ui';
+import {Text, PlusIcon} from './ui';
 import {StyleSheet, Animated, Dimensions, ScrollView, View} from 'react-native';
 import {GRAPHIC_BASE_1, MAGIC_CARD_HEIGHT, TEXT_BASE_1} from '../variables';
 import {CarouselItem} from './carousel-item';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
-import {Paragraph} from './ui/paragraph';
 
 const cardWidth = Dimensions.get('window').width - 40;
 
@@ -86,9 +85,9 @@ export const Wallets = () => {
           <PlusIcon color={GRAPHIC_BASE_1} width={12} height={12} />
         </Animated.View>
       </View>
-      <Paragraph p0 style={page.p0}>
+      <Text t6 style={page.t6}>
         Transactions
-      </Paragraph>
+      </Text>
     </View>
   );
 };
@@ -114,7 +113,7 @@ const page = StyleSheet.create({
     width: 12,
     height: 12,
   },
-  p0: {
+  t6: {
     marginVertical: 12,
     textAlign: 'left',
     paddingHorizontal: 20,

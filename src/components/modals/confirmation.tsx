@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CopyConfirmation, Paragraph} from '../ui';
+import {CopyConfirmation, Text} from '../ui';
 import {BG_14, GRAPHIC_BASE_2, TEXT_SECOND_3} from '../../variables';
 
 export enum ConfirmationBadgeActions {
@@ -35,9 +35,9 @@ export const ConfirmationModal = ({
     <TouchableOpacity onPress={onCloseModal} style={page.overlay}>
       <View style={page.background}>
         <CopyConfirmation color={GRAPHIC_BASE_2} style={page.icon} />
-        <Paragraph clean style={page.text}>
+        <Text clean style={page.text}>
           {texts[action ?? '']}
-        </Paragraph>
+        </Text>
       </View>
     </TouchableOpacity>
   );

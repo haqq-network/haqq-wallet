@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Container, Paragraph} from '../components/ui';
+import {Button, Container, Text} from '../components/ui';
 import {Dimensions, Image} from 'react-native';
 import {
   CARD_CIRCLE_TOTAL,
@@ -32,7 +32,7 @@ export const SettingsTestScreen = () => {
           });
         }}
       />
-      <Paragraph>{pattern}</Paragraph>
+      <Text clean>{pattern}</Text>
       <Image
         style={{
           width: width,

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Title, Waiting} from '../ui';
+import {Text, Waiting} from '../ui';
 import {GRAPHIC_GREEN_2, TEXT_BASE_3} from '../../variables';
 
 export type LoadingModalProps = {
@@ -10,7 +10,11 @@ export const LoadingModal = ({text}: LoadingModalProps) => {
   return (
     <View style={page.container}>
       <Waiting style={page.waiting} />
-      {text && <Title style={page.text}>{text}</Title>}
+      {text && (
+        <Text t4 style={page.text}>
+          {text}
+        </Text>
+      )}
     </View>
   );
 };

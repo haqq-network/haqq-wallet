@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {Button} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container, Paragraph} from '../components/ui';
+import {Container, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {vibrate} from '../services/haptic';
 
@@ -27,8 +27,8 @@ export const SetPinScreen = ({navigation}: PinScreenProp) => {
 
   return (
     <Container>
-      <Paragraph clean>Set pin code</Paragraph>
-      <Paragraph clean>{pin}</Paragraph>
+      <Text clean>Set pin code</Text>
+      <Text clean>{pin}</Text>
       <NumericKeyboard onPress={onKeyboard} />
       <Button title="Set pin" onPress={onSetPin} disabled={pin.length < 4} />
     </Container>

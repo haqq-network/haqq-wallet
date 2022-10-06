@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Paragraph} from './ui';
+import {Text} from './ui';
 import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
 import {asyncTiming, sleep} from '../utils';
 
@@ -49,9 +49,9 @@ export const NotificationMessage = ({
             opacity: pan,
           },
         ]}>
-        <Paragraph p3 style={page.p3}>
+        <Text t14 style={page.t14}>
           {message}
-        </Paragraph>
+        </Text>
       </Animated.View>
     </TouchableWithoutFeedback>
   );
@@ -76,5 +76,5 @@ const page = StyleSheet.create({
     elevation: 5,
   },
   flex: {flex: 1},
-  p3: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
+  t14: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
 });

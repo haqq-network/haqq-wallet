@@ -3,7 +3,7 @@ import {TransactionListDate} from '../../types';
 import {StyleSheet, View} from 'react-native';
 import {format, isSameYear, isToday} from 'date-fns';
 import {TEXT_BASE_2} from '../../variables';
-import {Paragraph} from '../ui';
+import {Text} from '../ui';
 
 export type TransactionDate = {
   item: TransactionListDate;
@@ -22,9 +22,9 @@ export const TransactionDate = ({item}: TransactionDate) => {
 
   return (
     <View style={page.container}>
-      <Paragraph clean style={page.text}>
+      <Text clean style={page.text}>
         {date}
-      </Paragraph>
+      </Text>
     </View>
   );
 };

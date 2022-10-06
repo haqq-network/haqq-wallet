@@ -4,7 +4,7 @@ import {BG_1, TEXT_BASE_2} from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';
 import {Pin, PinInterface} from '../pin';
-import {Paragraph} from '../ui';
+import {Text} from '../ui';
 
 export type PinModalProps = {};
 
@@ -37,12 +37,12 @@ export const PinModal = () => {
           <TouchableOpacity
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
-            <Paragraph clean style={page.additionButtonText}>
+            <Text clean style={page.additionButtonText}>
               Forgot
-            </Paragraph>
-            <Paragraph clean style={page.additionButtonText}>
+            </Text>
+            <Text clean style={page.additionButtonText}>
               the code
-            </Paragraph>
+            </Text>
           </TouchableOpacity>
         }
       />

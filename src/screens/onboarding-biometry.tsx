@@ -6,9 +6,8 @@ import {
   ButtonVariant,
   Container,
   Icon,
-  Paragraph,
+  Text,
   Spacer,
-  Title,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
 
@@ -54,9 +53,11 @@ export const OnboardingBiometryScreen = ({
         {biometryIcons[biometryType] && (
           <Icon name={biometryIcons[biometryType]} style={page.icon} />
         )}
-        <Title style={page.title}>Enable {biometryTypes[biometryType]}</Title>
-        <Paragraph style={page.textStyle}>Safe and fast</Paragraph>
-        {error && <Paragraph>{error}</Paragraph>}
+        <Text t4 style={page.title}>
+          Enable {biometryTypes[biometryType]}
+        </Text>
+        <Text style={page.textStyle}>Safe and fast</Text>
+        {error && <Text clean>{error}</Text>}
       </Spacer>
       <Button
         style={page.margin}

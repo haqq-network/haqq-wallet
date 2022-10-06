@@ -3,7 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, StyleSheet, TextInput} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
-import {Container, Paragraph} from '../components/ui';
+import {Container, Text} from '../components/ui';
 import {BG_9} from '../variables';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
@@ -23,7 +23,7 @@ export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
 
   return (
     <Container>
-      <Paragraph clean>Import Wallet Screen</Paragraph>
+      <Text clean>Import Wallet Screen</Text>
       <TextInput
         style={page.input}
         placeholder={'Name'}

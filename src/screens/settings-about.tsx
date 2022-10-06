@@ -7,7 +7,7 @@ import {
   DocIcon,
   GlobalIcon,
   IconButton,
-  Paragraph,
+  Text,
   Spacer,
   StarIcon,
   LottieWrap,
@@ -54,48 +54,48 @@ export const SettingsAboutScreen = () => {
           loop
         />
       </Spacer>
-      <Paragraph p3 style={page.title}>
+      <Text t14 style={page.title}>
         About App
-      </Paragraph>
+      </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressRate} style={page.button}>
           <StarIcon color={GRAPHIC_BASE_1} />
-          <Paragraph style={page.buttonText}>Rate ISLM wallet App</Paragraph>
+          <Text style={page.buttonText}>Rate ISLM wallet App</Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
         <IconButton onPress={onPressSite} style={page.button}>
           <GlobalIcon color={GRAPHIC_BASE_1} />
-          <Paragraph style={page.buttonText}>Visit islamiccoin.net</Paragraph>
+          <Text style={page.buttonText}>Visit islamiccoin.net</Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph p3 style={page.title}>
+      <Text t14 style={page.title}>
         Legal Documents
-      </Paragraph>
+      </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDoc} style={page.button}>
           <DocIcon color={GRAPHIC_BASE_1} />
-          <Paragraph style={page.buttonText}>Terms & Conditions</Paragraph>
+          <Text style={page.buttonText}>Terms & Conditions</Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph p3 style={page.title}>
+      <Text t14 style={page.title}>
         Our Socials
-      </Paragraph>
+      </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDiscord} style={page.button}>
           <DiscordIcon color={GRAPHIC_BASE_1} />
-          <Paragraph style={page.buttonText}>Discord</Paragraph>
+          <Text style={page.buttonText}>Discord</Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Paragraph style={page.terms}>
+      <Text style={page.terms}>
         ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
-      </Paragraph>
+      </Text>
     </Container>
   );
 };

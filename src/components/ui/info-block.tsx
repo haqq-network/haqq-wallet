@@ -2,7 +2,7 @@
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {BG_6, TEXT_YELLOW_1} from '../../variables';
-import {Paragraph} from './paragraph';
+import {Text} from './text';
 
 export enum InfoBlockType {
   warning = 'warning',
@@ -13,8 +13,8 @@ export type InfoBlockProps = {
   icon?: React.ReactNode;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
-  p3?: boolean;
-  p4?: boolean;
+  t14?: boolean;
+  t15?: boolean;
 };
 
 export const InfoBlock = ({
@@ -22,8 +22,8 @@ export const InfoBlock = ({
   icon,
   type,
   style,
-  p3 = true,
-  p4 = false,
+  t14 = true,
+  t15 = false,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [page.container, page[`${type}Container`], style],
@@ -37,9 +37,9 @@ export const InfoBlock = ({
   return (
     <View style={containerStyle}>
       {icon}
-      <Paragraph p3={p3} p4={p4} style={textStyle}>
+      <Text t14={t14} t15={t15} style={textStyle}>
         {children}
-      </Paragraph>
+      </Text>
     </View>
   );
 };

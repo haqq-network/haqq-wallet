@@ -4,9 +4,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
-  Paragraph,
+  Text,
   PopupContainer,
-  Title,
   LottieWrap,
 } from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
@@ -32,23 +31,23 @@ export const SignInAgreementScreen = ({
         />
       </View>
       <PopupContainer style={page.container}>
-        <Title style={page.title}>
+        <Text t4 style={page.title}>
           Do you have your recovery phrase or private key?
-        </Title>
-        <Paragraph style={page.disclaimer}>
+        </Text>
+        <Text style={page.disclaimer}>
           The recovery phrase is a 12-word phrase that you received when you
           created the wallet. A private key is a key created by you in the
           application
-        </Paragraph>
+        </Text>
         <Button
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
           onPress={onDone}
         />
-        <Paragraph style={page.agreement}>
+        <Text style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
-        </Paragraph>
+        </Text>
       </PopupContainer>
     </>
   );

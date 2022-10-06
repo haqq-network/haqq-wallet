@@ -11,7 +11,7 @@ import {
   DataContent,
   IconButton,
   ISLMIcon,
-  Paragraph,
+  Text,
 } from '../components/ui';
 import {Linking, StyleSheet, View} from 'react-native';
 import {
@@ -57,11 +57,11 @@ export const TransactionDetailScreen = ({
 
   return (
     <BottomSheet onClose={navigation.goBack} title={title}>
-      <Paragraph p3 style={page.p3}>
+      <Text t14 style={page.t14}>
         Total amount
-      </Paragraph>
-      <Paragraph
-        p0
+      </Text>
+      <Text
+        t6
         style={[
           page.sum,
           transaction.source === TransactionSource.send
@@ -69,10 +69,10 @@ export const TransactionDetailScreen = ({
             : page.sumReceive,
         ]}>
         {transaction.totalFormatted} ISLM
-      </Paragraph>
-      {/*<Paragraph p3 style={page.subSum}>*/}
+      </Text>
+      {/*<Text t14 style={page.subSum}>*/}
       {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
-      {/*</Paragraph>*/}
+      {/*</Text>*/}
       <View style={page.infoContainer}>
         <DataContent
           title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
@@ -104,12 +104,12 @@ export const TransactionDetailScreen = ({
                 color={GRAPHIC_GREEN_1}
                 style={page.icon}
               />
-              <Paragraph clean>
+              <Text clean>
                 Islamic coin{' '}
-                <Paragraph clean style={{color: TEXT_BASE_2}}>
+                <Text clean style={{color: TEXT_BASE_2}}>
                   (ISLM)
-                </Paragraph>
-              </Paragraph>
+                </Text>
+              </Text>
             </>
           }
           subtitle="Cryptocurrency"
@@ -120,9 +120,9 @@ export const TransactionDetailScreen = ({
           title={
             <>
               HAQQ blockchain{' '}
-              <Paragraph clean style={{color: TEXT_BASE_2}}>
+              <Text clean style={{color: TEXT_BASE_2}}>
                 (HQ)
-              </Paragraph>
+              </Text>
             </>
           }
           subtitle="Network"
@@ -144,7 +144,7 @@ export const TransactionDetailScreen = ({
       </View>
       <IconButton onPress={onPressInfo} style={page.iconButton}>
         <BlockIcon color={GRAPHIC_BASE_1} />
-        <Paragraph style={page.textStyle}>View on block explorer</Paragraph>
+        <Text style={page.textStyle}>View on block explorer</Text>
       </IconButton>
     </BottomSheet>
   );
@@ -172,7 +172,7 @@ const page = StyleSheet.create({
   info: {
     marginVertical: 8,
   },
-  p3: {marginBottom: 2},
+  t14: {marginBottom: 2},
   icon: {marginRight: 4},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8, color: TEXT_BASE_1, fontWeight: '700'},

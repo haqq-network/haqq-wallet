@@ -2,7 +2,7 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
-import {Paragraph} from './paragraph';
+import {Text} from './text';
 
 export enum LabelBlockVariant {
   default = 'default',
@@ -37,9 +37,9 @@ export const LabeledBlock = ({
     <View style={containerStyle} {...props}>
       <View style={page.flex}>
         {label && (
-          <Paragraph clean style={placeholderStyle}>
+          <Text clean style={placeholderStyle}>
             {label}
-          </Paragraph>
+          </Text>
         )}
         <View style={page.inner}>{children}</View>
       </View>

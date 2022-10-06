@@ -14,7 +14,7 @@ import {
   Card,
   InfoBlock,
   InfoBlockType,
-  Paragraph,
+  Text,
 } from '../components/ui';
 import {
   GRADIENT_END,
@@ -81,10 +81,10 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
             logoBorderRadius={8}
           />
         </View>
-        <Paragraph p3 style={page.title}>
+        <Text t14 style={page.title}>
           {wallet?.name}
-        </Paragraph>
-        <Paragraph style={page.address}>{address}</Paragraph>
+        </Text>
+        <Text style={page.address}>{address}</Text>
       </LinearGradient>
 
       <View style={page.buttons}>

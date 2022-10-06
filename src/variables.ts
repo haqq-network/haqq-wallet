@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import {WalletCardStyle} from './types';
 
-export const TEXT_BASE_1 = '#2F2F2F';
+export const TEXT_BASE_1 = '#2E312D';
 export const TEXT_BASE_2 = '#8E8E8E';
 export const TEXT_BASE_3 = '#FFFFFF';
 
