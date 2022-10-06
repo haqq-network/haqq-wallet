@@ -1,4 +1,4 @@
-import {addMinutes, addSeconds, isAfter} from 'date-fns';
+import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {realm} from './index';
 import {
   PIN_BANNED_ATTEMPTS,
@@ -120,7 +120,7 @@ export class User {
   isOutdatedLastActivity() {
     return (
       this.last_activity <
-      addSeconds(new Date(), USER_LAST_ACTIVITY_TIMEOUT_SECONDS)
+      subSeconds(new Date(), USER_LAST_ACTIVITY_TIMEOUT_SECONDS)
     );
   }
 

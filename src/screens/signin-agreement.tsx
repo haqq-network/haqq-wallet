@@ -1,18 +1,19 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
+  LottieWrap,
   Paragraph,
   PopupContainer,
   Title,
-  LottieWrap,
 } from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
-const windowWidth = Dimensions.get('window').width;
+
+const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const SignInAgreementScreen = ({
   navigation,
@@ -25,11 +26,7 @@ export const SignInAgreementScreen = ({
   return (
     <>
       <View style={page.animation}>
-        <LottieWrap
-          source={require('../../assets/animations/success-animation.json')}
-          autoPlay
-          loop={false}
-        />
+        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </View>
       <PopupContainer style={page.container}>
         <Title style={page.title}>
@@ -60,9 +57,12 @@ const page = StyleSheet.create({
   },
   animation: {
     position: 'absolute',
-    width: windowWidth,
-    height: windowWidth,
-    top: -34,
+    left: 0,
+    right: 0,
+    height: 200,
+    top: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {marginBottom: 4, marginHorizontal: 20},
   disclaimer: {
@@ -73,4 +73,5 @@ const page = StyleSheet.create({
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
   agreement: {textAlign: 'center', marginHorizontal: 20, marginBottom: 16},
+  image: {width: 200, height: 200},
 });
