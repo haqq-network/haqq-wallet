@@ -15,7 +15,7 @@ import {
   QRCode,
 } from './ui';
 import {
-  BG_10,
+  GRAPHIC_SECOND_6,
   BG_5,
   GRAPHIC_BASE_3,
   TEXT_BASE_3,
@@ -153,7 +153,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: BG_10,
+    backgroundColor: GRAPHIC_SECOND_6,
     borderRadius: 16,
     padding: 6,
   },

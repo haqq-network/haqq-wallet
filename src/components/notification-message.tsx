@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {Text} from './ui';
-import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
+import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
 import {asyncTiming, sleep} from '../utils';
 
 export type NotificationMessageProps = {
@@ -66,7 +66,7 @@ const page = StyleSheet.create({
     paddingVertical: 16,
     backgroundColor: BG_1,
     borderRadius: 24,
-    shadowColor: BG_9,
+    shadowColor: GRAPHIC_SECOND_5,
     shadowOffset: {
       width: 0,
       height: 2,

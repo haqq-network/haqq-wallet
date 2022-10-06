@@ -27,6 +27,12 @@ export const GRAPHIC_SECOND_1 = '#EFEFEF';
 export const GRAPHIC_SECOND_2 = '#CFD1DB';
 export const GRAPHIC_SECOND_3 = '#CCCDD2';
 export const GRAPHIC_SECOND_4 = '#AAABB2';
+export const GRAPHIC_SECOND_5 = '#000000';
+export const GRAPHIC_SECOND_6 = 'rgba(255, 255, 255, 0.15)';
+export const GRAPHIC_SECOND_7 = 'rgba(25, 26, 28, 0.08)';
+export const GRAPHIC_SECOND_8 = '#0000004D';
+export const GRAPHIC_SECOND_9 = 'rgba(255, 255, 255, 0.3)';
+export const GRAPHIC_SECOND_10 = 'rgba(229, 229, 234, 0.82)';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';
@@ -36,12 +42,6 @@ export const BG_5 = 'rgba(225, 99, 99, 0.8)';
 export const BG_6 = 'rgba(247, 193, 90, 0.3)';
 export const BG_7 = '#F9EEEE';
 export const BG_8 = '#F4F5F8';
-export const BG_9 = '#000000';
-export const BG_10 = 'rgba(255, 255, 255, 0.15)';
-export const BG_11 = 'rgba(25, 26, 28, 0.08)';
-export const BG_12 = '#0000004D';
-export const BG_13 = 'rgba(255, 255, 255, 0.3)';
-export const BG_14 = 'rgba(229, 229, 234, 0.82)';
 
 export const MAIN_ACCOUNT_NAME = 'Main account';
 

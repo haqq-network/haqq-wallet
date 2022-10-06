@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {BG_1, BG_9, TEXT_BASE_1} from '../variables';
+import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 
 // type BackupNotificationScreenProp = {
@@ -146,7 +146,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: BG_9,
+    backgroundColor: GRAPHIC_SECOND_5,
   },
   animateViewFade: {
     flex: 1,

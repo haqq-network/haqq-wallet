@@ -3,7 +3,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {BG_9} from '../variables';
+import {GRAPHIC_SECOND_5} from '../variables';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -72,7 +72,7 @@ const page = StyleSheet.create({
   },
   input: {
     padding: 10,
-    borderColor: BG_9,
+    borderColor: GRAPHIC_SECOND_5,
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 20,

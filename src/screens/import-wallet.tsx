@@ -4,7 +4,7 @@ import {Button, StyleSheet, TextInput} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {isHexString} from '../utils';
 import {Container, Text} from '../components/ui';
-import {BG_9} from '../variables';
+import {GRAPHIC_SECOND_5} from '../variables';
 
 type HomeScreenProp = CompositeScreenProps<any, any>;
 
@@ -44,7 +44,7 @@ export const ImportWalletScreen = ({navigation}: HomeScreenProp) => {
 const page = StyleSheet.create({
   input: {
     padding: 10,
-    borderColor: BG_9,
+    borderColor: GRAPHIC_SECOND_5,
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 20,

@@ -7,7 +7,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {BG_1, BG_9, GRAPHIC_SECOND_2, TEXT_BASE_1} from '../variables';
+import {
+  BG_1,
+  GRAPHIC_SECOND_5,
+  GRAPHIC_SECOND_2,
+  TEXT_BASE_1,
+} from '../variables';
 import {CloseCircle, IconButton, Text, Spacer, SwiperIcon} from './ui';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -109,7 +114,7 @@ const page = StyleSheet.create({
   container: {justifyContent: 'flex-end'},
   space: {flex: 1},
   background: {
-    backgroundColor: BG_9,
+    backgroundColor: GRAPHIC_SECOND_5,
   },
   animateView: {
     flex: 1,

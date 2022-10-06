@@ -5,7 +5,7 @@ import {NavigationProp} from '@react-navigation/core';
 import {Button, ButtonVariant, Text} from './ui';
 import {
   BG_1,
-  BG_11,
+  GRAPHIC_SECOND_7,
   GRAPHIC_SECOND_1,
   MAGIC_CARD_HEIGHT,
   TEXT_GREEN_1,
@@ -54,7 +54,7 @@ const page = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 28,
     backgroundColor: BG_1,
-    shadowColor: BG_11,
+    shadowColor: GRAPHIC_SECOND_7,
     shadowOffset: {
       width: 0,
       height: 6,

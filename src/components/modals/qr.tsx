@@ -14,8 +14,8 @@ import {
   Text,
 } from '../ui';
 import {
-  BG_12,
-  BG_13,
+  GRAPHIC_SECOND_8,
+  GRAPHIC_SECOND_9,
   GRAPHIC_BASE_3,
   GRAPHIC_RED_1,
   TEXT_BASE_3,
@@ -153,7 +153,7 @@ const page = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
-    backgroundColor: BG_12,
+    backgroundColor: GRAPHIC_SECOND_8,
   },
   bottomErrorContainer: {
     position: 'absolute',
@@ -169,6 +169,6 @@ const page = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: BG_13,
+    backgroundColor: GRAPHIC_SECOND_9,
   },
 });

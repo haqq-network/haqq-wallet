@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {
   BG_1,
-  BG_9,
+  GRAPHIC_SECOND_5,
   GRAPHIC_BASE_4,
   TEXT_BASE_1,
   TEXT_BASE_2,
@@ -105,7 +105,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         style={[
           StyleSheet.absoluteFill,
           {
-            backgroundColor: BG_9,
+            backgroundColor: GRAPHIC_SECOND_5,
             opacity: pan.interpolate({
               inputRange: [0, 1],
               outputRange: [0.5, 0],

@@ -1,7 +1,11 @@
 import React, {useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {CopyConfirmation, Text} from '../ui';
-import {BG_14, GRAPHIC_BASE_2, TEXT_SECOND_3} from '../../variables';
+import {
+  GRAPHIC_SECOND_10,
+  GRAPHIC_BASE_2,
+  TEXT_SECOND_3,
+} from '../../variables';
 
 export enum ConfirmationBadgeActions {
   copied = 'copied',
@@ -46,7 +50,7 @@ export const ConfirmationModal = ({
 const page = StyleSheet.create({
   overlay: {justifyContent: 'center', alignItems: 'center', flex: 1},
   background: {
-    backgroundColor: BG_14,
+    backgroundColor: GRAPHIC_SECOND_10,
     width: 155,
     height: 155,
     justifyContent: 'center',
