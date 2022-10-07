@@ -21,6 +21,10 @@ import {
 
 type BackupVerifyScreenProp = CompositeScreenProps<any, any>;
 
+function shuffleWords(words: Map<string, string>) {
+  return Array.from(words.keys()).sort(() => 0.5 - Math.random());
+}
+
 export const BackupVerifyScreen = ({
   navigation,
   route,
@@ -38,12 +42,7 @@ export const BackupVerifyScreen = ({
     [wallet],
   );
 
-  const shuffleWords = useCallback(
-    () => Array.from(words.keys()).sort(() => 0.5 - Math.random()),
-    [words],
-  );
-
-  const [buttons, setButton] = useState(shuffleWords());
+  const [buttons, setButton] = useState(shuffleWords(words));
 
   const onDone = useCallback(() => {
     if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
@@ -55,9 +54,9 @@ export const BackupVerifyScreen = ({
     } else {
       setSelected([]);
       setError(true);
-      setButton(shuffleWords);
+      setButton(shuffleWords(words));
     }
-  }, [selected, wallet, words, navigation, shuffleWords]);
+  }, [selected, wallet, words, navigation]);
 
   return (
     <Container>
