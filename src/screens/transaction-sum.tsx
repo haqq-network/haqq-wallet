@@ -17,6 +17,7 @@ import {shortAddress} from '../utils';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
+
 export const TransactionSumScreen = ({
   route,
   navigation,
