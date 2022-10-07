@@ -81,7 +81,7 @@ export const Modals = ({initialModal = null}: ModalProps) => {
   }, [modal]);
 
   return (
-    <Modal animationType="fade" visible={!!modal} transparent={true}>
+    <Modal animationType="none" visible={!!modal} transparent={true}>
       {entry}
     </Modal>
   );
