@@ -18,6 +18,7 @@ export type CardProps = {
   colorTo: string;
   colorPattern: string;
   pattern: string;
+  onLoad?: () => void;
 };
 
 export const Card = ({
@@ -27,6 +28,7 @@ export const Card = ({
   colorFrom,
   colorTo,
   colorPattern,
+  onLoad,
   borderRadius = 16,
   transparent = false,
   pattern = CARD_DEFAULT_STYLE,
@@ -45,13 +47,10 @@ export const Card = ({
           style,
         ]}>
         <Image
+          onLoad={onLoad}
           source={uri}
           style={[
-            page.index,
             {
-              width: width,
-              height: width * 0.632835821,
-
               tintColor: colorPattern,
             },
             StyleSheet.absoluteFillObject,
@@ -78,12 +77,9 @@ export const Card = ({
       ]}>
       <Image
         source={uri}
+        onLoad={onLoad}
         style={[
-          page.index,
           {
-            width: width,
-            height: width * 0.632835821,
-
             tintColor: colorPattern,
           },
           StyleSheet.absoluteFillObject,
@@ -100,5 +96,4 @@ const page = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  index: {zIndex: -1},
 });
