@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {SignUpAgreementScreen} from './signup-agreement';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {PopupHeader} from '../components/popup-header';
@@ -10,7 +10,7 @@ import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
 
-const SignUpStack = createNativeStackNavigator();
+const SignUpStack = createStackNavigator();
 type SignUpScreenProp = CompositeScreenProps<any, any>;
 
 export const SignUpScreen = ({route}: SignUpScreenProp) => {

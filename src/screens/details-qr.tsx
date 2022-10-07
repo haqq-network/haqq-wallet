@@ -73,6 +73,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
         </View>
         <View style={page.qrStyle}>
           <QRCode
+            ecl={'H'}
             logo={logo}
             value={`haqq:${address}`}
             size={width - 169}
@@ -84,7 +85,9 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
         <Text t14 style={page.title}>
           {wallet?.name}
         </Text>
-        <Text style={page.address}>{address}</Text>
+        <Text t10 style={page.address}>
+          {address}
+        </Text>
       </LinearGradient>
 
       <View style={page.buttons}>
@@ -121,7 +124,6 @@ const page = StyleSheet.create({
   },
   address: {
     color: TEXT_BASE_3,
-    fontWeight: '600',
     marginBottom: 4,
   },
   buttons: {
