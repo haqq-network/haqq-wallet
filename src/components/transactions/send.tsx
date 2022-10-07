@@ -28,18 +28,18 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
-            <Text clean style={{color: TEXT_BASE_1}}>
+            <Text t11 style={page.info}>
               Sent
             </Text>
-            <Text clean style={page.sum}>
+            <Text t11 style={page.sum}>
               {`- ${item.value.toFixed(2)} ISLM`}
             </Text>
           </View>
           <View style={page.infoRow}>
-            <Text clean style={{color: TEXT_BASE_2}}>
+            <Text t14 style={page.detail}>
               {`to ${shortAddress(item.to, '•')}`}
             </Text>
-            <Text clean style={{color: TEXT_BASE_2}}>
+            <Text t14 style={page.detail}>
               {`- ${item.value.toFixed(2)} $`}
             </Text>
           </View>
@@ -56,7 +56,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  infoContainer: {marginLeft: 16, flex: 1},
+  infoContainer: {marginLeft: 12, flex: 1},
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -71,4 +71,6 @@ const page = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  detail: {color: TEXT_BASE_2},
+  info: {color: TEXT_BASE_1},
 });

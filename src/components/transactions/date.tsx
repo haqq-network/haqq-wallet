@@ -22,7 +22,7 @@ export const TransactionDate = ({item}: TransactionDate) => {
 
   return (
     <View style={page.container}>
-      <Text clean style={page.text}>
+      <Text t13 style={page.text}>
         {date}
       </Text>
     </View>
@@ -31,8 +31,9 @@ export const TransactionDate = ({item}: TransactionDate) => {
 
 const page = StyleSheet.create({
   container: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 8,
+    paddingHorizontal: 24,
   },
   text: {
     fontWeight: '600',
