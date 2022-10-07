@@ -14,7 +14,7 @@ import {
   Spacer,
   Textarea,
 } from '../components/ui';
-import {TEXT_GREEN_1} from '../variables';
+import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
@@ -54,7 +54,9 @@ export const SignInRestoreScreen = ({
 
   return (
     <KeyboardSafeArea style={page.container}>
-      <Text style={page.intro}>Recovery phrase or Private key</Text>
+      <Text t11 style={page.intro}>
+        Recovery phrase or Private key
+      </Text>
       <Textarea
         style={page.input}
         value={seed}
@@ -83,6 +85,7 @@ const page = StyleSheet.create({
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
+    color: TEXT_BASE_2,
   },
   input: {
     marginBottom: 8,
