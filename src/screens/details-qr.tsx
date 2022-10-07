@@ -25,7 +25,7 @@ import {
   TEXT_YELLOW_1,
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
-import {app, useApp} from '../contexts/app';
+import {useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
