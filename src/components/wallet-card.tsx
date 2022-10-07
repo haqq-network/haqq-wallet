@@ -23,6 +23,7 @@ import {
 } from '../variables';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
+import {BlurView} from '@react-native-community/blur';
 
 export type BalanceProps = {
   address: string;
@@ -32,6 +33,7 @@ export const WalletCard = ({address}: BalanceProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const wallet = useWallet(address);
   const [balance, setBalance] = useState(wallet?.balance ?? 0);
+  const [cardState, setCardState] = useState('loading');
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -72,7 +74,10 @@ export const WalletCard = ({address}: BalanceProps) => {
       colorPattern={wallet?.colorPattern}
       pattern={wallet?.pattern}
       style={page.container}
-      width={Dimensions.get('window').width - 40}>
+      width={Dimensions.get('window').width - 40}
+      onLoad={() => {
+        setCardState('laded');
+      }}>
       <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
         <Text t14 style={page.name}>
           {wallet.name || 'name'}
@@ -99,18 +104,34 @@ export const WalletCard = ({address}: BalanceProps) => {
         {balance.toFixed(4)} ISLM
       </Text>
       <View style={page.buttonsContainer}>
-        <IconButton style={page.button} onPress={onPressSend}>
-          <ArrowSend color={GRAPHIC_BASE_3} />
-          <Text clean style={page.buttonText}>
-            Send
-          </Text>
-        </IconButton>
-        <IconButton style={page.button} onPress={onPressQR}>
-          <ArrowReceive color={GRAPHIC_BASE_3} />
-          <Text clean style={page.buttonText}>
-            Receive
-          </Text>
-        </IconButton>
+        <View style={page.button}>
+          <BlurView
+            key={`send-${cardState}`}
+            blurType="light"
+            blurAmount={5}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <IconButton style={{flex: 1}} onPress={onPressSend}>
+            <ArrowSend color={GRAPHIC_BASE_3} />
+            <Text clean style={page.buttonText}>
+              Send
+            </Text>
+          </IconButton>
+        </View>
+        <View style={page.button}>
+          <BlurView
+            key={`receive-${cardState}`}
+            blurType="light"
+            blurAmount={5}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <IconButton style={{flex: 1}} onPress={onPressQR}>
+            <ArrowReceive color={GRAPHIC_BASE_3} />
+            <Text clean style={page.buttonText}>
+              Receive
+            </Text>
+          </IconButton>
+        </View>
       </View>
     </Card>
   );
@@ -153,9 +174,10 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: GRAPHIC_SECOND_6,
+    // backgroundColor: GRAPHIC_SECOND_6,
     borderRadius: 16,
     padding: 6,
+    overflow: 'hidden',
   },
   buttonText: {
     color: TEXT_BASE_3,
