@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {BlurView} from '@react-native-community/blur';
 import {NavigationProp} from '@react-navigation/core/src/types';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 
+import {useNavigation} from '@react-navigation/native';
 import {useWallet} from '../contexts/wallets';
 import {
   ArrowReceive,
@@ -11,19 +12,12 @@ import {
   Copy,
   CopyButton,
   IconButton,
-  Text,
   QRCode,
+  Text,
 } from './ui';
-import {
-  GRAPHIC_SECOND_6,
-  BG_5,
-  GRAPHIC_BASE_3,
-  TEXT_BASE_3,
-  TEXT_SECOND_2,
-} from '../variables';
+import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3, TEXT_SECOND_2} from '../variables';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
-import {BlurView} from '@react-native-community/blur';
 
 export type BalanceProps = {
   address: string;
@@ -108,10 +102,10 @@ export const WalletCard = ({address}: BalanceProps) => {
           <BlurView
             key={`send-${cardState}`}
             blurType="light"
-            blurAmount={5}
+            blurAmount={7}
             style={StyleSheet.absoluteFillObject}
           />
-          <IconButton style={{flex: 1}} onPress={onPressSend}>
+          <IconButton style={page.spacer} onPress={onPressSend}>
             <ArrowSend color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
               Send
@@ -122,10 +116,10 @@ export const WalletCard = ({address}: BalanceProps) => {
           <BlurView
             key={`receive-${cardState}`}
             blurType="light"
-            blurAmount={5}
+            blurAmount={7}
             style={StyleSheet.absoluteFillObject}
           />
-          <IconButton style={{flex: 1}} onPress={onPressQR}>
+          <IconButton style={page.spacer} onPress={onPressQR}>
             <ArrowReceive color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
               Receive
