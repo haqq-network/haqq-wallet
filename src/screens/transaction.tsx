@@ -36,7 +36,7 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
       <TransactionStack.Screen
         name="transactionSum"
         component={TransactionSumScreen}
-        options={{title: 'Send', headerRight: DismissPopupButton}}
+        options={{title: 'Send'}}
       />
       <TransactionStack.Screen
         name="transactionConfirmation"

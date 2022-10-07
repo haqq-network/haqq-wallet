@@ -145,7 +145,12 @@ const page = StyleSheet.create({
     marginVertical: 12,
   },
   image: {width: 140, height: 140},
-  title: {marginBottom: 34, color: TEXT_GREEN_1},
+  title: {
+    marginTop: 32,
+    marginBottom: 34,
+    color: TEXT_GREEN_1,
+    textAlign: 'center',
+  },
   icon: {marginBottom: 16, alignSelf: 'center'},
   sum: {
     marginBottom: 8,
