@@ -60,7 +60,6 @@ export const NotificationMessage = ({
 const page = StyleSheet.create({
   container: {
     marginVertical: 4,
-    minWidth: 200,
     maxWidth: Dimensions.get('window').width - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,

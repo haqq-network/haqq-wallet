@@ -7,6 +7,7 @@ import {useApp} from '../contexts/app';
 import {BottomSheet} from './bottom-sheet';
 import {useTransactions} from '../contexts/transactions';
 import {useContacts} from '../contexts/contacts';
+import {captureException} from '../helpers';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;
@@ -55,17 +56,21 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
           style: 'destructive',
           text: 'Reset',
           onPress: async () => {
-            wallet.clean();
-            transactions.clean();
-            contacts.clean();
-            await app.clean();
-            Animated.timing(pan, {
-              toValue: 1,
-              duration: 250,
-              useNativeDriver: true,
-            }).start(() => {
-              app.emit('resetWallet');
-            });
+            try {
+              wallet.clean();
+              transactions.clean();
+              contacts.clean();
+              await app.clean();
+              Animated.timing(pan, {
+                toValue: 1,
+                duration: 250,
+                useNativeDriver: true,
+              }).start(() => {
+                app.emit('resetWallet');
+              });
+            } catch (e) {
+              captureException(e);
+            }
           },
         },
       ],
