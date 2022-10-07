@@ -41,7 +41,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
 
   const onCopy = () => {
     Clipboard.setString(address);
-    app.emit('modal', {type: 'confirmation', action: 'copied'});
+    app.emit('notification', 'Copied');
   };
 
   const onShare = () => {
