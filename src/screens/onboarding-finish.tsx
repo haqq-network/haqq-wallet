@@ -66,6 +66,6 @@ export const OnboardingFinishScreen = ({
 };
 
 const page = StyleSheet.create({
-  title: {marginBottom: 76},
+  title: {marginBottom: 76, textAlign: 'center'},
   button: {marginBottom: 16},
 });
