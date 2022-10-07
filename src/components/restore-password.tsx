@@ -8,6 +8,7 @@ import {useApp} from '../contexts/app';
 import {BottomSheet} from './bottom-sheet';
 import {useTransactions} from '../contexts/transactions';
 import {useContacts} from '../contexts/contacts';
+import {captureException} from '../helpers';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;
@@ -69,7 +70,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
                 app.emit('resetWallet');
               });
             } catch (e) {
-              Sentry.captureException(e);
+              captureException(e);
             }
           },
         },
