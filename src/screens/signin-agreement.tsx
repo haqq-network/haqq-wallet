@@ -31,7 +31,7 @@ export const SignInAgreementScreen = ({
         <Text t4 style={page.title}>
           Do you have your recovery phrase or private key?
         </Text>
-        <Text style={page.disclaimer}>
+        <Text t11 style={page.disclaimer}>
           The recovery phrase is a 12-word phrase that you received when you
           created the wallet. A private key is a key created by you in the
           application
@@ -42,7 +42,7 @@ export const SignInAgreementScreen = ({
           title="Agree"
           onPress={onDone}
         />
-        <Text style={page.agreement}>
+        <Text t11 style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
         </Text>
       </PopupContainer>
@@ -63,7 +63,11 @@ const page = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {marginBottom: 4, marginHorizontal: 20},
+  title: {
+    marginBottom: 4,
+    marginHorizontal: 20,
+    textAlign: 'center',
+  },
   disclaimer: {
     marginBottom: 154,
     textAlign: 'center',
@@ -71,6 +75,11 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {textAlign: 'center', marginHorizontal: 20, marginBottom: 16},
+  agreement: {
+    textAlign: 'center',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    color: TEXT_BASE_2,
+  },
   image: {width: 200, height: 200},
 });

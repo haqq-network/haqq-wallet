@@ -1,8 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Modal} from 'react-native';
 import {
-  ConfirmationModal,
-  ConfirmationModalProps,
   LoadingModal,
   LoadingModalProps,
   PinModal,
@@ -17,10 +15,6 @@ type Loading = {
   type: 'loading';
 } & LoadingModalProps;
 
-type Confirmation = {
-  type: 'confirmation';
-} & Omit<ConfirmationModalProps, 'onClose'>;
-
 type Splash = {
   type: 'splash' & SplashModalProps;
 };
@@ -33,7 +27,7 @@ type QR = {
   type: 'qr' & QRModalProps;
 };
 
-type ModalState = Loading | Confirmation | Splash | Pin | QR | null;
+type ModalState = Loading | Splash | Pin | QR | null;
 
 export type ModalProps = {
   initialModal?: ModalState;
@@ -65,8 +59,6 @@ export const Modals = ({initialModal = null}: ModalProps) => {
       return null;
     }
     switch (modal.type) {
-      case 'confirmation':
-        return <ConfirmationModal action={modal.action} onClose={onClose} />;
       case 'loading':
         return <LoadingModal text={modal.text} />;
       case 'pin':
