@@ -7,8 +7,8 @@ import {
   ButtonVariant,
   KeyboardSafeArea,
   LabeledBlock,
-  Text,
   Spacer,
+  Text,
 } from '../components/ui';
 import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
@@ -54,8 +54,8 @@ export const TransactionSumScreen = ({
       route.params.to,
       newBalance,
     );
-    setMaxSum(balance - fee * 2);
-  }, [balance, route.params.from, route.params.to, transactions, wallets]);
+    setMaxSum(newBalance - fee * 2);
+  }, [route, transactions, wallets]);
 
   useEffect(() => {
     getBalance();
