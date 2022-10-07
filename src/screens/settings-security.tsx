@@ -37,14 +37,17 @@ export const SettingsSecurityScreen = ({
     if (!biometry) {
       try {
         await app.biometryAuth();
+        app.biometry = true;
         setBiometry(true);
       } catch (e) {
         if (e instanceof Error) {
           Alert.alert(e.message);
         }
+        app.biometry = false;
         setBiometry(false);
       }
     } else {
+      app.biometry = false;
       setBiometry(false);
     }
   }, [app, biometry]);

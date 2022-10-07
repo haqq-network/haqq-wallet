@@ -18,6 +18,7 @@ import {useTransactions} from '../contexts/transactions';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
+
 export const TransactionSumScreen = ({
   route,
   navigation,
@@ -131,6 +132,7 @@ export const TransactionSumScreen = ({
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={TEXT_BASE_2}
+          autoFocus
         />
         <View style={page.max}>
           {balance > 0 && (

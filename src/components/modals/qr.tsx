@@ -14,10 +14,10 @@ import {
   Text,
 } from '../ui';
 import {
-  GRAPHIC_SECOND_8,
-  GRAPHIC_SECOND_9,
   GRAPHIC_BASE_3,
   GRAPHIC_RED_1,
+  GRAPHIC_SECOND_8,
+  GRAPHIC_SECOND_9,
   TEXT_BASE_3,
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -33,7 +33,6 @@ export const QRModal = ({onClose}: QRModalProps) => {
   const insets = useSafeAreaInsets();
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
-      console.log(e);
       if (e.data && e.data !== code) {
         setCode(e.data);
       }
@@ -41,7 +40,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
     [code],
   );
 
-  const checkAddress = useCallback(address => {
+  const checkAddress = useCallback((address: string) => {
     if (utils.isAddress(address)) {
       app.emit('address', address);
     } else {
@@ -82,53 +81,56 @@ export const QRModal = ({onClose}: QRModalProps) => {
   }, []);
 
   return (
-    <QRscanner
-      style={page.container}
-      onRead={onSuccess}
-      flashMode={flashMode}
-      hintText=""
-      isShowScanBar={false}
-      cornerColor={error ? GRAPHIC_RED_1 : GRAPHIC_BASE_3}
-      cornerWidth={7}
-      zoom={0}
-      renderTopView={() => (
-        <View style={{paddingTop: insets.top}}>
-          <View style={page.headerContainer}>
-            <IconButton onPress={onClose}>
-              <ArrowBackIcon color={GRAPHIC_BASE_3} />
-            </IconButton>
-            <Text t8 style={page.headerTitle}>
-              Scan QR Code
-            </Text>
-            <View style={page.headerSpacer} />
-          </View>
-        </View>
-      )}
-      renderBottomView={() => (
-        <View style={[page.bottomContainer, {paddingBottom: insets.bottom}]}>
-          {error && (
-            <View style={page.bottomErrorContainer}>
-              <Text t8 style={page.bottomErrorText}>
-                Invalid code
+    <>
+      <QRscanner
+        style={page.container}
+        onRead={onSuccess}
+        flashMode={flashMode}
+        hintText=""
+        isShowScanBar={false}
+        cornerColor={error ? GRAPHIC_RED_1 : GRAPHIC_BASE_3}
+        cornerWidth={7}
+        zoom={0}
+        renderTopView={() => (
+          <View style={{paddingTop: insets.top}}>
+            <View style={page.headerContainer}>
+              <IconButton onPress={onClose}>
+                <ArrowBackIcon color={GRAPHIC_BASE_3} />
+              </IconButton>
+              <Text t8 style={page.headerTitle}>
+                Scan QR Code
               </Text>
+              <View style={page.headerSpacer} />
             </View>
-          )}
-
-          <View style={page.subContainer}>
-            <IconButton onPress={onClickGallery} style={page.iconButton}>
-              <ImageIcon color={GRAPHIC_BASE_3} />
-            </IconButton>
-            <IconButton
-              onPress={() => {
-                setFlashMode(!flashMode);
-              }}
-              style={page.iconButton}>
-              <FlashLightIcon color={GRAPHIC_BASE_3} />
-            </IconButton>
+          </View>
+        )}
+        renderBottomView={() => (
+          <View style={[page.bottomContainer, {paddingBottom: insets.bottom}]}>
+            <View style={page.subContainer}>
+              <IconButton onPress={onClickGallery} style={page.iconButton}>
+                <ImageIcon color={GRAPHIC_BASE_3} />
+              </IconButton>
+              <IconButton
+                onPress={() => {
+                  setFlashMode(!flashMode);
+                }}
+                style={page.iconButton}>
+                <FlashLightIcon color={GRAPHIC_BASE_3} />
+              </IconButton>
+            </View>
+          </View>
+        )}
+      />
+      {error && (
+        <View style={page.bottomErrorContainer}>
+          <View style={page.bottomError}>
+            <Text t8 style={page.bottomErrorText}>
+              Invalid code
+            </Text>
           </View>
         </View>
       )}
-    />
+    </>
   );
 };
 
@@ -155,13 +157,18 @@ const page = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: GRAPHIC_SECOND_8,
   },
-  bottomErrorContainer: {
-    position: 'absolute',
+  bottomError: {
     backgroundColor: GRAPHIC_RED_1,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    bottom: Dimensions.get('window').height / 4,
     borderRadius: 30,
+  },
+  bottomErrorContainer: {
+    alignItems: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: Dimensions.get('window').height / 2 - 135,
   },
   bottomErrorText: {color: TEXT_BASE_3, fontWeight: '600'},
   iconButton: {
