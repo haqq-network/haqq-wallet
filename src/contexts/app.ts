@@ -103,9 +103,15 @@ class App extends EventEmitter {
   }
 
   async removeUser() {
-    realm.write(() => {
-      realm.delete(this.user?.raw);
-    });
+    this.user = undefined;
+
+    const users = realm.objects<User>('User');
+
+    for (const user of users) {
+      realm.write(() => {
+        realm.delete(user);
+      });
+    }
   }
 
   async setPin(password: string) {
