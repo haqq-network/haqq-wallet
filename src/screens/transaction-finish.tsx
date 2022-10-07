@@ -22,7 +22,7 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
