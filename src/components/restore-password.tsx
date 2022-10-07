@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
-import * as Sentry from '@sentry/react-native';
 import {TEXT_BASE_2} from '../variables';
 import {Button, ButtonVariant, Text} from './ui';
 import {useWallets} from '../contexts/wallets';
