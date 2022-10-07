@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionRow} from '../components/transaction-row';
@@ -56,7 +56,7 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
 
   return (
     <FlatList
-      style={{flex: 1}}
+      style={page.container}
       scrollEnabled={Boolean(transactionsList.length)}
       ListHeaderComponent={Wallets}
       ListEmptyComponent={TransactionEmpty}
@@ -68,3 +68,9 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
     />
   );
 };
+
+const page = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

@@ -6,7 +6,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {BG_1, BG_3, TEXT_BASE_1} from '../../variables';
-import {Paragraph, ParagraphSize} from './paragraph';
+import {Text} from './text';
 
 export type SegmentedControlValue<T> = {
   value: T;
@@ -36,11 +36,9 @@ export const SegmentedControl = ({
             onChange(v.value);
           }}>
           <View style={[page.item, v.value === value && page.itemActive]}>
-            <Paragraph
-              size={ParagraphSize.s}
-              style={[page.text, v.value === value && page.textActive]}>
+            <Text t14 style={[page.text, v.value === value && page.textActive]}>
               {v.name}
-            </Paragraph>
+            </Text>
           </View>
         </TouchableWithoutFeedback>
       ))}

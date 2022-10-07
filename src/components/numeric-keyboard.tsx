@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Icon, IconButton} from './ui';
+import {StyleSheet, View} from 'react-native';
+import {Icon, IconButton, Text} from './ui';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -14,35 +14,55 @@ export const NumericKeyboard = ({
   return (
     <View style={page.container}>
       <IconButton style={page.button} onPress={() => onPress(1)}>
-        <Text style={page.buttonText}>1</Text>
+        <Text clean style={page.buttonText}>
+          1
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(2)}>
-        <Text style={page.buttonText}>2</Text>
+        <Text clean style={page.buttonText}>
+          2
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(3)}>
-        <Text style={page.buttonText}>3</Text>
+        <Text clean style={page.buttonText}>
+          3
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(4)}>
-        <Text style={page.buttonText}>4</Text>
+        <Text clean style={page.buttonText}>
+          4
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(5)}>
-        <Text style={page.buttonText}>5</Text>
+        <Text clean style={page.buttonText}>
+          5
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(6)}>
-        <Text style={page.buttonText}>6</Text>
+        <Text clean style={page.buttonText}>
+          6
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(7)}>
-        <Text style={page.buttonText}>7</Text>
+        <Text clean style={page.buttonText}>
+          7
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(8)}>
-        <Text style={page.buttonText}>8</Text>
+        <Text clean style={page.buttonText}>
+          8
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(9)}>
-        <Text style={page.buttonText}>9</Text>
+        <Text clean style={page.buttonText}>
+          9
+        </Text>
       </IconButton>
       <View style={page.button}>{additionButton}</View>
       <IconButton style={page.button} onPress={() => onPress(0)}>
-        <Text style={page.buttonText}>0</Text>
+        <Text clean style={page.buttonText}>
+          0
+        </Text>
       </IconButton>
       <IconButton style={page.button} onPress={() => onPress(-1)}>
         <Icon name={'clear'} />

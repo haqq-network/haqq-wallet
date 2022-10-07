@@ -36,12 +36,12 @@ export const CardSmall = ({
       start={GRADIENT_START}
       end={GRADIENT_END}
       style={[
+        page.container,
         {
           width: width,
           height: width * 0.692307692,
-          padding: 16,
+
           borderRadius,
-          overflow: 'hidden',
         },
         style,
       ]}>
@@ -60,3 +60,10 @@ export const CardSmall = ({
     </LinearGradient>
   );
 };
+
+const page = StyleSheet.create({
+  container: {
+    padding: 16,
+    overflow: 'hidden',
+  },
+});

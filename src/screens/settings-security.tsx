@@ -1,18 +1,8 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {
-  MenuNavigationButton,
-  Paragraph,
-  ParagraphSize,
-  Spacer,
-} from '../components/ui';
+import {MenuNavigationButton, Text, Spacer} from '../components/ui';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Alert, StyleSheet, Switch, View} from 'react-native';
-import {
-  GRAPHIC_BASE_4,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-} from '../variables';
+import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 import {Pin, PinInterface} from '../components/pin';
 
@@ -47,14 +37,17 @@ export const SettingsSecurityScreen = ({
     if (!biometry) {
       try {
         await app.biometryAuth();
+        app.biometry = true;
         setBiometry(true);
       } catch (e) {
         if (e instanceof Error) {
           Alert.alert(e.message);
         }
+        app.biometry = false;
         setBiometry(false);
       }
     } else {
+      app.biometry = false;
       setBiometry(false);
     }
   }, [app, biometry]);
@@ -64,25 +57,23 @@ export const SettingsSecurityScreen = ({
   }
 
   return (
-    <View style={{marginHorizontal: 20, flex: 1}}>
+    <View style={page.container}>
       <MenuNavigationButton
         onPress={() => navigation.navigate('settingsSecurityPin')}>
         <View>
-          <Paragraph style={page.menuTitle}>Change PIN</Paragraph>
-          <Paragraph size={ParagraphSize.s} style={page.menuSubtitle}>
+          <Text style={page.menuTitle}>Change PIN</Text>
+          <Text t14 style={page.menuSubtitle}>
             Enter new pin
-          </Paragraph>
+          </Text>
         </View>
       </MenuNavigationButton>
       {app.biometryType !== null && (
         <MenuNavigationButton hideArrow onPress={() => {}}>
           <View>
-            <Paragraph style={page.menuTitle}>
-              {biometryName[app.biometryType]}
-            </Paragraph>
-            <Paragraph size={ParagraphSize.s} style={page.menuSubtitle}>
+            <Text style={page.menuTitle}>{biometryName[app.biometryType]}</Text>
+            <Text t14 style={page.menuSubtitle}>
               Use {biometryName[app.biometryType]} to unlock the app
-            </Paragraph>
+            </Text>
           </View>
           <Spacer />
           <Switch value={biometry} onChange={onToggleBiometry} />
@@ -94,31 +85,7 @@ export const SettingsSecurityScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center'},
-  spacer: {justifyContent: 'center', alignItems: 'center'},
-  dots: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  dot: {
-    width: 18,
-    height: 18,
-    backgroundColor: GRAPHIC_BASE_4,
-    margin: 5,
-    borderRadius: 9,
-    transform: [{scale: 0.66}],
-  },
-  active: {
-    backgroundColor: TEXT_GREEN_1,
-    transform: [{scale: 1}],
-  },
-  additionButton: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {marginBottom: 60},
+  container: {flex: 1, marginHorizontal: 20},
 
   menuSubtitle: {
     color: TEXT_BASE_2,

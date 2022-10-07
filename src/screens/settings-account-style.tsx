@@ -7,7 +7,7 @@ import {
   ButtonVariant,
   Card,
   Container,
-  Paragraph,
+  Text,
   SegmentedControl,
   Spacer,
 } from '../components/ui';
@@ -118,14 +118,14 @@ export const SettingsAccountStyleScreen = ({
         colorPattern={colors[2]}
         style={page.card}
       />
-      <Paragraph style={page.title}>Choose color style</Paragraph>
+      <Text style={page.title}>Choose color style</Text>
       <SegmentedControl
         value={cardStyle}
         values={cardStyleVariants}
         onChange={onChangeType}
-        style={{marginBottom: 32}}
+        style={page.margin}
       />
-      <Paragraph style={page.title}>Choose color style</Paragraph>
+      <Text style={page.title}>Choose color style</Text>
       <SegmentedControl
         value={patternStyle}
         values={patternVariants}
@@ -164,4 +164,5 @@ const page = StyleSheet.create({
   button: {
     marginVertical: 8,
   },
+  margin: {marginBottom: 32},
 });

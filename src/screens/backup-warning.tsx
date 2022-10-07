@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Alert,
@@ -6,17 +7,16 @@ import {
   ButtonVariant,
   InfoBlock,
   InfoBlockType,
-  Paragraph,
+  Text,
   PopupContainer,
   Spacer,
-  Title,
+  LottieWrap,
 } from '../components/ui';
-import {Image, StyleSheet} from 'react-native';
 import {TEXT_YELLOW_1} from '../variables';
 
 type BackupWarningScreenProp = CompositeScreenProps<any, any>;
 
-const warningImage = require('../../assets/images/mnemonic-warning.png');
+const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const BackupWarningScreen = ({
   navigation,
@@ -24,14 +24,16 @@ export const BackupWarningScreen = ({
 }: BackupWarningScreenProp) => {
   return (
     <PopupContainer style={page.container}>
-      <Spacer style={page.image}>
-        <Image source={warningImage} />
+      <Spacer style={page.imageContainer}>
+        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </Spacer>
-      <Title style={page.title}>Important about backup</Title>
-      <Paragraph style={page.paragraph}>
+      <Text t4 style={page.title}>
+        Important about backup
+      </Text>
+      <Text style={page.paragraph}>
         A backup is a restoring phrase of 12 words. It is better to write down
         the phrase on paper and not keep it online.
-      </Paragraph>
+      </Text>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock1}
@@ -62,7 +64,8 @@ const page = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
-  image: {justifyContent: 'center', alignItems: 'center'},
+  imageContainer: {justifyContent: 'center', alignItems: 'center'},
+  image: {width: 200, height: 200},
   title: {marginBottom: 4},
   paragraph: {marginBottom: 20, textAlign: 'center'},
   infoBlock1: {marginBottom: 20},

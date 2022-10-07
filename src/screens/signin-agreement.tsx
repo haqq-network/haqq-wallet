@@ -1,18 +1,18 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
-  Paragraph,
+  Text,
   PopupContainer,
-  Title,
   LottieWrap,
 } from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
 
 type SignInAgreementScreenProp = CompositeScreenProps<any, any>;
-const windowWidth = Dimensions.get('window').width;
+
+const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const SignInAgreementScreen = ({
   navigation,
@@ -25,30 +25,26 @@ export const SignInAgreementScreen = ({
   return (
     <>
       <View style={page.animation}>
-        <LottieWrap
-          source={require('../../assets/animations/success-animation.json')}
-          autoPlay
-          loop={false}
-        />
+        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </View>
       <PopupContainer style={page.container}>
-        <Title style={page.title}>
+        <Text t4 style={page.title}>
           Do you have your recovery phrase or private key?
-        </Title>
-        <Paragraph style={page.disclaimer}>
+        </Text>
+        <Text t11 style={page.disclaimer}>
           The recovery phrase is a 12-word phrase that you received when you
           created the wallet. A private key is a key created by you in the
           application
-        </Paragraph>
+        </Text>
         <Button
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
           onPress={onDone}
         />
-        <Paragraph style={page.agreement}>
+        <Text t11 style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
-        </Paragraph>
+        </Text>
       </PopupContainer>
     </>
   );
@@ -60,11 +56,18 @@ const page = StyleSheet.create({
   },
   animation: {
     position: 'absolute',
-    width: windowWidth,
-    height: windowWidth,
-    top: -34,
+    left: 0,
+    right: 0,
+    height: 200,
+    top: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {marginBottom: 4, marginHorizontal: 20},
+  title: {
+    marginBottom: 4,
+    marginHorizontal: 20,
+    textAlign: 'center',
+  },
   disclaimer: {
     marginBottom: 154,
     textAlign: 'center',
@@ -72,5 +75,11 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {textAlign: 'center', marginHorizontal: 20, marginBottom: 16},
+  agreement: {
+    textAlign: 'center',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    color: TEXT_BASE_2,
+  },
+  image: {width: 200, height: 200},
 });

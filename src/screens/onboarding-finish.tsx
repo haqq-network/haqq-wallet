@@ -6,10 +6,11 @@ import {
   ButtonVariant,
   Container,
   Spacer,
-  Title,
+  Text,
   LottieWrap,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {useWallets} from '../contexts/wallets';
 
 type OnboardingFinishScreenProp = CompositeScreenProps<any, any>;
 
@@ -18,6 +19,7 @@ export const OnboardingFinishScreen = ({
   route,
 }: OnboardingFinishScreenProp) => {
   const app = useApp();
+  const wallets = useWallets();
   const title = useMemo(
     () =>
       route.params.action === 'create'
@@ -32,7 +34,10 @@ export const OnboardingFinishScreen = ({
     } else {
       navigation.replace('home');
     }
-  }, [navigation, route]);
+    requestAnimationFrame(async () => {
+      await wallets.checkForBackup(app.snoozeBackup);
+    });
+  }, [app, navigation, route, wallets]);
 
   useEffect(() => {
     app.emit('modal', null);
@@ -47,7 +52,9 @@ export const OnboardingFinishScreen = ({
           loop={false}
         />
       </Spacer>
-      <Title style={page.title}>{title}</Title>
+      <Text t4 style={page.title}>
+        {title}
+      </Text>
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
@@ -59,7 +66,6 @@ export const OnboardingFinishScreen = ({
 };
 
 const page = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center'},
-  title: {marginBottom: 76},
+  title: {marginBottom: 76, textAlign: 'center'},
   button: {marginBottom: 16},
 });

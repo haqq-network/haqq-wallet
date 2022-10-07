@@ -3,10 +3,9 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
-  Paragraph,
-  PopupContainer,
-  Title,
   LottieWrap,
+  PopupContainer,
+  Text,
 } from '../components/ui';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
@@ -30,23 +29,25 @@ export const SignUpAgreementScreen = ({
         <LottieWrap source={animation} autoPlay loop={false} />
       </View>
       <PopupContainer style={page.container}>
-        <Title style={page.title}>Islm - DeFi Wallet</Title>
-        <Paragraph style={page.disclaimer}>
+        <Text t4 style={page.title}>
+          Islm - DeFi Wallet
+        </Text>
+        <Text t11 style={page.disclaimer}>
           Islm Wallet does not store, transfer, transmit, convert, hold, or
           otherwise interact with any of the Virtual Currencies you may use with
           the Islm Wallet App. Any transfer or transaction occurs on the Haqq
           Network(s). Islm Wallet cannot block, freeze or take any kind of
           control over your Virtual Currency.
-        </Paragraph>
+        </Text>
         <Button
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
           onPress={onPressAgree}
         />
-        <Paragraph style={page.agreement}>
+        <Text t11 style={page.agreement}>
           By clicking Agree you agree to the Terms of Service and Privacy Policy
-        </Paragraph>
+        </Text>
       </PopupContainer>
     </>
   );
@@ -62,7 +63,7 @@ const page = StyleSheet.create({
     height: windowWidth,
     top: -34,
   },
-  title: {marginBottom: 4, marginHorizontal: 20},
+  title: {marginBottom: 4, marginHorizontal: 20, textAlign: 'center'},
   disclaimer: {
     marginBottom: 58,
     textAlign: 'center',
@@ -70,5 +71,10 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {textAlign: 'center', marginHorizontal: 20, marginBottom: 16},
+  agreement: {
+    textAlign: 'center',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    color: TEXT_BASE_2,
+  },
 });

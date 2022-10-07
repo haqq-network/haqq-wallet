@@ -31,11 +31,13 @@ export const SwipeableButton = ({
 
   return (
     <Animated.View
-      style={{
-        flex: 1,
-        backgroundColor: backgroundColor,
-        transform: [{translateX: translateX}],
-      }}>
+      style={[
+        page.container,
+        {
+          backgroundColor: backgroundColor,
+          transform: [{translateX: translateX}],
+        },
+      ]}>
       <TouchableWithoutFeedback onPress={pressHandler}>
         <View style={page.iconContainer}>{icon}</View>
       </TouchableWithoutFeedback>
@@ -44,6 +46,7 @@ export const SwipeableButton = ({
 };
 
 const page = StyleSheet.create({
+  container: {flex: 1},
   iconContainer: {
     width: '100%',
     height: '100%',

@@ -5,7 +5,7 @@ import {
   ButtonVariant,
   Container,
   Spacer,
-  Title,
+  Text,
   LottieWrap,
 } from '../components/ui';
 import {Dimensions, StyleSheet} from 'react-native';
@@ -25,10 +25,10 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
           loop={false}
         />
       </Spacer>
-      <Title>Congratulations!</Title>
-      <Title style={page.title}>
+      <Text t4>Congratulations!</Text>
+      <Text t4 style={page.title}>
         You've successfully protected your wallet.
-      </Title>
+      </Text>
       <Button
         style={page.button}
         variant={ButtonVariant.contained}

@@ -5,14 +5,13 @@ import {
   Container,
   DataContent,
   MenuNavigationButton,
-  Paragraph,
-  ParagraphSize,
+  Text,
   Spacer,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import {BG_8, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {BG_8, TEXT_BASE_1} from '../variables';
 import prompt from 'react-native-prompt-android';
 import {app} from '../contexts/app';
 
@@ -74,7 +73,7 @@ export const SettingsAccountDetailScreen = ({
 
   return (
     <Container>
-      <View style={[page.header, wallet.isHidden && {opacity: 0.5}]}>
+      <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={Dimensions.get('window').width - 72}
           style={page.card}
@@ -83,13 +82,16 @@ export const SettingsAccountDetailScreen = ({
           colorTo={wallet.colorTo}
           colorPattern={wallet.colorPattern}>
           <CardMask
-            style={{width: cardMaskWidth, height: cardMaskHeight, margin: 4}}
+            style={[
+              page.cardMask,
+              {width: cardMaskWidth, height: cardMaskHeight},
+            ]}
           />
         </Card>
-        <Paragraph style={page.headerName}>{wallet.name}</Paragraph>
-        <Paragraph size={ParagraphSize.s} style={page.headerAddress}>
+        <Text style={page.headerName}>{wallet.name}</Text>
+        <Text t14 style={page.headerAddress}>
           {wallet?.address}
-        </Paragraph>
+        </Text>
       </View>
       <MenuNavigationButton onPress={onPressRename}>
         <DataContent
@@ -120,11 +122,13 @@ const page = StyleSheet.create({
     marginBottom: 12,
   },
   header: {
+    height: 298,
+    marginTop: 15,
     backgroundColor: BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   headerName: {
     fontWeight: '600',
@@ -134,11 +138,6 @@ const page = StyleSheet.create({
   headerAddress: {
     color: TEXT_BASE_1,
   },
-  subtitle: {
-    color: TEXT_BASE_2,
-  },
-  title: {
-    color: TEXT_BASE_1,
-    marginBottom: 2,
-  },
+  cardMask: {margin: 4},
+  opacity: {opacity: 0.5},
 });

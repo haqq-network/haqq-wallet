@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
@@ -7,23 +7,17 @@ import {
   ButtonVariant,
   KeyboardSafeArea,
   LabeledBlock,
-  Paragraph,
-  ParagraphSize,
+  Text,
   Spacer,
 } from '../components/ui';
-import {
-  BG_2,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
-} from '../variables';
+import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
+
 export const TransactionSumScreen = ({
   route,
   navigation,
@@ -100,17 +94,18 @@ export const TransactionSumScreen = ({
   // const onPressSwap = () => {};
 
   return (
-    <KeyboardSafeArea
-      style={{justifyContent: 'space-between', paddingHorizontal: 20}}>
-      <LabeledBlock label="Send to" style={{marginBottom: 50}}>
-        <Paragraph
+    <KeyboardSafeArea style={page.container}>
+      <LabeledBlock label="Send to" style={page.label}>
+        <Text
           style={{color: TEXT_BASE_1}}
           numberOfLines={1}
           ellipsizeMode="middle">
           {formattedAddress}
-        </Paragraph>
+        </Text>
       </LabeledBlock>
-      <Text style={page.subtitle}>ISLM</Text>
+      <Text clean style={page.subtitle}>
+        ISLM
+      </Text>
       <View style={page.sum}>
         <View style={page.swap}>
           {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
@@ -124,6 +119,7 @@ export const TransactionSumScreen = ({
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={TEXT_BASE_2}
+          autoFocus
         />
         <View style={page.max}>
           {balance > 0 && (
@@ -137,14 +133,16 @@ export const TransactionSumScreen = ({
         </View>
       </View>
       <View style={page.amount}>
-        <Paragraph size={ParagraphSize.xs}>$ {amountUsd}</Paragraph>
+        <Text t15>$ {amountUsd}</Text>
       </View>
       {error ? (
-        <Text style={[page.help, page.error]}>{error}</Text>
+        <Text clean style={[page.help, page.error]}>
+          {error}
+        </Text>
       ) : (
-        <Text style={[page.help, page.available]}>
+        <Text clean style={[page.help, page.available]}>
           Available:{' '}
-          <Text style={{color: TEXT_GREEN_1}}>
+          <Text clean style={{color: TEXT_GREEN_1}}>
             {balance.toFixed(8).replace(/0+$/g, '')} ISLM
           </Text>
         </Text>
@@ -162,6 +160,8 @@ export const TransactionSumScreen = ({
 };
 
 const page = StyleSheet.create({
+  container: {justifyContent: 'space-between', paddingHorizontal: 20},
+  label: {marginBottom: 50},
   input: {
     flex: 1,
     textAlign: 'center',
@@ -183,12 +183,6 @@ const page = StyleSheet.create({
     width: 60,
     justifyContent: 'center',
     alignItems: 'flex-end',
-  },
-  swapButton: {
-    backgroundColor: BG_2,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
   },
   subtitle: {
     fontWeight: '600',
@@ -223,4 +217,10 @@ const page = StyleSheet.create({
   submit: {
     marginVertical: 16,
   },
+  // swapButton: {
+  //   backgroundColor: BG_2,
+  //   width: 40,
+  //   height: 40,
+  //   borderRadius: 20,
+  // },
 });

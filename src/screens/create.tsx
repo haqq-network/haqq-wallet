@@ -2,7 +2,7 @@ import React from 'react';
 import {SignUpAgreementScreen} from './signup-agreement';
 import {PopupHeader} from '../components/popup-header';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {OnboardingStoreWalletScreen} from './onboarding-store-wallet';
+import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
@@ -26,7 +26,7 @@ export const CreateScreen = ({}: CreateScreenProp) => {
       />
       <SignUpStack.Screen
         name="createStoreWallet"
-        component={OnboardingStoreWalletScreen}
+        component={SignupStoreWalletScreen}
         options={{
           title,
           header: () => null,

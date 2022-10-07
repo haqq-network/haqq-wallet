@@ -18,6 +18,7 @@ export type CardProps = {
   colorTo: string;
   colorPattern: string;
   pattern: string;
+  onLoad?: () => void;
 };
 
 export const Card = ({
@@ -27,6 +28,7 @@ export const Card = ({
   colorFrom,
   colorTo,
   colorPattern,
+  onLoad,
   borderRadius = 16,
   transparent = false,
   pattern = CARD_DEFAULT_STYLE,
@@ -36,23 +38,19 @@ export const Card = ({
     return (
       <View
         style={[
+          page.container,
           {
             width: width,
             height: width * 0.632835821,
-            padding: 16,
             borderRadius,
-            overflow: 'hidden',
-            position: 'relative',
           },
           style,
         ]}>
         <Image
+          onLoad={onLoad}
           source={uri}
           style={[
             {
-              width: width,
-              height: width * 0.632835821,
-              zIndex: -1,
               tintColor: colorPattern,
             },
             StyleSheet.absoluteFillObject,
@@ -69,23 +67,19 @@ export const Card = ({
       start={GRADIENT_START}
       end={GRADIENT_END}
       style={[
+        page.container,
         {
           width: width,
-          height: width * 0.632835821,
-          padding: 16,
+          height: width * 0.612835821,
           borderRadius,
-          overflow: 'hidden',
-          position: 'relative',
         },
         style,
       ]}>
       <Image
         source={uri}
+        onLoad={onLoad}
         style={[
           {
-            width: width,
-            height: width * 0.632835821,
-            zIndex: -1,
             tintColor: colorPattern,
           },
           StyleSheet.absoluteFillObject,
@@ -95,3 +89,11 @@ export const Card = ({
     </LinearGradient>
   );
 };
+
+const page = StyleSheet.create({
+  container: {
+    padding: 16,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+});

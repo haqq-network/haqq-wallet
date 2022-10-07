@@ -1,13 +1,13 @@
 import React, {useCallback, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
   Container,
   Icon,
-  Paragraph,
+  Text,
   Spacer,
-  Title,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
 
@@ -31,9 +31,10 @@ export const OnboardingBiometryScreen = ({
 
   const onClickSkip = useCallback(() => {
     requestAnimationFrame(() => {
-      navigation.navigate('onboarding-store-wallet');
+      const {nextScreen, ...params} = route.params;
+      navigation.navigate(nextScreen ?? 'signupStoreWallet', params);
     });
-  }, [navigation]);
+  }, [route, navigation]);
 
   const onClickEnable = useCallback(async () => {
     try {
@@ -49,23 +50,31 @@ export const OnboardingBiometryScreen = ({
 
   return (
     <Container>
-      <Spacer style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Spacer style={page.space}>
         {biometryIcons[biometryType] && (
-          <Icon name={biometryIcons[biometryType]} style={{marginBottom: 40}} />
+          <Icon name={biometryIcons[biometryType]} style={page.icon} />
         )}
-        <Title style={{marginBottom: 12}}>
+        <Text t4 style={page.title}>
           Enable {biometryTypes[biometryType]}
-        </Title>
-        <Paragraph style={{textAlign: 'center'}}>Safe and fast</Paragraph>
-        {error && <Paragraph>{error}</Paragraph>}
+        </Text>
+        <Text style={page.textStyle}>Safe and fast</Text>
+        {error && <Text clean>{error}</Text>}
       </Spacer>
       <Button
-        style={{marginBottom: 16}}
+        style={page.margin}
         variant={ButtonVariant.contained}
         title={`Enable ${biometryTypes[biometryType]}`}
         onPress={onClickEnable}
       />
-      <Button style={{marginBottom: 16}} title="Skip" onPress={onClickSkip} />
+      <Button style={page.margin} title="Skip" onPress={onClickSkip} />
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  title: {marginBottom: 12},
+  space: {justifyContent: 'center', alignItems: 'center'},
+  icon: {marginBottom: 40},
+  textStyle: {textAlign: 'center'},
+  margin: {marginBottom: 16},
+});

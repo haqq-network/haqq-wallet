@@ -24,6 +24,7 @@ export const SettingsSecurityPinScreen = ({
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
         app.emit('modal', null);
+        app.emit('notification', 'PIN code successfully changed');
         navigation.goBack();
       } else {
         pinRef.current?.reset('pin not matched');

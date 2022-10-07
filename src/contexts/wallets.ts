@@ -20,6 +20,8 @@ import {
   CARD_RHOMBUS_TOTAL,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
+  GRAPHIC_GREEN_3,
+  GRAPHIC_GREEN_4,
 } from '../variables';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
@@ -33,9 +35,9 @@ const defaultData = {
   mnemonicSaved: true,
   isHidden: false,
   cardStyle: WalletCardStyle.flat,
-  colorFrom: '#03BF77',
-  colorTo: '#03BF77',
-  colorPattern: '#0DAC6F',
+  colorFrom: GRAPHIC_GREEN_3,
+  colorTo: GRAPHIC_GREEN_3,
+  colorPattern: GRAPHIC_GREEN_4,
   pattern: CARD_DEFAULT_STYLE,
 };
 
@@ -84,7 +86,10 @@ class Wallets extends EventEmitter {
     });
 
     this.onChangeWallet();
+    await this.checkForBackup(snoozeBackup);
+  }
 
+  async checkForBackup(snoozeBackup: Date) {
     if (isAfter(new Date(), snoozeBackup)) {
       const backupMnemonic = Array.from(this._wallets.values()).find(
         w => !w.mnemonicSaved && !w.isHidden,
@@ -215,10 +220,10 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async clean() {
+  clean() {
     this._wallets = new Map();
 
-    const wallets = await realm.objects<WalletRealm>('Wallet');
+    const wallets = realm.objects<WalletRealm>('Wallet');
 
     for (const wallet of wallets) {
       realm.write(() => {

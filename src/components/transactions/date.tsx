@@ -1,8 +1,9 @@
 import React, {useMemo} from 'react';
 import {TransactionListDate} from '../../types';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {format, isSameYear, isToday} from 'date-fns';
 import {TEXT_BASE_2} from '../../variables';
+import {Text} from '../ui';
 
 export type TransactionDate = {
   item: TransactionListDate;
@@ -21,15 +22,18 @@ export const TransactionDate = ({item}: TransactionDate) => {
 
   return (
     <View style={page.container}>
-      <Text style={page.text}>{date}</Text>
+      <Text t13 style={page.text}>
+        {date}
+      </Text>
     </View>
   );
 };
 
 const page = StyleSheet.create({
   container: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 8,
+    paddingHorizontal: 24,
   },
   text: {
     fontWeight: '600',

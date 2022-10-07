@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {MenuNavigationButton, Paragraph} from './ui';
+import {MenuNavigationButton, Text} from './ui';
 import {TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {
@@ -23,7 +23,7 @@ export const SettingsButton = ({
     <MenuNavigationButton onPress={() => onPress(next)}>
       <View style={[page.container, style]}>
         {icon}
-        <Paragraph style={page.text}>{title}</Paragraph>
+        <Text style={page.text}>{title}</Text>
       </View>
     </MenuNavigationButton>
   );

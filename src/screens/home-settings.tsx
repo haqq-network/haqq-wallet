@@ -1,4 +1,5 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   AddressBookSettingsIcon,
@@ -48,7 +49,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
         title="Security"
         onPress={onClickButton}
         next="settingsSecurity"
-        style={{marginBottom: 20}}
+        style={page.button}
       />
 
       {/*<SettingsButton*/}
@@ -76,3 +77,7 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  button: {marginBottom: 20},
+});
