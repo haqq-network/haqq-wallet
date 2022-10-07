@@ -75,12 +75,20 @@ export const TransactionConfirmationScreen = ({
   return (
     <PopupContainer style={page.container}>
       <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
-      <Text style={page.subtitle}>Total Amount</Text>
+      <Text t11 style={page.subtitle}>
+        Total Amount
+      </Text>
       <Text clean style={page.sum}>
         {(amount + estimateFee).toFixed(8)} ISLM
       </Text>
-      <Text style={page.subtitle}>Send to</Text>
-      {contact && <Text style={page.contact}>{contact.name}</Text>}
+      <Text t11 style={page.subtitle}>
+        Send to
+      </Text>
+      {contact && (
+        <Text t11 style={page.contact}>
+          {contact.name}
+        </Text>
+      )}
       <Text style={page.address}>
         <Text clean>{splittedTo[0]}</Text>
         <Text clean style={{color: TEXT_BASE_2}}>
@@ -138,6 +146,7 @@ const page = StyleSheet.create({
     color: TEXT_BASE_1,
     marginHorizontal: 27.5,
     fontWeight: '600',
+    height: 30,
   },
   address: {
     marginBottom: 40,
@@ -148,9 +157,10 @@ const page = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     marginBottom: 4,
+    color: TEXT_BASE_2,
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
-  info: {borderRadius: 16, backgroundColor: BG_3},
+  info: {top: 40, borderRadius: 16, backgroundColor: BG_3},
   sum: {
     marginBottom: 16,
     fontWeight: '700',
