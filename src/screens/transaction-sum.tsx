@@ -118,6 +118,7 @@ export const TransactionSumScreen = ({
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={TEXT_BASE_2}
+          autoFocus
         />
         <View style={page.max}>
           {balance > 0 && (
