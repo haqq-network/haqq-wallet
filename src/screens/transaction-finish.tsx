@@ -12,6 +12,7 @@ import {
   PopupContainer,
   Spacer,
   UserIcon,
+  LottieWrap,
 } from '../components/ui';
 import {
   BG_8,
@@ -30,7 +31,7 @@ import prompt from 'react-native-prompt-android';
 
 type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
 
-const icon = require('../../assets/images/transaction-finish.png');
+const icon = require('../../assets/animations/transaction-finish.json');
 
 export const TransactionFinishScreen = ({
   navigation,
@@ -81,7 +82,7 @@ export const TransactionFinishScreen = ({
   return (
     <PopupContainer style={page.container}>
       <View style={page.sub}>
-        <Image source={icon} style={page.image} />
+        <LottieWrap source={icon} style={page.image} autoPlay loop={false} />
       </View>
       <Text t4 style={page.title}>
         Sending Completed!
