@@ -64,11 +64,12 @@ export const BackupCreateScreen = ({
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
-        <Checkbox value={checked} onPress={setChecked} />
-        <Text t14 style={page.agreeText}>
-          I understand that if I lose my recovery phrase, I will not be able to
-          restore access to my account
-        </Text>
+        <Checkbox value={checked} onPress={setChecked}>
+          <Text t14 style={page.agreeText}>
+            I understand that if I lose my recovery phrase, I will not be able
+            to restore access to my account
+          </Text>
+        </Checkbox>
       </View>
       <Button
         title="Continue"
@@ -103,6 +104,7 @@ const page = StyleSheet.create({
     color: TEXT_BASE_2,
     fontWeight: '600',
     marginLeft: 12,
+    marginBottom: 4,
   },
   submit: {marginVertical: 16},
   copy: {

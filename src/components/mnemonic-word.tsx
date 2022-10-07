@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import {TEXT_BASE_2} from '../variables';
+import {GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 import React from 'react';
 import {Text} from './ui';
 
@@ -32,5 +32,6 @@ const page = StyleSheet.create({
   },
   word: {
     fontWeight: '600',
+    color: GRAPHIC_BASE_1,
   },
 });

@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import Svg, {Circle, Path} from 'react-native-svg';
-import {TouchableOpacity} from 'react-native';
-import {GRAPHIC_GREEN_1} from '../../variables';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../../variables';
 
 const CheckboxEmpty = ({color}: {color: string}) => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>
@@ -22,19 +22,29 @@ const CheckboxFilled = ({color}: {color: string}) => (
 export type CheckboxProps = {
   value: boolean;
   onPress: (value: boolean) => void;
+  children: React.ReactNode;
 };
 
-export const Checkbox = ({value, onPress}: CheckboxProps) => {
+export const Checkbox = ({value, onPress, children}: CheckboxProps) => {
   const onPressCheckbox = useCallback(() => {
     onPress(!value);
   }, [value, onPress]);
   return (
-    <TouchableOpacity onPress={onPressCheckbox}>
+    <TouchableOpacity onPress={onPressCheckbox} style={page.container}>
       {value ? (
         <CheckboxFilled color={GRAPHIC_GREEN_1} />
       ) : (
-        <CheckboxEmpty color={GRAPHIC_GREEN_1} />
+        <CheckboxEmpty color={GRAPHIC_BASE_2} />
       )}
+      {children}
     </TouchableOpacity>
   );
 };
+
+const page = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 40,
+  },
+});
