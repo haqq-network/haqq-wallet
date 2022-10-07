@@ -13,7 +13,8 @@ import {
 import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {useContacts} from '../contexts/contacts';
-import {shortAddress} from '../utils';
+import {cleanNumber, shortAddress} from '../utils';
+import {useTransactions} from '../contexts/transactions';
 
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
@@ -24,10 +25,12 @@ export const TransactionSumScreen = ({
 }: TransactionSumScreenProp) => {
   const contacts = useContacts();
   const wallets = useWallets();
+  const transactions = useTransactions();
   const [amount, setAmount] = useState('');
   const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
   const [error, setError] = useState('');
+  const [maxSum, setMaxSum] = useState(0);
 
   const contact = useMemo(
     () => contacts.getContact(route.params.to),
@@ -42,11 +45,21 @@ export const TransactionSumScreen = ({
     [contact, route.params.to],
   );
 
+  const getBalance = useCallback(async () => {
+    const newBalance = await wallets.getBalance(route.params.from);
+    setBalance(newBalance);
+
+    const fee = await transactions.estimateTransaction(
+      route.params.from,
+      route.params.to,
+      newBalance,
+    );
+    setMaxSum(balance - fee * 2);
+  }, [balance, route.params.from, route.params.to, transactions, wallets]);
+
   useEffect(() => {
-    wallets.getBalance(route.params.from).then(result => {
-      setBalance(result);
-    });
-  }, [route.params.from, wallets]);
+    getBalance();
+  }, [getBalance]);
 
   useEffect(() => {
     setAmountUsd(amount === '' ? '0' : amount);
@@ -70,8 +83,8 @@ export const TransactionSumScreen = ({
   }, [amount, navigation, route.params.from, route.params.to]);
 
   const onPressMax = useCallback(() => {
-    setAmount(balance.toFixed(8).replace(/0+$/g, ''));
-  }, [balance]);
+    setAmount(cleanNumber(maxSum.toFixed(8)));
+  }, [maxSum]);
 
   const onChangeValue = useCallback(
     (value: string) => {
