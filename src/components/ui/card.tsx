@@ -96,5 +96,4 @@ const page = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  index: {zIndex: -1},
 });
