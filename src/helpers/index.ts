@@ -3,10 +3,8 @@ import * as Sentry from '@sentry/react-native';
 
 export const captureException = (error: unknown) => {
   if (!error) {
-    console.log(
-      'captureException called with messing or incorrect arguments',
-      'background: #555; color: yellow',
-    );
+    console.log('captureException called with messing or incorrect arguments');
+    console.trace();
     return;
   }
   console.error('captureException', error);

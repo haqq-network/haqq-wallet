@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {BG_1, TEXT_BASE_2} from '../../variables';
+import {BG_1, PIN_BANNED_ATTEMPTS, TEXT_BASE_2} from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';
 import {Pin, PinInterface} from '../pin';
