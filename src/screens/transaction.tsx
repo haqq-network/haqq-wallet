@@ -41,7 +41,7 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
       <TransactionStack.Screen
         name="transactionConfirmation"
         component={TransactionConfirmationScreen}
-        options={{title: 'Preview', headerRight: DismissPopupButton}}
+        options={{title: 'Preview'}}
       />
       <TransactionStack.Screen
         name="transactionFinish"
