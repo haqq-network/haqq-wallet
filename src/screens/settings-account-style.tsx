@@ -118,14 +118,18 @@ export const SettingsAccountStyleScreen = ({
         colorPattern={colors[2]}
         style={page.card}
       />
-      <Text style={page.title}>Choose color style</Text>
+      <Text t10 style={page.title}>
+        Choose color style
+      </Text>
       <SegmentedControl
         value={cardStyle}
         values={cardStyleVariants}
         onChange={onChangeType}
         style={page.margin}
       />
-      <Text style={page.title}>Choose color style</Text>
+      <Text t10 style={page.title}>
+        Choose color style
+      </Text>
       <SegmentedControl
         value={patternStyle}
         values={patternVariants}
