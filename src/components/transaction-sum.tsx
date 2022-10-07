@@ -1,0 +1,237 @@
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import {useContacts} from '../contexts/contacts';
+import {useWallets} from '../contexts/wallets';
+import {useTransactions} from '../contexts/transactions';
+import {cleanNumber, isNumber, shortAddress} from '../utils';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  KeyboardSafeArea,
+  LabeledBlock,
+  Spacer,
+  Text,
+} from './ui';
+import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+
+export type TransactionSumProps = {
+  to: string;
+  from: string;
+  onAmount: (amount: number) => void;
+  onContact: () => void;
+};
+
+export const TransactionSum = ({
+  to,
+  from,
+  onAmount,
+  onContact,
+}: TransactionSumProps) => {
+  const contacts = useContacts();
+  const wallets = useWallets();
+  const transactions = useTransactions();
+  const [amount, setAmount] = useState('');
+  const [amountUsd, setAmountUsd] = useState('0');
+  const [balance, setBalance] = useState(0);
+  const [error, setError] = useState('');
+  const [maxSum, setMaxSum] = useState(0);
+
+  const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
+
+  const formattedAddress = useMemo(
+    () => (contact ? `${contact.name} ${to}` : shortAddress(to)),
+    [contact, to],
+  );
+
+  const getBalance = useCallback(async () => {
+    const newBalance = await wallets.getBalance(from);
+    setBalance(newBalance);
+
+    const fee = await transactions.estimateTransaction(from, to, newBalance);
+    setMaxSum(newBalance - fee * 2);
+  }, [from, to, transactions, wallets]);
+
+  useEffect(() => {
+    getBalance();
+  }, [getBalance]);
+
+  useEffect(() => {
+    setAmountUsd(amount === '' ? '0' : amount);
+  }, [amount]);
+
+  const checked = useMemo(
+    () =>
+      parseFloat(amount) > 0 &&
+      balance > 0 &&
+      parseFloat(amount) < balance &&
+      !error,
+    [error, amount, balance],
+  );
+
+  const onDone = useCallback(() => {
+    onAmount(parseFloat(amount));
+  }, [amount]);
+
+  const onPressMax = useCallback(() => {
+    setAmount(cleanNumber(maxSum.toFixed(8)));
+  }, [maxSum]);
+
+  const onChangeValue = useCallback(
+    (value: string) => {
+      const sum = value.replace(/,/g, '.');
+      setAmount(sum);
+      setError(() => {
+        if (!isNumber(sum)) {
+          return 'Wrong symbol';
+        }
+        if (parseFloat(sum) > balance) {
+          return "You don't have enough funds";
+        }
+
+        return '';
+      });
+    },
+    [balance],
+  );
+
+  // const onPressSwap = () => {};
+
+  return (
+    <KeyboardSafeArea style={page.container}>
+      <TouchableWithoutFeedback onPress={onContact}>
+        <LabeledBlock label="Send to" style={page.label}>
+          <Text
+            style={{color: TEXT_BASE_1}}
+            numberOfLines={1}
+            ellipsizeMode="middle">
+            {formattedAddress}
+          </Text>
+        </LabeledBlock>
+      </TouchableWithoutFeedback>
+      <Text clean style={page.subtitle}>
+        ISLM
+      </Text>
+      <View style={page.sum}>
+        <View style={page.swap}>
+          {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
+          {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
+          {/*</IconButton>*/}
+        </View>
+        <TextInput
+          style={page.input}
+          value={amount}
+          placeholder="0"
+          onChangeText={onChangeValue}
+          keyboardType="numeric"
+          placeholderTextColor={TEXT_BASE_2}
+          autoFocus
+        />
+        <View style={page.max}>
+          {balance > 0 && (
+            <Button
+              title="Max"
+              onPress={onPressMax}
+              variant={ButtonVariant.second}
+              size={ButtonSize.small}
+            />
+          )}
+        </View>
+      </View>
+      <View style={page.amount}>
+        <Text t15>$ {amountUsd}</Text>
+      </View>
+      {error ? (
+        <Text clean style={[page.help, page.error]}>
+          {error}
+        </Text>
+      ) : (
+        <Text clean style={[page.help, page.available]}>
+          Available:{' '}
+          <Text clean style={{color: TEXT_GREEN_1}}>
+            {balance.toFixed(8).replace(/0+$/g, '')} ISLM
+          </Text>
+        </Text>
+      )}
+      <Spacer />
+      <Button
+        style={page.submit}
+        disabled={!checked}
+        variant={ButtonVariant.contained}
+        title="Preview"
+        onPress={onDone}
+      />
+    </KeyboardSafeArea>
+  );
+};
+
+const page = StyleSheet.create({
+  container: {justifyContent: 'space-between', paddingHorizontal: 20},
+  label: {marginBottom: 50},
+  input: {
+    flex: 1,
+    textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 34,
+    lineHeight: 42,
+    color: TEXT_BASE_1,
+    paddingVertical: 2,
+    alignItems: 'center',
+  },
+  swap: {
+    height: 46,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  max: {
+    height: 46,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  subtitle: {
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 24,
+    textAlign: 'center',
+    color: TEXT_BASE_2,
+    marginBottom: 4,
+  },
+  sum: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  amount: {
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  available: {
+    color: TEXT_BASE_2,
+  },
+  error: {
+    color: TEXT_RED_1,
+  },
+  help: {
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  submit: {
+    marginVertical: 16,
+  },
+  // swapButton: {
+  //   backgroundColor: BG_2,
+  //   width: 40,
+  //   height: 40,
+  //   borderRadius: 20,
+  // },
+});

@@ -1,21 +1,21 @@
 import React, {useCallback} from 'react';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {TransactionAddress} from '../components/transaction-address';
+import {useApp} from '../contexts/app';
 
-type TransactionAddressScreenProp = CompositeScreenProps<any, any>;
+type TransactionSumAddressScreenProp = CompositeScreenProps<any, any>;
 
-export const TransactionAddressScreen = ({
+export const TransactionSumAddressScreen = ({
   route,
   navigation,
-}: TransactionAddressScreenProp) => {
+}: TransactionSumAddressScreenProp) => {
+  const app = useApp();
   const onDone = useCallback(
     (address: string) => {
-      navigation.navigate('transactionSum', {
-        from: route.params.from,
-        to: address,
-      });
+      app.emit(route.params.event, address);
+      navigation.goBack();
     },
-    [navigation, route],
+    [app, navigation],
   );
 
   return <TransactionAddress initial={route.params.to} onAddress={onDone} />;
