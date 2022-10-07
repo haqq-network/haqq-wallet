@@ -25,7 +25,7 @@ import {
   TEXT_YELLOW_1,
 } from '../variables';
 import {useWallet} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
+import {app, useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
 
 type DetailsQrScreenProp = CompositeScreenProps<any, any>;
@@ -41,7 +41,7 @@ export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
 
   const onCopy = () => {
     Clipboard.setString(address);
-    app.emit('modal', {type: 'confirmation', action: 'copied'});
+    app.emit('notification', 'Copied');
   };
 
   const onShare = () => {
