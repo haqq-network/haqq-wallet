@@ -42,7 +42,7 @@ export const TransactionSumScreen = ({
       to,
       event,
     });
-  }, [navigation]);
+  }, [event, navigation, to]);
 
   return (
     <TransactionSum

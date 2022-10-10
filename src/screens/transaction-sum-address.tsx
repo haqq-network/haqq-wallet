@@ -15,7 +15,7 @@ export const TransactionSumAddressScreen = ({
       app.emit(route.params.event, address);
       navigation.goBack();
     },
-    [app, navigation],
+    [app, navigation, route.params.event],
   );
 
   return <TransactionAddress initial={route.params.to} onAddress={onDone} />;

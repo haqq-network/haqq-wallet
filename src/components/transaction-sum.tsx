@@ -76,7 +76,7 @@ export const TransactionSum = ({
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amount));
-  }, [amount]);
+  }, [amount, onAmount]);
 
   const onPressMax = useCallback(() => {
     setAmount(cleanNumber(maxSum.toFixed(8)));
