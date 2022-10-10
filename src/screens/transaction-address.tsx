@@ -7,9 +7,7 @@ import {
   ButtonVariant,
   CloseCircle,
   IconButton,
-  Input,
   KeyboardSafeArea,
-  Text,
   QRScanner,
   Spacer,
 } from '../components/ui';
@@ -17,7 +15,8 @@ import {useContacts} from '../contexts/contacts';
 import {AddressRow} from '../components/address-row';
 import {useApp} from '../contexts/app';
 import {AddressHeader} from '../components/address-header';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, TEXT_RED_1} from '../variables';
+import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
+import TextField from '../components/ui/TextField';
 
 type TransactionAddressScreenProp = CompositeScreenProps<any, any>;
 
@@ -83,15 +82,14 @@ export const TransactionAddressScreen = ({
 
   return (
     <KeyboardSafeArea>
-      <Input
-        label="Send to"
-        style={page.input}
+      <TextField
         placeholder="Enter Address or contact name"
-        onChangeText={setTo}
+        style={page.input}
+        label="Send to"
         value={to}
-        error={error}
-        multiline={true}
-        autoFocus={true}
+        onChangeText={setTo}
+        multiline
+        autoFocus
         rightAction={
           to === '' ? (
             <IconButton onPress={onPressQR}>
@@ -103,12 +101,9 @@ export const TransactionAddressScreen = ({
             </IconButton>
           )
         }
+        error={error}
+        errorText="Incorrect address"
       />
-      {error && (
-        <Text t14 style={page.t14}>
-          Incorrect address
-        </Text>
-      )}
       <Spacer>
         {contactsList.length ? (
           <FlatList
@@ -145,5 +140,4 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
-  t14: {color: TEXT_RED_1, marginHorizontal: 20},
 });
