@@ -18,6 +18,11 @@ export function isHexString(value: any, length?: number): boolean {
   }
   return true;
 }
+const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
+
+export function isNumber(value: string) {
+  return value.match(numbersRegExp);
+}
 
 export function prepareTransactions(
   source: string[],
