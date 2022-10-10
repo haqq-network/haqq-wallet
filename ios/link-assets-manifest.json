@@ -196,18 +196,6 @@
     {
       "path": "assets/images/splash-image@3x.png",
       "sha1": "8eb1e75eb974bed1bab06ca9e53f05d0c16aa667"
-    },
-    {
-      "path": "assets/images/transaction-finish.png",
-      "sha1": "9725da122baca1b1d08aa35b50f843a440777f83"
-    },
-    {
-      "path": "assets/images/transaction-finish@2x.png",
-      "sha1": "b8426739685a8c893c3facba4fcb62fe11fc7c3f"
-    },
-    {
-      "path": "assets/images/transaction-finish@3x.png",
-      "sha1": "0a74fa76a33964e1b223c228e01726606b037b3b"
     }
   ]
 }

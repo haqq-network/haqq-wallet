@@ -36,7 +36,10 @@ export const SegmentedControl = ({
             onChange(v.value);
           }}>
           <View style={[page.item, v.value === value && page.itemActive]}>
-            <Text t14 style={[page.text, v.value === value && page.textActive]}>
+            <Text
+              t14={v.value !== value}
+              t13={v.value === value}
+              style={page.text}>
               {v.name}
             </Text>
           </View>
@@ -65,8 +68,5 @@ const page = StyleSheet.create({
   },
   text: {
     color: TEXT_BASE_1,
-  },
-  textActive: {
-    fontWeight: '600',
   },
 });

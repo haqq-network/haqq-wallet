@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Text} from './text';
-import {TEXT_BASE_1} from '../../variables';
+import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
 
 export type DataContentProps = {
   title: React.ReactNode;
@@ -17,8 +17,12 @@ export const DataContent = ({
 }: DataContentProps) => {
   return (
     <View style={[reversed && page.reverse, style]}>
-      <Text style={page.title}>{title}</Text>
-      <Text t14>{subtitle}</Text>
+      <Text t11 style={page.title}>
+        {title}
+      </Text>
+      <Text t14 style={page.subtitle}>
+        {subtitle}
+      </Text>
     </View>
   );
 };
@@ -29,6 +33,9 @@ const page = StyleSheet.create({
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
+  },
+  subtitle: {
+    color: TEXT_BASE_2,
   },
   reverse: {flexDirection: 'column-reverse'},
 });

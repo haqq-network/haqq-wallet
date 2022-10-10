@@ -89,7 +89,7 @@ export const TransactionConfirmationScreen = ({
           {contact.name}
         </Text>
       )}
-      <Text style={page.address}>
+      <Text t11 style={page.address}>
         <Text clean>{splittedTo[0]}</Text>
         <Text clean style={{color: TEXT_BASE_2}}>
           {splittedTo[1]}

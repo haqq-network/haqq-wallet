@@ -23,7 +23,9 @@ export const SettingsButton = ({
     <MenuNavigationButton onPress={() => onPress(next)}>
       <View style={[page.container, style]}>
         {icon}
-        <Text style={page.text}>{title}</Text>
+        <Text t11 style={page.text}>
+          {title}
+        </Text>
       </View>
     </MenuNavigationButton>
   );

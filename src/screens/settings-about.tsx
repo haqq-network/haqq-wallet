@@ -17,6 +17,7 @@ import {
   GRAPHIC_BASE_1,
   GRAPHIC_SECOND_3,
   TEXT_BASE_1,
+  TEXT_BASE_2,
 } from '../variables';
 
 import {openURL} from '../helpers';
@@ -60,13 +61,17 @@ export const SettingsAboutScreen = () => {
       <View style={page.buttons}>
         <IconButton onPress={onPressRate} style={page.button}>
           <StarIcon color={GRAPHIC_BASE_1} />
-          <Text style={page.buttonText}>Rate ISLM wallet App</Text>
+          <Text t11 style={page.buttonText}>
+            Rate ISLM wallet App
+          </Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
         <IconButton onPress={onPressSite} style={page.button}>
           <GlobalIcon color={GRAPHIC_BASE_1} />
-          <Text style={page.buttonText}>Visit islamiccoin.net</Text>
+          <Text t11 style={page.buttonText}>
+            Visit islamiccoin.net
+          </Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
@@ -77,7 +82,9 @@ export const SettingsAboutScreen = () => {
       <View style={page.buttons}>
         <IconButton onPress={onPressDoc} style={page.button}>
           <DocIcon color={GRAPHIC_BASE_1} />
-          <Text style={page.buttonText}>Terms & Conditions</Text>
+          <Text t11 style={page.buttonText}>
+            Terms & Conditions
+          </Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
@@ -88,12 +95,14 @@ export const SettingsAboutScreen = () => {
       <View style={page.buttons}>
         <IconButton onPress={onPressDiscord} style={page.button}>
           <DiscordIcon color={GRAPHIC_BASE_1} />
-          <Text style={page.buttonText}>Discord</Text>
+          <Text t11 style={page.buttonText}>
+            Discord
+          </Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
-      <Text style={page.terms}>
+      <Text t11 style={page.terms}>
         ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
       </Text>
     </Container>
@@ -103,6 +112,8 @@ export const SettingsAboutScreen = () => {
 const page = StyleSheet.create({
   title: {
     marginBottom: 8,
+    color: TEXT_BASE_2,
+    marginHorizontal: 4,
   },
   buttons: {
     backgroundColor: BG_3,
