@@ -18,9 +18,21 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: "3.x"
+      - name: Decode Keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'android/app/haqq-upload-key.keystore'
+          encodedString: ${{ secrets.HAQQ_KEYSTORE }}
       - name: Install Fastlane
         run: bundle install
       - name: Install packages
         run: yarn install
       - name: Execute Fastlane command
         run: fastlane android distribute
+        env:
+          HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
+          HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
+          HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
+          HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
