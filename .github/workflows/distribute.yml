@@ -24,11 +24,13 @@ jobs:
           fileName: 'android/app/haqq-upload-key.keystore'
           encodedString: ${{ secrets.HAQQ_KEYSTORE }}
       - name: Install Fastlane
-        run: bundle install
+        run: |
+          bundle install
+          bundle exec fastlane add_plugin firebase_app_distribution
       - name: Install packages
         run: yarn install
       - name: Execute Fastlane command
-        run: fastlane android distribute
+        run: bundle exec fastlane android distribute
         env:
           HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
           HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
