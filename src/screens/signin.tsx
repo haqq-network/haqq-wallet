@@ -50,7 +50,7 @@ export const SignInScreen = ({}: SignInScreenProp) => {
       <SignInStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
-        options={{title}}
+        options={{title, headerBackHidden: true}}
         initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen

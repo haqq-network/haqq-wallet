@@ -4,7 +4,12 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text, Spacer} from '../components/ui';
 import {useApp} from '../contexts/app';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+import {
+  GRAPHIC_BASE_4,
+  TEXT_GREEN_1,
+  TEXT_RED_1,
+  TEXT_BASE_2,
+} from '../variables';
 import {vibrate} from '../services/haptic';
 
 type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
@@ -102,5 +107,5 @@ const page = StyleSheet.create({
     color: TEXT_RED_1,
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center'},
+  t11: {textAlign: 'center', color: TEXT_BASE_2},
 });
