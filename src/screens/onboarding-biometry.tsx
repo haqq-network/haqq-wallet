@@ -10,6 +10,7 @@ import {
   Spacer,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {TEXT_BASE_2} from '../variables';
 
 type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
 
@@ -57,7 +58,9 @@ export const OnboardingBiometryScreen = ({
         <Text t4 style={page.title}>
           Enable {biometryTypes[biometryType]}
         </Text>
-        <Text style={page.textStyle}>Safe and fast</Text>
+        <Text t11 style={page.textStyle}>
+          Safe and fast
+        </Text>
         {error && <Text clean>{error}</Text>}
       </Spacer>
       <Button
@@ -75,6 +78,6 @@ const page = StyleSheet.create({
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},
-  textStyle: {textAlign: 'center'},
+  textStyle: {textAlign: 'center', color: TEXT_BASE_2},
   margin: {marginBottom: 16},
 });
