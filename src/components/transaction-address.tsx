@@ -89,6 +89,7 @@ export const TransactionAddress = ({
         error={error}
         errorText="Incorrect address"
         autoFocus
+        multiline
         rightAction={
           address === '' ? (
             <IconButton onPress={onPressQR}>

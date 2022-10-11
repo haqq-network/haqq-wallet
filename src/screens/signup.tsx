@@ -40,7 +40,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
       <SignUpStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
-        options={{title}}
+        options={{title, headerBackHidden: true}}
         initialParams={{nextScreen: 'signupStoreWallet'}}
       />
       <SignUpStack.Screen
