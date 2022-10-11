@@ -1,4 +1,4 @@
-package com.haqq.haptic
+package com.haqq.wallet.haptic
 
 import android.view.View
 import com.facebook.react.ReactPackage
