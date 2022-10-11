@@ -13,18 +13,15 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### version
+## Android
+
+### android version
 
 ```sh
-[bundle exec] fastlane version
+[bundle exec] fastlane android version
 ```
 
-IOS Production App
-
-----
-
-
-## Android
+Android Production App
 
 ### android distribute
 
@@ -32,7 +29,7 @@ IOS Production App
 [bundle exec] fastlane android distribute
 ```
 
-Android Production App
+
 
 ### android release
 
@@ -41,6 +38,27 @@ Android Production App
 ```
 
 
+
+### android version_code
+
+```sh
+[bundle exec] fastlane android version_code
+```
+
+
+
+----
+
+
+## iOS
+
+### ios version
+
+```sh
+[bundle exec] fastlane ios version
+```
+
+IOS Production App
 
 ----
 
