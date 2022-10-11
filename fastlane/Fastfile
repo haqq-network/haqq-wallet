@@ -36,6 +36,21 @@ platform :android do
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
       )
   end
+
+  lane :version_code do
+    previous_build_number = google_play_track_version_codes(
+      package_name: 'com.haqq.wallet',
+      track: "internal",
+      json_key: 'android/app/google-account.json',
+    )[0]
+
+    current_build_number = previous_build_number + 1
+
+    increment_version_code(
+      gradle_file_path: 'android/app/build.gradle',
+      version_code: current_build_number
+    )
+  end
 end
 
 platform :ios do
