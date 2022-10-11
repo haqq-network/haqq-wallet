@@ -38,7 +38,7 @@ jobs:
 
       - name: Set env
         run: |
-          current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }')
+          current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }' |  awk -F '-' '{ print $1 }')
           echo "RELEASE_VERSION=${current_version}" >> $GITHUB_ENV
 
       - uses: actions/setup-ruby@v1
