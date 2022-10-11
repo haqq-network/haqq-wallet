@@ -12,7 +12,7 @@ import {
   KeyboardSafeArea,
   Text,
   Spacer,
-  TextBigField,
+  TextField,
 } from '../components/ui';
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
@@ -57,7 +57,7 @@ export const SignInRestoreScreen = ({
       <Text t11 style={page.intro}>
         Recovery phrase or Private key
       </Text>
-      <TextBigField
+      <TextField
         placeholder="Enter or paste your recovery phrase"
         style={page.input}
         label="Backup phrase"

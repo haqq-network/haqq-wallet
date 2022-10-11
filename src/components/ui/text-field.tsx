@@ -23,6 +23,7 @@ type Props = React.ComponentProps<typeof TextInput> & {
   errorText?: string | null;
   placeholder?: string;
   rightAction?: React.ReactNode;
+  multiline?: boolean;
 };
 
 export const TextField: React.FC<Props> = ({
@@ -35,6 +36,7 @@ export const TextField: React.FC<Props> = ({
   onFocus,
   placeholder,
   rightAction,
+  multiline,
   ...restOfProps
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -51,7 +53,7 @@ export const TextField: React.FC<Props> = ({
     }).start();
   }, [focusAnim, isFocused, value]);
 
-  let color = isFocused ? TEXT_BASE_2 : TEXT_BASE_2;
+  let color = TEXT_BASE_2;
   if (error) {
     color = TEXT_RED_1;
   }
@@ -61,7 +63,12 @@ export const TextField: React.FC<Props> = ({
   return (
     <>
       <View
-        style={[page.container, style, {backgroundColor: error ? BG_7 : BG_8}]}>
+        style={[
+          page.container,
+          style,
+          error && page.containerError,
+          multiline && page.containerMultiline,
+        ]}>
         <TextInput
           style={[
             containerStyle,
@@ -103,7 +110,7 @@ export const TextField: React.FC<Props> = ({
                   {
                     translateX: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [0, -10],
+                      outputRange: [multiline ? 6 : 0, multiline ? -12 : -8],
                     }),
                   },
                 ],
@@ -112,6 +119,7 @@ export const TextField: React.FC<Props> = ({
             <Text
               style={[
                 page.label,
+                multiline && page.labelMultiline,
                 {
                   color,
                   top,
@@ -135,23 +143,30 @@ const page = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
-    height: 58,
     justifyContent: 'space-between',
+    backgroundColor: BG_8,
+    height: 58,
   },
+  containerMultiline: {
+    height: 170,
+  },
+  containerError: {
+    backgroundColor: BG_7,
+  },
+
   input: {
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     fontSize: 16,
     color: TEXT_BASE_1,
-    top: 8,
   },
   placeholderStyle: {
+    alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     fontSize: 17.5,
     color: TEXT_BASE_1,
-    top: 14,
-    right: 2,
+    top: 24,
   },
   labelContainer: {
     position: 'absolute',
@@ -162,6 +177,9 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontSize: 19,
     left: 0,
+  },
+  labelMultiline: {
+    left: -4.5,
   },
   error: {
     marginLeft: 35,

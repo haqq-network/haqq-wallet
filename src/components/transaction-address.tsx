@@ -88,7 +88,6 @@ export const TransactionAddress = ({
         onChangeText={setAddress}
         error={error}
         errorText="Incorrect address"
-        multiline
         autoFocus
         rightAction={
           address === '' ? (
@@ -102,7 +101,6 @@ export const TransactionAddress = ({
           )
         }
       />
-
       <Spacer>
         {contactsList.length ? (
           <FlatList
