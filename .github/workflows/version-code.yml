@@ -22,7 +22,8 @@ jobs:
           current_version=$(cat ./android/app/build.gradle | grep 'versionCode *' | head -1 | awk -F '[ ]'  '{ print $6 }')
           new_version=$(($current_version + 1))
           sed -i '' -e "s/versionCode ${current_version}/versionCode ${new_version}/" ./android/app/build.gradle
-      - name: Amend the last commit
+
+      - name: Push updates
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Update branch"

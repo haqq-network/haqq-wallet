@@ -1,5 +1,6 @@
 platform :android do
-  desc "RN Production App"
+  desc "Android Production App"
+
   lane :distribute do
     gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
       "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
@@ -35,4 +36,20 @@ platform :android do
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
       )
   end
+end
+
+platform :ios do
+  desc "IOS Production App"
+end
+
+lane :version do
+  increment_version_number(
+    xcodeproj: './ios/haqq.xcodeproj',
+    version_number: ENV["RELEASE_VERSION"]
+  )
+
+  increment_version_name(
+    gradle_file_path: './android/app/build.gradle',
+    version_name: ENV["RELEASE_VERSION"]
+  )
 end

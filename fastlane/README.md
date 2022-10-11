@@ -13,6 +13,17 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+### version
+
+```sh
+[bundle exec] fastlane version
+```
+
+IOS Production App
+
+----
+
+
 ## Android
 
 ### android distribute
@@ -21,7 +32,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane android distribute
 ```
 
-RN Production App
+Android Production App
 
 ### android release
 
