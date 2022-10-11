@@ -17,7 +17,7 @@ platform :android do
     })
 
     firebase_app_distribution(
-      app: "1:427318688544:android:740c299a1aab9b6f07f545",
+      app: "1:915453653093:android:d69f18643b8b3f2954568c",
       testers: ENV["FIREBASE_TESTERS"],
       firebase_cli_token: ENV["FIREBASE_TOKEN"],
       release_notes: "Lots of amazing new features to test out!"
