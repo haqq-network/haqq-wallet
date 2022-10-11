@@ -8,7 +8,12 @@ import React, {
 import {StyleSheet, View} from 'react-native';
 import {Container, Spacer, Text} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+import {
+  GRAPHIC_BASE_4,
+  TEXT_BASE_2,
+  TEXT_GREEN_1,
+  TEXT_RED_1,
+} from '../variables';
 import {HapticEffects, vibrate} from '../services/haptic';
 import {isBefore} from 'date-fns';
 
@@ -102,7 +107,7 @@ export const Pin = forwardRef(
         </Text>
         {error && <Text clean>{error}</Text>}
         {subtitle && !error && (
-          <Text clean style={page.error}>
+          <Text t11 style={page.t11}>
             {subtitle}
           </Text>
         )}
@@ -148,4 +153,5 @@ const page = StyleSheet.create({
     fontWeight: '600',
   },
   title: {marginTop: 40, marginBottom: 12},
+  t11: {textAlign: 'center', color: TEXT_BASE_2},
 });

@@ -14,7 +14,9 @@ export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
       <Text t14 style={page.index}>
         {index}
       </Text>
-      <Text style={page.word}>{word}</Text>
+      <Text t10 style={page.word}>
+        {word}
+      </Text>
     </View>
   );
 };
