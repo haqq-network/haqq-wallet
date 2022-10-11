@@ -1,6 +1,13 @@
 platform :android do
   desc "Android Production App"
 
+  lane :version do
+    increment_version_name(
+      gradle_file_path: './android/app/build.gradle',
+      version_name: ENV["RELEASE_VERSION"]
+    )
+  end
+
   lane :distribute do
     gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
       "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
