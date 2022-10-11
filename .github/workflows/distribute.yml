@@ -2,25 +2,58 @@ name: Distribute app
 
 on:
   workflow_dispatch:
-  create:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
-  build_android:
-    name: Build and release Android app
+  test:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Test
+        run: yarn test
+
+  build_android:
+    name: Build and release Android app
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: "3.x"
+
+      - name: Decode secrets
+        run: |
+          echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
+          echo ${{secrets.GOOGLE_SERVICES_ANDROID}} | base64 -d > android/app/google-services.json
+
       - name: Install Fastlane
-        run: bundle install
+        run: |
+          bundle install
+
       - name: Install packages
         run: yarn install
+
       - name: Execute Fastlane command
-        run: fastlane android distribute
+        run: bundle exec fastlane android distribute
+        env:
+          HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
+          HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
+          HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
+          HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}

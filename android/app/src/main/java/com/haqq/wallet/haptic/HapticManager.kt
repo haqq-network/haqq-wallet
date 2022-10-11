@@ -1,4 +1,4 @@
-package com.haqq.haptic
+package com.haqq.wallet.haptic
 
 import android.content.Context
 import android.os.VibrationEffect
