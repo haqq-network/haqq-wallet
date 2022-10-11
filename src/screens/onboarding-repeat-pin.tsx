@@ -56,7 +56,9 @@ export const OnboardingRepeatPinScreen = ({
   return (
     <Container style={page.container}>
       <Text t4>Please repeat pin code</Text>
-      <Text clean>For security, we don't have a “Restore pin” button.</Text>
+      <Text t11 style={page.t11}>
+        For security, we don't have a “Restore pin” button.
+      </Text>
       <Spacer style={page.spacer}>
         <View style={page.dots}>
           <View style={[page.dot, pin.length >= 1 && page.active]} />
@@ -100,4 +102,5 @@ const page = StyleSheet.create({
     color: TEXT_RED_1,
     justifyContent: 'center',
   },
+  t11: {textAlign: 'center'},
 });
