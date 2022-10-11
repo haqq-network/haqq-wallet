@@ -24,6 +24,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
+      - uses: actions/cache@v2
+        with:
+         path: '**/node_modules'
+         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Run linters
@@ -43,6 +47,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       # - name: Build applications
