@@ -7,13 +7,12 @@ import {
   ButtonVariant,
   CloseCircle,
   IconButton,
-  Input,
   KeyboardSafeArea,
   QRScanner,
   Spacer,
-  Text,
+  TextField,
 } from './ui';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, TEXT_RED_1} from '../variables';
+import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
@@ -81,15 +80,15 @@ export const TransactionAddress = ({
 
   return (
     <KeyboardSafeArea>
-      <Input
+      <TextField
         label="Send to"
         style={page.input}
         placeholder="Enter Address or contact name"
-        onChangeText={setAddress}
         value={address}
+        onChangeText={setAddress}
         error={error}
-        multiline={true}
-        autoFocus={true}
+        errorText="Incorrect address"
+        autoFocus
         rightAction={
           address === '' ? (
             <IconButton onPress={onPressQR}>
@@ -102,11 +101,6 @@ export const TransactionAddress = ({
           )
         }
       />
-      {error && (
-        <Text t14 style={page.t14}>
-          Incorrect address
-        </Text>
-      )}
       <Spacer>
         {contactsList.length ? (
           <FlatList
@@ -138,5 +132,4 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
-  t14: {color: TEXT_RED_1, marginHorizontal: 20},
 });

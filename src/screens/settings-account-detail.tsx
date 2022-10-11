@@ -5,18 +5,19 @@ import {
   Container,
   DataContent,
   MenuNavigationButton,
-  Text,
   Spacer,
+  Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import {BG_8, TEXT_BASE_1} from '../variables';
+import {BG_8} from '../variables';
 import prompt from 'react-native-prompt-android';
 import {app} from '../contexts/app';
 
 type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;
 
+const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
 const cardMaskHeight = cardMaskWidth * 0.547528517;
 
@@ -75,7 +76,7 @@ export const SettingsAccountDetailScreen = ({
     <Container>
       <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
-          width={Dimensions.get('window').width - 72}
+          width={cardWidth}
           style={page.card}
           pattern={wallet.pattern}
           colorFrom={wallet.colorFrom}
@@ -88,10 +89,10 @@ export const SettingsAccountDetailScreen = ({
             ]}
           />
         </Card>
-        <Text style={page.headerName}>{wallet.name}</Text>
-        <Text t14 style={page.headerAddress}>
-          {wallet?.address}
+        <Text t10 style={page.headerName}>
+          {wallet.name}
         </Text>
+        <Text t14>{wallet?.address}</Text>
       </View>
       <MenuNavigationButton onPress={onPressRename}>
         <DataContent
@@ -122,21 +123,15 @@ const page = StyleSheet.create({
     marginBottom: 12,
   },
   header: {
-    height: 298,
     marginTop: 15,
     backgroundColor: BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 16,
     marginBottom: 10,
   },
   headerName: {
-    fontWeight: '600',
-    color: TEXT_BASE_1,
     marginBottom: 4,
-  },
-  headerAddress: {
-    color: TEXT_BASE_1,
   },
   cardMask: {margin: 4},
   opacity: {opacity: 0.5},

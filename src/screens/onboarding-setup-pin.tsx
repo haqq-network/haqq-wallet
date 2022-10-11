@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text, Spacer} from '../components/ui';
-import {GRAPHIC_BASE_4, TEXT_GREEN_1} from '../variables';
+import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {vibrate} from '../services/haptic';
 
 type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;
@@ -37,7 +37,7 @@ export const OnboardingSetupPinScreen = ({
       <Text t4 style={page.title}>
         Set 6-digital pin code
       </Text>
-      <Text style={page.description}>
+      <Text t11 style={page.description}>
         Project your wallet. PIN code for increases wallet security in the event
         your phone{'\u00A0'}is{'\u00A0'}stolen
       </Text>
@@ -59,7 +59,7 @@ export const OnboardingSetupPinScreen = ({
 const page = StyleSheet.create({
   container: {alignItems: 'center', marginTop: 40, paddingBottom: 16},
   title: {marginBottom: 12},
-  description: {textAlign: 'center'},
+  description: {textAlign: 'center', color: TEXT_BASE_2},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',

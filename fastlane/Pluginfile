@@ -3,3 +3,5 @@
 # Ensure this file is checked in to source control!
 
 gem 'fastlane-plugin-firebase_app_distribution'
+gem 'fastlane-plugin-increment_version_name'
+gem 'fastlane-plugin-increment_version_code'

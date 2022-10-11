@@ -1,10 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {Button} from 'react-native';
+import {StyleSheet, Button} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {vibrate} from '../services/haptic';
+import {TEXT_BASE_2} from '../variables';
 
 type PinScreenProp = CompositeScreenProps<any, any>;
 
@@ -27,10 +28,19 @@ export const SetPinScreen = ({navigation}: PinScreenProp) => {
 
   return (
     <Container>
-      <Text clean>Set pin code</Text>
-      <Text clean>{pin}</Text>
+      <Text t4 style={page.t4}>
+        Set pin code
+      </Text>
+      <Text t11 style={page.t11}>
+        {pin}
+      </Text>
       <NumericKeyboard onPress={onKeyboard} />
       <Button title="Set pin" onPress={onSetPin} disabled={pin.length < 4} />
     </Container>
   );
 };
+
+const page = StyleSheet.create({
+  t4: {textAlign: 'center'},
+  t11: {textAlign: 'center', color: TEXT_BASE_2},
+});
