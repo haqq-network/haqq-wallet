@@ -31,6 +31,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Decode secrets
+        run: |
+          echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+
       - name: Set env
         run: |
           current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }')
@@ -46,6 +51,9 @@ jobs:
         run: bundle exec fastlane version
         env:
           RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
+
+      - name: Update Android versionCode
+        run: bundle exec fastlane android version_code
 
       - name: Push updates
         run: |
