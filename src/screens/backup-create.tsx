@@ -28,8 +28,10 @@ export const BackupCreateScreen = ({
 
   return (
     <PopupContainer style={page.container}>
-      <Text t4>Your recovery phrase</Text>
-      <Text clean>
+      <Text t4 style={page.t4}>
+        Your recovery phrase
+      </Text>
+      <Text t11 style={page.t11}>
         Write down or copy these words in the right order and save them
         somewhere safe.
       </Text>
@@ -119,5 +121,13 @@ const page = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     marginHorizontal: 4,
+  },
+  t4: {
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  t11: {
+    color: TEXT_BASE_2,
+    textAlign: 'center',
   },
 });

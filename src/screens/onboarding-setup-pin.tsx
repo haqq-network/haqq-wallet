@@ -37,7 +37,7 @@ export const OnboardingSetupPinScreen = ({
       <Text t4 style={page.title}>
         Set 6-digital pin code
       </Text>
-      <Text style={page.description}>
+      <Text t11 style={page.description}>
         Project your wallet. PIN code for increases wallet security in the event
         your phone{'\u00A0'}is{'\u00A0'}stolen
       </Text>

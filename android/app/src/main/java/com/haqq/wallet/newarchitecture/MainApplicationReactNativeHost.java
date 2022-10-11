@@ -1,4 +1,4 @@
-package com.haqq.newarchitecture;
+package com.haqq.wallet.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.haqq.BuildConfig;
-import com.haqq.newarchitecture.components.MainComponentsRegistry;
-import com.haqq.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.haqq.wallet.BuildConfig;
+import com.haqq.wallet.newarchitecture.components.MainComponentsRegistry;
+import com.haqq.wallet.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

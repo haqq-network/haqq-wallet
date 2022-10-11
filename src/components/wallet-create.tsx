@@ -9,6 +9,7 @@ import {
   GRAPHIC_SECOND_1,
   MAGIC_CARD_HEIGHT,
   TEXT_GREEN_1,
+  TEXT_BASE_2,
 } from '../variables';
 import {RootStackParamList} from '../types';
 
@@ -21,7 +22,9 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Text t8 style={page.title}>
         Add accounts
       </Text>
-      <Text style={page.subtitle}>Import and create new accounts</Text>
+      <Text t14 style={page.subtitle}>
+        Import and create new accounts
+      </Text>
       <Button
         variant={ButtonVariant.contained}
         title="Create new"
@@ -72,6 +75,7 @@ const page = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     marginBottom: 18,
+    color: TEXT_BASE_2,
   },
   create: {
     marginBottom: 4,
