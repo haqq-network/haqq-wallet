@@ -1,4 +1,4 @@
-package com.haqq.encryption
+package com.haqq.wallet.encryption
 
 import com.facebook.react.bridge.*
 import com.google.android.gms.common.util.Base64Utils

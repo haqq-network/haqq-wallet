@@ -1,4 +1,4 @@
-package com.haqq;
+package com.haqq.wallet;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,11 +9,11 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
-import com.haqq.haptic.HapticPackage;
-import com.haqq.newarchitecture.MainApplicationReactNativeHost;
+import com.haqq.wallet.haptic.HapticPackage;
+import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.haqq.encryption.EncryptionPackage;
+import com.haqq.wallet.encryption.EncryptionPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

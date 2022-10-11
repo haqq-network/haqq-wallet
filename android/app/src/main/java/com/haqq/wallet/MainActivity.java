@@ -1,4 +1,4 @@
-package com.haqq;
+package com.haqq.wallet;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
