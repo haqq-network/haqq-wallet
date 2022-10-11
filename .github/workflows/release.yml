@@ -22,7 +22,7 @@ jobs:
         run: yarn test
 
   update_version:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     name: Update app version
     needs:
       - test
