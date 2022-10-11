@@ -62,16 +62,11 @@ end
 
 platform :ios do
   desc "IOS Production App"
-end
 
-lane :version do
-  increment_version_number(
-    xcodeproj: './ios/haqq.xcodeproj',
-    version_number: ENV["RELEASE_VERSION"]
-  )
-
-  increment_version_name(
-    gradle_file_path: './android/app/build.gradle',
-    version_name: ENV["RELEASE_VERSION"]
-  )
+  lane :version do
+    increment_version_number(
+      xcodeproj: './ios/haqq.xcodeproj',
+      version_number: ENV["RELEASE_VERSION"]
+    )
+  end
 end
