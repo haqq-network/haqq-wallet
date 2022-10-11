@@ -14,7 +14,6 @@ import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
-import {splitAddress} from '../utils';
 
 type SendTransactionScreenProp = CompositeScreenProps<any, any>;
 
@@ -22,7 +21,7 @@ export const TransactionConfirmationScreen = ({
   navigation,
   route,
 }: SendTransactionScreenProp) => {
-  const {from, to, amount, fee} = route.params;
+  const {from, to, amount, fee, splittedTo} = route.params;
   const contacts = useContacts();
   const transactions = useTransactions();
   const wallet = useWallet(from);
@@ -35,8 +34,6 @@ export const TransactionConfirmationScreen = ({
     () => contacts.getContact(route.params.to),
     [contacts, route.params.to],
   );
-
-  const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   const onDone = useCallback(async () => {
     if (wallet) {
@@ -90,11 +87,13 @@ export const TransactionConfirmationScreen = ({
         </Text>
       )}
       <Text t11 style={page.address}>
-        <Text clean>{splittedTo[0]}</Text>
-        <Text clean style={{color: TEXT_BASE_2}}>
+        <Text t11 style={page.address}>
+          {splittedTo[0]}
+        </Text>
+        <Text t11 style={{color: TEXT_BASE_2}}>
           {splittedTo[1]}
         </Text>
-        <Text clean>{splittedTo[2]}</Text>
+        <Text t11>{splittedTo[2]}</Text>
       </Text>
 
       <View style={page.info}>
