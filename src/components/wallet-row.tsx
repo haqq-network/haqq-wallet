@@ -38,5 +38,6 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
 const page = StyleSheet.create({
   info: {
     marginLeft: 12,
+    flex: 1,
   },
 });

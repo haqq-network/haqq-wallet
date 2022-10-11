@@ -18,7 +18,6 @@ import {
   BG_3,
   GRAPHIC_BASE_1,
   GRAPHIC_GREEN_1,
-  TEXT_BASE_1,
   TEXT_BASE_2,
   TEXT_GREEN_1,
   TEXT_RED_1,
@@ -49,7 +48,7 @@ export const TransactionDetailScreen = ({
   }, [transaction?.hash]);
 
   const title =
-    transaction?.source === TransactionSource.send ? 'Send' : 'Receive';
+    transaction?.source === TransactionSource.send ? 'Sent' : 'Receive';
 
   if (!transaction) {
     return null;
@@ -57,7 +56,7 @@ export const TransactionDetailScreen = ({
 
   return (
     <BottomSheet onClose={navigation.goBack} title={title}>
-      <Text t14 style={page.t14}>
+      <Text t14 style={page.amount}>
         Total amount
       </Text>
       <Text
@@ -104,9 +103,9 @@ export const TransactionDetailScreen = ({
                 color={GRAPHIC_GREEN_1}
                 style={page.icon}
               />
-              <Text clean>
+              <Text t11>
                 Islamic coin{' '}
-                <Text clean style={{color: TEXT_BASE_2}}>
+                <Text clean style={page.subInfo}>
                   (ISLM)
                 </Text>
               </Text>
@@ -120,7 +119,7 @@ export const TransactionDetailScreen = ({
           title={
             <>
               HAQQ blockchain{' '}
-              <Text clean style={{color: TEXT_BASE_2}}>
+              <Text clean style={page.subInfo}>
                 (HQ)
               </Text>
             </>
@@ -144,7 +143,9 @@ export const TransactionDetailScreen = ({
       </View>
       <IconButton onPress={onPressInfo} style={page.iconButton}>
         <BlockIcon color={GRAPHIC_BASE_1} />
-        <Text style={page.textStyle}>View on block explorer</Text>
+        <Text t9 style={page.textStyle}>
+          View on block explorer
+        </Text>
       </IconButton>
     </BottomSheet>
   );
@@ -172,8 +173,9 @@ const page = StyleSheet.create({
   info: {
     marginVertical: 8,
   },
-  t14: {marginBottom: 2},
-  icon: {marginRight: 4},
+  amount: {marginBottom: 2, text: TEXT_BASE_2},
+  icon: {marginRight: 4, width: 16, height: 16},
   iconButton: {flexDirection: 'row', marginBottom: 50},
-  textStyle: {marginLeft: 8, color: TEXT_BASE_1, fontWeight: '700'},
+  textStyle: {marginLeft: 8},
+  subInfo: {color: TEXT_BASE_2},
 });

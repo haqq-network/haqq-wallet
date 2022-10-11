@@ -33,6 +33,7 @@ export const SettingsButton = ({
 
 const page = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
