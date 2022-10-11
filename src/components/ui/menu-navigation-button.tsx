@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import {GRAPHIC_SECOND_3} from '../../variables';
 import {ArrowForwardIcon} from './svg-icon';
-import {Spacer} from './spacer';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;
@@ -26,8 +25,7 @@ export const MenuNavigationButton = ({
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[page.container, style]}>
-        {children}
-        {!hideArrow && <Spacer />}
+        <View style={page.content}>{children}</View>
         {!hideArrow && <ArrowForwardIcon color={GRAPHIC_SECOND_3} />}
       </View>
     </TouchableWithoutFeedback>
@@ -40,5 +38,11 @@ const page = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flex: 1,
   },
 });

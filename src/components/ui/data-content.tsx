@@ -17,7 +17,7 @@ export const DataContent = ({
 }: DataContentProps) => {
   return (
     <View style={[reversed && page.reverse, style]}>
-      <Text t11 style={page.title}>
+      <Text t11 style={page.title} ellipsizeMode="tail" numberOfLines={1}>
         {title}
       </Text>
       <Text t14 style={page.subtitle}>

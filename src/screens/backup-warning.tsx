@@ -12,7 +12,7 @@ import {
   Spacer,
   LottieWrap,
 } from '../components/ui';
-import {TEXT_YELLOW_1} from '../variables';
+import {TEXT_BASE_2, TEXT_YELLOW_1} from '../variables';
 
 type BackupWarningScreenProp = CompositeScreenProps<any, any>;
 
@@ -30,7 +30,7 @@ export const BackupWarningScreen = ({
       <Text t4 style={page.title}>
         Important about backup
       </Text>
-      <Text style={page.paragraph}>
+      <Text t11 style={page.paragraph}>
         A backup is a restoring phrase of 12 words. It is better to write down
         the phrase on paper and not keep it online.
       </Text>
@@ -66,8 +66,8 @@ const page = StyleSheet.create({
   },
   imageContainer: {justifyContent: 'center', alignItems: 'center'},
   image: {width: 200, height: 200},
-  title: {marginBottom: 4},
-  paragraph: {marginBottom: 20, textAlign: 'center'},
+  title: {marginBottom: 4, textAlign: 'center'},
+  paragraph: {marginBottom: 20, textAlign: 'center', color: TEXT_BASE_2},
   infoBlock1: {marginBottom: 20},
   infoBlock2: {marginBottom: 34},
   submit: {marginVertical: 16},
