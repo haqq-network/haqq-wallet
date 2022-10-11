@@ -62,6 +62,9 @@ export const QRModal = ({onClose}: QRModalProps) => {
       checkAddress(code.slice(9));
       return;
     }
+    if (code.trim() !== '') {
+      checkAddress(code.trim());
+    }
   }, [checkAddress, code]);
 
   const onClickGallery = useCallback(async () => {
@@ -105,7 +108,8 @@ export const QRModal = ({onClose}: QRModalProps) => {
           </View>
         )}
         renderBottomView={() => (
-          <View style={[page.bottomContainer, {paddingBottom: insets.bottom}]}>
+          <View
+            style={[page.bottomContainer, {paddingBottom: insets.bottom + 20}]}>
             <View style={page.subContainer}>
               <IconButton onPress={onClickGallery} style={page.iconButton}>
                 <ImageIcon color={GRAPHIC_BASE_3} />
