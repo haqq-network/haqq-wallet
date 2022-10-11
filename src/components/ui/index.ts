@@ -25,4 +25,5 @@ export * from './swipeable-button';
 export * from './swipeable-row';
 export * from '../lottie/waiting';
 export * from '../lottie';
-export * from '../ui/TextField';
+export * from './text-field';
+export * from './text-big-field';

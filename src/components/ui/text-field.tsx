@@ -15,7 +15,7 @@ import {
   TEXT_BASE_1,
   TEXT_BASE_2,
   TEXT_RED_1,
-} from '../../../variables';
+} from '../../variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -25,19 +25,18 @@ type Props = React.ComponentProps<typeof TextInput> & {
   rightAction?: React.ReactNode;
 };
 
-const TextBigField: React.FC<Props> = props => {
-  const {
-    label,
-    error,
-    errorText,
-    value,
-    style,
-    onBlur,
-    onFocus,
-    placeholder,
-    rightAction,
-    ...restOfProps
-  } = props;
+export const TextField: React.FC<Props> = ({
+  label,
+  error,
+  errorText,
+  value,
+  style,
+  onBlur,
+  onFocus,
+  placeholder,
+  rightAction,
+  ...restOfProps
+}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const inputRef = useRef<TextInput>(null);
@@ -104,7 +103,7 @@ const TextBigField: React.FC<Props> = props => {
                   {
                     translateX: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [6, -10],
+                      outputRange: [0, -10],
                     }),
                   },
                 ],
@@ -136,7 +135,7 @@ const page = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
-    height: 170,
+    height: 58,
     justifyContent: 'space-between',
   },
   input: {
@@ -152,6 +151,7 @@ const page = StyleSheet.create({
     fontSize: 17.5,
     color: TEXT_BASE_1,
     top: 14,
+    right: 2,
   },
   labelContainer: {
     position: 'absolute',
@@ -161,7 +161,7 @@ const page = StyleSheet.create({
   label: {
     fontFamily: 'SF Pro Display',
     fontSize: 19,
-    right: 6,
+    left: 0,
   },
   error: {
     marginLeft: 35,
@@ -174,5 +174,3 @@ const page = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-export default TextBigField;

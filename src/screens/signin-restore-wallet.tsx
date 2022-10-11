@@ -12,12 +12,10 @@ import {
   KeyboardSafeArea,
   Text,
   Spacer,
-  Textarea,
+  TextBigField,
 } from '../components/ui';
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
-import TextField from '../components/ui/TextField';
-import TextBigField from '../components/ui/TextBigField';
 
 type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
 

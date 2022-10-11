@@ -10,13 +10,13 @@ import {
   KeyboardSafeArea,
   QRScanner,
   Spacer,
+  TextField,
 } from './ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
-import TextField from './ui/TextField';
 
 export type TransactionAddressProps = {
   initial?: string;
