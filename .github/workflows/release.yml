@@ -41,6 +41,10 @@ jobs:
           current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }')
           echo "RELEASE_VERSION=${current_version}" >> $GITHUB_ENV
 
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "3.x"
+
       - name: Install Fastlane
         run: |
           bundle install
