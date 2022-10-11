@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {TransactionAccountScreen} from './transaction-account';
 import {useWallets} from '../contexts/wallets';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {TransactionSumAddressScreen} from './transaction-sum-address';
 
 const TransactionStack = createStackNavigator();
 type TransactionScreenProp = CompositeScreenProps<any, any>;
@@ -36,7 +37,11 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
       <TransactionStack.Screen
         name="transactionSum"
         component={TransactionSumScreen}
-        options={{title: 'Send'}}
+        options={{
+          title: 'Send',
+          headerBackHidden: true,
+          headerRight: DismissPopupButton,
+        }}
       />
       <TransactionStack.Screen
         name="transactionConfirmation"
@@ -58,6 +63,17 @@ export const TransactionScreen = ({route}: TransactionScreenProp) => {
           title: 'Send funds from',
           headerBackHidden: true,
           headerRight: DismissPopupButton,
+        }}
+      />
+
+      <TransactionStack.Screen
+        name="transactionSumAddress"
+        component={TransactionSumAddressScreen}
+        options={{
+          title: 'Address',
+          headerBackHidden: true,
+          headerRight: DismissPopupButton,
+          presentation: 'modal',
         }}
       />
     </TransactionStack.Navigator>
