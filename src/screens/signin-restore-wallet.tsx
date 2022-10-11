@@ -12,7 +12,7 @@ import {
   KeyboardSafeArea,
   Text,
   Spacer,
-  Textarea,
+  TextField,
 } from '../components/ui';
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
@@ -57,12 +57,16 @@ export const SignInRestoreScreen = ({
       <Text t11 style={page.intro}>
         Recovery phrase or Private key
       </Text>
-      <Textarea
+      <TextField
+        placeholder="Enter or paste your recovery phrase"
         style={page.input}
+        label="Backup phrase"
         value={seed}
-        placeholder="Backup phrase"
         onChangeText={setSeed}
+        multiline
+        errorText="Incorrect address"
       />
+
       <IconButton onPress={onPressPaste} style={page.button}>
         <Text t14 style={page.t14}>
           Paste from Clipboard
