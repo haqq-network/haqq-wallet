@@ -15,10 +15,19 @@ type HomeFeedScreenProp = CompositeScreenProps<any, any>;
 export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
   const wallets = useWallets();
   const transactions = useTransactions();
+  const [refreshing, setRefreshing] = useState(false);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(wallets.addressList, transactions.transactions),
   );
+
+  const onWalletsRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wallets.checkBalance().then(() => {
+      setRefreshing(false);
+    });
+  }, [wallets]);
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
@@ -57,6 +66,8 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
   return (
     <FlatList
       style={page.container}
+      refreshing={refreshing}
+      onRefresh={onWalletsRefresh}
       scrollEnabled={Boolean(transactionsList.length)}
       ListHeaderComponent={Wallets}
       ListEmptyComponent={TransactionEmpty}

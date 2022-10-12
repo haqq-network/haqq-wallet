@@ -262,6 +262,10 @@ class Wallets extends EventEmitter {
   get addressList() {
     return Array.from(this._wallets.keys());
   }
+
+  checkBalance() {
+    return Promise.all([...this._wallets.values()].map(w => w.checkBalance()));
+  }
 }
 
 export const wallets = new Wallets();
