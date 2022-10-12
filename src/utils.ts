@@ -79,7 +79,7 @@ export function sleep(duration: number) {
 }
 
 export const asyncTiming = (pan: Animated.Value, toValue: number) => {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     Animated.timing(pan, {
       toValue,
       duration: 250,
@@ -92,8 +92,10 @@ export const asyncTiming = (pan: Animated.Value, toValue: number) => {
 
 export function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    // eslint-disable-next-line no-bitwise
     const r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
+      // eslint-disable-next-line no-bitwise
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
