@@ -3,7 +3,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {TransactionSum} from '../components/transaction-sum';
 import {useApp} from '../contexts/app';
 import {generateUUID} from '../utils';
-
+import {splitAddress} from '../utils';
 type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 
 export const TransactionSumScreen = ({
@@ -26,15 +26,18 @@ export const TransactionSumScreen = ({
     };
   }, [app, event, onAddress]);
 
+  const splittedTo = useMemo(() => splitAddress(to), [to]);
+
   const onAmount = useCallback(
     (amount: number) => {
       navigation.navigate('transactionConfirmation', {
         from: route.params.from,
         to,
         amount,
+        splittedTo,
       });
     },
-    [navigation, route, to],
+    [navigation, route.params.from, splittedTo, to],
   );
 
   const onContact = useCallback(() => {

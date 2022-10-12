@@ -7,6 +7,7 @@ import {
   Animated,
   Easing,
   TouchableWithoutFeedback,
+  useWindowDimensions,
 } from 'react-native';
 import {
   BG_5,
@@ -24,9 +25,11 @@ type Props = React.ComponentProps<typeof TextInput> & {
   placeholder?: string;
   rightAction?: React.ReactNode;
   multiline?: boolean;
+  size?: 'small' | 'large';
 };
 
 export const TextField: React.FC<Props> = ({
+  size = 'small',
   label,
   error,
   errorText,
@@ -39,7 +42,11 @@ export const TextField: React.FC<Props> = ({
   multiline,
   ...restOfProps
 }) => {
+  const isLarge = size === 'large';
+  const {width} = useWindowDimensions();
+
   const [isFocused, setIsFocused] = useState(false);
+  const [height, setHeight] = useState(0);
 
   const inputRef = useRef<TextInput>(null);
   const focusAnim = useRef(new Animated.Value(0)).current;
@@ -59,7 +66,7 @@ export const TextField: React.FC<Props> = ({
   }
 
   const top = isFocused ? 0 : -5;
-  const containerStyle = isFocused ? page.placeholderStyle : page.input;
+
   return (
     <>
       <View
@@ -67,19 +74,25 @@ export const TextField: React.FC<Props> = ({
           page.container,
           style,
           error && page.containerError,
-          multiline && page.containerMultiline,
+          isLarge && page.containerMultiline,
+          {height: height + 50},
         ]}>
         <TextInput
           style={[
-            containerStyle,
+            page.input,
             {
               borderColor: color,
+              width: width - 100,
             },
           ]}
           ref={inputRef}
           placeholder={isFocused ? placeholder : ''}
           {...restOfProps}
           value={value}
+          multiline={multiline}
+          onContentSizeChange={event => {
+            setHeight(event.nativeEvent.contentSize.height);
+          }}
           onBlur={event => {
             setIsFocused(false);
             onBlur?.(event);
@@ -104,13 +117,13 @@ export const TextField: React.FC<Props> = ({
                   {
                     translateY: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [18, -1],
+                      outputRange: [22, 3],
                     }),
                   },
                   {
                     translateX: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [multiline ? 6 : 0, multiline ? -12 : -8],
+                      outputRange: [isLarge ? 9 : 0, isLarge ? -12 : -8],
                     }),
                   },
                 ],
@@ -119,7 +132,7 @@ export const TextField: React.FC<Props> = ({
             <Text
               style={[
                 page.label,
-                multiline && page.labelMultiline,
+                isLarge && page.labelMultiline,
                 {
                   color,
                   top,
@@ -153,20 +166,13 @@ const page = StyleSheet.create({
   containerError: {
     backgroundColor: BG_7,
   },
-
   input: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
-    fontSize: 16,
-    color: TEXT_BASE_1,
-  },
-  placeholderStyle: {
     alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
-    fontSize: 17.5,
     color: TEXT_BASE_1,
     top: 24,
+    fontSize: 16,
   },
   labelContainer: {
     position: 'absolute',
@@ -189,6 +195,10 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
   },
   sub: {
+    position: 'absolute',
     justifyContent: 'center',
+    alignSelf: 'center',
+    right: 0,
+    width: 50,
   },
 });

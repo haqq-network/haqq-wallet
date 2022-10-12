@@ -1,6 +1,13 @@
 platform :android do
   desc "Android Production App"
 
+  lane :version do
+    increment_version_name(
+      gradle_file_path: './android/app/build.gradle',
+      version_name: ENV["RELEASE_VERSION"]
+    )
+  end
+
   lane :distribute do
     gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
       "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
@@ -10,7 +17,7 @@ platform :android do
     })
 
     firebase_app_distribution(
-      app: "1:427318688544:android:740c299a1aab9b6f07f545",
+      app: "1:915453653093:android:d69f18643b8b3f2954568c",
       testers: ENV["FIREBASE_TESTERS"],
       firebase_cli_token: ENV["FIREBASE_TOKEN"],
       release_notes: "Lots of amazing new features to test out!"
@@ -41,13 +48,13 @@ platform :android do
     previous_build_number = google_play_track_version_codes(
       package_name: 'com.haqq.wallet',
       track: "internal",
-      json_key: 'android/app/google-account.json',
+      json_key: './android/app/google-account.json',
     )[0]
 
     current_build_number = previous_build_number + 1
 
     increment_version_code(
-      gradle_file_path: 'android/app/build.gradle',
+      gradle_file_path: './android/app/build.gradle',
       version_code: current_build_number
     )
   end
@@ -55,16 +62,11 @@ end
 
 platform :ios do
   desc "IOS Production App"
-end
 
-lane :version do
-  increment_version_number(
-    xcodeproj: './ios/haqq.xcodeproj',
-    version_number: ENV["RELEASE_VERSION"]
-  )
-
-  increment_version_name(
-    gradle_file_path: './android/app/build.gradle',
-    version_name: ENV["RELEASE_VERSION"]
-  )
+  lane :version do
+    increment_version_number(
+      xcodeproj: './ios/haqq.xcodeproj',
+      version_number: ENV["RELEASE_VERSION"]
+    )
+  end
 end

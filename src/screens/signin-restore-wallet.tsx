@@ -58,6 +58,7 @@ export const SignInRestoreScreen = ({
         Recovery phrase or Private key
       </Text>
       <TextField
+        size="large"
         placeholder="Enter or paste your recovery phrase"
         style={page.input}
         label="Backup phrase"
