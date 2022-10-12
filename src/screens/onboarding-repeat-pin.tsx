@@ -6,9 +6,9 @@ import {Container, Text, Spacer} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {
   GRAPHIC_BASE_4,
+  TEXT_BASE_2,
   TEXT_GREEN_1,
   TEXT_RED_1,
-  TEXT_BASE_2,
 } from '../variables';
 import {vibrate} from '../services/haptic';
 
@@ -54,6 +54,7 @@ export const OnboardingRepeatPinScreen = ({
           });
       } else {
         setError('Invalid code. Try again');
+        setPin('');
       }
     }
   }, [pin, currentPin, app, navigation, route]);
