@@ -17,7 +17,6 @@ import {
 } from '@react-navigation/native';
 import {Platform, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
@@ -33,7 +32,6 @@ import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {LoginScreen} from './screens/login';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
-import {RootStackParamList} from './types';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
@@ -55,8 +53,24 @@ import {RestoreScreen} from './screens/restore';
 import {sleep} from './utils';
 import {SettingsTestScreen} from './screens/settings-test';
 import {Notifications} from './components/notifications';
+import {
+  ActionSheetType,
+  RootStackParamList,
+  ScreenOptionType,
+  HeaderButtonProps,
+} from './types';
 
-const Stack = createStackNavigator<RootStackParamList>();
+const screenOptions: ScreenOptionType = {
+  tab: true,
+  headerBackVisible: true,
+  headerShown: true,
+  header: PopupHeader,
+  headerStyle: {
+    height: 56,
+  },
+};
+
+const Stack = createStackNavigator();
 
 const AppTheme = {
   dark: false,
@@ -67,7 +81,7 @@ const AppTheme = {
   },
 };
 
-const actionsSheet = {
+const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal',
   animation: 'fade',
   animationDuration: 0,
@@ -116,7 +130,7 @@ export const App = () => {
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
         {Platform.OS === 'ios' && (
-          <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+          <StatusBar backgroundColor={BG_1} barStyle="dark-content" />
         )}
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
@@ -158,16 +172,7 @@ export const App = () => {
                   component={TransactionDetailScreen}
                   options={actionsSheet}
                 />
-                <Stack.Group
-                  screenOptions={{
-                    tab: true,
-                    headerBackVisible: true,
-                    headerShown: true,
-                    header: PopupHeader,
-                    headerStyle: {
-                      height: 56,
-                    },
-                  }}>
+                <Stack.Group screenOptions={screenOptions}>
                   <Stack.Screen
                     name="settingsAccounts"
                     component={SettingsAccountsScreen}
@@ -180,8 +185,12 @@ export const App = () => {
                     component={SettingsAccountDetailScreen}
                     options={{
                       title: 'Account details',
-                      headerRight: props => (
-                        <SettingsAccountRemoveButton {...props} />
+                      headerRight: (
+                        props: HeaderButtonProps,
+                      ): React.ReactNode => (
+                        <SettingsAccountRemoveButton
+                          address={props?.route?.params?.address!} // non-null assertion in TypeScript
+                        />
                       ),
                     }}
                   />

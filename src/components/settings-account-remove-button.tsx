@@ -3,15 +3,17 @@ import {StyleSheet, Alert} from 'react-native';
 import {IconButton, TrashIcon} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {app} from '../contexts/app';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-type SettingsAccountRemoveButtonProp = CompositeScreenProps<any, any>;
+type SettingsAccountRemoveButtonProp = {
+  address: string;
+};
 
 export const SettingsAccountRemoveButton = ({
-  navigation,
-  route,
+  address,
 }: SettingsAccountRemoveButtonProp) => {
+  const navigation = useNavigation();
   const wallets = useWallets();
   const onClickRemove = () => {
     Alert.alert(
@@ -26,7 +28,7 @@ export const SettingsAccountRemoveButton = ({
           style: 'destructive',
           text: 'Delete',
           onPress: async () => {
-            await wallets.removeWallet(route.params.address);
+            await wallets.removeWallet(address);
             navigation.goBack();
             app.emit('notification', 'The account has been deleted');
           },

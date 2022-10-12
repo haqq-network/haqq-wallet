@@ -1,5 +1,8 @@
-import {TransactionType} from './models/transaction';
 import React from 'react';
+
+import {Transaction} from './models/transaction';
+
+import type {StackNavigationOptions} from '@react-navigation/stack';
 
 export enum TransactionSource {
   unknown,
@@ -8,11 +11,11 @@ export enum TransactionSource {
   receive,
 }
 
-export type TransactionListSend = TransactionType & {
+export type TransactionListSend = Transaction & {
   source: TransactionSource.send;
 };
 
-export type TransactionListReceive = TransactionType & {
+export type TransactionListReceive = Transaction & {
   source: TransactionSource.receive;
 };
 
@@ -97,3 +100,26 @@ export enum WalletCardPattern {
   circle = 'card-circle',
   rhombus = 'card-rhombus',
 }
+
+export type ActionSheetType = {
+  presentation: 'card' | 'modal' | 'transparentModal' | undefined;
+  animation: 'fade' | 'flip' | 'default' | undefined;
+  animationDuration: number;
+};
+
+export interface ScreenOptionType extends StackNavigationOptions {
+  tab: boolean;
+  headerBackVisible: boolean;
+}
+
+export type HeaderButtonProps = {
+  tintColor?: string;
+  pressColor?: string;
+  pressOpacity?: number;
+  canGoBack?: boolean;
+  route?: {
+    params: {
+      address: string;
+    };
+  };
+};
