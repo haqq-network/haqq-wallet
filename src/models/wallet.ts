@@ -4,9 +4,10 @@ import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
-import {getDefaultNetwork, wsProvider} from '../network';
+import {getDefaultNetwork} from '../network';
 import {Deferrable} from '@ethersproject/properties';
 import {Mnemonic, WalletCardStyle} from '../types';
+import {captureException} from '../helpers';
 
 export class WalletRealm extends Realm.Object {
   address!: string;
@@ -51,7 +52,7 @@ export class Wallet extends EventEmitter {
     this._raw = data;
     this._encrypted = data.data !== '';
 
-    const interval = setInterval(this.checkBalance, 15000);
+    const interval = setInterval(this.checkBalance, 6000);
 
     this.on('checkBalance', this.checkBalance);
 
@@ -63,11 +64,7 @@ export class Wallet extends EventEmitter {
       }
     });
 
-    getDefaultNetwork()
-      .getBalance(this.address)
-      .then(balance => {
-        this.balance = Number(utils.formatEther(balance));
-      });
+    this.checkBalance();
   }
 
   setWallet(wallet: ethers.Wallet) {
@@ -88,7 +85,7 @@ export class Wallet extends EventEmitter {
         }
       }
     } catch (e) {
-      console.log(e);
+      captureException(e);
     }
   }
 
@@ -176,9 +173,11 @@ export class Wallet extends EventEmitter {
   }
 
   checkBalance = () => {
-    wsProvider.getBalance(this.address).then(balance => {
-      this.balance = Number(utils.formatEther(balance));
-    });
+    getDefaultNetwork()
+      .getBalance(this.address)
+      .then(balance => {
+        this.balance = Number(utils.formatEther(balance));
+      });
   };
 
   get mnemonic() {
