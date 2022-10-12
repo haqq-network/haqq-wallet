@@ -75,7 +75,7 @@ export const OnboardingRepeatPinScreen = ({
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
         <Text clean style={page.error}>
-          {error}
+          {error ? error : ' '}
         </Text>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
