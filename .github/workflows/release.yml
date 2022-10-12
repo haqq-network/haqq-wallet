@@ -44,6 +44,13 @@ jobs:
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
           echo ${{secrets.GOOGLE_SERVICES_ANDROID}} | base64 -d > android/app/google-services.json
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+                    
+          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
+          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
+          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
+          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
+          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
+          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
       - name: Set release version
         run: |
           current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }' |  awk -F '-' '{ print $1 }')
