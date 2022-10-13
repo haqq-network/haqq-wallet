@@ -73,6 +73,9 @@ export type RootStackParamList = {
     address: string;
   };
   backupFinish: undefined;
+  backupCreate: {
+    address: string;
+  };
 };
 
 export type BiometryType = 'FaceID' | 'TouchID' | null;
