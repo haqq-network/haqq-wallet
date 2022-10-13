@@ -1,6 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {Dimensions, StyleSheet} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonSize,
@@ -17,7 +19,11 @@ import {Wallet} from '../models/wallet';
 import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
 import {generateFlatColors, generateGradientColors} from '../utils';
 
-type SettingsAccountStyleScreenProps = CompositeScreenProps<any, any>;
+type ParamList = {
+  settingsAccountStyle: {
+    address: string;
+  };
+};
 
 const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},
@@ -31,10 +37,10 @@ const patternVariants = [
 
 const cardWidth = Dimensions.get('window').width - 72;
 
-export const SettingsAccountStyleScreen = ({
-  navigation,
-  route,
-}: SettingsAccountStyleScreenProps) => {
+export const SettingsAccountStyleScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'settingsAccountStyle'>>();
+
   const wallet = useWallet(route.params.address) as Wallet;
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
     wallet.cardStyle || WalletCardStyle.flat,
