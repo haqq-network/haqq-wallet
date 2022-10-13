@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ArrowBackIcon, IconButton, Text} from './ui';
-import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
+import {DEFAULT_HITSLOP, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -13,12 +13,29 @@ export const PopupHeader = ({
 }: StackHeaderProps) => {
   const insets = useSafeAreaInsets();
 
+  const canGoBack = useMemo(
+    () => back && !options.headerBackHidden,
+    [back, options.headerBackHidden],
+  );
+
+  useEffect(() => {
+    const subscription = (e: {preventDefault: () => void}) => {
+      if (!canGoBack) {
+        e.preventDefault();
+      }
+    };
+
+    navigation.addListener('beforeRemove', subscription);
+
+    return () => {
+      navigation.removeListener('beforeRemove', subscription);
+    };
+  }, [canGoBack, navigation]);
+
   return (
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
-      {back && !options.headerBackHidden ? (
-        <IconButton
-          onPress={navigation.goBack}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+      {canGoBack ? (
+        <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
           <ArrowBackIcon color={GRAPHIC_BASE_1} />
         </IconButton>
       ) : (

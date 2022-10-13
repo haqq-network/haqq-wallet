@@ -112,3 +112,5 @@ export const PIN_BANNED_TIMEOUT_SECONDS = 60;
 export const PIN_BANNED_ATTEMPTS = 5;
 
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
+
+export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
