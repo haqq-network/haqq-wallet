@@ -6,23 +6,26 @@ import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {createStackNavigator} from '@react-navigation/stack';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {ScreenOptionType} from '../types';
 
 const SignUpStack = createStackNavigator();
 type CreateScreenProp = CompositeScreenProps<any, any>;
 
+const title = 'Create a wallet';
+const screenOptionsTitle: ScreenOptionType = {
+  title,
+  headerBackHidden: true,
+  headerRight: DismissPopupButton,
+};
+
 export const CreateScreen = ({}: CreateScreenProp) => {
-  const title = 'Create a wallet';
   return (
     <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
       <SignUpStack.Screen
         name="createAgreement"
         component={SignUpAgreementScreen}
         initialParams={{nextScreen: 'createStoreWallet'}}
-        options={{
-          title,
-          headerBackHidden: true,
-          headerRight: DismissPopupButton,
-        }}
+        options={screenOptionsTitle}
       />
       <SignUpStack.Screen
         name="createStoreWallet"
@@ -36,11 +39,7 @@ export const CreateScreen = ({}: CreateScreenProp) => {
       <SignUpStack.Screen
         name="createFinish"
         component={OnboardingFinishScreen}
-        options={{
-          title,
-          headerBackHidden: true,
-          headerRight: DismissPopupButton,
-        }}
+        options={screenOptionsTitle}
         initialParams={{action: 'create', hide: true}}
       />
     </SignUpStack.Navigator>
