@@ -1,29 +1,42 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import {RouteProp, useRoute} from '@react-navigation/native';
 import {SignUpAgreementScreen} from './signup-agreement';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {PopupHeader} from '../components/popup-header';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {ScreenOptionType} from '../types';
 
 const SignUpStack = createStackNavigator();
-type SignUpScreenProp = CompositeScreenProps<any, any>;
 
-export const SignUpScreen = ({route}: SignUpScreenProp) => {
-  const title = 'Create a wallet';
+type ParamList = {
+  signup: {
+    next: string;
+  };
+};
+
+const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
+
+const title = 'Create a wallet';
+const screenOptionsDismiss: ScreenOptionType = {
+  headerRight: DismissPopupButton,
+  headerBackHidden: true,
+};
+
+const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
+
+export const SignUpScreen = () => {
+  const route = useRoute<RouteProp<ParamList, 'signup'>>();
   return (
     <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
       <SignUpStack.Screen
         name="signupAgreement"
         component={SignUpAgreementScreen}
-        options={{
-          headerRight: DismissPopupButton,
-          headerBackHidden: true,
-        }}
+        options={screenOptionsDismiss}
         initialParams={{next: route.params.next}}
       />
       <SignUpStack.Screen
@@ -40,7 +53,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
       <SignUpStack.Screen
         name="onboarding-biometry"
         component={OnboardingBiometryScreen}
-        options={{title, headerBackHidden: true}}
+        options={screenOptionsBiometry}
         initialParams={{nextScreen: 'signupStoreWallet'}}
       />
       <SignUpStack.Screen
@@ -56,7 +69,7 @@ export const SignUpScreen = ({route}: SignUpScreenProp) => {
         name="onboardingFinish"
         component={OnboardingFinishScreen}
         initialParams={{action: 'create'}}
-        options={{title: '', headerBackHidden: true}}
+        options={screenOptions}
       />
     </SignUpStack.Navigator>
   );
