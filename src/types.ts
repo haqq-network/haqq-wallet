@@ -69,6 +69,10 @@ export type RootStackParamList = {
   };
   settingsFaq: undefined;
   settingsAbout: undefined;
+  backupVerify: {
+    address: string;
+  };
+  backupFinish: undefined;
 };
 
 export type BiometryType = 'FaceID' | 'TouchID' | null;

@@ -1,6 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
+
 import {useWallet} from '../contexts/wallets';
 import {
   Button,
@@ -19,16 +22,20 @@ import {
   TEXT_SECOND_1,
 } from '../variables';
 
-type BackupVerifyScreenProp = CompositeScreenProps<any, any>;
+type ParamList = {
+  backupVerify: {
+    address: string;
+  };
+};
 
 function shuffleWords(words: Map<string, string>) {
   return Array.from(words.keys()).sort(() => 0.5 - Math.random());
 }
 
-export const BackupVerifyScreen = ({
-  navigation,
-  route,
-}: BackupVerifyScreenProp) => {
+export const BackupVerifyScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'backupVerify'>>();
+
   const wallet = useWallet(route.params.address);
 
   const [selected, setSelected] = useState<string[]>([]);

@@ -21,7 +21,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
-import {RegisterScreen} from './screens/register';
 import {CreateScreen} from './screens/create';
 import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
