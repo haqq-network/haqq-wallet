@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, ImageProps, Omit} from 'react-native';
+import {Image, ImageProps} from 'react-native';
+import {IconsName} from '../../types';
 
 const icons = {
   'arrow-back': require('../../../assets/images/arrow-back.png'),
@@ -8,9 +9,11 @@ const icons = {
   'touch-id': require('../../../assets/images/face-id.png'),
 };
 
-export type IconProps = Omit<ImageProps, 'source'> & {
-  name: keyof typeof icons;
+export type IconProps = {
+  name: IconsName;
+  style: ImageProps['style'];
 };
-export const Icon = ({name, ...props}: IconProps) => {
-  return <Image source={icons[name]} {...props} />;
+
+export const Icon = ({name, style}: IconProps) => {
+  return <Image source={icons[name]} style={style} />;
 };

@@ -55,7 +55,6 @@ export type RootStackParamList = {
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
-  backupNotification: undefined;
   settingsTest: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
@@ -76,9 +75,32 @@ export type RootStackParamList = {
   backupCreate: {
     address: string;
   };
+  backupNotification: {
+    address: string;
+  };
+  ['onboarding-biometry']: {
+    currentPin: string;
+    biometryType: BiometryType;
+  };
+  createFinish: {
+    action: string;
+    hide: boolean;
+  };
+  ['onboarding-repeat-pin']: {
+    currentPin: string;
+    nextScreen: string;
+    biometryType: BiometryType;
+  };
+  signupStoreWallet: {
+    nextScreen: string;
+    biometryType?: BiometryType;
+  };
 };
 
-export type BiometryType = 'FaceID' | 'TouchID' | null;
+export type BiometryType = 'FaceID' | 'TouchID';
+export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
+export type BiometryKey = 'FaceID';
+export type IconName = 'Face ID';
 
 export type Mnemonic = {
   phrase: string;

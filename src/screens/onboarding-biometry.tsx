@@ -1,6 +1,9 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+
+import {BiometryKey, IconName, IconsName, RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -12,20 +15,25 @@ import {
 import {useApp} from '../contexts/app';
 import {TEXT_BASE_2} from '../variables';
 
-type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
-
-const biometryTypes: Record<string, string> = {
+const biometryTypes: Record<BiometryKey, IconName> = {
   FaceID: 'Face ID',
 };
 
-const biometryIcons: Record<string, string> = {
+const biometryIcons: Record<BiometryKey, IconsName> = {
   FaceID: 'face-id',
 };
 
-export const OnboardingBiometryScreen = ({
-  navigation,
-  route,
-}: OnboardingBiometryScreenProps) => {
+type ParamList = {
+  ['onboarding-biometry']: {
+    biometryType: BiometryKey;
+    nextScreen: 'backupNotification';
+    address: string;
+  };
+};
+
+export const OnboardingBiometryScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'onboarding-biometry'>>();
   const {biometryType} = route.params;
   const app = useApp();
   const [error, setError] = useState('');
@@ -49,12 +57,11 @@ export const OnboardingBiometryScreen = ({
     }
   }, [app, onClickSkip]);
 
+  const name: IconsName = biometryIcons[biometryType];
   return (
     <Container>
       <Spacer style={page.space}>
-        {biometryIcons[biometryType] && (
-          <Icon name={biometryIcons[biometryType]} style={page.icon} />
-        )}
+        {biometryIcons[biometryType] && <Icon name={name} style={page.icon} />}
         <Text t4 style={page.title}>
           Enable {biometryTypes[biometryType]}
         </Text>

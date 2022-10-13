@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+
 import {
   AddressBookSettingsIcon,
   Container,
@@ -12,28 +12,18 @@ import {
 import {SettingsButton} from '../components/settings-button';
 import {GRAPHIC_BASE_1} from '../variables';
 
-type HomeSettingsScreenProp = CompositeScreenProps<any, any>;
-
-export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
-  const onClickButton = (screen?: string) => {
-    if (screen) {
-      navigation.navigate(screen);
-    }
-  };
-
+export const HomeSettingsScreen = () => {
   return (
     <Container>
       <SettingsButton
         icon={<WalletIcon color={GRAPHIC_BASE_1} />}
         title="Manage accounts"
-        onPress={onClickButton}
         next="settingsAccounts"
       />
 
       <SettingsButton
         icon={<AddressBookSettingsIcon color={GRAPHIC_BASE_1} />}
         title="Address book"
-        onPress={onClickButton}
         next="settingsAddressBook"
       />
 
@@ -47,7 +37,6 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
       <SettingsButton
         icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
         title="Security"
-        onPress={onClickButton}
         next="settingsSecurity"
         style={page.button}
       />
@@ -62,7 +51,6 @@ export const HomeSettingsScreen = ({navigation}: HomeSettingsScreenProp) => {
       <SettingsButton
         icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}
         title="About"
-        onPress={onClickButton}
         next="settingsAbout"
       />
 

@@ -1,17 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {BiometryType, RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text, Spacer} from '../components/ui';
 import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {vibrate} from '../services/haptic';
 
-type OnboardingSetupPinScreenProp = CompositeScreenProps<any, any>;
+type ParamList = {
+  ['onboarding-setup-pin']: {
+    currentPin: string;
+    nextScreen: string;
+    biometryType: BiometryType;
+  };
+};
 
-export const OnboardingSetupPinScreen = ({
-  route,
-  navigation,
-}: OnboardingSetupPinScreenProp) => {
+export const OnboardingSetupPinScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'onboarding-setup-pin'>>();
+
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
     vibrate();

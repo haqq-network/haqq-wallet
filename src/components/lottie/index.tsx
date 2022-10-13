@@ -7,7 +7,7 @@ interface AnimatedLottie {
   source: string;
   autoPlay: boolean;
   loop: boolean;
-  style: ViewStyle;
+  style?: ViewStyle;
 }
 export const LottieWrap = (props: AnimatedLottie) => {
   const ref = useRef<AnimatedLottieView>(null);

@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {BiometryKey, RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text, Spacer} from '../components/ui';
 import {useApp} from '../contexts/app';
@@ -12,12 +14,17 @@ import {
 } from '../variables';
 import {vibrate} from '../services/haptic';
 
-type OnboardingRepeatPinScreenProps = CompositeScreenProps<any, any>;
+type ParamList = {
+  'onboarding-repeat-pin': {
+    biometryType: BiometryKey;
+    currentPin: string;
+    nextScreen: 'onboarding-biometry';
+  };
+};
 
-export const OnboardingRepeatPinScreen = ({
-  navigation,
-  route,
-}: OnboardingRepeatPinScreenProps) => {
+export const OnboardingRepeatPinScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'onboarding-repeat-pin'>>();
   const app = useApp();
   const {currentPin} = route.params;
   const [pin, setPin] = useState('');
