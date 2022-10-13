@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
 import {Alert, Button, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {Container, Text} from '../components/ui';
-import {RootStackParamList} from '../types';
 
 type ParamList = {
   details: {
