@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Icon, IconButton, Text} from './ui';
+import {TEXT_BASE_LIGHT_1} from '../variables';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -93,5 +94,6 @@ const page = StyleSheet.create({
     fontSize: 36,
     lineHeight: 43,
     letterSpacing: 0.38,
+    color: TEXT_BASE_LIGHT_1,
   },
 });
