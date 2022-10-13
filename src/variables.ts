@@ -5,6 +5,8 @@ export const TEXT_BASE_1 = '#2E312D';
 export const TEXT_BASE_2 = '#8E8E8E';
 export const TEXT_BASE_3 = '#FFFFFF';
 
+export const TEXT_BASE_LIGHT_1 = '#2F2F2F';
+
 export const TEXT_GREEN_1 = '#01B26E';
 export const TEXT_RED_1 = '#E16363';
 export const TEXT_YELLOW_1 = '#B26F1D';
