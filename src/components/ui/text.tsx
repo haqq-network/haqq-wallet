@@ -57,9 +57,12 @@ export const Text = ({
   return (
     <>
       {clean ? (
-        <RNText style={style}>{children}</RNText>
+        <RNText style={style} allowFontScaling={false}>
+          {children}
+        </RNText>
       ) : (
         <RNText
+          allowFontScaling={false}
           numberOfLines={numberOfLines}
           ellipsizeMode={ellipsizeMode}
           style={[

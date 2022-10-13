@@ -1,9 +1,11 @@
 import {Platform} from 'react-native';
-import {WalletCardStyle} from './types';
+import {BiometryType, WalletCardStyle} from './types';
 
 export const TEXT_BASE_1 = '#2E312D';
 export const TEXT_BASE_2 = '#8E8E8E';
 export const TEXT_BASE_3 = '#FFFFFF';
+
+export const TEXT_BASE_LIGHT_1 = '#2F2F2F';
 
 export const TEXT_GREEN_1 = '#01B26E';
 export const TEXT_RED_1 = '#E16363';
@@ -112,3 +114,11 @@ export const PIN_BANNED_TIMEOUT_SECONDS = 60;
 export const PIN_BANNED_ATTEMPTS = 5;
 
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
+
+export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
+export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
+  [BiometryType.faceId]: 'Face ID',
+  [BiometryType.touchId]: 'Touch ID',
+  [BiometryType.fingerprint]: 'Fingerprint',
+  [BiometryType.unknown]: '',
+};

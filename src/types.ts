@@ -68,7 +68,12 @@ export type RootStackParamList = {
   settingsAbout: undefined;
 };
 
-export type BiometryType = 'FaceID' | 'TouchID' | null;
+export enum BiometryType {
+  faceId = 'FaceId',
+  touchId = 'TouchID',
+  fingerprint = 'Fingerprint',
+  unknown = 'unknown',
+}
 
 export type Mnemonic = {
   phrase: string;
