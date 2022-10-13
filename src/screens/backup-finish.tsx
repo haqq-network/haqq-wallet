@@ -19,10 +19,10 @@ export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
     <Container>
       <Spacer style={page.container}>
         <LottieWrap
-          style={{width: animationSize, height: animationSize}}
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
           loop={false}
+          style={{width: animationSize, height: animationSize}}
         />
       </Spacer>
       <Text t4>Congratulations!</Text>
