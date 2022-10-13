@@ -78,6 +78,7 @@ export const TextField: React.FC<Props> = ({
           {height: height + 50},
         ]}>
         <TextInput
+          allowFontScaling={false}
           style={[
             page.input,
             {
@@ -130,6 +131,7 @@ export const TextField: React.FC<Props> = ({
               },
             ]}>
             <Text
+              allowFontScaling={false}
               style={[
                 page.label,
                 isLarge && page.labelMultiline,
