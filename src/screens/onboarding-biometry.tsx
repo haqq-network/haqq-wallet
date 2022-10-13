@@ -1,26 +1,21 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   ButtonVariant,
   Container,
-  Icon,
-  Text,
+  FaceIdIcon,
+  FingerprintIcon,
   Spacer,
+  Text,
+  TouchIdIcon,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {TEXT_BASE_2} from '../variables';
+import {BIOMETRY_TYPES_NAMES, GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
+import {BiometryType} from '../types';
 
 type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
-
-const biometryTypes: Record<string, string> = {
-  FaceID: 'Face ID',
-};
-
-const biometryIcons: Record<string, string> = {
-  FaceID: 'face-id',
-};
 
 export const OnboardingBiometryScreen = ({
   navigation,
@@ -49,14 +44,25 @@ export const OnboardingBiometryScreen = ({
     }
   }, [app, onClickSkip]);
 
+  const icon = useMemo(() => {
+    switch (biometryType) {
+      case BiometryType.faceId:
+        return <FaceIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+      case BiometryType.touchId:
+        return <TouchIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+      case BiometryType.fingerprint:
+        return <FingerprintIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+      default:
+        return null;
+    }
+  }, [biometryType]);
+
   return (
     <Container>
       <Spacer style={page.space}>
-        {biometryIcons[biometryType] && (
-          <Icon name={biometryIcons[biometryType]} style={page.icon} />
-        )}
+        {icon}
         <Text t4 style={page.title}>
-          Enable {biometryTypes[biometryType]}
+          Enable {BIOMETRY_TYPES_NAMES[biometryType]}
         </Text>
         <Text t11 style={page.textStyle}>
           Safe and fast
@@ -66,7 +72,7 @@ export const OnboardingBiometryScreen = ({
       <Button
         style={page.margin}
         variant={ButtonVariant.contained}
-        title={`Enable ${biometryTypes[biometryType]}`}
+        title={`Enable ${BIOMETRY_TYPES_NAMES[biometryType]}`}
         onPress={onClickEnable}
       />
       <Button style={page.margin} title="Skip" onPress={onClickSkip} />

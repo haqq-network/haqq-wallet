@@ -5,12 +5,14 @@ import {Alert, StyleSheet, Switch, View} from 'react-native';
 import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 import {Pin, PinInterface} from '../components/pin';
+import {BiometryType} from '../types';
 
 type SettingsSecurityScreenProps = CompositeScreenProps<any, any>;
 
 const biometryName = {
-  FaceID: 'Face ID',
-  TouchID: 'Touch ID',
+  [BiometryType.faceId]: 'Face ID',
+  [BiometryType.touchId]: 'Touch ID',
+  [BiometryType.fingerprint]: 'Fingerprint',
 };
 
 export const SettingsSecurityScreen = ({
