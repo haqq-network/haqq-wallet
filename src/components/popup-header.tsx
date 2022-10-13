@@ -4,6 +4,7 @@ import {ArrowBackIcon, IconButton, Text} from './ui';
 import {DEFAULT_HITSLOP, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {NavigationAction} from '@react-navigation/routers';
 
 export const PopupHeader = ({
   options,
@@ -19,8 +20,11 @@ export const PopupHeader = ({
   );
 
   useEffect(() => {
-    const subscription = (e: {preventDefault: () => void}) => {
-      if (!canGoBack) {
+    const subscription = (e: {
+      preventDefault: () => void;
+      data: {action: NavigationAction};
+    }) => {
+      if (!canGoBack && !e.data.action.source) {
         e.preventDefault();
       }
     };
