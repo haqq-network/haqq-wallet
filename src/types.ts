@@ -108,8 +108,9 @@ export type ActionSheetType = {
 };
 
 export interface ScreenOptionType extends StackNavigationOptions {
-  tab: boolean;
-  headerBackVisible: boolean;
+  tab?: boolean;
+  headerBackVisible?: boolean;
+  headerBackHidden?: boolean;
 }
 
 export type HeaderButtonProps = {
