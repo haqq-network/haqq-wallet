@@ -5,4 +5,5 @@ declare module '@env' {
   export const SENTRY_DSN: string;
   export const NETWORK_EXPLORER: string;
   export const PATTERNS_SOURCE: string;
+  export const ENVIRONMENT: string;
 }
