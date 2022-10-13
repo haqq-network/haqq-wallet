@@ -21,7 +21,7 @@ export const SignupStoreWalletScreen = ({
   }, [app]);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const actions = [sleep(4000)];
 
       actions.push(
@@ -36,7 +36,7 @@ export const SignupStoreWalletScreen = ({
       Promise.all(actions).then(() => {
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       });
-    });
+    }, 350);
   }, [navigation, route, wallets]);
 
   return <View />;
