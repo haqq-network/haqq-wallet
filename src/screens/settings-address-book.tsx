@@ -215,6 +215,7 @@ export const SettingsAddressBookScreen =
           )}
           ListHeaderComponent={AddressHeader}
           ListEmptyComponent={AddressEmpty}
+          contentContainerStyle={page.grow}
         />
       </Container>
     );
@@ -239,4 +240,5 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 16,
   },
+  grow: {flexGrow: 1},
 });
