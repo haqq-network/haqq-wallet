@@ -1,10 +1,11 @@
 import React, {useRef} from 'react';
 import QRCode from 'react-native-qrcode-svg';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {Share, StyleSheet, useWindowDimensions, View} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   Alert,
@@ -28,11 +29,17 @@ import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
 
-type DetailsQrScreenProp = CompositeScreenProps<any, any>;
-
 const logo = require('../../assets/images/qr-logo.png');
 
-export const DetailsQrScreen = ({route, navigation}: DetailsQrScreenProp) => {
+type ParamList = {
+  detailsQr: {
+    address: string;
+  };
+};
+
+export const DetailsQrScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'detailsQr'>>();
   const svg = useRef();
   const app = useApp();
   const wallet = useWallet(route.params.address) as Wallet;

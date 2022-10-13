@@ -156,7 +156,6 @@ export const App = () => {
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
                 </Stack.Group>
-                <Stack.Screen name="register" component={RegisterScreen} />
                 <Stack.Screen
                   name="detailsQr"
                   component={DetailsQrScreen}
