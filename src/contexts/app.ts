@@ -9,9 +9,10 @@ import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
 import {Language, User, UserType} from '../models/user';
-import {AppState} from 'react-native';
+import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
+import {BIOMETRY_TYPES_NAMES} from '../variables';
 
 const optionalConfigObject = {
   title: 'Authentication Required', // Android
@@ -35,14 +36,18 @@ class App extends EventEmitter {
   private user: User | undefined;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _biometryType: BiometryType = null;
+  private _biometryType: BiometryType | null = null;
 
   constructor() {
     super();
 
     TouchID.isSupported(optionalConfigObject)
       .then(biometryType => {
-        this._biometryType = biometryType;
+        this._biometryType =
+          Platform.select({
+            ios: biometryType as BiometryType,
+            android: biometryType ? BiometryType.fingerprint : null,
+          }) || null;
       })
       .catch(() => {
         this._biometryType = null;
@@ -183,7 +188,9 @@ class App extends EventEmitter {
 
   biometryAuth() {
     return TouchID.authenticate(
-      'to demo this react-native component',
+      `${
+        BIOMETRY_TYPES_NAMES[this.biometryType ?? BiometryType.unknown]
+      } required to continue`,
       optionalConfigObject,
     );
   }
