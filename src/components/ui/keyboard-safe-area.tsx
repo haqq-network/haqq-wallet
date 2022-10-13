@@ -19,7 +19,7 @@ export const KeyboardSafeArea = ({
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.select({
-        android: 0,
+        android: 75,
         ios: insets.top + 66,
       })}
       style={StyleSheet.compose({flex: 1, marginBottom: insets.bottom}, style)}
