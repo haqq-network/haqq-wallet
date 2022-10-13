@@ -12,11 +12,11 @@ import {Language, User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
-import {BIOMETRY_TYPES_NAMES} from '../variables';
+import {GRAPHIC_GREEN_1} from '../variables';
 
 const optionalConfigObject = {
-  title: 'Authentication Required', // Android
-  color: '#e00606', // Android,
+  title: 'Fingerprint Login', // Android
+  imageColor: GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
   // unifiedErrors: false,
 };
@@ -187,12 +187,7 @@ class App extends EventEmitter {
   }
 
   biometryAuth() {
-    return TouchID.authenticate(
-      `${
-        BIOMETRY_TYPES_NAMES[this.biometryType ?? BiometryType.unknown]
-      } required to continue`,
-      optionalConfigObject,
-    );
+    return TouchID.authenticate('', optionalConfigObject);
   }
 
   pinAuth() {

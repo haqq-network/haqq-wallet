@@ -12,7 +12,7 @@ import {
   TouchIdIcon,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {BIOMETRY_TYPES_NAMES, TEXT_BASE_2} from '../variables';
+import {BIOMETRY_TYPES_NAMES, GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 import {BiometryType} from '../types';
 
 type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
@@ -47,11 +47,11 @@ export const OnboardingBiometryScreen = ({
   const icon = useMemo(() => {
     switch (biometryType) {
       case BiometryType.faceId:
-        return <FaceIdIcon />;
+        return <FaceIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
       case BiometryType.touchId:
-        return <TouchIdIcon />;
+        return <TouchIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
       case BiometryType.fingerprint:
-        return <FingerprintIcon />;
+        return <FingerprintIcon color={GRAPHIC_BASE_1} style={page.icon} />;
       default:
         return null;
     }
