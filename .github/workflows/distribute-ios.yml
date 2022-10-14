@@ -1,0 +1,24 @@
+name: Distribute app
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "3.x"
+      - name: Execute Fastlane certificates
+        run: bundle exec fastlane ios certificates
+        env:
+          IOS_IDENTIFIER:  ${{ secrets.IOS_IDENTIFIER }}
+          GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
+          APP_STORE_CONNECT_TEAM_ID:  ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
+          DEVELOPER_PORTAL_TEAM_ID:  ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}
