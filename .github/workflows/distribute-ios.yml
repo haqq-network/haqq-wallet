@@ -19,7 +19,7 @@ jobs:
         run: |
           bundle install
       - name: Execute Fastlane certificates
-        run: bundle exec fastlane ios certificates
+        run: bundle exec fastlane ios test
         env:
           IOS_IDENTIFIER:  ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
