@@ -1,5 +1,7 @@
 import React, {useCallback} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {NextScreenT, RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -10,15 +12,20 @@ import {
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../variables';
 
-type SignUpAgreementScreenProp = CompositeScreenProps<any, any>;
 const windowWidth = Dimensions.get('window').width;
 
 const animation = require('../../assets/animations/first-screen-animation.json');
 
-export const SignUpAgreementScreen = ({
-  navigation,
-  route,
-}: SignUpAgreementScreenProp) => {
+type ParamList = {
+  createAgreement: {
+    nextScreen: NextScreenT;
+  };
+};
+
+export const SignUpAgreementScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'createAgreement'>>();
+
   const onPressAgree = useCallback(() => {
     navigation.navigate(route.params.nextScreen ?? 'onboarding-setup-pin');
   }, [navigation, route.params.nextScreen]);

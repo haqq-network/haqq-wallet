@@ -91,10 +91,22 @@ export type RootStackParamList = {
     nextScreen: string;
     biometryType: BiometryType;
   };
+  ['onboarding-setup-pin']: {
+    mnemonic: string | false;
+    privateKey: string | false;
+  };
   signupStoreWallet: {
     nextScreen: string;
     biometryType?: BiometryType;
   };
+  signinAgreement: {
+    nextScreen: string;
+  };
+  signinRestoreWallet: {
+    nextScreen: string;
+  };
+  onboardingFinish: undefined;
+  createStoreWallet: undefined;
 };
 
 export type BiometryType = 'FaceID' | 'TouchID';
@@ -106,6 +118,12 @@ export type Mnemonic = {
   phrase: string;
   path: string;
   locale: string;
+};
+
+export type NextScreenT = {
+  key: string;
+  params?: {currentPin: string; biometryType: BiometryType} | undefined;
+  merge?: boolean | undefined;
 };
 
 export type SwipeableAction<T> = {
