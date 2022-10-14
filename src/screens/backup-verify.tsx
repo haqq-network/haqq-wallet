@@ -22,19 +22,13 @@ import {
   TEXT_SECOND_1,
 } from '../variables';
 
-type ParamList = {
-  backupVerify: {
-    address: string;
-  };
-};
-
 function shuffleWords(words: Map<string, string>) {
   return Array.from(words.keys()).sort(() => 0.5 - Math.random());
 }
 
 export const BackupVerifyScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'backupVerify'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupVerify'>>();
 
   const wallet = useWallet(route.params.address);
 

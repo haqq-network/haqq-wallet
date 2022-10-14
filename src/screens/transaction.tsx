@@ -10,7 +10,7 @@ import {TransactionAccountScreen} from './transaction-account';
 import {useWallets} from '../contexts/wallets';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
-import {ScreenOptionType} from '../types';
+import {RootStackParamList, ScreenOptionType} from '../types';
 
 const TransactionStack = createStackNavigator();
 
@@ -35,15 +35,9 @@ const screenOptionsSendFunds: ScreenOptionType = {
   headerRight: DismissPopupButton,
 };
 
-type ParamList = {
-  transaction: {
-    from: boolean;
-  };
-};
-
 export const TransactionScreen = () => {
   const wallets = useWallets();
-  const route = useRoute<RouteProp<ParamList, 'transaction'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transaction'>>();
 
   const screenOptionsAddressRoute: ScreenOptionType = {
     title: 'Address',

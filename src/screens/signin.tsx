@@ -34,22 +34,22 @@ export const SignInScreen = () => {
         component={SignInRestoreScreen}
         options={{title}}
         initialParams={{
-          nextScreen: 'onboarding-setup-pin',
+          nextScreen: 'onboardingSetupPin',
         }}
       />
       <SignInStack.Screen
-        name="onboarding-setup-pin"
+        name="onboardingSetupPin"
         component={OnboardingSetupPinScreen}
         options={{title}}
       />
       <SignInStack.Screen
-        name="onboarding-repeat-pin"
+        name="onboardingRepeatPin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
         initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen
-        name="onboarding-biometry"
+        name="onboardingBiometry"
         component={OnboardingBiometryScreen}
         options={screenOptions}
         initialParams={{nextScreen: 'signinStoreWallet'}}

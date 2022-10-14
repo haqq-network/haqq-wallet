@@ -4,15 +4,9 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {TransactionAddress} from '../components/transaction-address';
 
-type ParamList = {
-  transactionAddress: {
-    from: string;
-  };
-};
-
 export const TransactionAddressScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionAddress'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionAddress'>>();
   const onDone = useCallback(
     (address: string) => {
       navigation.navigate('transactionSum', {

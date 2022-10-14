@@ -7,13 +7,9 @@ import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
 import {Container} from '../components/ui';
 
-type ParamList = {
-  transactionAccount: {};
-};
-
 export const TransactionAccountScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionAccount'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionAccount'>>();
   const wallets = useWallets();
   const onPressRow = useCallback(
     (address: string) => {

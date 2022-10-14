@@ -31,17 +31,11 @@ import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 import prompt from 'react-native-prompt-android';
 
-type ParamList = {
-  transactionFinish: {
-    hash: string;
-  };
-};
-
 const icon = require('../../assets/animations/transaction-finish.json');
 
 export const TransactionFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionFinish'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionFinish'>>();
   const contacts = useContacts();
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(

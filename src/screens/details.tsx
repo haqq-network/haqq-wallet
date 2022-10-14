@@ -7,15 +7,9 @@ import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {Container, Text} from '../components/ui';
 
-type ParamList = {
-  details: {
-    address: string;
-  };
-};
-
 export const DetailsScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'details'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'details'>>();
   const {address} = route.params;
   const wallets = useWallets();
 

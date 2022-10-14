@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {NextScreenT, RootStackParamList} from '../types';
+import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {MAIN_ACCOUNT_NAME} from '../variables';
@@ -10,17 +10,9 @@ import {sleep} from '../utils';
 import {useTransactions} from '../contexts/transactions';
 import {Wallet} from '../models/wallet';
 
-type ParamList = {
-  restoreStore: {
-    mnemonic: string;
-    privateKey: string | false;
-    nextScreen: NextScreenT;
-  };
-};
-
 export const SigninStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'restoreStore'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'restoreStore'>>();
   const app = useApp();
   const wallets = useWallets();
   const transactions = useTransactions();

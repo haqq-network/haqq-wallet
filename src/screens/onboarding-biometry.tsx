@@ -18,17 +18,9 @@ import {useApp} from '../contexts/app';
 import {BIOMETRY_TYPES_NAMES, GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 import {BiometryType} from '../types';
 
-type ParamList = {
-  ['onboarding-biometry']: {
-    biometryType: BiometryType;
-    nextScreen: 'backupNotification';
-    address: string;
-  };
-};
-
 export const OnboardingBiometryScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'onboarding-biometry'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'onboardingBiometry'>>();
   const {biometryType} = route.params;
   const app = useApp();
   const [error, setError] = useState('');

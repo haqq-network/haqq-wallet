@@ -19,15 +19,9 @@ import {
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
 
-type ParamList = {
-  restorePhrase: {
-    nextScreen: keyof RootStackParamList;
-  };
-};
-
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'restorePhrase'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'restorePhrase'>>();
   const app = useApp();
   const [seed, setSeed] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -40,7 +34,7 @@ export const SignInRestoreScreen = () => {
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin', {
+      navigation.replace(route.params.nextScreen ?? 'onboardingSetupPin', {
         mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
         privateKey: utils.isHexString(seed.trim()) && seed.trim(),
       });

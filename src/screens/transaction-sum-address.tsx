@@ -5,16 +5,10 @@ import {RootStackParamList} from '../types';
 import {TransactionAddress} from '../components/transaction-address';
 import {useApp} from '../contexts/app';
 
-type ParamList = {
-  transactionSumAddress: {
-    event: string;
-    to: string;
-  };
-};
-
 export const TransactionSumAddressScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionSumAddress'>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'transactionSumAddress'>>();
   const app = useApp();
   const onDone = useCallback(
     (address: string) => {

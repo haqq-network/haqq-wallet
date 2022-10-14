@@ -9,15 +9,9 @@ import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {ScreenOptionType} from '../types';
+import {RootStackParamList, ScreenOptionType} from '../types';
 
 const SignUpStack = createStackNavigator();
-
-type ParamList = {
-  signup: {
-    next: string;
-  };
-};
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
@@ -30,7 +24,7 @@ const screenOptionsDismiss: ScreenOptionType = {
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 export const SignUpScreen = () => {
-  const route = useRoute<RouteProp<ParamList, 'signup'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'signup'>>();
   return (
     <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
       <SignUpStack.Screen
@@ -40,18 +34,18 @@ export const SignUpScreen = () => {
         initialParams={{next: route.params.next}}
       />
       <SignUpStack.Screen
-        name="onboarding-setup-pin"
+        name="onboardingSetupPin"
         component={OnboardingSetupPinScreen}
         options={{title}}
       />
       <SignUpStack.Screen
-        name="onboarding-repeat-pin"
+        name="onboardingRepeatPin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
         initialParams={{nextScreen: 'signupStoreWallet'}}
       />
       <SignUpStack.Screen
-        name="onboarding-biometry"
+        name="onboardingBiometry"
         component={OnboardingBiometryScreen}
         options={screenOptionsBiometry}
         initialParams={{nextScreen: 'signupStoreWallet'}}

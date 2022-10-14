@@ -14,16 +14,9 @@ import {
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 
-type ParamList = {
-  createFinish: {
-    action: string;
-    hide: boolean;
-  };
-};
-
 export const OnboardingFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'createFinish'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'createFinish'>>();
   const app = useApp();
   const wallets = useWallets();
   const title = useMemo(

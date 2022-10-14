@@ -19,12 +19,6 @@ import {Wallet} from '../models/wallet';
 import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
 import {generateFlatColors, generateGradientColors} from '../utils';
 
-type ParamList = {
-  settingsAccountStyle: {
-    address: string;
-  };
-};
-
 const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},
   {value: WalletCardStyle.gradient, name: 'Gradient'},
@@ -39,7 +33,8 @@ const cardWidth = Dimensions.get('window').width - 72;
 
 export const SettingsAccountStyleScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'settingsAccountStyle'>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'settingsAccountStyle'>>();
 
   const wallet = useWallet(route.params.address) as Wallet;
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
