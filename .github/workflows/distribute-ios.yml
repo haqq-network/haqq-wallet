@@ -1,4 +1,4 @@
-name: Distribute app
+name: Distribute iOS app
 
 on:
   workflow_dispatch:
