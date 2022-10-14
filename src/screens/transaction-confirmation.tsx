@@ -1,6 +1,8 @@
-import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StyleSheet, View} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -15,12 +17,10 @@ import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 
-type SendTransactionScreenProp = CompositeScreenProps<any, any>;
-
-export const TransactionConfirmationScreen = ({
-  navigation,
-  route,
-}: SendTransactionScreenProp) => {
+export const TransactionConfirmationScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee, splittedTo} = route.params;
   const contacts = useContacts();
   const transactions = useTransactions();
@@ -42,7 +42,7 @@ export const TransactionConfirmationScreen = ({
         const transaction = await transactions.sendTransaction(
           from,
           to,
-          parseFloat(amount),
+          amount,
           estimateFee,
           wallet,
         );
