@@ -15,6 +15,9 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: "3.x"
+      - name: Install Fastlane
+        run: |
+          bundle install
       - name: Execute Fastlane certificates
         run: bundle exec fastlane ios certificates
         env:
