@@ -1,13 +1,15 @@
 import React, {useCallback} from 'react';
 import {Alert, Button, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {Container, Text} from '../components/ui';
 
-type DetailsScreenProp = CompositeScreenProps<any, any>;
-
-export const DetailsScreen = ({navigation, route}: DetailsScreenProp) => {
+export const DetailsScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'details'>>();
   const {address} = route.params;
   const wallets = useWallets();
 

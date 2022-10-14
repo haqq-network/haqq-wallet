@@ -1,10 +1,12 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as Sentry from '@sentry/react-native';
 
 import {utils} from 'ethers';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -17,12 +19,9 @@ import {
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {useApp} from '../contexts/app';
 
-type SignInRestoreScreenProp = CompositeScreenProps<any, any>;
-
-export const SignInRestoreScreen = ({
-  navigation,
-  route,
-}: SignInRestoreScreenProp) => {
+export const SignInRestoreScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'restorePhrase'>>();
   const app = useApp();
   const [seed, setSeed] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -35,7 +34,7 @@ export const SignInRestoreScreen = ({
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      navigation.replace(route.params.nextScreen ?? 'onboarding-setup-pin', {
+      navigation.replace(route.params.nextScreen ?? 'onboardingSetupPin', {
         mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
         privateKey: utils.isHexString(seed.trim()) && seed.trim(),
       });

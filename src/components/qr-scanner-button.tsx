@@ -4,12 +4,13 @@ import {IconButton, QRScanner} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../types';
 
-export type QrScannerButtonProps = CompositeScreenProps<any, any>;
-
-export const QrScannerButton = ({navigation}: QrScannerButtonProps) => {
+export const QrScannerButton = () => {
   const app = useApp();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const onPressQR = useCallback(() => {
     const subscription = (value: string) => {

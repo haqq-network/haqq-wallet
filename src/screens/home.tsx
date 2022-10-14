@@ -1,5 +1,4 @@
 import React from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
@@ -8,9 +7,9 @@ import {TabHeader} from '../components/tab-header';
 import {SettingsIcon, WalletIcon} from '../components/ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
 
-type HomeScreenProp = CompositeScreenProps<any, any>;
 const Tab = createBottomTabNavigator();
-export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
+
+export const HomeScreen = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -28,10 +27,8 @@ export const HomeScreen = ({navigation, route}: HomeScreenProp) => {
         options={{
           title: 'Wallet',
           headerTitle: 'Your wallets',
+          headerRight: () => <QrScannerButton />,
           headerTitleAllowFontScaling: false,
-          headerRight: () => (
-            <QrScannerButton navigation={navigation} route={route} />
-          ),
           tabBarIcon: ({focused}) => (
             <WalletIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),
