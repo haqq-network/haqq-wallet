@@ -8,10 +8,10 @@ import {RootStackParamList} from '../types';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
-export const LoginScreen = () => {
+export const WelcomeScreen = ({navigation}: LoginScreenProp) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
-    <Container>
+    <Container testID="welcome">
       <View style={page.container}>
         <Image source={logoImage} style={page.imageStyle} />
         <Text t4 style={page.title}>
@@ -23,12 +23,14 @@ export const LoginScreen = () => {
       </View>
 
       <Button
+        testID="welcome_signup"
         style={page.button}
         variant={ButtonVariant.contained}
         title="Create a wallet"
         onPress={() => navigation.navigate('signup', {next: 'create'})}
       />
       <Button
+        testID="welcome_signin"
         style={page.button}
         title="I already have a wallet"
         onPress={() => navigation.navigate('signin', {next: 'restore'})}

@@ -29,7 +29,7 @@ export const SignUpAgreementScreen = () => {
       <View pointerEvents="none" style={page.animation}>
         <LottieWrap source={animation} autoPlay loop={false} />
       </View>
-      <PopupContainer style={page.container}>
+      <PopupContainer style={page.container} testID="signup_agreement">
         <Text t4 style={page.title}>
           Islm - DeFi Wallet
         </Text>
@@ -41,6 +41,7 @@ export const SignUpAgreementScreen = () => {
           control over your Virtual Currency.
         </Text>
         <Button
+          testID="signup_agreement_agree"
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
