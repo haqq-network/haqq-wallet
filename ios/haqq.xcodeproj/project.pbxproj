@@ -421,7 +421,7 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
 				21DDB21D28BF6705004EE724 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
+				210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -760,7 +760,6 @@
 				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = HZ6BA3Y93A;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				INFOPLIST_FILE = haqq/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -791,8 +790,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 17;
-				DEVELOPMENT_TEAM = HZ6BA3Y93A;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -803,7 +801,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = haqqdevwallet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.haqq.wallet;
 				PRODUCT_NAME = haqq;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -985,7 +983,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
+		210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -1006,7 +1004,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		210AE02928DC7A80008D739C /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
+			package = 210AE02828DC7A80008D739C /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
