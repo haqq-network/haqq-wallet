@@ -94,14 +94,12 @@ platform :ios do
     match(
       app_identifier: ENV["IOS_IDENTIFIER"],
       type: 'development',
-      readonly: true,
-      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
+      readonly: true
     )
     match(
       app_identifier: ENV["IOS_IDENTIFIER"],
       type: 'appstore',
-      readonly: true,
-      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
+      readonly: true
     )
   end
 
