@@ -1,4 +1,4 @@
-git_url("git@github.com:haqq-network/haqq-wallet-certificate.git")
+git_url("https://github.com/haqq-network/haqq-wallet-certificate")
 
 storage_mode("git")
 type("development")
