@@ -43,15 +43,7 @@ export type RootStackParamList = {
   backup: {
     address: string;
   };
-  transaction:
-    | undefined
-    | {
-        from?: string;
-        to?: string;
-      };
-  transactionDetail: {
-    hash: string;
-  };
+
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
@@ -107,6 +99,38 @@ export type RootStackParamList = {
   };
   onboardingFinish: undefined;
   createStoreWallet: undefined;
+  transaction:
+    | undefined
+    | {
+        from?: string;
+        to?: string;
+      };
+  transactionDetail: {
+    hash: string;
+  };
+  transactionAccount: {
+    from: string;
+  };
+  transactionSum: {
+    from: string;
+    to: string;
+  };
+  transactionFinish: {
+    hash: string;
+  };
+  transactionConfirmation: {
+    from: string;
+    to: string;
+    amount: number;
+    splittedTo: string[];
+  };
+  transactionSumAddress: {
+    to: string;
+    event: string;
+  };
+  transactionAddress: {
+    from: string;
+  };
 };
 
 export type BiometryType = 'FaceID' | 'TouchID';

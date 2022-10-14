@@ -1,5 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StyleSheet, View} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   BlockIcon,
   Button,
@@ -22,21 +25,23 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {StyleSheet, View} from 'react-native';
 import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
 import prompt from 'react-native-prompt-android';
 
-type TransactionFinishScreenProp = CompositeScreenProps<any, any>;
+type ParamList = {
+  transactionFinish: {
+    hash: string;
+  };
+};
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
-export const TransactionFinishScreen = ({
-  navigation,
-  route,
-}: TransactionFinishScreenProp) => {
+export const TransactionFinishScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<ParamList, 'transactionFinish'>>();
   const contacts = useContacts();
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(
