@@ -69,4 +69,20 @@ platform :ios do
       version_number: ENV["RELEASE_VERSION"]
     )
   end
+
+  lane :certificates do
+    match(app_identifier: 'com.haqq.wallet', type: 'development', readonly: true)
+    match(app_identifier: 'com.haqq.wallet', type: 'appstore', readonly: true)
+  end
+
+  lane :distribute do
+    certificates
+#     increment_build_number(xcodeproj: './ios/haqq.xcodeproj')
+    build_app(workspace: "ios/haqq.xcworkspace", scheme: "haqq")
+    pilot(
+      ipa: "haqq.ipa",
+      skip_submission: true,
+      skip_waiting_for_build_processing: true
+    )
+  end
 end

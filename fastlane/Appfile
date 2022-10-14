@@ -1,2 +1,7 @@
 json_key_file "android/app/google-account.json"
 package_name("com.haqq.wallet")
+
+app_identifier("com.haqq.wallet")
+
+itc_team_id("125663781")
+team_id("XL66G6TJJL")
