@@ -9,9 +9,10 @@ import TouchID from 'react-native-touch-id';
 import {createContext, useContext} from 'react';
 import {realm} from '../models';
 import {Language, User, UserType} from '../models/user';
-import {AppState} from 'react-native';
+import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
+import {GRAPHIC_GREEN_1} from '../variables';
 
 type OptionalConfigObjectT = {
   title: string;
@@ -20,8 +21,8 @@ type OptionalConfigObjectT = {
 };
 
 const optionalConfigObject: OptionalConfigObjectT = {
-  title: 'Authentication Required', // Android
-  color: '#e00606', // Android,
+  title: 'Fingerprint Login', // Android
+  imageColor: GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
   // unifiedErrors: false,
 };
@@ -48,7 +49,11 @@ class App extends EventEmitter {
 
     TouchID.isSupported(optionalConfigObject)
       .then(biometryType => {
-        this._biometryType = biometryType;
+        this._biometryType =
+          Platform.select({
+            ios: biometryType as BiometryType,
+            android: biometryType ? BiometryType.fingerprint : null,
+          }) || null;
       })
       .catch(() => {
         this._biometryType = null;
@@ -188,10 +193,7 @@ class App extends EventEmitter {
   }
 
   biometryAuth() {
-    return TouchID.authenticate(
-      'to demo this react-native component',
-      optionalConfigObject,
-    );
+    return TouchID.authenticate('', optionalConfigObject);
   }
 
   pinAuth() {

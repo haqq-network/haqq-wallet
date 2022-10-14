@@ -133,10 +133,15 @@ export type RootStackParamList = {
   };
 };
 
-export type BiometryType = 'FaceID' | 'TouchID';
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
-export type BiometryKey = 'FaceID';
 export type IconName = 'Face ID';
+
+export enum BiometryType {
+  faceId = 'FaceID',
+  touchId = 'TouchID',
+  fingerprint = 'Fingerprint',
+  unknown = 'unknown',
+}
 
 export type Mnemonic = {
   phrase: string;

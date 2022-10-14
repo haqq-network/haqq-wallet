@@ -30,7 +30,7 @@ export const SigninStoreWalletScreen = () => {
   }, [app]);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const actions = [sleep(4000)];
       const name =
         wallets.getSize() === 0
@@ -58,7 +58,7 @@ export const SigninStoreWalletScreen = () => {
             return transactions.loadTransactionsFromExplorer(wallet.address);
           }
         });
-    });
+    }, 350);
   }, [navigation, route, transactions, wallets]);
 
   return <View />;

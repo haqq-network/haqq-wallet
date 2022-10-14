@@ -28,6 +28,7 @@ export const HomeScreen = () => {
           title: 'Wallet',
           headerTitle: 'Your wallets',
           headerRight: () => <QrScannerButton />,
+          headerTitleAllowFontScaling: false,
           tabBarIcon: ({focused}) => (
             <WalletIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),
@@ -61,6 +62,7 @@ export const HomeScreen = () => {
         options={{
           title: 'Settings',
           headerTitle: 'Settings',
+          headerTitleAllowFontScaling: false,
           tabBarIcon: ({focused}) => (
             <SettingsIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),

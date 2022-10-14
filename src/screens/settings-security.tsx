@@ -7,10 +7,12 @@ import {MenuNavigationButton, Text, Spacer} from '../components/ui';
 import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 import {Pin, PinInterface} from '../components/pin';
+import {BiometryType} from '../types';
 
 const biometryName = {
-  FaceID: 'Face ID',
-  TouchID: 'Touch ID',
+  [BiometryType.faceId]: 'Face ID',
+  [BiometryType.touchId]: 'Touch ID',
+  [BiometryType.fingerprint]: 'Fingerprint',
 };
 
 export const SettingsSecurityScreen = () => {
