@@ -31,15 +31,9 @@ import {Wallet} from '../models/wallet';
 
 const logo = require('../../assets/images/qr-logo.png');
 
-type ParamList = {
-  detailsQr: {
-    address: string;
-  };
-};
-
 export const DetailsQrScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'detailsQr'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
   const svg = useRef();
   const app = useApp();
   const wallet = useWallet(route.params.address) as Wallet;

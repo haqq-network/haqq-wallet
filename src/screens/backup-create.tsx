@@ -19,15 +19,9 @@ import {useWallet} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {MnemonicWord} from '../components/mnemonic-word';
 
-type ParamList = {
-  backupCreate: {
-    address: string;
-  };
-};
-
 export const BackupCreateScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'backupCreate'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupCreate'>>();
 
   const [checked, setChecked] = useState(false);
   const wallet = useWallet(route.params.address);

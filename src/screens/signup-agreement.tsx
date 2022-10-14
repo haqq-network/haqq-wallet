@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {NextScreenT, RootStackParamList} from '../types';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -16,18 +16,12 @@ const windowWidth = Dimensions.get('window').width;
 
 const animation = require('../../assets/animations/first-screen-animation.json');
 
-type ParamList = {
-  createAgreement: {
-    nextScreen: NextScreenT;
-  };
-};
-
 export const SignUpAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'createAgreement'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'createAgreement'>>();
 
   const onPressAgree = useCallback(() => {
-    navigation.navigate(route.params.nextScreen ?? 'onboarding-setup-pin');
+    navigation.navigate(route.params.nextScreen ?? 'onboardingSetupPin');
   }, [navigation, route.params.nextScreen]);
 
   return (

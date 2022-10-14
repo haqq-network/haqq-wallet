@@ -39,11 +39,18 @@ export type RootStackParamList = {
   signup: {next: string};
   setPin: undefined;
   restore: undefined;
+  restorePhrase: {
+    nextScreen: keyof RootStackParamList;
+  };
+  restoreStore: {
+    mnemonic: string;
+    privateKey: string | false;
+    nextScreen: NextScreenT;
+  };
   register: undefined;
   backup: {
     address: string;
   };
-
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
@@ -70,47 +77,59 @@ export type RootStackParamList = {
   backupNotification: {
     address: string;
   };
-  ['onboarding-biometry']: {
-    currentPin: string;
-    biometryType: BiometryType;
+  backupWarning: {
+    address: string;
   };
   createFinish: {
     action: string;
     hide: boolean;
   };
-  ['onboarding-repeat-pin']: {
-    currentPin: string;
-    nextScreen: string;
-    biometryType: BiometryType;
+  createAgreement: {
+    nextScreen: NextScreenT;
   };
-  ['onboarding-setup-pin']: {
+  createStoreWallet: {
+    nextScreen: NextScreenT;
+  };
+  onboardingBiometry: {
+    biometryType: BiometryType;
+    currentPin?: string;
+    nextScreen?: 'backupNotification';
+    address?: string;
+  };
+  onboardingRepeatPin: {
+    biometryType?: BiometryType;
+    currentPin: string;
+    nextScreen?: 'onboardingBiometry';
+  };
+  onboardingSetupPin: {
     mnemonic: string | false;
     privateKey: string | false;
   };
+  onboardingFinish: undefined;
   signupStoreWallet: {
-    nextScreen: string;
-    biometryType?: BiometryType;
+    currentPin: string;
+    biometryType: BiometryType;
   };
   signinAgreement: {
-    nextScreen: string;
+    nextScreen: {
+      key: string;
+      params?: {currentPin: string; biometryType: BiometryType};
+    };
   };
   signinRestoreWallet: {
-    nextScreen: string;
+    nextScreen?: string;
   };
-  onboardingFinish: undefined;
-  createStoreWallet: undefined;
-  transaction:
-    | undefined
-    | {
-        from?: string;
-        to?: string;
-      };
+  transaction: {
+    from?: string | boolean;
+    to?: string;
+  };
   transactionDetail: {
     hash: string;
   };
   transactionAccount: {
     from: string;
   };
+
   transactionSum: {
     from: string;
     to: string;
@@ -123,6 +142,7 @@ export type RootStackParamList = {
     to: string;
     amount: number;
     splittedTo: string[];
+    fee?: number;
   };
   transactionSumAddress: {
     to: string;
@@ -186,7 +206,7 @@ export type ActionSheetType = {
 export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
-  headerBackHidden?: boolean;
+  headerBackHidden?: boolean | string;
 }
 
 export type HeaderButtonProps = {
@@ -195,6 +215,14 @@ export type HeaderButtonProps = {
   pressOpacity?: number;
   canGoBack?: boolean;
   route?: {
+    params: {
+      address: string;
+    };
+  };
+};
+
+export type RoutePropT = {
+  route: {
     params: {
       address: string;
     };

@@ -19,19 +19,14 @@ import {BG_8} from '../variables';
 
 import {app} from '../contexts/app';
 
-type ParamList = {
-  settingsAccountDetail: {
-    address: string;
-  };
-};
-
 const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
 const cardMaskHeight = cardMaskWidth * 0.547528517;
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'settingsAccountDetail'>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'settingsAccountDetail'>>();
 
   const wallet = useWallet(route.params.address);
 

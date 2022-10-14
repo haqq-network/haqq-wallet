@@ -17,19 +17,10 @@ import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 
-type ParamList = {
-  transactionConfirmation: {
-    from: string;
-    to: string;
-    amount: number;
-    fee: number;
-    splittedTo: [string, string];
-  };
-};
-
 export const TransactionConfirmationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionConfirmation'>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee, splittedTo} = route.params;
   const contacts = useContacts();
   const transactions = useTransactions();

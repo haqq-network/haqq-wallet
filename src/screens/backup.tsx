@@ -1,5 +1,4 @@
 import React from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {PopupHeader} from '../components/popup-header';
 import {BackupCreateScreen} from './backup-create';
@@ -7,10 +6,9 @@ import {BackupFinishScreen} from './backup-finish';
 import {BackupVerifyScreen} from './backup-verify';
 import {BackupWarningScreen} from './backup-warning';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {ScreenOptionType} from '../types';
+import {RoutePropT, ScreenOptionType} from '../types';
 
 const BackupStack = createStackNavigator();
-type BackupScreenProp = CompositeScreenProps<any, any>;
 
 const screenOptions: ScreenOptionType = {
   title: '',
@@ -18,7 +16,7 @@ const screenOptions: ScreenOptionType = {
   headerBackHidden: true,
 };
 
-export const BackupScreen = ({route}: BackupScreenProp) => {
+export const BackupScreen = ({route}: RoutePropT) => {
   return (
     <BackupStack.Navigator
       screenOptions={{header: PopupHeader, title: 'Backup phrase'}}>

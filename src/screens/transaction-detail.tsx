@@ -26,15 +26,9 @@ import {
   TEXT_RED_1,
 } from '../variables';
 
-type ParamList = {
-  transactionDetail: {
-    hash: string;
-  };
-};
-
 export const TransactionDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionDetail'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionDetail'>>();
 
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(

@@ -18,15 +18,9 @@ import {TEXT_BASE_2, TEXT_YELLOW_1} from '../variables';
 
 const warningImage = require('../../assets/animations/recover-animation.json');
 
-type ParamList = {
-  backupWarning: {
-    address: string;
-  };
-};
-
 export const BackupWarningScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'backupWarning'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupWarning'>>();
   return (
     <PopupContainer style={page.container}>
       <Spacer style={page.imageContainer}>

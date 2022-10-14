@@ -16,15 +16,9 @@ import {useApp} from '../contexts/app';
 
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 
-type ParamList = {
-  backupNotification: {
-    address: string;
-  };
-};
-
 export const BackupNotificationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'backupNotification'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupNotification'>>();
 
   const app = useApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;

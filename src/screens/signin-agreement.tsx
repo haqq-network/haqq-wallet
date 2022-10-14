@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {BiometryType, RootStackParamList} from '../types';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -12,20 +12,11 @@ import {
 } from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
 
-type ParamList = {
-  signinAgreement: {
-    nextScreen: {
-      key: string;
-      params?: {currentPin: string; biometryType: BiometryType};
-    };
-  };
-};
-
 const warningImage = require('../../assets/animations/recover-animation.json');
 
 export const SignInAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'signinAgreement'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'signinAgreement'>>();
   const onDone = useCallback(() => {
     navigation.navigate(route.params.nextScreen ?? 'signinRestoreWallet');
   }, [navigation, route.params.nextScreen]);

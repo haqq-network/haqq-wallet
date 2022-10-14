@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {BiometryKey, RootStackParamList} from '../types';
+import {RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {Container, Text, Spacer} from '../components/ui';
 import {useApp} from '../contexts/app';
@@ -14,17 +14,10 @@ import {
 } from '../variables';
 import {vibrate} from '../services/haptic';
 
-type ParamList = {
-  'onboarding-repeat-pin': {
-    biometryType: BiometryKey;
-    currentPin: string;
-    nextScreen: 'onboarding-biometry';
-  };
-};
-
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'onboarding-repeat-pin'>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'onboardingRepeatPin'>>();
   const app = useApp();
   const {currentPin} = route.params;
   const [pin, setPin] = useState('');
@@ -49,7 +42,7 @@ export const OnboardingRepeatPinScreen = () => {
           .then(() => app.createUser())
           .then(() => {
             if (app.biometryType !== null) {
-              navigation.navigate('onboarding-biometry', {
+              navigation.navigate('onboardingBiometry', {
                 ...params,
                 biometryType: app.biometryType,
               });

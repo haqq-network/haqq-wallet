@@ -8,16 +8,9 @@ import {useApp} from '../contexts/app';
 import {generateUUID} from '../utils';
 import {splitAddress} from '../utils';
 
-type ParamList = {
-  transactionSum: {
-    to: string;
-    from: string;
-  };
-};
-
 export const TransactionSumScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<ParamList, 'transactionSum'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionSum'>>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
