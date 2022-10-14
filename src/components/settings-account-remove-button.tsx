@@ -4,7 +4,7 @@ import {IconButton, TrashIcon} from './ui';
 import {GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {app} from '../contexts/app';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 type SettingsAccountRemoveButtonProp = {
   address: string;
