@@ -1,6 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -15,12 +18,9 @@ import {useApp} from '../contexts/app';
 import {BIOMETRY_TYPES_NAMES, GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 import {BiometryType} from '../types';
 
-type OnboardingBiometryScreenProps = CompositeScreenProps<any, any>;
-
-export const OnboardingBiometryScreen = ({
-  navigation,
-  route,
-}: OnboardingBiometryScreenProps) => {
+export const OnboardingBiometryScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'onboardingBiometry'>>();
   const {biometryType} = route.params;
   const app = useApp();
   const [error, setError] = useState('');

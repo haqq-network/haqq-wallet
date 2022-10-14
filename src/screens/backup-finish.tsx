@@ -1,5 +1,8 @@
 import React from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {Dimensions, StyleSheet} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -8,21 +11,19 @@ import {
   Text,
   LottieWrap,
 } from '../components/ui';
-import {Dimensions, StyleSheet} from 'react-native';
-
-type BackupFinishScreenProp = CompositeScreenProps<any, any>;
 
 const animationSize = Dimensions.get('window').width - 116;
 
-export const BackupFinishScreen = ({navigation}: BackupFinishScreenProp) => {
+export const BackupFinishScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
     <Container>
       <Spacer style={page.container}>
         <LottieWrap
-          style={{width: animationSize, height: animationSize}}
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
           loop={false}
+          style={{width: animationSize, height: animationSize}}
         />
       </Spacer>
       <Text t4>Congratulations!</Text>
