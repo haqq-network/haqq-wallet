@@ -18,6 +18,10 @@ jobs:
       - name: Install Fastlane
         run: |
           bundle install
+      - name: Git init
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Github actions"
       - name: Execute Fastlane certificates
         run: bundle exec fastlane ios test
         env:
