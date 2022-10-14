@@ -94,12 +94,14 @@ platform :ios do
     match(
       app_identifier: ENV["IOS_IDENTIFIER"],
       type: 'development',
-      readonly: true
+      readonly: true,
+      keychain_name: ENV["TEMP_KEYCHAIN_USER"]
     )
     match(
       app_identifier: ENV["IOS_IDENTIFIER"],
       type: 'appstore',
-      readonly: true
+      readonly: true,
+      keychain_name: ENV["TEMP_KEYCHAIN_USER"]
     )
   end
 
