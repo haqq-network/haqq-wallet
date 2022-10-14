@@ -13,7 +13,13 @@ import {AppState} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
 
-const optionalConfigObject = {
+type OptionalConfigObjectT = {
+  title: string;
+  color: string;
+  fallbackLabel: string;
+};
+
+const optionalConfigObject: OptionalConfigObjectT = {
   title: 'Authentication Required', // Android
   color: '#e00606', // Android,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
@@ -35,7 +41,7 @@ class App extends EventEmitter {
   private user: User | undefined;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _biometryType: BiometryType = null;
+  private _biometryType: BiometryType | null = null;
 
   constructor() {
     super();
@@ -99,7 +105,7 @@ class App extends EventEmitter {
       });
     });
 
-    this.user = await this.loadUser(username);
+    this.user = this.loadUser(username);
   }
 
   async removeUser() {
