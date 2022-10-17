@@ -71,6 +71,7 @@ export const HomeFeedScreen = () => {
       onRefresh={onWalletsRefresh}
       scrollEnabled={Boolean(transactionsList.length)}
       ListHeaderComponent={Wallets}
+      contentContainerStyle={page.grow}
       ListEmptyComponent={TransactionEmpty}
       data={transactionsList}
       renderItem={({item}) => (
@@ -85,4 +86,5 @@ const page = StyleSheet.create({
   container: {
     flex: 1,
   },
+  grow: {flexGrow: 1},
 });
