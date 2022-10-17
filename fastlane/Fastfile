@@ -152,6 +152,12 @@ platform :ios do
       scheme: "haqq",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
+      export_options: {
+        provisioningProfiles: {
+          "com.haqq.wallet" => "match AppStore com.haqq.wallet"
+        },
+        signingStyle: "manual"
+      },
     )
 
     pilot(
