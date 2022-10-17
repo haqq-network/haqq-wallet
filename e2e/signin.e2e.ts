@@ -1,19 +1,15 @@
 import {by, device, element, expect} from 'detox';
 
-describe('Example', () => {
+describe('Signin', () => {
   beforeAll(async () => {
-    await device.launchApp();
+    await device.launchApp({newInstance: true});
     await device.reloadReactNative();
   });
 
   it('should have welcome screen', async () => {
     await expect(element(by.id('welcome'))).toBeVisible();
-    await expect(element(by.id('welcome_signup'))).toBeVisible();
+    await expect(element(by.id('welcome_signin'))).toBeVisible();
 
-    await element(by.id('welcome_signup')).tap();
-    await expect(element(by.id('signup_agreement'))).toBeVisible();
-    await expect(element(by.id('signup_agreement_agree'))).toBeVisible();
-
-    await element(by.id('signup_agreement_agree')).tap();
+    await element(by.id('welcome_signin')).tap();
   });
 });

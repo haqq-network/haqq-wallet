@@ -66,7 +66,7 @@ export const OnboardingBiometryScreen = () => {
     <Container>
       <Spacer style={page.space}>
         {icon}
-        <Text t4 style={page.title}>
+        <Text t4 style={page.title} testID="onboarding_biometry_title">
           Enable {BIOMETRY_TYPES_NAMES[biometryType]}
         </Text>
         <Text t11 style={page.textStyle}>
@@ -82,9 +82,15 @@ export const OnboardingBiometryScreen = () => {
         style={page.margin}
         variant={ButtonVariant.contained}
         title={`Enable ${BIOMETRY_TYPES_NAMES[biometryType]}`}
+        testID="onboarding_biometry_enable"
         onPress={onClickEnable}
       />
-      <Button style={page.margin} title="Skip" onPress={onClickSkip} />
+      <Button
+        style={page.margin}
+        title="Skip"
+        testID="onboarding_biometry_skip"
+        onPress={onClickSkip}
+      />
     </Container>
   );
 };
