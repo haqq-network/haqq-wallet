@@ -15,20 +15,38 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: "3.x"
+      - uses: actions/cache@v2
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
       - name: Install Fastlane
         run: |
           bundle install
       - name: Install packages
         run: yarn install
+      - name: Install pods
+        run: cd ios && pod install
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
-      - name: Execute Fastlane certificates
+      - name: Execute build
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          bundle exec fastlane ios distribute
+          bundle exec fastlane ios test
         env:
           IOS_IDENTIFIER:  ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
@@ -42,5 +60,3 @@ jobs:
           APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
           FASTLANE_PASSWORD: ${{ secrets.APPLE_FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
-          PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}

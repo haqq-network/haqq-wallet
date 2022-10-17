@@ -90,19 +90,28 @@ platform :ios do
     )
   end
 
-  lane :certificates do
-    match(
-      app_identifier: ENV["IOS_IDENTIFIER"],
-      type: 'development',
-      readonly: true,
-      keychain_name: ENV["TEMP_KEYCHAIN_USER"]
+  lane :test do
+    ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_KEY_ID"],
+      issuer_id: ENV["APPLE_ISSUER_ID"],
+      key_content: ENV["APPLE_KEY_CONTENT"],
+      duration: 1200,
+      in_house: false
     )
+
     match(
       app_identifier: ENV["IOS_IDENTIFIER"],
       type: 'appstore',
       readonly: true,
-      keychain_name: ENV["TEMP_KEYCHAIN_USER"]
+      keychain_name: ENV["TEMP_KEYCHAIN_USER"],
+      keychain_password: ENV["TEMP_KEYCHAIN_PASSWORD"],
+      api_key: api_key
     )
+
+    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
+
   end
 
   lane :distribute do
@@ -135,11 +144,6 @@ platform :ios do
     increment_build_number(
       xcodeproj: './ios/haqq.xcodeproj',
       build_number: current_build_number
-    )
-
-    cocoapods(
-      clean_install: true,
-      podfile: 'ios/Podfile'
     )
 
     gym(
