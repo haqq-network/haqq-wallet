@@ -165,13 +165,14 @@ platform :ios do
       podfile: 'ios/Podfile'
     )
 
-    build_app(
+    gym(
+      configuration: "Release",
       workspace: "ios/haqq.xcworkspace",
       scheme: "haqq",
-      export_method: "appstore",
+      export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-            ENV["DEVELOPER_APP_ID"] => ENV["PROVISIONING_PROFILE_SPECIFIER"]
+          ENV["DEVELOPER_APP_ID"] => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       }
     )
