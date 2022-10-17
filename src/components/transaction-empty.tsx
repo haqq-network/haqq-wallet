@@ -19,7 +19,6 @@ const page = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 375,
   },
   space: {marginBottom: 12},
 });
