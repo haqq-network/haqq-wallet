@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -17,12 +19,10 @@ import {useWallet} from '../contexts/wallets';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {MnemonicWord} from '../components/mnemonic-word';
 
-type BackupCreateScreenProp = CompositeScreenProps<any, any>;
+export const BackupCreateScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupCreate'>>();
 
-export const BackupCreateScreen = ({
-  navigation,
-  route,
-}: BackupCreateScreenProp) => {
   const [checked, setChecked] = useState(false);
   const wallet = useWallet(route.params.address);
 

@@ -60,6 +60,22 @@ Android Production App
 
 IOS Production App
 
+### ios certificates
+
+```sh
+[bundle exec] fastlane ios certificates
+```
+
+
+
+### ios distribute
+
+```sh
+[bundle exec] fastlane ios distribute
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

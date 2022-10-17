@@ -1,5 +1,8 @@
-import {TransactionType} from './models/transaction';
 import React from 'react';
+
+import {Transaction} from './models/transaction';
+
+import type {StackNavigationOptions} from '@react-navigation/stack';
 
 export enum TransactionSource {
   unknown,
@@ -8,11 +11,11 @@ export enum TransactionSource {
   receive,
 }
 
-export type TransactionListSend = TransactionType & {
+export type TransactionListSend = Transaction & {
   source: TransactionSource.send;
 };
 
-export type TransactionListReceive = TransactionType & {
+export type TransactionListReceive = Transaction & {
   source: TransactionSource.receive;
 };
 
@@ -32,27 +35,25 @@ export type RootStackParamList = {
   login: undefined;
   create: undefined;
   scanQr: undefined;
-  signin: undefined;
-  signup: undefined;
+  signin: {next: string};
+  signup: {next: string};
   setPin: undefined;
   restore: undefined;
+  restorePhrase: {
+    nextScreen: keyof RootStackParamList;
+  };
+  restoreStore: {
+    mnemonic: string;
+    privateKey: string | false;
+    nextScreen: NextScreenT;
+  };
   register: undefined;
   backup: {
     address: string;
   };
-  transaction:
-    | undefined
-    | {
-        from?: string;
-        to?: string;
-      };
-  transactionDetail: {
-    hash: string;
-  };
   importWallet: undefined;
   details: {address: string};
   detailsQr: {address: string};
-  backupNotification: undefined;
   settingsTest: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
@@ -66,7 +67,94 @@ export type RootStackParamList = {
   };
   settingsFaq: undefined;
   settingsAbout: undefined;
+  backupVerify: {
+    address: string;
+  };
+  backupFinish: undefined;
+  backupCreate: {
+    address: string;
+  };
+  backupNotification: {
+    address: string;
+  };
+  backupWarning: {
+    address: string;
+  };
+  createFinish: {
+    action: string;
+    hide: boolean;
+  };
+  createAgreement: {
+    nextScreen: NextScreenT;
+  };
+  createStoreWallet: {
+    nextScreen: NextScreenT;
+  };
+  onboardingBiometry: {
+    biometryType: BiometryType;
+    currentPin?: string;
+    nextScreen?: 'backupNotification';
+    address?: string;
+  };
+  onboardingRepeatPin: {
+    biometryType?: BiometryType;
+    currentPin: string;
+    nextScreen?: 'onboardingBiometry';
+  };
+  onboardingSetupPin: {
+    mnemonic: string | false;
+    privateKey: string | false;
+  };
+  onboardingFinish: undefined;
+  signupStoreWallet: {
+    currentPin: string;
+    biometryType: BiometryType;
+  };
+  signinAgreement: {
+    nextScreen: {
+      key: string;
+      params?: {currentPin: string; biometryType: BiometryType};
+    };
+  };
+  signinRestoreWallet: {
+    nextScreen?: string;
+  };
+  transaction: {
+    from?: string | boolean;
+    to?: string;
+  };
+  transactionDetail: {
+    hash: string;
+  };
+  transactionAccount: {
+    from: string;
+  };
+
+  transactionSum: {
+    from: string;
+    to: string;
+  };
+  transactionFinish: {
+    hash: string;
+  };
+  transactionConfirmation: {
+    from: string;
+    to: string;
+    amount: number;
+    splittedTo: string[];
+    fee?: number;
+  };
+  transactionSumAddress: {
+    to: string;
+    event: string;
+  };
+  transactionAddress: {
+    from: string;
+  };
 };
+
+export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
+export type IconName = 'Face ID';
 
 export enum BiometryType {
   faceId = 'FaceID',
@@ -79,6 +167,12 @@ export type Mnemonic = {
   phrase: string;
   path: string;
   locale: string;
+};
+
+export type NextScreenT = {
+  key: string;
+  params?: {currentPin: string; biometryType: BiometryType} | undefined;
+  merge?: boolean | undefined;
 };
 
 export type SwipeableAction<T> = {
@@ -102,3 +196,35 @@ export enum WalletCardPattern {
   circle = 'card-circle',
   rhombus = 'card-rhombus',
 }
+
+export type ActionSheetType = {
+  presentation: 'card' | 'modal' | 'transparentModal' | undefined;
+  animation: 'fade' | 'flip' | 'default' | undefined;
+  animationDuration: number;
+};
+
+export interface ScreenOptionType extends StackNavigationOptions {
+  tab?: boolean;
+  headerBackVisible?: boolean;
+  headerBackHidden?: boolean | string;
+}
+
+export type HeaderButtonProps = {
+  tintColor?: string;
+  pressColor?: string;
+  pressOpacity?: number;
+  canGoBack?: boolean;
+  route?: {
+    params: {
+      address: string;
+    };
+  };
+};
+
+export type RoutePropT = {
+  route: {
+    params: {
+      address: string;
+    };
+  };
+};

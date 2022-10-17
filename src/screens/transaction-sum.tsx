@@ -1,15 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
+
 import {TransactionSum} from '../components/transaction-sum';
 import {useApp} from '../contexts/app';
 import {generateUUID} from '../utils';
 import {splitAddress} from '../utils';
-type TransactionSumScreenProp = CompositeScreenProps<any, any>;
 
-export const TransactionSumScreen = ({
-  route,
-  navigation,
-}: TransactionSumScreenProp) => {
+export const TransactionSumScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionSum'>>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);

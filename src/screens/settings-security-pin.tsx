@@ -1,14 +1,13 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {Pin, PinInterface} from '../components/pin';
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 
-type SettingsSecurityPinScreenProps = CompositeScreenProps<any, any>;
-
-export const SettingsSecurityPinScreen = ({
-  navigation,
-}: SettingsSecurityPinScreenProps) => {
+export const SettingsSecurityPinScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const app = useApp();
   const wallets = useWallets();
   const pinRef = useRef<PinInterface>();

@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
@@ -12,12 +14,9 @@ import {
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 
-type OnboardingFinishScreenProp = CompositeScreenProps<any, any>;
-
-export const OnboardingFinishScreen = ({
-  navigation,
-  route,
-}: OnboardingFinishScreenProp) => {
+export const OnboardingFinishScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'createFinish'>>();
   const app = useApp();
   const wallets = useWallets();
   const title = useMemo(
