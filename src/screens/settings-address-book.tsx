@@ -30,7 +30,7 @@ import {useApp} from '../contexts/app';
 
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
-//
+
 export const SettingsAddressBookScreen = () => {
   const app = useApp();
   const contacts = useContacts();
