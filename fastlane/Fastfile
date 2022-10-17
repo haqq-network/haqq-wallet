@@ -73,8 +73,10 @@ platform :ios do
     create_keychain(
       name: name,
       password: password,
-      unlock: false,
-      timeout: 0
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
     )
   end
 
@@ -117,11 +119,11 @@ platform :ios do
   lane :distribute do
     keychain_name = ENV["TEMP_KEYCHAIN_USER"]
     keychain_password = ENV["TEMP_KEYCHAIN_PASSWORD"]
-    app_identifier =  ENV["IOS_IDENTIFIER"]
+    app_identifier =  ENV["DEVELOPER_APP_IDENTIFIER"]
     developer_apple_id = ENV["DEVELOPER_APP_ID"]
     provisioningProfile = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 
-    ensure_temp_keychain(keychain_name, keychain_password)
+    # ensure_temp_keychain(keychain_name, keychain_password)
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APPLE_KEY_ID"],
@@ -147,11 +149,15 @@ platform :ios do
       type: 'appstore',
       app_identifier: app_identifier,
       readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      api_key: api_key
+      # keychain_name: keychain_name,
+      # keychain_password: keychain_password,
+      # api_key: api_key
     )
 
+    # update_code_signing_settings(
+    #   path: './ios/haqq.xcodeproj',
+    #   use_automatic_signing: false
+    # )
 
     gym(
       configuration: "Release",
@@ -174,6 +180,6 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
 
-    delete_temp_keychain(keychain_name)
+    # delete_temp_keychain(keychain_name)
   end
 end
