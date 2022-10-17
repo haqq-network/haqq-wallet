@@ -151,6 +151,7 @@ platform :ios do
       workspace: "ios/haqq.xcworkspace",
       scheme: "haqq",
       export_method: "app-store",
+      export_xcargs: "-allowProvisioningUpdates",
 #       export_options: {
 #         provisioningProfiles: {
 #           "com.haqq.wallet" => "match AppStore com.haqq.wallet"
