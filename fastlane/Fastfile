@@ -151,6 +151,7 @@ platform :ios do
       workspace: "ios/haqq.xcworkspace",
       scheme: "haqq",
       export_method: "app-store",
+      skip_profile_detection: true,
       export_xcargs: "-allowProvisioningUpdates",
       export_options: {
         provisioningProfiles: {
