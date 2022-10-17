@@ -23,7 +23,10 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
       - name: Execute Fastlane certificates
-        run: bundle exec fastlane ios test
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
+          bundle exec fastlane ios test
         env:
           IOS_IDENTIFIER:  ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
