@@ -69,7 +69,7 @@ export type RootStackParamList = {
 };
 
 export enum BiometryType {
-  faceId = 'FaceId',
+  faceId = 'FaceID',
   touchId = 'TouchID',
   fingerprint = 'Fingerprint',
   unknown = 'unknown',
