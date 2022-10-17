@@ -46,7 +46,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          bundle exec fastlane ios test
+          bundle exec fastlane ios distribute
         env:
           IOS_IDENTIFIER:  ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
