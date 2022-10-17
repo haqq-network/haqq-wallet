@@ -93,11 +93,11 @@ export const TransactionAddress = ({
         rightAction={
           address === '' ? (
             <IconButton onPress={onPressQR}>
-              <QRScanner color={GRAPHIC_GREEN_1} width={20} height={20} />
+              <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <CloseCircle color={GRAPHIC_BASE_2} width={20} height={20} />
+              <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
             </IconButton>
           )
         }
