@@ -98,6 +98,7 @@ const page = StyleSheet.create({
   smallContainer: {
     paddingVertical: 6,
     paddingHorizontal: 12,
+    height: 34,
   },
   middleContainer: {
     paddingVertical: 12,
