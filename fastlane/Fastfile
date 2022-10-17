@@ -126,7 +126,7 @@ platform :ios do
     )
 
     match(
-      app_identifier: ENV["IOS_IDENTIFIER"],
+      app_identifier: "com.haqq.wallet",
       type: 'appstore',
       readonly: true,
       keychain_name: ENV["TEMP_KEYCHAIN_USER"],
@@ -135,7 +135,7 @@ platform :ios do
     )
 
     previous_build_number = latest_testflight_build_number(
-      app_identifier: ENV["IOS_IDENTIFIER"],
+      app_identifier: "com.haqq.wallet",
       api_key: api_key,
     )
 
@@ -152,16 +152,11 @@ platform :ios do
       scheme: "haqq",
       export_method: "app-store",
       export_xcargs: "-allowProvisioningUpdates",
-#       export_options: {
-#         provisioningProfiles: {
-#           "com.haqq.wallet" => "match AppStore com.haqq.wallet"
-#         }
-#       }
     )
 
     pilot(
       apple_id: "#{ENV["DEVELOPER_APP_ID"]}",
-      app_identifier: "#{ENV["IOS_IDENTIFIER"]}",
+      app_identifier: "com.haqq.wallet",
       ipa: "haqq.ipa",
       skip_submission: true,
       skip_waiting_for_build_processing: true
