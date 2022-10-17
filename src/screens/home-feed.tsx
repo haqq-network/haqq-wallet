@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {FlatList, StyleSheet} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {useTransactions} from '../contexts/transactions';
 import {TransactionRow} from '../components/transaction-row';
@@ -10,9 +12,8 @@ import {TransactionList} from '../types';
 import {Wallet} from '../models/wallet';
 import {TransactionEmpty} from '../components/transaction-empty';
 
-type HomeFeedScreenProp = CompositeScreenProps<any, any>;
-
-export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
+export const HomeFeedScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const wallets = useWallets();
   const transactions = useTransactions();
   const [refreshing, setRefreshing] = useState(false);
@@ -70,6 +71,7 @@ export const HomeFeedScreen = ({navigation}: HomeFeedScreenProp) => {
       onRefresh={onWalletsRefresh}
       scrollEnabled={Boolean(transactionsList.length)}
       ListHeaderComponent={Wallets}
+      contentContainerStyle={page.grow}
       ListEmptyComponent={TransactionEmpty}
       data={transactionsList}
       renderItem={({item}) => (
@@ -84,4 +86,5 @@ const page = StyleSheet.create({
   container: {
     flex: 1,
   },
+  grow: {flexGrow: 1},
 });

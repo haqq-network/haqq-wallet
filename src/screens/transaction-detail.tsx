@@ -1,8 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {Linking, StyleSheet, View} from 'react-native';
 import {NETWORK_EXPLORER} from '@env';
 import {format} from 'date-fns';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
+import {RootStackParamList, TransactionSource} from '../types';
 import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
 import {BottomSheet} from '../components/bottom-sheet';
@@ -13,7 +16,7 @@ import {
   ISLMIcon,
   Text,
 } from '../components/ui';
-import {Linking, StyleSheet, View} from 'react-native';
+
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -22,14 +25,11 @@ import {
   TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
-import {TransactionSource} from '../types';
 
-type TransactionDetailScreenProp = CompositeScreenProps<any, any>;
+export const TransactionDetailScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'transactionDetail'>>();
 
-export const TransactionDetailScreen = ({
-  route,
-  navigation,
-}: TransactionDetailScreenProp) => {
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),

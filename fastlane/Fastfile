@@ -63,10 +63,80 @@ end
 platform :ios do
   desc "IOS Production App"
 
+  def delete_temp_keychain(name)
+    delete_keychain(
+      name: name
+    ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+  end
+
+  def create_temp_keychain(name, password)
+    create_keychain(
+      name: name,
+      password: password,
+      unlock: false,
+      timeout: 0
+    )
+  end
+
+  def ensure_temp_keychain(name, password)
+    delete_temp_keychain(name)
+    create_temp_keychain(name, password)
+  end
+
   lane :version do
     increment_version_number(
       xcodeproj: './ios/haqq.xcodeproj',
       version_number: ENV["RELEASE_VERSION"]
     )
+  end
+
+  lane :certificates do
+    match(
+      app_identifier: ENV["IOS_IDENTIFIER"],
+      type: 'development',
+      readonly: true,
+      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
+    )
+    match(
+      app_identifier: ENV["IOS_IDENTIFIER"],
+      type: 'appstore',
+      readonly: true,
+      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
+    )
+  end
+
+  lane :test do
+    ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
+
+    certificates
+
+    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
+  end
+
+  lane :distribute do
+    ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
+    certificates
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_KEY_ID"],
+      issuer_id: ENV["APPLE_ISSUER_ID"],
+      key_content: ENV["APPLE_KEY_CONTENT"],
+      duration: 1200,
+      in_house: false
+    )
+
+    cocoapods(
+      clean_install: true
+    )
+
+    build_app(workspace: "ios/haqq.xcworkspace", scheme: "haqq")
+
+    pilot(
+      ipa: "haqq.ipa",
+      skip_submission: true,
+      skip_waiting_for_build_processing: true
+    )
+
+    delete_temp_keychain(keychain_name)
   end
 end

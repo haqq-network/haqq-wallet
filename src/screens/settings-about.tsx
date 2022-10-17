@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   ArrowForwardIcon,
-  Container,
   DiscordIcon,
   DocIcon,
   GlobalIcon,
@@ -23,6 +23,8 @@ import {
 import {openURL, ratio, windowWidth} from '../helpers';
 
 export const SettingsAboutScreen = () => {
+  const insets = useSafeAreaInsets();
+
   const onPressRate = useCallback(() => {
     const url = 'https://example.com';
     openURL(url);
@@ -44,72 +46,78 @@ export const SettingsAboutScreen = () => {
   }, []);
 
   return (
-    <Container>
-      <ScrollView>
-        <Spacer>
-          <LottieWrap
-            style={page.imageStyle}
-            source={require('../../assets/animations/first-screen-animation.json')}
-            autoPlay
-            loop
-          />
-        </Spacer>
-        <Text t14 style={page.title}>
-          About App
-        </Text>
-        <View style={page.buttons}>
-          <IconButton onPress={onPressRate} style={page.button}>
-            <StarIcon color={GRAPHIC_BASE_1} />
-            <Text t11 style={page.buttonText}>
-              Rate ISLM wallet App
-            </Text>
-            <Spacer />
-            <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
-          </IconButton>
-          <IconButton onPress={onPressSite} style={page.button}>
-            <GlobalIcon color={GRAPHIC_BASE_1} />
-            <Text t11 style={page.buttonText}>
-              Visit islamiccoin.net
-            </Text>
-            <Spacer />
-            <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
-          </IconButton>
-        </View>
-        <Text t14 style={page.title}>
-          Legal Documents
-        </Text>
-        <View style={page.buttons}>
-          <IconButton onPress={onPressDoc} style={page.button}>
-            <DocIcon color={GRAPHIC_BASE_1} />
-            <Text t11 style={page.buttonText}>
-              Terms & Conditions
-            </Text>
-            <Spacer />
-            <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
-          </IconButton>
-        </View>
-        <Text t14 style={page.title}>
-          Our Socials
-        </Text>
-        <View style={page.buttons}>
-          <IconButton onPress={onPressDiscord} style={page.button}>
-            <DiscordIcon color={GRAPHIC_BASE_1} />
-            <Text t11 style={page.buttonText}>
-              Discord
-            </Text>
-            <Spacer />
-            <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
-          </IconButton>
-        </View>
-        <Text t11 style={page.terms}>
-          ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
-        </Text>
-      </ScrollView>
-    </Container>
+    <ScrollView
+      style={[
+        page.container,
+        {paddingTop: insets.top - 50, paddingBottom: insets.bottom},
+      ]}>
+      <Spacer>
+        <LottieWrap
+          style={page.imageStyle}
+          source={require('../../assets/animations/first-screen-animation.json')}
+          autoPlay
+          loop
+        />
+      </Spacer>
+      <Text t14 style={page.title}>
+        About App
+      </Text>
+      <View style={page.buttons}>
+        <IconButton onPress={onPressRate} style={page.button}>
+          <StarIcon color={GRAPHIC_BASE_1} />
+          <Text t11 style={page.buttonText}>
+            Rate ISLM wallet App
+          </Text>
+          <Spacer />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+        </IconButton>
+        <IconButton onPress={onPressSite} style={page.button}>
+          <GlobalIcon color={GRAPHIC_BASE_1} />
+          <Text t11 style={page.buttonText}>
+            Visit islamiccoin.net
+          </Text>
+          <Spacer />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+        </IconButton>
+      </View>
+      <Text t14 style={page.title}>
+        Legal Documents
+      </Text>
+      <View style={page.buttons}>
+        <IconButton onPress={onPressDoc} style={page.button}>
+          <DocIcon color={GRAPHIC_BASE_1} />
+          <Text t11 style={page.buttonText}>
+            Terms & Conditions
+          </Text>
+          <Spacer />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+        </IconButton>
+      </View>
+      <Text t14 style={page.title}>
+        Our Socials
+      </Text>
+      <View style={page.buttons}>
+        <IconButton onPress={onPressDiscord} style={page.button}>
+          <DiscordIcon color={GRAPHIC_BASE_1} />
+          <Text t11 style={page.buttonText}>
+            Discord
+          </Text>
+          <Spacer />
+          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+        </IconButton>
+      </View>
+      <Text t11 style={page.terms}>
+        ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
+      </Text>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
   title: {
     marginBottom: 8,
     color: TEXT_BASE_2,

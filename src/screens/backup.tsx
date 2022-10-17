@@ -1,5 +1,4 @@
 import React from 'react';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {PopupHeader} from '../components/popup-header';
 import {BackupCreateScreen} from './backup-create';
@@ -7,11 +6,17 @@ import {BackupFinishScreen} from './backup-finish';
 import {BackupVerifyScreen} from './backup-verify';
 import {BackupWarningScreen} from './backup-warning';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {RoutePropT, ScreenOptionType} from '../types';
 
 const BackupStack = createStackNavigator();
-type BackupScreenProp = CompositeScreenProps<any, any>;
 
-export const BackupScreen = ({route}: BackupScreenProp) => {
+const screenOptions: ScreenOptionType = {
+  title: '',
+  headerRight: DismissPopupButton,
+  headerBackHidden: true,
+};
+
+export const BackupScreen = ({route}: RoutePropT) => {
   return (
     <BackupStack.Navigator
       screenOptions={{header: PopupHeader, title: 'Backup phrase'}}>
@@ -19,11 +24,7 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
         name={'backupWarning'}
         component={BackupWarningScreen}
         initialParams={{address: route.params.address}}
-        options={{
-          title: '',
-          headerRight: DismissPopupButton,
-          headerBackHidden: true,
-        }}
+        options={screenOptions}
       />
       <BackupStack.Screen
         name={'backupCreate'}
@@ -36,11 +37,7 @@ export const BackupScreen = ({route}: BackupScreenProp) => {
       <BackupStack.Screen
         name={'backupFinish'}
         component={BackupFinishScreen}
-        options={{
-          title: '',
-          headerBackHidden: true,
-          headerRight: DismissPopupButton,
-        }}
+        options={screenOptions}
       />
     </BackupStack.Navigator>
   );

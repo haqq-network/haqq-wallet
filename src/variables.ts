@@ -116,6 +116,7 @@ export const PIN_BANNED_ATTEMPTS = 5;
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
 
 export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
+
 export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
   [BiometryType.faceId]: 'Face ID',
   [BiometryType.touchId]: 'Touch ID',

@@ -11,7 +11,11 @@ const _keyFromPassword = (password: string, salt: string) => {
   return Aes.pbkdf2(password, salt, 5000, 256);
 };
 
-const _decryptWithKey = (encryptedData, key: string) =>
+type EncryptedDataT = {
+  cipher: string;
+  iv: string;
+};
+const _decryptWithKey = (encryptedData: EncryptedDataT, key: string) =>
   Aes.decrypt(encryptedData.cipher, key, encryptedData.iv, 'aes-256-cbc');
 
 async function decryptJS(password: string, encryptedString: string) {
