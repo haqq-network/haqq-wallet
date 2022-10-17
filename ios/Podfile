@@ -23,6 +23,11 @@ target 'haqq' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'CryptoSwift', '~> 1.6.0'
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+
   target 'haqqTests' do
     inherit! :complete
     # Pods for testing
