@@ -18,6 +18,8 @@ jobs:
       - name: Install Fastlane
         run: |
           bundle install
+      - name: Install packages
+        run: yarn install
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"

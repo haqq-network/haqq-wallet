@@ -148,8 +148,21 @@ platform :ios do
       api_key: api_key
     )
 
+    previous_build_number = latest_testflight_build_number(
+      app_identifier: ENV["IOS_IDENTIFIER"],
+      api_key: api_key,
+    )
+
+    current_build_number = previous_build_number + 1
+
+    increment_build_number(
+      xcodeproj: './ios/haqq.xcodeproj',
+      build_number: current_build_number
+    )
+
     cocoapods(
-      clean_install: true
+      clean_install: true,
+      podfile: 'ios/Podfile'
     )
 
     build_app(workspace: "ios/haqq.xcworkspace", scheme: "haqq")
@@ -160,6 +173,6 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
 
-    delete_temp_keychain(keychain_name)
+    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
   end
 end
