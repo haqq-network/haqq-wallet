@@ -8,24 +8,24 @@ jobs:
     name: Tests
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-      - uses: actions/setup-ruby@v1
+          node-version: 16
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.x"
-      - uses: actions/cache@v2
+          ruby-version: "3.0"
+      - uses: actions/cache@v3
         with:
           path: ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
