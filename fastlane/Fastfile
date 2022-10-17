@@ -165,9 +165,20 @@ platform :ios do
       podfile: 'ios/Podfile'
     )
 
-    build_app(workspace: "ios/haqq.xcworkspace", scheme: "haqq")
+    build_app(
+      workspace: "ios/haqq.xcworkspace",
+      scheme: "haqq",
+      export_method: "appstore",
+      export_options: {
+        provisioningProfiles: {
+            ENV["DEVELOPER_APP_ID"] => ENV["PROVISIONING_PROFILE_SPECIFIER"]
+        }
+      }
+    )
 
     pilot(
+      apple_id: "#{ENV["DEVELOPER_APP_ID"]}",
+      app_identifier: "#{ENV["IOS_IDENTIFIER"]}",
       ipa: "haqq.ipa",
       skip_submission: true,
       skip_waiting_for_build_processing: true
