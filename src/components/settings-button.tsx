@@ -1,13 +1,19 @@
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {MenuNavigationButton, Text} from './ui';
 import {TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {
-  next?: string;
+  next:
+    | 'settingsAccounts'
+    | 'settingsAddressBook'
+    | 'settingsSecurity'
+    | 'settingsAbout';
   icon: React.ReactNode;
   title: string;
-  onPress: (screen?: string) => void;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
@@ -15,12 +21,15 @@ export type SettingsButtonProps = {
 export const SettingsButton = ({
   icon,
   title,
-  onPress,
   next,
   style,
 }: SettingsButtonProps) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const onClickButton = () => navigation.navigate(next);
+
   return (
-    <MenuNavigationButton onPress={() => onPress(next)}>
+    <MenuNavigationButton onPress={onClickButton}>
       <View style={[page.container, style]}>
         {icon}
         <Text t11 style={page.text}>

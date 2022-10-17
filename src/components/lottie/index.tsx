@@ -1,13 +1,13 @@
 import React, {useEffect, useRef} from 'react';
-import {AppState} from 'react-native';
+import {AppState, ViewStyle} from 'react-native';
 import Lottie from 'lottie-react-native';
 import type AnimatedLottieView from 'lottie-react-native';
-import type AnimatedLottieViewProps from 'lottie-react-native';
 
-interface AnimatedLottie extends AnimatedLottieViewProps {
+interface AnimatedLottie {
   source: string;
   autoPlay: boolean;
   loop: boolean;
+  style?: ViewStyle;
 }
 export const LottieWrap = (props: AnimatedLottie) => {
   const ref = useRef<AnimatedLottieView>(null);

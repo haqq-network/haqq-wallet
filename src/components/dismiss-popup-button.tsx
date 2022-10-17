@@ -2,11 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {CloseCircle, IconButton} from './ui';
 import {GRAPHIC_SECOND_2} from '../variables';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-type DismissPopupButtonProp = CompositeScreenProps<any, any>;
-
-export const DismissPopupButton = ({navigation}: DismissPopupButtonProp) => {
+export const DismissPopupButton = () => {
+  const navigation = useNavigation();
   return (
     <IconButton style={page.container} onPress={navigation.goBack}>
       <CloseCircle color={GRAPHIC_SECOND_2} />

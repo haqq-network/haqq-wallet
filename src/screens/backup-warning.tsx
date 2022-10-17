@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Alert,
   Button,
@@ -14,14 +16,11 @@ import {
 } from '../components/ui';
 import {TEXT_BASE_2, TEXT_YELLOW_1} from '../variables';
 
-type BackupWarningScreenProp = CompositeScreenProps<any, any>;
-
 const warningImage = require('../../assets/animations/recover-animation.json');
 
-export const BackupWarningScreen = ({
-  navigation,
-  route,
-}: BackupWarningScreenProp) => {
+export const BackupWarningScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupWarning'>>();
   return (
     <PopupContainer style={page.container}>
       <Spacer style={page.imageContainer}>

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useContacts} from '../contexts/contacts';
 import {Alert, FlatList, StyleSheet} from 'react-native';
+import prompt from 'react-native-prompt-android';
+import {useContacts} from '../contexts/contacts';
 import {AddressRow} from '../components/address-row';
 import {AddressHeader} from '../components/address-header';
 import {
@@ -24,172 +25,168 @@ import {
   GRAPHIC_SECOND_4,
   TEXT_BASE_1,
 } from '../variables';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
-import prompt from 'react-native-prompt-android';
+
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
 
-type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
+export const SettingsAddressBookScreen = () => {
+  const app = useApp();
+  const contacts = useContacts();
+  const [search, setSearch] = useState('');
+  const [canAdd, setCanAdd] = useState(false);
 
-export const SettingsAddressBookScreen =
-  ({}: SettingsAddressBookScreenProps) => {
-    const app = useApp();
-    const contacts = useContacts();
-    const [search, setSearch] = useState('');
-    const [canAdd, setCanAdd] = useState(false);
+  const [rows, setRows] = useState(contacts.getContacts());
 
-    const [rows, setRows] = useState(contacts.getContacts());
+  useEffect(() => {
+    const callback = () => {
+      setRows(contacts.getContacts());
+    };
 
-    useEffect(() => {
-      const callback = () => {
-        setRows(contacts.getContacts());
-      };
+    contacts.on('contacts', callback);
 
-      contacts.on('contacts', callback);
+    return () => {
+      contacts.off('contacts', callback);
+    };
+  }, [contacts]);
 
-      return () => {
-        contacts.off('contacts', callback);
-      };
-    }, [contacts]);
+  const contactsList = useMemo(
+    () =>
+      rows.filter(
+        (contact: Contact) =>
+          !!`${contact.account} ${contact.name}`
+            .toLowerCase()
+            .match(search.toLowerCase()),
+      ),
+    [rows, search],
+  );
 
-    const contactsList = useMemo(
-      () =>
-        rows.filter(
-          (contact: Contact) =>
-            !!`${contact.account} ${contact.name}`
-              .toLowerCase()
-              .match(search.toLowerCase()),
-        ),
-      [rows, search],
+  useEffect(() => {
+    const add =
+      search.length === 42 &&
+      utils.isAddress(search.trim()) &&
+      contacts.getContact(search.trim()) === null;
+
+    setCanAdd(add);
+  }, [contacts, search]);
+
+  const onPressQR = useCallback(() => {
+    const subscription = (value: string) => {
+      if (utils.isAddress(value.trim())) {
+        setSearch(value.trim());
+        app.off('address', subscription);
+        app.emit('modal', null);
+      }
+    };
+
+    app.on('address', subscription);
+
+    app.emit('modal', {type: 'qr'});
+  }, [app]);
+
+  const onPressClear = useCallback(() => {
+    setSearch('');
+  }, []);
+
+  const onPressAdd = useCallback(() => {
+    prompt(
+      'Add contact',
+      `Address: ${search}`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Add',
+          onPress: value => {
+            contacts.createContact(search.trim(), value);
+            setSearch('');
+          },
+        },
+      ],
+      {
+        placeholder: 'Contact name',
+      },
     );
+  }, [contacts, search]);
 
-    useEffect(() => {
-      const add =
-        search.length === 42 &&
-        utils.isAddress(search.trim()) &&
-        contacts.getContact(search.trim()) === null;
-
-      setCanAdd(add);
-    }, [contacts, search]);
-
-    const onPressQR = useCallback(() => {
-      const subscription = (value: string) => {
-        if (utils.isAddress(value.trim())) {
-          setSearch(value.trim());
-          app.off('address', subscription);
-          app.emit('modal', null);
-        }
-      };
-
-      app.on('address', subscription);
-
-      app.emit('modal', {type: 'qr'});
-    }, [app]);
-
-    const onPressClear = useCallback(() => {
-      setSearch('');
-    }, []);
-
-    const onPressAdd = useCallback(() => {
+  const onPressEdit = useCallback(
+    (item: Contact) => {
       prompt(
-        'Add contact',
-        `Address: ${search}`,
+        'Edit contact',
+        `Address: ${item.account}`,
         [
           {
             text: 'Cancel',
             style: 'cancel',
           },
           {
-            text: 'Add',
+            text: 'Save',
             onPress: value => {
-              contacts.createContact(search.trim(), value);
-              setSearch('');
+              contacts.updateContact(item.account, value);
             },
           },
         ],
         {
+          defaultValue: item?.name ?? '',
           placeholder: 'Contact name',
         },
       );
-    }, [contacts, search]);
+    },
+    [contacts],
+  );
 
-    const onPressEdit = useCallback(
-      (item: Contact) => {
-        prompt(
-          'Edit contact',
-          `Address: ${item.account}`,
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Save',
-              onPress: value => {
-                contacts.updateContact(item.account, value);
-              },
-            },
-          ],
+  const onPressRemove = useCallback(
+    (item: Contact) => {
+      Alert.alert(
+        'Delete Contact',
+        'Are you sure you want to delete the selected contact?',
+        [
+          {text: 'Cancel', style: 'cancel'},
           {
-            defaultValue: item?.name ?? '',
-            placeholder: 'Contact name',
-          },
-        );
-      },
-      [contacts],
-    );
-
-    const onPressRemove = useCallback(
-      (item: Contact) => {
-        Alert.alert(
-          'Delete Contact',
-          'Are you sure you want to delete the selected contact?',
-          [
-            {text: 'Cancel', style: 'cancel'},
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: () => {
-                contacts.removeContact(item.account);
-              },
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => {
+              contacts.removeContact(item.account);
             },
-          ],
-        );
-      },
-      [contacts],
-    );
+          },
+        ],
+      );
+    },
+    [contacts],
+  );
 
-    return (
-      <Container style={page.container}>
-        <Input
-          label=""
-          style={page.input}
-          placeholder="Search or add a contact"
-          onChangeText={setSearch}
-          value={search}
-          multiline={true}
-          rightAction={
-            search === '' ? (
-              <IconButton onPress={onPressQR}>
-                <QRScanner color={GRAPHIC_GREEN_1} style={page.icon} />
-              </IconButton>
-            ) : (
-              <IconButton onPress={onPressClear}>
-                <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
-              </IconButton>
-            )
-          }
-        />
-        {canAdd && (
-          <IconButton onPress={onPressAdd} style={page.addButton}>
-            <Box style={page.badge}>
-              <PlusIcon color={GRAPHIC_BASE_2} />
-            </Box>
-            <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
-          </IconButton>
-        )}
+  return (
+    <Container style={page.container}>
+      <Input
+        label=""
+        style={page.input}
+        placeholder="Search or add a contact"
+        onChangeText={setSearch}
+        value={search}
+        multiline={true}
+        rightAction={
+          search === '' ? (
+            <IconButton onPress={onPressQR}>
+              <QRScanner color={GRAPHIC_GREEN_1} style={page.icon} />
+            </IconButton>
+          ) : (
+            <IconButton onPress={onPressClear}>
+              <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
+            </IconButton>
+          )
+        }
+      />
+      {canAdd && (
+        <IconButton onPress={onPressAdd} style={page.addButton}>
+          <Box style={page.badge}>
+            <PlusIcon color={GRAPHIC_BASE_2} />
+          </Box>
+          <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
+        </IconButton>
+      )}
         <FlatList
           // scrollEnabled={false}
           data={contactsList}
@@ -220,6 +217,7 @@ export const SettingsAddressBookScreen =
       </Container>
     );
   };
+        
 
 const page = StyleSheet.create({
   container: {

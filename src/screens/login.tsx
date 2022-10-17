@@ -1,14 +1,15 @@
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {Button, ButtonVariant, Container, Text} from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
-
-type LoginScreenProp = CompositeScreenProps<any, any>;
+import {RootStackParamList} from '../types';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
-export const LoginScreen = ({navigation}: LoginScreenProp) => {
+export const LoginScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
     <Container>
       <View style={page.container}>

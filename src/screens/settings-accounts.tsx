@@ -3,13 +3,12 @@ import {StyleSheet, FlatList} from 'react-native';
 import {useWallets} from '../contexts/wallets';
 import {WalletRow} from '../components/wallet-row';
 import {Wallet} from '../models/wallet';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 
-type SettingsAccountsScreenProps = CompositeScreenProps<any, any>;
-
-export const SettingsAccountsScreen = ({
-  navigation,
-}: SettingsAccountsScreenProps) => {
+export const SettingsAccountsScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const wallets = useWallets();
   const [rows, setRows] = useState(wallets.getWallets());
 
