@@ -129,8 +129,8 @@ platform :ios do
       app_identifier: "com.haqq.wallet",
       type: 'appstore',
       readonly: true,
-      keychain_name: ENV["TEMP_KEYCHAIN_USER"],
-      keychain_password: ENV["TEMP_KEYCHAIN_PASSWORD"],
+#       keychain_name: ENV["TEMP_KEYCHAIN_USER"],
+#       keychain_password: ENV["TEMP_KEYCHAIN_PASSWORD"],
       api_key: api_key
     )
 
