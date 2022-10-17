@@ -68,14 +68,6 @@ IOS Production App
 
 
 
-### ios test
-
-```sh
-[bundle exec] fastlane ios test
-```
-
-
-
 ### ios distribute
 
 ```sh

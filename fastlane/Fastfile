@@ -105,29 +105,6 @@ platform :ios do
     )
   end
 
-  lane :test do
-    ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
-
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APPLE_KEY_ID"],
-      issuer_id: ENV["APPLE_ISSUER_ID"],
-      key_content: ENV["APPLE_KEY_CONTENT"],
-      duration: 1200,
-      in_house: false
-    )
-
-    match(
-      app_identifier: ENV["IOS_IDENTIFIER"],
-      type: 'appstore',
-      readonly: true,
-      keychain_name: ENV["TEMP_KEYCHAIN_USER"],
-      keychain_password: ENV["TEMP_KEYCHAIN_PASSWORD"],
-      api_key: api_key
-    )
-
-    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
-  end
-
   lane :distribute do
     ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
 
@@ -172,7 +149,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          ENV["DEVELOPER_APP_ID"] => ENV["PROVISIONING_PROFILE_SPECIFIER"]
+          "com.haqq.wallet" => "match AppStore com.haqq.wallet"
         }
       }
     )
