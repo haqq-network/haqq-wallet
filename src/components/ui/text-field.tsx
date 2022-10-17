@@ -15,6 +15,7 @@ import {
   BG_8,
   TEXT_BASE_1,
   TEXT_BASE_2,
+  TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../../variables';
 
@@ -66,6 +67,7 @@ export const TextField: React.FC<Props> = ({
   }
 
   const top = isFocused ? 0 : -5;
+  const getHeight = height + 40;
 
   return (
     <>
@@ -74,10 +76,10 @@ export const TextField: React.FC<Props> = ({
           page.container,
           style,
           error && page.containerError,
-          isLarge && page.containerMultiline,
-          {height: height + 50},
+          {height: getHeight},
         ]}>
         <TextInput
+          selectionColor={TEXT_GREEN_1}
           allowFontScaling={false}
           style={[
             page.input,
@@ -118,13 +120,13 @@ export const TextField: React.FC<Props> = ({
                   {
                     translateY: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [22, 3],
+                      outputRange: [24, 9],
                     }),
                   },
                   {
                     translateX: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [isLarge ? 9 : 0, isLarge ? -12 : -8],
+                      outputRange: [isLarge ? 5 : 0, isLarge ? -12 : -8],
                     }),
                   },
                 ],
@@ -154,16 +156,11 @@ export const TextField: React.FC<Props> = ({
 
 const page = StyleSheet.create({
   container: {
-    paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: BG_8,
-    height: 58,
-  },
-  containerMultiline: {
-    height: 170,
   },
   containerError: {
     backgroundColor: BG_7,
@@ -173,17 +170,16 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: TEXT_BASE_1,
-    top: 24,
+    top: 26,
     fontSize: 16,
   },
   labelContainer: {
     position: 'absolute',
     paddingHorizontal: 14,
-    paddingTop: 5,
   },
   label: {
     fontFamily: 'SF Pro Display',
-    fontSize: 19,
+    fontSize: 18,
     left: 0,
   },
   labelMultiline: {
