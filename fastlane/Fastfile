@@ -124,7 +124,7 @@ platform :ios do
     provisioningProfile = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 
     ensure_temp_keychain(keychain_name, keychain_password)
-    xcode_select("/Applications/Xcode-14.0.1.app")
+    xcode_select("/Applications/Xcode.app")
     api_key = app_store_connect_api_key(
       key_id: ENV["APPLE_KEY_ID"],
       issuer_id: ENV["APPLE_ISSUER_ID"],
