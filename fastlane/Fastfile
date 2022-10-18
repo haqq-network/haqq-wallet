@@ -123,8 +123,8 @@ platform :ios do
     developer_apple_id = ENV["DEVELOPER_APP_ID"]
     provisioningProfile = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 
-    # ensure_temp_keychain(keychain_name, keychain_password)
-
+    ensure_temp_keychain(keychain_name, keychain_password)
+    xcode_select("/Applications/Xcode-14.0.1.app")
     api_key = app_store_connect_api_key(
       key_id: ENV["APPLE_KEY_ID"],
       issuer_id: ENV["APPLE_ISSUER_ID"],
@@ -149,18 +149,18 @@ platform :ios do
       type: 'development',
       app_identifier: app_identifier,
       readonly: true,
-      # keychain_name: keychain_name,
-      # keychain_password: keychain_password,
-      # api_key: api_key
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
     )
 
     match(
       type: 'appstore',
       app_identifier: app_identifier,
       readonly: true,
-      # keychain_name: keychain_name,
-      # keychain_password: keychain_password,
-      # api_key: api_key
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
     )
 
     # update_code_signing_settings(
@@ -189,6 +189,6 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
 
-    # delete_temp_keychain(keychain_name)
+    delete_temp_keychain(keychain_name)
   end
 end
