@@ -146,6 +146,15 @@ platform :ios do
     )
 
     match(
+      type: 'development',
+      app_identifier: app_identifier,
+      readonly: true,
+      # keychain_name: keychain_name,
+      # keychain_password: keychain_password,
+      # api_key: api_key
+    )
+
+    match(
       type: 'appstore',
       app_identifier: app_identifier,
       readonly: true,
