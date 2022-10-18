@@ -9,6 +9,8 @@ platform :android do
   end
 
   lane :distribute do
+    ENV['ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD'] = 'true'
+
     gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
       "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
       "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
