@@ -180,6 +180,7 @@ platform :ios do
     )
 
     pilot(
+      api_key: api_key,
       apple_id: developer_apple_id,
       app_identifier: app_identifier,
       ipa: "haqq.ipa",
