@@ -38,14 +38,10 @@ export const TransactionDetailScreen = () => {
     transactions.getTransaction(route.params.hash),
   );
 
-  const isTransaction = transaction?.source === TransactionSource.send;
-  const to = isTransaction ? transaction.to : ' ';
+  const isSent = transaction?.source === TransactionSource.send;
+  const to = isSent ? transaction.to : ' ';
   const from = transaction?.from ? transaction.from : ' ';
 
-  const splittedTo = useMemo(() => splitAddress(to), [to]);
-  const splittedFrom = useMemo(() => splitAddress(from), [from]);
-
-  console.log('splittedFrom', splittedFrom);
   useEffect(() => {
     setTransaction(transactions.getTransaction(route.params.hash));
   }, [route.params.hash, transactions]);
@@ -57,7 +53,13 @@ export const TransactionDetailScreen = () => {
     } catch (_e) {}
   }, [transaction?.hash]);
 
-  const title = isTransaction ? 'Sent' : 'Receive';
+  const title = isSent ? 'Sent' : 'Receive';
+  const titleAddress = isSent ? 'Send to' : 'Received from';
+
+  const splitted = useMemo(
+    () => (isSent ? splitAddress(to) : splitAddress(from)),
+    [from, isSent, to],
+  );
 
   if (!transaction) {
     return null;
@@ -68,9 +70,7 @@ export const TransactionDetailScreen = () => {
       <Text t14 style={page.amount}>
         Total amount
       </Text>
-      <Text
-        t6
-        style={[page.sum, isTransaction ? page.sumSent : page.sumReceive]}>
+      <Text t6 style={[page.sum, isSent ? page.sumSent : page.sumReceive]}>
         {transaction.totalFormatted} ISLM
       </Text>
       {/*<Text t14 style={page.subSum}>*/}
@@ -83,17 +83,17 @@ export const TransactionDetailScreen = () => {
           reversed
           style={page.info}
         />
-        {isTransaction ? (
+        {isSent ? (
           <DataContentSplitted
-            to={splittedTo}
-            title="Send to"
+            to={splitted}
+            title={titleAddress}
             style={page.info}
             reversed
           />
         ) : (
           <DataContentSplitted
-            to={splittedFrom}
-            title="Received from"
+            to={splitted}
+            title={titleAddress}
             style={page.info}
             reversed
           />
