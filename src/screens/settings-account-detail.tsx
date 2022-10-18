@@ -1,4 +1,9 @@
 import React, {useCallback} from 'react';
+import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import prompt from 'react-native-prompt-android';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {
   Card,
   CardMask,
@@ -9,22 +14,20 @@ import {
   Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import {BG_8} from '../variables';
-import prompt from 'react-native-prompt-android';
-import {app} from '../contexts/app';
 
-type SettingsAccountDetailScreenProps = CompositeScreenProps<any, any>;
+import {BG_8} from '../variables';
+
+import {app} from '../contexts/app';
 
 const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
 const cardMaskHeight = cardMaskWidth * 0.547528517;
 
-export const SettingsAccountDetailScreen = ({
-  navigation,
-  route,
-}: SettingsAccountDetailScreenProps) => {
+export const SettingsAccountDetailScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'settingsAccountDetail'>>();
+
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {

@@ -1,4 +1,3 @@
-import {CompositeScreenProps} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {
   StyleSheet,
@@ -8,22 +7,19 @@ import {
   Image,
   View,
 } from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 
-// type BackupNotificationScreenProp = {
-//   onClose: () => void;
-//   wallet: Wallet | null;
-// };
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 
-type BackupNotificationScreenProp = CompositeScreenProps<any, any>;
+export const BackupNotificationScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'backupNotification'>>();
 
-export const BackupNotificationScreen = ({
-  navigation,
-  route,
-}: BackupNotificationScreenProp) => {
   const app = useApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 

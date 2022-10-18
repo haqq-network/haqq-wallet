@@ -51,7 +51,7 @@ jobs:
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
-          echo "ENVIRONMENT=distribute" >> .env
+          echo "ENVIRONMENT=release" >> .env
       - name: Set release version
         run: |
           current_version=$(echo "${GITHUB_REF#refs/*/}" | awk -F 'v' '{ print $2 }' |  awk -F '-' '{ print $1 }')

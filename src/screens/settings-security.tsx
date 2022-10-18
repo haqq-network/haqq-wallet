@@ -1,13 +1,13 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {MenuNavigationButton, Text, Spacer} from '../components/ui';
-import {CompositeScreenProps} from '@react-navigation/native';
 import {Alert, StyleSheet, Switch, View} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../types';
+import {MenuNavigationButton, Text, Spacer} from '../components/ui';
 import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 import {Pin, PinInterface} from '../components/pin';
 import {BiometryType} from '../types';
-
-type SettingsSecurityScreenProps = CompositeScreenProps<any, any>;
 
 const biometryName = {
   [BiometryType.faceId]: 'Face ID',
@@ -15,9 +15,8 @@ const biometryName = {
   [BiometryType.fingerprint]: 'Fingerprint',
 };
 
-export const SettingsSecurityScreen = ({
-  navigation,
-}: SettingsSecurityScreenProps) => {
+export const SettingsSecurityScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const app = useApp();
   const [biometry, setBiometry] = useState(app.biometry);
   const [loggedIn, setLoggedIn] = useState(false);

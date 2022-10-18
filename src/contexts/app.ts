@@ -14,7 +14,13 @@ import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
 import {GRAPHIC_GREEN_1} from '../variables';
 
-const optionalConfigObject = {
+type OptionalConfigObjectT = {
+  title: string;
+  color: string;
+  fallbackLabel: string;
+};
+
+const optionalConfigObject: OptionalConfigObjectT = {
   title: 'Fingerprint Login', // Android
   imageColor: GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
@@ -104,7 +110,7 @@ class App extends EventEmitter {
       });
     });
 
-    this.user = await this.loadUser(username);
+    this.user = this.loadUser(username);
   }
 
   async removeUser() {
