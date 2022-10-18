@@ -7,6 +7,8 @@ export * from './checkbox';
 export * from './container';
 export * from './copy-button';
 export * from './data-content';
+export * from './copy-button';
+export * from './data-content-splitted';
 export * from './data-view';
 export * from './icon';
 export * from './icon-button';

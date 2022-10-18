@@ -5,8 +5,7 @@ import {RootStackParamList} from '../types';
 
 import {TransactionSum} from '../components/transaction-sum';
 import {useApp} from '../contexts/app';
-import {generateUUID} from '../utils';
-import {splitAddress} from '../utils';
+import {generateUUID, splitAddress} from '../utils';
 
 export const TransactionSumScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
