@@ -7981,7 +7981,7 @@ react-native-aes-crypto@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.1.1.tgz#371100ad322195f2792e2b365923620599d8abc2"
   integrity sha512-huAt7k43myFiY0bPnvoaCP0oBjTMw4VsL2mjkmCPzzDA56Sm3ps5xXIejPo5Z9qfnei9iijHzATV8eRNMEPtbQ==
 
-react-native-ble-plx@2.0.3:
+react-native-ble-plx@2.0.3, react-native-ble-plx@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-native-ble-plx/-/react-native-ble-plx-2.0.3.tgz#b0a746f33389dbf7fd7b158513330d487d5d0fbb"
   integrity sha512-62LRDBPf/03K7sge+qq2ZuF8PWCGB782G+SBrpgNm5fA5Hs3FCY1ExTJZ1G0tB5ZhBPYEXcKRxPLuFegcDFrqA==

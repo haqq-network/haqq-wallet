@@ -81,6 +81,7 @@ PODS:
   - lottie-react-native (5.1.4):
     - lottie-ios (~> 3.4.0)
     - React-Core
+  - MultiplatformBleAdapter (0.1.9)
   - OpenSSL-Universal (1.1.1100)
   - QrCode (1.0.0):
     - React
@@ -312,6 +313,9 @@ PODS:
     - glog
   - react-native-aes (2.0.0):
     - React-Core
+  - react-native-ble-plx (2.0.3):
+    - MultiplatformBleAdapter (= 0.1.9)
+    - React-Core
   - react-native-blur (4.2.0):
     - React-Core
   - react-native-camera (4.2.1):
@@ -488,6 +492,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
+  - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
@@ -535,6 +540,7 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - libevent
+    - MultiplatformBleAdapter
     - OpenSSL-Universal
     - Sentry
     - SocketRocket
@@ -593,6 +599,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-aes:
     :path: "../node_modules/react-native-aes-crypto"
+  react-native-ble-plx:
+    :path: "../node_modules/react-native-ble-plx"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-camera:
@@ -680,6 +688,7 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 9ae750cdc7820fecbd3c2f0cfc493038208fcdc4
   lottie-react-native: b702fab740cdb952a8e2354713d3beda63ff97b0
+  MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   QrCode: 703276888a8e1e5a77606392f82ce758d895a450
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
@@ -698,6 +707,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 0553c9fe7218e1f127be070bd5a4d2fc19fb8190
   React-logger: cffcc09e8aba8a3014be8d18da7f922802e9f19e
   react-native-aes: c75c46aa744bef7c2415fdf7f5b2dcb75ca4364d
+  react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-blur: 3e9c8e8e9f7d17fa1b94e1a0ae9fd816675f5382
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
