@@ -60,10 +60,10 @@ Android Production App
 
 IOS Production App
 
-### ios certificates
+### ios test
 
 ```sh
-[bundle exec] fastlane ios certificates
+[bundle exec] fastlane ios test
 ```
 
 

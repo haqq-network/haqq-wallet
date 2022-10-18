@@ -1,7 +1,7 @@
 json_key_file "android/app/google-account.json"
 package_name("com.haqq.wallet")
 
-app_identifier(ENV["IOS_IDENTIFIER"])
+app_identifier(ENV["DEVELOPER_APP_IDENTIFIER"])
 
 itc_team_id(ENV["APP_STORE_CONNECT_TEAM_ID"])
 team_id(ENV["DEVELOPER_PORTAL_TEAM_ID"])
