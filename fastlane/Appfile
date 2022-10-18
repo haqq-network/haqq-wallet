@@ -3,5 +3,5 @@ package_name("com.haqq.wallet")
 
 app_identifier(ENV["IOS_IDENTIFIER"])
 
-itc_team_id(ENV["APP_STORE_CONNECT_TEAM_ID")
+itc_team_id(ENV["APP_STORE_CONNECT_TEAM_ID"])
 team_id(ENV["DEVELOPER_PORTAL_TEAM_ID"])
