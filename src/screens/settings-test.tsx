@@ -1,46 +1,19 @@
-import React, {useState} from 'react';
-import {Button, Container, Text} from '../components/ui';
-import {Dimensions, Image} from 'react-native';
-import {
-  CARD_CIRCLE_TOTAL,
-  CARD_DEFAULT_STYLE,
-  CARD_RHOMBUS_TOTAL,
-  GRAPHIC_RED_2,
-} from '../variables';
-import {PATTERNS_SOURCE} from '@env';
-import {WalletCardPattern} from '../types';
+import React, {useCallback, useEffect} from 'react';
+import {Container} from '../components/ui';
+import {Dimensions} from 'react-native';
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 
 const width = Dimensions.get('window').width - 60;
 
 export const SettingsTestScreen = () => {
-  const [pattern, setPattern] = useState(CARD_DEFAULT_STYLE);
+  const startScan = useCallback(() => {
+    TransportBLE.listen((...props) => {
+      console.log(...props);
+    });
+  }, []);
+  useEffect(() => {
+    startScan();
+  }, [startScan]);
 
-  return (
-    <Container>
-      <Button
-        title="Toggle"
-        onPress={() => {
-          setPattern((p: string) => {
-            if (p.startsWith(WalletCardPattern.circle)) {
-              return `${WalletCardPattern.rhombus}-${Math.floor(
-                Math.random() * CARD_RHOMBUS_TOTAL,
-              )}`;
-            }
-            return `${WalletCardPattern.circle}-${Math.floor(
-              Math.random() * CARD_CIRCLE_TOTAL,
-            )}`;
-          });
-        }}
-      />
-      <Text clean>{pattern}</Text>
-      <Image
-        style={{
-          width: width,
-          height: width * 0.632835821,
-          tintColor: GRAPHIC_RED_2,
-        }}
-        source={{uri: `${PATTERNS_SOURCE}${pattern}@3x.png`}}
-      />
-    </Container>
-  );
+  return <Container />;
 };
