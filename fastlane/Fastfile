@@ -163,22 +163,20 @@ platform :ios do
       api_key: api_key
     )
 
-    # update_code_signing_settings(
-    #   path: './ios/haqq.xcodeproj',
-    #   use_automatic_signing: false
-    # )
+    update_code_signing_settings(
+      path: './ios/haqq.xcodeproj',
+      use_automatic_signing: false,
+      code_sign_identity: 'iPhone Distribution',
+      team_id: ENV["DEVELOPER_PORTAL_TEAM_ID"],
+      profile_name: provisioningProfile,
+      bundle_identifier: app_identifier,
+    )
 
     gym(
       configuration: "Release",
       workspace: "ios/haqq.xcworkspace",
       scheme: "haqq",
       export_method: "app-store",
-      export_options: {
-        provisioningProfiles: {
-          developer_apple_id => provisioningProfile
-        },
-        signingStyle: "manual"
-      },
     )
 
     pilot(
