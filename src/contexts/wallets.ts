@@ -1,11 +1,16 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import ethers, {utils} from 'ethers';
+import {utils} from 'ethers';
 import {realm} from '../models';
 import {getDefaultNetwork} from '../network';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
-import {WalletCardPattern, WalletCardStyle} from '../types';
+import {
+  Mnemonic,
+  WalletCardPattern,
+  WalletCardStyle,
+  WalletType,
+} from '../types';
 import {
   generateFlatColors,
   generateGradientColors,
@@ -39,7 +44,21 @@ const defaultData = {
   colorTo: GRAPHIC_GREEN_3,
   colorPattern: GRAPHIC_GREEN_4,
   pattern: CARD_DEFAULT_STYLE,
+  type: WalletType.hot,
+  deviceId: undefined,
 };
+
+type AddWalletParams = {address: string} & (
+  | {
+      type: WalletType.hot;
+      privateKey: string;
+      mnemonic?: Mnemonic;
+    }
+  | {
+      type: WalletType.ledgerBt;
+      deviceId: string;
+    }
+);
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -118,27 +137,62 @@ class Wallets extends EventEmitter {
     this.emit('wallets');
   };
 
-  async addWalletFromMnemonic(mnemonic: string, name?: string) {
-    const provider = getDefaultNetwork();
-    const eWallet = EthersWallet.fromMnemonic(mnemonic).connect(provider);
-
-    return this.addWallet(eWallet, name);
+  addWalletFromLedger(
+    {address, deviceId}: {address: string; deviceId: string},
+    name?: string,
+  ): Promise<Wallet | null> {
+    return this.addWallet(
+      {
+        type: WalletType.ledgerBt,
+        deviceId: deviceId,
+        address,
+      },
+      name,
+    );
   }
 
-  async addWalletFromPrivateKey(privateKey: string, name = '') {
+  addWalletFromMnemonic(
+    mnemonic: string,
+    name?: string,
+  ): Promise<Wallet | null> {
     const provider = getDefaultNetwork();
-    const eWallet = new EthersWallet(privateKey, provider);
+    const wallet = EthersWallet.fromMnemonic(mnemonic).connect(provider);
 
-    return this.addWallet(eWallet, name);
+    return this.addWallet(
+      {
+        address: wallet.address,
+        type: WalletType.hot,
+        privateKey: wallet.privateKey,
+        mnemonic: wallet.mnemonic,
+      },
+      name,
+    );
   }
 
-  async addWallet(eWallet: ethers.Wallet, name = '') {
+  addWalletFromPrivateKey(
+    privateKey: string,
+    name = '',
+  ): Promise<Wallet | null> {
+    const provider = getDefaultNetwork();
+    const wallet = new EthersWallet(privateKey, provider);
+
+    return this.addWallet(
+      {
+        address: wallet.address,
+        type: WalletType.hot,
+        privateKey: wallet.privateKey,
+      },
+      name,
+    );
+  }
+
+  async addWallet(walletParams: AddWalletParams, name = '') {
     const password = await app.getPassword();
+    let data = '';
 
-    const data = await encrypt(password, {
-      privateKey: eWallet.privateKey,
-      mnemonic: eWallet.mnemonic,
-    });
+    if (walletParams.type === WalletType.hot) {
+      data = await encrypt(password, walletParams);
+    }
 
     const cardStyle = cards[
       this._wallets.size % cards.length
@@ -176,14 +230,22 @@ class Wallets extends EventEmitter {
       result = realm.create<WalletRealm>('Wallet', {
         ...defaultData,
         data: data,
-        address: eWallet.address,
-        mnemonicSaved: !eWallet.mnemonic,
+        address: walletParams.address,
+        mnemonicSaved: !(
+          walletParams.type === WalletType.hot &&
+          walletParams.mnemonic !== undefined
+        ),
         name: name ?? defaultData.name,
         pattern,
         cardStyle,
         colorFrom: colors[0],
         colorTo: colors[1],
         colorPattern: colors[2],
+        type: walletParams.type,
+        deviceId:
+          walletParams.type === WalletType.ledgerBt
+            ? walletParams.deviceId
+            : undefined,
       });
     });
 

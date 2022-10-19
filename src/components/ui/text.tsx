@@ -1,4 +1,10 @@
-import {StyleSheet, Text as RNText, StyleProp, TextStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text as RNText,
+  TextProps,
+  TextStyle,
+} from 'react-native';
 import * as React from 'react';
 import {TEXT_BASE_1} from '../../variables';
 
@@ -26,6 +32,7 @@ interface TxtT {
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
   style?: StyleProp<TextStyle>;
   children: React.ReactNode;
+  onPress?: TextProps['onPress'];
 }
 
 export const Text = ({
@@ -52,12 +59,13 @@ export const Text = ({
   ellipsizeMode,
   numberOfLines,
   clean,
+  onPress,
   ...props
 }: TxtT) => {
   return (
     <>
       {clean ? (
-        <RNText style={style} allowFontScaling={false}>
+        <RNText style={style} allowFontScaling={false} onPress={onPress}>
           {children}
         </RNText>
       ) : (
@@ -65,6 +73,7 @@ export const Text = ({
           allowFontScaling={false}
           numberOfLines={numberOfLines}
           ellipsizeMode={ellipsizeMode}
+          onPress={onPress}
           style={[
             t0 && StyleSheet.flatten([page.t0Style, style]),
             t1 && StyleSheet.flatten([page.t1Style, style]),

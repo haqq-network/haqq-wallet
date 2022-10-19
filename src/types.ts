@@ -158,8 +158,17 @@ export type RootStackParamList = {
   ledgerBluetooth: {
     nextScreen: NextScreenT;
   };
+  ledgerScan: {
+    nextScreen: NextScreenT;
+  };
+  ledgerDevice: {
+    nextScreen: NextScreenT;
+  };
   ledgerFinish: {
     hide?: boolean;
+  };
+  ledgerVerify: {
+    address: boolean;
   };
 };
 
@@ -200,6 +209,11 @@ export enum WalletCardStyle {
   defaultViolet = 'defaultViolet',
   flat = 'flat',
   gradient = 'gradient',
+}
+
+export enum WalletType {
+  hot = 'hot',
+  ledgerBt = 'ledger-bt',
 }
 
 export enum WalletCardPattern {

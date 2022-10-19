@@ -29,6 +29,9 @@ export const LedgerBluetoothScreen = () => {
 
   useEffect(() => {
     switch (btState) {
+      case State.PoweredOn:
+        navigation.navigate(route.params.nextScreen ?? 'ledgerScan');
+        break;
       default:
         console.log('btState', btState);
     }
@@ -42,10 +45,6 @@ export const LedgerBluetoothScreen = () => {
     await ledger.init();
     setBtState(ledger.state);
   }, [ledger, user]);
-
-  const onDone = useCallback(() => {
-    navigation.navigate(route.params.nextScreen ?? 'LedgerRestoreWallet');
-  }, [navigation, route.params.nextScreen]);
 
   return (
     <>

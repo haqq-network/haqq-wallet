@@ -6,7 +6,7 @@ import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork} from '../network';
 import {Deferrable} from '@ethersproject/properties';
-import {Mnemonic, WalletCardStyle} from '../types';
+import {Mnemonic, WalletCardStyle, WalletType} from '../types';
 import {captureException} from '../helpers';
 
 export class WalletRealm extends Realm.Object {
@@ -20,6 +20,8 @@ export class WalletRealm extends Realm.Object {
   colorPattern!: string;
   pattern!: string;
   isHidden!: boolean;
+  type!: WalletType;
+  deviceId: string | undefined;
 
   static schema = {
     name: 'Wallet',
@@ -34,6 +36,8 @@ export class WalletRealm extends Realm.Object {
       colorTo: 'string',
       colorPattern: 'string',
       pattern: 'string',
+      type: 'string',
+      deviceId: 'string?',
     },
     primaryKey: 'address',
   };
@@ -95,6 +99,10 @@ export class Wallet extends EventEmitter {
 
   get name() {
     return this._raw.name;
+  }
+
+  get type() {
+    return this._raw.type;
   }
 
   set name(value) {
