@@ -16,7 +16,7 @@ import {GRAPHIC_GREEN_1} from '../variables';
 
 type OptionalConfigObjectT = {
   title: string;
-  color: string;
+  imageColor: string;
   fallbackLabel: string;
 };
 
