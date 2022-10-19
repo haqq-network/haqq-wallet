@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {NavigationProp} from '@react-navigation/core/src/types';
-import {Dimensions, Platform, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import {useWallet} from '../contexts/wallets';
@@ -108,7 +108,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       </Text>
       <View style={page.buttonsContainer}>
         <View style={page.button}>
-          {isIOS && <BlurView key="sent" cardState={cardState} />}
+          {isIOS && <BlurView action="sent" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressSend}>
             <ArrowSend color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
@@ -117,7 +117,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           </IconButton>
         </View>
         <View style={page.button}>
-          {isIOS && <BlurView key="receive" cardState={cardState} />}
+          {isIOS && <BlurView action="receive" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressQR}>
             <ArrowReceive color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
