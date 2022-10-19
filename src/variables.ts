@@ -123,3 +123,5 @@ export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
   [BiometryType.fingerprint]: 'Fingerprint',
   [BiometryType.unknown]: '',
 };
+
+export const DEFAULT_USERNAME = 'username';

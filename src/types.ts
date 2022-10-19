@@ -39,6 +39,7 @@ export type RootStackParamList = {
   signup: {next: string};
   setPin: undefined;
   restore: undefined;
+  ledger: undefined;
   restorePhrase: {
     nextScreen: keyof RootStackParamList;
   };
@@ -150,6 +151,15 @@ export type RootStackParamList = {
   };
   transactionAddress: {
     from: string;
+  };
+  ledgerAgreement: {
+    nextScreen: NextScreenT;
+  };
+  ledgerBluetooth: {
+    nextScreen: NextScreenT;
+  };
+  ledgerFinish: {
+    hide?: boolean;
   };
 };
 

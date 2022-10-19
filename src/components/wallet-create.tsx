@@ -5,11 +5,11 @@ import {NavigationProp} from '@react-navigation/core';
 import {Button, ButtonVariant, Text} from './ui';
 import {
   BG_1,
-  GRAPHIC_SECOND_7,
   GRAPHIC_SECOND_1,
+  GRAPHIC_SECOND_7,
   MAGIC_CARD_HEIGHT,
-  TEXT_GREEN_1,
   TEXT_BASE_2,
+  TEXT_GREEN_1,
 } from '../variables';
 import {RootStackParamList} from '../types';
 
@@ -33,13 +33,23 @@ export const WalletCreate = ({}: BalanceProps) => {
         }}
         style={page.create}
       />
-      <Button
-        title="Import an existing one"
-        style={page.create}
-        onPress={() => {
-          navigation.navigate('restore');
-        }}
-      />
+      <View style={page.buttons}>
+        <Button
+          variant={ButtonVariant.second}
+          title="Connect"
+          style={page.create}
+          onPress={() => {
+            navigation.navigate('ledger');
+          }}
+        />
+        <Button
+          title="Import"
+          style={page.create}
+          onPress={() => {
+            navigation.navigate('restore');
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -78,10 +88,15 @@ const page = StyleSheet.create({
     color: TEXT_BASE_2,
   },
   create: {
-    marginBottom: 4,
+    flex: 1,
     paddingHorizontal: 8,
     paddingVertical: 12,
     fontSize: 16,
     lineHeight: 22,
+  },
+  buttons: {
+    alignSelf: 'center',
+    marginTop: 4,
+    flexDirection: 'row',
   },
 });

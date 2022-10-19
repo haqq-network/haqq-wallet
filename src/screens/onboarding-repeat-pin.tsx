@@ -37,21 +37,18 @@ export const OnboardingRepeatPinScreen = () => {
       if (pin === currentPin) {
         const {nextScreen, ...params} = route.params;
 
-        app
-          .setPin(pin)
-          .then(() => app.createUser())
-          .then(() => {
-            if (app.biometryType !== null) {
-              navigation.navigate('onboardingBiometry', {
-                ...params,
-                biometryType: app.biometryType,
-              });
-            } else {
-              navigation.navigate(nextScreen ?? 'signupStoreWallet', {
-                ...params,
-              });
-            }
-          });
+        app.setPin(pin).then(() => {
+          if (app.biometryType !== null) {
+            navigation.navigate('onboardingBiometry', {
+              ...params,
+              biometryType: app.biometryType,
+            });
+          } else {
+            navigation.navigate(nextScreen ?? 'signupStoreWallet', {
+              ...params,
+            });
+          }
+        });
       } else {
         setError('Invalid code. Try again');
         setPin('');

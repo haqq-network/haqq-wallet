@@ -6,13 +6,14 @@ import Keychain, {
   STORAGE_TYPE,
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
-import {createContext, useContext} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {realm} from '../models';
 import {Language, User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
 import {GRAPHIC_GREEN_1} from '../variables';
+import {generateUUID} from '../utils';
 
 type OptionalConfigObjectT = {
   title: string;
@@ -39,7 +40,7 @@ function getAppStatus() {
 }
 
 class App extends EventEmitter {
-  private user: User | undefined;
+  private user: User;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
@@ -59,14 +60,18 @@ class App extends EventEmitter {
         this._biometryType = null;
       });
 
-    this.user = this.loadUser('username');
+    this.user = this.loadUser();
   }
 
   async init(): Promise<void> {
-    if (!this.user?.isLoaded) {
+    console.log('init 1');
+    try {
+      await this.getPassword();
+    } catch (e) {
+      console.log(e);
       return Promise.reject('user_not_found');
     }
-
+    console.log('init 2');
     await this.auth();
 
     this.authenticated = true;
@@ -80,60 +85,43 @@ class App extends EventEmitter {
 
   async getPassword() {
     const creds = await getGenericPassword();
-
-    if (!creds || !creds.password) {
+    if (!creds || !creds.password || creds.username !== this.user.uuid) {
       return Promise.reject();
     }
 
     return creds.password;
   }
 
-  loadUser(username: string = 'username'): User {
+  loadUser(): User {
     const users = realm.objects<UserType>('User');
-    const filtered = users.filtered(`username = '${username}'`);
 
-    return new User(filtered[0]);
+    if (!users.length) {
+      realm.write(() => {
+        realm.create('User', {
+          username: generateUUID(),
+          biometry: false,
+          bluetooth: false,
+          language: 'en',
+        });
+      });
+    }
+    console.log('users[0]', users[0]);
+    return new User(users[0]);
   }
 
   async clean() {
     await resetGenericPassword();
-    await this.removeUser();
-  }
-
-  async createUser(username: string = 'username') {
-    realm.write(() => {
-      realm.create('User', {
-        username,
-        pin: '',
-        biometry: false,
-        language: 'en',
-      });
-    });
-
-    this.user = this.loadUser(username);
-  }
-
-  async removeUser() {
-    this.user = undefined;
-
-    const users = realm.objects<User>('User');
-
-    for (const user of users) {
-      realm.write(() => {
-        realm.delete(user);
-      });
-    }
   }
 
   async setPin(password: string) {
-    await setGenericPassword('username', password, {
+    await setGenericPassword(this.user.uuid, password, {
       storage: STORAGE_TYPE.AES,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
   }
 
   async updatePin(pin: string) {
-    await setGenericPassword('username', pin, {
+    await setGenericPassword(this.user.uuid, pin, {
       storage: STORAGE_TYPE.AES,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
@@ -169,6 +157,16 @@ class App extends EventEmitter {
   set language(value) {
     if (this.user) {
       this.user.language = value;
+    }
+  }
+
+  get bluetooth() {
+    return this.user?.bluetooth || false;
+  }
+
+  set bluetooth(value) {
+    if (this.user) {
+      this.user.bluetooth = value;
     }
   }
 
@@ -235,6 +233,10 @@ class App extends EventEmitter {
     return this.user?.failureEnter();
   }
 
+  getUser() {
+    return this.user;
+  }
+
   async onAppStatusChanged() {
     const appStatus = getAppStatus();
     if (this.appStatus !== appStatus) {
@@ -267,4 +269,23 @@ export function useApp() {
   const context = useContext(AppContext);
 
   return context;
+}
+
+export function useUser() {
+  const user = app.getUser();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setDate] = useState(new Date());
+  useEffect(() => {
+    const subscription = () => {
+      setDate(new Date());
+    };
+
+    user.on('change', subscription);
+
+    return () => {
+      user.removeListener('change', subscription);
+    };
+  }, [user]);
+
+  return user;
 }

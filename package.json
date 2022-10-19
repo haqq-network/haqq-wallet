@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.6.0",
+    "@ledgerhq/hw-app-eth": "^6.29.9",
     "@ledgerhq/react-native-hw-transport-ble": "^6.27.8",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/async-storage": "1.12.1",
@@ -64,6 +65,7 @@
     "react-native-touch-id": "^4.4.1",
     "readable-stream": "^4.1.0",
     "realm": "11.0.0-rc.2",
+    "rxjs": "^7.5.7",
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",
     "vm-browserify": "0.0.4"
