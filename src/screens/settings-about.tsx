@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   ArrowForwardIcon,
-  Container,
   DiscordIcon,
   DocIcon,
   GlobalIcon,
@@ -20,11 +20,11 @@ import {
   TEXT_BASE_2,
 } from '../variables';
 
-import {openURL} from '../helpers';
-
-const windowWidth = Dimensions.get('window').width;
+import {openURL, ratio, windowWidth} from '../helpers';
 
 export const SettingsAboutScreen = () => {
+  const insets = useSafeAreaInsets();
+
   const onPressRate = useCallback(() => {
     const url = 'https://example.com';
     openURL(url);
@@ -46,7 +46,11 @@ export const SettingsAboutScreen = () => {
   }, []);
 
   return (
-    <Container>
+    <ScrollView
+      style={[
+        page.container,
+        {paddingTop: insets.top - 50, paddingBottom: insets.bottom},
+      ]}>
       <Spacer>
         <LottieWrap
           style={page.imageStyle}
@@ -105,11 +109,15 @@ export const SettingsAboutScreen = () => {
       <Text t11 style={page.terms}>
         ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
       </Text>
-    </Container>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
   title: {
     marginBottom: 8,
     color: TEXT_BASE_2,
@@ -134,9 +142,8 @@ const page = StyleSheet.create({
     marginBottom: 10,
   },
   imageStyle: {
-    position: 'absolute',
-    top: -20,
-    width: windowWidth - 40,
-    height: windowWidth - 40,
+    width: windowWidth,
+    height: 362 * ratio,
+    alignSelf: 'center',
   },
 });
