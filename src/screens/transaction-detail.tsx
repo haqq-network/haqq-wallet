@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {NETWORK_EXPLORER} from '@env';
 import {format} from 'date-fns';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -12,6 +12,7 @@ import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
   DataContent,
+  DataContentSplitted,
   IconButton,
   ISLMIcon,
   Text,
@@ -25,6 +26,8 @@ import {
   TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
+import {splitAddress} from '../utils';
+import {openURL} from '../helpers';
 
 export const TransactionDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -35,6 +38,10 @@ export const TransactionDetailScreen = () => {
     transactions.getTransaction(route.params.hash),
   );
 
+  const isSent = transaction?.source === TransactionSource.send;
+  const to = isSent ? transaction.to : ' ';
+  const from = transaction?.from ? transaction.from : ' ';
+
   useEffect(() => {
     setTransaction(transactions.getTransaction(route.params.hash));
   }, [route.params.hash, transactions]);
@@ -42,13 +49,17 @@ export const TransactionDetailScreen = () => {
   const onPressInfo = useCallback(async () => {
     try {
       const url = `${NETWORK_EXPLORER}tx/${transaction?.hash}/internal-transactions`;
-      await Linking.canOpenURL(url);
-      await Linking.openURL(url);
+      await openURL(url);
     } catch (_e) {}
   }, [transaction?.hash]);
 
-  const title =
-    transaction?.source === TransactionSource.send ? 'Sent' : 'Receive';
+  const title = isSent ? 'Sent' : 'Receive';
+  const titleAddress = isSent ? 'Send to' : 'Received from';
+
+  const splitted = useMemo(
+    () => (isSent ? splitAddress(to) : splitAddress(from)),
+    [from, isSent, to],
+  );
 
   if (!transaction) {
     return null;
@@ -59,14 +70,7 @@ export const TransactionDetailScreen = () => {
       <Text t14 style={page.amount}>
         Total amount
       </Text>
-      <Text
-        t6
-        style={[
-          page.sum,
-          transaction.source === TransactionSource.send
-            ? page.sumSent
-            : page.sumReceive,
-        ]}>
+      <Text t6 style={[page.sum, isSent ? page.sumSent : page.sumReceive]}>
         {transaction.totalFormatted} ISLM
       </Text>
       {/*<Text t14 style={page.subSum}>*/}
@@ -79,31 +83,34 @@ export const TransactionDetailScreen = () => {
           reversed
           style={page.info}
         />
-        {transaction?.source === TransactionSource.send ? (
-          <DataContent
-            title={transaction.to}
-            subtitle="Send to"
-            reversed
+        {isSent ? (
+          <DataContentSplitted
+            to={splitted}
+            title={titleAddress}
             style={page.info}
+            reversed
           />
         ) : (
-          <DataContent
-            title={transaction.from}
-            subtitle="Received from"
-            reversed
+          <DataContentSplitted
+            to={splitted}
+            title={titleAddress}
             style={page.info}
+            reversed
           />
         )}
         <DataContent
           title={
             <>
-              <ISLMIcon
-                width={16}
-                height={16}
-                color={GRAPHIC_GREEN_1}
-                style={page.icon}
-              />
+              <View style={page.iconView}>
+                <ISLMIcon
+                  width={16}
+                  height={16}
+                  color={GRAPHIC_GREEN_1}
+                  style={page.icon}
+                />
+              </View>
               <Text t11>
+                {' '}
                 Islamic coin{' '}
                 <Text clean style={page.subInfo}>
                   (ISLM)
@@ -173,8 +180,9 @@ const page = StyleSheet.create({
   info: {
     marginVertical: 8,
   },
-  amount: {marginBottom: 2, text: TEXT_BASE_2},
-  icon: {marginRight: 4, width: 16, height: 16},
+  amount: {marginBottom: 2, color: TEXT_BASE_2},
+  icon: {marginRight: 4, marginTop: 4, width: 16, height: 16},
+  iconView: {marginTop: -1.7},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
   subInfo: {color: TEXT_BASE_2},
