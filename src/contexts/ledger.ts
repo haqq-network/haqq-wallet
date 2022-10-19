@@ -127,6 +127,14 @@ class Ledger extends EventEmitter {
 
     return address;
   }
+
+  async signTransaction(deviceId: string) {
+    const transport = await TransportBLE.open(deviceId);
+
+    const eth = new AppEth(transport);
+
+    const resp = await eth.getAddress(path, validate);
+  }
 }
 
 export const ledger = new Ledger();

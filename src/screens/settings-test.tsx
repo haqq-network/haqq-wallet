@@ -1,10 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 // import {BleManager} from 'react-native-ble-plx';
-import {Button, Container} from '../components/ui';
+import {Button, Container, Spacer, Text} from '../components/ui';
 // import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {FlatList, PermissionsAndroid, Platform} from 'react-native';
-import {Observable} from 'rxjs';
-import AppEth from '@ledgerhq/hw-app-eth';
+import {EthNetwork} from '../services/eth-network';
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
+import {useWallet} from '../contexts/wallets';
+import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
+import {getDefaultNetwork} from '../network';
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
@@ -13,101 +15,50 @@ if (typeof Buffer === 'undefined') {
 // const bleManager = new BleManager();
 const path = "44'/60'/0'/0/0";
 export const SettingsTestScreen = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [devices, setDeices] = useState([]);
-  const [transport, setTransport] = useState(null);
-  const [address, setAddress] = useState('');
-  const sub = useRef();
-  // const startScan = useCallback(async () => {
-  //   setRefreshing(true);
-  //   sub.current = new Observable(TransportBLE.listen).subscribe({
-  //     complete: () => {
-  //       setRefreshing(false);
-  //     },
-  //     next: e => {
-  //       if (e.type === 'add') {
-  //         const d = e.descriptor;
-  //         setDeices(devicesList =>
-  //           devicesList.some(dev => dev.id === d.id)
-  //             ? devicesList
-  //             : devicesList.concat(d),
-  //         );
-  //       }
-  //     },
-  //     error: error => {
-  //       console.log('error', error);
-  //     },
-  //   });
-  // }, []);
-  //
-  // const reload = useCallback(
-  //   props => {
-  //     if (sub.current) {
-  //       sub.current.unsubscribe();
-  //       setDeices([]);
-  //       setRefreshing(false);
-  //     }
-  //     startScan();
-  //   },
-  //   [startScan],
-  // );
-  //
-  // useEffect(() => {
-  //   Promise.resolve()
-  //     .then(async () => {
-  //       if (Platform.OS === 'android') {
-  //         await PermissionsAndroid.request(
-  //           PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-  //         );
-  //       }
-  //     })
-  //     .then(() => {
-  //       let previousAvailable = false;
-  //       new Observable(TransportBLE.observeState).subscribe(e => {
-  //         if (e.available !== previousAvailable) {
-  //           previousAvailable = e.available;
-  //           if (e.available) {
-  //             reload();
-  //           }
-  //         }
-  //       });
-  //     })
-  //     .then(() => startScan());
-  // }, [reload, startScan]);
-  //
-  // const onPress = useCallback(async device => {
-  //   console.log('onPress', device);
-  //   const transport = await TransportBLE.open(device);
-  //   transport.on('disconnect', () => {
-  //     // Intentionally for the sake of simplicity we use a transport local state
-  //     // and remove it on disconnect.
-  //     // A better way is to pass in the device.id and handle the connection internally.
-  //     setTransport(null);
-  //   });
-  //   console.log('transport', transport);
-  //   setTransport(transport);
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (transport) {
-  //     Promise.resolve(new AppEth(transport))
-  //       .then(eth => eth.getAddress(path, false))
-  //       .then(({address}) => {
-  //         console.log('address', address);
-  //         setAddress(address);
-  //       });
-  //   }
-  // }, [transport]);
+  const [resp, setResp] = useState('');
+  const wallet = useWallet('0x866e2B80Cc5b887C571f98199C1beCa15FF82084');
+
+  const to = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
+  const from = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
+  const amount = '0.01';
+
+  const onPress = async () => {
+    try {
+      const {transaction, unsignedTx} = await EthNetwork.populateTransaction(
+        from,
+        to,
+        amount,
+      );
+      console.log('transaction', transaction);
+      console.log('unsignedTx', unsignedTx);
+      const transport = await TransportBLE.open(wallet?.deviceId);
+      const eth = new AppEth(transport);
+      const resolution = await ledgerService.resolveTransaction(unsignedTx);
+      console.log('resolution', resolution);
+
+      const signature = await eth.signTransaction(path, unsignedTx, resolution);
+      console.log('signature', signature);
+      let signedTx = EthNetwork.serializeTransaction(
+        from,
+        transaction,
+        signature,
+      );
+      console.log('signedTx', signedTx);
+      const response = await getDefaultNetwork().sendTransaction(signedTx);
+      setResp(JSON.stringify(response));
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+      console.log(e.message);
+      console.log(e.stack);
+    }
+  };
 
   return (
     <Container>
-      <FlatList
-        refreshing={refreshing}
-        data={devices}
-        renderItem={({item}) => (
-          <Button title={item.name} onPress={() => onPress(item)} />
-        )}
-      />
+      <Text>{resp}</Text>
+      <Spacer />
+      <Button title="Send" onPress={onPress} />
     </Container>
   );
 };

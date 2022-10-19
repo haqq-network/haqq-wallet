@@ -53,7 +53,7 @@ export const TransactionSum = ({
     const newBalance = await wallets.getBalance(from);
     setBalance(newBalance);
 
-    const fee = await transactions.estimateTransaction(from, to, newBalance);
+    const {fee} = await transactions.estimateTransaction(from, to, newBalance);
     setMaxSum(newBalance - fee * 2);
   }, [from, to, transactions, wallets]);
 

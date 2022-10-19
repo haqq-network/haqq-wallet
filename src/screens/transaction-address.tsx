@@ -7,6 +7,7 @@ import {TransactionAddress} from '../components/transaction-address';
 export const TransactionAddressScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'transactionAddress'>>();
+  console.log(route.params);
   const onDone = useCallback(
     (address: string) => {
       navigation.navigate('transactionSum', {

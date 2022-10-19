@@ -66,7 +66,7 @@ export const TransactionConfirmationScreen = () => {
   useEffect(() => {
     transactions
       .estimateTransaction(from, to, amount)
-      .then(result => setEstimateFee(result));
+      .then(result => setEstimateFee(result.fee));
   }, [from, to, amount, transactions]);
 
   return (

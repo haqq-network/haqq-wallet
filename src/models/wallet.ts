@@ -54,6 +54,9 @@ export class Wallet extends EventEmitter {
     super();
 
     this._raw = data;
+
+    console.log(this._raw.toJSON());
+
     this._encrypted = data.data !== '';
 
     const interval = setInterval(this.checkBalance, 6000);
@@ -73,14 +76,16 @@ export class Wallet extends EventEmitter {
 
   setWallet(wallet: ethers.Wallet) {
     this._wallet = wallet;
+    console.log('setWallet', this.address, this._wallet);
   }
 
   async decrypt(password: string, provider: Provider) {
     try {
+      console.log('decrypt', this._encrypted);
       if (this._encrypted) {
         const decrypted = await decrypt(password, this._raw.data);
         const tmp = new EthersWallet(decrypted.privateKey, provider);
-
+        console.log('decrypted', decrypted, tmp);
         this.setWallet(tmp);
         this._encrypted = false;
 
@@ -89,6 +94,7 @@ export class Wallet extends EventEmitter {
         }
       }
     } catch (e) {
+      console.log('decrypt error', e);
       captureException(e);
     }
   }
@@ -180,6 +186,10 @@ export class Wallet extends EventEmitter {
     return this._encrypted;
   }
 
+  get deviceId() {
+    return this._raw.deviceId;
+  }
+
   checkBalance = () => {
     getDefaultNetwork()
       .getBalance(this.address)
@@ -207,11 +217,14 @@ export class Wallet extends EventEmitter {
 
   connect(provider: Provider) {
     if (this._wallet) {
-      this._wallet = this._wallet.connect(provider);
+      this.setWallet(this._wallet.connect(provider));
+      console.log('connect', this._wallet);
     }
   }
 
   async sendTransaction(transaction: Deferrable<TransactionRequest>) {
+    console.log('sendTransaction', this.address, this._wallet);
+
     if (this._wallet) {
       return this._wallet.sendTransaction(transaction);
     }

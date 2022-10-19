@@ -343,11 +343,11 @@ export function useWallets() {
 export function useWallet(address: string) {
   // eslint-disable-next-line  @typescript-eslint/no-unused-vars
   const [_date, setDate] = useState(new Date());
-
-  const wallet = wallets.getWallet(address);
+  const [wallet, setWallet] = useState(wallets.getWallet(address));
 
   useEffect(() => {
     setDate(new Date());
+    setWallet(wallets.getWallet(address));
   }, [address]);
 
   useEffect(() => {

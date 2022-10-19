@@ -11,6 +11,7 @@ import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
 import {Wallet} from '../models/wallet';
 import {NETWORK_EXPLORER} from '@env';
+import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -131,7 +132,15 @@ class Transactions extends EventEmitter {
     return transaction;
   }
 
-  async estimateTransaction(from: string, to: string, amount: number) {
+  async estimateTransaction(
+    from: string,
+    to: string,
+    amount: number,
+  ): Promise<{
+    fee: number;
+    feeData: FeeData;
+    estimateGas: BigNumberish;
+  }> {
     const result = await Promise.all([
       getDefaultNetwork().getFeeData(),
       getDefaultNetwork().estimateGas({
@@ -141,7 +150,11 @@ class Transactions extends EventEmitter {
       } as Deferrable<TransactionRequest>),
     ]);
 
-    return calcFee(result[0].maxFeePerGas!, result[1]);
+    return {
+      fee: calcFee(result[0].maxFeePerGas!, result[1]),
+      feeData: result[0],
+      estimateGas: result[1],
+    };
   }
 
   async loadTransactionsFromExplorer(address: string) {
