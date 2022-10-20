@@ -9,7 +9,7 @@ import {WalletType} from '../types';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact],
-  schemaVersion: 20,
+  schemaVersion: 21,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');

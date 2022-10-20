@@ -1,85 +1,14 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
-import {
-  Button,
-  ButtonVariant,
-  LottieWrap,
-  PopupContainer,
-  Text,
-} from '../components/ui';
-import {TEXT_BASE_2} from '../variables';
-
-const anim = require('../../assets/animations/ledger-agreement.json');
+import {LedgerAgreement} from '../components/ledger-agreement';
 
 export const LedgerAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ledgerAgreement'>>();
   const onDone = useCallback(() => {
-    navigation.navigate(route.params.nextScreen ?? 'LedgerRestoreWallet');
-  }, [navigation, route.params.nextScreen]);
+    navigation.navigate('ledgerBluetooth');
+  }, [navigation]);
 
-  return (
-    <>
-      <View style={page.animation}>
-        {/*<LottieWrap source={anim} style={page.image} autoPlay loop />*/}
-      </View>
-      <PopupContainer style={page.container}>
-        <Text t4 style={page.title}>
-          Connect your Ledger
-        </Text>
-        <Text t11 style={page.disclaimer}>
-          If you have a Ledger Nano X, then you can connect it via Bluetooth to
-          Islm Wallet. You will be able to manage funds from Ledger using Islm
-          Wallet
-        </Text>
-        <Button
-          style={page.submit}
-          variant={ButtonVariant.contained}
-          title="Connect"
-          onPress={onDone}
-        />
-        <Text t11 style={page.agreement}>
-          By clicking Connect you agree to the Terms of Service and Privacy
-          Policy
-        </Text>
-      </PopupContainer>
-    </>
-  );
+  return <LedgerAgreement onDone={onDone} />;
 };
-
-const page = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-end',
-  },
-  animation: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 200,
-    top: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    marginBottom: 4,
-    marginHorizontal: 20,
-    textAlign: 'center',
-  },
-  disclaimer: {
-    marginBottom: 84,
-    textAlign: 'center',
-    color: TEXT_BASE_2,
-    marginHorizontal: 20,
-  },
-  submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {
-    textAlign: 'center',
-    marginHorizontal: 20,
-    marginBottom: 16,
-    color: TEXT_BASE_2,
-  },
-  image: {height: 310},
-});

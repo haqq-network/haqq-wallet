@@ -46,6 +46,7 @@ const defaultData = {
   pattern: CARD_DEFAULT_STYLE,
   type: WalletType.hot,
   deviceId: undefined,
+  deviceName: undefined,
 };
 
 type AddWalletParams = {address: string} & (
@@ -57,6 +58,7 @@ type AddWalletParams = {address: string} & (
   | {
       type: WalletType.ledgerBt;
       deviceId: string;
+      deviceName: string;
     }
 );
 
@@ -93,7 +95,7 @@ class Wallets extends EventEmitter {
     await Promise.all(
       Array.from(this._wallets.values())
         .filter(w => w.isEncrypted)
-        .map(w => w.decrypt(password, provider)),
+        .map(w => w.decrypt(password)),
     );
 
     Promise.all(
@@ -138,13 +140,18 @@ class Wallets extends EventEmitter {
   };
 
   addWalletFromLedger(
-    {address, deviceId}: {address: string; deviceId: string},
+    {
+      address,
+      deviceId,
+      deviceName,
+    }: {address: string; deviceId: string; deviceName: string},
     name?: string,
   ): Promise<Wallet | null> {
     return this.addWallet(
       {
         type: WalletType.ledgerBt,
-        deviceId: deviceId,
+        deviceId,
+        deviceName,
         address,
       },
       name,
@@ -246,6 +253,10 @@ class Wallets extends EventEmitter {
           walletParams.type === WalletType.ledgerBt
             ? walletParams.deviceId
             : undefined,
+        deviceName:
+          walletParams.type === WalletType.ledgerBt
+            ? walletParams.deviceName
+            : undefined,
       });
     });
 
@@ -253,8 +264,7 @@ class Wallets extends EventEmitter {
       const wallet = new Wallet(result);
 
       if (wallet.isEncrypted) {
-        const provider = getDefaultNetwork();
-        await wallet.decrypt(password, provider);
+        await wallet.decrypt(password);
       }
       this.attachWallet(wallet);
       this.onChangeWallet();

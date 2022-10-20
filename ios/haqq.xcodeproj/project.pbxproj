@@ -68,6 +68,9 @@
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
+		343BC0BFD3604AAB9E3FDAFC /* ledger-bluetooth.png in Resources */ = {isa = PBXBuildFile; fileRef = 5ED83A62B10C4976971C5069 /* ledger-bluetooth.png */; };
+		6E0C4BF53D174D4B9F7F2A6E /* ledger-bluetooth@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B1639D629584DD3B3902126 /* ledger-bluetooth@2x.png */; };
+		76288BC07E5B408FB379E963 /* ledger-bluetooth@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F6383D6A19BD4086A9DE96A9 /* ledger-bluetooth@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +155,9 @@
 		F2E08D5961284A3EBD30EC37 /* face-id@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "face-id@2x.png"; path = "../assets/images/face-id@2x.png"; sourceTree = "<group>"; };
 		F93BCCB0D3F149019A1CF700 /* mnemonic-warning@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-warning@2x.png"; path = "../assets/images/mnemonic-warning@2x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
+		5ED83A62B10C4976971C5069 /* ledger-bluetooth.png */ = {isa = PBXFileReference; name = "ledger-bluetooth.png"; path = "../assets/images/ledger-bluetooth.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4B1639D629584DD3B3902126 /* ledger-bluetooth@2x.png */ = {isa = PBXFileReference; name = "ledger-bluetooth@2x.png"; path = "../assets/images/ledger-bluetooth@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F6383D6A19BD4086A9DE96A9 /* ledger-bluetooth@3x.png */ = {isa = PBXFileReference; name = "ledger-bluetooth@3x.png"; path = "../assets/images/ledger-bluetooth@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -339,6 +345,9 @@
 				32498C55D7F34FD7BC90FB54 /* card-rhombus-0.png */,
 				141D6D9C95B647F28092002E /* card-rhombus-0@2x.png */,
 				EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */,
+				5ED83A62B10C4976971C5069 /* ledger-bluetooth.png */,
+				4B1639D629584DD3B3902126 /* ledger-bluetooth@2x.png */,
+				F6383D6A19BD4086A9DE96A9 /* ledger-bluetooth@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -496,6 +505,9 @@
 				369DAA3E3885440093BED988 /* card-rhombus-0.png in Resources */,
 				86D8C9D9E74F4281B3C593BF /* card-rhombus-0@2x.png in Resources */,
 				8D5CA368492A4FB1815C21A8 /* card-rhombus-0@3x.png in Resources */,
+				343BC0BFD3604AAB9E3FDAFC /* ledger-bluetooth.png in Resources */,
+				6E0C4BF53D174D4B9F7F2A6E /* ledger-bluetooth@2x.png in Resources */,
+				76288BC07E5B408FB379E963 /* ledger-bluetooth@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

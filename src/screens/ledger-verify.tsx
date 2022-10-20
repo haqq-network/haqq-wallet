@@ -1,43 +1,30 @@
-import React, {useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useCallback, useContext} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
-import {PopupContainer, Text} from '../components/ui';
-import {useLedger} from '../contexts/ledger';
 import {useWallets} from '../contexts/wallets';
+import {LedgerVerify} from '../components/ledger-verify';
+import {LedgerContext} from '../contexts/ledger';
 
 export const LedgerVerifyScreen = () => {
-  const ledger = useLedger();
+  const ledgerService = useContext(LedgerContext);
   const wallets = useWallets();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'ledgerVerify'>>();
 
-  useEffect(() => {
-    ledger.getAddressTransport(ledger.device!, true).then(address => {
-      if (!address || !ledger.device?.id) {
-        throw new Error('something wrong');
-      }
-      return wallets
-        .addWalletFromLedger(
-          {
-            address: address,
-            deviceId: ledger.device?.id,
-          },
-          `Ledger ${ledger.device.name}`,
-        )
-        .then(() => {
-          navigation.navigate('ledgerFinish', {});
-        });
-    });
-  }, [ledger, navigation, wallets]);
+  const onDone = useCallback(
+    async (params: {address: string; deviceId: string; deviceName: string}) => {
+      await wallets.addWalletFromLedger(params, params.deviceName);
+      navigation.navigate('ledgerFinish', {hide: true});
+    },
+    [wallets, navigation],
+  );
 
   return (
-    <PopupContainer>
-      <Text>verify</Text>
-      <Text>{route.params.address}</Text>
-    </PopupContainer>
+    <LedgerVerify
+      address={route.params.address}
+      onDone={onDone}
+      ledgerService={ledgerService}
+    />
   );
 };
-
-const page = StyleSheet.create({});

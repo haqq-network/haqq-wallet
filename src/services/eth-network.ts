@@ -11,8 +11,8 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
 
 export class EthNetwork {
+  static network = getDefaultNetwork();
   private wallet: Wallet;
-  private network = getDefaultNetwork();
   private path = "44'/60'/0'/0/0";
 
   constructor(wallet: Wallet) {
@@ -32,7 +32,7 @@ export class EthNetwork {
       throw new Error('signedTx not found');
     }
 
-    const response = await this.network.sendTransaction(signedTx);
+    const response = await EthNetwork.network.sendTransaction(signedTx);
 
     return response;
   }
@@ -57,7 +57,7 @@ export class EthNetwork {
     if (!this.wallet.privateKey) {
       throw new Error('private key not found');
     }
-    const wallet = new EthersWallet(this.wallet.privateKey, this.network);
+    const wallet = new EthersWallet(this.wallet.privateKey, EthNetwork.network);
 
     return wallet.signTransaction(transaction);
   }
@@ -130,5 +130,10 @@ export class EthNetwork {
     //   transaction,
     //   unsignedTx,
     // };
+  }
+
+  static async getBalance(address: string) {
+    const balance = await EthNetwork.network.getBalance(address);
+    return Number(utils.formatEther(balance));
   }
 }

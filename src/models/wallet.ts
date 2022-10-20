@@ -21,6 +21,7 @@ export class WalletRealm extends Realm.Object {
   isHidden!: boolean;
   type!: WalletType;
   deviceId: string | undefined;
+  deviceName: string | undefined;
 
   static schema = {
     name: 'Wallet',
@@ -37,6 +38,7 @@ export class WalletRealm extends Realm.Object {
       pattern: 'string',
       type: 'string',
       deviceId: 'string?',
+      deviceName: 'string?',
     },
     primaryKey: 'address',
   };
@@ -181,6 +183,10 @@ export class Wallet extends EventEmitter {
 
   get deviceId() {
     return this._raw.deviceId;
+  }
+
+  get deviceName() {
+    return this._raw.deviceName;
   }
 
   checkBalance = () => {

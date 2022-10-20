@@ -59,7 +59,6 @@ import {
   ScreenOptionType,
 } from './types';
 import {LedgerScreen} from './screens/ledger';
-import {ledger} from './contexts/ledger';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -97,11 +96,6 @@ export const App = () => {
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
-      .then(() => {
-        if (app.getUser().bluetooth) {
-          return ledger.init();
-        }
-      })
       .catch(e => {
         switch (e) {
           case 'user_not_found':

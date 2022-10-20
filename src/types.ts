@@ -158,23 +158,15 @@ export type RootStackParamList = {
   transactionAddress: {
     from: string;
   };
-  ledgerAgreement: {
-    nextScreen: NextScreenT;
-  };
-  ledgerBluetooth: {
-    nextScreen: NextScreenT;
-  };
-  ledgerScan: {
-    nextScreen: NextScreenT;
-  };
-  ledgerDevice: {
-    nextScreen: NextScreenT;
-  };
+  ledgerAgreement: undefined;
+  ledgerBluetooth: undefined;
+  ledgerScan: undefined;
+  ledgerAccounts: undefined;
   ledgerFinish: {
     hide?: boolean;
   };
   ledgerVerify: {
-    address: boolean;
+    address: string;
   };
 };
 
