@@ -1,5 +1,4 @@
 import ethers, {utils} from 'ethers';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
@@ -49,13 +48,12 @@ export class Wallet extends EventEmitter {
   private _balance: number = 0;
   private _encrypted: boolean;
   private _mnemonic: Mnemonic | undefined;
+  private _privateKey: string | undefined;
 
   constructor(data: WalletRealm) {
     super();
 
     this._raw = data;
-
-    console.log(this._raw.toJSON());
 
     this._encrypted = data.data !== '';
 
@@ -74,19 +72,11 @@ export class Wallet extends EventEmitter {
     this.checkBalance();
   }
 
-  setWallet(wallet: ethers.Wallet) {
-    this._wallet = wallet;
-    console.log('setWallet', this.address, this._wallet);
-  }
-
-  async decrypt(password: string, provider: Provider) {
+  async decrypt(password: string) {
     try {
-      console.log('decrypt', this._encrypted);
       if (this._encrypted) {
         const decrypted = await decrypt(password, this._raw.data);
-        const tmp = new EthersWallet(decrypted.privateKey, provider);
-        console.log('decrypted', decrypted, tmp);
-        this.setWallet(tmp);
+        this._privateKey = decrypted.privateKey;
         this._encrypted = false;
 
         if (decrypted.mnemonic) {
@@ -94,13 +84,16 @@ export class Wallet extends EventEmitter {
         }
       }
     } catch (e) {
-      console.log('decrypt error', e);
       captureException(e);
     }
   }
 
   get address() {
     return this._raw.address;
+  }
+
+  get privateKey() {
+    return this._privateKey;
   }
 
   get name() {
@@ -215,26 +208,11 @@ export class Wallet extends EventEmitter {
     return this._balance;
   }
 
-  connect(provider: Provider) {
-    if (this._wallet) {
-      this.setWallet(this._wallet.connect(provider));
-      console.log('connect', this._wallet);
-    }
-  }
-
-  async sendTransaction(transaction: Deferrable<TransactionRequest>) {
-    console.log('sendTransaction', this.address, this._wallet);
-
-    if (this._wallet) {
-      return this._wallet.sendTransaction(transaction);
-    }
-  }
-
   async updateWalletData(pin: string) {
     const data = this._wallet
       ? await encrypt(pin, {
-          privateKey: this._wallet.privateKey,
-          mnemonic: this._mnemonic || this._wallet.mnemonic,
+          privateKey: this._privateKey,
+          mnemonic: this._mnemonic,
         })
       : '';
 

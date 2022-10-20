@@ -145,6 +145,12 @@ export type RootStackParamList = {
     splittedTo: string[];
     fee?: number;
   };
+  transactionLedger: {
+    from: string;
+    to: string;
+    amount: number;
+    fee?: number;
+  };
   transactionSumAddress: {
     to: string;
     event: string;

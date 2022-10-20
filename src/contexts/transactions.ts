@@ -35,12 +35,12 @@ class Transactions extends EventEmitter {
     return Array.from(this._transactions ?? []);
   }
 
-  async saveTransaction(
+  saveTransaction(
     raw: TransactionResponse,
     from: string,
     to: string,
     amount: number,
-    estimateFee: number,
+    estimateFee?: number,
   ) {
     realm.write(() => {
       realm.create('Transaction', {
@@ -51,13 +51,17 @@ class Transactions extends EventEmitter {
         from,
         to,
         value: amount,
-        fee: estimateFee,
+        fee: estimateFee || 0,
         confirmed: false,
       });
     });
 
     this._transactions = realm.objects<Transaction>('Transaction');
     this.emit('transactions');
+
+    requestAnimationFrame(async () => {
+      await this.checkTransaction(raw.hash);
+    });
   }
 
   getTransaction(hash: string): Transaction | null {
@@ -104,32 +108,6 @@ class Transactions extends EventEmitter {
         realm.delete(transaction);
       });
     }
-  }
-
-  async sendTransaction(
-    from: string,
-    to: string,
-    amount: number,
-    estimateFee: number,
-    wallet: Wallet,
-  ) {
-    const transaction = await wallet.sendTransaction({
-      to,
-      value: utils.parseEther(amount.toString()),
-      chainId: getChainId(),
-    });
-
-    if (!transaction) {
-      return null;
-    }
-
-    await this.saveTransaction(transaction, from, to, amount, estimateFee);
-
-    requestAnimationFrame(async () => {
-      await this.checkTransaction(transaction.hash);
-    });
-
-    return transaction;
   }
 
   async estimateTransaction(
