@@ -17,7 +17,7 @@ import {generateUUID} from '../utils';
 
 type OptionalConfigObjectT = {
   title: string;
-  color: string;
+  imageColor: string;
   fallbackLabel: string;
 };
 

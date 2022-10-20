@@ -63,8 +63,8 @@ export function shortAddress(address: string, delimiter: string = '.') {
 const regex = /(0x\w{2})(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
+  regex.lastIndex = 0;
   const result = regex.exec(address);
-
   if (!result) {
     return [];
   }

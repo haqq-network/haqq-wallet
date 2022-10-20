@@ -26,6 +26,6 @@ const page = StyleSheet.create({
     flex: 1,
     backgroundColor: GRAPHIC_GREEN_2,
   },
-  text: {color: TEXT_BASE_3},
+  text: {color: TEXT_BASE_3, width: 230, textAlign: 'center'},
   waiting: {marginBottom: 40},
 });

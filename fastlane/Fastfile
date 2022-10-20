@@ -73,8 +73,10 @@ platform :ios do
     create_keychain(
       name: name,
       password: password,
-      unlock: false,
-      timeout: 0
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
     )
   end
 
@@ -90,32 +92,8 @@ platform :ios do
     )
   end
 
-  lane :certificates do
-    match(
-      app_identifier: ENV["IOS_IDENTIFIER"],
-      type: 'development',
-      readonly: true,
-      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
-    )
-    match(
-      app_identifier: ENV["IOS_IDENTIFIER"],
-      type: 'appstore',
-      readonly: true,
-      git_basic_authorization: Base64.strict_encode64(ENV["GIT_AUTHORIZATION"])
-    )
-  end
-
   lane :test do
     ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
-
-    certificates
-
-    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
-  end
-
-  lane :distribute do
-    ensure_temp_keychain(ENV["TEMP_KEYCHAIN_USER"], ENV["TEMP_KEYCHAIN_PASSWORD"])
-    certificates
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APPLE_KEY_ID"],
@@ -125,13 +103,89 @@ platform :ios do
       in_house: false
     )
 
-    cocoapods(
-      clean_install: true
+    match(
+      app_identifier: ENV["IOS_IDENTIFIER"],
+      type: 'appstore',
+      readonly: true,
+      keychain_name: ENV["TEMP_KEYCHAIN_USER"],
+      keychain_password: ENV["TEMP_KEYCHAIN_PASSWORD"],
+      api_key: api_key
     )
 
-    build_app(workspace: "ios/haqq.xcworkspace", scheme: "haqq")
+    delete_temp_keychain(ENV["TEMP_KEYCHAIN_USER"])
+
+  end
+
+  lane :distribute do
+   ENV['ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD'] = 'true'
+
+
+    keychain_name = ENV["TEMP_KEYCHAIN_USER"]
+    keychain_password = ENV["TEMP_KEYCHAIN_PASSWORD"]
+    app_identifier =  ENV["DEVELOPER_APP_IDENTIFIER"]
+    developer_apple_id = ENV["DEVELOPER_APP_ID"]
+    provisioningProfile = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+
+    ensure_temp_keychain(keychain_name, keychain_password)
+    xcode_select("/Applications/Xcode.app")
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_KEY_ID"],
+      issuer_id: ENV["APPLE_ISSUER_ID"],
+      key_content: ENV["APPLE_KEY_CONTENT"],
+      duration: 1200,
+      in_house: false
+    )
+
+    previous_build_number = latest_testflight_build_number(
+      app_identifier: app_identifier,
+      api_key: api_key,
+    )
+
+    current_build_number = previous_build_number + 1
+
+    increment_build_number(
+      xcodeproj: './ios/haqq.xcodeproj',
+      build_number: current_build_number
+    )
+
+    match(
+      type: 'development',
+      app_identifier: app_identifier,
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
+    )
+
+    match(
+      type: 'appstore',
+      app_identifier: app_identifier,
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
+    )
+
+    update_code_signing_settings(
+      path: './ios/haqq.xcodeproj',
+      use_automatic_signing: false,
+      code_sign_identity: 'iPhone Distribution',
+      team_id: ENV["DEVELOPER_PORTAL_TEAM_ID"],
+      profile_name: provisioningProfile,
+      bundle_identifier: app_identifier,
+    )
+
+    gym(
+      configuration: "Release",
+      workspace: "ios/haqq.xcworkspace",
+      scheme: "haqq",
+      export_method: "app-store",
+    )
 
     pilot(
+      api_key: api_key,
+      apple_id: developer_apple_id,
+      app_identifier: app_identifier,
       ipa: "haqq.ipa",
       skip_submission: true,
       skip_waiting_for_build_processing: true
