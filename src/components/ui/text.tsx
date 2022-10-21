@@ -1,5 +1,12 @@
-import {StyleSheet, Text as RNText, StyleProp, TextStyle} from 'react-native';
-import * as React from 'react';
+import React from 'react';
+import {
+  StyleSheet,
+  Text as RNText,
+  StyleProp,
+  TextStyle,
+  Platform,
+} from 'react-native';
+
 import {TEXT_BASE_1} from '../../variables';
 
 interface TxtT {
@@ -95,9 +102,16 @@ export const Text = ({
 
 const page = StyleSheet.create({
   t0Style: {
-    fontFamily: 'El Messiri',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'El Messiri',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'ElMessiri-Bold',
+      },
+    }),
     fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 34,
     lineHeight: 46,
     color: TEXT_BASE_1,
@@ -111,68 +125,132 @@ const page = StyleSheet.create({
     color: TEXT_BASE_1,
   },
   t2Style: {
-    fontFamily: 'El Messiri',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'El Messiri',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'ElMessiri-Bold',
+      },
+    }),
     fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 34,
     lineHeight: 46,
     color: TEXT_BASE_1,
   },
   t3Style: {
     fontFamily: 'SF Pro Display',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Bold',
+      },
+    }),
     fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,
     color: TEXT_BASE_1,
   },
   t4Style: {
-    //title
-    fontFamily: 'El Messiri',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'El Messiri',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'ElMessiri-Bold',
+      },
+    }),
     fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,
     color: TEXT_BASE_1,
   },
   t5Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '600',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Bold',
+      },
+    }),
     fontSize: 22,
     lineHeight: 30,
     color: TEXT_BASE_1,
   },
   t6Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '600',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Semibold',
+      },
+    }),
     fontSize: 22,
     lineHeight: 30,
     color: TEXT_BASE_1,
   },
   t7Style: {
     fontFamily: 'SF Pro Text',
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Text',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'SF-ProText-Semibold',
+      },
+    }),
     fontSize: 18,
     lineHeight: 24,
     color: TEXT_BASE_1,
   },
   t8Style: {
-    fontFamily: 'SF Pro Text',
-    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Text',
+        fontWeight: '600',
+      },
+      android: {
+        fontFamily: 'SF-ProText-Semibold',
+      },
+    }),
     fontSize: 18,
     lineHeight: 24,
     color: TEXT_BASE_1,
   },
   t9Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Bold',
+      },
+    }),
     fontSize: 16,
     lineHeight: 22,
     color: TEXT_BASE_1,
   },
   t10Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '600',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Bold',
+      },
+    }),
     fontSize: 16,
     lineHeight: 22,
     color: TEXT_BASE_1,
@@ -185,43 +263,85 @@ const page = StyleSheet.create({
     color: TEXT_BASE_1,
   },
   t12Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Bold',
+      },
+    }),
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_1,
   },
   t13Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '600',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '600',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Semibold',
+      },
+    }),
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_1,
   },
   t14Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '400',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Regular',
+      },
+    }),
     fontSize: 14,
     lineHeight: 18,
     color: TEXT_BASE_1,
   },
   t15Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '400',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Regular',
+      },
+    }),
     fontSize: 12,
     lineHeight: 16,
     color: TEXT_BASE_1,
   },
   t16Style: {
-    fontFamily: 'SF Pro Text',
-    fontWeight: '700',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Text',
+        fontWeight: '700',
+      },
+      android: {
+        fontFamily: 'SF-ProText-Bold',
+      },
+    }),
     fontSize: 10,
     lineHeight: 12,
     color: TEXT_BASE_1,
   },
   t17Style: {
-    fontFamily: 'SF Pro Text',
-    fontWeight: '500',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Text',
+        fontWeight: '500',
+      },
+      android: {
+        fontFamily: 'SF-ProText-Medium',
+      },
+    }),
     fontSize: 10,
     lineHeight: 12,
     color: TEXT_BASE_1,
