@@ -11,6 +11,7 @@ export class Transaction extends Realm.Object {
   fee!: number;
   createdAt!: Date;
   confirmed!: boolean;
+  providerId!: string;
 
   static schema = {
     name: 'Transaction',
@@ -24,6 +25,7 @@ export class Transaction extends Realm.Object {
       fee: 'double',
       createdAt: 'date',
       confirmed: 'bool',
+      providerId: 'string',
     },
     primaryKey: 'hash',
   };

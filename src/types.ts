@@ -159,6 +159,7 @@ export type RootStackParamList = {
   };
   transactionAddress: {
     from: string;
+    to?: string;
   };
   ledgerAgreement: undefined;
   ledgerBluetooth: undefined;

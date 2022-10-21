@@ -12,11 +12,10 @@ import {runUntil} from '../helpers/run-until';
 import {Provider} from '../models/provider';
 
 export class EthNetwork {
-  static network = getDefaultNetwork();
+  static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
   private wallet: Wallet;
   private path = "44'/60'/0'/0/0";
   private _stop = false;
-  static provider: ethers.providers.StaticJsonRpcProvider;
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 

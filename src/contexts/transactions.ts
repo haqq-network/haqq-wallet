@@ -38,7 +38,8 @@ class Transactions extends EventEmitter {
     from: string,
     to: string,
     amount: number,
-    estimateFee?: number,
+    estimateFee: number,
+    providerId: string,
   ) {
     realm.write(() => {
       realm.create('Transaction', {
@@ -51,6 +52,7 @@ class Transactions extends EventEmitter {
         value: amount,
         fee: estimateFee || 0,
         confirmed: false,
+        providerId,
       });
     });
 

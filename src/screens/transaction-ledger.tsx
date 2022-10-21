@@ -7,12 +7,14 @@ import {PopupContainer, Spacer, Text} from '../components/ui';
 import {useTransactions} from '../contexts/transactions';
 import {useWallet} from '../contexts/wallets';
 import {EthNetwork} from '../services/eth-network';
+import {useUser} from '../contexts/app';
 
 export const TransactionLedgerScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route =
     useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee} = route.params;
+  const user = useUser();
   const transactions = useTransactions();
   const wallet = useWallet(from);
   const [error, setError] = useState('');
@@ -33,7 +35,8 @@ export const TransactionLedgerScreen = () => {
             from,
             to,
             amount,
-            fee,
+            fee ?? 0,
+            user.providerId,
           );
           console.log('transaction', transaction);
 
@@ -48,7 +51,16 @@ export const TransactionLedgerScreen = () => {
         }
       }
     }
-  }, [wallet, navigation, from, to, amount, transactions, fee]);
+  }, [
+    wallet,
+    to,
+    amount,
+    transactions,
+    from,
+    fee,
+    user.providerId,
+    navigation,
+  ]);
 
   useEffect(() => {
     onDone();

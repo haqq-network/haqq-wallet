@@ -17,9 +17,11 @@ import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 import {EthNetwork} from '../services/eth-network';
+import {useUser} from '../contexts/app';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const user = useUser();
   const route =
     useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee, splittedTo} = route.params;
@@ -66,6 +68,7 @@ export const TransactionConfirmationScreen = () => {
             to,
             amount,
             estimateFee,
+            user.providerId,
           );
           console.log('transaction', transaction);
 
@@ -82,7 +85,16 @@ export const TransactionConfirmationScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, navigation, from, to, amount, transactions, estimateFee]);
+  }, [
+    wallet,
+    navigation,
+    from,
+    to,
+    amount,
+    estimateFee,
+    transactions,
+    user.providerId,
+  ]);
 
   useEffect(() => {
     transactions
