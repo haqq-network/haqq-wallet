@@ -3,6 +3,7 @@ import React from 'react';
 import {Transaction} from './models/transaction';
 
 import type {StackNavigationOptions} from '@react-navigation/stack';
+import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 export enum TransactionSource {
   unknown,
@@ -255,3 +256,5 @@ export type RoutePropT = {
     };
   };
 };
+
+export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;

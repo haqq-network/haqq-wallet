@@ -15,7 +15,12 @@ import {
   TouchIdIcon,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {BIOMETRY_TYPES_NAMES, GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
+import {
+  BIOMETRY_TYPES_NAMES,
+  GRAPHIC_BASE_1,
+  TEXT_BASE_2,
+  TEXT_RED_1,
+} from '../variables';
 import {BiometryType} from '../types';
 
 export const OnboardingBiometryScreen = () => {
@@ -67,7 +72,11 @@ export const OnboardingBiometryScreen = () => {
         <Text t11 style={page.textStyle}>
           Safe and fast
         </Text>
-        {error && <Text clean>{error}</Text>}
+        {error && (
+          <Text t11 style={page.error}>
+            {error}
+          </Text>
+        )}
       </Spacer>
       <Button
         style={page.margin}
@@ -86,4 +95,5 @@ const page = StyleSheet.create({
   icon: {marginBottom: 40},
   textStyle: {textAlign: 'center', color: TEXT_BASE_2},
   margin: {marginBottom: 16},
+  error: {top: 20, textAlign: 'center', color: TEXT_RED_1},
 });
