@@ -38,7 +38,6 @@ export const HomeSettingsScreen = () => {
         icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
         title="Security"
         next="settingsSecurity"
-        style={page.button}
       />
 
       <SettingsButton

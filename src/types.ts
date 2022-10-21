@@ -64,6 +64,7 @@ export type RootStackParamList = {
   settingsLanguage: undefined;
   settingsSecurity: undefined;
   settingsSecurityPin: undefined;
+  settingsProviders: undefined;
   settingsSecurityPinRepeat: {
     pin: string;
   };

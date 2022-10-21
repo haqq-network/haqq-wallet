@@ -1,4 +1,4 @@
-import ethers, {utils} from 'ethers';
+import ethers from 'ethers';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
@@ -189,7 +189,7 @@ export class Wallet extends EventEmitter {
 
   checkBalance = () => {
     EthNetwork.getBalance(this.address).then(balance => {
-      this.balance = Number(utils.formatEther(balance));
+      this.balance = balance;
     });
   };
 

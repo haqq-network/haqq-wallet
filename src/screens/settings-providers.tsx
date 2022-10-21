@@ -24,9 +24,12 @@ export const SettingsProvidersScreen = () => {
     };
   }, []);
 
-  const onSelectProvider = useCallback((providerId: string) => {
-    user.providerId = providerId;
-  }, []);
+  const onSelectProvider = useCallback(
+    (providerId: string) => {
+      user.providerId = providerId;
+    },
+    [user],
+  );
 
   return (
     <SettingsProviders
