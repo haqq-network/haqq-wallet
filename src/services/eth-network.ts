@@ -7,13 +7,14 @@ import {getChainId, getDefaultNetwork} from '../network';
 import {Wallet} from '../models/wallet';
 import {WalletType} from '../types';
 import {app} from '../contexts/app';
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
+import {ledgerService} from '@ledgerhq/hw-app-eth';
+import {runUntil} from '../helpers/run-until';
 
 export class EthNetwork {
   static network = getDefaultNetwork();
   private wallet: Wallet;
   private path = "44'/60'/0'/0/0";
+  private _stop = false;
 
   constructor(wallet: Wallet) {
     this.wallet = wallet;
@@ -35,6 +36,10 @@ export class EthNetwork {
     const response = await EthNetwork.network.sendTransaction(signedTx);
 
     return response;
+  }
+
+  tryToCancelSendTransaction() {
+    this._stop = true;
   }
 
   getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
@@ -64,19 +69,30 @@ export class EthNetwork {
 
   async getSignedTxForLedger(transaction: UnsignedTransaction) {
     const unsignedTx = utils.serializeTransaction(transaction).substring(2);
-    const transport = await TransportBLE.open(this.wallet.deviceId);
-    const eth = new AppEth(transport);
     const resolution = await ledgerService.resolveTransaction(
       unsignedTx,
       {},
       {},
     );
 
-    const signature = await eth.signTransaction(
-      this.path,
-      unsignedTx,
-      resolution,
+    let signature = null;
+
+    const iter = runUntil(this.wallet.deviceId!, eth =>
+      eth.signTransaction(this.path, unsignedTx, resolution),
     );
+
+    let done = false;
+    do {
+      const resp = await iter.next();
+      signature = resp.value;
+      done = resp.done;
+    } while (!done && !this._stop);
+
+    await iter.abort();
+
+    if (!signature) {
+      throw new Error('can_not_connected');
+    }
 
     return utils.serializeTransaction(transaction, {
       ...signature,

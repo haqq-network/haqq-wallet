@@ -1,40 +1,47 @@
 import React, {useEffect} from 'react';
 import {LottieWrap, PopupContainer, Text} from '../ui';
-import {Ledger} from '../../services/ledger';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
+import {runUntil} from '../../helpers/run-until';
+import {ETH_HD_PATH} from '../../variables';
 
 export type LedgerInfo = {
   address: string;
-  deviceId: string;
-  deviceName: string;
 };
 
 export type LedgerVerifyProps = {
+  deviceId: string;
   address: string;
-  ledgerService: Ledger;
   onDone: (info: LedgerInfo) => void;
 };
 
 export const LedgerVerify = ({
-  ledgerService,
+  deviceId,
   onDone,
   address,
 }: LedgerVerifyProps) => {
   useEffect(() => {
-    ledgerService
-      .getAddressTransport(ledgerService.device!, true)
-      .then((verifiedAddress: string | null) => {
-        if (!verifiedAddress || !ledgerService.device) {
-          throw new Error('something wrong');
+    const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, true));
+    requestAnimationFrame(async () => {
+      let verifiedAddress = null;
+      let done = false;
+      do {
+        const resp = await iter.next();
+        done = resp.done;
+        if (resp.value) {
+          verifiedAddress = resp.value.address;
         }
-
+      } while (!done);
+      if (verifiedAddress) {
         onDone({
           address: verifiedAddress,
-          deviceId: ledgerService.device.id,
-          deviceName: `Ledger ${ledgerService.device.name}`,
         });
-      });
-  }, [ledgerService, onDone]);
+      }
+    });
+
+    return () => {
+      iter.abort();
+    };
+  }, [deviceId, onDone]);
 
   return (
     <PopupContainer style={styles.container}>

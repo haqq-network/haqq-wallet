@@ -1,31 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {PopupContainer} from '../ui';
-import {Ledger} from '../../services/ledger';
 import {LedgerAccountsRow} from './ledger-accounts-row';
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
+import {runUntil} from '../../helpers/run-until';
+import {ETH_HD_PATH} from '../../variables';
 
 export type LedgerDeviceProps = {
-  ledgerService: Ledger;
+  deviceId: string;
   onAdd: (address: string) => void;
 };
 
-export const LedgerAccounts = ({ledgerService, onAdd}: LedgerDeviceProps) => {
+export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
   const [addresses, setAddresses] = useState<string[]>([]);
 
   useEffect(() => {
-    const subscription = (a: string) => {
-      setAddresses(list => (list.includes(a) ? list : list.concat([a])));
-    };
-    ledgerService.on('onAddress', subscription);
-
-    const stop = ledgerService.getAddress();
+    const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, false));
+    requestAnimationFrame(async () => {
+      let done = false;
+      do {
+        const resp = await iter.next();
+        done = resp.done;
+        if (resp.value) {
+          setAddresses(list =>
+            list.includes(resp.value.address)
+              ? list
+              : list.concat([resp.value.address]),
+          );
+        }
+      } while (!done);
+      await iter.abort();
+    });
 
     return () => {
-      ledgerService.off('onAddress', subscription);
-      stop();
+      iter.abort();
     };
-  });
+  }, [deviceId]);
 
   return (
     <PopupContainer>

@@ -137,9 +137,8 @@ const page = StyleSheet.create({
   },
   t4Style: {
     //title
-    fontFamily: 'El Messiri',
+    fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,
     color: TEXT_BASE_1,

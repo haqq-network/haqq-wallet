@@ -161,12 +161,17 @@ export type RootStackParamList = {
   ledgerAgreement: undefined;
   ledgerBluetooth: undefined;
   ledgerScan: undefined;
-  ledgerAccounts: undefined;
+  ledgerAccounts: {
+    deviceId: string;
+    deviceName: string;
+  };
   ledgerFinish: {
     hide?: boolean;
   };
   ledgerVerify: {
     address: string;
+    deviceId: string;
+    deviceName: string;
   };
 };
 

@@ -1,37 +1,33 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {State} from 'react-native-ble-plx';
+import {BleManager, State} from 'react-native-ble-plx';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
-import {Ledger} from '../../services/ledger';
 import {User} from '../../models/user';
 
 export type LedgerBluetooth = {
-  ledgerService: Ledger;
   user: User;
   onDone: () => void;
   onAllow: () => void;
 };
 
-export const LedgerBluetooth = ({
-  ledgerService,
-  user,
-  onDone,
-}: LedgerBluetooth) => {
-  const [btState, setBtState] = useState(ledgerService.state);
+export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
+  const bleManager = useRef(new BleManager()).current;
+
+  const [btState, setBtState] = useState(State.Unknown);
 
   useEffect(() => {
     if (user.bluetooth) {
       const subscription = (value: State) => {
         setBtState(value);
       };
-      ledgerService.on('stateChange', subscription);
+      const sub = bleManager.onStateChange(subscription);
 
       return () => {
-        ledgerService.off('stateChange', subscription);
+        sub.remove();
       };
     }
-  }, [ledgerService, user.bluetooth]);
+  }, [bleManager, user.bluetooth]);
 
   useEffect(() => {
     switch (btState) {
@@ -44,9 +40,9 @@ export const LedgerBluetooth = ({
   }, [btState, onDone]);
 
   const onPressAllow = useCallback(async () => {
-    await ledgerService.init();
-    setBtState(ledgerService.state);
-  }, [ledgerService]);
+    const state = await bleManager.state();
+    setBtState(state);
+  }, [bleManager]);
 
   return (
     <>

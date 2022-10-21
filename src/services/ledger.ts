@@ -9,7 +9,7 @@ import {sleep} from '../utils';
 export type OnScanEvent = {
   refreshing?: boolean;
   error?: string;
-  device: Device | null;
+  device?: Device;
 };
 
 const path = "44'/60'/0'/0/0"; // HD derivation path
@@ -100,7 +100,7 @@ export class Ledger extends EventEmitter {
     }
 
     const transport = await TransportBLE.open(device);
-
+    transport.isConnected();
     let stop = false;
 
     transport.on('disconnect', () => {
@@ -108,10 +108,10 @@ export class Ledger extends EventEmitter {
     });
 
     let address = null;
+    const eth = new AppEth(transport);
 
     while (!address && !stop) {
       try {
-        const eth = new AppEth(transport);
         const resp = await eth.getAddress(path, validate);
         address = resp.address;
       } catch (error) {

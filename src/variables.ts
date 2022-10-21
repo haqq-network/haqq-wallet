@@ -125,3 +125,4 @@ export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
 };
 
 export const DEFAULT_USERNAME = 'username';
+export const ETH_HD_PATH = "44'/60'/0'/0/0"; // HD derivation path
