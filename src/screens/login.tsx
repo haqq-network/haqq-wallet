@@ -13,7 +13,7 @@ export const LoginScreen = () => {
   return (
     <Container>
       <View style={page.container}>
-        <Image source={logoImage} style={page.image} />
+        <Image source={logoImage} style={page.imageStyle} />
         <Text t4 style={page.title}>
           No wallet is connected
         </Text>
@@ -39,8 +39,13 @@ export const LoginScreen = () => {
 
 const page = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  image: {marginBottom: 28},
   title: {marginBottom: 4},
   button: {marginBottom: 16},
   textStyle: {textAlign: 'center', color: TEXT_BASE_2},
+  imageStyle: {
+    width: 120,
+    height: 120,
+    alignSelf: 'center',
+    marginBottom: 28,
+  },
 });
