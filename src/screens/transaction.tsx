@@ -45,7 +45,6 @@ export const TransactionScreen = () => {
     headerRight: DismissPopupButton,
   };
 
-  const from = wallets.visible[0].address;
   return (
     <TransactionStack.Navigator
       screenOptions={{header: PopupHeader}}
@@ -57,7 +56,7 @@ export const TransactionScreen = () => {
       <TransactionStack.Screen
         name="transactionAddress"
         component={TransactionAddressScreen}
-        initialParams={{from}}
+        initialParams={{from: route.params.from}}
         options={screenOptionsAddressRoute}
       />
       <TransactionStack.Screen

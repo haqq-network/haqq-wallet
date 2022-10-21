@@ -11,6 +11,7 @@ import {
   LottieWrap,
 } from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
+import {ratio, windowWidth} from '../helpers';
 
 const warningImage = require('../../assets/animations/recover-animation.json');
 
@@ -66,8 +67,10 @@ const page = StyleSheet.create({
     marginBottom: 4,
     marginHorizontal: 20,
     textAlign: 'center',
+    top: 50,
   },
   disclaimer: {
+    top: 50,
     marginBottom: 154,
     textAlign: 'center',
     color: TEXT_BASE_2,
@@ -80,5 +83,10 @@ const page = StyleSheet.create({
     marginBottom: 16,
     color: TEXT_BASE_2,
   },
-  image: {width: 200, height: 200},
+  image: {
+    top: 10,
+    width: windowWidth,
+    height: 362 * ratio,
+    alignSelf: 'center',
+  },
 });
