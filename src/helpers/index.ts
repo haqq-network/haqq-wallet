@@ -1,4 +1,4 @@
-import {Linking, Alert, Dimensions} from 'react-native';
+import {Linking, Alert, Dimensions, Platform} from 'react-native';
 import * as Sentry from '@sentry/react-native';
 
 export const captureException = (error: unknown) => {
@@ -33,3 +33,5 @@ export const openURL = async (url: string) => {
 
 export const windowWidth = Dimensions.get('window').width;
 export const ratio = windowWidth / 541;
+
+export const isIOS = Platform.OS === 'ios';
