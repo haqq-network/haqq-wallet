@@ -98,7 +98,7 @@ export const TransactionConfirmationScreen = () => {
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
-          <Text style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: TEXT_BASE_1}}>
             Islamic coin{' '}
             <Text clean style={{color: TEXT_BASE_2}}>
               (ISLM)
@@ -106,7 +106,7 @@ export const TransactionConfirmationScreen = () => {
           </Text>
         </DataView>
         <DataView label="Network">
-          <Text style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: TEXT_BASE_1}}>
             HAQQ blockchain{' '}
             <Text clean style={{color: TEXT_BASE_2}}>
               (HQ)
@@ -114,10 +114,12 @@ export const TransactionConfirmationScreen = () => {
           </Text>
         </DataView>
         <DataView label="Amount">
-          <Text style={{color: TEXT_BASE_1}}>{amount.toFixed(8)} ISLM</Text>
+          <Text t11 style={{color: TEXT_BASE_1}}>
+            {amount.toFixed(8)} ISLM
+          </Text>
         </DataView>
         <DataView label="Network Fee">
-          <Text style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: TEXT_BASE_1}}>
             {estimateFee.toFixed(8)} ISLM
           </Text>
         </DataView>
