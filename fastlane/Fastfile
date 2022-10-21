@@ -9,22 +9,19 @@ platform :android do
   end
 
   lane :distribute do
-    gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
-      "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
-      "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
-      "HAQQ_UPLOAD_KEY_ALIAS" => ENV["HAQQ_UPLOAD_KEY_ALIAS"],
-      "HAQQ_UPLOAD_KEY_PASSWORD" => ENV["HAQQ_UPLOAD_KEY_PASSWORD"]
-    })
+      previous_build_number = google_play_track_version_codes(
+        package_name: 'com.haqq.wallet',
+        track: "internal",
+        json_key: './android/app/google-account.json',
+      )[0]
 
-    firebase_app_distribution(
-      app: "1:915453653093:android:d69f18643b8b3f2954568c",
-      testers: ENV["FIREBASE_TESTERS"],
-      firebase_cli_token: ENV["FIREBASE_TOKEN"],
-      release_notes: "Lots of amazing new features to test out!"
-    )
-  end
+      current_build_number = previous_build_number + 1
 
-  lane :release do
+      increment_version_code(
+        gradle_file_path: './android/app/build.gradle',
+        version_code: current_build_number
+      )
+
       gradle(task: 'clean bundleRelease', project_dir: './android', print_command: false, properties: {
         "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
         "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
@@ -42,21 +39,6 @@ platform :android do
         release_status: 'draft',
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
       )
-  end
-
-  lane :version_code do
-    previous_build_number = google_play_track_version_codes(
-      package_name: 'com.haqq.wallet',
-      track: "internal",
-      json_key: './android/app/google-account.json',
-    )[0]
-
-    current_build_number = previous_build_number + 1
-
-    increment_version_code(
-      gradle_file_path: './android/app/build.gradle',
-      version_code: current_build_number
-    )
   end
 end
 
