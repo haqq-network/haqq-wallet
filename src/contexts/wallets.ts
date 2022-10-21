@@ -89,7 +89,6 @@ class Wallets extends EventEmitter {
 
     this._initialized = true;
 
-    const provider = getDefaultNetwork();
     const password = await app.getPassword();
 
     await Promise.all(

@@ -1,10 +1,8 @@
 import ethers, {utils} from 'ethers';
-import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
 import {getDefaultNetwork} from '../network';
-import {Deferrable} from '@ethersproject/properties';
 import {Mnemonic, WalletCardStyle, WalletType} from '../types';
 import {captureException} from '../helpers';
 

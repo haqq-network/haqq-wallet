@@ -98,7 +98,7 @@ export class EthNetwork {
       ...signature,
       r: '0x' + signature.r,
       s: '0x' + signature.s,
-      v: parseInt(signature.v),
+      v: parseInt(signature.v, 10),
     });
   }
 

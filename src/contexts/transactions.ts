@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
-import {getChainId, getDefaultNetwork} from '../network';
+import {getDefaultNetwork} from '../network';
 import {BigNumberish, utils} from 'ethers';
 import {
   TransactionRequest,
@@ -9,7 +9,6 @@ import {
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
-import {Wallet} from '../models/wallet';
 import {NETWORK_EXPLORER} from '@env';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 

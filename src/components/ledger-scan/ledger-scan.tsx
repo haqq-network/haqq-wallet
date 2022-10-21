@@ -17,12 +17,11 @@ export type LedgerScanProps = {
 export const LedgerScan = ({onSelect}: LedgerScanProps) => {
   const [devices, setDevices] = useState<Device[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const app = useApp();
 
   const subscription = useCallback((event: OnScanEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    const {refreshing, device, error} = event;
+    const {refreshing, device} = event;
     if (refreshing) {
       setRefreshing(refreshing);
     }
@@ -33,10 +32,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
           ? devicesList
           : devicesList.concat(device),
       );
-    }
-
-    if (error) {
-      setError(error);
     }
   }, []);
 
