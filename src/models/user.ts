@@ -18,6 +18,7 @@ export const UserSchema = {
     snoozeBackup: 'date?',
     pinAttempts: 'int?',
     pinBanned: 'date?',
+    providerId: 'string',
   },
   primaryKey: 'username',
 };
@@ -35,6 +36,7 @@ export type UserType = {
   pinAttempts: number | null;
   pinBanned: Date | null;
   bluetooth: boolean | null;
+  providerId: string;
 };
 
 export class User extends EventEmitter {
@@ -58,6 +60,18 @@ export class User extends EventEmitter {
 
   get isLoaded() {
     return !!this._raw;
+  }
+
+  get providerId() {
+    return this._raw.providerId;
+  }
+
+  set providerId(value) {
+    realm.write(() => {
+      this._raw.providerId = value;
+    });
+
+    this.emit('providerId', value);
   }
 
   get biometry() {

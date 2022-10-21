@@ -2,9 +2,9 @@ import ethers, {utils} from 'ethers';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
-import {getDefaultNetwork} from '../network';
 import {Mnemonic, WalletCardStyle, WalletType} from '../types';
 import {captureException} from '../helpers';
+import {EthNetwork} from '../services/eth-network';
 
 export class WalletRealm extends Realm.Object {
   address!: string;
@@ -188,11 +188,9 @@ export class Wallet extends EventEmitter {
   }
 
   checkBalance = () => {
-    getDefaultNetwork()
-      .getBalance(this.address)
-      .then(balance => {
-        this.balance = Number(utils.formatEther(balance));
-      });
+    EthNetwork.getBalance(this.address).then(balance => {
+      this.balance = Number(utils.formatEther(balance));
+    });
   };
 
   get mnemonic() {

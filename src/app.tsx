@@ -59,6 +59,8 @@ import {
   ScreenOptionType,
 } from './types';
 import {LedgerScreen} from './screens/ledger';
+import {migration} from './models/migration';
+import {SettingsProvidersScreen} from './screens/settings-providers';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -93,6 +95,7 @@ export const App = () => {
     app.emit('modal', {type: 'splash'});
     sleep(150)
       .then(() => SplashScreen.hide())
+      .then(() => migration())
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
@@ -220,6 +223,13 @@ export const App = () => {
                     component={SettingsSecurityScreen}
                     options={{
                       title: 'Security',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsProviders"
+                    component={SettingsProvidersScreen}
+                    options={{
+                      title: 'Providers',
                     }}
                   />
                   <Stack.Screen

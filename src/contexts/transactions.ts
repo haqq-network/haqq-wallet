@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
-import {getDefaultNetwork} from '../network';
 import {BigNumberish, utils} from 'ethers';
 import {
   TransactionRequest,
@@ -9,8 +8,8 @@ import {
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
-import {NETWORK_EXPLORER} from '@env';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
+import {EthNetwork} from '../services/eth-network';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -79,7 +78,7 @@ class Transactions extends EventEmitter {
 
     if (local) {
       try {
-        const receipt = await getDefaultNetwork().getTransactionReceipt(
+        const receipt = await EthNetwork.network.getTransactionReceipt(
           local.hash,
         );
         if (receipt && receipt.confirmations > 0) {
@@ -119,8 +118,8 @@ class Transactions extends EventEmitter {
     estimateGas: BigNumberish;
   }> {
     const result = await Promise.all([
-      getDefaultNetwork().getFeeData(),
-      getDefaultNetwork().estimateGas({
+      EthNetwork.network.getFeeData(),
+      EthNetwork.network.estimateGas({
         from,
         to,
         amount,
@@ -136,12 +135,8 @@ class Transactions extends EventEmitter {
 
   async loadTransactionsFromExplorer(address: string) {
     try {
-      console.log(
-        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
-      );
-
       const txlist = await fetch(
-        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
+        `${EthNetwork.explorer}api?module=account&action=txlist&address=${address}`,
         {
           headers: {
             accept: 'application/json',

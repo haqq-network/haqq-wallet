@@ -1,0 +1,16 @@
+[
+  {
+    "id": "75a6778b-0a79-4a06-96c9-daddc8d2c013",
+    "name": "Testedge 2",
+    "network": "https://rpc.eth.testedge2.haqq.network",
+    "chainId": 54211,
+    "explorer": "https://explorer.testedge2.haqq.network/"
+  },
+  {
+    "id": "6d83b352-6da6-4a71-a250-ba222080e21f",
+    "name": "Main net",
+    "network": "https://rpc.eth.haqq.network",
+    "chainId": 11235,
+    "explorer": "https://explorer.haqq.network/"
+  }
+]

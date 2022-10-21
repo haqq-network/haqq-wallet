@@ -2,7 +2,6 @@ import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
 import {realm} from '../models';
-import {getDefaultNetwork} from '../network';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
 import {
@@ -30,6 +29,7 @@ import {
 } from '../variables';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
+import {EthNetwork} from '../services/eth-network';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
@@ -161,8 +161,9 @@ class Wallets extends EventEmitter {
     mnemonic: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const provider = getDefaultNetwork();
-    const wallet = EthersWallet.fromMnemonic(mnemonic).connect(provider);
+    const wallet = EthersWallet.fromMnemonic(mnemonic).connect(
+      EthNetwork.network,
+    );
 
     return this.addWallet(
       {
@@ -179,8 +180,7 @@ class Wallets extends EventEmitter {
     privateKey: string,
     name = '',
   ): Promise<Wallet | null> {
-    const provider = getDefaultNetwork();
-    const wallet = new EthersWallet(privateKey, provider);
+    const wallet = new EthersWallet(privateKey, EthNetwork.network);
 
     return this.addWallet(
       {
@@ -326,7 +326,7 @@ class Wallets extends EventEmitter {
   }
 
   async getBalance(address: string) {
-    const balance = await getDefaultNetwork().getBalance(address);
+    const balance = await EthNetwork.network.getBalance(address);
     return Number(utils.formatEther(balance));
   }
 

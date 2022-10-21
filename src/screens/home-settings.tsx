@@ -41,6 +41,13 @@ export const HomeSettingsScreen = () => {
         style={page.button}
       />
 
+      <SettingsButton
+        icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
+        title="Providers"
+        next="settingsProviders"
+        style={page.button}
+      />
+
       {/*<SettingsButton*/}
       {/*  icon={<HelpSettingsIcon color={GRAPHIC_BASE_1} />}*/}
       {/*  title="FAQ"*/}

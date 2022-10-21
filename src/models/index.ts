@@ -4,12 +4,18 @@ import {WalletRealm} from './wallet';
 import {UserSchema} from './user';
 import {Transaction} from './transaction';
 import {Contact} from './contact';
-import {CARD_COLORS, CARD_DEFAULT_STYLE, CARD_PATTERN} from '../variables';
+import {
+  CARD_COLORS,
+  CARD_DEFAULT_STYLE,
+  CARD_PATTERN,
+  TEST_NETWORK,
+} from '../variables';
 import {WalletType} from '../types';
+import {Provider} from './provider';
 
 export const realm = new Realm({
-  schema: [WalletRealm, UserSchema, Transaction, Contact],
-  schemaVersion: 21,
+  schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
+  schemaVersion: 22,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 2) {
       const oldObjects = oldRealm.objects('User');
@@ -147,7 +153,7 @@ export const realm = new Realm({
 
     if (oldRealm.schemaVersion < 17) {
       const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects('User');
+      const newObjects = newRealm.objects<{snoozeBackup: null}>('User');
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -162,6 +168,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.type = WalletType.hot;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 22) {
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects<{providerId: string}>('User');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.providerId = TEST_NETWORK;
       }
     }
   },

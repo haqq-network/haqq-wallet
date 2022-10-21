@@ -1,20 +1,24 @@
-import {BigNumber, utils} from 'ethers';
+import {BigNumber, ethers, utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Deferrable} from '@ethersproject/properties';
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
-import {getChainId, getDefaultNetwork} from '../network';
+import {getDefaultChainId, getDefaultNetwork} from '../network';
 import {Wallet} from '../models/wallet';
 import {WalletType} from '../types';
 import {app} from '../contexts/app';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {runUntil} from '../helpers/run-until';
+import {Provider} from '../models/provider';
 
 export class EthNetwork {
   static network = getDefaultNetwork();
   private wallet: Wallet;
   private path = "44'/60'/0'/0/0";
   private _stop = false;
+  static provider: ethers.providers.StaticJsonRpcProvider;
+  static chainId: number = getDefaultChainId();
+  static explorer: string | undefined;
 
   constructor(wallet: Wallet) {
     this.wallet = wallet;
@@ -36,10 +40,6 @@ export class EthNetwork {
     const response = await EthNetwork.network.sendTransaction(signedTx);
 
     return response;
-  }
-
-  tryToCancelSendTransaction() {
-    this._stop = true;
   }
 
   getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
@@ -123,7 +123,7 @@ export class EthNetwork {
       maxPriorityFeePerGas: gasPrice._hex,
       gasLimit: estimateGas._hex,
       data: '0x',
-      chainId: getChainId(),
+      chainId: EthNetwork.chainId,
     };
 
     const tx = await utils.resolveProperties(transaction);
@@ -151,5 +151,17 @@ export class EthNetwork {
   static async getBalance(address: string) {
     const balance = await EthNetwork.network.getBalance(address);
     return Number(utils.formatEther(balance));
+  }
+
+  static init(provider: Provider) {
+    EthNetwork.chainId = provider.chainId;
+    EthNetwork.explorer = provider.explorer;
+    EthNetwork.network = new ethers.providers.StaticJsonRpcProvider(
+      provider.network,
+      {
+        chainId: EthNetwork.chainId,
+        name: 'dev',
+      },
+    );
   }
 }

@@ -12,8 +12,11 @@ import {Language, User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
 import {subMinutes} from 'date-fns';
-import {GRAPHIC_GREEN_1} from '../variables';
+import {GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 import {generateUUID} from '../utils';
+import {ENVIRONMENT} from '@env';
+import {Provider} from '../models/provider';
+import {EthNetwork} from '../services/eth-network';
 
 type OptionalConfigObjectT = {
   title: string;
@@ -61,17 +64,31 @@ class App extends EventEmitter {
       });
 
     this.user = this.loadUser();
+
+    const provider = realm.objectForPrimaryKey<Provider>(
+      'Provider',
+      this.user.providerId,
+    );
+
+    if (provider) {
+      EthNetwork.init(provider);
+    }
+
+    this.user.on('provider', providerId => {
+      const p = realm.objectForPrimaryKey<Provider>('Provider', providerId);
+      if (p) {
+        EthNetwork.init(p);
+      }
+    });
   }
 
   async init(): Promise<void> {
-    console.log('init 1');
     try {
       await this.getPassword();
     } catch (e) {
       console.log(e);
       return Promise.reject('user_not_found');
     }
-    console.log('init 2');
     await this.auth();
 
     this.authenticated = true;
@@ -102,10 +119,12 @@ class App extends EventEmitter {
           biometry: false,
           bluetooth: false,
           language: 'en',
+          providerId:
+            ENVIRONMENT === 'production' ? MAIN_NETWORK : TEST_NETWORK,
         });
       });
     }
-    console.log('users[0]', users[0]);
+
     return new User(users[0]);
   }
 
