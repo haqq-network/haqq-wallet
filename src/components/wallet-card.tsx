@@ -82,7 +82,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         setCardState('laded');
       }}>
       <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
-        <Text t14 style={page.name}>
+        <Text t14 style={page.name} ellipsizeMode="tail" numberOfLines={1}>
           {wallet.name || 'name'}
         </Text>
         <View style={page.spacer} />
@@ -144,6 +144,7 @@ const page = StyleSheet.create({
   marginBottom: {marginBottom: 4},
   name: {
     fontWeight: '700',
+    width: 180,
     color: TEXT_SECOND_2,
   },
   address: {
