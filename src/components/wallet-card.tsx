@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {BlurView} from '@react-native-community/blur';
+
 import {NavigationProp} from '@react-navigation/core/src/types';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
@@ -8,6 +8,7 @@ import {useWallet} from '../contexts/wallets';
 import {
   ArrowReceive,
   ArrowSend,
+  BlurView,
   Card,
   Copy,
   CopyButton,
@@ -15,9 +16,17 @@ import {
   QRCode,
   Text,
 } from './ui';
-import {BG_5, GRAPHIC_BASE_3, TEXT_BASE_3, TEXT_SECOND_2} from '../variables';
+import {
+  BG_5,
+  GRAPHIC_BASE_3,
+  GRAPHIC_SECOND_11,
+  TEXT_BASE_3,
+  TEXT_SECOND_2,
+  TRANSPARENT,
+} from '../variables';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
+import {isIOS} from '../helpers';
 
 export type BalanceProps = {
   address: string;
@@ -99,12 +108,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       </Text>
       <View style={page.buttonsContainer}>
         <View style={page.button}>
-          <BlurView
-            key={`send-${cardState}`}
-            blurType="light"
-            blurAmount={7}
-            style={StyleSheet.absoluteFillObject}
-          />
+          {isIOS && <BlurView action="sent" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressSend}>
             <ArrowSend color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
@@ -113,12 +117,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           </IconButton>
         </View>
         <View style={page.button}>
-          <BlurView
-            key={`receive-${cardState}`}
-            blurType="light"
-            blurAmount={7}
-            style={StyleSheet.absoluteFillObject}
-          />
+          {isIOS && <BlurView action="receive" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressQR}>
             <ArrowReceive color={GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
@@ -168,7 +167,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    // backgroundColor: GRAPHIC_SECOND_6,
+    backgroundColor: isIOS ? TRANSPARENT : GRAPHIC_SECOND_11,
     borderRadius: 16,
     padding: 6,
     overflow: 'hidden',
