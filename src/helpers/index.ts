@@ -1,13 +1,19 @@
 import {Linking, Alert, Dimensions, Platform} from 'react-native';
 import * as Sentry from '@sentry/react-native';
 
-export const captureException = (error: unknown) => {
+export const captureException = (
+  error: unknown,
+  source: string = 'unknown',
+) => {
   if (!error) {
-    console.log('captureException called with messing or incorrect arguments');
+    console.log(
+      source,
+      'captureException called with messing or incorrect arguments',
+    );
     console.trace();
     return;
   }
-  console.error('captureException', error);
+  console.error(source, 'captureException', error);
   Sentry.captureException(error);
 };
 

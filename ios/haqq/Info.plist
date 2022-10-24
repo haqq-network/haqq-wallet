@@ -41,15 +41,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Your message to user when the camera is accessed for the first time</string>
+	<string>Allow $(PRODUCT_NAME) to use camera for recognize QR code</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Provide bluetooth to connect to Ledger Nano</string>
+	<string>Allow $(PRODUCT_NAME) to use bluetooth for connect to Ledger Nano</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>Allow $(PRODUCT_NAME) to use the photo library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ElMessiri-Bold.ttf</string>
@@ -79,6 +79,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
-  <false/>
+	<false/>
 </dict>
 </plist>
