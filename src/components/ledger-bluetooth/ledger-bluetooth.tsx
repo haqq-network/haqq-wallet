@@ -38,16 +38,13 @@ export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
 
   useEffect(() => {
     if (user.bluetooth) {
-      const subscription = (value: State) => {
-        setBtState(value);
-      };
-      const sub = bleManager.onStateChange(subscription, true);
+      const sub = bleManager.onStateChange(onChange, true);
 
       return () => {
         sub.remove();
       };
     }
-  }, [bleManager, user.bluetooth]);
+  }, [bleManager, onChange, user.bluetooth]);
 
   useEffect(() => {
     switch (btState) {
