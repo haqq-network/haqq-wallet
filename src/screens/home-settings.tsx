@@ -5,6 +5,7 @@ import {
   AddressBookSettingsIcon,
   Container,
   ISLMSettingsIcon,
+  ProviderIcon,
   ShieldSettingsIcon,
   Spacer,
   WalletIcon,
@@ -41,7 +42,7 @@ export const HomeSettingsScreen = () => {
       />
 
       <SettingsButton
-        icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
+        icon={<ProviderIcon color={GRAPHIC_BASE_1} />}
         title="Providers"
         next="settingsProviders"
         style={page.button}

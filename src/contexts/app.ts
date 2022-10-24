@@ -65,17 +65,14 @@ class App extends EventEmitter {
 
     this.user = this.loadUser();
 
-    const provider = realm.objectForPrimaryKey<Provider>(
-      'Provider',
-      this.user.providerId,
-    );
+    const provider = Provider.getProvider(this.user.providerId);
 
     if (provider) {
       EthNetwork.init(provider);
     }
 
     this.user.on('providerId', providerId => {
-      const p = realm.objectForPrimaryKey<Provider>('Provider', providerId);
+      const p = Provider.getProvider(providerId);
       if (p) {
         EthNetwork.init(p);
       }

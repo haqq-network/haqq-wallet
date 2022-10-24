@@ -61,6 +61,7 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
+import {Provider} from './models/provider';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -113,9 +114,17 @@ export const App = () => {
       .finally(() => {
         app.emit('modal', null);
         requestAnimationFrame(() => {
+          const providers = Provider.getProviders().filter(p => !!p.explorer);
+
+          const applicants: [string, string][] = wallets.addressList.flatMap(
+            d => providers.map(v => [d, v.id]),
+          );
+
+          console.log('applicants', applicants);
+
           Promise.all(
-            wallets.addressList.map(address =>
-              transactions.loadTransactionsFromExplorer(address),
+            applicants.map(([address, provider]) =>
+              transactions.loadTransactionsFromExplorer(address, provider),
             ),
           ).then(() => {
             console.log('transaction synced');
