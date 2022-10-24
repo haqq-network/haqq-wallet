@@ -9,6 +9,7 @@ import {
 import * as React from 'react';
 
 import {TEXT_BASE_1} from '../../variables';
+import {FontT} from '../../types';
 
 interface TxtT {
   t0?: boolean;
