@@ -1,5 +1,12 @@
 import {TransactionSource} from '../types';
 import {cleanNumber} from '../utils';
+import {
+  TransactionReceipt,
+  TransactionResponse,
+} from '@ethersproject/abstract-provider';
+import {realm} from './index';
+import {utils} from 'ethers';
+import {calcFee} from '../helpers/calc-fee';
 
 export class Transaction extends Realm.Object {
   hash!: string;
@@ -36,6 +43,12 @@ export class Transaction extends Realm.Object {
       : TransactionSource.receive;
   }
 
+  getSourceForAccount(account: string) {
+    return account === this.from.toLowerCase()
+      ? TransactionSource.send
+      : TransactionSource.receive;
+  }
+
   get totalFormatted() {
     if (this.source === TransactionSource.send) {
       return `- ${cleanNumber((this.value + this.fee).toFixed(8))}`;
@@ -50,5 +63,37 @@ export class Transaction extends Realm.Object {
 
   get feeFormatted() {
     return cleanNumber(this.fee.toFixed(8));
+  }
+
+  setConfirmed(receipt: TransactionReceipt) {
+    realm.write(() => {
+      this.confirmed = true;
+      this.fee = calcFee(receipt.cumulativeGasUsed, receipt.effectiveGasPrice);
+    });
+  }
+
+  static createTransaction(
+    transaction: TransactionResponse,
+    providerId: string,
+  ) {
+    console.log(
+      'createTransaction',
+      transaction,
+      utils.formatEther(transaction.value),
+    );
+    realm.write(() => {
+      realm.create('Transaction', {
+        hash: transaction.hash,
+        account: transaction.from,
+        raw: JSON.stringify(transaction),
+        createdAt: new Date(),
+        from: transaction.from,
+        to: transaction.to,
+        value: parseFloat(utils.formatEther(transaction.value)),
+        fee: 0,
+        confirmed: false,
+        providerId,
+      });
+    });
   }
 }

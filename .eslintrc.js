@@ -12,7 +12,7 @@ module.exports = {
         'no-undef': 'off',
         'import/no-default-export': 'error',
         'react-native/no-unused-styles': 2,
-        'react-native/split-platform-components': 2,
+        'react-native/split-platform-components': 'off',
         'react-native/no-inline-styles': 2,
         'react-native/no-color-literals': 2,
         'react-native/no-single-element-style-arrays': 2,

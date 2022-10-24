@@ -12,12 +12,12 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 import {EthNetwork} from '../services/eth-network';
 import {useUser} from '../contexts/app';
+import {Transaction} from '../models/transaction';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -26,7 +26,6 @@ export const TransactionConfirmationScreen = () => {
     useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee, splittedTo} = route.params;
   const contacts = useContacts();
-  const transactions = useTransactions();
   const wallet = useWallet(from);
 
   const [estimateFee, setEstimateFee] = useState(fee ?? 0);
@@ -62,14 +61,7 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
-          await transactions.saveTransaction(
-            transaction,
-            from,
-            to,
-            amount,
-            estimateFee,
-            user.providerId,
-          );
+          await Transaction.createTransaction(transaction, user.providerId);
           console.log('transaction', transaction);
 
           navigation.navigate('transactionFinish', {
@@ -85,22 +77,13 @@ export const TransactionConfirmationScreen = () => {
         setDisabled(false);
       }
     }
-  }, [
-    wallet,
-    navigation,
-    from,
-    to,
-    amount,
-    estimateFee,
-    transactions,
-    user.providerId,
-  ]);
+  }, [wallet, navigation, from, to, amount, estimateFee, user.providerId]);
 
   useEffect(() => {
-    transactions
-      .estimateTransaction(from, to, amount)
-      .then(result => setEstimateFee(result.fee));
-  }, [from, to, amount, transactions]);
+    EthNetwork.estimateTransaction(from, to, amount).then(result =>
+      setEstimateFee(result.fee),
+    );
+  }, [from, to, amount]);
 
   return (
     <PopupContainer style={page.container}>

@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Device} from 'react-native-ble-plx';
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
+import {Observable} from 'rxjs';
 import {PopupContainer} from '../ui';
 import {OnScanEvent} from '../../services/ledger';
 import {LedgerScanRow} from './ledger-scan-row';
 import {LedgerScanHeader} from './ledger-scan-header';
-import {Observable} from 'rxjs';
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {useApp} from '../../contexts/app';
 import {LedgerScanEmpty} from './ledger-scan-empty';
 

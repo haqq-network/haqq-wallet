@@ -5,14 +5,13 @@ import {EventEmitter} from 'events';
 import {Observable, Subscription} from 'rxjs';
 import AppEth from '@ledgerhq/hw-app-eth';
 import {sleep} from '../utils';
+import {ETH_HD_PATH} from '../variables';
 
 export type OnScanEvent = {
   refreshing?: boolean;
   error?: string;
   device?: Device;
 };
-
-const path = "44'/60'/0'/0/0"; // HD derivation path
 
 export class Ledger extends EventEmitter {
   private bleManager: BleManager;
@@ -112,7 +111,7 @@ export class Ledger extends EventEmitter {
 
     while (!address && !stop) {
       try {
-        const resp = await eth.getAddress(path, validate);
+        const resp = await eth.getAddress(ETH_HD_PATH, validate);
         address = resp.address;
       } catch (error) {
         console.log('error', error);
