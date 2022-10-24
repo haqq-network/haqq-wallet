@@ -1,10 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {LottieWrap, PopupContainer, Text} from '../ui';
 import {Dimensions, StyleSheet} from 'react-native';
-import {runUntil} from '../../helpers/run-until';
-import {ETH_HD_PATH} from '../../variables';
-import {useUser} from '../../contexts/app';
-import {useTransactions} from '../../contexts/transactions';
 import {useWallet} from '../../contexts/wallets';
 import {EthNetwork} from '../../services/eth-network';
 import {TransactionResponse} from '@ethersproject/abstract-provider';
@@ -23,7 +19,6 @@ export const TransactionLedger = ({
   onDone,
 }: TransactionVerifyProps) => {
   const wallet = useWallet(from);
-  const [error, setError] = useState('');
 
   const run = useCallback(async () => {
     if (wallet) {
@@ -40,9 +35,6 @@ export const TransactionLedger = ({
         }
       } catch (e) {
         console.log('onDone', e);
-        if (e instanceof Error) {
-          setError(e.message);
-        }
       }
     }
   }, [wallet, to, amount, onDone]);

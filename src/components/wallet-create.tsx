@@ -14,7 +14,7 @@ import {
 import {RootStackParamList} from '../types';
 import {IS_LEDGER_ENABLED} from '@env';
 
-const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED));
+const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED, 10));
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {

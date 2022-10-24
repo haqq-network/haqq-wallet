@@ -61,7 +61,6 @@ import {
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {EthNetwork} from './services/eth-network';
 import {Provider} from './models/provider';
 
 const screenOptions: ScreenOptionType = {

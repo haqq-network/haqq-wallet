@@ -54,7 +54,7 @@ export const SigninStoreWalletScreen = () => {
           }
         });
     }, 350);
-  }, [navigation, route, transactions, wallets]);
+  }, [app, navigation, route, transactions, wallets]);
 
   return <View />;
 };

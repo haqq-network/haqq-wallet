@@ -12,7 +12,6 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
