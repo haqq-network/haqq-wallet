@@ -15,7 +15,6 @@ import {
   StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {Platform, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';
@@ -58,6 +57,7 @@ import {
   RootStackParamList,
   ScreenOptionType,
 } from './types';
+import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
@@ -132,9 +132,7 @@ export const App = () => {
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
-        {Platform.OS === 'ios' && (
-          <StatusBar backgroundColor={BG_1} barStyle="dark-content" />
-        )}
+        <StatusBarColor barStyle="dark-content" />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>

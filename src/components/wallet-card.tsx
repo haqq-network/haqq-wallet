@@ -104,7 +104,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           </Text>
         </IconButton>
       )}
-      <Text clean style={page.balance}>
+      <Text t0 style={page.balance}>
         {balance.toFixed(4)} ISLM
       </Text>
       <View style={page.buttonsContainer}>
@@ -134,6 +134,7 @@ export const WalletCard = ({address}: BalanceProps) => {
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
+    height: 212,
   },
   topNav: {
     flexDirection: 'row',
@@ -152,9 +153,6 @@ const page = StyleSheet.create({
     color: TEXT_BASE_3,
   },
   balance: {
-    fontFamily: 'El Messiri',
-    fontStyle: 'normal',
-    fontWeight: '700',
     fontSize: 40,
     lineHeight: 54,
     marginBottom: 16,
