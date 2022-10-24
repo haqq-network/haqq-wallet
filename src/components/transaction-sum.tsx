@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import {useContacts} from '../contexts/contacts';
 import {useWallets} from '../contexts/wallets';
-import {useTransactions} from '../contexts/transactions';
 import {cleanNumber, isNumber, shortAddress} from '../utils';
 import {
   Button,
@@ -19,6 +18,7 @@ import {
   Text,
 } from './ui';
 import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+import {EthNetwork} from '../services/eth-network';
 
 export type TransactionSumProps = {
   to: string;
@@ -35,7 +35,6 @@ export const TransactionSum = ({
 }: TransactionSumProps) => {
   const contacts = useContacts();
   const wallets = useWallets();
-  const transactions = useTransactions();
   const [amount, setAmount] = useState('');
   const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
@@ -53,9 +52,9 @@ export const TransactionSum = ({
     const newBalance = await wallets.getBalance(from);
     setBalance(newBalance);
 
-    const {fee} = await transactions.estimateTransaction(from, to, newBalance);
+    const {fee} = await EthNetwork.estimateTransaction(from, to, newBalance);
     setMaxSum(newBalance - fee * 2);
-  }, [from, to, transactions, wallets]);
+  }, [from, to, wallets]);
 
   useEffect(() => {
     getBalance();

@@ -509,6 +509,89 @@ export const PlusIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const ProviderIcon = (props: SvgProps) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M17 19.9001H7V18.1001H17V19.9001Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19.9 7V17H18.1V7H19.9Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M7 4.1001H17V5.9001H7V4.1001Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M4.09998 17V7H5.89998V17H4.09998Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M8.86365 10.1366L5.86365 7.13656L7.13644 5.86377L10.1364 8.86377L8.86365 10.1366Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.8636 8.86377L16.8636 5.86377L18.1364 7.13656L15.1364 10.1366L13.8636 8.86377Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.1364 15.1366L7.13644 18.1366L5.86365 16.8638L8.86365 13.8638L10.1364 15.1366Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15.1364 13.8638L17.6364 16.3638L16.3636 17.6366L13.8636 15.1366L15.1364 13.8638Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5 6.2C5.66274 6.2 6.2 5.66274 6.2 5C6.2 4.33726 5.66274 3.8 5 3.8C4.33726 3.8 3.8 4.33726 3.8 5C3.8 5.66274 4.33726 6.2 5 6.2ZM5 8C6.65685 8 8 6.65685 8 5C8 3.34315 6.65685 2 5 2C3.34315 2 2 3.34315 2 5C2 6.65685 3.34315 8 5 8Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M5 20.2C5.66274 20.2 6.2 19.6627 6.2 19C6.2 18.3373 5.66274 17.8 5 17.8C4.33726 17.8 3.8 18.3373 3.8 19C3.8 19.6627 4.33726 20.2 5 20.2ZM5 22C6.65685 22 8 20.6569 8 19C8 17.3431 6.65685 16 5 16C3.34315 16 2 17.3431 2 19C2 20.6569 3.34315 22 5 22Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19 6.2C19.6627 6.2 20.2 5.66274 20.2 5C20.2 4.33726 19.6627 3.8 19 3.8C18.3373 3.8 17.8 4.33726 17.8 5C17.8 5.66274 18.3373 6.2 19 6.2ZM19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19 20.2C19.6627 20.2 20.2 19.6627 20.2 19C20.2 18.3373 19.6627 17.8 19 17.8C18.3373 17.8 17.8 18.3373 17.8 19C17.8 19.6627 18.3373 20.2 19 20.2ZM19 22C20.6569 22 22 20.6569 22 19C22 17.3431 20.6569 16 19 16C17.3431 16 16 17.3431 16 19C16 20.6569 17.3431 22 19 22Z"
+      fill="currentColor"
+    />
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 14.2C13.215 14.2 14.2 13.215 14.2 12C14.2 10.785 13.215 9.8 12 9.8C10.785 9.8 9.8 10.785 9.8 12C9.8 13.215 10.785 14.2 12 14.2ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"
+      fill="currentColor"
+    />
+  </Svg>
+);
+
 export const SettingsIcon = (props: SvgProps) => (
   <Svg width="25" height="24" viewBox="0 0 25 24" fill="none" {...props}>
     <Path
@@ -581,14 +664,14 @@ export const SwapVerticalIcon = ({style, color}: SvgProps) => (
 export const SwapIcon = (props: SvgProps) => (
   <Svg width="25" height="24" viewBox="0 0 25 24" fill="none" {...props}>
     <Path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M16.4296 3.29289C16.8089 2.90237 17.4239 2.90237 17.8032 3.29289L22.375 8L17.8032 12.7071C17.4239 13.0976 16.8089 13.0976 16.4296 12.7071C16.0503 12.3166 16.0503 11.6834 16.4296 11.2929L18.6566 9H9.34626C8.80985 9 8.375 8.55228 8.375 8C8.375 7.44772 8.80985 7 9.34626 7H18.6566L16.4296 4.70711C16.0503 4.31658 16.0503 3.68342 16.4296 3.29289Z"
       fill="currentColor"
     />
     <Path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M8.32041 11.2929C7.94111 10.9024 7.32614 10.9024 6.94684 11.2929L2.375 16L6.94684 20.7071C7.32614 21.0976 7.94111 21.0976 8.32041 20.7071C8.69972 20.3166 8.69972 19.6834 8.32041 19.2929L6.09341 17H15.4037C15.9402 17 16.375 16.5523 16.375 16C16.375 15.4477 15.9402 15 15.4037 15H6.09341L8.32041 12.7071C8.69972 12.3166 8.69972 11.6834 8.32041 11.2929Z"
       fill="currentColor"
     />

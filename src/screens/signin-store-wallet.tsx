@@ -47,11 +47,14 @@ export const SigninStoreWalletScreen = () => {
         .then(wallet => {
           if (wallet) {
             wallet.mnemonicSaved = true;
-            return transactions.loadTransactionsFromExplorer(wallet.address);
+            return transactions.loadTransactionsFromExplorer(
+              wallet.address,
+              app.getUser().providerId,
+            );
           }
         });
     }, 350);
-  }, [navigation, route, transactions, wallets]);
+  }, [app, navigation, route, transactions, wallets]);
 
   return <View />;
 };

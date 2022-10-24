@@ -1,3 +1,6 @@
+import {realm} from './index';
+import {ethers} from 'ethers';
+
 export class Provider extends Realm.Object {
   id!: string;
   name!: string;
@@ -16,4 +19,19 @@ export class Provider extends Realm.Object {
     },
     primaryKey: 'id',
   };
+
+  static getProviders() {
+    return realm.objects<Provider>('Provider');
+  }
+
+  static getProvider(providerId: string) {
+    return realm.objectForPrimaryKey<Provider>('Provider', providerId);
+  }
+
+  get rpcProvider() {
+    return new ethers.providers.StaticJsonRpcProvider(this.network, {
+      chainId: this.chainId,
+      name: this.id,
+    });
+  }
 }

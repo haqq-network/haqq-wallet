@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {NETWORK_EXPLORER} from '@env';
 import {format} from 'date-fns';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -28,13 +27,14 @@ import {
 } from '../variables';
 import {splitAddress} from '../utils';
 import {openURL} from '../helpers';
+import {EthNetwork} from '../services/eth-network';
 
 export const TransactionDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'transactionDetail'>>();
 
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<Transaction | null>(
+  const [transaction, setTransaction] = useState<Transaction | undefined>(
     transactions.getTransaction(route.params.hash),
   );
 
@@ -48,7 +48,7 @@ export const TransactionDetailScreen = () => {
 
   const onPressInfo = useCallback(async () => {
     try {
-      const url = `${NETWORK_EXPLORER}tx/${transaction?.hash}/internal-transactions`;
+      const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
       await openURL(url);
     } catch (_e) {}
   }, [transaction?.hash]);
