@@ -48,7 +48,7 @@ export const WalletCreate = ({}: BalanceProps) => {
           />
         )}
         <Button
-          title="Import"
+          title="Import  an existing one"
           style={page.create}
           onPress={() => {
             navigation.navigate('restore');
@@ -96,7 +96,6 @@ const page = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 8,
     paddingVertical: 12,
-    fontSize: 16,
     lineHeight: 22,
   },
   buttons: {
