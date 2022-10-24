@@ -5,6 +5,7 @@ import {LedgerAccountsRow} from './ledger-accounts-row';
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
+import {useWallet, useWallets} from '../../contexts/wallets';
 
 export type LedgerDeviceProps = {
   deviceId: string;
@@ -13,6 +14,7 @@ export type LedgerDeviceProps = {
 
 export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
   const [addresses, setAddresses] = useState<string[]>([]);
+  const wallets = useWallets();
 
   useEffect(() => {
     const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, false));
@@ -45,7 +47,11 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
         data={addresses}
         ListEmptyComponent={LedgerAccountsEmpty}
         renderItem={({item}) => (
-          <LedgerAccountsRow item={item} onPress={onAdd} />
+          <LedgerAccountsRow
+            item={item}
+            onPress={onAdd}
+            wallets={wallets.addressList}
+          />
         )}
       />
     </PopupContainer>

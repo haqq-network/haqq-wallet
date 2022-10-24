@@ -6,10 +6,15 @@ import {cleanNumber, shortAddress} from '../../utils';
 
 export type LedgerAccountsRowProps = {
   item: string;
+  wallets: string[];
   onPress: (item: string) => void;
 };
 
-export const LedgerAccountsRow = ({item, onPress}: LedgerAccountsRowProps) => {
+export const LedgerAccountsRow = ({
+  item,
+  onPress,
+  wallets,
+}: LedgerAccountsRowProps) => {
   const [balance, setBalance] = useState(0);
 
   const onPressButton = () => {
@@ -28,12 +33,22 @@ export const LedgerAccountsRow = ({item, onPress}: LedgerAccountsRowProps) => {
         title={`${cleanNumber(balance)} ISML`}
         subtitle={shortAddress(item)}
       />
-      <Button
-        variant={ButtonVariant.second}
-        size={ButtonSize.small}
-        title="Add"
-        onPress={onPressButton}
-      />
+      {wallets.includes(item) ? (
+        <Button
+          disabled
+          variant={ButtonVariant.second}
+          size={ButtonSize.small}
+          title="Added"
+          onPress={onPressButton}
+        />
+      ) : (
+        <Button
+          variant={ButtonVariant.second}
+          size={ButtonSize.small}
+          title="Add"
+          onPress={onPressButton}
+        />
+      )}
     </View>
   );
 };
