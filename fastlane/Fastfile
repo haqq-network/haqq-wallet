@@ -99,9 +99,6 @@ platform :ios do
   end
 
   lane :distribute do
-   ENV['ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD'] = 'true'
-
-
     keychain_name = ENV["TEMP_KEYCHAIN_USER"]
     keychain_password = ENV["TEMP_KEYCHAIN_PASSWORD"]
     app_identifier =  ENV["DEVELOPER_APP_IDENTIFIER"]
