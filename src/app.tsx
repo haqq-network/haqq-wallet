@@ -15,7 +15,6 @@ import {
   StackActions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import {Platform, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './screens/home';

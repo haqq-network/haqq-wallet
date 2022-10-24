@@ -14,6 +14,7 @@ export const HomeScreen = () => {
     <Tab.Navigator
       screenOptions={{
         headerTitle: TabHeader,
+        headerShadowVisible: false,
         headerStyle: {
           backgroundColor: 'transparent',
         },
@@ -27,6 +28,7 @@ export const HomeScreen = () => {
         options={{
           title: 'Wallet',
           headerTitle: 'Your wallets',
+          headerTitleAlign: 'center',
           headerRight: () => <QrScannerButton />,
           headerTitleAllowFontScaling: false,
           tabBarIcon: ({focused}) => (
@@ -63,6 +65,7 @@ export const HomeScreen = () => {
           title: 'Settings',
           headerTitle: 'Settings',
           headerTitleAllowFontScaling: false,
+          headerTitleAlign: 'center',
           tabBarIcon: ({focused}) => (
             <SettingsIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
           ),
