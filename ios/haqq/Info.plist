@@ -44,8 +44,6 @@
 	<string>Allow $(PRODUCT_NAME) to use camera for recognize QR code</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use bluetooth for connect to Ledger Nano</string>
 	<key>NSPhotoLibraryUsageDescription</key>
