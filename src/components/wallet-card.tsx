@@ -134,6 +134,7 @@ export const WalletCard = ({address}: BalanceProps) => {
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
+    height: 212,
   },
   topNav: {
     flexDirection: 'row',
