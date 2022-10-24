@@ -1,4 +1,4 @@
-import {BigNumber, ethers, utils} from 'ethers';
+import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Deferrable} from '@ethersproject/properties';
 import {TransactionRequest} from '@ethersproject/abstract-provider';
@@ -10,14 +10,16 @@ import {app} from '../contexts/app';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {runUntil} from '../helpers/run-until';
 import {Provider} from '../models/provider';
+import {FeeData} from '@ethersproject/abstract-provider/src.ts';
+import {calcFee} from '../helpers/calc-fee';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
+  static chainId: number = getDefaultChainId();
+  static explorer: string | undefined;
   private wallet: Wallet;
   private path = "44'/60'/0'/0/0";
   private _stop = false;
-  static chainId: number = getDefaultChainId();
-  static explorer: string | undefined;
 
   constructor(wallet: Wallet) {
     this.wallet = wallet;
@@ -138,13 +140,6 @@ export class EthNetwork {
       to: tx.to || undefined,
       value: tx.value || undefined,
     };
-
-    // const unsignedTx = utils.serializeTransaction(baseTx);
-    //
-    // return {
-    //   transaction,
-    //   unsignedTx,
-    // };
   }
 
   static async getBalance(address: string) {
@@ -155,12 +150,31 @@ export class EthNetwork {
   static init(provider: Provider) {
     EthNetwork.chainId = provider.chainId;
     EthNetwork.explorer = provider.explorer;
-    EthNetwork.network = new ethers.providers.StaticJsonRpcProvider(
-      provider.network,
-      {
-        chainId: EthNetwork.chainId,
-        name: 'dev',
-      },
-    );
+    EthNetwork.network = provider.rpcProvider;
+  }
+
+  static async estimateTransaction(
+    from: string,
+    to: string,
+    amount: number,
+  ): Promise<{
+    fee: number;
+    feeData: FeeData;
+    estimateGas: BigNumberish;
+  }> {
+    const result = await Promise.all([
+      EthNetwork.network.getFeeData(),
+      EthNetwork.network.estimateGas({
+        from,
+        to,
+        amount,
+      } as Deferrable<TransactionRequest>),
+    ]);
+
+    return {
+      fee: calcFee(result[0].maxFeePerGas!, result[1]),
+      feeData: result[0],
+      estimateGas: result[1],
+    };
   }
 }
