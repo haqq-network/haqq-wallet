@@ -53,11 +53,14 @@ import {SettingsTestScreen} from './screens/settings-test';
 import {Notifications} from './components/notifications';
 import {
   ActionSheetType,
+  HeaderButtonProps,
   RootStackParamList,
   ScreenOptionType,
-  HeaderButtonProps,
 } from './types';
 import {StatusBarColor} from './components/ui';
+import {LedgerScreen} from './screens/ledger';
+import {migration} from './models/migration';
+import {SettingsProvidersScreen} from './screens/settings-providers';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -92,6 +95,7 @@ export const App = () => {
     app.emit('modal', {type: 'splash'});
     sleep(150)
       .then(() => SplashScreen.hide())
+      .then(() => migration())
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
@@ -152,6 +156,7 @@ export const App = () => {
                   />
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
+                  <Stack.Screen name="ledger" component={LedgerScreen} />
                 </Stack.Group>
                 <Stack.Screen
                   name="detailsQr"
@@ -216,6 +221,13 @@ export const App = () => {
                     component={SettingsSecurityScreen}
                     options={{
                       title: 'Security',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsProviders"
+                    component={SettingsProvidersScreen}
+                    options={{
+                      title: 'Providers',
                     }}
                   />
                   <Stack.Screen

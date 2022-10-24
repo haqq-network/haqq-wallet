@@ -11,9 +11,11 @@ import {prepareTransactions} from '../utils';
 import {TransactionList} from '../types';
 import {Wallet} from '../models/wallet';
 import {TransactionEmpty} from '../components/transaction-empty';
+import {useUser} from '../contexts/app';
 
 export const HomeFeedScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const user = useUser();
   const wallets = useWallets();
   const transactions = useTransactions();
   const [refreshing, setRefreshing] = useState(false);
@@ -66,6 +68,7 @@ export const HomeFeedScreen = () => {
 
   return (
     <FlatList
+      key={user.providerId}
       style={page.container}
       refreshing={refreshing}
       onRefresh={onWalletsRefresh}

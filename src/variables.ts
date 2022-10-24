@@ -35,6 +35,7 @@ export const GRAPHIC_SECOND_7 = 'rgba(25, 26, 28, 0.08)';
 export const GRAPHIC_SECOND_8 = '#0000004D';
 export const GRAPHIC_SECOND_9 = 'rgba(255, 255, 255, 0.3)';
 export const GRAPHIC_SECOND_10 = 'rgba(229, 229, 234, 0.82)';
+export const GRAPHIC_SECOND_11 = 'rgba(255, 255, 255, 0.2)';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';
@@ -44,6 +45,8 @@ export const BG_5 = 'rgba(225, 99, 99, 0.8)';
 export const BG_6 = 'rgba(247, 193, 90, 0.3)';
 export const BG_7 = '#F9EEEE';
 export const BG_8 = '#F4F5F8';
+
+export const TRANSPARENT = 'transparent';
 
 export const MAIN_ACCOUNT_NAME = 'Main account';
 
@@ -123,3 +126,9 @@ export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
   [BiometryType.fingerprint]: 'Fingerprint',
   [BiometryType.unknown]: '',
 };
+
+export const DEFAULT_USERNAME = 'username';
+export const ETH_HD_PATH = "44'/60'/0'/0/0"; // HD derivation path
+
+export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
+export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';

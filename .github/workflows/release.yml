@@ -64,7 +64,6 @@ jobs:
       - name: Update app version
         run: |
           bundle exec fastlane android version
-          bundle exec fastlane android version_code
         env:
           RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
       - name: Execute Fastlane command

@@ -3,6 +3,7 @@ import React from 'react';
 import {Transaction} from './models/transaction';
 
 import type {StackNavigationOptions} from '@react-navigation/stack';
+import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 export enum TransactionSource {
   unknown,
@@ -39,6 +40,7 @@ export type RootStackParamList = {
   signup: {next: string};
   setPin: undefined;
   restore: undefined;
+  ledger: undefined;
   restorePhrase: {
     nextScreen: keyof RootStackParamList;
   };
@@ -62,6 +64,7 @@ export type RootStackParamList = {
   settingsLanguage: undefined;
   settingsSecurity: undefined;
   settingsSecurityPin: undefined;
+  settingsProviders: undefined;
   settingsSecurityPinRepeat: {
     pin: string;
   };
@@ -144,12 +147,34 @@ export type RootStackParamList = {
     splittedTo: string[];
     fee?: number;
   };
+  transactionLedger: {
+    from: string;
+    to: string;
+    amount: number;
+    fee?: number;
+  };
   transactionSumAddress: {
     to: string;
     event: string;
   };
   transactionAddress: {
     from: string;
+    to?: string;
+  };
+  ledgerAgreement: undefined;
+  ledgerBluetooth: undefined;
+  ledgerScan: undefined;
+  ledgerAccounts: {
+    deviceId: string;
+    deviceName: string;
+  };
+  ledgerFinish: {
+    hide?: boolean;
+  };
+  ledgerVerify: {
+    address: string;
+    deviceId: string;
+    deviceName: string;
   };
 };
 
@@ -192,6 +217,11 @@ export enum WalletCardStyle {
   gradient = 'gradient',
 }
 
+export enum WalletType {
+  hot = 'hot',
+  ledgerBt = 'ledger-bt',
+}
+
 export enum WalletCardPattern {
   circle = 'card-circle',
   rhombus = 'card-rhombus',
@@ -228,3 +258,5 @@ export type RoutePropT = {
     };
   };
 };
+
+export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;

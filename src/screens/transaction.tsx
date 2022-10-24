@@ -11,6 +11,7 @@ import {useWallets} from '../contexts/wallets';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
 import {RootStackParamList, ScreenOptionType} from '../types';
+import {TransactionLedgerScreen} from './transaction-ledger';
 
 const TransactionStack = createStackNavigator();
 
@@ -45,7 +46,6 @@ export const TransactionScreen = () => {
     headerRight: DismissPopupButton,
   };
 
-  const from = wallets.visible[0].address;
   return (
     <TransactionStack.Navigator
       screenOptions={{header: PopupHeader}}
@@ -57,7 +57,7 @@ export const TransactionScreen = () => {
       <TransactionStack.Screen
         name="transactionAddress"
         component={TransactionAddressScreen}
-        initialParams={{from}}
+        initialParams={{from: route.params.from}}
         options={screenOptionsAddressRoute}
       />
       <TransactionStack.Screen
@@ -80,7 +80,11 @@ export const TransactionScreen = () => {
         component={TransactionAccountScreen}
         options={screenOptionsSendFunds}
       />
-
+      <TransactionStack.Screen
+        name="transactionLedger"
+        component={TransactionLedgerScreen}
+        options={{title: 'Confirmation'}}
+      />
       <TransactionStack.Screen
         name="transactionSumAddress"
         component={TransactionSumAddressScreen}

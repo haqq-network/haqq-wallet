@@ -106,6 +106,7 @@ const page = StyleSheet.create({
   containedContainer: {
     backgroundColor: GRAPHIC_GREEN_1,
     borderRadius: 12,
+    height: 54,
   },
   containedDisabledContainer: {
     backgroundColor: GRAPHIC_SECOND_1,

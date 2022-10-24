@@ -145,8 +145,8 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
   )}${componentToHex(Math.round(255 * f(1)))}`;
 };
 
-export function cleanNumber(number: string) {
-  return number
+export function cleanNumber(number: string | number) {
+  return String(number)
     .trim()
     .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
     .replace(/^(\d+)\.0*$/g, '$1');

@@ -10,6 +10,10 @@ import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 
+if (typeof Buffer === 'undefined') {
+  global.Buffer = require('buffer').Buffer;
+}
+
 Sentry.init({
   dsn: SENTRY_DSN,
   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
@@ -35,8 +39,6 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     id: this._nextId++,
     jsonrpc: '2.0',
   };
-
-  // console.log(JSON.stringify(request));
 
   const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
   if (cache && this._cache[method]) {

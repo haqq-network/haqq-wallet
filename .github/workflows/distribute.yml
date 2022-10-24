@@ -48,6 +48,7 @@ jobs:
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
           echo ${{secrets.GOOGLE_SERVICES_ANDROID}} | base64 -d > android/app/google-services.json
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
 
           echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
           echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
@@ -111,6 +112,15 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
+      - name: Decode secrets
+        run: |
+          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
+          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
+          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
+          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
+          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
+          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
+          echo "ENVIRONMENT=distribute" >> .env
       - name: Execute build
         run: |
           eval "$(ssh-agent -s)"
