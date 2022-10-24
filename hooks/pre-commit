@@ -10,24 +10,26 @@ PASS=true
 
 echo "\nValidating Javascript:\n"
 
-# Check for eslint
-which eslint &> /dev/null
-if [[ "$?" == 1 ]]; then
-  echo "\t\033[41mPlease install ESlint\033[0m"
-  exit 1
-fi
-
 for FILE in $STAGED_FILES
 do
   ./node_modules/.bin/eslint "$FILE"
 
-  if [[ "$?" == 0 ]]; then
-    echo "\t\033[32mESLint Passed: $FILE\033[0m"
-  else
-    echo "\t\033[41mESLint Failed: $FILE\033[0m"
+  if [[ "$?" != 0 ]]; then
+    echo "\033[41mESLint Failed: $FILE\033[0m"
     PASS=false
   fi
 done
+
+./node_modules/.bin/prettier --check $STAGED_FILES
+#for FILE in $STAGED_FILES
+#do
+#  ./node_modules/.bin/prettier --check "$FILE"
+#
+#  if [[ "$?" != 0 ]]; then
+#    echo "\033[41mPrettier Failed: $FILE\033[0m"
+#    PASS=false
+#  fi
+#done
 
 echo "\nJavascript validation completed!\n"
 
