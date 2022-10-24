@@ -37,23 +37,33 @@ export const WalletCreate = ({}: BalanceProps) => {
         style={page.create}
       />
       <View style={page.buttons}>
-        {isLedgerEnabled && (
+        {isLedgerEnabled ? (
+          <>
+            <Button
+              variant={ButtonVariant.second}
+              title="Connect"
+              style={page.create}
+              onPress={() => {
+                navigation.navigate('ledger');
+              }}
+            />
+            <Button
+              title="Import"
+              style={page.create}
+              onPress={() => {
+                navigation.navigate('restore');
+              }}
+            />
+          </>
+        ) : (
           <Button
-            variant={ButtonVariant.second}
-            title="Connect"
+            title="Import  an existing one"
             style={page.create}
             onPress={() => {
-              navigation.navigate('ledger');
+              navigation.navigate('restore');
             }}
           />
         )}
-        <Button
-          title="Import  an existing one"
-          style={page.create}
-          onPress={() => {
-            navigation.navigate('restore');
-          }}
-        />
       </View>
     </View>
   );
