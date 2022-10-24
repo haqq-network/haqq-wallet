@@ -1,0 +1,4 @@
+#!/bin/sh
+
+unlink  ${PWD}/.git/hooks/pre-commit;
+unlink  ${PWD}/.git/hooks/pre-push;

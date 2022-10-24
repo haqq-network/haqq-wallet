@@ -11,7 +11,7 @@ import {realm} from '../models';
 import {Language, User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
 import {BiometryType} from '../types';
-import {subMinutes} from 'date-fns';
+import {subMinutes, addMinutes} from 'date-fns';
 import {GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 import {generateUUID} from '../utils';
 import {ENVIRONMENT} from '@env';
