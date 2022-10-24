@@ -1,13 +1,10 @@
-import ethers, {utils} from 'ethers';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {Provider, TransactionRequest} from '@ethersproject/abstract-provider';
+import ethers from 'ethers';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
-import {getDefaultNetwork} from '../network';
-import {Deferrable} from '@ethersproject/properties';
-import {Mnemonic, WalletCardStyle} from '../types';
+import {Mnemonic, WalletCardStyle, WalletType} from '../types';
 import {captureException} from '../helpers';
+import {EthNetwork} from '../services/eth-network';
 
 export class WalletRealm extends Realm.Object {
   address!: string;
@@ -20,6 +17,9 @@ export class WalletRealm extends Realm.Object {
   colorPattern!: string;
   pattern!: string;
   isHidden!: boolean;
+  type!: WalletType;
+  deviceId: string | undefined;
+  deviceName: string | undefined;
 
   static schema = {
     name: 'Wallet',
@@ -34,6 +34,9 @@ export class WalletRealm extends Realm.Object {
       colorTo: 'string',
       colorPattern: 'string',
       pattern: 'string',
+      type: 'string',
+      deviceId: 'string?',
+      deviceName: 'string?',
     },
     primaryKey: 'address',
   };
@@ -45,11 +48,13 @@ export class Wallet extends EventEmitter {
   private _balance: number = 0;
   private _encrypted: boolean;
   private _mnemonic: Mnemonic | undefined;
+  private _privateKey: string | undefined;
 
   constructor(data: WalletRealm) {
     super();
 
     this._raw = data;
+
     this._encrypted = data.data !== '';
 
     const interval = setInterval(this.checkBalance, 6000);
@@ -67,17 +72,11 @@ export class Wallet extends EventEmitter {
     this.checkBalance();
   }
 
-  setWallet(wallet: ethers.Wallet) {
-    this._wallet = wallet;
-  }
-
-  async decrypt(password: string, provider: Provider) {
+  async decrypt(password: string) {
     try {
       if (this._encrypted) {
         const decrypted = await decrypt(password, this._raw.data);
-        const tmp = new EthersWallet(decrypted.privateKey, provider);
-
-        this.setWallet(tmp);
+        this._privateKey = decrypted.privateKey;
         this._encrypted = false;
 
         if (decrypted.mnemonic) {
@@ -93,8 +92,16 @@ export class Wallet extends EventEmitter {
     return this._raw.address;
   }
 
+  get privateKey() {
+    return this._privateKey;
+  }
+
   get name() {
     return this._raw.name;
+  }
+
+  get type() {
+    return this._raw.type;
   }
 
   set name(value) {
@@ -172,12 +179,18 @@ export class Wallet extends EventEmitter {
     return this._encrypted;
   }
 
+  get deviceId() {
+    return this._raw.deviceId;
+  }
+
+  get deviceName() {
+    return this._raw.deviceName;
+  }
+
   checkBalance = () => {
-    getDefaultNetwork()
-      .getBalance(this.address)
-      .then(balance => {
-        this.balance = Number(utils.formatEther(balance));
-      });
+    EthNetwork.getBalance(this.address).then(balance => {
+      this.balance = balance;
+    });
   };
 
   get mnemonic() {
@@ -197,23 +210,11 @@ export class Wallet extends EventEmitter {
     return this._balance;
   }
 
-  connect(provider: Provider) {
-    if (this._wallet) {
-      this._wallet = this._wallet.connect(provider);
-    }
-  }
-
-  async sendTransaction(transaction: Deferrable<TransactionRequest>) {
-    if (this._wallet) {
-      return this._wallet.sendTransaction(transaction);
-    }
-  }
-
   async updateWalletData(pin: string) {
     const data = this._wallet
       ? await encrypt(pin, {
-          privateKey: this._wallet.privateKey,
-          mnemonic: this._mnemonic || this._wallet.mnemonic,
+          privateKey: this._privateKey,
+          mnemonic: this._mnemonic,
         })
       : '';
 

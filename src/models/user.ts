@@ -6,6 +6,7 @@ import {
   SNOOZE_WALLET_BACKUP_MINUTES,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables';
+import {EventEmitter} from 'events';
 
 export const UserSchema = {
   name: 'User',
@@ -13,9 +14,11 @@ export const UserSchema = {
     username: 'string',
     language: 'string',
     biometry: 'bool',
+    bluetooth: 'bool?',
     snoozeBackup: 'date?',
     pinAttempts: 'int?',
     pinBanned: 'date?',
+    providerId: 'string',
   },
   primaryKey: 'username',
 };
@@ -32,20 +35,43 @@ export type UserType = {
   snoozeBackup: Date | null;
   pinAttempts: number | null;
   pinBanned: Date | null;
+  bluetooth: boolean | null;
+  providerId: string;
 };
 
-export class User {
+export class User extends EventEmitter {
   private last_activity: Date;
   private _raw: UserType & Realm.Object;
 
   constructor(user: UserType & Realm.Object) {
+    super();
     this.last_activity = new Date();
 
     this._raw = user;
+
+    this._raw.addListener(() => {
+      this.emit('change');
+    });
+  }
+
+  get uuid() {
+    return this._raw.username;
   }
 
   get isLoaded() {
     return !!this._raw;
+  }
+
+  get providerId() {
+    return this._raw.providerId;
+  }
+
+  set providerId(value) {
+    realm.write(() => {
+      this._raw.providerId = value;
+    });
+
+    this.emit('providerId', value);
   }
 
   get biometry() {
@@ -65,6 +91,16 @@ export class User {
   set language(language) {
     realm.write(() => {
       this._raw.language = language;
+    });
+  }
+
+  get bluetooth() {
+    return this._raw.bluetooth ?? false;
+  }
+
+  set bluetooth(value) {
+    realm.write(() => {
+      this._raw.bluetooth = value;
     });
   }
 

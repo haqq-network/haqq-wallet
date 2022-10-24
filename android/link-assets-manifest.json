@@ -126,6 +126,18 @@
       "sha1": "d5b05a587bc75834fd9ef96ce972243e53ad0a5d"
     },
     {
+      "path": "assets/images/ledger-bluetooth.png",
+      "sha1": "e03acda5595cbbccef49c12b20bc54473b21d6aa"
+    },
+    {
+      "path": "assets/images/ledger-bluetooth@2x.png",
+      "sha1": "cc93f00ec38979c821dba2a39829572e8f92883a"
+    },
+    {
+      "path": "assets/images/ledger-bluetooth@3x.png",
+      "sha1": "a93f0b6888777c0f8bc9670190a79f5c481e6cb3"
+    },
+    {
       "path": "assets/images/logo-empty.png",
       "sha1": "300decd99701800b8b6957377536306035d71025"
     },

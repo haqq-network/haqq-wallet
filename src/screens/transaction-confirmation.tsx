@@ -2,23 +2,26 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {RootStackParamList, WalletType} from '../types';
 import {
   Button,
   ButtonVariant,
   DataView,
   ISLMIcon,
-  Text,
   PopupContainer,
   Spacer,
+  Text,
 } from '../components/ui';
 import {useTransactions} from '../contexts/transactions';
 import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
+import {EthNetwork} from '../services/eth-network';
+import {useUser} from '../contexts/app';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const user = useUser();
   const route =
     useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
   const {from, to, amount, fee, splittedTo} = route.params;
@@ -37,17 +40,38 @@ export const TransactionConfirmationScreen = () => {
 
   const onDone = useCallback(async () => {
     if (wallet) {
+      if (wallet.type === WalletType.ledgerBt) {
+        navigation.navigate('transactionLedger', {
+          from: from,
+          to: to,
+          amount: amount,
+          fee: estimateFee,
+        });
+
+        return;
+      }
+
       try {
         setDisabled(true);
-        const transaction = await transactions.sendTransaction(
-          from,
+
+        const ethNetworkProvider = new EthNetwork(wallet);
+
+        const transaction = await ethNetworkProvider.sendTransaction(
           to,
           amount,
-          estimateFee,
-          wallet,
         );
-        console.log('transaction', transaction);
+
         if (transaction) {
+          await transactions.saveTransaction(
+            transaction,
+            from,
+            to,
+            amount,
+            estimateFee,
+            user.providerId,
+          );
+          console.log('transaction', transaction);
+
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,
           });
@@ -61,12 +85,21 @@ export const TransactionConfirmationScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, transactions, from, to, amount, estimateFee, navigation]);
+  }, [
+    wallet,
+    navigation,
+    from,
+    to,
+    amount,
+    estimateFee,
+    transactions,
+    user.providerId,
+  ]);
 
   useEffect(() => {
     transactions
       .estimateTransaction(from, to, amount)
-      .then(result => setEstimateFee(result));
+      .then(result => setEstimateFee(result.fee));
   }, [from, to, amount, transactions]);
 
   return (

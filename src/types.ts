@@ -40,6 +40,7 @@ export type RootStackParamList = {
   signup: {next: string};
   setPin: undefined;
   restore: undefined;
+  ledger: undefined;
   restorePhrase: {
     nextScreen: keyof RootStackParamList;
   };
@@ -63,6 +64,7 @@ export type RootStackParamList = {
   settingsLanguage: undefined;
   settingsSecurity: undefined;
   settingsSecurityPin: undefined;
+  settingsProviders: undefined;
   settingsSecurityPinRepeat: {
     pin: string;
   };
@@ -145,12 +147,34 @@ export type RootStackParamList = {
     splittedTo: string[];
     fee?: number;
   };
+  transactionLedger: {
+    from: string;
+    to: string;
+    amount: number;
+    fee?: number;
+  };
   transactionSumAddress: {
     to: string;
     event: string;
   };
   transactionAddress: {
     from: string;
+    to?: string;
+  };
+  ledgerAgreement: undefined;
+  ledgerBluetooth: undefined;
+  ledgerScan: undefined;
+  ledgerAccounts: {
+    deviceId: string;
+    deviceName: string;
+  };
+  ledgerFinish: {
+    hide?: boolean;
+  };
+  ledgerVerify: {
+    address: string;
+    deviceId: string;
+    deviceName: string;
   };
 };
 
@@ -191,6 +215,11 @@ export enum WalletCardStyle {
   defaultViolet = 'defaultViolet',
   flat = 'flat',
   gradient = 'gradient',
+}
+
+export enum WalletType {
+  hot = 'hot',
+  ledgerBt = 'ledger-bt',
 }
 
 export enum WalletCardPattern {

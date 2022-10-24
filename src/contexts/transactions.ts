@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
-import {getChainId, getDefaultNetwork} from '../network';
 import {BigNumberish, utils} from 'ethers';
 import {
   TransactionRequest,
@@ -9,8 +8,8 @@ import {
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
 import {Deferrable} from '@ethersproject/properties';
-import {Wallet} from '../models/wallet';
-import {NETWORK_EXPLORER} from '@env';
+import {FeeData} from '@ethersproject/abstract-provider/src.ts';
+import {EthNetwork} from '../services/eth-network';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -34,12 +33,13 @@ class Transactions extends EventEmitter {
     return Array.from(this._transactions ?? []);
   }
 
-  async saveTransaction(
+  saveTransaction(
     raw: TransactionResponse,
     from: string,
     to: string,
     amount: number,
     estimateFee: number,
+    providerId: string,
   ) {
     realm.write(() => {
       realm.create('Transaction', {
@@ -50,13 +50,18 @@ class Transactions extends EventEmitter {
         from,
         to,
         value: amount,
-        fee: estimateFee,
+        fee: estimateFee || 0,
         confirmed: false,
+        providerId,
       });
     });
 
     this._transactions = realm.objects<Transaction>('Transaction');
     this.emit('transactions');
+
+    requestAnimationFrame(async () => {
+      await this.checkTransaction(raw.hash);
+    });
   }
 
   getTransaction(hash: string): Transaction | null {
@@ -75,7 +80,7 @@ class Transactions extends EventEmitter {
 
     if (local) {
       try {
-        const receipt = await getDefaultNetwork().getTransactionReceipt(
+        const receipt = await EthNetwork.network.getTransactionReceipt(
           local.hash,
         );
         if (receipt && receipt.confirmations > 0) {
@@ -105,53 +110,35 @@ class Transactions extends EventEmitter {
     }
   }
 
-  async sendTransaction(
+  async estimateTransaction(
     from: string,
     to: string,
     amount: number,
-    estimateFee: number,
-    wallet: Wallet,
-  ) {
-    const transaction = await wallet.sendTransaction({
-      to,
-      value: utils.parseEther(amount.toString()),
-      chainId: getChainId(),
-    });
-
-    if (!transaction) {
-      return null;
-    }
-
-    await this.saveTransaction(transaction, from, to, amount, estimateFee);
-
-    requestAnimationFrame(async () => {
-      await this.checkTransaction(transaction.hash);
-    });
-
-    return transaction;
-  }
-
-  async estimateTransaction(from: string, to: string, amount: number) {
+  ): Promise<{
+    fee: number;
+    feeData: FeeData;
+    estimateGas: BigNumberish;
+  }> {
     const result = await Promise.all([
-      getDefaultNetwork().getFeeData(),
-      getDefaultNetwork().estimateGas({
+      EthNetwork.network.getFeeData(),
+      EthNetwork.network.estimateGas({
         from,
         to,
         amount,
       } as Deferrable<TransactionRequest>),
     ]);
 
-    return calcFee(result[0].maxFeePerGas!, result[1]);
+    return {
+      fee: calcFee(result[0].maxFeePerGas!, result[1]),
+      feeData: result[0],
+      estimateGas: result[1],
+    };
   }
 
   async loadTransactionsFromExplorer(address: string) {
     try {
-      console.log(
-        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
-      );
-
       const txlist = await fetch(
-        `${NETWORK_EXPLORER}api?module=account&action=txlist&address=${address}`,
+        `${EthNetwork.explorer}api?module=account&action=txlist&address=${address}`,
         {
           headers: {
             accept: 'application/json',
