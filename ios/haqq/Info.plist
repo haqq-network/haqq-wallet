@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>28</string>
+	<string>36</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,7 +45,9 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use bluetooth for connect to Ledger Nano</string>
+	<string>App uses bluetooth to find, connect and communicate with Ledger Nano devices</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>App uses bluetooth to find, connect and communicate with Ledger Nano devices</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use the photo library.</string>
 	<key>UIAppFonts</key>
