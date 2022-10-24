@@ -1,5 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {AppState, Image, StyleSheet, View} from 'react-native';
+import {
+  AppState,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {GRAPHIC_GREEN_1, GRAPHIC_SECOND_4, TEXT_BASE_2} from '../../variables';
@@ -15,30 +22,33 @@ export type LedgerBluetooth = {
 const disabled = [State.PoweredOff, State.Unauthorized];
 
 export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
-  const bleManager = useRef(new BleManager()).current;
+  const bleManager = useRef<BleManager>(null);
 
   const [btState, setBtState] = useState(State.Unknown);
 
   const onChange = useCallback(async () => {
-    if (user.bluetooth && AppState.currentState) {
-      const state = await bleManager.state();
-
+    if (bleManager.current) {
+      const state = await bleManager.current.state();
       setBtState(state);
     }
-  }, [bleManager, user.bluetooth]);
+  }, [bleManager]);
 
   useEffect(() => {
+    if (user.bluetooth) {
+      bleManager.current = new BleManager();
+    }
+
     onChange();
 
     const subscription = AppState.addEventListener('change', onChange);
     return () => {
       subscription.remove();
     };
-  }, [onChange]);
+  }, [onChange, user.bluetooth]);
 
   useEffect(() => {
-    if (user.bluetooth) {
-      const sub = bleManager.onStateChange(onChange, true);
+    if (bleManager.current) {
+      const sub = bleManager.current.onStateChange(onChange, true);
 
       return () => {
         sub.remove();
@@ -57,7 +67,14 @@ export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
   }, [btState, onDone]);
 
   const onPressAllow = useCallback(async () => {
-    const state = await bleManager.state();
+    bleManager.current = new BleManager();
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      );
+    }
+
+    const state = await bleManager.current.state();
     setBtState(state);
     if (state === State.PoweredOn) {
       onAllow();
