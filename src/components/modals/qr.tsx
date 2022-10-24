@@ -109,7 +109,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
         )}
         renderBottomView={() => (
           <View
-            style={[page.bottomContainer, {paddingBottom: insets.bottom + 20}]}>
+            style={[page.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
             <View style={page.subContainer}>
               <IconButton onPress={onClickGallery} style={page.iconButton}>
                 <ImageIcon color={GRAPHIC_BASE_3} />
