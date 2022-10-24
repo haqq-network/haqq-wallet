@@ -28,3 +28,4 @@ export * from './swipeable-row';
 export * from '../lottie/waiting';
 export * from '../lottie';
 export * from './text-field';
+export * from './status-bar-color';

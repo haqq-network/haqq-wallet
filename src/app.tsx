@@ -58,6 +58,7 @@ import {
   ScreenOptionType,
   HeaderButtonProps,
 } from './types';
+import {StatusBarColor} from './components/ui';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -128,9 +129,7 @@ export const App = () => {
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
-        {Platform.OS === 'ios' && (
-          <StatusBar backgroundColor={BG_1} barStyle="dark-content" />
-        )}
+        <StatusBarColor barStyle="dark-content" />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
