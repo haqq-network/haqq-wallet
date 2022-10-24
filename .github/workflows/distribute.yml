@@ -57,6 +57,8 @@ jobs:
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribute" >> .env
+          echo "IS_LEDGER_ENABLED=1" >> .env
+          
       - name: Install Fastlane
         run: |
           bundle install
@@ -121,6 +123,8 @@ jobs:
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribute" >> .env
+          echo "IS_LEDGER_ENABLED=1" >> .env
+
       - name: Execute build
         run: |
           eval "$(ssh-agent -s)"
