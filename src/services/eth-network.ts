@@ -12,13 +12,13 @@ import {runUntil} from '../helpers/run-until';
 import {Provider} from '../models/provider';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {calcFee} from '../helpers/calc-fee';
+import {ETH_HD_PATH} from '../variables';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
   private wallet: Wallet;
-  private path = "44'/60'/0'/0/0";
   private _stop = false;
 
   constructor(wallet: Wallet) {
@@ -79,7 +79,7 @@ export class EthNetwork {
     let signature = null;
 
     const iter = runUntil(this.wallet.deviceId!, eth =>
-      eth.signTransaction(this.path, unsignedTx, resolution),
+      eth.signTransaction(ETH_HD_PATH, unsignedTx, resolution),
     );
 
     let done = false;
