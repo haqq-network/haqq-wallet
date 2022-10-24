@@ -5,7 +5,7 @@ import {LedgerAccountsRow} from './ledger-accounts-row';
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
-import {useWallet, useWallets} from '../../contexts/wallets';
+import {useWallets} from '../../contexts/wallets';
 
 export type LedgerDeviceProps = {
   deviceId: string;
