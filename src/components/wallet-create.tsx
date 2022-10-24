@@ -12,6 +12,9 @@ import {
   TEXT_GREEN_1,
 } from '../variables';
 import {RootStackParamList} from '../types';
+import {IS_LEDGER_ENABLED} from '@env';
+
+const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED));
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
@@ -34,14 +37,16 @@ export const WalletCreate = ({}: BalanceProps) => {
         style={page.create}
       />
       <View style={page.buttons}>
-        <Button
-          variant={ButtonVariant.second}
-          title="Connect"
-          style={page.create}
-          onPress={() => {
-            navigation.navigate('ledger');
-          }}
-        />
+        {isLedgerEnabled && (
+          <Button
+            variant={ButtonVariant.second}
+            title="Connect"
+            style={page.create}
+            onPress={() => {
+              navigation.navigate('ledger');
+            }}
+          />
+        )}
         <Button
           title="Import"
           style={page.create}
