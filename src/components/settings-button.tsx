@@ -11,7 +11,9 @@ export type SettingsButtonProps = {
     | 'settingsAccounts'
     | 'settingsAddressBook'
     | 'settingsSecurity'
-    | 'settingsAbout';
+    | 'settingsProviders'
+    | 'settingsAbout'
+    | 'settingsTest';
   icon: React.ReactNode;
   title: string;
   children?: React.ReactNode;

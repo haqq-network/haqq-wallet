@@ -55,6 +55,7 @@ export const WalletCard = ({address}: BalanceProps) => {
   }, [updateBalance, wallet]);
 
   const onPressSend = useCallback(() => {
+    console.log('onPressSend', address);
     navigation.navigate('transaction', {from: address});
   }, [navigation, address]);
 

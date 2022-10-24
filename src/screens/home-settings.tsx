@@ -38,6 +38,12 @@ export const HomeSettingsScreen = () => {
         icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
         title="Security"
         next="settingsSecurity"
+      />
+
+      <SettingsButton
+        icon={<ShieldSettingsIcon color={GRAPHIC_BASE_1} />}
+        title="Providers"
+        next="settingsProviders"
         style={page.button}
       />
 
@@ -54,12 +60,11 @@ export const HomeSettingsScreen = () => {
         next="settingsAbout"
       />
 
-      {/*<SettingsButton*/}
-      {/*  icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title="Test"*/}
-      {/*  onPress={onClickButton}*/}
-      {/*  next="settingsTest"*/}
-      {/*/>*/}
+      <SettingsButton
+        icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}
+        title="Test"
+        next="settingsTest"
+      />
 
       <Spacer />
     </Container>
