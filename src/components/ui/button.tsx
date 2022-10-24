@@ -81,7 +81,7 @@ export const Button = ({
       onPress={onPressButton}
       activeOpacity={0.7}
       {...props}>
-      <Text clean style={textStyle}>
+      <Text t9 style={textStyle}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -125,9 +125,7 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_SECOND_1,
   },
   text: {
-    fontFamily: 'SF Pro Display',
     fontStyle: 'normal',
-    fontWeight: '600',
     fontSize: 18,
     lineHeight: 24,
   },
