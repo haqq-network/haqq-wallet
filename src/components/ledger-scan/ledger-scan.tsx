@@ -36,23 +36,28 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
   }, []);
 
   useEffect(() => {
-    const sub = new Observable(TransportBLE.listen).subscribe({
-      complete: () => {
-        subscription({refreshing: false});
-      },
-      next: event => {
-        if (event.type === 'add') {
-          subscription({device: event.descriptor});
-        }
-      },
-      error: e => {
-        console.log('error', e);
-        subscription({refreshing: false, error: e});
-      },
-    });
+    let sub;
+    try {
+      sub = new Observable(TransportBLE.listen).subscribe({
+        complete: () => {
+          subscription({refreshing: false});
+        },
+        next: event => {
+          if (event.type === 'add') {
+            subscription({device: event.descriptor});
+          }
+        },
+        error: e => {
+          console.log('error', e);
+          subscription({refreshing: false, error: e});
+        },
+      });
+    } catch (e) {
+      console.log('err', e);
+    }
 
     return () => {
-      sub.unsubscribe();
+      sub?.unsubscribe();
     };
   }, [app, subscription]);
 

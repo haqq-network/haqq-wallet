@@ -12,7 +12,7 @@ export const LedgerScanScreen = () => {
     (item: Device) => {
       navigation.navigate('ledgerAccounts', {
         deviceId: item.id,
-        deviceName: item.name ?? '',
+        deviceName: `Ledger ${item.name}`,
       });
     },
     [navigation],
