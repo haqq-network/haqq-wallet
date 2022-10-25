@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
@@ -16,6 +16,7 @@ import {
 import {
   GRAPHIC_BASE_3,
   GRAPHIC_RED_1,
+  GRAPHIC_SECOND_12,
   GRAPHIC_SECOND_8,
   GRAPHIC_SECOND_9,
   TEXT_BASE_3,
@@ -85,6 +86,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
 
   return (
     <>
+      <StatusBar backgroundColor={GRAPHIC_SECOND_12} />
       <QRscanner
         style={page.container}
         onRead={onSuccess}
@@ -109,7 +111,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
         )}
         renderBottomView={() => (
           <View
-            style={[page.bottomContainer, {paddingBottom: insets.bottom + 20}]}>
+            style={[page.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
             <View style={page.subContainer}>
               <IconButton onPress={onClickGallery} style={page.iconButton}>
                 <ImageIcon color={GRAPHIC_BASE_3} />
