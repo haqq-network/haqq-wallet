@@ -31,8 +31,8 @@ export const SettingsButton = ({
   const onClickButton = () => navigation.navigate(next);
 
   return (
-    <MenuNavigationButton onPress={onClickButton}>
-      <View style={[page.container, style]}>
+    <MenuNavigationButton onPress={onClickButton} style={style}>
+      <View style={page.container}>
         {icon}
         <Text t11 style={page.text}>
           {title}

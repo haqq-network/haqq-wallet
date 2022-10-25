@@ -44,9 +44,10 @@ export const SigninStoreWalletScreen = () => {
           navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
           return resp[1] as Wallet;
         })
-        .then(wallet => {
+        .then(async wallet => {
           if (wallet) {
             wallet.mnemonicSaved = true;
+            await wallet.checkBalance();
             return transactions.loadTransactionsFromExplorer(
               wallet.address,
               app.getUser().providerId,

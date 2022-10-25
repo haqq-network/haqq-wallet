@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {Button, ButtonVariant, Text} from './ui';
+import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 import {
   BG_1,
   GRAPHIC_SECOND_1,
@@ -28,8 +28,10 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Text t14 style={page.subtitle}>
         Import and create new accounts
       </Text>
+      <Spacer />
       <Button
         variant={ButtonVariant.contained}
+        size={ButtonSize.middle}
         title="Create new"
         onPress={() => {
           navigation.navigate('create');
@@ -41,15 +43,17 @@ export const WalletCreate = ({}: BalanceProps) => {
           <>
             <Button
               variant={ButtonVariant.second}
+              size={ButtonSize.middle}
               title="Connect"
-              style={page.create}
+              style={page.createSmall}
               onPress={() => {
                 navigation.navigate('ledger');
               }}
             />
             <Button
+              size={ButtonSize.middle}
               title="Import"
-              style={page.create}
+              style={page.createSmall}
               onPress={() => {
                 navigation.navigate('restore');
               }}
@@ -99,10 +103,15 @@ const page = StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-    marginBottom: 18,
     color: TEXT_BASE_2,
   },
   create: {
+    flex: 0,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    lineHeight: 22,
+  },
+  createSmall: {
     flex: 1,
     paddingHorizontal: 8,
     paddingVertical: 12,

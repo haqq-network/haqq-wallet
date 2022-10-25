@@ -57,7 +57,7 @@ export const TransactionScreen = () => {
       <TransactionStack.Screen
         name="transactionAddress"
         component={TransactionAddressScreen}
-        initialParams={{from: route.params.from}}
+        initialParams={{from: route.params.from, to: route.params.to}}
         options={screenOptionsAddressRoute}
       />
       <TransactionStack.Screen
@@ -77,6 +77,7 @@ export const TransactionScreen = () => {
       />
       <TransactionStack.Screen
         name="transactionAccount"
+        initialParams={{to: route.params.to}}
         component={TransactionAccountScreen}
         options={screenOptionsSendFunds}
       />
