@@ -83,10 +83,9 @@ export const WalletCard = ({address}: BalanceProps) => {
         setCardState('laded');
       }}>
       <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
-        <Text t14 style={page.name} ellipsizeMode="tail" numberOfLines={1}>
+        <Text t12 style={page.name} ellipsizeMode="tail" numberOfLines={1}>
           {wallet.name || 'name'}
         </Text>
-        <View style={page.spacer} />
         <IconButton onPress={onPressQR} style={page.qrButton}>
           <QRCode color={GRAPHIC_BASE_3} />
         </IconButton>
@@ -145,9 +144,9 @@ const page = StyleSheet.create({
   marginLeft: {marginLeft: 4},
   marginBottom: {marginBottom: 4},
   name: {
-    fontWeight: '700',
-    width: 180,
+    flex: 1,
     color: TEXT_SECOND_2,
+    marginRight: 8,
   },
   address: {
     color: TEXT_BASE_3,
