@@ -26,7 +26,9 @@ export const BackupFinishScreen = () => {
           style={{width: animationSize, height: animationSize}}
         />
       </Spacer>
-      <Text t4>Congratulations!</Text>
+      <Text t4 style={page.title0}>
+        Congratulations!
+      </Text>
       <Text t4 style={page.title}>
         You've successfully protected your wallet.
       </Text>
@@ -44,6 +46,7 @@ export const BackupFinishScreen = () => {
 
 const page = StyleSheet.create({
   container: {justifyContent: 'center', alignItems: 'center'},
-  title: {marginBottom: 40},
+  title: {marginBottom: 40, textAlign: 'center'},
+  title0: {textAlign: 'center'},
   button: {marginVertical: 16},
 });
