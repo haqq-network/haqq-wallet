@@ -46,6 +46,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
         }
       },
       error: e => {
+        console.log('error', e);
         subscription({refreshing: false, error: e});
       },
     });

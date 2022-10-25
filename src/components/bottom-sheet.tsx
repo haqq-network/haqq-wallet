@@ -3,17 +3,18 @@ import {
   Animated,
   Dimensions,
   PanResponder,
+  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
   BG_1,
-  GRAPHIC_SECOND_5,
   GRAPHIC_SECOND_2,
+  GRAPHIC_SECOND_5,
   TEXT_BASE_1,
 } from '../variables';
-import {CloseCircle, IconButton, Text, Spacer, SwiperIcon} from './ui';
+import {CloseCircle, IconButton, Spacer, SwiperIcon, Text} from './ui';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type BottomSheetProps = {
@@ -25,6 +26,8 @@ export type BottomSheetProps = {
 
 const h = Dimensions.get('window').height;
 const defaultCloseDistance = h / 3;
+
+const AnimatedStatusBar = Animated.createAnimatedComponent(StatusBar);
 
 export const BottomSheet = ({
   children,
@@ -74,6 +77,13 @@ export const BottomSheet = ({
 
   return (
     <View style={[StyleSheet.absoluteFill, page.container]}>
+      <AnimatedStatusBar
+        backgroundColor={pan.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0)'],
+        })}
+      />
+
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
