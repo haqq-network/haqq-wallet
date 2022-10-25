@@ -102,6 +102,7 @@ const page = StyleSheet.create({
   middleContainer: {
     paddingVertical: 12,
     paddingHorizontal: 20,
+    height: 46,
   },
   containedContainer: {
     backgroundColor: GRAPHIC_GREEN_1,
