@@ -8,10 +8,14 @@ import {useApp} from '../contexts/app';
 import {utils} from 'ethers';
 import {MAIN_ACCOUNT_NAME} from '../variables';
 import {sleep} from '../utils';
+import {Wallet} from '../models/wallet';
+import {useTransactions} from '../contexts/transactions';
 
 export const SignupStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'createStoreWallet'>>();
+  const transactions = useTransactions();
+
   const app = useApp();
   const wallets = useWallets();
 
@@ -32,11 +36,22 @@ export const SignupStoreWalletScreen = () => {
         ),
       );
 
-      Promise.all(actions).then(() => {
-        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
-      });
+      Promise.all(actions)
+        .then(resp => {
+          navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+          return resp[1] as Wallet;
+        })
+        .then(async wallet => {
+          if (wallet) {
+            await wallet.checkBalance();
+            return transactions.loadTransactionsFromExplorer(
+              wallet.address,
+              app.getUser().providerId,
+            );
+          }
+        });
     }, 350);
-  }, [navigation, route, wallets]);
+  }, [app, navigation, route, transactions, wallets]);
 
   return <View />;
 };
