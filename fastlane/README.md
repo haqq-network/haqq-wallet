@@ -31,22 +31,6 @@ Android Production App
 
 
 
-### android release
-
-```sh
-[bundle exec] fastlane android release
-```
-
-
-
-### android version_code
-
-```sh
-[bundle exec] fastlane android version_code
-```
-
-
-
 ----
 
 
