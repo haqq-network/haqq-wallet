@@ -45,7 +45,7 @@ export const WalletCreate = ({}: BalanceProps) => {
               variant={ButtonVariant.second}
               size={ButtonSize.middle}
               title="Connect"
-              style={page.create}
+              style={page.createSmall}
               onPress={() => {
                 navigation.navigate('ledger');
               }}
@@ -53,7 +53,7 @@ export const WalletCreate = ({}: BalanceProps) => {
             <Button
               size={ButtonSize.middle}
               title="Import"
-              style={page.create}
+              style={page.createSmall}
               onPress={() => {
                 navigation.navigate('restore');
               }}
@@ -103,10 +103,15 @@ const page = StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-    marginBottom: 18,
     color: TEXT_BASE_2,
   },
   create: {
+    flex: 0,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    lineHeight: 22,
+  },
+  createSmall: {
     flex: 1,
     paddingHorizontal: 8,
     paddingVertical: 12,
