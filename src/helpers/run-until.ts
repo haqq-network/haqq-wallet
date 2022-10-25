@@ -2,11 +2,19 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import type Transport from '@ledgerhq/hw-transport';
 import AppEth from '@ledgerhq/hw-app-eth';
 import {sleep} from '../utils';
+import {BleManager, State} from 'react-native-ble-plx';
+
+const connectOptions = {
+  requestMTU: 156,
+  connectionPriority: 1,
+};
 
 export const runUntil = (
   deviceId: string,
   command: (eth: AppEth) => Promise<any>,
 ) => {
+  console.log('runUntil');
+  const bleManager = new BleManager();
   let result: any = null;
   let transport: Transport | null = null;
   let eth: AppEth | null = null;
@@ -28,16 +36,26 @@ export const runUntil = (
       }
       try {
         if (!transport) {
-          transport = await TransportBLE.open(deviceId);
+          const state = await bleManager.state();
+
+          if (state !== State.PoweredOn) {
+            throw new Error(`not_connected ${state}`);
+          }
+
+          const device = await bleManager.connectToDevice(
+            deviceId,
+            connectOptions,
+          );
+
+          const isConnected = await device.isConnected();
+
+          if (!isConnected) {
+            await device.connect();
+          }
+
+          transport = await TransportBLE.open(device);
+
           if (transport) {
-            // @ts-ignore
-            const device = transport.device;
-            const isConnected = await device.isConnected();
-
-            if (!isConnected) {
-              await device.connect();
-            }
-
             transport.on('disconnect', resetTransport);
             eth = new AppEth(transport);
           }
@@ -65,6 +83,7 @@ export const runUntil = (
       };
     },
     abort: async () => {
+      console.log('abort');
       if (transport) {
         aborted = true;
         await transport.close();

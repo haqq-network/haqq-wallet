@@ -35,6 +35,7 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
     });
 
     return () => {
+      console.log('LedgerAccounts ret');
       iter.abort();
     };
   }, [deviceId]);
