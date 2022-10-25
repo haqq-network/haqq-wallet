@@ -10,8 +10,19 @@ export const LedgerScanHeader = () => {
         Looking for devices
       </Text>
       <Text t14 style={styles.description}>
-        Please make sure your Ledger Nano X is unlocked, Bluetooth is enabled
-        and Ethereum app is installed and opened
+        Please make sure your Ledger Nano X is{' '}
+        <Text clean style={styles.bold}>
+          unlocked
+        </Text>
+        ,{' '}
+        <Text clean style={styles.bold}>
+          Bluetooth is enabled
+        </Text>{' '}
+        and{' '}
+        <Text clean style={styles.bold}>
+          Ethereum app on your Ledger is installed
+        </Text>{' '}
+        and opened
       </Text>
     </View>
   );
@@ -29,5 +40,8 @@ const styles = StyleSheet.create({
   description: {
     textAlign: 'center',
     color: TEXT_BASE_2,
+  },
+  bold: {
+    fontWeight: '700',
   },
 });
