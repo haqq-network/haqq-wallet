@@ -1,9 +1,17 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {
+  AppState,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
-import {TEXT_BASE_2} from '../../variables';
+import {GRAPHIC_GREEN_1, GRAPHIC_SECOND_4, TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
+import {getText, I18N} from '../../i18n';
 
 export type LedgerBluetooth = {
   user: User;
@@ -11,23 +19,42 @@ export type LedgerBluetooth = {
   onAllow: () => void;
 };
 
-export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
-  const bleManager = useRef(new BleManager()).current;
+const disabled = [State.PoweredOff, State.Unauthorized];
+
+export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
+  const bleManager = useRef<BleManager>(null);
 
   const [btState, setBtState] = useState(State.Unknown);
 
+  const onChange = useCallback(async () => {
+    if (bleManager.current) {
+      const state = await bleManager.current.state();
+      setBtState(state);
+    }
+  }, [bleManager]);
+
   useEffect(() => {
     if (user.bluetooth) {
-      const subscription = (value: State) => {
-        setBtState(value);
-      };
-      const sub = bleManager.onStateChange(subscription);
+      bleManager.current = new BleManager();
+    }
+
+    onChange();
+
+    const subscription = AppState.addEventListener('change', onChange);
+    return () => {
+      subscription.remove();
+    };
+  }, [onChange, user.bluetooth]);
+
+  useEffect(() => {
+    if (bleManager.current) {
+      const sub = bleManager.current.onStateChange(onChange, true);
 
       return () => {
         sub.remove();
       };
     }
-  }, [bleManager, user.bluetooth]);
+  }, [bleManager, onChange, user.bluetooth]);
 
   useEffect(() => {
     switch (btState) {
@@ -40,29 +67,51 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   }, [btState, onDone]);
 
   const onPressAllow = useCallback(async () => {
-    const state = await bleManager.state();
+    bleManager.current = new BleManager();
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      );
+    }
+
+    const state = await bleManager.current.state();
     setBtState(state);
-  }, [bleManager]);
+    if (state === State.PoweredOn) {
+      onAllow();
+    }
+  }, [bleManager, onAllow]);
 
   return (
     <>
       <View style={page.animation}>
         <Image
           source={require('../../../assets/images/ledger-bluetooth.png')}
+          style={{
+            tintColor: disabled.includes(btState)
+              ? GRAPHIC_SECOND_4
+              : GRAPHIC_GREEN_1,
+          }}
         />
       </View>
       <PopupContainer style={page.container}>
         <Text t4 style={page.title}>
-          Allow using Bluetooth
+          {getText(
+            disabled.includes(btState)
+              ? I18N.ledgerBluetoothTitleDisabled
+              : I18N.ledgerBluetoothTitleUnknown,
+          )}
         </Text>
         <Text t11 style={page.disclaimer}>
-          App uses bluetooth to find, connect and communicate with Ledger Nano
-          devices
+          {getText(
+            disabled.includes(btState)
+              ? I18N.ledgerBluetoothDescriptionDisabled
+              : I18N.ledgerBluetoothDescriptionUnknown,
+          )}
         </Text>
         <Button
           style={page.submit}
           variant={ButtonVariant.contained}
-          title="Allow"
+          title={getText(I18N.ledgerBluetoothAllow)}
           onPress={onPressAllow}
         />
       </PopupContainer>

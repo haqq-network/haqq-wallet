@@ -330,7 +330,7 @@ class Wallets extends EventEmitter {
     return Number(utils.formatEther(balance));
   }
 
-  get addressList() {
+  get addressList(): string[] {
     return Array.from(this._wallets.keys());
   }
 

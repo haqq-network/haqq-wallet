@@ -1,15 +1,11 @@
 import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
-import {BigNumberish, utils} from 'ethers';
-import {
-  TransactionRequest,
-  TransactionResponse,
-} from '@ethersproject/abstract-provider';
+import {utils} from 'ethers';
 import {realm} from '../models';
 import {Transaction} from '../models/transaction';
-import {Deferrable} from '@ethersproject/properties';
-import {FeeData} from '@ethersproject/abstract-provider/src.ts';
-import {EthNetwork} from '../services/eth-network';
+import {calcFee} from '../helpers/calc-fee';
+import {captureException} from '../helpers';
+import {Provider} from '../models/provider';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -17,6 +13,18 @@ class Transactions extends EventEmitter {
   constructor() {
     super();
     this._transactions = realm.objects<Transaction>('Transaction');
+
+    this._transactions.addListener((collection, changes) => {
+      changes.insertions.forEach(index => {
+        const transaction = collection[index];
+
+        requestAnimationFrame(async () => {
+          await this.checkTransaction(transaction.hash);
+        });
+      });
+
+      this.emit('transactions');
+    });
   }
 
   async init(): Promise<void> {
@@ -33,69 +41,27 @@ class Transactions extends EventEmitter {
     return Array.from(this._transactions ?? []);
   }
 
-  saveTransaction(
-    raw: TransactionResponse,
-    from: string,
-    to: string,
-    amount: number,
-    estimateFee: number,
-    providerId: string,
-  ) {
-    realm.write(() => {
-      realm.create('Transaction', {
-        hash: raw.hash,
-        account: from,
-        raw: JSON.stringify(raw),
-        createdAt: new Date(),
-        from,
-        to,
-        value: amount,
-        fee: estimateFee || 0,
-        confirmed: false,
-        providerId,
-      });
-    });
-
-    this._transactions = realm.objects<Transaction>('Transaction');
-    this.emit('transactions');
-
-    requestAnimationFrame(async () => {
-      await this.checkTransaction(raw.hash);
-    });
-  }
-
-  getTransaction(hash: string): Transaction | null {
-    const transactions = realm.objects<Transaction>('Transaction');
-    const transaction = transactions.filtered(`hash = '${hash}'`);
-
-    if (!transaction.length) {
-      return null;
-    }
-
-    return transaction[0];
+  getTransaction(hash: string): Transaction | undefined {
+    return realm.objectForPrimaryKey<Transaction>('Transaction', hash);
   }
 
   async checkTransaction(hash: string) {
-    const local = this.getTransaction(hash);
+    const transaction = this.getTransaction(hash);
 
-    if (local) {
+    if (transaction) {
       try {
-        const receipt = await EthNetwork.network.getTransactionReceipt(
-          local.hash,
-        );
-        if (receipt && receipt.confirmations > 0) {
-          realm.write(() => {
-            local.confirmed = true;
-            local.fee = calcFee(
-              receipt.cumulativeGasUsed,
-              receipt.effectiveGasPrice,
-            );
-          });
+        const provider = Provider.getProvider(transaction.providerId);
+
+        if (provider) {
+          const receipt = await provider.rpcProvider.getTransactionReceipt(
+            transaction.hash,
+          );
+          if (receipt && receipt.confirmations > 0) {
+            transaction.setConfirmed(receipt);
+          }
         }
       } catch (e) {
-        if (e instanceof Error) {
-          console.log('sendTransaction', e.message);
-        }
+        captureException(e, 'checkTransaction');
       }
     }
   }
@@ -110,80 +76,46 @@ class Transactions extends EventEmitter {
     }
   }
 
-  async estimateTransaction(
-    from: string,
-    to: string,
-    amount: number,
-  ): Promise<{
-    fee: number;
-    feeData: FeeData;
-    estimateGas: BigNumberish;
-  }> {
-    const result = await Promise.all([
-      EthNetwork.network.getFeeData(),
-      EthNetwork.network.estimateGas({
-        from,
-        to,
-        amount,
-      } as Deferrable<TransactionRequest>),
-    ]);
-
-    return {
-      fee: calcFee(result[0].maxFeePerGas!, result[1]),
-      feeData: result[0],
-      estimateGas: result[1],
-    };
-  }
-
-  async loadTransactionsFromExplorer(address: string) {
+  async loadTransactionsFromExplorer(address: string, providerId: string) {
     try {
-      const txlist = await fetch(
-        `${EthNetwork.explorer}api?module=account&action=txlist&address=${address}`,
-        {
-          headers: {
-            accept: 'application/json',
+      const p = Provider.getProvider(providerId);
+      if (p?.explorer) {
+        const txList = await fetch(
+          `${p.explorer}api?module=account&action=txlist&address=${address}`,
+          {
+            headers: {
+              accept: 'application/json',
+            },
           },
-        },
-      );
-
-      const rows = await txlist.json();
-
-      for (const row of rows.result) {
-        const exists = realm.objectForPrimaryKey<Transaction>(
-          'Transaction',
-          row.hash,
         );
 
-        if (!exists) {
-          realm.write(() => {
-            realm.create('Transaction', {
-              hash: row.hash,
-              account: address,
-              raw: JSON.stringify(row),
-              createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
-              from: row.from,
-              to: row.to,
-              value: Number(utils.formatEther(row.value)),
-              fee: calcFee(row.gasPrice, row.gasUsed),
-              confirmed: parseInt(row.confirmations, 10) > 10,
+        const rows = await txList.json();
+
+        for (const row of rows.result) {
+          const exists = this.getTransaction(row.hash);
+
+          if (!exists) {
+            realm.write(() => {
+              realm.create('Transaction', {
+                hash: row.hash,
+                account: address,
+                raw: JSON.stringify(row),
+                createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
+                from: row.from,
+                to: row.to,
+                value: Number(utils.formatEther(row.value)),
+                fee: calcFee(row.gasPrice, row.gasUsed),
+                confirmed: parseInt(row.confirmations, 10) > 10,
+                providerId,
+              });
             });
-          });
+          }
         }
       }
-
-      this.emit('transactions');
     } catch (e) {
-      console.log(e.message);
+      captureException(e, 'loadTransactionsFromExplorer');
     }
   }
-}
-
-function calcFee(gasPrice: BigNumberish, gasUsed: BigNumberish): number {
-  return (
-    Number(utils.formatEther(gasPrice)) *
-    Number(utils.formatEther(gasUsed)) *
-    1000000000000000000
-  );
 }
 
 export const transactions = new Transactions();

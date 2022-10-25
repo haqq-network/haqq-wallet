@@ -1,0 +1,3 @@
+#!/bin/sh
+
+unlink  ${PWD}/.git/hooks/pre-commit;

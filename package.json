@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "prettier:check": "prettier --check ./src",
-    "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto --yarn --hack",
+    "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto --yarn --hack && hooks/install",
     "ts-coverage": "typescript-coverage-report"
   },
   "dependencies": {
@@ -48,7 +48,6 @@
     "react-native-camera": "^4.2.1",
     "react-native-crypto": "^2.2.0",
     "react-native-dotenv": "^3.3.1",
-    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.6.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-image-picker": "^4.10.0",
