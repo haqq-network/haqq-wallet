@@ -66,7 +66,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   const onPressAllow = useCallback(async () => {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
     }
     await tryToInit(true);
