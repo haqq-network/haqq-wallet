@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {Button, ButtonSize, ButtonVariant, Text} from './ui';
+import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 import {
   BG_1,
   GRAPHIC_SECOND_1,
@@ -28,6 +28,7 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Text t14 style={page.subtitle}>
         Import and create new accounts
       </Text>
+      <Spacer />
       <Button
         variant={ButtonVariant.contained}
         size={ButtonSize.middle}
