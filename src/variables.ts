@@ -36,6 +36,7 @@ export const GRAPHIC_SECOND_8 = '#0000004D';
 export const GRAPHIC_SECOND_9 = 'rgba(255, 255, 255, 0.3)';
 export const GRAPHIC_SECOND_10 = 'rgba(229, 229, 234, 0.82)';
 export const GRAPHIC_SECOND_11 = 'rgba(255, 255, 255, 0.2)';
+export const GRAPHIC_SECOND_12 = '#b2b2b2';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';
