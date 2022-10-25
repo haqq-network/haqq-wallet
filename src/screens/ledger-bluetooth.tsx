@@ -10,12 +10,9 @@ export const LedgerBluetoothScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const onDone = useCallback(async () => {
-    navigation.navigate('ledgerScan');
-  }, [navigation]);
-
-  const onAllow = useCallback(() => {
     user.bluetooth = true;
-  }, [user]);
+    navigation.navigate('ledgerScan');
+  }, [navigation, user]);
 
-  return <LedgerBluetooth onDone={onDone} onAllow={onAllow} user={user} />;
+  return <LedgerBluetooth onDone={onDone} user={user} />;
 };
