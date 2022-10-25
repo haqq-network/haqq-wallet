@@ -17,6 +17,7 @@ import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.haqq.wallet.encryption.EncryptionPackage;
+import com.haqq.wallet.version.VersionPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -35,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
            packages.add(new EncryptionPackage());
            packages.add(new HapticPackage());
+           packages.add(new VersionPackage());
           return packages;
         }
 
