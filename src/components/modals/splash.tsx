@@ -1,14 +1,17 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {GRAPHIC_GREEN_2} from '../../variables';
 import {Waiting} from '../ui';
 
 export type SplashModalProps = {};
 export const SplashModal = ({}: SplashModalProps) => {
   return (
-    <View style={page.container}>
-      <Waiting />
-    </View>
+    <>
+      <StatusBar backgroundColor={GRAPHIC_GREEN_2} />
+      <View style={page.container}>
+        <Waiting />
+      </View>
+    </>
   );
 };
 

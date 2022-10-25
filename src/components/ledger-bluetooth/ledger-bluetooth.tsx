@@ -16,12 +16,11 @@ import {getText, I18N} from '../../i18n';
 export type LedgerBluetooth = {
   user: User;
   onDone: () => void;
-  onAllow: () => void;
 };
 
 const disabled = [State.PoweredOff, State.Unauthorized];
 
-export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
+export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   const bleManager = useRef<BleManager>(null);
 
   const [btState, setBtState] = useState(State.Unknown);
@@ -29,57 +28,49 @@ export const LedgerBluetooth = ({user, onDone, onAllow}: LedgerBluetooth) => {
   const onChange = useCallback(async () => {
     if (bleManager.current) {
       const state = await bleManager.current.state();
-      setBtState(state);
+
+      switch (state) {
+        case State.PoweredOn:
+          onDone();
+          break;
+        default:
+          setBtState(state);
+      }
     }
-  }, [bleManager]);
+  }, [onDone, bleManager]);
+
+  const tryToInit = useCallback(
+    async (force: boolean) => {
+      if (user.bluetooth || force) {
+        bleManager.current = new BleManager();
+
+        await onChange();
+      }
+    },
+    [onChange, user.bluetooth],
+  );
 
   useEffect(() => {
-    if (user.bluetooth) {
-      bleManager.current = new BleManager();
-    }
+    tryToInit();
 
-    onChange();
-
-    const subscription = AppState.addEventListener('change', onChange);
+    const subscriptionBle =
+      bleManager.current && bleManager.current.onStateChange(onChange, true);
+    const subscriptionApp = AppState.addEventListener('change', onChange);
     return () => {
-      subscription.remove();
+      subscriptionApp.remove();
+
+      subscriptionBle && subscriptionBle.remove();
     };
-  }, [onChange, user.bluetooth]);
-
-  useEffect(() => {
-    if (bleManager.current) {
-      const sub = bleManager.current.onStateChange(onChange, true);
-
-      return () => {
-        sub.remove();
-      };
-    }
-  }, [bleManager, onChange, user.bluetooth]);
-
-  useEffect(() => {
-    switch (btState) {
-      case State.PoweredOn:
-        onDone();
-        break;
-      default:
-        console.log('btState', btState);
-    }
-  }, [btState, onDone]);
+  }, [onChange, tryToInit]);
 
   const onPressAllow = useCallback(async () => {
-    bleManager.current = new BleManager();
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
     }
-
-    const state = await bleManager.current.state();
-    setBtState(state);
-    if (state === State.PoweredOn) {
-      onAllow();
-    }
-  }, [bleManager, onAllow]);
+    await tryToInit(true);
+  }, [tryToInit]);
 
   return (
     <>
