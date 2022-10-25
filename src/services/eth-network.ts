@@ -19,7 +19,7 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
   private wallet: Wallet;
-  private _stop = false;
+  public stop = false;
 
   constructor(wallet: Wallet) {
     this.wallet = wallet;
@@ -87,7 +87,7 @@ export class EthNetwork {
       const resp = await iter.next();
       signature = resp.value;
       done = resp.done;
-    } while (!done && !this._stop);
+    } while (!done && !this.stop);
 
     await iter.abort();
 
