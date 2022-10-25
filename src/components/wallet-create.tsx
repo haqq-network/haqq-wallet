@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
-import {Button, ButtonVariant, Text} from './ui';
+import {Button, ButtonSize, ButtonVariant, Text} from './ui';
 import {
   BG_1,
   GRAPHIC_SECOND_1,
@@ -30,6 +30,7 @@ export const WalletCreate = ({}: BalanceProps) => {
       </Text>
       <Button
         variant={ButtonVariant.contained}
+        size={ButtonSize.middle}
         title="Create new"
         onPress={() => {
           navigation.navigate('create');
@@ -41,6 +42,7 @@ export const WalletCreate = ({}: BalanceProps) => {
           <>
             <Button
               variant={ButtonVariant.second}
+              size={ButtonSize.middle}
               title="Connect"
               style={page.create}
               onPress={() => {
@@ -48,6 +50,7 @@ export const WalletCreate = ({}: BalanceProps) => {
               }}
             />
             <Button
+              size={ButtonSize.middle}
               title="Import"
               style={page.create}
               onPress={() => {
