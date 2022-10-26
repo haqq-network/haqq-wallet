@@ -8,7 +8,6 @@ import {
   Button,
   ButtonVariant,
   IconButton,
-  InvoiceIcon,
   ISLMIcon,
   LottieWrap,
   PenIcon,
@@ -78,10 +77,6 @@ export const TransactionFinishScreen = () => {
     }
   }, [transaction?.to, contact, short, contacts]);
 
-  const onPressDetail = () => {
-    navigation.navigate('transactionFinishDetails', {hash: transaction?.hash});
-  };
-
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
     await openURL(url);
@@ -109,12 +104,6 @@ export const TransactionFinishScreen = () => {
       </Text>
       <Spacer />
       <View style={page.buttons}>
-        <IconButton onPress={onPressDetail} style={page.button}>
-          <InvoiceIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Text clean style={page.buttonText}>
-            Details
-          </Text>
-        </IconButton>
         <IconButton onPress={onPressContact} style={page.button}>
           {contact ? (
             <PenIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
