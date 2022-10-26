@@ -1,17 +1,18 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  AppState,
   Image,
   PermissionsAndroid,
   Platform,
   StyleSheet,
   View,
 } from 'react-native';
-import {BleManager, State} from 'react-native-ble-plx';
+import {State} from 'react-native-ble-plx';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {GRAPHIC_GREEN_1, GRAPHIC_SECOND_4, TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
 import {getText, I18N} from '../../i18n';
+import {Observable, Subscription} from 'rxjs';
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 
 export type LedgerBluetooth = {
   user: User;
@@ -21,55 +22,46 @@ export type LedgerBluetooth = {
 const disabled = [State.PoweredOff, State.Unauthorized];
 
 export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
-  const bleManager = useRef<BleManager>(null);
-
+  const subscription = useRef<null | Subscription>(null);
   const [btState, setBtState] = useState(State.Unknown);
 
-  const onChange = useCallback(async () => {
-    if (bleManager.current) {
-      const state = await bleManager.current.state();
-
-      switch (state) {
-        case State.PoweredOn:
-          onDone();
-          break;
-        default:
-          setBtState(state);
-      }
-    }
-  }, [onDone, bleManager]);
-
-  const tryToInit = useCallback(
-    async (force: boolean) => {
-      if (user.bluetooth || force) {
-        bleManager.current = new BleManager();
-
-        await onChange();
-      }
-    },
-    [onChange, user.bluetooth],
-  );
-
-  useEffect(() => {
-    tryToInit();
-
-    const subscriptionBle =
-      bleManager.current && bleManager.current.onStateChange(onChange, true);
-    const subscriptionApp = AppState.addEventListener('change', onChange);
-    return () => {
-      subscriptionApp.remove();
-
-      subscriptionBle && subscriptionBle.remove();
-    };
-  }, [onChange, tryToInit]);
-
-  const onPressAllow = useCallback(async () => {
+  const tryToInit = useCallback(async () => {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
     }
-    await tryToInit(true);
+
+    let previousAvailable = false;
+    subscription.current = new Observable(TransportBLE.observeState).subscribe(
+      e => {
+        if (e.available !== previousAvailable) {
+          previousAvailable = e.available;
+          switch (e.type) {
+            case State.PoweredOn:
+              onDone();
+              break;
+            default:
+              setBtState(e.type);
+          }
+        }
+      },
+    );
+  }, [onDone]);
+
+  useEffect(() => {
+    if (user.bluetooth) {
+      tryToInit();
+    }
+    return () => {
+      if (subscription.current) {
+        subscription.current?.unsubscribe();
+      }
+    };
+  }, [user.bluetooth, tryToInit]);
+
+  const onPressAllow = useCallback(async () => {
+    await tryToInit();
   }, [tryToInit]);
 
   return (
