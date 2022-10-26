@@ -1,0 +1,49 @@
+{
+  "testRunner": "jest",
+  "runnerConfig": "e2e/config.json",
+  "skipLegacyWorkersInjection": true,
+  "apps": {
+    "ios": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/haqq.app",
+      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -destination 'id=61378F5F-7A14-4144-BD74-BE9CD75FFAAD' -sdk iphonesimulator -derivedDataPath ios/build"
+    },
+    "ios:debug": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/haqq.app",
+      "build": "xcodebuild  -workspace ios/haqq.xcworkspace -scheme haqq -configuration Debug -destination 'id=61378F5F-7A14-4144-BD74-BE9CD75FFAAD' -sdk iphonesimulator -derivedDataPath ios/build"
+    },
+    "android": {
+      "type": "android.apk",
+      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+    }
+  },
+  "devices": {
+    "simulator": {
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 14"
+      }
+    },
+    "emulator": {
+      "type": "android.emulator",
+      "device": {
+        "avdName": "Pixel_3a_API_30_x86"
+      }
+    }
+  },
+  "configurations": {
+    "ios": {
+      "device": "simulator",
+      "app": "ios"
+    },
+    "ios:debug": {
+      "device": "simulator",
+      "app": "ios:debug"
+    },
+    "android": {
+      "device": "emulator",
+      "app": "android"
+    }
+  }
+}
