@@ -62,6 +62,7 @@ import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {Provider} from './models/provider';
+import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -111,8 +112,17 @@ export const App = () => {
             }
         }
       })
-      .finally(() => {
+      .finally(async () => {
+        const initialUrl = await Linking.getInitialURL();
+
+        if (initialUrl && initialUrl.startsWith('haqq:')) {
+          navigator.navigate('transaction', {
+            to: initialUrl.substring(5),
+          });
+        }
+
         app.emit('modal', null);
+
         requestAnimationFrame(() => {
           const providers = Provider.getProviders().filter(p => !!p.explorer);
 
