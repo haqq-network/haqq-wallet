@@ -24,7 +24,9 @@ export const SwipeableButton = ({
   const translateX = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [x, 0],
+    extrapolate: 'clamp',
   });
+
   const pressHandler = useCallback(() => {
     onPress(item);
   }, [item, onPress]);
@@ -46,7 +48,7 @@ export const SwipeableButton = ({
 };
 
 const page = StyleSheet.create({
-  container: {flex: 1},
+  container: {width: 74},
   iconContainer: {
     width: '100%',
     height: '100%',
