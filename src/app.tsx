@@ -126,8 +126,8 @@ export const App = () => {
         requestAnimationFrame(() => {
           const providers = Provider.getProviders().filter(p => !!p.explorer);
 
-          const applicants: [string, string][] = wallets.addressList.flatMap(
-            d => providers.map(v => [d, v.id]),
+          const applicants: string[][] = wallets.addressList.flatMap(d =>
+            providers.map(v => [d, v.id]),
           );
 
           console.log('applicants', applicants);

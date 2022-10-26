@@ -26,7 +26,7 @@ import {
   TEXT_RED_1,
 } from '../variables';
 import {splitAddress} from '../utils';
-import {openURL} from '../helpers';
+import {isIOS, openURL} from '../helpers';
 import {EthNetwork} from '../services/eth-network';
 
 export const TransactionDetailScreen = () => {
@@ -181,8 +181,13 @@ const page = StyleSheet.create({
     marginVertical: 8,
   },
   amount: {marginBottom: 2, color: TEXT_BASE_2},
-  icon: {marginRight: 4, marginTop: 4, width: 16, height: 16},
-  iconView: {marginTop: -1.7},
+  icon: {
+    marginRight: isIOS ? 4 : 2,
+    top: isIOS ? 1 : 2,
+    width: 16,
+    height: 16,
+  },
+  iconView: {top: isIOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
   subInfo: {color: TEXT_BASE_2},
