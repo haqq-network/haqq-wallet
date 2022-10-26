@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StyleSheet, Animated} from 'react-native';
+import {Animated, StyleSheet} from 'react-native';
 
 export type CarouselItemProps = {
   index: number;
@@ -38,6 +38,5 @@ export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
 const page = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 24,
   },
 });

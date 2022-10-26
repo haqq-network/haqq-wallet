@@ -1,13 +1,11 @@
 import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Text, PlusIcon} from './ui';
-import {StyleSheet, Animated, Dimensions, ScrollView, View} from 'react-native';
-import {GRAPHIC_BASE_1, MAGIC_CARD_HEIGHT, TEXT_BASE_1} from '../variables';
+import {PlusIcon, Text} from './ui';
+import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {CarouselItem} from './carousel-item';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
-
-const cardWidth = Dimensions.get('window').width - 40;
 
 export const Wallets = () => {
   const wallets = useWallets();
@@ -40,12 +38,8 @@ export const Wallets = () => {
             nativeEvent.contentOffset.x / Dimensions.get('window').width,
           );
         }}
-        style={[
-          page.scroll,
-          {
-            height: cardWidth * MAGIC_CARD_HEIGHT + 48,
-          },
-        ]}>
+        style={page.scroll}
+        contentContainerStyle={page.scrollInner}>
         {visibleRows.map((w, i) => (
           <CarouselItem index={i} pan={pan} key={w.address}>
             <WalletCard address={w.address} />
@@ -93,8 +87,11 @@ export const Wallets = () => {
 };
 
 const page = StyleSheet.create({
-  container: {position: 'relative'},
+  container: {
+    paddingTop: 24,
+  },
   scroll: {overflow: 'hidden'},
+  scrollInner: {paddingBottom: 24, paddingTop: 6},
   sub: {
     height: 20,
     justifyContent: 'center',
