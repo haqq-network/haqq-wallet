@@ -1,10 +1,11 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 import {
   BG_1,
+  GRAPHIC_GREEN_1,
   GRAPHIC_SECOND_1,
   GRAPHIC_SECOND_7,
   MAGIC_CARD_HEIGHT,
@@ -46,6 +47,9 @@ export const WalletCreate = ({}: BalanceProps) => {
               size={ButtonSize.middle}
               title="Connect"
               style={page.createSmall}
+              iconRight={
+                <Image source={{uri: 'ledger'}} style={page.ledgerIcon} />
+              }
               onPress={() => {
                 navigation.navigate('ledger');
               }}
@@ -62,7 +66,7 @@ export const WalletCreate = ({}: BalanceProps) => {
         ) : (
           <Button
             title="Import  an existing one"
-            style={page.create}
+            style={page.import}
             onPress={() => {
               navigation.navigate('restore');
             }}
@@ -110,6 +114,13 @@ const page = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 12,
     lineHeight: 22,
+    marginBottom: 8,
+  },
+  import: {
+    flex: 0,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    lineHeight: 22,
   },
   createSmall: {
     flex: 1,
@@ -119,7 +130,7 @@ const page = StyleSheet.create({
   },
   buttons: {
     alignSelf: 'center',
-    marginTop: 4,
     flexDirection: 'row',
   },
+  ledgerIcon: {width: 22, height: 22, tintColor: GRAPHIC_GREEN_1},
 });

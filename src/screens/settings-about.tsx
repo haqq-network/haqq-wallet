@@ -21,6 +21,7 @@ import {
 } from '../variables';
 
 import {openURL, ratio, windowWidth} from '../helpers';
+import {getAppVersion, getBuildNumber} from '../services/version';
 
 export const SettingsAboutScreen = () => {
   const insets = useSafeAreaInsets();
@@ -107,7 +108,8 @@ export const SettingsAboutScreen = () => {
         </IconButton>
       </View>
       <Text t11 style={page.terms}>
-        ©2022 Islamiccoin. All Rights Reserved. Version 1.0.0 (112)
+        ©2022 Islamiccoin. All Rights Reserved. Version {getAppVersion()} (
+        {getBuildNumber()})
       </Text>
     </ScrollView>
   );

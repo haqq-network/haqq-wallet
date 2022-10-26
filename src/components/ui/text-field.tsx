@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from 'react-native';
+import {isIOS} from '../../helpers';
 import {
   BG_5,
   BG_7,
@@ -67,7 +68,7 @@ export const TextField: React.FC<Props> = ({
   }
 
   const top = isFocused ? 0 : -5;
-  const getHeight = height + 40;
+  const getHeight = height + (isIOS ? 40 : 15);
 
   return (
     <>
@@ -170,8 +171,9 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: TEXT_BASE_1,
-    top: 26,
+    top: isIOS ? 28 : 15,
     fontSize: 16,
+    right: isIOS ? 0 : 3,
   },
   labelContainer: {
     position: 'absolute',

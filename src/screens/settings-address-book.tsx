@@ -8,13 +8,13 @@ import {
   CloseCircle,
   Container,
   IconButton,
-  Input,
   Text,
   PenIcon,
   PlusIcon,
   QRScanner,
   SwipeableRow,
   TrashIcon,
+  TextField,
 } from '../components/ui';
 import {
   GRAPHIC_BASE_2,
@@ -163,13 +163,12 @@ export const SettingsAddressBookScreen =
 
     return (
       <Container style={page.container}>
-        <Input
-          label=""
+        <TextField
+          label="Address"
           style={page.input}
           placeholder="Search or add a contact"
-          onChangeText={setSearch}
           value={search}
-          multiline={true}
+          onChangeText={setSearch}
           rightAction={
             search === '' ? (
               <IconButton onPress={onPressQR}>
