@@ -140,6 +140,9 @@ export type RootStackParamList = {
   transactionFinish: {
     hash: string;
   };
+  transactionFinishDetails: {
+    hash: string;
+  };
   transactionConfirmation: {
     from: string;
     to: string;
