@@ -8,7 +8,6 @@ import {
   CloseCircle,
   Container,
   IconButton,
-  Input,
   Text,
   PenIcon,
   PlusIcon,
