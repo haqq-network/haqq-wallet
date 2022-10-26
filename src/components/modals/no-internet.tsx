@@ -1,8 +1,5 @@
 import React from 'react';
-
-import {useNetInfo} from '@react-native-community/netinfo';
-
-import {View, Modal, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   BG_1,
   GRAPHIC_SECOND_13,
@@ -13,25 +10,20 @@ import {NoInternetIcon, Text} from '../ui';
 import {windowWidth} from '../../helpers';
 
 export const NoInternet = () => {
-  const {isConnected} = useNetInfo();
-  const visible = isConnected !== null && !isConnected;
-
   return (
-    <Modal animationType="fade" transparent visible={!visible}>
-      <View style={page.container}>
-        <View style={page.modalView}>
-          <View style={page.modalContent}>
-            <Text t5 style={page.titleText}>
-              No Internet
-            </Text>
-            <Text t14 style={page.descriptionText}>
-              Make sure you are connected to Wi-Fi or a cellular network
-            </Text>
-            <NoInternetIcon color={GRAPHIC_SECOND_4} style={page.icon} />
-          </View>
+    <View style={page.container}>
+      <View style={page.modalView}>
+        <View style={page.modalContent}>
+          <Text t5 style={page.titleText}>
+            No Internet
+          </Text>
+          <Text t14 style={page.descriptionText}>
+            Make sure you are connected to Wi-Fi or a cellular network
+          </Text>
+          <NoInternetIcon color={GRAPHIC_SECOND_4} style={page.icon} />
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 

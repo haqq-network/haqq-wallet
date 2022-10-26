@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -17,6 +17,7 @@ import {
 } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import NetInfo from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -62,7 +63,6 @@ import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {Provider} from './models/provider';
-import {NoInternet} from './components/modals';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -114,11 +114,12 @@ export const App = () => {
       })
       .finally(() => {
         app.emit('modal', null);
+        setInitialized(true);
         requestAnimationFrame(() => {
           const providers = Provider.getProviders().filter(p => !!p.explorer);
 
-          const applicants: [string, string][] = wallets.addressList.flatMap(
-            d => providers.map(v => [d, v.id]),
+          const applicants: string[][] = wallets.addressList.flatMap(d =>
+            providers.map(v => [d, v.id]),
           );
 
           console.log('applicants', applicants);
@@ -139,11 +140,22 @@ export const App = () => {
     });
   }, [navigator]);
 
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialized) {
+      const unsubscribe = NetInfo.addEventListener(({isConnected}) => {
+        console.warn('isConnected', isConnected);
+        app.emit('modal', isConnected ? null : {type: 'no-internet'});
+      });
+      return () => unsubscribe();
+    }
+  }, [initialized]);
+
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
         <StatusBarColor barStyle="dark-content" />
-        <NoInternet />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
