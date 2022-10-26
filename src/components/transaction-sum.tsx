@@ -44,7 +44,7 @@ export const TransactionSum = ({
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
   const formattedAddress = useMemo(
-    () => (contact ? `${contact.name} ${to}` : shortAddress(to)),
+    () => (contact ? `${contact.name} ${shortAddress(to)}` : shortAddress(to)),
     [contact, to],
   );
 
