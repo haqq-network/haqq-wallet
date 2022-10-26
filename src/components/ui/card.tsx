@@ -5,6 +5,7 @@ import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
   GRADIENT_START,
+  MAGIC_CARD_HEIGHT,
 } from '../../variables';
 import {getPatternName} from '../../utils';
 
@@ -41,7 +42,7 @@ export const Card = ({
           page.container,
           {
             width: width,
-            height: width * 0.632835821,
+            height: Math.max(width * MAGIC_CARD_HEIGHT, 212),
             borderRadius,
           },
           style,
@@ -62,38 +63,41 @@ export const Card = ({
   }
 
   return (
-    <LinearGradient
-      colors={[colorFrom, colorTo]}
-      start={GRADIENT_START}
-      end={GRADIENT_END}
+    <View
       style={[
-        page.container,
         {
           width: width,
-          height: width * 0.612835821,
+          height: Math.max(width * MAGIC_CARD_HEIGHT, 212),
           borderRadius,
         },
         style,
       ]}>
-      <Image
-        source={uri}
-        onLoad={onLoad}
-        style={[
-          {
-            tintColor: colorPattern,
-          },
-          StyleSheet.absoluteFillObject,
-        ]}
-      />
-      {children}
-    </LinearGradient>
+      <LinearGradient
+        colors={[colorFrom, colorTo]}
+        start={GRADIENT_START}
+        end={GRADIENT_END}
+        style={[page.container, {borderRadius}]}>
+        <Image
+          source={uri}
+          onLoad={onLoad}
+          style={[
+            {
+              tintColor: colorPattern,
+              borderRadius,
+            },
+            StyleSheet.absoluteFillObject,
+          ]}
+        />
+        {children}
+      </LinearGradient>
+    </View>
   );
 };
 
 const page = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 16,
-    overflow: 'hidden',
     position: 'relative',
   },
 });

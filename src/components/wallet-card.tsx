@@ -17,9 +17,11 @@ import {
   Text,
 } from './ui';
 import {
+  BG_1,
   BG_5,
   GRAPHIC_BASE_3,
   GRAPHIC_SECOND_11,
+  GRAPHIC_SECOND_7,
   TEXT_BASE_3,
   TEXT_SECOND_2,
   TRANSPARENT,
@@ -133,7 +135,15 @@ export const WalletCard = ({address}: BalanceProps) => {
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
-    minHeight: 212,
+    backgroundColor: BG_1,
+    shadowColor: GRAPHIC_SECOND_7,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowRadius: 8,
+    shadowOpacity: 1,
+    elevation: 13,
   },
   topNav: {
     flexDirection: 'row',
