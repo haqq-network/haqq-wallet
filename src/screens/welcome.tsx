@@ -8,7 +8,7 @@ import {RootStackParamList} from '../types';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
-export const WelcomeScreen = ({navigation}: LoginScreenProp) => {
+export const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
     <Container testID="welcome">
