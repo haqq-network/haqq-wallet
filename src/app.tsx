@@ -28,7 +28,7 @@ import {SetPinScreen} from './screens/set-pin';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
-import {LoginScreen} from './screens/login';
+import {WelcomeScreen} from './screens/welcome';
 import {BG_1, GRAPHIC_GREEN_1} from './variables';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
@@ -104,7 +104,7 @@ export const App = () => {
       .catch(e => {
         switch (e) {
           case 'user_not_found':
-            navigator.navigate('login');
+            navigator.navigate('welcome');
             break;
           default:
             if (e instanceof Error) {
@@ -126,8 +126,8 @@ export const App = () => {
         requestAnimationFrame(() => {
           const providers = Provider.getProviders().filter(p => !!p.explorer);
 
-          const applicants: [string, string][] = wallets.addressList.flatMap(
-            d => providers.map(v => [d, v.id]),
+          const applicants: string[][] = wallets.addressList.flatMap(d =>
+            providers.map(v => [d, v.id]),
           );
 
           console.log('applicants', applicants);
@@ -143,7 +143,7 @@ export const App = () => {
       });
 
     app.on('resetWallet', () => {
-      navigator.dispatch(StackActions.replace('login'));
+      navigator.dispatch(StackActions.replace('welcome'));
       app.emit('modal', null);
     });
   }, [navigator]);
@@ -157,7 +157,7 @@ export const App = () => {
             <NavigationContainer ref={navigator} theme={AppTheme}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen name="home" component={HomeScreen} />
-                <Stack.Screen name="login" component={LoginScreen} />
+                <Stack.Screen name="welcome" component={WelcomeScreen} />
 
                 <Stack.Group screenOptions={{presentation: 'modal'}}>
                   <Stack.Screen name="backup" component={BackupScreen} />

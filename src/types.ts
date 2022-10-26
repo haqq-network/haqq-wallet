@@ -33,7 +33,7 @@ export type TransactionList =
 
 export type RootStackParamList = {
   home: undefined;
-  login: undefined;
+  welcome: undefined;
   create: undefined;
   scanQr: undefined;
   signin: {next: string};
@@ -138,6 +138,9 @@ export type RootStackParamList = {
     to: string;
   };
   transactionFinish: {
+    hash: string;
+  };
+  transactionFinishDetails: {
     hash: string;
   };
   transactionConfirmation: {
