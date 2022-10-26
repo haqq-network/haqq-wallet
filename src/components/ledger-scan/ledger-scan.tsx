@@ -1,20 +1,22 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Device} from 'react-native-ble-plx';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {PopupContainer} from '../ui';
 import {OnScanEvent} from '../../services/ledger';
 import {LedgerScanRow} from './ledger-scan-row';
 import {LedgerScanHeader} from './ledger-scan-header';
 import {useApp} from '../../contexts/app';
 import {LedgerScanEmpty} from './ledger-scan-empty';
+import {captureException} from '../../helpers';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;
 };
 
 export const LedgerScan = ({onSelect}: LedgerScanProps) => {
+  const transport = useRef<null | Subscription>(null);
   const [devices, setDevices] = useState<Device[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const app = useApp();
@@ -35,16 +37,19 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    let sub;
+  const listen = useCallback(() => {
     try {
-      sub = new Observable(TransportBLE.listen).subscribe({
+      if (transport.current) {
+        transport.current?.unsubscribe();
+      }
+
+      transport.current = new Observable(TransportBLE.listen).subscribe({
         complete: () => {
           subscription({refreshing: false});
         },
-        next: event => {
-          if (event.type === 'add') {
-            subscription({device: event.descriptor});
+        next: e => {
+          if (e.type === 'add') {
+            subscription({device: e.descriptor});
           }
         },
         error: e => {
@@ -53,13 +58,33 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
         },
       });
     } catch (e) {
-      console.log('err', e);
+      captureException(e, 'LedgerScan listen');
     }
+  }, [subscription, transport]);
+
+  useEffect(() => {
+    let previousAvailable: boolean = false;
+    const sub = new Observable(TransportBLE.observeState).subscribe(
+      (e: {available: boolean}) => {
+        if (e.available !== previousAvailable) {
+          console.log(e);
+          previousAvailable = e.available;
+          if (e.available) {
+            listen();
+          }
+        }
+      },
+    );
+
+    listen();
 
     return () => {
-      sub?.unsubscribe();
+      sub.unsubscribe();
+      if (transport.current) {
+        transport.current.unsubscribe();
+      }
     };
-  }, [app, subscription]);
+  }, [app, listen, subscription, transport]);
 
   const onPress = useCallback(
     (item: Device) => {
