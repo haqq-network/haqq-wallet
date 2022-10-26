@@ -62,6 +62,7 @@ import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {Provider} from './models/provider';
+import {NoInternet} from './components/modals';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -142,6 +143,7 @@ export const App = () => {
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
         <StatusBarColor barStyle="dark-content" />
+        <NoInternet />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
