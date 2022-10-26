@@ -63,6 +63,8 @@ import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {Provider} from './models/provider';
+import {AppState} from 'react-native';
+import {hideModal, modal} from './helpers/modal';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -144,11 +146,22 @@ export const App = () => {
 
   useEffect(() => {
     if (initialized) {
-      const unsubscribe = NetInfo.addEventListener(({isConnected}) => {
-        console.warn('isConnected', isConnected);
-        app.emit('modal', isConnected ? null : {type: 'no-internet'});
+      const subscription = ({isConnected}) => {
+        isConnected ? hideModal() : modal('no-internet');
+      };
+
+      NetInfo.fetch().then(subscription);
+      const unsubscribeNet = NetInfo.addEventListener(subscription);
+      const unsubscribeApp = AppState.addEventListener('change', () => {
+        if (AppState.currentState === 'active') {
+          NetInfo.fetch().then(subscription);
+        }
       });
-      return () => unsubscribe();
+
+      return () => {
+        unsubscribeNet();
+        unsubscribeApp.remove();
+      };
     }
   }, [initialized]);
 
