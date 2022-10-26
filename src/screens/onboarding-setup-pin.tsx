@@ -33,7 +33,7 @@ export const OnboardingSetupPinScreen = () => {
   }, [navigation, pin, route]);
 
   return (
-    <Container style={page.container}>
+    <Container style={page.container} testID="onboarding-setup-pin">
       <Text t4 style={page.title}>
         Set 6-digital pin code
       </Text>

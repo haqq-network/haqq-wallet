@@ -34,6 +34,7 @@ interface TxtT {
   numberOfLines?: number;
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
   style?: StyleProp<TextStyle>;
+  testID?: string;
   children: React.ReactNode;
   onPress?: TextProps['onPress'];
 }
@@ -62,13 +63,18 @@ export const Text = ({
   ellipsizeMode,
   numberOfLines,
   clean,
+  testID,
   onPress,
   ...props
 }: TxtT) => {
   return (
     <>
       {clean ? (
-        <RNText style={style} allowFontScaling={false} onPress={onPress}>
+        <RNText
+          style={style}
+          testID={testID}
+          onPress={onPress}
+          allowFontScaling={false}>
           {children}
         </RNText>
       ) : (
@@ -76,6 +82,7 @@ export const Text = ({
           allowFontScaling={false}
           numberOfLines={numberOfLines}
           ellipsizeMode={ellipsizeMode}
+          testID={testID}
           onPress={onPress}
           style={[
             t0 && StyleSheet.flatten([page.t0Style, style]),

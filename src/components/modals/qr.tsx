@@ -22,6 +22,7 @@ import {
   TEXT_BASE_3,
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {HapticEffects, vibrate} from '../../services/haptic';
 
 export type QRModalProps = {
   onClose: () => void;
@@ -35,6 +36,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
       if (e.data && e.data !== code) {
+        vibrate(HapticEffects.selection);
         setCode(e.data);
       }
     },
@@ -46,7 +48,7 @@ export const QRModal = ({onClose}: QRModalProps) => {
       app.emit('address', address);
     } else {
       setError(true);
-
+      vibrate(HapticEffects.error);
       setTimeout(() => {
         setError(false);
       }, 5000);
@@ -88,6 +90,8 @@ export const QRModal = ({onClose}: QRModalProps) => {
     <>
       <StatusBar backgroundColor={GRAPHIC_SECOND_12} />
       <QRscanner
+        isRepeatScan={true}
+        vibrate={false}
         style={page.container}
         onRead={onSuccess}
         flashMode={flashMode}

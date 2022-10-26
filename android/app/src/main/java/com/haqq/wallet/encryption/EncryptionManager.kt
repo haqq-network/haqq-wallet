@@ -1,5 +1,6 @@
 package com.haqq.wallet.encryption
 
+import android.os.Build
 import com.facebook.react.bridge.*
 import com.google.android.gms.common.util.Base64Utils
 import kotlinx.serialization.Serializable
@@ -27,8 +28,9 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
   override fun getName() = "RNEncryption"
 
-  private val ENCRYPT_ALGO = "ChaCha20-Poly1305"
-  private val NONCE_LEN = 12 // 96 bits, 12 bytes
+  private val ENCRYPT_ALGO =
+    if (Build.VERSION.SDK_INT >= 28) "ChaCha20-Poly1305" else "AES/CBC/PKCS7Padding"
+  private val NONCE_LEN =  if (Build.VERSION.SDK_INT >= 28) 12 else 16
 
   @ReactMethod
   fun encrypt(password: String, data: String, promise: Promise) {
@@ -36,7 +38,7 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
     val nonce = getNonce();
     val key = keyFromPassword(password, salt)
 
-    key ?.let {
+    key?.let {
       val encrypted = encryptWithKey(key, data, nonce);
 
       val result = Json.encodeToString(
@@ -57,7 +59,7 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
     val obj = Json.decodeFromString<EncryptedResult>(data)
     val key = keyFromPassword(password, Base64.getDecoder().decode(obj.salt))
 
-    key ?.let {
+    key?.let {
       val decrypted = decryptWithKey(key, obj.cipher, Base64.getDecoder().decode(obj.iv));
       if (decrypted != null) {
         return promise.resolve(decrypted.toString(Charsets.UTF_8))

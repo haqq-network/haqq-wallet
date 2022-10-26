@@ -130,6 +130,7 @@ export const TransactionSum = ({
           keyboardType="numeric"
           placeholderTextColor={TEXT_BASE_2}
           autoFocus
+          textAlign="left"
         />
         <View style={page.max}>
           {balance > 0 && (
@@ -173,14 +174,12 @@ const page = StyleSheet.create({
   container: {justifyContent: 'space-between', paddingHorizontal: 20},
   label: {marginBottom: 50},
   input: {
-    flex: 1,
-    textAlign: 'center',
+    alignSelf: 'center',
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
     color: TEXT_BASE_1,
     paddingVertical: 2,
-    alignItems: 'center',
   },
   swap: {
     height: 46,

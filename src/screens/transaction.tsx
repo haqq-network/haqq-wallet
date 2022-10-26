@@ -12,6 +12,7 @@ import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
 import {RootStackParamList, ScreenOptionType} from '../types';
 import {TransactionLedgerScreen} from './transaction-ledger';
+import {hideBack} from '../helpers/screenOptions';
 
 const TransactionStack = createStackNavigator();
 
@@ -19,21 +20,16 @@ const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
 const screenOptionsSend: ScreenOptionType = {
   title: 'Send',
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
+  ...hideBack,
 };
 
 const screenOptionsAddress: ScreenOptionType = {
   title: 'Address',
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
-  presentation: 'modal',
 };
 
 const screenOptionsSendFunds: ScreenOptionType = {
   title: 'Send funds from',
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
+  ...hideBack,
 };
 
 export const TransactionScreen = () => {

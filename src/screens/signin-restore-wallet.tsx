@@ -52,7 +52,7 @@ export const SignInRestoreScreen = () => {
   }, []);
 
   return (
-    <KeyboardSafeArea style={page.container}>
+    <KeyboardSafeArea style={page.container} testID="signin_restore">
       <Text t11 style={page.intro}>
         Recovery phrase or Private key
       </Text>

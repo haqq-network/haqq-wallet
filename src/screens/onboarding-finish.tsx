@@ -51,13 +51,14 @@ export const OnboardingFinishScreen = () => {
           loop={false}
         />
       </Spacer>
-      <Text t4 style={page.title}>
+      <Text t4 style={page.title} testID="onboarding_finish_title">
         {title}
       </Text>
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
         title="Finish"
+        testID="onboarding_finish_finish"
         onPress={onEnd}
       />
     </Container>
