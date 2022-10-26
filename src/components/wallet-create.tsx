@@ -78,8 +78,8 @@ const cardWidth = Dimensions.get('window').width - 40;
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
-    width: Dimensions.get('window').width - 40,
-    height: cardWidth * MAGIC_CARD_HEIGHT,
+    width: cardWidth,
+    height: Math.max(cardWidth * MAGIC_CARD_HEIGHT, 212),
     borderColor: GRAPHIC_SECOND_1,
     borderWidth: 1,
     borderRadius: 16,
@@ -91,7 +91,7 @@ const page = StyleSheet.create({
       width: 0,
       height: 6,
     },
-    shadowRadius: 16,
+    shadowRadius: 8,
     shadowOpacity: 1,
     elevation: 13,
   },
