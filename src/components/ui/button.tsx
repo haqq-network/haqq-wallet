@@ -19,6 +19,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
+  iconRight?: React.ReactNode;
 };
 
 export enum ButtonVariant {
@@ -42,6 +43,7 @@ export const Button = ({
   style,
   disabled,
   onPress,
+  iconRight,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -84,12 +86,14 @@ export const Button = ({
       <Text t9 style={textStyle}>
         {title}
       </Text>
+      {iconRight}
     </TouchableOpacity>
   );
 };
 
 const page = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
@@ -129,6 +133,7 @@ const page = StyleSheet.create({
     fontStyle: 'normal',
     fontSize: 18,
     lineHeight: 24,
+    marginHorizontal: 8,
   },
   smallText: {
     fontWeight: '700',
