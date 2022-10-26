@@ -70,7 +70,11 @@ export const Text = ({
   return (
     <>
       {clean ? (
-        <RNText style={style} testID={testID} onPress={onPress} allowFontScaling={false}>
+        <RNText
+          style={style}
+          testID={testID}
+          onPress={onPress}
+          allowFontScaling={false}>
           {children}
         </RNText>
       ) : (
