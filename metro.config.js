@@ -4,7 +4,7 @@
  *
  * @format
  */
-
+const blacklist = require('metro-config/src/defaults/exclusionList');
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
@@ -16,9 +16,9 @@ module.exports = {
     minifierPath: 'metro-minify-terser',
     // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
-  // resolver: {
-  //   extraNodeModules: {
-  //     crypto: require.resolve('react-native-crypto'),
-  //   },
-  // },
+  resolver: {
+    blacklistRE: blacklist([
+      /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
+    ]),
+  },
 };

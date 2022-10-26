@@ -27,7 +27,7 @@ export const SignInAgreementScreen = () => {
       <View style={page.animation}>
         <LottieWrap source={warningImage} style={page.image} autoPlay loop />
       </View>
-      <PopupContainer style={page.container}>
+      <PopupContainer style={page.container} testID="signin_agreement">
         <Text t4 style={page.title}>
           Do you have your recovery phrase or private key?
         </Text>
@@ -40,6 +40,7 @@ export const SignInAgreementScreen = () => {
           style={page.submit}
           variant={ButtonVariant.contained}
           title="Agree"
+          testID="signin_agreement_agree"
           onPress={onDone}
         />
         <Text t11 style={page.agreement}>

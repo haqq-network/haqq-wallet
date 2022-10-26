@@ -33,7 +33,7 @@ export type TransactionList =
 
 export type RootStackParamList = {
   home: undefined;
-  login: undefined;
+  welcome: undefined;
   create: undefined;
   scanQr: undefined;
   signin: {next: string};
