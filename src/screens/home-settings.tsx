@@ -7,13 +7,10 @@ import {
   ISLMSettingsIcon,
   ProviderIcon,
   ShieldSettingsIcon,
-  Spacer,
-  Text,
   WalletIcon,
 } from '../components/ui';
 import {SettingsButton} from '../components/settings-button';
-import {GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
-import {getAppVersion, getBuildNumber} from '../services/version';
+import {GRAPHIC_BASE_1} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (
@@ -64,11 +61,6 @@ export const HomeSettingsScreen = () => {
         style={page.button}
       />
 
-      <Text t17 style={page.version}>
-        Version {getAppVersion()} ({getBuildNumber()})
-      </Text>
-
-      <Spacer />
       {/*<SettingsButton*/}
       {/*  icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}*/}
       {/*  title="Test"*/}
@@ -80,7 +72,4 @@ export const HomeSettingsScreen = () => {
 
 const page = StyleSheet.create({
   button: {marginBottom: 20},
-  version: {
-    color: TEXT_BASE_2,
-  },
 });
