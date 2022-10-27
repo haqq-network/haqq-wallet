@@ -1,4 +1,3 @@
-import ethers from 'ethers';
 import {realm} from './index';
 import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
@@ -43,7 +42,6 @@ export class WalletRealm extends Realm.Object {
 }
 
 export class Wallet extends EventEmitter {
-  private _wallet: ethers.Wallet | null = null;
   private _raw: WalletRealm;
   private _balance: number = 0;
   private _encrypted: boolean;
@@ -211,12 +209,10 @@ export class Wallet extends EventEmitter {
   }
 
   async updateWalletData(pin: string) {
-    const data = this._wallet
-      ? await encrypt(pin, {
-          privateKey: this._privateKey,
-          mnemonic: this._mnemonic,
-        })
-      : '';
+    const data = await encrypt(pin, {
+      privateKey: this._privateKey,
+      mnemonic: this._mnemonic,
+    });
 
     const wallet = realm.objectForPrimaryKey<WalletRealm>(
       'Wallet',

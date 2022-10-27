@@ -5,9 +5,10 @@ import {StyleSheet} from 'react-native';
 export type FinishProps = {
   title: string;
   onFinish: () => void;
+  testID?: string;
 };
 
-export const Finish = ({title, onFinish}: FinishProps) => {
+export const Finish = ({title, onFinish, testID}: FinishProps) => {
   return (
     <Container>
       <Spacer>
@@ -24,6 +25,7 @@ export const Finish = ({title, onFinish}: FinishProps) => {
         style={page.button}
         variant={ButtonVariant.contained}
         title="Finish"
+        testID={`${testID}_finish`}
         onPress={onFinish}
       />
     </Container>
