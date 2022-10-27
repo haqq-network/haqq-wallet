@@ -169,6 +169,7 @@ export const SettingsAddressBookScreen =
           placeholder="Search or add a contact"
           value={search}
           onChangeText={setSearch}
+          multiline
           rightAction={
             search === '' ? (
               <IconButton onPress={onPressQR}>
