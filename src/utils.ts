@@ -149,10 +149,11 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 export function cleanNumber(number: string | number) {
   const [a, f] = String(number).trim().split('.');
 
-  return `${a.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}.${(f ?? '').replace(
-    /0*$/g,
-    '',
-  )}`.replace(/^(.*)\.0?$/g, '$1');
+  const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+  return `${aFormatted}.${(f ?? '').replace(/0*$/g, '')}`
+    .substring(0, Math.max(aFormatted.length, 12))
+    .replace(/^(.*)\.0?$/g, '$1');
 }
 
 export function getPatternName(pattern: string) {

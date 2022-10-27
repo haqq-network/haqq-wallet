@@ -107,7 +107,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         </IconButton>
       )}
       <Text t0 style={page.balance} numberOfLines={1} adjustsFontSizeToFit>
-        {cleanNumber(balance.toFixed(8))} ISLM
+        {cleanNumber(balance.toFixed(2))} ISLM
       </Text>
       <Spacer />
       <View style={page.buttonsContainer}>
