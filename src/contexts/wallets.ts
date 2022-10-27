@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
+import {HDNode} from 'ethers/lib/utils';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
@@ -22,6 +23,7 @@ import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
+  ETH_HD_PATH,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
   GRAPHIC_GREEN_3,
@@ -162,16 +164,14 @@ class Wallets extends EventEmitter {
     mnemonic: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const wallet = EthersWallet.fromMnemonic(mnemonic).connect(
-      EthNetwork.network,
-    );
+    const node = HDNode.fromMnemonic(mnemonic).derivePath(ETH_HD_PATH);
 
     return this.addWallet(
       {
-        address: wallet.address,
+        address: node.address,
         type: WalletType.hot,
-        privateKey: wallet.privateKey,
-        mnemonic: wallet.mnemonic,
+        privateKey: node.privateKey,
+        mnemonic: node.mnemonic,
       },
       name,
     );
