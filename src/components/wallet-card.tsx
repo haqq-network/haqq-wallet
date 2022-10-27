@@ -106,7 +106,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           </Text>
         </IconButton>
       )}
-      <Text t0 style={page.balance}>
+      <Text t0 style={page.balance} numberOfLines={1} adjustsFontSizeToFit>
         {balance.toFixed(4)} ISLM
       </Text>
       <Spacer />
