@@ -12,6 +12,7 @@ import {getPatternName} from '../../utils';
 export type CardProps = {
   children?: React.ReactNode;
   width: number;
+  height?: number;
   style?: StyleProp<ViewStyle> | undefined;
   borderRadius?: number;
   transparent?: boolean;
@@ -25,6 +26,7 @@ export type CardProps = {
 export const Card = ({
   children,
   width,
+  height,
   style,
   colorFrom,
   colorTo,
@@ -42,7 +44,7 @@ export const Card = ({
           page.container,
           {
             width: width,
-            height: Math.max(width * MAGIC_CARD_HEIGHT, 212),
+            height: height || Math.max(width * MAGIC_CARD_HEIGHT, 212),
             borderRadius,
           },
           style,
@@ -67,7 +69,7 @@ export const Card = ({
       style={[
         {
           width: width,
-          height: Math.max(width * MAGIC_CARD_HEIGHT, 212),
+          height: height || Math.max(width * MAGIC_CARD_HEIGHT, 212),
           borderRadius,
         },
         style,
