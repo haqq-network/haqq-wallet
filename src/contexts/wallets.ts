@@ -262,6 +262,11 @@ class Wallets extends EventEmitter {
 
       if (result) {
         const wallet = new Wallet(result);
+        if (wallet.isEncrypted) {
+          const password = await app.getPassword();
+          await wallet.decrypt(password);
+        }
+
         this.attachWallet(wallet);
         this.onChangeWallet();
 
