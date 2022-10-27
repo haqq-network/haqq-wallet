@@ -21,7 +21,7 @@ export const SignupStoreWalletScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      const actions = [sleep(4000)];
+      const actions = [sleep(1000)];
 
       actions.push(
         wallets.addWalletFromMnemonic(

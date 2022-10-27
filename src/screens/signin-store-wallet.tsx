@@ -19,7 +19,7 @@ export const SigninStoreWalletScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      const actions = [sleep(4000)];
+      const actions = [sleep(1000)];
       const name =
         wallets.getSize() === 0
           ? MAIN_ACCOUNT_NAME
