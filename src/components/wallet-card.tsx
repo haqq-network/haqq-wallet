@@ -28,7 +28,7 @@ import {
   TRANSPARENT,
 } from '../variables';
 import {RootStackParamList} from '../types';
-import {shortAddress} from '../utils';
+import {cleanNumber, shortAddress} from '../utils';
 import {isIOS} from '../helpers';
 
 export type BalanceProps = {
@@ -107,7 +107,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         </IconButton>
       )}
       <Text t0 style={page.balance} numberOfLines={1} adjustsFontSizeToFit>
-        {balance.toFixed(4)} ISLM
+        {cleanNumber(balance.toFixed(8))} ISLM
       </Text>
       <Spacer />
       <View style={page.buttonsContainer}>

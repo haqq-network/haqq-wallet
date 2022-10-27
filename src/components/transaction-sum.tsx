@@ -78,7 +78,7 @@ export const TransactionSum = ({
   }, [amount, onAmount]);
 
   const onPressMax = useCallback(() => {
-    setAmount(cleanNumber(maxSum.toFixed(8)));
+    setAmount(maxSum.toFixed(8));
   }, [maxSum]);
 
   const onChangeValue = useCallback(
@@ -154,7 +154,7 @@ export const TransactionSum = ({
         <Text clean style={[page.help, page.available]}>
           Available:{' '}
           <Text clean style={{color: TEXT_GREEN_1}}>
-            {balance.toFixed(8).replace(/0+$/g, '')} ISLM
+            {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>
       )}
