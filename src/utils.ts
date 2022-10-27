@@ -146,10 +146,7 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function cleanNumber(number: string | number) {
-  return String(number)
-    .trim()
-    .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
-    .replace(/^(\d+)\.0*$/g, '$1');
+  return parseFloat(<string>number).toLocaleString();
 }
 
 export function getPatternName(pattern: string) {
