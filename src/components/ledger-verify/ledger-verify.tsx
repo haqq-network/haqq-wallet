@@ -50,7 +50,7 @@ export const LedgerVerify = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t9>
+      <Text t9 style={styles.text}>
         Verify address {address} on your Ledger Nano X by pressing both buttons
         together
       </Text>
@@ -72,5 +72,8 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: Dimensions.get('window').width,
+  },
+  text: {
+    textAlign: 'center',
   },
 });
