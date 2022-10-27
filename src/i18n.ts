@@ -22,5 +22,5 @@ const en: Record<I18N, string> = {
     'The app does not have access to your Bluetooth. Please go to your phone settings and allow the app to use Bluetooth. Without this, we will not be able to find your Ledger Nano X',
   [I18N.transactionLedgerBluetoothDisabled]: 'No access to Bluetooth',
   [I18N.transactionLedgerBluetoothConfirmation]:
-    'Open ledger and confirm operation',
+    'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
 };

@@ -44,10 +44,12 @@ export const TransactionLedger = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t9>{getText(I18N.transactionLedgerBluetoothConfirmation)}</Text>
+      <Text t9 style={styles.text}>
+        {getText(I18N.transactionLedgerBluetoothConfirmation)}
+      </Text>
       <LottieWrap
         style={styles.lottie}
-        source={require('../../../assets/animations/ledger-verify.json')}
+        source={require('../../../assets/animations/transaction-ledger.json')}
         autoPlay
         loop={false}
       />
@@ -63,5 +65,8 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: Dimensions.get('window').width,
+  },
+  text: {
+    textAlign: 'center',
   },
 });
