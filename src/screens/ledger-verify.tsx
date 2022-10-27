@@ -4,6 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
 import {LedgerVerify} from '../components/ledger-verify';
+import {captureException} from '../helpers';
 
 export const LedgerVerifyScreen = () => {
   const wallets = useWallets();
@@ -12,17 +13,27 @@ export const LedgerVerifyScreen = () => {
 
   const onDone = useCallback(
     async (params: {address: string}) => {
-      await wallets.addWalletFromLedger(
-        {
-          address: params.address,
-          deviceId: route.params.deviceId,
-          deviceName: route.params.deviceName,
-        },
-        route.params.deviceName,
-      );
-      navigation.navigate('ledgerFinish', {hide: true});
+      try {
+        await wallets.addWalletFromLedger(
+          {
+            address: params.address,
+            deviceId: route.params.deviceId,
+            deviceName: route.params.deviceName,
+          },
+          route.params.deviceName,
+        );
+        navigation.navigate(route.params.nextScreen ?? 'ledgerFinish');
+      } catch (e) {
+        captureException(e, 'LedgerVerifyScreen');
+      }
     },
-    [wallets, route.params.deviceId, route.params.deviceName, navigation],
+    [
+      wallets,
+      route.params.deviceId,
+      route.params.deviceName,
+      route.params.nextScreen,
+      navigation,
+    ],
   );
 
   return (

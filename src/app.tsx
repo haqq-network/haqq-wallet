@@ -61,7 +61,6 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {Provider} from './models/provider';
 import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
@@ -124,21 +123,7 @@ export const App = () => {
         app.emit('modal', null);
 
         requestAnimationFrame(() => {
-          const providers = Provider.getProviders().filter(p => !!p.explorer);
-
-          const applicants: string[][] = wallets.addressList.flatMap(d =>
-            providers.map(v => [d, v.id]),
-          );
-
-          console.log('applicants', applicants);
-
-          Promise.all(
-            applicants.map(([address, provider]) =>
-              transactions.loadTransactionsFromExplorer(address, provider),
-            ),
-          ).then(() => {
-            console.log('transaction synced');
-          });
+          wallets.addressList.forEach(d => app.emit('addWallet', d));
         });
       });
 

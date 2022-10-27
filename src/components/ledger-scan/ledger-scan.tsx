@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList} from 'react-native';
-import {Device} from 'react-native-ble-plx';
+import {BleManager, Device} from 'react-native-ble-plx';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {Observable, Subscription} from 'rxjs';
 import {PopupContainer} from '../ui';
@@ -42,7 +42,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
       if (transport.current) {
         transport.current?.unsubscribe();
       }
-
+      console.log('listen');
       transport.current = new Observable(TransportBLE.listen).subscribe({
         complete: () => {
           subscription({refreshing: false});
@@ -63,22 +63,24 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
   }, [subscription, transport]);
 
   useEffect(() => {
+    const manager = new BleManager();
     let previousAvailable: boolean = false;
-    const sub = new Observable(TransportBLE.observeState).subscribe(
-      (e: {available: boolean}) => {
-        if (e.available !== previousAvailable) {
-          console.log(e);
-          previousAvailable = e.available;
-          if (e.available) {
-            listen();
-          }
+    const sub = new Observable<{available: boolean}>(
+      TransportBLE.observeState,
+    ).subscribe(e => {
+      if (e.available !== previousAvailable) {
+        console.log(e);
+        previousAvailable = e.available;
+        if (e.available) {
+          listen();
         }
-      },
-    );
+      }
+    });
 
     listen();
 
     return () => {
+      manager.destroy();
       sub.unsubscribe();
       if (transport.current) {
         transport.current.unsubscribe();

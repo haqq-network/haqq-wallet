@@ -20,6 +20,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   size?: ButtonSize;
   onPress: () => void;
   iconRight?: React.ReactNode;
+  iconLeft?: React.ReactNode;
 };
 
 export enum ButtonVariant {
@@ -44,6 +45,7 @@ export const Button = ({
   disabled,
   onPress,
   iconRight,
+  iconLeft,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -68,13 +70,15 @@ export const Button = ({
   const textStyle = useMemo(
     () => [
       page.text,
+      iconLeft && page.textIconLeft,
+      iconRight && page.textIconRight,
       page[`${variant}Text`] ?? null,
       page[`${size}Text`] ?? null,
       disabled && `${variant}DisabledText` in page
         ? page[`${variant}DisabledText`]
         : null,
     ],
-    [disabled, size, variant],
+    [disabled, iconLeft, iconRight, size, variant],
   );
 
   return (
@@ -133,7 +137,12 @@ const page = StyleSheet.create({
     fontStyle: 'normal',
     fontSize: 18,
     lineHeight: 24,
-    marginHorizontal: 8,
+  },
+  textIconRight: {
+    marginRight: 8,
+  },
+  textIconLeft: {
+    marginLeft: 8,
   },
   smallText: {
     fontWeight: '700',

@@ -105,8 +105,8 @@ export type RootStackParamList = {
     nextScreen?: 'onboardingBiometry';
   };
   onboardingSetupPin: {
-    mnemonic: string | false;
-    privateKey: string | false;
+    mnemonic?: string | false;
+    privateKey?: string | false;
   };
   onboardingFinish: undefined;
   signupStoreWallet: {
@@ -171,10 +171,9 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
-  ledgerFinish: {
-    hide?: boolean;
-  };
+  ledgerFinish: undefined;
   ledgerVerify: {
+    nextScreen: 'ledgerFinish' | 'onboardingSetupPin';
     address: string;
     deviceId: string;
     deviceName: string;
