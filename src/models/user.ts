@@ -15,6 +15,7 @@ export const UserSchema = {
     language: 'string',
     biometry: 'bool',
     bluetooth: 'bool?',
+    onboarded: 'bool?',
     snoozeBackup: 'date?',
     pinAttempts: 'int?',
     pinBanned: 'date?',
@@ -36,6 +37,7 @@ export type UserType = {
   pinAttempts: number | null;
   pinBanned: Date | null;
   bluetooth: boolean | null;
+  onboarded: boolean | null;
   providerId: string;
 };
 
@@ -101,6 +103,16 @@ export class User extends EventEmitter {
   set bluetooth(value) {
     realm.write(() => {
       this._raw.bluetooth = value;
+    });
+  }
+
+  get onboarded() {
+    return this._raw.onboarded ?? false;
+  }
+
+  set onboarded(value) {
+    realm.write(() => {
+      this._raw.onboarded = value;
     });
   }
 

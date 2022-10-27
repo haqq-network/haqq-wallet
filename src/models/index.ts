@@ -9,7 +9,7 @@ import {Provider} from './provider';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 23,
+  schemaVersion: 24,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -82,6 +82,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.providerId = TEST_NETWORK;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 24) {
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects<{onboarded: boolean}>('User');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.onboarded = true;
       }
     }
   },

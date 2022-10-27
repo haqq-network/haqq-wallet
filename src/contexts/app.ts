@@ -100,7 +100,7 @@ class App extends EventEmitter {
   async getPassword() {
     const creds = await getGenericPassword();
     if (!creds || !creds.password || creds.username !== this.user.uuid) {
-      return Promise.reject();
+      return Promise.reject('password_not_found');
     }
 
     return creds.password;

@@ -6,13 +6,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {State} from 'react-native-ble-plx';
+import {BleManager, State} from 'react-native-ble-plx';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {GRAPHIC_GREEN_1, GRAPHIC_SECOND_4, TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
 import {getText, I18N} from '../../i18n';
 import {Observable, Subscription} from 'rxjs';
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 
 export type LedgerBluetooth = {
   user: User;
@@ -26,27 +25,42 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   const [btState, setBtState] = useState(State.Unknown);
 
   const tryToInit = useCallback(async () => {
-    if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-    }
+    try {
+      if (subscription.current) {
+        subscription.current?.unsubscribe();
+      }
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+      }
+      const manager = new BleManager();
+      let sub = null;
+      let previousState = State.Unknown;
+      subscription.current = new Observable<State>(observer => {
+        manager.state().then(state => {
+          observer.next(state);
+        });
 
-    let previousAvailable = false;
-    subscription.current = new Observable(TransportBLE.observeState).subscribe(
-      e => {
-        if (e.available !== previousAvailable) {
-          previousAvailable = e.available;
-          switch (e.type) {
+        sub = manager.onStateChange(state => {
+          observer.next(state);
+        }, true);
+      }).subscribe(e => {
+        if (e !== previousState) {
+          previousState = e;
+          switch (e) {
             case State.PoweredOn:
               onDone();
+              sub.remove();
               break;
             default:
-              setBtState(e.type);
+              setBtState(e);
           }
         }
-      },
-    );
+      });
+    } catch (e) {
+      console.log('aaa', e);
+    }
   }, [onDone]);
 
   useEffect(() => {
@@ -92,6 +106,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
           )}
         </Text>
         <Button
+          disabled={disabled.includes(btState)}
           style={page.submit}
           variant={ButtonVariant.contained}
           title={getText(I18N.ledgerBluetoothAllow)}

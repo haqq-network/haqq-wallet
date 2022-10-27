@@ -3,6 +3,7 @@ import {LottieWrap, PopupContainer, Text} from '../ui';
 import {Dimensions, StyleSheet} from 'react-native';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
+import {captureException} from '../../helpers';
 
 export type LedgerInfo = {
   address: string;
@@ -22,19 +23,23 @@ export const LedgerVerify = ({
   useEffect(() => {
     const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, true));
     requestAnimationFrame(async () => {
-      let verifiedAddress = null;
-      let done = false;
-      do {
-        const resp = await iter.next();
-        done = resp.done;
-        if (resp.value) {
-          verifiedAddress = resp.value.address;
+      try {
+        let verifiedAddress = null;
+        let done = false;
+        do {
+          const resp = await iter.next();
+          done = resp.done;
+          if (resp.value) {
+            verifiedAddress = resp.value.address;
+          }
+        } while (!done);
+        if (verifiedAddress) {
+          onDone({
+            address: verifiedAddress,
+          });
         }
-      } while (!done);
-      if (verifiedAddress) {
-        onDone({
-          address: verifiedAddress,
-        });
+      } catch (e) {
+        captureException(e, 'LedgerVerify');
       }
     });
 

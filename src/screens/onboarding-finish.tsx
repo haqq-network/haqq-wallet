@@ -1,18 +1,10 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
-import {StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
-import {
-  Button,
-  ButtonVariant,
-  Container,
-  Spacer,
-  Text,
-  LottieWrap,
-} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
+import {Finish} from '../components/finish';
 
 export const OnboardingFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -28,44 +20,20 @@ export const OnboardingFinishScreen = () => {
   );
 
   const onEnd = useCallback(() => {
-    if (route.params.hide) {
+    if (app.getUser().onboarded) {
       navigation.getParent()?.goBack();
     } else {
+      app.getUser().onboarded = true;
       navigation.replace('home');
     }
     requestAnimationFrame(async () => {
       await wallets.checkForBackup(app.snoozeBackup);
     });
-  }, [app, navigation, route, wallets]);
+  }, [app, navigation, wallets]);
 
   useEffect(() => {
     app.emit('modal', null);
   }, [app]);
 
-  return (
-    <Container>
-      <Spacer>
-        <LottieWrap
-          source={require('../../assets/animations/success-animation.json')}
-          autoPlay
-          loop={false}
-        />
-      </Spacer>
-      <Text t4 style={page.title} testID="onboarding_finish_title">
-        {title}
-      </Text>
-      <Button
-        style={page.button}
-        variant={ButtonVariant.contained}
-        title="Finish"
-        testID="onboarding_finish_finish"
-        onPress={onEnd}
-      />
-    </Container>
-  );
+  return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };
-
-const page = StyleSheet.create({
-  title: {marginBottom: 76, textAlign: 'center'},
-  button: {marginBottom: 16},
-});
