@@ -10,6 +10,7 @@ import {
 } from '../components/modals';
 import {useApp} from '../contexts/app';
 import {QRModal, QRModalProps} from '../components/modals/qr';
+import {NoInternet} from '../components/modals/no-internet';
 
 type Loading = {
   type: 'loading';
@@ -27,7 +28,11 @@ type QR = {
   type: 'qr' & QRModalProps;
 };
 
-type ModalState = Loading | Splash | Pin | QR | null;
+type NoInternet = {
+  type: 'qr' & QRModalProps;
+};
+
+type ModalState = Loading | Splash | Pin | QR | NoInternet | null;
 
 export type ModalProps = {
   initialModal?: ModalState;
@@ -67,6 +72,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <SplashModal />;
       case 'qr':
         return <QRModal onClose={onClose} />;
+      case 'no-internet':
+        return <NoInternet />;
       default:
         return null;
     }

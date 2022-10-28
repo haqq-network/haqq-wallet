@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -18,6 +18,7 @@ import {
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
+import NetInfo from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -62,6 +63,8 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
+import {AppState} from 'react-native';
+import {hideModal, modal} from './helpers/modal';
 import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
@@ -124,6 +127,7 @@ export const App = () => {
 
         app.emit('modal', null);
 
+        setInitialized(true);
         requestAnimationFrame(() => {
           wallets.addressList.forEach(d => app.emit('addWallet', d));
         });
@@ -134,6 +138,29 @@ export const App = () => {
       app.emit('modal', null);
     });
   }, [navigator]);
+
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialized) {
+      const subscription = ({isConnected}) => {
+        isConnected ? hideModal() : modal('no-internet');
+      };
+
+      NetInfo.fetch().then(subscription);
+      const unsubscribeNet = NetInfo.addEventListener(subscription);
+      const unsubscribeApp = AppState.addEventListener('change', () => {
+        if (AppState.currentState === 'active') {
+          NetInfo.fetch().then(subscription);
+        }
+      });
+
+      return () => {
+        unsubscribeNet();
+        unsubscribeApp.remove();
+      };
+    }
+  }, [initialized]);
 
   return (
     <SafeAreaProvider>
