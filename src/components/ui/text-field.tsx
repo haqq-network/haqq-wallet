@@ -68,7 +68,7 @@ export const TextField: React.FC<Props> = ({
   }
 
   const top = isFocused ? 0 : -5;
-  const getHeight = height + (isIOS ? 40 : 15);
+  const getHeight = height + (isIOS ? 40 : 17);
 
   return (
     <>
@@ -171,7 +171,7 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: TEXT_BASE_1,
-    top: isIOS ? 28 : 20,
+    top: isIOS ? 28 : 18,
     fontSize: 16,
     right: isIOS ? 0 : 4.5,
   },
