@@ -63,7 +63,11 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
   }, [subscription, transport]);
 
   useEffect(() => {
-    const manager = new BleManager();
+    /**
+     * these variable needs to correct work of ledger scan
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _manager = new BleManager();
     let previousAvailable: boolean = false;
     const sub = new Observable<{available: boolean}>(
       TransportBLE.observeState,
@@ -80,7 +84,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
     listen();
 
     return () => {
-      manager.destroy();
       sub.unsubscribe();
       if (transport.current) {
         transport.current.unsubscribe();

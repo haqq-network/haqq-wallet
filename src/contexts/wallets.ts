@@ -270,7 +270,9 @@ class Wallets extends EventEmitter {
         this.attachWallet(wallet);
         this.onChangeWallet();
 
-        app.emit('addWallet', wallet.address);
+        requestAnimationFrame(() => {
+          app.emit('addWallet', wallet.address);
+        });
 
         return wallet;
       }

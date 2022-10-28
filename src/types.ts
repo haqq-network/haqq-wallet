@@ -31,6 +31,20 @@ export type TransactionList =
   | TransactionListReceive
   | TransactionListDate;
 
+export type WalletInitialData =
+  | {
+      privateKey: string;
+    }
+  | {
+      mnemonic: string;
+      privateKey?: string;
+    }
+  | {
+      address: string;
+      deviceId: string;
+      deviceName: string;
+    };
+
 export type RootStackParamList = {
   home: undefined;
   welcome: undefined;
@@ -95,24 +109,22 @@ export type RootStackParamList = {
   };
   onboardingBiometry: {
     biometryType: BiometryType;
-    currentPin?: string;
-    nextScreen?: 'backupNotification';
-    address?: string;
-  };
+    nextScreen?:
+      | 'signupStoreWallet'
+      | 'signinStoreWallet'
+      | 'ledgerStoreWallet';
+  } & WalletInitialData;
   onboardingRepeatPin: {
-    biometryType?: BiometryType;
     currentPin: string;
-    nextScreen?: 'onboardingBiometry';
-  };
-  onboardingSetupPin: {
-    mnemonic?: string | false;
-    privateKey?: string | false;
-  };
+    nextScreen?:
+      | 'signupStoreWallet'
+      | 'signinStoreWallet'
+      | 'ledgerStoreWallet';
+  } & WalletInitialData;
+  onboardingSetupPin: WalletInitialData;
   onboardingFinish: undefined;
-  signupStoreWallet: {
-    currentPin: string;
-    biometryType: BiometryType;
-  };
+  signupStoreWallet: WalletInitialData;
+  signinStoreWallet: WalletInitialData;
   signinAgreement: {
     nextScreen: {
       key: string;
@@ -171,13 +183,11 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
+  ledgerStoreWallet: WalletInitialData;
   ledgerFinish: undefined;
   ledgerVerify: {
-    nextScreen: 'ledgerFinish' | 'onboardingSetupPin';
-    address: string;
-    deviceId: string;
-    deviceName: string;
-  };
+    nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
+  } & WalletInitialData;
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
@@ -254,7 +264,7 @@ export type HeaderButtonProps = {
 };
 
 export type RoutePropT = {
-  route: {
+  route?: {
     params: {
       address: string;
     };
