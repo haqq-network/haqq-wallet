@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
 import {utils} from 'ethers';
+import {HDNode} from 'ethers/lib/utils';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
@@ -22,6 +23,7 @@ import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
+  ETH_HD_PATH,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
   GRAPHIC_GREEN_3,
@@ -30,6 +32,7 @@ import {
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 import {EthNetwork} from '../services/eth-network';
+import {captureException} from '../helpers';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
@@ -161,16 +164,14 @@ class Wallets extends EventEmitter {
     mnemonic: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const wallet = EthersWallet.fromMnemonic(mnemonic).connect(
-      EthNetwork.network,
-    );
+    const node = HDNode.fromMnemonic(mnemonic).derivePath(ETH_HD_PATH);
 
     return this.addWallet(
       {
-        address: wallet.address,
+        address: node.address,
         type: WalletType.hot,
-        privateKey: wallet.privateKey,
-        mnemonic: wallet.mnemonic,
+        privateKey: node.privateKey,
+        mnemonic: node.mnemonic,
       },
       name,
     );
@@ -193,82 +194,88 @@ class Wallets extends EventEmitter {
   }
 
   async addWallet(walletParams: AddWalletParams, name = '') {
-    const password = await app.getPassword();
-    let data = '';
+    try {
+      let data = '';
 
-    if (walletParams.type === WalletType.hot) {
-      data = await encrypt(password, walletParams);
-    }
-
-    const cardStyle = cards[
-      this._wallets.size % cards.length
-    ] as WalletCardStyle;
-
-    const patternVariant = patterns[this._wallets.size % cards.length];
-
-    const pattern = `${patternVariant}-${Math.floor(
-      Math.random() *
-        (patternVariant === WalletCardPattern.circle
-          ? CARD_CIRCLE_TOTAL
-          : CARD_RHOMBUS_TOTAL),
-    )}`;
-
-    const usedColors = new Set(
-      [...this._wallets.values()].map(w => w.colorFrom),
-    );
-
-    let availableColors = (
-      cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
-    ).filter(c => !usedColors.has(c[0]));
-
-    const generatedColors =
-      cardStyle === WalletCardStyle.flat
-        ? generateFlatColors()
-        : generateGradientColors();
-
-    const colors = availableColors.length
-      ? availableColors[Math.floor(Math.random() * availableColors.length)]
-      : generatedColors;
-
-    let result = null;
-
-    realm.write(() => {
-      result = realm.create<WalletRealm>('Wallet', {
-        ...defaultData,
-        data: data,
-        address: walletParams.address,
-        mnemonicSaved: !(
-          walletParams.type === WalletType.hot &&
-          walletParams.mnemonic !== undefined
-        ),
-        name: name ?? defaultData.name,
-        pattern,
-        cardStyle,
-        colorFrom: colors[0],
-        colorTo: colors[1],
-        colorPattern: colors[2],
-        type: walletParams.type,
-        deviceId:
-          walletParams.type === WalletType.ledgerBt
-            ? walletParams.deviceId
-            : undefined,
-        deviceName:
-          walletParams.type === WalletType.ledgerBt
-            ? walletParams.deviceName
-            : undefined,
-      });
-    });
-
-    if (result) {
-      const wallet = new Wallet(result);
-
-      if (wallet.isEncrypted) {
-        await wallet.decrypt(password);
+      if (walletParams.type === WalletType.hot) {
+        const password = await app.getPassword();
+        data = await encrypt(password, walletParams);
       }
-      this.attachWallet(wallet);
-      this.onChangeWallet();
 
-      return wallet;
+      const cardStyle = cards[
+        this._wallets.size % cards.length
+      ] as WalletCardStyle;
+
+      const patternVariant = patterns[this._wallets.size % cards.length];
+
+      const pattern = `${patternVariant}-${Math.floor(
+        Math.random() *
+          (patternVariant === WalletCardPattern.circle
+            ? CARD_CIRCLE_TOTAL
+            : CARD_RHOMBUS_TOTAL),
+      )}`;
+
+      const usedColors = new Set(
+        [...this._wallets.values()].map(w => w.colorFrom),
+      );
+
+      let availableColors = (
+        cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
+      ).filter(c => !usedColors.has(c[0]));
+
+      const generatedColors =
+        cardStyle === WalletCardStyle.flat
+          ? generateFlatColors()
+          : generateGradientColors();
+
+      const colors = availableColors.length
+        ? availableColors[Math.floor(Math.random() * availableColors.length)]
+        : generatedColors;
+
+      let result = null;
+      realm.write(() => {
+        result = realm.create<WalletRealm>('Wallet', {
+          ...defaultData,
+          data: data,
+          address: walletParams.address,
+          mnemonicSaved: !(
+            walletParams.type === WalletType.hot &&
+            walletParams.mnemonic !== undefined
+          ),
+          name: name ?? defaultData.name,
+          pattern,
+          cardStyle,
+          colorFrom: colors[0],
+          colorTo: colors[1],
+          colorPattern: colors[2],
+          type: walletParams.type,
+          deviceId:
+            walletParams.type === WalletType.ledgerBt
+              ? walletParams.deviceId
+              : undefined,
+          deviceName:
+            walletParams.type === WalletType.ledgerBt
+              ? walletParams.deviceName
+              : undefined,
+        });
+      });
+
+      if (result) {
+        const wallet = new Wallet(result);
+        if (wallet.isEncrypted) {
+          const password = await app.getPassword();
+          await wallet.decrypt(password);
+        }
+
+        this.attachWallet(wallet);
+        this.onChangeWallet();
+
+        app.emit('addWallet', wallet.address);
+
+        return wallet;
+      }
+    } catch (e) {
+      captureException(e, 'createWallet');
     }
 
     return null;

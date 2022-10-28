@@ -14,6 +14,7 @@ import {
   CopyButton,
   IconButton,
   QRCode,
+  Spacer,
   Text,
 } from './ui';
 import {
@@ -27,7 +28,7 @@ import {
   TRANSPARENT,
 } from '../variables';
 import {RootStackParamList} from '../types';
-import {shortAddress} from '../utils';
+import {cleanNumber, shortAddress} from '../utils';
 import {isIOS} from '../helpers';
 
 export type BalanceProps = {
@@ -105,9 +106,10 @@ export const WalletCard = ({address}: BalanceProps) => {
           </Text>
         </IconButton>
       )}
-      <Text t0 style={page.balance}>
-        {balance.toFixed(4)} ISLM
+      <Text t0 style={page.balance} numberOfLines={1} adjustsFontSizeToFit>
+        {cleanNumber(balance.toFixed(2))} ISLM
       </Text>
+      <Spacer />
       <View style={page.buttonsContainer}>
         <View style={page.button}>
           {isIOS && <BlurView action="sent" cardState={cardState} />}
@@ -164,7 +166,6 @@ const page = StyleSheet.create({
   balance: {
     fontSize: 40,
     lineHeight: 54,
-    marginBottom: 16,
     color: TEXT_BASE_3,
   },
   buttonsContainer: {

@@ -1,17 +1,15 @@
 import {
-  StyleProp,
+  Platform,
   StyleSheet,
   Text as RNText,
-  TextProps,
-  TextStyle,
-  Platform,
+  TextProps as RNTextProps,
 } from 'react-native';
 import * as React from 'react';
 
 import {TEXT_BASE_1} from '../../variables';
 import {FontT} from '../../types';
 
-interface TxtT {
+export type TextProps = {
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -31,13 +29,7 @@ interface TxtT {
   t16?: boolean;
   t17?: boolean;
   clean?: boolean;
-  numberOfLines?: number;
-  ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
-  style?: StyleProp<TextStyle>;
-  testID?: string;
-  children: React.ReactNode;
-  onPress?: TextProps['onPress'];
-}
+} & RNTextProps;
 
 export const Text = ({
   t0,
@@ -60,30 +52,18 @@ export const Text = ({
   t17,
   style,
   children,
-  ellipsizeMode,
-  numberOfLines,
   clean,
-  testID,
-  onPress,
   ...props
-}: TxtT) => {
+}: TextProps) => {
   return (
     <>
       {clean ? (
-        <RNText
-          style={style}
-          testID={testID}
-          onPress={onPress}
-          allowFontScaling={false}>
+        <RNText style={style} allowFontScaling={false} {...props}>
           {children}
         </RNText>
       ) : (
         <RNText
           allowFontScaling={false}
-          numberOfLines={numberOfLines}
-          ellipsizeMode={ellipsizeMode}
-          testID={testID}
-          onPress={onPress}
           style={[
             t0 && StyleSheet.flatten([page.t0Style, style]),
             t1 && StyleSheet.flatten([page.t1Style, style]),

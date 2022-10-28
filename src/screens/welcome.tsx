@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Button, ButtonVariant, Container, Text} from '../components/ui';
@@ -30,6 +30,14 @@ export const WelcomeScreen = () => {
         onPress={() => navigation.navigate('signup', {next: 'create'})}
       />
       <Button
+        testID="welcome_ledger"
+        title="Connect"
+        iconRight={<Image source={{uri: 'ledger'}} style={page.ledger} />}
+        style={page.button}
+        variant={ButtonVariant.second}
+        onPress={() => navigation.navigate('ledger')}
+      />
+      <Button
         testID="welcome_signin"
         style={page.button}
         title="I already have a wallet"
@@ -49,5 +57,9 @@ const page = StyleSheet.create({
     height: 120,
     alignSelf: 'center',
     marginBottom: 28,
+  },
+  ledger: {
+    width: 22,
+    height: 22,
   },
 });

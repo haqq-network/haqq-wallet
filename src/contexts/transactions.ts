@@ -6,6 +6,7 @@ import {Transaction} from '../models/transaction';
 import {calcFee} from '../helpers/calc-fee';
 import {captureException} from '../helpers';
 import {Provider} from '../models/provider';
+import {app} from './app';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -24,6 +25,18 @@ class Transactions extends EventEmitter {
       });
 
       this.emit('transactions');
+    });
+
+    app.addListener('addWallet', address => {
+      const providers = Provider.getProviders().filter(p => !!p.explorer);
+
+      Promise.all(
+        providers.map(provider =>
+          this.loadTransactionsFromExplorer(address, provider.id),
+        ),
+      ).finally(() => {
+        console.log(`synced for ${address}`);
+      });
     });
   }
 

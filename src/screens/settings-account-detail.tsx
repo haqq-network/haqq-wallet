@@ -80,6 +80,7 @@ export const SettingsAccountDetailScreen = () => {
       <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={cardWidth}
+          height={cardMaskHeight + 40}
           style={page.card}
           pattern={wallet.pattern}
           colorFrom={wallet.colorFrom}

@@ -9,6 +9,11 @@ import {LedgerBluetoothScreen} from './ledger-bluetooth';
 import {LedgerScanScreen} from './ledger-scan';
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerVerifyScreen} from './ledger-verify';
+import {hideBack} from '../helpers/screenOptions';
+import {useUser} from '../contexts/app';
+import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
+import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
+import {OnboardingBiometryScreen} from './onboarding-biometry';
 
 const LedgerStack = createStackNavigator();
 
@@ -20,7 +25,11 @@ const screenOptionsTitle: ScreenOptionType = {
   headerRight: DismissPopupButton,
 };
 
+const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
+
 export const LedgerScreen = () => {
+  const user = useUser();
+
   return (
     <LedgerStack.Navigator
       screenOptions={{
@@ -49,17 +58,34 @@ export const LedgerScreen = () => {
       <LedgerStack.Screen
         name="ledgerVerify"
         component={LedgerVerifyScreen}
-        options={{title: 'Verify'}}
+        options={{
+          title: 'Verify',
+        }}
+        initialParams={{
+          nextScreen: user.onboarded ? 'ledgerFinish' : 'onboardingSetupPin',
+        }}
+      />
+      <LedgerStack.Screen
+        name="onboardingSetupPin"
+        component={OnboardingSetupPinScreen}
+        options={{title}}
+      />
+      <LedgerStack.Screen
+        name="onboardingRepeatPin"
+        component={OnboardingRepeatPinScreen}
+        options={{title}}
+        initialParams={{nextScreen: 'ledgerFinish'}}
+      />
+      <LedgerStack.Screen
+        name="onboardingBiometry"
+        component={OnboardingBiometryScreen}
+        options={screenOptionsBiometry}
+        initialParams={{nextScreen: 'ledgerFinish'}}
       />
       <LedgerStack.Screen
         name="ledgerFinish"
         component={LedgerFinishScreen}
-        options={
-          {
-            headerBackHidden: true,
-            headerRight: DismissPopupButton,
-          } as ScreenOptionType
-        }
+        options={hideBack}
       />
     </LedgerStack.Navigator>
   );

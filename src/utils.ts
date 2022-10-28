@@ -18,6 +18,7 @@ export function isHexString(value: any, length?: number): boolean {
   }
   return true;
 }
+
 const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
 
 export function isNumber(value: string) {
@@ -146,10 +147,13 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function cleanNumber(number: string | number) {
-  return String(number)
-    .trim()
-    .replace(/^(\d+\.\d*?[1-9])0+$/g, '$1')
-    .replace(/^(\d+)\.0*$/g, '$1');
+  const [a, f] = String(number).trim().split('.');
+
+  const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+  return `${aFormatted}.${(f ?? '').replace(/0*$/g, '')}`
+    .substring(0, Math.max(aFormatted.length, 12))
+    .replace(/^(.*)\.0?$/g, '$1');
 }
 
 export function getPatternName(pattern: string) {

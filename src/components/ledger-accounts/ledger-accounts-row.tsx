@@ -30,7 +30,7 @@ export const LedgerAccountsRow = ({
   return (
     <View style={styles.container}>
       <DataContent
-        title={`${cleanNumber(balance)} ISML`}
+        title={`${cleanNumber(balance.toFixed(8))} ISML`}
         subtitle={shortAddress(item)}
       />
       {wallets.includes(item) ? (
