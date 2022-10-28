@@ -63,7 +63,9 @@ export const LedgerScreen = () => {
           title: 'Verify',
         }}
         initialParams={{
-          nextScreen: user.onboarded ? 'ledgerStore' : 'onboardingSetupPin',
+          nextScreen: user.onboarded
+            ? 'ledgerStoreWallet'
+            : 'onboardingSetupPin',
         }}
       />
       <LedgerStack.Screen
