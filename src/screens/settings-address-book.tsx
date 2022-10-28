@@ -170,6 +170,7 @@ export const SettingsAddressBookScreen =
           value={search}
           onChangeText={setSearch}
           multiline
+          autoFocus
           rightAction={
             search === '' ? (
               <IconButton onPress={onPressQR}>
@@ -182,6 +183,7 @@ export const SettingsAddressBookScreen =
             )
           }
         />
+
         {canAdd && (
           <IconButton onPress={onPressAdd} style={page.addButton}>
             <Box style={page.badge}>
