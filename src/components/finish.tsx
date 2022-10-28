@@ -33,6 +33,11 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
 };
 
 const page = StyleSheet.create({
-  title: {marginBottom: 76, textAlign: 'center'},
+  title: {
+    marginBottom: 76,
+    textAlign: 'center',
+    width: 300,
+    alignSelf: 'center',
+  },
   button: {marginBottom: 16},
 });

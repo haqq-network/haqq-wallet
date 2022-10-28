@@ -14,8 +14,8 @@ export const OnboardingFinishScreen = () => {
   const title = useMemo(
     () =>
       route.params.action === 'create'
-        ? 'Congratulations! You have successfully added a new wallet'
-        : 'Congratulations! You have successfully recovered a wallet',
+        ? 'Congratulations!\nYou have successfully added a new wallet'
+        : 'Congratulations!\nYou have successfully recovered a wallet',
     [route.params.action],
   );
 
