@@ -90,7 +90,7 @@ export const TextField: React.FC<Props> = ({
             },
           ]}
           ref={inputRef}
-          placeholder={isFocused ? placeholder : ''}
+          placeholder={placeholder}
           {...restOfProps}
           value={value}
           multiline={multiline}
