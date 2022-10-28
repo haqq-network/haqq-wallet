@@ -264,7 +264,7 @@ export type HeaderButtonProps = {
 };
 
 export type RoutePropT = {
-  route: {
+  route?: {
     params: {
       address: string;
     };
