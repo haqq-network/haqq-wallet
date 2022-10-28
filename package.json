@@ -21,6 +21,7 @@
     "@react-native-community/async-storage": "1.12.1",
     "@react-native-community/blur": "^4.2.0",
     "@react-native-community/cameraroll": "^4.1.2",
+    "@react-native-community/netinfo": "^9.3.6",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/stack": "^6.2.3",
