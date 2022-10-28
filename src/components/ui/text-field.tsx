@@ -121,7 +121,7 @@ export const TextField: React.FC<Props> = ({
                   {
                     translateY: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [24, 9],
+                      outputRange: [24, isIOS ? 9 : 7],
                     }),
                   },
                   {
@@ -171,9 +171,9 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: TEXT_BASE_1,
-    top: isIOS ? 28 : 15,
+    top: isIOS ? 28 : 20,
     fontSize: 16,
-    right: isIOS ? 0 : 3,
+    right: isIOS ? 0 : 4.5,
   },
   labelContainer: {
     position: 'absolute',
