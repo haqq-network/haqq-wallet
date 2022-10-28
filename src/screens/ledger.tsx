@@ -14,6 +14,7 @@ import {useUser} from '../contexts/app';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
+import {LedgerStoreWalletScreen} from './ledger-store-wallet';
 
 const LedgerStack = createStackNavigator();
 
@@ -62,7 +63,7 @@ export const LedgerScreen = () => {
           title: 'Verify',
         }}
         initialParams={{
-          nextScreen: user.onboarded ? 'ledgerFinish' : 'onboardingSetupPin',
+          nextScreen: user.onboarded ? 'ledgerStore' : 'onboardingSetupPin',
         }}
       />
       <LedgerStack.Screen
@@ -74,13 +75,18 @@ export const LedgerScreen = () => {
         name="onboardingRepeatPin"
         component={OnboardingRepeatPinScreen}
         options={{title}}
-        initialParams={{nextScreen: 'ledgerFinish'}}
+        initialParams={{nextScreen: 'ledgerStoreWallet'}}
       />
       <LedgerStack.Screen
         name="onboardingBiometry"
         component={OnboardingBiometryScreen}
         options={screenOptionsBiometry}
-        initialParams={{nextScreen: 'ledgerFinish'}}
+        initialParams={{nextScreen: 'ledgerStoreWallet'}}
+      />
+      <LedgerStack.Screen
+        name="ledgerStoreWallet"
+        component={LedgerStoreWalletScreen}
+        options={screenOptionsBiometry}
       />
       <LedgerStack.Screen
         name="ledgerFinish"

@@ -105,7 +105,7 @@ export const TransactionAddress = ({
       <Spacer>
         {contactsList.length ? (
           <FlatList
-            keyboardShouldPersistTaps
+            keyboardShouldPersistTaps="always"
             data={contactsList}
             renderItem={({item}) => (
               <AddressRow item={item} onPress={setAddress} />

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
+  Dimensions,
   StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
@@ -180,6 +181,7 @@ const page = StyleSheet.create({
     lineHeight: 42,
     color: TEXT_BASE_1,
     paddingVertical: 2,
+    maxWidth: Dimensions.get('window').width - 180,
   },
   swap: {
     height: 46,
