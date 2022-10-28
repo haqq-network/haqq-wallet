@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -8,6 +8,10 @@ import {useApp} from '../contexts/app';
 export const LedgerFinishScreen = () => {
   const app = useApp();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    app.emit('modal', null);
+  }, [app]);
 
   const onEnd = useCallback(() => {
     if (app.getUser().onboarded) {
