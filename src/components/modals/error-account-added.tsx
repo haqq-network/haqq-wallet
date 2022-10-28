@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
+
 import {windowWidth} from '../../helpers';
 import {app} from '../../contexts/app';
 
@@ -26,7 +27,7 @@ export const ErrorAccountAdded = () => {
             title="Close"
             onPress={onPress}
             variant={ButtonVariant.second}
-            size={ButtonSize.large}
+            size={ButtonSize.middle}
             style={page.button}
           />
         </View>
