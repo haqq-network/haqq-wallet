@@ -40,7 +40,7 @@ export const ErrorCreateAccount = () => {
             title="Close"
             onPress={onPress}
             variant={ButtonVariant.second}
-            size={ButtonSize.large}
+            size={ButtonSize.middle}
             style={page.button}
           />
         </View>
