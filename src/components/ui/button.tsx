@@ -106,6 +106,7 @@ const page = StyleSheet.create({
   smallContainer: {
     paddingVertical: 6,
     paddingHorizontal: 12,
+    height: 34,
   },
   middleContainer: {
     paddingVertical: 12,
@@ -168,8 +169,8 @@ const page = StyleSheet.create({
   },
   secondText: {
     color: TEXT_GREEN_1,
-    height: 32,
-    top: 3,
+    // height: 32,
+    // top: 3,
   },
   secondDisabledText: {
     color: TEXT_SECOND_1,
