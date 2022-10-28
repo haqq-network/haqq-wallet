@@ -17,6 +17,7 @@ import {
 } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {hideNavigationBar} from 'react-native-navigation-bar-color';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -93,6 +94,7 @@ const actionsSheet: ActionSheetType = {
 export const App = () => {
   const navigator = useNavigationContainerRef<RootStackParamList>();
   useEffect(() => {
+    hideNavigationBar();
     app.emit('modal', {type: 'splash'});
     sleep(150)
       .then(() => SplashScreen.hide())
