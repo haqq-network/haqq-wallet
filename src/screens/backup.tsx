@@ -23,7 +23,7 @@ export const BackupScreen = ({route}: RoutePropT) => {
       <BackupStack.Screen
         name={'backupWarning'}
         component={BackupWarningScreen}
-        initialParams={{address: route.params.address}}
+        initialParams={{address: route?.params.address}}
         options={screenOptions}
       />
       <BackupStack.Screen

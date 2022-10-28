@@ -18,7 +18,7 @@ import {
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
 import {DetailsScreen} from './screens/details';
@@ -143,7 +143,7 @@ export const App = () => {
 
   useEffect(() => {
     if (initialized) {
-      const subscription = ({isConnected}) => {
+      const subscription = ({isConnected}: NetInfoState) => {
         isConnected ? hideModal() : modal('no-internet');
       };
 
