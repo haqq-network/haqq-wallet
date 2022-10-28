@@ -1,6 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Modal} from 'react-native';
 import {
+  ErrorAccountAdded,
+  ErrorCreateAccount,
   LoadingModal,
   LoadingModalProps,
   PinModal,
@@ -74,6 +76,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <QRModal onClose={onClose} />;
       case 'no-internet':
         return <NoInternet />;
+      case 'error-account-added':
+        return <ErrorAccountAdded />;
+      case 'error-create-account':
+        return <ErrorCreateAccount />;
       default:
         return null;
     }
