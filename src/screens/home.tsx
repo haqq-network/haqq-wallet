@@ -28,13 +28,13 @@ export const HomeScreen = () => {
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 0,
-          height: isIOS ? 80 : 60,
-          top: isIOS ? 0 : 15,
+          height: isIOS ? 80 : 50,
+          top: isIOS ? 0 : 8,
           marginBottom: isIOS ? 0 : 23,
         },
         tabBarItemStyle: {
           marginTop: isIOS ? 5 : 8,
-          height: isIOS ? 50 : 48,
+          height: isIOS ? 50 : 40,
         },
       }}>
       <Tab.Screen
