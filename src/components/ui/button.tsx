@@ -130,7 +130,7 @@ const page = StyleSheet.create({
   secondContainer: {
     backgroundColor: BG_2,
     borderRadius: 12,
-    height: 46,
+    // height: 46,
   },
   secondDisabledContainer: {
     backgroundColor: GRAPHIC_SECOND_1,
