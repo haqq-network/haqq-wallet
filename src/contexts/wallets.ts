@@ -194,6 +194,13 @@ class Wallets extends EventEmitter {
   }
 
   async addWallet(walletParams: AddWalletParams, name = '') {
+    const exist = realm.objectForPrimaryKey<Wallet>(
+      'Wallet',
+      walletParams.address,
+    );
+    if (exist) {
+      return Promise.reject('wallet_already_exists');
+    }
     try {
       let data = '';
 
