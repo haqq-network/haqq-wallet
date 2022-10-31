@@ -11,16 +11,29 @@ import {prepareTransactions} from '../utils';
 import {Wallet} from '../models/wallet';
 import {TransactionEmpty} from '../components/transaction-empty';
 import {useUser} from '../contexts/app';
+import {Transaction} from '../models/transaction';
+
+const filterTransactions = (
+  transactions: Transaction[],
+  providerId: string,
+) => {
+  return transactions.filter(t => t.providerId === providerId);
+};
 
 export const HomeFeedScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const user = useUser();
+
   const wallets = useWallets();
   const transactions = useTransactions();
+
   const [refreshing, setRefreshing] = useState(false);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(wallets.addressList, transactions.transactions),
+    prepareTransactions(
+      wallets.addressList,
+      filterTransactions(transactions.transactions, user.providerId),
+    ),
   );
 
   const onWalletsRefresh = useCallback(() => {
@@ -33,9 +46,12 @@ export const HomeFeedScreen = () => {
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
-      prepareTransactions(wallets.addressList, transactions.transactions),
+      prepareTransactions(
+        wallets.addressList,
+        filterTransactions(transactions.transactions, user.providerId),
+      ),
     );
-  }, [transactions, wallets]);
+  }, [wallets.addressList, transactions.transactions, user.providerId]);
 
   const onBackupMnemonic = useCallback(
     (wallet: Wallet) => {
@@ -56,12 +72,13 @@ export const HomeFeedScreen = () => {
   useEffect(() => {
     transactions.on('transactions', onTransactionList);
     wallets.on('backupMnemonic', onBackupMnemonic);
-
+    user.on('change', onTransactionList);
     return () => {
       transactions.off('transactions', onTransactionList);
       wallets.off('backupMnemonic', onBackupMnemonic);
+      user.off('change', onTransactionList);
     };
-  }, [onBackupMnemonic, onTransactionList, transactions, wallets]);
+  }, [onBackupMnemonic, onTransactionList, transactions, user, wallets]);
 
   useEffect(() => {}, [wallets]);
 
