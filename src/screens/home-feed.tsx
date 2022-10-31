@@ -11,8 +11,12 @@ import {prepareTransactions} from '../utils';
 import {Wallet} from '../models/wallet';
 import {TransactionEmpty} from '../components/transaction-empty';
 import {useUser} from '../contexts/app';
+import {Transaction} from '../models/transaction';
 
-const filterTransactions = (transactions, providerId) => {
+const filterTransactions = (
+  transactions: Transaction[],
+  providerId: string,
+) => {
   return transactions.filter(t => t.providerId === providerId);
 };
 

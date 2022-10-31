@@ -62,7 +62,7 @@ export type RootStackParamList = {
   restoreStore: {
     mnemonic: string;
     privateKey: string | false;
-    nextScreen: NextScreenT;
+    nextScreen: NextScreenWithoutParamsT;
   };
   register: undefined;
   backup: {
@@ -106,7 +106,7 @@ export type RootStackParamList = {
     nextScreen: NextScreenT;
   };
   createStoreWallet: {
-    nextScreen: NextScreenT;
+    nextScreen: NextScreenWithoutParamsT;
   };
   onboardingBiometry: {
     biometryType: BiometryType;
@@ -189,6 +189,11 @@ export type RootStackParamList = {
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
   } & WalletInitialData;
+  ledgerStore: {
+    address: string;
+    deviceId: string;
+    deviceName: string;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
@@ -210,6 +215,13 @@ export type Mnemonic = {
 export type NextScreenT = {
   key: string;
   params?: {currentPin: string; biometryType: BiometryType} | undefined;
+  merge?: boolean | undefined;
+  name: string | undefined;
+};
+
+export type NextScreenWithoutParamsT = {
+  key: string;
+  params?: undefined;
   merge?: boolean | undefined;
 };
 
