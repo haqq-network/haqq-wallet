@@ -7,6 +7,8 @@ import {useWallets} from '../contexts/wallets';
 import {app} from '../contexts/app';
 import {MAIN_ACCOUNT_NAME} from '../variables';
 import {sleep} from '../utils';
+import {modal} from '../helpers/modal';
+import {captureException} from '../helpers';
 
 export const SigninStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -47,9 +49,24 @@ export const SigninStoreWalletScreen = () => {
         );
       }
 
-      Promise.all(actions).then(() => {
-        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
-      });
+      Promise.all(actions)
+        .then(() => {
+          navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+        })
+        .catch(error => {
+          switch (error) {
+            case 'wallet_already_exists':
+              modal('error-account-added');
+              navigation.getParent()?.goBack();
+              break;
+            default:
+              if (error instanceof Error) {
+                modal('error-create-account');
+                captureException(error, 'restoreStore');
+                navigation.getParent()?.goBack();
+              }
+          }
+        });
     }, 350);
   }, [navigation, route, wallets]);
 
