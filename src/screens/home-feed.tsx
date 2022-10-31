@@ -15,12 +15,20 @@ import {useUser} from '../contexts/app';
 export const HomeFeedScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const user = useUser();
+
   const wallets = useWallets();
   const transactions = useTransactions();
+
+  const filterTransactions = useCallback(() => {
+    return transactions.transactions.filter(
+      ({providerId}) => user.providerId === providerId,
+    );
+  }, [transactions.transactions, user.providerId])();
+
   const [refreshing, setRefreshing] = useState(false);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(wallets.addressList, transactions.transactions),
+    prepareTransactions(wallets.addressList, filterTransactions),
   );
 
   const onWalletsRefresh = useCallback(() => {
@@ -33,9 +41,9 @@ export const HomeFeedScreen = () => {
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
-      prepareTransactions(wallets.addressList, transactions.transactions),
+      prepareTransactions(wallets.addressList, filterTransactions),
     );
-  }, [transactions, wallets]);
+  }, [filterTransactions, wallets]);
 
   const onBackupMnemonic = useCallback(
     (wallet: Wallet) => {
