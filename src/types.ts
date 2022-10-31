@@ -24,6 +24,7 @@ export type TransactionListDate = {
   hash: string;
   date: Date;
   source: TransactionSource.date;
+  providerId: string;
 };
 
 export type TransactionList =
