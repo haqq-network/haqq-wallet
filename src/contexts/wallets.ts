@@ -292,6 +292,7 @@ class Wallets extends EventEmitter {
 
   async removeWallet(address: string) {
     const wallet = this._wallets.get(address);
+
     if (wallet) {
       this.deAttachWallet(wallet);
 
@@ -305,6 +306,9 @@ class Wallets extends EventEmitter {
         });
       }
     }
+    requestAnimationFrame(() => {
+      app.emit('removeWallet', address);
+    });
   }
 
   clean() {
