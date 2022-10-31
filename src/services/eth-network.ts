@@ -105,15 +105,15 @@ export class EthNetwork {
 
   static async populateTransaction(from: string, to: string, amount: string) {
     const value = utils.parseEther(amount.toString());
-    const nonce = await getDefaultNetwork().getTransactionCount(from, 'latest');
+    const nonce = await EthNetwork.network.getTransactionCount(from, 'latest');
 
-    const estimateGas = await getDefaultNetwork().estimateGas({
+    const estimateGas = await EthNetwork.network.estimateGas({
       from,
       to,
       amount,
     } as Deferrable<TransactionRequest>);
 
-    let gasPrice = await getDefaultNetwork().getGasPrice();
+    let gasPrice = await EthNetwork.network.getGasPrice();
 
     const transaction = {
       to: to,
