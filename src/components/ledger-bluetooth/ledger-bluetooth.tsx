@@ -1,17 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Image,
-  PermissionsAndroid,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
-import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
-import {GRAPHIC_GREEN_1, GRAPHIC_SECOND_4, TEXT_BASE_2} from '../../variables';
+import {Button, ButtonVariant, LottieWrap, PopupContainer, Text} from '../ui';
+import {TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
 import {getText, I18N} from '../../i18n';
 import {Observable, Subscription} from 'rxjs';
+import {ratio, windowWidth} from '../../helpers';
 
 export type LedgerBluetooth = {
   user: User;
@@ -81,13 +76,11 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   return (
     <>
       <View style={page.animation}>
-        <Image
-          source={require('../../../assets/images/ledger-bluetooth.png')}
-          style={{
-            tintColor: disabled.includes(btState)
-              ? GRAPHIC_SECOND_4
-              : GRAPHIC_GREEN_1,
-          }}
+        <LottieWrap
+          style={page.imageStyle}
+          source={require('../../../assets/animations/bluetooth.json')}
+          autoPlay
+          loop
         />
       </View>
       <PopupContainer style={page.container}>
@@ -142,4 +135,9 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
+  imageStyle: {
+    width: windowWidth,
+    height: 362 * ratio,
+    alignSelf: 'center',
+  },
 });
