@@ -4,7 +4,7 @@ import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 import {getText, I18N} from '../../i18n';
-import {Terms} from '../ui/terms';
+// import {Terms} from '../ui/terms';
 
 export type CreateAgreementProps = {
   onDone: () => void;
@@ -36,7 +36,7 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
           title={getText(I18N.createAgreementAgree)}
           onPress={onDone}
         />
-        <Terms style={page.agreement} />
+        {/*<Terms style={page.agreement} />*/}
       </PopupContainer>
     </>
   );
@@ -64,8 +64,8 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {
-    marginHorizontal: 20,
-    marginBottom: 16,
-  },
+  // agreement: {
+  //   marginHorizontal: 20,
+  //   marginBottom: 16,
+  // },
 });
