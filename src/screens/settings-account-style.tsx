@@ -3,6 +3,12 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
+
 import {
   Button,
   ButtonSize,
@@ -37,6 +43,19 @@ export const SettingsAccountStyleScreen = () => {
     useRoute<RouteProp<RootStackParamList, 'settingsAccountStyle'>>();
 
   const timerRef: {current: NodeJS.Timeout | null} = useRef(null);
+  const opacity = useSharedValue(1);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
+
+  useEffect(() => {
+    opacity.value = withTiming(loading ? 0.5 : 1, {duration: 500});
+  }, [loading, opacity]);
 
   useEffect(() => {
     return () => {
@@ -47,22 +66,23 @@ export const SettingsAccountStyleScreen = () => {
   }, []);
 
   const wallet = useWallet(route.params.address) as Wallet;
+  const [pattern, setPattern] = useState<string>(wallet.pattern);
+
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
     wallet.cardStyle || WalletCardStyle.flat,
   );
-  const [patternStyle, setPatternStyle] = useState<WalletCardPattern>(
-    wallet.pattern.startsWith(WalletCardPattern.circle)
-      ? WalletCardPattern.circle
-      : WalletCardPattern.rhombus,
-  );
-  const [pattern, setPattern] = useState<string>(wallet.pattern);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [colors, setColors] = useState([
     wallet.colorFrom,
     wallet.colorTo,
     wallet.colorPattern,
   ]);
+
+  const [patternStyle, setPatternStyle] = useState<WalletCardPattern>(
+    wallet.pattern.startsWith(WalletCardPattern.circle)
+      ? WalletCardPattern.circle
+      : WalletCardPattern.rhombus,
+  );
 
   const onChangeType = useCallback(
     (value: WalletCardStyle) => {
@@ -114,7 +134,7 @@ export const SettingsAccountStyleScreen = () => {
       setPattern(newPattern);
       setColors(newColors);
       setLoading(false);
-    }, 300);
+    }, 500);
   }, [cardStyle, patternStyle]);
 
   const onPressApply = useCallback(() => {
@@ -124,14 +144,16 @@ export const SettingsAccountStyleScreen = () => {
 
   return (
     <Container>
-      <Card
-        width={cardWidth}
-        pattern={pattern}
-        colorFrom={colors[0]}
-        colorTo={colors[1]}
-        colorPattern={colors[2]}
-        style={page.card}
-      />
+      <Animated.View style={animatedStyles}>
+        <Card
+          width={cardWidth}
+          pattern={pattern}
+          colorFrom={colors[0]}
+          colorTo={colors[1]}
+          colorPattern={colors[2]}
+          style={page.card}
+        />
+      </Animated.View>
       <Text t10 style={page.title}>
         Choose color style
       </Text>
