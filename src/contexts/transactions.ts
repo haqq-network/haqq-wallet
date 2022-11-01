@@ -7,6 +7,7 @@ import {calcFee} from '../helpers/calc-fee';
 import {captureException} from '../helpers';
 import {Provider} from '../models/provider';
 import {app} from './app';
+import {Wallet} from '../models/wallet';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;
@@ -37,6 +38,33 @@ class Transactions extends EventEmitter {
       ).finally(() => {
         console.log(`synced for ${address}`);
       });
+    });
+    app.addListener('removeWallet', address => {
+      const wallets = realm.objects<Wallet>('Wallet');
+      const addressArr = wallets.map(item => item.address);
+      const transactions = realm.objects<Transaction>('Transaction');
+
+      const transactionsTo = transactions.filtered(
+        `to = '${address.toLowerCase()}'`,
+      );
+      const transactionsFrom = transactions.filtered(
+        `from = '${address.toLowerCase()}'`,
+      );
+
+      for (const transaction of transactionsTo) {
+        if (!addressArr.includes(transaction.from)) {
+          realm.write(() => {
+            realm.delete(transaction);
+          });
+        }
+      }
+      for (const transaction of transactionsFrom) {
+        if (!addressArr.includes(transaction.to)) {
+          realm.write(() => {
+            realm.delete(transaction);
+          });
+        }
+      }
     });
   }
 
