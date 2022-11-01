@@ -148,6 +148,7 @@ export const TransactionConfirmationScreen = () => {
         title="Send"
         onPress={onDone}
         style={page.submit}
+        loading={disabled}
       />
     </PopupContainer>
   );
