@@ -1,5 +1,10 @@
 /* eslint-disable react-native/no-unused-styles */
-import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  ViewProps,
+} from 'react-native';
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 import {
@@ -21,6 +26,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   onPress: () => void;
   iconRight?: React.ReactNode;
   iconLeft?: React.ReactNode;
+  loading?: boolean;
 };
 
 export enum ButtonVariant {
@@ -46,6 +52,7 @@ export const Button = ({
   onPress,
   iconRight,
   iconLeft,
+  loading = false,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -87,9 +94,13 @@ export const Button = ({
       onPress={onPressButton}
       activeOpacity={0.7}
       {...props}>
-      <Text t9 style={textStyle}>
-        {title}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color={TEXT_BASE_3} />
+      ) : (
+        <Text t9 style={textStyle}>
+          {title}
+        </Text>
+      )}
       {iconRight}
     </TouchableOpacity>
   );
