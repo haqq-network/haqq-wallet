@@ -73,17 +73,6 @@ final class HDKey: XCTestCase {
     XCTAssertEqual(Data(new_key.publicKey).toHexString(), "02fe389b960a6f40df9909acfede4641df434eb9d5e5db74e65827713456339a62")
     XCTAssertEqual(Data(new_key.privateKey).toHexString(), "c9b3168b5bc173fbd6d5a33943f0e2e045632dfce26120c58a8c8142ee76fc0f")
   }
-  
-  
-  func testPath() throws {
-    let privateKey: [UInt8] = [202, 51, 19, 72, 127, 218, 2, 90, 113, 246, 240, 49, 151, 129, 46, 243, 130, 238, 150, 1, 54, 189, 62, 190, 149, 119, 70, 185, 148, 165, 16, 64]
-    let chainCode: [UInt8] = [196, 40, 137, 7, 223, 103, 100, 195, 22, 174, 58, 115, 199, 136, 141, 75, 184, 41, 74, 183, 105, 158, 253, 145, 175, 70, 234, 119, 80, 3, 188, 46]
-    let key = haqq.HDKey(privateKey: privateKey, chainCode: chainCode)
-    
-    
-    
-  }
-  
 
   func testPerformanceExample() throws {
     // This is an example of a performance test case.
