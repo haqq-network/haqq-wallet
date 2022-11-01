@@ -38,6 +38,17 @@
                ReferencedContainer = "container:haqq.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "210F819429112D4B002A27EB"
+               BuildableName = "Mnemonic.xctest"
+               BlueprintName = "Mnemonic"
+               ReferencedContainer = "container:haqq.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

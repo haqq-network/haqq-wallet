@@ -12,7 +12,7 @@ func bytesToBits(bytes: [UInt8]) -> String {
   return String(bytes.flatMap { ("00000000" + String($0, radix:2)).suffix(8) })
 }
 
-class Mnemonic {
+public class Mnemonic {
   static func generateEntropy(strength: Int = 16) -> [UInt8] {
     var bytes = [UInt8](repeating: 0, count: strength)
     _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)

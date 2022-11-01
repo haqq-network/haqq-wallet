@@ -28,6 +28,9 @@
 		210E9B952907F09400AC3C34 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B942907F09400AC3C34 /* Version.m */; };
 		210E9B972907F0A400AC3C34 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B962907F0A400AC3C34 /* Version.swift */; };
 		210F818C29110E66002A27EB /* String+split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818B29110E66002A27EB /* String+split.swift */; };
+		210F818E29111CAC002A27EB /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818D29111CAC002A27EB /* HDKey.swift */; };
+		210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818F29112548002A27EB /* Data+hexEncodedString.swift */; };
+		210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AC29112EDC002A27EB /* Mnemonic.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
@@ -115,6 +118,10 @@
 		210E9B942907F09400AC3C34 /* Version.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		210E9B962907F0A400AC3C34 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		210F818B29110E66002A27EB /* String+split.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+split.swift"; sourceTree = "<group>"; };
+		210F818D29111CAC002A27EB /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
+		210F818F29112548002A27EB /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
+		210F81AB29112EDC002A27EB /* haqqTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqqTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		210F81AC29112EDC002A27EB /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
@@ -196,8 +203,10 @@
 		00E356EF1AD99517003FC87E /* haqqTests */ = {
 			isa = PBXGroup;
 			children = (
+				210F81AC29112EDC002A27EB /* Mnemonic.swift */,
 				00E356F21AD99517003FC87E /* haqqTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
+				210F81AB29112EDC002A27EB /* haqqTests-Bridging-Header.h */,
 			);
 			path = haqqTests;
 			sourceTree = "<group>";
@@ -235,6 +244,7 @@
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
 				21D7A78D2910DC5800399978 /* Mnemonic.swift */,
 				21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */,
+				210F818D29111CAC002A27EB /* HDKey.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -270,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				210F818B29110E66002A27EB /* String+split.swift */,
+				210F818F29112548002A27EB /* Data+hexEncodedString.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -448,10 +459,12 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1400;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1400;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -719,6 +732,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* haqqTests.m in Sources */,
+				210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,10 +747,12 @@
 				21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */,
 				210AE02628DC6A8A008D739C /* Encryption.m in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
+				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
 				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
+				210F818E29111CAC002A27EB /* HDKey.swift in Sources */,
 				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
 				21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */,
 			);
@@ -759,6 +775,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
@@ -767,7 +784,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = haqqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -781,6 +798,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.haqq.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = com.haqq.wallet;
+				SWIFT_OBJC_BRIDGING_HEADER = "haqqTests/haqqTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/haqq.app/haqq";
 			};
 			name = Debug;
@@ -791,12 +811,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -810,6 +831,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.haqq.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = com.haqq.wallet;
+				SWIFT_OBJC_BRIDGING_HEADER = "haqqTests/haqqTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/haqq.app/haqq";
 			};
 			name = Release;
@@ -826,6 +849,7 @@
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -860,6 +884,7 @@
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
