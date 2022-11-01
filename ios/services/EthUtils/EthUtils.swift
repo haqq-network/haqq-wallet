@@ -14,7 +14,16 @@ class RNEthUtils: NSObject {
   static func requiresMainQueueSetup() -> Bool { return false }
   
   @objc
-  public func generate(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    resolve("CustomMethods.resolvePromise")
+  public func generate(_ strength: Optional<NSNumber>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+    let strength =  Int(truncating: strength ?? 16)
+    
+    let mnemonic = Mnemonic(bytes: Mnemonic.generateEntropy(strength: strength))
+    
+    if mnemonic.isValid {
+      resolve(mnemonic.mnemonic.joined(separator: " "))
+    } else {
+      reject("0", "generate mnemonic error", nil)
+    }
+    
   }
 }

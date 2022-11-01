@@ -9,6 +9,9 @@
 #import "React/RCTBridgeModule.h"
 
 @interface RCT_EXTERN_MODULE(RNEthUtils, NSObject)
-  RCT_EXTERN_METHOD(generate: (RCTPromiseResolveBlock) resolve
-                    rejecter: (RCTPromiseRejectBlock) reject)
+  RCT_EXTERN_METHOD(
+                    generate: (NSNumber *) strength
+                    resolve: (RCTPromiseResolveBlock) resolve
+                    rejecter: (RCTPromiseRejectBlock) reject
+                )
 @end
