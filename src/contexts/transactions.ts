@@ -14,6 +14,8 @@ class Transactions extends EventEmitter {
 
   constructor() {
     super();
+    this.loadTransactionsFromExplorer =
+      this.loadTransactionsFromExplorer.bind(this);
     this._transactions = realm.objects<Transaction>('Transaction');
 
     this._transactions.addListener((collection, changes) => {
@@ -28,17 +30,7 @@ class Transactions extends EventEmitter {
       this.emit('transactions');
     });
 
-    app.addListener('addWallet', address => {
-      const providers = Provider.getProviders().filter(p => !!p.explorer);
-
-      Promise.all(
-        providers.map(provider =>
-          this.loadTransactionsFromExplorer(address, provider.id),
-        ),
-      ).finally(() => {
-        console.log(`synced for ${address}`);
-      });
-    });
+    app.addListener('addWallet', this.loadTransactionsFromExplorer);
     app.addListener('removeWallet', address => {
       const wallets = realm.objects<Wallet>('Wallet');
       const addressArr = wallets.map(item => item.address);
@@ -117,7 +109,20 @@ class Transactions extends EventEmitter {
     }
   }
 
-  async loadTransactionsFromExplorer(address: string, providerId: string) {
+  loadTransactionsFromExplorer(address: string) {
+    const providers = Provider.getProviders().filter(p => !!p.explorer);
+
+    return Promise.all(
+      providers.map(provider =>
+        this.loadTransactionsFromExplorerWithProvider(address, provider.id),
+      ),
+    );
+  }
+
+  async loadTransactionsFromExplorerWithProvider(
+    address: string,
+    providerId: string,
+  ) {
     try {
       const p = Provider.getProvider(providerId);
       if (p?.explorer) {

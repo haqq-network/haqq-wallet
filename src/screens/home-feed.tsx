@@ -39,10 +39,16 @@ export const HomeFeedScreen = () => {
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
 
-    wallets.checkBalance().then(() => {
+    const actions = wallets.addressList.map(address =>
+      transactions.loadTransactionsFromExplorer(address),
+    );
+
+    actions.push(wallets.checkBalance());
+
+    Promise.all(actions).then(() => {
       setRefreshing(false);
     });
-  }, [wallets]);
+  }, [transactions, wallets]);
 
   const onTransactionList = useCallback(() => {
     setTransactionsList(
