@@ -27,6 +27,10 @@
 		210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2228E6A8E70036A851 /* Haptic.swift */; };
 		210E9B952907F09400AC3C34 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B942907F09400AC3C34 /* Version.m */; };
 		210E9B972907F0A400AC3C34 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B962907F0A400AC3C34 /* Version.swift */; };
+		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
+		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
+		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
+		21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		2E5D459518A44E1D95D06839 /* mnemonic-notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 093F7D3C80D54C028B10F9B3 /* mnemonic-notify.png */; };
 		2E8F73377F234395B52F32B7 /* arrow-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A66B99EEB3A4CB5920B1B26 /* arrow-back@2x.png */; };
@@ -109,6 +113,10 @@
 		210DBD2228E6A8E70036A851 /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
 		210E9B942907F09400AC3C34 /* Version.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		210E9B962907F0A400AC3C34 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
+		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
+		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
+		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
+		21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		25EA6C2D4335471DAA7CBD12 /* qr-logo@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@2x.png"; path = "../assets/images/qr-logo@2x.png"; sourceTree = "<group>"; };
 		32498C55D7F34FD7BC90FB54 /* card-rhombus-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0.png"; path = "../assets/images/card-rhombus-0.png"; sourceTree = "<group>"; };
@@ -218,9 +226,12 @@
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
 				210DBD2628E6CBD70036A851 /* Encryption */,
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
+				21D7A78D2910DC5800399978 /* Mnemonic.swift */,
+				21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -250,6 +261,15 @@
 				210E9B962907F0A400AC3C34 /* Version.swift */,
 			);
 			path = Version;
+			sourceTree = "<group>";
+		};
+		21D7A7882910DA8B00399978 /* EthUtils */ = {
+			isa = PBXGroup;
+			children = (
+				21D7A7892910DB9D00399978 /* EthUtils.m */,
+				21D7A78B2910DBA900399978 /* EthUtils.swift */,
+			);
+			path = EthUtils;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -698,11 +718,15 @@
 				210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */,
 				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */,
 				210AE02628DC6A8A008D739C /* Encryption.m in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
+				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
+				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
+				21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
