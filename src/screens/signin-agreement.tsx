@@ -1,19 +1,8 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
-import {
-  Button,
-  ButtonVariant,
-  Text,
-  PopupContainer,
-  LottieWrap,
-} from '../components/ui';
-import {TEXT_BASE_2} from '../variables';
-import {ratio, windowWidth} from '../helpers';
-
-const warningImage = require('../../assets/animations/recover-animation.json');
+import {RestoreAgreement} from '../components/restore-agreement/restore-agreement';
 
 export const SignInAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -22,72 +11,5 @@ export const SignInAgreementScreen = () => {
     navigation.navigate(route.params.nextScreen ?? 'signinRestoreWallet');
   }, [navigation, route.params.nextScreen]);
 
-  return (
-    <>
-      <View style={page.animation}>
-        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
-      </View>
-      <PopupContainer style={page.container} testID="signin_agreement">
-        <Text t4 style={page.title}>
-          Do you have your recovery phrase or private key?
-        </Text>
-        <Text t11 style={page.disclaimer}>
-          The recovery phrase is a 12-word phrase that you received when you
-          created the wallet. A private key is a key created by you in the
-          application
-        </Text>
-        <Button
-          style={page.submit}
-          variant={ButtonVariant.contained}
-          title="Agree"
-          testID="signin_agreement_agree"
-          onPress={onDone}
-        />
-        <Text t11 style={page.agreement}>
-          By clicking Agree you agree to the Terms of Service and Privacy Policy
-        </Text>
-      </PopupContainer>
-    </>
-  );
+  return <RestoreAgreement onDone={onDone} testID="signin_agreement" />;
 };
-
-const page = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-end',
-  },
-  animation: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 200,
-    top: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    marginBottom: 4,
-    marginHorizontal: 20,
-    textAlign: 'center',
-    top: 50,
-  },
-  disclaimer: {
-    top: 50,
-    marginBottom: 154,
-    textAlign: 'center',
-    color: TEXT_BASE_2,
-    marginHorizontal: 20,
-  },
-  submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {
-    textAlign: 'center',
-    marginHorizontal: 20,
-    marginBottom: 16,
-    color: TEXT_BASE_2,
-  },
-  image: {
-    top: 10,
-    width: windowWidth,
-    height: 362 * ratio,
-    alignSelf: 'center',
-  },
-});
