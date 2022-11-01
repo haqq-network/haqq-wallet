@@ -8,7 +8,7 @@
 import Foundation
 
 
-@objc(RNEncryption)
+@objc(RNEthUtils)
 class RNEthUtils: NSObject {
   @objc
   static func requiresMainQueueSetup() -> Bool { return false }

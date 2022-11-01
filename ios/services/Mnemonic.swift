@@ -26,12 +26,12 @@ public class Mnemonic {
     return String(bytesToBits(bytes: Digest.sha256(bytes)).prefix(CS))
   }
   
-  var mnemonic: [String]
+  public var mnemonic: [String]
   var passphrase: String = ""
   
   var seed: [UInt8] {
     get {
-      let mnemonicBytes = Array(mnemonic.joined(separator: "").utf8)
+      let mnemonicBytes = Array(mnemonic.joined(separator: " ").utf8)
       let saltBytes = Array("mnemonic\(passphrase)".utf8)
       
       let seed = try! PKCS5.PBKDF2(
@@ -60,9 +60,13 @@ public class Mnemonic {
       let entropyBits = String(bits.prefix(dividerIndex))
       let checksumBits = String(bits.suffix(bits.count - dividerIndex))
       
-      let entropyBytes = bits.split(by: 8).map {
+      let entropyBytes = bits.split(by: 8).filter{
+        $0.count == 8
+      }.map {
         UInt8($0 , radix: 2)!
       }
+      
+      print("isValid \(entropyBytes)")
       
       return checksumBits == Mnemonic.deriveChecksumBits(bytes: entropyBytes)
     }
