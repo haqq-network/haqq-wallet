@@ -40,11 +40,10 @@ class Transactions extends EventEmitter {
       });
     });
     app.addListener('removeWallet', address => {
-      console.log('removeWallet', address);
       const wallets = realm.objects<Wallet>('Wallet');
       const addressArr = wallets.map(item => item.address);
       const transactions = realm.objects<Transaction>('Transaction');
-      console.log('addressArr', addressArr);
+
       const transactionsTo = transactions.filtered(
         `to = '${address.toLowerCase()}'`,
       );
