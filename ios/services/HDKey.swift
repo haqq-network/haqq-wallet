@@ -50,7 +50,22 @@ public class HDKey {
         self.chainCode = Array(key[32..<64])
   }
   
-  public func derive(segment: String) -> HDKey? {
+  public func derive(path: String) -> HDKey? {
+    let segments = path.components(separatedBy: "/")
+    
+    var key: Optional<HDKey> = HDKey(privateKey: privateKey, chainCode: chainCode)
+    
+    for segment in segments[1...] {
+      guard let k = key else {
+        return nil
+      }
+      key = k.deriveChild(segment: segment)
+    }
+
+    return key
+  }
+  
+  public func deriveChild(segment: String) -> HDKey? {
       guard var childIndex = UInt32(segment.replacingOccurrences(of: "'", with: "")) else {
           return nil
       }
@@ -83,9 +98,9 @@ public class HDKey {
       guard let tweak2 = tweak2 else {
           let nextIndex = UInt32(childIndex) + 1
           if hardened {
-              return derive(segment: "\(nextIndex)'")
+              return deriveChild(segment: "\(nextIndex)'")
           } else {
-              return derive(segment: "\(nextIndex)")
+              return deriveChild(segment: "\(nextIndex)")
           }
       }
       
