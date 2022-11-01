@@ -9,7 +9,6 @@ import {
   IconButton,
   Text,
   Spacer,
-  StarIcon,
   LottieWrap,
 } from '../components/ui';
 import {
@@ -26,10 +25,10 @@ import {getAppVersion, getBuildNumber} from '../services/version';
 export const SettingsAboutScreen = () => {
   const insets = useSafeAreaInsets();
 
-  const onPressRate = useCallback(() => {
-    const url = 'https://example.com';
-    openURL(url);
-  }, []);
+  // const onPressRate = useCallback(() => {
+  //   const url = 'https://example.com';
+  //   openURL(url);
+  // }, []);
 
   const onPressSite = useCallback(() => {
     const url = 'https://islamiccoin.net';
@@ -64,14 +63,14 @@ export const SettingsAboutScreen = () => {
         About App
       </Text>
       <View style={page.buttons}>
-        <IconButton onPress={onPressRate} style={page.button}>
+        {/* <IconButton onPress={onPressRate} style={page.button}>
           <StarIcon color={GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
             Rate ISLM wallet App
           </Text>
           <Spacer />
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
-        </IconButton>
+        </IconButton> */}
         <IconButton onPress={onPressSite} style={page.button}>
           <GlobalIcon color={GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>

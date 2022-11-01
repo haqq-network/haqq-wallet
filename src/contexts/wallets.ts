@@ -292,19 +292,30 @@ class Wallets extends EventEmitter {
 
   async removeWallet(address: string) {
     const wallet = this._wallets.get(address);
-    if (wallet) {
-      this.deAttachWallet(wallet);
 
+    if (wallet) {
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
         'Wallet',
         address,
       );
+
+      this.deAttachWallet(wallet);
       if (realmWallet) {
         realm.write(() => {
           realm.delete(realmWallet);
         });
       }
     }
+
+    requestAnimationFrame(() => {
+      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
+        'Wallet',
+        address,
+      );
+      if (!realmWallet) {
+        app.emit('removeWallet', address);
+      }
+    });
   }
 
   clean() {
