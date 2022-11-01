@@ -1,37 +1,39 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
-import {Terms} from '../ui/terms';
 import {getText, I18N} from '../../i18n';
+import {Terms} from '../ui/terms';
 
-export type LedgerAgreementProps = {
+export type CreateAgreementProps = {
   onDone: () => void;
+  testID?: string;
 };
+const windowWidth = Dimensions.get('window').width;
 
-export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
+export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
     <>
-      <View style={page.animation}>
+      <View pointerEvents="none" style={page.animation}>
         <LottieWrap
-          source={require('../../../assets/animations/ledger-agreement.json')}
-          style={page.image}
+          source={require('../../../assets/animations/first-screen-animation.json')}
           autoPlay
-          loop
+          loop={false}
         />
       </View>
-      <PopupContainer style={page.container}>
+      <PopupContainer style={page.container} testID={testID}>
         <Text t4 style={page.title}>
-          {getText(I18N.ledgerAgreementTitle)}
+          {getText(I18N.createAgreementTitle)}
         </Text>
         <Text t11 style={page.disclaimer}>
-          {getText(I18N.ledgerAgreementText)}
+          {getText(I18N.createAgreementText)}
         </Text>
         <Button
+          testID={`${testID}_agree`}
           style={page.submit}
           variant={ButtonVariant.contained}
-          title={getText(I18N.ledgerAgreementAgree)}
+          title={getText(I18N.createAgreementAgree)}
           onPress={onDone}
         />
         <Terms style={page.agreement} />
@@ -46,12 +48,9 @@ const page = StyleSheet.create({
   },
   animation: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 200,
-    top: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: windowWidth,
+    height: windowWidth,
+    top: -34,
   },
   title: {
     marginBottom: 4,
@@ -69,5 +68,4 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 16,
   },
-  image: {height: 310},
 });
