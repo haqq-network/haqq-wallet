@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, LottieWrap, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {ratio, windowWidth} from '../../helpers';
-import {Terms} from '../ui/terms';
+// import {Terms} from '../ui/terms';
 import {getText, I18N} from '../../i18n';
 
 export type RestoreAgreementProps = {
@@ -36,7 +36,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
           testID={`${testID}_agree`}
           onPress={onDone}
         />
-        <Terms style={page.agreement} />
+        {/*<Terms style={page.agreement} />*/}
       </PopupContainer>
     </>
   );
@@ -69,10 +69,10 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  agreement: {
-    marginHorizontal: 20,
-    marginBottom: 16,
-  },
+  // agreement: {
+  //   marginHorizontal: 20,
+  //   marginBottom: 16,
+  // },
   image: {
     top: 10,
     width: windowWidth,
