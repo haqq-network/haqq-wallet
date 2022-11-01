@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -36,6 +36,16 @@ export const SettingsAccountStyleScreen = () => {
   const route =
     useRoute<RouteProp<RootStackParamList, 'settingsAccountStyle'>>();
 
+  const timerRef: {current: NodeJS.Timeout | null} = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
   const wallet = useWallet(route.params.address) as Wallet;
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
     wallet.cardStyle || WalletCardStyle.flat,
@@ -46,6 +56,7 @@ export const SettingsAccountStyleScreen = () => {
       : WalletCardPattern.rhombus,
   );
   const [pattern, setPattern] = useState<string>(wallet.pattern);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [colors, setColors] = useState([
     wallet.colorFrom,
@@ -87,6 +98,7 @@ export const SettingsAccountStyleScreen = () => {
   );
 
   const onPressGenerate = useCallback(() => {
+    setLoading(true);
     const newColors =
       cardStyle === WalletCardStyle.flat
         ? generateFlatColors()
@@ -98,10 +110,11 @@ export const SettingsAccountStyleScreen = () => {
           ? CARD_CIRCLE_TOTAL
           : CARD_RHOMBUS_TOTAL),
     )}`;
-
-    setPattern(newPattern);
-
-    setColors(newColors);
+    timerRef.current = setTimeout(() => {
+      setPattern(newPattern);
+      setColors(newColors);
+      setLoading(false);
+    }, 300);
   }, [cardStyle, patternStyle]);
 
   const onPressApply = useCallback(() => {
@@ -143,6 +156,7 @@ export const SettingsAccountStyleScreen = () => {
         title="Generate"
         onPress={onPressGenerate}
         style={page.button}
+        loading={loading}
       />
       <Button
         variant={ButtonVariant.second}
