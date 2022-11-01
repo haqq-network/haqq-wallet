@@ -30,6 +30,7 @@
 		210F818C29110E66002A27EB /* String+split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818B29110E66002A27EB /* String+split.swift */; };
 		210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818F29112548002A27EB /* Data+hexEncodedString.swift */; };
 		210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AC29112EDC002A27EB /* Mnemonic.swift */; };
+		210F81AF29113FFF002A27EB /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AE29113FFF002A27EB /* HDKey.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
@@ -120,6 +121,7 @@
 		210F818F29112548002A27EB /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
 		210F81AB29112EDC002A27EB /* haqqTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqqTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		210F81AC29112EDC002A27EB /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
+		210F81AE29113FFF002A27EB /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
 				21D7A78D2910DC5800399978 /* Mnemonic.swift */,
 				21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */,
+				210F81AE29113FFF002A27EB /* HDKey.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -737,6 +740,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				210F81AF29113FFF002A27EB /* HDKey.swift in Sources */,
 				210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
 				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
