@@ -170,8 +170,16 @@ export const App = () => {
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="home" component={HomeScreen} />
-                <Stack.Screen name="welcome" component={WelcomeScreen} />
+                <Stack.Screen
+                  name="home"
+                  component={HomeScreen}
+                  options={{gestureEnabled: false}}
+                />
+                <Stack.Screen
+                  name="welcome"
+                  component={WelcomeScreen}
+                  options={{gestureEnabled: false}}
+                />
 
                 <Stack.Group screenOptions={{presentation: 'modal'}}>
                   <Stack.Screen name="backup" component={BackupScreen} />
