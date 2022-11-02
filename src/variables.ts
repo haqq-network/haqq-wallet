@@ -38,6 +38,7 @@ export const GRAPHIC_SECOND_10 = 'rgba(229, 229, 234, 0.82)';
 export const GRAPHIC_SECOND_11 = 'rgba(255, 255, 255, 0.2)';
 export const GRAPHIC_SECOND_12 = '#b2b2b2';
 export const GRAPHIC_SECOND_13 = 'rgba(0, 0, 0, 0.5)';
+export const GRAPHIC_SECOND_14 = 'rgba(0, 0, 0, 0)';
 
 export const BG_1 = '#FFFFFF';
 export const BG_2 = '#EEF9F5';

@@ -1,12 +1,12 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  Animated,
   Dimensions,
-  PanResponder,
   StatusBar,
   StyleSheet,
+  useWindowDimensions,
   TouchableWithoutFeedback,
   View,
+  Animated as RNAnimated,
 } from 'react-native';
 import {
   BG_1,
@@ -15,113 +15,212 @@ import {
   TEXT_BASE_1,
 } from '../variables';
 import {CloseCircle, IconButton, Spacer, SwiperIcon, Text} from './ui';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Animated, {
+  runOnJS,
+  useSharedValue,
+  withTiming,
+  useAnimatedStyle,
+  useDerivedValue,
+  interpolate,
+} from 'react-native-reanimated';
+import {
+  Gesture,
+  GestureDetector,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+import {useAndroidStatusBarAnimation} from '../hooks';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
   title?: string;
   onClose: () => void;
   closeDistance?: number;
+  scrollable?: boolean;
 };
 
-const h = Dimensions.get('window').height;
-const defaultCloseDistance = h / 3;
-
-const AnimatedStatusBar = Animated.createAnimatedComponent(StatusBar);
+const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
 export const BottomSheet = ({
   children,
   onClose,
   title,
-  closeDistance = defaultCloseDistance,
+  closeDistance,
 }: BottomSheetProps) => {
-  const pan = useRef(new Animated.Value(1)).current;
-  const insets = useSafeAreaInsets();
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        if (gestureState.dy >= 0) {
-          pan.setValue(gestureState.dy / h);
+  const {height} = useWindowDimensions();
+
+  const bottomSheetHeigth = height * 0.8;
+  const snapPointFromTop: [number, number] = [0, bottomSheetHeigth];
+
+  const fullyOpenSnapPoint = snapPointFromTop[0];
+  const closedSnapPoint = snapPointFromTop[snapPointFromTop.length - 1];
+
+  const panGestureRef = useRef(Gesture.Pan());
+  const blockScrollUntilAtTheTopRef = useRef(Gesture.Tap());
+  const [snapPoint, setSnapPoint] = useState(closedSnapPoint);
+  const translationY = useSharedValue(0);
+  const scrollOffset = useSharedValue(0);
+  const bottomSheetTranslateY = useSharedValue(closedSnapPoint);
+
+  const onHandlerEndOnJS = (point: number) => {
+    setSnapPoint(point);
+  };
+
+  const onHandlerEnd = ({velocityY}: PanGestureHandlerEventPayload) => {
+    'worklet';
+    const dragToss = 0.05;
+    const endOffsetY =
+      bottomSheetTranslateY.value + translationY.value + velocityY * dragToss;
+
+    let destSnapPoint = fullyOpenSnapPoint;
+
+    if (snapPoint === fullyOpenSnapPoint && endOffsetY < fullyOpenSnapPoint) {
+      return;
+    }
+
+    for (const point of snapPointFromTop) {
+      const distFromSnap = Math.abs(point - endOffsetY);
+      if (distFromSnap < Math.abs(destSnapPoint - endOffsetY)) {
+        destSnapPoint = point;
+      }
+    }
+
+    bottomSheetTranslateY.value =
+      bottomSheetTranslateY.value + translationY.value;
+    translationY.value = 0;
+
+    bottomSheetTranslateY.value = withTiming(
+      destSnapPoint,
+      {
+        duration: 500,
+      },
+      success => {
+        if (destSnapPoint === closedSnapPoint && success) {
+          runOnJS(onClose)();
         }
       },
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dy > closeDistance) {
-          onClosePopup();
-        } else {
-          onOpenPopup();
-        }
-      },
-    }),
-  ).current;
+    );
+    runOnJS(onHandlerEndOnJS)(destSnapPoint);
+  };
+
+  const clampedTranslateY = useDerivedValue(() => {
+    const translateY = bottomSheetTranslateY.value + translationY.value;
+
+    const minTranslateY = Math.max(fullyOpenSnapPoint, translateY);
+    return Math.min(closedSnapPoint, minTranslateY);
+  });
+  const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
+    animatedValueRange: snapPointFromTop,
+  });
+
+  const panGesture = Gesture.Pan()
+    .onUpdate(e => {
+      if (snapPoint === fullyOpenSnapPoint) {
+        translationY.value = e.translationY - scrollOffset.value;
+      } else {
+        translationY.value = e.translationY;
+      }
+    })
+    .onEnd(onHandlerEnd)
+    .withRef(panGestureRef);
+
+  const blockScrollUntilAtTheTop = Gesture.Tap()
+    .maxDeltaY(snapPoint - fullyOpenSnapPoint)
+    .maxDuration(100000)
+    .simultaneousWithExternalGesture(panGesture)
+    .withRef(blockScrollUntilAtTheTopRef);
+
+  const headerGesture = Gesture.Pan()
+    .onUpdate(e => {
+      translationY.value = e.translationY;
+    })
+    .onEnd(onHandlerEnd);
+
+  const scrollViewGesture = Gesture.Native().requireExternalGestureToFail(
+    blockScrollUntilAtTheTop,
+  );
 
   const onClosePopup = useCallback(() => {
-    Animated.timing(pan, {
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: false,
-    }).start(onClose);
-  }, [pan, onClose]);
+    toLight();
+    bottomSheetTranslateY.value = withTiming(
+      closedSnapPoint,
+      {
+        duration: 500,
+      },
+      () => runOnJS(onClose)(),
+    );
+  }, [bottomSheetTranslateY, closedSnapPoint, onClose, toLight]);
 
   const onOpenPopup = useCallback(() => {
-    Animated.timing(pan, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: false,
-    }).start();
-  }, [pan]);
+    toDark();
+    bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
+      duration: 500,
+    });
+  }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
   useEffect(() => {
     onOpenPopup();
   }, [onOpenPopup]);
 
+  const backgroundAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      clampedTranslateY.value,
+      snapPointFromTop,
+      [0.5, 0],
+    );
+    return {
+      opacity,
+    };
+  });
+
+  const bottomSheetStyle = useAnimatedStyle(() => {
+    return {
+      maxHeight: bottomSheetHeigth,
+      transform: [{translateY: clampedTranslateY.value}],
+    };
+  });
+
   return (
     <View style={[StyleSheet.absoluteFill, page.container]}>
-      <AnimatedStatusBar
-        backgroundColor={pan.interpolate({
-          inputRange: [0, 1],
-          outputRange: ['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0)'],
-        })}
-      />
-
+      <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
           page.background,
-          {
-            opacity: pan.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0.5, 0],
-            }),
-          },
+          backgroundAnimatedStyle,
         ]}
       />
       <TouchableWithoutFeedback onPress={onClosePopup}>
         <View style={page.space} />
       </TouchableWithoutFeedback>
-      <Animated.View
-        style={[
-          page.animateView,
-          {
-            transform: [{translateY: Animated.multiply(pan, h)}],
-          },
-        ]}
-        {...panResponder.panHandlers}>
-        <View style={[page.content, {paddingBottom: insets.bottom}]}>
-          <View style={page.swipe}>
-            <SwiperIcon color={GRAPHIC_SECOND_2} />
-          </View>
-          <View style={page.header}>
-            <Text t6 style={page.title}>
-              {title}
-            </Text>
-            <Spacer />
-            <IconButton onPress={onClosePopup}>
-              <CloseCircle color={GRAPHIC_SECOND_2} />
-            </IconButton>
-          </View>
-          {children}
-        </View>
+      <Animated.View style={[page.animateView, page.content, bottomSheetStyle]}>
+        <GestureDetector gesture={headerGesture}>
+          <Animated.View>
+            <View style={page.swipe}>
+              <SwiperIcon color={GRAPHIC_SECOND_2} />
+            </View>
+            <View style={page.header}>
+              <Text t6 style={page.title}>
+                {title}
+              </Text>
+              <Spacer />
+              <IconButton onPress={onClosePopup}>
+                <CloseCircle color={GRAPHIC_SECOND_2} />
+              </IconButton>
+            </View>
+          </Animated.View>
+        </GestureDetector>
+        <GestureDetector
+          gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
+          <Animated.ScrollView
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={1}
+            onScrollBeginDrag={e => {
+              scrollOffset.value = e.nativeEvent.contentOffset.y;
+            }}>
+            {children}
+          </Animated.ScrollView>
+        </GestureDetector>
       </Animated.View>
     </View>
   );
@@ -136,7 +235,6 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_SECOND_5,
   },
   animateView: {
-    flex: 1,
     justifyContent: 'flex-end',
   },
   swipe: {
