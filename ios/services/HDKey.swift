@@ -47,7 +47,7 @@ public class HDKey {
     }
     
     self.privateKey = Array(key[0..<32])
-        self.chainCode = Array(key[32..<64])
+    self.chainCode = Array(key[32..<64])
   }
   
   public func derive(path: String) -> HDKey? {
@@ -55,7 +55,9 @@ public class HDKey {
     
     var key: Optional<HDKey> = HDKey(privateKey: privateKey, chainCode: chainCode)
     
-    for segment in segments[1...] {
+    let initialPosition = segments.count > 0 && segments[0].lowercased() == "m" ? 1 : 0
+    
+    for segment in segments[initialPosition...] {
       guard let k = key else {
         return nil
       }

@@ -4,11 +4,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
-import {utils} from 'ethers';
 import {MAIN_ACCOUNT_NAME} from '../variables';
-import {sleep} from '../utils';
 import {showModal} from '../helpers/modal';
 import {captureException} from '../helpers';
+import {generateMnemonic} from '../services/eth-utils';
 
 export const SignupStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -21,36 +20,34 @@ export const SignupStoreWalletScreen = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      const actions = [sleep(1000)];
+    setTimeout(async () => {
+      try {
+        const mnemonic = await generateMnemonic();
 
-      actions.push(
-        wallets.addWalletFromMnemonic(
-          utils.entropyToMnemonic(utils.randomBytes(16)),
+        console.log('mnemonic', mnemonic);
+
+        await wallets.addWalletFromMnemonic(
+          mnemonic,
           wallets.getSize() === 0
             ? MAIN_ACCOUNT_NAME
             : `Account #${wallets.getSize() + 1}`,
-        ),
-      );
+        );
 
-      Promise.all(actions)
-        .then(() => {
-          navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
-        })
-        .catch(error => {
-          switch (error) {
-            case 'wallet_already_exists':
-              showModal('error-account-added');
+        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+      } catch (error) {
+        switch (error) {
+          case 'wallet_already_exists':
+            showModal('error-account-added');
+            navigation.getParent()?.goBack();
+            break;
+          default:
+            if (error instanceof Error) {
+              showModal('error-create-account');
+              captureException(error, 'createStoreWallet');
               navigation.getParent()?.goBack();
-              break;
-            default:
-              if (error instanceof Error) {
-                showModal('error-create-account');
-                captureException(error, 'createStoreWallet');
-                navigation.getParent()?.goBack();
-              }
-          }
-        });
+            }
+        }
+      }
     }, 350);
   }, [navigation, route, wallets]);
 
