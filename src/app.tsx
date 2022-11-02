@@ -10,14 +10,13 @@
 
 import React, {useEffect, useState} from 'react';
 import {
+  createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer,
   StackActions,
-  useNavigationContainerRef,
 } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {hideNavigationBar} from 'react-native-navigation-bar-color';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
@@ -94,10 +93,10 @@ const actionsSheet: ActionSheetType = {
   animationDuration: 0,
 };
 
+export const navigator = createNavigationContainerRef<RootStackParamList>();
+
 export const App = () => {
-  const navigator = useNavigationContainerRef<RootStackParamList>();
   useEffect(() => {
-    hideNavigationBar();
     app.emit('modal', {type: 'splash'});
     sleep(150)
       .then(() => SplashScreen.hide())
@@ -137,7 +136,8 @@ export const App = () => {
       navigator.dispatch(StackActions.replace('welcome'));
       app.emit('modal', null);
     });
-  }, [navigator]);
+  }, []);
+  useEffect(() => () => console.log('unmount'), []);
 
   const [initialized, setInitialized] = useState(false);
 
