@@ -24,6 +24,12 @@ final class Mnemonic: XCTestCase {
     XCTAssertEqual(s.count, 16)
   }
   
+  func testDeriveChecksumBits() throws {
+    let bytes: [UInt8] = [99, 217, 244, 233, 222, 163, 139, 170, 225, 251, 157, 138, 154, 175, 134, 155]
+    let result = haqq.Mnemonic.deriveChecksumBits(bytes: bytes);
+    XCTAssertEqual(result, "1110")
+  }
+  
   func testGenerateSizedEntropy() throws {
     let s = haqq.Mnemonic.generateEntropy(strength: 24)
     
