@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -60,99 +60,111 @@ export const BackupVerifyScreen = () => {
   }, [selected, wallet, words, navigation]);
 
   return (
-    <Container>
-      <Text t4 style={page.title}>
-        Verify backup phrase
-      </Text>
-      {error ? (
-        <Text t11 style={page.error}>
-          Ooops, mistake in one of the words
+    <ScrollView
+      contentContainerStyle={page.scrollContent}
+      showsVerticalScrollIndicator={false}>
+      <Container>
+        <Text t4 style={page.title}>
+          Verify backup phrase
         </Text>
-      ) : (
-        <Text t11 style={page.textStyle}>
-          Please choose the correct backup phrase according to the serial number
-        </Text>
-      )}
-      <View style={page.cells}>
-        <View>
-          {Array.from(words.keys())
-            .slice(0, 6)
-            .map((k, i) =>
-              selected.length > i ? (
-                <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Text t14 style={page.cellTextFilled}>
-                    {words.get(selected[i])}
-                  </Text>
-                </View>
-              ) : (
-                <View
-                  style={[
-                    page.cell,
-                    page.cellEmpty,
-                    selected.length === i && {borderColor: GRAPHIC_GREEN_1},
-                  ]}
-                  key={`${k}_empty`}>
-                  <Text t14 style={page.cellTextEmpty}>
-                    #{i + 1}
-                  </Text>
-                </View>
-              ),
-            )}
+        {error ? (
+          <Text t11 style={page.error}>
+            Ooops, mistake in one of the words
+          </Text>
+        ) : (
+          <Text t11 style={page.textStyle}>
+            Please choose the correct backup phrase according to the serial
+            number
+          </Text>
+        )}
+        <View style={page.cells}>
+          <View>
+            {Array.from(words.keys())
+              .slice(0, 6)
+              .map((k, i) =>
+                selected.length > i ? (
+                  <View
+                    style={[page.cell, page.cellFilled]}
+                    key={`${k}_filled`}>
+                    <Text t14 style={page.cellTextFilled}>
+                      {words.get(selected[i])}
+                    </Text>
+                  </View>
+                ) : (
+                  <View
+                    style={[
+                      page.cell,
+                      page.cellEmpty,
+                      selected.length === i && {borderColor: GRAPHIC_GREEN_1},
+                    ]}
+                    key={`${k}_empty`}>
+                    <Text t14 style={page.cellTextEmpty}>
+                      #{i + 1}
+                    </Text>
+                  </View>
+                ),
+              )}
+          </View>
+          <View>
+            {Array.from(words.keys())
+              .slice(6, 12)
+              .map((k, i) =>
+                selected.length > i + 6 ? (
+                  <View
+                    style={[page.cell, page.cellFilled]}
+                    key={`${k}_filled`}>
+                    <Text t14 style={page.cellTextFilled}>
+                      {words.get(selected[i + 6])}
+                    </Text>
+                  </View>
+                ) : (
+                  <View
+                    style={[
+                      page.cell,
+                      page.cellEmpty,
+                      selected.length === i + 6 && {
+                        borderColor: GRAPHIC_GREEN_1,
+                      },
+                    ]}
+                    key={`${k}_empty`}>
+                    <Text t14 style={page.cellTextEmpty}>
+                      #{i + 7}
+                    </Text>
+                  </View>
+                ),
+              )}
+          </View>
         </View>
-        <View>
-          {Array.from(words.keys())
-            .slice(6, 12)
-            .map((k, i) =>
-              selected.length > i + 6 ? (
-                <View style={[page.cell, page.cellFilled]} key={`${k}_filled`}>
-                  <Text t14 style={page.cellTextFilled}>
-                    {words.get(selected[i + 6])}
-                  </Text>
-                </View>
-              ) : (
-                <View
-                  style={[
-                    page.cell,
-                    page.cellEmpty,
-                    selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
-                  ]}
-                  key={`${k}_empty`}>
-                  <Text t14 style={page.cellTextEmpty}>
-                    #{i + 7}
-                  </Text>
-                </View>
-              ),
-            )}
+        <View style={page.buttons}>
+          {buttons.map(val => (
+            <Button
+              size={ButtonSize.small}
+              variant={ButtonVariant.second}
+              disabled={selected.includes(val)}
+              key={val}
+              style={page.buttonStyle}
+              title={words.get(val) ?? ''}
+              onPress={() => {
+                setSelected(sel => sel.concat(val));
+              }}
+            />
+          ))}
         </View>
-      </View>
-      <View style={page.buttons}>
-        {buttons.map(val => (
-          <Button
-            size={ButtonSize.small}
-            variant={ButtonVariant.second}
-            disabled={selected.includes(val)}
-            key={val}
-            style={page.buttonStyle}
-            title={words.get(val) ?? ''}
-            onPress={() => {
-              setSelected(sel => sel.concat(val));
-            }}
-          />
-        ))}
-      </View>
-      <Spacer />
-      <Button
-        disabled={selected.length < 12}
-        variant={ButtonVariant.contained}
-        title="Check"
-        onPress={onDone}
-        style={page.margin}
-      />
-    </Container>
+        <Spacer />
+        <Button
+          disabled={selected.length < 12}
+          variant={ButtonVariant.contained}
+          title="Check"
+          onPress={onDone}
+          style={page.margin}
+        />
+      </Container>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  scrollContent: {flexGrow: 1},
   title: {marginTop: 20, marginBottom: 4, textAlign: 'center'},
   textStyle: {
     textAlign: 'center',
@@ -174,7 +186,8 @@ const page = StyleSheet.create({
     width: (Dimensions.get('window').width - 56) / 2,
     height: 30,
     paddingHorizontal: 20,
-    paddingVertical: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 8,
     marginHorizontal: 8,
     marginVertical: 4,

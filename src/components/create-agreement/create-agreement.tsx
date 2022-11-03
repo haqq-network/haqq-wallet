@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
@@ -14,7 +14,9 @@ const windowWidth = Dimensions.get('window').width;
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={page.scrollContent}
+      showsVerticalScrollIndicator={false}>
       <View pointerEvents="none" style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/first-screen-animation.json')}
@@ -38,11 +40,12 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
         />
         {/*<Terms style={page.agreement} />*/}
       </PopupContainer>
-    </>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  scrollContent: {flexGrow: 1},
   container: {
     justifyContent: 'flex-end',
   },

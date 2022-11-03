@@ -123,7 +123,7 @@ export const generateGradientColors = () => {
   return [
     [h, 50, b],
     [h, 70, b - 14],
-    [h, 62, b - (dark ? -16 : 20)],
+    [h, 62, b - (dark ? -10 : 16)],
   ].map(color => HSBToHEX(color[0], color[1], color[2]));
 };
 

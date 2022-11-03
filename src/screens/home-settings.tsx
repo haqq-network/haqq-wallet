@@ -44,7 +44,7 @@ export const HomeSettingsScreen = () => {
         icon={<ProviderIcon color={GRAPHIC_BASE_1} />}
         title="Providers"
         next="settingsProviders"
-        style={page.button}
+        style={[page.button, page.hr]}
       />
 
       {/*<SettingsButton*/}
@@ -71,5 +71,11 @@ export const HomeSettingsScreen = () => {
 };
 
 const page = StyleSheet.create({
-  button: {marginBottom: 20},
+  button: {
+    paddingBottom: 20,
+  },
+  hr: {
+    borderColor: '#cccccc',
+    borderBottomWidth: 1,
+  },
 });
