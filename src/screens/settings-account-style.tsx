@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -143,55 +143,60 @@ export const SettingsAccountStyleScreen = () => {
   }, [cardStyle, colors, navigation, wallet, pattern]);
 
   return (
-    <Container>
-      <Animated.View style={animatedStyles}>
-        <Card
-          width={cardWidth}
-          pattern={pattern}
-          colorFrom={colors[0]}
-          colorTo={colors[1]}
-          colorPattern={colors[2]}
-          style={page.card}
+    <ScrollView
+      contentContainerStyle={page.container}
+      showsVerticalScrollIndicator={false}>
+      <Container>
+        <Animated.View style={animatedStyles}>
+          <Card
+            width={cardWidth}
+            pattern={pattern}
+            colorFrom={colors[0]}
+            colorTo={colors[1]}
+            colorPattern={colors[2]}
+            style={page.card}
+          />
+        </Animated.View>
+        <Text t10 style={page.title}>
+          Choose color style
+        </Text>
+        <SegmentedControl
+          value={cardStyle}
+          values={cardStyleVariants}
+          onChange={onChangeType}
+          style={page.margin}
         />
-      </Animated.View>
-      <Text t10 style={page.title}>
-        Choose color style
-      </Text>
-      <SegmentedControl
-        value={cardStyle}
-        values={cardStyleVariants}
-        onChange={onChangeType}
-        style={page.margin}
-      />
-      <Text t10 style={page.title}>
-        Choose color style
-      </Text>
-      <SegmentedControl
-        value={patternStyle}
-        values={patternVariants}
-        onChange={onChangePattern}
-      />
-      <Spacer />
-      <Button
-        variant={ButtonVariant.contained}
-        size={ButtonSize.middle}
-        title="Generate"
-        onPress={onPressGenerate}
-        style={page.button}
-        loading={loading}
-      />
-      <Button
-        variant={ButtonVariant.second}
-        size={ButtonSize.middle}
-        title="Use this style"
-        onPress={onPressApply}
-        style={page.button}
-      />
-    </Container>
+        <Text t10 style={page.title}>
+          Choose color style
+        </Text>
+        <SegmentedControl
+          value={patternStyle}
+          values={patternVariants}
+          onChange={onChangePattern}
+        />
+        <Spacer />
+        <Button
+          variant={ButtonVariant.contained}
+          size={ButtonSize.middle}
+          title="Generate"
+          onPress={onPressGenerate}
+          style={page.button}
+          loading={loading}
+        />
+        <Button
+          variant={ButtonVariant.second}
+          size={ButtonSize.middle}
+          title="Use this style"
+          onPress={onPressApply}
+          style={page.button}
+        />
+      </Container>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  container: {flexGrow: 1},
   card: {
     marginHorizontal: 16,
     marginBottom: 30,

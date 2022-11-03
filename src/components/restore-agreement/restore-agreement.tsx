@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, LottieWrap, PopupContainer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {ratio, windowWidth} from '../../helpers';
@@ -13,7 +13,9 @@ export type RestoreAgreementProps = {
 
 export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={page.scrollContent}
+      showsVerticalScrollIndicator={false}>
       <View style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/recover-animation.json')}
@@ -38,11 +40,12 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
         />
         {/*<Terms style={page.agreement} />*/}
       </PopupContainer>
-    </>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  scrollContent: {flexGrow: 1},
   container: {
     justifyContent: 'flex-end',
   },

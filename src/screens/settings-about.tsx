@@ -47,6 +47,7 @@ export const SettingsAboutScreen = () => {
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={[
         page.container,
         {paddingTop: insets.top - 50, paddingBottom: insets.bottom},

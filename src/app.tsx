@@ -62,7 +62,7 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {AppState} from 'react-native';
+import {AppState, View} from 'react-native';
 import {hideModal, modal} from './helpers/modal';
 import {Linking} from 'react-native';
 

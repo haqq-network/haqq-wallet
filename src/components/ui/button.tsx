@@ -149,7 +149,6 @@ const page = StyleSheet.create({
   text: {
     fontStyle: 'normal',
     fontSize: 18,
-    lineHeight: 24,
   },
   textIconRight: {
     marginRight: 8,

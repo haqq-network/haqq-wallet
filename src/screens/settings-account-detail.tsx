@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Switch, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -76,53 +76,58 @@ export const SettingsAccountDetailScreen = () => {
   }
 
   return (
-    <Container>
-      <View style={[page.header, wallet.isHidden && page.opacity]}>
-        <Card
-          width={cardWidth}
-          height={cardMaskHeight + 40}
-          style={page.card}
-          pattern={wallet.pattern}
-          colorFrom={wallet.colorFrom}
-          colorTo={wallet.colorTo}
-          colorPattern={wallet.colorPattern}>
-          <CardMask
-            style={[
-              page.cardMask,
-              {width: cardMaskWidth, height: cardMaskHeight},
-            ]}
+    <ScrollView
+      contentContainerStyle={page.scrollContent}
+      showsVerticalScrollIndicator={false}>
+      <Container>
+        <View style={[page.header, wallet.isHidden && page.opacity]}>
+          <Card
+            width={cardWidth}
+            height={cardMaskHeight + 40}
+            style={page.card}
+            pattern={wallet.pattern}
+            colorFrom={wallet.colorFrom}
+            colorTo={wallet.colorTo}
+            colorPattern={wallet.colorPattern}>
+            <CardMask
+              style={[
+                page.cardMask,
+                {width: cardMaskWidth, height: cardMaskHeight},
+              ]}
+            />
+          </Card>
+          <Text t10 style={page.headerName}>
+            {wallet.name}
+          </Text>
+          <Text t14>{wallet?.address}</Text>
+        </View>
+        <MenuNavigationButton onPress={onPressRename}>
+          <DataContent
+            title="Rename account"
+            subtitle="Change the account display name"
           />
-        </Card>
-        <Text t10 style={page.headerName}>
-          {wallet.name}
-        </Text>
-        <Text t14>{wallet?.address}</Text>
-      </View>
-      <MenuNavigationButton onPress={onPressRename}>
-        <DataContent
-          title="Rename account"
-          subtitle="Change the account display name"
-        />
-      </MenuNavigationButton>
-      <MenuNavigationButton onPress={onPressStyle}>
-        <DataContent
-          title="Change style"
-          subtitle="Change the picture of the account"
-        />
-      </MenuNavigationButton>
-      <MenuNavigationButton onPress={onPressRename} hideArrow>
-        <DataContent
-          title="Hide account"
-          subtitle="Will be hidden from the general list"
-        />
-        <Spacer />
-        <Switch value={wallet.isHidden} onChange={onToggleIsHidden} />
-      </MenuNavigationButton>
-    </Container>
+        </MenuNavigationButton>
+        <MenuNavigationButton onPress={onPressStyle}>
+          <DataContent
+            title="Change style"
+            subtitle="Change the picture of the account"
+          />
+        </MenuNavigationButton>
+        <MenuNavigationButton onPress={onPressRename} hideArrow>
+          <DataContent
+            title="Hide account"
+            subtitle="Will be hidden from the general list"
+          />
+          <Spacer />
+          <Switch value={wallet.isHidden} onChange={onToggleIsHidden} />
+        </MenuNavigationButton>
+      </Container>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  scrollContent: {flexGrow: 1},
   card: {
     marginBottom: 12,
   },
