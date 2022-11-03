@@ -23,9 +23,10 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun generateMnemonic(strength: Int, promise: Promise) {
     try {
-      val mnemonic = Mnemonic(bytes = Mnemonic.generateEntropy(strength = strength))
+      val bytes =  Mnemonic.generateEntropy(strength = strength)
+      val mnemonic = Mnemonic(bytes = bytes)
 
-      promise.resolve(mnemonic)
+      promise.resolve(mnemonic.mnemonic())
 
     } catch (e: IOException) {
       promise.reject("0", "generateMnemonic")
