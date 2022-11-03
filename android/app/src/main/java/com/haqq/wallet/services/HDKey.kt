@@ -30,7 +30,6 @@ class HDKey {
     mac.init(signingKey)
 
     val bytes = mac.doFinal(seed.decodeHex())
-    println("HDKey bytes ${bytes.size} ${bytes.toHex()}")
     _privateKey = bytes.slice(0 until 32).toByteArray()
     _chainCode = bytes.slice(32 until 64).toByteArray()
   }
@@ -53,12 +52,9 @@ class HDKey {
 
     var key = HDKey(_privateKey, _chainCode)
 
-    println("derive $path ${_privateKey.toHex()} ${_chainCode.toHex()}")
-
     segments.forEach {
       if (it.lowercase() != "m") {
         key = key.deriveChild(it)
-        println("derive $it ${key.privateKey().toHex()}")
       }
     }
 
