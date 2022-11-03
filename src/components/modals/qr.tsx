@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
+import {Dimensions, FlatList, StatusBar, StyleSheet, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
@@ -11,6 +11,7 @@ import {
   FlashLightIcon,
   IconButton,
   ImageIcon,
+  Spacer,
   Text,
 } from '../ui';
 import {
@@ -23,12 +24,38 @@ import {
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HapticEffects, vibrate} from '../../services/haptic';
+import {BottomSheet} from '../bottom-sheet';
+import {useWallets} from '../../contexts/wallets';
+import {WalletRow} from '../wallet-row';
+import {navigator} from '../../app';
 
 export type QRModalProps = {
   onClose: () => void;
 };
 
 export const QRModal = ({onClose}: QRModalProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const wallets = useWallets();
+  const onPressRow = (address: string) => {
+    console.log(navigator);
+    navigator.navigate('welcome');
+  };
+
+  const [rows, setRows] = useState(wallets.getWallets());
+
+  useEffect(() => {
+    setRows(wallets.getWallets());
+
+    const callback = () => {
+      setRows(wallets.getWallets());
+    };
+
+    wallets.on('wallets', callback);
+    return () => {
+      wallets.off('wallets', callback);
+    };
+  }, [wallets]);
+
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -45,7 +72,8 @@ export const QRModal = ({onClose}: QRModalProps) => {
 
   const checkAddress = useCallback((address: string) => {
     if (utils.isAddress(address)) {
-      app.emit('address', address);
+      setIsOpen(true);
+      //app.emit('address', address);
     } else {
       setError(true);
       vibrate(HapticEffects.error);
@@ -85,6 +113,8 @@ export const QRModal = ({onClose}: QRModalProps) => {
       }
     }
   }, []);
+
+  const onCloseBottomSheet = () => setIsOpen(false);
 
   return (
     <>
@@ -140,6 +170,14 @@ export const QRModal = ({onClose}: QRModalProps) => {
           </View>
         </View>
       )}
+      {isOpen && (
+        <BottomSheet onClose={onCloseBottomSheet} title="Send funds from">
+          {rows.map((item, id) => (
+            <WalletRow key={id} item={item} onPress={onPressRow} />
+          ))}
+          <Spacer style={page.spacer} />
+        </BottomSheet>
+      )}
     </>
   );
 };
@@ -188,4 +226,5 @@ const page = StyleSheet.create({
     borderRadius: 28,
     backgroundColor: GRAPHIC_SECOND_9,
   },
+  spacer: {height: 50},
 });
