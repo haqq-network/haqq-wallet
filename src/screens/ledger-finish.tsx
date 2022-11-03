@@ -4,14 +4,15 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {Finish} from '../components/finish';
 import {useApp} from '../contexts/app';
+import {hideModal} from '../helpers/modal';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
-    app.emit('modal', null);
-  }, [app]);
+    hideModal();
+  }, []);
 
   const onEnd = useCallback(() => {
     if (app.getUser().onboarded) {
