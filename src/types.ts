@@ -53,7 +53,6 @@ export type RootStackParamList = {
   scanQr: undefined;
   signin: {next: string};
   signup: {next: string};
-  setPin: undefined;
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
@@ -68,8 +67,6 @@ export type RootStackParamList = {
   backup: {
     address: string;
   };
-  importWallet: undefined;
-  details: {address: string};
   detailsQr: {address: string};
   settingsTest: undefined;
   settingsAccounts: undefined;
