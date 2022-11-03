@@ -1,20 +1,13 @@
 package com.haqq.wallet.services
 
+import com.haqq.wallet.byteArrayOfInts
+import com.haqq.wallet.toBits
+import com.haqq.wallet.toHex
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.security.spec.KeySpec
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
-
-fun bytesToBits(bytes: ByteArray): String {
-  return bytes.map {
-    String.format("%8s", Integer.toBinaryString((it.toInt() + 256) % 256)).replace(' ', '0')
-  }.joinToString(separator = "")
-}
-
-fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
-
-fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
 
 
 class Mnemonic {
@@ -29,7 +22,7 @@ class Mnemonic {
     fun deriveChecksumBits(bytes: ByteArray): String {
       val ENT = bytes.size * 8;
       val CS = ENT / 32;
-      return bytesToBits(MessageDigest.getInstance("SHA-256").digest(bytes)).substring(0, CS)
+      return MessageDigest.getInstance("SHA-256").digest(bytes).toBits().substring(0, CS)
     }
   }
 
@@ -37,7 +30,7 @@ class Mnemonic {
   private var _pass: String = ""
 
   constructor(bytes: ByteArray) {
-    val bits = bytesToBits(bytes) + deriveChecksumBits(bytes)
+    val bits = bytes.toBits() + deriveChecksumBits(bytes)
 
     val words = ArrayList<String>().toMutableList()
 

@@ -2,12 +2,11 @@ package com.haqq.wallet.encryption
 
 import android.os.Build
 import com.facebook.react.bridge.*
-import com.google.android.gms.common.util.Base64Utils
+import com.haqq.wallet.toBase64
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.nio.charset.Charset
 import java.security.SecureRandom
 import java.security.spec.KeySpec
 import java.util.*
@@ -16,10 +15,6 @@ import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
-
-
-fun ByteArray.toBase64(): String =
-  String(Base64.getEncoder().encode(this))
 
 @Serializable
 data class EncryptedResult(val cipher: String, val iv: String, val salt: String, val method: String)

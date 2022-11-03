@@ -68,18 +68,15 @@ public class HDKey {
   }
   
   public func deriveChild(segment: String) -> HDKey? {
-      guard var childIndex = UInt32(segment.replacingOccurrences(of: "'", with: "")) else {
-          return nil
-      }
-  
-      var hardened = segment.suffix(1) == "'"
-      if (hardened) {
-          childIndex += UInt32(HDKey.hardenedOffset)
-      }
+    guard var childIndex = UInt32(segment.replacingOccurrences(of: "'", with: "")) else {
+      return nil
+    }
+
+    var hardened = segment.suffix(1) == "'"
       
-    var indexBuffer = byteArray(from: UInt32(childIndex))
-      
-    var pk = hardened ? HDKey.spacer + privateKey + indexBuffer : publicKey + indexBuffer
+    var pk = hardened ?
+      HDKey.spacer + privateKey + byteArray(from: UInt32(childIndex + UInt32(HDKey.hardenedOffset))) :
+      publicKey + byteArray(from: UInt32(childIndex))
     
     let key2 = try? HMAC(key: chainCode, variant: .sha512).authenticate(pk)
       
@@ -91,24 +88,19 @@ public class HDKey {
 
     let tweak = try? secp256k1.Signing.PrivateKey(rawRepresentation: privateKey)
       
-      guard let tweak = tweak else {
-          return nil
-      }
-      
-      let tweak2 = try? tweak.add(Array(key2[0..<32]))
-      
-      guard let tweak2 = tweak2 else {
-          let nextIndex = UInt32(childIndex) + 1
-          if hardened {
-              return deriveChild(segment: "\(nextIndex)'")
-          } else {
-              return deriveChild(segment: "\(nextIndex)")
-          }
-      }
-      
-      let privatekey = [UInt8](tweak2.rawRepresentation)
-      
-      return HDKey(privateKey: privatekey, chainCode: Array(key2[32..<64]))
-      
+    guard let tweak = tweak else {
+      return nil
+    }
+    
+    let tweak2 = try? tweak.add(Array(key2[0..<32]))
+    
+    guard let tweak2 = tweak2 else {
+      let nextIndex = hardened ?  "\(UInt32(childIndex) + 1)'": "\(UInt32(childIndex) + 1)"
+      return deriveChild(segment: "\(nextIndex)'")
+    }
+    
+    let privatekey = [UInt8](tweak2.rawRepresentation)
+    return HDKey(privateKey: privatekey, chainCode: Array(key2[32..<64]))
+    
   }
 }

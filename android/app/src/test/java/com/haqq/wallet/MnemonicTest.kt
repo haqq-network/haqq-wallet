@@ -4,9 +4,6 @@ import com.haqq.wallet.services.Mnemonic
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
-
-
 class MnemonicTest {
   @Test
   fun deriveChecksumBits() {
