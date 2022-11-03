@@ -29,6 +29,7 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import {useAndroidStatusBarAnimation} from '../hooks';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -40,6 +41,8 @@ export type BottomSheetProps = {
 
 const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
+type pointsT = [number, number];
+
 export const BottomSheet = ({
   children,
   onClose,
@@ -47,12 +50,17 @@ export const BottomSheet = ({
   closeDistance,
 }: BottomSheetProps) => {
   const {height} = useWindowDimensions();
+  const {bottom: bottomInsets} = useSafeAreaInsets();
 
-  const bottomSheetHeigth = height * 0.8;
-  const snapPointFromTop: [number, number] = [0, bottomSheetHeigth];
+  const bottomSheetHeight = height * 0.75;
+  const snapPointFromTop: pointsT = [0, bottomSheetHeight];
 
   const fullyOpenSnapPoint = snapPointFromTop[0];
   const closedSnapPoint = snapPointFromTop[snapPointFromTop.length - 1];
+  const mockedSnapPointFromTop: pointsT = [
+    fullyOpenSnapPoint,
+    closeDistance ? closeDistance * 2 : closedSnapPoint,
+  ];
 
   const panGestureRef = useRef(Gesture.Pan());
   const blockScrollUntilAtTheTopRef = useRef(Gesture.Tap());
@@ -77,12 +85,12 @@ export const BottomSheet = ({
       return;
     }
 
-    for (const point of snapPointFromTop) {
+    mockedSnapPointFromTop.forEach((point, id) => {
       const distFromSnap = Math.abs(point - endOffsetY);
       if (distFromSnap < Math.abs(destSnapPoint - endOffsetY)) {
-        destSnapPoint = point;
+        destSnapPoint = snapPointFromTop[id];
       }
-    }
+    });
 
     bottomSheetTranslateY.value =
       bottomSheetTranslateY.value + translationY.value;
@@ -174,7 +182,7 @@ export const BottomSheet = ({
 
   const bottomSheetStyle = useAnimatedStyle(() => {
     return {
-      maxHeight: bottomSheetHeigth,
+      maxHeight: bottomSheetHeight,
       transform: [{translateY: clampedTranslateY.value}],
     };
   });
@@ -219,6 +227,7 @@ export const BottomSheet = ({
               scrollOffset.value = e.nativeEvent.contentOffset.y;
             }}>
             {children}
+            <Spacer style={{height: bottomInsets}} />
           </Animated.ScrollView>
         </GestureDetector>
       </Animated.View>
