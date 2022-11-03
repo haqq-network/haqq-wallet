@@ -137,7 +137,6 @@ export const App = () => {
       app.emit('modal', null);
     });
   }, []);
-  useEffect(() => () => console.log('unmount'), []);
 
   const [initialized, setInitialized] = useState(false);
 

@@ -1,11 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, FlatList, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from 'ethers';
-import {app} from '../../contexts/app';
 import {
   ArrowBackIcon,
   FlashLightIcon,
@@ -28,6 +33,7 @@ import {BottomSheet} from '../bottom-sheet';
 import {useWallets} from '../../contexts/wallets';
 import {WalletRow} from '../wallet-row';
 import {navigator} from '../../app';
+import {hideModal} from '../../helpers/modal';
 
 export type QRModalProps = {
   onClose: () => void;
@@ -36,12 +42,16 @@ export type QRModalProps = {
 export const QRModal = ({onClose}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const wallets = useWallets();
-  const onPressRow = (address: string) => {
-    console.log(navigator);
-    navigator.navigate('welcome');
-  };
 
+  const closeDistance = useWindowDimensions().height / 6;
   const [rows, setRows] = useState(wallets.getWallets());
+
+  const onPressRow = (address: string) => {
+    hideModal();
+    navigator.navigate('transaction', {
+      to: address.trim(),
+    });
+  };
 
   useEffect(() => {
     setRows(wallets.getWallets());
@@ -83,20 +93,23 @@ export const QRModal = ({onClose}: QRModalProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (code.startsWith('haqq:')) {
-      checkAddress(code.slice(5));
-      return;
-    }
+  const prepareAdress = useCallback(
+    (data: string) => {
+      if (data.startsWith('haqq:')) {
+        checkAddress(data.slice(5));
+        return;
+      }
 
-    if (code.startsWith('etherium:')) {
-      checkAddress(code.slice(9));
-      return;
-    }
-    if (code.trim() !== '') {
-      checkAddress(code.trim());
-    }
-  }, [checkAddress, code]);
+      if (data.startsWith('etherium:')) {
+        checkAddress(data.slice(9));
+        return;
+      }
+      if (data.trim() !== '') {
+        checkAddress(data.trim());
+      }
+    },
+    [checkAddress],
+  );
 
   const onClickGallery = useCallback(async () => {
     const response = await launchImageLibrary({mediaType: 'photo'});
@@ -107,12 +120,13 @@ export const QRModal = ({onClose}: QRModalProps) => {
         try {
           const data = await QRreader(first.uri);
           setCode(data);
+          prepareAdress(data);
         } catch (err) {
           console.log(err);
         }
       }
     }
-  }, []);
+  }, [prepareAdress]);
 
   const onCloseBottomSheet = () => setIsOpen(false);
 
@@ -171,7 +185,10 @@ export const QRModal = ({onClose}: QRModalProps) => {
         </View>
       )}
       {isOpen && (
-        <BottomSheet onClose={onCloseBottomSheet} title="Send funds from">
+        <BottomSheet
+          onClose={onCloseBottomSheet}
+          closeDistance={closeDistance}
+          title="Send funds from">
           {rows.map((item, id) => (
             <WalletRow key={id} item={item} onPress={onPressRow} />
           ))}
