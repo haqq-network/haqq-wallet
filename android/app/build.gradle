@@ -241,8 +241,7 @@ android {
       }
     }
   }
-    namespace 'com.haqq.wallet'
-    buildTypes {
+  buildTypes {
     debug {
       signingConfig signingConfigs.debug
     }
