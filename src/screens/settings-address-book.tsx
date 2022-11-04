@@ -30,6 +30,7 @@ import {useApp} from '../contexts/app';
 import prompt from 'react-native-prompt-android';
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
+import {hideModal, showModal} from '../helpers/modal';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
@@ -79,13 +80,13 @@ export const SettingsAddressBookScreen =
         if (utils.isAddress(value.trim())) {
           setSearch(value.trim());
           app.off('address', subscription);
-          app.emit('modal', null);
+          hideModal();
         }
       };
 
       app.on('address', subscription);
 
-      app.emit('modal', {type: 'qr'});
+      showModal('qr');
     }, [app]);
 
     const onPressClear = useCallback(() => {

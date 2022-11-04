@@ -12,17 +12,16 @@ import {
   ButtonVariant,
   IconButton,
   KeyboardSafeArea,
-  Text,
   Spacer,
+  Text,
   TextField,
 } from '../components/ui';
 import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
-import {useApp} from '../contexts/app';
+import {hideModal} from '../helpers/modal';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'restorePhrase'>>();
-  const app = useApp();
   const [seed, setSeed] = useState('');
   const [disabled, setDisabled] = useState(false);
 
@@ -42,9 +41,9 @@ export const SignInRestoreScreen = () => {
       Sentry.captureException(e);
     } finally {
       setDisabled(false);
-      app.emit('modal', null);
+      hideModal();
     }
-  }, [app, seed, navigation, route]);
+  }, [seed, navigation, route]);
 
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();
