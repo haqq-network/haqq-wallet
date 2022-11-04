@@ -1,5 +1,5 @@
-import React, {useRef} from 'react';
-import QRCode from 'react-native-qrcode-svg';
+import React from 'react';
+// import QRCode from 'react-native-qrcode-svg';
 import {Share, StyleSheet, useWindowDimensions, View} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,13 +28,13 @@ import {
 import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
+import {QR} from '../components/ui/qr';
 
-const logo = require('../../assets/images/qr-logo.png');
+// const logo = require('../../assets/images/qr-logo.png');
 
 export const DetailsQrScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
-  const svg = useRef();
   const app = useApp();
   const wallet = useWallet(route.params.address) as Wallet;
   const {address} = route.params;
@@ -57,6 +57,7 @@ export const DetailsQrScreen = () => {
         icon={<Alert color={TEXT_YELLOW_1} />}>
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
+
       <LinearGradient
         colors={[wallet?.colorFrom, wallet?.colorTo]}
         style={page.qrContainer}
@@ -73,15 +74,15 @@ export const DetailsQrScreen = () => {
           />
         </View>
         <View style={page.qrStyle}>
-          <QRCode
-            ecl={'H'}
-            logo={logo}
-            value={`haqq:${address}`}
-            size={width - 169}
-            getRef={c => (svg.current = c)}
-            logoSize={width / 5.86}
-            logoBorderRadius={8}
-          />
+          {/*<QRCode*/}
+          {/*  ecl={'H'}*/}
+          {/*  logo={logo}*/}
+          {/*  value={`haqq:${address}`}*/}
+          {/*  size={width - 169}*/}
+          {/*  logoSize={width / 5.86}*/}
+          {/*  logoBorderRadius={8}*/}
+          {/*/>*/}
+          <QR value={`haqq:${address}`} style={page.qr} size={width - 169} />
         </View>
         <Text t14 style={page.title}>
           {wallet?.name}
@@ -142,5 +143,7 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_BASE_3,
     borderRadius: 12,
     marginBottom: 20,
+    flex: 0,
   },
+  qr: {flex: 0},
 });
