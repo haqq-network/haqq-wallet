@@ -45,12 +45,26 @@ export const QRModal = ({onClose}: QRModalProps) => {
 
   const closeDistance = useWindowDimensions().height / 6;
   const [rows, setRows] = useState(wallets.getWallets());
+  const [code, setCode] = useState('');
+
+  const prepareAddress = useCallback((data: string) => {
+    if (data.startsWith('haqq:')) {
+      return data.slice(5);
+    }
+
+    if (data.startsWith('etherium:')) {
+      return data.slice(9);
+    }
+    if (data.trim() !== '') {
+      return data.trim();
+    }
+  }, []);
 
   const onPressRow = (address: string) => {
     hideModal();
     navigator.navigate('transaction', {
-      to: code(),
-      from: address.trim()
+      to: prepareAddress(code),
+      from: address.trim(),
     });
   };
 
@@ -67,7 +81,6 @@ export const QRModal = ({onClose}: QRModalProps) => {
     };
   }, [wallets]);
 
-  const [code, setCode] = useState('');
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const insets = useSafeAreaInsets();
@@ -81,35 +94,27 @@ export const QRModal = ({onClose}: QRModalProps) => {
     [code],
   );
 
-  const checkAddress = useCallback((address: string) => {
-    if (utils.isAddress(address)) {
-      setIsOpen(true);
-      //app.emit('address', address);
-    } else {
-      setError(true);
-      vibrate(HapticEffects.error);
-      setTimeout(() => {
-        setError(false);
-      }, 5000);
-    }
-  }, []);
-
-  const prepareAdress = useCallback(
-    (data: string) => {
-      if (data.startsWith('haqq:')) {
-        checkAddress(data.slice(5));
-        return;
-      }
-
-      if (data.startsWith('etherium:')) {
-        checkAddress(data.slice(9));
-        return;
-      }
-      if (data.trim() !== '') {
-        checkAddress(data.trim());
+  const checkAddress = useCallback(
+    (address: string) => {
+      if (utils.isAddress(address)) {
+        if (rows.length === 1) {
+          hideModal();
+          navigator.navigate('transaction', {
+            to: prepareAddress(address),
+            from: rows[0].address.trim(),
+          });
+        } else {
+          setIsOpen(true);
+        }
+      } else {
+        setError(true);
+        vibrate(HapticEffects.error);
+        setTimeout(() => {
+          setError(false);
+        }, 5000);
       }
     },
-    [checkAddress],
+    [rows, prepareAddress, setIsOpen],
   );
 
   const onClickGallery = useCallback(async () => {
@@ -121,13 +126,16 @@ export const QRModal = ({onClose}: QRModalProps) => {
         try {
           const data = await QRreader(first.uri);
           setCode(data);
-          prepareAdress(data);
+          const slicedAddress = prepareAddress(data);
+          if (slicedAddress) {
+            checkAddress(slicedAddress);
+          }
         } catch (err) {
           console.log(err);
         }
       }
     }
-  }, [prepareAdress]);
+  }, [prepareAddress, checkAddress]);
 
   const onCloseBottomSheet = () => setIsOpen(false);
 

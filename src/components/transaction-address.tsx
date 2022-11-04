@@ -18,6 +18,7 @@ import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
 import {hideModal, showModal} from '../helpers/modal';
+import {useNavigation} from '@react-navigation/native';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -30,6 +31,7 @@ export const TransactionAddress = ({
 }: TransactionAddressProps) => {
   const app = useApp();
   const contacts = useContacts();
+  const {goBack} = useNavigation();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
   const contactsList = contacts.getContacts();
@@ -62,6 +64,7 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
+    goBack();
     const subscription = (value: string) => {
       if (utils.isAddress(value.trim())) {
         setAddress(value.trim());
@@ -73,7 +76,7 @@ export const TransactionAddress = ({
     app.on('address', subscription);
 
     showModal('qr');
-  }, [app]);
+  }, [app, goBack]);
 
   const onPressClear = useCallback(() => {
     setAddress('');
