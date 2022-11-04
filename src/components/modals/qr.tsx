@@ -49,7 +49,8 @@ export const QRModal = ({onClose}: QRModalProps) => {
   const onPressRow = (address: string) => {
     hideModal();
     navigator.navigate('transaction', {
-      to: address.trim(),
+      to: code(),
+      from: address.trim()
     });
   };
 
