@@ -8,6 +8,7 @@ import {
   GlobalIcon,
   IconButton,
   LottieWrap,
+  PopupContainer,
   Spacer,
   Text,
 } from '../components/ui';

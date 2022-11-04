@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Switch, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -76,7 +76,9 @@ export const SettingsAccountDetailScreen = () => {
   }
 
   return (
-    <PopupContainer style={page.container}>
+    <ScrollView
+      contentContainerStyle={page.container}
+      showsVerticalScrollIndicator={false}>
       <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={cardWidth}
@@ -118,7 +120,7 @@ export const SettingsAccountDetailScreen = () => {
         <Spacer />
         <Switch value={wallet.isHidden} onChange={onToggleIsHidden} />
       </MenuNavigationButton>
-    </PopupContainer>
+    </ScrollView>
   );
 };
 

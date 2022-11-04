@@ -1,6 +1,6 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
 import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
+import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 import {getText, I18N} from '../../i18n';
@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
-    <PopupContainer style={page.container} testID={testID}>
+    <PopupContainer style={page.container} testID={testID} scrollEnabled>
       <View pointerEvents="none" style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/first-screen-animation.json')}

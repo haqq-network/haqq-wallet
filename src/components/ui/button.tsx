@@ -146,6 +146,10 @@ const page = StyleSheet.create({
   secondDisabledContainer: {
     backgroundColor: GRAPHIC_SECOND_1,
   },
+  text: {
+    fontStyle: 'normal',
+    fontSize: 18,
+  },
   textIconRight: {
     marginRight: 8,
   },

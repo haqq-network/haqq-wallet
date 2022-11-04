@@ -19,6 +19,7 @@ import {
 } from './ui';
 import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
 import {EthNetwork} from '../services/eth-network';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export type TransactionSumProps = {
   to: string;
@@ -102,69 +103,73 @@ export const TransactionSum = ({
 
   return (
     <KeyboardSafeArea style={page.container}>
-      <TouchableWithoutFeedback onPress={onContact}>
-        <LabeledBlock label="Send to" style={page.label}>
-          <Text
-            style={{color: TEXT_BASE_1}}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {formattedAddress}
-          </Text>
-        </LabeledBlock>
-      </TouchableWithoutFeedback>
-      <Text clean style={page.subtitle}>
-        ISLM
-      </Text>
-      <View style={page.sum}>
-        <View style={page.swap}>
-          {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
-          {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
-          {/*</IconButton>*/}
+      <KeyboardAwareScrollView>
+        <TouchableWithoutFeedback onPress={onContact}>
+          <LabeledBlock label="Send to" style={page.label}>
+            <Text
+              style={{color: TEXT_BASE_1}}
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {formattedAddress}
+            </Text>
+          </LabeledBlock>
+        </TouchableWithoutFeedback>
+        <Text clean style={page.subtitle}>
+          ISLM
+        </Text>
+
+        <View style={page.sum}>
+          <View style={page.swap}>
+            {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
+            {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
+            {/*</IconButton>*/}
+          </View>
+          <TextInput
+            style={page.input}
+            value={amount}
+            placeholder="0"
+            onChangeText={onChangeValue}
+            keyboardType="numeric"
+            placeholderTextColor={TEXT_BASE_2}
+            autoFocus
+            textAlign="left"
+          />
+          <View style={page.max}>
+            {balance > 0 && (
+              <Button
+                title="Max"
+                onPress={onPressMax}
+                variant={ButtonVariant.second}
+                size={ButtonSize.small}
+              />
+            )}
+          </View>
         </View>
-        <TextInput
-          style={page.input}
-          value={amount}
-          placeholder="0"
-          onChangeText={onChangeValue}
-          keyboardType="numeric"
-          placeholderTextColor={TEXT_BASE_2}
-          autoFocus
-          textAlign="left"
+
+        <View style={page.amount}>
+          <Text t15>$ {amountUsd}</Text>
+        </View>
+        {error ? (
+          <Text clean style={[page.help, page.error]}>
+            {error}
+          </Text>
+        ) : (
+          <Text clean style={[page.help, page.available]}>
+            Available:{' '}
+            <Text clean style={{color: TEXT_GREEN_1}}>
+              {cleanNumber(balance.toFixed(8))} ISLM
+            </Text>
+          </Text>
+        )}
+        <Spacer />
+        <Button
+          style={page.submit}
+          disabled={!checked}
+          variant={ButtonVariant.contained}
+          title="Preview"
+          onPress={onDone}
         />
-        <View style={page.max}>
-          {balance > 0 && (
-            <Button
-              title="Max"
-              onPress={onPressMax}
-              variant={ButtonVariant.second}
-              size={ButtonSize.small}
-            />
-          )}
-        </View>
-      </View>
-      <View style={page.amount}>
-        <Text t15>$ {amountUsd}</Text>
-      </View>
-      {error ? (
-        <Text clean style={[page.help, page.error]}>
-          {error}
-        </Text>
-      ) : (
-        <Text clean style={[page.help, page.available]}>
-          Available:{' '}
-          <Text clean style={{color: TEXT_GREEN_1}}>
-            {cleanNumber(balance.toFixed(8))} ISLM
-          </Text>
-        </Text>
-      )}
-      <Spacer />
-      <Button
-        style={page.submit}
-        disabled={!checked}
-        variant={ButtonVariant.contained}
-        title="Preview"
-        onPress={onDone}
-      />
+      </KeyboardAwareScrollView>
     </KeyboardSafeArea>
   );
 };
