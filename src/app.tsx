@@ -55,6 +55,7 @@ import {Notifications} from './components/notifications';
 import {
   ActionSheetType,
   HeaderButtonProps,
+  PresentationNavigation,
   RootStackParamList,
   ScreenOptionType,
 } from './types';
@@ -62,12 +63,12 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {AppState} from 'react-native';
+import {AppState, Linking} from 'react-native';
 import {hideModal, showModal} from './helpers/modal';
-import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
+  gestureEnabled: false,
   headerBackVisible: true,
   headerShown: true,
   header: PopupHeader,
@@ -88,13 +89,21 @@ const AppTheme = {
 };
 
 const actionsSheet: ActionSheetType = {
-  presentation: 'transparentModal',
+  presentation: 'transparentModal' as PresentationNavigation,
   animation: 'fade',
   animationDuration: 0,
 };
 
 export const navigator = createNavigationContainerRef<RootStackParamList>();
 
+const basicScreenOptions = {
+  headerShown: false,
+  gestureEnabled: false,
+};
+const stackScreenOptions = {
+  presentation: 'modal',
+  gestureEnabled: false,
+};
 export const App = () => {
   useEffect(() => {
     showModal('splash');
@@ -169,19 +178,11 @@ export const App = () => {
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={AppTheme}>
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen
-                  name="home"
-                  component={HomeScreen}
-                  options={{gestureEnabled: false}}
-                />
-                <Stack.Screen
-                  name="welcome"
-                  component={WelcomeScreen}
-                  options={{gestureEnabled: false}}
-                />
+              <Stack.Navigator screenOptions={basicScreenOptions}>
+                <Stack.Screen name="home" component={HomeScreen} />
+                <Stack.Screen name="welcome" component={WelcomeScreen} />
 
-                <Stack.Group screenOptions={{presentation: 'modal'}}>
+                <Stack.Group screenOptions={stackScreenOptions}>
                   <Stack.Screen name="backup" component={BackupScreen} />
                   <Stack.Screen name="details" component={DetailsScreen} />
                   <Stack.Screen

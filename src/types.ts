@@ -253,10 +253,16 @@ export enum WalletCardPattern {
 }
 
 export type ActionSheetType = {
-  presentation: 'card' | 'modal' | 'transparentModal' | undefined;
+  presentation: PresentationNavigation;
   animation: 'fade' | 'flip' | 'default' | undefined;
   animationDuration: number;
 };
+
+export type PresentationNavigation =
+  | 'card'
+  | 'modal'
+  | 'transparentModal'
+  | undefined;
 
 export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
