@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Container, Spacer, Text} from './ui';
+import {Spacer, Text} from './ui';
 import {NumericKeyboard} from './numeric-keyboard';
 import {
   GRAPHIC_BASE_4,
@@ -16,6 +16,7 @@ import {
 } from '../variables';
 import {HapticEffects, vibrate} from '../services/haptic';
 import {isBefore} from 'date-fns';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type PinProps = {
   title: string;
@@ -31,6 +32,7 @@ export interface PinInterface {
 
 export const Pin = forwardRef(
   ({title, subtitle, onPin, additionButton}: PinProps, ref) => {
+    const insets = useSafeAreaInsets();
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const [locked, setLocked] = useState<Date | null>(null);
@@ -101,7 +103,7 @@ export const Pin = forwardRef(
     }, [onPin, pin]);
 
     return (
-      <Container style={page.container}>
+      <View style={[page.container, {paddingBottom: insets.bottom}]}>
         <Text t4 style={page.title}>
           {title}
         </Text>
@@ -123,13 +125,17 @@ export const Pin = forwardRef(
           </View>
         </Spacer>
         <NumericKeyboard onPress={onKeyboard} additionButton={additionButton} />
-      </Container>
+      </View>
     );
   },
 );
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center'},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
