@@ -16,14 +16,18 @@ export const TransactionLedgerScreen = () => {
   const onDone = useCallback(
     async (transaction: TransactionResponse) => {
       if (transaction) {
-        await Transaction.createTransaction(transaction, user.providerId);
+        await Transaction.createTransaction(
+          transaction,
+          user.providerId,
+          route.params.fee,
+        );
 
         navigation.navigate('transactionFinish', {
           hash: transaction.hash,
         });
       }
     },
-    [user.providerId, navigation],
+    [user.providerId, route.params.fee, navigation],
   );
 
   return (

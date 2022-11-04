@@ -7,9 +7,9 @@ import {RootStackParamList} from '../types';
 import {
   Card,
   CardMask,
-  Container,
   DataContent,
   MenuNavigationButton,
+  PopupContainer,
   Spacer,
   Text,
 } from '../components/ui';
@@ -76,7 +76,7 @@ export const SettingsAccountDetailScreen = () => {
   }
 
   return (
-    <Container>
+    <PopupContainer style={page.container}>
       <View style={[page.header, wallet.isHidden && page.opacity]}>
         <Card
           width={cardWidth}
@@ -118,11 +118,14 @@ export const SettingsAccountDetailScreen = () => {
         <Spacer />
         <Switch value={wallet.isHidden} onChange={onToggleIsHidden} />
       </MenuNavigationButton>
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
   card: {
     marginBottom: 12,
   },
