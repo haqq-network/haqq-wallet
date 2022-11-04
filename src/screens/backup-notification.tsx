@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   StyleSheet,
   Alert,
-  Animated,
   Dimensions,
   Image,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -13,42 +13,66 @@ import {RootStackParamList} from '../types';
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
+import Animated, {
+  Easing,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  WithTimingConfig,
+} from 'react-native-reanimated';
 
 const warningImage = require('../../assets/images/mnemonic-notify.png');
+
+const timingOutAnimationConfig: WithTimingConfig = {
+  duration: 650,
+  easing: Easing.in(Easing.back()),
+};
+
+const timingInAnimationConfig: WithTimingConfig = {
+  duration: 650,
+  easing: Easing.out(Easing.back()),
+};
 
 export const BackupNotificationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'backupNotification'>>();
 
+  const {height: H} = useWindowDimensions();
+
+  const fullyOpen = 0;
+  const fullyClosed = H * 0.85;
+
+  const fadeAnim = useSharedValue(fullyClosed);
   const app = useApp();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      useNativeDriver: true,
-      toValue: 1,
-      duration: 250,
-    }).start();
-  }, [fadeAnim]);
-
-  const fadeOut = useCallback(() => {
-    Animated.timing(fadeAnim, {
-      useNativeDriver: true,
-      toValue: 0,
-      duration: 250,
-    }).start(() => {
-      navigation.goBack();
-    });
-  }, [fadeAnim, navigation]);
+  const fadeOut = useCallback(
+    (endCallback?: () => void) => {
+      const onEnd = () => {
+        navigation.goBack();
+        endCallback?.();
+      };
+      fadeAnim.value = withTiming(fullyClosed, timingOutAnimationConfig, () =>
+        runOnJS(onEnd)(),
+      );
+    },
+    [navigation, fullyClosed, fadeAnim],
+  );
 
   const onClickBackup = useCallback(() => {
     if (route.params.address) {
-      navigation.goBack();
-      navigation.navigate('backup', {
-        address: route.params.address,
+      fadeOut(() => {
+        navigation.navigate('backup', {
+          address: route.params.address,
+        });
       });
     }
-  }, [navigation, route]);
+  }, [navigation, route, fadeOut]);
+
+  useEffect(() => {
+    fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
+  }, [fadeAnim]);
 
   const onClickSkip = useCallback(() => {
     return Alert.alert(
@@ -71,30 +95,18 @@ export const BackupNotificationScreen = () => {
     );
   }, [app, fadeOut]);
 
+  const bgAnimation = useAnimatedStyle(() => ({
+    opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [0.5, 0]),
+  }));
+
+  const slideFromBottomAnimation = useAnimatedStyle(() => ({
+    transform: [{translateY: fadeAnim.value}],
+  }));
+
   return (
     <View style={page.container}>
-      <Animated.View
-        style={[
-          page.animateView,
-          {
-            opacity: Animated.multiply(fadeAnim, 0.5),
-          },
-        ]}
-      />
-      <Animated.View
-        style={[
-          page.animateViewFade,
-          {
-            transform: [
-              {
-                translateY: fadeAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [Dimensions.get('window').height, 0],
-                }),
-              },
-            ],
-          },
-        ]}>
+      <Animated.View style={[page.animateView, bgAnimation]} />
+      <Animated.View style={[page.animateViewFade, slideFromBottomAnimation]}>
         <View style={page.sub}>
           <Image
             source={warningImage}
