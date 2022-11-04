@@ -3,13 +3,13 @@ import {StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
-import {RootStackParamList} from '../types';
+import {BiometryType, RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
-  Container,
   FaceIdIcon,
   FingerprintIcon,
+  PopupContainer,
   Spacer,
   Text,
   TouchIdIcon,
@@ -21,7 +21,6 @@ import {
   TEXT_BASE_2,
   TEXT_RED_1,
 } from '../variables';
-import {BiometryType} from '../types';
 
 export const OnboardingBiometryScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -63,7 +62,7 @@ export const OnboardingBiometryScreen = () => {
   }, [biometryType]);
 
   return (
-    <Container>
+    <PopupContainer style={page.container}>
       <Spacer style={page.space}>
         {icon}
         <Text t4 style={page.title} testID="onboarding_biometry_title">
@@ -91,11 +90,12 @@ export const OnboardingBiometryScreen = () => {
         testID="onboarding_biometry_skip"
         onPress={onClickSkip}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  container: {marginHorizontal: 20},
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},

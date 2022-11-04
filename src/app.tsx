@@ -20,12 +20,9 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
-import {DetailsScreen} from './screens/details';
 import {CreateScreen} from './screens/create';
-import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
-import {SetPinScreen} from './screens/set-pin';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
@@ -184,12 +181,6 @@ export const App = () => {
 
                 <Stack.Group screenOptions={stackScreenOptions}>
                   <Stack.Screen name="backup" component={BackupScreen} />
-                  <Stack.Screen name="details" component={DetailsScreen} />
-                  <Stack.Screen
-                    name="importWallet"
-                    component={ImportWalletScreen}
-                  />
-                  <Stack.Screen name="setPin" component={SetPinScreen} />
                   <Stack.Screen name="signin" component={SignInScreen} />
                   <Stack.Screen name="signup" component={SignUpScreen} />
                   <Stack.Screen

@@ -2,17 +2,24 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Button, ButtonVariant, Container, Text} from '../components/ui';
+import {Button, ButtonVariant, Text} from '../components/ui';
 import {TEXT_BASE_2} from '../variables';
 import {RootStackParamList} from '../types';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
 export const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const insets = useSafeAreaInsets();
   return (
-    <Container testID="welcome">
-      <View style={page.container}>
+    <View
+      style={[
+        page.container,
+        {paddingTop: insets.top, paddingBottom: insets.bottom},
+      ]}
+      testID="welcome">
+      <View style={page.content}>
         <Image source={logoImage} style={page.imageStyle} />
         <Text t4 style={page.title}>
           No wallet is connected
@@ -43,12 +50,16 @@ export const WelcomeScreen = () => {
         title="I already have a wallet"
         onPress={() => navigation.navigate('signin', {next: 'restore'})}
       />
-    </Container>
+    </View>
   );
 };
 
 const page = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
+  content: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 4},
   button: {marginBottom: 16},
   textStyle: {textAlign: 'center', color: TEXT_BASE_2},
