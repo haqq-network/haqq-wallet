@@ -76,16 +76,14 @@ export const Button = ({
 
   const textStyle = useMemo(
     () => [
-      page.text,
       iconLeft && page.textIconLeft,
       iconRight && page.textIconRight,
       page[`${variant}Text`] ?? null,
-      page[`${size}Text`] ?? null,
       disabled && `${variant}DisabledText` in page
         ? page[`${variant}DisabledText`]
         : null,
     ],
-    [disabled, iconLeft, iconRight, size, variant],
+    [disabled, iconLeft, iconRight, variant],
   );
 
   return (
@@ -97,7 +95,10 @@ export const Button = ({
       {loading ? (
         <ActivityIndicator size="small" color={TEXT_BASE_3} />
       ) : (
-        <Text t9 style={textStyle}>
+        <Text
+          t9={size !== ButtonSize.small}
+          t12={size === ButtonSize.small}
+          style={textStyle}>
           {title}
         </Text>
       )}
@@ -111,16 +112,16 @@ const page = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 13, // originally 16 but for android 16 - 3
     paddingHorizontal: 28,
   },
   smallContainer: {
-    paddingVertical: 6,
+    paddingVertical: 3, // originally 6 but for android 6 - 3
     paddingHorizontal: 12,
     height: 34,
   },
   middleContainer: {
-    paddingVertical: 12,
+    paddingVertical: 9, // originally 12 but for android 12 - 3
     paddingHorizontal: 20,
     height: 46,
   },
@@ -141,31 +142,15 @@ const page = StyleSheet.create({
   secondContainer: {
     backgroundColor: BG_2,
     borderRadius: 12,
-    // height: 46,
   },
   secondDisabledContainer: {
     backgroundColor: GRAPHIC_SECOND_1,
-  },
-  text: {
-    fontStyle: 'normal',
-    fontSize: 18,
-    lineHeight: 24,
   },
   textIconRight: {
     marginRight: 8,
   },
   textIconLeft: {
     marginLeft: 8,
-  },
-  smallText: {
-    fontWeight: '700',
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  middleText: {
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 22,
   },
   containedText: {
     color: TEXT_BASE_3,
@@ -180,8 +165,6 @@ const page = StyleSheet.create({
   },
   secondText: {
     color: TEXT_GREEN_1,
-    // height: 32,
-    // top: 3,
   },
   secondDisabledText: {
     color: TEXT_SECOND_1,
