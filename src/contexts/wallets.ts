@@ -1,6 +1,5 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import {utils} from 'ethers';
 import {HDNode} from 'ethers/lib/utils';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
@@ -320,7 +319,7 @@ class Wallets extends EventEmitter {
 
   clean() {
     this._wallets = new Map();
-
+    this.emit('wallets');
     const wallets = realm.objects<WalletRealm>('Wallet');
 
     for (const wallet of wallets) {
@@ -350,11 +349,6 @@ class Wallets extends EventEmitter {
 
   get visible() {
     return Array.from(this._wallets.values()).filter(w => !w.isHidden);
-  }
-
-  async getBalance(address: string) {
-    const balance = await EthNetwork.network.getBalance(address);
-    return Number(utils.formatEther(balance));
   }
 
   get addressList(): string[] {
