@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
-import {Container} from '../components/ui';
+import {PopupContainer} from '../components/ui';
 
 export const TransactionAccountScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -37,11 +37,17 @@ export const TransactionAccountScreen = () => {
   }, [wallets]);
 
   return (
-    <Container>
+    <PopupContainer style={styles.container}>
       <FlatList
         data={rows}
         renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
       />
-    </Container>
+    </PopupContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
+});
