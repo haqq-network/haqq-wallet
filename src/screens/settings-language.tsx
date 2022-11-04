@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {CheckIcon, Container, DataContent, IconButton} from '../components/ui';
+import {
+  CheckIcon,
+  DataContent,
+  IconButton,
+  PopupContainer,
+} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {Language} from '../models/user';
 import {GRAPHIC_GREEN_1} from '../variables';
@@ -15,7 +20,7 @@ export const SettingsLanguageScreen = () => {
   };
 
   return (
-    <Container>
+    <PopupContainer style={page.container}>
       <IconButton
         style={page.button}
         onPress={() => {
@@ -36,11 +41,14 @@ export const SettingsLanguageScreen = () => {
           <CheckIcon color={GRAPHIC_GREEN_1} style={page.icon} />
         )}
       </IconButton>
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
   button: {
     paddingVertical: 16,
     flexDirection: 'row',

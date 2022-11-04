@@ -20,12 +20,9 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {HomeScreen} from './screens/home';
 import {wallets, WalletsContext} from './contexts/wallets';
-import {DetailsScreen} from './screens/details';
 import {CreateScreen} from './screens/create';
-import {ImportWalletScreen} from './screens/import-wallet';
 import {DetailsQrScreen} from './screens/details-qr';
 import {app, AppContext} from './contexts/app';
-import {SetPinScreen} from './screens/set-pin';
 import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
@@ -62,9 +59,8 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {AppState} from 'react-native';
+import {AppState, Linking} from 'react-native';
 import {hideModal, showModal} from './helpers/modal';
-import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -182,12 +178,6 @@ export const App = () => {
 
                 <Stack.Group screenOptions={{presentation: 'modal'}}>
                   <Stack.Screen name="backup" component={BackupScreen} />
-                  <Stack.Screen name="details" component={DetailsScreen} />
-                  <Stack.Screen
-                    name="importWallet"
-                    component={ImportWalletScreen}
-                  />
-                  <Stack.Screen name="setPin" component={SetPinScreen} />
                   <Stack.Screen name="signin" component={SignInScreen} />
                   <Stack.Screen name="signup" component={SignUpScreen} />
                   <Stack.Screen

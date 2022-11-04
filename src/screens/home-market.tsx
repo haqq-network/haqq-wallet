@@ -1,6 +1,6 @@
 import React from 'react';
-import {Container} from '../components/ui';
+import {View} from 'react-native';
 
 export const HomeMarketScreen = () => {
-  return <Container />;
+  return <View />;
 };

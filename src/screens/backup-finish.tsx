@@ -6,10 +6,10 @@ import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
-  Container,
+  LottieWrap,
+  PopupContainer,
   Spacer,
   Text,
-  LottieWrap,
 } from '../components/ui';
 
 const animationSize = Dimensions.get('window').width - 116;
@@ -17,7 +17,7 @@ const animationSize = Dimensions.get('window').width - 116;
 export const BackupFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
-    <Container>
+    <PopupContainer style={page.popupContainer}>
       <Spacer style={page.container}>
         <LottieWrap
           source={require('../../assets/animations/backup-success-animation.json')}
@@ -40,11 +40,12 @@ export const BackupFinishScreen = () => {
           navigation.getParent()?.goBack();
         }}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  popupContainer: {marginHorizontal: 20},
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40, textAlign: 'center'},
   title0: {textAlign: 'center'},
