@@ -1,24 +1,22 @@
 import React from 'react';
 import {SignUpAgreementScreen} from './signup-agreement';
-import {PopupHeader} from '../components/popup-header';
 import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {createStackNavigator} from '@react-navigation/stack';
-import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {ScreenOptionType} from '../types';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 
 const SignUpStack = createStackNavigator();
 
 const title = 'Create a wallet';
 const screenOptionsTitle: ScreenOptionType = {
   title,
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
+  ...hideBack,
 };
 
 export const CreateScreen = () => {
   return (
-    <SignUpStack.Navigator screenOptions={{header: PopupHeader}}>
+    <SignUpStack.Navigator screenOptions={popupScreenOptions}>
       <SignUpStack.Screen
         name="createAgreement"
         component={SignUpAgreementScreen}

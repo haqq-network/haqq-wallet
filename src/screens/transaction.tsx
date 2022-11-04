@@ -1,5 +1,4 @@
 import React from 'react';
-import {PopupHeader} from '../components/popup-header';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
 import {TransactionFinishScreen} from './transaction-finish';
@@ -12,7 +11,7 @@ import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
 import {RootStackParamList, ScreenOptionType} from '../types';
 import {TransactionLedgerScreen} from './transaction-ledger';
-import {hideBack} from '../helpers/screenOptions';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 
 const TransactionStack = createStackNavigator();
 
@@ -44,7 +43,7 @@ export const TransactionScreen = () => {
 
   return (
     <TransactionStack.Navigator
-      screenOptions={{header: PopupHeader}}
+      screenOptions={popupScreenOptions}
       initialRouteName={
         route.params.from || wallets.visible.length === 1
           ? 'transactionAddress'
