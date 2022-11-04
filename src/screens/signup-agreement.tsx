@@ -3,11 +3,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {CreateAgreement} from '../components/create-agreement';
-import {Dimensions} from 'react-native';
+// import {Dimensions} from 'react-native';
 
-const windowWidth = Dimensions.get('window').width;
+// const windowWidth = Dimensions.get('window').width;
 
-const animation = require('../../assets/animations/first-screen-animation.json');
+// const animation = require('../../assets/animations/first-screen-animation.json');
 
 export const SignUpAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

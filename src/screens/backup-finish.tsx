@@ -7,7 +7,6 @@ import {
   Button,
   ButtonVariant,
   LottieWrap,
-  PopupContainer,
   Spacer,
   Text,
 } from '../components/ui';

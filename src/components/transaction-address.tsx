@@ -8,7 +8,6 @@ import {
   CloseCircle,
   IconButton,
   KeyboardSafeArea,
-  PopupContainer,
   QRScanner,
   Spacer,
   TextField,
@@ -20,7 +19,6 @@ import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
 import {hideModal, showModal} from '../helpers/modal';
 import {isIOS} from '../helpers';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -147,7 +145,7 @@ const page = StyleSheet.create({
   scrollContent: {flexGrow: 1},
   placeholder: {
     position: 'absolute',
-    color: '#aaa',
+    color: '#aaaaaa',
     left: 37,
     bottom: isIOS ? 21 : 25,
   },
