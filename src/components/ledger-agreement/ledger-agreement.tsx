@@ -1,10 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Button, ButtonVariant, PopupContainer, Text} from '../ui';
+import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 // import {Terms} from '../ui/terms';
 import {getText, I18N} from '../../i18n';
+import {windowWidth} from '../../helpers';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
@@ -12,7 +13,7 @@ export type LedgerAgreementProps = {
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
   return (
-    <>
+    <PopupContainer style={page.container}>
       <View style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/ledger-agreement.json')}
@@ -21,22 +22,21 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
           loop
         />
       </View>
-      <PopupContainer style={page.container}>
-        <Text t4 style={page.title}>
-          {getText(I18N.ledgerAgreementTitle)}
-        </Text>
-        <Text t11 style={page.disclaimer}>
-          {getText(I18N.ledgerAgreementText)}
-        </Text>
-        <Button
-          style={page.submit}
-          variant={ButtonVariant.contained}
-          title={getText(I18N.ledgerAgreementAgree)}
-          onPress={onDone}
-        />
-        {/*<Terms style={page.agreement} />*/}
-      </PopupContainer>
-    </>
+      <Text t4 style={page.title}>
+        {getText(I18N.ledgerAgreementTitle)}
+      </Text>
+      <Text t11 style={page.disclaimer}>
+        {getText(I18N.ledgerAgreementText)}
+      </Text>
+      <Spacer />
+      <Button
+        style={page.submit}
+        variant={ButtonVariant.contained}
+        title={getText(I18N.ledgerAgreementAgree)}
+        onPress={onDone}
+      />
+      {/*<Terms style={page.agreement} />*/}
+    </PopupContainer>
   );
 };
 
@@ -45,13 +45,9 @@ const page = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animation: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 200,
-    top: 55,
     justifyContent: 'center',
     alignItems: 'center',
+    height: Math.min(windowWidth, 330),
   },
   title: {
     marginBottom: 4,
@@ -59,7 +55,7 @@ const page = StyleSheet.create({
     textAlign: 'center',
   },
   disclaimer: {
-    marginBottom: 84,
+    marginBottom: 20,
     textAlign: 'center',
     color: TEXT_BASE_2,
     marginHorizontal: 20,
@@ -69,5 +65,7 @@ const page = StyleSheet.create({
   //   marginHorizontal: 20,
   //   marginBottom: 16,
   // },
-  image: {height: 310},
+  image: {
+    height: Math.min(windowWidth, 330) - 20,
+  },
 });

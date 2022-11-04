@@ -6,15 +6,15 @@ import {AddressHeader} from '../components/address-header';
 import {
   Box,
   CloseCircle,
-  Container,
   IconButton,
-  Text,
   PenIcon,
   PlusIcon,
+  PopupContainer,
   QRScanner,
   SwipeableRow,
-  TrashIcon,
+  Text,
   TextField,
+  TrashIcon,
 } from '../components/ui';
 import {
   GRAPHIC_BASE_2,
@@ -30,6 +30,7 @@ import {useApp} from '../contexts/app';
 import prompt from 'react-native-prompt-android';
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
+import {hideModal, showModal} from '../helpers/modal';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
@@ -79,13 +80,13 @@ export const SettingsAddressBookScreen =
         if (utils.isAddress(value.trim())) {
           setSearch(value.trim());
           app.off('address', subscription);
-          app.emit('modal', null);
+          hideModal();
         }
       };
 
       app.on('address', subscription);
 
-      app.emit('modal', {type: 'qr'});
+      showModal('qr');
     }, [app]);
 
     const onPressClear = useCallback(() => {
@@ -162,7 +163,7 @@ export const SettingsAddressBookScreen =
     );
 
     return (
-      <Container style={page.container}>
+      <PopupContainer>
         <TextField
           label="Address"
           style={page.input}
@@ -219,15 +220,11 @@ export const SettingsAddressBookScreen =
           ListEmptyComponent={AddressEmpty}
           contentContainerStyle={page.grow}
         />
-      </Container>
+      </PopupContainer>
     );
   };
 
 const page = StyleSheet.create({
-  container: {
-    marginVertical: 0,
-    marginHorizontal: 0,
-  },
   input: {
     marginBottom: 12,
     marginHorizontal: 20,

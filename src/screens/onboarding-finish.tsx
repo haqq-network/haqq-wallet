@@ -5,6 +5,7 @@ import {RootStackParamList} from '../types';
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 import {Finish} from '../components/finish';
+import {hideModal} from '../helpers/modal';
 
 export const OnboardingFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -32,8 +33,8 @@ export const OnboardingFinishScreen = () => {
   }, [app, navigation, wallets]);
 
   useEffect(() => {
-    app.emit('modal', null);
-  }, [app]);
+    hideModal();
+  }, []);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };

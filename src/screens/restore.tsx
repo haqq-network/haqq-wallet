@@ -1,12 +1,11 @@
 import React from 'react';
-import {PopupHeader} from '../components/popup-header';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {SignInAgreementScreen} from './signin-agreement';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {createStackNavigator} from '@react-navigation/stack';
-import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {SigninStoreWalletScreen} from './signin-store-wallet';
 import {ScreenOptionType} from '../types';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 
 const SignInStack = createStackNavigator();
 
@@ -16,16 +15,12 @@ const title = 'Restore wallet';
 
 const screenOptionsTitle: ScreenOptionType = {
   title,
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
+  ...hideBack,
 };
 
 export const RestoreScreen = () => {
   return (
-    <SignInStack.Navigator
-      screenOptions={{
-        header: PopupHeader,
-      }}>
+    <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
         name="restoreAgreement"
         component={SignInAgreementScreen}

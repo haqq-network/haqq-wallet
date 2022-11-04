@@ -10,9 +10,9 @@ import {
   SplashModal,
   SplashModalProps,
 } from '../components/modals';
-import {useApp} from '../contexts/app';
+import {app} from '../contexts/app';
 import {QRModal, QRModalProps} from '../components/modals/qr';
-import {NoInternet} from '../components/modals/no-internet';
+import {NoInternet} from '../components/modals';
 
 type Loading = {
   type: 'loading';
@@ -41,21 +41,33 @@ export type ModalProps = {
 };
 
 export const Modals = ({initialModal = null}: ModalProps) => {
-  const app = useApp();
   const [modal, setModal] = useState<ModalState>(initialModal);
 
   useEffect(() => {
-    const subscription = (event: ModalState) => {
+    const showModal = (event: ModalState) => {
       setModal(event);
       console.log('modal', JSON.stringify(event));
     };
 
-    app.on('modal', subscription);
+    const hideModal = (event: {type: string | null}) => {
+      setModal((currentModal: ModalState) => {
+        if (!event.type || event.type === currentModal?.type) {
+          return null;
+        }
 
-    return () => {
-      app.off('modal', subscription);
+        return currentModal;
+      });
     };
-  }, [app]);
+
+    app.on('modal', showModal);
+    app.on('showModal', showModal);
+    app.on('hideModal', hideModal);
+    return () => {
+      app.off('modal', showModal);
+      app.off('showModal', showModal);
+      app.off('hideModal', hideModal);
+    };
+  }, []);
 
   const onClose = () => {
     setModal(null);

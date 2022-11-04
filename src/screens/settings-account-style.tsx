@@ -2,10 +2,10 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -14,13 +14,12 @@ import {
   ButtonSize,
   ButtonVariant,
   Card,
-  Container,
-  Text,
+  PopupContainer,
   SegmentedControl,
   Spacer,
+  Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
-import {WalletCardPattern, WalletCardStyle} from '../types';
 import {Wallet} from '../models/wallet';
 import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
 import {generateFlatColors, generateGradientColors} from '../utils';
@@ -143,7 +142,7 @@ export const SettingsAccountStyleScreen = () => {
   }, [cardStyle, colors, navigation, wallet, pattern]);
 
   return (
-    <Container>
+    <PopupContainer style={page.container}>
       <Animated.View style={animatedStyles}>
         <Card
           width={cardWidth}
@@ -188,11 +187,14 @@ export const SettingsAccountStyleScreen = () => {
         onPress={onPressApply}
         style={page.button}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
   card: {
     marginHorizontal: 16,
     marginBottom: 30,
