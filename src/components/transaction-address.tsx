@@ -17,6 +17,7 @@ import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
+import {hideModal, showModal} from '../helpers/modal';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -65,13 +66,13 @@ export const TransactionAddress = ({
       if (utils.isAddress(value.trim())) {
         setAddress(value.trim());
         app.off('address', subscription);
-        app.emit('modal', null);
+        hideModal();
       }
     };
 
     app.on('address', subscription);
 
-    app.emit('modal', {type: 'qr'});
+    showModal('qr');
   }, [app]);
 
   const onPressClear = useCallback(() => {

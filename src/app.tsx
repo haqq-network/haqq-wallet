@@ -63,7 +63,7 @@ import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {AppState} from 'react-native';
-import {hideModal, modal} from './helpers/modal';
+import {hideModal, showModal} from './helpers/modal';
 import {Linking} from 'react-native';
 
 const screenOptions: ScreenOptionType = {
@@ -97,7 +97,7 @@ export const navigator = createNavigationContainerRef<RootStackParamList>();
 
 export const App = () => {
   useEffect(() => {
-    app.emit('modal', {type: 'splash'});
+    showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => migration())
@@ -124,7 +124,7 @@ export const App = () => {
           });
         }
 
-        app.emit('modal', null);
+        hideModal();
 
         setInitialized(true);
         requestAnimationFrame(() => {
@@ -134,7 +134,7 @@ export const App = () => {
 
     app.on('resetWallet', () => {
       navigator.dispatch(StackActions.replace('welcome'));
-      app.emit('modal', null);
+      hideModal();
     });
   }, []);
 
@@ -143,7 +143,7 @@ export const App = () => {
   useEffect(() => {
     if (initialized) {
       const subscription = ({isConnected}: NetInfoState) => {
-        isConnected ? hideModal() : modal('no-internet');
+        isConnected ? hideModal('no-internet') : showModal('no-internet');
       };
 
       NetInfo.fetch().then(subscription);

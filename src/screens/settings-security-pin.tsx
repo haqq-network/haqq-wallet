@@ -5,6 +5,7 @@ import {RootStackParamList} from '../types';
 import {Pin, PinInterface} from '../components/pin';
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
+import {hideModal, showModal} from '../helpers/modal';
 
 export const SettingsSecurityPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -19,10 +20,10 @@ export const SettingsSecurityPinScreen = () => {
   const onPinRepeated = useCallback(
     async (repeatedPin: string) => {
       if (pin === repeatedPin) {
-        app.emit('modal', {type: 'loading'});
+        showModal('loading');
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
-        app.emit('modal', null);
+        hideModal();
         app.emit('notification', 'PIN code successfully changed');
         navigation.goBack();
       } else {

@@ -4,12 +4,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
-import {app} from '../contexts/app';
 import {utils} from 'ethers';
 import {MAIN_ACCOUNT_NAME} from '../variables';
 import {sleep} from '../utils';
-import {modal} from '../helpers/modal';
-import {captureException} from '../helpers/index';
+import {showModal} from '../helpers/modal';
+import {captureException} from '../helpers';
 
 export const SignupStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -18,7 +17,7 @@ export const SignupStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    app.emit('modal', {type: 'loading', text: 'Creating a wallet'});
+    showModal('loading', {text: 'Creating a wallet'});
   }, []);
 
   useEffect(() => {
@@ -41,12 +40,12 @@ export const SignupStoreWalletScreen = () => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              modal('error-account-added');
+              showModal('error-account-added');
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                modal('error-create-account');
+                showModal('error-create-account');
                 captureException(error, 'createStoreWallet');
                 navigation.getParent()?.goBack();
               }
