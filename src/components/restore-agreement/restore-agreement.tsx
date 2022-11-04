@@ -55,7 +55,6 @@ const page = StyleSheet.create({
   },
   animation: {
     height: Math.min(windowWidth, windowHeight * 0.355),
-    width: windowWidth,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -76,7 +75,6 @@ const page = StyleSheet.create({
   // },
   image: {
     height: Math.min(windowWidth, windowHeight * 0.355) - 20,
-    margin: 10,
     top: -10,
   },
 });
