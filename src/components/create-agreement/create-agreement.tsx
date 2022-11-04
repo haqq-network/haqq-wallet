@@ -50,7 +50,6 @@ const page = StyleSheet.create({
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: windowWidth,
     height: Math.min(windowWidth, windowHeight * 0.355),
   },
   title: {
@@ -65,9 +64,7 @@ const page = StyleSheet.create({
     marginBottom: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  image: {height: '100%', margin: 10, top: -10},
-  // agreement: {
-  //   marginHorizontal: 20,
-  //   marginBottom: 16,
-  // },
+  image: {
+    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
+  },
 });
