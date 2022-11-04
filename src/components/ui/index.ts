@@ -5,7 +5,6 @@ export * from './card';
 export * from './card-small';
 export * from './card-mask';
 export * from './checkbox';
-export * from './container';
 export * from './copy-button';
 export * from './data-content';
 export * from './data-content-splitted';

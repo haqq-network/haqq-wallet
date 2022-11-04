@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {
   AddressBookSettingsIcon,
-  Container,
   ISLMSettingsIcon,
   ProviderIcon,
   ShieldSettingsIcon,
@@ -14,7 +13,7 @@ import {GRAPHIC_BASE_1} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (
-    <Container>
+    <View style={page.container}>
       <SettingsButton
         icon={<WalletIcon color={GRAPHIC_BASE_1} />}
         title="Manage accounts"
@@ -66,10 +65,11 @@ export const HomeSettingsScreen = () => {
       {/*  title="Test"*/}
       {/*  next="settingsTest"*/}
       {/*/>*/}
-    </Container>
+    </View>
   );
 };
 
 const page = StyleSheet.create({
+  container: {marginHorizontal: 20},
   button: {marginBottom: 20},
 });

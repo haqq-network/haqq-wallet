@@ -1,12 +1,19 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
-import {Button, ButtonVariant, LottieWrap, PopupContainer, Text} from '../ui';
+import {
+  Button,
+  ButtonVariant,
+  LottieWrap,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '../ui';
 import {TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
 import {getText, I18N} from '../../i18n';
 import {Observable, Subscription} from 'rxjs';
-import {ratio, windowWidth} from '../../helpers';
+import {windowHeight, windowWidth} from '../../helpers';
 
 export type LedgerBluetooth = {
   user: User;
@@ -74,39 +81,38 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   }, [tryToInit]);
 
   return (
-    <>
+    <PopupContainer style={page.container}>
       <View style={page.animation}>
         <LottieWrap
           style={page.imageStyle}
-          source={require('../../../assets/animations/bluetooth.json')}
+          source={require('../../../assets/animations/ledger-bluetooth.json')}
           autoPlay
           loop
         />
       </View>
-      <PopupContainer style={page.container}>
-        <Text t4 style={page.title}>
-          {getText(
-            disabled.includes(btState)
-              ? I18N.ledgerBluetoothTitleDisabled
-              : I18N.ledgerBluetoothTitleUnknown,
-          )}
-        </Text>
-        <Text t11 style={page.disclaimer}>
-          {getText(
-            disabled.includes(btState)
-              ? I18N.ledgerBluetoothDescriptionDisabled
-              : I18N.ledgerBluetoothDescriptionUnknown,
-          )}
-        </Text>
-        <Button
-          disabled={disabled.includes(btState)}
-          style={page.submit}
-          variant={ButtonVariant.contained}
-          title={getText(I18N.ledgerBluetoothAllow)}
-          onPress={onPressAllow}
-        />
-      </PopupContainer>
-    </>
+      <Text t4 style={page.title}>
+        {getText(
+          disabled.includes(btState)
+            ? I18N.ledgerBluetoothTitleDisabled
+            : I18N.ledgerBluetoothTitleUnknown,
+        )}
+      </Text>
+      <Text t11 style={page.disclaimer}>
+        {getText(
+          disabled.includes(btState)
+            ? I18N.ledgerBluetoothDescriptionDisabled
+            : I18N.ledgerBluetoothDescriptionUnknown,
+        )}
+      </Text>
+      <Spacer />
+      <Button
+        disabled={disabled.includes(btState)}
+        style={page.submit}
+        variant={ButtonVariant.contained}
+        title={getText(I18N.ledgerBluetoothAllow)}
+        onPress={onPressAllow}
+      />
+    </PopupContainer>
   );
 };
 
@@ -115,11 +121,8 @@ const page = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animation: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: 200,
-    top: 55,
+    width: windowWidth,
+    height: Math.min(windowWidth * 0.8, windowHeight * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -129,15 +132,17 @@ const page = StyleSheet.create({
     textAlign: 'center',
   },
   disclaimer: {
-    marginBottom: 182,
     textAlign: 'center',
     color: TEXT_BASE_2,
     marginHorizontal: 20,
   },
-  submit: {marginBottom: 16, marginHorizontal: 20},
+  submit: {
+    marginBottom: 16,
+    marginHorizontal: 20,
+  },
   imageStyle: {
     width: windowWidth,
-    height: 362 * ratio,
-    alignSelf: 'center',
+    height: Math.min(windowWidth * 0.8, windowHeight * 0.355) - 20,
+    margin: 10,
   },
 });

@@ -9,9 +9,9 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
-  Container,
-  Text,
+  PopupContainer,
   Spacer,
+  Text,
 } from '../components/ui';
 import {
   BG_3,
@@ -60,7 +60,7 @@ export const BackupVerifyScreen = () => {
   }, [selected, wallet, words, navigation]);
 
   return (
-    <Container>
+    <PopupContainer style={page.container}>
       <Text t4 style={page.title}>
         Verify backup phrase
       </Text>
@@ -148,11 +148,14 @@ export const BackupVerifyScreen = () => {
         onPress={onDone}
         style={page.margin}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
+  container: {
+    marginHorizontal: 20,
+  },
   title: {marginTop: 20, marginBottom: 4, textAlign: 'center'},
   textStyle: {
     textAlign: 'center',
@@ -171,10 +174,12 @@ const page = StyleSheet.create({
     marginBottom: 28,
   },
   cell: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: (Dimensions.get('window').width - 56) / 2,
     height: 30,
     paddingHorizontal: 20,
-    paddingVertical: 6,
+    paddingVertical: 3,
     borderRadius: 8,
     marginHorizontal: 8,
     marginVertical: 4,
