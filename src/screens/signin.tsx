@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-import {PopupHeader} from '../components/popup-header';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
@@ -9,18 +8,19 @@ import {SignInAgreementScreen} from './signin-agreement';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {SigninStoreWalletScreen} from './signin-store-wallet';
 import {ScreenOptionType} from '../types';
+import {popupScreenOptions} from '../helpers/screenOptions';
 
 const SignInStack = createStackNavigator();
 
-const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
+const screenOptions: ScreenOptionType = {
+  title: '',
+  headerBackHidden: true,
+};
 
 export const SignInScreen = () => {
   const title = 'Restore wallet';
   return (
-    <SignInStack.Navigator
-      screenOptions={{
-        header: PopupHeader,
-      }}>
+    <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
         name="signinAgreement"
         component={SignInAgreementScreen}

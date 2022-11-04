@@ -47,7 +47,6 @@ const page = StyleSheet.create({
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: windowWidth,
     height: Math.min(windowWidth, 330),
   },
   title: {
@@ -66,5 +65,7 @@ const page = StyleSheet.create({
   //   marginHorizontal: 20,
   //   marginBottom: 16,
   // },
-  image: {height: Math.min(windowWidth, 330) - 20, margin: 10},
+  image: {
+    height: Math.min(windowWidth, 330) - 20,
+  },
 });
