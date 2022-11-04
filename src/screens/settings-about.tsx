@@ -19,7 +19,7 @@ import {
   TEXT_BASE_2,
 } from '../variables';
 
-import {openURL, ratio, windowWidth} from '../helpers';
+import {openURL, windowWidth} from '../helpers';
 import {getAppVersion, getBuildNumber} from '../services/version';
 
 export const SettingsAboutScreen = () => {
@@ -144,7 +144,9 @@ const page = StyleSheet.create({
   },
   imageStyle: {
     width: windowWidth,
-    height: 362 * ratio,
+    height: windowWidth * 0.9,
+    marginTop: -10,
+    marginBottom: -20,
     alignSelf: 'center',
   },
 });
