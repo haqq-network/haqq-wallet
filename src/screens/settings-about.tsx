@@ -146,6 +146,9 @@ const page = StyleSheet.create({
   },
   imageStyle: {
     width: windowWidth,
-    height: windowWidth * 0.8,
+    height: windowWidth * 0.9,
+    marginTop: -10,
+    marginBottom: -20,
+    alignSelf: 'center',
   },
 });
