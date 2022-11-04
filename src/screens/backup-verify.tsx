@@ -171,10 +171,12 @@ const page = StyleSheet.create({
     marginBottom: 28,
   },
   cell: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: (Dimensions.get('window').width - 56) / 2,
     height: 30,
     paddingHorizontal: 20,
-    paddingVertical: 6,
+    paddingVertical: 3,
     borderRadius: 8,
     marginHorizontal: 8,
     marginVertical: 4,
