@@ -7,6 +7,7 @@ import {useApp} from '../contexts/app';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../types';
+import {hideModal, showModal} from '../helpers/modal';
 
 export const QrScannerButton = () => {
   const app = useApp();
@@ -15,7 +16,7 @@ export const QrScannerButton = () => {
   const onPressQR = useCallback(() => {
     const subscription = (value: string) => {
       if (utils.isAddress(value.trim())) {
-        app.emit('modal', null);
+        hideModal();
 
         navigation.navigate('transaction', {
           to: value.trim(),
@@ -24,7 +25,7 @@ export const QrScannerButton = () => {
     };
 
     app.on('address', subscription);
-    app.emit('modal', {type: 'qr'});
+    showModal('qr');
   }, [app, navigation]);
 
   return (
