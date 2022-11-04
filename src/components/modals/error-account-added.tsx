@@ -1,14 +1,14 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 import {windowWidth} from '../../helpers';
-import {app} from '../../contexts/app';
+import {hideModal} from '../../helpers/modal';
 
 export const ErrorAccountAdded = () => {
   const onPress = () => {
-    app.emit('modal', null);
+    hideModal();
   };
   return (
     <View style={page.container}>
