@@ -61,8 +61,11 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
-          await Transaction.createTransaction(transaction, user.providerId);
-          console.log('transaction', transaction);
+          await Transaction.createTransaction(
+            transaction,
+            user.providerId,
+            estimateFee,
+          );
 
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,

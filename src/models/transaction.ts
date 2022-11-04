@@ -75,12 +75,8 @@ export class Transaction extends Realm.Object {
   static createTransaction(
     transaction: TransactionResponse,
     providerId: string,
+    fee: number = 0,
   ) {
-    console.log(
-      'createTransaction',
-      transaction,
-      utils.formatEther(transaction.value),
-    );
     realm.write(() => {
       realm.create('Transaction', {
         hash: transaction.hash,
@@ -90,7 +86,7 @@ export class Transaction extends Realm.Object {
         from: transaction.from,
         to: transaction.to,
         value: parseFloat(utils.formatEther(transaction.value)),
-        fee: 0,
+        fee: fee,
         confirmed: false,
         providerId,
       });
