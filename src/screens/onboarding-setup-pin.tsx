@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container, Text, Spacer} from '../components/ui';
+import {PopupContainer, Spacer, Text} from '../components/ui';
 import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {vibrate} from '../services/haptic';
 
@@ -33,7 +33,7 @@ export const OnboardingSetupPinScreen = () => {
   }, [navigation, pin, route]);
 
   return (
-    <Container style={page.container} testID="onboarding-setup-pin">
+    <PopupContainer style={page.container} testID="onboarding-setup-pin">
       <Text t4 style={page.title}>
         Set 6-digital pin code
       </Text>
@@ -52,12 +52,17 @@ export const OnboardingSetupPinScreen = () => {
         </View>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center', marginTop: 40, paddingBottom: 16},
+  container: {
+    alignItems: 'center',
+    marginTop: 40,
+    paddingBottom: 16,
+    marginHorizontal: 20,
+  },
   title: {marginBottom: 12},
   description: {textAlign: 'center', color: TEXT_BASE_2},
   spacer: {justifyContent: 'center', alignItems: 'center'},

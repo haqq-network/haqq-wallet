@@ -6,15 +6,15 @@ import {AddressHeader} from '../components/address-header';
 import {
   Box,
   CloseCircle,
-  Container,
   IconButton,
-  Text,
   PenIcon,
   PlusIcon,
+  PopupContainer,
   QRScanner,
   SwipeableRow,
-  TrashIcon,
+  Text,
   TextField,
+  TrashIcon,
 } from '../components/ui';
 import {
   GRAPHIC_BASE_2,
@@ -163,7 +163,7 @@ export const SettingsAddressBookScreen =
     );
 
     return (
-      <Container style={page.container}>
+      <PopupContainer>
         <TextField
           label="Address"
           style={page.input}
@@ -220,15 +220,11 @@ export const SettingsAddressBookScreen =
           ListEmptyComponent={AddressEmpty}
           contentContainerStyle={page.grow}
         />
-      </Container>
+      </PopupContainer>
     );
   };
 
 const page = StyleSheet.create({
-  container: {
-    marginVertical: 0,
-    marginHorizontal: 0,
-  },
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
