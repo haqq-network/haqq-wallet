@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
   BG_1,
   GRAPHIC_BASE_1,
@@ -7,18 +7,18 @@ import {
   GRAPHIC_SECOND_4,
 } from '../../variables';
 import {
-  ErrorCreateAccountIcon,
   Button,
   ButtonSize,
   ButtonVariant,
+  ErrorCreateAccountIcon,
   Text,
 } from '../ui';
 import {windowWidth} from '../../helpers';
-import {app} from '../../contexts/app';
+import {hideModal} from '../../helpers/modal';
 
 export const ErrorCreateAccount = () => {
   const onPress = () => {
-    app.emit('modal', null);
+    hideModal();
   };
   return (
     <View style={page.container}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Container} from '../components/ui';
+import {PopupContainer} from '../components/ui';
 
 export const SettingsFAQScreen = () => {
-  return <Container />;
+  return <PopupContainer />;
 };

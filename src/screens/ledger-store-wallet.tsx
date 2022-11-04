@@ -4,9 +4,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {useWallets} from '../contexts/wallets';
-import {app} from '../contexts/app';
 import {sleep} from '../utils';
-import {modal} from '../helpers/modal';
+import {showModal} from '../helpers/modal';
 import {captureException} from '../helpers';
 
 export const LedgerStoreWalletScreen = () => {
@@ -15,7 +14,7 @@ export const LedgerStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    app.emit('modal', {type: 'loading', text: 'Wallet saving in progress'});
+    showModal('loading', {text: 'Wallet saving in progress'});
   }, []);
 
   useEffect(() => {
@@ -40,12 +39,12 @@ export const LedgerStoreWalletScreen = () => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              modal('error-account-added');
+              showModal('error-account-added');
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                modal('error-create-account');
+                showModal('error-create-account');
                 captureException(error, 'ledgerStore');
                 navigation.getParent()?.goBack();
               }
