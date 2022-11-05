@@ -146,6 +146,7 @@ export const SettingsAccountStyleScreen = () => {
       <Animated.View style={animatedStyles}>
         <Card
           width={cardWidth}
+          height={192}
           pattern={pattern}
           colorFrom={colors[0]}
           colorTo={colors[1]}
