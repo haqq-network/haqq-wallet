@@ -22,6 +22,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   interpolate,
+  Easing,
 } from 'react-native-reanimated';
 import {
   Gesture,
@@ -99,7 +100,7 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       destSnapPoint,
       {
-        duration: 500,
+        duration: 250,
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
@@ -152,7 +153,8 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       closedSnapPoint,
       {
-        duration: 500,
+        duration: 250,
+        easing: Easing.out(Easing.exp),
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -161,7 +163,8 @@ export const BottomSheet = ({
   const onOpenPopup = useCallback(() => {
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-      duration: 500,
+      duration: 250,
+      easing: Easing.in(Easing.exp),
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
