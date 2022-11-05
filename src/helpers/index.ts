@@ -38,6 +38,7 @@ export const openURL = async (url: string) => {
 };
 
 export const windowWidth = Dimensions.get('window').width;
+export const windowHeight = Dimensions.get('window').height;
 export const ratio = windowWidth / 541;
 
 export const isIOS = Platform.OS === 'ios';

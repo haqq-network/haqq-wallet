@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import {useContacts} from '../contexts/contacts';
-import {useWallets} from '../contexts/wallets';
 import {cleanNumber, isNumber, shortAddress} from '../utils';
 import {
   Button,
@@ -35,7 +34,6 @@ export const TransactionSum = ({
   onContact,
 }: TransactionSumProps) => {
   const contacts = useContacts();
-  const wallets = useWallets();
   const [amount, setAmount] = useState('');
   const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
@@ -50,12 +48,12 @@ export const TransactionSum = ({
   );
 
   const getBalance = useCallback(async () => {
-    const newBalance = await wallets.getBalance(from);
+    const newBalance = await EthNetwork.getBalance(from);
     setBalance(newBalance);
 
     const {fee} = await EthNetwork.estimateTransaction(from, to, newBalance);
     setMaxSum(newBalance - fee * 2);
-  }, [from, to, wallets]);
+  }, [from, to]);
 
   useEffect(() => {
     getBalance();

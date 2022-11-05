@@ -321,7 +321,7 @@ class Wallets extends EventEmitter {
 
   clean() {
     this._wallets = new Map();
-
+    this.emit('wallets');
     const wallets = realm.objects<WalletRealm>('Wallet');
 
     for (const wallet of wallets) {
@@ -351,11 +351,6 @@ class Wallets extends EventEmitter {
 
   get visible() {
     return Array.from(this._wallets.values()).filter(w => !w.isHidden);
-  }
-
-  async getBalance(address: string) {
-    const balance = await EthNetwork.network.getBalance(address);
-    return Number(utils.formatEther(balance));
   }
 
   get addressList(): string[] {

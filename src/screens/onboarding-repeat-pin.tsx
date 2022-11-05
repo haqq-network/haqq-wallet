@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {Container, Text, Spacer} from '../components/ui';
+import {PopupContainer, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {
   GRAPHIC_BASE_4,
@@ -57,7 +57,7 @@ export const OnboardingRepeatPinScreen = () => {
   }, [pin, currentPin, app, navigation, route]);
 
   return (
-    <Container style={page.container}>
+    <PopupContainer style={page.container}>
       <Text t4>Please repeat pin code</Text>
       <Text t11 style={page.t11}>
         For security, we don't have a “Restore pin” button.
@@ -76,12 +76,17 @@ export const OnboardingRepeatPinScreen = () => {
         </Text>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
-    </Container>
+    </PopupContainer>
   );
 };
 
 const page = StyleSheet.create({
-  container: {alignItems: 'center', marginTop: 40, paddingBottom: 16},
+  container: {
+    alignItems: 'center',
+    marginTop: 40,
+    paddingBottom: 16,
+    marginHorizontal: 20,
+  },
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',

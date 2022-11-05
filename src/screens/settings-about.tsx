@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   ArrowForwardIcon,
@@ -7,9 +7,9 @@ import {
   DocIcon,
   GlobalIcon,
   IconButton,
-  Text,
-  Spacer,
   LottieWrap,
+  Spacer,
+  Text,
 } from '../components/ui';
 import {
   BG_3,
@@ -19,7 +19,7 @@ import {
   TEXT_BASE_2,
 } from '../variables';
 
-import {openURL, ratio, windowWidth} from '../helpers';
+import {openURL, windowWidth} from '../helpers';
 import {getAppVersion, getBuildNumber} from '../services/version';
 
 export const SettingsAboutScreen = () => {
@@ -47,11 +47,9 @@ export const SettingsAboutScreen = () => {
 
   return (
     <ScrollView
-      style={[
-        page.container,
-        {paddingTop: insets.top - 50, paddingBottom: insets.bottom},
-      ]}>
-      <Spacer>
+      style={{paddingBottom: insets.bottom}}
+      contentContainerStyle={page.content}>
+      <Spacer style={page.animation}>
         <LottieWrap
           style={page.imageStyle}
           source={require('../../assets/animations/first-screen-animation.json')}
@@ -115,9 +113,9 @@ export const SettingsAboutScreen = () => {
 };
 
 const page = StyleSheet.create({
-  container: {
-    flex: 1,
+  content: {
     marginHorizontal: 20,
+    flexGrow: 1,
   },
   title: {
     marginBottom: 8,
@@ -142,9 +140,15 @@ const page = StyleSheet.create({
     color: TEXT_BASE_1,
     marginBottom: 10,
   },
+  animation: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   imageStyle: {
     width: windowWidth,
-    height: 362 * ratio,
+    height: windowWidth * 0.9,
+    marginTop: -10,
+    marginBottom: -20,
     alignSelf: 'center',
   },
 });

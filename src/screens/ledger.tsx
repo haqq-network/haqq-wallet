@@ -1,7 +1,5 @@
 import React from 'react';
-import {PopupHeader} from '../components/popup-header';
 import {createStackNavigator} from '@react-navigation/stack';
-import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {ScreenOptionType} from '../types';
 import {LedgerAgreementScreen} from './ledger-agreement';
 import {LedgerFinishScreen} from './ledger-finish';
@@ -9,7 +7,7 @@ import {LedgerBluetoothScreen} from './ledger-bluetooth';
 import {LedgerScanScreen} from './ledger-scan';
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerVerifyScreen} from './ledger-verify';
-import {hideBack} from '../helpers/screenOptions';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 import {useUser} from '../contexts/app';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
@@ -22,8 +20,7 @@ const title = 'Connect Ledger';
 
 const screenOptionsTitle: ScreenOptionType = {
   title,
-  headerBackHidden: true,
-  headerRight: DismissPopupButton,
+  ...hideBack,
 };
 
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
@@ -32,10 +29,7 @@ export const LedgerScreen = () => {
   const user = useUser();
 
   return (
-    <LedgerStack.Navigator
-      screenOptions={{
-        header: PopupHeader,
-      }}>
+    <LedgerStack.Navigator screenOptions={popupScreenOptions}>
       <LedgerStack.Screen
         name="ledgerAgreement"
         component={LedgerAgreementScreen}

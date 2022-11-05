@@ -1,4 +1,11 @@
-import {Button, ButtonVariant, Container, LottieWrap, Spacer, Text} from './ui';
+import {
+  Button,
+  ButtonVariant,
+  LottieWrap,
+  PopupContainer,
+  Spacer,
+  Text,
+} from './ui';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
@@ -10,7 +17,7 @@ export type FinishProps = {
 
 export const Finish = ({title, onFinish, testID}: FinishProps) => {
   return (
-    <Container>
+    <PopupContainer>
       <Spacer>
         <LottieWrap
           source={require('../../assets/animations/success-animation.json')}
@@ -28,7 +35,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
         testID={`${testID}_finish`}
         onPress={onFinish}
       />
-    </Container>
+    </PopupContainer>
   );
 };
 
@@ -38,6 +45,10 @@ const page = StyleSheet.create({
     textAlign: 'center',
     width: 300,
     alignSelf: 'center',
+    marginHorizontal: 20,
   },
-  button: {marginBottom: 16},
+  button: {
+    marginBottom: 16,
+    marginHorizontal: 20,
+  },
 });
