@@ -9,7 +9,7 @@ import {
   WalletIcon,
 } from '../components/ui';
 import {SettingsButton} from '../components/settings-button';
-import {GRAPHIC_BASE_1} from '../variables';
+import {GRAPHIC_BASE_1, HR_GRAY} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (
@@ -73,7 +73,7 @@ const page = StyleSheet.create({
   container: {marginHorizontal: 20},
   button: {marginBottom: 20},
   hr: {
-    borderColor: '#cccccc',
+    borderColor: HR_GRAY,
     borderBottomWidth: 1,
   },
 });

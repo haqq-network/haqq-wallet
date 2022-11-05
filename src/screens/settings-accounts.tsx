@@ -36,7 +36,7 @@ export const SettingsAccountsScreen = () => {
     [navigation],
   );
 
-  if (!rows.length)
+  if (!rows.length) {
     return (
       <View style={page.emptyContainer}>
         <NoTransactionsIcon color={GRAPHIC_SECOND_3} style={page.space} />
@@ -45,6 +45,7 @@ export const SettingsAccountsScreen = () => {
         </Text>
       </View>
     );
+  }
 
   return (
     <FlatList

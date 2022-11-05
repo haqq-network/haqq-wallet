@@ -12,7 +12,7 @@ import {
   Spacer,
   TextField,
 } from './ui';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
+import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, PLACEHOLDER_GRAY} from '../variables';
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
@@ -145,7 +145,7 @@ const page = StyleSheet.create({
   scrollContent: {flexGrow: 1},
   placeholder: {
     position: 'absolute',
-    color: '#aaaaaa',
+    color: PLACEHOLDER_GRAY,
     left: 37,
     bottom: isIOS ? 21 : 25,
   },
