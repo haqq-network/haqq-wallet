@@ -49,8 +49,12 @@ export const DetailsQrScreen = () => {
     Share.share({message: address});
   };
 
+  const onCloseBottomSheet = () => {
+    navigation.canGoBack() && navigation.goBack();
+  };
+
   return (
-    <BottomSheet onClose={navigation.goBack} title="Receive">
+    <BottomSheet onClose={onCloseBottomSheet} title="Receive">
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.info}

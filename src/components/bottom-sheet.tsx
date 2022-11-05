@@ -34,7 +34,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 export type BottomSheetProps = {
   children: React.ReactNode;
   title?: string;
-  onClose: () => void;
+  onClose?: () => void;
   closeDistance?: number;
   scrollable?: boolean;
 };
@@ -103,7 +103,7 @@ export const BottomSheet = ({
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
-          runOnJS(onClose)();
+          onClose && runOnJS(onClose)();
         }
       },
     );
@@ -154,7 +154,7 @@ export const BottomSheet = ({
       {
         duration: 500,
       },
-      () => runOnJS(onClose)(),
+      () => onClose && runOnJS(onClose)(),
     );
   }, [bottomSheetTranslateY, closedSnapPoint, onClose, toLight]);
 

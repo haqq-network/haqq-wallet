@@ -65,8 +65,12 @@ export const TransactionDetailScreen = () => {
     return null;
   }
 
+  const onCloseBottomSheet = () => {
+    navigation.canGoBack() && navigation.goBack();
+  };
+
   return (
-    <BottomSheet onClose={navigation.goBack} title={title}>
+    <BottomSheet onClose={onCloseBottomSheet} title={title}>
       <Text t14 style={page.amount}>
         Total amount
       </Text>
