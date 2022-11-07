@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {BG_1, PIN_BANNED_ATTEMPTS, TEXT_BASE_2} from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';
@@ -42,37 +42,30 @@ export const PinModal = () => {
   );
 
   return (
-    <ScrollView
-      contentContainerStyle={page.scrollContent}
-      showsVerticalScrollIndicator={false}>
-      <View style={page.container}>
-        <Pin
-          ref={pinRef}
-          title="Welcome to ISLM Wallet"
-          onPin={onPin}
-          additionButton={
-            <TouchableOpacity
-              style={page.additionButton}
-              onPress={() => setShowRestore(true)}>
-              <Text clean style={page.additionButtonText}>
-                Forgot
-              </Text>
-              <Text clean style={page.additionButtonText}>
-                the code
-              </Text>
-            </TouchableOpacity>
-          }
-        />
-        {showRestore && (
-          <RestorePassword onClose={() => setShowRestore(false)} />
-        )}
-      </View>
-    </ScrollView>
+    <View style={page.container}>
+      <Pin
+        ref={pinRef}
+        title="Welcome to ISLM Wallet"
+        onPin={onPin}
+        additionButton={
+          <TouchableOpacity
+            style={page.additionButton}
+            onPress={() => setShowRestore(true)}>
+            <Text clean style={page.additionButtonText}>
+              Forgot
+            </Text>
+            <Text clean style={page.additionButtonText}>
+              the code
+            </Text>
+          </TouchableOpacity>
+        }
+      />
+      {showRestore && <RestorePassword onClose={() => setShowRestore(false)} />}
+    </View>
   );
 };
 
 const page = StyleSheet.create({
-  scrollContent: {flexGrow: 1},
   container: {backgroundColor: BG_1, flex: 1, paddingTop: 110},
   additionButton: {
     flex: 1,

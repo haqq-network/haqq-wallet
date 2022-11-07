@@ -15,7 +15,7 @@ interface PopupContainerProps {
 export const PopupContainer = ({
   children,
   style,
-  scrollEnabled,
+  scrollEnabled = true,
   ...props
 }: ViewProps & PopupContainerProps) => {
   const insets = useSafeAreaInsets();

@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -9,6 +9,7 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
+  PopupContainer,
   Spacer,
   Text,
 } from '../components/ui';
@@ -59,9 +60,7 @@ export const BackupVerifyScreen = () => {
   }, [selected, wallet, words, navigation]);
 
   return (
-    <ScrollView
-      contentContainerStyle={page.container}
-      showsVerticalScrollIndicator={false}>
+    <PopupContainer style={page.container}>
       <Text t4 style={page.title}>
         Verify backup phrase
       </Text>
@@ -149,7 +148,7 @@ export const BackupVerifyScreen = () => {
         onPress={onDone}
         style={page.margin}
       />
-    </ScrollView>
+    </PopupContainer>
   );
 };
 

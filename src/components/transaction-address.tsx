@@ -13,7 +13,7 @@ import {
   TextField,
 } from './ui';
 import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, PLACEHOLDER_GRAY} from '../variables';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
@@ -85,64 +85,61 @@ export const TransactionAddress = ({
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={page.scrollContent} scrollEnabled>
-      <KeyboardSafeArea>
-        <View>
-          <TextField
-            onFocus={handleFocusInput}
-            onBlur={handleBlurInput}
-            label="Send to"
-            style={page.input}
-            value={address}
-            onChangeText={setAddress}
-            error={error}
-            errorText="Incorrect address"
-            autoFocus
-            multiline
-            rightAction={
-              address === '' ? (
-                <IconButton onPress={onPressQR}>
-                  <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
-                </IconButton>
-              ) : (
-                <IconButton onPress={onPressClear}>
-                  <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
-                </IconButton>
-              )
-            }
-          />
-          {!address && inputIsFocused ? (
-            <Text style={page.placeholder}>Enter Address or contact name</Text>
-          ) : null}
-        </View>
-
-        <Spacer>
-          {contactsList.length ? (
-            <FlatList
-              keyboardShouldPersistTaps="always"
-              data={contactsList}
-              renderItem={({item}) => (
-                <AddressRow item={item} onPress={setAddress} />
-              )}
-              ListHeaderComponent={AddressHeader}
-            />
-          ) : null}
-        </Spacer>
-
-        <Button
-          disabled={!checked}
-          variant={ButtonVariant.contained}
-          title="Continue"
-          onPress={onDone}
-          style={page.button}
+    <KeyboardSafeArea>
+      <View>
+        <TextField
+          onFocus={handleFocusInput}
+          onBlur={handleBlurInput}
+          label="Send to"
+          style={page.input}
+          value={address}
+          onChangeText={setAddress}
+          error={error}
+          errorText="Incorrect address"
+          autoFocus
+          multiline
+          rightAction={
+            address === '' ? (
+              <IconButton onPress={onPressQR}>
+                <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
+              </IconButton>
+            ) : (
+              <IconButton onPress={onPressClear}>
+                <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
+              </IconButton>
+            )
+          }
         />
-      </KeyboardSafeArea>
-    </ScrollView>
+        {!address && inputIsFocused ? (
+          <Text style={page.placeholder}>Enter Address or contact name</Text>
+        ) : null}
+      </View>
+
+      <Spacer>
+        {contactsList.length ? (
+          <FlatList
+            keyboardShouldPersistTaps="always"
+            data={contactsList}
+            renderItem={({item}) => (
+              <AddressRow item={item} onPress={setAddress} />
+            )}
+            ListHeaderComponent={AddressHeader}
+          />
+        ) : null}
+      </Spacer>
+
+      <Button
+        disabled={!checked}
+        variant={ButtonVariant.contained}
+        title="Continue"
+        onPress={onDone}
+        style={page.button}
+      />
+    </KeyboardSafeArea>
   );
 };
 
 const page = StyleSheet.create({
-  scrollContent: {flexGrow: 1},
   placeholder: {
     position: 'absolute',
     color: PLACEHOLDER_GRAY,

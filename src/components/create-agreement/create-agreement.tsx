@@ -15,7 +15,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
-    <PopupContainer style={page.container} testID={testID} scrollEnabled>
+    <PopupContainer style={page.container} testID={testID}>
       <View pointerEvents="none" style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/first-screen-animation.json')}

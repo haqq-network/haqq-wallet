@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, ScrollView, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -7,6 +7,7 @@ import {
   Button,
   ButtonVariant,
   LottieWrap,
+  PopupContainer,
   Spacer,
   Text,
 } from '../components/ui';
@@ -16,9 +17,7 @@ const animationSize = Dimensions.get('window').width - 116;
 export const BackupFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
-    <ScrollView
-      style={page.popupContainer}
-      showsVerticalScrollIndicator={false}>
+    <PopupContainer style={page.popupContainer}>
       <Spacer style={page.container}>
         <LottieWrap
           source={require('../../assets/animations/backup-success-animation.json')}
@@ -41,7 +40,7 @@ export const BackupFinishScreen = () => {
           navigation.getParent()?.goBack();
         }}
       />
-    </ScrollView>
+    </PopupContainer>
   );
 };
 
