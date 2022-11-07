@@ -12,6 +12,7 @@ import {TransactionSumAddressScreen} from './transaction-sum-address';
 import {RootStackParamList, ScreenOptionType} from '../types';
 import {TransactionLedgerScreen} from './transaction-ledger';
 import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {EditContactScreen} from './edit-contact';
 
 const TransactionStack = createStackNavigator();
 
@@ -29,6 +30,10 @@ const screenOptionsAddress: ScreenOptionType = {
 const screenOptionsSendFunds: ScreenOptionType = {
   title: 'Send funds from',
   ...hideBack,
+};
+
+const screenOptionsEditContact: ScreenOptionType = {
+  title: 'Edit Contact',
 };
 
 export const TransactionScreen = () => {
@@ -85,6 +90,11 @@ export const TransactionScreen = () => {
         name="transactionSumAddress"
         component={TransactionSumAddressScreen}
         options={screenOptionsAddress}
+      />
+      <TransactionStack.Screen
+        name="transactionEditContact"
+        component={EditContactScreen}
+        options={screenOptionsEditContact}
       />
     </TransactionStack.Navigator>
   );

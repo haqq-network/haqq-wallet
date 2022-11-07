@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useContacts} from '../contexts/contacts';
-import {Alert, FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from '../components/address-row';
 import {AddressHeader} from '../components/address-header';
 import {
@@ -27,43 +26,31 @@ import {
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
-import prompt from 'react-native-prompt-android';
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
 import {hideModal, showModal} from '../helpers/modal';
+import {useAddressBookItemActions} from '../hooks/useAddressBookItemActions';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
 export const SettingsAddressBookScreen =
   ({}: SettingsAddressBookScreenProps) => {
     const app = useApp();
-    const contacts = useContacts();
+    const {contactsList, onPressEdit, onPressRemove, navigation, contacts} =
+      useAddressBookItemActions(true);
+
     const [search, setSearch] = useState('');
     const [canAdd, setCanAdd] = useState(false);
 
-    const [rows, setRows] = useState(contacts.getContacts());
-
-    useEffect(() => {
-      const callback = () => {
-        setRows(contacts.getContacts());
-      };
-
-      contacts.on('contacts', callback);
-
-      return () => {
-        contacts.off('contacts', callback);
-      };
-    }, [contacts]);
-
-    const contactsList = useMemo(
+    const contactsFilteredList = useMemo(
       () =>
-        rows.filter(
+        contactsList.filter(
           (contact: Contact) =>
             !!`${contact.account} ${contact.name}`
               .toLowerCase()
               .match(search.toLowerCase()),
         ),
-      [rows, search],
+      [contactsList, search],
     );
 
     useEffect(() => {
@@ -94,73 +81,13 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
-      prompt(
-        'Add contact',
-        `Address: ${search}`,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Add',
-            onPress: value => {
-              contacts.createContact(search.trim(), value);
-              setSearch('');
-            },
-          },
-        ],
-        {
-          placeholder: 'Contact name',
-        },
-      );
-    }, [contacts, search]);
-
-    const onPressEdit = useCallback(
-      (item: Contact) => {
-        prompt(
-          'Edit contact',
-          `Address: ${item.account}`,
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Save',
-              onPress: value => {
-                contacts.updateContact(item.account, value);
-              },
-            },
-          ],
-          {
-            defaultValue: item?.name ?? '',
-            placeholder: 'Contact name',
-          },
-        );
-      },
-      [contacts],
-    );
-
-    const onPressRemove = useCallback(
-      (item: Contact) => {
-        Alert.alert(
-          'Delete Contact',
-          'Are you sure you want to delete the selected contact?',
-          [
-            {text: 'Cancel', style: 'cancel'},
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: () => {
-                contacts.removeContact(item.account);
-              },
-            },
-          ],
-        );
-      },
-      [contacts],
-    );
+      navigation.navigate('editContact', {
+        name: '',
+        address: search.trim(),
+        isCreate: true,
+      });
+      setSearch('');
+    }, [navigation, search]);
 
     return (
       <PopupContainer>
@@ -195,7 +122,7 @@ export const SettingsAddressBookScreen =
         )}
         <FlatList
           // scrollEnabled={false}
-          data={contactsList}
+          data={contactsFilteredList}
           renderItem={({item}) => (
             <SwipeableRow
               item={item}

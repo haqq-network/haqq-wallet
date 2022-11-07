@@ -45,6 +45,7 @@ import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {TransactionDetailScreen} from './screens/transaction-detail';
+import {EditAccountNameScreen} from './screens/edit-account-name';
 import {RestoreScreen} from './screens/restore';
 import {sleep} from './utils';
 import {SettingsTestScreen} from './screens/settings-test';
@@ -62,6 +63,7 @@ import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {AppState, Linking} from 'react-native';
 import {hideModal, showModal} from './helpers/modal';
+import {EditContactScreen} from './screens/edit-contact';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -289,6 +291,20 @@ export const App = () => {
                     component={SettingsTestScreen}
                     options={{
                       title: 'Test',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="editAccountName"
+                    component={EditAccountNameScreen}
+                    options={{
+                      title: 'Edit account name',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="editContact"
+                    component={EditContactScreen}
+                    options={{
+                      title: 'Edit Contact',
                     }}
                   />
                 </Stack.Group>

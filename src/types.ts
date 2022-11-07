@@ -174,6 +174,10 @@ export type RootStackParamList = {
     from: string;
     to?: string;
   };
+  transactionEditContact: {
+    name: string;
+    address: string;
+  };
   ledgerAgreement: undefined;
   ledgerBluetooth: undefined;
   ledgerScan: undefined;
@@ -190,6 +194,12 @@ export type RootStackParamList = {
     address: string;
     deviceId: string;
     deviceName: string;
+  };
+  editAccountName: {address: string};
+  editContact: {
+    name: string;
+    address: string;
+    isCreate?: boolean;
   };
 };
 

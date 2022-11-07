@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import prompt from 'react-native-prompt-android';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -31,29 +30,8 @@ export const SettingsAccountDetailScreen = () => {
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {
-    prompt(
-      'Edit account name',
-      '',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Save',
-          onPress: n => {
-            if (wallet) {
-              wallet.name = n;
-            }
-          },
-        },
-      ],
-      {
-        cancelable: false,
-        defaultValue: wallet?.name,
-      },
-    );
-  }, [wallet]);
+    navigation.navigate('editAccountName', route.params);
+  }, [navigation, route.params]);
 
   const onPressStyle = useCallback(() => {
     navigation.navigate('settingsAccountStyle', {

@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
 import {utils} from 'ethers';
 import {
   Button,
@@ -8,16 +7,26 @@ import {
   CloseCircle,
   IconButton,
   KeyboardSafeArea,
+  PenIcon,
   QRScanner,
   Spacer,
+  SwipeableRow,
   TextField,
+  TrashIcon,
 } from './ui';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
+import {
+  GRAPHIC_BASE_2,
+  GRAPHIC_BASE_3,
+  GRAPHIC_GREEN_1,
+  GRAPHIC_RED_1,
+  GRAPHIC_SECOND_4,
+} from '../variables';
 import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
 import {hideModal, showModal} from '../helpers/modal';
+import {useAddressBookItemActions} from '../hooks/useAddressBookItemActions';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -29,11 +38,14 @@ export const TransactionAddress = ({
   onAddress,
 }: TransactionAddressProps) => {
   const app = useApp();
-  const contacts = useContacts();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
-  const contactsList = contacts.getContacts();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
+
+  const {contactsList, onPressEdit, onPressRemove} = useAddressBookItemActions(
+    true,
+    true,
+  );
 
   useEffect(() => {
     const toTrim = address.trim();
@@ -109,7 +121,25 @@ export const TransactionAddress = ({
             keyboardShouldPersistTaps="always"
             data={contactsList}
             renderItem={({item}) => (
-              <AddressRow item={item} onPress={setAddress} />
+              <SwipeableRow
+                item={item}
+                rightActions={[
+                  {
+                    icon: <PenIcon color={GRAPHIC_BASE_3} />,
+                    backgroundColor: GRAPHIC_SECOND_4,
+                    onPress: onPressEdit,
+                    key: 'edit',
+                  },
+                  {
+                    icon: <TrashIcon color={GRAPHIC_BASE_3} />,
+                    backgroundColor: GRAPHIC_RED_1,
+                    onPress: onPressRemove,
+                    key: 'remove',
+                  },
+                ]}>
+                <AddressRow item={item} onPress={() => {}} />
+              </SwipeableRow>
+              // <AddressRow item={item} onPress={setAddress} />
             )}
             ListHeaderComponent={AddressHeader}
           />

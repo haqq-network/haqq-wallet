@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TextInput, TextInputProps} from 'react-native';
-import {TEXT_BASE_1} from '../../variables';
+import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
 
 export type InputProps = TextInputProps & {
@@ -22,7 +22,10 @@ export const Input = ({
       style={[page.wrapper, style]}
       variant={error ? LabelBlockVariant.error : LabelBlockVariant.default}
       rightAction={rightAction}>
-      <TextInput style={page.input} {...props} />
+      <TextInput
+        style={[page.input, props.editable === false && page.inputDisabled]}
+        {...props}
+      />
     </LabeledBlock>
   );
 };
@@ -33,6 +36,10 @@ const page = StyleSheet.create({
     lineHeight: 22,
     color: TEXT_BASE_1,
     paddingTop: 0,
+    paddingBottom: 0,
+  },
+  inputDisabled: {
+    color: TEXT_BASE_2,
   },
   wrapper: {
     minHeight: 58,
