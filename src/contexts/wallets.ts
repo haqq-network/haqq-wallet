@@ -1,6 +1,5 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import {utils} from 'ethers';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
@@ -28,7 +27,6 @@ import {
 } from '../variables';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
-import {EthNetwork} from '../services/eth-network';
 import {captureException} from '../helpers';
 import {
   restoreFromMnemonic,
