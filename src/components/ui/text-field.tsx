@@ -3,7 +3,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
-  StyleSheet,
   Text,
   TextInput,
   TouchableWithoutFeedback,
@@ -11,16 +10,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+import {Color, getColor} from '../../colors';
 import {isIOS} from '../../helpers';
-import {
-  LIGHT_BG_5,
-  LIGHT_BG_7,
-  LIGHT_BG_8,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../../variables';
+import {createTheme} from '../../helpers/create-theme';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -64,10 +56,7 @@ export const TextField: React.FC<Props> = ({
     }).start();
   }, [focusAnim, isFocused, value]);
 
-  let color = LIGHT_TEXT_BASE_2;
-  if (error) {
-    color = LIGHT_TEXT_RED_1;
-  }
+  const color = getColor(error ? Color.textRed1 : Color.textBase2);
 
   const top = isFocused ? 0 : -5;
   const getHeight = height + (isIOS ? 40 : 17);
@@ -82,7 +71,7 @@ export const TextField: React.FC<Props> = ({
           {height: getHeight},
         ]}>
         <TextInput
-          selectionColor={LIGHT_TEXT_GREEN_1}
+          selectionColor={getColor(Color.textGreen1)}
           allowFontScaling={false}
           style={[
             page.input,
@@ -157,22 +146,22 @@ export const TextField: React.FC<Props> = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
   },
   containerError: {
-    backgroundColor: LIGHT_BG_7,
+    backgroundColor: Color.bg7,
   },
   input: {
     alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     top: isIOS ? 28 : 18,
     fontSize: 16,
     right: isIOS ? 0 : 4.5,
@@ -193,7 +182,7 @@ const page = StyleSheet.create({
     marginLeft: 35,
     bottom: 8,
     fontSize: 12,
-    color: LIGHT_BG_5,
+    color: Color.textRed1,
     fontFamily: 'SF Pro Display',
   },
   sub: {

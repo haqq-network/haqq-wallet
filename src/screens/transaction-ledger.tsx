@@ -5,7 +5,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {TransactionLedger} from '../components/transaction-ledger';
-import {useUser} from '../contexts/app';
+import {useUser} from '../hooks/use-user';
 import {Transaction} from '../models/transaction';
 import {RootStackParamList} from '../types';
 

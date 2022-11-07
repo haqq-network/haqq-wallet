@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
 
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 
 import {captureException} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
 import {LottieWrap, PopupContainer, Text} from '../ui';
@@ -66,7 +67,7 @@ export const LedgerVerify = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 20,
     justifyContent: 'center',

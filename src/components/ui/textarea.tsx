@@ -1,14 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
+import {TextInput, TextInputProps, View} from 'react-native';
 
 import {Text} from './text';
 
-import {
-  LIGHT_BG_8,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 type TextareaProps = Omit<TextInputProps, 'multiline'>;
 
@@ -37,20 +34,20 @@ export const Textarea = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     paddingVertical: 18,
     paddingHorizontal: 16,
     borderRadius: 16,
   },
   placeholder: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   input: {
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     height: 110,
   },
 });

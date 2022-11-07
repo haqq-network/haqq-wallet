@@ -1,14 +1,10 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color, getColor} from '../../colors';
 import {windowWidth} from '../../helpers';
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_SECOND_4,
-  LIGHT_TEXT_BASE_1,
-} from '../../variables';
+import {createTheme} from '../../helpers/create-theme';
 import {NoInternetIcon, Text} from '../ui';
 
 export const NoInternet = () => {
@@ -22,19 +18,22 @@ export const NoInternet = () => {
           <Text t14 style={page.descriptionText}>
             Make sure you are connected to Wi-Fi or a cellular network
           </Text>
-          <NoInternetIcon color={LIGHT_GRAPHIC_SECOND_4} style={page.icon} />
+          <NoInternetIcon
+            color={getColor(Color.graphicSecond4)}
+            style={page.icon}
+          />
         </View>
       </View>
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
     paddingBottom: 30,
   },
   titleText: {
@@ -44,7 +43,7 @@ const page = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 6,
     width: 290,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   icon: {
     marginTop: 24,
@@ -57,7 +56,7 @@ const page = StyleSheet.create({
     bottom: 0,
   },
   modalView: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 16,
     alignItems: 'center',
   },

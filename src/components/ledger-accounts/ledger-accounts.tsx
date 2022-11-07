@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {LedgerAccountsRow} from './ledger-accounts-row';
 
 import {useWallets} from '../../contexts/wallets';
+import {createTheme} from '../../helpers/create-theme';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
 import {PopupContainer} from '../ui';
@@ -62,7 +63,7 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
   },

@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {Text} from '../ui';
 
 export const LedgerScanHeader = () => {
@@ -30,18 +31,18 @@ export const LedgerScanHeader = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     padding: 20,
   },
   title: {
     marginBottom: 8,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   description: {
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   bold: {
     fontWeight: '700',

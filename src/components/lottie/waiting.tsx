@@ -1,7 +1,8 @@
 import React from 'react';
 
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 
+import {createTheme} from '../../helpers/create-theme';
 import {LottieWrap} from './';
 
 type WaitingProps = {
@@ -19,7 +20,7 @@ export const Waiting = ({style}: WaitingProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     width: 180,
     height: 180,

@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, TextInput, TextInputProps} from 'react-native';
+import {TextInput, TextInputProps} from 'react-native';
 
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
 
-import {LIGHT_TEXT_BASE_1} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type InputProps = TextInputProps & {
   label: string;
@@ -30,11 +31,11 @@ export const Input = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   input: {
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     paddingTop: 0,
   },
   wrapper: {

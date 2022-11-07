@@ -6,7 +6,6 @@ import {
   Alert,
   Dimensions,
   Image,
-  StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -20,12 +19,11 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import {Color} from '../colors';
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
-
-const warningImage = require('../../assets/images/mnemonic-notify.png');
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: 650,
@@ -38,6 +36,14 @@ const timingInAnimationConfig: WithTimingConfig = {
 };
 
 export const BackupNotificationScreen = () => {
+  const warningImage = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../assets/images/backup-notification-dark.png');
+    }
+
+    return require('../../assets/images/backup-notification-light.png');
+  }, [theme]);
+
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'backupNotification'>>();
 
@@ -47,6 +53,7 @@ export const BackupNotificationScreen = () => {
   const fullyClosed = H * 0.85;
 
   const fadeAnim = useSharedValue(fullyClosed);
+  const theme = useTheme();
   const app = useApp();
 
   const fadeOut = useCallback(
@@ -110,10 +117,7 @@ export const BackupNotificationScreen = () => {
       <Animated.View style={[page.animateView, bgAnimation]} />
       <Animated.View style={[page.animateViewFade, slideFromBottomAnimation]}>
         <View style={page.sub}>
-          <Image
-            source={warningImage}
-            style={{width: Dimensions.get('window').width - 80}}
-          />
+          <Image source={warningImage} style={page.image} />
           <Text t8 style={page.t8}>
             Backup your wallet, keep your assets safe
           </Text>
@@ -139,12 +143,12 @@ export const BackupNotificationScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {flex: 1},
   sub: {
     marginHorizontal: 16,
     marginVertical: 42,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     flex: 0,
     padding: 24,
     borderRadius: 16,
@@ -156,7 +160,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
   },
   animateViewFade: {
     flex: 1,
@@ -164,7 +168,7 @@ const page = StyleSheet.create({
   },
   t8: {
     marginBottom: 8,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -173,4 +177,18 @@ const page = StyleSheet.create({
     textAlign: 'center',
   },
   margin: {marginBottom: 8},
+  image: {
+    width: Dimensions.get('window').width - 80,
+    borderColor: Color.graphicSecond1,
+    borderWidth: 1,
+    borderRadius: 12,
+    shadowColor: CARD_SHADOW_COLOR,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowRadius: 8,
+    shadowOpacity: 1,
+    elevation: 13,
+  },
 });

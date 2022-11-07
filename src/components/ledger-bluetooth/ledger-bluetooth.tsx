@@ -1,13 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
+import {PermissionsAndroid, Platform, View} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
+import {Color} from '../../colors';
 import {windowHeight, windowWidth} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
 import {I18N, getText} from '../../i18n';
 import {User} from '../../models/user';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {
   Button,
   ButtonVariant,
@@ -121,7 +122,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
@@ -138,7 +139,7 @@ const page = StyleSheet.create({
   },
   disclaimer: {
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     marginHorizontal: 20,
   },
   submit: {

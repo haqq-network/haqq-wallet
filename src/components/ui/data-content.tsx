@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type DataContentProps = {
   title: React.ReactNode;
@@ -29,16 +30,16 @@ export const DataContent = ({
     </View>
   );
 };
-const page = StyleSheet.create({
+const page = createTheme({
   title: {
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     marginBottom: 2,
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
   },
   subtitle: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   reverse: {flexDirection: 'column-reverse'},
 });

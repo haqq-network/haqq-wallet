@@ -1,14 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, ScrollView, View} from 'react-native';
 
 import {CarouselItem} from './carousel-item';
 import {Icon, Text} from './ui';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
 
+import {Color, getColor} from '../colors';
 import {useWallets} from '../contexts/wallets';
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_1} from '../variables';
+import {createTheme} from '../helpers/create-theme';
 
 export const Wallets = () => {
   const wallets = useWallets();
@@ -79,7 +80,7 @@ export const Wallets = () => {
               }),
             },
           ]}>
-          <Icon xs name="plusMid" color={LIGHT_GRAPHIC_BASE_1} />
+          <Icon xs name="plusMid" color={getColor(Color.graphicBase1)} />
         </Animated.View>
       </View>
       <Text t6 style={page.t6}>
@@ -89,7 +90,7 @@ export const Wallets = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingTop: 24,
   },
@@ -107,7 +108,7 @@ const page = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     margin: 3,
-    backgroundColor: LIGHT_GRAPHIC_BASE_1,
+    backgroundColor: Color.graphicBase1,
   },
   animateView: {
     width: 12,
@@ -118,6 +119,6 @@ const page = StyleSheet.create({
     textAlign: 'left',
     paddingHorizontal: 20,
     fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

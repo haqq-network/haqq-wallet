@@ -1,16 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {TransactionListSend} from '../../types';
 import {shortAddress} from '../../utils';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_RED_1,
-} from '../../variables';
 import {ArrowSend, Text} from '../ui';
 
 export type TransactionPreviewProps = {
@@ -26,7 +21,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
       }}>
       <View style={page.container}>
         <View style={page.iconWrapper}>
-          <ArrowSend color={LIGHT_GRAPHIC_BASE_1} />
+          <ArrowSend color={getColor(Color.graphicBase1)} />
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
@@ -51,7 +46,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',
@@ -64,15 +59,15 @@ const page = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 1,
   },
-  sum: {color: LIGHT_TEXT_RED_1},
+  sum: {color: Color.textRed1},
   iconWrapper: {
     width: 42,
     height: 42,
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  detail: {color: LIGHT_TEXT_BASE_2},
-  info: {color: LIGHT_TEXT_BASE_1},
+  detail: {color: Color.textBase2},
+  info: {color: Color.textBase1},
 });

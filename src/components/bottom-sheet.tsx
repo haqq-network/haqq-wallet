@@ -27,13 +27,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 
+import {Color, getColor} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {useAndroidStatusBarAnimation} from '../hooks';
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_1,
-} from '../variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -210,7 +206,7 @@ export const BottomSheet = ({
         <GestureDetector gesture={headerGesture}>
           <Animated.View>
             <View style={page.swipe}>
-              <SwiperIcon color={LIGHT_GRAPHIC_SECOND_2} />
+              <SwiperIcon color={getColor(Color.graphicSecond2)} />
             </View>
             <View style={page.header}>
               <Text t6 style={page.title}>
@@ -218,7 +214,11 @@ export const BottomSheet = ({
               </Text>
               <Spacer />
               <IconButton onPress={onClosePopup}>
-                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_SECOND_2} />
+                <Icon
+                  s
+                  name="closeCircle"
+                  color={getColor(Color.graphicSecond2)}
+                />
               </IconButton>
             </View>
           </Animated.View>
@@ -241,13 +241,13 @@ export const BottomSheet = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
   space: {flex: 1},
   background: {
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
   },
   animateView: {
     justifyContent: 'flex-end',
@@ -259,7 +259,7 @@ const page = StyleSheet.create({
   },
   content: {
     width: Dimensions.get('window').width,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 20,
@@ -271,5 +271,8 @@ const page = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  title: {fontWeight: '600', color: LIGHT_TEXT_BASE_1},
+  title: {
+    fontWeight: '600',
+    color: Color.textBase1,
+  },
 });

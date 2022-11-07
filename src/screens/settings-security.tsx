@@ -2,13 +2,14 @@ import React, {useCallback, useRef, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Alert, StyleSheet, Switch, View} from 'react-native';
+import {Alert, Switch, View} from 'react-native';
 
+import {Color} from '../colors';
 import {Pin, PinInterface} from '../components/pin';
 import {MenuNavigationButton, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {BiometryType, RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 
 const biometryName = {
   [BiometryType.faceId]: 'Face ID',
@@ -90,14 +91,16 @@ export const SettingsSecurityScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
-  container: {flex: 1, marginHorizontal: 20},
-
+const page = createTheme({
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
+  },
   menuSubtitle: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   menuTitle: {
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     marginBottom: 2,
   },
 });

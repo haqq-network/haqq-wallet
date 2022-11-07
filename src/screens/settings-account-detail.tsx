@@ -2,9 +2,10 @@ import React, {useCallback} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import {Dimensions, Switch, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
+import {Color} from '../colors';
 import {
   Card,
   CardMask,
@@ -16,8 +17,8 @@ import {
 } from '../components/ui';
 import {app} from '../contexts/app';
 import {useWallet} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {LIGHT_BG_8} from '../variables';
 
 const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
@@ -122,7 +123,7 @@ export const SettingsAccountDetailScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
   },
@@ -131,7 +132,7 @@ const page = StyleSheet.create({
   },
   header: {
     marginTop: 15,
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {utils} from 'ethers';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 
 import {AddressHeader} from './address-header';
 import {AddressRow} from './address-row';
@@ -16,15 +16,13 @@ import {
   TextField,
 } from './ui';
 
+import {Color, getColor} from '../colors';
 import {useApp} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
+import {createTheme} from '../helpers/create-theme';
 import {hideModal, showModal} from '../helpers/modal';
 import {isHexString} from '../utils';
-import {
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  PLACEHOLDER_GRAY,
-} from '../variables';
+import {PLACEHOLDER_GRAY} from '../variables';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -106,14 +104,14 @@ export const TransactionAddress = ({
             address === '' ? (
               <IconButton onPress={onPressQR}>
                 <QRScanner
-                  color={LIGHT_GRAPHIC_GREEN_1}
+                  color={getColor(Color.graphicGreen1)}
                   width={25}
                   height={25}
                 />
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon name="closeCircle" color={getColor(Color.graphicBase2)} />
               </IconButton>
             )
           }
@@ -146,7 +144,7 @@ export const TransactionAddress = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   placeholder: {
     position: 'absolute',
     color: PLACEHOLDER_GRAY,

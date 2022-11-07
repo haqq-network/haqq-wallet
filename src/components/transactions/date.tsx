@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
 
 import {format, isSameYear, isToday} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {TransactionListDate} from '../../types';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {Text} from '../ui';
 
 export type TransactionDate = {
@@ -31,7 +32,7 @@ export const TransactionDate = ({item}: TransactionDate) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingTop: 16,
     paddingBottom: 8,
@@ -41,6 +42,6 @@ const page = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
 });

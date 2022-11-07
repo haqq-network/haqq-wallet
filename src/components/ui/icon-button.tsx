@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
+import {TouchableOpacity, ViewProps} from 'react-native';
+
+import {createTheme} from '../../helpers/create-theme';
 
 export type IconButtonProps = ViewProps & {
   onPress: () => void;
@@ -33,7 +35,7 @@ export const IconButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

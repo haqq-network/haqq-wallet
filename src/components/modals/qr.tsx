@@ -1,32 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {utils} from 'ethers';
-import {
-  Dimensions,
-  StatusBar,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {launchImageLibrary} from 'react-native-image-picker';
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color, getColor} from '../../colors';
 import {useApp} from '../../contexts/app';
 import {useWallets} from '../../contexts/wallets';
+import {createTheme} from '../../helpers/create-theme';
 import {hideModal} from '../../helpers/modal';
 import {HapticEffects, vibrate} from '../../services/haptic';
-import {
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_GRAPHIC_GREEN_2,
-  LIGHT_GRAPHIC_RED_1,
-  LIGHT_TEXT_BASE_3,
-  QR_BACKGROUND,
-  QR_STATUS_BAR,
-  SYSTEM_BLUR_3,
-} from '../../variables';
+import {QR_BACKGROUND, QR_STATUS_BAR, SYSTEM_BLUR_3} from '../../variables';
 import {BottomSheet} from '../bottom-sheet';
 import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {WalletRow} from '../wallet-row';
@@ -153,14 +141,14 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         flashMode={flashMode}
         hintText=""
         isShowScanBar={false}
-        cornerColor={error ? LIGHT_GRAPHIC_RED_1 : LIGHT_GRAPHIC_BASE_3}
+        cornerColor={getColor(error ? Color.graphicRed1 : Color.graphicBase3)}
         cornerWidth={7}
         zoom={0}
         renderTopView={() => (
           <View style={{paddingTop: insets.top}}>
             <View style={page.headerContainer}>
               <IconButton onPress={onClose}>
-                <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_3} />
+                <Icon s name="arrowBack" color={getColor(Color.graphicBase3)} />
               </IconButton>
               <Text t8 style={page.headerTitle}>
                 Scan QR Code
@@ -174,7 +162,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             style={[page.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
             <View style={page.subContainer}>
               <IconButton onPress={onClickGallery} style={page.iconButton}>
-                <ImageIcon color={LIGHT_GRAPHIC_BASE_3} />
+                <ImageIcon color={getColor(Color.graphicBase3)} />
               </IconButton>
               <IconButton
                 onPress={() => {
@@ -182,9 +170,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
                 }}
                 style={page.iconButton}>
                 <FlashLightIcon
-                  color={
-                    flashMode ? LIGHT_GRAPHIC_GREEN_2 : LIGHT_GRAPHIC_BASE_3
-                  }
+                  color={getColor(
+                    flashMode ? Color.graphicGreen2 : Color.graphicBase3,
+                  )}
                 />
               </IconButton>
             </View>
@@ -215,7 +203,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {flex: 1},
   subContainer: {justifyContent: 'center', flexDirection: 'row'},
   headerContainer: {
@@ -228,7 +216,7 @@ const page = StyleSheet.create({
   headerTitle: {
     fontWeight: '600',
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
   },
   headerSpacer: {
     width: 24,
@@ -239,7 +227,7 @@ const page = StyleSheet.create({
     backgroundColor: QR_BACKGROUND,
   },
   bottomError: {
-    backgroundColor: LIGHT_GRAPHIC_RED_1,
+    backgroundColor: Color.graphicRed1,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 30,
@@ -251,7 +239,10 @@ const page = StyleSheet.create({
     right: 0,
     bottom: Dimensions.get('window').height / 2 - 135,
   },
-  bottomErrorText: {color: LIGHT_TEXT_BASE_3, fontWeight: '600'},
+  bottomErrorText: {
+    color: Color.textBase3,
+    fontWeight: '600',
+  },
   iconButton: {
     marginHorizontal: 16,
     width: 56,

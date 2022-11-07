@@ -69,6 +69,7 @@ export type RootStackParamList = {
   };
   detailsQr: {address: string};
   settingsTest: undefined;
+  settingsTheme: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
   settingsAccountStyle: {address: string};

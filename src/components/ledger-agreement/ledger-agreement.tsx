@@ -1,13 +1,14 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+// import {Terms} from '../ui/terms';
+import {Color} from '../../colors';
 import {windowWidth} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
 import {I18N, getText} from '../../i18n';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
-// import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
@@ -42,7 +43,7 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
@@ -59,7 +60,7 @@ const page = StyleSheet.create({
   disclaimer: {
     marginBottom: 20,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},

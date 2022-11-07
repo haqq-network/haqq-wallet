@@ -4,6 +4,7 @@ import {PATTERNS_SOURCE} from '@env';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import {createTheme} from '../../helpers/create-theme';
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
@@ -63,7 +64,7 @@ export const CardSmall = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     padding: 16,
     overflow: 'hidden',

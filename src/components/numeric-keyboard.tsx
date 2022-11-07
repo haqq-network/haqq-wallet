@@ -1,11 +1,12 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Icon, IconButton, Text} from './ui';
 
+import {Color, getColor} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {moderateVerticalScale} from '../helpers/scaling-utils';
-import {LIGHT_TEXT_BASE_1} from '../variables';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -103,13 +104,13 @@ export const NumericKeyboard = ({
         style={page.button}
         onPress={() => onPress(-1)}
         testID="numeric_keyboard_rem">
-        <Icon name="clear" color={LIGHT_TEXT_BASE_1} />
+        <Icon name="clear" color={getColor(Color.textBase1)} />
       </IconButton>
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     width: '100%',
     justifyContent: 'center',
@@ -131,6 +132,6 @@ const page = StyleSheet.create({
     fontSize: 36,
     lineHeight: 43,
     letterSpacing: 0.38,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

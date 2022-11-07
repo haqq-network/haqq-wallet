@@ -1,11 +1,11 @@
-/* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
 
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {LIGHT_BG_6, LIGHT_TEXT_YELLOW_1} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export enum InfoBlockType {
   warning = 'warning',
@@ -47,7 +47,7 @@ export const InfoBlock = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     borderRadius: 16,
@@ -55,13 +55,13 @@ const page = StyleSheet.create({
     paddingHorizontal: 16,
   },
   warningContainer: {
-    backgroundColor: LIGHT_BG_6,
+    backgroundColor: Color.bg6,
   },
   iconText: {marginLeft: 12},
   text: {
     flex: 1,
   },
   warningText: {
-    color: LIGHT_TEXT_YELLOW_1,
+    color: Color.textYellow1,
   },
 });

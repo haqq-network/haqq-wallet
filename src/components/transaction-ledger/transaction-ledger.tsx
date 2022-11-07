@@ -1,9 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 
 import {TransactionResponse} from '@ethersproject/abstract-provider';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 
 import {useWallet} from '../../contexts/wallets';
+import {createTheme} from '../../helpers/create-theme';
 import {I18N, getText} from '../../i18n';
 import {EthNetwork} from '../../services/eth-network';
 import {LottieWrap, PopupContainer, Text} from '../ui';
@@ -59,7 +60,7 @@ export const TransactionLedger = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 20,
     justifyContent: 'center',

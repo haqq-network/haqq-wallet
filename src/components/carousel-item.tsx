@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {Animated, StyleSheet} from 'react-native';
+import {Animated} from 'react-native';
+
+import {createTheme} from '../helpers/create-theme';
 
 export type CarouselItemProps = {
   index: number;
@@ -35,7 +37,7 @@ export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 20,
   },

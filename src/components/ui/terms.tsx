@@ -1,14 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {Text as RNText, StyleProp, StyleSheet, TextStyle} from 'react-native';
+import {Text as RNText, StyleProp, TextStyle} from 'react-native';
 
+import {Color} from '../../colors';
 import {openURL} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
 import {I18N, getText} from '../../i18n';
-import {
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_2,
-  PRIVACY_POLICY,
-} from '../../variables';
+import {PRIVACY_POLICY} from '../../variables';
 import {Text} from '../ui';
 
 export type TermsProps = {
@@ -30,12 +28,12 @@ export const Terms = ({style}: TermsProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   agreement: {
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   link: {
-    color: LIGHT_GRAPHIC_GREEN_1,
+    color: Color.graphicGreen1,
   },
 });

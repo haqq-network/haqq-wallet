@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {
   Dimensions,
-  StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
   View,
@@ -18,15 +17,11 @@ import {
   Text,
 } from './ui';
 
+import {Color, getColor} from '../colors';
 import {useContacts} from '../contexts/contacts';
+import {createTheme} from '../helpers/create-theme';
 import {EthNetwork} from '../services/eth-network';
 import {cleanNumber, isNumber, shortAddress} from '../utils';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export type TransactionSumProps = {
   to: string;
@@ -113,7 +108,8 @@ export const TransactionSum = ({
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock label="Send to" style={page.label}>
           <Text
-            style={{color: LIGHT_TEXT_BASE_1}}
+            t11
+            style={page.sendTo}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -135,7 +131,7 @@ export const TransactionSum = ({
           placeholder="0"
           onChangeText={onChangeValue}
           keyboardType="numeric"
-          placeholderTextColor={LIGHT_TEXT_BASE_2}
+          placeholderTextColor={getColor(Color.textBase2)}
           autoFocus
           textAlign="left"
         />
@@ -160,7 +156,7 @@ export const TransactionSum = ({
       ) : (
         <Text clean style={[page.help, page.available]}>
           Available:{' '}
-          <Text clean style={{color: LIGHT_TEXT_GREEN_1}}>
+          <Text clean style={page.balance}>
             {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>
@@ -177,7 +173,7 @@ export const TransactionSum = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {justifyContent: 'space-between', paddingHorizontal: 20},
   label: {marginBottom: 50},
   input: {
@@ -185,7 +181,7 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     paddingVertical: 2,
     maxWidth: Dimensions.get('window').width - 180,
   },
@@ -206,7 +202,7 @@ const page = StyleSheet.create({
     fontSize: 18,
     lineHeight: 24,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     marginBottom: 4,
   },
   sum: {
@@ -220,10 +216,10 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   available: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   help: {
     fontWeight: '400',
@@ -233,6 +229,10 @@ const page = StyleSheet.create({
   },
   submit: {
     marginVertical: 16,
+  },
+  balance: {color: Color.textGreen1},
+  sendTo: {
+    color: Color.textBase1,
   },
   // swapButton: {
   //   backgroundColor: BG_2,

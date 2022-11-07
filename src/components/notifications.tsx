@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {NotificationMessage} from './notification-message';
 
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {generateUUID} from '../utils';
 
 export const Notifications = () => {
@@ -45,7 +46,7 @@ export const Notifications = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     alignItems: 'center',
     position: 'absolute',

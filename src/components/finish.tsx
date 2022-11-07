@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
-
 import {
   Button,
   ButtonVariant,
@@ -10,6 +8,8 @@ import {
   Spacer,
   Text,
 } from './ui';
+
+import {createTheme} from '../helpers/create-theme';
 
 export type FinishProps = {
   title: string;
@@ -41,7 +41,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   title: {
     marginBottom: 76,
     textAlign: 'center',

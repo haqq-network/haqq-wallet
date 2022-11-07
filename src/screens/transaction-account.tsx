@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 
 import {PopupContainer} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
 
 export const TransactionAccountScreen = () => {
@@ -48,7 +49,7 @@ export const TransactionAccountScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     marginHorizontal: 20,
   },

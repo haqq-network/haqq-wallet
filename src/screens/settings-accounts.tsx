@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 
 import {NoTransactionsIcon, Text} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList} from '../types';
 import {GRAPHIC_SECOND_3, TEXT_SECOND_1} from '../variables';
@@ -59,7 +60,7 @@ export const SettingsAccountsScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {paddingHorizontal: 20, flex: 1},
   emptyContainer: {
     justifyContent: 'center',

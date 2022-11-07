@@ -1,4 +1,8 @@
 export enum I18N {
+  settingsThemeScreen,
+  settingsThemeLight,
+  settingsThemeDark,
+  settingsThemeSystem,
   ledgerBluetoothAllow,
   ledgerBluetoothTitleUnknown,
   ledgerBluetoothTitleDisabled,
@@ -24,6 +28,10 @@ export function getText(key: I18N): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.settingsThemeScreen]: 'Appearance',
+  [I18N.settingsThemeLight]: 'Light',
+  [I18N.settingsThemeDark]: 'Dark',
+  [I18N.settingsThemeSystem]: 'System',
   [I18N.ledgerBluetoothAllow]: 'Allow',
   [I18N.ledgerBluetoothTitleUnknown]: 'Allow using Bluetooth',
   [I18N.ledgerBluetoothTitleDisabled]: 'No access to Bluetooth',

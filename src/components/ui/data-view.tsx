@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type DataViewProps = {
   label: string;
@@ -24,7 +25,7 @@ export const DataView = ({label, children, style}: DataViewProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -32,6 +33,6 @@ const page = StyleSheet.create({
     paddingHorizontal: 20,
   },
   t11: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
 });

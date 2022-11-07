@@ -1,9 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Box, DataContent, Text} from './ui';
 
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {Contact} from '../models/contact';
 import {shortAddress} from '../utils';
 
@@ -19,7 +21,9 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
       }}>
       <View style={page.container}>
         <Box style={page.badge}>
-          <Text clean>{item.name.slice(0, 1)}</Text>
+          <Text t13 style={page.preview}>
+            {item.name.slice(0, 1)}
+          </Text>
         </Box>
         <DataContent
           style={page.info}
@@ -31,12 +35,15 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     paddingVertical: 16,
     alignItems: 'center',
     marginHorizontal: 20,
+  },
+  preview: {
+    color: Color.textBase2,
   },
   badge: {
     marginRight: 12,

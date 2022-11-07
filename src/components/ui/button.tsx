@@ -1,25 +1,12 @@
-/* eslint-disable react-native/no-unused-styles */
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  ViewProps,
-} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
 
 import {Text} from './text';
 
-import {
-  LIGHT_BG_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-  LIGHT_TEXT_SECOND_1,
-} from '../../variables';
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;
@@ -96,7 +83,7 @@ export const Button = ({
       activeOpacity={0.7}
       {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={LIGHT_TEXT_BASE_3} />
+        <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
       ) : (
         <Text
           t9={size !== ButtonSize.small}
@@ -110,7 +97,7 @@ export const Button = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -129,25 +116,27 @@ const page = StyleSheet.create({
     height: 46,
   },
   containedContainer: {
-    backgroundColor: LIGHT_GRAPHIC_GREEN_1,
+    backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     height: 54,
   },
   containedDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
-  textContainer: {},
+  textContainer: {
+    backgroundColor: Color.transparent,
+  },
   errorContainer: {},
   outlinedContainer: {
-    borderColor: LIGHT_GRAPHIC_GREEN_1,
+    borderColor: Color.graphicGreen1,
     borderRadius: 12,
   },
   secondContainer: {
-    backgroundColor: LIGHT_BG_2,
+    backgroundColor: Color.bg2,
     borderRadius: 12,
   },
   secondDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
   textIconRight: {
     marginRight: 8,
@@ -156,20 +145,20 @@ const page = StyleSheet.create({
     marginLeft: 8,
   },
   containedText: {
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
   },
   containedDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
   },
   textText: {},
   outlinedText: {},
   errorText: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   secondText: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
   },
   secondDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
   },
 });

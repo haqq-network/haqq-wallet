@@ -1,16 +1,17 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
+import {Alert, Animated, Dimensions} from 'react-native';
 
 import {BottomSheet} from './bottom-sheet';
 import {Button, ButtonVariant, Text} from './ui';
 
+import {Color} from '../colors';
 import {useApp} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
 import {useTransactions} from '../contexts/transactions';
 import {useWallets} from '../contexts/wallets';
 import {captureException} from '../helpers';
-import {LIGHT_TEXT_BASE_2} from '../variables';
+import {createTheme} from '../helpers/create-theme';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;
@@ -101,7 +102,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   button: {
     marginBottom: 16,
   },
@@ -109,6 +110,6 @@ const page = StyleSheet.create({
     marginBottom: 24,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
 });

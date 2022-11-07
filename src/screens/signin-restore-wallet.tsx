@@ -5,8 +5,9 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView} from 'react-native';
 
+import {Color} from '../colors';
 import {
   Button,
   ButtonVariant,
@@ -16,9 +17,9 @@ import {
   Text,
   TextField,
 } from '../components/ui';
+import {createTheme} from '../helpers/create-theme';
 import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -89,18 +90,22 @@ export const SignInRestoreScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   scrollContent: {flexGrow: 1},
   container: {paddingHorizontal: 20, paddingTop: 20},
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   input: {
     marginBottom: 8,
   },
-  t14: {color: LIGHT_TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
+  t14: {
+    color: Color.textGreen1,
+    fontWeight: '600',
+    textAlign: 'left',
+  },
   submit: {
     marginVertical: 16,
   },

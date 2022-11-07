@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet} from 'react-native';
 
+import {Color, getColor} from '../colors';
 import {
   Alert,
   Button,
@@ -15,18 +15,26 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
-
-const warningImage = require('../../assets/animations/recover-animation.json');
+import {createTheme} from '../helpers/create-theme';
+import {useTheme} from '../hooks/use-theme';
+import {AppTheme, RootStackParamList} from '../types';
 
 export const BackupWarningScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'backupWarning'>>();
+  const theme = useTheme();
+  const animation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../assets/animations/recover-animation-dark.json');
+    }
+
+    return require('../../assets/animations/recover-animation-light.json');
+  }, [theme]);
+
   return (
     <PopupContainer style={page.container}>
       <Spacer style={page.imageContainer}>
-        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
+        <LottieWrap source={animation} style={page.image} autoPlay loop />
       </Spacer>
       <Text t4 style={page.title}>
         Important about backup
@@ -38,14 +46,14 @@ export const BackupWarningScreen = () => {
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock1}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
+        icon={<Alert color={getColor(Color.textYellow1)} />}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock2}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
+        icon={<Alert color={getColor(Color.textYellow1)} />}>
         This phrase is your only chance to recover access to your funds if your
         usual device is unavailable to you.
       </InfoBlock>
@@ -61,14 +69,18 @@ export const BackupWarningScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 20,
   },
   imageContainer: {justifyContent: 'center', alignItems: 'center'},
   image: {width: 200, height: 200},
   title: {marginBottom: 4, textAlign: 'center'},
-  paragraph: {marginBottom: 20, textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  paragraph: {
+    marginBottom: 20,
+    textAlign: 'center',
+    color: Color.textBase2,
+  },
   infoBlock1: {marginBottom: 20},
   infoBlock2: {marginBottom: 34},
   submit: {marginVertical: 16},

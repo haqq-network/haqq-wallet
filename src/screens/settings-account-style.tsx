@@ -2,13 +2,14 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
+import {Color} from '../colors';
 import {
   Button,
   ButtonSize,
@@ -20,14 +21,11 @@ import {
   Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors} from '../utils';
-import {
-  CARD_CIRCLE_TOTAL,
-  CARD_RHOMBUS_TOTAL,
-  LIGHT_TEXT_BASE_1,
-} from '../variables';
+import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL} from '../variables';
 
 const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},
@@ -219,7 +217,7 @@ export const SettingsAccountStyleScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
   },
@@ -231,7 +229,7 @@ const page = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 23,
     fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   button: {
     marginVertical: 8,

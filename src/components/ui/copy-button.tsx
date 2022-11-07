@@ -1,13 +1,10 @@
 import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
+import {TouchableOpacity, TouchableOpacityProps} from 'react-native';
 
 import {useApp} from '../../contexts/app';
+import {createTheme} from '../../helpers/create-theme';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;
@@ -34,7 +31,7 @@ export const CopyButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',

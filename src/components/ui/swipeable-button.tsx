@@ -1,12 +1,8 @@
 import React, {useCallback} from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {Animated, TouchableWithoutFeedback, View} from 'react-native';
 
+import {createTheme} from '../../helpers/create-theme';
 import {SwipeableAction} from '../../types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {
@@ -49,7 +45,7 @@ export const SwipeableButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {width: 74},
   iconContainer: {
     width: '100%',

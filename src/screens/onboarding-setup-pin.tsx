@@ -2,17 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '../colors';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
+import {createTheme} from '../helpers/create-theme';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
-import {
-  LIGHT_GRAPHIC_BASE_4,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-} from '../variables';
 
 export const OnboardingSetupPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -62,7 +59,7 @@ export const OnboardingSetupPinScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     alignItems: 'center',
     marginTop: 40,
@@ -70,7 +67,7 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {marginBottom: 12},
-  description: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  description: {textAlign: 'center', color: Color.textBase2},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
@@ -80,13 +77,13 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_BASE_4,
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: LIGHT_TEXT_GREEN_1,
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
 });

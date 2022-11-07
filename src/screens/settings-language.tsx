@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 
-import {StyleSheet} from 'react-native';
-
+import {Color, getColor} from '../colors';
 import {
   CheckIcon,
   DataContent,
@@ -9,8 +8,8 @@ import {
   PopupContainer,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {AppLanguage} from '../types';
-import {LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
 export const SettingsLanguageScreen = () => {
   const app = useApp();
@@ -30,7 +29,7 @@ export const SettingsLanguageScreen = () => {
         }}>
         <DataContent title="Arabic" subtitle="العربية" />
         {language === AppLanguage.ar && (
-          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
+          <CheckIcon color={getColor(Color.graphicGreen1)} style={page.icon} />
         )}
       </IconButton>
       <IconButton
@@ -40,14 +39,14 @@ export const SettingsLanguageScreen = () => {
         }}>
         <DataContent title="English" subtitle="English" />
         {language === AppLanguage.en && (
-          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
+          <CheckIcon color={getColor(Color.graphicGreen1)} style={page.icon} />
         )}
       </IconButton>
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
   },

@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
-
 import {Text} from './ui';
 
-import {LIGHT_TEXT_BASE_1} from '../variables';
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 
 export const AddressHeader = () => {
   return (
@@ -14,11 +13,11 @@ export const AddressHeader = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
     marginVertical: 12,
     fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
-import {LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {PopupContainer, Text} from '../ui';
 
 export const LedgerAccountsEmpty = () => {
@@ -19,7 +20,7 @@ export const LedgerAccountsEmpty = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptyDescription: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     textAlign: 'center',
   },
 });

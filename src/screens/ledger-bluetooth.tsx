@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
-import {useUser} from '../contexts/app';
+import {useUser} from '../hooks/use-user';
 import {RootStackParamList} from '../types';
 
 export const LedgerBluetoothScreen = () => {

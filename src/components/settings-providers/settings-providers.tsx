@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 
 import {SettingsProvidersRow} from './settings-providers-row';
 
+import {createTheme} from '../../helpers/create-theme';
 import {Provider} from '../../models/provider';
 
 export type SettingsProvidersProps = {
@@ -34,7 +35,7 @@ export const SettingsProviders = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
   },

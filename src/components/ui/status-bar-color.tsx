@@ -1,18 +1,21 @@
 import React from 'react';
 
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar, View} from 'react-native';
 
-import {LIGHT_BG_1} from '../../variables';
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
-export const StatusBarColor = ({backgroundColor = LIGHT_BG_1, ...props}) => {
+export const StatusBarColor = ({backgroundColor = null, ...props}) => {
+  const bgColor = backgroundColor ?? getColor(Color.bg1);
+
   return (
-    <View style={[page.statusBar, {backgroundColor}]}>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    <View style={[page.statusBar, {backgroundColor: bgColor}]}>
+      <StatusBar translucent backgroundColor={bgColor} {...props} />
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   statusBar: {
     height: StatusBar.currentHeight,
   },

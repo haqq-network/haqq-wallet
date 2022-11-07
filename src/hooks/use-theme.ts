@@ -9,8 +9,6 @@ export function useTheme() {
     const subscription = () => {
       if (theme !== app.getTheme()) {
         setTheme(app.getTheme());
-
-        console.log('theme changed', app.getTheme());
       }
     };
 

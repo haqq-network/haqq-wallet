@@ -3,14 +3,14 @@ import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {utils} from 'ethers';
-import {StyleSheet} from 'react-native';
 
 import {IconButton, QRScanner} from './ui';
 
+import {Color, getColor} from '../colors';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 export const QrScannerButton = () => {
   const app = useApp();
@@ -31,11 +31,11 @@ export const QrScannerButton = () => {
 
   return (
     <IconButton onPress={onPressQR} style={page.container}>
-      <QRScanner color={LIGHT_GRAPHIC_BASE_1} />
+      <QRScanner color={getColor(Color.graphicBase1)} />
     </IconButton>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {marginRight: 12},
 });

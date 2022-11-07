@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext} from 'react';
 
 import {EventEmitter} from 'events';
 
@@ -75,7 +75,7 @@ class App extends EventEmitter {
       EthNetwork.init(provider);
     }
 
-    this.user.on('providerId', providerId => {
+    this.on('providerId', providerId => {
       const p = Provider.getProvider(providerId);
       if (p) {
         EthNetwork.init(p);
@@ -120,6 +120,7 @@ class App extends EventEmitter {
           biometry: false,
           bluetooth: false,
           language: 'en',
+          theme: 'system',
           providerId:
             ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
               ? MAIN_NETWORK
@@ -302,23 +303,4 @@ export function useApp() {
   const context = useContext(AppContext);
 
   return context;
-}
-
-export function useUser() {
-  const user = app.getUser();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setDate] = useState(new Date());
-  useEffect(() => {
-    const subscription = () => {
-      setDate(new Date());
-    };
-
-    user.on('change', subscription);
-
-    return () => {
-      user.removeListener('change', subscription);
-    };
-  }, [user]);
-
-  return user;
 }

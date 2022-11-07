@@ -61,6 +61,10 @@ export class User extends EventEmitter {
         if (changes.changedProperties.includes('theme')) {
           app.emit('theme', obj.theme);
         }
+
+        if (changes.changedProperties.includes('providerId')) {
+          this.emit('providerId', obj.providerId);
+        }
       }
     });
 

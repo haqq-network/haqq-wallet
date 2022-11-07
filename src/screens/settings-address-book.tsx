@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {Alert, FlatList, StyleSheet} from 'react-native';
+import {Alert, FlatList} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
+import {Color, getColor} from '../colors';
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
 import {AddressRow} from '../components/address-row';
@@ -22,16 +23,9 @@ import {
 } from '../components/ui';
 import {useApp} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
+import {createTheme} from '../helpers/create-theme';
 import {hideModal, showModal} from '../helpers/modal';
 import {Contact} from '../models/contact';
-import {
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_RED_1,
-  LIGHT_GRAPHIC_SECOND_4,
-  LIGHT_TEXT_BASE_1,
-} from '../variables';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
@@ -176,11 +170,18 @@ export const SettingsAddressBookScreen =
           rightAction={
             search === '' ? (
               <IconButton onPress={onPressQR}>
-                <QRScanner color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
+                <QRScanner
+                  color={getColor(Color.graphicGreen1)}
+                  style={page.icon}
+                />
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon
+                  s
+                  name="closeCircle"
+                  color={getColor(Color.graphicBase2)}
+                />
               </IconButton>
             )
           }
@@ -189,9 +190,11 @@ export const SettingsAddressBookScreen =
         {canAdd && (
           <IconButton onPress={onPressAdd} style={page.addButton}>
             <Box style={page.badge}>
-              <Icon s name="plusMid" color={LIGHT_GRAPHIC_BASE_2} />
+              <Icon s name="plusMid" color={getColor(Color.graphicBase2)} />
             </Box>
-            <Text style={{color: LIGHT_TEXT_BASE_1}}>Add Contact</Text>
+            <Text t11 style={page.addContact}>
+              Add Contact
+            </Text>
           </IconButton>
         )}
         <FlatList
@@ -202,14 +205,14 @@ export const SettingsAddressBookScreen =
               item={item}
               rightActions={[
                 {
-                  icon: <PenIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                  backgroundColor: LIGHT_GRAPHIC_SECOND_4,
+                  icon: <PenIcon color={getColor(Color.graphicBase3)} />,
+                  backgroundColor: Color.graphicSecond4,
                   onPress: onPressEdit,
                   key: 'edit',
                 },
                 {
-                  icon: <TrashIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                  backgroundColor: LIGHT_GRAPHIC_RED_1,
+                  icon: <TrashIcon color={getColor(Color.graphicBase3)} />,
+                  backgroundColor: Color.graphicRed1,
                   onPress: onPressRemove,
                   key: 'remove',
                 },
@@ -225,12 +228,15 @@ export const SettingsAddressBookScreen =
     );
   };
 
-const page = StyleSheet.create({
+const page = createTheme({
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
   },
-  icon: {width: 20, height: 20},
+  icon: {
+    width: 20,
+    height: 20,
+  },
   badge: {
     marginRight: 12,
   },
@@ -241,4 +247,17 @@ const page = StyleSheet.create({
     marginVertical: 16,
   },
   grow: {flexGrow: 1},
+  addContact: {
+    color: Color.textBase1,
+  },
+  clear: {
+    width: 24,
+    height: 24,
+    tintColor: Color.graphicBase2,
+  },
+  plusMid: {
+    tintColor: Color.graphicBase2,
+    width: 24,
+    height: 24,
+  },
 });

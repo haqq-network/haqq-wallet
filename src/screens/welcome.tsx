@@ -2,12 +2,13 @@ import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '../colors';
 import {Button, ButtonVariant, Text} from '../components/ui';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2} from '../variables';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
@@ -56,7 +57,7 @@ export const WelcomeScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     marginHorizontal: 20,
@@ -64,12 +65,16 @@ const page = StyleSheet.create({
   content: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 4},
   button: {marginBottom: 16},
-  textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  textStyle: {
+    textAlign: 'center',
+    color: Color.textBase2,
+  },
   imageStyle: {
     width: 120,
     height: 120,
     alignSelf: 'center',
     marginBottom: 28,
+    tintColor: Color.graphicSecond2,
   },
   ledger: {
     width: 22,

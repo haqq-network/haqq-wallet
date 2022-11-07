@@ -3,8 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {format} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color, getColor} from '../colors';
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
@@ -16,18 +17,11 @@ import {
 } from '../components/ui';
 import {useTransactions} from '../contexts/transactions';
 import {isIOS, openURL} from '../helpers';
+import {createTheme} from '../helpers/create-theme';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList, TransactionSource} from '../types';
 import {splitAddress} from '../utils';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export const TransactionDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -109,7 +103,7 @@ export const TransactionDetailScreen = () => {
                 <ISLMIcon
                   width={16}
                   height={16}
-                  color={LIGHT_GRAPHIC_GREEN_1}
+                  color={getColor(Color.graphicGreen1)}
                   style={page.icon}
                 />
               </View>
@@ -153,7 +147,7 @@ export const TransactionDetailScreen = () => {
         />
       </View>
       <IconButton onPress={onPressInfo} style={page.iconButton}>
-        <BlockIcon color={LIGHT_GRAPHIC_BASE_1} />
+        <BlockIcon color={getColor(Color.graphicBase1)} />
         <Text t9 style={page.textStyle}>
           View on block explorer
         </Text>
@@ -162,29 +156,29 @@ export const TransactionDetailScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   sum: {
     marginBottom: 20,
     fontWeight: '700',
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   sumSent: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   sumReceive: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
   },
   infoContainer: {
     paddingHorizontal: 20,
     paddingVertical: 4,
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 16,
     marginBottom: 24,
   },
   info: {
     marginVertical: 8,
   },
-  amount: {marginBottom: 2, color: LIGHT_TEXT_BASE_2},
+  amount: {marginBottom: 2, color: Color.textBase2},
   icon: {
     marginRight: isIOS ? 4 : 2,
     top: isIOS ? 1 : 2,
@@ -194,5 +188,5 @@ const page = StyleSheet.create({
   iconView: {top: isIOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
-  subInfo: {color: LIGHT_TEXT_BASE_2},
+  subInfo: {color: Color.textBase2},
 });

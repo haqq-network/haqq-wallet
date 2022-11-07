@@ -6,10 +6,10 @@ import {HeaderTitleProps} from '@react-navigation/elements';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
+import {Color, getColor} from '../colors';
 import {QrScannerButton} from '../components/qr-scanner-button';
 import {SettingsIcon, Text, WalletIcon} from '../components/ui';
 import {isIOS} from '../helpers';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,46 +17,43 @@ interface HeaderTitleT extends HeaderTitleProps {
   headerTitle?: string;
 }
 
+const screenOptions = {
+  headerTitle: ({headerTitle}: HeaderTitleT) => <Text t8>{headerTitle}</Text>,
+  headerShadowVisible: false,
+  headerStyle: {
+    backgroundColor: Color.transparent,
+  },
+  tabBarStyle: {
+    backgroundColor: Color.transparent,
+    borderTopWidth: 0,
+    elevation: 0,
+    height: isIOS ? 80 : 50,
+    top: isIOS ? 0 : 8,
+    marginBottom: isIOS ? 0 : 23,
+  },
+  tabBarItemStyle: {
+    marginTop: isIOS ? 5 : 8,
+    height: isIOS ? 50 : 40,
+  },
+};
+
 export const HomeScreen = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerTitle: ({headerTitle}: HeaderTitleT) => (
-          <Text t8>{headerTitle}</Text>
-        ),
-        headerShadowVisible: false,
-        headerStyle: {
-          backgroundColor: 'transparent',
-        },
-        tabBarStyle: {
-          borderTopWidth: 0,
-          elevation: 0,
-          height: isIOS ? 80 : 50,
-          top: isIOS ? 0 : 8,
-          marginBottom: isIOS ? 0 : 23,
-        },
-        tabBarItemStyle: {
-          marginTop: isIOS ? 5 : 8,
-          height: isIOS ? 50 : 40,
-        },
-      }}>
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="home-feed"
         component={HomeFeedScreen}
         options={{
           title: 'Wallet',
-          headerTitle: 'Your wallets',
-          headerTitleAlign: 'center',
+          headerTitle: () => <Text t8>Your wallets</Text>,
           headerRight: () => <QrScannerButton />,
-          headerTitleAllowFontScaling: false,
           tabBarIcon: ({focused}) => (
             <WalletIcon
-              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
+              color={getColor(
+                focused ? Color.graphicGreen1 : Color.graphicBase2,
+              )}
             />
           ),
-          headerTitleStyle: {
-            fontSize: 18,
-          },
         }}
       />
       {/* <Tab.Screen
@@ -86,12 +83,12 @@ export const HomeScreen = () => {
         component={HomeSettingsScreen}
         options={{
           title: 'Settings',
-          headerTitle: 'Settings',
-          headerTitleAllowFontScaling: false,
-          headerTitleAlign: 'center',
+          headerTitle: () => <Text t8>Settings</Text>,
           tabBarIcon: ({focused}) => (
             <SettingsIcon
-              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
+              color={getColor(
+                focused ? Color.graphicGreen1 : Color.graphicBase2,
+              )}
             />
           ),
         }}

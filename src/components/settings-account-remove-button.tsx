@@ -1,13 +1,14 @@
 import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
-import {Alert, StyleSheet} from 'react-native';
+import {Alert} from 'react-native';
 
 import {IconButton, TrashIcon} from './ui';
 
+import {Color, getColor} from '../colors';
 import {app} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables';
+import {createTheme} from '../helpers/create-theme';
 
 type SettingsAccountRemoveButtonProp = {
   address: string;
@@ -42,11 +43,11 @@ export const SettingsAccountRemoveButton = ({
 
   return (
     <IconButton style={page.container} onPress={onClickRemove}>
-      <TrashIcon color={LIGHT_GRAPHIC_BASE_1} />
+      <TrashIcon color={getColor(Color.graphicBase1)} />
     </IconButton>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {width: 24, height: 24},
 });

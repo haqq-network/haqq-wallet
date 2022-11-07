@@ -54,6 +54,30 @@
       "sha1": "9560ae412d73c7c9af72333db50464b4e597b0f9"
     },
     {
+      "path": "assets/images/backup-notification-dark.png",
+      "sha1": "a7a5201381eb87b7c3422505962aa5f38fccc51f"
+    },
+    {
+      "path": "assets/images/backup-notification-dark@2x.png",
+      "sha1": "25a51bd03ce817d0afccbbd7bfba2a9dd25a94a6"
+    },
+    {
+      "path": "assets/images/backup-notification-dark@3x.png",
+      "sha1": "e71a6cf9d5e5870ec663506b78f3d7d93d291b7b"
+    },
+    {
+      "path": "assets/images/backup-notification-light.png",
+      "sha1": "ae7032311c83fb1665f188411be024e1bda9a4ba"
+    },
+    {
+      "path": "assets/images/backup-notification-light@2x.png",
+      "sha1": "fca187c176ace29a50dc61ef8bcd6d4761438eb5"
+    },
+    {
+      "path": "assets/images/backup-notification-light@3x.png",
+      "sha1": "5e7e3bc909a18694498dddae250a66be5c868082"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
@@ -100,18 +124,6 @@
     {
       "path": "assets/images/logo-empty@3x.png",
       "sha1": "9db33e31b5dc0b041060749b2da6a7dddf4bb1f0"
-    },
-    {
-      "path": "assets/images/mnemonic-notify.png",
-      "sha1": "7a7300223411f0ff092c800ee53f6e7129a55764"
-    },
-    {
-      "path": "assets/images/mnemonic-notify@2x.png",
-      "sha1": "51c6a81242dd148e7ab8bc838b717df99cc7fdcc"
-    },
-    {
-      "path": "assets/images/mnemonic-notify@3x.png",
-      "sha1": "f66f0e1965b85795f8e472d37d3413450566d02a"
     },
     {
       "path": "assets/images/qr-logo.png",

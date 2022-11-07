@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {createTheme} from '../../helpers/create-theme';
 import {EthNetwork} from '../../services/eth-network';
 import {cleanNumber, shortAddress} from '../../utils';
 import {Button, ButtonSize, ButtonVariant, DataContent} from '../ui';
@@ -55,7 +56,7 @@ export const LedgerAccountsRow = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',

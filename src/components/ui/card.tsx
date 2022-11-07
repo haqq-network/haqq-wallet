@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import {createTheme} from '../../helpers/create-theme';
 import {getPatternName} from '../../utils';
 import {
   CARD_DEFAULT_STYLE,
@@ -98,7 +99,7 @@ export const Card = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     padding: 16,

@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {Provider} from '../../models/provider';
-import {LIGHT_GRAPHIC_GREEN_1} from '../../variables';
 import {CheckIcon, DataContent} from '../ui';
 
 export type SettingsProvidersRowProps = {
@@ -28,14 +29,17 @@ export const SettingsProvidersRow = ({
           subtitle={`${item.name} (${item.chainId})`}
         />
         {providerId === item.id && (
-          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={styles.icon} />
+          <CheckIcon
+            color={getColor(Color.graphicGreen1)}
+            style={styles.icon}
+          />
         )}
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',

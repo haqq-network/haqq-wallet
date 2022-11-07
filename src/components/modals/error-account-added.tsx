@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color, getColor} from '../../colors';
 import {windowWidth} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
 import {hideModal} from '../../helpers/modal';
-import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 export const ErrorAccountAdded = () => {
@@ -19,7 +20,7 @@ export const ErrorAccountAdded = () => {
             This account has already been added
           </Text>
           <AccountAddedIcon
-            color={LIGHT_GRAPHIC_SECOND_4}
+            color={getColor(Color.graphicSecond4)}
             style={page.icon}
             width={120}
             height={120}
@@ -37,12 +38,12 @@ export const ErrorAccountAdded = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
     paddingBottom: 30,
   },
   titleText: {
@@ -61,7 +62,7 @@ const page = StyleSheet.create({
     bottom: 0,
   },
   modalView: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 16,
     alignItems: 'center',
   },

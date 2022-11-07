@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Text} from './ui';
 
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 
 export type MnemonicWordProps = {
   word: string;
@@ -24,7 +25,7 @@ export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     margin: 6,
     flexDirection: 'row',
@@ -33,10 +34,10 @@ const page = StyleSheet.create({
   },
   index: {
     marginRight: 8,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   word: {
     fontWeight: '600',
-    color: LIGHT_GRAPHIC_BASE_1,
+    color: Color.graphicBase1,
   },
 });

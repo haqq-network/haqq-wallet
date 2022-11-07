@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   StyleProp,
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
@@ -10,7 +9,8 @@ import {
 
 import {ArrowForwardIcon} from './svg-icon';
 
-import {LIGHT_GRAPHIC_SECOND_3} from '../../variables';
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;
@@ -29,13 +29,15 @@ export const MenuNavigationButton = ({
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[page.container, style]}>
         <View style={page.content}>{children}</View>
-        {!hideArrow && <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />}
+        {!hideArrow && (
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingVertical: 13,
     flexDirection: 'row',

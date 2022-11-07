@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
 
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color, getColor} from '../colors';
 import {
   ArrowForwardIcon,
   DiscordIcon,
@@ -14,14 +15,8 @@ import {
   Text,
 } from '../components/ui';
 import {openURL, windowWidth} from '../helpers';
+import {createTheme} from '../helpers/create-theme';
 import {getAppVersion, getBuildNumber} from '../services/version';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_GRAPHIC_SECOND_3,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-} from '../variables';
 
 export const SettingsAboutScreen = () => {
   const insets = useSafeAreaInsets();
@@ -71,12 +66,12 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton> */}
         <IconButton onPress={onPressSite} style={page.button}>
-          <GlobalIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <GlobalIcon color={getColor(Color.graphicBase1)} />
           <Text t11 style={page.buttonText}>
             Visit islamiccoin.net
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
       <Text t14 style={page.title}>
@@ -84,12 +79,12 @@ export const SettingsAboutScreen = () => {
       </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDoc} style={page.button}>
-          <DocIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <DocIcon color={getColor(Color.graphicBase1)} />
           <Text t11 style={page.buttonText}>
             Terms & Conditions
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
       <Text t14 style={page.title}>
@@ -97,12 +92,12 @@ export const SettingsAboutScreen = () => {
       </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDiscord} style={page.button}>
-          <DiscordIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <DiscordIcon color={getColor(Color.graphicBase1)} />
           <Text t11 style={page.buttonText}>
             Discord
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
       <Text t11 style={page.terms}>
@@ -113,18 +108,18 @@ export const SettingsAboutScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   content: {
     marginHorizontal: 20,
     flexGrow: 1,
   },
   title: {
     marginBottom: 8,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     marginHorizontal: 4,
   },
   buttons: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 16,
     marginBottom: 24,
   },
@@ -134,11 +129,11 @@ const page = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonText: {
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     marginLeft: 12,
   },
   terms: {
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     marginBottom: 10,
   },
   animation: {

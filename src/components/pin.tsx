@@ -7,20 +7,16 @@ import React, {
 } from 'react';
 
 import {isBefore} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {NumericKeyboard} from './numeric-keyboard';
 import {Spacer, Text} from './ui';
 
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {moderateVerticalScale} from '../helpers/scaling-utils';
 import {HapticEffects, vibrate} from '../services/haptic';
-import {
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export type PinProps = {
   title: string;
@@ -134,7 +130,7 @@ export const Pin = forwardRef(
   },
 );
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -149,23 +145,22 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: LIGHT_TEXT_GREEN_1,
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
     fontWeight: '600',
   },
   title: {
     marginTop: moderateVerticalScale(40, 8),
     marginBottom: 12,
-    textAlign: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  t11: {textAlign: 'center', color: Color.textBase2},
 });

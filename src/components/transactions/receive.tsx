@@ -1,16 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
+import {Color, getColor} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {TransactionListReceive} from '../../types';
 import {shortAddress} from '../../utils';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-} from '../../variables';
 import {ArrowReceive, Text} from '../ui';
 
 export type TransactionPreviewProps = {
@@ -29,7 +24,7 @@ export const TransactionReceive = ({
       }}>
       <View style={page.container}>
         <View style={page.iconWrapper}>
-          <ArrowReceive color={LIGHT_GRAPHIC_BASE_1} />
+          <ArrowReceive color={getColor(Color.graphicBase1)} />
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
@@ -54,7 +49,7 @@ export const TransactionReceive = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',
@@ -68,16 +63,16 @@ const page = StyleSheet.create({
     marginVertical: 1,
   },
   sum: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
   },
   iconWrapper: {
     width: 42,
     height: 42,
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  detail: {color: LIGHT_TEXT_BASE_2},
-  info: {color: LIGHT_TEXT_BASE_1},
+  detail: {color: Color.textBase2},
+  info: {color: Color.textBase1},
 });

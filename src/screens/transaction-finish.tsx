@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
+import {Color, getColor} from '../colors';
 import {
   BlockIcon,
   Button,
@@ -21,18 +22,11 @@ import {
 import {useContacts} from '../contexts/contacts';
 import {useTransactions} from '../contexts/transactions';
 import {openURL} from '../helpers';
+import {createTheme} from '../helpers/create-theme';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList} from '../types';
 import {shortAddress} from '../utils';
-import {
-  LIGHT_BG_8,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-} from '../variables';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
@@ -92,7 +86,7 @@ export const TransactionFinishScreen = () => {
       <Text t4 style={page.title}>
         Sending Completed!
       </Text>
-      <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
+      <ISLMIcon color={getColor(Color.graphicGreen1)} style={page.icon} />
       {transaction && (
         <Text clean style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
@@ -108,16 +102,25 @@ export const TransactionFinishScreen = () => {
       <View style={page.buttons}>
         <IconButton onPress={onPressContact} style={page.button}>
           {contact ? (
-            <PenIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
+            <PenIcon
+              color={getColor(Color.graphicBase2)}
+              style={page.buttonIcon}
+            />
           ) : (
-            <UserIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
+            <UserIcon
+              color={getColor(Color.graphicBase2)}
+              style={page.buttonIcon}
+            />
           )}
           <Text clean style={page.buttonText}>
             {contact ? 'Edit Contact' : 'Add Contact'}
           </Text>
         </IconButton>
         <IconButton onPress={onPressHash} style={page.button}>
-          <BlockIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
+          <BlockIcon
+            color={getColor(Color.graphicBase2)}
+            style={page.buttonIcon}
+          />
           <Text clean style={page.buttonText}>
             Hash
           </Text>
@@ -135,7 +138,7 @@ export const TransactionFinishScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 20,
   },
@@ -148,7 +151,7 @@ const page = StyleSheet.create({
   title: {
     marginTop: 32,
     marginBottom: 34,
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
     textAlign: 'center',
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
@@ -158,20 +161,20 @@ const page = StyleSheet.create({
     fontSize: 22,
     lineHeight: 30,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   address: {
     fontSize: 14,
     lineHeight: 18,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     marginBottom: 4,
   },
   fee: {
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   buttons: {
     flexDirection: 'row',
@@ -183,7 +186,7 @@ const page = StyleSheet.create({
     marginHorizontal: 6,
     paddingHorizontal: 4,
     paddingVertical: 12,
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 12,
   },
   buttonIcon: {
@@ -193,7 +196,7 @@ const page = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   margin: {marginBottom: 16},
 });

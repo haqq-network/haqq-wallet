@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {SettingsProviders} from '../components/settings-providers/settings-providers';
-import {useUser} from '../contexts/app';
+import {useUser} from '../hooks/use-user';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 

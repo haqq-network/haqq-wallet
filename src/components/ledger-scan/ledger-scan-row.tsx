@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {Device} from 'react-native-ble-plx';
 
-import {LIGHT_BG_3} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {Text} from '../ui';
 
 export type LedgerScanRowProps = {
@@ -21,9 +22,9 @@ export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 12,

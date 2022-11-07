@@ -2,14 +2,16 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 
 import {TransactionEmpty} from '../components/transaction-empty';
 import {TransactionRow} from '../components/transaction-row';
 import {Wallets} from '../components/wallets';
-import {useUser} from '../contexts/app';
 import {useTransactions} from '../contexts/transactions';
 import {useWallets} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
+import {useTheme} from '../hooks/use-theme';
+import {useUser} from '../hooks/use-user';
 import {Transaction} from '../models/transaction';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList, TransactionList} from '../types';
@@ -25,7 +27,7 @@ const filterTransactions = (
 export const HomeFeedScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const user = useUser();
-
+  const theme = useTheme();
   const wallets = useWallets();
   const transactions = useTransactions();
 
@@ -92,7 +94,7 @@ export const HomeFeedScreen = () => {
 
   return (
     <FlatList
-      key={user.providerId}
+      key={`${user.providerId}_${theme}`}
       style={page.container}
       refreshing={refreshing}
       onRefresh={onWalletsRefresh}
@@ -109,7 +111,7 @@ export const HomeFeedScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
   },

@@ -1,8 +1,9 @@
 import React, {useMemo} from 'react';
 
-import {StyleSheet, View, ViewProps} from 'react-native';
+import {View, ViewProps} from 'react-native';
 
-import {LIGHT_BG_8} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export const Box = ({children, style, ...props}: ViewProps) => {
   const container = useMemo(() => [page.container, style], [style]);
@@ -13,13 +14,13 @@ export const Box = ({children, style, ...props}: ViewProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     width: 42,
     height: 42,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 12,
   },
 });

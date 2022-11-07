@@ -1,12 +1,13 @@
 import React, {useCallback} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
+import {Color} from '../../colors';
 import {app} from '../../contexts/app';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {createTheme} from '../../helpers/create-theme';
 
 export type DataContentSplittedProps = {
   to: string[];
@@ -32,14 +33,14 @@ export const DataContentSplitted = ({
         <Text t11 style={page.address}>
           {to[0]}
         </Text>
-        <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+        <Text t11 style={page.t11}>
           {to[1]}
         </Text>
         <Text t11>{to[2]}</Text>
       </Text>
-      <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+      <Text t11 style={page.t11}>
         {
-          <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+          <Text t11 style={page.t11}>
             {title}
           </Text>
         }
@@ -47,13 +48,14 @@ export const DataContentSplitted = ({
     </View>
   );
 };
-const page = StyleSheet.create({
+const page = createTheme({
   address: {
     minHeight: 22,
     marginBottom: 2,
     textAlign: 'left',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     width: '100%',
   },
   reverse: {flexDirection: 'column-reverse'},
+  t11: {color: Color.textBase2},
 });

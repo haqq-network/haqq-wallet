@@ -7,8 +7,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 import {FontT} from '../../types';
-import {LIGHT_TEXT_BASE_1} from '../../variables';
 
 export type TextProps = {
   t0?: boolean;
@@ -153,13 +154,13 @@ const sfProTextBold700: FontT = Platform.select({
   },
 });
 
-const page = StyleSheet.create({
+const page = createTheme({
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t1Style: {
     fontFamily: 'SF Pro Display',
@@ -167,14 +168,14 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t2Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t3Style: {
     fontFamily: 'SF Pro Display',
@@ -182,92 +183,92 @@ const page = StyleSheet.create({
     fontStyle: 'normal',
     fontSize: 28,
     lineHeight: 38,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t4Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 28,
     lineHeight: 38,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t5Style: {
     ...sfProDisplayBold700,
     fontSize: 22,
     lineHeight: 30,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t6Style: {
     ...sfProDisplaySemibold600,
     fontSize: 22,
     lineHeight: 30,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t7Style: {
     ...sfProTextBold700,
     fontSize: 18,
     lineHeight: 24,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t8Style: {
     ...sfProTextSemibold600,
     fontSize: 18,
     lineHeight: 24,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t9Style: {
     ...sfProDisplayBold700,
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t10Style: {
     ...sfProDisplayBold700,
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t11Style: {
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t12Style: {
     ...sfProDisplayBold700,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t13Style: {
     ...sfProDisplaySemibold600,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t14Style: {
     ...sfProTextRegular400,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t15Style: {
     ...sfProTextRegular400,
     fontSize: 12,
     lineHeight: 16,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t16Style: {
     ...sfProTextBold700,
     fontSize: 10,
     lineHeight: 12,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t17Style: {
     ...sfProTextMedium500,
     fontSize: 10,
     lineHeight: 12,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

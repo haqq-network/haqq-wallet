@@ -2,8 +2,8 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet} from 'react-native';
 
+import {Color, getColor} from '../colors';
 import {
   Button,
   ButtonVariant,
@@ -15,13 +15,9 @@ import {
   TouchIdIcon,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {BiometryType, RootStackParamList} from '../types';
-import {
-  BIOMETRY_TYPES_NAMES,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
+import {BIOMETRY_TYPES_NAMES} from '../variables';
 
 export const OnboardingBiometryScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -52,12 +48,19 @@ export const OnboardingBiometryScreen = () => {
   const icon = useMemo(() => {
     switch (biometryType) {
       case BiometryType.faceId:
-        return <FaceIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
+        return (
+          <FaceIdIcon color={getColor(Color.graphicBase1)} style={page.icon} />
+        );
       case BiometryType.touchId:
-        return <TouchIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
+        return (
+          <TouchIdIcon color={getColor(Color.graphicBase1)} style={page.icon} />
+        );
       case BiometryType.fingerprint:
         return (
-          <FingerprintIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />
+          <FingerprintIcon
+            color={getColor(Color.graphicBase1)}
+            style={page.icon}
+          />
         );
       default:
         return null;
@@ -97,12 +100,12 @@ export const OnboardingBiometryScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {marginHorizontal: 20},
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},
-  textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  textStyle: {textAlign: 'center', color: Color.textBase2},
   margin: {marginBottom: 16},
-  error: {top: 20, textAlign: 'center', color: LIGHT_TEXT_RED_1},
+  error: {top: 20, textAlign: 'center', color: Color.textRed1},
 });

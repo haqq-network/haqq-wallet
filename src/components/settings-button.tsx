@@ -2,12 +2,13 @@ import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {MenuNavigationButton, Text} from './ui';
 
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {
   next:
@@ -16,7 +17,8 @@ export type SettingsButtonProps = {
     | 'settingsSecurity'
     | 'settingsProviders'
     | 'settingsAbout'
-    | 'settingsTest';
+    | 'settingsTest'
+    | 'settingsTheme';
   icon: React.ReactNode;
   title: string;
   children?: React.ReactNode;
@@ -45,7 +47,7 @@ export const SettingsButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -54,6 +56,6 @@ const page = StyleSheet.create({
   },
   text: {
     marginLeft: 12,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

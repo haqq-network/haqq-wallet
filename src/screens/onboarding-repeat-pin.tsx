@@ -2,19 +2,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '../colors';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
+import {createTheme} from '../helpers/create-theme';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
-import {
-  LIGHT_GRAPHIC_BASE_4,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -82,7 +78,7 @@ export const OnboardingRepeatPinScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     alignItems: 'center',
     marginTop: 40,
@@ -99,18 +95,18 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_BASE_4,
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: LIGHT_TEXT_GREEN_1,
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  t11: {textAlign: 'center', color: Color.textBase2},
 });

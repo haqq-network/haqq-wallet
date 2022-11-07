@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-import {windowHeight, windowWidth} from '../../helpers';
 // import {Terms} from '../ui/terms';
+import {Color} from '../../colors';
+import {windowHeight, windowWidth} from '../../helpers';
+import {createTheme} from '../../helpers/create-theme';
+import {useTheme} from '../../hooks/use-theme';
 import {I18N, getText} from '../../i18n';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
+import {AppTheme} from '../../types';
 import {
   Button,
   ButtonVariant,
@@ -21,11 +24,20 @@ export type RestoreAgreementProps = {
 };
 
 export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
+  const theme = useTheme();
+  const animation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../../assets/animations/recover-animation-dark.json');
+    }
+
+    return require('../../../assets/animations/recover-animation-light.json');
+  }, [theme]);
+
   return (
     <PopupContainer style={page.container} testID={testID}>
       <View style={page.animation}>
         <LottieWrap
-          source={require('../../../assets/animations/recover-animation.json')}
+          source={animation}
           style={page.image}
           autoPlay
           resizeMode="center"
@@ -51,7 +63,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
@@ -67,7 +79,7 @@ const page = StyleSheet.create({
   },
   disclaimer: {
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},

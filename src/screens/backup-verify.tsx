@@ -2,8 +2,9 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, View} from 'react-native';
 
+import {Color} from '../colors';
 import {
   Button,
   ButtonSize,
@@ -13,15 +14,8 @@ import {
   Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_RED_1,
-  LIGHT_TEXT_SECOND_1,
-} from '../variables';
 
 function shuffleWords(words: Map<string, string>) {
   return Array.from(words.keys()).sort(() => 0.5 - Math.random());
@@ -91,7 +85,7 @@ export const BackupVerifyScreen = () => {
                     page.cell,
                     page.cellEmpty,
                     selected.length === i && {
-                      borderColor: LIGHT_GRAPHIC_GREEN_1,
+                      borderColor: Color.graphicGreen1,
                     },
                   ]}
                   key={`${k}_empty`}>
@@ -118,7 +112,7 @@ export const BackupVerifyScreen = () => {
                     page.cell,
                     page.cellEmpty,
                     selected.length === i + 6 && {
-                      borderColor: LIGHT_GRAPHIC_GREEN_1,
+                      borderColor: Color.graphicGreen1,
                     },
                   ]}
                   key={`${k}_empty`}>
@@ -157,7 +151,7 @@ export const BackupVerifyScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
   },
@@ -165,7 +159,7 @@ const page = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     marginBottom: 16,
-    color: LIGHT_GRAPHIC_BASE_2,
+    color: Color.graphicBase2,
   },
   buttons: {
     flexDirection: 'row',
@@ -189,19 +183,19 @@ const page = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical: 4,
     borderStyle: 'solid',
-    borderColor: LIGHT_BG_3,
+    borderColor: Color.bg3,
     borderWidth: 1,
   },
-  cellEmpty: {backgroundColor: LIGHT_BG_3},
-  cellFilled: {backgroundColor: LIGHT_GRAPHIC_GREEN_1},
+  cellEmpty: {backgroundColor: Color.bg3},
+  cellFilled: {backgroundColor: Color.graphicGreen1},
   cellTextEmpty: {
     fontWeight: '600',
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
     textAlign: 'center',
   },
   cellTextFilled: {
     fontWeight: '600',
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
     textAlign: 'center',
   },
   error: {
@@ -211,7 +205,7 @@ const page = StyleSheet.create({
     paddingVertical: 11,
     textAlign: 'center',
     marginBottom: 16,
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   buttonStyle: {margin: 6},
   margin: {marginVertical: 16},

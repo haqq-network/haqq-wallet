@@ -1,16 +1,12 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {
-  Animated,
-  Dimensions,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {Animated, Dimensions, TouchableWithoutFeedback} from 'react-native';
 
 import {Text} from './ui';
 
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {asyncTiming, sleep} from '../utils';
-import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
 
 export type NotificationMessageProps = {
   message: string;
@@ -60,15 +56,15 @@ export const NotificationMessage = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginVertical: 4,
     maxWidth: Dimensions.get('window').width - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 24,
-    shadowColor: SHADOW_COLOR,
+    shadowColor: Color.bg9,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -78,5 +74,9 @@ const page = StyleSheet.create({
     elevation: 5,
   },
   flex: {flex: 1},
-  t14: {fontWeight: '600', color: LIGHT_TEXT_BASE_1, textAlign: 'center'},
+  t14: {
+    fontWeight: '600',
+    color: Color.textBase1,
+    textAlign: 'center',
+  },
 });

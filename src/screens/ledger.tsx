@@ -13,8 +13,8 @@ import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 
-import {useUser} from '../contexts/app';
 import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {useUser} from '../hooks/use-user';
 import {ScreenOptionType} from '../types';
 
 const LedgerStack = createStackNavigator();

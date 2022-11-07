@@ -1,15 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {LIGHT_BG_1, LIGHT_BG_3, LIGHT_TEXT_BASE_1} from '../../variables';
+import {Color} from '../../colors';
+import {createTheme} from '../../helpers/create-theme';
 
 export type SegmentedControlValue<T> = {
   value: T;
@@ -52,9 +48,9 @@ export const SegmentedControl = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     padding: 3,
     borderRadius: 14,
     flexDirection: 'row',
@@ -66,10 +62,10 @@ const page = StyleSheet.create({
     padding: 8,
   },
   itemActive: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 12,
   },
   text: {
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

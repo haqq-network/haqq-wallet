@@ -3,20 +3,14 @@ import React from 'react';
 import {IS_LEDGER_ENABLED} from '@env';
 import {NavigationProp} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, View} from 'react-native';
 
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 
+import {Color} from '../colors';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {
-  LIGHT_BG_1,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  MAGIC_CARD_HEIGHT,
-  SHADOW_COLOR,
-} from '../variables';
+import {MAGIC_CARD_HEIGHT} from '../variables';
 
 const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED, 10));
 
@@ -82,17 +76,16 @@ export const WalletCreate = ({}: BalanceProps) => {
 
 const cardWidth = Dimensions.get('window').width - 40;
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     width: cardWidth,
     height: Math.max(cardWidth * MAGIC_CARD_HEIGHT, 212),
-    borderColor: LIGHT_GRAPHIC_SECOND_1,
+    borderColor: Color.graphicSecond1,
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
-    backgroundColor: LIGHT_BG_1,
     shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
@@ -104,13 +97,13 @@ const page = StyleSheet.create({
   },
   title: {
     fontWeight: '600',
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
     textAlign: 'center',
     marginBottom: 4,
   },
   subtitle: {
     textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
   },
   create: {
     flex: 0,
@@ -135,5 +128,5 @@ const page = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
   },
-  ledgerIcon: {width: 22, height: 22, tintColor: LIGHT_GRAPHIC_GREEN_1},
+  ledgerIcon: {width: 22, height: 22, tintColor: Color.graphicGreen1},
 });

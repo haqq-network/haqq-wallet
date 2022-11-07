@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {Animated, StyleSheet, View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
 
 import {SwipeableButton} from './swipeable-button';
 
+import {createTheme} from '../../helpers/create-theme';
 import {SwipeableAction} from '../../types';
 
 export type SwipeableRowProps<T> = {
@@ -41,7 +42,7 @@ export const SwipeableRow = ({
   return <Swipeable renderRightActions={rActions}>{children}</Swipeable>;
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
   },

@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color, getColor} from '../colors';
 import {MnemonicWord} from '../components/mnemonic-word';
 import {
   Button,
@@ -18,8 +19,8 @@ import {
   Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
+import {createTheme} from '../helpers/create-theme';
 import {RootStackParamList} from '../types';
-import {LIGHT_BG_3, LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 
 export const BackupCreateScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -57,7 +58,7 @@ export const BackupCreateScreen = () => {
           </View>
         </View>
         <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
-          <Copy color={LIGHT_TEXT_GREEN_1} />
+          <Copy color={getColor(Color.textGreen1)} />
           <Text clean style={page.copyText}>
             Copy
           </Text>
@@ -88,13 +89,13 @@ export const BackupCreateScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 20,
     paddingTop: 20,
   },
   mnemonics: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     flexDirection: 'row',
     padding: 20,
     borderRadius: 16,
@@ -105,7 +106,7 @@ const page = StyleSheet.create({
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     fontWeight: '600',
     marginLeft: 12,
     marginBottom: 4,
@@ -118,7 +119,7 @@ const page = StyleSheet.create({
     alignSelf: 'center',
   },
   copyText: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
     fontWeight: '700',
     fontSize: 16,
     lineHeight: 22,
@@ -129,7 +130,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   t11: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     textAlign: 'center',
   },
 });

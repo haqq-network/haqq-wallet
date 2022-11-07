@@ -1,7 +1,8 @@
 import React from 'react';
 
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
+import {createTheme} from '../../helpers/create-theme';
 import {PopupContainer} from '../ui';
 
 export const LedgerScanEmpty = () => {
@@ -12,7 +13,7 @@ export const LedgerScanEmpty = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',
