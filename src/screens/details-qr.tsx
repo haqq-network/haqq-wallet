@@ -29,6 +29,7 @@ import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
 import {QR} from '../components/ui/qr';
+import {windowWidth} from '../helpers';
 
 // const logo = require('../../assets/images/qr-logo.png');
 
@@ -143,7 +144,8 @@ const page = StyleSheet.create({
     backgroundColor: GRAPHIC_BASE_3,
     borderRadius: 12,
     marginBottom: 20,
-    flex: 0,
+    width: windowWidth - 145,
+    height: windowWidth - 145,
   },
-  qr: {flex: 0},
+  qr: {flex: 1},
 });

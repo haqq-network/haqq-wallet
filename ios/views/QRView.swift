@@ -10,7 +10,7 @@ import Foundation
 @objc(RNQRViewManager)
 class RNQRViewManager: RCTViewManager {
   override static func requiresMainQueueSetup() -> Bool {
-    return true
+    return false
   }
   
   override func view() -> UIView! {
@@ -28,16 +28,28 @@ class RNQRViewManager: RCTViewManager {
 }
 
 import UIKit
-class QRView: UIView {
-  @objc var value = "" {
+class QRView: UIImageView {
+  var width: CGFloat = 0.0 {
     didSet {
-      button.setTitle(String(describing: value), for: .normal)
+      rerenderImage()
     }
   }
   
+  @objc var value = "" {
+    didSet {
+      rerenderImage()
+    }
+  }
+  
+  var qrCodeImage: CIImage!
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
-    self.addSubview(button)
+    self.contentMode = .scaleAspectFit
+  }
+  
+  init() {
+      super.init(frame: CGRect.zero)
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -45,18 +57,66 @@ class QRView: UIView {
   }
   
   override func layoutSubviews() {
-    button.frame.size.height = self.bounds.width
+    print("self.bounds \(self.bounds)")
+    width = self.bounds.width
   }
-  
-  lazy var button: UIButton = {
-    let b = UIButton.init(type: UIButton.ButtonType.system)
-    b.titleLabel?.font = UIFont.systemFont(ofSize: 50)
-    b.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    b.backgroundColor = .darkGray
-    return b
-  }()
   
   @objc func update(newValue: String) {
     value = newValue
   }
+  
+  func rerenderImage() {
+    if let qrImage = generateQrCode(value) {
+      image = UIImage(ciImage: qrImage)
+      
+      if width > 0.0 {
+        let logo = UIImage(named: "qr-logo")?.rounded(radius: 8.0)
+        logo?.addToCenter(of: self, width: width * 0.302325581, height: width * 0.302325581)
+      }
+    }
+  }
+  
+  func generateQrCode(_ content: String)  -> CIImage? {
+      let data = content.data(using: String.Encoding.ascii, allowLossyConversion: false)
+      let filter = CIFilter(name: "CIQRCodeGenerator")
+
+      filter?.setValue(data, forKey: "inputMessage")
+      filter?.setValue("H", forKey: "inputCorrectionLevel")
+
+      if let qrCodeImage = (filter?.outputImage){
+          return qrCodeImage
+      }
+
+      return nil
+  }
+}
+
+extension UIImage {
+    func addToCenter(of superView: UIView, width: CGFloat = 100, height: CGFloat = 100) {
+        let overlayImageView = UIImageView(image: self)
+        
+      print("overlayImageView \(overlayImageView.bounds) \(overlayImageView.frame)")
+      print("superView \(superView.frame)")
+
+        overlayImageView.translatesAutoresizingMaskIntoConstraints = false
+        overlayImageView.contentMode = .scaleAspectFit
+        superView.addSubview(overlayImageView)
+        
+        let centerXConst = NSLayoutConstraint(item: overlayImageView, attribute: .centerX, relatedBy: .equal, toItem: superView, attribute: .centerX, multiplier: 1, constant: 0)
+        let width = NSLayoutConstraint(item: overlayImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 100)
+        let height = NSLayoutConstraint(item: overlayImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 100)
+        let centerYConst = NSLayoutConstraint(item: overlayImageView, attribute: .centerY, relatedBy: .equal, toItem: superView, attribute: .centerY, multiplier: 1, constant: 0)
+        
+        NSLayoutConstraint.activate([width, height, centerXConst, centerYConst])
+    }
+}
+
+extension UIImage {
+    public func rounded(radius: CGFloat) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
+        draw(in: rect)
+        return UIGraphicsGetImageFromCurrentImageContext()!
+    }
 }
