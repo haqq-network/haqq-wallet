@@ -24,8 +24,6 @@ export const SignupStoreWalletScreen = () => {
       try {
         const mnemonic = await generateMnemonic();
 
-        console.log('mnemonic', mnemonic);
-
         await wallets.addWalletFromMnemonic(
           mnemonic,
           wallets.getSize() === 0
