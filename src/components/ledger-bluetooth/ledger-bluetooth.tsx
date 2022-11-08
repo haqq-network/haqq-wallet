@@ -32,9 +32,12 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
         subscription.current?.unsubscribe();
       }
       if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(
+        await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
+        ]);
       }
       const manager = new BleManager();
       let sub = null;
