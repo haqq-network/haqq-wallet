@@ -33,11 +33,13 @@ const screenOptionsSendFunds: ScreenOptionType = {
 
 export const TransactionScreen = () => {
   const wallets = useWallets();
-  const route = useRoute<RouteProp<RootStackParamList, 'transaction'>>();
+  const {
+    params: {from, to},
+  } = useRoute<RouteProp<RootStackParamList, 'transaction'>>();
 
   const screenOptionsAddressRoute: ScreenOptionType = {
     title: 'Address',
-    headerBackHidden: route.params.from || wallets.visible.length === 1,
+    headerBackHidden: from || wallets.visible.length === 1,
     headerRight: DismissPopupButton,
   };
 
@@ -45,14 +47,14 @@ export const TransactionScreen = () => {
     <TransactionStack.Navigator
       screenOptions={popupScreenOptions}
       initialRouteName={
-        route.params.from || wallets.visible.length === 1
+        from || wallets.visible.length === 1
           ? 'transactionAddress'
           : 'transactionAccount'
       }>
       <TransactionStack.Screen
         name="transactionAddress"
         component={TransactionAddressScreen}
-        initialParams={{from: route.params.from, to: route.params.to}}
+        initialParams={{from, to}}
         options={screenOptionsAddressRoute}
       />
       <TransactionStack.Screen
@@ -72,7 +74,7 @@ export const TransactionScreen = () => {
       />
       <TransactionStack.Screen
         name="transactionAccount"
-        initialParams={{to: route.params.to}}
+        initialParams={{to}}
         component={TransactionAccountScreen}
         options={screenOptionsSendFunds}
       />
