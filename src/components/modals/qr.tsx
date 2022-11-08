@@ -21,6 +21,7 @@ import {
 } from '../ui';
 import {
   GRAPHIC_BASE_3,
+  GRAPHIC_GREEN_2,
   GRAPHIC_RED_1,
   GRAPHIC_SECOND_12,
   GRAPHIC_SECOND_8,
@@ -182,10 +183,12 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
               </IconButton>
               <IconButton
                 onPress={() => {
-                  setFlashMode(!flashMode);
+                  setFlashMode(pr => !pr);
                 }}
                 style={page.iconButton}>
-                <FlashLightIcon color={GRAPHIC_BASE_3} />
+                <FlashLightIcon
+                  color={flashMode ? GRAPHIC_GREEN_2 : GRAPHIC_BASE_3}
+                />
               </IconButton>
             </View>
           </View>

@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '12.4'
+platform :ios, '13'
 install! 'cocoapods', :deterministic_uuids => false
 
 production = ENV["PRODUCTION"] == "1"
@@ -24,6 +24,9 @@ target 'haqq' do
   )
 
   pod 'CryptoSwift', '~> 1.6.0'
+  pod 'secp256k1Swift', '~> 0.7.4'
+  pod 'secp256k1Wrapper', :modular_headers => true
+
 #   pod 'Firebase', :modular_headers => true
 #   pod 'FirebaseCore', :modular_headers => true
 #   pod 'GoogleUtilities', :modular_headers => true
