@@ -20,7 +20,7 @@ export type RestoreAgreementProps = {
 
 export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   return (
-    <PopupContainer style={page.container} testID={testID} scrollEnabled>
+    <PopupContainer style={page.container} testID={testID}>
       <View style={page.animation}>
         <LottieWrap
           source={require('../../../assets/animations/recover-animation.json')}
