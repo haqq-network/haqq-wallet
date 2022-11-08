@@ -1,6 +1,6 @@
 import {useCallback, useRef} from 'react';
 import {Animated} from 'react-native';
-import {GRAPHIC_SECOND_13, GRAPHIC_SECOND_14} from '../variables';
+import {GRAPHIC_SECOND_13, TRANSPARENT} from '../variables';
 
 interface useAndroidStatusBarAnimationT {
   animatedValueRange: [number, number];
@@ -10,8 +10,8 @@ interface useAndroidStatusBarAnimationT {
 
 export const useAndroidStatusBarAnimation = ({
   animatedValueRange,
-  animatedValueOutputRange = [GRAPHIC_SECOND_14, GRAPHIC_SECOND_13],
-  duration = 500,
+  animatedValueOutputRange = [TRANSPARENT, GRAPHIC_SECOND_13],
+  duration = 250,
 }: useAndroidStatusBarAnimationT) => {
   const [startPoint, endPoint] = animatedValueRange;
 

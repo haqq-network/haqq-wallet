@@ -1,1 +1,1 @@
-export * from './useAndroidStatusBarAnimation';
+export * from './use-android-status-bar-animation';
