@@ -8,7 +8,7 @@
   },
   {
     "id": "6d83b352-6da6-4a71-a250-ba222080e21f",
-    "name": "Main net",
+    "name": "Mainnet",
     "network": "https://rpc.eth.haqq.network",
     "chainId": 11235,
     "explorer": "https://explorer.haqq.network/"
