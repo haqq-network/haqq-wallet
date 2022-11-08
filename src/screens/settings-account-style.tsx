@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions, ScrollView, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
@@ -14,6 +14,7 @@ import {
   ButtonSize,
   ButtonVariant,
   Card,
+  PopupContainer,
   SegmentedControl,
   Spacer,
   Text,
@@ -141,9 +142,7 @@ export const SettingsAccountStyleScreen = () => {
   }, [cardStyle, colors, navigation, wallet, pattern]);
 
   return (
-    <ScrollView
-      contentContainerStyle={page.container}
-      showsVerticalScrollIndicator={false}>
+    <PopupContainer style={page.container}>
       <Animated.View style={animatedStyles}>
         <Card
           width={cardWidth}
@@ -188,7 +187,7 @@ export const SettingsAccountStyleScreen = () => {
         onPress={onPressApply}
         style={page.button}
       />
-    </ScrollView>
+    </PopupContainer>
   );
 };
 
