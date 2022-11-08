@@ -458,6 +458,9 @@ PODS:
     - Sentry (= 7.25.1)
   - RNSVG (12.4.4):
     - React-Core
+  - secp256k1Swift (0.7.4):
+    - secp256k1Wrapper (~> 0.0.5)
+  - secp256k1Wrapper (0.0.5)
   - Sentry (7.25.1):
     - Sentry/Core (= 7.25.1)
   - Sentry/Core (7.25.1)
@@ -553,6 +556,8 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
+  - secp256k1Swift (~> 0.7.4)
+  - secp256k1Wrapper
   - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -573,6 +578,8 @@ SPEC REPOS:
     - libevent
     - MultiplatformBleAdapter
     - OpenSSL-Universal
+    - secp256k1Swift
+    - secp256k1Wrapper
     - Sentry
     - SocketRocket
     - YogaKit
@@ -773,12 +780,14 @@ SPEC CHECKSUMS:
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSentry: f63b860631c855cae811b15f1d574176e91dcf73
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
+  secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
+  secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: dd29c18c32b0af9269949f079cf631d581ca76ca
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 1f02ef4ce4469aefc36167138441b27d988282b1
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 97e59098026e39c5f974ec9e597bee7c59b56daa
+PODFILE CHECKSUM: bf079db6a4972c1c266885666664a1a833095dbc
 
 COCOAPODS: 1.11.3
