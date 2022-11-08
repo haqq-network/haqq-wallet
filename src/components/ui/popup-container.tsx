@@ -1,46 +1,28 @@
 import React from 'react';
-import {
-  ScrollView,
-  ScrollViewProps,
-  StyleSheet,
-  View,
-  ViewProps,
-} from 'react-native';
+import {ScrollView, ScrollViewProps, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-interface PopupContainerProps {
-  scrollEnabled?: boolean;
-}
 
 export const PopupContainer = ({
   children,
   style,
-  scrollEnabled = true,
   ...props
-}: ViewProps & PopupContainerProps) => {
+}: ScrollViewProps) => {
   const insets = useSafeAreaInsets();
-  const Component = scrollEnabled ? ScrollView : View;
 
   const propStyle = StyleSheet.compose(
-    {flex: 1, paddingBottom: insets.bottom},
+    {flexGrow: 1, paddingBottom: insets.bottom},
     style,
   );
-
-  const defaultViewProps: ViewProps = {
-    style: propStyle,
-  };
-  const defaultScrollViewProps: ScrollViewProps = {
+  const defaultProps: ScrollViewProps = {
     showsVerticalScrollIndicator: false,
     contentContainerStyle: propStyle,
+    overScrollMode: 'never',
+    bounces: false,
   };
 
-  const defaultProps = scrollEnabled
-    ? defaultScrollViewProps
-    : defaultViewProps;
-
   return (
-    <Component {...defaultProps} {...props}>
+    <ScrollView {...defaultProps} {...props}>
       {children}
-    </Component>
+    </ScrollView>
   );
 };
