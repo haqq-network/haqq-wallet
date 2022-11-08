@@ -117,7 +117,9 @@ class App extends EventEmitter {
           bluetooth: false,
           language: 'en',
           providerId:
-            ENVIRONMENT === 'production' ? MAIN_NETWORK : TEST_NETWORK,
+            ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
+              ? MAIN_NETWORK
+              : TEST_NETWORK,
         });
       });
     }
