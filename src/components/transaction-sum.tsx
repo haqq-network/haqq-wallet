@@ -115,7 +115,6 @@ export const TransactionSum = ({
       <Text clean style={page.subtitle}>
         ISLM
       </Text>
-
       <View style={page.sum}>
         <View style={page.swap}>
           {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
