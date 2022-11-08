@@ -42,6 +42,7 @@ export const SettingsAccountStyleScreen = () => {
     useRoute<RouteProp<RootStackParamList, 'settingsAccountStyle'>>();
 
   const timerRef: {current: NodeJS.Timeout | null} = useRef(null);
+  const [isStyleChanged, setIsStyleChanged] = useState(false);
   const opacity = useSharedValue(1);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -136,6 +137,27 @@ export const SettingsAccountStyleScreen = () => {
     }, 500);
   }, [cardStyle, patternStyle]);
 
+  useEffect(() => {
+    const {
+      cardStyle: WCardStyle,
+      colorFrom,
+      colorTo,
+      colorPattern,
+      pattern: WPattern,
+    } = wallet;
+    if (
+      WCardStyle !== cardStyle ||
+      colors[0] !== colorFrom ||
+      colors[1] !== colorTo ||
+      colors[2] !== colorPattern ||
+      WPattern !== pattern
+    ) {
+      !isStyleChanged && setIsStyleChanged(true);
+    } else {
+      isStyleChanged && setIsStyleChanged(false);
+    }
+  }, [isStyleChanged, colors, cardStyle, wallet, pattern]);
+
   const onPressApply = useCallback(() => {
     wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2], pattern);
     navigation.goBack();
@@ -183,7 +205,8 @@ export const SettingsAccountStyleScreen = () => {
       <Button
         variant={ButtonVariant.second}
         size={ButtonSize.middle}
-        title="Use this style"
+        title={isStyleChanged ? 'Use this style' : 'This style is used'}
+        disabled={!isStyleChanged}
         onPress={onPressApply}
         style={page.button}
       />
