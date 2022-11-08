@@ -63,9 +63,9 @@ export const SettingsAddressBookScreen =
     }, [contacts, search]);
 
     const onPressQR = useCallback(() => {
-      const subscription = (value: string) => {
-        if (utils.isAddress(value.trim())) {
-          setSearch(value.trim());
+      const subscription = ({to}: any) => {
+        if (utils.isAddress(to)) {
+          setSearch(to);
           app.off('address', subscription);
           hideModal();
         }
@@ -73,7 +73,7 @@ export const SettingsAddressBookScreen =
 
       app.on('address', subscription);
 
-      showModal('qr');
+      showModal('qr', {qrWithoutFrom: true});
     }, [app]);
 
     const onPressClear = useCallback(() => {

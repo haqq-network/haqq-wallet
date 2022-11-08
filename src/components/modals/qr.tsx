@@ -1,16 +1,22 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from 'ethers';
-import {app} from '../../contexts/app';
 import {
   ArrowBackIcon,
   FlashLightIcon,
   IconButton,
   ImageIcon,
+  Spacer,
   Text,
 } from '../ui';
 import {
@@ -24,13 +30,60 @@ import {
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HapticEffects, vibrate} from '../../services/haptic';
+import {BottomSheet} from '../bottom-sheet';
+import {useWallets} from '../../contexts/wallets';
+import {WalletRow} from '../wallet-row';
+import {hideModal} from '../../helpers/modal';
+import {useApp} from '../../contexts/app';
 
 export type QRModalProps = {
-  onClose: () => void;
+  onClose?: () => void;
+  qrWithoutFrom?: boolean;
 };
 
-export const QRModal = ({onClose}: QRModalProps) => {
+export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const wallets = useWallets();
+  const app = useApp();
+
+  const closeDistance = useWindowDimensions().height / 6;
+  const [rows, setRows] = useState(wallets.visible);
   const [code, setCode] = useState('');
+
+  const prepareAddress = useCallback((data: string) => {
+    if (data.startsWith('haqq:')) {
+      return data.slice(5);
+    }
+
+    if (data.startsWith('etherium:')) {
+      return data.slice(9);
+    }
+    if (data.trim() !== '') {
+      return data.trim();
+    }
+  }, []);
+
+  const handleAddressEvent = useCallback(
+    (address: string) => {
+      app.emit('address', {
+        to: prepareAddress(code),
+        from: address.trim(),
+      });
+    },
+    [app, prepareAddress, code],
+  );
+
+  useEffect(() => {
+    const callback = () => {
+      setRows(wallets.visible);
+    };
+    callback();
+    wallets.on('wallets', callback);
+    return () => {
+      wallets.off('wallets', callback);
+    };
+  }, [wallets]);
+
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const insets = useSafeAreaInsets();
@@ -44,32 +97,28 @@ export const QRModal = ({onClose}: QRModalProps) => {
     [code],
   );
 
-  const checkAddress = useCallback((address: string) => {
-    if (utils.isAddress(address)) {
-      app.emit('address', address);
-    } else {
-      setError(true);
-      vibrate(HapticEffects.error);
-      setTimeout(() => {
-        setError(false);
-      }, 5000);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (code.startsWith('haqq:')) {
-      checkAddress(code.slice(5));
-      return;
-    }
-
-    if (code.startsWith('etherium:')) {
-      checkAddress(code.slice(9));
-      return;
-    }
-    if (code.trim() !== '') {
-      checkAddress(code.trim());
-    }
-  }, [checkAddress, code]);
+  const checkAddress = useCallback(
+    (address: string) => {
+      if (utils.isAddress(address)) {
+        if (rows.length === 1) {
+          hideModal();
+          app.emit('address', {
+            to: prepareAddress(address),
+            from: rows[0].address.trim(),
+          });
+        } else {
+          setIsOpen(true);
+        }
+      } else {
+        setError(true);
+        vibrate(HapticEffects.error);
+        setTimeout(() => {
+          setError(false);
+        }, 5000);
+      }
+    },
+    [rows, prepareAddress, setIsOpen, app],
+  );
 
   const onClickGallery = useCallback(async () => {
     const response = await launchImageLibrary({mediaType: 'photo'});
@@ -80,12 +129,23 @@ export const QRModal = ({onClose}: QRModalProps) => {
         try {
           const data = await QRreader(first.uri);
           setCode(data);
+          const slicedAddress = prepareAddress(data);
+
+          if (slicedAddress && qrWithoutFrom) {
+            app.emit('address', {
+              to: slicedAddress,
+            });
+          } else if (slicedAddress) {
+            checkAddress(slicedAddress);
+          }
         } catch (err) {
           console.log(err);
         }
       }
     }
-  }, []);
+  }, [prepareAddress, checkAddress, qrWithoutFrom, app]);
+
+  const onCloseBottomSheet = () => setIsOpen(false);
 
   return (
     <>
@@ -143,6 +203,17 @@ export const QRModal = ({onClose}: QRModalProps) => {
           </View>
         </View>
       )}
+      {isOpen && (
+        <BottomSheet
+          onClose={onCloseBottomSheet}
+          closeDistance={closeDistance}
+          title="Send funds from">
+          {rows.map((item, id) => (
+            <WalletRow key={id} item={item} onPress={handleAddressEvent} />
+          ))}
+          <Spacer style={page.spacer} />
+        </BottomSheet>
+      )}
     </>
   );
 };
@@ -191,4 +262,5 @@ const page = StyleSheet.create({
     borderRadius: 28,
     backgroundColor: GRAPHIC_SECOND_9,
   },
+  spacer: {height: 50},
 });

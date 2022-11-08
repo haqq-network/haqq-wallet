@@ -145,7 +145,6 @@ export const App = () => {
       hideModal();
     });
   }, []);
-  useEffect(() => () => console.log('unmount'), []);
 
   const [initialized, setInitialized] = useState(false);
 

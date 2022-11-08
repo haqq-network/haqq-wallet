@@ -74,9 +74,9 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
-    const subscription = (value: string) => {
-      if (utils.isAddress(value.trim())) {
-        setAddress(value.trim());
+    const subscription = ({to}: any) => {
+      if (utils.isAddress(to)) {
+        setAddress(to);
         app.off('address', subscription);
         hideModal();
       }
@@ -87,9 +87,7 @@ export const TransactionAddress = ({
     showModal('qr');
   }, [app]);
 
-  const onPressClear = useCallback(() => {
-    setAddress('');
-  }, []);
+  const onPressClear = useCallback(() => setAddress(''), []);
 
   return (
     <KeyboardSafeArea>

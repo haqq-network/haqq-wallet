@@ -19,20 +19,20 @@ type Loading = {
 } & LoadingModalProps;
 
 type Splash = {
-  type: 'splash' & SplashModalProps;
-};
+  type: 'splash';
+} & SplashModalProps;
 
 type Pin = {
-  type: 'pin' & PinModalProps;
-};
+  type: 'pin';
+} & PinModalProps;
 
 type QR = {
-  type: 'qr' & QRModalProps;
-};
+  type: 'qr';
+} & QRModalProps;
 
 type NoInternet = {
   type: 'qr' & QRModalProps;
-};
+} & QRModalProps;
 
 type ModalState = Loading | Splash | Pin | QR | NoInternet | null;
 
@@ -85,7 +85,12 @@ export const Modals = ({initialModal = null}: ModalProps) => {
       case 'splash':
         return <SplashModal />;
       case 'qr':
-        return <QRModal onClose={onClose} />;
+        return (
+          <QRModal
+            onClose={onClose || modal.onClose}
+            qrWithoutFrom={modal.qrWithoutFrom}
+          />
+        );
       case 'no-internet':
         return <NoInternet />;
       case 'error-account-added':
