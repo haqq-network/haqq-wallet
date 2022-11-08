@@ -1,6 +1,5 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import {HDNode} from 'ethers/lib/utils';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
 import {app} from './app';
@@ -16,13 +15,11 @@ import {
   getPatternName,
   sleep,
 } from '../utils';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {encrypt} from '../passworder';
 import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
-  ETH_HD_PATH,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
   GRAPHIC_GREEN_3,
@@ -30,8 +27,11 @@ import {
 } from '../variables';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
-import {EthNetwork} from '../services/eth-network';
 import {captureException} from '../helpers';
+import {
+  restoreFromMnemonic,
+  restoreFromPrivateKey,
+} from '../services/eth-utils';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
@@ -159,11 +159,11 @@ class Wallets extends EventEmitter {
     );
   }
 
-  addWalletFromMnemonic(
+  async addWalletFromMnemonic(
     mnemonic: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const node = HDNode.fromMnemonic(mnemonic).derivePath(ETH_HD_PATH);
+    const node = await restoreFromMnemonic(mnemonic);
 
     return this.addWallet(
       {
@@ -176,17 +176,17 @@ class Wallets extends EventEmitter {
     );
   }
 
-  addWalletFromPrivateKey(
+  async addWalletFromPrivateKey(
     privateKey: string,
     name = '',
   ): Promise<Wallet | null> {
-    const wallet = new EthersWallet(privateKey, EthNetwork.network);
+    const node = await restoreFromPrivateKey(privateKey);
 
     return this.addWallet(
       {
-        address: wallet.address,
+        address: node.address,
         type: WalletType.hot,
-        privateKey: wallet.privateKey,
+        privateKey: node.privateKey,
       },
       name,
     );
