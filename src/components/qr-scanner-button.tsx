@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
-import {IconButton, QRScanner} from './ui';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 import {utils} from 'ethers';
-import {useApp} from '../contexts/app';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useApp} from '../contexts/app';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 import {RootStackParamList} from '../types';
 import {hideModal, showModal} from '../helpers/modal';
+import {IconButton, QRScanner} from './ui';
 
 export const QrScannerButton = () => {
   const app = useApp();

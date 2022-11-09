@@ -2,13 +2,14 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import prompt from 'react-native-prompt-android';
 import {RootStackParamList} from '../types';
 import {
   BlockIcon,
   Button,
   ButtonVariant,
-  IconButton,
   ISLMIcon,
+  IconButton,
   LottieWrap,
   PenIcon,
   PopupContainer,
@@ -28,7 +29,6 @@ import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
 import {useContacts} from '../contexts/contacts';
 import {shortAddress} from '../utils';
-import prompt from 'react-native-prompt-android';
 import {EthNetwork} from '../services/eth-network';
 import {openURL} from '../helpers';
 

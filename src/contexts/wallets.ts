@@ -1,8 +1,7 @@
-import {createContext, useContext, useEffect, useState} from 'react';
 import {EventEmitter} from 'events';
-import {realm} from '../models';
-import {Wallet, WalletRealm} from '../models/wallet';
-import {app} from './app';
+import {createContext, useContext, useEffect, useState} from 'react';
+import {isAfter} from 'date-fns';
+import {Image} from 'react-native';
 import {
   Mnemonic,
   WalletCardPattern,
@@ -20,18 +19,19 @@ import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
-  FLAT_PRESETS,
-  GRADIENT_PRESETS,
   DEFAULT_CARD_BACKGROUND,
   DEFAULT_CARD_PATTERN,
+  FLAT_PRESETS,
+  GRADIENT_PRESETS,
 } from '../variables';
-import {isAfter} from 'date-fns';
-import {Image} from 'react-native';
+import {realm} from '../models';
+import {Wallet, WalletRealm} from '../models/wallet';
 import {captureException} from '../helpers';
 import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
 } from '../services/eth-utils';
+import {app} from './app';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];

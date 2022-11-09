@@ -5,11 +5,11 @@ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {Observable, Subscription} from 'rxjs';
 import {PopupContainer} from '../ui';
 import {OnScanEvent} from '../../services/ledger';
+import {useApp} from '../../contexts/app';
+import {captureException} from '../../helpers';
 import {LedgerScanRow} from './ledger-scan-row';
 import {LedgerScanHeader} from './ledger-scan-header';
-import {useApp} from '../../contexts/app';
 import {LedgerScanEmpty} from './ledger-scan-empty';
-import {captureException} from '../../helpers';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;

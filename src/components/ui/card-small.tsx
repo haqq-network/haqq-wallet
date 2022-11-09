@@ -1,12 +1,12 @@
 import React from 'react';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {PATTERNS_SOURCE} from '@env';
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
   GRADIENT_START,
 } from '../../variables';
-import {PATTERNS_SOURCE} from '@env';
 
 export type CardSmallProps = {
   children?: React.ReactNode;

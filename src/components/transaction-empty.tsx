@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {NoTransactionsIcon, Text} from './ui';
 import {LIGHT_GRAPHIC_SECOND_3, LIGHT_TEXT_SECOND_1} from '../variables';
+import {NoTransactionsIcon, Text} from './ui';
 
 export const TransactionEmpty = () => {
   return (

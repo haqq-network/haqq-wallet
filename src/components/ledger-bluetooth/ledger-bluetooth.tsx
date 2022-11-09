@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
+import {Observable, Subscription} from 'rxjs';
 import {
   Button,
   ButtonVariant,
@@ -11,8 +12,7 @@ import {
 } from '../ui';
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
-import {getText, I18N} from '../../i18n';
-import {Observable, Subscription} from 'rxjs';
+import {I18N, getText} from '../../i18n';
 import {windowHeight, windowWidth} from '../../helpers';
 
 export type LedgerBluetooth = {

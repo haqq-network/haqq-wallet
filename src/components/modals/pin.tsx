@@ -2,8 +2,8 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   LIGHT_BG_1,
-  PIN_BANNED_ATTEMPTS,
   LIGHT_TEXT_BASE_2,
+  PIN_BANNED_ATTEMPTS,
 } from '../../variables';
 import {useApp} from '../../contexts/app';
 import {RestorePassword} from '../restore-password';

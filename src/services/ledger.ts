@@ -1,7 +1,7 @@
+import {EventEmitter} from 'events';
 import {BleManager, Device, State} from 'react-native-ble-plx';
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 
-import {EventEmitter} from 'events';
 import {Observable, Subscription} from 'rxjs';
 import AppEth from '@ledgerhq/hw-app-eth';
 import {sleep} from '../utils';

@@ -10,28 +10,29 @@
 
 import React, {useEffect, useState} from 'react';
 import {
-  createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer,
   StackActions,
+  createNavigationContainerRef,
 } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
+import {createStackNavigator} from '@react-navigation/stack';
+import {AppState, Linking} from 'react-native';
 import {HomeScreen} from './screens/home';
-import {wallets, WalletsContext} from './contexts/wallets';
+import {WalletsContext, wallets} from './contexts/wallets';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
-import {app, AppContext} from './contexts/app';
+import {AppContext, app} from './contexts/app';
 import {SignInScreen} from './screens/signin';
-import {transactions, TransactionsContext} from './contexts/transactions';
+import {TransactionsContext, transactions} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {WelcomeScreen} from './screens/welcome';
 import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from './variables';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
-import {createStackNavigator} from '@react-navigation/stack';
 import {BackupNotificationScreen} from './screens/backup-notification';
 import {SettingsAccountsScreen} from './screens/settings-accounts';
 import {PopupHeader} from './components/popup-header';
@@ -60,7 +61,6 @@ import {StatusBarColor} from './components/ui';
 import {LedgerScreen} from './screens/ledger';
 import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
-import {AppState, Linking} from 'react-native';
 import {hideModal, showModal} from './helpers/modal';
 
 const screenOptions: ScreenOptionType = {

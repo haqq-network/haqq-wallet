@@ -7,6 +7,14 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'import/order': 'error',
+        'sort-imports':
+          [
+            'error',
+            {
+              'ignoreDeclarationSort': true
+            }
+          ],
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',

@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Icon, IconButton} from './ui';
-import {LIGHT_GRAPHIC_SECOND_2} from '../variables';
 import {useNavigation} from '@react-navigation/native';
+import {LIGHT_GRAPHIC_SECOND_2} from '../variables';
+import {Icon, IconButton} from './ui';
 
 export const DismissPopupButton = () => {
   const navigation = useNavigation();

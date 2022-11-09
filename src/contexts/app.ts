@@ -1,20 +1,20 @@
 import {EventEmitter} from 'events';
 import Keychain, {
+  STORAGE_TYPE,
   getGenericPassword,
   resetGenericPassword,
   setGenericPassword,
-  STORAGE_TYPE,
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 import {createContext, useContext, useEffect, useState} from 'react';
+import {AppState, Platform} from 'react-native';
+import {subMinutes} from 'date-fns';
+import {ENVIRONMENT} from '@env';
 import {realm} from '../models';
 import {User, UserType} from '../models/user';
-import {AppState, Platform} from 'react-native';
-import {BiometryType, AppLanguage, AppTheme} from '../types';
-import {subMinutes} from 'date-fns';
+import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 import {generateUUID} from '../utils';
-import {ENVIRONMENT} from '@env';
 import {Provider} from '../models/provider';
 import {EthNetwork} from '../services/eth-network';
 

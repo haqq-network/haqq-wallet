@@ -3,25 +3,25 @@ import {
   Dimensions,
   StatusBar,
   StyleSheet,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from 'ethers';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {
   LIGHT_GRAPHIC_BASE_3,
   LIGHT_GRAPHIC_GREEN_2,
   LIGHT_GRAPHIC_RED_1,
-  QR_STATUS_BAR,
-  QR_BACKGROUND,
-  SYSTEM_BLUR_3,
   LIGHT_TEXT_BASE_3,
+  QR_BACKGROUND,
+  QR_STATUS_BAR,
+  SYSTEM_BLUR_3,
 } from '../../variables';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HapticEffects, vibrate} from '../../services/haptic';
 import {BottomSheet} from '../bottom-sheet';
 import {useWallets} from '../../contexts/wallets';

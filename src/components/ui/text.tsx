@@ -1,8 +1,8 @@
 import {
   Platform,
-  StyleSheet,
   Text as RNText,
   TextProps as RNTextProps,
+  StyleSheet,
 } from 'react-native';
 import * as React from 'react';
 
