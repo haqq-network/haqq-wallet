@@ -5,10 +5,9 @@ import {AddressRow} from '../components/address-row';
 import {AddressHeader} from '../components/address-header';
 import {
   Box,
-  CloseCircle,
+  Icon,
   IconButton,
   PenIcon,
-  PlusIcon,
   PopupContainer,
   QRScanner,
   SwipeableRow,
@@ -179,7 +178,7 @@ export const SettingsAddressBookScreen =
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
+                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -188,7 +187,7 @@ export const SettingsAddressBookScreen =
         {canAdd && (
           <IconButton onPress={onPressAdd} style={page.addButton}>
             <Box style={page.badge}>
-              <PlusIcon color={GRAPHIC_BASE_2} />
+              <Icon s name="plusMid" color={GRAPHIC_BASE_2} />
             </Box>
             <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
           </IconButton>

@@ -5,7 +5,7 @@ import {utils} from 'ethers';
 import {
   Button,
   ButtonVariant,
-  CloseCircle,
+  Icon,
   IconButton,
   KeyboardSafeArea,
   QRScanner,
@@ -96,7 +96,7 @@ export const TransactionAddress = ({
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
+              <Icon name="closeCircle" color={GRAPHIC_BASE_2} />
             </IconButton>
           )
         }
