@@ -14,13 +14,11 @@ export const QrScannerButton = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const onPressQR = useCallback(() => {
-    const subscription = (value: string) => {
-      if (utils.isAddress(value.trim())) {
+    const subscription = ({from, to}: any) => {
+      if (utils.isAddress(to)) {
+        app.off('address', subscription);
         hideModal();
-
-        navigation.navigate('transaction', {
-          to: value.trim(),
-        });
+        navigation.navigate('transaction', {to, from});
       }
     };
 

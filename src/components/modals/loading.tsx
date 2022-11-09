@@ -1,12 +1,16 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {Text, Waiting} from '../ui';
-import {GRAPHIC_GREEN_2, TEXT_BASE_3} from '../../variables';
+import {BG_1, GRAPHIC_GREEN_2, TEXT_BASE_3} from '../../variables';
 
 export type LoadingModalProps = {
   text?: string;
 };
 export const LoadingModal = ({text}: LoadingModalProps) => {
+  useEffect(() => {
+    StatusBar.setBackgroundColor(GRAPHIC_GREEN_2);
+    return () => StatusBar.setBackgroundColor(BG_1);
+  }, []);
   return (
     <View style={page.container}>
       <Waiting style={page.waiting} />

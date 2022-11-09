@@ -280,7 +280,15 @@ dependencies {
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
   implementation 'com.google.firebase:firebase-analytics'
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
+  implementation 'fr.acinq.secp256k1:secp256k1-kmp-jvm:0.7.0'
+  implementation 'fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.7.0'
+//  implementation 'fr.acinq.secp256k1:secp256k1-kmp-jni-jvm-darwin:0.7.0'
   implementation platform('com.google.firebase:firebase-bom:30.3.2')
+
+  implementation "com.github.komputing.khash:keccak:1.1.1"
+
+  testImplementation platform("org.junit:junit-bom:5.9.1")
+  testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"
 
   debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
     exclude group: 'com.facebook.fbjni'
@@ -337,3 +345,16 @@ def isNewArchitectureEnabled() {
   // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
   return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
+
+android.testOptions {
+  unitTests.all {
+    useJUnitPlatform()
+  }
+}
+
+//test {
+//  useJUnitPlatform()
+//  testLogging {
+//    showStandardStreams = true
+//  }
+//}
