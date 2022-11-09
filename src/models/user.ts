@@ -63,7 +63,7 @@ export class User extends EventEmitter {
         }
 
         if (changes.changedProperties.includes('providerId')) {
-          this.emit('providerId', obj.providerId);
+          app.emit('providerId', obj.providerId);
         }
       }
     });
@@ -103,8 +103,6 @@ export class User extends EventEmitter {
     realm.write(() => {
       this._raw.providerId = value;
     });
-
-    this.emit('providerId', value);
   }
 
   get biometry() {
