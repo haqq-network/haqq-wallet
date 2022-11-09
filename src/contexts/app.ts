@@ -119,8 +119,8 @@ class App extends EventEmitter {
           username: generateUUID(),
           biometry: false,
           bluetooth: false,
-          language: 'en',
-          theme: 'system',
+          language: AppLanguage.en,
+          theme: AppTheme.light,
           providerId:
             ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
               ? MAIN_NETWORK
