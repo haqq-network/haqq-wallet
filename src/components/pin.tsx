@@ -17,6 +17,7 @@ import {
 import {HapticEffects, vibrate} from '../services/haptic';
 import {isBefore} from 'date-fns';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {moderateVerticalScale} from '../helpers/scaling-utils';
 
 export type PinProps = {
   title: string;
@@ -158,6 +159,10 @@ const page = StyleSheet.create({
     color: TEXT_RED_1,
     fontWeight: '600',
   },
-  title: {marginTop: 40, marginBottom: 12},
+  title: {
+    marginTop: moderateVerticalScale(40, 8),
+    marginBottom: 12,
+    textAlign: 'center',
+  },
   t11: {textAlign: 'center', color: TEXT_BASE_2},
 });

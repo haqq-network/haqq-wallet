@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Icon, IconButton, Text} from './ui';
+import {moderateVerticalScale} from '../helpers/scaling-utils';
 import {TEXT_BASE_1, TEXT_BASE_LIGHT_1} from '../variables';
 
 export type NumericKeyboardProps = {
@@ -117,8 +118,8 @@ const page = StyleSheet.create({
   button: {
     marginHorizontal: 12,
     marginVertical: 2,
-    width: 72,
-    height: 72,
+    width: moderateVerticalScale(72, 0.6),
+    height: moderateVerticalScale(72, 0.6),
     justifyContent: 'center',
     alignItems: 'center',
   },

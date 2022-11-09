@@ -1,13 +1,13 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 
 import {Icon} from '../components/ui';
 import {SettingsButton} from '../components/settings-button';
-import {GRAPHIC_BASE_1} from '../variables';
+import {GRAPHIC_BASE_1, HR_GRAY} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (
-    <View style={page.container}>
+    <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
         icon={<Icon s name="wallet" color={GRAPHIC_BASE_1} />}
         title="Manage accounts"
@@ -37,7 +37,7 @@ export const HomeSettingsScreen = () => {
         icon={<Icon s name="providers" color={GRAPHIC_BASE_1} />}
         title="Providers"
         next="settingsProviders"
-        style={page.button}
+        style={[page.button, page.hr]}
       />
 
       {/*<SettingsButton*/}
@@ -59,11 +59,15 @@ export const HomeSettingsScreen = () => {
       {/*  title="Test"*/}
       {/*  next="settingsTest"*/}
       {/*/>*/}
-    </View>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
   container: {marginHorizontal: 20},
   button: {marginBottom: 20},
+  hr: {
+    borderColor: HR_GRAY,
+    borderBottomWidth: 1,
+  },
 });

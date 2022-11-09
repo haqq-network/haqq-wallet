@@ -48,6 +48,9 @@ export const BG_6 = 'rgba(247, 193, 90, 0.3)';
 export const BG_7 = '#F9EEEE';
 export const BG_8 = '#F4F5F8';
 
+export const PLACEHOLDER_GRAY = '#AAAAAA';
+export const HR_GRAY = '#EEEEEE';
+
 export const TRANSPARENT = 'transparent';
 
 export const MAIN_ACCOUNT_NAME = 'Main account';
