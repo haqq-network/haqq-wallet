@@ -29,7 +29,7 @@ import {useApp} from '../contexts/app';
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
 import {hideModal, showModal} from '../helpers/modal';
-import {useAddressBookItemActions} from '../hooks/useAddressBookItemActions';
+import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
@@ -81,7 +81,7 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
-      navigation.navigate('editContact', {
+      navigation.navigate('settingsEditContact', {
         name: '',
         address: search.trim(),
         isCreate: true,

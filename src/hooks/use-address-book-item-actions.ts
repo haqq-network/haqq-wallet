@@ -37,7 +37,7 @@ export const useAddressBookItemActions = (
           address: item.account,
         });
       } else {
-        navigation.navigate('editContact', {
+        navigation.navigate('settingsEditContact', {
           name: item.name,
           address: item.account,
         });

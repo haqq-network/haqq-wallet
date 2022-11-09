@@ -30,7 +30,7 @@ export const SettingsAccountDetailScreen = () => {
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {
-    navigation.navigate('editAccountName', route.params);
+    navigation.navigate('settingsAccountEdit', route.params);
   }, [navigation, route.params]);
 
   const onPressStyle = useCallback(() => {

@@ -32,6 +32,7 @@ export const Input = ({
 
 const page = StyleSheet.create({
   input: {
+    flex: 1,
     fontSize: 16,
     lineHeight: 22,
     color: TEXT_BASE_1,

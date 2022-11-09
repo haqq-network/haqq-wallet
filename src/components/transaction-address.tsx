@@ -26,7 +26,8 @@ import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
 import {hideModal, showModal} from '../helpers/modal';
-import {useAddressBookItemActions} from '../hooks/useAddressBookItemActions';
+import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
+import {useNavigation} from '@react-navigation/native';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -40,6 +41,7 @@ export const TransactionAddress = ({
   const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
+  const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
   const {contactsList, onPressEdit, onPressRemove} = useAddressBookItemActions(
@@ -85,7 +87,8 @@ export const TransactionAddress = ({
     app.on('address', subscription);
 
     showModal('qr');
-  }, [app]);
+    goBack();
+  }, [app, goBack]);
 
   const onPressClear = useCallback(() => setAddress(''), []);
 

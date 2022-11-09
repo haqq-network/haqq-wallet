@@ -14,20 +14,16 @@ import {StyleSheet, View} from 'react-native';
 import {GRAPHIC_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
 
-export const EditContactScreen = () => {
+export const TransactionEditContactScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const {name, address, isCreate} =
-    useRoute<RouteProp<RootStackParamList, 'editContact'>>().params;
+  const {name, address} =
+    useRoute<RouteProp<RootStackParamList, 'transactionEditContact'>>().params;
 
   const contacts = useContacts();
   const [inputName, setInputName] = useState(name);
 
   const onSubmit = () => {
-    if (isCreate) {
-      contacts.createContact(address, inputName);
-    } else {
-      contacts.updateContact(address, inputName);
-    }
+    contacts.updateContact(address, inputName);
     navigation.goBack();
   };
 
@@ -35,9 +31,7 @@ export const EditContactScreen = () => {
     setInputName(e);
   };
 
-  const cleanTextFile = () => {
-    setInputName('');
-  };
+  const cleanTextFile = () => setInputName('');
 
   return (
     <KeyboardSafeArea>
@@ -58,7 +52,8 @@ export const EditContactScreen = () => {
         <Input multiline label="Address" editable={false} value={address} />
         <View style={page.buttonContainer}>
           <Button
-            title="Save"
+            disabled={name === inputName}
+            title="Continue"
             onPress={onSubmit}
             variant={ButtonVariant.contained}
           />
