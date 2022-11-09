@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {Icon, IconButton, Text} from './ui';
-import {TEXT_BASE_LIGHT_1} from '../variables';
+import {TEXT_BASE_1, TEXT_BASE_LIGHT_1} from '../variables';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -99,7 +99,8 @@ export const NumericKeyboard = ({
         style={page.button}
         onPress={() => onPress(-1)}
         testID="numeric_keyboard_rem">
-        <Icon name={'clear'} />
+        <Icon name="clear" color={TEXT_BASE_1} />
+        <Image source={{uri: 'clear'}} style={page.clearIcon} />
       </IconButton>
     </View>
   );
@@ -128,5 +129,10 @@ const page = StyleSheet.create({
     lineHeight: 43,
     letterSpacing: 0.38,
     color: TEXT_BASE_LIGHT_1,
+  },
+  clearIcon: {
+    tintColor: TEXT_BASE_1,
+    width: 32,
+    height: 32,
   },
 });
