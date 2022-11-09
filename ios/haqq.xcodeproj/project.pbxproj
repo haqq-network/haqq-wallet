@@ -865,7 +865,7 @@
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IslamQ;
+				INFOPLIST_KEY_CFBundleDisplayName = "IslamIQ\nIslamIQ\nIslamIQ";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -901,7 +901,7 @@
 				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = IslamQ;
+				INFOPLIST_KEY_CFBundleDisplayName = "IslamIQ\nIslamIQ\nIslamIQ";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
