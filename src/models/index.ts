@@ -4,12 +4,12 @@ import {UserSchema} from './user';
 import {Transaction} from './transaction';
 import {Contact} from './contact';
 import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
-import {WalletType} from '../types';
+import {AppTheme, WalletType} from '../types';
 import {Provider} from './provider';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 24,
+  schemaVersion: 25,
   migration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -92,6 +92,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.onboarded = true;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 25) {
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects<{theme: string}>('User');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.theme = AppTheme.light;
       }
     }
   },

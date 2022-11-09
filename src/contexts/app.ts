@@ -8,9 +8,9 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 import {createContext, useContext, useEffect, useState} from 'react';
 import {realm} from '../models';
-import {Language, User, UserType} from '../models/user';
+import {User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
-import {BiometryType} from '../types';
+import {BiometryType, AppLanguage, AppTheme} from '../types';
 import {subMinutes} from 'date-fns';
 import {GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 import {generateUUID} from '../utils';
@@ -47,6 +47,7 @@ class App extends EventEmitter {
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
+  private _lastTheme: AppTheme = AppTheme.light;
 
   constructor() {
     super();
@@ -169,7 +170,7 @@ class App extends EventEmitter {
   }
 
   get language() {
-    return this.user?.language || Language.en;
+    return this.user?.language || AppLanguage.en;
   }
 
   set language(value) {
@@ -253,6 +254,17 @@ class App extends EventEmitter {
 
   getUser() {
     return this.user;
+  }
+
+  getTheme() {
+    if (this.user) {
+      this._lastTheme =
+        this.user.theme === AppTheme.system
+          ? this.user.systemTheme
+          : this.user.theme;
+    }
+
+    return this._lastTheme;
   }
 
   async onAppStatusChanged() {
