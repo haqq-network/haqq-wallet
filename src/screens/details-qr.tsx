@@ -29,8 +29,6 @@ import {useWallet} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
 import {Wallet} from '../models/wallet';
 
-const logo = require('../../assets/images/qr-logo.png');
-
 export const DetailsQrScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
@@ -79,7 +77,7 @@ export const DetailsQrScreen = () => {
         <View style={page.qrStyle}>
           <QRCode
             ecl={'H'}
-            logo={logo}
+            logo={require('../../assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}
