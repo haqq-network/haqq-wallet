@@ -1,17 +1,19 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList, TransactionList} from '../types';
-import {useWallets} from '../contexts/wallets';
-import {useTransactions} from '../contexts/transactions';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FlatList, StyleSheet} from 'react-native';
+
+import {TransactionEmpty} from '../components/transaction-empty';
 import {TransactionRow} from '../components/transaction-row';
 import {Wallets} from '../components/wallets';
-import {prepareTransactions} from '../utils';
-import {Wallet} from '../models/wallet';
-import {TransactionEmpty} from '../components/transaction-empty';
 import {useUser} from '../contexts/app';
+import {useTransactions} from '../contexts/transactions';
+import {useWallets} from '../contexts/wallets';
 import {Transaction} from '../models/transaction';
+import {Wallet} from '../models/wallet';
+import {RootStackParamList, TransactionList} from '../types';
+import {prepareTransactions} from '../utils';
 
 const filterTransactions = (
   transactions: Transaction[],

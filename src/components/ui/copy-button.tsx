@@ -1,10 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
+
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+
 import {useApp} from '../../contexts/app';
 
 export type CopyButtonProps = TouchableOpacityProps & {

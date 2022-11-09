@@ -1,5 +1,7 @@
 import {useCallback, useRef} from 'react';
+
 import {Animated} from 'react-native';
+
 import {LIGHT_BG_9, TRANSPARENT} from '../variables';
 
 interface useAndroidStatusBarAnimationT {

@@ -1,8 +1,11 @@
 import React, {useMemo} from 'react';
-import {Swipeable} from 'react-native-gesture-handler';
+
 import {Animated, StyleSheet, View} from 'react-native';
-import {SwipeableAction} from '../../types';
+import {Swipeable} from 'react-native-gesture-handler';
+
 import {SwipeableButton} from './swipeable-button';
+
+import {SwipeableAction} from '../../types';
 
 export type SwipeableRowProps<T> = {
   children: React.ReactNode;

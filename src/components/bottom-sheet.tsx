@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+
 import {
   Dimensions,
   Animated as RNAnimated,
@@ -8,6 +9,11 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {
+  Gesture,
+  GestureDetector,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   interpolate,
@@ -17,12 +23,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
+
 import {useAndroidStatusBarAnimation} from '../hooks';
 import {
   LIGHT_BG_1,
@@ -30,7 +34,6 @@ import {
   LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_1,
 } from '../variables';
-import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 
 export type BottomSheetProps = {
   children: React.ReactNode;

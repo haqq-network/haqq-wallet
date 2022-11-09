@@ -3,9 +3,10 @@ import {
   TransactionResponse,
 } from '@ethersproject/abstract-provider';
 import {utils} from 'ethers';
+
+import {calcFee} from '../helpers/calc-fee';
 import {TransactionSource} from '../types';
 import {cleanNumber} from '../utils';
-import {calcFee} from '../helpers/calc-fee';
 import {realm} from './index';
 
 export class Transaction extends Realm.Object {

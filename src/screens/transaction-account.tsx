@@ -1,11 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FlatList, StyleSheet} from 'react-native';
+
+import {PopupContainer} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
 import {useWallets} from '../contexts/wallets';
-import {PopupContainer} from '../components/ui';
+import {RootStackParamList} from '../types';
 
 export const TransactionAccountScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

@@ -1,8 +1,10 @@
 import React from 'react';
-import {TransactionList, TransactionSource} from '../types';
+
 import {TransactionDate} from './transactions/date';
-import {TransactionSend} from './transactions/send';
 import {TransactionReceive} from './transactions/receive';
+import {TransactionSend} from './transactions/send';
+
+import {TransactionList, TransactionSource} from '../types';
 
 export type TransactionPreviewProps = {
   item: TransactionList;

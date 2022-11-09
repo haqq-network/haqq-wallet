@@ -1,4 +1,5 @@
 import {ethers} from 'ethers';
+
 import {realm} from './index';
 
 export class Provider extends Realm.Object {

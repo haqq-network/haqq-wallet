@@ -1,11 +1,13 @@
 import Realm from 'realm';
-import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
-import {AppTheme, WalletType} from '../types';
-import {WalletRealm} from './wallet';
-import {UserSchema} from './user';
-import {Transaction} from './transaction';
+
 import {Contact} from './contact';
 import {Provider} from './provider';
+import {Transaction} from './transaction';
+import {UserSchema} from './user';
+import {WalletRealm} from './wallet';
+
+import {AppTheme, WalletType} from '../types';
+import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],

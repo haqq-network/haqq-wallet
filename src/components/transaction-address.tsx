@@ -1,15 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
 import {utils} from 'ethers';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
-import {
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  PLACEHOLDER_GRAY,
-} from '../variables';
-import {isHexString} from '../utils';
-import {hideModal, showModal} from '../helpers/modal';
+
+import {AddressHeader} from './address-header';
+import {AddressRow} from './address-row';
 import {
   Button,
   ButtonVariant,
@@ -20,8 +15,16 @@ import {
   Spacer,
   TextField,
 } from './ui';
-import {AddressRow} from './address-row';
-import {AddressHeader} from './address-header';
+
+import {useApp} from '../contexts/app';
+import {useContacts} from '../contexts/contacts';
+import {hideModal, showModal} from '../helpers/modal';
+import {isHexString} from '../utils';
+import {
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+  PLACEHOLDER_GRAY,
+} from '../variables';
 
 export type TransactionAddressProps = {
   initial?: string;

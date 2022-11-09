@@ -1,5 +1,7 @@
 import React, {useMemo} from 'react';
+
 import {StyleSheet, View, ViewProps} from 'react-native';
+
 import {LIGHT_BG_8} from '../../variables';
 
 export const Box = ({children, style, ...props}: ViewProps) => {

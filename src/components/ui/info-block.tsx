@@ -1,8 +1,11 @@
 /* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
+
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {LIGHT_BG_6, LIGHT_TEXT_YELLOW_1} from '../../variables';
+
 import {Text} from './text';
+
+import {LIGHT_BG_6, LIGHT_TEXT_YELLOW_1} from '../../variables';
 
 export enum InfoBlockType {
   warning = 'warning',

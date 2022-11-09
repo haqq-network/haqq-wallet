@@ -1,10 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
 
-import {useWallet} from '../contexts/wallets';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Dimensions, StyleSheet, View} from 'react-native';
+
 import {
   Button,
   ButtonSize,
@@ -13,6 +12,8 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
+import {useWallet} from '../contexts/wallets';
+import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_3,
   LIGHT_GRAPHIC_BASE_2,

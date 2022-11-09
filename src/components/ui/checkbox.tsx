@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
-import Svg, {Circle, Path} from 'react-native-svg';
+
 import {StyleSheet, TouchableOpacity} from 'react-native';
+import Svg, {Circle, Path} from 'react-native-svg';
+
 import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../../variables';
 
 const CheckboxEmpty = ({color}: {color: string}) => (

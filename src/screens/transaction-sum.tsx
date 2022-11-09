@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {TransactionSum} from '../components/transaction-sum';
 import {useApp} from '../contexts/app';
+import {RootStackParamList} from '../types';
 import {generateUUID, splitAddress} from '../utils';
 
 export const TransactionSumScreen = () => {

@@ -1,4 +1,5 @@
 import {Provider} from './provider';
+
 import {realm} from './index';
 
 export const migration = () => {

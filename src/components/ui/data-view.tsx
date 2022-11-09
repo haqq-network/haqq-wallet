@@ -1,7 +1,10 @@
 import React, {useMemo} from 'react';
+
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
+
 import {Text} from './text';
+
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataViewProps = {
   label: string;

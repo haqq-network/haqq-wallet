@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet} from 'react-native';
+
 import {
   Alert,
   Button,
@@ -14,6 +15,7 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
+import {RootStackParamList} from '../types';
 import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
 
 const warningImage = require('../../assets/animations/recover-animation.json');

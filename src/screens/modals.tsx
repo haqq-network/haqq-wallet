@@ -1,5 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
+
 import {Modal} from 'react-native';
+
 import {
   ErrorAccountAdded,
   ErrorCreateAccount,
@@ -11,8 +13,8 @@ import {
   SplashModal,
   SplashModalProps,
 } from '../components/modals';
-import {app} from '../contexts/app';
 import {QRModal, QRModalProps} from '../components/modals/qr';
+import {app} from '../contexts/app';
 
 type Loading = {
   type: 'loading';

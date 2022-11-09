@@ -1,13 +1,16 @@
 import React, {useCallback, useEffect, useRef} from 'react';
+
 import {
   Animated,
   Dimensions,
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
-import {asyncTiming, sleep} from '../utils';
+
 import {Text} from './ui';
+
+import {asyncTiming, sleep} from '../utils';
+import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
 
 export type NotificationMessageProps = {
   message: string;

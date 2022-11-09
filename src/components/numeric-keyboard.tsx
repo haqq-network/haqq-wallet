@@ -1,8 +1,11 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
+
+import {Icon, IconButton, Text} from './ui';
+
 import {moderateVerticalScale} from '../helpers/scaling-utils';
 import {LIGHT_TEXT_BASE_1} from '../variables';
-import {Icon, IconButton, Text} from './ui';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;

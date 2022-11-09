@@ -1,5 +1,9 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
+
+import {windowWidth} from '../../helpers';
+import {hideModal} from '../../helpers/modal';
 import {
   LIGHT_BG_1,
   LIGHT_BG_9,
@@ -13,8 +17,6 @@ import {
   ErrorCreateAccountIcon,
   Text,
 } from '../ui';
-import {windowWidth} from '../../helpers';
-import {hideModal} from '../../helpers/modal';
 
 export const ErrorCreateAccount = () => {
   const onPress = () => {

@@ -1,13 +1,15 @@
 import React, {useCallback} from 'react';
+
 import {Text as RNText, StyleProp, StyleSheet, TextStyle} from 'react-native';
-import {Text} from '../ui';
+
+import {openURL} from '../../helpers';
 import {I18N, getText} from '../../i18n';
 import {
   LIGHT_GRAPHIC_GREEN_1,
   LIGHT_TEXT_BASE_2,
   PRIVACY_POLICY,
 } from '../../variables';
-import {openURL} from '../../helpers';
+import {Text} from '../ui';
 
 export type TermsProps = {
   style?: StyleProp<TextStyle> | undefined;

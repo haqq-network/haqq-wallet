@@ -1,11 +1,13 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
+
+import {windowWidth} from '../../helpers';
+import {I18N, getText} from '../../i18n';
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
+import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
 // import {Terms} from '../ui/terms';
-import {I18N, getText} from '../../i18n';
-import {windowWidth} from '../../helpers';
 
 export type LedgerAgreementProps = {
   onDone: () => void;

@@ -1,13 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+
+import {useApp} from '../../contexts/app';
 import {
   LIGHT_BG_1,
   LIGHT_TEXT_BASE_2,
   PIN_BANNED_ATTEMPTS,
 } from '../../variables';
-import {useApp} from '../../contexts/app';
-import {RestorePassword} from '../restore-password';
 import {Pin, PinInterface} from '../pin';
+import {RestorePassword} from '../restore-password';
 import {Text} from '../ui';
 
 export type PinModalProps = {};

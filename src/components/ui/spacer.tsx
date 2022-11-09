@@ -1,4 +1,5 @@
 import React, {useMemo} from 'react';
+
 import {View, ViewProps} from 'react-native';
 
 export type SpacerProps = ViewProps;

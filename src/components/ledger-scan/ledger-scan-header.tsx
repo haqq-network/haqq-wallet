@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {Text} from '../ui';
+
 import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {Text} from '../ui';
 
 export const LedgerScanHeader = () => {
   return (

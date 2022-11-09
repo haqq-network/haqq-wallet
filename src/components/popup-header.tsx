@@ -1,14 +1,17 @@
 import React, {useEffect, useMemo} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StackHeaderProps} from '@react-navigation/stack';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import {NavigationAction} from '@react-navigation/routers';
+import {StackHeaderProps} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {Icon, IconButton, Text} from './ui';
+
 import {
   DEFAULT_HITSLOP,
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_TEXT_BASE_1,
 } from '../variables';
-import {Icon, IconButton, Text} from './ui';
 
 export const PopupHeader = ({
   options,

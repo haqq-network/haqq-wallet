@@ -1,11 +1,14 @@
 import React from 'react';
+
 import {createStackNavigator} from '@react-navigation/stack';
-import {ScreenOptionType} from '../types';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
-import {SignInRestoreScreen} from './signin-restore-wallet';
-import {SignInAgreementScreen} from './signin-agreement';
+
 import {OnboardingFinishScreen} from './onboarding-finish';
+import {SignInAgreementScreen} from './signin-agreement';
+import {SignInRestoreScreen} from './signin-restore-wallet';
 import {SigninStoreWalletScreen} from './signin-store-wallet';
+
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {ScreenOptionType} from '../types';
 
 const SignInStack = createStackNavigator();
 

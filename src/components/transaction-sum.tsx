@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
 import {
   Dimensions,
   StyleSheet,
@@ -6,15 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {useContacts} from '../contexts/contacts';
-import {cleanNumber, isNumber, shortAddress} from '../utils';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
-import {EthNetwork} from '../services/eth-network';
+
 import {
   Button,
   ButtonSize,
@@ -24,6 +17,16 @@ import {
   Spacer,
   Text,
 } from './ui';
+
+import {useContacts} from '../contexts/contacts';
+import {EthNetwork} from '../services/eth-network';
+import {cleanNumber, isNumber, shortAddress} from '../utils';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '../variables';
 
 export type TransactionSumProps = {
   to: string;

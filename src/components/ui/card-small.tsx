@@ -1,7 +1,9 @@
 import React from 'react';
+
+import {PATTERNS_SOURCE} from '@env';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {PATTERNS_SOURCE} from '@env';
+
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
