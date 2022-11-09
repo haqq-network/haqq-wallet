@@ -42,7 +42,6 @@
 		36EF7B1A413D41EC8F672314 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B62F68B77BB844B9B19878FB /* logo-empty@2x.png */; };
 		4A2969855A534849BB8EF4F0 /* logo-empty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E00656D896F2482F98B67D83 /* logo-empty@3x.png */; };
 		506E24D8FB374BE28D1152E7 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25EA6C2D4335471DAA7CBD12 /* qr-logo@2x.png */; };
-		528DF3B9D5764D389B27BCB3 /* clear@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9B7299AEBC64ECEA2E9EAB4 /* clear@3x.png */; };
 		5EC78F2DCE2648FE9AEC3C47 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 16464E6CF9A24E1590282D07 /* SF-Pro-Display-Semibold.ttf */; };
 		60D4E8D50A864590B8A8D854 /* SF-Pro-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */; };
 		69201C9A86064BF191BEB50E /* SF-ProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */; };
@@ -60,9 +59,9 @@
 		BCE8D61DA932477781C76A80 /* ElMessiri-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */; };
 		BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
-		DAE3763B90F2406E9C96A4AC /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = E960828E516E4A08818F5110 /* clear.png */; };
+		D3D828C2C35244A8BB5C7A04 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0F236437C74ACE8C45F953 /* logo.png */; };
 		DB9B501EC4B745EB95FD6396 /* qr-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B593B56E9C8247AE9EDAAB18 /* qr-logo.png */; };
-		DC9189139809401AB37BE758 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2883E67A4B140A497683B68 /* clear@2x.png */; };
+		E046FA128BC54C538D47A78A /* mnemonic-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = BF34339DCC6443B98293697D /* mnemonic-warning.png */; };
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
@@ -143,10 +142,7 @@
 		D5156E9B36FD417885E1F80C /* card-circles-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0.png"; path = "../assets/images/card-circles-0.png"; sourceTree = "<group>"; };
 		DD4BF65C3D8F4812A58B909F /* SF-Pro-Display-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Medium.ttf"; path = "../assets/fonts/SF-Pro-Display-Medium.ttf"; sourceTree = "<group>"; };
 		E00656D896F2482F98B67D83 /* logo-empty@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty@3x.png"; path = "../assets/images/logo-empty@3x.png"; sourceTree = "<group>"; };
-		E2883E67A4B140A497683B68 /* clear@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clear@2x.png"; path = "../assets/images/clear@2x.png"; sourceTree = "<group>"; };
 		E4889AA51BE54118AE456FE2 /* SF-Pro-Display-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Thin.ttf"; path = "../assets/fonts/SF-Pro-Display-Thin.ttf"; sourceTree = "<group>"; };
-		E960828E516E4A08818F5110 /* clear.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = clear.png; path = ../assets/images/clear.png; sourceTree = "<group>"; };
-		E9B7299AEBC64ECEA2E9EAB4 /* clear@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clear@3x.png"; path = "../assets/images/clear@3x.png"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0@3x.png"; path = "../assets/images/card-rhombus-0@3x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
@@ -341,9 +337,6 @@
 				D35B5E77C48142A29F3DBC95 /* card-maks.png */,
 				591592406D9C4AC3B7C7165F /* card-maks@2x.png */,
 				93FCDB04C0264A779D1F806D /* card-maks@3x.png */,
-				E960828E516E4A08818F5110 /* clear.png */,
-				E2883E67A4B140A497683B68 /* clear@2x.png */,
-				E9B7299AEBC64ECEA2E9EAB4 /* clear@3x.png */,
 				093F7D3C80D54C028B10F9B3 /* mnemonic-notify.png */,
 				72BFF8B9B7A245238E0CC28E /* mnemonic-notify@2x.png */,
 				9D873BDE961E4AC3BBF823AF /* mnemonic-notify@3x.png */,
@@ -478,9 +471,6 @@
 				70FD5B6DB32D4AADAB575E85 /* card-maks.png in Resources */,
 				02CA530EC3F143AFAE0B65EF /* card-maks@2x.png in Resources */,
 				8CB6FA05E56D492F97CD8C8E /* card-maks@3x.png in Resources */,
-				DAE3763B90F2406E9C96A4AC /* clear.png in Resources */,
-				DC9189139809401AB37BE758 /* clear@2x.png in Resources */,
-				528DF3B9D5764D389B27BCB3 /* clear@3x.png in Resources */,
 				2E5D459518A44E1D95D06839 /* mnemonic-notify.png in Resources */,
 				1BFF98E646594B19BB5C3FB9 /* mnemonic-notify@2x.png in Resources */,
 				7095790EA85C4D6E81E4E5E5 /* mnemonic-notify@3x.png in Resources */,
