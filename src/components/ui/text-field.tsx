@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Text,
-  TextInput,
-  StyleSheet,
-  View,
   Animated,
   Easing,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableWithoutFeedback,
+  View,
   useWindowDimensions,
 } from 'react-native';
 import {isIOS} from '../../helpers';

@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   LIGHT_BG_1,
-  LIGHT_GRAPHIC_SECOND_4,
   LIGHT_BG_9,
+  LIGHT_GRAPHIC_SECOND_4,
   LIGHT_TEXT_BASE_1,
 } from '../../variables';
 import {NoInternetIcon, Text} from '../ui';

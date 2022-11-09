@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, Alert} from 'react-native';
-import {IconButton, TrashIcon} from './ui';
+import {Alert, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 import {useWallets} from '../contexts/wallets';
 import {app} from '../contexts/app';
-import {useNavigation} from '@react-navigation/native';
+import {IconButton, TrashIcon} from './ui';
 
 type SettingsAccountRemoveButtonProp = {
   address: string;

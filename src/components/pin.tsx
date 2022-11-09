@@ -6,8 +6,8 @@ import React, {
   useState,
 } from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Spacer, Text} from './ui';
-import {NumericKeyboard} from './numeric-keyboard';
+import {isBefore} from 'date-fns';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   LIGHT_GRAPHIC_BASE_4,
   LIGHT_TEXT_BASE_2,
@@ -15,9 +15,9 @@ import {
   LIGHT_TEXT_RED_1,
 } from '../variables';
 import {HapticEffects, vibrate} from '../services/haptic';
-import {isBefore} from 'date-fns';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {moderateVerticalScale} from '../helpers/scaling-utils';
+import {NumericKeyboard} from './numeric-keyboard';
+import {Spacer, Text} from './ui';
 
 export type PinProps = {
   title: string;

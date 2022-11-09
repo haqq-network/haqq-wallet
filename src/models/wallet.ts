@@ -1,9 +1,9 @@
-import {realm} from './index';
-import {decrypt, encrypt} from '../passworder';
 import {EventEmitter} from 'events';
+import {decrypt, encrypt} from '../passworder';
 import {Mnemonic, WalletCardStyle, WalletType} from '../types';
 import {captureException} from '../helpers';
 import {EthNetwork} from '../services/eth-network';
+import {realm} from './index';
 
 export class WalletRealm extends Realm.Object {
   address!: string;

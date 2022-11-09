@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {PopupContainer} from '../ui';
-import {LedgerAccountsRow} from './ledger-accounts-row';
-import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
 import {useWallets} from '../../contexts/wallets';
+import {LedgerAccountsEmpty} from './ledger-accounts-empty';
+import {LedgerAccountsRow} from './ledger-accounts-row';
 
 export type LedgerDeviceProps = {
   deviceId: string;

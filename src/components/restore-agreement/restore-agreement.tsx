@@ -11,7 +11,7 @@ import {
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {windowHeight, windowWidth} from '../../helpers';
 // import {Terms} from '../ui/terms';
-import {getText, I18N} from '../../i18n';
+import {I18N, getText} from '../../i18n';
 
 export type RestoreAgreementProps = {
   onDone: () => void;

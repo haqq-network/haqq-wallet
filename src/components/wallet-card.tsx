@@ -6,6 +6,19 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useWallet} from '../contexts/wallets';
 import {
+  LIGHT_BG_1,
+  LIGHT_BG_5,
+  LIGHT_GRAPHIC_BASE_3,
+  LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_SECOND_2,
+  SHADOW_COLOR,
+  SYSTEM_BLUR_2,
+  TRANSPARENT,
+} from '../variables';
+import {RootStackParamList} from '../types';
+import {cleanNumber, shortAddress} from '../utils';
+import {isIOS} from '../helpers';
+import {
   ArrowReceive,
   ArrowSend,
   BlurView,
@@ -17,19 +30,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_5,
-  LIGHT_GRAPHIC_BASE_3,
-  SHADOW_COLOR,
-  SYSTEM_BLUR_2,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_SECOND_2,
-  TRANSPARENT,
-} from '../variables';
-import {RootStackParamList} from '../types';
-import {cleanNumber, shortAddress} from '../utils';
-import {isIOS} from '../helpers';
 
 export type BalanceProps = {
   address: string;

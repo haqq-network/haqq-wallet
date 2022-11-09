@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
+import {Device} from 'react-native-ble-plx';
 import {RootStackParamList} from '../types';
 import {LedgerScan} from '../components/ledger-scan';
-import {Device} from 'react-native-ble-plx';
 
 export const LedgerScanScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

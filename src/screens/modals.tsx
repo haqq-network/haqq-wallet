@@ -5,6 +5,7 @@ import {
   ErrorCreateAccount,
   LoadingModal,
   LoadingModalProps,
+  NoInternet,
   PinModal,
   PinModalProps,
   SplashModal,
@@ -12,7 +13,6 @@ import {
 } from '../components/modals';
 import {app} from '../contexts/app';
 import {QRModal, QRModalProps} from '../components/modals/qr';
-import {NoInternet} from '../components/modals';
 
 type Loading = {
   type: 'loading';

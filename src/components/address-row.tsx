@@ -1,8 +1,8 @@
 import React from 'react';
-import {Contact} from '../models/contact';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {Box, DataContent, Text} from './ui';
+import {Contact} from '../models/contact';
 import {shortAddress} from '../utils';
+import {Box, DataContent, Text} from './ui';
 
 export type AddressRowProps = {
   item: Contact;

@@ -12,8 +12,8 @@ import {
   BlockIcon,
   DataContent,
   DataContentSplitted,
-  IconButton,
   ISLMIcon,
+  IconButton,
   Text,
 } from '../components/ui';
 

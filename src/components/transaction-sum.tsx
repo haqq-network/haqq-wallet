@@ -9,6 +9,13 @@ import {
 import {useContacts} from '../contexts/contacts';
 import {cleanNumber, isNumber, shortAddress} from '../utils';
 import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '../variables';
+import {EthNetwork} from '../services/eth-network';
+import {
   Button,
   ButtonSize,
   ButtonVariant,
@@ -17,13 +24,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
-import {EthNetwork} from '../services/eth-network';
 
 export type TransactionSumProps = {
   to: string;

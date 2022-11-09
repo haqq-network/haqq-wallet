@@ -11,9 +11,9 @@ import {
   CopyButton,
   InfoBlock,
   InfoBlockType,
-  Text,
   PopupContainer,
   Spacer,
+  Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {LIGHT_BG_3, LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';

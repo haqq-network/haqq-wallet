@@ -3,14 +3,14 @@ import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {Deferrable} from '@ethersproject/properties';
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
+import {ledgerService} from '@ledgerhq/hw-app-eth';
+import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {getDefaultChainId, getDefaultNetwork} from '../network';
 import {Wallet} from '../models/wallet';
 import {WalletType} from '../types';
 import {app} from '../contexts/app';
-import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {runUntil} from '../helpers/run-until';
 import {Provider} from '../models/provider';
-import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {calcFee} from '../helpers/calc-fee';
 import {ETH_HD_PATH} from '../variables';
 

@@ -6,8 +6,8 @@ import {Transaction} from '../models/transaction';
 import {calcFee} from '../helpers/calc-fee';
 import {captureException} from '../helpers';
 import {Provider} from '../models/provider';
-import {app} from './app';
 import {Wallet} from '../models/wallet';
+import {app} from './app';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;

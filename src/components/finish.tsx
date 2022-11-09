@@ -1,3 +1,5 @@
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import {
   Button,
   ButtonVariant,
@@ -6,8 +8,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-import React from 'react';
-import {StyleSheet} from 'react-native';
 
 export type FinishProps = {
   title: string;

@@ -1,14 +1,14 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList, ScreenOptionType} from '../types';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 import {SignUpAgreementScreen} from './signup-agreement';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {SignupStoreWalletScreen} from './signup-store-wallet';
 import {OnboardingFinishScreen} from './onboarding-finish';
-import {RootStackParamList, ScreenOptionType} from '../types';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 
 const SignUpStack = createStackNavigator();
 

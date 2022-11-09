@@ -1,6 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useContacts} from '../contexts/contacts';
 import {Alert, FlatList, StyleSheet} from 'react-native';
+import {CompositeScreenProps} from '@react-navigation/native';
+import {utils} from 'ethers';
+import prompt from 'react-native-prompt-android';
+import {useContacts} from '../contexts/contacts';
 import {AddressRow} from '../components/address-row';
 import {AddressHeader} from '../components/address-header';
 import {
@@ -23,10 +26,7 @@ import {
   LIGHT_GRAPHIC_SECOND_4,
   LIGHT_TEXT_BASE_1,
 } from '../variables';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
-import prompt from 'react-native-prompt-android';
 import {Contact} from '../models/contact';
 import {AddressEmpty} from '../components/address-empty';
 import {hideModal, showModal} from '../helpers/modal';
