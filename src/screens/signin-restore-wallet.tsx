@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as Sentry from '@sentry/react-native';
 
@@ -51,40 +51,45 @@ export const SignInRestoreScreen = () => {
   }, []);
 
   return (
-    <KeyboardSafeArea style={page.container} testID="signin_restore">
-      <Text t11 style={page.intro}>
-        Recovery phrase or Private key
-      </Text>
-      <TextField
-        size="large"
-        autoFocus
-        placeholder="Enter or paste your recovery phrase"
-        style={page.input}
-        label="Backup phrase"
-        value={seed}
-        onChangeText={setSeed}
-        multiline
-        errorText="Incorrect address"
-      />
-
-      <IconButton onPress={onPressPaste} style={page.button}>
-        <Text t14 style={page.t14}>
-          Paste from Clipboard
+    <ScrollView
+      contentContainerStyle={page.scrollContent}
+      showsVerticalScrollIndicator={false}>
+      <KeyboardSafeArea style={page.container} testID="signin_restore">
+        <Text t11 style={page.intro}>
+          Recovery phrase or Private key
         </Text>
-      </IconButton>
-      <Spacer />
-      <Button
-        disabled={!checked || disabled}
-        title="Recovery"
-        onPress={onDone}
-        variant={ButtonVariant.contained}
-        style={page.submit}
-      />
-    </KeyboardSafeArea>
+        <TextField
+          size="large"
+          autoFocus
+          placeholder="Enter or paste your recovery phrase"
+          style={page.input}
+          label="Backup phrase"
+          value={seed}
+          onChangeText={setSeed}
+          multiline
+          errorText="Incorrect address"
+        />
+
+        <IconButton onPress={onPressPaste} style={page.button}>
+          <Text t14 style={page.t14}>
+            Paste from Clipboard
+          </Text>
+        </IconButton>
+        <Spacer />
+        <Button
+          disabled={!checked || disabled}
+          title="Recovery"
+          onPress={onDone}
+          variant={ButtonVariant.contained}
+          style={page.submit}
+        />
+      </KeyboardSafeArea>
+    </ScrollView>
   );
 };
 
 const page = StyleSheet.create({
+  scrollContent: {flexGrow: 1},
   container: {paddingHorizontal: 20, paddingTop: 20},
   button: {alignSelf: 'flex-start'},
   intro: {

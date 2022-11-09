@@ -298,3 +298,14 @@ export type RoutePropT = {
 };
 
 export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
+
+export enum AppLanguage {
+  en = 'en',
+  ar = 'ar',
+}
+
+export enum AppTheme {
+  light = 'light',
+  dark = 'dark',
+  system = 'system',
+}

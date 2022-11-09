@@ -63,7 +63,7 @@ import {migration} from './models/migration';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {AppState, Linking} from 'react-native';
 import {hideModal, showModal} from './helpers/modal';
-import {SettingsEditContactScreen} from './screens/settings-edit-contact';
+import {SettingsEditContactScreen} from './screens/settings-contact-edit';
 
 const screenOptions: ScreenOptionType = {
   tab: true,

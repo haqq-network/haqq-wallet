@@ -5,7 +5,7 @@ import {RootStackParamList} from '../types';
 import {
   Button,
   ButtonVariant,
-  CloseCircle,
+  Icon,
   IconButton,
   Input,
   KeyboardSafeArea,
@@ -43,7 +43,7 @@ export const TransactionEditContactScreen = () => {
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
+                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -70,7 +70,6 @@ const page = StyleSheet.create({
     marginTop: 12,
   },
   spaceInput: {height: 24},
-  icon: {width: 20, height: 20},
   buttonContainer: {
     flex: 1,
     justifyContent: 'flex-end',

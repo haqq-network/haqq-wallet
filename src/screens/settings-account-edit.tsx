@@ -2,12 +2,7 @@ import React, {useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
-import {
-  CloseCircle,
-  IconButton,
-  Input,
-  KeyboardSafeArea,
-} from '../components/ui';
+import {Icon, IconButton, Input, KeyboardSafeArea} from '../components/ui';
 import {StyleSheet, View} from 'react-native';
 import {useWallet} from '../contexts/wallets';
 import {GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
@@ -74,7 +69,7 @@ export const SettingsAccountEditScreen = () => {
             rightAction={
               inputName && (
                 <IconButton onPress={cleanTextFile}>
-                  <CloseCircle color={GRAPHIC_BASE_2} style={page.icon} />
+                  <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
                 </IconButton>
               )
             }
@@ -97,5 +92,4 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 12,
   },
-  icon: {width: 20, height: 20},
 });

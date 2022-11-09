@@ -4,7 +4,7 @@ import {utils} from 'ethers';
 import {
   Button,
   ButtonVariant,
-  CloseCircle,
+  Icon,
   IconButton,
   KeyboardSafeArea,
   PenIcon,
@@ -14,14 +14,15 @@ import {
   TextField,
   TrashIcon,
 } from './ui';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {
   GRAPHIC_BASE_2,
   GRAPHIC_BASE_3,
   GRAPHIC_GREEN_1,
   GRAPHIC_RED_1,
   GRAPHIC_SECOND_4,
+  PLACEHOLDER_GRAY,
 } from '../variables';
-import {FlatList, StyleSheet} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
@@ -41,6 +42,7 @@ export const TransactionAddress = ({
   const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
+  const [inputIsFocused, setInputIsFocused] = useState(false);
   const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
@@ -71,6 +73,9 @@ export const TransactionAddress = ({
     setError(false);
   }, [address]);
 
+  const handleFocusInput = () => setInputIsFocused(true);
+  const handleBlurInput = () => setInputIsFocused(false);
+
   const onDone = useCallback(async () => {
     onAddress(address.trim());
   }, [onAddress, address]);
@@ -94,28 +99,34 @@ export const TransactionAddress = ({
 
   return (
     <KeyboardSafeArea>
-      <TextField
-        label="Send to"
-        style={page.input}
-        placeholder="Enter Address or contact name"
-        value={address}
-        onChangeText={setAddress}
-        error={error}
-        errorText="Incorrect address"
-        autoFocus
-        multiline
-        rightAction={
-          address === '' ? (
-            <IconButton onPress={onPressQR}>
-              <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
-            </IconButton>
-          ) : (
-            <IconButton onPress={onPressClear}>
-              <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
-            </IconButton>
-          )
-        }
-      />
+      <View>
+        <TextField
+          onFocus={handleFocusInput}
+          onBlur={handleBlurInput}
+          label="Send to"
+          style={page.input}
+          value={address}
+          onChangeText={setAddress}
+          error={error}
+          errorText="Incorrect address"
+          autoFocus
+          multiline
+          rightAction={
+            address === '' ? (
+              <IconButton onPress={onPressQR}>
+                <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
+              </IconButton>
+            ) : (
+              <IconButton onPress={onPressClear}>
+                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+              </IconButton>
+            )
+          }
+        />
+        {!address && inputIsFocused ? (
+          <Text style={page.placeholder}>Enter Address or contact name</Text>
+        ) : null}
+      </View>
       <Spacer>
         {contactsList.length ? (
           <FlatList
@@ -146,6 +157,7 @@ export const TransactionAddress = ({
           />
         ) : null}
       </Spacer>
+
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
@@ -158,6 +170,12 @@ export const TransactionAddress = ({
 };
 
 const page = StyleSheet.create({
+  placeholder: {
+    position: 'absolute',
+    color: PLACEHOLDER_GRAY,
+    left: 37,
+    bottom: 21,
+  },
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
