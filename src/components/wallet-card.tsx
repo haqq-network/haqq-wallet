@@ -21,8 +21,8 @@ import {
   BG_1,
   BG_5,
   GRAPHIC_BASE_3,
-  GRAPHIC_SECOND_11,
-  GRAPHIC_SECOND_7,
+  SHADOW_COLOR,
+  SYSTEM_BLUR_2,
   TEXT_BASE_3,
   TEXT_SECOND_2,
   TRANSPARENT,
@@ -138,7 +138,7 @@ const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     backgroundColor: BG_1,
-    shadowColor: GRAPHIC_SECOND_7,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
       height: 6,
@@ -177,7 +177,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: isIOS ? TRANSPARENT : GRAPHIC_SECOND_11,
+    backgroundColor: isIOS ? TRANSPARENT : SYSTEM_BLUR_2,
     borderRadius: 16,
     padding: 6,
     overflow: 'hidden',

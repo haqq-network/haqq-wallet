@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect} from 'react';
 import {
-  StyleSheet,
   Alert,
   Dimensions,
   Image,
-  View,
+  StyleSheet,
   useWindowDimensions,
+  View,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
+import {BG_1, LIGHT_BG_9, TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 import Animated, {
   Easing,
@@ -96,7 +96,7 @@ export const BackupNotificationScreen = () => {
   }, [app, fadeOut]);
 
   const bgAnimation = useAnimatedStyle(() => ({
-    opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [0.5, 0]),
+    opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [1, 0]),
   }));
 
   const slideFromBottomAnimation = useAnimatedStyle(() => ({
@@ -154,7 +154,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: GRAPHIC_SECOND_5,
+    backgroundColor: LIGHT_BG_9,
   },
   animateViewFade: {
     flex: 1,

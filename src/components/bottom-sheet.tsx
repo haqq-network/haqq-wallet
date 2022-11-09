@@ -11,7 +11,7 @@ import {
 import {
   BG_1,
   GRAPHIC_SECOND_2,
-  GRAPHIC_SECOND_5,
+  LIGHT_BG_9,
   TEXT_BASE_1,
 } from '../variables';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
@@ -244,7 +244,7 @@ const page = StyleSheet.create({
   },
   space: {flex: 1},
   background: {
-    backgroundColor: GRAPHIC_SECOND_5,
+    backgroundColor: LIGHT_BG_9,
   },
   animateView: {
     justifyContent: 'flex-end',

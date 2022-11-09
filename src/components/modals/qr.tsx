@@ -16,9 +16,9 @@ import {
   GRAPHIC_BASE_3,
   GRAPHIC_GREEN_2,
   GRAPHIC_RED_1,
-  GRAPHIC_SECOND_12,
-  GRAPHIC_SECOND_8,
-  GRAPHIC_SECOND_9,
+  QR_STATUS_BAR,
+  QR_BACKGROUND,
+  SYSTEM_BLUR_3,
   TEXT_BASE_3,
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -142,7 +142,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   return (
     <>
-      <StatusBar backgroundColor={GRAPHIC_SECOND_12} />
+      <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}
@@ -232,7 +232,7 @@ const page = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
-    backgroundColor: GRAPHIC_SECOND_8,
+    backgroundColor: QR_BACKGROUND,
   },
   bottomError: {
     backgroundColor: GRAPHIC_RED_1,
@@ -253,7 +253,7 @@ const page = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: GRAPHIC_SECOND_9,
+    backgroundColor: SYSTEM_BLUR_3,
   },
   spacer: {height: 50},
 });

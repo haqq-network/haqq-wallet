@@ -7,8 +7,8 @@ import {
   BG_1,
   GRAPHIC_GREEN_1,
   GRAPHIC_SECOND_1,
-  GRAPHIC_SECOND_7,
   MAGIC_CARD_HEIGHT,
+  SHADOW_COLOR,
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
@@ -90,7 +90,7 @@ const page = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 28,
     backgroundColor: BG_1,
-    shadowColor: GRAPHIC_SECOND_7,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
       height: 6,

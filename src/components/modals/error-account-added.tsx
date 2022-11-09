@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
+import {BG_1, LIGHT_BG_9, GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 import {windowWidth} from '../../helpers';
@@ -41,7 +41,7 @@ const page = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: GRAPHIC_SECOND_13,
+    backgroundColor: LIGHT_BG_9,
     paddingBottom: 30,
   },
   titleText: {
