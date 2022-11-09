@@ -1,7 +1,10 @@
 import React from 'react';
+
 import {StyleSheet, TextInput, TextInputProps} from 'react-native';
-import {LIGHT_TEXT_BASE_1} from '../../variables';
+
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
+
+import {LIGHT_TEXT_BASE_1} from '../../variables';
 
 export type InputProps = TextInputProps & {
   label: string;

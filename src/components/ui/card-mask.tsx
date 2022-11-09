@@ -1,5 +1,6 @@
-import {Image, ImageProps} from 'react-native';
 import React from 'react';
+
+import {Image, ImageProps} from 'react-native';
 
 const mask = require('../../../assets/images/card-maks.png');
 

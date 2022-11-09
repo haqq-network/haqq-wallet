@@ -1,5 +1,6 @@
-import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
+
+import {EventEmitter} from 'events';
 
 import {realm} from '../models';
 import {Contact} from '../models/contact';

@@ -1,12 +1,15 @@
 import React from 'react';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {HeaderTitleProps} from '@react-navigation/elements';
+
+import {HomeFeedScreen} from './home-feed';
+import {HomeSettingsScreen} from './home-settings';
+
 import {QrScannerButton} from '../components/qr-scanner-button';
 import {SettingsIcon, Text, WalletIcon} from '../components/ui';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 import {isIOS} from '../helpers';
-import {HomeSettingsScreen} from './home-settings';
-import {HomeFeedScreen} from './home-feed';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
 const Tab = createBottomTabNavigator();
 

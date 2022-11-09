@@ -1,11 +1,14 @@
 import React, {useMemo} from 'react';
+
 import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
+
+import {Text} from './text';
+
 import {
   LIGHT_BG_8,
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
 } from '../../variables';
-import {Text} from './text';
 
 type TextareaProps = Omit<TextInputProps, 'multiline'>;
 

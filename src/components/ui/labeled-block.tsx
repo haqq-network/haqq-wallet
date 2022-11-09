@@ -1,13 +1,16 @@
 /* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
+
 import {StyleSheet, View, ViewProps} from 'react-native';
+
+import {Text} from './text';
+
 import {
   LIGHT_BG_7,
   LIGHT_BG_8,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_RED_1,
 } from '../../variables';
-import {Text} from './text';
 
 export enum LabelBlockVariant {
   default = 'default',

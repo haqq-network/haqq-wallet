@@ -1,9 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
-import {BiometryType, RootStackParamList} from '../types';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -15,6 +15,7 @@ import {
   TouchIdIcon,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
+import {BiometryType, RootStackParamList} from '../types';
 import {
   BIOMETRY_TYPES_NAMES,
   LIGHT_GRAPHIC_BASE_1,

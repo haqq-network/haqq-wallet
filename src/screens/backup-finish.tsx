@@ -1,8 +1,9 @@
 import React from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Dimensions, StyleSheet} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -11,6 +12,7 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
+import {RootStackParamList} from '../types';
 
 const animationSize = Dimensions.get('window').width - 116;
 

@@ -1,10 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {Finish} from '../components/finish';
 import {useApp} from '../contexts/app';
 import {hideModal} from '../helpers/modal';
+import {RootStackParamList} from '../types';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();

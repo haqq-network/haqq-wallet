@@ -1,12 +1,16 @@
 /* eslint-disable react-native/no-unused-styles */
+import * as React from 'react';
+import {useCallback, useMemo} from 'react';
+
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   ViewProps,
 } from 'react-native';
-import * as React from 'react';
-import {useCallback, useMemo} from 'react';
+
+import {Text} from './text';
+
 import {
   LIGHT_BG_2,
   LIGHT_GRAPHIC_GREEN_1,
@@ -16,7 +20,6 @@ import {
   LIGHT_TEXT_RED_1,
   LIGHT_TEXT_SECOND_1,
 } from '../../variables';
-import {Text} from './text';
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   title: string;

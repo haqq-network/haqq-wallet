@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   StyleProp,
   StyleSheet,
@@ -6,8 +7,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {LIGHT_GRAPHIC_SECOND_3} from '../../variables';
+
 import {ArrowForwardIcon} from './svg-icon';
+
+import {LIGHT_GRAPHIC_SECOND_3} from '../../variables';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;

@@ -1,6 +1,8 @@
 import React, {useMemo} from 'react';
-import {StyleSheet, View} from 'react-native';
+
 import {format, isSameYear, isToday} from 'date-fns';
+import {StyleSheet, View} from 'react-native';
+
 import {TransactionListDate} from '../../types';
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {Text} from '../ui';

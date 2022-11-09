@@ -1,8 +1,13 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NavigationProp} from '@react-navigation/core';
+
 import {IS_LEDGER_ENABLED} from '@env';
+import {NavigationProp} from '@react-navigation/core';
+import {useNavigation} from '@react-navigation/native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
+
+import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
+
+import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_1,
   LIGHT_GRAPHIC_GREEN_1,
@@ -12,8 +17,6 @@ import {
   MAGIC_CARD_HEIGHT,
   SHADOW_COLOR,
 } from '../variables';
-import {RootStackParamList} from '../types';
-import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 
 const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED, 10));
 

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {StatusBar, StyleSheet, View} from 'react-native';
 
 import {LIGHT_BG_1} from '../../variables';

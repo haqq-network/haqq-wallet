@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+
 import {BiometryType} from './types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';

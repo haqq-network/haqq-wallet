@@ -1,14 +1,16 @@
 import {EventEmitter} from 'events';
+
 import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance} from 'react-native';
+
+import {app} from '../contexts/app';
+import {AppLanguage, AppTheme} from '../types';
 import {
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
   SNOOZE_WALLET_BACKUP_MINUTES,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables';
-import {AppLanguage, AppTheme} from '../types';
-import {app} from '../contexts/app';
 import {realm} from './index';
 
 export const UserSchema = {

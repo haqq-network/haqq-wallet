@@ -1,12 +1,14 @@
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {View} from 'react-native';
+
 import {useWallets} from '../contexts/wallets';
-import {sleep} from '../utils';
-import {showModal} from '../helpers/modal';
 import {captureException} from '../helpers';
+import {showModal} from '../helpers/modal';
+import {RootStackParamList} from '../types';
+import {sleep} from '../utils';
 
 export const LedgerStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

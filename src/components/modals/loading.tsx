@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react';
+
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Text, Waiting} from '../ui';
+
 import {
   LIGHT_BG_1,
   LIGHT_GRAPHIC_GREEN_2,
   LIGHT_TEXT_BASE_3,
 } from '../../variables';
+import {Text, Waiting} from '../ui';
 
 export type LoadingModalProps = {
   text?: string;

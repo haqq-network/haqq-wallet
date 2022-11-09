@@ -1,5 +1,8 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
+
+import {windowWidth} from '../../helpers';
 import {
   LIGHT_BG_1,
   LIGHT_BG_9,
@@ -7,7 +10,6 @@ import {
   LIGHT_TEXT_BASE_1,
 } from '../../variables';
 import {NoInternetIcon, Text} from '../ui';
-import {windowWidth} from '../../helpers';
 
 export const NoInternet = () => {
   return (

@@ -1,11 +1,13 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {Pin, PinInterface} from '../components/pin';
 import {useApp} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
 import {hideModal, showModal} from '../helpers/modal';
+import {RootStackParamList} from '../types';
 
 export const SettingsSecurityPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

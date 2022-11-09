@@ -1,7 +1,10 @@
-import {FlatList, StyleSheet} from 'react-native';
 import React from 'react';
-import {Provider} from '../../models/provider';
+
+import {FlatList, StyleSheet} from 'react-native';
+
 import {SettingsProvidersRow} from './settings-providers-row';
+
+import {Provider} from '../../models/provider';
 
 export type SettingsProvidersProps = {
   providers: Provider[];

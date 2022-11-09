@@ -1,9 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
-import {RootStackParamList} from '../types';
+
 import {
   BlockIcon,
   Button,
@@ -17,6 +18,13 @@ import {
   Text,
   UserIcon,
 } from '../components/ui';
+import {useContacts} from '../contexts/contacts';
+import {useTransactions} from '../contexts/transactions';
+import {openURL} from '../helpers';
+import {Transaction} from '../models/transaction';
+import {EthNetwork} from '../services/eth-network';
+import {RootStackParamList} from '../types';
+import {shortAddress} from '../utils';
 import {
   LIGHT_BG_8,
   LIGHT_GRAPHIC_BASE_2,
@@ -25,12 +33,6 @@ import {
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
 } from '../variables';
-import {useTransactions} from '../contexts/transactions';
-import {Transaction} from '../models/transaction';
-import {useContacts} from '../contexts/contacts';
-import {shortAddress} from '../utils';
-import {EthNetwork} from '../services/eth-network';
-import {openURL} from '../helpers';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 

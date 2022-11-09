@@ -1,10 +1,12 @@
 import React, {useCallback} from 'react';
+
 import {
   Animated,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
 import {SwipeableAction} from '../../types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {

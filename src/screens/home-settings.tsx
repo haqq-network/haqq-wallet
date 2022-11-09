@@ -1,8 +1,9 @@
 import React from 'react';
+
 import {ScrollView, StyleSheet} from 'react-native';
 
-import {Icon} from '../components/ui';
 import {SettingsButton} from '../components/settings-button';
+import {Icon} from '../components/ui';
 import {HR_GRAY, LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 export const HomeSettingsScreen = () => {

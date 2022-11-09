@@ -1,15 +1,18 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {FlatList} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {Observable, Subscription} from 'rxjs';
-import {PopupContainer} from '../ui';
-import {OnScanEvent} from '../../services/ledger';
+
+import {LedgerScanEmpty} from './ledger-scan-empty';
+import {LedgerScanHeader} from './ledger-scan-header';
+import {LedgerScanRow} from './ledger-scan-row';
+
 import {useApp} from '../../contexts/app';
 import {captureException} from '../../helpers';
-import {LedgerScanRow} from './ledger-scan-row';
-import {LedgerScanHeader} from './ledger-scan-header';
-import {LedgerScanEmpty} from './ledger-scan-empty';
+import {OnScanEvent} from '../../services/ledger';
+import {PopupContainer} from '../ui';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;

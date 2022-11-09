@@ -1,8 +1,10 @@
 import React, {useCallback} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {LedgerVerify} from '../components/ledger-verify';
+import {RootStackParamList} from '../types';
 
 export const LedgerVerifyScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

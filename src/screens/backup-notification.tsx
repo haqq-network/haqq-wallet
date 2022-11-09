@@ -1,4 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
+
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {
   Alert,
   Dimensions,
@@ -7,8 +10,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import Animated, {
   Easing,
   WithTimingConfig,
@@ -18,10 +19,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {RootStackParamList} from '../types';
+
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
+import {RootStackParamList} from '../types';
+import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
 
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 

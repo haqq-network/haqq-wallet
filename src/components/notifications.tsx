@@ -1,9 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
+
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {NotificationMessage} from './notification-message';
+
 import {useApp} from '../contexts/app';
 import {generateUUID} from '../utils';
-import {NotificationMessage} from './notification-message';
 
 export const Notifications = () => {
   const app = useApp();

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+
 import {LottieWrap} from './';
 
 type WaitingProps = {

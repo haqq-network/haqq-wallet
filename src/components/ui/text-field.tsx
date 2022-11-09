@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
+
 import {
   Animated,
   Easing,
@@ -9,6 +10,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
 import {isIOS} from '../../helpers';
 import {
   LIGHT_BG_5,

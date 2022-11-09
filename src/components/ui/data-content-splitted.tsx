@@ -1,9 +1,12 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+
 import Clipboard from '@react-native-clipboard/clipboard';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
-import {app} from '../../contexts/app';
+import {StyleSheet, View, ViewStyle} from 'react-native';
+
 import {Text} from './text';
+
+import {app} from '../../contexts/app';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataContentSplittedProps = {
   to: string[];

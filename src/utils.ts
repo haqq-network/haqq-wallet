@@ -1,6 +1,7 @@
+import {PATTERNS_SOURCE} from '@env';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
-import {PATTERNS_SOURCE} from '@env';
+
 import {Transaction} from './models/transaction';
 import {
   TransactionList,

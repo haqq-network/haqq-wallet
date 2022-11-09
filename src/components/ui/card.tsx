@@ -1,13 +1,15 @@
 import React, {useMemo} from 'react';
+
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+
+import {getPatternName} from '../../utils';
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
   GRADIENT_START,
   MAGIC_CARD_HEIGHT,
 } from '../../variables';
-import {getPatternName} from '../../utils';
 
 export type CardProps = {
   children?: React.ReactNode;

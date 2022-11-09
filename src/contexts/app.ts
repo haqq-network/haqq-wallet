@@ -1,4 +1,10 @@
+import {createContext, useContext, useEffect, useState} from 'react';
+
 import {EventEmitter} from 'events';
+
+import {ENVIRONMENT} from '@env';
+import {subMinutes} from 'date-fns';
+import {AppState, Platform} from 'react-native';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -6,17 +12,14 @@ import Keychain, {
   setGenericPassword,
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
-import {createContext, useContext, useEffect, useState} from 'react';
-import {AppState, Platform} from 'react-native';
-import {subMinutes} from 'date-fns';
-import {ENVIRONMENT} from '@env';
+
 import {realm} from '../models';
-import {User, UserType} from '../models/user';
-import {AppLanguage, AppTheme, BiometryType} from '../types';
-import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
-import {generateUUID} from '../utils';
 import {Provider} from '../models/provider';
+import {User, UserType} from '../models/user';
 import {EthNetwork} from '../services/eth-network';
+import {AppLanguage, AppTheme, BiometryType} from '../types';
+import {generateUUID} from '../utils';
+import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 
 type OptionalConfigObjectT = {
   title: string;

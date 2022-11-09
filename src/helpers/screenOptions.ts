@@ -1,6 +1,6 @@
 import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {ActionSheetType} from '../types';
 import {PopupHeader} from '../components/popup-header';
+import {ActionSheetType} from '../types';
 
 export const actionSheet: ActionSheetType = {
   presentation: 'transparentModal',

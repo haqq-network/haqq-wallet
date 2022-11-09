@@ -1,8 +1,10 @@
 import React, {useCallback} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {LedgerAccounts} from '../components/ledger-accounts';
+import {RootStackParamList} from '../types';
 
 export const LedgerAccountsScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
