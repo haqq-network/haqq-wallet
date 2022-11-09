@@ -17,9 +17,9 @@ import {
 import {useApp} from '../contexts/app';
 import {
   BIOMETRY_TYPES_NAMES,
-  GRAPHIC_BASE_1,
-  TEXT_BASE_2,
-  TEXT_RED_1,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_RED_1,
 } from '../variables';
 
 export const OnboardingBiometryScreen = () => {
@@ -51,11 +51,13 @@ export const OnboardingBiometryScreen = () => {
   const icon = useMemo(() => {
     switch (biometryType) {
       case BiometryType.faceId:
-        return <FaceIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+        return <FaceIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
       case BiometryType.touchId:
-        return <TouchIdIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+        return <TouchIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
       case BiometryType.fingerprint:
-        return <FingerprintIcon color={GRAPHIC_BASE_1} style={page.icon} />;
+        return (
+          <FingerprintIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />
+        );
       default:
         return null;
     }
@@ -99,7 +101,7 @@ const page = StyleSheet.create({
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},
-  textStyle: {textAlign: 'center', color: TEXT_BASE_2},
+  textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   margin: {marginBottom: 16},
-  error: {top: 20, textAlign: 'center', color: TEXT_RED_1},
+  error: {top: 20, textAlign: 'center', color: LIGHT_TEXT_RED_1},
 });

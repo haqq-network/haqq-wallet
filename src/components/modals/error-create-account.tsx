@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
-  BG_1,
-  GRAPHIC_BASE_1,
+  LIGHT_BG_1,
+  LIGHT_GRAPHIC_BASE_1,
   LIGHT_BG_9,
-  GRAPHIC_SECOND_4,
+  LIGHT_GRAPHIC_SECOND_4,
 } from '../../variables';
 import {
   Button,
@@ -31,7 +31,7 @@ export const ErrorCreateAccount = () => {
             Please try again later
           </Text>
           <ErrorCreateAccountIcon
-            color={GRAPHIC_SECOND_4}
+            color={LIGHT_GRAPHIC_SECOND_4}
             style={page.icon}
             width={120}
             height={120}
@@ -62,7 +62,7 @@ const page = StyleSheet.create({
     width: 280,
   },
   subTitleText: {
-    color: GRAPHIC_BASE_1,
+    color: LIGHT_GRAPHIC_BASE_1,
     top: 5,
   },
   icon: {
@@ -77,7 +77,7 @@ const page = StyleSheet.create({
     bottom: 0,
   },
   modalView: {
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     borderRadius: 16,
     alignItems: 'center',
   },

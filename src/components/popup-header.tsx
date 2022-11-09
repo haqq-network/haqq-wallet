@@ -1,7 +1,11 @@
 import React, {useEffect, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Icon, IconButton, Text} from './ui';
-import {DEFAULT_HITSLOP, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
+import {
+  DEFAULT_HITSLOP,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_TEXT_BASE_1,
+} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NavigationAction} from '@react-navigation/routers';
@@ -40,7 +44,7 @@ export const PopupHeader = ({
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
       {canGoBack ? (
         <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
-          <Icon s name="arrowBack" color={GRAPHIC_BASE_1} />
+          <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_1} />
         </IconButton>
       ) : (
         <View style={page.spacer} />
@@ -69,7 +73,7 @@ const page = StyleSheet.create({
   title: {
     fontWeight: '600',
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   spacer: {
     width: 24,

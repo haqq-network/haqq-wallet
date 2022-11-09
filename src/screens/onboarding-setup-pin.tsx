@@ -5,7 +5,11 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
-import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {
+  LIGHT_GRAPHIC_BASE_4,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+} from '../variables';
 import {vibrate} from '../services/haptic';
 
 export const OnboardingSetupPinScreen = () => {
@@ -64,7 +68,7 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {marginBottom: 12},
-  description: {textAlign: 'center', color: TEXT_BASE_2},
+  description: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
@@ -74,13 +78,13 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: GRAPHIC_BASE_4,
+    backgroundColor: LIGHT_GRAPHIC_BASE_4,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: TEXT_GREEN_1,
+    backgroundColor: LIGHT_TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
 });

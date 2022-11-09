@@ -15,7 +15,7 @@ import {
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 
-import {BG_8} from '../variables';
+import {LIGHT_BG_8} from '../variables';
 
 import {app} from '../contexts/app';
 
@@ -131,7 +131,7 @@ const page = StyleSheet.create({
   },
   header: {
     marginTop: 15,
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,

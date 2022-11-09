@@ -18,12 +18,12 @@ import {
 } from '../components/ui';
 
 import {
-  BG_3,
-  GRAPHIC_BASE_1,
-  GRAPHIC_GREEN_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
+  LIGHT_BG_3,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
 } from '../variables';
 import {splitAddress} from '../utils';
 import {isIOS, openURL} from '../helpers';
@@ -109,7 +109,7 @@ export const TransactionDetailScreen = () => {
                 <ISLMIcon
                   width={16}
                   height={16}
-                  color={GRAPHIC_GREEN_1}
+                  color={LIGHT_GRAPHIC_GREEN_1}
                   style={page.icon}
                 />
               </View>
@@ -153,7 +153,7 @@ export const TransactionDetailScreen = () => {
         />
       </View>
       <IconButton onPress={onPressInfo} style={page.iconButton}>
-        <BlockIcon color={GRAPHIC_BASE_1} />
+        <BlockIcon color={LIGHT_GRAPHIC_BASE_1} />
         <Text t9 style={page.textStyle}>
           View on block explorer
         </Text>
@@ -166,25 +166,25 @@ const page = StyleSheet.create({
   sum: {
     marginBottom: 20,
     fontWeight: '700',
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   sumSent: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   sumReceive: {
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
   },
   infoContainer: {
     paddingHorizontal: 20,
     paddingVertical: 4,
-    backgroundColor: BG_3,
+    backgroundColor: LIGHT_BG_3,
     borderRadius: 16,
     marginBottom: 24,
   },
   info: {
     marginVertical: 8,
   },
-  amount: {marginBottom: 2, color: TEXT_BASE_2},
+  amount: {marginBottom: 2, color: LIGHT_TEXT_BASE_2},
   icon: {
     marginRight: isIOS ? 4 : 2,
     top: isIOS ? 1 : 2,
@@ -194,5 +194,5 @@ const page = StyleSheet.create({
   iconView: {top: isIOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
-  subInfo: {color: TEXT_BASE_2},
+  subInfo: {color: LIGHT_TEXT_BASE_2},
 });

@@ -1,15 +1,19 @@
 import React, {useEffect} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Text, Waiting} from '../ui';
-import {BG_1, GRAPHIC_GREEN_2, TEXT_BASE_3} from '../../variables';
+import {
+  LIGHT_BG_1,
+  LIGHT_GRAPHIC_GREEN_2,
+  LIGHT_TEXT_BASE_3,
+} from '../../variables';
 
 export type LoadingModalProps = {
   text?: string;
 };
 export const LoadingModal = ({text}: LoadingModalProps) => {
   useEffect(() => {
-    StatusBar.setBackgroundColor(GRAPHIC_GREEN_2);
-    return () => StatusBar.setBackgroundColor(BG_1);
+    StatusBar.setBackgroundColor(LIGHT_GRAPHIC_GREEN_2);
+    return () => StatusBar.setBackgroundColor(LIGHT_BG_1);
   }, []);
   return (
     <View style={page.container}>
@@ -28,8 +32,8 @@ const page = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    backgroundColor: GRAPHIC_GREEN_2,
+    backgroundColor: LIGHT_GRAPHIC_GREEN_2,
   },
-  text: {color: TEXT_BASE_3, width: 230, textAlign: 'center'},
+  text: {color: LIGHT_TEXT_BASE_3, width: 230, textAlign: 'center'},
   waiting: {marginBottom: 40},
 });

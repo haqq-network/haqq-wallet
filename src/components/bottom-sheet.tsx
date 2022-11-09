@@ -9,10 +9,10 @@ import {
   View,
 } from 'react-native';
 import {
-  BG_1,
-  GRAPHIC_SECOND_2,
+  LIGHT_BG_1,
+  LIGHT_GRAPHIC_SECOND_2,
   LIGHT_BG_9,
-  TEXT_BASE_1,
+  LIGHT_TEXT_BASE_1,
 } from '../variables';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 import Animated, {
@@ -207,7 +207,7 @@ export const BottomSheet = ({
         <GestureDetector gesture={headerGesture}>
           <Animated.View>
             <View style={page.swipe}>
-              <SwiperIcon color={GRAPHIC_SECOND_2} />
+              <SwiperIcon color={LIGHT_GRAPHIC_SECOND_2} />
             </View>
             <View style={page.header}>
               <Text t6 style={page.title}>
@@ -256,7 +256,7 @@ const page = StyleSheet.create({
   },
   content: {
     width: Dimensions.get('window').width,
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 20,
@@ -268,5 +268,5 @@ const page = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  title: {fontWeight: '600', color: TEXT_BASE_1},
+  title: {fontWeight: '600', color: LIGHT_TEXT_BASE_1},
 });

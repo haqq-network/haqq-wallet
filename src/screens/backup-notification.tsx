@@ -11,7 +11,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {BG_1, LIGHT_BG_9, TEXT_BASE_1} from '../variables';
+import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
 import {useApp} from '../contexts/app';
 import Animated, {
   Easing,
@@ -142,7 +142,7 @@ const page = StyleSheet.create({
   sub: {
     marginHorizontal: 16,
     marginVertical: 42,
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     flex: 0,
     padding: 24,
     borderRadius: 16,
@@ -162,7 +162,7 @@ const page = StyleSheet.create({
   },
   t8: {
     marginBottom: 8,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     fontWeight: '700',
     textAlign: 'center',
   },

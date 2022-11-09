@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
 import {MenuNavigationButton, Text, Spacer} from '../components/ui';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 import {useApp} from '../contexts/app';
 import {Pin, PinInterface} from '../components/pin';
 import {BiometryType} from '../types';
@@ -93,10 +93,10 @@ const page = StyleSheet.create({
   container: {flex: 1, marginHorizontal: 20},
 
   menuSubtitle: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   menuTitle: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginBottom: 2,
   },
 });
