@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {BG_6, TEXT_YELLOW_1} from '../../variables';
+import {LIGHT_BG_6, LIGHT_TEXT_YELLOW_1} from '../../variables';
 import {Text} from './text';
 
 export enum InfoBlockType {
@@ -52,13 +52,13 @@ const page = StyleSheet.create({
     paddingHorizontal: 16,
   },
   warningContainer: {
-    backgroundColor: BG_6,
+    backgroundColor: LIGHT_BG_6,
   },
   iconText: {marginLeft: 12},
   text: {
     flex: 1,
   },
   warningText: {
-    color: TEXT_YELLOW_1,
+    color: LIGHT_TEXT_YELLOW_1,
   },
 });

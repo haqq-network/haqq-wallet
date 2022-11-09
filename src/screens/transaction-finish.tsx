@@ -17,12 +17,12 @@ import {
   UserIcon,
 } from '../components/ui';
 import {
-  BG_8,
-  GRAPHIC_BASE_2,
-  GRAPHIC_GREEN_1,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
+  LIGHT_BG_8,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
 } from '../variables';
 import {useTransactions} from '../contexts/transactions';
 import {Transaction} from '../models/transaction';
@@ -90,7 +90,7 @@ export const TransactionFinishScreen = () => {
       <Text t4 style={page.title}>
         Sending Completed!
       </Text>
-      <ISLMIcon color={GRAPHIC_GREEN_1} style={page.icon} />
+      <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
       {transaction && (
         <Text clean style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
@@ -106,16 +106,16 @@ export const TransactionFinishScreen = () => {
       <View style={page.buttons}>
         <IconButton onPress={onPressContact} style={page.button}>
           {contact ? (
-            <PenIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+            <PenIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
           ) : (
-            <UserIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+            <UserIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
           )}
           <Text clean style={page.buttonText}>
             {contact ? 'Edit Contact' : 'Add Contact'}
           </Text>
         </IconButton>
         <IconButton onPress={onPressHash} style={page.button}>
-          <BlockIcon color={GRAPHIC_BASE_2} style={page.buttonIcon} />
+          <BlockIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
           <Text clean style={page.buttonText}>
             Hash
           </Text>
@@ -146,7 +146,7 @@ const page = StyleSheet.create({
   title: {
     marginTop: 32,
     marginBottom: 34,
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
     textAlign: 'center',
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
@@ -156,20 +156,20 @@ const page = StyleSheet.create({
     fontSize: 22,
     lineHeight: 30,
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   address: {
     fontSize: 14,
     lineHeight: 18,
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginBottom: 4,
   },
   fee: {
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   buttons: {
     flexDirection: 'row',
@@ -181,7 +181,7 @@ const page = StyleSheet.create({
     marginHorizontal: 6,
     paddingHorizontal: 4,
     paddingVertical: 12,
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
     borderRadius: 12,
   },
   buttonIcon: {
@@ -191,7 +191,7 @@ const page = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   margin: {marginBottom: 16},
 });

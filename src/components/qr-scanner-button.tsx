@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {IconButton, QRScanner} from './ui';
-import {GRAPHIC_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 import {utils} from 'ethers';
 import {useApp} from '../contexts/app';
 import {useNavigation} from '@react-navigation/native';
@@ -28,7 +28,7 @@ export const QrScannerButton = () => {
 
   return (
     <IconButton onPress={onPressQR} style={page.container}>
-      <QRScanner color={GRAPHIC_BASE_1} />
+      <QRScanner color={LIGHT_GRAPHIC_BASE_1} />
     </IconButton>
   );
 };

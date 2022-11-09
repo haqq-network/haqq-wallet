@@ -13,13 +13,13 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from 'ethers';
 import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {
-  GRAPHIC_BASE_3,
-  GRAPHIC_GREEN_2,
-  GRAPHIC_RED_1,
-  GRAPHIC_SECOND_12,
-  GRAPHIC_SECOND_8,
-  GRAPHIC_SECOND_9,
-  TEXT_BASE_3,
+  LIGHT_GRAPHIC_BASE_3,
+  LIGHT_GRAPHIC_GREEN_2,
+  LIGHT_GRAPHIC_RED_1,
+  QR_STATUS_BAR,
+  QR_BACKGROUND,
+  SYSTEM_BLUR_3,
+  LIGHT_TEXT_BASE_3,
 } from '../../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {HapticEffects, vibrate} from '../../services/haptic';
@@ -142,7 +142,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   return (
     <>
-      <StatusBar backgroundColor={GRAPHIC_SECOND_12} />
+      <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}
@@ -151,14 +151,14 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         flashMode={flashMode}
         hintText=""
         isShowScanBar={false}
-        cornerColor={error ? GRAPHIC_RED_1 : GRAPHIC_BASE_3}
+        cornerColor={error ? LIGHT_GRAPHIC_RED_1 : LIGHT_GRAPHIC_BASE_3}
         cornerWidth={7}
         zoom={0}
         renderTopView={() => (
           <View style={{paddingTop: insets.top}}>
             <View style={page.headerContainer}>
               <IconButton onPress={onClose}>
-                <Icon name="arrowBack" color={GRAPHIC_BASE_3} />
+                <Icon name="arrowBack" color={LIGHT_GRAPHIC_BASE_3} />
               </IconButton>
               <Text t8 style={page.headerTitle}>
                 Scan QR Code
@@ -172,7 +172,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             style={[page.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
             <View style={page.subContainer}>
               <IconButton onPress={onClickGallery} style={page.iconButton}>
-                <ImageIcon color={GRAPHIC_BASE_3} />
+                <ImageIcon color={LIGHT_GRAPHIC_BASE_3} />
               </IconButton>
               <IconButton
                 onPress={() => {
@@ -180,7 +180,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
                 }}
                 style={page.iconButton}>
                 <FlashLightIcon
-                  color={flashMode ? GRAPHIC_GREEN_2 : GRAPHIC_BASE_3}
+                  color={
+                    flashMode ? LIGHT_GRAPHIC_GREEN_2 : LIGHT_GRAPHIC_BASE_3
+                  }
                 />
               </IconButton>
             </View>
@@ -224,7 +226,7 @@ const page = StyleSheet.create({
   headerTitle: {
     fontWeight: '600',
     textAlign: 'center',
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
   headerSpacer: {
     width: 24,
@@ -232,10 +234,10 @@ const page = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
-    backgroundColor: GRAPHIC_SECOND_8,
+    backgroundColor: QR_BACKGROUND,
   },
   bottomError: {
-    backgroundColor: GRAPHIC_RED_1,
+    backgroundColor: LIGHT_GRAPHIC_RED_1,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 30,
@@ -247,13 +249,13 @@ const page = StyleSheet.create({
     right: 0,
     bottom: Dimensions.get('window').height / 2 - 135,
   },
-  bottomErrorText: {color: TEXT_BASE_3, fontWeight: '600'},
+  bottomErrorText: {color: LIGHT_TEXT_BASE_3, fontWeight: '600'},
   iconButton: {
     marginHorizontal: 16,
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: GRAPHIC_SECOND_9,
+    backgroundColor: SYSTEM_BLUR_3,
   },
   spacer: {height: 50},
 });

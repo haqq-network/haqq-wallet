@@ -8,13 +8,13 @@ import {
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 import {
-  BG_2,
-  GRAPHIC_GREEN_1,
-  GRAPHIC_SECOND_1,
-  TEXT_BASE_3,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
-  TEXT_SECOND_1,
+  LIGHT_BG_2,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_GRAPHIC_SECOND_1,
+  LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+  LIGHT_TEXT_SECOND_1,
 } from '../../variables';
 import {Text} from './text';
 
@@ -93,7 +93,7 @@ export const Button = ({
       activeOpacity={0.7}
       {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={TEXT_BASE_3} />
+        <ActivityIndicator size="small" color={LIGHT_TEXT_BASE_3} />
       ) : (
         <Text
           t9={size !== ButtonSize.small}
@@ -126,25 +126,25 @@ const page = StyleSheet.create({
     height: 46,
   },
   containedContainer: {
-    backgroundColor: GRAPHIC_GREEN_1,
+    backgroundColor: LIGHT_GRAPHIC_GREEN_1,
     borderRadius: 12,
     height: 54,
   },
   containedDisabledContainer: {
-    backgroundColor: GRAPHIC_SECOND_1,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
   },
   textContainer: {},
   errorContainer: {},
   outlinedContainer: {
-    borderColor: GRAPHIC_GREEN_1,
+    borderColor: LIGHT_GRAPHIC_GREEN_1,
     borderRadius: 12,
   },
   secondContainer: {
-    backgroundColor: BG_2,
+    backgroundColor: LIGHT_BG_2,
     borderRadius: 12,
   },
   secondDisabledContainer: {
-    backgroundColor: GRAPHIC_SECOND_1,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
   },
   textIconRight: {
     marginRight: 8,
@@ -153,20 +153,20 @@ const page = StyleSheet.create({
     marginLeft: 8,
   },
   containedText: {
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
   containedDisabledText: {
-    color: TEXT_SECOND_1,
+    color: LIGHT_TEXT_SECOND_1,
   },
   textText: {},
   outlinedText: {},
   errorText: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   secondText: {
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
   },
   secondDisabledText: {
-    color: TEXT_SECOND_1,
+    color: LIGHT_TEXT_SECOND_1,
   },
 });

@@ -27,7 +27,7 @@ import {SignInScreen} from './screens/signin';
 import {transactions, TransactionsContext} from './contexts/transactions';
 import {TransactionScreen} from './screens/transaction';
 import {WelcomeScreen} from './screens/welcome';
-import {BG_1, GRAPHIC_GREEN_1} from './variables';
+import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from './variables';
 import {BackupScreen} from './screens/backup';
 import {SignUpScreen} from './screens/signup';
 import {Modals} from './screens/modals';
@@ -80,8 +80,8 @@ const AppTheme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: GRAPHIC_GREEN_1,
-    background: BG_1,
+    primary: LIGHT_GRAPHIC_GREEN_1,
+    background: LIGHT_BG_1,
   },
 };
 

@@ -6,7 +6,7 @@ import {
   PopupContainer,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {GRAPHIC_GREEN_1} from '../variables';
+import {LIGHT_GRAPHIC_GREEN_1} from '../variables';
 import {StyleSheet} from 'react-native';
 import {AppLanguage} from '../types';
 
@@ -28,7 +28,7 @@ export const SettingsLanguageScreen = () => {
         }}>
         <DataContent title="Arabic" subtitle="العربية" />
         {language === AppLanguage.ar && (
-          <CheckIcon color={GRAPHIC_GREEN_1} style={page.icon} />
+          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
         )}
       </IconButton>
       <IconButton
@@ -38,7 +38,7 @@ export const SettingsLanguageScreen = () => {
         }}>
         <DataContent title="English" subtitle="English" />
         {language === AppLanguage.en && (
-          <CheckIcon color={GRAPHIC_GREEN_1} style={page.icon} />
+          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
         )}
       </IconButton>
     </PopupContainer>

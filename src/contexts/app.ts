@@ -12,7 +12,7 @@ import {User, UserType} from '../models/user';
 import {AppState, Platform} from 'react-native';
 import {BiometryType, AppLanguage, AppTheme} from '../types';
 import {subMinutes} from 'date-fns';
-import {GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
+import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 import {generateUUID} from '../utils';
 import {ENVIRONMENT} from '@env';
 import {Provider} from '../models/provider';
@@ -26,7 +26,7 @@ type OptionalConfigObjectT = {
 
 const optionalConfigObject: OptionalConfigObjectT = {
   title: 'Fingerprint Login', // Android
-  imageColor: GRAPHIC_GREEN_1,
+  imageColor: LIGHT_GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
   // unifiedErrors: false,
 };

@@ -12,11 +12,11 @@ import {
   Text,
 } from '../components/ui';
 import {
-  BG_3,
-  GRAPHIC_BASE_1,
-  GRAPHIC_SECOND_3,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
+  LIGHT_BG_3,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_GRAPHIC_SECOND_3,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
 } from '../variables';
 
 import {openURL, windowWidth} from '../helpers';
@@ -70,12 +70,12 @@ export const SettingsAboutScreen = () => {
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton> */}
         <IconButton onPress={onPressSite} style={page.button}>
-          <GlobalIcon color={GRAPHIC_BASE_1} />
+          <GlobalIcon color={LIGHT_GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
             Visit islamiccoin.net
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Text t14 style={page.title}>
@@ -83,12 +83,12 @@ export const SettingsAboutScreen = () => {
       </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDoc} style={page.button}>
-          <DocIcon color={GRAPHIC_BASE_1} />
+          <DocIcon color={LIGHT_GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
             Terms & Conditions
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Text t14 style={page.title}>
@@ -96,12 +96,12 @@ export const SettingsAboutScreen = () => {
       </Text>
       <View style={page.buttons}>
         <IconButton onPress={onPressDiscord} style={page.button}>
-          <DiscordIcon color={GRAPHIC_BASE_1} />
+          <DiscordIcon color={LIGHT_GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
             Discord
           </Text>
           <Spacer />
-          <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
         </IconButton>
       </View>
       <Text t11 style={page.terms}>
@@ -119,11 +119,11 @@ const page = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 4,
   },
   buttons: {
-    backgroundColor: BG_3,
+    backgroundColor: LIGHT_BG_3,
     borderRadius: 16,
     marginBottom: 24,
   },
@@ -133,11 +133,11 @@ const page = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonText: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginLeft: 12,
   },
   terms: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginBottom: 10,
   },
   animation: {

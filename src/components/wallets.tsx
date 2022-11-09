@@ -2,7 +2,7 @@ import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Icon, Text} from './ui';
 import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
-import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_1} from '../variables';
 import {CarouselItem} from './carousel-item';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
@@ -76,7 +76,7 @@ export const Wallets = () => {
               }),
             },
           ]}>
-          <Icon xs name="plusMid" color={GRAPHIC_BASE_1} />
+          <Icon xs name="plusMid" color={LIGHT_GRAPHIC_BASE_1} />
         </Animated.View>
       </View>
       <Text t6 style={page.t6}>
@@ -104,7 +104,7 @@ const page = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     margin: 3,
-    backgroundColor: GRAPHIC_BASE_1,
+    backgroundColor: LIGHT_GRAPHIC_BASE_1,
   },
   animateView: {
     width: 12,
@@ -115,6 +115,6 @@ const page = StyleSheet.create({
     textAlign: 'left',
     paddingHorizontal: 20,
     fontWeight: '600',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
 });

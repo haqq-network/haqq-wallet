@@ -12,7 +12,12 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {
+  LIGHT_BG_3,
+  LIGHT_GRAPHIC_GREEN_2,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+} from '../variables';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
 import {EthNetwork} from '../services/eth-network';
@@ -90,7 +95,7 @@ export const TransactionConfirmationScreen = () => {
 
   return (
     <PopupContainer style={page.container}>
-      <ISLMIcon color={GRAPHIC_GREEN_2} style={page.icon} />
+      <ISLMIcon color={LIGHT_GRAPHIC_GREEN_2} style={page.icon} />
       <Text t11 style={page.subtitle}>
         Total Amount
       </Text>
@@ -109,7 +114,7 @@ export const TransactionConfirmationScreen = () => {
         <Text t11 style={page.address}>
           {splittedTo[0]}
         </Text>
-        <Text t11 style={{color: TEXT_BASE_2}}>
+        <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
           {splittedTo[1]}
         </Text>
         <Text t11>{splittedTo[2]}</Text>
@@ -117,28 +122,28 @@ export const TransactionConfirmationScreen = () => {
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
-          <Text t11 style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
             Islamic coin{' '}
-            <Text clean style={{color: TEXT_BASE_2}}>
+            <Text clean style={{color: LIGHT_TEXT_BASE_2}}>
               (ISLM)
             </Text>
           </Text>
         </DataView>
         <DataView label="Network">
-          <Text t11 style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
             HAQQ blockchain{' '}
-            <Text clean style={{color: TEXT_BASE_2}}>
+            <Text clean style={{color: LIGHT_TEXT_BASE_2}}>
               (HQ)
             </Text>
           </Text>
         </DataView>
         <DataView label="Amount">
-          <Text t11 style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
             {amount.toFixed(8)} ISLM
           </Text>
         </DataView>
         <DataView label="Network Fee">
-          <Text t11 style={{color: TEXT_BASE_1}}>
+          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
             {estimateFee.toFixed(8)} ISLM
           </Text>
         </DataView>
@@ -164,7 +169,7 @@ const page = StyleSheet.create({
   },
   contact: {
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginHorizontal: 27.5,
     fontWeight: '600',
     height: 30,
@@ -172,23 +177,23 @@ const page = StyleSheet.create({
   address: {
     marginBottom: 40,
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginHorizontal: 27.5,
   },
   subtitle: {
     textAlign: 'center',
     marginBottom: 4,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
-  info: {top: 40, borderRadius: 16, backgroundColor: BG_3},
+  info: {top: 40, borderRadius: 16, backgroundColor: LIGHT_BG_3},
   sum: {
     marginBottom: 16,
     fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   submit: {
     marginVertical: 16,

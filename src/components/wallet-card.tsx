@@ -18,13 +18,13 @@ import {
   Text,
 } from './ui';
 import {
-  BG_1,
-  BG_5,
-  GRAPHIC_BASE_3,
-  GRAPHIC_SECOND_11,
-  GRAPHIC_SECOND_7,
-  TEXT_BASE_3,
-  TEXT_SECOND_2,
+  LIGHT_BG_1,
+  LIGHT_BG_5,
+  LIGHT_GRAPHIC_BASE_3,
+  SHADOW_COLOR,
+  SYSTEM_BLUR_2,
+  LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_SECOND_2,
   TRANSPARENT,
 } from '../variables';
 import {RootStackParamList} from '../types';
@@ -90,13 +90,13 @@ export const WalletCard = ({address}: BalanceProps) => {
           {wallet.name || 'name'}
         </Text>
         <IconButton onPress={onPressQR} style={page.qrButton}>
-          <QRCode color={GRAPHIC_BASE_3} />
+          <QRCode color={LIGHT_GRAPHIC_BASE_3} />
         </IconButton>
         <CopyButton style={page.copyButton} value={wallet.address}>
           <Text t14 style={page.address}>
             {formattedAddress}
           </Text>
-          <Copy color={GRAPHIC_BASE_3} style={page.marginLeft} />
+          <Copy color={LIGHT_GRAPHIC_BASE_3} style={page.marginLeft} />
         </CopyButton>
       </View>
       {!wallet.mnemonicSaved && (
@@ -114,7 +114,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         <View style={page.button}>
           {isIOS && <BlurView action="sent" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressSend}>
-            <ArrowSend color={GRAPHIC_BASE_3} />
+            <ArrowSend color={LIGHT_GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
               Send
             </Text>
@@ -123,7 +123,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         <View style={page.button}>
           {isIOS && <BlurView action="receive" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressQR}>
-            <ArrowReceive color={GRAPHIC_BASE_3} />
+            <ArrowReceive color={LIGHT_GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
               Receive
             </Text>
@@ -137,8 +137,8 @@ export const WalletCard = ({address}: BalanceProps) => {
 const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
-    backgroundColor: BG_1,
-    shadowColor: GRAPHIC_SECOND_7,
+    backgroundColor: LIGHT_BG_1,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
       height: 6,
@@ -157,16 +157,16 @@ const page = StyleSheet.create({
   marginBottom: {marginBottom: 4},
   name: {
     flex: 1,
-    color: TEXT_SECOND_2,
+    color: LIGHT_TEXT_SECOND_2,
     marginRight: 8,
   },
   address: {
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
   balance: {
     fontSize: 40,
     lineHeight: 54,
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -177,13 +177,13 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: isIOS ? TRANSPARENT : GRAPHIC_SECOND_11,
+    backgroundColor: isIOS ? TRANSPARENT : SYSTEM_BLUR_2,
     borderRadius: 16,
     padding: 6,
     overflow: 'hidden',
   },
   buttonText: {
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
   copyButton: {
     flexDirection: 'row',
@@ -194,7 +194,7 @@ const page = StyleSheet.create({
   cacheButton: {
     alignSelf: 'flex-start',
     marginBottom: 8,
-    backgroundColor: BG_5,
+    backgroundColor: LIGHT_BG_5,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -202,6 +202,6 @@ const page = StyleSheet.create({
   cacheText: {
     fontSize: 12,
     lineHeight: 16,
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
   },
 });

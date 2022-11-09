@@ -2,7 +2,11 @@ import React, {useCallback} from 'react';
 import {StyleProp, StyleSheet, Text as RNText, TextStyle} from 'react-native';
 import {Text} from '../ui';
 import {getText, I18N} from '../../i18n';
-import {GRAPHIC_GREEN_1, PRIVACY_POLICY, TEXT_BASE_2} from '../../variables';
+import {
+  LIGHT_GRAPHIC_GREEN_1,
+  PRIVACY_POLICY,
+  LIGHT_TEXT_BASE_2,
+} from '../../variables';
 import {openURL} from '../../helpers';
 export type TermsProps = {
   style?: StyleProp<TextStyle> | undefined;
@@ -26,9 +30,9 @@ export const Terms = ({style}: TermsProps) => {
 const styles = StyleSheet.create({
   agreement: {
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   link: {
-    color: GRAPHIC_GREEN_1,
+    color: LIGHT_GRAPHIC_GREEN_1,
   },
 });

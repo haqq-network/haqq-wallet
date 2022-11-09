@@ -12,7 +12,11 @@ import {
   Spacer,
   TextField,
 } from './ui';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1, PLACEHOLDER_GRAY} from '../variables';
+import {
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+  PLACEHOLDER_GRAY,
+} from '../variables';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
@@ -98,11 +102,15 @@ export const TransactionAddress = ({
           rightAction={
             address === '' ? (
               <IconButton onPress={onPressQR}>
-                <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
+                <QRScanner
+                  color={LIGHT_GRAPHIC_GREEN_1}
+                  width={25}
+                  height={25}
+                />
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon name="closeCircle" color={GRAPHIC_BASE_2} />
+                <Icon name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }

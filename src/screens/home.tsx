@@ -5,7 +5,7 @@ import {HomeSettingsScreen} from './home-settings';
 import {QrScannerButton} from '../components/qr-scanner-button';
 import {HeaderTitleProps} from '@react-navigation/elements';
 import {SettingsIcon, WalletIcon, Text} from '../components/ui';
-import {GRAPHIC_BASE_2, GRAPHIC_GREEN_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 import {isIOS} from '../helpers';
 
 const Tab = createBottomTabNavigator();
@@ -47,7 +47,9 @@ export const HomeScreen = () => {
           headerRight: () => <QrScannerButton />,
           headerTitleAllowFontScaling: false,
           tabBarIcon: ({focused}) => (
-            <WalletIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
+            <WalletIcon
+              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
+            />
           ),
           headerTitleStyle: {
             fontSize: 18,
@@ -85,7 +87,9 @@ export const HomeScreen = () => {
           headerTitleAllowFontScaling: false,
           headerTitleAlign: 'center',
           tabBarIcon: ({focused}) => (
-            <SettingsIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
+            <SettingsIcon
+              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
+            />
           ),
         }}
       />

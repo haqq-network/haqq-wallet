@@ -14,12 +14,12 @@ import {
   Text,
 } from '../components/ui';
 import {
-  BG_3,
-  GRAPHIC_BASE_2,
-  GRAPHIC_GREEN_1,
-  TEXT_BASE_3,
-  TEXT_RED_1,
-  TEXT_SECOND_1,
+  LIGHT_BG_3,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_RED_1,
+  LIGHT_TEXT_SECOND_1,
 } from '../variables';
 
 function shuffleWords(words: Map<string, string>) {
@@ -89,7 +89,9 @@ export const BackupVerifyScreen = () => {
                   style={[
                     page.cell,
                     page.cellEmpty,
-                    selected.length === i && {borderColor: GRAPHIC_GREEN_1},
+                    selected.length === i && {
+                      borderColor: LIGHT_GRAPHIC_GREEN_1,
+                    },
                   ]}
                   key={`${k}_empty`}>
                   <Text t14 style={page.cellTextEmpty}>
@@ -114,7 +116,9 @@ export const BackupVerifyScreen = () => {
                   style={[
                     page.cell,
                     page.cellEmpty,
-                    selected.length === i + 6 && {borderColor: GRAPHIC_GREEN_1},
+                    selected.length === i + 6 && {
+                      borderColor: LIGHT_GRAPHIC_GREEN_1,
+                    },
                   ]}
                   key={`${k}_empty`}>
                   <Text t14 style={page.cellTextEmpty}>
@@ -160,7 +164,7 @@ const page = StyleSheet.create({
   textStyle: {
     textAlign: 'center',
     marginBottom: 16,
-    color: GRAPHIC_BASE_2,
+    color: LIGHT_GRAPHIC_BASE_2,
   },
   buttons: {
     flexDirection: 'row',
@@ -184,13 +188,21 @@ const page = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical: 4,
     borderStyle: 'solid',
-    borderColor: BG_3,
+    borderColor: LIGHT_BG_3,
     borderWidth: 1,
   },
-  cellEmpty: {backgroundColor: BG_3},
-  cellFilled: {backgroundColor: GRAPHIC_GREEN_1},
-  cellTextEmpty: {fontWeight: '600', color: TEXT_SECOND_1, textAlign: 'center'},
-  cellTextFilled: {fontWeight: '600', color: TEXT_BASE_3, textAlign: 'center'},
+  cellEmpty: {backgroundColor: LIGHT_BG_3},
+  cellFilled: {backgroundColor: LIGHT_GRAPHIC_GREEN_1},
+  cellTextEmpty: {
+    fontWeight: '600',
+    color: LIGHT_TEXT_SECOND_1,
+    textAlign: 'center',
+  },
+  cellTextFilled: {
+    fontWeight: '600',
+    color: LIGHT_TEXT_BASE_3,
+    textAlign: 'center',
+  },
   error: {
     fontWeight: '600',
     fontSize: 16,
@@ -198,7 +210,7 @@ const page = StyleSheet.create({
     paddingVertical: 11,
     textAlign: 'center',
     marginBottom: 16,
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   buttonStyle: {margin: 6},
   margin: {marginVertical: 16},

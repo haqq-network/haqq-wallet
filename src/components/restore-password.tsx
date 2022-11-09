@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
-import {TEXT_BASE_2} from '../variables';
+import {LIGHT_TEXT_BASE_2} from '../variables';
 import {Button, ButtonVariant, Text} from './ui';
 import {useWallets} from '../contexts/wallets';
 import {useApp} from '../contexts/app';
@@ -106,6 +106,6 @@ const page = StyleSheet.create({
     marginBottom: 24,
     fontSize: 14,
     lineHeight: 18,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
 });

@@ -16,7 +16,7 @@ import {
   Spacer,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
-import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {LIGHT_BG_3, LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 import {MnemonicWord} from '../components/mnemonic-word';
 
 export const BackupCreateScreen = () => {
@@ -55,7 +55,7 @@ export const BackupCreateScreen = () => {
           </View>
         </View>
         <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
-          <Copy color={TEXT_GREEN_1} />
+          <Copy color={LIGHT_TEXT_GREEN_1} />
           <Text clean style={page.copyText}>
             Copy
           </Text>
@@ -92,7 +92,7 @@ const page = StyleSheet.create({
     paddingTop: 20,
   },
   mnemonics: {
-    backgroundColor: BG_3,
+    backgroundColor: LIGHT_BG_3,
     flexDirection: 'row',
     padding: 20,
     borderRadius: 16,
@@ -103,7 +103,7 @@ const page = StyleSheet.create({
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     fontWeight: '600',
     marginLeft: 12,
     marginBottom: 4,
@@ -116,7 +116,7 @@ const page = StyleSheet.create({
     alignSelf: 'center',
   },
   copyText: {
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
     fontWeight: '700',
     fontSize: 16,
     lineHeight: 22,
@@ -127,7 +127,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   t11: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     textAlign: 'center',
   },
 });

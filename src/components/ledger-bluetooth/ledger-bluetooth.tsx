@@ -9,7 +9,7 @@ import {
   Spacer,
   Text,
 } from '../ui';
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {User} from '../../models/user';
 import {getText, I18N} from '../../i18n';
 import {Observable, Subscription} from 'rxjs';
@@ -136,7 +136,7 @@ const page = StyleSheet.create({
   },
   disclaimer: {
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
   },
   submit: {
