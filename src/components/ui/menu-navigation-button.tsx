@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {GRAPHIC_SECOND_3} from '../../variables';
+import {LIGHT_GRAPHIC_SECOND_3} from '../../variables';
 import {ArrowForwardIcon} from './svg-icon';
 
 export type MenuNavigationButtonProps = {
@@ -26,7 +26,7 @@ export const MenuNavigationButton = ({
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[page.container, style]}>
         <View style={page.content}>{children}</View>
-        {!hideArrow && <ArrowForwardIcon color={GRAPHIC_SECOND_3} />}
+        {!hideArrow && <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />}
       </View>
     </TouchableWithoutFeedback>
   );

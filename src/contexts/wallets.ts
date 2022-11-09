@@ -22,8 +22,8 @@ import {
   CARD_RHOMBUS_TOTAL,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
-  GRAPHIC_GREEN_3,
-  GRAPHIC_GREEN_4,
+  DEFAULT_CARD_BACKGROUND,
+  DEFAULT_CARD_PATTERN,
 } from '../variables';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
@@ -42,9 +42,9 @@ const defaultData = {
   mnemonicSaved: true,
   isHidden: false,
   cardStyle: WalletCardStyle.flat,
-  colorFrom: GRAPHIC_GREEN_3,
-  colorTo: GRAPHIC_GREEN_3,
-  colorPattern: GRAPHIC_GREEN_4,
+  colorFrom: DEFAULT_CARD_BACKGROUND,
+  colorTo: DEFAULT_CARD_BACKGROUND,
+  colorPattern: DEFAULT_CARD_PATTERN,
   pattern: CARD_DEFAULT_STYLE,
   type: WalletType.hot,
   deviceId: undefined,

@@ -4,13 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/core';
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 import {
-  BG_1,
-  GRAPHIC_GREEN_1,
-  GRAPHIC_SECOND_1,
-  GRAPHIC_SECOND_7,
+  LIGHT_BG_1,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_GRAPHIC_SECOND_1,
   MAGIC_CARD_HEIGHT,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
+  SHADOW_COLOR,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
 } from '../variables';
 import {RootStackParamList} from '../types';
 import {IS_LEDGER_ENABLED} from '@env';
@@ -84,13 +84,13 @@ const page = StyleSheet.create({
     justifyContent: 'space-between',
     width: cardWidth,
     height: Math.max(cardWidth * MAGIC_CARD_HEIGHT, 212),
-    borderColor: GRAPHIC_SECOND_1,
+    borderColor: LIGHT_GRAPHIC_SECOND_1,
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
-    backgroundColor: BG_1,
-    shadowColor: GRAPHIC_SECOND_7,
+    backgroundColor: LIGHT_BG_1,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
       height: 6,
@@ -101,13 +101,13 @@ const page = StyleSheet.create({
   },
   title: {
     fontWeight: '600',
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
     textAlign: 'center',
     marginBottom: 4,
   },
   subtitle: {
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   create: {
     flex: 0,
@@ -132,5 +132,5 @@ const page = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
   },
-  ledgerIcon: {width: 22, height: 22, tintColor: GRAPHIC_GREEN_1},
+  ledgerIcon: {width: 22, height: 22, tintColor: LIGHT_GRAPHIC_GREEN_1},
 });

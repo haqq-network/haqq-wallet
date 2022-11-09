@@ -7,10 +7,10 @@ import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {
-  GRAPHIC_BASE_4,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
+  LIGHT_GRAPHIC_BASE_4,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
 } from '../variables';
 import {vibrate} from '../services/haptic';
 
@@ -97,18 +97,18 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: GRAPHIC_BASE_4,
+    backgroundColor: LIGHT_GRAPHIC_BASE_4,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: TEXT_GREEN_1,
+    backgroundColor: LIGHT_TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
   error: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center', color: TEXT_BASE_2},
+  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
 });

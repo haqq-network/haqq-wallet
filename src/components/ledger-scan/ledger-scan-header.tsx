@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from '../ui';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
 
 export const LedgerScanHeader = () => {
   return (
@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 8,
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   description: {
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   bold: {
     fontWeight: '700',

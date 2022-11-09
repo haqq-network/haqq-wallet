@@ -3,11 +3,11 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {ArrowReceive, Text} from '../ui';
 import {TransactionListReceive} from '../../types';
 import {
-  BG_3,
-  GRAPHIC_BASE_1,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
+  LIGHT_BG_3,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
 } from '../../variables';
 import {shortAddress} from '../../utils';
 
@@ -27,7 +27,7 @@ export const TransactionReceive = ({
       }}>
       <View style={page.container}>
         <View style={page.iconWrapper}>
-          <ArrowReceive color={GRAPHIC_BASE_1} />
+          <ArrowReceive color={LIGHT_GRAPHIC_BASE_1} />
         </View>
         <View style={page.infoContainer}>
           <View style={page.infoRow}>
@@ -66,16 +66,16 @@ const page = StyleSheet.create({
     marginVertical: 1,
   },
   sum: {
-    color: TEXT_GREEN_1,
+    color: LIGHT_TEXT_GREEN_1,
   },
   iconWrapper: {
     width: 42,
     height: 42,
-    backgroundColor: BG_3,
+    backgroundColor: LIGHT_BG_3,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  detail: {color: TEXT_BASE_2},
-  info: {color: TEXT_BASE_1},
+  detail: {color: LIGHT_TEXT_BASE_2},
+  info: {color: LIGHT_TEXT_BASE_1},
 });

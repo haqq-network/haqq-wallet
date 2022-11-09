@@ -16,7 +16,7 @@ import {
   Text,
   TextField,
 } from '../components/ui';
-import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
+import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 import {hideModal} from '../helpers/modal';
 
 export const SignInRestoreScreen = () => {
@@ -94,12 +94,12 @@ const page = StyleSheet.create({
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   input: {
     marginBottom: 8,
   },
-  t14: {color: TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
+  t14: {color: LIGHT_TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   submit: {
     marginVertical: 16,
   },

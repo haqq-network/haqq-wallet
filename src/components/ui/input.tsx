@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TextInput, TextInputProps} from 'react-native';
-import {TEXT_BASE_1} from '../../variables';
+import {LIGHT_TEXT_BASE_1} from '../../variables';
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
 
 export type InputProps = TextInputProps & {
@@ -31,7 +31,7 @@ const page = StyleSheet.create({
   input: {
     fontSize: 16,
     lineHeight: 22,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     paddingTop: 0,
   },
   wrapper: {

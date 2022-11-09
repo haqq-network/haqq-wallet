@@ -17,7 +17,12 @@ import {
   Spacer,
   Text,
 } from './ui';
-import {TEXT_BASE_1, TEXT_BASE_2, TEXT_GREEN_1, TEXT_RED_1} from '../variables';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '../variables';
 import {EthNetwork} from '../services/eth-network';
 
 export type TransactionSumProps = {
@@ -105,7 +110,7 @@ export const TransactionSum = ({
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock label="Send to" style={page.label}>
           <Text
-            style={{color: TEXT_BASE_1}}
+            style={{color: LIGHT_TEXT_BASE_1}}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -127,7 +132,7 @@ export const TransactionSum = ({
           placeholder="0"
           onChangeText={onChangeValue}
           keyboardType="numeric"
-          placeholderTextColor={TEXT_BASE_2}
+          placeholderTextColor={LIGHT_TEXT_BASE_2}
           autoFocus
           textAlign="left"
         />
@@ -152,7 +157,7 @@ export const TransactionSum = ({
       ) : (
         <Text clean style={[page.help, page.available]}>
           Available:{' '}
-          <Text clean style={{color: TEXT_GREEN_1}}>
+          <Text clean style={{color: LIGHT_TEXT_GREEN_1}}>
             {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>
@@ -177,7 +182,7 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     paddingVertical: 2,
     maxWidth: Dimensions.get('window').width - 180,
   },
@@ -198,7 +203,7 @@ const page = StyleSheet.create({
     fontSize: 18,
     lineHeight: 24,
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginBottom: 4,
   },
   sum: {
@@ -212,10 +217,10 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   available: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   error: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   help: {
     fontWeight: '400',

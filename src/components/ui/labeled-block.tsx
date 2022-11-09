@@ -1,7 +1,12 @@
 /* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
-import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
+import {
+  LIGHT_BG_7,
+  LIGHT_BG_8,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_RED_1,
+} from '../../variables';
 import {Text} from './text';
 
 export enum LabelBlockVariant {
@@ -50,7 +55,7 @@ export const LabeledBlock = ({
 
 const page = StyleSheet.create({
   container: {
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 16,
@@ -61,7 +66,7 @@ const page = StyleSheet.create({
   placeholder: {
     fontSize: 14,
     lineHeight: 18,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginBottom: 2,
   },
   inner: {
@@ -69,9 +74,9 @@ const page = StyleSheet.create({
     justifyContent: 'space-between',
   },
   errorPlaceholder: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
   },
   errorContainer: {
-    backgroundColor: BG_7,
+    backgroundColor: LIGHT_BG_7,
   },
 });
