@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {
   CheckIcon,
   DataContent,
@@ -7,7 +8,6 @@ import {
 } from '../components/ui';
 import {useApp} from '../contexts/app';
 import {LIGHT_GRAPHIC_GREEN_1} from '../variables';
-import {StyleSheet} from 'react-native';
 import {AppLanguage} from '../types';
 
 export const SettingsLanguageScreen = () => {

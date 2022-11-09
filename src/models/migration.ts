@@ -1,5 +1,5 @@
-import {realm} from './index';
 import {Provider} from './provider';
+import {realm} from './index';
 
 export const migration = () => {
   const providers = realm.objects<Provider>('Provider');

@@ -1,6 +1,6 @@
-import {PopupContainer, Text} from '../ui';
 import {ActivityIndicator, StyleSheet} from 'react-native';
 import React from 'react';
+import {PopupContainer, Text} from '../ui';
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 
 export const LedgerAccountsEmpty = () => {

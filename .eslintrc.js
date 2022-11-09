@@ -7,11 +7,11 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'import/order': 'error',
         'sort-imports':
           [
             'error',
             {
-              'ignoreCase': true,
               'ignoreDeclarationSort': true
             }
           ],

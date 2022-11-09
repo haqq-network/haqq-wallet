@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {LottieWrap, PopupContainer, Text} from '../ui';
 import {Dimensions, StyleSheet} from 'react-native';
+import {LottieWrap, PopupContainer, Text} from '../ui';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
 import {captureException} from '../../helpers';

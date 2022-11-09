@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {CardSmall, DataContent, MenuNavigationButton} from './ui';
 import {Wallet} from '../models/wallet';
 import {shortAddress} from '../utils';
+import {CardSmall, DataContent, MenuNavigationButton} from './ui';
 
 export type WalletRowProps = {
   item: Wallet;

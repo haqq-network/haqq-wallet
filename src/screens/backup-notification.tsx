@@ -4,24 +4,24 @@ import {
   Dimensions,
   Image,
   StyleSheet,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
-import {Button, ButtonVariant, Text} from '../components/ui';
-import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
-import {useApp} from '../contexts/app';
 import Animated, {
   Easing,
+  WithTimingConfig,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  WithTimingConfig,
 } from 'react-native-reanimated';
+import {RootStackParamList} from '../types';
+import {Button, ButtonVariant, Text} from '../components/ui';
+import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
+import {useApp} from '../contexts/app';
 
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 

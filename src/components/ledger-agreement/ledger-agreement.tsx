@@ -4,7 +4,7 @@ import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
 import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 // import {Terms} from '../ui/terms';
-import {getText, I18N} from '../../i18n';
+import {I18N, getText} from '../../i18n';
 import {windowWidth} from '../../helpers';
 
 export type LedgerAgreementProps = {

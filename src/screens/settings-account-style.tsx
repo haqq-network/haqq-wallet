@@ -2,12 +2,12 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 
 import {
   Button,

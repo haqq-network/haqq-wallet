@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {AppState, StyleProp, ViewStyle} from 'react-native';
-import Lottie, {AnimatedLottieViewProps} from 'lottie-react-native';
 import type AnimatedLottieView from 'lottie-react-native';
+import Lottie, {AnimatedLottieViewProps} from 'lottie-react-native';
 
 type AnimatedLottie = AnimatedLottieViewProps & {
   source: string;

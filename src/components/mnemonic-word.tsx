@@ -1,6 +1,6 @@
 import {StyleSheet, View} from 'react-native';
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 import React from 'react';
+import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 import {Text} from './ui';
 
 export type MnemonicWordProps = {

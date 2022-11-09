@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import QRCode from 'react-native-qrcode-svg';
-import {Share, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import LinearGradient from 'react-native-linear-gradient';
 import {StackNavigationProp} from '@react-navigation/stack';

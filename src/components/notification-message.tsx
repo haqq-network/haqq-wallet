@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Text} from './ui';
-import {LIGHT_BG_1, SHADOW_COLOR, LIGHT_TEXT_BASE_1} from '../variables';
+import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
 import {asyncTiming, sleep} from '../utils';
+import {Text} from './ui';
 
 export type NotificationMessageProps = {
   message: string;

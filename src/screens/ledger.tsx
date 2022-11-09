@@ -1,14 +1,14 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ScreenOptionType} from '../types';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {useUser} from '../contexts/app';
 import {LedgerAgreementScreen} from './ledger-agreement';
 import {LedgerFinishScreen} from './ledger-finish';
 import {LedgerBluetoothScreen} from './ledger-bluetooth';
 import {LedgerScanScreen} from './ledger-scan';
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerVerifyScreen} from './ledger-verify';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
-import {useUser} from '../contexts/app';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingBiometryScreen} from './onboarding-biometry';

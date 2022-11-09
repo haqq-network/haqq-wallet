@@ -9,10 +9,10 @@ import {
   ButtonVariant,
   InfoBlock,
   InfoBlockType,
-  Text,
+  LottieWrap,
   PopupContainer,
   Spacer,
-  LottieWrap,
+  Text,
 } from '../components/ui';
 import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
 

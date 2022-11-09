@@ -3,7 +3,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 
 import {Icon} from '../components/ui';
 import {SettingsButton} from '../components/settings-button';
-import {LIGHT_GRAPHIC_BASE_1, HR_GRAY} from '../variables';
+import {HR_GRAY, LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (

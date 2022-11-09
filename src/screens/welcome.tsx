@@ -2,10 +2,10 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {LIGHT_TEXT_BASE_2} from '../variables';
 import {RootStackParamList} from '../types';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
