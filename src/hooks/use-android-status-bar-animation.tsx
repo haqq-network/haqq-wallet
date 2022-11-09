@@ -2,6 +2,8 @@ import {useCallback, useRef} from 'react';
 
 import {Animated} from 'react-native';
 
+import {Color, getColor} from '../colors';
+
 interface useAndroidStatusBarAnimationT {
   animatedValueRange: [number, number];
   duration?: number;
