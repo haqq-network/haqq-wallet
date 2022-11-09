@@ -142,7 +142,6 @@ export const TransactionSum = ({
           )}
         </View>
       </View>
-
       <View style={page.amount}>
         <Text t15>$ {amountUsd}</Text>
       </View>

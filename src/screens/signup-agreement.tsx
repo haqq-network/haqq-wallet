@@ -7,6 +7,7 @@ import {CreateAgreement} from '../components/create-agreement';
 export const SignUpAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'createAgreement'>>();
+
   const onPressAgree = useCallback(() => {
     navigation.navigate(route.params.nextScreen ?? 'onboardingSetupPin');
   }, [navigation, route.params.nextScreen]);

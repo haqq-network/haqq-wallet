@@ -18,7 +18,6 @@ import {AddressRow} from './address-row';
 import {AddressHeader} from './address-header';
 import {isHexString} from '../utils';
 import {hideModal, showModal} from '../helpers/modal';
-import {isIOS} from '../helpers';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -141,7 +140,7 @@ const page = StyleSheet.create({
     position: 'absolute',
     color: PLACEHOLDER_GRAY,
     left: 37,
-    bottom: isIOS ? 21 : 25,
+    bottom: 21,
   },
   input: {
     marginBottom: 12,
