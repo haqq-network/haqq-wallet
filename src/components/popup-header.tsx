@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ArrowBackIcon, IconButton, Text} from './ui';
+import {Icon, IconButton, Text} from './ui';
 import {DEFAULT_HITSLOP, GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 import {StackHeaderProps} from '@react-navigation/stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -40,7 +40,7 @@ export const PopupHeader = ({
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
       {canGoBack ? (
         <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
-          <ArrowBackIcon color={GRAPHIC_BASE_1} />
+          <Icon s name="arrowBack" color={GRAPHIC_BASE_1} />
         </IconButton>
       ) : (
         <View style={page.spacer} />

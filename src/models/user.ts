@@ -7,6 +7,9 @@ import {
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables';
 import {EventEmitter} from 'events';
+import {AppLanguage, AppTheme} from '../types';
+import {app} from '../contexts/app';
+import {Appearance, AppState} from 'react-native';
 
 export const UserSchema = {
   name: 'User',
@@ -20,18 +23,14 @@ export const UserSchema = {
     pinAttempts: 'int?',
     pinBanned: 'date?',
     providerId: 'string',
+    theme: 'string',
   },
   primaryKey: 'username',
 };
 
-export enum Language {
-  en = 'en',
-  ar = 'ar',
-}
-
 export type UserType = {
   username: string;
-  language: Language;
+  language: AppLanguage;
   biometry: boolean;
   snoozeBackup: Date | null;
   pinAttempts: number | null;
@@ -39,11 +38,13 @@ export type UserType = {
   bluetooth: boolean | null;
   onboarded: boolean | null;
   providerId: string;
+  theme: AppTheme;
 };
 
 export class User extends EventEmitter {
   private last_activity: Date;
   private _raw: UserType & Realm.Object;
+  private _systemTheme: AppTheme;
 
   constructor(user: UserType & Realm.Object) {
     super();
@@ -51,10 +52,34 @@ export class User extends EventEmitter {
 
     this._raw = user;
 
-    this._raw.addListener(() => {
-      this.emit('change');
+    this._raw.addListener((obj, changes) => {
+      if (changes.changedProperties.length) {
+        this.emit('change');
+
+        if (changes.changedProperties.includes('theme')) {
+          app.emit('theme', obj.theme);
+        }
+      }
     });
+
+    this._systemTheme = Appearance.getColorScheme() as AppTheme;
+
+    Appearance.addChangeListener(this.listenTheme);
+
+    AppState.addEventListener('change', this.listenTheme);
   }
+
+  listenTheme = () => {
+    const theme = Appearance.getColorScheme() as AppTheme;
+
+    if (theme !== this._systemTheme) {
+      this._systemTheme = theme;
+
+      if (this._raw.theme === AppTheme.system) {
+        app.emit('theme');
+      }
+    }
+  };
 
   get uuid() {
     return this._raw.username;
@@ -87,12 +112,26 @@ export class User extends EventEmitter {
   }
 
   get language() {
-    return this._raw.language as Language;
+    return this._raw.language as AppLanguage;
   }
 
   set language(language) {
     realm.write(() => {
       this._raw.language = language;
+    });
+  }
+
+  get theme(): AppTheme {
+    return this._raw.theme;
+  }
+
+  get systemTheme(): AppTheme {
+    return this._systemTheme;
+  }
+
+  set theme(value) {
+    realm.write(() => {
+      this._raw.theme = value;
     });
   }
 

@@ -5,7 +5,7 @@ import {utils} from 'ethers';
 import {
   Button,
   ButtonVariant,
-  CloseCircle,
+  Icon,
   IconButton,
   KeyboardSafeArea,
   QRScanner,
@@ -103,7 +103,7 @@ export const TransactionAddress = ({
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <CloseCircle color={GRAPHIC_BASE_2} width={25} height={25} />
+                <Icon name="closeCircle" color={GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -112,7 +112,6 @@ export const TransactionAddress = ({
           <Text style={page.placeholder}>Enter Address or contact name</Text>
         ) : null}
       </View>
-
       <Spacer>
         {contactsList.length ? (
           <FlatList

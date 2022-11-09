@@ -6,15 +6,15 @@ import {
   PopupContainer,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {Language} from '../models/user';
 import {GRAPHIC_GREEN_1} from '../variables';
 import {StyleSheet} from 'react-native';
+import {AppLanguage} from '../types';
 
 export const SettingsLanguageScreen = () => {
   const app = useApp();
   const [language, setLanguage] = useState(app.language);
 
-  const updateLanguage = (lang: Language) => {
+  const updateLanguage = (lang: AppLanguage) => {
     app.language = lang;
     setLanguage(app.language);
   };
@@ -24,20 +24,20 @@ export const SettingsLanguageScreen = () => {
       <IconButton
         style={page.button}
         onPress={() => {
-          updateLanguage(Language.ar);
+          updateLanguage(AppLanguage.ar);
         }}>
         <DataContent title="Arabic" subtitle="العربية" />
-        {language === Language.ar && (
+        {language === AppLanguage.ar && (
           <CheckIcon color={GRAPHIC_GREEN_1} style={page.icon} />
         )}
       </IconButton>
       <IconButton
         style={page.button}
         onPress={() => {
-          updateLanguage(Language.en);
+          updateLanguage(AppLanguage.en);
         }}>
         <DataContent title="English" subtitle="English" />
-        {language === Language.en && (
+        {language === AppLanguage.en && (
           <CheckIcon color={GRAPHIC_GREEN_1} style={page.icon} />
         )}
       </IconButton>

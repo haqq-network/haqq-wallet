@@ -11,14 +11,7 @@ import {BarCodeReadEvent} from 'react-native-camera';
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from 'ethers';
-import {
-  ArrowBackIcon,
-  FlashLightIcon,
-  IconButton,
-  ImageIcon,
-  Spacer,
-  Text,
-} from '../ui';
+import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {
   GRAPHIC_BASE_3,
   GRAPHIC_GREEN_2,
@@ -165,7 +158,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           <View style={{paddingTop: insets.top}}>
             <View style={page.headerContainer}>
               <IconButton onPress={onClose}>
-                <ArrowBackIcon color={GRAPHIC_BASE_3} />
+                <Icon name="arrowBack" color={GRAPHIC_BASE_3} />
               </IconButton>
               <Text t8 style={page.headerTitle}>
                 Scan QR Code

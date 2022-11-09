@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  Animated as RNAnimated,
   Dimensions,
   StatusBar,
   StyleSheet,
-  useWindowDimensions,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
-  Animated as RNAnimated,
 } from 'react-native';
 import {
   BG_1,
@@ -14,15 +14,15 @@ import {
   GRAPHIC_SECOND_5,
   TEXT_BASE_1,
 } from '../variables';
-import {CloseCircle, IconButton, Spacer, SwiperIcon, Text} from './ui';
+import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 import Animated, {
+  Easing,
+  interpolate,
   runOnJS,
-  useSharedValue,
-  withTiming,
   useAnimatedStyle,
   useDerivedValue,
-  interpolate,
-  Easing,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import {
   Gesture,
@@ -215,7 +215,7 @@ export const BottomSheet = ({
               </Text>
               <Spacer />
               <IconButton onPress={onClosePopup}>
-                <CloseCircle color={GRAPHIC_SECOND_2} />
+                <Icon s name="closeCircle" color={GRAPHIC_SECOND_2} />
               </IconButton>
             </View>
           </Animated.View>
