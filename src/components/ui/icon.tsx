@@ -3,13 +3,13 @@ import React, {useMemo} from 'react';
 import {Image, ImageProps, StyleSheet} from 'react-native';
 
 export enum IconsName {
-  addressBook = 'addressBook',
-  arrowBack = 'arrowBack',
+  address_book = 'address_book',
+  arrow_back = 'arrow_back',
   brush = 'brush',
   clear = 'clear',
-  closeCircle = 'closeCircle',
+  close_circle = 'close_circle',
   islm = 'islm',
-  plusMid = 'plusMid',
+  plus_mid = 'plus_mid',
   providers = 'providers',
   shield = 'shield',
   wallet = 'wallet',
