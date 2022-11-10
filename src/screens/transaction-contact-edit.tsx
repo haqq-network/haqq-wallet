@@ -45,7 +45,7 @@ export const TransactionEditContactScreen = () => {
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }

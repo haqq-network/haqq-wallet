@@ -218,7 +218,7 @@ export const BottomSheet = ({
               </Text>
               <Spacer />
               <IconButton onPress={onClosePopup}>
-                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_SECOND_2} />
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_SECOND_2} />
               </IconButton>
             </View>
           </Animated.View>

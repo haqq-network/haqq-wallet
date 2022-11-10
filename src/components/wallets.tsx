@@ -79,7 +79,7 @@ export const Wallets = () => {
               }),
             },
           ]}>
-          <Icon xs name="plusMid" color={LIGHT_GRAPHIC_BASE_1} />
+          <Icon xs name="plus_mid" color={LIGHT_GRAPHIC_BASE_1} />
         </Animated.View>
       </View>
       <Text t6 style={page.t6}>

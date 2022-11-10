@@ -5,8 +5,13 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
 import {ActionsSheet} from '../components/actions-sheet';
-import {CustomHeader} from '../components/custom-header';
-import {Icon, IconButton, Input, KeyboardSafeArea} from '../components/ui';
+import {
+  CustomHeader,
+  Icon,
+  IconButton,
+  Input,
+  KeyboardSafeArea,
+} from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
@@ -71,7 +76,7 @@ export const SettingsAccountEditScreen = () => {
             rightAction={
               inputName && (
                 <IconButton onPress={cleanTextFile}>
-                  <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                  <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
                 </IconButton>
               )
             }

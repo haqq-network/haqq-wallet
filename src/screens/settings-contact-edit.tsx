@@ -4,10 +4,10 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {Alert, StyleSheet, View} from 'react-native';
 
 import {ActionsSheet} from '../components/actions-sheet';
-import {CustomHeader} from '../components/custom-header';
 import {
   Button,
   ButtonVariant,
+  CustomHeader,
   Icon,
   IconButton,
   Input,
@@ -101,7 +101,7 @@ export const SettingsEditContactScreen = () => {
         renderIconLeft={
           isEdit
             ? undefined
-            : () => <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_1} />
+            : () => <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_1} />
         }
         textLeft={'Cancel'}
         textRight={isEdit ? 'Save' : 'Edit'}
@@ -121,7 +121,7 @@ export const SettingsEditContactScreen = () => {
               inputName &&
               isEdit && (
                 <IconButton onPress={cleanTextFile}>
-                  <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                  <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
                 </IconButton>
               )
             }
