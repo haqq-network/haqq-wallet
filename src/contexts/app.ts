@@ -13,6 +13,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
@@ -119,7 +120,8 @@ class App extends EventEmitter {
           username: generateUUID(),
           biometry: false,
           bluetooth: false,
-          language: 'en',
+          language: AppLanguage.en,
+          theme: AppTheme.light,
           providerId:
             ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
               ? MAIN_NETWORK
@@ -260,14 +262,18 @@ class App extends EventEmitter {
   }
 
   getTheme() {
-    if (this.user) {
-      this._lastTheme =
-        this.user.theme === AppTheme.system
-          ? this.user.systemTheme
-          : this.user.theme;
+    try {
+      if (this.user) {
+        this._lastTheme =
+          this.user.theme === AppTheme.system
+            ? this.user.systemTheme
+            : this.user.theme;
+      }
+    } catch (e) {
+      captureException(e, 'app.getTheme');
+    } finally {
+      return this._lastTheme;
     }
-
-    return this._lastTheme;
   }
 
   async onAppStatusChanged() {
