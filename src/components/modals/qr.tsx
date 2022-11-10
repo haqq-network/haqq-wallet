@@ -160,7 +160,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           <View style={{paddingTop: insets.top}}>
             <View style={page.headerContainer}>
               <IconButton onPress={onClose}>
-                <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_3} />
+                <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_3} />
               </IconButton>
               <Text t8 style={page.headerTitle}>
                 Scan QR Code

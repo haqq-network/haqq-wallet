@@ -47,7 +47,7 @@ export const PopupHeader = ({
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
       {canGoBack ? (
         <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
-          <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_1} />
+          <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_1} />
         </IconButton>
       ) : (
         <View style={page.spacer} />

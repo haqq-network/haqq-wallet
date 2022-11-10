@@ -113,7 +113,7 @@ export const TransactionAddress = ({
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
