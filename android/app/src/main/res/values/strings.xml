@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">haqq</string>
+  <string name="app_name">haqq</string>
+  <string name="overview_text">ISLM Wallet</string>
 </resources>

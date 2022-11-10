@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <!-- fontWeight
+ 100 Thin
+ 200 Extra Light
+ 300 Light
+ 400 Normal
+ 500 Medium
+ 600 Semi Bold
+ 700 Bold
+ 800 Extra Bold
+ 900 Ultra Bold -->
+
+  <font
+    android:font="@font/el_messiri_medium"
+    android:fontStyle="normal"
+    android:fontWeight="500" />
+
+  <font
+    android:font="@font/el_messiri_regular"
+    android:fontStyle="normal"
+    android:fontWeight="400" />
+
+  <font
+    android:font="@font/el_messiri_semi_bold"
+    android:fontStyle="normal"
+    android:fontWeight="600" />
+
+  <font
+    android:font="@font/el_messiri_bold"
+    android:fontStyle="normal"
+    android:fontWeight="700" />
+</font-family>

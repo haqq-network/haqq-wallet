@@ -1,11 +1,21 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
-    </style>
-    <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
-        <item name="colorPrimaryDark">@color/status_bar_color</item>
-    </style>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+  </style>
+
+  <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
+    <item name="colorPrimaryDark">@color/status_bar_color</item>
+  </style>
+
+  <style name="overview_text">
+    <item name="android:textSize">34sp</item>
+    <item name="android:textColor">#FFFFFF</item>
+  </style>
+
+  <style name="splash" parent="SplashScreen_SplashTheme">
+    <item name="android:windowFullscreen">true</item>
+  </style>
 </resources>

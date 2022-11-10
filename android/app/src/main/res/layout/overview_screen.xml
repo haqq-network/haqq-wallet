@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/overviewScreen"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_centerHorizontal="false"
+  android:background="#04D484"
+  android:orientation="vertical">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="190dp"
+    android:layout_centerInParent="true"
+    android:gravity="center">
+
+    <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:foregroundTintMode="multiply"
+      android:gravity="top"
+      android:scaleType="center"
+      android:src="@drawable/logo_overview"
+      android:tint="#FFFFFFFF" />
+
+    <TextView
+      android:id="@+id/text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:fontFamily="@font/el_messiri_bold"
+      android:gravity="bottom|center_horizontal"
+      android:lineSpacingExtra="-7sp"
+      android:text="@string/overview_text"
+      android:textAppearance="@style/overview_text" />
+  </RelativeLayout>
+</RelativeLayout>

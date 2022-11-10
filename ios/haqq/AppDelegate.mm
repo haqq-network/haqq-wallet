@@ -73,6 +73,28 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   return true;
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application{
+  //always fill the view
+  UIView*  loadingView = [UIView new];
+  loadingView.frame = self.window.bounds;
+  loadingView.backgroundColor = [UIColor colorWithRed:0.015686275 green:0.831372549 blue:0.517647059 alpha:1];
+    
+  UIImage *image = [UIImage imageNamed:@"splashImage"];
+
+  UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake((loadingView.frame.size.width / 2) - (image.size.width / 2), (loadingView.frame.size.height / 2) - (image.size.height / 2), image.size.width, image.size.height)];
+  [imageView setBackgroundColor: [UIColor clearColor]];
+  [imageView setImage: image];
+  
+  [loadingView addSubview: imageView];
+  
+  loadingView.tag = 181099;
+  [self.window addSubview:loadingView];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application{
+  [[self.window viewWithTag:181099] removeFromSuperview];
+}
+
 - (NSDictionary *)prepareInitialProps
 {
   NSMutableDictionary *initProps = [NSMutableDictionary new];
