@@ -16,7 +16,7 @@ export const HomeSettingsScreen = () => {
       />
 
       <SettingsButton
-        icon={<Icon s name="addressBook" color={LIGHT_GRAPHIC_BASE_1} />}
+        icon={<Icon s name="address_book" color={LIGHT_GRAPHIC_BASE_1} />}
         title="Address book"
         next="settingsAddressBook"
       />

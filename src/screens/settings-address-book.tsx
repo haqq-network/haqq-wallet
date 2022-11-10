@@ -180,7 +180,7 @@ export const SettingsAddressBookScreen =
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -189,7 +189,7 @@ export const SettingsAddressBookScreen =
         {canAdd && (
           <IconButton onPress={onPressAdd} style={page.addButton}>
             <Box style={page.badge}>
-              <Icon s name="plusMid" color={LIGHT_GRAPHIC_BASE_2} />
+              <Icon s name="plus_mid" color={LIGHT_GRAPHIC_BASE_2} />
             </Box>
             <Text style={{color: LIGHT_TEXT_BASE_1}}>Add Contact</Text>
           </IconButton>
