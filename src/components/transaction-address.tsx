@@ -2,34 +2,27 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
-import {AddressHeader} from './address-header';
-import {AddressRow} from './address-row';
+import {ListContact} from './list-contact';
 import {
   Button,
   ButtonVariant,
   Icon,
   IconButton,
   KeyboardSafeArea,
-  PenIcon,
   QRScanner,
   Spacer,
-  SwipeableRow,
   TextField,
-  TrashIcon,
 } from './ui';
 
 import {useApp} from '../contexts/app';
 import {hideModal, showModal} from '../helpers/modal';
-import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
+import {withActionsContactItem} from '../hocs';
 import {isHexString} from '../utils';
 import {
   LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_BASE_3,
   LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_RED_1,
-  LIGHT_GRAPHIC_SECOND_4,
   PLACEHOLDER_GRAY,
 } from '../variables';
 
@@ -37,6 +30,10 @@ export type TransactionAddressProps = {
   initial?: string;
   onAddress: (address: string) => void;
 };
+
+const ListOfContacts = withActionsContactItem(ListContact, {
+  screen: 'transaction',
+});
 
 export const TransactionAddress = ({
   initial = '',
@@ -48,11 +45,6 @@ export const TransactionAddress = ({
   const [inputIsFocused, setInputIsFocused] = useState(false);
   const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
-
-  const {contactsList, onPressEdit, onPressRemove} = useAddressBookItemActions(
-    true,
-    true,
-  );
 
   useEffect(() => {
     const toTrim = address.trim();
@@ -139,33 +131,7 @@ export const TransactionAddress = ({
         ) : null}
       </View>
       <Spacer>
-        {contactsList.length ? (
-          <FlatList
-            keyboardShouldPersistTaps="always"
-            data={contactsList}
-            renderItem={({item}) => (
-              <SwipeableRow
-                item={item}
-                rightActions={[
-                  {
-                    icon: <PenIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                    backgroundColor: LIGHT_GRAPHIC_SECOND_4,
-                    onPress: onPressEdit,
-                    key: 'edit',
-                  },
-                  {
-                    icon: <TrashIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                    backgroundColor: LIGHT_GRAPHIC_RED_1,
-                    onPress: onPressRemove,
-                    key: 'remove',
-                  },
-                ]}>
-                <AddressRow item={item} />
-              </SwipeableRow>
-            )}
-            ListHeaderComponent={AddressHeader}
-          />
-        ) : null}
+        <ListOfContacts />
       </Spacer>
 
       <Button

@@ -17,7 +17,7 @@ import {RootStackParamList} from '../types';
 import {LIGHT_GRAPHIC_BASE_2} from '../variables';
 
 export const TransactionEditContactScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const {goBack} = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {name, address} =
     useRoute<RouteProp<RootStackParamList, 'transactionEditContact'>>().params;
 
@@ -26,7 +26,7 @@ export const TransactionEditContactScreen = () => {
 
   const onSubmit = () => {
     contacts.updateContact(address, inputName);
-    navigation.goBack();
+    goBack();
   };
 
   const onChange = (e: string) => {

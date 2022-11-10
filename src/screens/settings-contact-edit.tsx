@@ -13,7 +13,8 @@ import {
   Input,
   KeyboardSafeArea,
 } from '../components/ui';
-import {useAddressBookItemActions} from '../hooks';
+import {useContacts} from '../contexts/contacts';
+import {useTypedNavigation} from '../hooks';
 import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_7,
@@ -25,8 +26,8 @@ import {
 export const SettingsEditContactScreen = () => {
   const {name, address, isCreate} =
     useRoute<RouteProp<RootStackParamList, 'settingsEditContact'>>().params;
-
-  const {contacts, navigation} = useAddressBookItemActions();
+  const contacts = useContacts();
+  const {goBack} = useTypedNavigation();
 
   const [inputName, setInputName] = useState(name);
   const [isEdit, setIsEdit] = useState(!!isCreate);
@@ -40,7 +41,7 @@ export const SettingsEditContactScreen = () => {
     } else {
       contacts.updateContact(address, inputName);
     }
-    navigation.goBack();
+    goBack();
   };
 
   const onChange = (e: string) => {
@@ -61,16 +62,16 @@ export const SettingsEditContactScreen = () => {
 
   const onPressLeft = () => {
     if (!isEdit) {
-      navigation.goBack();
+      goBack();
     } else if (isChanged) {
       setActionSheetVisible(true);
     } else {
-      navigation.goBack();
+      goBack();
     }
   };
   const onPressDiscard = () => {
     setActionSheetVisible(false);
-    navigation.goBack();
+    goBack();
   };
 
   const onPressKeepEditing = () => setActionSheetVisible(false);
@@ -86,7 +87,7 @@ export const SettingsEditContactScreen = () => {
           style: 'destructive',
           onPress: () => {
             contacts.removeContact(address);
-            navigation.goBack();
+            goBack();
           },
         },
       ],
