@@ -16,10 +16,10 @@ import {Spacer, Text} from './ui';
 import {moderateVerticalScale} from '../helpers/scaling-utils';
 import {HapticEffects, vibrate} from '../services/haptic';
 import {
-  GRAPHIC_BASE_4,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
+  LIGHT_GRAPHIC_SECOND_2,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
 } from '../variables';
 
 export type PinProps = {
@@ -149,17 +149,17 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: GRAPHIC_BASE_4,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: TEXT_GREEN_1,
+    backgroundColor: LIGHT_TEXT_GREEN_1,
     transform: [{scale: 1}],
   },
   error: {
-    color: TEXT_RED_1,
+    color: LIGHT_TEXT_RED_1,
     fontWeight: '600',
   },
   title: {
@@ -167,5 +167,5 @@ const page = StyleSheet.create({
     marginBottom: 12,
     textAlign: 'center',
   },
-  t11: {textAlign: 'center', color: TEXT_BASE_2},
+  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
 });

@@ -23,7 +23,11 @@ import {useWallet} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors} from '../utils';
-import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
+import {
+  CARD_CIRCLE_TOTAL,
+  CARD_RHOMBUS_TOTAL,
+  LIGHT_TEXT_BASE_1,
+} from '../variables';
 
 const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},
@@ -227,7 +231,7 @@ const page = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 23,
     fontWeight: '600',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   button: {
     marginVertical: 8,

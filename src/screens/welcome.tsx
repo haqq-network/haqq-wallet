@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {RootStackParamList} from '../types';
-import {TEXT_BASE_2} from '../variables';
+import {LIGHT_TEXT_BASE_2} from '../variables';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 
@@ -64,7 +64,7 @@ const page = StyleSheet.create({
   content: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 4},
   button: {marginBottom: 16},
-  textStyle: {textAlign: 'center', color: TEXT_BASE_2},
+  textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   imageStyle: {
     width: 120,
     height: 120,

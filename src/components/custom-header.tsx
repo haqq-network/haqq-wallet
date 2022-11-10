@@ -5,7 +5,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {IconButton, Text} from './ui';
 
-import {DEFAULT_HITSLOP, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {
+  DEFAULT_HITSLOP,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+} from '../variables';
 
 interface CustomHeaderProps {
   onPressLeft?: () => void;
@@ -86,7 +90,10 @@ const RenderButton = ({
   } else if (text) {
     return (
       <Pressable onPress={() => !disabled && onPress?.()}>
-        <Text t10 color={disabled ? TEXT_BASE_2 : textColor} style={page.title}>
+        <Text
+          t10
+          color={disabled ? LIGHT_TEXT_BASE_2 : textColor}
+          style={page.title}>
           {text || ''}
         </Text>
       </Pressable>
@@ -109,7 +116,7 @@ const page = StyleSheet.create({
   title: {
     fontWeight: '600',
     textAlign: 'center',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
   spacer: {
     width: 24,

@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native';
 
 import {Text} from './ui';
 
-import {TEXT_BASE_1} from '../variables';
+import {LIGHT_TEXT_BASE_1} from '../variables';
 
 export const AddressHeader = () => {
   return (
@@ -19,6 +19,6 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 12,
     fontWeight: '600',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
 });

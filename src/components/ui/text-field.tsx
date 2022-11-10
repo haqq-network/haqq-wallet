@@ -13,13 +13,13 @@ import {
 
 import {isIOS} from '../../helpers';
 import {
-  BG_5,
-  BG_7,
-  BG_8,
-  TEXT_BASE_1,
-  TEXT_BASE_2,
-  TEXT_GREEN_1,
-  TEXT_RED_1,
+  LIGHT_BG_5,
+  LIGHT_BG_7,
+  LIGHT_BG_8,
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
 } from '../../variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
@@ -64,9 +64,9 @@ export const TextField: React.FC<Props> = ({
     }).start();
   }, [focusAnim, isFocused, value]);
 
-  let color = TEXT_BASE_2;
+  let color = LIGHT_TEXT_BASE_2;
   if (error) {
-    color = TEXT_RED_1;
+    color = LIGHT_TEXT_RED_1;
   }
 
   const top = isFocused ? 0 : -5;
@@ -82,7 +82,7 @@ export const TextField: React.FC<Props> = ({
           {height: getHeight},
         ]}>
         <TextInput
-          selectionColor={TEXT_GREEN_1}
+          selectionColor={LIGHT_TEXT_GREEN_1}
           allowFontScaling={false}
           style={[
             page.input,
@@ -163,16 +163,16 @@ const page = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
   },
   containerError: {
-    backgroundColor: BG_7,
+    backgroundColor: LIGHT_BG_7,
   },
   input: {
     alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     top: isIOS ? 28 : 18,
     fontSize: 16,
     right: isIOS ? 0 : 4.5,
@@ -193,7 +193,7 @@ const page = StyleSheet.create({
     marginLeft: 35,
     bottom: 8,
     fontSize: 12,
-    color: BG_5,
+    color: LIGHT_BG_5,
     fontFamily: 'SF Pro Display',
   },
   sub: {

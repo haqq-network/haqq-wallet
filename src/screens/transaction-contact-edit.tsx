@@ -14,7 +14,7 @@ import {
 } from '../components/ui';
 import {useContacts} from '../contexts/contacts';
 import {RootStackParamList} from '../types';
-import {GRAPHIC_BASE_2} from '../variables';
+import {LIGHT_GRAPHIC_BASE_2} from '../variables';
 
 export const TransactionEditContactScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -45,7 +45,7 @@ export const TransactionEditContactScreen = () => {
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }

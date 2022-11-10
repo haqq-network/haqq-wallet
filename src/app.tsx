@@ -65,7 +65,7 @@ import {
   ScreenOptionType,
 } from './types';
 import {sleep} from './utils';
-import {BG_1, GRAPHIC_GREEN_1} from './variables';
+import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from './variables';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -84,8 +84,8 @@ const AppTheme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: GRAPHIC_GREEN_1,
-    background: BG_1,
+    primary: LIGHT_GRAPHIC_GREEN_1,
+    background: LIGHT_BG_1,
   },
 };
 

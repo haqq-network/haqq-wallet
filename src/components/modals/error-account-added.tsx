@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {windowWidth} from '../../helpers';
 import {hideModal} from '../../helpers/modal';
-import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
+import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 export const ErrorAccountAdded = () => {
@@ -19,7 +19,7 @@ export const ErrorAccountAdded = () => {
             This account has already been added
           </Text>
           <AccountAddedIcon
-            color={GRAPHIC_SECOND_4}
+            color={LIGHT_GRAPHIC_SECOND_4}
             style={page.icon}
             width={120}
             height={120}
@@ -42,7 +42,7 @@ const page = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: GRAPHIC_SECOND_13,
+    backgroundColor: LIGHT_BG_9,
     paddingBottom: 30,
   },
   titleText: {
@@ -61,7 +61,7 @@ const page = StyleSheet.create({
     bottom: 0,
   },
   modalView: {
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     borderRadius: 16,
     alignItems: 'center',
   },

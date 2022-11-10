@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {Keyboard, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   WithTimingConfig,
@@ -12,14 +13,16 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Button, ButtonVariant, Text} from './ui';
+import {Text} from './ui';
 
 import {
-  BG_1,
-  GRAPHIC_SECOND_12,
-  GRAPHIC_SECOND_5,
-  TEXT_BLUE_1,
-  TEXT_SECOND_4,
+  DARK_GRAPHIC_RED_1,
+  LIGHT_BG_1,
+  LIGHT_BG_9,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_SECOND_1,
+  LIGHT_TEXT_BLUE_1,
+  LIGHT_TEXT_SECOND_1,
 } from '../variables';
 
 const timingOutAnimationConfig: WithTimingConfig = {
@@ -57,6 +60,7 @@ export const ActionsSheet = ({
   };
 
   useEffect(() => {
+    Keyboard.dismiss();
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
   }, [fadeAnim]);
 
@@ -86,21 +90,18 @@ export const ActionsSheet = ({
             Are you sure you want to discard your changes?
           </Text>
           <View style={page.line} />
-          <Button
-            title="Discard Changes"
-            variant={ButtonVariant.error}
-            onPress={handleDiscard}
-            style={page.margin}
-          />
+          <TouchableOpacity style={page.margin} onPress={handleDiscard}>
+            <Text color={DARK_GRAPHIC_RED_1} t14 style={page.tButton}>
+              Discard Changes
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={page.bottom}>
-          <Button
-            title="Keep Editing"
-            textColor={TEXT_BLUE_1}
-            style={page.margin}
-            variant={ButtonVariant.text}
-            onPress={handleKeepEditing}
-          />
+          <TouchableOpacity style={page.margin} onPress={handleKeepEditing}>
+            <Text color={LIGHT_TEXT_BLUE_1} t14 style={page.tButton}>
+              Keep Editing
+            </Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
     </View>
@@ -116,11 +117,11 @@ const page = StyleSheet.create({
   },
   top: {
     borderRadius: 13,
-    backgroundColor: GRAPHIC_SECOND_12,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
   },
   bottom: {
     borderRadius: 13,
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     marginVertical: 8,
   },
   animateView: {
@@ -129,7 +130,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: GRAPHIC_SECOND_5,
+    backgroundColor: LIGHT_BG_9,
   },
   animateViewFade: {
     flex: 1,
@@ -140,12 +141,22 @@ const page = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 12,
     textAlign: 'center',
-    color: TEXT_SECOND_4,
+    color: LIGHT_GRAPHIC_BASE_2,
+  },
+  tButton: {
+    fontFamily: 'SF Pro Display',
+    fontStyle: 'normal',
+    fontSize: 20,
+    lineHeight: 25,
   },
   line: {
     width: '100%',
     height: 0.3,
-    backgroundColor: TEXT_SECOND_4,
+    backgroundColor: LIGHT_TEXT_SECOND_1,
   },
-  margin: {paddingVertical: 18},
+  margin: {
+    paddingVertical: 18,
+    width: '100%',
+    alignItems: 'center',
+  },
 });

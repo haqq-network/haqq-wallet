@@ -16,7 +16,7 @@ import {
 import {app} from '../contexts/app';
 import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
-import {BG_8} from '../variables';
+import {LIGHT_BG_8} from '../variables';
 
 const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
@@ -109,7 +109,7 @@ const page = StyleSheet.create({
   },
   header: {
     marginTop: 15,
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,

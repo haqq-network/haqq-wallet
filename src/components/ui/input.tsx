@@ -4,7 +4,7 @@ import {StyleSheet, TextInput, TextInputProps} from 'react-native';
 
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
 
-import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type InputProps = TextInputProps & {
   label: string;
@@ -38,12 +38,12 @@ const page = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 22,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     paddingTop: 0,
     paddingBottom: 0,
   },
   inputDisabled: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   wrapper: {
     minHeight: 58,

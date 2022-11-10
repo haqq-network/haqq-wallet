@@ -4,7 +4,7 @@ import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataContentProps = {
   title: React.ReactNode;
@@ -31,14 +31,14 @@ export const DataContent = ({
 };
 const page = StyleSheet.create({
   title: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginBottom: 2,
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
   },
   subtitle: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   reverse: {flexDirection: 'column-reverse'},
 });

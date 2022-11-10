@@ -24,12 +24,12 @@ import {hideModal, showModal} from '../helpers/modal';
 import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
 import {Contact} from '../models/contact';
 import {
-  GRAPHIC_BASE_2,
-  GRAPHIC_BASE_3,
-  GRAPHIC_GREEN_1,
-  GRAPHIC_RED_1,
-  GRAPHIC_SECOND_4,
-  TEXT_BASE_1,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_BASE_3,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_GRAPHIC_RED_1,
+  LIGHT_GRAPHIC_SECOND_4,
+  LIGHT_TEXT_BASE_1,
 } from '../variables';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
@@ -103,11 +103,11 @@ export const SettingsAddressBookScreen =
           rightAction={
             search === '' ? (
               <IconButton onPress={onPressQR}>
-                <QRScanner color={GRAPHIC_GREEN_1} style={page.icon} />
+                <QRScanner color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -116,9 +116,9 @@ export const SettingsAddressBookScreen =
         {canAdd && (
           <IconButton onPress={onPressAdd} style={page.addButton}>
             <Box style={page.badge}>
-              <Icon s name="plusMid" color={GRAPHIC_BASE_2} />
+              <Icon s name="plusMid" color={LIGHT_GRAPHIC_BASE_2} />
             </Box>
-            <Text style={{color: TEXT_BASE_1}}>Add Contact</Text>
+            <Text style={{color: LIGHT_TEXT_BASE_1}}>Add Contact</Text>
           </IconButton>
         )}
         <FlatList
@@ -129,19 +129,19 @@ export const SettingsAddressBookScreen =
               item={item}
               rightActions={[
                 {
-                  icon: <PenIcon color={GRAPHIC_BASE_3} />,
-                  backgroundColor: GRAPHIC_SECOND_4,
+                  icon: <PenIcon color={LIGHT_GRAPHIC_BASE_3} />,
+                  backgroundColor: LIGHT_GRAPHIC_SECOND_4,
                   onPress: onPressEdit,
                   key: 'edit',
                 },
                 {
-                  icon: <TrashIcon color={GRAPHIC_BASE_3} />,
-                  backgroundColor: GRAPHIC_RED_1,
+                  icon: <TrashIcon color={LIGHT_GRAPHIC_BASE_3} />,
+                  backgroundColor: LIGHT_GRAPHIC_RED_1,
                   onPress: onPressRemove,
                   key: 'remove',
                 },
               ]}>
-              <AddressRow item={item} onPress={() => {}} />
+              <AddressRow item={item} />
             </SwipeableRow>
           )}
           ListHeaderComponent={AddressHeader}

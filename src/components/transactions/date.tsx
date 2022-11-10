@@ -4,7 +4,7 @@ import {format, isSameYear, isToday} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
 import {TransactionListDate} from '../../types';
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {Text} from '../ui';
 
 export type TransactionDate = {
@@ -41,6 +41,6 @@ const page = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
     lineHeight: 18,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
 });

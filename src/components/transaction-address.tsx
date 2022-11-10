@@ -25,11 +25,11 @@ import {hideModal, showModal} from '../helpers/modal';
 import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
 import {isHexString} from '../utils';
 import {
-  GRAPHIC_BASE_2,
-  GRAPHIC_BASE_3,
-  GRAPHIC_GREEN_1,
-  GRAPHIC_RED_1,
-  GRAPHIC_SECOND_4,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_BASE_3,
+  LIGHT_GRAPHIC_GREEN_1,
+  LIGHT_GRAPHIC_RED_1,
+  LIGHT_GRAPHIC_SECOND_4,
   PLACEHOLDER_GRAY,
 } from '../variables';
 
@@ -84,18 +84,22 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
+    const subscriptionBack = () => {
+      goBack();
+      app.off('onCloseQr', subscriptionBack);
+    };
     const subscription = ({to}: any) => {
       if (utils.isAddress(to)) {
         setAddress(to);
         app.off('address', subscription);
+        app.off('onCloseQr', subscriptionBack);
         hideModal();
       }
     };
-
     app.on('address', subscription);
 
+    app.on('onCloseQr', subscriptionBack);
     showModal('qr');
-    goBack();
   }, [app, goBack]);
 
   const onPressClear = useCallback(() => setAddress(''), []);
@@ -117,11 +121,15 @@ export const TransactionAddress = ({
           rightAction={
             address === '' ? (
               <IconButton onPress={onPressQR}>
-                <QRScanner color={GRAPHIC_GREEN_1} width={25} height={25} />
+                <QRScanner
+                  color={LIGHT_GRAPHIC_GREEN_1}
+                  width={25}
+                  height={25}
+                />
               </IconButton>
             ) : (
               <IconButton onPress={onPressClear}>
-                <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+                <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
@@ -140,21 +148,20 @@ export const TransactionAddress = ({
                 item={item}
                 rightActions={[
                   {
-                    icon: <PenIcon color={GRAPHIC_BASE_3} />,
-                    backgroundColor: GRAPHIC_SECOND_4,
+                    icon: <PenIcon color={LIGHT_GRAPHIC_BASE_3} />,
+                    backgroundColor: LIGHT_GRAPHIC_SECOND_4,
                     onPress: onPressEdit,
                     key: 'edit',
                   },
                   {
-                    icon: <TrashIcon color={GRAPHIC_BASE_3} />,
-                    backgroundColor: GRAPHIC_RED_1,
+                    icon: <TrashIcon color={LIGHT_GRAPHIC_BASE_3} />,
+                    backgroundColor: LIGHT_GRAPHIC_RED_1,
                     onPress: onPressRemove,
                     key: 'remove',
                   },
                 ]}>
-                <AddressRow item={item} onPress={() => {}} />
+                <AddressRow item={item} />
               </SwipeableRow>
-              // <AddressRow item={item} onPress={setAddress} />
             )}
             ListHeaderComponent={AddressHeader}
           />

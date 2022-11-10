@@ -9,7 +9,7 @@ import {
 
 import {Text} from './text';
 
-import {BG_1, BG_3, TEXT_BASE_1} from '../../variables';
+import {LIGHT_BG_1, LIGHT_BG_3, LIGHT_TEXT_BASE_1} from '../../variables';
 
 export type SegmentedControlValue<T> = {
   value: T;
@@ -54,7 +54,7 @@ export const SegmentedControl = ({
 
 const page = StyleSheet.create({
   container: {
-    backgroundColor: BG_3,
+    backgroundColor: LIGHT_BG_3,
     padding: 3,
     borderRadius: 14,
     flexDirection: 'row',
@@ -66,10 +66,10 @@ const page = StyleSheet.create({
     padding: 8,
   },
   itemActive: {
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     borderRadius: 12,
   },
   text: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
 });

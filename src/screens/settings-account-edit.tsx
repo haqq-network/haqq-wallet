@@ -9,7 +9,7 @@ import {CustomHeader} from '../components/custom-header';
 import {Icon, IconButton, Input, KeyboardSafeArea} from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
-import {GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
 export const SettingsAccountEditScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -59,8 +59,8 @@ export const SettingsAccountEditScreen = () => {
         textRight={'Save'}
         disabledRight={!isChanged}
         onPressRight={onPressRight}
-        textColorRight={TEXT_GREEN_1}
-        textColorLeft={TEXT_GREEN_1}
+        textColorRight={LIGHT_GRAPHIC_GREEN_1}
+        textColorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
       <KeyboardSafeArea>
         <View style={page.container}>
@@ -71,7 +71,7 @@ export const SettingsAccountEditScreen = () => {
             rightAction={
               inputName && (
                 <IconButton onPress={cleanTextFile}>
-                  <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+                  <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
                 </IconButton>
               )
             }

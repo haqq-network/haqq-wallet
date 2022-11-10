@@ -2,7 +2,7 @@ import React from 'react';
 
 import {ActivityIndicator, StyleSheet} from 'react-native';
 
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {PopupContainer, Text} from '../ui';
 
 export const LedgerAccountsEmpty = () => {
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptyDescription: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     textAlign: 'center',
   },
 });

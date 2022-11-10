@@ -15,7 +15,12 @@ import {
 } from '../components/ui';
 import {useAddressBookItemActions} from '../hooks';
 import {RootStackParamList} from '../types';
-import {BG_7, GRAPHIC_BASE_1, GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
+import {
+  LIGHT_BG_7,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+} from '../variables';
 
 export const SettingsEditContactScreen = () => {
   const {name, address, isCreate} =
@@ -96,14 +101,14 @@ export const SettingsEditContactScreen = () => {
         renderIconLeft={
           isEdit
             ? undefined
-            : () => <Icon s name="arrowBack" color={GRAPHIC_BASE_1} />
+            : () => <Icon s name="arrowBack" color={LIGHT_GRAPHIC_BASE_1} />
         }
         textLeft={'Cancel'}
         textRight={isEdit ? 'Save' : 'Edit'}
         disabledRight={!isChanged && isEdit}
         onPressRight={onPressRight}
-        textColorRight={TEXT_GREEN_1}
-        textColorLeft={TEXT_GREEN_1}
+        textColorRight={LIGHT_GRAPHIC_GREEN_1}
+        textColorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
       <KeyboardSafeArea>
         <View style={page.container}>
@@ -116,7 +121,7 @@ export const SettingsEditContactScreen = () => {
               inputName &&
               isEdit && (
                 <IconButton onPress={cleanTextFile}>
-                  <Icon s name="closeCircle" color={GRAPHIC_BASE_2} />
+                  <Icon s name="closeCircle" color={LIGHT_GRAPHIC_BASE_2} />
                 </IconButton>
               )
             }
@@ -157,7 +162,7 @@ const page = StyleSheet.create({
     marginTop: 24,
   },
   errorButton: {
-    backgroundColor: BG_7,
+    backgroundColor: LIGHT_BG_7,
     borderRadius: 12,
   },
 });

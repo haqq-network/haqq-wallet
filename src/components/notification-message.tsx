@@ -10,7 +10,7 @@ import {
 import {Text} from './ui';
 
 import {asyncTiming, sleep} from '../utils';
-import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
+import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
 
 export type NotificationMessageProps = {
   message: string;
@@ -66,9 +66,9 @@ const page = StyleSheet.create({
     maxWidth: Dimensions.get('window').width - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     borderRadius: 24,
-    shadowColor: GRAPHIC_SECOND_5,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -78,5 +78,5 @@ const page = StyleSheet.create({
     elevation: 5,
   },
   flex: {flex: 1},
-  t14: {fontWeight: '600', color: TEXT_BASE_1, textAlign: 'center'},
+  t14: {fontWeight: '600', color: LIGHT_TEXT_BASE_1, textAlign: 'center'},
 });

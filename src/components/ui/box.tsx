@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet, View, ViewProps} from 'react-native';
 
-import {BG_8} from '../../variables';
+import {LIGHT_BG_8} from '../../variables';
 
 export const Box = ({children, style, ...props}: ViewProps) => {
   const container = useMemo(() => [page.container, style], [style]);
@@ -19,7 +19,7 @@ const page = StyleSheet.create({
     height: 42,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: BG_8,
+    backgroundColor: LIGHT_BG_8,
     borderRadius: 12,
   },
 });

@@ -10,7 +10,7 @@ import {IconButton, QRScanner} from './ui';
 import {useApp} from '../contexts/app';
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {GRAPHIC_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 export const QrScannerButton = () => {
   const app = useApp();
@@ -31,7 +31,7 @@ export const QrScannerButton = () => {
 
   return (
     <IconButton onPress={onPressQR} style={page.container}>
-      <QRScanner color={GRAPHIC_BASE_1} />
+      <QRScanner color={LIGHT_GRAPHIC_BASE_1} />
     </IconButton>
   );
 };

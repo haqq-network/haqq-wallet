@@ -7,9 +7,8 @@ import {Alert, StyleSheet, Switch, View} from 'react-native';
 import {Pin, PinInterface} from '../components/pin';
 import {MenuNavigationButton, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
-import {RootStackParamList} from '../types';
-import {BiometryType} from '../types';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {BiometryType, RootStackParamList} from '../types';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 
 const biometryName = {
   [BiometryType.faceId]: 'Face ID',
@@ -95,10 +94,10 @@ const page = StyleSheet.create({
   container: {flex: 1, marginHorizontal: 20},
 
   menuSubtitle: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
   menuTitle: {
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     marginBottom: 2,
   },
 });

@@ -23,7 +23,7 @@ import Animated, {
 import {Button, ButtonVariant, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {RootStackParamList} from '../types';
-import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
+import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
 
 const warningImage = require('../../assets/images/mnemonic-notify.png');
 
@@ -98,7 +98,7 @@ export const BackupNotificationScreen = () => {
   }, [app, fadeOut]);
 
   const bgAnimation = useAnimatedStyle(() => ({
-    opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [0.5, 0]),
+    opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [1, 0]),
   }));
 
   const slideFromBottomAnimation = useAnimatedStyle(() => ({
@@ -144,7 +144,7 @@ const page = StyleSheet.create({
   sub: {
     marginHorizontal: 16,
     marginVertical: 42,
-    backgroundColor: BG_1,
+    backgroundColor: LIGHT_BG_1,
     flex: 0,
     padding: 24,
     borderRadius: 16,
@@ -156,7 +156,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: GRAPHIC_SECOND_5,
+    backgroundColor: LIGHT_BG_9,
   },
   animateViewFade: {
     flex: 1,
@@ -164,7 +164,7 @@ const page = StyleSheet.create({
   },
   t8: {
     marginBottom: 8,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     fontWeight: '700',
     textAlign: 'center',
   },

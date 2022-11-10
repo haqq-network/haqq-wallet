@@ -4,7 +4,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Text} from './text';
 
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataViewProps = {
   label: string;
@@ -32,6 +32,6 @@ const page = StyleSheet.create({
     paddingHorizontal: 20,
   },
   t11: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
 });

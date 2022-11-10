@@ -7,12 +7,12 @@ import {
   ErrorCreateAccount,
   LoadingModal,
   LoadingModalProps,
+  NoInternet,
   PinModal,
   PinModalProps,
   SplashModal,
   SplashModalProps,
 } from '../components/modals';
-import {NoInternet} from '../components/modals';
 import {QRModal, QRModalProps} from '../components/modals/qr';
 import {app} from '../contexts/app';
 
@@ -73,6 +73,7 @@ export const Modals = ({initialModal = null}: ModalProps) => {
 
   const onClose = () => {
     setModal(null);
+    app.emit('onCloseQr');
   };
 
   const entry = useMemo(() => {
@@ -88,10 +89,7 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <SplashModal />;
       case 'qr':
         return (
-          <QRModal
-            onClose={onClose || modal.onClose}
-            qrWithoutFrom={modal.qrWithoutFrom}
-          />
+          <QRModal onClose={onClose} qrWithoutFrom={modal.qrWithoutFrom} />
         );
       case 'no-internet':
         return <NoInternet />;

@@ -7,7 +7,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {MenuNavigationButton, Text} from './ui';
 
 import {RootStackParamList} from '../types';
-import {TEXT_BASE_1} from '../variables';
+import {LIGHT_TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {
   next:
@@ -54,6 +54,6 @@ const page = StyleSheet.create({
   },
   text: {
     marginLeft: 12,
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
   },
 });

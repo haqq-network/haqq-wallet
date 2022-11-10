@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import {windowHeight, windowWidth} from '../../helpers';
 // import {Terms} from '../ui/terms';
 import {I18N, getText} from '../../i18n';
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {
   Button,
   ButtonVariant,
@@ -67,7 +67,7 @@ const page = StyleSheet.create({
   },
   disclaimer: {
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},

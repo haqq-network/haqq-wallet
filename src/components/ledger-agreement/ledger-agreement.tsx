@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {windowWidth} from '../../helpers';
 import {I18N, getText} from '../../i18n';
-import {TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
 import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
 // import {Terms} from '../ui/terms';
@@ -59,7 +59,7 @@ const page = StyleSheet.create({
   disclaimer: {
     marginBottom: 20,
     textAlign: 'center',
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},

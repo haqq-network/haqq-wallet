@@ -7,7 +7,7 @@ import {IconButton, TrashIcon} from './ui';
 
 import {app} from '../contexts/app';
 import {useWallets} from '../contexts/wallets';
-import {GRAPHIC_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 type SettingsAccountRemoveButtonProp = {
   address: string;
@@ -42,7 +42,7 @@ export const SettingsAccountRemoveButton = ({
 
   return (
     <IconButton style={page.container} onPress={onClickRemove}>
-      <TrashIcon color={GRAPHIC_BASE_1} />
+      <TrashIcon color={LIGHT_GRAPHIC_BASE_1} />
     </IconButton>
   );
 };

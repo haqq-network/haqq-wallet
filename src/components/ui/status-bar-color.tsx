@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StatusBar, StyleSheet, View} from 'react-native';
 
-import {BG_1} from '../../variables';
+import {LIGHT_BG_1} from '../../variables';
 
-export const StatusBarColor = ({backgroundColor = BG_1, ...props}) => {
+export const StatusBarColor = ({backgroundColor = LIGHT_BG_1, ...props}) => {
   return (
     <View style={[page.statusBar, {backgroundColor}]}>
       <StatusBar translucent backgroundColor={backgroundColor} {...props} />

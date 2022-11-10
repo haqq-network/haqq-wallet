@@ -6,7 +6,7 @@ import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Text} from './text';
 
 import {app} from '../../contexts/app';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
+import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataContentSplittedProps = {
   to: string[];
@@ -32,14 +32,14 @@ export const DataContentSplitted = ({
         <Text t11 style={page.address}>
           {to[0]}
         </Text>
-        <Text t11 style={{color: TEXT_BASE_2}}>
+        <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
           {to[1]}
         </Text>
         <Text t11>{to[2]}</Text>
       </Text>
-      <Text t11 style={{color: TEXT_BASE_2}}>
+      <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
         {
-          <Text t11 style={{color: TEXT_BASE_2}}>
+          <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
             {title}
           </Text>
         }
@@ -52,7 +52,7 @@ const page = StyleSheet.create({
     minHeight: 22,
     marginBottom: 2,
     textAlign: 'left',
-    color: TEXT_BASE_1,
+    color: LIGHT_TEXT_BASE_1,
     width: '100%',
   },
   reverse: {flexDirection: 'column-reverse'},

@@ -3,7 +3,11 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {useApp} from '../../contexts/app';
-import {BG_1, PIN_BANNED_ATTEMPTS, TEXT_BASE_2} from '../../variables';
+import {
+  LIGHT_BG_1,
+  LIGHT_TEXT_BASE_2,
+  PIN_BANNED_ATTEMPTS,
+} from '../../variables';
 import {Pin, PinInterface} from '../pin';
 import {RestorePassword} from '../restore-password';
 import {Text} from '../ui';
@@ -68,14 +72,14 @@ export const PinModal = () => {
 };
 
 const page = StyleSheet.create({
-  container: {backgroundColor: BG_1, flex: 1, paddingTop: 110},
+  container: {backgroundColor: LIGHT_BG_1, flex: 1, paddingTop: 110},
   additionButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   additionButtonText: {
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 16,

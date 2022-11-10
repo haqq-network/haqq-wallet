@@ -25,10 +25,10 @@ import {RootStackParamList} from '../types';
 import {
   GRADIENT_END,
   GRADIENT_START,
-  GRAPHIC_BASE_3,
-  TEXT_BASE_3,
-  TEXT_SECOND_2,
-  TEXT_YELLOW_1,
+  LIGHT_GRAPHIC_BASE_3,
+  LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_SECOND_2,
+  LIGHT_TEXT_YELLOW_1,
 } from '../variables';
 
 export const DetailsQrScreen = () => {
@@ -58,7 +58,7 @@ export const DetailsQrScreen = () => {
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.info}
-        icon={<Alert color={TEXT_YELLOW_1} />}>
+        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
       <LinearGradient
@@ -123,12 +123,12 @@ const page = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    color: TEXT_SECOND_2,
+    color: LIGHT_TEXT_SECOND_2,
     fontWeight: '700',
     marginBottom: 4,
   },
   address: {
-    color: TEXT_BASE_3,
+    color: LIGHT_TEXT_BASE_3,
     marginBottom: 4,
   },
   buttons: {
@@ -143,7 +143,7 @@ const page = StyleSheet.create({
   card: {position: 'absolute', bottom: 0, left: 0, right: 0},
   qrStyle: {
     padding: 12,
-    backgroundColor: GRAPHIC_BASE_3,
+    backgroundColor: LIGHT_GRAPHIC_BASE_3,
     borderRadius: 12,
     marginBottom: 20,
   },

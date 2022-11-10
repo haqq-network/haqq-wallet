@@ -16,7 +16,7 @@ import {
   Text,
 } from '../components/ui';
 import {RootStackParamList} from '../types';
-import {TEXT_BASE_2, TEXT_YELLOW_1} from '../variables';
+import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
 
 const warningImage = require('../../assets/animations/recover-animation.json');
 
@@ -38,14 +38,14 @@ export const BackupWarningScreen = () => {
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock1}
-        icon={<Alert color={TEXT_YELLOW_1} />}>
+        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
         If you lose your recovery phrase, you will be unable to access your
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.infoBlock2}
-        icon={<Alert color={TEXT_YELLOW_1} />}>
+        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
         This phrase is your only chance to recover access to your funds if your
         usual device is unavailable to you.
       </InfoBlock>
@@ -68,7 +68,7 @@ const page = StyleSheet.create({
   imageContainer: {justifyContent: 'center', alignItems: 'center'},
   image: {width: 200, height: 200},
   title: {marginBottom: 4, textAlign: 'center'},
-  paragraph: {marginBottom: 20, textAlign: 'center', color: TEXT_BASE_2},
+  paragraph: {marginBottom: 20, textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   infoBlock1: {marginBottom: 20},
   infoBlock2: {marginBottom: 34},
   submit: {marginVertical: 16},

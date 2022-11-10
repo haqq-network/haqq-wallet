@@ -10,7 +10,7 @@ import {
 
 import {ArrowForwardIcon} from './svg-icon';
 
-import {GRAPHIC_SECOND_3} from '../../variables';
+import {LIGHT_GRAPHIC_SECOND_3} from '../../variables';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;
@@ -29,7 +29,7 @@ export const MenuNavigationButton = ({
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[page.container, style]}>
         <View style={page.content}>{children}</View>
-        {!hideArrow && <ArrowForwardIcon color={GRAPHIC_SECOND_3} />}
+        {!hideArrow && <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />}
       </View>
     </TouchableWithoutFeedback>
   );

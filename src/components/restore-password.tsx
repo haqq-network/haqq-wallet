@@ -10,7 +10,7 @@ import {useContacts} from '../contexts/contacts';
 import {useTransactions} from '../contexts/transactions';
 import {useWallets} from '../contexts/wallets';
 import {captureException} from '../helpers';
-import {TEXT_BASE_2} from '../variables';
+import {LIGHT_TEXT_BASE_2} from '../variables';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;
@@ -109,6 +109,6 @@ const page = StyleSheet.create({
     marginBottom: 24,
     fontSize: 14,
     lineHeight: 18,
-    color: TEXT_BASE_2,
+    color: LIGHT_TEXT_BASE_2,
   },
 });

@@ -19,7 +19,7 @@ import {User, UserType} from '../models/user';
 import {EthNetwork} from '../services/eth-network';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {generateUUID} from '../utils';
-import {GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
+import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 
 type OptionalConfigObjectT = {
   title: string;
@@ -29,7 +29,7 @@ type OptionalConfigObjectT = {
 
 const optionalConfigObject: OptionalConfigObjectT = {
   title: 'Fingerprint Login', // Android
-  imageColor: GRAPHIC_GREEN_1,
+  imageColor: LIGHT_GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
   // unifiedErrors: false,
 };

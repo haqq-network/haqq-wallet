@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Provider} from '../../models/provider';
-import {GRAPHIC_GREEN_1} from '../../variables';
+import {LIGHT_GRAPHIC_GREEN_1} from '../../variables';
 import {CheckIcon, DataContent} from '../ui';
 
 export type SettingsProvidersRowProps = {
@@ -28,7 +28,7 @@ export const SettingsProvidersRow = ({
           subtitle={`${item.name} (${item.chainId})`}
         />
         {providerId === item.id && (
-          <CheckIcon color={GRAPHIC_GREEN_1} style={styles.icon} />
+          <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={styles.icon} />
         )}
       </View>
     </TouchableWithoutFeedback>
