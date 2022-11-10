@@ -103,7 +103,7 @@ export const NumericKeyboard = ({
         style={page.button}
         onPress={() => onPress(-1)}
         testID="numeric_keyboard_rem">
-        <Icon name="clear" color={TEXT_BASE_1} />
+        <Icon name="clear" color={LIGHT_TEXT_BASE_1} />
       </IconButton>
     </View>
   );
