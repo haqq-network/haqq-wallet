@@ -5,19 +5,22 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
+
+import {isBefore} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
-import {Spacer, Text} from './ui';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import {NumericKeyboard} from './numeric-keyboard';
+import {Spacer, Text} from './ui';
+
+import {moderateVerticalScale} from '../helpers/scaling-utils';
+import {HapticEffects, vibrate} from '../services/haptic';
 import {
   GRAPHIC_BASE_4,
   TEXT_BASE_2,
   TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
-import {HapticEffects, vibrate} from '../services/haptic';
-import {isBefore} from 'date-fns';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {moderateVerticalScale} from '../helpers/scaling-utils';
 
 export type PinProps = {
   title: string;

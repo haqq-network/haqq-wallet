@@ -1,22 +1,25 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {format} from 'date-fns';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
-import {RootStackParamList, TransactionSource} from '../types';
-import {useTransactions} from '../contexts/transactions';
-import {Transaction} from '../models/transaction';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {format} from 'date-fns';
+import {StyleSheet, View} from 'react-native';
+
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
   DataContent,
   DataContentSplitted,
-  IconButton,
   ISLMIcon,
+  IconButton,
   Text,
 } from '../components/ui';
-
+import {useTransactions} from '../contexts/transactions';
+import {isIOS, openURL} from '../helpers';
+import {Transaction} from '../models/transaction';
+import {EthNetwork} from '../services/eth-network';
+import {RootStackParamList, TransactionSource} from '../types';
+import {splitAddress} from '../utils';
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -25,9 +28,6 @@ import {
   TEXT_GREEN_1,
   TEXT_RED_1,
 } from '../variables';
-import {splitAddress} from '../utils';
-import {isIOS, openURL} from '../helpers';
-import {EthNetwork} from '../services/eth-network';
 
 export const TransactionDetailScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

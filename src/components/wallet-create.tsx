@@ -1,8 +1,13 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+
+import {IS_LEDGER_ENABLED} from '@env';
 import {NavigationProp} from '@react-navigation/core';
+import {useNavigation} from '@react-navigation/native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
+
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
+
+import {RootStackParamList} from '../types';
 import {
   BG_1,
   GRAPHIC_GREEN_1,
@@ -12,8 +17,6 @@ import {
   TEXT_BASE_2,
   TEXT_GREEN_1,
 } from '../variables';
-import {RootStackParamList} from '../types';
-import {IS_LEDGER_ENABLED} from '@env';
 
 const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED, 10));
 

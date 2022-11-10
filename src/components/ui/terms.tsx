@@ -1,9 +1,11 @@
 import React, {useCallback} from 'react';
-import {StyleProp, StyleSheet, Text as RNText, TextStyle} from 'react-native';
-import {Text} from '../ui';
-import {getText, I18N} from '../../i18n';
-import {GRAPHIC_GREEN_1, PRIVACY_POLICY, TEXT_BASE_2} from '../../variables';
+
+import {Text as RNText, StyleProp, StyleSheet, TextStyle} from 'react-native';
+
 import {openURL} from '../../helpers';
+import {I18N, getText} from '../../i18n';
+import {GRAPHIC_GREEN_1, PRIVACY_POLICY, TEXT_BASE_2} from '../../variables';
+import {Text} from '../ui';
 export type TermsProps = {
   style?: StyleProp<TextStyle> | undefined;
 };

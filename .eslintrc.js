@@ -7,6 +7,31 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'import/order': [
+          'error',
+          {
+            groups: ['builtin', 'external', 'internal', 'sibling'],
+            pathGroups: [
+              {
+                pattern: 'react',
+                group: 'builtin',
+                position: 'before',
+              },
+            ],
+            pathGroupsExcludedImportTypes: ['react'],
+            'newlines-between': 'always',
+            alphabetize: {
+              order: 'asc',
+              caseInsensitive: true,
+            },
+          },
+        ],
+        'sort-imports': [
+          'error',
+          {
+            ignoreDeclarationSort: true,
+          },
+        ],
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',

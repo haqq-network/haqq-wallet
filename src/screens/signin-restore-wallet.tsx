@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
-import * as Sentry from '@sentry/react-native';
 
-import {utils} from 'ethers';
-import {StackNavigationProp} from '@react-navigation/stack';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import * as Sentry from '@sentry/react-native';
+import {utils} from 'ethers';
+import {ScrollView, StyleSheet} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -16,8 +16,9 @@ import {
   Text,
   TextField,
 } from '../components/ui';
-import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {hideModal} from '../helpers/modal';
+import {RootStackParamList} from '../types';
+import {TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

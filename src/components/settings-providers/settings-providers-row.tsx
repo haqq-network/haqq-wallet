@@ -1,8 +1,10 @@
 import React from 'react';
+
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+
 import {Provider} from '../../models/provider';
-import {CheckIcon, DataContent} from '../ui';
 import {GRAPHIC_GREEN_1} from '../../variables';
+import {CheckIcon, DataContent} from '../ui';
 
 export type SettingsProvidersRowProps = {
   item: Provider;

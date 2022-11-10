@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+
 import {BlurView as Blur} from '@react-native-community/blur';
+import {StyleSheet} from 'react-native';
 
 type BlurViewProps = {
   action: string;

@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
-import {Icon, IconButton, Input, KeyboardSafeArea} from '../components/ui';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
-import {useWallet} from '../contexts/wallets';
-import {GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
-import {CustomHeader} from '../components/custom-header';
+
 import {ActionsSheet} from '../components/actions-sheet';
+import {CustomHeader} from '../components/custom-header';
+import {Icon, IconButton, Input, KeyboardSafeArea} from '../components/ui';
+import {useWallet} from '../contexts/wallets';
+import {RootStackParamList} from '../types';
+import {GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
 
 export const SettingsAccountEditScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

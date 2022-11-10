@@ -1,12 +1,15 @@
 import React, {useMemo} from 'react';
+
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native';
-import {BG_1, BG_3, TEXT_BASE_1} from '../../variables';
+
 import {Text} from './text';
+
+import {BG_1, BG_3, TEXT_BASE_1} from '../../variables';
 
 export type SegmentedControlValue<T> = {
   value: T;

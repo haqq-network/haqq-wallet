@@ -1,10 +1,11 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
-import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 import {windowWidth} from '../../helpers';
 import {hideModal} from '../../helpers/modal';
+import {BG_1, GRAPHIC_SECOND_13, GRAPHIC_SECOND_4} from '../../variables';
+import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 export const ErrorAccountAdded = () => {
   const onPress = () => {

@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList, WalletType} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -12,12 +13,13 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
+import {useUser} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
 import {useWallet} from '../contexts/wallets';
-import {EthNetwork} from '../services/eth-network';
-import {useUser} from '../contexts/app';
 import {Transaction} from '../models/transaction';
+import {EthNetwork} from '../services/eth-network';
+import {RootStackParamList, WalletType} from '../types';
+import {BG_3, GRAPHIC_GREEN_2, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

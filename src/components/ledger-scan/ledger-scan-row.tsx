@@ -1,8 +1,10 @@
 import React from 'react';
+
 import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Device} from 'react-native-ble-plx';
+
 import {BG_3} from '../../variables';
 import {Text} from '../ui';
-import {Device} from 'react-native-ble-plx';
 
 export type LedgerScanRowProps = {
   item: Device;

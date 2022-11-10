@@ -1,7 +1,10 @@
 import React from 'react';
+
 import {StyleSheet} from 'react-native';
-import {TEXT_BASE_1} from '../variables';
+
 import {Text} from './ui';
+
+import {TEXT_BASE_1} from '../variables';
 
 export const AddressHeader = () => {
   return (

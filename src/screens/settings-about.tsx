@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
+
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import {
   ArrowForwardIcon,
   DiscordIcon,
@@ -11,6 +13,8 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
+import {openURL, windowWidth} from '../helpers';
+import {getAppVersion, getBuildNumber} from '../services/version';
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -18,9 +22,6 @@ import {
   TEXT_BASE_1,
   TEXT_BASE_2,
 } from '../variables';
-
-import {openURL, windowWidth} from '../helpers';
-import {getAppVersion, getBuildNumber} from '../services/version';
 
 export const SettingsAboutScreen = () => {
   const insets = useSafeAreaInsets();

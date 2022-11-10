@@ -1,8 +1,11 @@
 import React from 'react';
+
 import {Pressable, StyleSheet, View} from 'react-native';
-import {IconButton, Text} from './ui';
-import {DEFAULT_HITSLOP, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {IconButton, Text} from './ui';
+
+import {DEFAULT_HITSLOP, TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 
 interface CustomHeaderProps {
   onPressLeft?: () => void;

@@ -1,4 +1,6 @@
 import React from 'react';
+
+import {useHeaderHeight} from '@react-navigation/elements';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,7 +8,6 @@ import {
   ViewProps,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useHeaderHeight} from '@react-navigation/elements';
 
 export type KeyboardSafeAreaProps = ViewProps & {};
 

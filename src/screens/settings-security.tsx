@@ -1,13 +1,15 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {Alert, StyleSheet, Switch, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
-import {MenuNavigationButton, Text, Spacer} from '../components/ui';
-import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
-import {useApp} from '../contexts/app';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Alert, StyleSheet, Switch, View} from 'react-native';
+
 import {Pin, PinInterface} from '../components/pin';
+import {MenuNavigationButton, Spacer, Text} from '../components/ui';
+import {useApp} from '../contexts/app';
+import {RootStackParamList} from '../types';
 import {BiometryType} from '../types';
+import {TEXT_BASE_1, TEXT_BASE_2} from '../variables';
 
 const biometryName = {
   [BiometryType.faceId]: 'Face ID',

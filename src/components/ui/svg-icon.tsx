@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Svg, {Path, Rect} from 'react-native-svg';
 import {SvgProps} from 'react-native-svg/src/elements/Svg';
 

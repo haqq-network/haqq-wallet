@@ -1,10 +1,12 @@
 import React, {useEffect, useRef} from 'react';
-import {LottieWrap, PopupContainer, Text} from '../ui';
-import {Dimensions, StyleSheet} from 'react-native';
-import {useWallet} from '../../contexts/wallets';
-import {EthNetwork} from '../../services/eth-network';
+
 import {TransactionResponse} from '@ethersproject/abstract-provider';
-import {getText, I18N} from '../../i18n';
+import {Dimensions, StyleSheet} from 'react-native';
+
+import {useWallet} from '../../contexts/wallets';
+import {I18N, getText} from '../../i18n';
+import {EthNetwork} from '../../services/eth-network';
+import {LottieWrap, PopupContainer, Text} from '../ui';
 
 export type TransactionVerifyProps = {
   from: string;

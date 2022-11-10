@@ -1,5 +1,5 @@
-import {Linking, Alert, Dimensions, Platform} from 'react-native';
 import * as Sentry from '@sentry/react-native';
+import {Alert, Dimensions, Linking, Platform} from 'react-native';
 
 export const captureException = (
   error: unknown,

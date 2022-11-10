@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+
+import {StyleSheet} from 'react-native';
+
 import {
   CheckIcon,
   DataContent,
@@ -6,9 +9,8 @@ import {
   PopupContainer,
 } from '../components/ui';
 import {useApp} from '../contexts/app';
-import {GRAPHIC_GREEN_1} from '../variables';
-import {StyleSheet} from 'react-native';
 import {AppLanguage} from '../types';
+import {GRAPHIC_GREEN_1} from '../variables';
 
 export const SettingsLanguageScreen = () => {
   const app = useApp();

@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
+
+import {MnemonicWord} from '../components/mnemonic-word';
 import {
   Button,
   ButtonVariant,
@@ -11,13 +13,13 @@ import {
   CopyButton,
   InfoBlock,
   InfoBlockType,
-  Text,
   PopupContainer,
   Spacer,
+  Text,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
+import {RootStackParamList} from '../types';
 import {BG_3, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
-import {MnemonicWord} from '../components/mnemonic-word';
 
 export const BackupCreateScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

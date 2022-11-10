@@ -1,13 +1,16 @@
 import React, {useCallback, useEffect, useRef} from 'react';
+
 import {
   Animated,
   Dimensions,
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
+
 import {Text} from './ui';
-import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
+
 import {asyncTiming, sleep} from '../utils';
+import {BG_1, GRAPHIC_SECOND_5, TEXT_BASE_1} from '../variables';
 
 export type NotificationMessageProps = {
   message: string;

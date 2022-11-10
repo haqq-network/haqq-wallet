@@ -1,7 +1,10 @@
 import React, {useEffect, useMemo, useRef} from 'react';
+
+import {Animated, StyleSheet, View} from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
-import {StyleSheet, Animated, View} from 'react-native';
+
 import {SwipeableButton} from './swipeable-button';
+
 import {SwipeableAction} from '../../types';
 
 export type SwipeableRowProps<T> = {

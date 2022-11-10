@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Dimensions, StyleSheet} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -21,8 +21,9 @@ import {
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
-import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
+import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors} from '../utils';
+import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL, TEXT_BASE_1} from '../variables';
 
 const cardStyleVariants = [
   {value: WalletCardStyle.flat, name: 'Flat'},

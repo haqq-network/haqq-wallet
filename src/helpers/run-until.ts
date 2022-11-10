@@ -1,8 +1,9 @@
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
-import type Transport from '@ledgerhq/hw-transport';
 import AppEth from '@ledgerhq/hw-app-eth';
-import {sleep} from '../utils';
+import type Transport from '@ledgerhq/hw-transport';
+import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import {BleManager, State} from 'react-native-ble-plx';
+
+import {sleep} from '../utils';
 
 const connectOptions = {
   requestMTU: 156,

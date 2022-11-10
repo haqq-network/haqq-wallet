@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+
 import {BiometryType, WalletCardStyle} from './types';
 
 export const TEXT_BASE_1 = '#2E312D';

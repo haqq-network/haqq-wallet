@@ -1,9 +1,11 @@
 import {useCallback, useEffect, useState} from 'react';
-import {useContacts} from '../contexts/contacts';
-import {Alert} from 'react-native';
+
 import {useNavigation} from '@react-navigation/native';
-import {Contact} from '../models/contact';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {Alert} from 'react-native';
+
+import {useContacts} from '../contexts/contacts';
+import {Contact} from '../models/contact';
 import {RootStackParamList} from '../types';
 
 export const useAddressBookItemActions = (

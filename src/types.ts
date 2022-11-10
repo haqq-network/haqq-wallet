@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {Transaction} from './models/transaction';
-
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+
+import {Transaction} from './models/transaction';
 
 export enum TransactionSource {
   unknown,

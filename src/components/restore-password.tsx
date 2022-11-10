@@ -1,13 +1,16 @@
 import React, {useCallback, useEffect, useRef} from 'react';
+
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
-import {TEXT_BASE_2} from '../variables';
-import {Button, ButtonVariant, Text} from './ui';
-import {useWallets} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
+
 import {BottomSheet} from './bottom-sheet';
-import {useTransactions} from '../contexts/transactions';
+import {Button, ButtonVariant, Text} from './ui';
+
+import {useApp} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
+import {useTransactions} from '../contexts/transactions';
+import {useWallets} from '../contexts/wallets';
 import {captureException} from '../helpers';
+import {TEXT_BASE_2} from '../variables';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;

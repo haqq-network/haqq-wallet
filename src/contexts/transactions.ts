@@ -1,12 +1,16 @@
-import {EventEmitter} from 'events';
 import {createContext, useContext} from 'react';
+
+import {EventEmitter} from 'events';
+
 import {utils} from 'ethers';
-import {realm} from '../models';
-import {Transaction} from '../models/transaction';
-import {calcFee} from '../helpers/calc-fee';
-import {captureException} from '../helpers';
-import {Provider} from '../models/provider';
+
 import {app} from './app';
+
+import {captureException} from '../helpers';
+import {calcFee} from '../helpers/calc-fee';
+import {realm} from '../models';
+import {Provider} from '../models/provider';
+import {Transaction} from '../models/transaction';
 import {Wallet} from '../models/wallet';
 
 class Transactions extends EventEmitter {

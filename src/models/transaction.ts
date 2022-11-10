@@ -1,12 +1,13 @@
-import {TransactionSource} from '../types';
-import {cleanNumber} from '../utils';
 import {
   TransactionReceipt,
   TransactionResponse,
 } from '@ethersproject/abstract-provider';
-import {realm} from './index';
 import {utils} from 'ethers';
+
 import {calcFee} from '../helpers/calc-fee';
+import {TransactionSource} from '../types';
+import {cleanNumber} from '../utils';
+import {realm} from './index';
 
 export class Transaction extends Realm.Object {
   hash!: string;

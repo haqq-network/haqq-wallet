@@ -1,6 +1,9 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
+
 import {NoTransactionsIcon, Text} from './ui';
+
 import {GRAPHIC_SECOND_3, TEXT_SECOND_1} from '../variables';
 
 export const TransactionEmpty = () => {

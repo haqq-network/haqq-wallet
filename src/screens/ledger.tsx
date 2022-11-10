@@ -1,18 +1,21 @@
 import React from 'react';
+
 import {createStackNavigator} from '@react-navigation/stack';
-import {ScreenOptionType} from '../types';
-import {LedgerAgreementScreen} from './ledger-agreement';
-import {LedgerFinishScreen} from './ledger-finish';
-import {LedgerBluetoothScreen} from './ledger-bluetooth';
-import {LedgerScanScreen} from './ledger-scan';
+
 import {LedgerAccountsScreen} from './ledger-accounts';
-import {LedgerVerifyScreen} from './ledger-verify';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
-import {useUser} from '../contexts/app';
-import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
-import {OnboardingBiometryScreen} from './onboarding-biometry';
+import {LedgerAgreementScreen} from './ledger-agreement';
+import {LedgerBluetoothScreen} from './ledger-bluetooth';
+import {LedgerFinishScreen} from './ledger-finish';
+import {LedgerScanScreen} from './ledger-scan';
 import {LedgerStoreWalletScreen} from './ledger-store-wallet';
+import {LedgerVerifyScreen} from './ledger-verify';
+import {OnboardingBiometryScreen} from './onboarding-biometry';
+import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
+
+import {useUser} from '../contexts/app';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {ScreenOptionType} from '../types';
 
 const LedgerStack = createStackNavigator();
 

@@ -1,11 +1,14 @@
-import {useWallets} from '../contexts/wallets';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Icon, Text} from './ui';
+
 import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
-import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
+
 import {CarouselItem} from './carousel-item';
+import {Icon, Text} from './ui';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
+
+import {useWallets} from '../contexts/wallets';
+import {GRAPHIC_BASE_1, TEXT_BASE_1} from '../variables';
 
 export const Wallets = () => {
   const wallets = useWallets();

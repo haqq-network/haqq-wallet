@@ -1,13 +1,14 @@
-import {
-  Platform,
-  StyleSheet,
-  Text as RNText,
-  TextProps as RNTextProps,
-} from 'react-native';
 import * as React from 'react';
 
-import {TEXT_BASE_1} from '../../variables';
+import {
+  Platform,
+  Text as RNText,
+  TextProps as RNTextProps,
+  StyleSheet,
+} from 'react-native';
+
 import {FontT} from '../../types';
+import {TEXT_BASE_1} from '../../variables';
 
 export type TextProps = {
   t0?: boolean;

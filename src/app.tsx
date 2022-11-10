@@ -9,47 +9,54 @@
  */
 
 import React, {useEffect, useState} from 'react';
+
+import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
-  createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer,
   StackActions,
+  createNavigationContainerRef,
 } from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
+import {createStackNavigator} from '@react-navigation/stack';
+import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
-import {HomeScreen} from './screens/home';
-import {wallets, WalletsContext} from './contexts/wallets';
+import SplashScreen from 'react-native-splash-screen';
+
+import {Notifications} from './components/notifications';
+import {PopupHeader} from './components/popup-header';
+import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
+import {StatusBarColor} from './components/ui';
+import {AppContext, app} from './contexts/app';
+import {TransactionsContext, transactions} from './contexts/transactions';
+import {WalletsContext, wallets} from './contexts/wallets';
+import {hideModal, showModal} from './helpers/modal';
+import {migration} from './models/migration';
+import {BackupScreen} from './screens/backup';
+import {BackupNotificationScreen} from './screens/backup-notification';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
-import {app, AppContext} from './contexts/app';
-import {SignInScreen} from './screens/signin';
-import {transactions, TransactionsContext} from './contexts/transactions';
-import {TransactionScreen} from './screens/transaction';
-import {WelcomeScreen} from './screens/welcome';
-import {BG_1, GRAPHIC_GREEN_1} from './variables';
-import {BackupScreen} from './screens/backup';
-import {SignUpScreen} from './screens/signup';
+import {HomeScreen} from './screens/home';
+import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
-import {createStackNavigator} from '@react-navigation/stack';
-import {BackupNotificationScreen} from './screens/backup-notification';
-import {SettingsAccountsScreen} from './screens/settings-accounts';
-import {PopupHeader} from './components/popup-header';
-import {SettingsAddressBookScreen} from './screens/settings-address-book';
-import {SettingsLanguageScreen} from './screens/settings-language';
-import {SettingsSecurityScreen} from './screens/settings-security';
-import {SettingsFAQScreen} from './screens/settings-faq';
+import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
-import {SettingsAccountStyleScreen} from './screens/settings-account-style';
-import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
-import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
-import {TransactionDetailScreen} from './screens/transaction-detail';
 import {SettingsAccountEditScreen} from './screens/settings-account-edit';
-import {RestoreScreen} from './screens/restore';
-import {sleep} from './utils';
+import {SettingsAccountStyleScreen} from './screens/settings-account-style';
+import {SettingsAccountsScreen} from './screens/settings-accounts';
+import {SettingsAddressBookScreen} from './screens/settings-address-book';
+import {SettingsEditContactScreen} from './screens/settings-contact-edit';
+import {SettingsFAQScreen} from './screens/settings-faq';
+import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProvidersScreen} from './screens/settings-providers';
+import {SettingsSecurityScreen} from './screens/settings-security';
+import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
-import {Notifications} from './components/notifications';
+import {SignInScreen} from './screens/signin';
+import {SignUpScreen} from './screens/signup';
+import {TransactionScreen} from './screens/transaction';
+import {TransactionDetailScreen} from './screens/transaction-detail';
+import {WelcomeScreen} from './screens/welcome';
 import {
   ActionSheetType,
   HeaderButtonProps,
@@ -57,13 +64,8 @@ import {
   RootStackParamList,
   ScreenOptionType,
 } from './types';
-import {StatusBarColor} from './components/ui';
-import {LedgerScreen} from './screens/ledger';
-import {migration} from './models/migration';
-import {SettingsProvidersScreen} from './screens/settings-providers';
-import {AppState, Linking} from 'react-native';
-import {hideModal, showModal} from './helpers/modal';
-import {SettingsEditContactScreen} from './screens/settings-contact-edit';
+import {sleep} from './utils';
+import {BG_1, GRAPHIC_GREEN_1} from './variables';
 
 const screenOptions: ScreenOptionType = {
   tab: true,

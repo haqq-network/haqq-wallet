@@ -1,12 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
+
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
-import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 import {vibrate} from '../services/haptic';
+import {RootStackParamList} from '../types';
+import {GRAPHIC_BASE_4, TEXT_BASE_2, TEXT_GREEN_1} from '../variables';
 
 export const OnboardingSetupPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

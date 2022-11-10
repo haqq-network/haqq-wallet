@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {ArrowSend, Text} from '../ui';
+
 import {TransactionListSend} from '../../types';
+import {shortAddress} from '../../utils';
 import {
   BG_3,
   GRAPHIC_BASE_1,
@@ -9,7 +11,7 @@ import {
   TEXT_BASE_2,
   TEXT_RED_1,
 } from '../../variables';
-import {shortAddress} from '../../utils';
+import {ArrowSend, Text} from '../ui';
 
 export type TransactionPreviewProps = {
   item: TransactionListSend;

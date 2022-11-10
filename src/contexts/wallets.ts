@@ -1,8 +1,20 @@
 import {createContext, useContext, useEffect, useState} from 'react';
+
 import {EventEmitter} from 'events';
+
+import {isAfter} from 'date-fns';
+import {Image} from 'react-native';
+
+import {app} from './app';
+
+import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Wallet, WalletRealm} from '../models/wallet';
-import {app} from './app';
+import {encrypt} from '../passworder';
+import {
+  restoreFromMnemonic,
+  restoreFromPrivateKey,
+} from '../services/eth-utils';
 import {
   Mnemonic,
   WalletCardPattern,
@@ -15,7 +27,6 @@ import {
   getPatternName,
   sleep,
 } from '../utils';
-import {encrypt} from '../passworder';
 import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
@@ -25,13 +36,6 @@ import {
   GRAPHIC_GREEN_3,
   GRAPHIC_GREEN_4,
 } from '../variables';
-import {isAfter} from 'date-fns';
-import {Image} from 'react-native';
-import {captureException} from '../helpers';
-import {
-  restoreFromMnemonic,
-  restoreFromPrivateKey,
-} from '../services/eth-utils';
 
 const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
 const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];

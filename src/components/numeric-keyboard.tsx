@@ -1,6 +1,9 @@
 import React from 'react';
+
 import {Image, StyleSheet, View} from 'react-native';
+
 import {Icon, IconButton, Text} from './ui';
+
 import {moderateVerticalScale} from '../helpers/scaling-utils';
 import {TEXT_BASE_1, TEXT_BASE_LIGHT_1} from '../variables';
 

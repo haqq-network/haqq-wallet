@@ -1,17 +1,23 @@
 import React, {useCallback, useEffect, useState} from 'react';
+
+import {utils} from 'ethers';
 import {
   Dimensions,
   StatusBar,
   StyleSheet,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
-import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {utils} from 'ethers';
-import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
+import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {useApp} from '../../contexts/app';
+import {useWallets} from '../../contexts/wallets';
+import {hideModal} from '../../helpers/modal';
+import {HapticEffects, vibrate} from '../../services/haptic';
 import {
   GRAPHIC_BASE_3,
   GRAPHIC_GREEN_2,
@@ -21,13 +27,9 @@ import {
   GRAPHIC_SECOND_9,
   TEXT_BASE_3,
 } from '../../variables';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {HapticEffects, vibrate} from '../../services/haptic';
 import {BottomSheet} from '../bottom-sheet';
-import {useWallets} from '../../contexts/wallets';
+import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {WalletRow} from '../wallet-row';
-import {hideModal} from '../../helpers/modal';
-import {useApp} from '../../contexts/app';
 
 export type QRModalProps = {
   onClose?: () => void;

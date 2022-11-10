@@ -1,17 +1,18 @@
-import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {Deferrable} from '@ethersproject/properties';
 import {TransactionRequest} from '@ethersproject/abstract-provider';
+import {FeeData} from '@ethersproject/abstract-provider/src.ts';
+import {Deferrable} from '@ethersproject/properties';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
-import {getDefaultChainId, getDefaultNetwork} from '../network';
-import {Wallet} from '../models/wallet';
-import {WalletType} from '../types';
-import {app} from '../contexts/app';
+import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
+import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
+
+import {app} from '../contexts/app';
+import {calcFee} from '../helpers/calc-fee';
 import {runUntil} from '../helpers/run-until';
 import {Provider} from '../models/provider';
-import {FeeData} from '@ethersproject/abstract-provider/src.ts';
-import {calcFee} from '../helpers/calc-fee';
+import {Wallet} from '../models/wallet';
+import {getDefaultChainId, getDefaultNetwork} from '../network';
+import {WalletType} from '../types';
 import {ETH_HD_PATH} from '../variables';
 
 export class EthNetwork {

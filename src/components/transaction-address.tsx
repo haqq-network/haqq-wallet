@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useApp} from '../contexts/app';
+
+import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+
+import {AddressHeader} from './address-header';
+import {AddressRow} from './address-row';
 import {
   Button,
   ButtonVariant,
@@ -14,7 +19,11 @@ import {
   TextField,
   TrashIcon,
 } from './ui';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+
+import {useApp} from '../contexts/app';
+import {hideModal, showModal} from '../helpers/modal';
+import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
+import {isHexString} from '../utils';
 import {
   GRAPHIC_BASE_2,
   GRAPHIC_BASE_3,
@@ -23,12 +32,6 @@ import {
   GRAPHIC_SECOND_4,
   PLACEHOLDER_GRAY,
 } from '../variables';
-import {AddressRow} from './address-row';
-import {AddressHeader} from './address-header';
-import {isHexString} from '../utils';
-import {hideModal, showModal} from '../helpers/modal';
-import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
-import {useNavigation} from '@react-navigation/native';
 
 export type TransactionAddressProps = {
   initial?: string;

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {StatusBar, StyleSheet, View} from 'react-native';
+
 import {GRAPHIC_GREEN_2} from '../../variables';
 import {Waiting} from '../ui';
 

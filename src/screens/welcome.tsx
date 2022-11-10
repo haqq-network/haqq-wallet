@@ -1,11 +1,13 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Button, ButtonVariant, Text} from '../components/ui';
-import {TEXT_BASE_2} from '../variables';
-import {RootStackParamList} from '../types';
+import {Image, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {Button, ButtonVariant, Text} from '../components/ui';
+import {RootStackParamList} from '../types';
+import {TEXT_BASE_2} from '../variables';
 
 const logoImage = require('../../assets/images/logo-empty.png');
 

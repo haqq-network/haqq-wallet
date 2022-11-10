@@ -1,18 +1,21 @@
 import React from 'react';
+
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {TransactionConfirmationScreen} from './transaction-confirmation';
-import {TransactionFinishScreen} from './transaction-finish';
-import {TransactionAddressScreen} from './transaction-address';
-import {TransactionSumScreen} from './transaction-sum';
 import {createStackNavigator} from '@react-navigation/stack';
+
 import {TransactionAccountScreen} from './transaction-account';
-import {useWallets} from '../contexts/wallets';
-import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {TransactionSumAddressScreen} from './transaction-sum-address';
-import {RootStackParamList, ScreenOptionType} from '../types';
-import {TransactionLedgerScreen} from './transaction-ledger';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {TransactionAddressScreen} from './transaction-address';
+import {TransactionConfirmationScreen} from './transaction-confirmation';
 import {TransactionEditContactScreen} from './transaction-contact-edit';
+import {TransactionFinishScreen} from './transaction-finish';
+import {TransactionLedgerScreen} from './transaction-ledger';
+import {TransactionSumScreen} from './transaction-sum';
+import {TransactionSumAddressScreen} from './transaction-sum-address';
+
+import {DismissPopupButton} from '../components/dismiss-popup-button';
+import {useWallets} from '../contexts/wallets';
+import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {RootStackParamList, ScreenOptionType} from '../types';
 
 const TransactionStack = createStackNavigator();
 

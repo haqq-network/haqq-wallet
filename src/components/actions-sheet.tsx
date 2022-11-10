@@ -1,6 +1,19 @@
 import React, {useEffect} from 'react';
+
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import Animated, {
+  Easing,
+  WithTimingConfig,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import {Button, ButtonVariant, Text} from './ui';
+
 import {
   BG_1,
   GRAPHIC_SECOND_12,
@@ -8,16 +21,6 @@ import {
   TEXT_BLUE_1,
   TEXT_SECOND_4,
 } from '../variables';
-import Animated, {
-  Easing,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  WithTimingConfig,
-} from 'react-native-reanimated';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: 550,

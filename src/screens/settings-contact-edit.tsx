@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {Alert, StyleSheet, View} from 'react-native';
+
+import {ActionsSheet} from '../components/actions-sheet';
+import {CustomHeader} from '../components/custom-header';
 import {
   Button,
   ButtonVariant,
@@ -10,11 +13,9 @@ import {
   Input,
   KeyboardSafeArea,
 } from '../components/ui';
-import {Alert, StyleSheet, View} from 'react-native';
-import {BG_7, GRAPHIC_BASE_1, GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
-import {CustomHeader} from '../components/custom-header';
 import {useAddressBookItemActions} from '../hooks';
-import {ActionsSheet} from '../components/actions-sheet';
+import {RootStackParamList} from '../types';
+import {BG_7, GRAPHIC_BASE_1, GRAPHIC_BASE_2, TEXT_GREEN_1} from '../variables';
 
 export const SettingsEditContactScreen = () => {
   const {name, address, isCreate} =

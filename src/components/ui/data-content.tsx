@@ -1,6 +1,9 @@
 import React from 'react';
+
 import {StyleSheet, View, ViewStyle} from 'react-native';
+
 import {Text} from './text';
+
 import {TEXT_BASE_1, TEXT_BASE_2} from '../../variables';
 
 export type DataContentProps = {

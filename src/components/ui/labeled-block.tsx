@@ -1,8 +1,11 @@
 /* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
+
 import {StyleSheet, View, ViewProps} from 'react-native';
-import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
+
 import {Text} from './text';
+
+import {BG_7, BG_8, TEXT_BASE_2, TEXT_RED_1} from '../../variables';
 
 export enum LabelBlockVariant {
   default = 'default',

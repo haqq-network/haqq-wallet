@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
+
+import {windowHeight} from '../../helpers';
+import {I18N, getText} from '../../i18n';
 import {TEXT_BASE_2} from '../../variables';
 import {LottieWrap} from '../lottie';
-import {getText, I18N} from '../../i18n';
-import {windowHeight} from '../../helpers';
+import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
 // import {Terms} from '../ui/terms';
 
 export type CreateAgreementProps = {

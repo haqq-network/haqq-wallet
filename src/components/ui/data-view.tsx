@@ -1,6 +1,9 @@
 import React, {useMemo} from 'react';
+
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+
 import {Text} from './text';
+
 import {TEXT_BASE_2} from '../../variables';
 
 export type DataViewProps = {

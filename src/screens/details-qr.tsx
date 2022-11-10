@@ -1,11 +1,12 @@
 import React, {useRef} from 'react';
-import QRCode from 'react-native-qrcode-svg';
-import {Share, StyleSheet, useWindowDimensions, View} from 'react-native';
+
 import Clipboard from '@react-native-clipboard/clipboard';
-import LinearGradient from 'react-native-linear-gradient';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import QRCode from 'react-native-qrcode-svg';
+
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   Alert,
@@ -17,6 +18,10 @@ import {
   InfoBlockType,
   Text,
 } from '../components/ui';
+import {useApp} from '../contexts/app';
+import {useWallet} from '../contexts/wallets';
+import {Wallet} from '../models/wallet';
+import {RootStackParamList} from '../types';
 import {
   GRADIENT_END,
   GRADIENT_START,
@@ -25,9 +30,6 @@ import {
   TEXT_SECOND_2,
   TEXT_YELLOW_1,
 } from '../variables';
-import {useWallet} from '../contexts/wallets';
-import {useApp} from '../contexts/app';
-import {Wallet} from '../models/wallet';
 
 export const DetailsQrScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

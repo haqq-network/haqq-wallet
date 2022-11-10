@@ -1,19 +1,21 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet} from 'react-native';
+
 import {
   Alert,
   Button,
   ButtonVariant,
   InfoBlock,
   InfoBlockType,
-  Text,
+  LottieWrap,
   PopupContainer,
   Spacer,
-  LottieWrap,
+  Text,
 } from '../components/ui';
+import {RootStackParamList} from '../types';
 import {TEXT_BASE_2, TEXT_YELLOW_1} from '../variables';
 
 const warningImage = require('../../assets/animations/recover-animation.json');

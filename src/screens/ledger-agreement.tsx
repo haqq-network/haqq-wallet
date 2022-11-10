@@ -1,8 +1,10 @@
 import React, {useCallback} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+
 import {LedgerAgreement} from '../components/ledger-agreement';
+import {RootStackParamList} from '../types';
 
 export const LedgerAgreementScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

@@ -1,9 +1,12 @@
 import React from 'react';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+
 import {MenuNavigationButton, Text} from './ui';
+
+import {RootStackParamList} from '../types';
 import {TEXT_BASE_1} from '../variables';
 
 export type SettingsButtonProps = {

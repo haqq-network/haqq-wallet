@@ -1,5 +1,7 @@
 import {useCallback, useRef} from 'react';
+
 import {Animated} from 'react-native';
+
 import {GRAPHIC_SECOND_13, TRANSPARENT} from '../variables';
 
 interface useAndroidStatusBarAnimationT {

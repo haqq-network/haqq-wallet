@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {Button, ButtonSize, ButtonVariant, DataContent} from '../ui';
+
 import {EthNetwork} from '../../services/eth-network';
 import {cleanNumber, shortAddress} from '../../utils';
+import {Button, ButtonSize, ButtonVariant, DataContent} from '../ui';
 
 export type LedgerAccountsRowProps = {
   item: string;

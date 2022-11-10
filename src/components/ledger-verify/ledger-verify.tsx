@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
-import {LottieWrap, PopupContainer, Text} from '../ui';
+
 import {Dimensions, StyleSheet} from 'react-native';
+
+import {captureException} from '../../helpers';
 import {runUntil} from '../../helpers/run-until';
 import {ETH_HD_PATH} from '../../variables';
-import {captureException} from '../../helpers';
+import {LottieWrap, PopupContainer, Text} from '../ui';
 
 export type LedgerInfo = {
   address: string;

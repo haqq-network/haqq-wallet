@@ -1,7 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {CompositeScreenProps} from '@react-navigation/native';
+import {utils} from 'ethers';
 import {FlatList, StyleSheet} from 'react-native';
-import {AddressRow} from '../components/address-row';
+
+import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
+import {AddressRow} from '../components/address-row';
 import {
   Box,
   Icon,
@@ -14,6 +19,10 @@ import {
   TextField,
   TrashIcon,
 } from '../components/ui';
+import {useApp} from '../contexts/app';
+import {hideModal, showModal} from '../helpers/modal';
+import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
+import {Contact} from '../models/contact';
 import {
   GRAPHIC_BASE_2,
   GRAPHIC_BASE_3,
@@ -22,13 +31,6 @@ import {
   GRAPHIC_SECOND_4,
   TEXT_BASE_1,
 } from '../variables';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {utils} from 'ethers';
-import {useApp} from '../contexts/app';
-import {Contact} from '../models/contact';
-import {AddressEmpty} from '../components/address-empty';
-import {hideModal, showModal} from '../helpers/modal';
-import {useAddressBookItemActions} from '../hooks/use-address-book-item-actions';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 

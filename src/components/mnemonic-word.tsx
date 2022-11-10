@@ -1,7 +1,10 @@
-import {StyleSheet, View} from 'react-native';
-import {GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 import React from 'react';
+
+import {StyleSheet, View} from 'react-native';
+
 import {Text} from './ui';
+
+import {GRAPHIC_BASE_1, TEXT_BASE_2} from '../variables';
 
 export type MnemonicWordProps = {
   word: string;

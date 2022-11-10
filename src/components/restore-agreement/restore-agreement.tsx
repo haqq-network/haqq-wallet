@@ -1,5 +1,11 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
+
+import {windowHeight, windowWidth} from '../../helpers';
+// import {Terms} from '../ui/terms';
+import {I18N, getText} from '../../i18n';
+import {TEXT_BASE_2} from '../../variables';
 import {
   Button,
   ButtonVariant,
@@ -8,10 +14,6 @@ import {
   Spacer,
   Text,
 } from '../ui';
-import {TEXT_BASE_2} from '../../variables';
-import {windowHeight, windowWidth} from '../../helpers';
-// import {Terms} from '../ui/terms';
-import {getText, I18N} from '../../i18n';
 
 export type RestoreAgreementProps = {
   onDone: () => void;

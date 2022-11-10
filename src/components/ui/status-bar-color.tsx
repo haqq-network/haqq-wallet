@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, StatusBar} from 'react-native';
+
+import {StatusBar, StyleSheet, View} from 'react-native';
 
 import {BG_1} from '../../variables';
 

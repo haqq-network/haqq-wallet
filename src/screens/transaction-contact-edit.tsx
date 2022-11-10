@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import {StackNavigationProp} from '@react-navigation/stack';
+
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from '../types';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -10,9 +12,9 @@ import {
   Input,
   KeyboardSafeArea,
 } from '../components/ui';
-import {StyleSheet, View} from 'react-native';
-import {GRAPHIC_BASE_2} from '../variables';
 import {useContacts} from '../contexts/contacts';
+import {RootStackParamList} from '../types';
+import {GRAPHIC_BASE_2} from '../variables';
 
 export const TransactionEditContactScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
