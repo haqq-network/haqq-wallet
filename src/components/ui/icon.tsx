@@ -20,24 +20,30 @@ export type IconProps = {
   color: string;
   xs?: boolean;
   s?: boolean;
+  m?: boolean;
   style?: ImageProps['style'];
 };
 
-export const Icon = ({name, s, xs, style, color}: IconProps) => {
+export const Icon = ({name, m, s, xs, style, color}: IconProps) => {
   const container = useMemo(
     () => [
       xs && styles.xsContainer,
       s && styles.sContainer,
+      m && styles.mContainer,
       style,
       {tintColor: color},
     ],
-    [color, s, style, xs],
+    [color, m, s, style, xs],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
   return <Image source={icon} style={container} />;
 };
 
 const styles = StyleSheet.create({
+  mContainer: {
+    width: 32,
+    height: 32,
+  },
   sContainer: {
     width: 24,
     height: 24,
