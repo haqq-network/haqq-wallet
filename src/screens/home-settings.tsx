@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 
 import {SettingsButton} from '../components/settings-button';
 import {Icon} from '../components/ui';
-import {HR_GRAY, LIGHT_GRAPHIC_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 export const HomeSettingsScreen = () => {
   return (
@@ -38,7 +38,7 @@ export const HomeSettingsScreen = () => {
         icon={<Icon s name="providers" color={LIGHT_GRAPHIC_BASE_1} />}
         title="Providers"
         next="settingsProviders"
-        style={[page.button, page.hr]}
+        style={page.button}
       />
 
       {/*<SettingsButton*/}
@@ -67,8 +67,4 @@ export const HomeSettingsScreen = () => {
 const page = StyleSheet.create({
   container: {marginHorizontal: 20},
   button: {marginBottom: 20},
-  hr: {
-    borderColor: HR_GRAY,
-    borderBottomWidth: 1,
-  },
 });
