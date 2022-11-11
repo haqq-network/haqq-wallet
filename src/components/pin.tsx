@@ -24,8 +24,9 @@ import {
 
 export type PinProps = {
   title: string;
-  subtitle?: string;
   onPin: (pin: string) => void;
+  subtitle?: string;
+  onLock?: () => void;
   additionButton?: React.ReactNode;
 };
 
@@ -35,7 +36,7 @@ export interface PinInterface {
 }
 
 export const Pin = forwardRef(
-  ({title, subtitle, onPin, additionButton}: PinProps, ref) => {
+  ({title, subtitle, onPin, onLock, additionButton}: PinProps, ref) => {
     const insets = useSafeAreaInsets();
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
@@ -43,6 +44,9 @@ export const Pin = forwardRef(
 
     useEffect(() => {
       if (locked !== null) {
+        if (isBefore(new Date(), locked)) {
+          onLock?.();
+        }
         const timer = setInterval(() => {
           if (isBefore(new Date(), locked)) {
             const interval = Math.round((+locked - +new Date()) / 1000);
@@ -68,7 +72,7 @@ export const Pin = forwardRef(
           clearInterval(timer);
         };
       }
-    }, [locked]);
+    }, [locked, onLock]);
 
     useImperativeHandle(ref, () => ({
       reset(message?: string) {
@@ -111,7 +115,11 @@ export const Pin = forwardRef(
         <Text t4 style={page.title}>
           {title}
         </Text>
-        {error && <Text clean>{error}</Text>}
+        {error && (
+          <Text t6 style={page.error}>
+            {error}
+          </Text>
+        )}
         {subtitle && !error && (
           <Text t11 style={page.t11}>
             {subtitle}
@@ -161,6 +169,8 @@ const page = StyleSheet.create({
   error: {
     color: LIGHT_TEXT_RED_1,
     fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
   },
   title: {
     marginTop: moderateVerticalScale(40, 8),

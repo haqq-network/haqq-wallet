@@ -10,7 +10,7 @@ import {useApp} from '../contexts/app';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
 import {
-  LIGHT_GRAPHIC_BASE_4,
+  LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
   LIGHT_TEXT_RED_1,
@@ -73,7 +73,7 @@ export const OnboardingRepeatPinScreen = () => {
           <View style={[page.dot, pin.length >= 5 && page.active]} />
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
-        <Text clean style={page.error}>
+        <Text t6 style={page.error}>
           {error ? error : ' '}
         </Text>
       </Spacer>
@@ -99,7 +99,7 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_BASE_4,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
@@ -110,6 +110,9 @@ const page = StyleSheet.create({
   },
   error: {
     color: LIGHT_TEXT_RED_1,
+    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 22,
     justifyContent: 'center',
   },
   t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},

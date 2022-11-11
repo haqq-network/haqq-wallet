@@ -46,6 +46,9 @@ export const PinModal = () => {
     },
     [app, pinRef],
   );
+  const onLock = useCallback(() => {
+    setShowRestore(true);
+  }, []);
 
   return (
     <View style={page.container}>
@@ -53,6 +56,7 @@ export const PinModal = () => {
         ref={pinRef}
         title="Welcome to ISLM Wallet"
         onPin={onPin}
+        onLock={onLock}
         additionButton={
           <TouchableOpacity
             style={page.additionButton}
