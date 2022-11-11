@@ -70,7 +70,7 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
-      navigate('settingsEditContact', {
+      navigate('settingsContactEdit', {
         name: '',
         address: search.trim(),
         isCreate: true,

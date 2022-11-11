@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {ActionsSheet} from '../components/actions-sheet';
 import {
@@ -13,6 +13,7 @@ import {
   KeyboardSafeArea,
 } from '../components/ui';
 import {useWallet} from '../contexts/wallets';
+import {I18N, getText} from '../i18n';
 import {RootStackParamList} from '../types';
 import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
@@ -58,30 +59,28 @@ export const SettingsAccountEditScreen = () => {
   return (
     <>
       <CustomHeader
-        title="Edit account name"
+        title={getText(I18N.settingsAccountEditHeaderTitle)}
         onPressLeft={onPressLeft}
-        textLeft={'Cancel'}
-        textRight={'Save'}
+        textLeft={getText(I18N.cancel)}
+        textRight={getText(I18N.save)}
         disabledRight={!isChanged}
         onPressRight={onPressRight}
         textColorRight={LIGHT_GRAPHIC_GREEN_1}
         textColorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
-      <KeyboardSafeArea>
-        <View style={page.container}>
-          <Input
-            onChangeText={onChange}
-            label="Name"
-            value={inputName}
-            rightAction={
-              inputName && (
-                <IconButton onPress={cleanTextFile}>
-                  <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
-                </IconButton>
-              )
-            }
-          />
-        </View>
+      <KeyboardSafeArea style={page.container}>
+        <Input
+          onChangeText={onChange}
+          label={getText(I18N.name)}
+          value={inputName}
+          rightAction={
+            inputName && (
+              <IconButton onPress={cleanTextFile}>
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+              </IconButton>
+            )
+          }
+        />
       </KeyboardSafeArea>
       {actionSheetVisible && (
         <ActionsSheet

@@ -192,11 +192,11 @@ export type RootStackParamList = {
     deviceName: string;
   };
   settingsAccountEdit: {address: string};
-  transactionEditContact: {
+  transactionContactEdit: {
     name: string;
     address: string;
   };
-  settingsEditContact: {
+  settingsContactEdit: {
     name: string;
     address: string;
     isCreate?: boolean;

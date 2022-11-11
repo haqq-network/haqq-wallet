@@ -45,7 +45,7 @@ import {SettingsAccountEditScreen} from './screens/settings-account-edit';
 import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountsScreen} from './screens/settings-accounts';
 import {SettingsAddressBookScreen} from './screens/settings-address-book';
-import {SettingsEditContactScreen} from './screens/settings-contact-edit';
+import {SettingsContactEditScreen} from './screens/settings-contact-edit';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
 import {SettingsProvidersScreen} from './screens/settings-providers';
@@ -302,8 +302,8 @@ export const App = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="settingsEditContact"
-                    component={SettingsEditContactScreen}
+                    name="settingsContactEdit"
+                    component={SettingsContactEditScreen}
                     options={{
                       headerShown: false,
                     }}

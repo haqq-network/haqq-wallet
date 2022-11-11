@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {TransactionAccountScreen} from './transaction-account';
 import {TransactionAddressScreen} from './transaction-address';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
-import {TransactionEditContactScreen} from './transaction-contact-edit';
+import {TransactionContactEditScreen} from './transaction-contact-edit';
 import {TransactionFinishScreen} from './transaction-finish';
 import {TransactionLedgerScreen} from './transaction-ledger';
 import {TransactionSumScreen} from './transaction-sum';
@@ -15,6 +15,7 @@ import {TransactionSumAddressScreen} from './transaction-sum-address';
 import {DismissPopupButton} from '../components/dismiss-popup-button';
 import {useWallets} from '../contexts/wallets';
 import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
+import {I18N, getText} from '../i18n';
 import {RootStackParamList, ScreenOptionType} from '../types';
 
 const TransactionStack = createStackNavigator();
@@ -36,7 +37,7 @@ const screenOptionsSendFunds: ScreenOptionType = {
 };
 
 const screenOptionsEditContact: ScreenOptionType = {
-  title: 'Edit Contact',
+  title: getText(I18N.transactionContactEditHeaderTitle),
   headerRight: DismissPopupButton,
 };
 
@@ -98,8 +99,8 @@ export const TransactionScreen = () => {
         options={screenOptionsAddress}
       />
       <TransactionStack.Screen
-        name="transactionEditContact"
-        component={TransactionEditContactScreen}
+        name="transactionContactEdit"
+        component={TransactionContactEditScreen}
         options={screenOptionsEditContact}
       />
     </TransactionStack.Navigator>

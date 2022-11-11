@@ -62,11 +62,11 @@ export const withActionsContactItem = (
         };
         switch (screen) {
           case 'transaction':
-            navigate('transactionEditContact', params);
+            navigate('transactionContactEdit', params);
             break;
 
           case 'settings':
-            navigate('settingsEditContact', params);
+            navigate('settingsContactEdit', params);
             break;
         }
       },

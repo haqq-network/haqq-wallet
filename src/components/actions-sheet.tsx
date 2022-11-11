@@ -15,6 +15,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Text} from './ui';
 
+import {I18N, getText} from '../i18n';
 import {
   DARK_GRAPHIC_RED_1,
   LIGHT_BG_1,
@@ -87,19 +88,19 @@ export const ActionsSheet = ({
         ]}>
         <View style={page.top}>
           <Text t14 style={page.t8}>
-            Are you sure you want to discard your changes?
+            {getText(I18N.actionSheetMessage)}
           </Text>
           <View style={page.line} />
           <TouchableOpacity style={page.margin} onPress={handleDiscard}>
             <Text color={DARK_GRAPHIC_RED_1} t14 style={page.tButton}>
-              Discard Changes
+              {getText(I18N.actionSheetDiscard)}
             </Text>
           </TouchableOpacity>
         </View>
         <View style={page.bottom}>
           <TouchableOpacity style={page.margin} onPress={handleKeepEditing}>
             <Text color={LIGHT_TEXT_BLUE_1} t14 style={page.tButton}>
-              Keep Editing
+              {getText(I18N.actionSheetKeepEditing)}
             </Text>
           </TouchableOpacity>
         </View>

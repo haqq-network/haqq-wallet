@@ -15,6 +15,7 @@ import {
 } from '../components/ui';
 import {useContacts} from '../contexts/contacts';
 import {useTypedNavigation} from '../hooks';
+import {I18N, getText} from '../i18n';
 import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_7,
@@ -23,9 +24,9 @@ import {
   LIGHT_GRAPHIC_GREEN_1,
 } from '../variables';
 
-export const SettingsEditContactScreen = () => {
+export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
-    useRoute<RouteProp<RootStackParamList, 'settingsEditContact'>>().params;
+    useRoute<RouteProp<RootStackParamList, 'settingsContactEdit'>>().params;
   const contacts = useContacts();
   const {goBack} = useTypedNavigation();
 
@@ -97,48 +98,51 @@ export const SettingsEditContactScreen = () => {
   return (
     <>
       <CustomHeader
-        title="Contact"
+        title={getText(I18N.settingsContactEditHeaderTitle)}
         onPressLeft={onPressLeft}
         renderIconLeft={
           isEdit
             ? undefined
             : () => <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_1} />
         }
-        textLeft={'Cancel'}
-        textRight={isEdit ? 'Save' : 'Edit'}
+        textLeft={getText(I18N.cancel)}
+        textRight={isEdit ? getText(I18N.save) : getText(I18N.edit)}
         disabledRight={!isChanged && isEdit}
         onPressRight={onPressRight}
         textColorRight={LIGHT_GRAPHIC_GREEN_1}
         textColorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
-      <KeyboardSafeArea>
-        <View style={page.container}>
-          <Input
-            onChangeText={onChange}
-            label="Name"
-            editable={isEdit}
-            value={inputName}
-            rightAction={
-              inputName &&
-              isEdit && (
-                <IconButton onPress={cleanTextFile}>
-                  <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
-                </IconButton>
-              )
-            }
-          />
-          <View style={page.spaceInput} />
-          <Input multiline label="Address" editable={false} value={address} />
-          <View style={page.buttonContainer}>
-            {isEdit && !isCreate && (
-              <Button
-                variant={ButtonVariant.error}
-                style={page.errorButton}
-                onPress={onRemove}
-                title="Delete Contact"
-              />
-            )}
-          </View>
+      <KeyboardSafeArea style={page.container}>
+        <Input
+          onChangeText={onChange}
+          label={getText(I18N.name)}
+          editable={isEdit}
+          value={inputName}
+          rightAction={
+            inputName &&
+            isEdit && (
+              <IconButton onPress={cleanTextFile}>
+                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+              </IconButton>
+            )
+          }
+        />
+        <View style={page.spaceInput} />
+        <Input
+          multiline
+          label={getText(I18N.address)}
+          editable={false}
+          value={address}
+        />
+        <View style={page.buttonContainer}>
+          {isEdit && !isCreate && (
+            <Button
+              variant={ButtonVariant.error}
+              style={page.errorButton}
+              onPress={onRemove}
+              title={getText(I18N.settingsContactEditDeleteContact)}
+            />
+          )}
         </View>
       </KeyboardSafeArea>
       {actionSheetVisible && (

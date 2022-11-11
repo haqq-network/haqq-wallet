@@ -13,13 +13,14 @@ import {
   KeyboardSafeArea,
 } from '../components/ui';
 import {useContacts} from '../contexts/contacts';
+import {I18N, getText} from '../i18n';
 import {RootStackParamList} from '../types';
 import {LIGHT_GRAPHIC_BASE_2} from '../variables';
 
-export const TransactionEditContactScreen = () => {
+export const TransactionContactEditScreen = () => {
   const {goBack} = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {name, address} =
-    useRoute<RouteProp<RootStackParamList, 'transactionEditContact'>>().params;
+    useRoute<RouteProp<RootStackParamList, 'transactionContactEdit'>>().params;
 
   const contacts = useContacts();
   const [inputName, setInputName] = useState(name);
@@ -36,30 +37,33 @@ export const TransactionEditContactScreen = () => {
   const cleanTextFile = () => setInputName('');
 
   return (
-    <KeyboardSafeArea>
-      <View style={page.container}>
-        <Input
-          onChangeText={onChange}
-          label="Name"
-          value={inputName}
-          rightAction={
-            inputName && (
-              <IconButton onPress={cleanTextFile}>
-                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
-              </IconButton>
-            )
-          }
+    <KeyboardSafeArea style={page.container}>
+      <Input
+        onChangeText={onChange}
+        label={getText(I18N.name)}
+        value={inputName}
+        rightAction={
+          inputName && (
+            <IconButton onPress={cleanTextFile}>
+              <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+            </IconButton>
+          )
+        }
+      />
+      <View style={page.spaceInput} />
+      <Input
+        multiline
+        label={getText(I18N.address)}
+        editable={false}
+        value={address}
+      />
+      <View style={page.buttonContainer}>
+        <Button
+          disabled={name === inputName}
+          title={getText(I18N.continue)}
+          onPress={onSubmit}
+          variant={ButtonVariant.contained}
         />
-        <View style={page.spaceInput} />
-        <Input multiline label="Address" editable={false} value={address} />
-        <View style={page.buttonContainer}>
-          <Button
-            disabled={name === inputName}
-            title="Continue"
-            onPress={onSubmit}
-            variant={ButtonVariant.contained}
-          />
-        </View>
       </View>
     </KeyboardSafeArea>
   );
