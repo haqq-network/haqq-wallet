@@ -3,14 +3,14 @@
  */
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 
-import {App} from './src/app';
-import {name as appName} from './app.json';
-import {JsonRpcProvider} from '@ethersproject/providers';
+import { App } from './src/app';
+import { name as appName } from './app.json';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import {ENVIRONMENT, SENTRY_DSN} from '@env';
-import {LaunchArguments} from 'react-native-launch-arguments';
+import { ENVIRONMENT, SENTRY_DSN } from '@env';
+import { Overview } from './src/overview';
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
@@ -34,7 +34,7 @@ function getResult(payload) {
   return payload.result;
 }
 
-JsonRpcProvider.prototype.send = async function (method, params) {
+JsonRpcProvider.prototype.send = async function(method, params) {
   const request = {
     method: method,
     params: params,
@@ -70,3 +70,5 @@ JsonRpcProvider.prototype.send = async function (method, params) {
 const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
+
+AppRegistry.registerComponent('overview', () => Overview)
