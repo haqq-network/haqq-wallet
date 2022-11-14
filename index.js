@@ -34,7 +34,7 @@ function getResult(payload) {
   return payload.result;
 }
 
-JsonRpcProvider.prototype.send = async function(method, params) {
+JsonRpcProvider.prototype.send = async function (method, params) {
   const request = {
     method: method,
     params: params,
