@@ -240,6 +240,8 @@ export enum WalletCardStyle {
 }
 
 export enum WalletType {
+  mixed = 'mixed',
+  mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
 }
@@ -299,3 +301,25 @@ export enum AppTheme {
   dark = 'dark',
   system = 'system',
 }
+
+export type AddWalletParams = {address: string} & (
+  | {
+      type: WalletType.mnemonic;
+      mnemonic: Mnemonic;
+      isNew: boolean;
+    }
+  | {
+      type: WalletType.hot;
+      privateKey: string;
+    }
+  | {
+      type: WalletType.mixed;
+      privateKey: string;
+      mnemonic?: Mnemonic;
+    }
+  | {
+      type: WalletType.ledgerBt;
+      deviceId: string;
+      deviceName: string;
+    }
+);

@@ -7,6 +7,7 @@ import {useApp, useWallets} from '@app/hooks';
 
 import {Finish} from '../components/finish';
 import {hideModal} from '../helpers/modal';
+import {useWallets} from '../hooks/use-wallets';
 import {RootStackParamList} from '../types';
 
 export const OnboardingFinishScreen = () => {

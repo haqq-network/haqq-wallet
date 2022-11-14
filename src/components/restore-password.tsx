@@ -8,6 +8,7 @@ import {BottomSheet} from './bottom-sheet';
 import {Button, ButtonVariant, Text} from './ui';
 
 import {captureException} from '../helpers';
+import {useWallets} from '../hooks/use-wallets';
 import {LIGHT_TEXT_BASE_2} from '../variables';
 
 const h = Dimensions.get('window').height;

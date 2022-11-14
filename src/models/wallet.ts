@@ -1,9 +1,26 @@
 import {EventEmitter} from 'events';
 
+import {app} from '../contexts/app';
 import {captureException} from '../helpers';
 import {decrypt, encrypt} from '../passworder';
 import {EthNetwork} from '../services/eth-network';
-import {Mnemonic, WalletCardStyle, WalletType} from '../types';
+import {
+  AddWalletParams,
+  Mnemonic,
+  WalletCardPattern,
+  WalletCardStyle,
+  WalletType,
+} from '../types';
+import {generateFlatColors, generateGradientColors} from '../utils';
+import {
+  CARD_CIRCLE_TOTAL,
+  CARD_DEFAULT_STYLE,
+  CARD_RHOMBUS_TOTAL,
+  DEFAULT_CARD_BACKGROUND,
+  DEFAULT_CARD_PATTERN,
+  FLAT_PRESETS,
+  GRADIENT_PRESETS,
+} from '../variables';
 import {realm} from './index';
 
 export class WalletRealm extends Realm.Object {
@@ -43,6 +60,120 @@ export class WalletRealm extends Realm.Object {
 }
 
 export class Wallet extends EventEmitter {
+  static defaultData = {
+    data: '',
+    name: '',
+    mnemonicSaved: true,
+    isHidden: false,
+    cardStyle: WalletCardStyle.flat,
+    colorFrom: DEFAULT_CARD_BACKGROUND,
+    colorTo: DEFAULT_CARD_BACKGROUND,
+    colorPattern: DEFAULT_CARD_PATTERN,
+    pattern: CARD_DEFAULT_STYLE,
+    type: WalletType.hot,
+    deviceId: undefined,
+    deviceName: undefined,
+  };
+
+  static async create(walletParams: AddWalletParams, name = '') {
+    const exist = realm.objectForPrimaryKey<Wallet>(
+      'Wallet',
+      walletParams.address,
+    );
+    if (exist) {
+      throw new Error('wallet_already_exists');
+    }
+
+    let data = '';
+    let deviceId: string | undefined;
+    let deviceName: string | undefined;
+    let mnemonicSaved = true;
+
+    switch (walletParams.type) {
+      case WalletType.mnemonic:
+        {
+          const password = await app.getPassword();
+          data = await encrypt(password, walletParams);
+          mnemonicSaved = !walletParams.isNew;
+        }
+        break;
+      case WalletType.hot:
+      case WalletType.mixed:
+        {
+          const password = await app.getPassword();
+          data = await encrypt(password, walletParams);
+        }
+        break;
+      case WalletType.ledgerBt:
+        deviceId = walletParams.deviceId;
+        deviceName = walletParams.deviceName;
+        break;
+    }
+
+    const cards = Object.keys(WalletCardStyle);
+    const cardStyle = cards[
+      Math.floor(Math.random() * cards.length)
+    ] as WalletCardStyle;
+
+    const patterns = Object.keys(WalletCardPattern);
+    const patternVariant =
+      patterns[Math.floor(Math.random() * patterns.length)];
+
+    const pattern = `${patternVariant}-${Math.floor(
+      Math.random() *
+        (patternVariant === WalletCardPattern.circle
+          ? CARD_CIRCLE_TOTAL
+          : CARD_RHOMBUS_TOTAL),
+    )}`;
+
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const usedColors = new Set(wallets.map(w => w.colorFrom));
+
+    let availableColors = (
+      cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
+    ).filter(c => !usedColors.has(c[0]));
+
+    let colors = [
+      DEFAULT_CARD_BACKGROUND,
+      DEFAULT_CARD_BACKGROUND,
+      DEFAULT_CARD_PATTERN,
+    ];
+    if (availableColors.length) {
+      colors =
+        availableColors[Math.floor(Math.random() * availableColors.length)];
+    } else {
+      colors =
+        cardStyle === WalletCardStyle.flat
+          ? generateFlatColors()
+          : generateGradientColors();
+    }
+
+    let result = null;
+    realm.write(() => {
+      result = realm.create<WalletRealm>(WalletRealm.schema.name, {
+        ...Wallet.defaultData,
+        data,
+        address: walletParams.address,
+        mnemonicSaved,
+        name: name ?? Wallet.defaultData.name,
+        pattern,
+        cardStyle,
+        colorFrom: colors[0],
+        colorTo: colors[1],
+        colorPattern: colors[2],
+        type: walletParams.type,
+        deviceId,
+        deviceName,
+      });
+    });
+
+    if (!result) {
+      throw new Error('wallet_error');
+    }
+
+    return new Wallet(result);
+  }
+
   private _raw: WalletRealm;
   private _balance: number = 0;
   private _encrypted: boolean;
@@ -75,8 +206,11 @@ export class Wallet extends EventEmitter {
     try {
       if (this._encrypted) {
         const decrypted = await decrypt(password, this._raw.data);
-        this._privateKey = decrypted.privateKey;
         this._encrypted = false;
+
+        if (decrypted.privateKey) {
+          this._privateKey = decrypted.privateKey;
+        }
 
         if (decrypted.mnemonic) {
           this._mnemonic = decrypted.mnemonic;
