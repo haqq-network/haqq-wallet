@@ -7,6 +7,7 @@ import {StyleSheet} from 'react-native';
 import {
   Button,
   ButtonVariant,
+  ErrorText,
   FaceIdIcon,
   FingerprintIcon,
   PopupContainer,
@@ -20,7 +21,6 @@ import {
   BIOMETRY_TYPES_NAMES,
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_RED_1,
 } from '../variables';
 
 export const OnboardingBiometryScreen = () => {
@@ -75,9 +75,9 @@ export const OnboardingBiometryScreen = () => {
           Safe and fast
         </Text>
         {error && (
-          <Text t11 style={page.error}>
+          <ErrorText e2 style={page.error}>
             {error}
-          </Text>
+          </ErrorText>
         )}
       </Spacer>
       <Button
@@ -104,5 +104,5 @@ const page = StyleSheet.create({
   icon: {marginBottom: 40},
   textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   margin: {marginBottom: 16},
-  error: {top: 20, textAlign: 'center', color: LIGHT_TEXT_RED_1},
+  error: {top: 20, textAlign: 'center'},
 });

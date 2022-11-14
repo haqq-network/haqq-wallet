@@ -28,3 +28,4 @@ export * from '../lottie/waiting';
 export * from '../lottie';
 export * from './text-field';
 export * from './status-bar-color';
+export * from './error-text';

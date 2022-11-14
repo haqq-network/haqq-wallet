@@ -5,7 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {PopupContainer, Spacer, Text} from '../components/ui';
+import {ErrorText, PopupContainer, Spacer, Text} from '../components/ui';
 import {useApp} from '../contexts/app';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
@@ -13,7 +13,6 @@ import {
   LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
 } from '../variables';
 
 export const OnboardingRepeatPinScreen = () => {
@@ -73,9 +72,9 @@ export const OnboardingRepeatPinScreen = () => {
           <View style={[page.dot, pin.length >= 5 && page.active]} />
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
-        <Text t6 style={page.error}>
+        <ErrorText e2 style={page.error}>
           {error ? error : ' '}
-        </Text>
+        </ErrorText>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
     </PopupContainer>
@@ -109,10 +108,6 @@ const page = StyleSheet.create({
     transform: [{scale: 1}],
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
-    fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 22,
     justifyContent: 'center',
   },
   t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
