@@ -5,7 +5,6 @@ import {Modal} from 'react-native';
 import {
   ErrorAccountAdded,
   ErrorCreateAccount,
-  HideModal,
   LoadingModal,
   LoadingModalProps,
   NoInternet,
@@ -100,8 +99,6 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <ErrorAccountAdded />;
       case 'error-create-account':
         return <ErrorCreateAccount />;
-      case 'hide':
-        return <HideModal />;
       default:
         return null;
     }

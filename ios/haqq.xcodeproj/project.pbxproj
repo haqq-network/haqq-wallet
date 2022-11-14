@@ -28,8 +28,6 @@
 		210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818F29112548002A27EB /* Data+hexEncodedString.swift */; };
 		210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AC29112EDC002A27EB /* Mnemonic.swift */; };
 		210F81AF29113FFF002A27EB /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AE29113FFF002A27EB /* HDKey.swift */; };
-		21A5A918292211F3001CA88F /* OverviewScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21A5A9162922115F001CA88F /* OverviewScreen.storyboard */; };
-		21A5A91A29222184001CA88F /* ReactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A5A91929222184001CA88F /* ReactViewController.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
@@ -104,8 +102,6 @@
 		210F81AB29112EDC002A27EB /* haqqTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqqTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		210F81AC29112EDC002A27EB /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
 		210F81AE29113FFF002A27EB /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
-		21A5A9162922115F001CA88F /* OverviewScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OverviewScreen.storyboard; path = haqq/OverviewScreen.storyboard; sourceTree = "<group>"; };
-		21A5A91929222184001CA88F /* ReactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactViewController.swift; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
@@ -200,7 +196,6 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				21A5A9162922115F001CA88F /* OverviewScreen.storyboard */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				210AE02228DC693F008D739C /* haqq-Bridging-Header.h */,
@@ -220,7 +215,6 @@
 				210F81AE29113FFF002A27EB /* HDKey.swift */,
 				21E6B18A291224440055570A /* Wallet.swift */,
 				21E6B18E291247A60055570A /* logger.swift */,
-				21A5A91929222184001CA88F /* ReactViewController.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -458,7 +452,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21A5A918292211F3001CA88F /* OverviewScreen.storyboard in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */,
@@ -681,7 +674,6 @@
 				210F81AF29113FFF002A27EB /* HDKey.swift in Sources */,
 				210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
-				21A5A91A29222184001CA88F /* ReactViewController.swift in Sources */,
 				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
