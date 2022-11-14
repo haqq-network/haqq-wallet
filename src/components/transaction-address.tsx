@@ -18,10 +18,10 @@ import {
 
 import {useApp} from '../contexts/app';
 import {useContacts} from '../contexts/contacts';
-import {isIOS} from '../helpers';
 import {hideModal, showModal} from '../helpers/modal';
 import {isHexString} from '../utils';
 import {
+  IS_IOS,
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_GREEN_1,
   PLACEHOLDER_GRAY,
@@ -152,7 +152,7 @@ const page = StyleSheet.create({
     position: 'absolute',
     color: PLACEHOLDER_GRAY,
     left: 37,
-    bottom: isIOS ? 24 : 22,
+    bottom: IS_IOS ? 24 : 22,
   },
   input: {
     marginBottom: 12,
