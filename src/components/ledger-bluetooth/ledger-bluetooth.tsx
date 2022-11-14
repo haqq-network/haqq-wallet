@@ -149,5 +149,7 @@ const page = StyleSheet.create({
     width: windowWidth,
     height: Math.min(windowWidth * 0.8, windowHeight * 0.355) - 20,
     margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
