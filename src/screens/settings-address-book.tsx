@@ -28,7 +28,7 @@ import {
 } from '../variables';
 
 const ListOfContacts = withActionsContactItem(ListContact, {
-  screen: 'settings',
+  nextScreen: 'settingsContactEdit',
 });
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;

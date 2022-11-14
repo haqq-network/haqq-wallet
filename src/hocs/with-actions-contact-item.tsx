@@ -12,7 +12,7 @@ import {Contact} from '../models/contact';
 
 interface settings {
   subscribeOnContacts?: boolean;
-  screen?: string;
+  nextScreen?: 'transactionContactEdit' | 'settingsContactEdit';
 }
 
 export interface ComponentProps extends Omit<ContactFlatListProps, 'data'> {
@@ -21,7 +21,7 @@ export interface ComponentProps extends Omit<ContactFlatListProps, 'data'> {
 
 export const withActionsContactItem = (
   Component: React.FC<ListContactProps>,
-  {screen = 'settings', subscribeOnContacts = true}: settings,
+  {nextScreen = 'settingsContactEdit', subscribeOnContacts = true}: settings,
 ) => {
   return ({filterText, ...props}: ComponentProps) => {
     const {navigate} = useTypedNavigation();
@@ -60,15 +60,7 @@ export const withActionsContactItem = (
           name: item.name,
           address: item.account,
         };
-        switch (screen) {
-          case 'transaction':
-            navigate('transactionContactEdit', params);
-            break;
-
-          case 'settings':
-            navigate('settingsContactEdit', params);
-            break;
-        }
+        navigate(nextScreen, params);
       },
       [navigate],
     );

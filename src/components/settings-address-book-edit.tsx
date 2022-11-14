@@ -1,6 +1,6 @@
 import React, {memo, useState} from 'react';
 
-import {Alert, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {
   Button,
@@ -11,8 +11,6 @@ import {
   KeyboardSafeArea,
 } from './ui';
 
-import {useContacts} from '../contexts/contacts';
-import {useTypedNavigation} from '../hooks';
 import {I18N, getText} from '../i18n';
 import {LIGHT_BG_7, LIGHT_GRAPHIC_BASE_2} from '../variables';
 
@@ -23,6 +21,8 @@ interface SettingsAddressBookEditProps {
   isCreate?: boolean;
   isEdit?: boolean;
   onChangeAddress?: (text: string) => void;
+  onSubmit?: (name: string) => void;
+  onRemove?: () => void;
 }
 
 export const SettingsAddressBookEdit = memo(
@@ -32,21 +32,13 @@ export const SettingsAddressBookEdit = memo(
     buttonType = 'save',
     isCreate = false,
     isEdit,
+    onSubmit,
+    onRemove,
     onChangeAddress,
   }: SettingsAddressBookEditProps) => {
-    const {goBack} = useTypedNavigation();
-
-    const contacts = useContacts();
     const [inputName, setInputName] = useState(initName);
 
-    const onSubmit = () => {
-      if (isCreate) {
-        contacts.createContact(initAddress, inputName);
-      } else {
-        contacts.updateContact(initAddress, inputName);
-      }
-      goBack();
-    };
+    const handleSubmit = () => onSubmit?.(inputName);
 
     const onChange = (e: string) => {
       onChangeAddress?.(e);
@@ -55,23 +47,7 @@ export const SettingsAddressBookEdit = memo(
 
     const cleanTextFile = () => setInputName('');
 
-    const onRemove = () => {
-      Alert.alert(
-        'Delete Contact',
-        'Are you sure you want to delete the selected contact?',
-        [
-          {text: 'Cancel', style: 'cancel'},
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: () => {
-              contacts.removeContact(initAddress);
-              goBack();
-            },
-          },
-        ],
-      );
-    };
+    const handleRemove = () => onRemove?.();
 
     return (
       <KeyboardSafeArea style={page.container}>
@@ -101,7 +77,7 @@ export const SettingsAddressBookEdit = memo(
             <Button
               disabled={initName === inputName}
               title={getText(I18N.continue)}
-              onPress={onSubmit}
+              onPress={handleSubmit}
               variant={ButtonVariant.contained}
             />
           </View>
@@ -111,7 +87,7 @@ export const SettingsAddressBookEdit = memo(
               <Button
                 variant={ButtonVariant.error}
                 style={page.errorButton}
-                onPress={onRemove}
+                onPress={handleRemove}
                 title={getText(I18N.settingsContactEditDeleteContact)}
               />
             )}

@@ -1,6 +1,7 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
+import {Alert} from 'react-native';
 
 import {ActionsSheet} from '../components/actions-sheet';
 import {SettingsAddressBookEdit} from '../components/settings-address-book-edit';
@@ -23,13 +24,30 @@ export const SettingsContactEditScreen = () => {
 
   const isChanged = inputName !== name;
 
-  const onSubmit = () => {
+  const onSubmit = (newName?: string) => {
     if (isCreate) {
-      contacts.createContact(address, inputName);
+      contacts.createContact(address, newName || inputName);
     } else {
-      contacts.updateContact(address, inputName);
+      contacts.updateContact(address, newName || inputName);
     }
     goBack();
+  };
+  const onRemove = () => {
+    Alert.alert(
+      'Delete Contact',
+      'Are you sure you want to delete the selected contact?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            contacts.removeContact(address);
+            goBack();
+          },
+        },
+      ],
+    );
   };
   const onPressRight = () => {
     if (!isEdit) {
@@ -53,9 +71,9 @@ export const SettingsContactEditScreen = () => {
     setActionSheetVisible(false);
     goBack();
   };
-  const onChangeAddress = useCallback((text: string) => {
+  const onChangeAddress = (text: string) => {
     setInputName(text);
-  }, []);
+  };
 
   const onPressKeepEditing = () => setActionSheetVisible(false);
 
@@ -77,6 +95,8 @@ export const SettingsContactEditScreen = () => {
         textColorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
       <SettingsAddressBookEdit
+        onSubmit={onSubmit}
+        onRemove={onRemove}
         buttonType="del"
         isEdit={isEdit}
         isCreate={isCreate}

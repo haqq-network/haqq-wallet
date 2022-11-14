@@ -32,7 +32,7 @@ export type TransactionAddressProps = {
 };
 
 const ListOfContacts = withActionsContactItem(ListContact, {
-  screen: 'transaction',
+  nextScreen: 'transactionContactEdit',
 });
 
 export const TransactionAddress = ({

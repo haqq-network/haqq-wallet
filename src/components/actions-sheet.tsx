@@ -1,6 +1,12 @@
 import React, {useEffect} from 'react';
 
-import {Keyboard, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {
+  ActionSheetIOS,
+  Keyboard,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -15,6 +21,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Text} from './ui';
 
+import {isIOS} from '../helpers';
 import {I18N, getText} from '../i18n';
 import {
   DARK_GRAPHIC_RED_1,
@@ -65,9 +72,27 @@ export const ActionsSheet = ({
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
   }, [fadeAnim]);
 
-  const handleDiscard = () => fadeOut(onPressDiscard);
-
-  const handleKeepEditing = () => fadeOut(onPressKeepEditing);
+  useEffect(() => {
+    isIOS &&
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: [
+            getText(I18N.actionSheetKeepEditing),
+            getText(I18N.actionSheetDiscard),
+          ],
+          title: getText(I18N.actionSheetMessage),
+          destructiveButtonIndex: 1,
+          cancelButtonIndex: 0,
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            onPressKeepEditing?.();
+          } else if (buttonIndex === 1) {
+            onPressDiscard?.();
+          }
+        },
+      );
+  }, [onPressKeepEditing, onPressDiscard]);
 
   const bgAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [0.5, 0]),
@@ -77,8 +102,16 @@ export const ActionsSheet = ({
     transform: [{translateY: fadeAnim.value}],
   }));
 
+  if (isIOS) {
+    return <></>;
+  }
+
+  const handleDiscard = () => fadeOut(onPressDiscard);
+
+  const handleKeepEditing = () => fadeOut(onPressKeepEditing);
+
   return (
-    <View style={page.container}>
+    <View style={StyleSheet.absoluteFillObject}>
       <Animated.View style={[page.animateView, bgAnimation]} />
       <Animated.View
         style={[
@@ -110,12 +143,6 @@ export const ActionsSheet = ({
 };
 
 const page = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    zIndex: 30,
-  },
   top: {
     borderRadius: 13,
     backgroundColor: LIGHT_GRAPHIC_SECOND_1,
