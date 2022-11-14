@@ -2,6 +2,8 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {hideBack, popupScreenOptions} from '@app/helpers';
+
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerAgreementScreen} from './ledger-agreement';
 import {LedgerBluetoothScreen} from './ledger-bluetooth';
@@ -14,7 +16,6 @@ import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 
 import {useUser} from '../contexts/app';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 import {ScreenOptionType} from '../types';
 
 const LedgerStack = createStackNavigator();

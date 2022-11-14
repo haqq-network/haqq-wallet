@@ -13,7 +13,7 @@ module.exports = {
         inlineRequires: true,
       },
     }),
-    // minifierPath: 'metro-minify-terser',
+    minifierPath: 'metro-minify-terser',
     // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
   resolver: {
