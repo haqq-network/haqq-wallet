@@ -7,7 +7,6 @@ import {useApp, useWallets} from '@app/hooks';
 
 import {Pin, PinInterface} from '../components/pin';
 import {hideModal, showModal} from '../helpers/modal';
-import {useWallets} from '../hooks/use-wallets';
 import {RootStackParamList} from '../types';
 
 export const SettingsSecurityPinScreen = () => {
