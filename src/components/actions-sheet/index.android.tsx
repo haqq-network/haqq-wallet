@@ -1,12 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {
-  ActionSheetIOS,
-  Keyboard,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Keyboard, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -19,10 +13,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Text} from './ui';
-
-import {isIOS} from '../helpers';
-import {I18N, getText} from '../i18n';
+import {ActionsSheetProps} from '.';
+import {I18N, getText} from '../../i18n';
 import {
   DARK_GRAPHIC_RED_1,
   LIGHT_BG_1,
@@ -31,7 +23,8 @@ import {
   LIGHT_GRAPHIC_SECOND_1,
   LIGHT_TEXT_BLUE_1,
   LIGHT_TEXT_SECOND_1,
-} from '../variables';
+} from '../../variables';
+import {Text} from '../ui';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: 550,
@@ -42,11 +35,6 @@ const timingInAnimationConfig: WithTimingConfig = {
   duration: 550,
   easing: Easing.out(Easing.back()),
 };
-
-interface ActionsSheetProps {
-  onPressDiscard?: () => void;
-  onPressKeepEditing?: () => void;
-}
 
 export const ActionsSheet = ({
   onPressDiscard,
@@ -72,28 +60,6 @@ export const ActionsSheet = ({
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
   }, [fadeAnim]);
 
-  useEffect(() => {
-    isIOS &&
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: [
-            getText(I18N.actionSheetKeepEditing),
-            getText(I18N.actionSheetDiscard),
-          ],
-          title: getText(I18N.actionSheetMessage),
-          destructiveButtonIndex: 1,
-          cancelButtonIndex: 0,
-        },
-        buttonIndex => {
-          if (buttonIndex === 0) {
-            onPressKeepEditing?.();
-          } else if (buttonIndex === 1) {
-            onPressDiscard?.();
-          }
-        },
-      );
-  }, [onPressKeepEditing, onPressDiscard]);
-
   const bgAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [0.5, 0]),
   }));
@@ -101,10 +67,6 @@ export const ActionsSheet = ({
   const slideFromBottomAnimation = useAnimatedStyle(() => ({
     transform: [{translateY: fadeAnim.value}],
   }));
-
-  if (isIOS) {
-    return <></>;
-  }
 
   const handleDiscard = () => fadeOut(onPressDiscard);
 

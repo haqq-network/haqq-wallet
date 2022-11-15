@@ -2,7 +2,8 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {ActionsSheet} from '../components/actions-sheet';
+import {ActionsSheet} from '@app/components/actions-sheet';
+
 import {
   CustomHeader,
   Icon,
