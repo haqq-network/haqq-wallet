@@ -4,12 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FlatList, StyleSheet} from 'react-native';
 
+import {useTransactions, useUser, useWallets} from '@app/hooks';
+
 import {TransactionEmpty} from '../components/transaction-empty';
 import {TransactionRow} from '../components/transaction-row';
 import {Wallets} from '../components/wallets';
-import {useUser} from '../contexts/app';
-import {useTransactions} from '../contexts/transactions';
-import {useWallets} from '../contexts/wallets';
 import {Transaction} from '../models/transaction';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList, TransactionList} from '../types';

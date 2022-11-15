@@ -22,6 +22,16 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
+import {
+  ActionSheetType,
+  HeaderButtonProps,
+  PresentationNavigation,
+  RootStackParamList,
+  ScreenOptionType,
+} from '@app/types';
+import {sleep} from '@app/utils';
+import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
+
 import {Notifications} from './components/notifications';
 import {PopupHeader} from './components/popup-header';
 import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
@@ -57,15 +67,6 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WelcomeScreen} from './screens/welcome';
-import {
-  ActionSheetType,
-  HeaderButtonProps,
-  PresentationNavigation,
-  RootStackParamList,
-  ScreenOptionType,
-} from './types';
-import {sleep} from './utils';
-import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from './variables';
 
 const screenOptions: ScreenOptionType = {
   tab: true,

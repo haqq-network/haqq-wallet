@@ -4,12 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FlatList, StyleSheet, View} from 'react-native';
 
+import {useWallets} from '@app/hooks';
+import {LIGHT_GRAPHIC_SECOND_3, LIGHT_TEXT_SECOND_1} from '@app/variables';
+
 import {NoTransactionsIcon, Text} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
-import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList} from '../types';
-import {GRAPHIC_SECOND_3, TEXT_SECOND_1} from '../variables';
 
 export const SettingsAccountsScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -41,8 +42,8 @@ export const SettingsAccountsScreen = () => {
   if (!rows.length) {
     return (
       <View style={page.emptyContainer}>
-        <NoTransactionsIcon color={GRAPHIC_SECOND_3} style={page.space} />
-        <Text t14 style={{color: TEXT_SECOND_1}}>
+        <NoTransactionsIcon color={LIGHT_GRAPHIC_SECOND_3} style={page.space} />
+        <Text t14 style={{color: LIGHT_TEXT_SECOND_1}}>
           No wallets
         </Text>
       </View>

@@ -3,10 +3,11 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet} from 'react-native';
 
+import {useWallets} from '@app/hooks';
+
 import {IconButton, TrashIcon} from './ui';
 
 import {app} from '../contexts/app';
-import {useWallets} from '../contexts/wallets';
 import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 type SettingsAccountRemoveButtonProp = {

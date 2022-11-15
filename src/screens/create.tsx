@@ -2,11 +2,12 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {hideBack, popupScreenOptions} from '@app/helpers';
+
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {SignUpAgreementScreen} from './signup-agreement';
 import {SignupStoreWalletScreen} from './signup-store-wallet';
 
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 import {ScreenOptionType} from '../types';
 
 const SignUpStack = createStackNavigator();

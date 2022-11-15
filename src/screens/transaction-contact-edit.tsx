@@ -2,10 +2,9 @@ import React from 'react';
 
 import {RouteProp, useRoute} from '@react-navigation/native';
 
-import {SettingsAddressBookEdit} from '../components/settings-address-book-edit';
-import {useContacts} from '../contexts/contacts';
-import {useTypedNavigation} from '../hooks';
-import {RootStackParamList} from '../types';
+import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
+import {useContacts, useTypedNavigation} from '@app/hooks';
+import {RootStackParamList} from '@app/types';
 
 export const TransactionContactEditScreen = () => {
   const {name, address} =

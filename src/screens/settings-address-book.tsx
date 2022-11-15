@@ -4,6 +4,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {StyleSheet} from 'react-native';
 
+import {useApp, useContacts} from '@app/hooks';
+
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
 import {ListContact} from '../components/list-contact';
@@ -11,13 +13,10 @@ import {
   Box,
   Icon,
   IconButton,
-  PopupContainer,
   QRScanner,
   Text,
   TextField,
 } from '../components/ui';
-import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
 import {hideModal, showModal} from '../helpers/modal';
 import {withActionsContactItem} from '../hocs';
 import {useTypedNavigation} from '../hooks';
@@ -79,7 +78,7 @@ export const SettingsAddressBookScreen =
     }, [navigate, search]);
 
     return (
-      <PopupContainer>
+      <>
         <TextField
           label="Address"
           style={page.input}
@@ -115,7 +114,7 @@ export const SettingsAddressBookScreen =
           contentContainerStyle={page.grow}
           filterText={search}
         />
-      </PopupContainer>
+      </>
     );
   };
 

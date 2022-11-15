@@ -3,14 +3,13 @@ import React, {useState} from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {Alert} from 'react-native';
 
-import {ActionsSheet} from '../components/actions-sheet';
-import {SettingsAddressBookEdit} from '../components/settings-address-book-edit';
-import {CustomHeader, Icon} from '../components/ui';
-import {useContacts} from '../contexts/contacts';
-import {useTypedNavigation} from '../hooks';
-import {I18N, getText} from '../i18n';
-import {RootStackParamList} from '../types';
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_GRAPHIC_GREEN_1} from '../variables';
+import {ActionsSheet} from '@app/components/actions-sheet';
+import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
+import {CustomHeader, Icon} from '@app/components/ui';
+import {useContacts, useTypedNavigation} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {RootStackParamList} from '@app/types';
+import {LIGHT_GRAPHIC_BASE_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =

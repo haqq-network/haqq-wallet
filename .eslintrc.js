@@ -17,6 +17,11 @@ module.exports = {
                 group: 'builtin',
                 position: 'before',
               },
+              {
+                "pattern": "@app/**",
+                "group": "external",
+                "position": "after"
+              }
             ],
             pathGroupsExcludedImportTypes: ['react'],
             'newlines-between': 'always',

@@ -3,6 +3,12 @@ import React from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {hideBack, popupScreenOptions} from '@app/helpers';
+import {useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {RootStackParamList, ScreenOptionType} from '@app/types';
+
 import {TransactionAccountScreen} from './transaction-account';
 import {TransactionAddressScreen} from './transaction-address';
 import {TransactionConfirmationScreen} from './transaction-confirmation';
@@ -11,12 +17,6 @@ import {TransactionFinishScreen} from './transaction-finish';
 import {TransactionLedgerScreen} from './transaction-ledger';
 import {TransactionSumScreen} from './transaction-sum';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
-
-import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {useWallets} from '../contexts/wallets';
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
-import {I18N, getText} from '../i18n';
-import {RootStackParamList, ScreenOptionType} from '../types';
 
 const TransactionStack = createStackNavigator();
 

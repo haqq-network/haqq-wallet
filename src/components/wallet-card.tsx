@@ -4,6 +4,8 @@ import {NavigationProp} from '@react-navigation/core/src/types';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
+import {useWallet} from '@app/hooks';
+
 import {
   ArrowReceive,
   ArrowSend,
@@ -17,11 +19,10 @@ import {
   Text,
 } from './ui';
 
-import {useWallet} from '../contexts/wallets';
-import {isIOS} from '../helpers';
 import {RootStackParamList} from '../types';
 import {cleanNumber, shortAddress} from '../utils';
 import {
+  IS_IOS,
   LIGHT_BG_1,
   LIGHT_BG_5,
   LIGHT_GRAPHIC_BASE_3,
@@ -113,7 +114,7 @@ export const WalletCard = ({address}: BalanceProps) => {
       <Spacer />
       <View style={page.buttonsContainer}>
         <View style={page.button}>
-          {isIOS && <BlurView action="sent" cardState={cardState} />}
+          {IS_IOS && <BlurView action="sent" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressSend}>
             <ArrowSend color={LIGHT_GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
@@ -122,7 +123,7 @@ export const WalletCard = ({address}: BalanceProps) => {
           </IconButton>
         </View>
         <View style={page.button}>
-          {isIOS && <BlurView action="receive" cardState={cardState} />}
+          {IS_IOS && <BlurView action="receive" cardState={cardState} />}
           <IconButton style={page.spacer} onPress={onPressQR}>
             <ArrowReceive color={LIGHT_GRAPHIC_BASE_3} />
             <Text clean style={page.buttonText}>
@@ -178,7 +179,7 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: isIOS ? TRANSPARENT : SYSTEM_BLUR_2,
+    backgroundColor: IS_IOS ? TRANSPARENT : SYSTEM_BLUR_2,
     borderRadius: 16,
     padding: 6,
     overflow: 'hidden',

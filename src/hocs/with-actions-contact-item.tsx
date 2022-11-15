@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Alert} from 'react-native';
 
+import {useContacts} from '@app/hooks';
+
 import {
   ContactFlatListProps,
   ListContactProps,
 } from '../components/list-contact';
-import {useContacts} from '../contexts/contacts';
 import {useTypedNavigation} from '../hooks/use-typed-navigation';
 import {Contact} from '../models/contact';
 

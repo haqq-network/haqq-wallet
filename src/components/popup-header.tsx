@@ -5,7 +5,7 @@ import {StackHeaderProps} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Icon, IconButton, Text} from './ui';
+import {Icon, IconButton, Text} from '@app/components/ui';
 
 import {
   DEFAULT_HITSLOP,

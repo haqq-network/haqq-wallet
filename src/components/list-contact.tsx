@@ -1,9 +1,10 @@
 import React from 'react';
 
 import {FlatList, FlatListProps} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {AddressRow} from './address-row';
-import {PenIcon, SwipeableRow, TrashIcon} from './ui';
+import {PenIcon, Spacer, SwipeableRow, TrashIcon} from './ui';
 
 import {
   LIGHT_GRAPHIC_BASE_3,
@@ -24,9 +25,11 @@ export const ListContact = ({
   onPressEdit,
   ...flatListProps
 }: ListContactProps) => {
+  const {bottom} = useSafeAreaInsets();
   return (
     <FlatList
       data={data}
+      ListFooterComponent={() => <Spacer height={bottom} />}
       renderItem={({item}) => (
         <SwipeableRow
           item={item}

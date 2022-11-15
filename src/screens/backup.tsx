@@ -2,12 +2,13 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {hideBack, popupScreenOptions} from '@app/helpers';
+
 import {BackupCreateScreen} from './backup-create';
 import {BackupFinishScreen} from './backup-finish';
 import {BackupVerifyScreen} from './backup-verify';
 import {BackupWarningScreen} from './backup-warning';
 
-import {hideBack, popupScreenOptions} from '../helpers/screenOptions';
 import {RoutePropT, ScreenOptionType} from '../types';
 
 const BackupStack = createStackNavigator();

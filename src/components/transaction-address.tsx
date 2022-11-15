@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {StyleSheet, Text, View} from 'react-native';
 
-import {ListContact} from './list-contact';
+import {ListContact} from '@app/components/list-contact';
 import {
   Button,
   ButtonVariant,
@@ -14,18 +14,17 @@ import {
   QRScanner,
   Spacer,
   TextField,
-} from './ui';
-
-import {useApp} from '../contexts/app';
-import {isIOS} from '../helpers';
-import {hideModal, showModal} from '../helpers/modal';
-import {withActionsContactItem} from '../hocs';
-import {isHexString} from '../utils';
+} from '@app/components/ui';
+import {hideModal, showModal} from '@app/helpers/modal';
+import {withActionsContactItem} from '@app/hocs';
+import {useApp} from '@app/hooks';
+import {isHexString} from '@app/utils';
 import {
+  IS_IOS,
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_GREEN_1,
   PLACEHOLDER_GRAY,
-} from '../variables';
+} from '@app/variables';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -151,7 +150,7 @@ const page = StyleSheet.create({
     position: 'absolute',
     color: PLACEHOLDER_GRAY,
     left: 37,
-    bottom: isIOS ? 24 : 22,
+    bottom: IS_IOS ? 24 : 22,
   },
   input: {
     marginBottom: 12,

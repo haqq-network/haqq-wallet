@@ -3,9 +3,10 @@ import React, {useEffect, useRef} from 'react';
 import {TransactionResponse} from '@ethersproject/abstract-provider';
 import {Dimensions, StyleSheet} from 'react-native';
 
-import {useWallet} from '../../contexts/wallets';
-import {I18N, getText} from '../../i18n';
-import {EthNetwork} from '../../services/eth-network';
+import {useWallet} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {EthNetwork} from '@app/services/eth-network';
+
 import {LottieWrap, PopupContainer, Text} from '../ui';
 
 export type TransactionVerifyProps = {

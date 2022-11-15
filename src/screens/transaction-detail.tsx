@@ -5,6 +5,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {format} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
+import {useTransactions} from '@app/hooks';
+
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
@@ -14,13 +16,13 @@ import {
   IconButton,
   Text,
 } from '../components/ui';
-import {useTransactions} from '../contexts/transactions';
-import {isIOS, openURL} from '../helpers';
+import {openURL} from '../helpers';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList, TransactionSource} from '../types';
 import {splitAddress} from '../utils';
 import {
+  IS_IOS,
   LIGHT_BG_3,
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_GRAPHIC_GREEN_1,
@@ -186,12 +188,12 @@ const page = StyleSheet.create({
   },
   amount: {marginBottom: 2, color: LIGHT_TEXT_BASE_2},
   icon: {
-    marginRight: isIOS ? 4 : 2,
-    top: isIOS ? 1 : 2,
+    marginRight: IS_IOS ? 4 : 2,
+    top: IS_IOS ? 1 : 2,
     width: 16,
     height: 16,
   },
-  iconView: {top: isIOS ? -1.7 : 0},
+  iconView: {top: IS_IOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
   subInfo: {color: LIGHT_TEXT_BASE_2},

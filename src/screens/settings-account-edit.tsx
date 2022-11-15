@@ -3,8 +3,9 @@ import React, {useState} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useWallet} from '@app/hooks';
+
 import {SettingsAccountEdit} from '../components/settings-account-edit';
-import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 
 export const SettingsAccountEditScreen = () => {

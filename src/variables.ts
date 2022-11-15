@@ -172,3 +172,5 @@ export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
 export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';
 
 export const PRIVACY_POLICY = 'https://boredgen.net/privacy_policy';
+
+export const IS_IOS = Platform.OS === 'ios';

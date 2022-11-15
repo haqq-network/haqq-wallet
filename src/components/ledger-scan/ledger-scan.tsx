@@ -5,11 +5,12 @@ import {FlatList} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
+import {useApp} from '@app/hooks';
+
 import {LedgerScanEmpty} from './ledger-scan-empty';
 import {LedgerScanHeader} from './ledger-scan-header';
 import {LedgerScanRow} from './ledger-scan-row';
 
-import {useApp} from '../../contexts/app';
 import {captureException} from '../../helpers';
 import {OnScanEvent} from '../../services/ledger';
 import {PopupContainer} from '../ui';

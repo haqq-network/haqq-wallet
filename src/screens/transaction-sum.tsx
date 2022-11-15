@@ -3,8 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useApp} from '@app/hooks';
+
 import {TransactionSum} from '../components/transaction-sum';
-import {useApp} from '../contexts/app';
 import {RootStackParamList} from '../types';
 import {generateUUID, splitAddress} from '../utils';
 

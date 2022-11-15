@@ -3,10 +3,12 @@ import React, {useEffect} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 
 import {
+  IS_ANDROID,
   LIGHT_BG_1,
   LIGHT_GRAPHIC_GREEN_2,
   LIGHT_TEXT_BASE_3,
-} from '../../variables';
+} from '@app/variables';
+
 import {Text, Waiting} from '../ui';
 
 export type LoadingModalProps = {
@@ -14,8 +16,10 @@ export type LoadingModalProps = {
 };
 export const LoadingModal = ({text}: LoadingModalProps) => {
   useEffect(() => {
-    StatusBar.setBackgroundColor(LIGHT_GRAPHIC_GREEN_2);
-    return () => StatusBar.setBackgroundColor(LIGHT_BG_1);
+    if (IS_ANDROID) {
+      StatusBar.setBackgroundColor(LIGHT_GRAPHIC_GREEN_2);
+      return () => StatusBar.setBackgroundColor(LIGHT_BG_1);
+    }
   }, []);
   return (
     <View style={page.container}>

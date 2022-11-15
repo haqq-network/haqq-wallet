@@ -4,6 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
 
+import {useWallet} from '@app/hooks';
+
 import {
   Card,
   CardMask,
@@ -14,7 +16,6 @@ import {
   Text,
 } from '../components/ui';
 import {app} from '../contexts/app';
-import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 import {LIGHT_BG_8} from '../variables';
 
