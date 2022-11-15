@@ -1,15 +1,9 @@
 import {EventEmitter} from 'events';
 
-import {app} from '../contexts/app';
-import {decrypt, encrypt} from '../passworder';
-import {EthNetwork} from '../services/eth-network';
-import {
-  AddWalletParams,
-  WalletCardPattern,
-  WalletCardStyle,
-  WalletType,
-} from '../types';
-import {generateFlatColors, generateGradientColors} from '../utils';
+import {app} from '@app/contexts';
+import {decrypt, encrypt} from '@app/passworder';
+import {EthNetwork} from '@app/services';
+import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
@@ -18,7 +12,14 @@ import {
   DEFAULT_CARD_PATTERN,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
-} from '../variables';
+} from '@app/variables';
+
+import {
+  AddWalletParams,
+  WalletCardPattern,
+  WalletCardStyle,
+  WalletType,
+} from '../types';
 import {realm} from './index';
 
 export class WalletRealm extends Realm.Object {
@@ -227,6 +228,10 @@ export class Wallet extends EventEmitter {
 
   get type() {
     return this._raw.type;
+  }
+
+  get path() {
+    return this._raw.path ?? '';
   }
 
   get rootAddress() {

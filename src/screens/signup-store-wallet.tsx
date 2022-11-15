@@ -44,17 +44,20 @@ export const SignupStoreWalletScreen = () => {
           const password = await app.getPassword();
           const mnemonic = await main.getMnemonic(password);
 
+          console.log('mnemonic', mnemonic, main.rootAddress);
+
           const last = wallets
             .getForRootAddress(main.rootAddress)
             .reduce((memo, wallet) => {
+              console.log('reduce', wallet);
               const segments = wallet.path?.split('/') ?? ['0'];
-
+              console.log('segments', wallet.path, segments);
               return Math.max(
                 memo,
                 parseInt(segments[segments.length - 1], 10),
               );
             }, 0);
-
+          console.log('last', last);
           await wallets.addWalletFromMnemonic(
             mnemonic,
             `${ETH_HD_SHORT_PATH}/${last + 1}`,

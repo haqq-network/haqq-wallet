@@ -6,9 +6,9 @@ import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
-import {app} from '../contexts/app';
-import {calcFee} from '../helpers/calc-fee';
-import {runUntil} from '../helpers/run-until';
+import {app} from '@app/contexts';
+import {calcFee, runUntil} from '@app/helpers';
+
 import {Provider} from '../models/provider';
 import {Wallet} from '../models/wallet';
 import {getDefaultChainId, getDefaultNetwork} from '../network';

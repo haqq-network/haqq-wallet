@@ -5,17 +5,16 @@ import {EventEmitter} from 'events';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
-import {app} from './app';
-
-import {captureException} from '../helpers';
-import {realm} from '../models';
-import {Wallet, WalletRealm} from '../models/wallet';
+import {app} from '@app/contexts';
+import {captureException} from '@app/helpers';
+import {realm} from '@app/models';
+import {Wallet, WalletRealm} from '@app/models/wallet';
 import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
-} from '../services/eth-utils';
-import {AddWalletParams, WalletType} from '../types';
-import {getPatternName, sleep} from '../utils';
+} from '@app/services/eth-utils';
+import {AddWalletParams, WalletType} from '@app/types';
+import {getPatternName, sleep} from '@app/utils';
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -25,6 +24,8 @@ class Wallets extends EventEmitter {
     super();
     this._wallets = new Map();
     const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+
+    console.log('wallets', wallets.toJSON());
 
     wallets.addListener(() => {
       this.emit('wallets');
@@ -105,6 +106,8 @@ class Wallets extends EventEmitter {
     name?: string,
   ): Promise<Wallet | null> {
     const node = await restoreFromMnemonic(mnemonic, path);
+
+    console.log('addWalletFromMnemonic', mnemonic, path, name);
 
     return this.addWallet(
       {
@@ -225,7 +228,9 @@ class Wallets extends EventEmitter {
 
   getForRootAddress(rootAddress: string) {
     const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
-    return wallets.filtered(`rootAddress = ${rootAddress}`);
+    return wallets
+      .filtered(`rootAddress = '${rootAddress}'`)
+      .map(w => new Wallet(w));
   }
 
   get visible() {
