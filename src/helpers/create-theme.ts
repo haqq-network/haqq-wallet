@@ -1,5 +1,5 @@
-import {Color, getColor} from '../colors';
-import {app} from '../contexts/app';
+import {Color, getColor} from '@app/colors';
+import {app} from '@app/contexts';
 
 export function createTheme<
   T extends Record<string, any>,

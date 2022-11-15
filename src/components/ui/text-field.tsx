@@ -11,8 +11,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import {isIOS} from '../../helpers';
 import {
+  IS_IOS,
   LIGHT_BG_5,
   LIGHT_BG_7,
   LIGHT_BG_8,
@@ -174,12 +174,12 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: LIGHT_TEXT_BASE_1,
-    top: isIOS ? 26 : 24,
+    top: IS_IOS ? 26 : 24,
     fontSize: 16,
     paddingTop: 0,
     paddingBottom: 0,
     textAlignVertical: 'center',
-    right: isIOS ? 0 : 4.5,
+    right: IS_IOS ? 0 : 4.5,
   },
   labelContainer: {
     position: 'absolute',
