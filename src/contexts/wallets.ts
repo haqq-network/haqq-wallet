@@ -107,8 +107,7 @@ class Wallets extends EventEmitter {
   ): Promise<Wallet | null> {
     const node = await restoreFromMnemonic(mnemonic, path);
 
-    console.log('addWalletFromMnemonic', mnemonic, path, name);
-
+    console.log('node', node);
     return this.addWallet(
       {
         address: node.address,

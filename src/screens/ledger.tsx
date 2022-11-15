@@ -2,6 +2,7 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {useUser} from '@app/contexts';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useUser} from '@app/hooks';
 

@@ -47,11 +47,12 @@ export class EthNetwork {
   getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
     switch (this.wallet.type) {
       case WalletType.hot:
+      case WalletType.mnemonic:
         return this.getSignedTxForHot(transaction as TransactionRequest);
       case WalletType.ledgerBt:
         return this.getSignedTxForLedger(transaction as UnsignedTransaction);
       default:
-        throw new Error('wallet type not found');
+        throw new Error('wallet_type_not_found');
     }
   }
 

@@ -97,7 +97,7 @@ export class Wallet extends EventEmitter {
     let deviceName: string | undefined;
     let path: string | undefined;
     let rootAddress: string | undefined;
-    let mnemonicSaved = true;
+    let mnemonicSaved = false;
 
     switch (walletParams.type) {
       case WalletType.mnemonic:

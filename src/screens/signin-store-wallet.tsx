@@ -5,11 +5,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
 import {useWallets} from '@app/hooks';
+import {captureException, showModal} from '@app/helpers';
+import {EthNetwork} from '@app/services';
 
-import {captureException} from '../helpers';
-import {showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {MAIN_ACCOUNT_NAME} from '../variables';
+import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '../variables';
 
 export const SigninStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -31,28 +31,42 @@ export const SigninStoreWalletScreen = () => {
             : `Account #${wallets.getSize() + 1}`;
 
         if (route.params.mnemonic) {
-          const wallet = await wallets.addWalletFromMnemonic(
-            route.params.mnemonic,
+          let canNext = true;
+          let index = 0;
+          while (canNext) {
+            const wallet = await wallets.addWalletFromMnemonic(
+              route.params.mnemonic,
+              `${ETH_HD_SHORT_PATH}/${index}`,
+              name,
+            );
+
+            if (wallet) {
+              wallet.mnemonicSaved = true;
+
+              const main = wallets.getMain();
+
+              if (!main) {
+                wallet.isMain = true;
+              }
+
+              const balance = await EthNetwork.getBalance(wallet.address);
+              if (balance > 0 || index === 0) {
+                index += 1;
+              } else {
+                canNext = false;
+                await wallets.removeWallet(wallet.address);
+              }
+            }
+          }
+        } else if (route.params.privateKey) {
+          const wallet = await wallets.addWalletFromPrivateKey(
+            route.params.privateKey,
             name,
           );
 
           if (wallet) {
             wallet.mnemonicSaved = true;
-
-            const main = wallets.getMain();
-
-            if (!main) {
-              wallet.isMain = true;
-            }
           }
-        } else if (route.params.privateKey) {
-          await wallets
-            .addWalletFromPrivateKey(route.params.privateKey, name)
-            .then(wallet => {
-              if (wallet) {
-                wallet.mnemonicSaved = true;
-              }
-            });
         }
 
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');

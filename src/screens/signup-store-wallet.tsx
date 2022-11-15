@@ -4,14 +4,16 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
+import {app} from '@app/contexts';
+import {captureException, showModal} from '@app/helpers';
 import {useWallets} from '@app/hooks';
-
-import {app} from '@app/contexts/app';
-import {captureException} from '../helpers';
-import {showModal} from '../helpers/modal';
-import {generateMnemonic} from '../services/eth-utils';
-import {RootStackParamList} from '../types';
-import {ETH_HD_PATH, ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '../variables';
+import {generateMnemonic} from '@app/services/eth-utils';
+import {RootStackParamList} from '@app/types';
+import {
+  ETH_HD_PATH,
+  ETH_HD_SHORT_PATH,
+  MAIN_ACCOUNT_NAME,
+} from '@app/variables';
 
 export const SignupStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -44,25 +46,25 @@ export const SignupStoreWalletScreen = () => {
           const password = await app.getPassword();
           const mnemonic = await main.getMnemonic(password);
 
-          console.log('mnemonic', mnemonic, main.rootAddress);
-
           const last = wallets
             .getForRootAddress(main.rootAddress)
             .reduce((memo, wallet) => {
-              console.log('reduce', wallet);
               const segments = wallet.path?.split('/') ?? ['0'];
-              console.log('segments', wallet.path, segments);
               return Math.max(
                 memo,
                 parseInt(segments[segments.length - 1], 10),
               );
             }, 0);
-          console.log('last', last);
-          await wallets.addWalletFromMnemonic(
+
+          const wallet = await wallets.addWalletFromMnemonic(
             mnemonic,
             `${ETH_HD_SHORT_PATH}/${last + 1}`,
             `Account #${wallets.getSize() + 1}`,
           );
+
+          if (wallet) {
+            wallet.mnemonicSaved = main.mnemonicSaved;
+          }
         }
 
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
