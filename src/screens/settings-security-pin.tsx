@@ -3,9 +3,9 @@ import React, {useCallback, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useApp, useWallets} from '@app/hooks';
+
 import {Pin, PinInterface} from '../components/pin';
-import {useApp} from '../contexts/app';
-import {useWallets} from '../contexts/wallets';
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 

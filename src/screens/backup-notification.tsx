@@ -20,8 +20,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import {useApp} from '@app/hooks';
+
 import {Button, ButtonVariant, Text} from '../components/ui';
-import {useApp} from '../contexts/app';
 import {RootStackParamList} from '../types';
 import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_TEXT_BASE_1} from '../variables';
 

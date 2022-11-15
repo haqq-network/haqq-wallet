@@ -3,6 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 
+import {useApp, useContacts} from '@app/hooks';
+
 import {AddressHeader} from './address-header';
 import {AddressRow} from './address-row';
 import {
@@ -16,8 +18,6 @@ import {
   TextField,
 } from './ui';
 
-import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
 import {hideModal, showModal} from '../helpers/modal';
 import {isHexString} from '../utils';
 import {

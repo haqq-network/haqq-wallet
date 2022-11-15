@@ -5,6 +5,8 @@ import {utils} from 'ethers';
 import {Alert, FlatList, StyleSheet} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
+import {useApp, useContacts} from '@app/hooks';
+
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
 import {AddressRow} from '../components/address-row';
@@ -20,8 +22,6 @@ import {
   TextField,
   TrashIcon,
 } from '../components/ui';
-import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
 import {hideModal, showModal} from '../helpers/modal';
 import {Contact} from '../models/contact';
 import {
