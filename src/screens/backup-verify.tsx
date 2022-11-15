@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
 import {useWallet} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {
   Button,
@@ -56,10 +57,19 @@ export const BackupVerifyScreen = () => {
       navigation.navigate('backupFinish');
     } else {
       setSelected([]);
+      vibrate(HapticEffects.error);
       setError(true);
       setButton(shuffleWords(words));
     }
   }, [selected, wallet, words, navigation]);
+
+  const onPressWord = useCallback(
+    (val: string) => () => {
+      vibrate(HapticEffects.selection); // impactLight
+      setSelected(sel => sel.concat(val));
+    },
+    [],
+  );
 
   return (
     <PopupContainer style={page.container}>
@@ -140,9 +150,7 @@ export const BackupVerifyScreen = () => {
             key={val}
             style={page.buttonStyle}
             title={words.get(val) ?? ''}
-            onPress={() => {
-              setSelected(sel => sel.concat(val));
-            }}
+            onPress={onPressWord(val)}
           />
         ))}
       </View>

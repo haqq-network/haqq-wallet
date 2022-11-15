@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import {useContacts} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {
   Button,
@@ -86,6 +87,7 @@ export const TransactionSum = ({
   }, [amount, onAmount]);
 
   const onPressMax = useCallback(() => {
+    vibrate(HapticEffects.selection); // impactLight
     setAmount(maxSum.toFixed(8));
   }, [maxSum]);
 

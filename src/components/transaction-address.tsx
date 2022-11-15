@@ -4,6 +4,7 @@ import {utils} from 'ethers';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 
 import {useApp, useContacts} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {AddressHeader} from './address-header';
 import {AddressRow} from './address-row';
@@ -89,6 +90,11 @@ export const TransactionAddress = ({
 
   const onPressClear = useCallback(() => setAddress(''), []);
 
+  const onPressAddress = useCallback((item: string) => {
+    vibrate(HapticEffects.selection); // impactLight
+    setAddress(item);
+  }, []);
+
   return (
     <KeyboardSafeArea>
       <View>
@@ -129,7 +135,7 @@ export const TransactionAddress = ({
             keyboardShouldPersistTaps="always"
             data={contactsList}
             renderItem={({item}) => (
-              <AddressRow item={item} onPress={setAddress} />
+              <AddressRow item={item} onPress={onPressAddress} />
             )}
             ListHeaderComponent={AddressHeader}
           />

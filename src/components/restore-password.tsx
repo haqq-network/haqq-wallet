@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
 import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {BottomSheet} from './bottom-sheet';
 import {Button, ButtonVariant, Text} from './ui';
@@ -45,7 +46,8 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   }, [onOpenPopup]);
 
   const onClickReset = useCallback(() => {
-    return Alert.alert(
+    vibrate(HapticEffects.warning);
+    Alert.alert(
       'Attention. You may lose all your funds!',
       'Do not reset the application if you are not sure that you can restore your account. To restore, you will need a backup phrase of 12 words that you made for your account',
       [

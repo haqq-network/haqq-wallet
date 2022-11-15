@@ -102,6 +102,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             from: rows[0].address.trim(),
           });
         } else {
+          vibrate(HapticEffects.success);
           setIsOpen(true);
         }
       } else {
@@ -127,6 +128,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           const slicedAddress = prepareAddress(data);
 
           if (slicedAddress && qrWithoutFrom) {
+            vibrate(HapticEffects.success);
             app.emit('address', {
               to: slicedAddress,
             });
@@ -141,6 +143,11 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   }, [prepareAddress, checkAddress, qrWithoutFrom, app]);
 
   const onCloseBottomSheet = () => setIsOpen(false);
+
+  const onPressFlashLight = () => {
+    setFlashMode(pr => !pr);
+    vibrate(HapticEffects.selection); // impactLight
+  };
 
   return (
     <>
@@ -176,11 +183,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
               <IconButton onPress={onClickGallery} style={page.iconButton}>
                 <ImageIcon color={LIGHT_GRAPHIC_BASE_3} />
               </IconButton>
-              <IconButton
-                onPress={() => {
-                  setFlashMode(pr => !pr);
-                }}
-                style={page.iconButton}>
+              <IconButton onPress={onPressFlashLight} style={page.iconButton}>
                 <FlashLightIcon
                   color={
                     flashMode ? LIGHT_GRAPHIC_GREEN_2 : LIGHT_GRAPHIC_BASE_3

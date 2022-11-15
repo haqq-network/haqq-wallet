@@ -6,6 +6,7 @@ import {Alert, FlatList, StyleSheet} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
 import {useApp, useContacts} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
@@ -163,6 +164,10 @@ export const SettingsAddressBookScreen =
       [contacts],
     );
 
+    const onPressAddress = useCallback(() => {
+      vibrate(HapticEffects.selection); // impactLight
+    }, []);
+
     return (
       <PopupContainer>
         <TextField
@@ -214,7 +219,7 @@ export const SettingsAddressBookScreen =
                   key: 'remove',
                 },
               ]}>
-              <AddressRow item={item} onPress={() => {}} />
+              <AddressRow item={item} onPress={onPressAddress} />
             </SwipeableRow>
           )}
           ListHeaderComponent={AddressHeader}

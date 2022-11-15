@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
 import {useWallet} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {MnemonicWord} from '../components/mnemonic-word';
 import {
@@ -28,6 +29,11 @@ export const BackupCreateScreen = () => {
 
   const [checked, setChecked] = useState(false);
   const wallet = useWallet(route.params.address);
+
+  const onClickCheck = (val: boolean) => {
+    vibrate(HapticEffects.selection); // impactLight
+    setChecked(val);
+  };
 
   return (
     <PopupContainer style={page.container}>
@@ -69,7 +75,7 @@ export const BackupCreateScreen = () => {
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
-        <Checkbox value={checked} onPress={setChecked}>
+        <Checkbox value={checked} onPress={onClickCheck}>
           <Text t14 style={page.agreeText}>
             I understand that if I lose my recovery phrase, I will not be able
             to restore access to my account
