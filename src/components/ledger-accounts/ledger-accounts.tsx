@@ -8,7 +8,6 @@ import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {LedgerAccountsRow} from './ledger-accounts-row';
 
 import {runUntil} from '../../helpers/run-until';
-import {useWallets} from '../../hooks/use-wallets';
 import {ETH_HD_PATH} from '../../variables';
 import {PopupContainer} from '../ui';
 

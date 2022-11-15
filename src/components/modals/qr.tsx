@@ -17,7 +17,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useApp, useWallets} from '@app/hooks';
 
 import {hideModal} from '../../helpers/modal';
-import {useWallets} from '../../hooks/use-wallets';
 import {HapticEffects, vibrate} from '../../services/haptic';
 import {
   LIGHT_GRAPHIC_BASE_3,
