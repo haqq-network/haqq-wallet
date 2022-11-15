@@ -23,12 +23,9 @@ export const OnboardingFinishScreen = () => {
   );
 
   const onEnd = useCallback(() => {
-    if (app.getUser().onboarded) {
-      navigation.getParent()?.goBack();
-    } else {
-      app.getUser().onboarded = true;
-      navigation.replace('home');
-    }
+    app.getUser().onboarded = true;
+    navigation.replace('home');
+
     requestAnimationFrame(async () => {
       await wallets.checkForBackup(app.snoozeBackup);
     });
