@@ -10,7 +10,7 @@ import {name as appName} from './app.json';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
-import {LaunchArguments} from 'react-native-launch-arguments';
+import {Overview} from './src/overview';
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
@@ -70,3 +70,5 @@ JsonRpcProvider.prototype.send = async function (method, params) {
 const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
+
+AppRegistry.registerComponent('overview', () => Overview)

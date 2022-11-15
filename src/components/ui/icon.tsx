@@ -9,37 +9,52 @@ export enum IconsName {
   clear = 'clear',
   close_circle = 'close_circle',
   islm = 'islm',
+  logo = 'logo',
   plus_mid = 'plus_mid',
   providers = 'providers',
   shield = 'shield',
   wallet = 'wallet',
 }
 
+export type IconSize =
+  | {xs: boolean}
+  | {s: boolean}
+  | {m: boolean}
+  | {xl: boolean}
+  | {xxl: boolean};
+
 export type IconProps = {
   name: IconsName | keyof typeof IconsName;
   color: string;
-  xs?: boolean;
-  s?: boolean;
-  m?: boolean;
   style?: ImageProps['style'];
-};
+} & IconSize;
 
-export const Icon = ({name, m, s, xs, style, color}: IconProps) => {
+export const Icon = ({name, m, s, xs, xl, xxl, style, color}: IconProps) => {
   const container = useMemo(
     () => [
       xs && styles.xsContainer,
       s && styles.sContainer,
       m && styles.mContainer,
+      xl && styles.xlContainer,
+      xxl && styles.xxlContainer,
       style,
       {tintColor: color},
     ],
-    [color, m, s, style, xs],
+    [color, m, s, style, xl, xs, xxl],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
   return <Image source={icon} style={container} />;
 };
 
 const styles = StyleSheet.create({
+  xxlContainer: {
+    width: 120,
+    height: 120,
+  },
+  xlContainer: {
+    width: 72,
+    height: 72,
+  },
   mContainer: {
     width: 32,
     height: 32,

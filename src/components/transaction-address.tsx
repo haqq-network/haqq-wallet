@@ -17,6 +17,7 @@ import {
 } from './ui';
 
 import {useApp} from '../contexts/app';
+import {isIOS} from '../helpers';
 import {hideModal, showModal} from '../helpers/modal';
 import {withActionsContactItem} from '../hocs';
 import {isHexString} from '../utils';
@@ -150,7 +151,7 @@ const page = StyleSheet.create({
     position: 'absolute',
     color: PLACEHOLDER_GRAY,
     left: 37,
-    bottom: 21,
+    bottom: isIOS ? 24 : 22,
   },
   input: {
     marginBottom: 12,

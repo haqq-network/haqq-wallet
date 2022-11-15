@@ -69,8 +69,8 @@ export const TextField: React.FC<Props> = ({
     color = LIGHT_TEXT_RED_1;
   }
 
-  const top = isFocused ? 0 : -5;
-  const getHeight = height + (isIOS ? 40 : 17);
+  const top = -4;
+  const getHeight = height + 30;
 
   return (
     <>
@@ -97,7 +97,8 @@ export const TextField: React.FC<Props> = ({
           value={value}
           multiline={multiline}
           onContentSizeChange={event => {
-            setHeight(event.nativeEvent.contentSize.height);
+            const inputH = Math.max(event.nativeEvent.contentSize.height, 28);
+            setHeight(inputH);
           }}
           onBlur={event => {
             setIsFocused(false);
@@ -123,7 +124,7 @@ export const TextField: React.FC<Props> = ({
                   {
                     translateY: focusAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [24, isIOS ? 9 : 7],
+                      outputRange: [24, 9],
                     }),
                   },
                   {
@@ -173,8 +174,11 @@ const page = StyleSheet.create({
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: LIGHT_TEXT_BASE_1,
-    top: isIOS ? 28 : 18,
+    top: isIOS ? 26 : 24,
     fontSize: 16,
+    paddingTop: 0,
+    paddingBottom: 0,
+    textAlignVertical: 'center',
     right: isIOS ? 0 : 4.5,
   },
   labelContainer: {
