@@ -4,6 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet} from 'react-native';
 
+import {useApp} from '@app/hooks';
+
 import {
   Button,
   ButtonVariant,
@@ -14,7 +16,6 @@ import {
   Text,
   TouchIdIcon,
 } from '../components/ui';
-import {useApp} from '../contexts/app';
 import {BiometryType, RootStackParamList} from '../types';
 import {
   BIOMETRY_TYPES_NAMES,

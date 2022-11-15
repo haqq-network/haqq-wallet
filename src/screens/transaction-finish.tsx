@@ -5,6 +5,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
+import {useContacts, useTransactions} from '@app/hooks';
+
 import {
   BlockIcon,
   Button,
@@ -18,8 +20,6 @@ import {
   Text,
   UserIcon,
 } from '../components/ui';
-import {useContacts} from '../contexts/contacts';
-import {useTransactions} from '../contexts/transactions';
 import {openURL} from '../helpers';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';

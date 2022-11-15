@@ -4,9 +4,10 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FlatList, StyleSheet} from 'react-native';
 
+import {useWallets} from '@app/hooks';
+
 import {PopupContainer} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
-import {useWallets} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 
 export const TransactionAccountScreen = () => {

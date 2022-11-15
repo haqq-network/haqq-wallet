@@ -4,6 +4,7 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {useWallets} from '@app/hooks';
 
 import {TransactionAccountScreen} from './transaction-account';
 import {TransactionAddressScreen} from './transaction-address';
@@ -14,7 +15,6 @@ import {TransactionSumScreen} from './transaction-sum';
 import {TransactionSumAddressScreen} from './transaction-sum-address';
 
 import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {useWallets} from '../contexts/wallets';
 import {RootStackParamList, ScreenOptionType} from '../types';
 
 const TransactionStack = createStackNavigator();

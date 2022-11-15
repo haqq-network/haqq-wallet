@@ -14,8 +14,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {useApp} from '../../contexts/app';
-import {useWallets} from '../../contexts/wallets';
+import {useApp, useWallets} from '@app/hooks';
+
 import {hideModal} from '../../helpers/modal';
 import {HapticEffects, vibrate} from '../../services/haptic';
 import {

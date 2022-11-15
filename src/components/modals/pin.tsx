@@ -2,7 +2,8 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
-import {useApp} from '../../contexts/app';
+import {useApp} from '@app/hooks';
+
 import {
   LIGHT_BG_1,
   LIGHT_TEXT_BASE_2,
