@@ -3,9 +3,9 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useApp, useWallets} from '@app/hooks';
+
 import {Finish} from '../components/finish';
-import {useApp} from '../contexts/app';
-import {useWallets} from '../contexts/wallets';
 import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 

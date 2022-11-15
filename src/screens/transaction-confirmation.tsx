@@ -4,6 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {useContacts, useUser, useWallet} from '@app/hooks';
+
 import {
   Button,
   ButtonVariant,
@@ -13,9 +15,6 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {useUser} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
-import {useWallet} from '../contexts/wallets';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList, WalletType} from '../types';

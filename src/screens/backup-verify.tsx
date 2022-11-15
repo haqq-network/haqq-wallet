@@ -4,6 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
+import {useWallet} from '@app/hooks';
+
 import {
   Button,
   ButtonSize,
@@ -12,7 +14,6 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_3,

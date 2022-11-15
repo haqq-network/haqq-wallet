@@ -4,7 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {useApp} from '@app/contexts';
+import {useApp} from '@app/hooks';
 
 import {NumericKeyboard} from '../components/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';

@@ -4,9 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {FlatList, StyleSheet, View} from 'react-native';
 
+import {useWallets} from '@app/hooks';
+
 import {NoTransactionsIcon, Text} from '../components/ui';
 import {WalletRow} from '../components/wallet-row';
-import {useWallets} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList} from '../types';
 import {GRAPHIC_SECOND_3, TEXT_SECOND_1} from '../variables';

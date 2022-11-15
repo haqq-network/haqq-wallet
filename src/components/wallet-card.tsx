@@ -4,6 +4,8 @@ import {NavigationProp} from '@react-navigation/core/src/types';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
+import {useWallet} from '@app/hooks';
+
 import {
   ArrowReceive,
   ArrowSend,
@@ -17,7 +19,6 @@ import {
   Text,
 } from './ui';
 
-import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 import {cleanNumber, shortAddress} from '../utils';
 import {

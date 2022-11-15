@@ -7,7 +7,7 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
-import {useApp} from '../../contexts/app';
+import {useApp} from '@app/hooks';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;

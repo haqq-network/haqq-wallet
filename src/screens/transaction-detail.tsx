@@ -5,6 +5,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {format} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
+import {useTransactions} from '@app/hooks';
+
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   BlockIcon,
@@ -14,7 +16,6 @@ import {
   IconButton,
   Text,
 } from '../components/ui';
-import {useTransactions} from '../contexts/transactions';
 import {openURL} from '../helpers';
 import {Transaction} from '../models/transaction';
 import {EthNetwork} from '../services/eth-network';

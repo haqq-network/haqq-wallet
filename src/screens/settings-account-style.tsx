@@ -9,6 +9,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import {useWallet} from '@app/hooks';
+
 import {
   Button,
   ButtonSize,
@@ -19,7 +21,6 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
-import {useWallet} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList, WalletCardPattern, WalletCardStyle} from '../types';
 import {generateFlatColors, generateGradientColors} from '../utils';

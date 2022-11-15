@@ -4,8 +4,9 @@ import {TransactionResponse} from '@ethersproject/abstract-provider';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useUser} from '@app/hooks';
+
 import {TransactionLedger} from '../components/transaction-ledger';
-import {useUser} from '../contexts/app';
 import {Transaction} from '../models/transaction';
 import {RootStackParamList} from '../types';
 

@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 
+import {useContacts} from '@app/hooks';
+
 import {
   Button,
   ButtonSize,
@@ -18,7 +20,6 @@ import {
   Text,
 } from './ui';
 
-import {useContacts} from '../contexts/contacts';
 import {EthNetwork} from '../services/eth-network';
 import {cleanNumber, isNumber, shortAddress} from '../utils';
 import {
