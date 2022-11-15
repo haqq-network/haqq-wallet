@@ -29,7 +29,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 #endif
 
 @implementation AppDelegate
-
+RCTRootView* overview = nil;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   RCTAppSetupPrepareApp(application);
@@ -46,7 +46,9 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
   NSDictionary *initProps = [self prepareInitialProps];
   UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"haqq", initProps);
-
+  
+  overview = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"overview" initialProperties:nil];
+  
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
@@ -91,6 +93,16 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application{
+  overview.frame = self.window.bounds;
+  overview.tag = 181099;
+  [self.window addSubview:overview];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application{
+  [[self.window viewWithTag:181099] removeFromSuperview];
 }
 
 #if RCT_NEW_ARCH_ENABLED
