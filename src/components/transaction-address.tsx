@@ -129,7 +129,7 @@ export const TransactionAddress = ({
             keyboardShouldPersistTaps="always"
             data={contactsList}
             renderItem={({item}) => (
-              <AddressRow item={item} onPress={setAddress} />
+              <AddressRow item={item} onPress={onAddress} />
             )}
             ListHeaderComponent={AddressHeader}
           />
