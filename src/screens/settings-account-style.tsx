@@ -90,20 +90,15 @@ export const SettingsAccountStyleScreen = () => {
       : WalletCardPattern.rhombus,
   );
 
-  const onChangeType = useCallback(
-    (value: WalletCardStyle) => {
-      if (value !== cardStyle) {
-        setCardStyle(value);
-        const newColors =
-          value === WalletCardStyle.flat
-            ? generateFlatColors()
-            : generateGradientColors();
+  const onChangeType = useCallback((value: WalletCardStyle) => {
+    setCardStyle(value);
+    const newColors =
+      value === WalletCardStyle.flat
+        ? generateFlatColors()
+        : generateGradientColors();
 
-        setColors(newColors);
-      }
-    },
-    [cardStyle],
-  );
+    setColors(newColors);
+  }, []);
 
   const onChangePattern = useCallback(
     (value: WalletCardPattern) => {
@@ -118,9 +113,16 @@ export const SettingsAccountStyleScreen = () => {
         )}`;
 
         setPattern(newPattern);
+        if (patternStyle !== value) {
+          opacity.value = withTiming(0.5, {duration: 250}, finished => {
+            if (finished) {
+              opacity.value = withTiming(1, {duration: 250});
+            }
+          });
+        }
       }
     },
-    [pattern],
+    [pattern, opacity, patternStyle],
   );
 
   const onPressGenerate = useCallback(() => {
