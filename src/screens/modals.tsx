@@ -13,7 +13,7 @@ import {
   SplashModal,
   SplashModalProps,
 } from '../components/modals';
-import {QRModal, QRModalProps} from '../components/modals/qr';
+import {QRModal, QRModalProps} from '../components/modals/qr/qr';
 import {app} from '../contexts/app';
 
 type Loading = {
