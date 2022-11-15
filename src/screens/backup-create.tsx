@@ -4,8 +4,6 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {useWallet} from '@app/hooks';
-
 import {MnemonicWord} from '../components/mnemonic-word';
 import {
   Button,

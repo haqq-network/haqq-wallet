@@ -4,8 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
-import {useWallets} from '@app/hooks';
 import {captureException, showModal} from '@app/helpers';
+import {useWallets} from '@app/hooks';
 import {EthNetwork} from '@app/services';
 
 import {RootStackParamList} from '../types';
