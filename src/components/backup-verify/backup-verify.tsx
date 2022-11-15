@@ -1,8 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Dimensions, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {EmptyCell} from '@app/components/backup-verify/empty-cell';
+import {FilledCell} from '@app/components/backup-verify/filled-cell';
 import {
   Button,
   ButtonSize,
@@ -53,25 +55,16 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
             .slice(0, 6)
             .map((k, i) =>
               selected.length > i ? (
-                <View
-                  style={[styles.cell, styles.cellFilled]}
-                  key={`${k}_filled`}>
-                  <Text t14 style={styles.cellTextFilled}>
-                    {words.get(selected[i])}
-                  </Text>
-                </View>
+                <FilledCell
+                  word={words.get(selected[i]) ?? ''}
+                  key={`${i}_filled`}
+                />
               ) : (
-                <View
-                  style={[
-                    styles.cell,
-                    styles.cellEmpty,
-                    selected.length === i && styles.cellActive,
-                  ]}
-                  key={`${k}_empty`}>
-                  <Text t14 style={styles.cellTextEmpty}>
-                    #{i + 1}
-                  </Text>
-                </View>
+                <EmptyCell
+                  active={selected.length === i}
+                  index={i + 1}
+                  key={`${i}_empty`}
+                />
               ),
             )}
         </View>
@@ -80,25 +73,16 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
             .slice(6, 12)
             .map((k, i) =>
               selected.length > i + 6 ? (
-                <View
-                  style={[styles.cell, styles.cellFilled]}
-                  key={`${k}_filled`}>
-                  <Text t14 style={styles.cellTextFilled}>
-                    {words.get(selected[i + 6])}
-                  </Text>
-                </View>
+                <FilledCell
+                  word={words.get(selected[i + 6]) ?? ''}
+                  key={`${i}_filled`}
+                />
               ) : (
-                <View
-                  style={[
-                    styles.cell,
-                    styles.cellEmpty,
-                    selected.length === i + 6 && styles.cellActive,
-                  ]}
-                  key={`${k}_empty`}>
-                  <Text t14 style={styles.cellTextEmpty}>
-                    #{i + 7}
-                  </Text>
-                </View>
+                <EmptyCell
+                  active={selected.length === i + 6}
+                  index={i + 7}
+                  key={`${i}_empty`}
+                />
               ),
             )}
         </View>
@@ -150,35 +134,6 @@ const styles = createTheme({
     flexDirection: 'row',
     marginHorizontal: -8,
     marginBottom: 28,
-  },
-  cell: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: (Dimensions.get('window').width - 56) / 2,
-    height: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 3,
-    borderRadius: 8,
-    marginHorizontal: 8,
-    marginVertical: 4,
-    borderStyle: 'solid',
-    borderColor: Color.bg3,
-    borderWidth: 1,
-  },
-  cellEmpty: {backgroundColor: Color.bg3},
-  cellFilled: {backgroundColor: Color.graphicGreen1},
-  cellTextEmpty: {
-    fontWeight: '600',
-    color: Color.textSecond1,
-    textAlign: 'center',
-  },
-  cellTextFilled: {
-    fontWeight: '600',
-    color: Color.textBase3,
-    textAlign: 'center',
-  },
-  cellActive: {
-    borderColor: Color.graphicGreen1,
   },
   error: {
     fontWeight: '600',

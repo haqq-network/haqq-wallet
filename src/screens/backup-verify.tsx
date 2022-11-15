@@ -3,7 +3,7 @@ import React, {useCallback, useState} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {BackupVerify} from '@app/components/backup-verify/backup-verify';
+import {BackupVerify} from '@app/components/backup-verify';
 import {useWallets} from '@app/hooks';
 import {RootStackParamList} from '@app/types';
 
