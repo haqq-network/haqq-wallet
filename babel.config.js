@@ -5,6 +5,14 @@ module.exports = {
   ],
   plugins: [
     [
+      'module-resolver',
+      {
+        alias: {
+          '@app': './src',
+        },
+      },
+    ],
+    [
       'module:react-native-dotenv',
       {
         envName: 'APP_ENV',

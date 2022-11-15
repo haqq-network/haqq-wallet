@@ -2,6 +2,8 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {popupScreenOptions} from '@app/helpers';
+
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
@@ -10,7 +12,6 @@ import {SignInAgreementScreen} from './signin-agreement';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {SigninStoreWalletScreen} from './signin-store-wallet';
 
-import {popupScreenOptions} from '../helpers/screenOptions';
 import {ScreenOptionType} from '../types';
 
 const SignInStack = createStackNavigator();
