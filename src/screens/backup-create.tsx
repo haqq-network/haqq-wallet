@@ -80,7 +80,7 @@ export const BackupCreateScreen = () => {
         disabled={!checked}
         onPress={() =>
           navigation.navigate('backupVerify', {
-            address: route.params.address,
+            rootAddress: route.params.rootAddress,
             mnemonic: route.params.mnemonic,
           })
         }

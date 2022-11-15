@@ -31,7 +31,7 @@ export const BackupWarningScreen = () => {
     const password = await app.getPassword();
     const mnemonic = await wallet?.getMnemonic(password);
     navigation.navigate('backupCreate', {
-      address: route.params.address,
+      rootAddress: wallet?.rootAddress ?? '',
       mnemonic,
     });
   };

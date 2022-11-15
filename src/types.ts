@@ -83,16 +83,16 @@ export type RootStackParamList = {
   settingsFaq: undefined;
   settingsAbout: undefined;
   backupVerify: {
-    address: string;
+    rootAddress: string;
     mnemonic: string;
   };
   backupFinish: undefined;
   backupCreate: {
-    address: string;
+    rootAddress: string;
     mnemonic: string;
   };
   backupNotification: {
-    address: string;
+    rootAddress: string;
   };
   backupWarning: {
     address: string;

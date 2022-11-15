@@ -7,9 +7,9 @@ import {View} from 'react-native';
 import {captureException, showModal} from '@app/helpers';
 import {useWallets} from '@app/hooks';
 import {EthNetwork} from '@app/services';
+import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
 import {RootStackParamList} from '../types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '../variables';
 
 export const SigninStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
