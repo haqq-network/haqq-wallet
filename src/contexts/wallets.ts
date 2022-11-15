@@ -25,8 +25,6 @@ class Wallets extends EventEmitter {
     this._wallets = new Map();
     const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
 
-    console.log('wallets', wallets.toJSON());
-
     wallets.addListener(() => {
       this.emit('wallets');
     });
