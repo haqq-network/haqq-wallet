@@ -159,6 +159,17 @@ class Wallets extends EventEmitter {
     const wallet = this._wallets.get(address);
 
     if (wallet) {
+      if (wallet.isMain) {
+        const wallets = realm
+          .objects<WalletRealm>(WalletRealm.schema.name)
+          .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
+
+        if (wallets.length) {
+          const w = new Wallet(wallets[0]);
+          w.isMain = true;
+        }
+      }
+
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
         WalletRealm.schema.name,
         address,
