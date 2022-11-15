@@ -1,5 +1,6 @@
-import {DismissPopupButton} from '../components/dismiss-popup-button';
-import {PopupHeader} from '../components/popup-header';
+import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {PopupHeader} from '@app/components/popup-header';
+
 import {ActionSheetType} from '../types';
 
 export const actionSheet: ActionSheetType = {

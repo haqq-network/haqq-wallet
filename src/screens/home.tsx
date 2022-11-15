@@ -8,8 +8,11 @@ import {HomeSettingsScreen} from './home-settings';
 
 import {QrScannerButton} from '../components/qr-scanner-button';
 import {SettingsIcon, Text, WalletIcon} from '../components/ui';
-import {isIOS} from '../helpers';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
+import {
+  IS_IOS,
+  LIGHT_GRAPHIC_BASE_2,
+  LIGHT_GRAPHIC_GREEN_1,
+} from '../variables';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,13 +34,13 @@ export const HomeScreen = () => {
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 0,
-          height: isIOS ? 80 : 50,
-          top: isIOS ? 0 : 8,
-          marginBottom: isIOS ? 0 : 23,
+          height: IS_IOS ? 80 : 50,
+          top: IS_IOS ? 0 : 8,
+          marginBottom: IS_IOS ? 0 : 23,
         },
         tabBarItemStyle: {
-          marginTop: isIOS ? 5 : 8,
-          height: isIOS ? 50 : 40,
+          marginTop: IS_IOS ? 5 : 8,
+          height: IS_IOS ? 50 : 40,
         },
       }}>
       <Tab.Screen
