@@ -56,15 +56,13 @@ export class EthNetwork {
   }
 
   async getSignedTxForHot(transaction: TransactionRequest) {
-    if (!this.wallet.isEncrypted) {
-      const password = await app.getPassword();
-      await this.wallet.decrypt(password);
-    }
+    const password = await app.getPassword();
+    const privateKey = await this.wallet.getPrivateKey(password);
 
-    if (!this.wallet.privateKey) {
+    if (!privateKey) {
       throw new Error('private key not found');
     }
-    const wallet = new EthersWallet(this.wallet.privateKey, EthNetwork.network);
+    const wallet = new EthersWallet(privateKey, EthNetwork.network);
 
     return wallet.signTransaction(transaction);
   }

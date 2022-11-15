@@ -40,15 +40,17 @@ export const BackupVerifyScreen = () => {
   const words = useMemo(
     () =>
       new Map(
-        wallet?.mnemonic.split(' ').map((value, pos) => [String(pos), value]),
+        route.params.mnemonic
+          .split(' ')
+          .map((value, pos) => [String(pos), value]),
       ),
-    [wallet],
+    [route],
   );
 
   const [buttons, setButton] = useState(shuffleWords(words));
 
   const onDone = useCallback(() => {
-    if (selected.map(v => words.get(v)).join(' ') === wallet?.mnemonic) {
+    if (selected.map(v => words.get(v)).join(' ') === route.params.mnemonic) {
       if (wallet) {
         wallet.mnemonicSaved = true;
       }
@@ -59,7 +61,7 @@ export const BackupVerifyScreen = () => {
       setError(true);
       setButton(shuffleWords(words));
     }
-  }, [selected, wallet, words, navigation]);
+  }, [selected, route.params.mnemonic, words, wallet, navigation]);
 
   return (
     <PopupContainer style={page.container}>

@@ -31,13 +31,20 @@ export const SigninStoreWalletScreen = () => {
             : `Account #${wallets.getSize() + 1}`;
 
         if (route.params.mnemonic) {
-          await wallets
-            .addWalletFromMnemonic(route.params.mnemonic, name)
-            .then(wallet => {
-              if (wallet) {
-                wallet.mnemonicSaved = true;
-              }
-            });
+          const wallet = await wallets.addWalletFromMnemonic(
+            route.params.mnemonic,
+            name,
+          );
+
+          if (wallet) {
+            wallet.mnemonicSaved = true;
+
+            const main = wallets.getMain();
+
+            if (!main) {
+              wallet.isMain = true;
+            }
+          }
         } else if (route.params.privateKey) {
           await wallets
             .addWalletFromPrivateKey(route.params.privateKey, name)

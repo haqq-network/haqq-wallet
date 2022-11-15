@@ -27,7 +27,6 @@ export const BackupCreateScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'backupCreate'>>();
 
   const [checked, setChecked] = useState(false);
-  const wallet = useWallet(route.params.address);
 
   return (
     <PopupContainer style={page.container}>
@@ -41,7 +40,7 @@ export const BackupCreateScreen = () => {
       <Spacer style={page.space}>
         <View style={page.mnemonics}>
           <View style={page.column}>
-            {wallet?.mnemonic
+            {route.params.mnemonic
               .split(' ')
               .slice(0, 6)
               .map((t, i) => (
@@ -49,7 +48,7 @@ export const BackupCreateScreen = () => {
               ))}
           </View>
           <View style={page.column}>
-            {wallet?.mnemonic
+            {route.params.mnemonic
               .split(' ')
               .slice(6, 12)
               .map((t, i) => (
@@ -57,7 +56,7 @@ export const BackupCreateScreen = () => {
               ))}
           </View>
         </View>
-        <CopyButton value={wallet?.mnemonic ?? ''} style={page.copy}>
+        <CopyButton value={route.params.mnemonic ?? ''} style={page.copy}>
           <Copy color={LIGHT_TEXT_GREEN_1} />
           <Text clean style={page.copyText}>
             Copy
@@ -82,7 +81,10 @@ export const BackupCreateScreen = () => {
         variant={ButtonVariant.contained}
         disabled={!checked}
         onPress={() =>
-          navigation.navigate('backupVerify', {address: route.params.address})
+          navigation.navigate('backupVerify', {
+            address: route.params.address,
+            mnemonic: route.params.mnemonic,
+          })
         }
       />
     </PopupContainer>

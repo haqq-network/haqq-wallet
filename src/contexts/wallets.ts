@@ -14,21 +14,8 @@ import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
 } from '../services/eth-utils';
-import {Mnemonic, WalletType} from '../types';
+import {AddWalletParams, WalletType} from '../types';
 import {getPatternName, sleep} from '../utils';
-
-type AddWalletParams = {address: string} & (
-  | {
-      type: WalletType.hot;
-      privateKey: string;
-      mnemonic?: Mnemonic;
-    }
-  | {
-      type: WalletType.ledgerBt;
-      deviceId: string;
-      deviceName: string;
-    }
-);
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -60,14 +47,6 @@ class Wallets extends EventEmitter {
     }
 
     this._initialized = true;
-
-    const password = await app.getPassword();
-
-    await Promise.all(
-      Array.from(this._wallets.values())
-        .filter(w => w.isEncrypted)
-        .map(w => w.decrypt(password)),
-    );
 
     Promise.all(
       Array.from(this._wallets.values()).map(w =>
@@ -122,16 +101,19 @@ class Wallets extends EventEmitter {
 
   async addWalletFromMnemonic(
     mnemonic: string,
+    path: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const node = await restoreFromMnemonic(mnemonic);
+    const node = await restoreFromMnemonic(mnemonic, path);
 
     return this.addWallet(
       {
         address: node.address,
-        type: WalletType.hot,
+        type: WalletType.mnemonic,
         privateKey: node.privateKey,
         mnemonic: node.mnemonic,
+        path: node.path,
+        rootAddress: node.rootAddress,
       },
       name,
     );
@@ -156,10 +138,6 @@ class Wallets extends EventEmitter {
   async addWallet(walletParams: AddWalletParams, name = '') {
     try {
       const wallet = await Wallet.create(walletParams, name);
-      if (wallet.isEncrypted) {
-        const password = await app.getPassword();
-        await wallet.decrypt(password);
-      }
 
       this.attachWallet(wallet);
 
@@ -215,9 +193,10 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async updateWalletsData(pin: string) {
+  async updateWalletsData(newPin: string) {
+    const oldPin = await app.getPassword();
     for (const wallet of this._wallets.values()) {
-      await wallet.updateWalletData(pin);
+      await wallet.updateWalletData(oldPin, newPin);
     }
   }
 
@@ -231,6 +210,22 @@ class Wallets extends EventEmitter {
 
   getSize() {
     return this._wallets.size;
+  }
+
+  getMain() {
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const main = wallets.filtered('isMain = true');
+
+    if (!main.length) {
+      return null;
+    }
+
+    return new Wallet(main[0]);
+  }
+
+  getForRootAddress(rootAddress: string) {
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    return wallets.filtered(`rootAddress = ${rootAddress}`);
   }
 
   get visible() {

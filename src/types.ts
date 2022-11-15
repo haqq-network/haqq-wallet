@@ -84,10 +84,12 @@ export type RootStackParamList = {
   settingsAbout: undefined;
   backupVerify: {
     address: string;
+    mnemonic: string;
   };
   backupFinish: undefined;
   backupCreate: {
     address: string;
+    mnemonic: string;
   };
   backupNotification: {
     address: string;
@@ -305,17 +307,14 @@ export enum AppTheme {
 export type AddWalletParams = {address: string} & (
   | {
       type: WalletType.mnemonic;
-      mnemonic: Mnemonic;
-      isNew: boolean;
+      mnemonic: string;
+      path: string;
+      privateKey: string;
+      rootAddress: string;
     }
   | {
       type: WalletType.hot;
       privateKey: string;
-    }
-  | {
-      type: WalletType.mixed;
-      privateKey: string;
-      mnemonic?: Mnemonic;
     }
   | {
       type: WalletType.ledgerBt;

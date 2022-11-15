@@ -1,12 +1,10 @@
 import {EventEmitter} from 'events';
 
 import {app} from '../contexts/app';
-import {captureException} from '../helpers';
 import {decrypt, encrypt} from '../passworder';
 import {EthNetwork} from '../services/eth-network';
 import {
   AddWalletParams,
-  Mnemonic,
   WalletCardPattern,
   WalletCardStyle,
   WalletType,
@@ -34,9 +32,12 @@ export class WalletRealm extends Realm.Object {
   colorPattern!: string;
   pattern!: string;
   isHidden!: boolean;
+  isMain!: boolean;
   type!: WalletType;
   deviceId: string | undefined;
   deviceName: string | undefined;
+  path: string | undefined;
+  rootAddress: string | undefined;
 
   static schema = {
     name: 'Wallet',
@@ -47,13 +48,16 @@ export class WalletRealm extends Realm.Object {
       mnemonicSaved: 'bool',
       cardStyle: 'string',
       isHidden: 'bool',
+      isMain: 'bool',
       colorFrom: 'string',
       colorTo: 'string',
       colorPattern: 'string',
       pattern: 'string',
       type: 'string',
+      path: 'string?',
       deviceId: 'string?',
       deviceName: 'string?',
+      rootAddress: 'string?',
     },
     primaryKey: 'address',
   };
@@ -65,6 +69,7 @@ export class Wallet extends EventEmitter {
     name: '',
     mnemonicSaved: true,
     isHidden: false,
+    isMain: false,
     cardStyle: WalletCardStyle.flat,
     colorFrom: DEFAULT_CARD_BACKGROUND,
     colorTo: DEFAULT_CARD_BACKGROUND,
@@ -73,6 +78,8 @@ export class Wallet extends EventEmitter {
     type: WalletType.hot,
     deviceId: undefined,
     deviceName: undefined,
+    path: undefined,
+    rootAddress: undefined,
   };
 
   static async create(walletParams: AddWalletParams, name = '') {
@@ -87,6 +94,8 @@ export class Wallet extends EventEmitter {
     let data = '';
     let deviceId: string | undefined;
     let deviceName: string | undefined;
+    let path: string | undefined;
+    let rootAddress: string | undefined;
     let mnemonicSaved = true;
 
     switch (walletParams.type) {
@@ -94,11 +103,11 @@ export class Wallet extends EventEmitter {
         {
           const password = await app.getPassword();
           data = await encrypt(password, walletParams);
-          mnemonicSaved = !walletParams.isNew;
+          path = walletParams.path;
+          rootAddress = walletParams.rootAddress;
         }
         break;
       case WalletType.hot:
-      case WalletType.mixed:
         {
           const password = await app.getPassword();
           data = await encrypt(password, walletParams);
@@ -164,6 +173,8 @@ export class Wallet extends EventEmitter {
         type: walletParams.type,
         deviceId,
         deviceName,
+        path,
+        rootAddress,
       });
     });
 
@@ -176,16 +187,11 @@ export class Wallet extends EventEmitter {
 
   private _raw: WalletRealm;
   private _balance: number = 0;
-  private _encrypted: boolean;
-  private _mnemonic: Mnemonic | undefined;
-  private _privateKey: string | undefined;
 
   constructor(data: WalletRealm) {
     super();
 
     this._raw = data;
-
-    this._encrypted = data.data !== '';
 
     const interval = setInterval(this.checkBalance, 6000);
 
@@ -202,31 +208,17 @@ export class Wallet extends EventEmitter {
     this.checkBalance();
   }
 
-  async decrypt(password: string) {
-    try {
-      if (this._encrypted) {
-        const decrypted = await decrypt(password, this._raw.data);
-        this._encrypted = false;
-
-        if (decrypted.privateKey) {
-          this._privateKey = decrypted.privateKey;
-        }
-
-        if (decrypted.mnemonic) {
-          this._mnemonic = decrypted.mnemonic;
-        }
-      }
-    } catch (e) {
-      captureException(e);
-    }
-  }
-
   get address() {
     return this._raw.address;
   }
 
-  get privateKey() {
-    return this._privateKey;
+  async getPrivateKey(password: string) {
+    if (this.type !== WalletType.hot) {
+      throw new Error('wallet_no_pk');
+    }
+    const decrypted = await decrypt(password, this._raw.data);
+
+    return decrypted.privateKey;
   }
 
   get name() {
@@ -237,6 +229,10 @@ export class Wallet extends EventEmitter {
     return this._raw.type;
   }
 
+  get rootAddress() {
+    return this._raw.rootAddress ?? '';
+  }
+
   set name(value) {
     realm.write(() => {
       this._raw.name = value;
@@ -244,9 +240,6 @@ export class Wallet extends EventEmitter {
   }
 
   get mnemonicSaved() {
-    if (!this._mnemonic?.phrase) {
-      return true;
-    }
     return this._raw.mnemonicSaved;
   }
 
@@ -263,6 +256,16 @@ export class Wallet extends EventEmitter {
   set isHidden(value) {
     realm.write(() => {
       this._raw.isHidden = value;
+    });
+  }
+
+  get isMain() {
+    return this._raw.isMain;
+  }
+
+  set isMain(value) {
+    realm.write(() => {
+      this._raw.isMain = value;
     });
   }
 
@@ -308,10 +311,6 @@ export class Wallet extends EventEmitter {
     });
   }
 
-  get isEncrypted() {
-    return this._encrypted;
-  }
-
   get deviceId() {
     return this._raw.deviceId;
   }
@@ -326,12 +325,14 @@ export class Wallet extends EventEmitter {
     });
   };
 
-  get mnemonic() {
-    if (!this._mnemonic) {
-      return '';
-    }
+  async getMnemonic(password: string) {
+    const decrypted = await decrypt(password, this._raw.data);
 
-    return this._mnemonic.phrase ?? '';
+    return (
+      (typeof decrypted.mnemonic === 'string'
+        ? decrypted.mnemonic
+        : decrypted.mnemonic.phrase) ?? ''
+    );
   }
 
   set balance(value: number) {
@@ -343,19 +344,17 @@ export class Wallet extends EventEmitter {
     return this._balance;
   }
 
-  async updateWalletData(pin: string) {
-    const data = await encrypt(pin, {
-      privateKey: this._privateKey,
-      mnemonic: this._mnemonic,
-    });
+  async updateWalletData(oldPin: string, newPin: string) {
+    const decrypted = await decrypt(oldPin, this._raw.data);
+    const encrypted = await encrypt(newPin, decrypted);
 
     const wallet = realm.objectForPrimaryKey<WalletRealm>(
-      'Wallet',
+      WalletRealm.schema.name,
       this.address,
     );
     if (wallet) {
       realm.write(() => {
-        wallet.data = data;
+        wallet.data = encrypted;
       });
     }
   }
