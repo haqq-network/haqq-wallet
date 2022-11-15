@@ -4,9 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Alert, StyleSheet, Switch, View} from 'react-native';
 
+import {useApp} from '@app/hooks';
+
 import {Pin, PinInterface} from '../components/pin';
 import {MenuNavigationButton, Spacer, Text} from '../components/ui';
-import {useApp} from '../contexts/app';
 import {BiometryType, RootStackParamList} from '../types';
 import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
 

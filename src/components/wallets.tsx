@@ -2,12 +2,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 
+import {useWallets} from '@app/hooks';
+
 import {CarouselItem} from './carousel-item';
 import {Icon, Text} from './ui';
 import {WalletCard} from './wallet-card';
 import {WalletCreate} from './wallet-create';
 
-import {useWallets} from '../contexts/wallets';
 import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_1} from '../variables';
 
 export const Wallets = () => {

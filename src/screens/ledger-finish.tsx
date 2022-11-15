@@ -3,8 +3,9 @@ import React, {useCallback, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useApp} from '@app/hooks';
+
 import {Finish} from '../components/finish';
-import {useApp} from '../contexts/app';
 import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 

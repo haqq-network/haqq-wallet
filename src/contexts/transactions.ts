@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
@@ -171,9 +171,3 @@ class Transactions extends EventEmitter {
 export const transactions = new Transactions();
 
 export const TransactionsContext = createContext(transactions);
-
-export function useTransactions() {
-  const context = useContext(TransactionsContext);
-
-  return context;
-}

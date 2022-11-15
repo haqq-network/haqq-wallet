@@ -3,9 +3,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {useApp} from '@app/hooks';
+
 import {NotificationMessage} from './notification-message';
 
-import {useApp} from '../contexts/app';
 import {generateUUID} from '../utils';
 
 export const Notifications = () => {

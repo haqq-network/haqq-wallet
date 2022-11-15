@@ -4,9 +4,10 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
+import {useApp} from '@app/hooks';
+
 import {NumericKeyboard} from '../components/numeric-keyboard';
-import {ErrorText, PopupContainer, Spacer, Text} from '../components/ui';
-import {useApp} from '../contexts/app';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
 import {

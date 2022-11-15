@@ -3,8 +3,9 @@ import React, {useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {useUser} from '@app/hooks';
+
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
-import {useUser} from '../contexts/app';
 import {RootStackParamList} from '../types';
 
 export const LedgerBluetoothScreen = () => {

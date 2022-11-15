@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {useApp} from '@app/hooks';
+
 import {
   CheckIcon,
   DataContent,
   IconButton,
   PopupContainer,
 } from '../components/ui';
-import {useApp} from '../contexts/app';
 import {AppLanguage} from '../types';
 import {LIGHT_GRAPHIC_GREEN_1} from '../variables';
 
