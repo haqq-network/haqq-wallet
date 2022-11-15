@@ -242,7 +242,6 @@ export enum WalletCardStyle {
 }
 
 export enum WalletType {
-  mixed = 'mixed',
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',

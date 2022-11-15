@@ -129,7 +129,7 @@ export class Wallet extends EventEmitter {
     const patternVariant =
       patterns[Math.floor(Math.random() * patterns.length)];
 
-    const pattern = `${patternVariant}-${Math.floor(
+    const pattern = `card-${patternVariant}-${Math.floor(
       Math.random() *
         (patternVariant === WalletCardPattern.circle
           ? CARD_CIRCLE_TOTAL
@@ -214,12 +214,15 @@ export class Wallet extends EventEmitter {
   }
 
   async getPrivateKey(password: string) {
-    if (this.type !== WalletType.hot) {
-      throw new Error('wallet_no_pk');
+    switch (this.type) {
+      case WalletType.hot:
+      case WalletType.mnemonic: {
+        const decrypted = await decrypt(password, this._raw.data);
+        return decrypted.privateKey;
+      }
+      default:
+        throw new Error('wallet_no_pk');
     }
-    const decrypted = await decrypt(password, this._raw.data);
-
-    return decrypted.privateKey;
   }
 
   get name() {
