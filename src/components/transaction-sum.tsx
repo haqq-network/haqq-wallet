@@ -9,6 +9,14 @@ import {
 } from 'react-native';
 
 import {useContacts} from '@app/hooks';
+import {EthNetwork} from '@app/services/eth-network';
+import {cleanNumber, isNumber, shortAddress} from '@app/utils';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '@app/variables';
 
 import {
   Button,
@@ -19,15 +27,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-
-import {EthNetwork} from '../services/eth-network';
-import {cleanNumber, isNumber, shortAddress} from '../utils';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export type TransactionSumProps = {
   to: string;
