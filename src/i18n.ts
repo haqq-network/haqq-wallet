@@ -57,6 +57,10 @@ export enum I18N {
   backupNotificationSkip,
   backupNotificationAlertTitle,
   backupNotificationAlertDescription,
+  homeWallet,
+  homeWalletTitle,
+  homeSettings,
+  homeSettingsTitle,
 }
 
 export function getText(key: I18N): string {
@@ -131,7 +135,11 @@ const en: Record<I18N, string> = {
     "If your recovery phrase is misplaced or stolen, it's the equivalent of osing your wallet. It's the only way to access your wallet if you forget your account password.",
   [I18N.backupNotificationBackup]: 'Backup now',
   [I18N.backupNotificationSkip]: 'I will risk it',
-  [I18N.backupNotificationAlertTitle]: 'Proceed withut backup?',
+  [I18N.backupNotificationAlertTitle]: 'Proceed without backup?',
   [I18N.backupNotificationAlertDescription]:
     'If you lose access to your wallet, we will not be able to restore your wallet if you do not make a backup',
+  [I18N.homeWallet]: 'Wallet',
+  [I18N.homeWalletTitle]: 'Your wallets',
+  [I18N.homeSettings]: 'Settings',
+  [I18N.homeSettingsTitle]: 'Settings',
 };
