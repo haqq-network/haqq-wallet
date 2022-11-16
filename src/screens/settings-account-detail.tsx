@@ -3,7 +3,8 @@ import React, {useCallback} from 'react';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
-import prompt from 'react-native-prompt-android';
+
+import {useWallet} from '@app/hooks';
 
 import {
   Card,
@@ -15,7 +16,6 @@ import {
   Text,
 } from '../components/ui';
 import {app} from '../contexts/app';
-import {useWallet} from '../contexts/wallets';
 import {RootStackParamList} from '../types';
 import {LIGHT_BG_8} from '../variables';
 
@@ -31,29 +31,8 @@ export const SettingsAccountDetailScreen = () => {
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {
-    prompt(
-      'Edit account name',
-      '',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Save',
-          onPress: n => {
-            if (wallet) {
-              wallet.name = n;
-            }
-          },
-        },
-      ],
-      {
-        cancelable: false,
-        defaultValue: wallet?.name,
-      },
-    );
-  }, [wallet]);
+    navigation.navigate('settingsAccountEdit', route.params);
+  }, [navigation, route.params]);
 
   const onPressStyle = useCallback(() => {
     navigation.navigate('settingsAccountStyle', {

@@ -68,6 +68,7 @@ export type RootStackParamList = {
     address: string;
   };
   detailsQr: {address: string};
+  settingsTheme: undefined;
   settingsTest: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
@@ -83,14 +84,16 @@ export type RootStackParamList = {
   settingsFaq: undefined;
   settingsAbout: undefined;
   backupVerify: {
-    address: string;
+    rootAddress: string;
+    mnemonic: string;
   };
   backupFinish: undefined;
   backupCreate: {
-    address: string;
+    rootAddress: string;
+    mnemonic: string;
   };
   backupNotification: {
-    address: string;
+    rootAddress: string;
   };
   backupWarning: {
     address: string;
@@ -191,6 +194,16 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
+  settingsAccountEdit: {address: string};
+  transactionContactEdit: {
+    name: string;
+    address: string;
+  };
+  settingsContactEdit: {
+    name: string;
+    address: string;
+    isCreate?: boolean;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
@@ -240,6 +253,7 @@ export enum WalletCardStyle {
 }
 
 export enum WalletType {
+  mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
 }
@@ -299,3 +313,22 @@ export enum AppTheme {
   dark = 'dark',
   system = 'system',
 }
+
+export type AddWalletParams = {address: string} & (
+  | {
+      type: WalletType.mnemonic;
+      mnemonic: string;
+      path: string;
+      privateKey: string;
+      rootAddress: string;
+    }
+  | {
+      type: WalletType.hot;
+      privateKey: string;
+    }
+  | {
+      type: WalletType.ledgerBt;
+      deviceId: string;
+      deviceName: string;
+    }
+);

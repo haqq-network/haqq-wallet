@@ -7,6 +7,8 @@ import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
+import {useApp, useWallet} from '@app/hooks';
+
 import {BottomSheet} from '../components/bottom-sheet';
 import {
   Alert,
@@ -18,8 +20,6 @@ import {
   InfoBlockType,
   Text,
 } from '../components/ui';
-import {useApp} from '../contexts/app';
-import {useWallet} from '../contexts/wallets';
 import {Wallet} from '../models/wallet';
 import {RootStackParamList} from '../types';
 import {

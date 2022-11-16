@@ -31,13 +31,12 @@ module.exports = {
             },
           },
         ],
-        'sort-imports':
-          [
-            'error',
-            {
-              'ignoreDeclarationSort': true
-            }
-          ],
+        'sort-imports': [
+          'error',
+          {
+            ignoreDeclarationSort: true,
+          },
+        ],
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',

@@ -5,9 +5,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {utils} from 'ethers';
 import {StyleSheet} from 'react-native';
 
+import {useApp} from '@app/hooks';
+
 import {IconButton, QRScanner} from './ui';
 
-import {useApp} from '../contexts/app';
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 import {LIGHT_GRAPHIC_BASE_1} from '../variables';

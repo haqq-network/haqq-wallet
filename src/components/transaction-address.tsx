@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
-import {AddressHeader} from './address-header';
-import {AddressRow} from './address-row';
+import {ListContact} from '@app/components/list-contact';
 import {
   Button,
   ButtonVariant,
@@ -14,34 +14,36 @@ import {
   QRScanner,
   Spacer,
   TextField,
-} from './ui';
-
-import {useApp} from '../contexts/app';
-import {useContacts} from '../contexts/contacts';
-import {hideModal, showModal} from '../helpers/modal';
-import {isHexString} from '../utils';
+} from '@app/components/ui';
+import {hideModal, showModal} from '@app/helpers/modal';
+import {withActionsContactItem} from '@app/hocs';
+import {useApp} from '@app/hooks';
+import {isHexString} from '@app/utils';
 import {
   IS_IOS,
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_GREEN_1,
   PLACEHOLDER_GRAY,
-} from '../variables';
+} from '@app/variables';
 
 export type TransactionAddressProps = {
   initial?: string;
   onAddress: (address: string) => void;
 };
 
+const ListOfContacts = withActionsContactItem(ListContact, {
+  nextScreen: 'transactionContactEdit',
+});
+
 export const TransactionAddress = ({
   initial = '',
   onAddress,
 }: TransactionAddressProps) => {
   const app = useApp();
-  const contacts = useContacts();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
   const [inputIsFocused, setInputIsFocused] = useState(false);
-  const contactsList = contacts.getContacts();
+  const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
   useEffect(() => {
@@ -74,18 +76,23 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
+    const subscriptionBack = () => {
+      goBack();
+      app.off('onCloseQr', subscriptionBack);
+    };
     const subscription = ({to}: any) => {
       if (utils.isAddress(to)) {
         setAddress(to);
         app.off('address', subscription);
+        app.off('onCloseQr', subscriptionBack);
         hideModal();
       }
     };
-
     app.on('address', subscription);
 
+    app.on('onCloseQr', subscriptionBack);
     showModal('qr');
-  }, [app]);
+  }, [app, goBack]);
 
   const onPressClear = useCallback(() => setAddress(''), []);
 
@@ -124,16 +131,7 @@ export const TransactionAddress = ({
         ) : null}
       </View>
       <Spacer>
-        {contactsList.length ? (
-          <FlatList
-            keyboardShouldPersistTaps="always"
-            data={contactsList}
-            renderItem={({item}) => (
-              <AddressRow item={item} onPress={setAddress} />
-            )}
-            ListHeaderComponent={AddressHeader}
-          />
-        ) : null}
+        <ListOfContacts />
       </Spacer>
 
       <Button

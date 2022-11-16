@@ -1,8 +1,8 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT} from '@env';
+import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
 import Keychain, {
@@ -121,7 +121,7 @@ class App extends EventEmitter {
           biometry: false,
           bluetooth: false,
           language: AppLanguage.en,
-          theme: AppTheme.light,
+          theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
           providerId:
             ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
               ? MAIN_NETWORK
@@ -303,28 +303,3 @@ class App extends EventEmitter {
 export const app = new App();
 
 export const AppContext = createContext(app);
-
-export function useApp() {
-  const context = useContext(AppContext);
-
-  return context;
-}
-
-export function useUser() {
-  const user = app.getUser();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setDate] = useState(new Date());
-  useEffect(() => {
-    const subscription = () => {
-      setDate(new Date());
-    };
-
-    user.on('change', subscription);
-
-    return () => {
-      user.removeListener('change', subscription);
-    };
-  }, [user]);
-
-  return user;
-}

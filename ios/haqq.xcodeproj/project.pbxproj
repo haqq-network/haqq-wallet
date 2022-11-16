@@ -63,6 +63,12 @@
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
+		84D4DC6E3E9440D89720DBAB /* backup-notification-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 249F18A2DEDB427998FD995D /* backup-notification-dark.png */; };
+		AF3F44C8BCE74B54AA670029 /* backup-notification-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2601ACF3CF704575BA1D67B6 /* backup-notification-dark@2x.png */; };
+		52305F758E994C81890E5380 /* backup-notification-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 53AC42AE6B69462FBD5FE33F /* backup-notification-dark@3x.png */; };
+		BA44CAA6FB524AA7A1D71E4F /* backup-notification-light.png in Resources */ = {isa = PBXBuildFile; fileRef = D9104D65DCF749C09FAD59A3 /* backup-notification-light.png */; };
+		81CA5137D28D4C508D5C9C6F /* backup-notification-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04A660904CAA421CA4511E30 /* backup-notification-light@2x.png */; };
+		AB8DBE0E79714E818C6F1E66 /* backup-notification-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +150,12 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0@3x.png"; path = "../assets/images/card-rhombus-0@3x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
+		249F18A2DEDB427998FD995D /* backup-notification-dark.png */ = {isa = PBXFileReference; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2601ACF3CF704575BA1D67B6 /* backup-notification-dark@2x.png */ = {isa = PBXFileReference; name = "backup-notification-dark@2x.png"; path = "../assets/images/backup-notification-dark@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		53AC42AE6B69462FBD5FE33F /* backup-notification-dark@3x.png */ = {isa = PBXFileReference; name = "backup-notification-dark@3x.png"; path = "../assets/images/backup-notification-dark@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D9104D65DCF749C09FAD59A3 /* backup-notification-light.png */ = {isa = PBXFileReference; name = "backup-notification-light.png"; path = "../assets/images/backup-notification-light.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		04A660904CAA421CA4511E30 /* backup-notification-light@2x.png */ = {isa = PBXFileReference; name = "backup-notification-light@2x.png"; path = "../assets/images/backup-notification-light@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */ = {isa = PBXFileReference; name = "backup-notification-light@3x.png"; path = "../assets/images/backup-notification-light@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -351,6 +363,12 @@
 				32498C55D7F34FD7BC90FB54 /* card-rhombus-0.png */,
 				141D6D9C95B647F28092002E /* card-rhombus-0@2x.png */,
 				EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */,
+				249F18A2DEDB427998FD995D /* backup-notification-dark.png */,
+				2601ACF3CF704575BA1D67B6 /* backup-notification-dark@2x.png */,
+				53AC42AE6B69462FBD5FE33F /* backup-notification-dark@3x.png */,
+				D9104D65DCF749C09FAD59A3 /* backup-notification-light.png */,
+				04A660904CAA421CA4511E30 /* backup-notification-light@2x.png */,
+				F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -485,6 +503,12 @@
 				369DAA3E3885440093BED988 /* card-rhombus-0.png in Resources */,
 				86D8C9D9E74F4281B3C593BF /* card-rhombus-0@2x.png in Resources */,
 				8D5CA368492A4FB1815C21A8 /* card-rhombus-0@3x.png in Resources */,
+				84D4DC6E3E9440D89720DBAB /* backup-notification-dark.png in Resources */,
+				AF3F44C8BCE74B54AA670029 /* backup-notification-dark@2x.png in Resources */,
+				52305F758E994C81890E5380 /* backup-notification-dark@3x.png in Resources */,
+				BA44CAA6FB524AA7A1D71E4F /* backup-notification-light.png in Resources */,
+				81CA5137D28D4C508D5C9C6F /* backup-notification-light@2x.png in Resources */,
+				AB8DBE0E79714E818C6F1E66 /* backup-notification-light@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ import {PopupContainer, Spacer, Text} from '../components/ui';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
 import {
-  LIGHT_GRAPHIC_BASE_4,
+  LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
 } from '../variables';
@@ -80,7 +80,7 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_BASE_4,
+    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],

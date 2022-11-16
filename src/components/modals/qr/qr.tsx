@@ -1,35 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {utils} from 'ethers';
-import {
-  Dimensions,
-  StatusBar,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
-// @ts-ignore
 import {launchImageLibrary} from 'react-native-image-picker';
+// @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {useApp} from '../../contexts/app';
-import {useWallets} from '../../contexts/wallets';
-import {hideModal} from '../../helpers/modal';
-import {HapticEffects, vibrate} from '../../services/haptic';
-import {
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_GRAPHIC_GREEN_2,
-  LIGHT_GRAPHIC_RED_1,
-  LIGHT_TEXT_BASE_3,
-  QR_BACKGROUND,
-  QR_STATUS_BAR,
-  SYSTEM_BLUR_3,
-} from '../../variables';
-import {BottomSheet} from '../bottom-sheet';
-import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
-import {WalletRow} from '../wallet-row';
+import {Color, getColor} from '@app/colors';
+import {Spacer, Text} from '@app/components/ui';
+import {createTheme, hideModal} from '@app/helpers';
+import {useApp, useWallets} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {LIGHT_GRAPHIC_RED_1, QR_STATUS_BAR} from '@app/variables';
+
+import {QrBottomView} from './qr-bottom-view';
+import {QrNoAccess} from './qr-no-access';
+import {QrTopView} from './qr-top-view';
+
+import {BottomSheet} from '../../bottom-sheet';
+import {WalletRow} from '../../wallet-row';
 
 export type QRModalProps = {
   onClose?: () => void;
@@ -81,7 +71,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
-  const insets = useSafeAreaInsets();
+
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
       if (e.data && e.data !== code) {
@@ -142,59 +132,38 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onCloseBottomSheet = () => setIsOpen(false);
 
+  const onToggleFlashMode = useCallback(() => {
+    setFlashMode(pr => !pr);
+  }, []);
+
   return (
     <>
       <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}
-        style={page.container}
+        style={styles.container}
         onRead={onSuccess}
         flashMode={flashMode}
         hintText=""
         isShowScanBar={false}
-        cornerColor={error ? LIGHT_GRAPHIC_RED_1 : LIGHT_GRAPHIC_BASE_3}
+        cornerColor={getColor(error ? Color.graphicRed1 : Color.graphicBase3)}
         cornerWidth={7}
         zoom={0}
-        renderTopView={() => (
-          <View style={{paddingTop: insets.top}}>
-            <View style={page.headerContainer}>
-              <IconButton onPress={onClose}>
-                <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_3} />
-              </IconButton>
-              <Text t8 style={page.headerTitle}>
-                Scan QR Code
-              </Text>
-              <View style={page.headerSpacer} />
-            </View>
-          </View>
-        )}
+        notAuthorizedView={() => <QrNoAccess onClose={onClose} />}
+        renderTopView={() => <QrTopView onClose={onClose} />}
         renderBottomView={() => (
-          <View
-            style={[page.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
-            <View style={page.subContainer}>
-              <IconButton onPress={onClickGallery} style={page.iconButton}>
-                <ImageIcon color={LIGHT_GRAPHIC_BASE_3} />
-              </IconButton>
-              <IconButton
-                onPress={() => {
-                  setFlashMode(pr => !pr);
-                }}
-                style={page.iconButton}>
-                <FlashLightIcon
-                  color={
-                    flashMode ? LIGHT_GRAPHIC_GREEN_2 : LIGHT_GRAPHIC_BASE_3
-                  }
-                />
-              </IconButton>
-            </View>
-          </View>
+          <QrBottomView
+            flashMode={flashMode}
+            onClickGallery={onClickGallery}
+            onToggleFlashMode={onToggleFlashMode}
+          />
         )}
       />
       {error && (
-        <View style={page.bottomErrorContainer}>
-          <View style={page.bottomError}>
-            <Text t8 style={page.bottomErrorText}>
+        <View style={styles.bottomErrorContainer}>
+          <View style={styles.bottomError}>
+            <Text t8 style={styles.bottomErrorText}>
               Invalid code
             </Text>
           </View>
@@ -208,36 +177,16 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           {rows.map((item, id) => (
             <WalletRow key={id} item={item} onPress={handleAddressEvent} />
           ))}
-          <Spacer style={page.spacer} />
+          <Spacer style={styles.spacer} />
         </BottomSheet>
       )}
     </>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
+  overlay: {},
   container: {flex: 1},
-  subContainer: {justifyContent: 'center', flexDirection: 'row'},
-  headerContainer: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    height: 56,
-    flexDirection: 'row',
-  },
-  headerTitle: {
-    fontWeight: '600',
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_3,
-  },
-  headerSpacer: {
-    width: 24,
-    height: 24,
-  },
-  bottomContainer: {
-    alignItems: 'center',
-    backgroundColor: QR_BACKGROUND,
-  },
   bottomError: {
     backgroundColor: LIGHT_GRAPHIC_RED_1,
     paddingVertical: 8,
@@ -251,13 +200,6 @@ const page = StyleSheet.create({
     right: 0,
     bottom: Dimensions.get('window').height / 2 - 135,
   },
-  bottomErrorText: {color: LIGHT_TEXT_BASE_3, fontWeight: '600'},
-  iconButton: {
-    marginHorizontal: 16,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: SYSTEM_BLUR_3,
-  },
+  bottomErrorText: {color: Color.textBase3, fontWeight: '600'},
   spacer: {height: 50},
 });

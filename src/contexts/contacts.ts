@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
@@ -71,9 +71,3 @@ class Contacts extends EventEmitter {
 export const contacts = new Contacts();
 
 export const ContactsContext = createContext(contacts);
-
-export function useContacts() {
-  const context = useContext(ContactsContext);
-
-  return context;
-}
