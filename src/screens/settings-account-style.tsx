@@ -125,7 +125,7 @@ export const SettingsAccountStyleScreen = () => {
   );
 
   const onPressGenerate = useCallback(() => {
-    vibrate(HapticEffects.selection); // impactLight
+    vibrate(HapticEffects.impactLight);
     setLoading(true);
     const newColors =
       cardStyle === WalletCardStyle.flat

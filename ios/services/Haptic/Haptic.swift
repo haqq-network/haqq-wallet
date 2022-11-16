@@ -31,6 +31,13 @@ class RNHaptic: NSObject {
     
     return generator;
   }()
+
+  static let impact: UIImpactFeedbackGenerator = {
+    let generator = UIImpactFeedbackGenerator()
+    generator.prepare()
+    
+    return generator;
+  }()
   
   @objc
   static func requiresMainQueueSetup() -> Bool { return true }
@@ -56,6 +63,9 @@ class RNHaptic: NSObject {
     case .error:
       notification(.error)
 
+    case .impactLight:
+      impact(.light)
+
     default:
         return
     }
@@ -73,6 +83,13 @@ class RNHaptic: NSObject {
     DispatchQueue.main.async {
       RNHaptic.selection.selectionChanged()
       RNHaptic.selection.prepare()
+    }
+  }
+
+  func impact(_ notificationType: UINotificationFeedbackGenerator.FeedbackType) -> Void {
+    DispatchQueue.main.async {
+      RNHaptic.impact.impactOccurred(style: notificationType)
+      RNHaptic.impact.prepare()
     }
   }
 }

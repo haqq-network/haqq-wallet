@@ -91,7 +91,7 @@ export const TransactionAddress = ({
   const onPressClear = useCallback(() => setAddress(''), []);
 
   const onPressAddress = useCallback((item: string) => {
-    vibrate(HapticEffects.selection); // impactLight
+    vibrate(HapticEffects.impactLight);
     setAddress(item);
   }, []);
 

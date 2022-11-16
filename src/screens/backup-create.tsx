@@ -31,7 +31,7 @@ export const BackupCreateScreen = () => {
   const wallet = useWallet(route.params.address);
 
   const onClickCheck = (val: boolean) => {
-    vibrate(HapticEffects.selection); // impactLight
+    vibrate(HapticEffects.impactLight);
     setChecked(val);
   };
 

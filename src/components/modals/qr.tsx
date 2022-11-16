@@ -146,7 +146,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onPressFlashLight = () => {
     setFlashMode(pr => !pr);
-    vibrate(HapticEffects.selection); // impactLight
+    vibrate(HapticEffects.impactLight);
   };
 
   return (

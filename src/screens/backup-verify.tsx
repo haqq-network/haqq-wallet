@@ -65,7 +65,7 @@ export const BackupVerifyScreen = () => {
 
   const onPressWord = useCallback(
     (val: string) => () => {
-      vibrate(HapticEffects.selection); // impactLight
+      vibrate(HapticEffects.impactLight);
       setSelected(sel => sel.concat(val));
     },
     [],

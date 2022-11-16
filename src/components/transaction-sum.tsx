@@ -87,7 +87,7 @@ export const TransactionSum = ({
   }, [amount, onAmount]);
 
   const onPressMax = useCallback(() => {
-    vibrate(HapticEffects.selection); // impactLight
+    vibrate(HapticEffects.impactLight);
     setAmount(maxSum.toFixed(8));
   }, [maxSum]);
 

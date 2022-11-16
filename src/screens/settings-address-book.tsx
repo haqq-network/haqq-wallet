@@ -165,7 +165,7 @@ export const SettingsAddressBookScreen =
     );
 
     const onPressAddress = useCallback(() => {
-      vibrate(HapticEffects.selection); // impactLight
+      vibrate(HapticEffects.impactLight);
     }, []);
 
     return (
