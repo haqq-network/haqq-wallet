@@ -15,6 +15,7 @@
   "dependencies": {
     "@ethersproject/hardware-wallets": "^5.7.0",
     "@ethersproject/shims": "^5.6.0",
+    "@evmos/provider": "^0.2.8",
     "@ledgerhq/hw-app-eth": "^6.30.0",
     "@ledgerhq/react-native-hw-transport-ble": "^6.27.9",
     "@react-native-clipboard/clipboard": "1.11.1",
@@ -28,6 +29,7 @@
     "@sentry/react-native": "5.0.0-alpha.4",
     "@tradle/react-native-http": "^2.0.0",
     "assert": "^2.0.0",
+    "bech32-converting": "^1.0.9",
     "big-integer": "^1.6.51",
     "buffer": "^6.0.3",
     "date-fns": "^2.29.1",

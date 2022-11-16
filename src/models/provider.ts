@@ -5,8 +5,11 @@ import {realm} from './index';
 export class Provider extends Realm.Object {
   id!: string;
   name!: string;
-  network!: string;
-  chainId!: number;
+  ethChainId!: number;
+  ethRpcEndpoint!: string;
+  cosmosChainId!: string;
+  cosmosRestEndpoint!: string;
+  tmRpcEndpoint!: string;
   explorer: string | undefined;
 
   static schema = {
@@ -14,8 +17,11 @@ export class Provider extends Realm.Object {
     properties: {
       id: 'string',
       name: 'string',
-      network: 'string',
-      chainId: 'int',
+      ethRpcEndpoint: 'string',
+      ethChainId: 'int',
+      cosmosChainId: 'string',
+      cosmosRestEndpoint: 'string',
+      tmRpcEndpoint: 'string',
       explorer: 'string?',
     },
     primaryKey: 'id',
@@ -30,8 +36,8 @@ export class Provider extends Realm.Object {
   }
 
   get rpcProvider() {
-    return new ethers.providers.StaticJsonRpcProvider(this.network, {
-      chainId: this.chainId,
+    return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
+      chainId: this.ethChainId,
       name: this.id,
     });
   }
