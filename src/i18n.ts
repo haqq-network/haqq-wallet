@@ -27,6 +27,7 @@ export enum I18N {
   settingsContactEditDeleteContact,
   name,
   address,
+  accept,
   cancel,
   save,
   edit,
@@ -50,6 +51,12 @@ export enum I18N {
   homeSettingsFAQ,
   homeSettingsTest,
   homeSettingsLanguage,
+  backupNotificationTitle,
+  backupNotificationDescription,
+  backupNotificationBackup,
+  backupNotificationSkip,
+  backupNotificationAlertTitle,
+  backupNotificationAlertDescription,
 }
 
 export function getText(key: I18N): string {
@@ -98,6 +105,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
   [I18N.name]: 'Name',
   [I18N.address]: 'Address',
+  [I18N.accept]: 'Accept',
   [I18N.cancel]: 'Cancel',
   [I18N.save]: 'Save',
   [I18N.edit]: 'Edit',
@@ -118,4 +126,12 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsFAQ]: 'FAQ',
   [I18N.homeSettingsTest]: 'Test',
   [I18N.homeSettingsLanguage]: 'Language',
+  [I18N.backupNotificationTitle]: 'Backup your wallet, keep your assets safe',
+  [I18N.backupNotificationDescription]:
+    "If your recovery phrase is misplaced or stolen, it's the equivalent of osing your wallet. It's the only way to access your wallet if you forget your account password.",
+  [I18N.backupNotificationBackup]: 'Backup now',
+  [I18N.backupNotificationSkip]: 'I will risk it',
+  [I18N.backupNotificationAlertTitle]: 'Proceed withut backup?',
+  [I18N.backupNotificationAlertDescription]:
+    'If you lose access to your wallet, we will not be able to restore your wallet if you do not make a backup',
 };
