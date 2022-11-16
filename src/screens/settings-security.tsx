@@ -6,7 +6,7 @@ import {Alert, StyleSheet, Switch, View} from 'react-native';
 
 import {useApp} from '@app/hooks';
 
-import {Pin, PinInterface} from '../components/pin';
+import {Pin, PinInterface} from '../components/pin/pin';
 import {MenuNavigationButton, Spacer, Text} from '../components/ui';
 import {BiometryType, RootStackParamList} from '../types';
 import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';

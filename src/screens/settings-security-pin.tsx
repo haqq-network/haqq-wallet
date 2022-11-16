@@ -5,7 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {useApp, useWallets} from '@app/hooks';
 
-import {Pin, PinInterface} from '../components/pin';
+import {Pin, PinInterface} from '../components/pin/pin';
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 
