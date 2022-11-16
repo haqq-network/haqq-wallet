@@ -20,6 +20,9 @@ export const DARK_TEXT_RED_1 = '#E16363';
 export const LIGHT_TEXT_YELLOW_1 = '#B26F1D';
 export const DARK_TEXT_YELLOW_1 = '#EB9226';
 
+export const LIGHT_TEXT_BLUE_1 = '#007AFF';
+export const DARK_TEXT_BLUE_1 = '#007AFF';
+
 export const LIGHT_TEXT_SECOND_1 = '#B2B4BB';
 export const DARK_TEXT_SECOND_1 = '#5E6061';
 

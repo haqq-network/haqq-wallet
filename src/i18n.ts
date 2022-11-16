@@ -21,6 +21,19 @@ export enum I18N {
   backupVerifyError,
   backupVerifyDescription,
   backupVerifyCheck,
+  transactionContactEditHeaderTitle,
+  settingsAccountEditHeaderTitle,
+  settingsContactEditHeaderTitle,
+  settingsContactEditDeleteContact,
+  name,
+  address,
+  cancel,
+  save,
+  edit,
+  continue,
+  actionSheetDiscard,
+  actionSheetKeepEditing,
+  actionSheetMessage,
 }
 
 export function getText(key: I18N): string {
@@ -59,4 +72,17 @@ const en: Record<I18N, string> = {
   [I18N.backupVerifyDescription]:
     'Please choose the correct backup phrase according to the serial number',
   [I18N.backupVerifyCheck]: 'Check',
+  [I18N.transactionContactEditHeaderTitle]: 'Edit Contact',
+  [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
+  [I18N.settingsContactEditHeaderTitle]: 'Contact',
+  [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
+  [I18N.name]: 'Name',
+  [I18N.address]: 'Address',
+  [I18N.cancel]: 'Cancel',
+  [I18N.save]: 'Save',
+  [I18N.edit]: 'Edit',
+  [I18N.continue]: 'Continue',
+  [I18N.actionSheetDiscard]: 'Discard Changes',
+  [I18N.actionSheetKeepEditing]: 'Keep Editing',
+  [I18N.actionSheetMessage]: 'Are you sure you want to discard your changes?',
 };

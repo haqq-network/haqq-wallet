@@ -9,13 +9,13 @@ import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
   item: Contact;
-  onPress: (address: string) => void;
+  onPress?: (address: string) => void;
 };
 export const AddressRow = ({item, onPress}: AddressRowProps) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        onPress(item.account);
+        onPress?.(item.account);
       }}>
       <View style={page.container}>
         <Box style={page.badge}>

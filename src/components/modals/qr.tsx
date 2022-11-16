@@ -9,15 +9,14 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
-// @ts-ignore
 import {launchImageLibrary} from 'react-native-image-picker';
+// @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {hideModal} from '@app/helpers/modal';
 import {useApp, useWallets} from '@app/hooks';
-
-import {hideModal} from '../../helpers/modal';
-import {HapticEffects, vibrate} from '../../services/haptic';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_BASE_3,
   LIGHT_GRAPHIC_GREEN_2,
@@ -26,7 +25,8 @@ import {
   QR_BACKGROUND,
   QR_STATUS_BAR,
   SYSTEM_BLUR_3,
-} from '../../variables';
+} from '@app/variables';
+
 import {BottomSheet} from '../bottom-sheet';
 import {FlashLightIcon, Icon, IconButton, ImageIcon, Spacer, Text} from '../ui';
 import {WalletRow} from '../wallet-row';

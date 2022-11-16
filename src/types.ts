@@ -193,6 +193,16 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
+  settingsAccountEdit: {address: string};
+  transactionContactEdit: {
+    name: string;
+    address: string;
+  };
+  settingsContactEdit: {
+    name: string;
+    address: string;
+    isCreate?: boolean;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
