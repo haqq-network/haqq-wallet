@@ -15,7 +15,7 @@ class HDKey {
   private var _chainCode: ByteArray = ByteArray(32)
 
   private val hmacAlgo = "HmacSHA512"
-  private val masterSecret = "Bitcoin seed".toByteArray()
+  public val masterSecret = "Bitcoin seed".toByteArray()
   private val hdSpacer = byteArrayOfInts(0)
   private val hardenedOffset = 2147483648
 

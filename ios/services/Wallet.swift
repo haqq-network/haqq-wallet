@@ -39,4 +39,15 @@ public class Wallet {
   init(hdkey: HDKey) {
     privateKey = hdkey.privateKey
   }
+  
+  init(seed: [UInt8]) throws {
+    let key = try? HMAC(key: HDKey.masterSecret, variant: .sha512).authenticate(seed)
+        
+    guard let key = key else {
+      throw HDKeyError.seed
+    }
+    
+    self.privateKey = Array(key[0..<32])
+  }
+
 }

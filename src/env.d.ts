@@ -6,5 +6,5 @@ declare module '@env' {
   export const NETWORK_EXPLORER: string;
   export const PATTERNS_SOURCE: string;
   export const ENVIRONMENT: string;
-  export const IS_LEDGER_ENABLED: string;
+  export const IS_DEVELOPMENT: string;
 }

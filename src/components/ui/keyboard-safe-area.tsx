@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {useHeaderHeight} from '@react-navigation/elements';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -15,13 +16,14 @@ export const KeyboardSafeArea = ({
   style,
   ...props
 }: KeyboardSafeAreaProps) => {
+  const header = useHeaderHeight();
   const insets = useSafeAreaInsets();
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.select({
-        android: 75,
-        ios: insets.top + 66,
+        android: header + 47,
+        ios: insets.top + header,
       })}
       style={StyleSheet.compose({flex: 1, marginBottom: insets.bottom}, style)}
       {...props}>
