@@ -49,7 +49,7 @@ export const PopupHeader = ({
       ) : (
         <View style={page.spacer} />
       )}
-      <Text t8 style={page.title}>
+      <Text t8 center color={getColor(Color.textBase1)}>
         {options.title}
       </Text>
       {options.headerRight ? (
@@ -69,11 +69,6 @@ const page = createTheme({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
-  },
-  title: {
-    fontWeight: '600',
-    textAlign: 'center',
-    color: Color.textBase1,
   },
   spacer: {
     width: 24,

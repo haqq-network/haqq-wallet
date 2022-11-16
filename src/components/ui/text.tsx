@@ -32,6 +32,7 @@ export type TextProps = {
   t16?: boolean;
   t17?: boolean;
   clean?: boolean;
+  center?: boolean;
   color?: string;
 } & RNTextProps;
 
@@ -57,6 +58,7 @@ export const Text = ({
   style,
   children,
   clean,
+  center,
   color,
   ...props
 }: TextProps) => {
@@ -89,6 +91,7 @@ export const Text = ({
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
             !!color && {color},
+            center && page.center,
           ]}
           {...props}>
           {children}
@@ -159,6 +162,9 @@ const sfProTextBold700: FontT = Platform.select({
 });
 
 const page = createTheme({
+  center: {
+    textAlign: 'center',
+  },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
