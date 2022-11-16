@@ -4,9 +4,12 @@ import com.haqq.wallet.decodeHex
 import fr.acinq.secp256k1.Secp256k1
 import org.komputing.khash.keccak.Keccak
 import org.komputing.khash.keccak.KeccakParameter
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class Wallet {
   private var _privateKey: ByteArray = ByteArray(32)
+  private val hmacAlgo = "HmacSHA512"
 
   constructor(privateKey: ByteArray) {
     _privateKey = privateKey
@@ -19,6 +22,15 @@ class Wallet {
       privateKey
     }
     _privateKey = pk.decodeHex()
+  }
+
+  constructor(seed: String, masterSecret: ByteArray) {
+    val signingKey = SecretKeySpec(masterSecret, hmacAlgo)
+    val mac = Mac.getInstance(hmacAlgo)
+    mac.init(signingKey)
+
+    val bytes = mac.doFinal(seed.decodeHex())
+    _privateKey = bytes.slice(0 until 32).toByteArray()
   }
 
   constructor(hdkey: HDKey) {

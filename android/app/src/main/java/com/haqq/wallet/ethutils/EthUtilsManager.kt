@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 import java.io.IOException
 
 @Serializable
-data class EthUtilsResult(val address: String, val privateKey: String, val mnemonic: String?)
+data class EthUtilsResult(val address: String, val privateKey: String, val mnemonic: String?, val path: String?, val rootAddress: String?)
 
 class EthUtilsManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -42,7 +42,9 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
         EthUtilsResult(
           address = "0x${wallet.address().toHex()}",
           privateKey = "0x${wallet.privateKey().toHex()}",
-          mnemonic = null
+          mnemonic = null,
+          path = null,
+          rootAddress = null
         )
       )
 
@@ -66,11 +68,15 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
 
       val wallet = Wallet(hdkey = child)
 
+      val rootWallet = Wallet(seed = mnemonic.seed(), masterSecret = hdKey.masterSecret)
+
       val result = Json.encodeToString(
         EthUtilsResult(
           address = "0x${wallet.address().toHex()}",
           privateKey = "0x${wallet.privateKey().toHex()}",
-          mnemonic = mnemonic.mnemonic()
+          mnemonic = mnemonic.mnemonic(),
+          path = path,
+          rootAddress = "0x${rootWallet.address().toHex()}"
         )
       )
 

@@ -160,3 +160,7 @@ export function cleanNumber(number: string | number) {
 export function getPatternName(pattern: string) {
   return `${PATTERNS_SOURCE}${pattern}@3x.png`;
 }
+
+export function shuffleWords(words: Map<string, string>) {
+  return Array.from(words.keys()).sort(() => 0.5 - Math.random());
+}
