@@ -54,6 +54,30 @@
       "sha1": "9560ae412d73c7c9af72333db50464b4e597b0f9"
     },
     {
+      "path": "assets/images/backup-notification-dark.png",
+      "sha1": "a7a5201381eb87b7c3422505962aa5f38fccc51f"
+    },
+    {
+      "path": "assets/images/backup-notification-dark@2x.png",
+      "sha1": "25a51bd03ce817d0afccbbd7bfba2a9dd25a94a6"
+    },
+    {
+      "path": "assets/images/backup-notification-dark@3x.png",
+      "sha1": "e71a6cf9d5e5870ec663506b78f3d7d93d291b7b"
+    },
+    {
+      "path": "assets/images/backup-notification-light.png",
+      "sha1": "00df7ad3cbb55794c88ab450e58512fa30a87f15"
+    },
+    {
+      "path": "assets/images/backup-notification-light@2x.png",
+      "sha1": "ea4d18702f444aefbf4cd4a59b7561215f97da5e"
+    },
+    {
+      "path": "assets/images/backup-notification-light@3x.png",
+      "sha1": "12bb8524ca6f9b624f755e2423d09e49f4a7268a"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
