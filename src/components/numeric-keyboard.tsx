@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {Icon, IconButton, Text} from './ui';
 
-import {moderateVerticalScale} from '../helpers/scaling-utils';
+import {moderateScale} from '../helpers/scaling-utils';
 import {LIGHT_TEXT_BASE_1} from '../variables';
 
 export type NumericKeyboardProps = {
@@ -113,15 +113,17 @@ const page = StyleSheet.create({
   container: {
     width: '100%',
     justifyContent: 'center',
-    padding: 10,
+    paddingVertical: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   button: {
     marginHorizontal: 12,
     marginVertical: 2,
-    width: moderateVerticalScale(72, 0.6),
-    height: moderateVerticalScale(72, 0.6),
+    width: moderateScale(72, 0.6),
+    height: moderateScale(72, 0.6),
+    maxHeight: moderateScale(72, 1.2),
+    maxWidth: moderateScale(72, 1.2),
     justifyContent: 'center',
     alignItems: 'center',
   },
