@@ -38,7 +38,7 @@ export const SettingsButton = ({
     <MenuNavigationButton onPress={onClickButton} style={style}>
       <View style={page.container}>
         <Icon s name={icon} color={getColor(Color.graphicBase1)} />
-        <Text t11 style={page.text}>
+        <Text t11 style={page.text} color={getColor(Color.textBase1)}>
           {title}
         </Text>
       </View>
@@ -55,6 +55,5 @@ const page = StyleSheet.create({
   },
   text: {
     marginLeft: 12,
-    color: Color.textBase1,
   },
 });

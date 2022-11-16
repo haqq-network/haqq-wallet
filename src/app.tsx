@@ -8,13 +8,14 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
   NavigationContainer,
   StackActions,
+  Theme,
   createNavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -22,6 +23,7 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
+import {Color} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
@@ -35,17 +37,18 @@ import {
   transactions,
   wallets,
 } from '@app/contexts';
-import {hideModal, showModal} from '@app/helpers';
+import {createTheme, hideModal, showModal} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
   ActionSheetType,
+  AppTheme,
   HeaderButtonProps,
   PresentationNavigation,
   RootStackParamList,
   ScreenOptionType,
 } from '@app/types';
 import {sleep} from '@app/utils';
-import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 import {StatusBarColor} from './components/ui';
 import {migration} from './models/migration';
@@ -90,14 +93,13 @@ const screenOptions: ScreenOptionType = {
 
 const Stack = createStackNavigator();
 
-const AppTheme = {
-  dark: false,
+const appTheme = createTheme({
   colors: {
     ...DefaultTheme.colors,
-    primary: LIGHT_GRAPHIC_GREEN_1,
-    background: LIGHT_BG_1,
+    primary: Color.graphicGreen1,
+    background: Color.bg1,
   },
-};
+});
 
 const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
@@ -116,6 +118,13 @@ const stackScreenOptions = {
   gestureEnabled: false,
 };
 export const App = () => {
+  const theme = useTheme();
+
+  const navTheme = useMemo(
+    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
+    [theme],
+  );
+
   useEffect(() => {
     showModal('splash');
     sleep(150)
@@ -185,10 +194,12 @@ export const App = () => {
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
-        <StatusBarColor barStyle="dark-content" />
+        <StatusBarColor
+          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+        />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
-            <NavigationContainer ref={navigator} theme={AppTheme}>
+            <NavigationContainer ref={navigator} theme={navTheme}>
               <Stack.Navigator screenOptions={basicScreenOptions}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
