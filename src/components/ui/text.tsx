@@ -30,6 +30,7 @@ export type TextProps = {
   t16?: boolean;
   t17?: boolean;
   clean?: boolean;
+  color?: string;
 } & RNTextProps;
 
 export const Text = ({
@@ -54,6 +55,7 @@ export const Text = ({
   style,
   children,
   clean,
+  color,
   ...props
 }: TextProps) => {
   return (
@@ -84,6 +86,7 @@ export const Text = ({
             t15 && StyleSheet.flatten([page.t15Style, style]),
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
+            !!color && {color},
           ]}
           {...props}>
           {children}

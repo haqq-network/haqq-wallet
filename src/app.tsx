@@ -23,46 +23,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {
-  Notifications,
-  PopupHeader,
-  SettingsAccountRemoveButton,
-} from '@app/components';
-import {StatusBarColor} from '@app/components/ui';
-import {
-  AppContext,
-  TransactionsContext,
-  WalletsContext,
-  app,
-  transactions,
-  wallets,
-} from '@app/contexts';
-import {hideModal, showModal} from '@app/helpers';
-import {migration} from '@app/models/migration';
-import {BackupScreen} from '@app/screens/backup';
-import {BackupNotificationScreen} from '@app/screens/backup-notification';
-import {CreateScreen} from '@app/screens/create';
-import {DetailsQrScreen} from '@app/screens/details-qr';
-import {HomeScreen} from '@app/screens/home';
-import {LedgerScreen} from '@app/screens/ledger';
-import {Modals} from '@app/screens/modals';
-import {RestoreScreen} from '@app/screens/restore';
-import {SettingsAboutScreen} from '@app/screens/settings-about';
-import {SettingsAccountDetailScreen} from '@app/screens/settings-account-detail';
-import {SettingsAccountStyleScreen} from '@app/screens/settings-account-style';
-import {SettingsAccountsScreen} from '@app/screens/settings-accounts';
-import {SettingsAddressBookScreen} from '@app/screens/settings-address-book';
-import {SettingsFAQScreen} from '@app/screens/settings-faq';
-import {SettingsLanguageScreen} from '@app/screens/settings-language';
-import {SettingsProvidersScreen} from '@app/screens/settings-providers';
-import {SettingsSecurityScreen} from '@app/screens/settings-security';
-import {SettingsSecurityPinScreen} from '@app/screens/settings-security-pin';
-import {SettingsTestScreen} from '@app/screens/settings-test';
-import {SignInScreen} from '@app/screens/signin';
-import {SignUpScreen} from '@app/screens/signup';
-import {TransactionScreen} from '@app/screens/transaction';
-import {TransactionDetailScreen} from '@app/screens/transaction-detail';
-import {WelcomeScreen} from '@app/screens/welcome';
-import {
   ActionSheetType,
   HeaderButtonProps,
   PresentationNavigation,
@@ -71,6 +31,42 @@ import {
 } from '@app/types';
 import {sleep} from '@app/utils';
 import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
+
+import {Notifications} from './components/notifications';
+import {PopupHeader} from './components/popup-header';
+import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
+import {StatusBarColor} from './components/ui';
+import {AppContext, app} from './contexts/app';
+import {TransactionsContext, transactions} from './contexts/transactions';
+import {WalletsContext, wallets} from './contexts/wallets';
+import {hideModal, showModal} from './helpers/modal';
+import {migration} from './models/migration';
+import {BackupScreen} from './screens/backup';
+import {BackupNotificationScreen} from './screens/backup-notification';
+import {CreateScreen} from './screens/create';
+import {DetailsQrScreen} from './screens/details-qr';
+import {HomeScreen} from './screens/home';
+import {LedgerScreen} from './screens/ledger';
+import {Modals} from './screens/modals';
+import {RestoreScreen} from './screens/restore';
+import {SettingsAboutScreen} from './screens/settings-about';
+import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
+import {SettingsAccountEditScreen} from './screens/settings-account-edit';
+import {SettingsAccountStyleScreen} from './screens/settings-account-style';
+import {SettingsAccountsScreen} from './screens/settings-accounts';
+import {SettingsAddressBookScreen} from './screens/settings-address-book';
+import {SettingsContactEditScreen} from './screens/settings-contact-edit';
+import {SettingsFAQScreen} from './screens/settings-faq';
+import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProvidersScreen} from './screens/settings-providers';
+import {SettingsSecurityScreen} from './screens/settings-security';
+import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsTestScreen} from './screens/settings-test';
+import {SignInScreen} from './screens/signin';
+import {SignUpScreen} from './screens/signup';
+import {TransactionScreen} from './screens/transaction';
+import {TransactionDetailScreen} from './screens/transaction-detail';
+import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -297,6 +293,20 @@ export const App = () => {
                     component={SettingsTestScreen}
                     options={{
                       title: 'Test',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountEdit"
+                    component={SettingsAccountEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsContactEdit"
+                    component={SettingsContactEditScreen}
+                    options={{
+                      headerShown: false,
                     }}
                   />
                 </Stack.Group>
