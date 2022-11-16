@@ -4,15 +4,16 @@ import {
   Platform,
   Text as RNText,
   TextProps as RNTextProps,
+  StyleProp,
   StyleSheet,
+  ViewStyle,
 } from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {FontT} from '@app/types';
 
-import {FontT} from '../../types';
-
-export type TextProps = {
+export type TextProps = Omit<RNTextProps, 'style'> & {
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -32,8 +33,10 @@ export type TextProps = {
   t16?: boolean;
   t17?: boolean;
   clean?: boolean;
+  center?: boolean;
   color?: string;
-} & RNTextProps;
+  style: StyleProp<ViewStyle>;
+};
 
 export const Text = ({
   t0,
@@ -57,6 +60,7 @@ export const Text = ({
   style,
   children,
   clean,
+  center,
   color,
   ...props
 }: TextProps) => {
@@ -89,6 +93,7 @@ export const Text = ({
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
             !!color && {color},
+            center && page.center,
           ]}
           {...props}>
           {children}
@@ -159,6 +164,9 @@ const sfProTextBold700: FontT = Platform.select({
 });
 
 const page = createTheme({
+  center: {
+    textAlign: 'center',
+  },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
