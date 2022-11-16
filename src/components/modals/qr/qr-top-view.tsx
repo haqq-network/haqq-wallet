@@ -6,6 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 
 export type QrTopViewProps = {
   onClose: () => void;
@@ -21,7 +22,7 @@ export const QrTopView = ({onClose}: QrTopViewProps) => {
           <Icon s name="arrow_back" color={getColor(Color.graphicBase3)} />
         </IconButton>
         <Text t8 style={styles.headerTitle}>
-          Scan QR Code
+          {getText(I18N.modalQRTitle)}
         </Text>
         <View style={styles.headerSpacer} />
       </View>
