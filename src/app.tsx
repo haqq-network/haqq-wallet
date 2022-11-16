@@ -8,13 +8,14 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
   NavigationContainer,
   StackActions,
+  Theme,
   createNavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -22,12 +23,12 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
+import {Color} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
   SettingsAccountRemoveButton,
 } from '@app/components';
-import {StatusBarColor} from '@app/components/ui';
 import {
   AppContext,
   TransactionsContext,
@@ -36,41 +37,48 @@ import {
   transactions,
   wallets,
 } from '@app/contexts';
-import {hideModal, showModal} from '@app/helpers';
-import {migration} from '@app/models/migration';
-import {BackupScreen} from '@app/screens/backup';
-import {BackupNotificationScreen} from '@app/screens/backup-notification';
-import {CreateScreen} from '@app/screens/create';
-import {DetailsQrScreen} from '@app/screens/details-qr';
-import {HomeScreen} from '@app/screens/home';
-import {LedgerScreen} from '@app/screens/ledger';
-import {Modals} from '@app/screens/modals';
-import {RestoreScreen} from '@app/screens/restore';
-import {SettingsAboutScreen} from '@app/screens/settings-about';
-import {SettingsAccountDetailScreen} from '@app/screens/settings-account-detail';
-import {SettingsAccountStyleScreen} from '@app/screens/settings-account-style';
-import {SettingsAccountsScreen} from '@app/screens/settings-accounts';
-import {SettingsAddressBookScreen} from '@app/screens/settings-address-book';
-import {SettingsFAQScreen} from '@app/screens/settings-faq';
-import {SettingsLanguageScreen} from '@app/screens/settings-language';
-import {SettingsProvidersScreen} from '@app/screens/settings-providers';
-import {SettingsSecurityScreen} from '@app/screens/settings-security';
-import {SettingsSecurityPinScreen} from '@app/screens/settings-security-pin';
-import {SettingsTestScreen} from '@app/screens/settings-test';
-import {SignInScreen} from '@app/screens/signin';
-import {SignUpScreen} from '@app/screens/signup';
-import {TransactionScreen} from '@app/screens/transaction';
-import {TransactionDetailScreen} from '@app/screens/transaction-detail';
-import {WelcomeScreen} from '@app/screens/welcome';
+import {createTheme, hideModal, showModal} from '@app/helpers';
+import {useTheme} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {
   ActionSheetType,
+  AppTheme,
   HeaderButtonProps,
   PresentationNavigation,
   RootStackParamList,
   ScreenOptionType,
 } from '@app/types';
 import {sleep} from '@app/utils';
-import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
+
+import {StatusBarColor} from './components/ui';
+import {migration} from './models/migration';
+import {BackupScreen} from './screens/backup';
+import {BackupNotificationScreen} from './screens/backup-notification';
+import {CreateScreen} from './screens/create';
+import {DetailsQrScreen} from './screens/details-qr';
+import {HomeScreen} from './screens/home';
+import {LedgerScreen} from './screens/ledger';
+import {Modals} from './screens/modals';
+import {RestoreScreen} from './screens/restore';
+import {SettingsAboutScreen} from './screens/settings-about';
+import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
+import {SettingsAccountEditScreen} from './screens/settings-account-edit';
+import {SettingsAccountStyleScreen} from './screens/settings-account-style';
+import {SettingsAccountsScreen} from './screens/settings-accounts';
+import {SettingsAddressBookScreen} from './screens/settings-address-book';
+import {SettingsContactEditScreen} from './screens/settings-contact-edit';
+import {SettingsFAQScreen} from './screens/settings-faq';
+import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProvidersScreen} from './screens/settings-providers';
+import {SettingsSecurityScreen} from './screens/settings-security';
+import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsTestScreen} from './screens/settings-test';
+import {SettingsThemeScreen} from './screens/settings-theme';
+import {SignInScreen} from './screens/signin';
+import {SignUpScreen} from './screens/signup';
+import {TransactionScreen} from './screens/transaction';
+import {TransactionDetailScreen} from './screens/transaction-detail';
+import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -85,14 +93,13 @@ const screenOptions: ScreenOptionType = {
 
 const Stack = createStackNavigator();
 
-const AppTheme = {
-  dark: false,
+const appTheme = createTheme({
   colors: {
     ...DefaultTheme.colors,
-    primary: LIGHT_GRAPHIC_GREEN_1,
-    background: LIGHT_BG_1,
+    primary: Color.graphicGreen1,
+    background: Color.bg1,
   },
-};
+});
 
 const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
@@ -111,6 +118,13 @@ const stackScreenOptions = {
   gestureEnabled: false,
 };
 export const App = () => {
+  const theme = useTheme();
+
+  const navTheme = useMemo(
+    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
+    [theme],
+  );
+
   useEffect(() => {
     showModal('splash');
     sleep(150)
@@ -176,13 +190,16 @@ export const App = () => {
     }
   }, [initialized]);
 
+  // @ts-ignore
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
-        <StatusBarColor barStyle="dark-content" />
+        <StatusBarColor
+          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+        />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
-            <NavigationContainer ref={navigator} theme={AppTheme}>
+            <NavigationContainer ref={navigator} theme={navTheme}>
               <Stack.Navigator screenOptions={basicScreenOptions}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
@@ -297,6 +314,27 @@ export const App = () => {
                     component={SettingsTestScreen}
                     options={{
                       title: 'Test',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountEdit"
+                    component={SettingsAccountEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsContactEdit"
+                    component={SettingsContactEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsTheme"
+                    component={SettingsThemeScreen}
+                    options={{
+                      title: getText(I18N.settingsThemeScreen),
                     }}
                   />
                 </Stack.Group>

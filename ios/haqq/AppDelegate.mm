@@ -95,7 +95,7 @@ RCTRootView* overview = nil;
 #endif
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application{
+- (void)applicationDidEnterBackground:(UIApplication *)application{
   overview.frame = self.window.bounds;
   overview.tag = 181099;
   [self.window addSubview:overview];

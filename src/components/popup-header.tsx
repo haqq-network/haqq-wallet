@@ -2,16 +2,13 @@ import React, {useEffect, useMemo} from 'react';
 
 import {NavigationAction} from '@react-navigation/routers';
 import {StackHeaderProps} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
-
-import {
-  DEFAULT_HITSLOP,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_TEXT_BASE_1,
-} from '../variables';
+import {createTheme} from '@app/helpers';
+import {DEFAULT_HITSLOP} from '@app/variables';
 
 export const PopupHeader = ({
   options,
@@ -47,12 +44,12 @@ export const PopupHeader = ({
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
       {canGoBack ? (
         <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
-          <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_1} />
+          <Icon s name="arrow_back" color={getColor(Color.graphicBase1)} />
         </IconButton>
       ) : (
         <View style={page.spacer} />
       )}
-      <Text t8 style={page.title}>
+      <Text t8 center color={getColor(Color.textBase1)}>
         {options.title}
       </Text>
       {options.headerRight ? (
@@ -64,7 +61,7 @@ export const PopupHeader = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -72,11 +69,6 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
-  },
-  title: {
-    fontWeight: '600',
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
   },
   spacer: {
     width: 24,

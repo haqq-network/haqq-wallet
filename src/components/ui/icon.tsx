@@ -5,6 +5,7 @@ import {Image, ImageProps, StyleSheet} from 'react-native';
 export enum IconsName {
   address_book = 'address_book',
   arrow_back = 'arrow_back',
+  arrow_forward = 'arrow_forward',
   brush = 'brush',
   clear = 'clear',
   close_circle = 'close_circle',
@@ -12,6 +13,7 @@ export enum IconsName {
   logo = 'logo',
   plus_mid = 'plus_mid',
   providers = 'providers',
+  settings = 'settings',
   shield = 'shield',
   wallet = 'wallet',
 }
