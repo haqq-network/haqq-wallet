@@ -86,6 +86,9 @@ export const DARK_BG_8 = '#292E2D';
 export const LIGHT_BG_9 = 'rgba(0, 0, 0, 0.6)';
 export const DARK_BG_9 = 'rgba(0, 0, 0, 0.6)';
 
+export const LIGHT_BG_10 = '#181C1A';
+export const DARK_BG_10 = '#181C1A';
+
 export const QR_STATUS_BAR = '#b2b2b2';
 export const QR_BACKGROUND = '#0000004D';
 

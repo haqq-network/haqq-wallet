@@ -34,6 +34,9 @@ export enum I18N {
   actionSheetDiscard,
   actionSheetKeepEditing,
   actionSheetMessage,
+  modalQRTitle,
+  modalQRNoAccessTitle,
+  modalQRNoAccessDescription,
 }
 
 export function getText(key: I18N): string {
@@ -72,6 +75,10 @@ const en: Record<I18N, string> = {
   [I18N.backupVerifyDescription]:
     'Please choose the correct backup phrase according to the serial number',
   [I18N.backupVerifyCheck]: 'Check',
+  [I18N.modalQRTitle]: 'Scan QR Code',
+  [I18N.modalQRNoAccessTitle]: 'No access to the camera',
+  [I18N.modalQRNoAccessDescription]:
+    'The app does not have access to your camera. Please go to your phone settings and allow the app to use camera. Without this, we will not be able to scan QR Code',
   [I18N.transactionContactEditHeaderTitle]: 'Edit Contact',
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
