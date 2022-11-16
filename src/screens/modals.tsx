@@ -12,9 +12,9 @@ import {
   PinModalProps,
   SplashModal,
   SplashModalProps,
-} from '../components/modals';
-import {QRModal, QRModalProps} from '../components/modals/qr/qr';
-import {app} from '../contexts/app';
+} from '@app/components/modals';
+import {QRModal, QRModalProps} from '@app/components/modals/qr';
+import {app} from '@app/contexts';
 
 type Loading = {
   type: 'loading';
