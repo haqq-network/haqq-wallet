@@ -6,7 +6,7 @@ import {
   TextProps as RNTextProps,
   StyleProp,
   StyleSheet,
-  ViewStyle,
+  TextStyle,
 } from 'react-native';
 
 import {Color} from '@app/colors';
@@ -35,7 +35,7 @@ export type TextProps = Omit<RNTextProps, 'style'> & {
   clean?: boolean;
   center?: boolean;
   color?: string;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 };
 
 export const Text = ({
