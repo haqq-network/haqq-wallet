@@ -13,6 +13,7 @@ export enum IconsName {
   logo = 'logo',
   plus_mid = 'plus_mid',
   providers = 'providers',
+  settings = 'settings',
   shield = 'shield',
   wallet = 'wallet',
 }
