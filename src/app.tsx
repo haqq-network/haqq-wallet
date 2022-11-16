@@ -23,6 +23,21 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {
+  Notifications,
+  PopupHeader,
+  SettingsAccountRemoveButton,
+} from '@app/components';
+import {
+  AppContext,
+  TransactionsContext,
+  WalletsContext,
+  app,
+  transactions,
+  wallets,
+} from '@app/contexts';
+import {hideModal, showModal} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {
   ActionSheetType,
   HeaderButtonProps,
   PresentationNavigation,
@@ -32,14 +47,7 @@ import {
 import {sleep} from '@app/utils';
 import {LIGHT_BG_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
-import {Notifications} from './components/notifications';
-import {PopupHeader} from './components/popup-header';
-import {SettingsAccountRemoveButton} from './components/settings-account-remove-button';
 import {StatusBarColor} from './components/ui';
-import {AppContext, app} from './contexts/app';
-import {TransactionsContext, transactions} from './contexts/transactions';
-import {WalletsContext, wallets} from './contexts/wallets';
-import {hideModal, showModal} from './helpers/modal';
 import {migration} from './models/migration';
 import {BackupScreen} from './screens/backup';
 import {BackupNotificationScreen} from './screens/backup-notification';
@@ -62,6 +70,7 @@ import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
+import {SettingsThemeScreen} from './screens/settings-theme';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
@@ -172,6 +181,7 @@ export const App = () => {
     }
   }, [initialized]);
 
+  // @ts-ignore
   return (
     <SafeAreaProvider>
       <AppContext.Provider value={app}>
@@ -307,6 +317,13 @@ export const App = () => {
                     component={SettingsContactEditScreen}
                     options={{
                       headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsTheme"
+                    component={SettingsThemeScreen}
+                    options={{
+                      title: getText(I18N.settingsThemeScreen),
                     }}
                   />
                 </Stack.Group>
