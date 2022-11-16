@@ -30,6 +30,9 @@ export enum I18N {
   actionSheetDiscard,
   actionSheetKeepEditing,
   actionSheetMessage,
+  modalQRTitle,
+  modalQRNoAccessTitle,
+  modalQRNoAccessDescription,
 }
 
 export function getText(key: I18N): string {
@@ -62,6 +65,11 @@ const en: Record<I18N, string> = {
   [I18N.ledgerAgreementTitle]: 'Connect your Ledger',
   [I18N.ledgerAgreementText]:
     'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
+  [I18N.ledgerAgreementAgree]: 'Connect',
+  [I18N.modalQRTitle]: 'Scan QR Code',
+  [I18N.modalQRNoAccessTitle]: 'No access to the camera',
+  [I18N.modalQRNoAccessDescription]:
+    'The app does not have access to your camera. Please go to your phone settings and allow the app to use camera. Without this, we will not be able to scan QR Code',
   [I18N.transactionContactEditHeaderTitle]: 'Edit Contact',
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
