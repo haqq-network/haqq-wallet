@@ -4,15 +4,16 @@ import {
   Platform,
   Text as RNText,
   TextProps as RNTextProps,
+  StyleProp,
   StyleSheet,
+  ViewStyle,
 } from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {FontT} from '@app/types';
 
-import {FontT} from '../../types';
-
-export type TextProps = {
+export type TextProps = Omit<RNTextProps, 'style'> & {
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -34,7 +35,8 @@ export type TextProps = {
   clean?: boolean;
   center?: boolean;
   color?: string;
-} & RNTextProps;
+  style: StyleProp<ViewStyle>;
+};
 
 export const Text = ({
   t0,

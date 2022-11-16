@@ -35,25 +35,29 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   }, [theme]);
 
   return (
-    <PopupContainer style={page.container} testID={testID}>
-      <View style={page.animation}>
+    <PopupContainer style={styles.container} testID={testID}>
+      <View style={styles.animation}>
         <LottieWrap
           source={animation}
-          style={page.image}
+          style={styles.image}
           autoPlay
           resizeMode="center"
           loop
         />
       </View>
-      <Text t4 style={page.title}>
+      <Text t4 center style={styles.title}>
         {getText(I18N.restoreAgreementTitle)}
       </Text>
-      <Text t11 style={page.disclaimer} color={getColor(Color.textBase2)}>
+      <Text
+        t11
+        center
+        style={styles.disclaimer}
+        color={getColor(Color.textBase2)}>
         {getText(I18N.restoreAgreementText)}
       </Text>
       <Spacer />
       <Button
-        style={page.submit}
+        style={styles.submit}
         variant={ButtonVariant.contained}
         title={getText(I18N.restoreAgreementAgree)}
         testID={`${testID}_agree`}
@@ -64,7 +68,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
@@ -76,10 +80,8 @@ const page = createTheme({
   title: {
     marginBottom: 4,
     marginHorizontal: 20,
-    textAlign: 'center',
   },
   disclaimer: {
-    textAlign: 'center',
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
