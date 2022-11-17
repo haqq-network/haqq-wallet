@@ -20,6 +20,7 @@ export type SettingsButtonProps = {
     | 'settingsTest';
   icon: IconsName | keyof typeof IconsName;
   title: string;
+  rightTitle?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
@@ -29,6 +30,7 @@ export const SettingsButton = ({
   title,
   next,
   style,
+  rightTitle,
 }: SettingsButtonProps) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -41,6 +43,11 @@ export const SettingsButton = ({
         <Text t11 style={page.text} color={getColor(Color.textBase1)}>
           {title}
         </Text>
+        {rightTitle && (
+          <Text t11 style={page.textRight} color={getColor(Color.textBase2)}>
+            {rightTitle}
+          </Text>
+        )}
       </View>
     </MenuNavigationButton>
   );
@@ -55,5 +62,10 @@ const page = StyleSheet.create({
   },
   text: {
     marginLeft: 12,
+  },
+  textRight: {
+    textAlign: 'right',
+    flex: 1,
+    marginRight: 20,
   },
 });
