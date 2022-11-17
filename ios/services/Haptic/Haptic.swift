@@ -13,6 +13,7 @@ enum RNHapticEffect: String
   case success
   case warning
   case error
+  case impactLight
 }
 
 
@@ -28,13 +29,6 @@ class RNHaptic: NSObject {
   static let selection: UISelectionFeedbackGenerator = {
     let generator = UISelectionFeedbackGenerator()
     generator.prepare();
-    
-    return generator;
-  }()
-
-  static let impact: UIImpactFeedbackGenerator = {
-    let generator = UIImpactFeedbackGenerator()
-    generator.prepare()
     
     return generator;
   }()
@@ -86,10 +80,10 @@ class RNHaptic: NSObject {
     }
   }
 
-  func impact(_ notificationType: UINotificationFeedbackGenerator.FeedbackType) -> Void {
+  func impact(_ impactStyle: UIImpactFeedbackGenerator.FeedbackStyle) -> Void {
     DispatchQueue.main.async {
-      RNHaptic.impact.impactOccurred(style: notificationType)
-      RNHaptic.impact.prepare()
+      let generator = UIImpactFeedbackGenerator(style: impactStyle)
+      generator.impactOccurred()
     }
   }
 }
