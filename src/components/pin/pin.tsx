@@ -7,20 +7,17 @@ import React, {
 } from 'react';
 
 import {isBefore} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {NumericKeyboard} from './numeric-keyboard';
-import {Spacer, Text} from './ui';
+import {Color} from '@app/colors';
+import {Spacer, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {moderateVerticalScale} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {moderateVerticalScale} from '../helpers/scaling-utils';
-import {HapticEffects, vibrate} from '../services/haptic';
-import {
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
+import {NumericKeyboard} from './numeric-keyboard';
 
 export type PinProps = {
   title: string;
@@ -51,12 +48,7 @@ export const Pin = forwardRef(
               '0',
             )}:${String(interval % 60).padStart(2, '0')}`;
 
-            setError(
-              'Too many attempts, please wait for {timer}'.replace(
-                '{timer}',
-                left,
-              ),
-            );
+            setError(getText(I18N.pinManyAttempts, left));
           } else {
             clearInterval(timer);
             setLocked(null);
@@ -107,25 +99,25 @@ export const Pin = forwardRef(
     }, [onPin, pin]);
 
     return (
-      <View style={[page.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 style={page.title}>
+      <View style={[styles.container, {paddingBottom: insets.bottom}]}>
+        <Text t4 style={styles.title}>
           {title}
         </Text>
         {error && <Text clean>{error}</Text>}
         {subtitle && !error && (
-          <Text t11 style={page.t11}>
+          <Text t11 style={styles.t11}>
             {subtitle}
           </Text>
         )}
 
-        <Spacer style={page.spacer}>
-          <View style={page.dots}>
-            <View style={[page.dot, pin.length >= 1 && page.active]} />
-            <View style={[page.dot, pin.length >= 2 && page.active]} />
-            <View style={[page.dot, pin.length >= 3 && page.active]} />
-            <View style={[page.dot, pin.length >= 4 && page.active]} />
-            <View style={[page.dot, pin.length >= 5 && page.active]} />
-            <View style={[page.dot, pin.length >= 6 && page.active]} />
+        <Spacer style={styles.spacer}>
+          <View style={styles.dots}>
+            <View style={[styles.dot, pin.length >= 1 && styles.active]} />
+            <View style={[styles.dot, pin.length >= 2 && styles.active]} />
+            <View style={[styles.dot, pin.length >= 3 && styles.active]} />
+            <View style={[styles.dot, pin.length >= 4 && styles.active]} />
+            <View style={[styles.dot, pin.length >= 5 && styles.active]} />
+            <View style={[styles.dot, pin.length >= 6 && styles.active]} />
           </View>
         </Spacer>
         <NumericKeyboard onPress={onKeyboard} additionButton={additionButton} />
@@ -134,13 +126,16 @@ export const Pin = forwardRef(
   },
 );
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
     alignItems: 'center',
     marginHorizontal: 20,
   },
-  spacer: {justifyContent: 'center', alignItems: 'center'},
+  spacer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -149,17 +144,17 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: LIGHT_TEXT_GREEN_1,
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
     fontWeight: '600',
   },
   title: {
@@ -167,5 +162,8 @@ const page = StyleSheet.create({
     marginBottom: 12,
     textAlign: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  t11: {
+    textAlign: 'center',
+    color: Color.textBase2,
+  },
 });
