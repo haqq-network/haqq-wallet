@@ -61,10 +61,17 @@ export enum I18N {
   homeWalletTitle,
   homeSettings,
   homeSettingsTitle,
+  modalPinTitle,
+  modalPinForgotCode,
+  pinManyAttempts,
 }
 
-export function getText(key: I18N): string {
-  return en[key];
+export function getText(key: I18N, ...args: string[]): string {
+  let str = en[key];
+  if (args.length) {
+    return str.replace('{0}', args[0]);
+  }
+  return str;
 }
 
 const en: Record<I18N, string> = {
@@ -138,6 +145,9 @@ const en: Record<I18N, string> = {
   [I18N.backupNotificationAlertTitle]: 'Proceed without backup?',
   [I18N.backupNotificationAlertDescription]:
     'If you lose access to your wallet, we will not be able to restore your wallet if you do not make a backup',
+  [I18N.modalPinTitle]: 'Welcome to ISLM Wallet',
+  [I18N.modalPinForgotCode]: 'Forgot\nthe code',
+  [I18N.pinManyAttempts]: 'Too many attempts, please wait for {0}',
   [I18N.homeWallet]: 'Wallet',
   [I18N.homeWalletTitle]: 'Your wallets',
   [I18N.homeSettings]: 'Settings',
