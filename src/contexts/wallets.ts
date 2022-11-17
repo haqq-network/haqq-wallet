@@ -5,68 +5,16 @@ import {EventEmitter} from 'events';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
-import {app} from './app';
-
-import {captureException} from '../helpers';
-import {realm} from '../models';
-import {Wallet, WalletRealm} from '../models/wallet';
-import {encrypt} from '../passworder';
+import {app} from '@app/contexts';
+import {captureException} from '@app/helpers';
+import {realm} from '@app/models';
+import {Wallet, WalletRealm} from '@app/models/wallet';
 import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
-} from '../services/eth-utils';
-import {
-  Mnemonic,
-  WalletCardPattern,
-  WalletCardStyle,
-  WalletType,
-} from '../types';
-import {
-  generateFlatColors,
-  generateGradientColors,
-  getPatternName,
-  sleep,
-} from '../utils';
-import {
-  CARD_CIRCLE_TOTAL,
-  CARD_DEFAULT_STYLE,
-  CARD_RHOMBUS_TOTAL,
-  DEFAULT_CARD_BACKGROUND,
-  DEFAULT_CARD_PATTERN,
-  FLAT_PRESETS,
-  GRADIENT_PRESETS,
-} from '../variables';
-
-const cards = [WalletCardStyle.flat, WalletCardStyle.gradient];
-const patterns = [WalletCardPattern.circle, WalletCardPattern.rhombus];
-
-const defaultData = {
-  data: '',
-  name: '',
-  mnemonicSaved: true,
-  isHidden: false,
-  cardStyle: WalletCardStyle.flat,
-  colorFrom: DEFAULT_CARD_BACKGROUND,
-  colorTo: DEFAULT_CARD_BACKGROUND,
-  colorPattern: DEFAULT_CARD_PATTERN,
-  pattern: CARD_DEFAULT_STYLE,
-  type: WalletType.hot,
-  deviceId: undefined,
-  deviceName: undefined,
-};
-
-type AddWalletParams = {address: string} & (
-  | {
-      type: WalletType.hot;
-      privateKey: string;
-      mnemonic?: Mnemonic;
-    }
-  | {
-      type: WalletType.ledgerBt;
-      deviceId: string;
-      deviceName: string;
-    }
-);
+} from '@app/services/eth-utils';
+import {AddWalletParams, WalletType} from '@app/types';
+import {getPatternName, sleep} from '@app/utils';
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -75,7 +23,11 @@ class Wallets extends EventEmitter {
   constructor() {
     super();
     this._wallets = new Map();
-    const wallets = realm.objects<WalletRealm>('Wallet');
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+
+    wallets.addListener(() => {
+      this.emit('wallets');
+    });
 
     for (const rawWallet of wallets) {
       try {
@@ -95,14 +47,6 @@ class Wallets extends EventEmitter {
 
     this._initialized = true;
 
-    const password = await app.getPassword();
-
-    await Promise.all(
-      Array.from(this._wallets.values())
-        .filter(w => w.isEncrypted)
-        .map(w => w.decrypt(password)),
-    );
-
     Promise.all(
       Array.from(this._wallets.values()).map(w =>
         Image.prefetch(getPatternName(w.pattern)),
@@ -111,7 +55,6 @@ class Wallets extends EventEmitter {
       console.log('image prefetched');
     });
 
-    this.onChangeWallet();
     await this.checkForBackup(snoozeBackup);
   }
 
@@ -129,20 +72,12 @@ class Wallets extends EventEmitter {
   }
 
   attachWallet(wallet: Wallet) {
-    wallet.addListener('change', this.onChangeWallet);
     this._wallets.set(wallet.address, wallet);
-    this.onChangeWallet();
   }
 
   deAttachWallet(wallet: Wallet) {
-    wallet.removeListener('change', this.onChangeWallet);
     this._wallets.delete(wallet.address);
-    this.onChangeWallet();
   }
-
-  onChangeWallet = () => {
-    this.emit('wallets');
-  };
 
   addWalletFromLedger(
     {
@@ -165,16 +100,19 @@ class Wallets extends EventEmitter {
 
   async addWalletFromMnemonic(
     mnemonic: string,
+    path: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const node = await restoreFromMnemonic(mnemonic);
+    const node = await restoreFromMnemonic(mnemonic, path);
 
     return this.addWallet(
       {
         address: node.address,
-        type: WalletType.hot,
+        type: WalletType.mnemonic,
         privateKey: node.privateKey,
         mnemonic: node.mnemonic,
+        path: node.path,
+        rootAddress: node.rootAddress,
       },
       name,
     );
@@ -197,95 +135,16 @@ class Wallets extends EventEmitter {
   }
 
   async addWallet(walletParams: AddWalletParams, name = '') {
-    const exist = realm.objectForPrimaryKey<Wallet>(
-      'Wallet',
-      walletParams.address,
-    );
-    if (exist) {
-      return Promise.reject('wallet_already_exists');
-    }
     try {
-      let data = '';
+      const wallet = await Wallet.create(walletParams, name);
 
-      if (walletParams.type === WalletType.hot) {
-        const password = await app.getPassword();
-        data = await encrypt(password, walletParams);
-      }
+      this.attachWallet(wallet);
 
-      const cardStyle = cards[
-        this._wallets.size % cards.length
-      ] as WalletCardStyle;
-
-      const patternVariant = patterns[this._wallets.size % cards.length];
-
-      const pattern = `${patternVariant}-${Math.floor(
-        Math.random() *
-          (patternVariant === WalletCardPattern.circle
-            ? CARD_CIRCLE_TOTAL
-            : CARD_RHOMBUS_TOTAL),
-      )}`;
-
-      const usedColors = new Set(
-        [...this._wallets.values()].map(w => w.colorFrom),
-      );
-
-      let availableColors = (
-        cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
-      ).filter(c => !usedColors.has(c[0]));
-
-      const generatedColors =
-        cardStyle === WalletCardStyle.flat
-          ? generateFlatColors()
-          : generateGradientColors();
-
-      const colors = availableColors.length
-        ? availableColors[Math.floor(Math.random() * availableColors.length)]
-        : generatedColors;
-
-      let result = null;
-      realm.write(() => {
-        result = realm.create<WalletRealm>('Wallet', {
-          ...defaultData,
-          data: data,
-          address: walletParams.address,
-          mnemonicSaved: !(
-            walletParams.type === WalletType.hot &&
-            walletParams.mnemonic !== undefined
-          ),
-          name: name ?? defaultData.name,
-          pattern,
-          cardStyle,
-          colorFrom: colors[0],
-          colorTo: colors[1],
-          colorPattern: colors[2],
-          type: walletParams.type,
-          deviceId:
-            walletParams.type === WalletType.ledgerBt
-              ? walletParams.deviceId
-              : undefined,
-          deviceName:
-            walletParams.type === WalletType.ledgerBt
-              ? walletParams.deviceName
-              : undefined,
-        });
+      requestAnimationFrame(() => {
+        app.emit('addWallet', wallet.address);
       });
 
-      if (result) {
-        const wallet = new Wallet(result);
-        if (wallet.isEncrypted) {
-          const password = await app.getPassword();
-          await wallet.decrypt(password);
-        }
-
-        this.attachWallet(wallet);
-        this.onChangeWallet();
-
-        requestAnimationFrame(() => {
-          app.emit('addWallet', wallet.address);
-        });
-
-        return wallet;
-      }
+      return wallet;
     } catch (e) {
       captureException(e, 'createWallet');
     }
@@ -297,8 +156,19 @@ class Wallets extends EventEmitter {
     const wallet = this._wallets.get(address);
 
     if (wallet) {
+      if (wallet.isMain) {
+        const wallets = realm
+          .objects<WalletRealm>(WalletRealm.schema.name)
+          .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
+
+        if (wallets.length) {
+          const w = new Wallet(wallets[0]);
+          w.isMain = true;
+        }
+      }
+
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        'Wallet',
+        WalletRealm.schema.name,
         address,
       );
 
@@ -312,7 +182,7 @@ class Wallets extends EventEmitter {
 
     requestAnimationFrame(() => {
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        'Wallet',
+        WalletRealm.schema.name,
         address,
       );
       if (!realmWallet) {
@@ -324,7 +194,7 @@ class Wallets extends EventEmitter {
   clean() {
     this._wallets = new Map();
     this.emit('wallets');
-    const wallets = realm.objects<WalletRealm>('Wallet');
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
 
     for (const wallet of wallets) {
       realm.write(() => {
@@ -333,9 +203,10 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async updateWalletsData(pin: string) {
+  async updateWalletsData(newPin: string) {
+    const oldPin = await app.getPassword();
     for (const wallet of this._wallets.values()) {
-      await wallet.updateWalletData(pin);
+      await wallet.updateWalletData(oldPin, newPin);
     }
   }
 
@@ -349,6 +220,24 @@ class Wallets extends EventEmitter {
 
   getSize() {
     return this._wallets.size;
+  }
+
+  getMain() {
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const main = wallets.filtered('isMain = true');
+
+    if (!main.length) {
+      return null;
+    }
+
+    return new Wallet(main[0]);
+  }
+
+  getForRootAddress(rootAddress: string) {
+    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    return wallets
+      .filtered(`rootAddress = '${rootAddress}'`)
+      .map(w => new Wallet(w));
   }
 
   get visible() {

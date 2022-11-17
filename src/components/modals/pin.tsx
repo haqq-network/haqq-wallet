@@ -1,15 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {useApp} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables';
 
-import {
-  LIGHT_BG_1,
-  LIGHT_TEXT_BASE_2,
-  PIN_BANNED_ATTEMPTS,
-} from '../../variables';
-import {Pin, PinInterface} from '../pin';
+import {Pin, PinInterface} from '../pin/pin';
 import {RestorePassword} from '../restore-password';
 import {Text} from '../ui';
 
@@ -55,7 +54,7 @@ export const PinModal = () => {
     <View style={page.container}>
       <Pin
         ref={pinRef}
-        title="Welcome to ISLM Wallet"
+        title={getText(I18N.modalPinTitle)}
         onPin={onPin}
         onLock={onLock}
         additionButton={
@@ -63,10 +62,7 @@ export const PinModal = () => {
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
             <Text clean style={page.additionButtonText}>
-              Forgot
-            </Text>
-            <Text clean style={page.additionButtonText}>
-              the code
+              {getText(I18N.modalPinForgotCode)}
             </Text>
           </TouchableOpacity>
         }
@@ -76,15 +72,19 @@ export const PinModal = () => {
   );
 };
 
-const page = StyleSheet.create({
-  container: {backgroundColor: LIGHT_BG_1, flex: 1, paddingTop: 110},
+const page = createTheme({
+  container: {
+    backgroundColor: Color.bg1,
+    flex: 1,
+    paddingTop: 110,
+  },
   additionButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   additionButtonText: {
-    color: LIGHT_TEXT_BASE_2,
+    color: Color.textBase2,
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 16,

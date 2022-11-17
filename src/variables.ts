@@ -20,6 +20,9 @@ export const DARK_TEXT_RED_1 = '#E16363';
 export const LIGHT_TEXT_YELLOW_1 = '#B26F1D';
 export const DARK_TEXT_YELLOW_1 = '#EB9226';
 
+export const LIGHT_TEXT_BLUE_1 = '#007AFF';
+export const DARK_TEXT_BLUE_1 = '#007AFF';
+
 export const LIGHT_TEXT_SECOND_1 = '#B2B4BB';
 export const DARK_TEXT_SECOND_1 = '#5E6061';
 
@@ -82,6 +85,9 @@ export const DARK_BG_8 = '#292E2D';
 
 export const LIGHT_BG_9 = 'rgba(0, 0, 0, 0.6)';
 export const DARK_BG_9 = 'rgba(0, 0, 0, 0.6)';
+
+export const LIGHT_BG_10 = '#181C1A';
+export const DARK_BG_10 = '#181C1A';
 
 export const QR_STATUS_BAR = '#b2b2b2';
 export const QR_BACKGROUND = '#0000004D';
@@ -163,7 +169,8 @@ export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
 };
 
 export const DEFAULT_USERNAME = 'username';
-export const ETH_HD_PATH = "44'/60'/0'/0/0"; // HD derivation path
+export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
+export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
 export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
 export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';

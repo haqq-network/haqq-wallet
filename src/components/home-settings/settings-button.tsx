@@ -4,10 +4,10 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {MenuNavigationButton, Text} from './ui';
+import {Color, getColor} from '@app/colors';
+import {RootStackParamList} from '@app/types';
 
-import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_1} from '../variables';
+import {Icon, IconsName, MenuNavigationButton, Text} from '../ui';
 
 export type SettingsButtonProps = {
   next:
@@ -16,8 +16,9 @@ export type SettingsButtonProps = {
     | 'settingsSecurity'
     | 'settingsProviders'
     | 'settingsAbout'
+    | 'settingsTheme'
     | 'settingsTest';
-  icon: React.ReactNode;
+  icon: IconsName | keyof typeof IconsName;
   title: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -36,8 +37,8 @@ export const SettingsButton = ({
   return (
     <MenuNavigationButton onPress={onClickButton} style={style}>
       <View style={page.container}>
-        {icon}
-        <Text t11 style={page.text}>
+        <Icon s name={icon} color={getColor(Color.graphicBase1)} />
+        <Text t11 style={page.text} color={getColor(Color.textBase1)}>
           {title}
         </Text>
       </View>
@@ -54,6 +55,5 @@ const page = StyleSheet.create({
   },
   text: {
     marginLeft: 12,
-    color: LIGHT_TEXT_BASE_1,
   },
 });

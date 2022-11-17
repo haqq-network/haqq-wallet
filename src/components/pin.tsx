@@ -10,16 +10,16 @@ import {isBefore} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {NumericKeyboard} from './numeric-keyboard';
-import {ErrorText, Spacer, Text} from './ui';
-
-import {moderateVerticalScale} from '../helpers/scaling-utils';
-import {HapticEffects, vibrate} from '../services/haptic';
+import {moderateVerticalScale} from '@app/helpers/scaling-utils';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-} from '../variables';
+} from '@app/variables';
+
+import {NumericKeyboard} from './pin/numeric-keyboard';
+import {ErrorText, Spacer, Text} from './ui';
 
 export type PinProps = {
   title: string;
@@ -116,7 +116,7 @@ export const Pin = forwardRef(
         </Text>
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
-          <Text t11 style={page.t11}>
+          <Text t11 color={LIGHT_TEXT_BASE_2} center>
             {subtitle}
           </Text>
         )}
@@ -166,5 +166,4 @@ const page = StyleSheet.create({
     marginBottom: 12,
     textAlign: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
 });

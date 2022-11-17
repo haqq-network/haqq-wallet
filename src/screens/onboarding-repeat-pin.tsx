@@ -4,17 +4,16 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {useApp} from '@app/hooks';
-
-import {NumericKeyboard} from '../components/numeric-keyboard';
-import {vibrate} from '../services/haptic';
-import {RootStackParamList} from '../types';
+import {vibrate} from '@app/services/haptic';
+import {RootStackParamList} from '@app/types';
 import {
   LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-} from '../variables';
+} from '@app/variables';
 
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -61,7 +60,7 @@ export const OnboardingRepeatPinScreen = () => {
   return (
     <PopupContainer style={page.container}>
       <Text t4>Please repeat pin code</Text>
-      <Text t11 style={page.t11}>
+      <Text t11 color={LIGHT_TEXT_BASE_2} center>
         For security, we don't have a “Restore pin” button.
       </Text>
       <Spacer style={page.spacer}>
@@ -111,5 +110,4 @@ const page = StyleSheet.create({
   error: {
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
 });
