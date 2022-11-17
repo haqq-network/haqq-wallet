@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {useApp} from '@app/hooks';
 
-import {NumericKeyboard} from '../components/numeric-keyboard';
+import {NumericKeyboard} from '../components/pin/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '../components/ui';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';

@@ -9,7 +9,15 @@ import {
 } from 'react-native';
 
 import {useContacts} from '@app/hooks';
+import {EthNetwork} from '@app/services/eth-network';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {cleanNumber, isNumber, shortAddress} from '@app/utils';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '@app/variables';
 
 import {
   Button,
@@ -20,15 +28,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-
-import {EthNetwork} from '../services/eth-network';
-import {cleanNumber, isNumber, shortAddress} from '../utils';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export type TransactionSumProps = {
   to: string;
@@ -116,7 +115,7 @@ export const TransactionSum = ({
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock label="Send to" style={page.label}>
           <Text
-            style={{color: LIGHT_TEXT_BASE_1}}
+            color={LIGHT_TEXT_BASE_1}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -157,13 +156,13 @@ export const TransactionSum = ({
         <Text t15>$ {amountUsd}</Text>
       </View>
       {error ? (
-        <Text clean style={[page.help, page.error]}>
+        <Text clean center color={LIGHT_TEXT_RED_1} t14>
           {error}
         </Text>
       ) : (
-        <Text clean style={[page.help, page.available]}>
+        <Text clean center color={LIGHT_TEXT_BASE_2} t14>
           Available:{' '}
-          <Text clean style={{color: LIGHT_TEXT_GREEN_1}}>
+          <Text clean center color={LIGHT_TEXT_GREEN_1}>
             {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>
@@ -221,18 +220,6 @@ const page = StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  available: {
-    color: LIGHT_TEXT_BASE_2,
-  },
-  error: {
-    color: LIGHT_TEXT_RED_1,
-  },
-  help: {
-    fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'center',
   },
   submit: {
     marginVertical: 16,

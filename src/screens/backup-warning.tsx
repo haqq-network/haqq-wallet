@@ -15,6 +15,8 @@ import {
   Spacer,
   Text,
 } from '../components/ui';
+import {app} from '../contexts/app';
+import {useWallet} from '../hooks';
 import {RootStackParamList} from '../types';
 import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
 
@@ -23,6 +25,17 @@ const warningImage = require('../../assets/animations/recover-animation.json');
 export const BackupWarningScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'backupWarning'>>();
+  const wallet = useWallet(route.params.address);
+
+  const onPressBackup = async () => {
+    const password = await app.getPassword();
+    const mnemonic = await wallet?.getMnemonic(password);
+    navigation.navigate('backupCreate', {
+      rootAddress: wallet?.rootAddress ?? '',
+      mnemonic,
+    });
+  };
+
   return (
     <PopupContainer style={page.container}>
       <Spacer style={page.imageContainer}>
@@ -53,9 +66,7 @@ export const BackupWarningScreen = () => {
         variant={ButtonVariant.contained}
         style={page.submit}
         title="Understood"
-        onPress={() =>
-          navigation.navigate('backupCreate', {address: route.params.address})
-        }
+        onPress={onPressBackup}
       />
     </PopupContainer>
   );
