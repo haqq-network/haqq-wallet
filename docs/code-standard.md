@@ -151,7 +151,7 @@ function concatenateAll(...args) {
 }
 ```
 
-## 8. Always put default parameters last. eslint: default-param-last
+## 7. Always put default parameters last. eslint: default-param-last
 
 ```jsx
 // bad
@@ -165,7 +165,7 @@ function handleThings(name, opts = {}) {
 }
 ```
 
-## 9. Use exponentiation operator \*\*
+## 8. Use exponentiation operator \*\*
 
 When calculating exponentiations. eslint: no-restricted-properties
 
@@ -177,7 +177,7 @@ const binary = Math.pow(2, 10);
 const binary = 2 ** 10;
 ```
 
-## 10. Assign variables where you need them, but place them in a reasonable place.
+## 9. Assign variables where you need them, but place them in a reasonable place.
 
 Why? let and const are block-scoped and not function-scoped.
 
@@ -215,7 +215,7 @@ function checkName(hasName) {
 }
 ```
 
-## 11. Group all your consts and then group all your lets.
+## 10. Group all your consts and then group all your lets.
 
 ```jsx
 // bad
@@ -237,7 +237,7 @@ let dragonball;
 let i;
 ```
 
-## 12. Use shortcuts for booleans, but explicit comparisons for strings and numbers.
+## 11. Use shortcuts for booleans, but explicit comparisons for strings and numbers.
 
 ```jsx
 // bad
@@ -271,7 +271,7 @@ if (collection.length > 0) {
 }
 ```
 
-## 13. Avoid unneeded ternary statements. eslint: no-unneeded-ternary
+## 12. Avoid unneeded ternary statements. eslint: no-unneeded-ternary
 
 ```jsx
 // bad
@@ -285,7 +285,7 @@ const bar = !!c;
 const baz = !c;
 ```
 
-## 14. Avoid single-letter names. Be descriptive with your naming. eslint: id-length
+## 13. Avoid single-letter names. Be descriptive with your naming. eslint: id-length
 
 ```jsx
 // bad
@@ -299,42 +299,7 @@ function query() {
 }
 ```
 
-## 15. A base filename should exactly match the name of its default export.
-
-```jsx
-// file 1 contents
-class CheckBox {
-  // ...
-}
-export default CheckBox;
-
-// file 2 contents
-export default function fortyTwo() { return 42; }
-
-// file 3 contents
-export default function insideDirectory() {}
-
-// in some other file
-// bad
-import CheckBox from './checkBox'; // PascalCase import/export, camelCase filename
-import FortyTwo from './FortyTwo'; // PascalCase import/filename, camelCase export
-import InsideDirectory from './InsideDirectory'; // PascalCase import/filename, camelCase export
-
-// bad
-import CheckBox from './check_box'; // PascalCase import/export, snake_case filename
-import forty_two from './forty_two'; // snake_case import/filename, camelCase export
-import inside_directory from './inside_directory'; // snake_case import, camelCase export
-import index from './inside_directory/index'; // requiring the index file explicitly
-import insideDirectory from './insideDirectory/index'; // requiring the index file explicitly
-
-// good
-import CheckBox from './CheckBox'; // PascalCase export/import/filename
-import fortyTwo from './fortyTwo'; // camelCase export/import/filename
-import insideDirectory from './insideDirectory'; // camelCase export/import/directory name/implicit "index"
-// ^ supports both insideDirectory.js and insideDirectory/index.js
-```
-
-## 16. You may optionally uppercase a constant only
+## 14. You may optionally uppercase a constant only
 
 If it (1) is exported, (2) is a const (it can not be reassigned), and (3) the programmer can trust it (and its nested properties) to never change.
 Why? This is an additional tool to assist in situations where the programmer would be unsure if a variable might ever change. UPPERCASE_VARIABLES are letting the programmer know that they can trust the variable (and its properties) not to change.
@@ -374,7 +339,7 @@ export const MAPPING = {
 };
 ```
 
-## 17. Acronyms and initialisms should always be all uppercase or all lowercase.
+## 15. Acronyms and initialisms should always be all uppercase or all lowercase.
 
 Why? Names are for readability, not to appease a computer algorithm.
 
@@ -409,9 +374,9 @@ const requests = [
 ];
 ```
 
-## 18. Use Number.isNaN instead of global isNaN. eslint: no-restricted-globals
+## 16. Use Number.isNaN instead of global isNaN. eslint: no-restricted-globals
 
-Why? The global isNaN coerces non-numbers to numbers, returning true for anything that coerces to NaN. If this behavior is desired, make it explicit.
+[Why?](https://stackoverflow.com/a/33164924) The global isNaN coerces non-numbers to numbers, returning true for anything that coerces to NaN. If this behavior is desired, make it explicit.
 
 ```jsx
 // bad
@@ -423,7 +388,7 @@ Number.isNaN('1.2.3'); // false
 Number.isNaN(Number('1.2.3')); // true
 ```
 
-## 19. Never mutate parameters. eslint: no-param-reassign
+## 17. Never mutate parameters. eslint: no-param-reassign
 
 ```jsx
 // bad
@@ -439,7 +404,7 @@ function f2(obj) {
 
 very cool with a smile
 
-## 15. Avoid magic numbers. eslint: no-magic-numbers
+## 18. Avoid magic numbers. eslint: no-magic-numbers
 
 ```jsx
 // bad
@@ -471,6 +436,41 @@ const marginTitleTopWithSafeArea = safeAreaTop + marginTitleTop
 <p style={{marginTop: marginTitleTopWithSafeArea}}>Title</p>
 ...
 ```
+
+<!-- ## 19. A base filename should exactly match the name of its default export.
+
+```jsx
+// file 1 contents
+class CheckBox {
+  // ...
+}
+export default CheckBox;
+
+// file 2 contents
+export default function fortyTwo() { return 42; }
+
+// file 3 contents
+export default function insideDirectory() {}
+
+// in some other file
+// bad
+import CheckBox from './checkBox'; // PascalCase import/export, camelCase filename
+import FortyTwo from './FortyTwo'; // PascalCase import/filename, camelCase export
+import InsideDirectory from './InsideDirectory'; // PascalCase import/filename, camelCase export
+
+// bad
+import CheckBox from './check_box'; // PascalCase import/export, snake_case filename
+import forty_two from './forty_two'; // snake_case import/filename, camelCase export
+import inside_directory from './inside_directory'; // snake_case import, camelCase export
+import index from './inside_directory/index'; // requiring the index file explicitly
+import insideDirectory from './insideDirectory/index'; // requiring the index file explicitly
+
+// good
+import CheckBox from './CheckBox'; // PascalCase export/import/filename
+import fortyTwo from './fortyTwo'; // camelCase export/import/filename
+import insideDirectory from './insideDirectory'; // camelCase export/import/directory name/implicit "index"
+// ^ supports both insideDirectory.js and insideDirectory/index.js
+``` -->
 
 ## React/ReactNative
 
@@ -544,11 +544,11 @@ For more info about how use redux with a project see this document: State Manage
 
 ## 5. Extract reusable logic into custom hooks
 
-Examples & explanation:
+Examples can be found in the project folder - `src/hooks`
 
-Advanced React Hooks: Creating custom reusable Hooks - LogRocket Blog
+[Advanced React Hooks: Creating custom reusable Hooks - LogRocket Blog](https://blog.logrocket.com/advanced-react-hooks-creating-custom-reusable-hooks/)
 
-Creating and using custom React Hooks to promote reusability of logics
+[Creating and using custom React Hooks to promote reusability of logics](https://medium.com/geekculture/creating-and-using-custom-react-hooks-to-promote-reusability-of-logics-632a0b7fcbe9)
 
 ## 6. Use absolute path everywhere
 
@@ -629,25 +629,41 @@ Using the key prop is important because it helps React identify the exact elemen
 function UserList() {
   const renderUserItem = user => <li>{user.name}</li>;
 
-  return userlist.map(renderUserItem);
+  return userList.map(renderUserItem);
 }
 
 // very bad
 function UserList() {
   const renderUserItem = (user, index) => <li key={index}>{user.name}</li>;
 
-  return userlist.map(renderUserItem);
+  return userList.map(renderUserItem);
 }
 
 // good
 function UserList() {
   const renderUserItem = user => <li key={user.id}>{user.name}</li>;
 
-  return userlist.map(renderUserItem);
+  return userList.map(renderUserItem);
 }
 ```
 
 But if it has not id param, so you can use an external library like nanoid for generating unique id's.
+
+```jsx
+// good
+function fetchData() {
+  const data = fetch(...params);
+
+  return data.map(el => ({...el, id: nanoid()}));
+}
+
+// bad
+function UserList() {
+  const renderItem = user => <li key={nanoid()}>{user.name}</li>;
+
+  return dataList.map(renderItem);
+}
+```
 
 ## 10. Use shorthand for boolean props
 
@@ -704,11 +720,7 @@ Regular HTML attributes also typically use double quotes instead of single, so J
 
 ## 13. Use the following order of code organization in the component file:
 
-imports
-constants
-component
-helpers
-screens
+imports - constants - component - helpers - screens
 
 # React Native
 
