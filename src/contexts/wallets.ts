@@ -72,11 +72,11 @@ class Wallets extends EventEmitter {
   }
 
   attachWallet(wallet: Wallet) {
-    this._wallets.set(wallet.address, wallet);
+    this._wallets.set(wallet.address.toLowerCase(), wallet);
   }
 
   deAttachWallet(wallet: Wallet) {
-    this._wallets.delete(wallet.address);
+    this._wallets.delete(wallet.address.toLowerCase());
   }
 
   addWalletFromLedger(
@@ -211,7 +211,7 @@ class Wallets extends EventEmitter {
   }
 
   getWallet(address: string): Wallet | undefined {
-    return this._wallets.get(address);
+    return this._wallets.get(address.toLowerCase());
   }
 
   getWallets(): Wallet[] {
