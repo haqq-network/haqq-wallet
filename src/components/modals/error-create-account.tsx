@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {StyleSheet, View} from 'react-native';
+
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {windowWidth} from '../../helpers';
 import {hideModal} from '../../helpers/modal';
@@ -19,6 +21,9 @@ import {
 } from '../ui';
 
 export const ErrorCreateAccount = () => {
+  useEffect(() => {
+    vibrate(HapticEffects.error);
+  }, []);
   const onPress = () => {
     hideModal();
   };

@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet} from 'react-native';
 
 import {useWallets} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {IconButton, TrashIcon} from './ui';
 
@@ -20,6 +21,7 @@ export const SettingsAccountRemoveButton = ({
   const navigation = useNavigation();
   const wallets = useWallets();
   const onClickRemove = () => {
+    vibrate(HapticEffects.warning);
     Alert.alert(
       'Attention. You may lose all your funds! Are you sure you want to delete your account?',
       'Do not delete the account if you are not sure that you can restore them. To restore, you will need a backup phrase of 12 words that you made for your account',
