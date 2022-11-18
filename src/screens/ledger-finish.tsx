@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {useApp} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {Finish} from '../components/finish';
 import {hideModal} from '../helpers/modal';
@@ -15,6 +16,7 @@ export const LedgerFinishScreen = () => {
 
   useEffect(() => {
     hideModal();
+    vibrate(HapticEffects.success);
   }, []);
 
   const onEnd = useCallback(() => {

@@ -163,6 +163,7 @@ export const App = () => {
 
     app.on('resetWallet', () => {
       navigator.dispatch(StackActions.replace('welcome'));
+      app.getUser().onboarded = false;
       hideModal();
     });
   }, []);

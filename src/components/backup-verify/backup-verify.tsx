@@ -15,6 +15,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shuffleWords} from '@app/utils';
 
 export type BackupVerifyProps = {
@@ -34,6 +35,14 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
   const onPressDone = useCallback(() => {
     onDone(selected.map(v => words.get(v)).join(' '));
   }, [onDone, selected, words]);
+
+  const onPressWord = useCallback(
+    (val: string) => () => {
+      vibrate(HapticEffects.impactLight);
+      setSelected(sel => sel.concat(val));
+    },
+    [],
+  );
 
   return (
     <PopupContainer style={styles.container}>
@@ -96,9 +105,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
             key={val}
             style={styles.buttonStyle}
             title={words.get(val) ?? ''}
-            onPress={() => {
-              setSelected(sel => sel.concat(val));
-            }}
+            onPress={onPressWord(val)}
           />
         ))}
       </View>

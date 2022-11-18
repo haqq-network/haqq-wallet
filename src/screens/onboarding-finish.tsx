@@ -4,6 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {useApp, useWallets} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {Finish} from '../components/finish';
 import {hideModal} from '../helpers/modal';
@@ -36,6 +37,7 @@ export const OnboardingFinishScreen = () => {
 
   useEffect(() => {
     hideModal();
+    vibrate(HapticEffects.success);
   }, []);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
