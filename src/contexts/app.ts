@@ -13,6 +13,8 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {HapticEffects, vibrate} from '@app/services/haptic';
+
 import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
@@ -202,6 +204,7 @@ class App extends EventEmitter {
     if (this.biometry) {
       try {
         await this.biometryAuth();
+        vibrate(HapticEffects.success);
         this.authenticated = true;
       } catch (error) {
         console.log(error);

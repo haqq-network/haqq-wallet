@@ -4,7 +4,8 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {NumericKeyboard} from '../components/pin/numeric-keyboard';
+import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
+
 import {PopupContainer, Spacer, Text} from '../components/ui';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
@@ -43,7 +44,7 @@ export const OnboardingSetupPinScreen = () => {
       <Text t4 style={page.title}>
         Set 6-digital pin code
       </Text>
-      <Text t11 style={page.description}>
+      <Text t11 color={LIGHT_TEXT_BASE_2} center>
         Project your wallet. PIN code for increases wallet security in the event
         your phone{'\u00A0'}is{'\u00A0'}stolen
       </Text>
@@ -70,7 +71,6 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {marginBottom: 12},
-  description: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
