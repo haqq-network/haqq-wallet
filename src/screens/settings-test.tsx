@@ -5,11 +5,11 @@ import {View} from 'react-native';
 import {Button, Input, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {Evmos} from '@app/services/evmos';
+import {Cosmos} from '@app/services/cosmos';
 import {GWEI} from '@app/variables';
 
 export const SettingsTestScreen = () => {
-  const evmos = useRef(new Evmos(app.provider!)).current;
+  const evmos = useRef(new Cosmos(app.provider!)).current;
   const [amount, setAmount] = useState('0.001');
   const [staked, setStaked] = useState(0);
   const [address, setAddress] = useState(
@@ -17,7 +17,7 @@ export const SettingsTestScreen = () => {
   );
 
   useEffect(() => {
-    const sourceAddress = Evmos.address(
+    const sourceAddress = Cosmos.address(
       '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
     );
 

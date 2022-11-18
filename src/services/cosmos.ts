@@ -26,7 +26,7 @@ import {app, wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services/eth-network';
 
-export class Evmos {
+export class Cosmos {
   private _provider: Provider;
 
   static address(address: string) {
@@ -126,7 +126,7 @@ export class Evmos {
         'hex',
       ).toString('base64');
 
-      const senderEvmosAddress = Evmos.address(wallet?.address!);
+      const senderEvmosAddress = Cosmos.address(wallet?.address!);
       const accInfo = await this.getAccountInfo(senderEvmosAddress);
       console.log('accInfo', accInfo);
 
