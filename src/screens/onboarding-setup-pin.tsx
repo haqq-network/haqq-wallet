@@ -4,7 +4,9 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {NumericKeyboard} from '../components/pin/numeric-keyboard';
+import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
+import {verticalScale} from '@app/helpers';
+
 import {PopupContainer, Spacer, Text} from '../components/ui';
 import {vibrate} from '../services/haptic';
 import {RootStackParamList} from '../types';
@@ -69,8 +71,12 @@ const page = StyleSheet.create({
     paddingBottom: 16,
     marginHorizontal: 20,
   },
-  title: {marginBottom: 12},
-  description: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  title: {marginBottom: verticalScale(5)},
+  description: {
+    textAlign: 'center',
+    color: LIGHT_TEXT_BASE_2,
+    marginBottom: verticalScale(5),
+  },
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
