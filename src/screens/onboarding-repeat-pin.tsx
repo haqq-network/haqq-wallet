@@ -4,6 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {verticalScale} from '@app/helpers';
 import {useApp} from '@app/hooks';
 
 import {NumericKeyboard} from '../components/pin/numeric-keyboard';
@@ -86,7 +87,7 @@ export const OnboardingRepeatPinScreen = () => {
 const page = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: verticalScale(40),
     paddingBottom: 16,
     marginHorizontal: 20,
   },
@@ -113,5 +114,9 @@ const page = StyleSheet.create({
     color: LIGHT_TEXT_RED_1,
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  t11: {
+    textAlign: 'center',
+    color: LIGHT_TEXT_BASE_2,
+    marginBottom: verticalScale(5),
+  },
 });
