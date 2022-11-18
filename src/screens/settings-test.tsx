@@ -5,21 +5,24 @@ import {View} from 'react-native';
 import {Button, Input, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {Cosmos} from '@app/services/cosmos';
+import {Evmos} from '@app/services/evmos';
 import {GWEI} from '@app/variables';
 
 export const SettingsTestScreen = () => {
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const evmos = useRef(new Evmos(app.provider!)).current;
   const [amount, setAmount] = useState('0.001');
   const [staked, setStaked] = useState(0);
+  const [address, setAddress] = useState(
+    'haqqvaloper155srwdpu6vs0kftz8cu0lxgmy5kqhe3q0sd6l3',
+  );
 
   useEffect(() => {
-    const address = Cosmos.address(
+    const sourceAddress = Evmos.address(
       '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
     );
 
-    cosmos
-      .getAccountDelegations(address)
+    evmos
+      .getAccountDelegations(sourceAddress)
       .then(resp => {
         const r = resp.delegation_responses.reduce((memo, delegate) => {
           return memo + parseInt(delegate.balance.amount, 10) / GWEI;
@@ -29,21 +32,28 @@ export const SettingsTestScreen = () => {
       .catch(e => {
         console.log('e', e);
       });
-  }, [cosmos]);
+  }, [evmos]);
 
   const onPress = useCallback(async () => {
-    const resp = await cosmos.delegate(
+    const resp = await evmos.delegate(
       '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
-      'haqqvaloper17c6sm68sfeuyxle5tswa28lcv4u8cvt2fx8mvz',
+      address,
       parseFloat(amount),
     );
 
     console.log('resp', resp);
-  }, [amount, cosmos]);
+  }, [address, amount, evmos]);
 
   return (
     <View style={styles.container}>
       <Text>staked: {staked}</Text>
+      <Input
+        label="delegate"
+        value={address}
+        onChangeText={val => setAddress(val)}
+        multiline
+      />
+
       <Input
         label="amount"
         value={amount}

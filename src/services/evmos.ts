@@ -1,3 +1,5 @@
+import {hexConcat, joinSignature} from '@ethersproject/bytes';
+import {keccak256} from '@ethersproject/keccak256';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {
   generateEndpointAccount,
@@ -24,7 +26,7 @@ import {app, wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services/eth-network';
 
-export class Cosmos {
+export class Evmos {
   private _provider: Provider;
 
   static address(address: string) {
@@ -143,8 +145,9 @@ export class Cosmos {
       //
       //   console.log('pubKey', pubKey);
 
-      const senderEvmosAddress = Cosmos.address(wallet?.address!);
+      const senderEvmosAddress = Evmos.address(wallet?.address!);
       const accInfo = await this.getAccountInfo(senderEvmosAddress);
+      console.log('accInfo', accInfo);
 
       const sender = {
         accountAddress: senderEvmosAddress,
@@ -184,19 +187,33 @@ export class Cosmos {
       const msg = createTxMsgDelegate(haqqChain, sender, fee, memo, params);
       console.log('msg', msg);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // @ts-ignore
       const {EIP712Domain, ...types} = msg.eipToSign.types;
 
-      const structHash = utils._TypedDataEncoder.hash(
+      const domainHash = utils._TypedDataEncoder.hashStruct(
+        'EIP712Domain',
+        {EIP712Domain},
         msg.eipToSign.domain,
-        types,
-        msg.eipToSign.message,
       );
+      console.log('domainHash', domainHash);
 
-      console.log('structHash', structHash);
+      const valuesHash = utils._TypedDataEncoder
+        .from(types)
+        .hash(msg.eipToSign.message);
+      console.log('valuesHash', valuesHash);
 
-      const signature = await ethWallet.signMessage(structHash);
+      const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+      console.log('concatHash', concatHash);
 
+      const hash = keccak256(concatHash);
+      console.log('hash', hash);
+
+      const signature = joinSignature(ethWallet._signingKey().signDigest(hash));
+
+      console.log(
+        'expected',
+        '0x1c534533d69a0ddf4a387977f15a9da6a8cd13489625550ab40b67039a0076a668f36c28c434abc36061726a783fcdb08358e4e728292dfd18d5829b5f2326d71b',
+      );
       console.log('signature', signature);
       const extension = signatureToWeb3Extension(haqqChain, sender, signature);
       console.log('extension', extension);
@@ -215,7 +232,6 @@ export class Cosmos {
       return tx;
     } catch (e) {
       console.log('err', e);
-      console.log(e.stack);
     }
   }
 }
