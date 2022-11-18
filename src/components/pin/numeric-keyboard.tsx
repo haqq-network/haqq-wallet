@@ -5,7 +5,7 @@ import {View} from 'react-native';
 import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {moderateVerticalScale} from '@app/helpers/scaling-utils';
+import {moderateScale} from '@app/helpers/scaling-utils';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;
@@ -113,15 +113,17 @@ const page = createTheme({
   container: {
     width: '100%',
     justifyContent: 'center',
-    padding: 10,
+    paddingVertical: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   button: {
     marginHorizontal: 12,
     marginVertical: 2,
-    width: moderateVerticalScale(72, 0.6),
-    height: moderateVerticalScale(72, 0.6),
+    width: moderateScale(72, 0.6),
+    height: moderateScale(72, 0.6),
+    maxHeight: moderateScale(72, 1.2),
+    maxWidth: moderateScale(72, 1.2),
     justifyContent: 'center',
     alignItems: 'center',
   },
