@@ -2,14 +2,13 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Alert} from 'react-native';
 
-import {useContacts} from '@app/hooks';
-
 import {
   ContactFlatListProps,
   ListContactProps,
-} from '../components/list-contact';
-import {useTypedNavigation} from '../hooks/use-typed-navigation';
-import {Contact} from '../models/contact';
+} from '@app/components/list-contact';
+import {useContacts} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
+import {Contact} from '@app/models/contact';
 
 interface settings {
   subscribeOnContacts?: boolean;
@@ -18,7 +17,7 @@ interface settings {
 
 export interface ComponentProps extends Omit<ContactFlatListProps, 'data'> {
   filterText?: string;
-  onPressAddress?: (address: string) => void;
+  onPressAddress?: (item: string) => void;
 }
 
 export const withActionsContactItem = (

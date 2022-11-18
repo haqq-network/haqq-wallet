@@ -17,7 +17,7 @@ export type ContactFlatListProps = Omit<FlatListProps<any>, 'renderItem'>;
 export interface ListContactProps extends ContactFlatListProps {
   onPressRemove: (item: any) => void;
   onPressEdit: (item: any) => void;
-  onPressAddress?: (item: any) => void;
+  onPressAddress?: (item: string) => void;
 }
 
 export const ListContact = ({

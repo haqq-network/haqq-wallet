@@ -18,6 +18,7 @@ import {
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
 import {useApp} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
 import {
   IS_IOS,
@@ -96,6 +97,14 @@ export const TransactionAddress = ({
 
   const onPressClear = useCallback(() => setAddress(''), []);
 
+  const onPressAddress = useCallback(
+    (item: string) => {
+      vibrate(HapticEffects.impactLight);
+      onAddress(item);
+    },
+    [onAddress],
+  );
+
   return (
     <KeyboardSafeArea>
       <View>
@@ -131,7 +140,7 @@ export const TransactionAddress = ({
         ) : null}
       </View>
       <Spacer>
-        <ListOfContacts onPressAddress={onAddress} />
+        <ListOfContacts onPressAddress={onPressAddress} />
       </Spacer>
 
       <Button

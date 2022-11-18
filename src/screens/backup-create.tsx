@@ -4,7 +4,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {MnemonicWord} from '../components/mnemonic-word';
+import {MnemonicWord} from '@app/components/mnemonic-word';
 import {
   Button,
   ButtonVariant,
@@ -16,9 +16,14 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from '../components/ui';
-import {RootStackParamList} from '../types';
-import {LIGHT_BG_3, LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
+} from '@app/components/ui';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {RootStackParamList} from '@app/types';
+import {
+  LIGHT_BG_3,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+} from '@app/variables';
 
 export const BackupCreateScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -26,12 +31,17 @@ export const BackupCreateScreen = () => {
 
   const [checked, setChecked] = useState(false);
 
+  const onClickCheck = (val: boolean) => {
+    vibrate(HapticEffects.impactLight);
+    setChecked(val);
+  };
+
   return (
     <PopupContainer style={page.container}>
       <Text t4 style={page.t4}>
         Your recovery phrase
       </Text>
-      <Text t11 style={page.t11}>
+      <Text t11 color={LIGHT_TEXT_BASE_2} center>
         Write down or copy these words in the right order and save them
         somewhere safe.
       </Text>
@@ -66,7 +76,7 @@ export const BackupCreateScreen = () => {
         funds, as nobody will be able to restore it.
       </InfoBlock>
       <View style={page.agree}>
-        <Checkbox value={checked} onPress={setChecked}>
+        <Checkbox value={checked} onPress={onClickCheck}>
           <Text t14 style={page.agreeText}>
             I understand that if I lose my recovery phrase, I will not be able
             to restore access to my account
@@ -128,9 +138,5 @@ const page = StyleSheet.create({
   t4: {
     alignSelf: 'center',
     alignItems: 'center',
-  },
-  t11: {
-    color: LIGHT_TEXT_BASE_2,
-    textAlign: 'center',
   },
 });
