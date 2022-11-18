@@ -116,34 +116,15 @@ export class Evmos {
   async delegate(source: string, address: string, amount: number) {
     try {
       const wallet = wallets.getWallet(source);
-      console.log('wallet', wallet?.address);
       const password = await app.getPassword();
       const privateKey = await wallet?.getPrivateKey(password);
-      console.log('privateKey', privateKey, password);
+
       const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
 
       const pubkey = Buffer.from(
         ethWallet._signingKey().compressedPublicKey.slice(2),
         'hex',
       ).toString('base64');
-
-      // console.log(
-      //   'ethWallet',
-      //   ethWallet.publicKey,
-      //   Buffer.from(ethWallet.publicKey).toString('base64'),
-      // );
-      // console.log('signature', signature);
-      // try {
-      //   const pubKey = signatureToPubkey(
-      //     signature,
-      //     Buffer.from([
-      //       50, 215, 18, 245, 169, 63, 252, 16, 225, 169, 71, 95, 254, 165, 146,
-      //       216, 40, 162, 115, 78, 147, 125, 80, 182, 25, 69, 136, 250, 65, 200,
-      //       94, 178,
-      //     ]),
-      //   );
-      //
-      //   console.log('pubKey', pubKey);
 
       const senderEvmosAddress = Evmos.address(wallet?.address!);
       const accInfo = await this.getAccountInfo(senderEvmosAddress);
@@ -210,10 +191,6 @@ export class Evmos {
 
       const signature = joinSignature(ethWallet._signingKey().signDigest(hash));
 
-      console.log(
-        'expected',
-        '0x1c534533d69a0ddf4a387977f15a9da6a8cd13489625550ab40b67039a0076a668f36c28c434abc36061726a783fcdb08358e4e728292dfd18d5829b5f2326d71b',
-      );
       console.log('signature', signature);
       const extension = signatureToWeb3Extension(haqqChain, sender, signature);
       console.log('extension', extension);
