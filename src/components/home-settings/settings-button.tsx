@@ -44,7 +44,11 @@ export const SettingsButton = ({
           {title}
         </Text>
         {rightTitle && (
-          <Text t11 style={page.textRight} color={getColor(Color.textBase2)}>
+          <Text
+            t11
+            right
+            style={page.textRight}
+            color={getColor(Color.textBase2)}>
             {rightTitle}
           </Text>
         )}
@@ -64,7 +68,6 @@ const page = StyleSheet.create({
     marginLeft: 12,
   },
   textRight: {
-    textAlign: 'right',
     flex: 1,
     marginRight: 20,
   },

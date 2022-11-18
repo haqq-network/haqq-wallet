@@ -34,8 +34,9 @@ export type TextProps = Omit<RNTextProps, 'style'> & {
   t17?: boolean;
   clean?: boolean;
   center?: boolean;
+  right?: boolean;
   color?: string;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Text = ({
@@ -61,6 +62,7 @@ export const Text = ({
   children,
   clean,
   center,
+  right,
   color,
   ...props
 }: TextProps) => {
@@ -94,6 +96,7 @@ export const Text = ({
             t17 && StyleSheet.flatten([page.t17Style, style]),
             !!color && {color},
             center && page.center,
+            right && page.right,
           ]}
           {...props}>
           {children}
@@ -166,6 +169,9 @@ const sfProTextBold700: FontT = Platform.select({
 const page = createTheme({
   center: {
     textAlign: 'center',
+  },
+  right: {
+    textAlign: 'right',
   },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
