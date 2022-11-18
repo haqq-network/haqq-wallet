@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Button, Input, Text} from '@app/components/ui';
+import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {Cosmos} from '@app/services/cosmos';
@@ -16,7 +16,7 @@ export const SettingsTestScreen = () => {
   const [unbounded, setUnbounded] = useState(0);
 
   const [address, setAddress] = useState(
-    'haqqvaloper155srwdpu6vs0kftz8cu0lxgmy5kqhe3q0sd6l3',
+    'haqqvaloper175gdzz9l0tuw83e3trh3zq2p435fkge27rxarf',
   );
 
   useEffect(() => {
@@ -77,8 +77,11 @@ export const SettingsTestScreen = () => {
     <View style={styles.container}>
       <Text>staked: {staked}</Text>
       <Text>reward: {reward}</Text>
-      <Text>unbounded: {unbounded}</Text>
+      <Text clean style={styles.gap}>
+        unbounded: {unbounded}
+      </Text>
       <Input
+        style={styles.gap}
         label="delegate"
         value={address}
         onChangeText={val => setAddress(val)}
@@ -86,12 +89,25 @@ export const SettingsTestScreen = () => {
       />
 
       <Input
+        style={styles.gap}
         label="amount"
         value={amount}
         onChangeText={val => setAmount(val)}
       />
-      <Button title="delegate" onPress={onPressDelegate} />
-      <Button title="delegate" onPress={onPressUnDelegate} />
+      <View style={styles.buttons}>
+        <Button
+          style={styles.btn}
+          title="delegate"
+          onPress={onPressDelegate}
+          variant={ButtonVariant.contained}
+        />
+        <Button
+          style={styles.btn}
+          title="undelegate"
+          onPress={onPressUnDelegate}
+          variant={ButtonVariant.second}
+        />
+      </View>
     </View>
   );
 };
@@ -99,5 +115,16 @@ export const SettingsTestScreen = () => {
 const styles = createTheme({
   container: {
     paddingHorizontal: 20,
+  },
+  gap: {
+    marginBottom: 20,
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginHorizontal: -8,
+  },
+  btn: {
+    flex: 1,
+    marginHorizontal: 8,
   },
 });
