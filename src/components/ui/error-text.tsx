@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import {StyleSheet, TextProps} from 'react-native';
+import {TextProps} from 'react-native';
+
+import {Color, getColor} from '@app/colors';
 
 import {Text} from './text';
-
-import {LIGHT_TEXT_BASE_3, LIGHT_TEXT_RED_1} from '../../variables';
 
 type ErrorTextProps = {
   e0?: boolean;
@@ -23,36 +23,13 @@ export const ErrorText = ({
 }: ErrorTextProps) => {
   return (
     <Text
-      t6={e0}
-      t14={e1 || e2}
+      t10={e0}
+      t14={e1}
+      t11={e2}
       t8={e3}
-      style={[
-        e0 && StyleSheet.flatten([page.e0Style, style]),
-        e1 && StyleSheet.flatten([page.e1Style, style]),
-        e2 && StyleSheet.flatten([page.e2Style, style]),
-        e3 && StyleSheet.flatten([page.e3Style, style]),
-      ]}
+      color={getColor(Color.textRed1)}
+      style={style}
       {...props}
     />
   );
 };
-
-const page = StyleSheet.create({
-  e0Style: {
-    fontStyle: 'normal',
-    fontSize: 16,
-    lineHeight: 22,
-    color: LIGHT_TEXT_RED_1,
-  },
-  e1Style: {
-    color: LIGHT_TEXT_RED_1,
-  },
-  e2Style: {
-    fontSize: 16,
-    lineHeight: 22,
-    color: LIGHT_TEXT_RED_1,
-  },
-  e3Style: {
-    color: LIGHT_TEXT_BASE_3,
-  },
-});

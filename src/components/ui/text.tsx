@@ -235,14 +235,13 @@ const page = createTheme({
     color: Color.textBase1,
   },
   t10Style: {
-    ...sfProDisplayBold700,
+    ...sfProDisplaySemibold600,
     fontSize: 16,
     lineHeight: 22,
     color: Color.textBase1,
   },
   t11Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
+    ...sfProTextRegular400,
     fontSize: 16,
     lineHeight: 22,
     color: Color.textBase1,
