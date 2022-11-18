@@ -12,7 +12,11 @@ import {
 } from '@evmos/provider';
 import {AccountResponse} from '@evmos/provider/dist/rest/account';
 import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
-import {GetDelegationsResponse} from '@evmos/provider/dist/rest/staking';
+import {
+  DistributionRewardsResponse,
+  GetDelegationsResponse,
+  UndelegationResponse,
+} from '@evmos/provider/dist/rest/staking';
 import {
   Fee,
   createTxMsgDelegate,
@@ -37,76 +41,63 @@ export class Cosmos {
     this._provider = provider;
   }
 
+  getPath(subPath: string) {
+    if (subPath.startsWith('/')) {
+      return `${this._provider.cosmosRestEndpoint}${subPath}`;
+    }
+
+    return `${this._provider.cosmosRestEndpoint}/${subPath}`;
+  }
+
+  async getQuery<T>(path: string): Promise<T> {
+    const resp = await fetch(this.getPath(path), {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+
+    return await resp.json();
+  }
+
+  async postQuery<T>(path: string, data: string): Promise<T> {
+    const resp = await fetch(this.getPath(path), {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: data,
+    });
+
+    return await resp.json();
+  }
+
   async getAccountDelegations(
     address: string,
   ): Promise<GetDelegationsResponse> {
-    const delegations = await fetch(
-      `${this._provider.cosmosRestEndpoint}/${generateEndpointGetDelegations(
-        address,
-      )}`,
-    );
-
-    return await delegations.json();
+    return this.getQuery(generateEndpointGetDelegations(address));
   }
 
-  async getRewardsInfo(address: string) {
-    const info = await fetch(
-      `${
-        this._provider.cosmosRestEndpoint
-      }/${generateEndpointDistributionRewardsByAddress(address)}`,
-    );
-
-    return await info.json();
+  async getRewardsInfo(address: string): Promise<DistributionRewardsResponse> {
+    return this.getQuery(generateEndpointDistributionRewardsByAddress(address));
   }
 
-  async getUnDelegations(address: string) {
-    const unDelegationsResponse = await fetch(
-      `${this._provider.cosmosRestEndpoint}/${generateEndpointGetUndelegations(
-        address,
-      )}`,
-    );
-
-    return await unDelegationsResponse.json();
+  async getUnDelegations(address: string): Promise<UndelegationResponse> {
+    return this.getQuery(generateEndpointGetUndelegations(address));
   }
 
   async getAllValidators(limit = 1000) {
-    const response = await fetch(
-      `${
-        this._provider.cosmosRestEndpoint
-      }${generateEndpointGetValidators()}?pagination.limit=${limit}`,
-      {
-        method: 'get',
-        headers: {'Content-Type': 'application/json'},
-      },
+    return this.getQuery(
+      generateEndpointGetValidators() + `?pagination.limit=${limit}`,
     );
-    return await response.json();
   }
 
   async getAccountInfo(address: string): Promise<AccountResponse> {
-    const fetchedAcc = await fetch(
-      `${this._provider.cosmosRestEndpoint}/${generateEndpointAccount(
-        address,
-      )}`,
-      {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-      },
-    );
-    return await fetchedAcc.json();
+    return this.getQuery(generateEndpointAccount(address));
   }
 
   async broadcastTransaction(txToBroadcast: TxToSend) {
     try {
-      const broadcastResponse = await fetch(
-        `${this._provider.cosmosRestEndpoint}${generateEndpointBroadcast()}`,
-        {
-          method: 'post',
-          headers: {'Content-Type': 'application/json'},
-          body: generatePostBodyBroadcast(txToBroadcast),
-        },
+      return this.postQuery(
+        generateEndpointBroadcast(),
+        generatePostBodyBroadcast(txToBroadcast),
       );
-
-      return await broadcastResponse.json();
     } catch (error) {
       console.error((error as any).message);
       throw new Error((error as any).message);
