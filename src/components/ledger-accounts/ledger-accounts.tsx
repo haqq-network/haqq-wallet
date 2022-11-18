@@ -28,6 +28,7 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
         const resp = await iter.next();
         done = resp.done;
         if (resp.value) {
+          console.log('resp.value', resp.value);
           setAddresses(list =>
             list.includes(resp.value.address)
               ? list

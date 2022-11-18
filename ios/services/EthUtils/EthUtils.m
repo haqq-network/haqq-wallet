@@ -27,7 +27,4 @@
                     resolve: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject
                     )
-  RCT_EXTERN_METHOD(
-                    recoverPublicKey: ()
-                    )
 @end

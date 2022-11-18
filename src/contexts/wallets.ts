@@ -82,9 +82,15 @@ class Wallets extends EventEmitter {
   addWalletFromLedger(
     {
       address,
+      publicKey,
       deviceId,
       deviceName,
-    }: {address: string; deviceId: string; deviceName: string},
+    }: {
+      address: string;
+      deviceId: string;
+      deviceName: string;
+      publicKey: string;
+    },
     name?: string,
   ): Promise<Wallet | null> {
     return this.addWallet(
@@ -93,6 +99,7 @@ class Wallets extends EventEmitter {
         deviceId,
         deviceName,
         address,
+        publicKey,
       },
       name,
     );
@@ -113,6 +120,7 @@ class Wallets extends EventEmitter {
         mnemonic: node.mnemonic,
         path: node.path,
         rootAddress: node.rootAddress,
+        publicKey: node.publicKey,
       },
       name,
     );
@@ -129,6 +137,7 @@ class Wallets extends EventEmitter {
         address: node.address,
         type: WalletType.hot,
         privateKey: node.privateKey,
+        publicKey: node.publicKey,
       },
       name,
     );

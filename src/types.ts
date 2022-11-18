@@ -313,7 +313,7 @@ export enum AppTheme {
   system = 'system',
 }
 
-export type AddWalletParams = {address: string} & (
+export type AddWalletParams = {address: string; publicKey: string} & (
   | {
       type: WalletType.mnemonic;
       mnemonic: string;

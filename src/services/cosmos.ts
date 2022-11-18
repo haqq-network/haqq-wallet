@@ -32,13 +32,15 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {app, wallets} from '@app/contexts';
+import {runUntil} from '@app/helpers';
 import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services/eth-network';
+import {WalletType} from '@app/types';
 import {GWEI} from '@app/variables';
 
 export class Cosmos {
   private _provider: Provider;
-
+  public stop = false;
   static fee: Fee = {
     amount: '5000',
     gas: '600000',
@@ -168,11 +170,35 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+    switch (wallet?.type) {
+      case WalletType.hot:
+      case WalletType.mnemonic:
+        const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+        const hash = keccak256(concatHash);
+        return joinSignature(ethWallet._signingKey().signDigest(hash));
 
-    const hash = keccak256(concatHash);
+      case WalletType.ledgerBt:
+        let signature = null;
 
-    return joinSignature(ethWallet._signingKey().signDigest(hash));
+        const iter = runUntil(wallet.deviceId!, eth =>
+          eth.signEIP712HashedMessage(wallet.path, domainHash, valuesHash),
+        );
+
+        let done = false;
+        do {
+          const resp = await iter.next();
+          signature = resp.value;
+          done = resp.done;
+        } while (!done && !this.stop);
+
+        await iter.abort();
+
+        if (!signature) {
+          throw new Error('can_not_connected');
+        }
+
+        return `${signature.v}${signature.r}${signature.s}`;
+    }
   }
 
   async sendMsg(

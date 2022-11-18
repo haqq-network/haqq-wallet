@@ -39,6 +39,7 @@ export class WalletRealm extends Realm.Object {
   deviceName: string | undefined;
   path: string | undefined;
   rootAddress: string | undefined;
+  publicKey: string | undefined;
 
   static schema = {
     name: 'Wallet',
@@ -59,6 +60,7 @@ export class WalletRealm extends Realm.Object {
       deviceId: 'string?',
       deviceName: 'string?',
       rootAddress: 'string?',
+      publicKey: 'string?',
     },
     primaryKey: 'address',
   };
@@ -81,6 +83,7 @@ export class Wallet extends EventEmitter {
     deviceName: undefined,
     path: undefined,
     rootAddress: undefined,
+    publicKey: undefined,
   };
 
   static async create(walletParams: AddWalletParams, name = '') {
@@ -178,6 +181,7 @@ export class Wallet extends EventEmitter {
         deviceName,
         path,
         rootAddress,
+        publicKey: walletParams.publicKey,
       });
     });
 
