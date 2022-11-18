@@ -7,6 +7,7 @@ export enum HapticEffects {
   success = 'success',
   warning = 'warning',
   error = 'error',
+  impactLight = 'impactLight',
 }
 
 export const vibrate = (effect = HapticEffects.selection) => {

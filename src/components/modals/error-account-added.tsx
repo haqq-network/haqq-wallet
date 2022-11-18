@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {StyleSheet, View} from 'react-native';
+
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {windowWidth} from '../../helpers';
 import {hideModal} from '../../helpers/modal';
@@ -8,6 +10,9 @@ import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_GRAPHIC_SECOND_4} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 export const ErrorAccountAdded = () => {
+  useEffect(() => {
+    vibrate(HapticEffects.error);
+  }, []);
   const onPress = () => {
     hideModal();
   };

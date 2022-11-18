@@ -5,6 +5,7 @@ import {utils} from 'ethers';
 import {StyleSheet} from 'react-native';
 
 import {useApp, useContacts} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
@@ -77,6 +78,10 @@ export const SettingsAddressBookScreen =
       setSearch('');
     }, [navigate, search]);
 
+    const onPressAddress = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
+    }, []);
+
     return (
       <>
         <TextField
@@ -105,13 +110,14 @@ export const SettingsAddressBookScreen =
             <Box style={page.badge}>
               <Icon s name="plus_mid" color={LIGHT_GRAPHIC_BASE_2} />
             </Box>
-            <Text style={{color: LIGHT_TEXT_BASE_1}}>Add Contact</Text>
+            <Text color={LIGHT_TEXT_BASE_1}>Add Contact</Text>
           </IconButton>
         )}
         <ListOfContacts
           ListHeaderComponent={AddressHeader}
           ListEmptyComponent={AddressEmpty}
           contentContainerStyle={page.grow}
+          onPressAddress={onPressAddress}
           filterText={search}
         />
       </>
