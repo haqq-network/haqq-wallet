@@ -53,8 +53,18 @@ export const SettingsTestScreen = () => {
     });
   }, [cosmos]);
 
-  const onPress = useCallback(async () => {
+  const onPressDelegate = useCallback(async () => {
     const resp = await cosmos.delegate(
+      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
+      address,
+      parseFloat(amount),
+    );
+
+    console.log('resp', resp);
+  }, [address, amount, cosmos]);
+
+  const onPressUnDelegate = useCallback(async () => {
+    const resp = await cosmos.unDelegate(
       '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
       address,
       parseFloat(amount),
@@ -80,7 +90,8 @@ export const SettingsTestScreen = () => {
         value={amount}
         onChangeText={val => setAmount(val)}
       />
-      <Button title="delegate" onPress={onPress} />
+      <Button title="delegate" onPress={onPressDelegate} />
+      <Button title="delegate" onPress={onPressUnDelegate} />
     </View>
   );
 };

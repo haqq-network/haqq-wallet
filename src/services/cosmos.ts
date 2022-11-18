@@ -1,6 +1,8 @@
+import {TypedDataField} from '@ethersproject/abstract-signer';
 import {hexConcat, joinSignature} from '@ethersproject/bytes';
 import {keccak256} from '@ethersproject/keccak256';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
+import {protoTxNamespace} from '@evmos/proto';
 import {
   generateEndpointAccount,
   generateEndpointBroadcast,
@@ -18,20 +20,30 @@ import {
   UndelegationResponse,
 } from '@evmos/provider/dist/rest/staking';
 import {
+  Chain,
   Fee,
   createTxMsgDelegate,
+  createTxMsgUndelegate,
   createTxRawEIP712,
   signatureToWeb3Extension,
 } from '@evmos/transactions';
+import {Sender} from '@evmos/transactions/dist/messages/common';
 import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {app, wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services/eth-network';
+import {GWEI} from '@app/variables';
 
 export class Cosmos {
   private _provider: Provider;
+
+  static fee: Fee = {
+    amount: '5000',
+    gas: '600000',
+    denom: 'aISLM',
+  };
 
   static address(address: string) {
     return converter('haqq').toBech32(address);
@@ -39,6 +51,13 @@ export class Cosmos {
 
   constructor(provider: Provider) {
     this._provider = provider;
+  }
+
+  get haqqChain(): Chain {
+    return {
+      chainId: this._provider.ethChainId,
+      cosmosChainId: this._provider.cosmosChainId,
+    };
   }
 
   getPath(subPath: string) {
@@ -104,100 +123,142 @@ export class Cosmos {
     }
   }
 
-  async delegate(source: string, address: string, amount: number) {
-    try {
-      const wallet = wallets.getWallet(source);
-      const password = await app.getPassword();
-      const privateKey = await wallet?.getPrivateKey(password);
+  async getSender(ethAddress: string) {
+    const wallet = wallets.getWallet(ethAddress);
+    const password = await app.getPassword();
+    const privateKey = await wallet?.getPrivateKey(password);
 
-      const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
+    const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
 
-      const pubkey = Buffer.from(
-        ethWallet._signingKey().compressedPublicKey.slice(2),
-        'hex',
-      ).toString('base64');
+    const pubkey = Buffer.from(
+      ethWallet._signingKey().compressedPublicKey.slice(2),
+      'hex',
+    ).toString('base64');
 
-      const senderEvmosAddress = Cosmos.address(wallet?.address!);
-      const accInfo = await this.getAccountInfo(senderEvmosAddress);
-      console.log('accInfo', accInfo);
+    const senderEvmosAddress = Cosmos.address(wallet?.address!);
+    const accInfo = await this.getAccountInfo(senderEvmosAddress);
 
-      const sender = {
-        accountAddress: senderEvmosAddress,
-        sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
-        accountNumber: parseInt(
-          accInfo.account.base_account.account_number,
-          10,
-        ),
-        pubkey: pubkey,
+    return {
+      accountAddress: senderEvmosAddress,
+      sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
+      accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
+      pubkey: pubkey,
+    };
+  }
+
+  async signRequest(
+    ethAddress: string,
+    domain: Record<string, any>,
+    types: Record<string, Array<TypedDataField>>,
+    message: Record<string, any>,
+  ) {
+    const wallet = wallets.getWallet(ethAddress);
+    const password = await app.getPassword();
+    const privateKey = await wallet?.getPrivateKey(password);
+
+    const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
+
+    // @ts-ignore
+    const {EIP712Domain, ...othTypes} = types;
+
+    const domainHash = utils._TypedDataEncoder.hashStruct(
+      'EIP712Domain',
+      {EIP712Domain},
+      domain,
+    );
+    const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
+
+    const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+
+    const hash = keccak256(concatHash);
+
+    return joinSignature(ethWallet._signingKey().signDigest(hash));
+  }
+
+  async sendMsg(
+    source: string,
+    sender: Sender,
+    msg: {
+      eipToSign: {
+        domain: Record<string, any>;
+        types: Record<string, Array<TypedDataField>>;
+        message: Record<string, any>;
       };
+      legacyAmino: {
+        body: protoTxNamespace.txn.TxBody;
+        authInfo: protoTxNamespace.txn.AuthInfo;
+      };
+    },
+  ) {
+    const signature = await this.signRequest(
+      source,
+      msg.eipToSign.domain,
+      msg.eipToSign.types,
+      msg.eipToSign.message,
+    );
 
-      console.log('sender', sender);
+    const extension = signatureToWeb3Extension(
+      this.haqqChain,
+      sender,
+      signature,
+    );
+
+    const rawTx = createTxRawEIP712(
+      msg.legacyAmino.body,
+      msg.legacyAmino.authInfo,
+      extension,
+    );
+
+    return await this.broadcastTransaction(rawTx);
+  }
+
+  async unDelegate(source: string, address: string, amount: number) {
+    try {
+      const sender = await this.getSender(source);
 
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * 10 ** 18).toLocaleString().replace(/,/g, ''),
-        denom: 'aISLM',
-      };
-
-      console.log('params', params);
-
-      const haqqChain = {
-        chainId: this._provider.ethChainId,
-        cosmosChainId: this._provider.cosmosChainId,
-      };
-
-      console.log('haqqChain', haqqChain);
-
-      const fee: Fee = {
-        amount: '5000',
-        gas: '600000',
+        amount: ((amount ?? 0) * GWEI).toLocaleString().replace(/,/g, ''),
         denom: 'aISLM',
       };
 
       const memo = '';
 
-      const msg = createTxMsgDelegate(haqqChain, sender, fee, memo, params);
-      console.log('msg', msg);
-
-      // @ts-ignore
-      const {EIP712Domain, ...types} = msg.eipToSign.types;
-
-      const domainHash = utils._TypedDataEncoder.hashStruct(
-        'EIP712Domain',
-        {EIP712Domain},
-        msg.eipToSign.domain,
+      const msg = createTxMsgUndelegate(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
       );
-      console.log('domainHash', domainHash);
 
-      const valuesHash = utils._TypedDataEncoder
-        .from(types)
-        .hash(msg.eipToSign.message);
-      console.log('valuesHash', valuesHash);
+      return await this.sendMsg(source, sender, msg);
+    } catch (e) {
+      console.log('err', e);
+    }
+  }
 
-      const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
-      console.log('concatHash', concatHash);
+  async delegate(source: string, address: string, amount: number) {
+    try {
+      const sender = await this.getSender(source);
 
-      const hash = keccak256(concatHash);
-      console.log('hash', hash);
+      const params = {
+        validatorAddress: address,
+        amount: ((amount ?? 0) * GWEI).toLocaleString().replace(/,/g, ''),
+        denom: 'aISLM',
+      };
 
-      const signature = joinSignature(ethWallet._signingKey().signDigest(hash));
+      const memo = '';
 
-      console.log('signature', signature);
-      const extension = signatureToWeb3Extension(haqqChain, sender, signature);
-      console.log('extension', extension);
-
-      const rawTx = createTxRawEIP712(
-        msg.legacyAmino.body,
-        msg.legacyAmino.authInfo,
-        extension,
+      const msg = createTxMsgDelegate(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
       );
-      console.log('rawTx', rawTx);
 
-      const tx = await this.broadcastTransaction(rawTx);
-
-      console.log(tx);
-
-      return tx;
+      return await this.sendMsg(source, sender, msg);
     } catch (e) {
       console.log('err', e);
     }
