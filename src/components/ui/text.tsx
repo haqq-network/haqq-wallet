@@ -35,7 +35,7 @@ export type TextProps = Omit<RNTextProps, 'style'> & {
   clean?: boolean;
   center?: boolean;
   color?: string;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Text = ({
