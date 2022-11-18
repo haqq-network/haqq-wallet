@@ -30,6 +30,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   iconRight?: React.ReactNode;
   iconLeft?: React.ReactNode;
   loading?: boolean;
+  textColor?: string;
 };
 
 export enum ButtonVariant {
@@ -55,6 +56,7 @@ export const Button = ({
   onPress,
   iconRight,
   iconLeft,
+  textColor,
   loading = false,
   ...props
 }: ButtonProps) => {
@@ -101,7 +103,8 @@ export const Button = ({
         <Text
           t9={size !== ButtonSize.small}
           t12={size === ButtonSize.small}
-          style={textStyle}>
+          style={textStyle}
+          color={textColor}>
           {title}
         </Text>
       )}

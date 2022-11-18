@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
 import {
   Dimensions,
   StyleSheet,
@@ -9,6 +10,14 @@ import {
 } from 'react-native';
 
 import {useContacts} from '@app/hooks';
+import {EthNetwork} from '@app/services/eth-network';
+import {cleanNumber, isNumber, shortAddress} from '@app/utils';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  LIGHT_TEXT_GREEN_1,
+  LIGHT_TEXT_RED_1,
+} from '@app/variables';
 
 import {
   Button,
@@ -19,15 +28,6 @@ import {
   Spacer,
   Text,
 } from './ui';
-
-import {EthNetwork} from '../services/eth-network';
-import {cleanNumber, isNumber, shortAddress} from '../utils';
-import {
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
 
 export type TransactionSumProps = {
   to: string;
@@ -48,6 +48,7 @@ export const TransactionSum = ({
   const [balance, setBalance] = useState(0);
   const [error, setError] = useState('');
   const [maxSum, setMaxSum] = useState(0);
+  const inputSumRef = useRef<TextInput>(null);
 
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
@@ -63,6 +64,12 @@ export const TransactionSum = ({
     const {fee} = await EthNetwork.estimateTransaction(from, to, newBalance);
     setMaxSum(newBalance - fee * 2);
   }, [from, to]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setTimeout(() => inputSumRef.current?.focus(), 500);
+    }, []),
+  );
 
   useEffect(() => {
     getBalance();
@@ -110,11 +117,11 @@ export const TransactionSum = ({
   // const onPressSwap = () => {};
 
   return (
-    <KeyboardSafeArea style={page.container}>
+    <KeyboardSafeArea isNumeric style={page.container}>
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock label="Send to" style={page.label}>
           <Text
-            style={{color: LIGHT_TEXT_BASE_1}}
+            color={LIGHT_TEXT_BASE_1}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -137,7 +144,7 @@ export const TransactionSum = ({
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={LIGHT_TEXT_BASE_2}
-          autoFocus
+          ref={inputSumRef}
           textAlign="left"
         />
         <View style={page.max}>
@@ -161,7 +168,7 @@ export const TransactionSum = ({
       ) : (
         <Text clean style={[page.help, page.available]}>
           Available:{' '}
-          <Text clean style={{color: LIGHT_TEXT_GREEN_1}}>
+          <Text clean color={LIGHT_TEXT_GREEN_1}>
             {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>

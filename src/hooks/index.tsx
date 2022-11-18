@@ -1,4 +1,5 @@
 export * from './use-android-status-bar-animation';
+export * from './use-typed-navigation';
 export * from './use-theme';
 export * from './use-user';
 export * from './use-contacts';
