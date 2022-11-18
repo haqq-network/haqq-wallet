@@ -131,7 +131,7 @@ export const TransactionAddress = ({
         ) : null}
       </View>
       <Spacer>
-        <ListOfContacts />
+        <ListOfContacts onPressAddress={onAddress} />
       </Spacer>
 
       <Button

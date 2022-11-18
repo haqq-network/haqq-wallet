@@ -18,6 +18,7 @@ interface settings {
 
 export interface ComponentProps extends Omit<ContactFlatListProps, 'data'> {
   filterText?: string;
+  onPressAddress?: (address: string) => void;
 }
 
 export const withActionsContactItem = (

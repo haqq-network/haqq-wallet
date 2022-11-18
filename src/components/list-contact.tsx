@@ -17,12 +17,14 @@ export type ContactFlatListProps = Omit<FlatListProps<any>, 'renderItem'>;
 export interface ListContactProps extends ContactFlatListProps {
   onPressRemove: (item: any) => void;
   onPressEdit: (item: any) => void;
+  onPressAddress?: (item: any) => void;
 }
 
 export const ListContact = ({
   data,
   onPressRemove,
   onPressEdit,
+  onPressAddress,
   ...flatListProps
 }: ListContactProps) => {
   const {bottom} = useSafeAreaInsets();
@@ -47,7 +49,7 @@ export const ListContact = ({
               key: 'remove',
             },
           ]}>
-          <AddressRow item={item} />
+          <AddressRow item={item} onPress={onPressAddress} />
         </SwipeableRow>
       )}
       keyExtractor={(item, id) => String(id)}
