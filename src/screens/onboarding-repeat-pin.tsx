@@ -5,14 +5,13 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
+import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
+import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {verticalScale} from '@app/helpers';
 import {useApp} from '@app/hooks';
-
-import {NumericKeyboard} from '../components/pin/numeric-keyboard';
-import {PopupContainer, Spacer, Text} from '../components/ui';
-import {vibrate} from '../services/haptic';
-import {RootStackParamList} from '../types';
-import {LIGHT_GRAPHIC_SECOND_2, LIGHT_TEXT_GREEN_1} from '../variables';
+import {vibrate} from '@app/services/haptic';
+import {RootStackParamList} from '@app/types';
+import {LIGHT_GRAPHIC_SECOND_2, LIGHT_TEXT_GREEN_1} from '@app/variables';
 
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -71,9 +70,9 @@ export const OnboardingRepeatPinScreen = () => {
           <View style={[page.dot, pin.length >= 5 && page.active]} />
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
-        <Text clean color={getColor(Color.textRed1)} style={page.error}>
+        <ErrorText e2 style={page.error}>
           {error ? error : ' '}
-        </Text>
+        </ErrorText>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
     </PopupContainer>
