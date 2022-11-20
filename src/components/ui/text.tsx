@@ -34,6 +34,7 @@ export type TextProps = Omit<RNTextProps, 'style'> & {
   t17?: boolean;
   clean?: boolean;
   center?: boolean;
+  right?: boolean;
   color?: string;
   style?: StyleProp<ViewStyle>;
 };
@@ -61,6 +62,7 @@ export const Text = ({
   children,
   clean,
   center,
+  right,
   color,
   ...props
 }: TextProps) => {
@@ -94,6 +96,7 @@ export const Text = ({
             t17 && StyleSheet.flatten([page.t17Style, style]),
             !!color && {color},
             center && page.center,
+            right && page.right,
           ]}
           {...props}>
           {children}
@@ -167,6 +170,9 @@ const page = createTheme({
   center: {
     textAlign: 'center',
   },
+  right: {
+    textAlign: 'right',
+  },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
@@ -235,14 +241,13 @@ const page = createTheme({
     color: Color.textBase1,
   },
   t10Style: {
-    ...sfProDisplayBold700,
+    ...sfProDisplaySemibold600,
     fontSize: 16,
     lineHeight: 22,
     color: Color.textBase1,
   },
   t11Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
+    ...sfProTextRegular400,
     fontSize: 16,
     lineHeight: 22,
     color: Color.textBase1,
