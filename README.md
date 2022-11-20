@@ -26,14 +26,10 @@ cd ios && pod install
 
 To run the application, write the following in the terminal:
 
-If you are using Android
-
-```
+```sh
+// to start android dev application
 yarn android
-```
 
-If you are using iOS
-
-```
+// to start iOS dev application
 yarn ios
 ```
