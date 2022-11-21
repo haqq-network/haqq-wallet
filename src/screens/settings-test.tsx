@@ -3,12 +3,24 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
-import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
+import {app, wallets} from '@app/contexts';
+import {createTheme, runUntil} from '@app/helpers';
 import {Cosmos} from '@app/services/cosmos';
+import {
+  CLA,
+  ERROR_CODE,
+  INS,
+  P1_VALUES,
+  serializeHRP,
+  serializePath,
+} from '@app/services/ledger';
 import {GWEI} from '@app/variables';
 
+const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
+// const sourceAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
+
 export const SettingsTestScreen = () => {
+  const live = useRef(true);
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const [amount, setAmount] = useState('0.001');
   const [staked, setStaked] = useState(0);
@@ -20,9 +32,13 @@ export const SettingsTestScreen = () => {
   );
 
   useEffect(() => {
-    const sourceAddress = Cosmos.address(
-      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
-    );
+    return () => {
+      live.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const sourceAddress = Cosmos.address(sourceEthAddress);
 
     cosmos
       .getAccountDelegations(sourceAddress)
@@ -55,7 +71,7 @@ export const SettingsTestScreen = () => {
 
   const onPressDelegate = useCallback(async () => {
     const resp = await cosmos.delegate(
-      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
+      sourceEthAddress,
       address,
       parseFloat(amount),
     );
@@ -65,13 +81,49 @@ export const SettingsTestScreen = () => {
 
   const onPressUnDelegate = useCallback(async () => {
     const resp = await cosmos.unDelegate(
-      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
+      sourceEthAddress,
       address,
       parseFloat(amount),
     );
 
     console.log('resp', resp);
   }, [address, amount, cosmos]);
+
+  const onPressPubKey = useCallback(async () => {
+    const wallet = wallets.getWallet(sourceEthAddress);
+
+    let signature = null;
+    const data = Buffer.concat([
+      serializeHRP('cosmos'),
+      serializePath([44, 118, 5, 0, 0]),
+    ]);
+
+    console.log(CLA, INS.GET_ADDR_SECP256K1, P1_VALUES.ONLY_RETRIEVE, 0, data, [
+      ERROR_CODE.NoError,
+    ]);
+
+    const iter = runUntil(wallet.deviceId!, eth =>
+      eth.transport.send(
+        CLA,
+        INS.GET_ADDR_SECP256K1,
+        P1_VALUES.ONLY_RETRIEVE,
+        0,
+        data,
+        [ERROR_CODE.NoError],
+      ),
+    );
+
+    let done = false;
+    do {
+      const resp = await iter.next();
+      signature = resp.value;
+      done = resp.done;
+    } while (!done && live.current);
+
+    await iter.abort();
+
+    console.log('signature', signature);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -108,6 +160,8 @@ export const SettingsTestScreen = () => {
           variant={ButtonVariant.second}
         />
       </View>
+
+      <Button title="public key" onPress={onPressPubKey} />
     </View>
   );
 };

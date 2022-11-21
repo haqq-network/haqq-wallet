@@ -34,7 +34,16 @@ import {utils} from 'ethers';
 import {app, wallets} from '@app/contexts';
 import {runUntil} from '@app/helpers';
 import {Provider} from '@app/models/provider';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services/eth-network';
+import {
+  CLA,
+  ERROR_CODE,
+  INS,
+  P1_VALUES,
+  serializeHRP,
+  serializePath,
+} from '@app/services/ledger';
 import {WalletType} from '@app/types';
 import {GWEI} from '@app/variables';
 
@@ -127,8 +136,31 @@ export class Cosmos {
 
   async getSender(ethAddress: string) {
     const wallet = wallets.getWallet(ethAddress);
+    const {publicKey, address} = await this.getPubkeyAndAddress(wallet!);
+
+    const accInfo = await this.getAccountInfo(address);
+
+    return {
+      accountAddress: address,
+      sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
+      accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
+      pubkey: publicKey,
+    };
+  }
+
+  getPubkeyAndAddress(wallet: Wallet) {
+    switch (wallet.type) {
+      case WalletType.hot:
+      case WalletType.mnemonic:
+        return this.getPubkeyAndAddressHot(wallet);
+      case WalletType.ledgerBt:
+        return this.getPubkeyAndAddressLedger(wallet);
+    }
+  }
+
+  async getPubkeyAndAddressHot(wallet: Wallet) {
     const password = await app.getPassword();
-    const privateKey = await wallet?.getPrivateKey(password);
+    const privateKey = await wallet.getPrivateKey(password);
 
     const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
 
@@ -137,14 +169,49 @@ export class Cosmos {
       'hex',
     ).toString('base64');
 
-    const senderEvmosAddress = Cosmos.address(wallet?.address!);
-    const accInfo = await this.getAccountInfo(senderEvmosAddress);
+    const senderEvmosAddress = Cosmos.address(wallet.address!);
 
     return {
-      accountAddress: senderEvmosAddress,
-      sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
-      accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
-      pubkey: pubkey,
+      publicKey: pubkey,
+      address: senderEvmosAddress,
+    };
+  }
+
+  async getPubkeyAndAddressLedger(wallet: Wallet) {
+    let response = null;
+    const data = Buffer.concat([
+      serializeHRP('cosmos'),
+      serializePath([44, 118, 5, 0, 3]),
+    ]);
+    const iter = runUntil(wallet.deviceId!, eth => {
+      return eth.transport.send(
+        CLA,
+        INS.GET_ADDR_SECP256K1,
+        P1_VALUES.ONLY_RETRIEVE,
+        0,
+        data,
+        [ERROR_CODE.NoError],
+      );
+    });
+
+    let done = false;
+    do {
+      const resp = await iter.next();
+      response = resp.value;
+      done = resp.done;
+    } while (!done && !this.stop);
+
+    await iter.abort();
+
+    const compressedPk = Buffer.from(response.slice(0, 33));
+    const bech32Address = Buffer.from(response.slice(33, -2)).toString();
+    const senderEvmosAddress = Cosmos.address(wallet.address!);
+
+    console.log('bech32Address', bech32Address, senderEvmosAddress);
+
+    return {
+      address: senderEvmosAddress,
+      publicKey: compressedPk.toString(),
     };
   }
 
@@ -267,7 +334,7 @@ export class Cosmos {
   async delegate(source: string, address: string, amount: number) {
     try {
       const sender = await this.getSender(source);
-
+      console.log('sender', sender);
       const params = {
         validatorAddress: address,
         amount: ((amount ?? 0) * GWEI).toLocaleString().replace(/,/g, ''),
