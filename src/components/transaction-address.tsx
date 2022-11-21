@@ -97,10 +97,13 @@ export const TransactionAddress = ({
 
   const onPressClear = useCallback(() => setAddress(''), []);
 
-  const onPressAddress = useCallback((item: string) => {
-    vibrate(HapticEffects.impactLight);
-    setAddress(item);
-  }, []);
+  const onPressAddress = useCallback(
+    (item: string) => {
+      vibrate(HapticEffects.impactLight);
+      onAddress(item);
+    },
+    [onAddress],
+  );
 
   return (
     <KeyboardSafeArea>

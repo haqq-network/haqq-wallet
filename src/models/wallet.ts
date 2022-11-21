@@ -112,11 +112,13 @@ export class Wallet extends EventEmitter {
         {
           const password = await app.getPassword();
           data = await encrypt(password, walletParams);
+          mnemonicSaved = true;
         }
         break;
       case WalletType.ledgerBt:
         deviceId = walletParams.deviceId;
         deviceName = walletParams.deviceName;
+        mnemonicSaved = true;
         break;
     }
 
