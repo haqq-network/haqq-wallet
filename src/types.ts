@@ -48,6 +48,8 @@ export type WalletInitialData =
 
 export type RootStackParamList = {
   home: undefined;
+  homeFeed: undefined;
+  homeSettings: undefined;
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
