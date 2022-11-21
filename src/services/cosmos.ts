@@ -14,6 +14,7 @@ import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
 import {
   DistributionRewardsResponse,
   GetDelegationsResponse,
+  GetValidatorsResponse,
   UndelegationResponse,
 } from '@evmos/provider/dist/rest/staking';
 import {
@@ -97,7 +98,7 @@ export class Cosmos {
     return this.getQuery(generateEndpointGetUndelegations(address));
   }
 
-  async getAllValidators(limit = 1000) {
+  async getAllValidators(limit = 1000): Promise<GetValidatorsResponse> {
     return this.getQuery(
       generateEndpointGetValidators() + `?pagination.limit=${limit}`,
     );

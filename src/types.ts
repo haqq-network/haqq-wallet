@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Validator} from '@evmos/provider';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
@@ -342,3 +343,13 @@ export type AddWalletParams = {address: string; publicKey: string} & (
       deviceName: string;
     }
 );
+
+export enum ValidatorStatus {
+  active = 'Active',
+  inactive = 'Inactive',
+  jailed = 'Jailed',
+}
+
+export type ValidatorItem = Validator & {
+  status: ValidatorStatus;
+};

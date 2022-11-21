@@ -1,13 +1,31 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {FlatList} from 'react-native';
 
-import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {ValidatorItem} from '@app/types';
 
-export const StakingValidators = () => {
+import {ValidatorRow} from './validator-row';
+
+export type StakingValidatorsProps = {
+  validators: ValidatorItem[];
+  onPress: (address: string) => void;
+};
+export const StakingValidators = ({
+  validators,
+  onPress,
+}: StakingValidatorsProps) => {
   return (
-    <View>
-      <Text>Validators</Text>
-    </View>
+    <FlatList
+      style={styles.container}
+      data={validators}
+      renderItem={({item}) => <ValidatorRow item={item} onPress={onPress} />}
+    />
   );
 };
+
+const styles = createTheme({
+  container: {
+    flex: 1,
+  },
+});
