@@ -40,6 +40,8 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {StakingInfoScreen} from '@app/screens/staking-info';
+import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
   AppTheme,
@@ -336,6 +338,22 @@ export const App = () => {
                     component={SettingsThemeScreen}
                     options={{
                       title: getText(I18N.settingsThemeScreen),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="stakingValidators"
+                    component={StakingValidatorsScreen}
+                    options={{
+                      title: 'Manage accounts',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="stakingInfo"
+                    component={StakingInfoScreen}
+                    options={{
+                      title: 'Manage accounts',
                     }}
                   />
                 </Stack.Group>

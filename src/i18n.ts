@@ -64,6 +64,8 @@ export enum I18N {
   homeWalletTitle,
   homeSettings,
   homeSettingsTitle,
+  homeStaking,
+  homeStakingTitle,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -158,4 +160,6 @@ const en: Record<I18N, string> = {
   [I18N.homeWalletTitle]: 'Your wallets',
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
+  [I18N.homeStaking]: 'Staking',
+  [I18N.homeStakingTitle]: 'Staking',
 };

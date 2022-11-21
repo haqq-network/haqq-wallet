@@ -52,6 +52,7 @@ export type WalletInitialData =
 export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
+  homeStaking: undefined;
   homeSettings: undefined;
   welcome: undefined;
   create: undefined;
@@ -208,6 +209,10 @@ export type RootStackParamList = {
     name: string;
     address: string;
     isCreate?: boolean;
+  };
+  stakingValidators: undefined;
+  stakingInfo: {
+    address: string;
   };
 };
 
