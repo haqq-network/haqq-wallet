@@ -7,6 +7,8 @@ import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
+
 import {
   Button,
   ButtonVariant,
@@ -18,7 +20,6 @@ import {
 } from '../components/ui';
 import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -56,7 +57,7 @@ export const SignInRestoreScreen = () => {
       contentContainerStyle={page.scrollContent}
       showsVerticalScrollIndicator={false}>
       <KeyboardSafeArea style={page.container} testID="signin_restore">
-        <Text t11 style={page.intro}>
+        <Text t11 color={getColor(Color.textBase2)} style={page.intro}>
           Recovery phrase or Private key
         </Text>
         <TextField
@@ -72,7 +73,7 @@ export const SignInRestoreScreen = () => {
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
-          <Text t14 style={page.t14}>
+          <Text t13 color={getColor(Color.textGreen1)}>
             Paste from Clipboard
           </Text>
         </IconButton>
@@ -95,12 +96,10 @@ const page = StyleSheet.create({
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
-    color: LIGHT_TEXT_BASE_2,
   },
   input: {
     marginBottom: 8,
   },
-  t14: {color: LIGHT_TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   submit: {
     marginVertical: 16,
   },

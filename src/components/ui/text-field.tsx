@@ -1,15 +1,23 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {
-  Animated,
-  Easing,
+  NativeSyntheticEvent,
   StyleSheet,
   Text,
   TextInput,
+  TextInputContentSizeChangeEventData,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from 'react-native';
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useEvent,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import {
   IS_IOS,
@@ -32,131 +40,150 @@ type Props = React.ComponentProps<typeof TextInput> & {
   size?: 'small' | 'large';
 };
 
-export const TextField: React.FC<Props> = ({
-  size = 'small',
-  label,
-  error,
-  errorText,
-  value,
-  style,
-  onBlur,
-  onFocus,
-  placeholder,
-  rightAction,
-  multiline,
-  ...restOfProps
-}) => {
-  const isLarge = size === 'large';
-  const {width} = useWindowDimensions();
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+type sizeChangeEventType =
+  NativeSyntheticEvent<TextInputContentSizeChangeEventData>;
+type nativeEventType = sizeChangeEventType['nativeEvent'];
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [height, setHeight] = useState(0);
+export const TextField: React.FC<Props> = memo(
+  ({
+    size = 'small',
+    label,
+    error,
+    errorText,
+    value,
+    style,
+    onBlur,
+    onFocus,
+    placeholder,
+    rightAction,
+    multiline,
+    ...restOfProps
+  }) => {
+    const isLarge = size === 'large';
+    const {width} = useWindowDimensions();
+    const [isFocused, setIsFocused] = useState(false);
 
-  const inputRef = useRef<TextInput>(null);
-  const focusAnim = useRef(new Animated.Value(0)).current;
+    const inputRef = useRef<TextInput>(null);
+    const height = useSharedValue(30);
+    const focusAnim = useSharedValue(0);
 
-  useEffect(() => {
-    Animated.timing(focusAnim, {
-      toValue: isFocused || !!value ? 1 : 0,
-      duration: 150,
-      easing: Easing.bezier(0.4, 0, 0.2, 1),
-      useNativeDriver: true,
-    }).start();
-  }, [focusAnim, isFocused, value]);
+    const onChangeContentSize = (newHeight: number) => {
+      'worklet';
+      const inputH = Math.max(newHeight, 28);
+      height.value = inputH + 30;
+    };
 
-  let color = LIGHT_TEXT_BASE_2;
-  if (error) {
-    color = LIGHT_TEXT_RED_1;
-  }
+    const contentSizeChangeEvent = useEvent((event: nativeEventType) => {
+      'worklet';
+      onChangeContentSize(event.contentSize.height);
+    });
 
-  const top = -4;
-  const getHeight = height + 30;
+    const contentSizeChangeEventIOS = (event: sizeChangeEventType) => {
+      'worklet';
+      onChangeContentSize(event.nativeEvent.contentSize.height);
+    };
 
-  return (
-    <>
-      <View
-        style={[
-          page.container,
-          style,
-          error && page.containerError,
-          {height: getHeight},
-        ]}>
-        <TextInput
-          selectionColor={LIGHT_TEXT_GREEN_1}
-          allowFontScaling={false}
+    const onInputEvent = useCallback(() => {
+      focusAnim.value = withTiming(isFocused || !!value ? 1 : 0, {
+        duration: 150,
+        easing: Easing.bezier(0.4, 0, 0.2, 1),
+      });
+    }, [value, focusAnim, isFocused]);
+
+    useEffect(() => {
+      onInputEvent();
+    }, [onInputEvent]);
+
+    let color = LIGHT_TEXT_BASE_2;
+    if (error) {
+      color = LIGHT_TEXT_RED_1;
+    }
+
+    const labelAnimStyle = useAnimatedStyle(
+      () => ({
+        transform: [
+          {
+            scale: interpolate(focusAnim.value, [0, 1], [1, 0.75]),
+          },
+          {
+            translateY: interpolate(focusAnim.value, [0, 1], [24, 9]),
+          },
+          {
+            translateX: interpolate(
+              focusAnim.value,
+              [0, 1],
+              [isLarge ? 5 : 0, isLarge ? -12 : -8],
+            ),
+          },
+        ],
+      }),
+      [isLarge],
+    );
+
+    const inputAnimStyle = useAnimatedStyle(() => ({
+      height: height.value,
+    }));
+
+    return (
+      <>
+        <Animated.View
           style={[
-            page.input,
-            {
-              borderColor: color,
-              width: width - 100,
-            },
-          ]}
-          ref={inputRef}
-          placeholder={isFocused ? placeholder : ''}
-          {...restOfProps}
-          value={value}
-          multiline={multiline}
-          onContentSizeChange={event => {
-            const inputH = Math.max(event.nativeEvent.contentSize.height, 28);
-            setHeight(inputH);
-          }}
-          onBlur={event => {
-            setIsFocused(false);
-            onBlur?.(event);
-          }}
-          onFocus={event => {
-            setIsFocused(true);
-            onFocus?.(event);
-          }}
-        />
-        <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-          <Animated.View
+            page.container,
+            style,
+            error && page.containerError,
+            inputAnimStyle,
+          ]}>
+          <AnimatedTextInput
+            selectionColor={LIGHT_TEXT_GREEN_1}
+            allowFontScaling={false}
             style={[
-              page.labelContainer,
+              page.input,
               {
-                transform: [
-                  {
-                    scale: focusAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0.75],
-                    }),
-                  },
-                  {
-                    translateY: focusAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [24, 9],
-                    }),
-                  },
-                  {
-                    translateX: focusAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [isLarge ? 5 : 0, isLarge ? -12 : -8],
-                    }),
-                  },
-                ],
+                borderColor: color,
+                width: width - 100,
               },
-            ]}>
-            <Text
-              allowFontScaling={false}
-              style={[
-                page.label,
-                isLarge && page.labelMultiline,
-                {
-                  color,
-                  top,
-                },
-              ]}>
-              {label}
-            </Text>
-          </Animated.View>
-        </TouchableWithoutFeedback>
+            ]}
+            ref={inputRef}
+            placeholder={isFocused ? placeholder : ''}
+            {...restOfProps}
+            value={value}
+            multiline={multiline}
+            onContentSizeChange={
+              IS_IOS ? contentSizeChangeEventIOS : contentSizeChangeEvent
+            }
+            onBlur={event => {
+              setIsFocused(false);
+              onBlur?.(event);
+            }}
+            onFocus={event => {
+              setIsFocused(true);
+              onFocus?.(event);
+            }}
+          />
+          <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
+            <Animated.View style={[page.labelContainer, labelAnimStyle]}>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  page.label,
+                  isLarge && page.labelMultiline,
+                  {
+                    color,
+                  },
+                ]}>
+                {label}
+              </Text>
+            </Animated.View>
+          </TouchableWithoutFeedback>
 
-        {rightAction && <View style={page.sub}>{rightAction}</View>}
-      </View>
-      {!!error && <Text style={page.error}>{errorText}</Text>}
-    </>
-  );
-};
+          {rightAction && <View style={page.sub}>{rightAction}</View>}
+        </Animated.View>
+        {!!error && <Text style={page.error}>{errorText}</Text>}
+      </>
+    );
+  },
+);
 
 const page = StyleSheet.create({
   container: {
@@ -176,6 +203,7 @@ const page = StyleSheet.create({
     color: LIGHT_TEXT_BASE_1,
     top: IS_IOS ? 26 : 24,
     fontSize: 16,
+    minHeight: 28,
     paddingTop: 0,
     paddingBottom: 0,
     textAlignVertical: 'center',
@@ -188,6 +216,7 @@ const page = StyleSheet.create({
   label: {
     fontFamily: 'SF Pro Display',
     fontSize: 18,
+    top: -4,
     left: 0,
   },
   labelMultiline: {
