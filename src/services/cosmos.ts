@@ -1,7 +1,4 @@
 import {TypedDataField} from '@ethersproject/abstract-signer';
-import {hexConcat, joinSignature} from '@ethersproject/bytes';
-import {keccak256} from '@ethersproject/keccak256';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {protoTxNamespace} from '@evmos/proto';
 import {
   generateEndpointAccount,
@@ -31,20 +28,8 @@ import {Sender} from '@evmos/transactions/dist/messages/common';
 import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
-import {app, wallets} from '@app/contexts';
-import {runUntil} from '@app/helpers';
+import {wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services/eth-network';
-import {
-  CLA,
-  ERROR_CODE,
-  INS,
-  P1_VALUES,
-  serializeHRP,
-  serializePath,
-} from '@app/services/ledger';
-import {WalletType} from '@app/types';
 import {GWEI} from '@app/variables';
 
 export class Cosmos {
@@ -136,96 +121,30 @@ export class Cosmos {
 
   async getSender(ethAddress: string) {
     const wallet = wallets.getWallet(ethAddress);
-    const {publicKey, address} = await this.getPubkeyAndAddress(wallet!);
 
-    const accInfo = await this.getAccountInfo(address);
+    if (!wallet) {
+      throw new Error('wallet_not_found');
+    }
 
+    const transport = wallet.transport;
+
+    const accInfo = await this.getAccountInfo(transport.cosmosAddress);
+    const pubkey = await transport?.getPublicKey();
     return {
-      accountAddress: address,
+      accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
       accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
-      pubkey: publicKey,
+      pubkey,
     };
   }
 
-  getPubkeyAndAddress(wallet: Wallet) {
-    switch (wallet.type) {
-      case WalletType.hot:
-      case WalletType.mnemonic:
-        return this.getPubkeyAndAddressHot(wallet);
-      case WalletType.ledgerBt:
-        return this.getPubkeyAndAddressLedger(wallet);
-    }
-  }
-
-  async getPubkeyAndAddressHot(wallet: Wallet) {
-    const password = await app.getPassword();
-    const privateKey = await wallet.getPrivateKey(password);
-
-    const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
-
-    const pubkey = Buffer.from(
-      ethWallet._signingKey().compressedPublicKey.slice(2),
-      'hex',
-    ).toString('base64');
-
-    const senderEvmosAddress = Cosmos.address(wallet.address!);
-
-    return {
-      publicKey: pubkey,
-      address: senderEvmosAddress,
-    };
-  }
-
-  async getPubkeyAndAddressLedger(wallet: Wallet) {
-    let response = null;
-    const data = Buffer.concat([
-      serializeHRP('cosmos'),
-      serializePath([44, 118, 5, 0, 3]),
-    ]);
-    const iter = runUntil(wallet.deviceId!, eth => {
-      return eth.transport.send(
-        CLA,
-        INS.GET_ADDR_SECP256K1,
-        P1_VALUES.ONLY_RETRIEVE,
-        0,
-        data,
-        [ERROR_CODE.NoError],
-      );
-    });
-
-    let done = false;
-    do {
-      const resp = await iter.next();
-      response = resp.value;
-      done = resp.done;
-    } while (!done && !this.stop);
-
-    await iter.abort();
-
-    const compressedPk = Buffer.from(response.slice(0, 33));
-    const bech32Address = Buffer.from(response.slice(33, -2)).toString();
-    const senderEvmosAddress = Cosmos.address(wallet.address!);
-
-    console.log('bech32Address', bech32Address, senderEvmosAddress);
-
-    return {
-      address: senderEvmosAddress,
-      publicKey: compressedPk.toString(),
-    };
-  }
-
-  async signRequest(
+  async signTypedData(
     ethAddress: string,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ) {
     const wallet = wallets.getWallet(ethAddress);
-    const password = await app.getPassword();
-    const privateKey = await wallet?.getPrivateKey(password);
-
-    const ethWallet = new EthersWallet(privateKey, EthNetwork.network);
 
     // @ts-ignore
     const {EIP712Domain, ...othTypes} = types;
@@ -237,35 +156,7 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    switch (wallet?.type) {
-      case WalletType.hot:
-      case WalletType.mnemonic:
-        const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
-        const hash = keccak256(concatHash);
-        return joinSignature(ethWallet._signingKey().signDigest(hash));
-
-      case WalletType.ledgerBt:
-        let signature = null;
-
-        const iter = runUntil(wallet.deviceId!, eth =>
-          eth.signEIP712HashedMessage(wallet.path, domainHash, valuesHash),
-        );
-
-        let done = false;
-        do {
-          const resp = await iter.next();
-          signature = resp.value;
-          done = resp.done;
-        } while (!done && !this.stop);
-
-        await iter.abort();
-
-        if (!signature) {
-          throw new Error('can_not_connected');
-        }
-
-        return `${signature.v}${signature.r}${signature.s}`;
-    }
+    return await wallet?.transport.signTypedData(domainHash, valuesHash);
   }
 
   async sendMsg(
@@ -283,7 +174,7 @@ export class Cosmos {
       };
     },
   ) {
-    const signature = await this.signRequest(
+    const signature = await this.signTypedData(
       source,
       msg.eipToSign.domain,
       msg.eipToSign.types,

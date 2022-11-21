@@ -3,21 +3,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
-import {app, wallets} from '@app/contexts';
-import {createTheme, runUntil} from '@app/helpers';
+import {app} from '@app/contexts';
+import {createTheme} from '@app/helpers';
 import {Cosmos} from '@app/services/cosmos';
-import {
-  CLA,
-  ERROR_CODE,
-  INS,
-  P1_VALUES,
-  serializeHRP,
-  serializePath,
-} from '@app/services/ledger';
 import {GWEI} from '@app/variables';
 
-const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
-// const sourceAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
+// const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
+const sourceEthAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
 
 export const SettingsTestScreen = () => {
   const live = useRef(true);
@@ -89,42 +81,6 @@ export const SettingsTestScreen = () => {
     console.log('resp', resp);
   }, [address, amount, cosmos]);
 
-  const onPressPubKey = useCallback(async () => {
-    const wallet = wallets.getWallet(sourceEthAddress);
-
-    let signature = null;
-    const data = Buffer.concat([
-      serializeHRP('cosmos'),
-      serializePath([44, 118, 5, 0, 0]),
-    ]);
-
-    console.log(CLA, INS.GET_ADDR_SECP256K1, P1_VALUES.ONLY_RETRIEVE, 0, data, [
-      ERROR_CODE.NoError,
-    ]);
-
-    const iter = runUntil(wallet.deviceId!, eth =>
-      eth.transport.send(
-        CLA,
-        INS.GET_ADDR_SECP256K1,
-        P1_VALUES.ONLY_RETRIEVE,
-        0,
-        data,
-        [ERROR_CODE.NoError],
-      ),
-    );
-
-    let done = false;
-    do {
-      const resp = await iter.next();
-      signature = resp.value;
-      done = resp.done;
-    } while (!done && live.current);
-
-    await iter.abort();
-
-    console.log('signature', signature);
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text>staked: {staked}</Text>
@@ -160,8 +116,6 @@ export const SettingsTestScreen = () => {
           variant={ButtonVariant.second}
         />
       </View>
-
-      <Button title="public key" onPress={onPressPubKey} />
     </View>
   );
 };

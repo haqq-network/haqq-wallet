@@ -5,6 +5,12 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {Transaction} from './models/transaction';
 
+export interface TransportWallet {
+  getPublicKey: () => Promise<string>;
+
+  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
+}
+
 export enum TransactionSource {
   unknown,
   date,

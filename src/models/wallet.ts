@@ -3,6 +3,8 @@ import {EventEmitter} from 'events';
 import {app} from '@app/contexts';
 import {decrypt, encrypt} from '@app/passworder';
 import {EthNetwork} from '@app/services';
+import {TransportHot} from '@app/services/transport-hot';
+import {TransportLedger} from '@app/services/transport-ledger';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
@@ -370,6 +372,18 @@ export class Wallet extends EventEmitter {
       realm.write(() => {
         wallet.data = encrypted;
       });
+    }
+  }
+
+  get transport() {
+    switch (this.type) {
+      case WalletType.mnemonic:
+      case WalletType.hot:
+        return new TransportHot(this);
+      case WalletType.ledgerBt:
+        return new TransportLedger(this);
+      default:
+        throw new Error('transport_not_implemented');
     }
   }
 }
