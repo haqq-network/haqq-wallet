@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {IS_LEDGER_ENABLED} from '@env';
 import {NavigationProp} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
@@ -17,8 +16,6 @@ import {
   MAGIC_CARD_HEIGHT,
   SHADOW_COLOR,
 } from '../variables';
-
-const isLedgerEnabled = Boolean(parseInt(IS_LEDGER_ENABLED, 10));
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
@@ -43,38 +40,24 @@ export const WalletCreate = ({}: BalanceProps) => {
         style={page.create}
       />
       <View style={page.buttons}>
-        {isLedgerEnabled ? (
-          <>
-            <Button
-              variant={ButtonVariant.second}
-              size={ButtonSize.middle}
-              title="Connect"
-              style={page.createSmall}
-              iconRight={
-                <Image source={{uri: 'ledger'}} style={page.ledgerIcon} />
-              }
-              onPress={() => {
-                navigation.navigate('ledger');
-              }}
-            />
-            <Button
-              size={ButtonSize.middle}
-              title="Import"
-              style={page.createSmall}
-              onPress={() => {
-                navigation.navigate('restore');
-              }}
-            />
-          </>
-        ) : (
-          <Button
-            title="Import  an existing one"
-            style={page.import}
-            onPress={() => {
-              navigation.navigate('restore');
-            }}
-          />
-        )}
+        <Button
+          variant={ButtonVariant.second}
+          size={ButtonSize.middle}
+          title="Connect"
+          style={page.createSmall}
+          iconRight={<Image source={{uri: 'ledger'}} style={page.ledgerIcon} />}
+          onPress={() => {
+            navigation.navigate('ledger');
+          }}
+        />
+        <Button
+          size={ButtonSize.middle}
+          title="Import"
+          style={page.createSmall}
+          onPress={() => {
+            navigation.navigate('restore');
+          }}
+        />
       </View>
     </View>
   );
@@ -118,12 +101,6 @@ const page = StyleSheet.create({
     paddingVertical: 12,
     lineHeight: 22,
     marginBottom: 8,
-  },
-  import: {
-    flex: 0,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-    lineHeight: 22,
   },
   createSmall: {
     flex: 1,
