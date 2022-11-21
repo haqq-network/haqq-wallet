@@ -4,17 +4,21 @@ import {Text, View} from 'react-native';
 
 export type ErrorBoundaryProps = {
   fallback: React.ReactNode;
+  children: React.ReactNode;
 };
 
-export class ErrorBoundary extends PureComponent {
+type State = {
+  error: any;
+  errorInfo: any;
+};
+
+export class ErrorBoundary extends PureComponent<ErrorBoundaryProps, State> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {error: null, errorInfo: null};
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    console.log(error, errorInfo);
-
     this.setState({
       error: error,
       errorInfo: errorInfo,
@@ -22,7 +26,7 @@ export class ErrorBoundary extends PureComponent {
   }
 
   render() {
-    if (this.state.errorInfo) {
+    if (this.state && this.state?.errorInfo) {
       // Error path
       return (
         <View>
@@ -35,7 +39,7 @@ export class ErrorBoundary extends PureComponent {
         </View>
       );
     }
-    // Normally, just render children
+
     return this.props.children;
   }
 }

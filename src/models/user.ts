@@ -3,7 +3,8 @@ import {EventEmitter} from 'events';
 import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance} from 'react-native';
 
-import {app} from '../contexts/app';
+import {app} from '@app/contexts';
+
 import {AppLanguage, AppTheme} from '../types';
 import {
   PIN_BANNED_ATTEMPTS,
@@ -45,10 +46,10 @@ export type UserType = {
 
 export class User extends EventEmitter {
   private last_activity: Date;
-  private _raw: UserType & Realm.Object;
+  private _raw: UserType & Realm.Object<UserType>;
   private _systemTheme: AppTheme;
 
-  constructor(user: UserType & Realm.Object) {
+  constructor(user: UserType & Realm.Object<UserType>) {
     super();
     this.last_activity = new Date();
 
