@@ -148,6 +148,7 @@ android {
     versionName "0.0.1"
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
+    vectorDrawables.useSupportLibrary = true
 
     if (isNewArchitectureEnabled()) {
       // We configure the NDK build only if you decide to opt-in for the New Architecture.
@@ -273,7 +274,7 @@ android {
 
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
-
+  implementation 'com.android.support:appcompat-v7:23.2.0'
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
