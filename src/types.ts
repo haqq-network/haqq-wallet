@@ -34,11 +34,8 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      privateKey: string;
-    }
-  | {
-      mnemonic: string;
-      privateKey?: string;
+      mnemonic?: string | boolean;
+      privateKey?: string | boolean;
     }
   | {
       address: string;
@@ -58,12 +55,12 @@ export type RootStackParamList = {
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
-    nextScreen: keyof RootStackParamList;
+    nextScreen: 'onboardingSetupPin' | 'restoreStore';
   };
   restoreStore: {
-    mnemonic: string;
-    privateKey: string | false;
     nextScreen: NextScreenWithoutParamsT;
+    mnemonic: string | false;
+    privateKey: string | false;
   };
   register: undefined;
   backup: {
