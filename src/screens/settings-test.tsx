@@ -8,8 +8,14 @@ import {createTheme} from '@app/helpers';
 export const SettingsTestScreen = () => {
   return (
     <View>
-      <Image source={{uri: 'staking'}} style={styles.icon1} />
-      <Image source={{uri: 'staking'}} style={styles.icon2} />
+      <Image
+        source={require('../../assets/icons/staking.svg')}
+        style={styles.icon1}
+      />
+      <Image
+        source={require('../../assets/icons/staking.svg')}
+        style={styles.icon2}
+      />
     </View>
   );
 };
