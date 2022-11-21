@@ -9,7 +9,8 @@
     "strictPropertyInitialization": false,
     "baseUrl": ".",
     "paths" : {
-      "@app/*": ["src/*"]
+      "@app/*": ["src/*"],
+      "@assets/*": ["assets/*"]
     }
   }
 }
