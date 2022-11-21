@@ -13,13 +13,13 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
-import {EthNetwork} from '../services/eth-network';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {generateUUID} from '../utils';
 import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
