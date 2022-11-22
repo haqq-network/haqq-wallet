@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: '@react-native-community',
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-native', 'import'],
+  plugins: ['@typescript-eslint', 'react', 'react-native', 'import', 'prettier'],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -31,13 +31,12 @@ module.exports = {
             },
           },
         ],
-        'sort-imports':
-          [
-            'error',
-            {
-              'ignoreDeclarationSort': true
-            }
-          ],
+        'sort-imports': [
+          'error',
+          {
+            ignoreDeclarationSort: true,
+          },
+        ],
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',

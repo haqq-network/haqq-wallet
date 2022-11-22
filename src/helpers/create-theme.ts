@@ -1,12 +1,26 @@
+import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+
 import {Color, getColor} from '@app/colors';
 import {app} from '@app/contexts';
 
-export function createTheme<
-  T extends Record<string, any>,
-  U extends {
-    [key in keyof T]: any;
-  },
->(styles: T): U {
+type NamedStyles<T> = {
+  [P in keyof T]:
+    | ViewStyle
+    | TextStyle
+    | ImageStyle
+    | {
+        primary: string;
+        background: string;
+        card: string;
+        text: string;
+        border: string;
+        notification: string;
+      };
+};
+
+export function createTheme<T extends NamedStyles<T> | NamedStyles<any>>(
+  styles: T | NamedStyles<T>,
+): T {
   const style = {};
   const cache = new Map();
   const keys = Object.keys(styles);

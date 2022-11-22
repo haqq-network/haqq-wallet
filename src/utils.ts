@@ -49,7 +49,7 @@ export function prepareTransactions(
       );
 
       return memo.concat(
-        {date: key, source: TransactionSource.date, hash: k},
+        {date: key, source: TransactionSource.date, hash: k, providerId: ''},
         ...tmp,
       );
     }, []);
@@ -159,4 +159,12 @@ export function cleanNumber(number: string | number) {
 
 export function getPatternName(pattern: string) {
   return `${PATTERNS_SOURCE}${pattern}@3x.png`;
+}
+
+export function shuffleWords(words: Map<string, string>) {
+  return Array.from(words.keys()).sort(() => 0.5 - Math.random());
+}
+
+export function capitalize(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }

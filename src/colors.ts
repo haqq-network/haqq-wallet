@@ -1,7 +1,8 @@
-import {app} from './contexts/app';
-import {AppTheme} from './types';
+import {app} from '@app/contexts';
+import {AppTheme} from '@app/types';
 import {
   DARK_BG_1,
+  DARK_BG_10,
   DARK_BG_2,
   DARK_BG_3,
   DARK_BG_4,
@@ -29,6 +30,7 @@ import {
   DARK_TEXT_SECOND_2,
   DARK_TEXT_YELLOW_1,
   LIGHT_BG_1,
+  LIGHT_BG_10,
   LIGHT_BG_2,
   LIGHT_BG_3,
   LIGHT_BG_4,
@@ -56,7 +58,7 @@ import {
   LIGHT_TEXT_SECOND_2,
   LIGHT_TEXT_YELLOW_1,
   TRANSPARENT,
-} from './variables';
+} from '@app/variables';
 
 export enum Color {
   transparent = 'transparent',
@@ -77,6 +79,7 @@ export enum Color {
   bg7 = 'bg7',
   bg8 = 'bg8',
   bg9 = 'bg9',
+  bg10 = 'bg10',
   graphicBase1 = 'graphicBase1',
   graphicBase2 = 'graphicBase2',
   graphicBase3 = 'graphicBase3',
@@ -89,7 +92,13 @@ export enum Color {
   graphicSecond4 = 'graphicSecond4',
 }
 
+const styled = new Set(Object.keys(Color));
+
 export function getColor(key: Color) {
+  if (!styled.has(key)) {
+    return key;
+  }
+
   if (app.getTheme() === AppTheme.dark) {
     return dark[key];
   }
@@ -116,6 +125,7 @@ const light = {
   [Color.bg7]: LIGHT_BG_7,
   [Color.bg8]: LIGHT_BG_8,
   [Color.bg9]: LIGHT_BG_9,
+  [Color.bg10]: LIGHT_BG_10,
   [Color.graphicBase1]: LIGHT_GRAPHIC_BASE_1,
   [Color.graphicBase2]: LIGHT_GRAPHIC_BASE_2,
   [Color.graphicBase3]: LIGHT_GRAPHIC_BASE_3,
@@ -147,6 +157,7 @@ const dark = {
   [Color.bg7]: DARK_BG_7,
   [Color.bg8]: DARK_BG_8,
   [Color.bg9]: DARK_BG_9,
+  [Color.bg10]: DARK_BG_10,
   [Color.graphicBase1]: DARK_GRAPHIC_BASE_1,
   [Color.graphicBase2]: DARK_GRAPHIC_BASE_2,
   [Color.graphicBase3]: DARK_GRAPHIC_BASE_3,

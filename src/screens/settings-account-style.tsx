@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {useWallet} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {
   Button,
@@ -126,6 +127,7 @@ export const SettingsAccountStyleScreen = () => {
   );
 
   const onPressGenerate = useCallback(() => {
+    vibrate(HapticEffects.impactLight);
     setLoading(true);
     const newColors =
       cardStyle === WalletCardStyle.flat

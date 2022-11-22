@@ -11,8 +11,8 @@ import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 25,
-  migration: (oldRealm, newRealm) => {
+  schemaVersion: 26,
+  onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{
@@ -104,6 +104,16 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.theme = AppTheme.light;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 26) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects<{isMain: boolean}>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.isMain = false;
       }
     }
   },

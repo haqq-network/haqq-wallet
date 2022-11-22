@@ -1,71 +1,46 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {Alert, FlatList, StyleSheet} from 'react-native';
-import prompt from 'react-native-prompt-android';
+import {StyleSheet} from 'react-native';
 
 import {useApp, useContacts} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {AddressEmpty} from '../components/address-empty';
 import {AddressHeader} from '../components/address-header';
-import {AddressRow} from '../components/address-row';
+import {ListContact} from '../components/list-contact';
 import {
   Box,
   Icon,
   IconButton,
-  PenIcon,
-  PopupContainer,
   QRScanner,
-  SwipeableRow,
   Text,
   TextField,
-  TrashIcon,
 } from '../components/ui';
 import {hideModal, showModal} from '../helpers/modal';
-import {Contact} from '../models/contact';
+import {withActionsContactItem} from '../hocs';
+import {useTypedNavigation} from '../hooks';
 import {
   LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_BASE_3,
   LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_RED_1,
-  LIGHT_GRAPHIC_SECOND_4,
   LIGHT_TEXT_BASE_1,
 } from '../variables';
+
+const ListOfContacts = withActionsContactItem(ListContact, {
+  nextScreen: 'settingsContactEdit',
+});
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
 export const SettingsAddressBookScreen =
   ({}: SettingsAddressBookScreenProps) => {
     const app = useApp();
-    const contacts = useContacts();
+
     const [search, setSearch] = useState('');
     const [canAdd, setCanAdd] = useState(false);
-
-    const [rows, setRows] = useState(contacts.getContacts());
-
-    useEffect(() => {
-      const callback = () => {
-        setRows(contacts.getContacts());
-      };
-
-      contacts.on('contacts', callback);
-
-      return () => {
-        contacts.off('contacts', callback);
-      };
-    }, [contacts]);
-
-    const contactsList = useMemo(
-      () =>
-        rows.filter(
-          (contact: Contact) =>
-            !!`${contact.account} ${contact.name}`
-              .toLowerCase()
-              .match(search.toLowerCase()),
-        ),
-      [rows, search],
-    );
+    const {navigate} = useTypedNavigation();
+    const contacts = useContacts();
 
     useEffect(() => {
       const add =
@@ -95,76 +70,20 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
-      prompt(
-        'Add contact',
-        `Address: ${search}`,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Add',
-            onPress: value => {
-              contacts.createContact(search.trim(), value);
-              setSearch('');
-            },
-          },
-        ],
-        {
-          placeholder: 'Contact name',
-        },
-      );
-    }, [contacts, search]);
+      navigate('settingsContactEdit', {
+        name: '',
+        address: search.trim(),
+        isCreate: true,
+      });
+      setSearch('');
+    }, [navigate, search]);
 
-    const onPressEdit = useCallback(
-      (item: Contact) => {
-        prompt(
-          'Edit contact',
-          `Address: ${item.account}`,
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Save',
-              onPress: value => {
-                contacts.updateContact(item.account, value);
-              },
-            },
-          ],
-          {
-            defaultValue: item?.name ?? '',
-            placeholder: 'Contact name',
-          },
-        );
-      },
-      [contacts],
-    );
-
-    const onPressRemove = useCallback(
-      (item: Contact) => {
-        Alert.alert(
-          'Delete Contact',
-          'Are you sure you want to delete the selected contact?',
-          [
-            {text: 'Cancel', style: 'cancel'},
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: () => {
-                contacts.removeContact(item.account);
-              },
-            },
-          ],
-        );
-      },
-      [contacts],
-    );
+    const onPressAddress = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
+    }, []);
 
     return (
-      <PopupContainer>
+      <>
         <TextField
           label="Address"
           style={page.input}
@@ -191,37 +110,17 @@ export const SettingsAddressBookScreen =
             <Box style={page.badge}>
               <Icon s name="plus_mid" color={LIGHT_GRAPHIC_BASE_2} />
             </Box>
-            <Text style={{color: LIGHT_TEXT_BASE_1}}>Add Contact</Text>
+            <Text color={LIGHT_TEXT_BASE_1}>Add Contact</Text>
           </IconButton>
         )}
-        <FlatList
-          // scrollEnabled={false}
-          data={contactsList}
-          renderItem={({item}) => (
-            <SwipeableRow
-              item={item}
-              rightActions={[
-                {
-                  icon: <PenIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                  backgroundColor: LIGHT_GRAPHIC_SECOND_4,
-                  onPress: onPressEdit,
-                  key: 'edit',
-                },
-                {
-                  icon: <TrashIcon color={LIGHT_GRAPHIC_BASE_3} />,
-                  backgroundColor: LIGHT_GRAPHIC_RED_1,
-                  onPress: onPressRemove,
-                  key: 'remove',
-                },
-              ]}>
-              <AddressRow item={item} onPress={() => {}} />
-            </SwipeableRow>
-          )}
+        <ListOfContacts
           ListHeaderComponent={AddressHeader}
           ListEmptyComponent={AddressEmpty}
           contentContainerStyle={page.grow}
+          onPressAddress={onPressAddress}
+          filterText={search}
         />
-      </PopupContainer>
+      </>
     );
   };
 

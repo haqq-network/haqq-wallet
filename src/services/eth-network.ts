@@ -6,9 +6,9 @@ import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
-import {app} from '../contexts/app';
-import {calcFee} from '../helpers/calc-fee';
-import {runUntil} from '../helpers/run-until';
+import {app} from '@app/contexts';
+import {calcFee, runUntil} from '@app/helpers';
+
 import {Provider} from '../models/provider';
 import {Wallet} from '../models/wallet';
 import {getDefaultChainId, getDefaultNetwork} from '../network';
@@ -47,24 +47,23 @@ export class EthNetwork {
   getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
     switch (this.wallet.type) {
       case WalletType.hot:
+      case WalletType.mnemonic:
         return this.getSignedTxForHot(transaction as TransactionRequest);
       case WalletType.ledgerBt:
         return this.getSignedTxForLedger(transaction as UnsignedTransaction);
       default:
-        throw new Error('wallet type not found');
+        throw new Error('wallet_type_not_found');
     }
   }
 
   async getSignedTxForHot(transaction: TransactionRequest) {
-    if (!this.wallet.isEncrypted) {
-      const password = await app.getPassword();
-      await this.wallet.decrypt(password);
-    }
+    const password = await app.getPassword();
+    const privateKey = await this.wallet.getPrivateKey(password);
 
-    if (!this.wallet.privateKey) {
+    if (!privateKey) {
       throw new Error('private key not found');
     }
-    const wallet = new EthersWallet(this.wallet.privateKey, EthNetwork.network);
+    const wallet = new EthersWallet(privateKey, EthNetwork.network);
 
     return wallet.signTransaction(transaction);
   }

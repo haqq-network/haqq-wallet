@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet} from 'react-native';
+
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {
   Button,
@@ -18,6 +20,11 @@ const animationSize = Dimensions.get('window').width - 116;
 
 export const BackupFinishScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    vibrate(HapticEffects.success);
+  }, []);
+
   return (
     <PopupContainer style={page.popupContainer}>
       <Spacer style={page.container}>

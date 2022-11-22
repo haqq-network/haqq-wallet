@@ -1,16 +1,23 @@
 import * as React from 'react';
+import {useMemo} from 'react';
 
 import {
   Platform,
   Text as RNText,
   TextProps as RNTextProps,
+  StyleProp,
   StyleSheet,
+  ViewStyle,
 } from 'react-native';
 
-import {FontT} from '../../types';
-import {LIGHT_TEXT_BASE_1} from '../../variables';
+import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {FontT} from '@app/types';
 
-export type TextProps = {
+export type TextValue = {children: React.ReactNode} | {i18n: I18N};
+
+export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -29,8 +36,13 @@ export type TextProps = {
   t15?: boolean;
   t16?: boolean;
   t17?: boolean;
+  u0?: boolean;
   clean?: boolean;
-} & RNTextProps;
+  center?: boolean;
+  right?: boolean;
+  color?: string | Color;
+  style?: StyleProp<ViewStyle>;
+} & TextValue;
 
 export const Text = ({
   t0,
@@ -51,11 +63,21 @@ export const Text = ({
   t15,
   t16,
   t17,
+  u0,
   style,
+  i18n,
   children,
   clean,
+  center,
+  right,
+  color,
   ...props
 }: TextProps) => {
+  const value = useMemo(
+    () => (typeof i18n !== 'undefined' ? getText(i18n) : children),
+    [children, i18n],
+  );
+
   return (
     <>
       {clean ? (
@@ -84,9 +106,13 @@ export const Text = ({
             t15 && StyleSheet.flatten([page.t15Style, style]),
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
+            u0 && StyleSheet.flatten([page.u0Style, style]),
+            !!color && {color: getColor(color as Color)},
+            center && page.center,
+            right && page.right,
           ]}
           {...props}>
-          {children}
+          {value}
         </RNText>
       )}
     </>
@@ -153,13 +179,26 @@ const sfProTextBold700: FontT = Platform.select({
   },
 });
 
-const page = StyleSheet.create({
+const page = createTheme({
+  center: {
+    textAlign: 'center',
+  },
+  right: {
+    textAlign: 'right',
+  },
+  u0Style: {
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 36,
+    lineHeight: 43,
+    letterSpacing: 0.38,
+  },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t1Style: {
     fontFamily: 'SF Pro Display',
@@ -167,14 +206,14 @@ const page = StyleSheet.create({
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t2Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 34,
     lineHeight: 46,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t3Style: {
     fontFamily: 'SF Pro Display',
@@ -182,92 +221,91 @@ const page = StyleSheet.create({
     fontStyle: 'normal',
     fontSize: 28,
     lineHeight: 38,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t4Style: {
     fontFamily: 'ElMessiri-Bold',
     fontStyle: 'normal',
     fontSize: 28,
     lineHeight: 38,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t5Style: {
     ...sfProDisplayBold700,
     fontSize: 22,
     lineHeight: 30,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t6Style: {
     ...sfProDisplaySemibold600,
     fontSize: 22,
     lineHeight: 30,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t7Style: {
     ...sfProTextBold700,
     fontSize: 18,
     lineHeight: 24,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t8Style: {
     ...sfProTextSemibold600,
     fontSize: 18,
     lineHeight: 24,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t9Style: {
     ...sfProDisplayBold700,
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t10Style: {
-    ...sfProDisplayBold700,
+    ...sfProDisplaySemibold600,
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t11Style: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
+    ...sfProTextRegular400,
     fontSize: 16,
     lineHeight: 22,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t12Style: {
     ...sfProDisplayBold700,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t13Style: {
     ...sfProDisplaySemibold600,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t14Style: {
     ...sfProTextRegular400,
     fontSize: 14,
     lineHeight: 18,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t15Style: {
     ...sfProTextRegular400,
     fontSize: 12,
     lineHeight: 16,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t16Style: {
     ...sfProTextBold700,
     fontSize: 10,
     lineHeight: 12,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   t17Style: {
     ...sfProTextMedium500,
     fontSize: 10,
     lineHeight: 12,
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

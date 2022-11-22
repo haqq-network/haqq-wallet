@@ -4,8 +4,7 @@ import {app} from '@app/contexts';
 
 export function useUser() {
   const user = app.getUser();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setDate] = useState(new Date());
+  const [, setDate] = useState(new Date());
   useEffect(() => {
     const subscription = () => {
       setDate(new Date());

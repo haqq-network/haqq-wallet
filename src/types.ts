@@ -34,11 +34,8 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      privateKey: string;
-    }
-  | {
-      mnemonic: string;
-      privateKey?: string;
+      mnemonic?: string | boolean;
+      privateKey?: string | boolean;
     }
   | {
       address: string;
@@ -48,6 +45,8 @@ export type WalletInitialData =
 
 export type RootStackParamList = {
   home: undefined;
+  homeFeed: undefined;
+  homeSettings: undefined;
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
@@ -56,18 +55,19 @@ export type RootStackParamList = {
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
-    nextScreen: keyof RootStackParamList;
+    nextScreen: 'onboardingSetupPin' | 'restoreStore';
   };
   restoreStore: {
-    mnemonic: string;
-    privateKey: string | false;
     nextScreen: NextScreenWithoutParamsT;
+    mnemonic: string | false;
+    privateKey: string | false;
   };
   register: undefined;
   backup: {
     address: string;
   };
   detailsQr: {address: string};
+  settingsTheme: undefined;
   settingsTest: undefined;
   settingsAccounts: undefined;
   settingsAccountDetail: {address: string};
@@ -83,11 +83,13 @@ export type RootStackParamList = {
   settingsFaq: undefined;
   settingsAbout: undefined;
   backupVerify: {
-    address: string;
+    rootAddress: string;
+    mnemonic: string;
   };
   backupFinish: undefined;
   backupCreate: {
-    address: string;
+    rootAddress: string;
+    mnemonic: string;
   };
   backupNotification: {
     address: string;
@@ -191,6 +193,16 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
+  settingsAccountEdit: {address: string};
+  transactionContactEdit: {
+    name: string;
+    address: string;
+  };
+  settingsContactEdit: {
+    name: string;
+    address: string;
+    isCreate?: boolean;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
@@ -240,6 +252,7 @@ export enum WalletCardStyle {
 }
 
 export enum WalletType {
+  mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
 }
@@ -299,3 +312,22 @@ export enum AppTheme {
   dark = 'dark',
   system = 'system',
 }
+
+export type AddWalletParams = {address: string} & (
+  | {
+      type: WalletType.mnemonic;
+      mnemonic: string;
+      path: string;
+      privateKey: string;
+      rootAddress: string;
+    }
+  | {
+      type: WalletType.hot;
+      privateKey: string;
+    }
+  | {
+      type: WalletType.ledgerBt;
+      deviceId: string;
+      deviceName: string;
+    }
+);

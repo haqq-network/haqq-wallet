@@ -1,69 +1,65 @@
 import React from 'react';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HeaderTitleProps} from '@react-navigation/elements';
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
+
+import {Color} from '@app/colors';
+import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
+import {HomeScreenTitle} from '@app/components/home-screen/title';
+import {QrScannerButton} from '@app/components/qr-scanner-button';
+import {I18N, getText} from '@app/i18n';
+import {RootStackParamList} from '@app/types';
+import {IS_IOS} from '@app/variables';
 
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
-import {QrScannerButton} from '../components/qr-scanner-button';
-import {SettingsIcon, Text, WalletIcon} from '../components/ui';
-import {
-  IS_IOS,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-} from '../variables';
-
 const Tab = createBottomTabNavigator();
 
-interface HeaderTitleT extends HeaderTitleProps {
-  headerTitle?: string;
-}
+const screenOptions = ({
+  route,
+}: {
+  route: RouteProp<RootStackParamList>;
+  navigation: any;
+}): BottomTabNavigationOptions => ({
+  headerShadowVisible: false,
+  headerStyle: {
+    backgroundColor: Color.transparent,
+  },
+  tabBarStyle: {
+    backgroundColor: Color.transparent,
+    borderTopWidth: 0,
+    elevation: 0,
+    height: IS_IOS ? 80 : 50,
+    top: IS_IOS ? 0 : 8,
+    marginBottom: IS_IOS ? 0 : 23,
+  },
+  tabBarItemStyle: {
+    marginTop: IS_IOS ? 5 : 8,
+    height: IS_IOS ? 50 : 40,
+  },
+  headerTitle: () => <HomeScreenTitle route={route} />,
+  tabBarIcon: ({focused}) => (
+    <HomeScreenTabBarIcon focused={focused} route={route} />
+  ),
+});
 
 export const HomeScreen = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerTitle: ({headerTitle}: HeaderTitleT) => (
-          <Text t8>{headerTitle}</Text>
-        ),
-        headerShadowVisible: false,
-        headerStyle: {
-          backgroundColor: 'transparent',
-        },
-        tabBarStyle: {
-          borderTopWidth: 0,
-          elevation: 0,
-          height: IS_IOS ? 80 : 50,
-          top: IS_IOS ? 0 : 8,
-          marginBottom: IS_IOS ? 0 : 23,
-        },
-        tabBarItemStyle: {
-          marginTop: IS_IOS ? 5 : 8,
-          height: IS_IOS ? 50 : 40,
-        },
-      }}>
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
-        name="home-feed"
+        name="homeFeed"
         component={HomeFeedScreen}
         options={{
-          title: 'Wallet',
-          headerTitle: 'Your wallets',
-          headerTitleAlign: 'center',
-          headerRight: () => <QrScannerButton />,
-          headerTitleAllowFontScaling: false,
-          tabBarIcon: ({focused}) => (
-            <WalletIcon
-              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
-            />
-          ),
-          headerTitleStyle: {
-            fontSize: 18,
-          },
+          title: getText(I18N.homeWallet),
+          headerRight: QrScannerButton,
         }}
       />
       {/* <Tab.Screen
-        name="home-market"
+        name="homeMarket"
         component={HomeMarketScreen}
         options={{
           title: 'Market',
@@ -74,7 +70,7 @@ export const HomeScreen = () => {
         }}
       />
       <Tab.Screen
-        name="home-swap"
+        name="homeSwap"
         component={HomeSwapScreen}
         options={{
           title: 'Swap',
@@ -85,18 +81,10 @@ export const HomeScreen = () => {
         }}
       /> */}
       <Tab.Screen
-        name="home-settings"
+        name="homeSettings"
         component={HomeSettingsScreen}
         options={{
-          title: 'Settings',
-          headerTitle: 'Settings',
-          headerTitleAllowFontScaling: false,
-          headerTitleAlign: 'center',
-          tabBarIcon: ({focused}) => (
-            <SettingsIcon
-              color={focused ? LIGHT_GRAPHIC_GREEN_1 : LIGHT_GRAPHIC_BASE_2}
-            />
-          ),
+          title: getText(I18N.homeSettings),
         }}
       />
     </Tab.Navigator>

@@ -6,6 +6,7 @@
 
     /* Completeness */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */,
+    "strictPropertyInitialization": false,
     "baseUrl": ".",
     "paths" : {
       "@app/*": ["src/*"]

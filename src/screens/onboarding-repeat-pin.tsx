@@ -4,18 +4,14 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
+import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
+import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
+import {verticalScale} from '@app/helpers';
 import {useApp} from '@app/hooks';
-
-import {NumericKeyboard} from '../components/numeric-keyboard';
-import {PopupContainer, Spacer, Text} from '../components/ui';
-import {vibrate} from '../services/haptic';
-import {RootStackParamList} from '../types';
-import {
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-} from '../variables';
+import {vibrate} from '@app/services/haptic';
+import {RootStackParamList} from '@app/types';
+import {LIGHT_GRAPHIC_SECOND_2, LIGHT_TEXT_GREEN_1} from '@app/variables';
 
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -62,7 +58,7 @@ export const OnboardingRepeatPinScreen = () => {
   return (
     <PopupContainer style={page.container}>
       <Text t4>Please repeat pin code</Text>
-      <Text t11 style={page.t11}>
+      <Text t11 center color={getColor(Color.textBase2)} style={page.t11}>
         For security, we don't have a “Restore pin” button.
       </Text>
       <Spacer style={page.spacer}>
@@ -74,9 +70,9 @@ export const OnboardingRepeatPinScreen = () => {
           <View style={[page.dot, pin.length >= 5 && page.active]} />
           <View style={[page.dot, pin.length >= 6 && page.active]} />
         </View>
-        <Text clean style={page.error}>
+        <ErrorText e2 style={page.error}>
           {error ? error : ' '}
-        </Text>
+        </ErrorText>
       </Spacer>
       <NumericKeyboard onPress={onKeyboard} />
     </PopupContainer>
@@ -86,7 +82,7 @@ export const OnboardingRepeatPinScreen = () => {
 const page = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: verticalScale(40),
     paddingBottom: 16,
     marginHorizontal: 20,
   },
@@ -110,8 +106,9 @@ const page = StyleSheet.create({
     transform: [{scale: 1}],
   },
   error: {
-    color: LIGHT_TEXT_RED_1,
     justifyContent: 'center',
   },
-  t11: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  t11: {
+    marginBottom: verticalScale(5),
+  },
 });

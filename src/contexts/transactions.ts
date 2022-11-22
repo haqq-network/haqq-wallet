@@ -78,8 +78,11 @@ class Transactions extends EventEmitter {
     return Array.from(this._transactions ?? []);
   }
 
-  getTransaction(hash: string): Transaction | undefined {
-    return realm.objectForPrimaryKey<Transaction>('Transaction', hash);
+  getTransaction(hash: string): Transaction | null {
+    return realm.objectForPrimaryKey<Transaction>(
+      Transaction.schema.name,
+      hash,
+    );
   }
 
   async checkTransaction(hash: string) {
