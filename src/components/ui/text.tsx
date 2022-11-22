@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useMemo} from 'react';
 
 import {
   Platform,
@@ -9,11 +10,14 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {FontT} from '@app/types';
 
-export type TextProps = Omit<RNTextProps, 'style'> & {
+export type TextValue = {children: React.ReactNode} | {i18n: I18N};
+
+export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -32,12 +36,13 @@ export type TextProps = Omit<RNTextProps, 'style'> & {
   t15?: boolean;
   t16?: boolean;
   t17?: boolean;
+  u0?: boolean;
   clean?: boolean;
   center?: boolean;
   right?: boolean;
-  color?: string;
+  color?: string | Color;
   style?: StyleProp<ViewStyle>;
-};
+} & TextValue;
 
 export const Text = ({
   t0,
@@ -58,7 +63,9 @@ export const Text = ({
   t15,
   t16,
   t17,
+  u0,
   style,
+  i18n,
   children,
   clean,
   center,
@@ -66,6 +73,11 @@ export const Text = ({
   color,
   ...props
 }: TextProps) => {
+  const value = useMemo(
+    () => (typeof i18n !== 'undefined' ? getText(i18n) : children),
+    [children, i18n],
+  );
+
   return (
     <>
       {clean ? (
@@ -94,12 +106,13 @@ export const Text = ({
             t15 && StyleSheet.flatten([page.t15Style, style]),
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
-            !!color && {color},
+            u0 && StyleSheet.flatten([page.u0Style, style]),
+            !!color && {color: getColor(color as Color)},
             center && page.center,
             right && page.right,
           ]}
           {...props}>
-          {children}
+          {value}
         </RNText>
       )}
     </>
@@ -172,6 +185,13 @@ const page = createTheme({
   },
   right: {
     textAlign: 'right',
+  },
+  u0Style: {
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 36,
+    lineHeight: 43,
+    letterSpacing: 0.38,
   },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',

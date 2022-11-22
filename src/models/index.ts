@@ -12,7 +12,7 @@ import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
   schemaVersion: 26,
-  migration: (oldRealm, newRealm) => {
+  onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{

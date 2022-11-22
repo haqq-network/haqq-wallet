@@ -92,7 +92,13 @@ export enum Color {
   graphicSecond4 = 'graphicSecond4',
 }
 
+const styled = new Set(Object.keys(Color));
+
 export function getColor(key: Color) {
+  if (!styled.has(key)) {
+    return key;
+  }
+
   if (app.getTheme() === AppTheme.dark) {
     return dark[key];
   }

@@ -36,7 +36,7 @@ export const TransactionDetailScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'transactionDetail'>>();
 
   const transactions = useTransactions();
-  const [transaction, setTransaction] = useState<Transaction | undefined>(
+  const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),
   );
 

@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {useContacts} from '@app/hooks';
 import {EthNetwork} from '@app/services/eth-network';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -17,7 +18,6 @@ import {
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
 } from '@app/variables';
 
 import {
@@ -45,7 +45,7 @@ export const TransactionSum = ({
 }: TransactionSumProps) => {
   const contacts = useContacts();
   const [amount, setAmount] = useState('');
-  const [amountUsd, setAmountUsd] = useState('0');
+  // const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
   const [error, setError] = useState('');
   const [maxSum, setMaxSum] = useState(0);
@@ -76,9 +76,9 @@ export const TransactionSum = ({
     getBalance();
   }, [getBalance]);
 
-  useEffect(() => {
-    setAmountUsd(amount === '' ? '0' : amount);
-  }, [amount]);
+  // useEffect(() => {
+  //   setAmountUsd(amount === '' ? '0' : amount);
+  // }, [amount]);
 
   const checked = useMemo(
     () =>
@@ -160,15 +160,15 @@ export const TransactionSum = ({
           )}
         </View>
       </View>
-      <View style={page.amount}>
-        <Text t15>$ {amountUsd}</Text>
-      </View>
+      {/*<View style={page.amount}>*/}
+      {/*  <Text t15>$ {amountUsd}</Text>*/}
+      {/*</View>*/}
       {error ? (
-        <Text clean center color={LIGHT_TEXT_RED_1} t14>
+        <Text center color={getColor(Color.textRed1)} t14>
           {error}
         </Text>
       ) : (
-        <Text clean center color={LIGHT_TEXT_BASE_2} t14>
+        <Text center color={getColor(Color.textBase2)} t14>
           Available:{' '}
           <Text clean color={LIGHT_TEXT_GREEN_1}>
             {cleanNumber(balance.toFixed(8))} ISLM
@@ -224,11 +224,11 @@ const page = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  amount: {
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // amount: {
+  //   marginBottom: 10,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   submit: {
     marginVertical: 16,
   },

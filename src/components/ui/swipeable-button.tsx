@@ -10,7 +10,7 @@ import {
 import {SwipeableAction} from '../../types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {
-  progress: Animated.AnimatedInterpolation;
+  progress: Animated.AnimatedInterpolation<number>;
   x: number;
   item: T;
 };

@@ -4,7 +4,9 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {useContacts, useUser, useWallet} from '@app/hooks';
+import {EthNetwork} from '@app/services';
 
 import {
   Button,
@@ -16,7 +18,6 @@ import {
   Text,
 } from '../components/ui';
 import {Transaction} from '../models/transaction';
-import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList, WalletType} from '../types';
 import {
   LIGHT_BG_3,
@@ -115,7 +116,7 @@ export const TransactionConfirmationScreen = () => {
         <Text t11 style={page.address}>
           {splittedTo[0]}
         </Text>
-        <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+        <Text t11 color={getColor(Color.textBase2)}>
           {splittedTo[1]}
         </Text>
         <Text t11>{splittedTo[2]}</Text>
@@ -123,28 +124,28 @@ export const TransactionConfirmationScreen = () => {
 
       <View style={page.info}>
         <DataView label="Cryptocurrency">
-          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
+          <Text t11 color={getColor(Color.textBase1)}>
             Islamic coin{' '}
-            <Text clean style={{color: LIGHT_TEXT_BASE_2}}>
+            <Text clean color={getColor(Color.textBase2)}>
               (ISLM)
             </Text>
           </Text>
         </DataView>
         <DataView label="Network">
-          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
+          <Text t11 color={getColor(Color.textBase1)}>
             HAQQ blockchain{' '}
-            <Text clean style={{color: LIGHT_TEXT_BASE_2}}>
+            <Text clean color={getColor(Color.textBase2)}>
               (HQ)
             </Text>
           </Text>
         </DataView>
         <DataView label="Amount">
-          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
+          <Text t11 color={getColor(Color.textBase1)}>
             {amount.toFixed(8)} ISLM
           </Text>
         </DataView>
         <DataView label="Network Fee">
-          <Text t11 style={{color: LIGHT_TEXT_BASE_1}}>
+          <Text t11 color={getColor(Color.textBase1)}>
             {estimateFee.toFixed(8)} ISLM
           </Text>
         </DataView>
