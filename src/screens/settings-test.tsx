@@ -5,17 +5,13 @@ import {Image, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
+const icon = require('../../assets/icons/staking.svg');
+
 export const SettingsTestScreen = () => {
   return (
     <View>
-      <Image
-        source={require('../../assets/icons/staking.svg')}
-        style={styles.icon1}
-      />
-      <Image
-        source={require('../../assets/icons/staking.svg')}
-        style={styles.icon2}
-      />
+      <Image source={icon} style={styles.icon1} />
+      <Image source={icon} style={styles.icon2} />
     </View>
   );
 };

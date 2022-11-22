@@ -148,6 +148,10 @@
     {
       "path": "assets/images/qr-logo@3x.png",
       "sha1": "6dbe55e9e26e8c568afdd03e100e41212416a194"
+    },
+    {
+      "path": "assets/icons/staking.svg",
+      "sha1": "641ab9bfe69194429e4eadbb13a26721831363d2"
     }
   ]
 }
