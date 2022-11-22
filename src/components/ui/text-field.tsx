@@ -19,15 +19,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import {Color, getColor} from '@app/colors';
+
 import {
   IS_IOS,
   LIGHT_BG_5,
   LIGHT_BG_7,
   LIGHT_BG_8,
   LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
+  PLACEHOLDER_GRAY,
 } from '../../variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
@@ -74,14 +75,18 @@ export const TextField: React.FC<Props> = memo(
       height.value = inputH + 30;
     };
 
-    const contentSizeChangeEvent = useEvent((event: nativeEventType) => {
-      'worklet';
-      onChangeContentSize(event.contentSize.height);
-    });
+    const contentSizeChangeEvent = useEvent(
+      ({contentSize}: nativeEventType) => {
+        'worklet';
+        onChangeContentSize(contentSize.height);
+      },
+    );
 
-    const contentSizeChangeEventIOS = (event: sizeChangeEventType) => {
+    const contentSizeChangeEventIOS = ({
+      nativeEvent: {contentSize},
+    }: sizeChangeEventType) => {
       'worklet';
-      onChangeContentSize(event.nativeEvent.contentSize.height);
+      onChangeContentSize(contentSize.height);
     };
 
     const onInputEvent = useCallback(() => {
@@ -95,9 +100,9 @@ export const TextField: React.FC<Props> = memo(
       onInputEvent();
     }, [onInputEvent]);
 
-    let color = LIGHT_TEXT_BASE_2;
+    let color = getColor(Color.textBase2);
     if (error) {
-      color = LIGHT_TEXT_RED_1;
+      color = getColor(Color.textRed1);
     }
 
     const labelAnimStyle = useAnimatedStyle(
@@ -125,27 +130,34 @@ export const TextField: React.FC<Props> = memo(
       height: height.value,
     }));
 
+    const onPressLabel = () => {
+      inputRef.current?.focus();
+    };
+
     return (
       <>
         <Animated.View
           style={[
-            page.container,
+            styles.container,
             style,
-            error && page.containerError,
+            error && styles.containerError,
             inputAnimStyle,
           ]}>
+          {!value && isFocused && (
+            <Text style={styles.placeholder}>{placeholder}</Text>
+          )}
           <AnimatedTextInput
             selectionColor={LIGHT_TEXT_GREEN_1}
             allowFontScaling={false}
             style={[
-              page.input,
+              styles.input,
               {
                 borderColor: color,
                 width: width - 100,
               },
             ]}
             ref={inputRef}
-            placeholder={isFocused ? placeholder : ''}
+            placeholderTextColor={PLACEHOLDER_GRAY}
             {...restOfProps}
             value={value}
             multiline={multiline}
@@ -161,13 +173,13 @@ export const TextField: React.FC<Props> = memo(
               onFocus?.(event);
             }}
           />
-          <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-            <Animated.View style={[page.labelContainer, labelAnimStyle]}>
+          <TouchableWithoutFeedback onPress={onPressLabel}>
+            <Animated.View style={[styles.labelContainer, labelAnimStyle]}>
               <Text
                 allowFontScaling={false}
                 style={[
-                  page.label,
-                  isLarge && page.labelMultiline,
+                  styles.label,
+                  isLarge && styles.labelMultiline,
                   {
                     color,
                   },
@@ -176,16 +188,15 @@ export const TextField: React.FC<Props> = memo(
               </Text>
             </Animated.View>
           </TouchableWithoutFeedback>
-
-          {rightAction && <View style={page.sub}>{rightAction}</View>}
+          {rightAction && <View style={styles.sub}>{rightAction}</View>}
         </Animated.View>
-        {!!error && <Text style={page.error}>{errorText}</Text>}
+        {!!error && <Text style={styles.error}>{errorText}</Text>}
       </>
     );
   },
 );
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     borderRadius: 16,
@@ -235,5 +246,11 @@ const page = StyleSheet.create({
     alignSelf: 'center',
     right: 0,
     width: 50,
+  },
+  placeholder: {
+    position: 'absolute',
+    color: PLACEHOLDER_GRAY,
+    top: IS_IOS ? 28 : 26,
+    left: 18,
   },
 });

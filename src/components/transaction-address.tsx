@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {ListContact} from '@app/components/list-contact';
 import {
@@ -20,12 +20,7 @@ import {withActionsContactItem} from '@app/hocs';
 import {useApp} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
-import {
-  IS_IOS,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  PLACEHOLDER_GRAY,
-} from '@app/variables';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -43,7 +38,6 @@ export const TransactionAddress = ({
   const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
-  const [inputIsFocused, setInputIsFocused] = useState(false);
   const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
@@ -68,9 +62,6 @@ export const TransactionAddress = ({
 
     setError(false);
   }, [address]);
-
-  const handleFocusInput = () => setInputIsFocused(true);
-  const handleBlurInput = () => setInputIsFocused(false);
 
   const onDone = useCallback(async () => {
     onAddress(address.trim());
@@ -107,38 +98,29 @@ export const TransactionAddress = ({
 
   return (
     <KeyboardSafeArea>
-      <View>
-        <TextField
-          onFocus={handleFocusInput}
-          onBlur={handleBlurInput}
-          label="Send to"
-          style={page.input}
-          value={address}
-          onChangeText={setAddress}
-          error={error}
-          errorText="Incorrect address"
-          autoFocus
-          multiline
-          rightAction={
-            address === '' ? (
-              <IconButton onPress={onPressQR}>
-                <QRScanner
-                  color={LIGHT_GRAPHIC_GREEN_1}
-                  width={25}
-                  height={25}
-                />
-              </IconButton>
-            ) : (
-              <IconButton onPress={onPressClear}>
-                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
-              </IconButton>
-            )
-          }
-        />
-        {!address && inputIsFocused ? (
-          <Text style={page.placeholder}>Enter Address or contact name</Text>
-        ) : null}
-      </View>
+      <TextField
+        label="Send to"
+        style={page.input}
+        value={address}
+        onChangeText={setAddress}
+        error={error}
+        errorText="Incorrect address"
+        autoFocus
+        multiline
+        placeholder="Address (0x) or contact name"
+        rightAction={
+          address === '' ? (
+            <IconButton onPress={onPressQR}>
+              <QRScanner color={LIGHT_GRAPHIC_GREEN_1} width={25} height={25} />
+            </IconButton>
+          ) : (
+            <IconButton onPress={onPressClear}>
+              <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+            </IconButton>
+          )
+        }
+      />
+
       <Spacer>
         <ListOfContacts onPressAddress={onPressAddress} />
       </Spacer>
@@ -155,12 +137,6 @@ export const TransactionAddress = ({
 };
 
 const page = StyleSheet.create({
-  placeholder: {
-    position: 'absolute',
-    color: PLACEHOLDER_GRAY,
-    left: 37,
-    bottom: IS_IOS ? 24 : 22,
-  },
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
