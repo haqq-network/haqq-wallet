@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {ListContact} from '@app/components/list-contact';
 import {
@@ -11,6 +12,7 @@ import {
   Icon,
   IconButton,
   KeyboardSafeArea,
+  PasteIcon,
   QRScanner,
   Spacer,
   TextField,
@@ -18,6 +20,7 @@ import {
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
 import {useApp} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
 import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
@@ -96,23 +99,44 @@ export const TransactionAddress = ({
     [onAddress],
   );
 
+  const onPressPaste = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    const pasteString = await Clipboard.getString();
+    setAddress(pasteString);
+  }, []);
+
   return (
     <KeyboardSafeArea>
       <TextField
-        label="Send to"
+        label={getText(I18N.transactionAddressLabel)}
         style={page.input}
         value={address}
         onChangeText={setAddress}
         error={error}
-        errorText="Incorrect address"
+        errorText={getText(I18N.transactionAddressError)}
         autoFocus
         multiline
-        placeholder="Address (0x) or contact name"
+        twoIcons={address === ''}
+        placeholder={getText(I18N.transactionAddressPlaceholder)}
         rightAction={
           address === '' ? (
-            <IconButton onPress={onPressQR}>
-              <QRScanner color={LIGHT_GRAPHIC_GREEN_1} width={25} height={25} />
-            </IconButton>
+            <View style={page.inputButtonContainer}>
+              <IconButton onPress={onPressPaste}>
+                <PasteIcon
+                  color={LIGHT_GRAPHIC_GREEN_1}
+                  width={25}
+                  height={25}
+                />
+              </IconButton>
+              <Spacer width={12} />
+              <IconButton onPress={onPressQR}>
+                <QRScanner
+                  color={LIGHT_GRAPHIC_GREEN_1}
+                  width={25}
+                  height={25}
+                />
+              </IconButton>
+            </View>
           ) : (
             <IconButton onPress={onPressClear}>
               <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
@@ -128,7 +152,7 @@ export const TransactionAddress = ({
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
-        title="Continue"
+        title={getText(I18N.continue)}
         onPress={onDone}
         style={page.button}
       />
@@ -140,6 +164,9 @@ const page = StyleSheet.create({
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
+  },
+  inputButtonContainer: {
+    flexDirection: 'row',
   },
   button: {
     marginHorizontal: 20,

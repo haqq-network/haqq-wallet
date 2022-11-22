@@ -38,6 +38,7 @@ type Props = React.ComponentProps<typeof TextInput> & {
   placeholder?: string;
   rightAction?: React.ReactNode;
   multiline?: boolean;
+  twoIcons?: boolean;
   size?: 'small' | 'large';
 };
 
@@ -59,6 +60,7 @@ export const TextField: React.FC<Props> = memo(
     placeholder,
     rightAction,
     multiline,
+    twoIcons,
     ...restOfProps
   }) => {
     const isLarge = size === 'large';
@@ -153,7 +155,7 @@ export const TextField: React.FC<Props> = memo(
               styles.input,
               {
                 borderColor: color,
-                width: width - 100,
+                width: width - (twoIcons ? 100 + 45 : 100),
               },
             ]}
             ref={inputRef}
@@ -244,8 +246,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'center',
-    right: 0,
-    width: 50,
+    right: 16,
   },
   placeholder: {
     position: 'absolute',
