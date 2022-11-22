@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {
   NativeSyntheticEvent,
@@ -91,16 +91,12 @@ export const TextField: React.FC<Props> = memo(
       onChangeContentSize(contentSize.height);
     };
 
-    const onInputEvent = useCallback(() => {
+    useEffect(() => {
       focusAnim.value = withTiming(isFocused || !!value ? 1 : 0, {
         duration: 150,
         easing: Easing.bezier(0.4, 0, 0.2, 1),
       });
     }, [value, focusAnim, isFocused]);
-
-    useEffect(() => {
-      onInputEvent();
-    }, [onInputEvent]);
 
     let color = getColor(Color.textBase2);
     if (error) {
