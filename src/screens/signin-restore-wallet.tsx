@@ -8,6 +8,7 @@ import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
+import {hideModal} from '@app/helpers';
 
 import {
   Button,
@@ -18,7 +19,6 @@ import {
   Text,
   TextField,
 } from '../components/ui';
-import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
 
 export const SignInRestoreScreen = () => {
@@ -35,7 +35,7 @@ export const SignInRestoreScreen = () => {
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      navigation.replace(route.params.nextScreen ?? 'onboardingSetupPin', {
+      navigation.push(route.params.nextScreen ?? 'onboardingSetupPin', {
         mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
         privateKey: utils.isHexString(seed.trim()) && seed.trim(),
       });
@@ -73,9 +73,7 @@ export const SignInRestoreScreen = () => {
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
-          <Text t13 color={getColor(Color.textGreen1)}>
-            Paste from Clipboard
-          </Text>
+          <Text t14>Paste from Clipboard</Text>
         </IconButton>
         <Spacer />
         <Button
