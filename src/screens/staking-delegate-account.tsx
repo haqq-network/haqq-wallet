@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -23,20 +23,7 @@ export const StakingDelegateAccountScreen = () => {
     [navigation, route.params],
   );
 
-  const [rows, setRows] = useState(wallets.visible);
-
-  useEffect(() => {
-    setRows(wallets.visible);
-
-    const callback = () => {
-      setRows(wallets.visible);
-    };
-
-    wallets.on('wallets', callback);
-    return () => {
-      wallets.off('wallets', callback);
-    };
-  }, [wallets]);
-
-  return <StakingDelegateAccount wallets={rows} onPress={onPressRow} />;
+  return (
+    <StakingDelegateAccount wallets={wallets.visible} onPress={onPressRow} />
+  );
 };

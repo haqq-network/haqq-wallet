@@ -230,6 +230,7 @@ export type RootStackParamList = {
   stakingDelegatePreview: {
     account: string;
     amount: number;
+    fee: number;
     validator: ValidatorItem;
   };
 };

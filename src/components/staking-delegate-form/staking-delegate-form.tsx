@@ -31,6 +31,7 @@ export const StakingDelegateForm = ({
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [balance, setBalance] = useState(0);
+  const [maxSum, setMaxSum] = useState(0);
 
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
@@ -39,6 +40,7 @@ export const StakingDelegateForm = ({
   useEffect(() => {
     EthNetwork.getBalance(account).then(newBalance => {
       setBalance(newBalance);
+      setMaxSum(newBalance);
     });
   }, [account]);
 
@@ -65,8 +67,8 @@ export const StakingDelegateForm = ({
   );
 
   const onPressMax = useCallback(() => {
-    setAmount(balance.toFixed(8));
-  }, [balance]);
+    setAmount(maxSum.toFixed(2));
+  }, [maxSum]);
 
   const checked = useMemo(
     () =>
@@ -87,16 +89,15 @@ export const StakingDelegateForm = ({
         <Text t14 i18n={I18N.stakingDelegateCommission} />
         <Text t10>{validatorCommission}%</Text>
       </View>
-      <Spacer>
-        <SumBlock
-          value={amount}
-          error={error}
-          currency="ISLM"
-          balance={balance}
-          onChange={onChangeValue}
-          onMax={onPressMax}
-        />
-      </Spacer>
+      <SumBlock
+        value={amount}
+        error={error}
+        currency="ISLM"
+        balance={balance}
+        onChange={onChangeValue}
+        onMax={onPressMax}
+      />
+      <Spacer />
       <Button
         style={styles.submit}
         disabled={!checked}
@@ -114,6 +115,7 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   row: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 12,
   },

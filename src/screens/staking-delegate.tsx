@@ -10,18 +10,25 @@ import {useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {StakingDelegateAccountScreen} from '@app/screens/staking-delegate-account';
 import {StakingDelegateFormScreen} from '@app/screens/staking-delegate-form';
+import {StakingDelegatePreviewScreen} from '@app/screens/staking-delegate-preview';
 import {Cosmos} from '@app/services/cosmos';
 import {RootStackParamList, ScreenOptionType, ValidatorItem} from '@app/types';
 
 const StakingDelegateStack = createStackNavigator();
 
-const screenOptionsSend: ScreenOptionType = {
+const screenOptionsAccount: ScreenOptionType = {
+  title: getText(I18N.stakingDelegatePreviewTitle),
+  ...hideBack,
+};
+
+const screenOptionsPreview: ScreenOptionType = {
+  title: getText(I18N.stakingDelegatePreviewTitle),
   ...hideBack,
 };
 
 const screenOptionsForm: ScreenOptionType = {
   ...hideBack,
-  title: getText(I18N.stakingDelegateTitle),
+  title: getText(I18N.stakingDelegateFormTitle),
 };
 
 export const StakingDelegateScreen = () => {
@@ -64,7 +71,13 @@ export const StakingDelegateScreen = () => {
         name="stakingDelegateAccount"
         initialParams={{validator}}
         component={StakingDelegateAccountScreen}
-        options={screenOptionsSend}
+        options={screenOptionsAccount}
+      />
+      <StakingDelegateStack.Screen
+        name="stakingDelegatePreview"
+        initialParams={{validator}}
+        component={StakingDelegatePreviewScreen}
+        options={screenOptionsPreview}
       />
     </StakingDelegateStack.Navigator>
   );

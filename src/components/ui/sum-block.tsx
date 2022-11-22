@@ -1,7 +1,7 @@
 import React, {useCallback, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {Dimensions, TextInput, View} from 'react-native';
+import {Dimensions, StyleProp, TextInput, View, ViewStyle} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
@@ -17,6 +17,7 @@ export type SumBlockProps = {
   balance: number;
   onChange: (value: string) => void;
   onMax: () => void;
+  style?: StyleProp<ViewStyle>;
 };
 export const SumBlock = ({
   onChange,
@@ -25,6 +26,7 @@ export const SumBlock = ({
   currency,
   onMax,
   error,
+  style,
 }: SumBlockProps) => {
   const inputSumRef = useRef<TextInput>(null);
 
@@ -43,7 +45,7 @@ export const SumBlock = ({
   );
 
   return (
-    <>
+    <View style={style}>
       <Text t8 center style={styles.subtitle} color={Color.textBase2}>
         {currency}
       </Text>
@@ -89,7 +91,7 @@ export const SumBlock = ({
           </Text>
         </Text>
       )}
-    </>
+    </View>
   );
 };
 
@@ -106,6 +108,7 @@ const styles = createTheme({
     marginVertical: 16,
   },
   subtitle: {
+    color: 'tomato',
     marginBottom: 4,
   },
   sum: {

@@ -18,6 +18,7 @@ export const StakingDelegateFormScreen = () => {
         validator: route.params.validator,
         account: route.params.account,
         amount: amount,
+        fee: 0,
       });
     },
     [navigation, route.params.account, route.params.validator],

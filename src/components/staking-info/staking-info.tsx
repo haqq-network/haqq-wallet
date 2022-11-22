@@ -17,15 +17,10 @@ import {Markdown} from './markdown';
 
 export type StakingInfoProps = {
   validator: ValidatorItem;
+  onStake: () => void;
 };
 
-export type Commission = {
-  current: number;
-  max: number;
-  maxChange: number;
-};
-
-export const StakingInfo = ({validator}: StakingInfoProps) => {
+export const StakingInfo = ({validator, onStake}: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
   const textColor = useMemo(() => {
     switch (validator.localStatus) {
@@ -47,8 +42,6 @@ export const StakingInfo = ({validator}: StakingInfoProps) => {
   const onPressWebsite = useCallback(() => {
     openURL(validator.description.website);
   }, [validator.description.website]);
-
-  const onPressStake = useCallback(() => {}, []);
 
   const commission = useMemo(
     () => ({
@@ -133,7 +126,7 @@ export const StakingInfo = ({validator}: StakingInfoProps) => {
         <Button
           variant={ButtonVariant.contained}
           title={getText(I18N.stakingInfoStake)}
-          onPress={onPressStake}
+          onPress={onStake}
         />
       </View>
     </>
