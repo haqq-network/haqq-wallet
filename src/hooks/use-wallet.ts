@@ -3,8 +3,7 @@ import {useEffect, useState} from 'react';
 import {wallets} from '@app/contexts';
 
 export function useWallet(address: string) {
-  // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-  const [_date, setDate] = useState(new Date());
+  const [, setDate] = useState(new Date());
   const [wallet, setWallet] = useState(wallets.getWallet(address));
 
   useEffect(() => {

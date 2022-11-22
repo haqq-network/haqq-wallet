@@ -18,7 +18,9 @@ const filterTransactions = (
   transactions: Transaction[],
   providerId: string,
 ) => {
-  return transactions.filter(t => t.providerId === providerId);
+  return transactions.filter(
+    t => t.providerId === providerId || t.providerId === '',
+  );
 };
 
 export const HomeFeedScreen = () => {

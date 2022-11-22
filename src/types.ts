@@ -92,7 +92,7 @@ export type RootStackParamList = {
     mnemonic: string;
   };
   backupNotification: {
-    rootAddress: string;
+    address: string;
   };
   backupWarning: {
     address: string;

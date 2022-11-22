@@ -13,28 +13,25 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
-import {EthNetwork} from '../services/eth-network';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {generateUUID} from '../utils';
 import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 
-type OptionalConfigObjectT = {
-  title: string;
-  imageColor: string;
-  fallbackLabel: string;
-};
-
-const optionalConfigObject: OptionalConfigObjectT = {
+const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
   imageColor: LIGHT_GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
-  // unifiedErrors: false,
+};
+
+const isSupportedConfig = {
+  unifiedErrors: false,
 };
 
 enum AppStatus {
@@ -58,7 +55,7 @@ class App extends EventEmitter {
   constructor() {
     super();
 
-    TouchID.isSupported(optionalConfigObject)
+    TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {
         this._biometryType =
           Platform.select({
@@ -132,7 +129,7 @@ class App extends EventEmitter {
       });
     }
 
-    return new User(users[0]);
+    return new User(users[0] as UserType & Realm.Object<UserType>);
   }
 
   async clean() {

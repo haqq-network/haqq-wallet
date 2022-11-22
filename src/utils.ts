@@ -49,7 +49,7 @@ export function prepareTransactions(
       );
 
       return memo.concat(
-        {date: key, source: TransactionSource.date, hash: k},
+        {date: key, source: TransactionSource.date, hash: k, providerId: ''},
         ...tmp,
       );
     }, []);
