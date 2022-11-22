@@ -83,6 +83,14 @@ export enum I18N {
   validatorStatusActive,
   validatorStatusInactive,
   validatorStatusJailed,
+  stakingDelegateTitle,
+  stakingDelegateStakeTo,
+  stakingDelegateCommission,
+  stakingDelegatePreview,
+  stakingDelegateWrongSymbol,
+  stakingDelegateNotEnough,
+  sumBlockMax,
+  sumBlockAvailable,
 }
 
 export function getText(key: I18N, ...args: string[]): string {
@@ -190,4 +198,12 @@ const en: Record<I18N, string> = {
   [I18N.validatorStatusActive]: 'Active',
   [I18N.validatorStatusInactive]: 'Inactive',
   [I18N.validatorStatusJailed]: 'Jailed',
+  [I18N.stakingDelegateTitle]: 'Stake',
+  [I18N.stakingDelegateStakeTo]: 'Stake to',
+  [I18N.stakingDelegateCommission]: 'Commission',
+  [I18N.stakingDelegatePreview]: 'Preview',
+  [I18N.stakingDelegateWrongSymbol]: 'Wrong symbol',
+  [I18N.stakingDelegateNotEnough]: "You don't have enough funds",
+  [I18N.sumBlockMax]: 'Max',
+  [I18N.sumBlockAvailable]: 'Available',
 };

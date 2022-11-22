@@ -217,6 +217,21 @@ export type RootStackParamList = {
   stakingInfo: {
     validator: ValidatorItem;
   };
+  stakingDelegate: {
+    validator: string;
+  };
+  stakingDelegateAccount: {
+    validator: ValidatorItem;
+  };
+  stakingDelegateForm: {
+    account: string;
+    validator: ValidatorItem;
+  };
+  stakingDelegatePreview: {
+    account: string;
+    amount: number;
+    validator: ValidatorItem;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';

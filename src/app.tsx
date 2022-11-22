@@ -40,6 +40,7 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
@@ -218,6 +219,10 @@ export const App = () => {
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
                   <Stack.Screen name="ledger" component={LedgerScreen} />
+                  <Stack.Screen
+                    name="stakingDelegate"
+                    component={StakingDelegateScreen}
+                  />
                 </Stack.Group>
                 <Stack.Screen
                   name="detailsQr"
