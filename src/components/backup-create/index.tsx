@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {MnemonicWord} from '@app/components/mnemonic-word';
+import {MnemonicWord} from '@app/components/backup-create/mnemonic-word';
 import {
   Button,
   ButtonVariant,
