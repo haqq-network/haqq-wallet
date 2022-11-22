@@ -63,7 +63,7 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
           </View>
         </View>
         <CopyButton value={mnemonic ?? ''} style={page.copy}>
-          <Copy color={getColor(Color.textGreen1)} />
+          <Copy height={22} width={22} color={getColor(Color.textGreen1)} />
           <Text t9 style={page.copyText}>
             {getText(I18N.copy)}
           </Text>
@@ -120,7 +120,7 @@ const page = createTheme({
   },
   copyText: {
     color: Color.textGreen1,
-    marginHorizontal: 4,
+    marginHorizontal: 8,
   },
   t4: {
     alignSelf: 'center',

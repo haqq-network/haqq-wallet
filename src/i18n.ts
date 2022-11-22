@@ -126,7 +126,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
-  [I18N.copy]: 'copy',
+  [I18N.copy]: 'Copy',
   [I18N.name]: 'Name',
   [I18N.address]: 'Address',
   [I18N.accept]: 'Accept',
