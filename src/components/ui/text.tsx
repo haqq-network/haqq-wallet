@@ -15,7 +15,9 @@ import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {FontT} from '@app/types';
 
-export type TextValue = {children: React.ReactNode} | {i18n: I18N};
+export type TextValue =
+  | {children: React.ReactNode; i18n: undefined}
+  | {i18n: I18N; children: undefined};
 
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t0?: boolean;
