@@ -1,9 +1,8 @@
 import {Validator} from '@evmos/provider';
-import {bondStatusFromJSON} from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 
+import {validatorStatus} from '@app/helpers/validator-status';
 import {ValidatorStatus} from '@app/types';
 
-// TODO: add correct typings
 export function validatorsSplit(validatorsList: Validator[]) {
   const active = [];
   const inactive = [];
@@ -11,12 +10,16 @@ export function validatorsSplit(validatorsList: Validator[]) {
 
   if (validatorsList?.length) {
     for (const validator of validatorsList) {
-      if (validator.jailed) {
-        jailed.push({...validator, status: ValidatorStatus.jailed});
-      } else if (bondStatusFromJSON(validator.status) === 3) {
-        active.push({...validator, status: ValidatorStatus.active});
-      } else {
-        inactive.push({...validator, status: ValidatorStatus.inactive});
+      switch (validatorStatus(validator)) {
+        case ValidatorStatus.active:
+          active.push({...validator, localStatus: ValidatorStatus.active});
+          break;
+        case ValidatorStatus.inactive:
+          inactive.push({...validator, localStatus: ValidatorStatus.inactive});
+          break;
+        case ValidatorStatus.jailed:
+          jailed.push({...validator, localStatus: ValidatorStatus.jailed});
+          break;
       }
     }
   }

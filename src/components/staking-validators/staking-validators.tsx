@@ -9,7 +9,7 @@ import {ValidatorRow} from './validator-row';
 
 export type StakingValidatorsProps = {
   validators: ValidatorItem[];
-  onPress: (address: string) => void;
+  onPress: (validator: ValidatorItem) => void;
 };
 export const StakingValidators = ({
   validators,

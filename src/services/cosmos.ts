@@ -16,6 +16,7 @@ import {
   GetDelegationsResponse,
   GetValidatorsResponse,
   UndelegationResponse,
+  Validator,
 } from '@evmos/provider/dist/rest/staking';
 import {
   Chain,
@@ -32,6 +33,10 @@ import {utils} from 'ethers';
 import {wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
 import {GWEI} from '@app/variables';
+
+export type GetValidatorResponse = {
+  validator: Validator;
+};
 
 export class Cosmos {
   private _provider: Provider;
@@ -102,6 +107,10 @@ export class Cosmos {
     return this.getQuery(
       generateEndpointGetValidators() + `?pagination.limit=${limit}`,
     );
+  }
+
+  async getValidator(address: string): Promise<GetValidatorResponse> {
+    return this.getQuery(`/cosmos/staking/v1beta1/validators/${address}`);
   }
 
   async getAccountInfo(address: string): Promise<AccountResponse> {

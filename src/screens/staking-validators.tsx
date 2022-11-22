@@ -16,9 +16,9 @@ export const StakingValidatorsScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const onPressValidator = useCallback(
-    (address: string) => {
+    (validator: ValidatorItem) => {
       navigation.navigate('stakingInfo', {
-        address,
+        validator,
       });
     },
     [navigation],

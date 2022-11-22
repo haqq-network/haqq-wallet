@@ -1,30 +1,35 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {ArrowSend, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {formatPercents} from '@app/helpers/format-percents';
+import {getText} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
+import {GWEI} from '@app/variables';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
-  onPress: (address: string) => void;
+  onPress: (validator: ValidatorItem) => void;
 };
 export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
   const validatorCommission = useMemo(() => {
-    return (
-      parseFloat(item.commission.commission_rates.rate ?? '0') * 100
-    ).toFixed(0);
+    return formatPercents(item.commission.commission_rates.rate);
   }, [item.commission.commission_rates]);
 
   const votingPower = useMemo(() => {
-    return parseInt(item.tokens ?? '0', 10) / 10 ** 18;
+    return parseInt(item.tokens ?? '0', 10) / GWEI;
   }, [item.tokens]);
 
+  const onPressRow = useCallback(() => {
+    onPress(item);
+  }, [item, onPress]);
+
   const textColor = useMemo(() => {
-    switch (item.status) {
+    switch (item.localStatus) {
       case ValidatorStatus.active:
         return Color.textGreen1;
       case ValidatorStatus.inactive:
@@ -34,13 +39,10 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
       default:
         return Color.textBase1;
     }
-  }, [item.status]);
+  }, [item.localStatus]);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        onPress(item.operator_address);
-      }}>
+    <TouchableWithoutFeedback onPress={onPressRow}>
       <View style={styles.container}>
         <View style={styles.iconWrapper}>
           <ArrowSend color={getColor(Color.graphicBase1)} />
@@ -55,7 +57,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               Power {cleanNumber(votingPower.toFixed(2))}
             </Text>
             <Text t14 color={getColor(textColor)}>
-              {item.status}
+              {getText(item.localStatus as number)}
             </Text>
           </View>
         </View>

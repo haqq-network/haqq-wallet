@@ -4,6 +4,8 @@ import {Validator} from '@evmos/provider';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
+import {I18N} from '@app/i18n';
+
 import {Transaction} from './models/transaction';
 
 export interface TransportWallet {
@@ -213,7 +215,7 @@ export type RootStackParamList = {
   };
   stakingValidators: undefined;
   stakingInfo: {
-    address: string;
+    validator: ValidatorItem;
   };
 };
 
@@ -345,11 +347,11 @@ export type AddWalletParams = {address: string; publicKey: string} & (
 );
 
 export enum ValidatorStatus {
-  active = 'Active',
-  inactive = 'Inactive',
-  jailed = 'Jailed',
+  active = I18N.validatorStatusActive,
+  inactive = I18N.validatorStatusInactive,
+  jailed = I18N.validatorStatusJailed,
 }
 
 export type ValidatorItem = Validator & {
-  status: ValidatorStatus;
+  localStatus: ValidatorStatus;
 };

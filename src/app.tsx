@@ -346,14 +346,14 @@ export const App = () => {
                     name="stakingValidators"
                     component={StakingValidatorsScreen}
                     options={{
-                      title: 'Manage accounts',
+                      title: getText(I18N.stakingValidators),
                     }}
                   />
                   <Stack.Screen
                     name="stakingInfo"
                     component={StakingInfoScreen}
                     options={{
-                      title: 'Manage accounts',
+                      title: getText(I18N.stakingInfo),
                     }}
                   />
                 </Stack.Group>
