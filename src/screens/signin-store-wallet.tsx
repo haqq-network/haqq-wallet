@@ -7,9 +7,10 @@ import {View} from 'react-native';
 import {captureException, showModal} from '@app/helpers';
 import {useWallets} from '@app/hooks';
 import {EthNetwork} from '@app/services';
+import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
-import {RootStackParamList} from '../types';
+import {RootStackParamList, WalletType} from '../types';
 
 export const SigninStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -25,40 +26,59 @@ export const SigninStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const name =
-          wallets.getSize() === 0
-            ? MAIN_ACCOUNT_NAME
-            : `Account #${wallets.getSize() + 1}`;
-
         if (route.params.mnemonic) {
           let canNext = true;
           let index = 0;
           while (canNext) {
-            const wallet = await wallets.addWalletFromMnemonic(
-              route.params.mnemonic,
+            const name =
+              wallets.getSize() === 0
+                ? MAIN_ACCOUNT_NAME
+                : `Account #${wallets.getSize() + 1}`;
+
+            const node = await restoreFromMnemonic(
+              String(route.params.mnemonic),
               `${ETH_HD_SHORT_PATH}/${index}`,
-              name,
             );
 
-            if (wallet) {
-              wallet.mnemonicSaved = true;
+            if (!wallets.getWallet(node.address)) {
+              const balance = await EthNetwork.getBalance(node.address);
+              canNext = balance > 0 || index === 0;
 
-              const main = wallets.getMain();
+              if (canNext) {
+                const wallet = await wallets.addWallet(
+                  {
+                    address: node.address,
+                    type: WalletType.mnemonic,
+                    privateKey: node.privateKey,
+                    mnemonic: node.mnemonic,
+                    path: node.path,
+                    rootAddress: node.rootAddress,
+                  },
+                  name,
+                );
 
-              if (!main) {
-                wallet.isMain = true;
-              }
+                if (wallet) {
+                  wallet.mnemonicSaved = true;
 
-              const balance = await EthNetwork.getBalance(wallet.address);
-              if (balance > 0 || index === 0) {
-                index += 1;
+                  const main = wallets.getMain();
+
+                  if (!main) {
+                    wallet.isMain = true;
+                  }
+                }
               } else {
                 canNext = false;
-                await wallets.removeWallet(wallet.address);
               }
             }
+
+            index += 1;
           }
         } else if (route.params.privateKey) {
+          const name =
+            wallets.getSize() === 0
+              ? MAIN_ACCOUNT_NAME
+              : `Account #${wallets.getSize() + 1}`;
+
           const wallet = await wallets.addWalletFromPrivateKey(
             route.params.privateKey,
             name,
