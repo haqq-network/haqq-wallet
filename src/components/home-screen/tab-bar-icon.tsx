@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
 import {RootStackParamList} from '@app/types';
 
@@ -30,9 +30,9 @@ export const HomeScreenTabBarIcon = ({
 
   return (
     <Icon
-      s
+      i12
       name={name}
-      color={getColor(focused ? Color.graphicGreen1 : Color.graphicBase2)}
+      color={focused ? Color.graphicGreen1 : Color.graphicBase2}
     />
   );
 };

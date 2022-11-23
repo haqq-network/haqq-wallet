@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {useWallets} from '@app/hooks';
 
 import {CarouselItem} from './carousel-item';
@@ -80,7 +81,7 @@ export const Wallets = () => {
               }),
             },
           ]}>
-          <Icon xs name="plus_mid" color={LIGHT_GRAPHIC_BASE_1} />
+          <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
       <Text t6 style={page.t6}>
