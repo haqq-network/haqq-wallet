@@ -7,6 +7,9 @@ import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
+import {hideModal} from '@app/helpers';
+
 import {
   Button,
   ButtonVariant,
@@ -16,9 +19,7 @@ import {
   Text,
   TextField,
 } from '../components/ui';
-import {hideModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_GREEN_1} from '../variables';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -34,7 +35,7 @@ export const SignInRestoreScreen = () => {
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      navigation.replace(route.params.nextScreen ?? 'onboardingSetupPin', {
+      navigation.push(route.params.nextScreen ?? 'onboardingSetupPin', {
         mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
         privateKey: utils.isHexString(seed.trim()) && seed.trim(),
       });
@@ -56,7 +57,7 @@ export const SignInRestoreScreen = () => {
       contentContainerStyle={page.scrollContent}
       showsVerticalScrollIndicator={false}>
       <KeyboardSafeArea style={page.container} testID="signin_restore">
-        <Text t11 style={page.intro}>
+        <Text t11 color={getColor(Color.textBase2)} style={page.intro}>
           Recovery phrase or Private key
         </Text>
         <TextField
@@ -72,9 +73,7 @@ export const SignInRestoreScreen = () => {
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
-          <Text t14 style={page.t14}>
-            Paste from Clipboard
-          </Text>
+          <Text t14>Paste from Clipboard</Text>
         </IconButton>
         <Spacer />
         <Button
@@ -95,12 +94,10 @@ const page = StyleSheet.create({
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
-    color: LIGHT_TEXT_BASE_2,
   },
   input: {
     marginBottom: 8,
   },
-  t14: {color: LIGHT_TEXT_GREEN_1, fontWeight: '600', textAlign: 'left'},
   submit: {
     marginVertical: 16,
   },

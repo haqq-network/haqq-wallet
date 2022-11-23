@@ -1,16 +1,11 @@
-/* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
 
-import {StyleSheet, View, ViewProps} from 'react-native';
+import {View, ViewProps} from 'react-native';
+
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 
 import {Text} from './text';
-
-import {
-  LIGHT_BG_7,
-  LIGHT_BG_8,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_RED_1,
-} from '../../variables';
 
 export enum LabelBlockVariant {
   default = 'default',
@@ -32,20 +27,28 @@ export const LabeledBlock = ({
   ...props
 }: LabeledBlockProps) => {
   const containerStyle = useMemo(
-    () => [page.container, page[`${variant}Container`], style],
+    () => [
+      page.container,
+      {
+        backgroundColor:
+          variant === LabelBlockVariant.error ? Color.bg7 : Color.bg8,
+      },
+      style,
+    ],
     [style, variant],
   );
 
-  const placeholderStyle = useMemo(
-    () => [page.placeholder, page[`${variant}Placeholder`]],
-    [variant],
-  );
+  const placeholderColor = useMemo(() => {
+    return variant === LabelBlockVariant.error
+      ? Color.textRed1
+      : Color.textBase2;
+  }, [variant]);
 
   return (
     <View style={containerStyle} {...props}>
       <View style={page.flex}>
         {label && (
-          <Text clean style={placeholderStyle}>
+          <Text t14 color={placeholderColor}>
             {label}
           </Text>
         )}
@@ -56,30 +59,23 @@ export const LabeledBlock = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_8,
-    paddingVertical: 8,
+    paddingTop: 8,
+    paddingBottom: 5,
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
   },
-  sub: {justifyContent: 'center', marginLeft: 12},
-  flex: {flex: 1},
-  placeholder: {
-    fontSize: 14,
-    lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
-    marginBottom: 2,
+  sub: {
+    justifyContent: 'center',
+    marginLeft: 12,
+  },
+  flex: {
+    flex: 1,
   },
   inner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  errorPlaceholder: {
-    color: LIGHT_TEXT_RED_1,
-  },
-  errorContainer: {
-    backgroundColor: LIGHT_BG_7,
   },
 });
