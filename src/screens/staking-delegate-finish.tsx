@@ -1,14 +1,14 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {StakingDelegateFinish} from '@app/components/staking-delegate-finish/staking-delegate-finish';
+import {useTypedNavigation} from '@app/hooks';
 
 import {RootStackParamList} from '../types';
 
 export const StakingDelegateFinishScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
   const route =
     useRoute<RouteProp<RootStackParamList, 'stakingDelegateFinish'>>();
 

@@ -1,17 +1,16 @@
 import React, {useCallback, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview/staking-delegate-preview';
 import {app} from '@app/contexts';
-import {useWallet} from '@app/hooks';
+import {useTypedNavigation, useWallet} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
 
 import {RootStackParamList} from '../types';
 
 export const StakingDelegatePreviewScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
   const route =
     useRoute<RouteProp<RootStackParamList, 'stakingDelegatePreview'>>();
 

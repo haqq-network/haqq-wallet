@@ -1,14 +1,14 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {StakingInfo} from '@app/components/staking-info';
+import {useTypedNavigation} from '@app/hooks';
 import {RootStackParamList} from '@app/types';
 
 export const StakingInfoScreen = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'stakingInfo'>>();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
 
   const onStake = useCallback(() => {
     navigation.push('stakingDelegate', {

@@ -1,20 +1,18 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
 import {StakingValidators} from '@app/components/staking-validators';
 import {app} from '@app/contexts';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
+import {useTypedNavigation} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
-import {RootStackParamList, ValidatorItem} from '@app/types';
+import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const [validators, setValidators] = useState<ValidatorItem[]>([]);
 
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
   const onPressValidator = useCallback(
     (validator: ValidatorItem) => {
       navigation.navigate('stakingInfo', {
