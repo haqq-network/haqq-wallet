@@ -240,6 +240,7 @@ export type RootStackParamList = {
     fee: number;
   };
   notificationPopup: undefined;
+  trackActivity: undefined;
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
