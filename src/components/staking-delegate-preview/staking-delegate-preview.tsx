@@ -17,6 +17,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
+import {WEI} from '@app/variables';
 
 export type StakingDelegatePreviewProps = {
   amount: number;
@@ -35,6 +36,7 @@ export const StakingDelegatePreview = ({
   disabled,
   onSend,
 }: StakingDelegatePreviewProps) => {
+  const feeValue = fee / WEI;
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
@@ -50,7 +52,7 @@ export const StakingDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber((amount + fee).toFixed(8))} ISLM
+        {cleanNumber((amount + feeValue).toFixed(15))} ISLM
       </Text>
       <Text
         t11
@@ -74,14 +76,13 @@ export const StakingDelegatePreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {cleanNumber(fee.toFixed(8))} ISLM
+            {feeValue.toFixed(15)} ISLM
           </Text>
         </DataView>
       </View>
       {error && <Text clean>{error}</Text>}
       <Spacer />
       <Button
-        disabled={!disabled}
         variant={ButtonVariant.contained}
         title={getText(I18N.stakingDelegatePreviewDelegate)}
         onPress={onSend}

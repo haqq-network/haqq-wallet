@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,17 +17,20 @@ import {I18N, getText} from '@app/i18n';
 import {EthNetwork} from '@app/services';
 import {ValidatorItem} from '@app/types';
 import {isNumber} from '@app/utils';
+import {WEI} from '@app/variables';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
+  fee: number;
 };
 
 export const StakingDelegateForm = ({
   validator,
   account,
   onAmount,
+  fee,
 }: StakingDelegateFormProps) => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
@@ -54,10 +58,10 @@ export const StakingDelegateForm = ({
       setAmount(sum);
       setError(() => {
         if (!isNumber(sum)) {
-          return getText(I18N.stakingDelegateWrongSymbol);
+          return getText(I18N.stakingDelegateFormWrongSymbol);
         }
         if (parseFloat(sum) > balance) {
-          return getText(I18N.stakingDelegateNotEnough);
+          return getText(I18N.stakingDelegateFormNotEnough);
         }
 
         return '';
@@ -67,8 +71,8 @@ export const StakingDelegateForm = ({
   );
 
   const onPressMax = useCallback(() => {
-    setAmount(maxSum.toFixed(2));
-  }, [maxSum]);
+    setAmount((maxSum - fee / WEI).toFixed(2));
+  }, [fee, maxSum]);
 
   const checked = useMemo(
     () =>
@@ -82,11 +86,11 @@ export const StakingDelegateForm = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateStakeTo} />
+        <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
         <Text t10>{validator.description.moniker}</Text>
       </View>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateCommission} />
+        <Text t14 i18n={I18N.stakingDelegateFormCommission} />
         <Text t10>{validatorCommission}%</Text>
       </View>
       <SumBlock
@@ -98,11 +102,15 @@ export const StakingDelegateForm = ({
         onMax={onPressMax}
       />
       <Spacer />
+      <Text t14 center color={Color.textBase2}>
+        {getText(I18N.stakingDelegateFormNetworkFee)}: {(fee / WEI).toFixed(15)}{' '}
+        ISLM
+      </Text>
       <Button
         style={styles.submit}
         disabled={!checked}
         variant={ButtonVariant.contained}
-        title={getText(I18N.stakingDelegatePreview)}
+        title={getText(I18N.stakingDelegateFormPreview)}
         onPress={onDone}
       />
     </KeyboardSafeArea>
