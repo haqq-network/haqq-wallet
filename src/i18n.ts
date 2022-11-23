@@ -1,4 +1,8 @@
 export enum I18N {
+  backupCreateRecoveryPhrase,
+  backupCreateRecoverySaveWords,
+  backupCreateRecoveryWarningMessage,
+  backupCreateRecoveryAgreement,
   ledgerBluetoothAllow,
   ledgerBluetoothTitleUnknown,
   ledgerBluetoothTitleDisabled,
@@ -28,6 +32,7 @@ export enum I18N {
   settingsAccountEditHeaderTitle,
   settingsContactEditHeaderTitle,
   settingsContactEditDeleteContact,
+  copy,
   name,
   address,
   accept,
@@ -115,6 +120,13 @@ export function getText(key: I18N, ...args: string[]): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.backupCreateRecoveryPhrase]: 'Your recovery phrase',
+  [I18N.backupCreateRecoverySaveWords]:
+    'Write down or copy these words in the right order and save them somewhere safe.',
+  [I18N.backupCreateRecoveryWarningMessage]:
+    'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
+  [I18N.backupCreateRecoveryAgreement]:
+    'I understand that if I lose my recovery phrase, I will not be able to restore access to my account',
   [I18N.ledgerBluetoothAllow]: 'Allow',
   [I18N.ledgerBluetoothTitleUnknown]: 'Allow using Bluetooth',
   [I18N.ledgerBluetoothTitleDisabled]: 'No access to Bluetooth',
@@ -157,6 +169,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
+  [I18N.copy]: 'Copy',
   [I18N.name]: 'Name',
   [I18N.address]: 'Address',
   [I18N.accept]: 'Accept',

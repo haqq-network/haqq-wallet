@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Text} from './ui';
+import {Color, getColor} from '@app/colors';
 
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
+import {Text} from '../ui';
 
 export type MnemonicWordProps = {
   word: string;
@@ -14,10 +14,10 @@ export type MnemonicWordProps = {
 export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
   return (
     <View style={page.container}>
-      <Text t14 style={page.index}>
+      <Text t14 color={getColor(Color.textBase2)} style={page.index}>
         {index}
       </Text>
-      <Text t10 style={page.word}>
+      <Text t10 color={getColor(Color.graphicBase1)}>
         {word}
       </Text>
     </View>
@@ -33,10 +33,5 @@ const page = StyleSheet.create({
   },
   index: {
     marginRight: 8,
-    color: LIGHT_TEXT_BASE_2,
-  },
-  word: {
-    fontWeight: '600',
-    color: LIGHT_GRAPHIC_BASE_1,
   },
 });
