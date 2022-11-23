@@ -4,11 +4,12 @@ import {StakingValidators} from '@app/components/staking-validators';
 import {app} from '@app/contexts';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useWallets} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
+  const wallets = useWallets();
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const [validators, setValidators] = useState<ValidatorItem[]>([]);
 
@@ -39,7 +40,7 @@ export const StakingValidatorsScreen = () => {
       .then(validatorsList => {
         setValidators(validatorsList);
       });
-  }, [cosmos]);
+  }, [cosmos, wallets.visible]);
   return (
     <StakingValidators validators={validators} onPress={onPressValidator} />
   );

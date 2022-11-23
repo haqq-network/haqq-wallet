@@ -128,6 +128,8 @@ export enum I18N {
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
 
+  stakingHomeButton,
+
   sumBlockMax,
   sumBlockAvailable,
 }
@@ -285,6 +287,8 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
+
+  [I18N.stakingHomeButton]: 'Validators',
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.sumBlockMax]: 'Max',

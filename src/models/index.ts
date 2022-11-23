@@ -1,5 +1,7 @@
 import Realm from 'realm';
 
+import {CosmosMetadata} from '@app/models/cosmos-metadata';
+
 import {Contact} from './contact';
 import {Provider} from './provider';
 import {Transaction} from './transaction';
@@ -10,8 +12,15 @@ import {AppTheme, WalletType} from '../types';
 import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 
 export const realm = new Realm({
-  schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 28,
+  schema: [
+    WalletRealm,
+    UserSchema,
+    Transaction,
+    Contact,
+    Provider,
+    CosmosMetadata,
+  ],
+  schemaVersion: 29,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

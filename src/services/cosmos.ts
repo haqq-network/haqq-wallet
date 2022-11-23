@@ -14,8 +14,8 @@ import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
 import {
   DistributionRewardsResponse,
   GetDelegationsResponse,
+  GetUndelegationsResponse,
   GetValidatorsResponse,
-  UndelegationResponse,
   Validator,
 } from '@evmos/provider/dist/rest/staking';
 import {
@@ -31,6 +31,8 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
+import {realm} from '@app/models';
+import {CosmosMetadata, CosmosMetadataType} from '@app/models/cosmos-metadata';
 import {Provider} from '@app/models/provider';
 import {
   CosmosTxV1beta1GetTxResponse,
@@ -103,11 +105,15 @@ export class Cosmos {
     return this.getQuery(generateEndpointGetDelegations(address));
   }
 
-  async getRewardsInfo(address: string): Promise<DistributionRewardsResponse> {
+  async getAccountRewardsInfo(
+    address: string,
+  ): Promise<DistributionRewardsResponse> {
     return this.getQuery(generateEndpointDistributionRewardsByAddress(address));
   }
 
-  async getUnDelegations(address: string): Promise<UndelegationResponse> {
+  async getAccountUnDelegations(
+    address: string,
+  ): Promise<GetUndelegationsResponse> {
     return this.getQuery(generateEndpointGetUndelegations(address));
   }
 
@@ -270,5 +276,97 @@ export class Cosmos {
     } catch (e) {
       console.log('err', e);
     }
+  }
+
+  sync(addressList: string[]) {
+    const rows = realm.objects<CosmosMetadata>(CosmosMetadata.schema.name);
+    const cache: Record<string, string[]> = {};
+
+    for (const row of rows) {
+      const k = `${row.validator}:${row.type}`;
+      cache[k] = (cache[k] ?? []).concat(row.hash);
+    }
+
+    return Promise.all(
+      addressList.reduce<Array<Promise<void>>>((memo, curr) => {
+        return memo.concat([
+          this.syncDelegations(
+            cache[`${curr}:${CosmosMetadataType.delegation}`] ?? [],
+            curr,
+          ),
+          this.syncUnDelegations(
+            cache[`${curr}:${CosmosMetadataType.undelegation}`] ?? [],
+            curr,
+          ),
+          this.syncRewards(
+            cache[`${curr}:${CosmosMetadataType.reward}`] ?? [],
+            curr,
+          ),
+        ]);
+      }, []),
+    );
+  }
+
+  async syncDelegations(exists: string[], address: string) {
+    return this.getAccountDelegations(address)
+      .then(resp =>
+        resp.delegation_responses.map(d =>
+          CosmosMetadata.createDelegation(
+            d.delegation.delegator_address,
+            d.delegation.validator_address,
+            d.balance.amount,
+          ),
+        ),
+      )
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => CosmosMetadata.remove(r));
+      });
+  }
+
+  async syncUnDelegations(exists: string[], address: string) {
+    return this.getAccountUnDelegations(address)
+      .then(resp => {
+        return resp.unbonding_responses
+          .map(ur => {
+            return ur.entries.map(ure =>
+              CosmosMetadata.createUnDelegation(
+                ur.delegator_address,
+                ur.validator_address,
+                ure.balance,
+                ure.completion_time,
+              ),
+            );
+          })
+          .flat();
+      })
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => CosmosMetadata.remove(r));
+      });
+  }
+
+  async syncRewards(exists: string[], address: string) {
+    return this.getAccountRewardsInfo(address)
+      .then(resp => {
+        return resp.rewards
+          .map(r =>
+            r.reward.map(rr =>
+              CosmosMetadata.createReward(
+                address,
+                r.validator_address,
+                rr.amount,
+              ),
+            ),
+          )
+          .flat();
+      })
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => CosmosMetadata.remove(r));
+      });
   }
 }
