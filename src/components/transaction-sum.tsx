@@ -189,7 +189,9 @@ export const TransactionSum = ({
 
 const page = StyleSheet.create({
   container: {justifyContent: 'space-between', paddingHorizontal: 20},
-  label: {marginBottom: 50},
+  label: {
+    marginBottom: 50,
+  },
   input: {
     alignSelf: 'center',
     fontWeight: '700',
