@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -14,8 +14,9 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {TxResponse} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
+import {CosmosTxV1beta1GetTxResponse} from '@app/types/cosmos';
+import {cleanNumber} from '@app/utils';
 import {
   LIGHT_BG_8,
   LIGHT_GRAPHIC_GREEN_1,
@@ -27,7 +28,7 @@ import {
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
-  transaction: TxResponse;
+  transaction: CosmosTxV1beta1GetTxResponse;
   onDone: () => void;
 };
 
@@ -36,6 +37,25 @@ export const StakingDelegateFinish = ({
   validator,
   transaction,
 }: StakingDelegateFinishProps) => {
+  const amount = useMemo(() => {
+    const am = transaction.tx.body.messages.find(
+      m => m['@type'] === '/cosmos.staking.v1beta1.MsgDelegate',
+    ) ?? {amount: {amount: '0', denom: 'aISLM'}};
+
+    return parseInt(am.amount.amount, 10) / WEI;
+  }, [transaction]);
+
+  const fee = useMemo(() => {
+    const calculatedFee = transaction.tx.auth_info.fee.amount.reduce(
+      (memo, f) => {
+        return memo + parseInt(f.amount, 10);
+      },
+      0,
+    );
+
+    return calculatedFee / WEI;
+  }, [transaction]);
+
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
@@ -47,17 +67,15 @@ export const StakingDelegateFinish = ({
         />
       </View>
       <Text t4 i18n={I18N.stakingDelegateFinishTitle} style={styles.title} />
-      <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
-      {transaction && (
-        <Text clean style={page.sum}>
-          - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
-        </Text>
-      )}
+      <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={styles.icon} />
+      <Text clean style={styles.sum}>
+        - {cleanNumber(amount.toFixed(2))} ISLM
+      </Text>
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
       <Text t15 center color={Color.textBase2}>
-        Network Fee: {(5000 / WEI).toFixed(15)} ISLM
+        Network Fee: {(fee / WEI).toFixed(15)} ISLM
       </Text>
       <Spacer />
       <Button

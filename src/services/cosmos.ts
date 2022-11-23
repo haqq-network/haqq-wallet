@@ -32,31 +32,18 @@ import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
+import {
+  CosmosTxV1beta1GetTxResponse,
+  CosmosTxV1beta1TxResponse,
+} from '@app/types/cosmos';
 import {WEI} from '@app/variables';
 
 export type GetValidatorResponse = {
   validator: Validator;
 };
 
-export type TxResponse = {
-  height?: string;
-  txhash: string;
-  codespace?: string;
-  code?: number;
-  data?: string;
-  rawLog?: string;
-  info?: string;
-  gasWanted?: string;
-  gasUsed?: string;
-  timestamp?: string;
-};
-
 export type BroadcastTransactionResponse = {
-  tx_response: TxResponse;
-};
-
-export type GetTransactionResponse = {
-  tx_response: TxResponse;
+  tx_response: CosmosTxV1beta1TxResponse;
 };
 
 export class Cosmos {
@@ -138,7 +125,7 @@ export class Cosmos {
     return this.getQuery(generateEndpointAccount(address));
   }
 
-  async getTransaction(hash: string): Promise<GetTransactionResponse> {
+  async getTransaction(hash: string): Promise<CosmosTxV1beta1GetTxResponse> {
     return this.getQuery(`/cosmos/tx/v1beta1/txs/${hash}`);
   }
 

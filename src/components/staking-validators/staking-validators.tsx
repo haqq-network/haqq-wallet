@@ -2,6 +2,7 @@ import React from 'react';
 
 import {FlatList} from 'react-native';
 
+import {Loading} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {ValidatorItem} from '@app/types';
 
@@ -20,6 +21,8 @@ export const StakingValidators = ({
       style={styles.container}
       data={validators}
       renderItem={({item}) => <ValidatorRow item={item} onPress={onPress} />}
+      ListEmptyComponent={Loading}
+      contentContainerStyle={styles.grow}
     />
   );
 };
@@ -27,5 +30,8 @@ export const StakingValidators = ({
 const styles = createTheme({
   container: {
     flex: 1,
+  },
+  grow: {
+    flexGrow: 1,
   },
 });

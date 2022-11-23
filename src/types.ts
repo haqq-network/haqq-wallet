@@ -235,6 +235,7 @@ export type RootStackParamList = {
   };
   stakingDelegateFinish: {
     txhash: string;
+    validator: ValidatorItem;
   };
 };
 
