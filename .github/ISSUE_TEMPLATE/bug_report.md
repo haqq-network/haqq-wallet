@@ -21,6 +21,6 @@ assignees: ''
 
 ## Specifications
 
-  - Version:
+  - Build number:
   - Platform:
-  - Subsystem:
+  - OS Version:
