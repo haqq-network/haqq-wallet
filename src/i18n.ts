@@ -107,6 +107,27 @@ export enum I18N {
   stakingDelegateFinishTitle,
   stakingDelegateFinishTotalAmount,
   stakingDelegateFinishDone,
+  stakingUnDelegateFormTitle,
+  stakingUnDelegateFormWrongSymbol,
+  stakingUnDelegateFormNotEnough,
+  stakingUnDelegateFormPreview,
+  stakingUnDelegateFormCommission,
+  stakingUnDelegateFormNetworkFee,
+  stakingUnDelegateAccountTitle,
+  stakingUnDelegatePreviewTitle,
+
+  stakingUnDelegatePreviewTotalAmount,
+  stakingUnDelegatePreviewStakeTo,
+  stakingUnDelegatePreviewCommission,
+  stakingUnDelegatePreviewAmount,
+  stakingUnDelegatePreviewNetworkFee,
+  stakingUnDelegatePreviewDelegate,
+  stakingUnDelegatePreviewAttention,
+
+  stakingUnDelegateFinishTitle,
+  stakingUnDelegateFinishTotalAmount,
+  stakingUnDelegateFinishDone,
+
   sumBlockMax,
   sumBlockAvailable,
 }
@@ -244,6 +265,28 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
   [I18N.stakingDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingDelegateFinishDone]: 'Done',
+  [I18N.stakingUnDelegateFormTitle]: 'Undelegate',
+  [I18N.stakingUnDelegateFormNetworkFee]: 'Network fee',
+  [I18N.stakingUnDelegateFormCommission]: 'Commission',
+  [I18N.stakingUnDelegateFormPreview]: 'Preview',
+  [I18N.stakingUnDelegateFormWrongSymbol]: 'Wrong symbol',
+  [I18N.stakingUnDelegateFormNotEnough]: "You don't have enough funds",
+  [I18N.stakingUnDelegatePreviewTitle]: 'Preview',
+
+  [I18N.stakingUnDelegatePreviewTotalAmount]: 'Total Amount',
+  [I18N.stakingUnDelegatePreviewStakeTo]: 'Stake to',
+  [I18N.stakingUnDelegatePreviewCommission]: 'Commission',
+  [I18N.stakingUnDelegatePreviewAmount]: 'Amount',
+  [I18N.stakingUnDelegatePreviewNetworkFee]: 'Network fee',
+  [I18N.stakingUnDelegatePreviewDelegate]: 'Delegate',
+  [I18N.stakingUnDelegatePreviewAttention]:
+    'Attention! If in the future you want to undelegate the staked funds, it will take 21 days',
+
+  [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
+  [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
+  [I18N.stakingUnDelegateFinishDone]: 'Done',
+
+  [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
 };

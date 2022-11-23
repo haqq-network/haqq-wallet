@@ -9,34 +9,34 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
 import {useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {StakingDelegateAccountScreen} from '@app/screens/staking-delegate-account';
-import {StakingDelegateFinishScreen} from '@app/screens/staking-delegate-finish';
-import {StakingDelegateFormScreen} from '@app/screens/staking-delegate-form';
-import {StakingDelegatePreviewScreen} from '@app/screens/staking-delegate-preview';
+import {StakingUnDelegateAccountScreen} from '@app/screens/staking-undelegate-account';
+import {StakingUnDelegateFinishScreen} from '@app/screens/staking-undelegate-finish';
+import {StakingUnDelegateFormScreen} from '@app/screens/staking-undelegate-form';
+import {StakingUnDelegatePreviewScreen} from '@app/screens/staking-undelegate-preview';
 import {Cosmos} from '@app/services/cosmos';
 import {RootStackParamList, ScreenOptionType, ValidatorItem} from '@app/types';
 
-const StakingDelegateStack = createStackNavigator();
+const StakingUnDelegateStack = createStackNavigator();
 
 const screenOptionsAccount: ScreenOptionType = {
-  title: getText(I18N.stakingDelegateAccountTitle),
+  title: getText(I18N.stakingUnDelegateAccountTitle),
   ...hideBack,
 };
 
 const screenOptionsPreview: ScreenOptionType = {
-  title: getText(I18N.stakingDelegatePreviewTitle),
+  title: getText(I18N.stakingUnDelegatePreviewTitle),
   ...hideBack,
 };
 
 const screenOptionsForm: ScreenOptionType = {
   ...hideBack,
-  title: getText(I18N.stakingDelegateFormTitle),
+  title: getText(I18N.stakingUnDelegateFormTitle),
 };
 
-export const StakingDelegateScreen = () => {
+export const StakingUnDelegateScreen = () => {
   const wallets = useWallets();
   const cosmos = useRef(new Cosmos(app.provider!)).current;
-  const route = useRoute<RouteProp<RootStackParamList, 'stakingDelegate'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'stakingUnDelegate'>>();
 
   const [validator, setValidator] = useState<ValidatorItem | undefined>();
 
@@ -58,35 +58,35 @@ export const StakingDelegateScreen = () => {
   }
 
   return (
-    <StakingDelegateStack.Navigator
+    <StakingUnDelegateStack.Navigator
       screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}
       initialRouteName={
-        account ? 'stakingDelegateForm' : 'stakingDelegateAccount'
+        account ? 'stakingUnDelegateForm' : 'stakingUnDelegateAccount'
       }>
-      <StakingDelegateStack.Screen
-        name="stakingDelegateForm"
-        component={StakingDelegateFormScreen}
+      <StakingUnDelegateStack.Screen
+        name="stakingUnDelegateForm"
+        component={StakingUnDelegateFormScreen}
         initialParams={{validator, account}}
         options={screenOptionsForm}
       />
-      <StakingDelegateStack.Screen
-        name="stakingDelegateAccount"
+      <StakingUnDelegateStack.Screen
+        name="stakingUnDelegateAccount"
         initialParams={{validator}}
-        component={StakingDelegateAccountScreen}
+        component={StakingUnDelegateAccountScreen}
         options={screenOptionsAccount}
       />
-      <StakingDelegateStack.Screen
-        name="stakingDelegatePreview"
+      <StakingUnDelegateStack.Screen
+        name="stakingUnDelegatePreview"
         initialParams={{validator}}
-        component={StakingDelegatePreviewScreen}
+        component={StakingUnDelegatePreviewScreen}
         options={screenOptionsPreview}
       />
-      <StakingDelegateStack.Screen
-        name="stakingDelegateFinish"
+      <StakingUnDelegateStack.Screen
+        name="stakingUnDelegateFinish"
         initialParams={{validator}}
-        component={StakingDelegateFinishScreen}
+        component={StakingUnDelegateFinishScreen}
         options={hideBack}
       />
-    </StakingDelegateStack.Navigator>
+    </StakingUnDelegateStack.Navigator>
   );
 };

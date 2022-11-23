@@ -239,6 +239,30 @@ export type RootStackParamList = {
     amount: number;
     fee: number;
   };
+  stakingUnDelegate: {
+    validator: string;
+  };
+  stakingUnDelegateAccount: {
+    validator: ValidatorItem;
+    maxAmount: number;
+  };
+  stakingUnDelegateForm: {
+    account: string;
+    validator: ValidatorItem;
+    maxAmount: number;
+  };
+  stakingUnDelegatePreview: {
+    account: string;
+    amount: number;
+    fee: number;
+    validator: ValidatorItem;
+  };
+  stakingUnDelegateFinish: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: number;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
