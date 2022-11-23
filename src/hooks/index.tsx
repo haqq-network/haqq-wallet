@@ -7,3 +7,4 @@ export * from './use-transactions';
 export * from './use-wallet';
 export * from './use-wallets';
 export * from './use-app';
+export * from './use-typed-route';
