@@ -4,7 +4,7 @@ import {useCallback, useMemo} from 'react';
 import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
 
 export type IconButtonProps = ViewProps & {
-  onPress: () => void;
+  onPress: () => void | Promise<void>;
   disabled?: boolean;
 };
 

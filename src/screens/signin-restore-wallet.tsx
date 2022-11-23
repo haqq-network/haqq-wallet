@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {hideModal} from '@app/helpers';
 
 import {
@@ -19,7 +20,6 @@ import {
   TextField,
 } from '../components/ui';
 import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2} from '../variables';
 
 export const SignInRestoreScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -57,7 +57,7 @@ export const SignInRestoreScreen = () => {
       contentContainerStyle={page.scrollContent}
       showsVerticalScrollIndicator={false}>
       <KeyboardSafeArea style={page.container} testID="signin_restore">
-        <Text t11 style={page.intro}>
+        <Text t11 color={getColor(Color.textBase2)} style={page.intro}>
           Recovery phrase or Private key
         </Text>
         <TextField
@@ -94,7 +94,6 @@ const page = StyleSheet.create({
   button: {alignSelf: 'flex-start'},
   intro: {
     marginBottom: 32,
-    color: LIGHT_TEXT_BASE_2,
   },
   input: {
     marginBottom: 8,
