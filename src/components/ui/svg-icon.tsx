@@ -103,14 +103,14 @@ export const CheckIcon = ({style, color}: SvgProps) => (
   </Svg>
 );
 
-export const Copy = ({style, color}: SvgProps) => (
+export const Copy = ({color, ...props}: SvgProps) => (
   <Svg
     width="16"
     height="16"
     viewBox="0 0 16 16"
     fill="none"
-    style={style}
-    color={color}>
+    color={color}
+    {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
