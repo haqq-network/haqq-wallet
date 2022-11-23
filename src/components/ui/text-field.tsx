@@ -6,7 +6,6 @@ import {
   Text,
   TextInput,
   TextInputContentSizeChangeEventData,
-  TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -20,7 +19,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
-
 import {
   IS_IOS,
   LIGHT_BG_5,
@@ -29,7 +27,7 @@ import {
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_GREEN_1,
   PLACEHOLDER_GRAY,
-} from '../../variables';
+} from '@app/variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -128,10 +126,6 @@ export const TextField: React.FC<Props> = memo(
       height: height.value,
     }));
 
-    const onPressLabel = () => {
-      inputRef.current?.focus();
-    };
-
     return (
       <>
         <Animated.View
@@ -171,21 +165,21 @@ export const TextField: React.FC<Props> = memo(
               onFocus?.(event);
             }}
           />
-          <TouchableWithoutFeedback onPress={onPressLabel}>
-            <Animated.View style={[styles.labelContainer, labelAnimStyle]}>
-              <Text
-                allowFontScaling={false}
-                style={[
-                  styles.label,
-                  isLarge && styles.labelMultiline,
-                  {
-                    color,
-                  },
-                ]}>
-                {label}
-              </Text>
-            </Animated.View>
-          </TouchableWithoutFeedback>
+          <Animated.View
+            style={[styles.labelContainer, labelAnimStyle]}
+            pointerEvents="none">
+            <Text
+              allowFontScaling={false}
+              style={[
+                styles.label,
+                isLarge && styles.labelMultiline,
+                {
+                  color,
+                },
+              ]}>
+              {label}
+            </Text>
+          </Animated.View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
         </Animated.View>
         {!!error && <Text style={styles.error}>{errorText}</Text>}
