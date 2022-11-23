@@ -55,20 +55,16 @@ export const BackupNotification = ({
           style={styles.image}
         />
       </View>
-      <Text t7 style={styles.title}>
-        {getText(I18N.backupNotificationTitle)}
-      </Text>
-      <Text t14 style={styles.t14}>
-        {getText(I18N.backupNotificationDescription)}
-      </Text>
+      <Text t7 style={styles.title} i18n={I18N.backupNotificationTitle} />
+      <Text t14 style={styles.t14} i18n={I18N.backupNotificationDescription} />
       <Button
-        title={getText(I18N.backupNotificationBackup)}
+        i18n={I18N.backupNotificationBackup}
         variant={ButtonVariant.contained}
         onPress={onClickBackup}
         style={styles.margin}
       />
       <Button
-        title={getText(I18N.backupNotificationSkip)}
+        i18n={I18N.backupNotificationSkip}
         variant={ButtonVariant.error}
         onPress={onSkip}
       />
