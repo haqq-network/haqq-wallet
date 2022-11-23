@@ -12,6 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {TxResponse} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
@@ -69,7 +70,7 @@ export const StakingDelegateFinish = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 20,
   },
