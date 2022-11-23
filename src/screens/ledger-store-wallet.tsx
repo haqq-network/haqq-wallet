@@ -4,12 +4,10 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
+import {captureException, showModal} from '@app/helpers';
 import {useWallets} from '@app/hooks';
-
-import {captureException} from '../helpers';
-import {showModal} from '../helpers/modal';
-import {RootStackParamList} from '../types';
-import {sleep} from '../utils';
+import {RootStackParamList} from '@app/types';
+import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -30,6 +28,7 @@ export const LedgerStoreWalletScreen = () => {
             address: route.params.address,
             deviceId: route?.params?.deviceId,
             deviceName: route?.params?.deviceName,
+            publicKey: '',
           },
           route?.params?.deviceName,
         ),
