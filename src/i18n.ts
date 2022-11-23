@@ -72,6 +72,10 @@ export enum I18N {
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
+  popupNotificationTitle,
+  popupNotificationDescription,
+  popupNotificationTurnOn,
+  popupNotificationNotNow,
 }
 
 export function getText(key: I18N, ...args: string[]): string {
@@ -171,4 +175,9 @@ const en: Record<I18N, string> = {
   [I18N.homeWalletTitle]: 'Your wallets',
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
+  [I18N.popupNotificationTitle]: 'Turn on push notifications',
+  [I18N.popupNotificationDescription]:
+    'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your wallet',
+  [I18N.popupNotificationTurnOn]: 'Turn on notifications',
+  [I18N.popupNotificationNotNow]: 'Not now',
 };

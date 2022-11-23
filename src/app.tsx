@@ -59,6 +59,7 @@ import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {NotificationPopupScreen} from './screens/notification-popup';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -225,6 +226,11 @@ export const App = () => {
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="notificationPopup"
+                  component={NotificationPopupScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen

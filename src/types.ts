@@ -203,6 +203,7 @@ export type RootStackParamList = {
     address: string;
     isCreate?: boolean;
   };
+  notificationPopup: undefined;
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
