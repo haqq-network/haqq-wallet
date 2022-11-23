@@ -2,7 +2,10 @@ import React from 'react';
 
 import {NavigationProp} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {Dimensions, Image, View} from 'react-native';
+
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 
@@ -26,7 +29,7 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Text t8 style={page.title}>
         Add accounts
       </Text>
-      <Text t14 style={page.subtitle}>
+      <Text t14 center color={Color.textBase2}>
         Import and create new accounts
       </Text>
       <Spacer />
@@ -65,7 +68,7 @@ export const WalletCreate = ({}: BalanceProps) => {
 
 const cardWidth = Dimensions.get('window').width - 40;
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     width: cardWidth,
