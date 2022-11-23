@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-markdown-display/src/index.d.ts b/node_modules/react-native-markdown-display/src/index.d.ts
+index f0daf4a..ae8e8e0 100644
+--- a/node_modules/react-native-markdown-display/src/index.d.ts
++++ b/node_modules/react-native-markdown-display/src/index.d.ts
+@@ -82,6 +82,7 @@ export function stringToTokens(
+ export function tokensToAST(tokens: ReadonlyArray<Token>): ASTNode[];
+ 
+ export interface MarkdownProps {
++  children?: ReactNode;
+   rules?: RenderRules;
+   style?: StyleSheet.NamedStyles<any>;
+   renderer?: AstRenderer;

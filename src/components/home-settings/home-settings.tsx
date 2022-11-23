@@ -71,11 +71,14 @@ export const HomeSettings = () => {
         style={page.button}
       />
 
-      {/*<SettingsButton*/}
-      {/*  icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title={getText(I18N.homeSettingsTest)}"*/}
-      {/*  next="settingsTest"*/}
-      {/*/>*/}
+      {IS_DEVELOPMENT === '1' && (
+        <SettingsButton
+          icon="settings"
+          title={getText(I18N.homeSettingsTest)}
+          next="settingsTest"
+          style={page.button}
+        />
+      )}
     </ScrollView>
   );
 };

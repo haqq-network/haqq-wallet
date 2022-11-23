@@ -71,4 +71,4 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('overview', () => Overview)
+AppRegistry.registerComponent('overview', () => Overview);

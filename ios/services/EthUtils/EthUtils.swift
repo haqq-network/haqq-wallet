@@ -23,6 +23,7 @@ struct RNEthUtilsResult: Codable {
   var mnemonic: Optional<String>;
   var path: Optional<String>;
   var rootAddress: Optional<String>;
+  var publicKey: String;
 
   public func toJSON() throws -> String {
     let jsonEncoder = JSONEncoder();
@@ -77,7 +78,8 @@ class RNEthUtils: NSObject {
         address: "0x\(Data(wallet.address).toHexString())",
         mnemonic: nil,
         path: nil,
-        rootAddress: nil
+        rootAddress: nil,
+        publicKey: Data(wallet.publicKey).toHexString()
       )
       
       let json = try! resp.toJSON()
@@ -122,7 +124,8 @@ class RNEthUtils: NSObject {
         address: "0x\(Data(wallet.address).toHexString())",
         mnemonic: mnemonic.mnemonic.joined(separator: " "),
         path: path,
-        rootAddress: "0x\(Data(rootWallet.address).toHexString())"
+        rootAddress: "0x\(Data(rootWallet.address).toHexString())",
+        publicKey: Data(wallet.publicKey).toHexString()
       )
 
       let json = try! resp.toJSON()

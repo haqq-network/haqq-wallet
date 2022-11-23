@@ -53,10 +53,10 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
-    if (!disabled) {
+    if (!(disabled || loading)) {
       onPress();
     }
-  }, [disabled, onPress]);
+  }, [disabled, loading, onPress]);
 
   const containerStyle = useMemo(
     () => [

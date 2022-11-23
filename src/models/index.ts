@@ -11,7 +11,7 @@ import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 
 export const realm = new Realm({
   schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 26,
+  schemaVersion: 28,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -114,6 +114,34 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.isMain = false;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 27) {
+      const providersList = require('../../assets/migrations/providers.json');
+
+      const oldObjects = oldRealm.objects<{id: string}>('Provider');
+      const newObjects = newRealm.objects<{
+        ethChainId: string;
+        ethRpcEndpoint: string;
+        cosmosChainId: string;
+        cosmosRestEndpoint: string;
+        tmRpcEndpoint: string;
+      }>('Provider');
+
+      for (const objectIndex in oldObjects) {
+        const provider = providersList.find(
+          (p: {id: string}) => p.id === oldObjects[objectIndex].id,
+        );
+
+        if (provider) {
+          const newObject = newObjects[objectIndex];
+          newObject.ethChainId = provider.ethChainId;
+          newObject.ethRpcEndpoint = provider.ethRpcEndpoint;
+          newObject.cosmosChainId = provider.cosmosChainId;
+          newObject.cosmosRestEndpoint = provider.cosmosRestEndpoint;
+          newObject.tmRpcEndpoint = provider.tmRpcEndpoint;
+        }
       }
     }
   },

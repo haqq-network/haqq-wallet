@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
+
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 
 import {Text} from './text';
-
-import {LIGHT_TEXT_BASE_2} from '../../variables';
 
 export type DataViewProps = {
   label: string;
@@ -16,7 +17,7 @@ export const DataView = ({label, children, style}: DataViewProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
   return (
     <View style={containerStyle}>
-      <Text style={page.t11} t11>
+      <Text t11 color={Color.textBase2}>
         {label}
       </Text>
       {children}
@@ -24,14 +25,11 @@ export const DataView = ({label, children, style}: DataViewProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 20,
-  },
-  t11: {
-    color: LIGHT_TEXT_BASE_2,
   },
 });

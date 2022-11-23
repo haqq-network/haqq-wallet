@@ -19,6 +19,8 @@ export const HomeScreenTabBarIcon = ({
     switch (route.name) {
       case 'homeFeed':
         return IconsName.wallet;
+      case 'homeStaking':
+        return IconsName.staking;
       case 'homeSettings':
         return IconsName.settings;
     }

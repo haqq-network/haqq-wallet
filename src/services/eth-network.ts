@@ -148,7 +148,7 @@ export class EthNetwork {
   }
 
   static init(provider: Provider) {
-    EthNetwork.chainId = provider.chainId;
+    EthNetwork.chainId = provider.ethChainId;
     EthNetwork.explorer = provider.explorer;
     EthNetwork.network = provider.rpcProvider;
   }
