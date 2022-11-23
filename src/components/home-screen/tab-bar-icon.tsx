@@ -30,7 +30,6 @@ export const HomeScreenTabBarIcon = ({
 
   return (
     <Icon
-      i12
       name={name}
       color={focused ? Color.graphicGreen1 : Color.graphicBase2}
     />
