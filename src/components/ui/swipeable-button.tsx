@@ -1,11 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 import {SwipeableAction} from '../../types';
 
@@ -15,6 +10,10 @@ type SwipeableButtonProps<T> = SwipeableAction<T> & {
   item: T;
 };
 
+const AnimatedTouchableWithoutFeedback = Animated.createAnimatedComponent(
+  TouchableWithoutFeedback,
+);
+
 export const SwipeableButton = ({
   progress,
   x,
@@ -23,9 +22,21 @@ export const SwipeableButton = ({
   item,
   onPress,
 }: SwipeableButtonProps<any>) => {
-  const translateX = progress.interpolate({
+  const iconScale = progress.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const buttonPosition = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [x, 0],
+    extrapolate: 'clamp',
+  });
+
+  const iconTranslationX = iconScale.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-37, 0],
     extrapolate: 'clamp',
   });
 
@@ -39,12 +50,21 @@ export const SwipeableButton = ({
         page.container,
         {
           backgroundColor: backgroundColor,
-          transform: [{translateX: translateX}],
+          transform: [{translateX: buttonPosition}],
         },
       ]}>
-      <TouchableWithoutFeedback onPress={pressHandler}>
-        <View style={page.iconContainer}>{icon}</View>
-      </TouchableWithoutFeedback>
+      <AnimatedTouchableWithoutFeedback
+        style={{
+          transform: [
+            {scale: iconScale},
+            {
+              translateX: iconTranslationX,
+            },
+          ],
+        }}
+        onPress={pressHandler}>
+        <Animated.View style={page.iconContainer}>{icon}</Animated.View>
+      </AnimatedTouchableWithoutFeedback>
     </Animated.View>
   );
 };
