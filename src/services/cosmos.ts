@@ -32,10 +32,31 @@ import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
 import {Provider} from '@app/models/provider';
-import {GWEI} from '@app/variables';
+import {WEI} from '@app/variables';
 
 export type GetValidatorResponse = {
   validator: Validator;
+};
+
+export type TxResponse = {
+  height?: string;
+  txhash: string;
+  codespace?: string;
+  code?: number;
+  data?: string;
+  rawLog?: string;
+  info?: string;
+  gasWanted?: string;
+  gasUsed?: string;
+  timestamp?: string;
+};
+
+export type BroadcastTransactionResponse = {
+  tx_response: TxResponse;
+};
+
+export type GetTransactionResponse = {
+  tx_response: TxResponse;
 };
 
 export class Cosmos {
@@ -117,7 +138,13 @@ export class Cosmos {
     return this.getQuery(generateEndpointAccount(address));
   }
 
-  async broadcastTransaction(txToBroadcast: TxToSend) {
+  async getTransaction(hash: string): Promise<GetTransactionResponse> {
+    return this.getQuery(`/cosmos/tx/v1beta1/txs/${hash}`);
+  }
+
+  async broadcastTransaction(
+    txToBroadcast: TxToSend,
+  ): Promise<BroadcastTransactionResponse> {
     try {
       return this.postQuery(
         generateEndpointBroadcast(),
@@ -212,7 +239,7 @@ export class Cosmos {
 
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * GWEI).toLocaleString().replace(/,/g, ''),
+        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
         denom: 'aISLM',
       };
 
@@ -238,7 +265,7 @@ export class Cosmos {
       console.log('sender', sender);
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * GWEI).toLocaleString().replace(/,/g, ''),
+        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
         denom: 'aISLM',
       };
 

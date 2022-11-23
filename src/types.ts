@@ -233,6 +233,9 @@ export type RootStackParamList = {
     fee: number;
     validator: ValidatorItem;
   };
+  stakingDelegateFinish: {
+    txhash: string;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';

@@ -9,6 +9,7 @@ import {validatorStatus} from '@app/helpers/validator-status';
 import {useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {StakingDelegateAccountScreen} from '@app/screens/staking-delegate-account';
+import {StakingDelegateFinishScreen} from '@app/screens/staking-delegate-finish';
 import {StakingDelegateFormScreen} from '@app/screens/staking-delegate-form';
 import {StakingDelegatePreviewScreen} from '@app/screens/staking-delegate-preview';
 import {Cosmos} from '@app/services/cosmos';
@@ -78,6 +79,12 @@ export const StakingDelegateScreen = () => {
         initialParams={{validator}}
         component={StakingDelegatePreviewScreen}
         options={screenOptionsPreview}
+      />
+      <StakingDelegateStack.Screen
+        name="stakingDelegateFinish"
+        initialParams={{validator}}
+        component={StakingDelegateFinishScreen}
+        options={hideBack}
       />
     </StakingDelegateStack.Navigator>
   );

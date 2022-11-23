@@ -10,7 +10,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {GWEI} from '@app/variables';
+import {WEI} from '@app/variables';
 
 import {Block} from './block';
 import {Markdown} from './markdown';
@@ -36,7 +36,7 @@ export const StakingInfo = ({validator, onStake}: StakingInfoProps) => {
   }, [validator.localStatus]);
 
   const votingPower = useMemo(() => {
-    return parseInt(validator.tokens ?? '0', 10) / GWEI;
+    return parseInt(validator.tokens ?? '0', 10) / WEI;
   }, [validator.tokens]);
 
   const onPressWebsite = useCallback(() => {

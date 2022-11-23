@@ -1,12 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 
-import {app} from '@app/contexts';
-import {Cosmos, GetTransactionResponse, TxResponse} from '@app/services/cosmos';
-
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -15,66 +11,65 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from '../components/ui';
-import {RootStackParamList} from '../types';
+} from '@app/components/ui';
+import {I18N, getText} from '@app/i18n';
+import {TxResponse} from '@app/services/cosmos';
+import {ValidatorItem} from '@app/types';
 import {
   LIGHT_BG_8,
   LIGHT_GRAPHIC_GREEN_1,
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-} from '../variables';
+  WEI,
+} from '@app/variables';
 
-const icon = require('../../assets/animations/transaction-finish.json');
+export type StakingDelegateFinishProps = {
+  validator: ValidatorItem;
+  transaction: TxResponse;
+  onDone: () => void;
+};
 
-export const StakingDelegateFinishScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'stakingDelegateFinish'>>();
-
-  const [transaction, setTransaction] = useState<TxResponse | undefined>();
-
-  useEffect(() => {
-    const cosmos = new Cosmos(app.provider!);
-    cosmos.getTransaction(route.params.txhash).then(tx => {
-      setTransaction(tx.tx_response);
-    });
-  }, [route.params.txhash]);
-
+export const StakingDelegateFinish = ({
+  onDone,
+  validator,
+  transaction,
+}: StakingDelegateFinishProps) => {
   return (
-    <PopupContainer style={page.container}>
-      <View style={page.sub}>
-        <LottieWrap source={icon} style={page.image} autoPlay loop={false} />
+    <PopupContainer style={styles.container}>
+      <View style={styles.sub}>
+        <LottieWrap
+          source={require('../../assets/animations/transaction-finish.json')}
+          style={styles.image}
+          autoPlay
+          loop={false}
+        />
       </View>
-      <Text t4 style={page.title}>
-        Sending Completed!
-      </Text>
+      <Text t4 i18n={I18N.stakingDelegateFinishTitle} style={styles.title} />
       <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
       {transaction && (
         <Text clean style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
         </Text>
       )}
-      <Text clean style={page.address}>
-        {short}
+      <Text t13 center style={styles.address}>
+        {validator.description.moniker}
       </Text>
-      <Text clean style={page.fee}>
-        Network Fee: {transaction?.fee.toFixed(8)} ISLM
+      <Text t15 center color={Color.textBase2}>
+        Network Fee: {(5000 / WEI).toFixed(15)} ISLM
       </Text>
       <Spacer />
       <Button
-        style={page.margin}
+        style={styles.margin}
         variant={ButtonVariant.contained}
-        title="Done"
-        onPress={() => {
-          navigation.getParent()?.goBack();
-        }}
+        title={getText(I18N.stakingDelegateFinishDone)}
+        onPress={onDone}
       />
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
@@ -100,10 +95,6 @@ const page = StyleSheet.create({
     color: LIGHT_TEXT_BASE_1,
   },
   address: {
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
     marginBottom: 4,
   },
   fee: {

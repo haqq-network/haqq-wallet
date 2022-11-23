@@ -98,6 +98,8 @@ export enum I18N {
   stakingDelegatePreviewNetworkFee,
   stakingDelegatePreviewDelegate,
   stakingDelegatePreviewAttention,
+  stakingDelegateFinishTitle,
+  stakingDelegateFinishDone,
   sumBlockMax,
   sumBlockAvailable,
 }
@@ -223,6 +225,8 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegatePreviewAttention]:
     'Attention! If in the future you want to withdraw the staked funds, it will take 21 days',
   [I18N.stakingDelegateAccountTitle]: 'Account',
+  [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
+  [I18N.stakingDelegateFinishDone]: 'Done',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
 };

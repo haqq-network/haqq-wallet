@@ -57,8 +57,8 @@ export const StakingDelegatePreviewScreen = () => {
         );
 
         if (resp) {
-          navigation.navigate('transactionFinish', {
-            resp,
+          navigation.navigate('stakingDelegateFinish', {
+            txhash: resp.tx_response.txhash,
           });
         }
       } catch (e) {

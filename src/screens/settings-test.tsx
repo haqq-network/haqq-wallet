@@ -6,7 +6,7 @@ import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {Cosmos} from '@app/services/cosmos';
-import {GWEI} from '@app/variables';
+import {WEI} from '@app/variables';
 
 // const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
 const sourceEthAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
@@ -36,7 +36,7 @@ export const SettingsTestScreen = () => {
       .getAccountDelegations(sourceAddress)
       .then(resp => {
         const r = resp.delegation_responses.reduce((memo, delegate) => {
-          return memo + parseInt(delegate.balance.amount, 10) / GWEI;
+          return memo + parseInt(delegate.balance.amount, 10) / WEI;
         }, 0);
         setStaked(r);
       })
@@ -46,7 +46,7 @@ export const SettingsTestScreen = () => {
 
     cosmos.getRewardsInfo(sourceAddress).then(resp => {
       const r = resp.total.reduce((memo, curr) => {
-        return memo + parseInt(curr.amount, 10) / GWEI;
+        return memo + parseInt(curr.amount, 10) / WEI;
       }, 0);
 
       setReward(r);
@@ -54,7 +54,7 @@ export const SettingsTestScreen = () => {
 
     cosmos.getUnDelegations(sourceAddress).then(resp => {
       const r = resp.entries.reduce((memo, entry) => {
-        return memo + parseInt(entry.balance, 10) / GWEI;
+        return memo + parseInt(entry.balance, 10) / WEI;
       }, 0);
 
       setUnbounded(r);

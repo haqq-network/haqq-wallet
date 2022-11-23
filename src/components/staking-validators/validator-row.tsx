@@ -9,7 +9,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {getText} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {GWEI} from '@app/variables';
+import {WEI} from '@app/variables';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
@@ -21,7 +21,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
   }, [item.commission.commission_rates]);
 
   const votingPower = useMemo(() => {
-    return parseInt(item.tokens ?? '0', 10) / GWEI;
+    return parseInt(item.tokens ?? '0', 10) / WEI;
   }, [item.tokens]);
 
   const onPressRow = useCallback(() => {
