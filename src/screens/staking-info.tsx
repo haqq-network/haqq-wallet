@@ -27,8 +27,6 @@ export const StakingInfoScreen = () => {
     route.params.validator.operator_address,
   );
 
-  console.log(delegated);
-
   return (
     <StakingInfo
       validator={route.params.validator}
