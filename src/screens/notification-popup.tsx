@@ -14,16 +14,12 @@ export const NotificationPopupScreen = () => {
     console.log('onClickTurnOn');
   }, [goBack]);
 
-  const onClickNotNow = useCallback(() => {
-    goBack();
-  }, [goBack]);
-
   return (
     <BottomPopupContainer>
       {onClose => (
         <NotificationPopup
           onClickTurnOn={() => onClose(onClickTurnOn)}
-          onClickNotNow={() => onClose(onClickNotNow)}
+          onClickNotNow={() => onClose(goBack)}
         />
       )}
     </BottomPopupContainer>
