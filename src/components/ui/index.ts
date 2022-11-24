@@ -1,3 +1,4 @@
+export * from './badge';
 export * from './box';
 export * from './button';
 export * from './blur-view';
@@ -14,6 +15,7 @@ export * from './icon-button';
 export * from './input';
 export * from './keyboard-safe-area';
 export * from './labeled-block';
+export * from './loading';
 export * from './menu-navigation-button';
 export * from './textarea';
 export * from './info-block';

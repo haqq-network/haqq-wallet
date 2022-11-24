@@ -51,6 +51,7 @@ class App extends EventEmitter {
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
   private _lastTheme: AppTheme = AppTheme.light;
+  private _provider: Provider | undefined;
 
   constructor() {
     super();
@@ -69,15 +70,16 @@ class App extends EventEmitter {
 
     this.user = this.loadUser();
 
-    const provider = Provider.getProvider(this.user.providerId);
+    this._provider = Provider.getProvider(this.user.providerId);
 
-    if (provider) {
-      EthNetwork.init(provider);
+    if (this._provider) {
+      EthNetwork.init(this._provider);
     }
 
     this.user.on('providerId', providerId => {
       const p = Provider.getProvider(providerId);
       if (p) {
+        this._provider = p;
         EthNetwork.init(p);
       }
     });
@@ -157,6 +159,10 @@ class App extends EventEmitter {
     }
 
     return Promise.reject();
+  }
+
+  get provider() {
+    return this._provider;
   }
 
   get biometryType() {

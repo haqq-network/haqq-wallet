@@ -11,6 +11,7 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {I18N, getText} from '@app/i18n';
+import {HomeStakingScreen} from '@app/screens/home-staking';
 import {RootStackParamList} from '@app/types';
 import {IS_IOS} from '@app/variables';
 
@@ -58,18 +59,14 @@ export const HomeScreen = () => {
           headerRight: QrScannerButton,
         }}
       />
-      {/* <Tab.Screen
-        name="homeMarket"
-        component={HomeMarketScreen}
+      <Tab.Screen
+        name="homeStaking"
+        component={HomeStakingScreen}
         options={{
-          title: 'Market',
-          headerTitle: 'Market screen',
-          tabBarIcon: ({focused}) => (
-            <MarketIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
-          ),
+          title: getText(I18N.homeStaking),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="homeSwap"
         component={HomeSwapScreen}
         options={{

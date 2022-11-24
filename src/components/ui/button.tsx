@@ -1,28 +1,19 @@
-/* eslint-disable react-native/no-unused-styles */
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  ViewProps,
-} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
+
+import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 import {Text} from './text';
 
-import {
-  LIGHT_BG_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-  LIGHT_TEXT_SECOND_1,
-} from '../../variables';
+export type ButtonValue = {title: string} | {i18n: I18N};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  title: string;
+  title?: string;
+  i18n?: I18N;
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -31,7 +22,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   iconLeft?: React.ReactNode;
   loading?: boolean;
   textColor?: string;
-};
+} & ButtonValue;
 
 export enum ButtonVariant {
   text = 'text',
@@ -49,6 +40,7 @@ export enum ButtonSize {
 
 export const Button = ({
   title,
+  i18n,
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
@@ -61,10 +53,10 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
-    if (!disabled) {
+    if (!(disabled || loading)) {
       onPress();
     }
-  }, [disabled, onPress]);
+  }, [disabled, loading, onPress]);
 
   const containerStyle = useMemo(
     () => [
@@ -98,13 +90,14 @@ export const Button = ({
       activeOpacity={0.7}
       {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={LIGHT_TEXT_BASE_3} />
+        <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
       ) : (
         <Text
           t9={size !== ButtonSize.small}
           t12={size === ButtonSize.small}
           style={textStyle}
-          color={textColor}>
+          color={textColor}
+          i18n={i18n}>
           {title}
         </Text>
       )}
@@ -113,7 +106,7 @@ export const Button = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -132,25 +125,25 @@ const page = StyleSheet.create({
     height: 46,
   },
   containedContainer: {
-    backgroundColor: LIGHT_GRAPHIC_GREEN_1,
+    backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     height: 54,
   },
   containedDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
   textContainer: {},
   errorContainer: {},
   outlinedContainer: {
-    borderColor: LIGHT_GRAPHIC_GREEN_1,
+    borderColor: Color.graphicGreen1,
     borderRadius: 12,
   },
   secondContainer: {
-    backgroundColor: LIGHT_BG_2,
+    backgroundColor: Color.bg2,
     borderRadius: 12,
   },
   secondDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
   textIconRight: {
     marginRight: 8,
@@ -159,20 +152,20 @@ const page = StyleSheet.create({
     marginLeft: 8,
   },
   containedText: {
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
   },
   containedDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
   },
   textText: {},
   outlinedText: {},
   errorText: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
   secondText: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
   },
   secondDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
   },
 });

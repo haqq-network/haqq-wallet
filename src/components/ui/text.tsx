@@ -18,6 +18,8 @@ import {FontT} from '@app/types';
 export type TextValue = {children: React.ReactNode} | {i18n: I18N};
 
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
+  children?: React.ReactNode;
+  i18n?: I18N;
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -65,8 +67,8 @@ export const Text = ({
   t17,
   u0,
   style,
-  i18n,
-  children,
+  i18n = undefined,
+  children = undefined,
   clean,
   center,
   right,
