@@ -293,15 +293,15 @@ export class Cosmos {
     return Promise.all(
       addressList.reduce<Array<Promise<void>>>((memo, curr) => {
         return memo.concat([
-          this.syncDelegations(
+          this.syncStakingDelegations(
             cache[`${curr}:${StakingMetadataType.delegation}`] ?? [],
             curr,
           ),
-          this.syncUnDelegations(
+          this.syncStakingUnDelegations(
             cache[`${curr}:${StakingMetadataType.undelegation}`] ?? [],
             curr,
           ),
-          this.syncRewards(
+          this.syncStakingRewards(
             cache[`${curr}:${StakingMetadataType.reward}`] ?? [],
             curr,
           ),
@@ -310,7 +310,7 @@ export class Cosmos {
     );
   }
 
-  async syncDelegations(exists: string[], address: string) {
+  async syncStakingDelegations(exists: string[], address: string) {
     return this.getAccountDelegations(address)
       .then(resp =>
         resp.delegation_responses.map(d =>
@@ -328,7 +328,7 @@ export class Cosmos {
       });
   }
 
-  async syncUnDelegations(exists: string[], address: string) {
+  async syncStakingUnDelegations(exists: string[], address: string) {
     return this.getAccountUnDelegations(address)
       .then(resp => {
         return resp.unbonding_responses
@@ -351,7 +351,7 @@ export class Cosmos {
       });
   }
 
-  async syncRewards(exists: string[], address: string) {
+  async syncStakingRewards(exists: string[], address: string) {
     return this.getAccountRewardsInfo(address)
       .then(resp => {
         return resp.rewards

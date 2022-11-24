@@ -122,4 +122,28 @@ export class StakingMetadata extends Realm.Object {
       });
     }
   }
+
+  static getRewardsForValidator(address: string) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+
+    return rows.filtered(
+      `validator = '${address}' and type = '${StakingMetadataType.reward}'`,
+    );
+  }
+
+  static getDelegationsForValidator(address: string) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+
+    return rows.filtered(
+      `validator = '${address}' and type = '${StakingMetadataType.delegation}'`,
+    );
+  }
+
+  static getUnDelegationsForValidator(address: string) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+
+    return rows.filtered(
+      `validator = '${address}' and type = '${StakingMetadataType.undelegation}'`,
+    );
+  }
 }
