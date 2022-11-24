@@ -29,9 +29,9 @@ export const NotificationPopup = ({
 
   const lottieAnimation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/animations/notification-popup-dark.json');
+      return require('../../../../assets/animations/notification-popup-dark.json');
     }
-    return require('../../../assets/animations/notification-popup-light.json');
+    return require('../../../../assets/animations/notification-popup-light.json');
   }, [theme]);
 
   return (

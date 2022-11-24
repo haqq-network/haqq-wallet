@@ -1,7 +1,9 @@
 import React, {useCallback} from 'react';
 
-import {NotificationPopup} from '@app/components/notification-popup';
-import {NotificationPopupContainer} from '@app/components/ui';
+import {
+  BottomPopupContainer,
+  NotificationPopup,
+} from '@app/components/bottom-popups';
 import {useTypedNavigation} from '@app/hooks';
 
 export const NotificationPopupScreen = () => {
@@ -17,13 +19,13 @@ export const NotificationPopupScreen = () => {
   }, [goBack]);
 
   return (
-    <NotificationPopupContainer>
+    <BottomPopupContainer>
       {onClose => (
         <NotificationPopup
           onClickTurnOn={() => onClose(onClickTurnOn)}
           onClickNotNow={() => onClose(onClickNotNow)}
         />
       )}
-    </NotificationPopupContainer>
+    </BottomPopupContainer>
   );
 };
