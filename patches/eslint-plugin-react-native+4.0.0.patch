@@ -1,0 +1,39 @@
+diff --git a/node_modules/eslint-plugin-react-native/lib/util/stylesheet.js b/node_modules/eslint-plugin-react-native/lib/util/stylesheet.js
+index 09811e9..8955c8e 100644
+--- a/node_modules/eslint-plugin-react-native/lib/util/stylesheet.js
++++ b/node_modules/eslint-plugin-react-native/lib/util/stylesheet.js
+@@ -91,6 +91,7 @@ const getSourceCode = (node) => currentContent
+   .getText(node);
+ 
+ const getStyleSheetObjectNames = (settings) => settings['react-native/style-sheet-object-names'] || ['StyleSheet'];
++const getCreateThemeObjectNames = (settings) => settings['react-native/create-theme-object-names'] || ['createTheme'];
+ 
+ const astHelpers = {
+   containsStyleSheetObject: function (node, objectNames) {
+@@ -113,12 +114,24 @@ const astHelpers = {
+     );
+   },
+ 
++  containsCreateThemeObject: function (node, objectNames) {
++    return Boolean(
++      node &&
++      node.type === 'CallExpression' &&
++      node.callee &&
++      node.callee.name &&
++      objectNames.includes(node.callee.name),
++    );
++  },
++
+   isStyleSheetDeclaration: function (node, settings) {
+     const objectNames = getStyleSheetObjectNames(settings);
+ 
+     return Boolean(
+-      astHelpers.containsStyleSheetObject(node, objectNames)
+-      && astHelpers.containsCreateCall(node)
++      (
++        astHelpers.containsStyleSheetObject(node, objectNames) && astHelpers.containsCreateCall(node)
++      )
++      || astHelpers.containsCreateThemeObject(node, getCreateThemeObjectNames(settings))
+     );
+   },
+ 
