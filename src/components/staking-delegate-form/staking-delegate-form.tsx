@@ -121,7 +121,4 @@ const styles = createTheme({
   submit: {
     marginVertical: 16,
   },
-  subtitle: {
-    marginBottom: 4,
-  },
 });

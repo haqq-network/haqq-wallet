@@ -14,7 +14,6 @@ import {
   LIGHT_BG_1,
   LIGHT_GRAPHIC_GREEN_1,
   LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
   MAGIC_CARD_HEIGHT,
   SHADOW_COLOR,
@@ -93,10 +92,6 @@ const page = createTheme({
     color: LIGHT_TEXT_GREEN_1,
     textAlign: 'center',
     marginBottom: 4,
-  },
-  subtitle: {
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
   },
   create: {
     flex: 0,

@@ -14,7 +14,7 @@ import {WalletRow} from '@app/components/wallet-row';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {LIGHT_GRAPHIC_RED_1, QR_STATUS_BAR} from '@app/variables';
+import {QR_STATUS_BAR} from '@app/variables';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
@@ -199,10 +199,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 };
 
 const styles = createTheme({
-  overlay: {},
   container: {flex: 1},
   bottomError: {
-    backgroundColor: LIGHT_GRAPHIC_RED_1,
+    backgroundColor: Color.graphicRed1,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 30,
