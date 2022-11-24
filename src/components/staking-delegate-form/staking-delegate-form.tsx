@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {View} from 'react-native';
 
@@ -14,7 +14,6 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
-import {EthNetwork} from '@app/services';
 import {ValidatorItem} from '@app/types';
 import {isNumber} from '@app/utils';
 import {WEI} from '@app/variables';
@@ -24,29 +23,21 @@ export type StakingDelegateFormProps = {
   account: string;
   onAmount: (amount: number) => void;
   fee: number;
+  balance: number;
 };
 
 export const StakingDelegateForm = ({
   validator,
-  account,
   onAmount,
   fee,
+  balance,
 }: StakingDelegateFormProps) => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
-  const [balance, setBalance] = useState(0);
-  const [maxSum, setMaxSum] = useState(0);
 
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
-
-  useEffect(() => {
-    EthNetwork.getBalance(account).then(newBalance => {
-      setBalance(newBalance);
-      setMaxSum(newBalance);
-    });
-  }, [account]);
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amount));
@@ -71,8 +62,8 @@ export const StakingDelegateForm = ({
   );
 
   const onPressMax = useCallback(() => {
-    setAmount((maxSum - fee / WEI).toFixed(2));
-  }, [fee, maxSum]);
+    setAmount((balance - fee / WEI).toFixed(2));
+  }, [fee, balance]);
 
   const checked = useMemo(
     () =>
@@ -107,10 +98,10 @@ export const StakingDelegateForm = ({
         ISLM
       </Text>
       <Button
+        i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}
         disabled={!checked}
         variant={ButtonVariant.contained}
-        title={getText(I18N.stakingDelegateFormPreview)}
         onPress={onDone}
       />
     </KeyboardSafeArea>
