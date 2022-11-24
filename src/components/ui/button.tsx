@@ -114,34 +114,39 @@ const page = createTheme({
     paddingVertical: 13, // originally 16 but for android 16 - 3
     paddingHorizontal: 28,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   smallContainer: {
     paddingVertical: 3, // originally 6 but for android 6 - 3
     paddingHorizontal: 12,
     height: 34,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   middleContainer: {
     paddingVertical: 9, // originally 12 but for android 12 - 3
     paddingHorizontal: 20,
     height: 46,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedContainer: {
     backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     height: 54,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
-  textContainer: {},
-  errorContainer: {},
+  // eslint-disable-next-line react-native/no-unused-styles
   outlinedContainer: {
     borderColor: Color.graphicGreen1,
     borderRadius: 12,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondContainer: {
     backgroundColor: Color.bg2,
     borderRadius: 12,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
@@ -151,20 +156,23 @@ const page = createTheme({
   textIconLeft: {
     marginLeft: 8,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedText: {
     color: Color.textBase3,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledText: {
     color: Color.textSecond1,
   },
-  textText: {},
-  outlinedText: {},
+  // eslint-disable-next-line react-native/no-unused-styles
   errorText: {
     color: Color.textRed1,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondText: {
     color: Color.textGreen1,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledText: {
     color: Color.textSecond1,
   },

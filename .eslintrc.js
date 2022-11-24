@@ -2,7 +2,13 @@ module.exports = {
   root: true,
   extends: '@react-native-community',
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-native', 'import', 'prettier'],
+  plugins: [
+    '@typescript-eslint',
+    'react',
+    'react-native',
+    'import',
+    'prettier',
+  ],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -18,10 +24,10 @@ module.exports = {
                 position: 'before',
               },
               {
-                "pattern": "@app/**",
-                "group": "external",
-                "position": "after"
-              }
+                pattern: '@app/**',
+                group: 'external',
+                position: 'after',
+              },
             ],
             pathGroupsExcludedImportTypes: ['react'],
             'newlines-between': 'always',
