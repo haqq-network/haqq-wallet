@@ -1,9 +1,8 @@
 import Realm from 'realm';
 
-import {CosmosMetadata} from '@app/models/cosmos-metadata';
-
 import {Contact} from './contact';
 import {Provider} from './provider';
+import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
 import {WalletRealm} from './wallet';
@@ -18,7 +17,7 @@ export const realm = new Realm({
     Transaction,
     Contact,
     Provider,
-    CosmosMetadata,
+    StakingMetadata,
   ],
   schemaVersion: 29,
   onMigration: (oldRealm, newRealm) => {

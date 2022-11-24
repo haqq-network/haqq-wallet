@@ -2,22 +2,22 @@ import createHash from 'create-hash';
 
 import {realm} from '@app/models/index';
 
-export enum CosmosMetadataType {
+export enum StakingMetadataType {
   delegation = 'delegation',
   undelegation = 'undelegation',
   reward = 'reward',
 }
 
-export class CosmosMetadata extends Realm.Object {
+export class StakingMetadata extends Realm.Object {
   hash!: string;
-  type!: CosmosMetadataType;
+  type!: StakingMetadataType;
   delegator!: string;
   validator!: string;
   amount!: number;
   completion_time: string | undefined;
 
   static schema = {
-    name: 'CosmosMetadata',
+    name: 'StakingMetadata',
     properties: {
       hash: 'string',
       type: 'string',
@@ -35,16 +35,16 @@ export class CosmosMetadata extends Realm.Object {
     amount: string,
   ) {
     const hash = createHash('sha1')
-      .update(`${CosmosMetadataType.delegation}:${delegator}:${validator}`)
+      .update(`${StakingMetadataType.delegation}:${delegator}:${validator}`)
       .digest()
       .toString('hex');
 
     realm.write(() => {
-      realm.create<CosmosMetadata>(
-        CosmosMetadata.schema.name,
+      realm.create<StakingMetadata>(
+        StakingMetadata.schema.name,
         {
           hash,
-          type: CosmosMetadataType.delegation,
+          type: StakingMetadataType.delegation,
           delegator,
           validator,
           amount: parseFloat(amount),
@@ -58,16 +58,16 @@ export class CosmosMetadata extends Realm.Object {
 
   static createReward(delegator: string, validator: string, amount: string) {
     const hash = createHash('sha1')
-      .update(`${CosmosMetadataType.reward}:${delegator}:${validator}`)
+      .update(`${StakingMetadataType.reward}:${delegator}:${validator}`)
       .digest()
       .toString('hex');
 
     realm.write(() => {
-      realm.create<CosmosMetadata>(
-        CosmosMetadata.schema.name,
+      realm.create<StakingMetadata>(
+        StakingMetadata.schema.name,
         {
           hash,
-          type: CosmosMetadataType.reward,
+          type: StakingMetadataType.reward,
           delegator,
           validator,
           amount: parseFloat(amount),
@@ -87,17 +87,17 @@ export class CosmosMetadata extends Realm.Object {
   ) {
     const hash = createHash('sha1')
       .update(
-        `${CosmosMetadataType.undelegation}:${delegator}:${validator}:${completion_time}`,
+        `${StakingMetadataType.undelegation}:${delegator}:${validator}:${completion_time}`,
       )
       .digest()
       .toString('hex');
 
     realm.write(() => {
-      realm.create<CosmosMetadata>(
-        CosmosMetadata.schema.name,
+      realm.create<StakingMetadata>(
+        StakingMetadata.schema.name,
         {
           hash,
-          type: CosmosMetadataType.undelegation,
+          type: StakingMetadataType.undelegation,
           delegator,
           validator,
           amount: parseFloat(amount),
@@ -111,8 +111,8 @@ export class CosmosMetadata extends Realm.Object {
   }
 
   static remove(hash: string) {
-    const obj = realm.objectForPrimaryKey<CosmosMetadata>(
-      CosmosMetadata.schema.name,
+    const obj = realm.objectForPrimaryKey<StakingMetadata>(
+      StakingMetadata.schema.name,
       hash,
     );
 

@@ -32,8 +32,11 @@ import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
 import {realm} from '@app/models';
-import {CosmosMetadata, CosmosMetadataType} from '@app/models/cosmos-metadata';
 import {Provider} from '@app/models/provider';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -279,7 +282,7 @@ export class Cosmos {
   }
 
   sync(addressList: string[]) {
-    const rows = realm.objects<CosmosMetadata>(CosmosMetadata.schema.name);
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
     const cache: Record<string, string[]> = {};
 
     for (const row of rows) {
@@ -291,15 +294,15 @@ export class Cosmos {
       addressList.reduce<Array<Promise<void>>>((memo, curr) => {
         return memo.concat([
           this.syncDelegations(
-            cache[`${curr}:${CosmosMetadataType.delegation}`] ?? [],
+            cache[`${curr}:${StakingMetadataType.delegation}`] ?? [],
             curr,
           ),
           this.syncUnDelegations(
-            cache[`${curr}:${CosmosMetadataType.undelegation}`] ?? [],
+            cache[`${curr}:${StakingMetadataType.undelegation}`] ?? [],
             curr,
           ),
           this.syncRewards(
-            cache[`${curr}:${CosmosMetadataType.reward}`] ?? [],
+            cache[`${curr}:${StakingMetadataType.reward}`] ?? [],
             curr,
           ),
         ]);
@@ -311,7 +314,7 @@ export class Cosmos {
     return this.getAccountDelegations(address)
       .then(resp =>
         resp.delegation_responses.map(d =>
-          CosmosMetadata.createDelegation(
+          StakingMetadata.createDelegation(
             d.delegation.delegator_address,
             d.delegation.validator_address,
             d.balance.amount,
@@ -321,7 +324,7 @@ export class Cosmos {
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
-          .map(r => CosmosMetadata.remove(r));
+          .map(r => StakingMetadata.remove(r));
       });
   }
 
@@ -331,7 +334,7 @@ export class Cosmos {
         return resp.unbonding_responses
           .map(ur => {
             return ur.entries.map(ure =>
-              CosmosMetadata.createUnDelegation(
+              StakingMetadata.createUnDelegation(
                 ur.delegator_address,
                 ur.validator_address,
                 ure.balance,
@@ -344,7 +347,7 @@ export class Cosmos {
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
-          .map(r => CosmosMetadata.remove(r));
+          .map(r => StakingMetadata.remove(r));
       });
   }
 
@@ -354,7 +357,7 @@ export class Cosmos {
         return resp.rewards
           .map(r =>
             r.reward.map(rr =>
-              CosmosMetadata.createReward(
+              StakingMetadata.createReward(
                 address,
                 r.validator_address,
                 rr.amount,
@@ -366,7 +369,7 @@ export class Cosmos {
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
-          .map(r => CosmosMetadata.remove(r));
+          .map(r => StakingMetadata.remove(r));
       });
   }
 }
