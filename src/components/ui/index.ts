@@ -12,6 +12,7 @@ export * from './data-content-splitted';
 export * from './data-view';
 export * from './icon';
 export * from './icon-button';
+export * from './inline';
 export * from './input';
 export * from './keyboard-safe-area';
 export * from './labeled-block';

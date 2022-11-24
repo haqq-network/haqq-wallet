@@ -44,7 +44,7 @@ export const SettingsTestScreen = () => {
         console.log('e', e);
       });
 
-    cosmos.getRewardsInfo(sourceAddress).then(resp => {
+    cosmos.getAccountRewardsInfo(sourceAddress).then(resp => {
       const r = resp.total.reduce((memo, curr) => {
         return memo + parseInt(curr.amount, 10) / WEI;
       }, 0);
@@ -52,7 +52,7 @@ export const SettingsTestScreen = () => {
       setReward(r);
     });
 
-    cosmos.getUnDelegations(sourceAddress).then(resp => {
+    cosmos.getAccountUnDelegations(sourceAddress).then(resp => {
       const r = resp.entries.reduce((memo, entry) => {
         return memo + parseInt(entry.balance, 10) / WEI;
       }, 0);
