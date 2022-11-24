@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
-import {BackupNotification} from '@app/components/backup-notification';
-import {NotificationPopupContainer} from '@app/components/ui';
+import {BottomPopupContainer} from '@app/components/bottom-popups';
+import {BackupNotification} from '@app/components/bottom-popups';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const BackupNotificationScreen = () => {
@@ -25,13 +25,13 @@ export const BackupNotificationScreen = () => {
   }, [app, goBack]);
 
   return (
-    <NotificationPopupContainer>
+    <BottomPopupContainer>
       {onClose => (
         <BackupNotification
           onClickBackup={() => onClose(onClickBackup)}
           onClickSkip={() => onClose(onClickSkip)}
         />
       )}
-    </NotificationPopupContainer>
+    </BottomPopupContainer>
   );
 };

@@ -24,13 +24,11 @@ const timingInAnimationConfig: WithTimingConfig = {
   easing: Easing.out(Easing.back()),
 };
 
-interface NotificationPopupContainerProps {
+interface BottomPopupContainerProps {
   children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
 }
 
-export const NotificationPopupContainer = ({
-  children,
-}: NotificationPopupContainerProps) => {
+export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
   const {height: H} = useWindowDimensions();
 
   const fullyOpen = 0;
