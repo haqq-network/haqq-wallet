@@ -40,10 +40,17 @@ export const InfoBlock = ({
     () => [styles.text, styles[`${type}Text`], icon ? styles.iconText : null],
     [icon, type],
   );
+
+  const textColor = useMemo(
+    () =>
+      type === InfoBlockType.warning ? Color.textYellow1 : Color.textBase1,
+    [type],
+  );
+
   return (
     <View style={containerStyle}>
       {icon}
-      <Text i18n={i18n} t14={t14} t15={t15} style={textStyle}>
+      <Text i18n={i18n} t14={t14} t15={t15} style={textStyle} color={textColor}>
         {children}
       </Text>
     </View>
@@ -57,14 +64,12 @@ const styles = createTheme({
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   warningContainer: {
     backgroundColor: Color.bg6,
   },
   iconText: {marginLeft: 12},
   text: {
     flex: 1,
-  },
-  warningText: {
-    color: Color.textYellow1,
   },
 });

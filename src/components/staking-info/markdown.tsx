@@ -29,6 +29,7 @@ export const Markdown = ({children}: MarkdownProps) => {
 };
 
 const styles = createTheme({
+  // eslint-disable-next-line react-native/no-unused-styles
   body: {
     width: windowWidth - 40,
   },

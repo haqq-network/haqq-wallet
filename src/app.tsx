@@ -120,6 +120,7 @@ const stackScreenOptions = {
   presentation: 'modal',
   gestureEnabled: false,
 };
+
 export const App = () => {
   const theme = useTheme();
 

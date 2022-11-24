@@ -96,19 +96,7 @@ export const SumBlock = ({
 };
 
 const styles = createTheme({
-  container: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  row: {
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  submit: {
-    marginVertical: 16,
-  },
   subtitle: {
-    color: 'tomato',
     marginBottom: 4,
   },
   sum: {
