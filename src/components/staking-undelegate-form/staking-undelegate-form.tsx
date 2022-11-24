@@ -1,7 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {View} from 'react-native';
-
 import {Color} from '@app/colors';
 import {
   Button,
@@ -13,21 +11,17 @@ import {
 import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {ValidatorItem} from '@app/types';
 import {isNumber} from '@app/utils';
 import {WEI} from '@app/variables';
 
 export type StakingDelegateFormProps = {
-  maxAmount: number;
-  validator: ValidatorItem;
-  account: string;
+  balance: number;
   onAmount: (amount: number) => void;
   fee: number;
 };
 
 export const StakingUnDelegateForm = ({
-  validator,
-  maxAmount,
+  balance,
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
@@ -46,40 +40,39 @@ export const StakingUnDelegateForm = ({
         if (!isNumber(sum)) {
           return getText(I18N.stakingUnDelegateFormWrongSymbol);
         }
-        if (parseFloat(sum) < maxAmount) {
+        if (parseFloat(sum) > balance) {
           return getText(I18N.stakingUnDelegateFormNotEnough);
         }
 
         return '';
       });
     },
-    [maxAmount],
+    [balance],
   );
 
   const onPressMax = useCallback(() => {
-    setAmount((maxAmount - fee / WEI).toFixed(2));
-  }, [fee, maxAmount]);
+    setAmount((balance - fee / WEI).toFixed(4));
+  }, [fee, balance]);
 
   const checked = useMemo(
     () =>
       parseFloat(amount) > 0 &&
-      maxAmount > 0 &&
-      parseFloat(amount) < maxAmount &&
+      balance > 0 &&
+      parseFloat(amount) < balance &&
       !error,
-    [amount, maxAmount, error],
+    [amount, balance, error],
   );
+
+  console.log('StakingUnDelegateForm', amount, balance);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
-        <Text t10>{validator.description.moniker}</Text>
-      </View>
+      <Spacer />
       <SumBlock
         value={amount}
         error={error}
         currency="ISLM"
-        balance={maxAmount}
+        balance={balance}
         onChange={onChangeValue}
         onMax={onPressMax}
       />

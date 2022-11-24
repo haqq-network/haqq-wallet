@@ -53,7 +53,7 @@ export const StakingUnDelegatePreview = ({
       <Text
         t11
         center
-        i18n={I18N.stakingUnDelegatePreviewStakeTo}
+        i18n={I18N.stakingUnDelegatePreviewWithdrawFrom}
         color={Color.textBase2}
         style={styles.subtitle}
       />
@@ -63,7 +63,7 @@ export const StakingUnDelegatePreview = ({
 
       <View style={styles.info}>
         <DataView label={getText(I18N.stakingUnDelegatePreviewAmount)}>
-          <Text t11>{cleanNumber(amount)}</Text>
+          <Text t11>{cleanNumber(amount)} ISLM</Text>
         </DataView>
         <DataView label={getText(I18N.stakingUnDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
@@ -75,7 +75,7 @@ export const StakingUnDelegatePreview = ({
       <Spacer />
       <Button
         variant={ButtonVariant.contained}
-        i18n={I18N.stakingUnDelegatePreviewDelegate}
+        i18n={I18N.stakingUnDelegatePreviewButton}
         onPress={onSend}
         style={styles.submit}
         loading={disabled}

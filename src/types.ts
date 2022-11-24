@@ -5,6 +5,7 @@ import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
 
@@ -243,6 +244,7 @@ export type RootStackParamList = {
     validator: string;
   };
   stakingUnDelegateAccount: {
+    available: Wallet[];
     validator: ValidatorItem;
     maxAmount: number;
   };

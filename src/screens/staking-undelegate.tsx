@@ -9,6 +9,7 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
 import {useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {StakingMetadata} from '@app/models/staking-metadata';
 import {StakingUnDelegateAccountScreen} from '@app/screens/staking-undelegate-account';
 import {StakingUnDelegateFinishScreen} from '@app/screens/staking-undelegate-finish';
 import {StakingUnDelegateFormScreen} from '@app/screens/staking-undelegate-form';
@@ -37,7 +38,6 @@ export const StakingUnDelegateScreen = () => {
   const wallets = useWallets();
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const route = useRoute<RouteProp<RootStackParamList, 'stakingUnDelegate'>>();
-
   const [validator, setValidator] = useState<ValidatorItem | undefined>();
 
   useEffect(() => {
@@ -49,11 +49,25 @@ export const StakingUnDelegateScreen = () => {
     });
   }, [cosmos, route.params.validator]);
 
-  const account = useMemo(() => {
-    return wallets.visible.length === 1 ? wallets.visible[0].address : null;
-  }, [wallets.visible]);
+  const available = useMemo(() => {
+    const delegations = new Set(
+      StakingMetadata.getDelegationsForValidator(route.params.validator).map(
+        v => v.delegator,
+      ),
+    );
 
-  if (!validator) {
+    return wallets.visible.filter(w => delegations.has(w.cosmosAddress));
+  }, [route.params.validator, wallets.visible]);
+
+  const account = useMemo(() => {
+    return available.length === 1 ? available[0].address : null;
+  }, [available]);
+
+  console.log('validator', validator);
+  console.log('available', available);
+  console.log('account', account);
+
+  if (!(validator && available.length)) {
     return <Loading />;
   }
 
@@ -71,7 +85,7 @@ export const StakingUnDelegateScreen = () => {
       />
       <StakingUnDelegateStack.Screen
         name="stakingUnDelegateAccount"
-        initialParams={{validator}}
+        initialParams={{validator, available}}
         component={StakingUnDelegateAccountScreen}
         options={screenOptionsAccount}
       />

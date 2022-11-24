@@ -16,7 +16,7 @@ export const HomeStakingScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    const addressList = wallets.visible.map(w => w.transport.cosmosAddress);
+    const addressList = wallets.visible.map(w => w.cosmosAddress);
 
     cosmos.sync(addressList).then(() => {
       setLoading(false);

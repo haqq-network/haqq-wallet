@@ -159,10 +159,8 @@ export class Cosmos {
       throw new Error('wallet_not_found');
     }
 
-    const transport = wallet.transport;
-
-    const accInfo = await this.getAccountInfo(transport.cosmosAddress);
-    const pubkey = await transport?.getPublicKey();
+    const accInfo = await this.getAccountInfo(wallet.cosmosAddress);
+    const pubkey = await wallet.transport?.getPublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),

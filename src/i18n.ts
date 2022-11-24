@@ -118,11 +118,11 @@ export enum I18N {
   stakingUnDelegatePreviewTitle,
 
   stakingUnDelegatePreviewTotalAmount,
-  stakingUnDelegatePreviewStakeTo,
+  stakingUnDelegatePreviewWithdrawFrom,
   stakingUnDelegatePreviewCommission,
   stakingUnDelegatePreviewAmount,
   stakingUnDelegatePreviewNetworkFee,
-  stakingUnDelegatePreviewDelegate,
+  stakingUnDelegatePreviewButton,
   stakingUnDelegatePreviewAttention,
 
   stakingUnDelegateFinishTitle,
@@ -278,11 +278,11 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegatePreviewTitle]: 'Preview',
 
   [I18N.stakingUnDelegatePreviewTotalAmount]: 'Total Amount',
-  [I18N.stakingUnDelegatePreviewStakeTo]: 'Stake to',
+  [I18N.stakingUnDelegatePreviewWithdrawFrom]: 'Withdrawal from',
   [I18N.stakingUnDelegatePreviewCommission]: 'Commission',
   [I18N.stakingUnDelegatePreviewAmount]: 'Amount',
   [I18N.stakingUnDelegatePreviewNetworkFee]: 'Network fee',
-  [I18N.stakingUnDelegatePreviewDelegate]: 'Delegate',
+  [I18N.stakingUnDelegatePreviewButton]: 'Undelegate',
   [I18N.stakingUnDelegatePreviewAttention]:
     'Attention! If in the future you want to undelegate the staked funds, it will take 21 days',
 
