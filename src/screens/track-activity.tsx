@@ -1,7 +1,9 @@
 import React, {useCallback} from 'react';
 
-import {TrackActivity} from '@app/components/track-activity';
-import {NotificationPopupContainer} from '@app/components/ui';
+import {
+  BottomPopupContainer,
+  TrackActivity,
+} from '@app/components/bottom-popups';
 import {useTypedNavigation} from '@app/hooks';
 
 export const TrackActivityScreen = () => {
@@ -13,8 +15,8 @@ export const TrackActivityScreen = () => {
   }, [goBack]);
 
   return (
-    <NotificationPopupContainer>
+    <BottomPopupContainer>
       {onClose => <TrackActivity onClick={() => onClose(onClickContinue)} />}
-    </NotificationPopupContainer>
+    </BottomPopupContainer>
   );
 };

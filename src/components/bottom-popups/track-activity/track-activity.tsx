@@ -7,11 +7,10 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
-  LockIcon,
+  Icon,
   LottieWrap,
   Spacer,
   Text,
-  UpIcon,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -28,7 +27,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
       <View style={styles.imageWrapper}>
         <LottieWrap
           style={styles.lottie}
-          source={require('../../../assets/animations/track-activity.json')}
+          source={require('../../../../assets/animations/track-activity.json')}
           autoPlay
           loop={false}
         />
@@ -37,7 +36,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
       <Spacer height={16} />
       <View style={styles.infoContainer}>
         <View style={styles.subInfoContainer}>
-          <UpIcon />
+          <Icon color={Color.graphicGreen1} s name="up" />
           <View style={styles.infoDescription}>
             <Text
               t12
@@ -54,7 +53,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
           </View>
         </View>
         <View style={styles.subInfoContainer}>
-          <LockIcon />
+          <Icon color={Color.graphicGreen1} s name="lock" />
           <View style={styles.infoDescription}>
             <Text
               t12
