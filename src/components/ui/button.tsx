@@ -4,6 +4,7 @@ import {useCallback, useMemo} from 'react';
 import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
+import {Icon, IconProps} from '@app/components/ui/icon';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -18,8 +19,10 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
-  iconRight?: React.ReactNode;
-  iconLeft?: React.ReactNode;
+  iconRight?: IconProps['name'];
+  iconRightColor?: IconProps['color'];
+  iconLeft?: IconProps['name'];
+  iconLeftColor?: IconProps['color'];
   loading?: boolean;
   textColor?: string;
 } & ButtonValue;
@@ -47,7 +50,9 @@ export const Button = ({
   disabled,
   onPress,
   iconRight,
+  iconRightColor,
   iconLeft,
+  iconLeftColor,
   textColor,
   loading = false,
   ...props
@@ -92,16 +97,31 @@ export const Button = ({
       {loading ? (
         <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
       ) : (
-        <Text
-          t9={size !== ButtonSize.small}
-          t12={size === ButtonSize.small}
-          style={textStyle}
-          color={textColor}
-          i18n={i18n}>
-          {title}
-        </Text>
+        <>
+          {iconLeft && (
+            <Icon
+              name={iconLeft}
+              color={iconLeftColor ?? textColor}
+              style={page.icon}
+            />
+          )}
+          <Text
+            t9={size !== ButtonSize.small}
+            t12={size === ButtonSize.small}
+            style={textStyle}
+            color={textColor}
+            i18n={i18n}>
+            {title}
+          </Text>
+          {iconRight && (
+            <Icon
+              name={iconRight}
+              color={iconRightColor ?? textColor}
+              style={page.icon}
+            />
+          )}
+        </>
       )}
-      {iconRight}
     </TouchableOpacity>
   );
 };
@@ -175,5 +195,9 @@ const page = createTheme({
   // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledText: {
     color: Color.textSecond1,
+  },
+  icon: {
+    width: 22,
+    height: 22,
   },
 });
