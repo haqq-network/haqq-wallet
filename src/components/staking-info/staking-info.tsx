@@ -5,9 +5,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
 import {Badge, Button, ButtonVariant, Text} from '@app/components/ui';
+import {Inline} from '@app/components/ui/inline';
 import {createTheme, openURL, windowWidth} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
+import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables';
@@ -16,11 +18,18 @@ import {Block} from './block';
 import {Markdown} from './markdown';
 
 export type StakingInfoProps = {
+  delegations: Realm.Results<StakingMetadata> | null;
   validator: ValidatorItem;
-  onStake: () => void;
+  onDelegate: () => void;
+  onUnDelegate: () => void;
 };
 
-export const StakingInfo = ({validator, onStake}: StakingInfoProps) => {
+export const StakingInfo = ({
+  validator,
+  onDelegate,
+  onUnDelegate,
+  delegations,
+}: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
   const textColor = useMemo(() => {
     switch (validator.localStatus) {
@@ -123,11 +132,20 @@ export const StakingInfo = ({validator, onStake}: StakingInfoProps) => {
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        <Button
-          variant={ButtonVariant.contained}
-          title={getText(I18N.stakingInfoStake)}
-          onPress={onStake}
-        />
+        <Inline gap={10}>
+          <Button
+            variant={ButtonVariant.contained}
+            title={getText(I18N.stakingInfoDelegate)}
+            onPress={onDelegate}
+          />
+          {delegations?.length && (
+            <Button
+              variant={ButtonVariant.contained}
+              title={getText(I18N.stakingInfoUnDelegate)}
+              onPress={onUnDelegate}
+            />
+          )}
+        </Inline>
       </View>
     </>
   );

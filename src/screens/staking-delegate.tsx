@@ -3,6 +3,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
@@ -18,7 +19,7 @@ import {RootStackParamList, ScreenOptionType, ValidatorItem} from '@app/types';
 const StakingDelegateStack = createStackNavigator();
 
 const screenOptionsAccount: ScreenOptionType = {
-  title: getText(I18N.stakingDelegatePreviewTitle),
+  title: getText(I18N.stakingDelegateAccountTitle),
   ...hideBack,
 };
 
@@ -53,7 +54,7 @@ export const StakingDelegateScreen = () => {
   }, [wallets.visible]);
 
   if (!validator) {
-    return null;
+    return <Loading />;
   }
 
   return (
