@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "AddressBook.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "AddressBook@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "AddressBook@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "AddressBook.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
