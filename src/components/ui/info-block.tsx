@@ -1,11 +1,12 @@
-/* eslint-disable react-native/no-unused-styles */
 import React, {useMemo} from 'react';
 
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
+
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 import {Text} from './text';
-
-import {LIGHT_BG_6, LIGHT_TEXT_YELLOW_1} from '../../variables';
 
 export enum InfoBlockType {
   warning = 'warning',
@@ -14,7 +15,8 @@ export enum InfoBlockType {
 export type InfoBlockProps = {
   type: InfoBlockType;
   icon?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  i18n?: I18N;
   style?: StyleProp<ViewStyle>;
   t14?: boolean;
   t15?: boolean;
@@ -22,6 +24,7 @@ export type InfoBlockProps = {
 
 export const InfoBlock = ({
   children,
+  i18n,
   icon,
   type,
   style,
@@ -29,25 +32,25 @@ export const InfoBlock = ({
   t15 = false,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
-    () => [page.container, page[`${type}Container`], style],
+    () => [styles.container, styles[`${type}Container`], style],
     [style, type],
   );
 
   const textStyle = useMemo(
-    () => [page.text, page[`${type}Text`], icon ? page.iconText : null],
+    () => [styles.text, styles[`${type}Text`], icon ? styles.iconText : null],
     [icon, type],
   );
   return (
     <View style={containerStyle}>
       {icon}
-      <Text t14={t14} t15={t15} style={textStyle}>
+      <Text i18n={i18n} t14={t14} t15={t15} style={textStyle}>
         {children}
       </Text>
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     borderRadius: 16,
@@ -55,13 +58,13 @@ const page = StyleSheet.create({
     paddingHorizontal: 16,
   },
   warningContainer: {
-    backgroundColor: LIGHT_BG_6,
+    backgroundColor: Color.bg6,
   },
   iconText: {marginLeft: 12},
   text: {
     flex: 1,
   },
   warningText: {
-    color: LIGHT_TEXT_YELLOW_1,
+    color: Color.textYellow1,
   },
 });
