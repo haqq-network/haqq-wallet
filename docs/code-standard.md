@@ -729,12 +729,13 @@ imports - constants - component - helpers - screens
 For touchable components instead of TouchableOpacity || TouchableHighlight to avoid some UI cross-platform bugs and get to access a lot of new possibilities
 Pressable · React Native
 
+<!--
 ## 2. Use .svg format
 
 For icons and small vector images for size reduction and more control.
-Memory/CPU consumption investigation | Images & icons
+Memory/CPU consumption investigation | Images & icons -->
 
-## 3. Navigation and route props
+## 2. Navigation and route props
 
 The priority is to use useNavigation and useRoute instead of navigation and route props
 
@@ -767,7 +768,7 @@ function Component() {
 }
 ```
 
-## 4. Use StyleSheet.flatten
+## 3. Use StyleSheet.flatten
 
 In child components if they have self styles and the style prop is an array
 
@@ -787,7 +788,7 @@ function Title({style, value}) {
 }
 ```
 
-## 5. Avoid Inline Styles
+## 4. Avoid Inline Styles
 
 ```jsx
 // bad
