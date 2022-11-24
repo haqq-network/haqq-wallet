@@ -82,18 +82,6 @@ const styles = createTheme({
     borderRadius: 16,
     paddingBottom: 16,
   },
-  animateView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: Color.bg9,
-  },
-  animateViewFade: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   title: {
     marginBottom: 8,
     textAlign: 'center',
