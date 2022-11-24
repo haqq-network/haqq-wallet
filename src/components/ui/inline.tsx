@@ -16,7 +16,6 @@ export const Inline = ({gap, children, style}: InlineProps) => {
   );
 
   const childrenList = React.Children.toArray(children).filter(el => !!el);
-  console.log('childrenList', childrenList);
   return (
     <View style={container}>
       {React.Children.map(
