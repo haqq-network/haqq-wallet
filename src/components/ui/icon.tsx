@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, ImageProps, StyleSheet} from 'react-native';
+import {Image, ImageStyle, StyleProp, StyleSheet} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 
@@ -59,53 +59,56 @@ export enum IconsName {
 }
 
 export type IconSize =
-  | {xs: boolean}
-  | {s: boolean}
-  | {m: boolean}
-  | {xl: boolean}
-  | {xxl: boolean};
+  | {i12: boolean}
+  | {i24: boolean}
+  | {i32: boolean}
+  | {i72: boolean}
+  | {i120: boolean}
+  | {};
 
 export type IconProps = {
   name: IconsName | keyof typeof IconsName;
-  color: string;
-  style?: ImageProps['style'];
+  color: string | Color;
+  style?: StyleProp<ImageStyle>;
 } & IconSize;
 
-export const Icon = ({name, m, s, xs, xl, xxl, style, color}: IconProps) => {
+export const Icon = ({name, style, color, ...props}: IconProps) => {
   const container = useMemo(
-    () => [
-      xs && styles.xsContainer,
-      s && styles.sContainer,
-      m && styles.mContainer,
-      xl && styles.xlContainer,
-      xxl && styles.xxlContainer,
-      style,
-      {tintColor: getColor(color as Color)},
-    ],
-    [color, m, s, style, xl, xs, xxl],
+    () =>
+      StyleSheet.flatten([
+        styles.i24Container,
+        'i12' in props && styles.i12Container,
+        'i24' in props && styles.i24Container,
+        'i32' in props && styles.i32Container,
+        'i72' in props && styles.i72Container,
+        'i120' in props && styles.i120Container,
+        style,
+        {tintColor: getColor(color as Color)},
+      ]),
+    [color, props, style],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
   return <Image source={icon} style={container} />;
 };
 
 const styles = StyleSheet.create({
-  xxlContainer: {
+  i120Container: {
     width: 120,
     height: 120,
   },
-  xlContainer: {
+  i72Container: {
     width: 72,
     height: 72,
   },
-  mContainer: {
+  i32Container: {
     width: 32,
     height: 32,
   },
-  sContainer: {
+  i24Container: {
     width: 24,
     height: 24,
   },
-  xsContainer: {
+  i12Container: {
     width: 12,
     height: 12,
   },

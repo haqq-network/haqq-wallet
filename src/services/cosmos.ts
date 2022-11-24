@@ -14,8 +14,8 @@ import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
 import {
   DistributionRewardsResponse,
   GetDelegationsResponse,
+  GetUndelegationsResponse,
   GetValidatorsResponse,
-  UndelegationResponse,
   Validator,
 } from '@evmos/provider/dist/rest/staking';
 import {
@@ -31,7 +31,12 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
+import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -103,11 +108,15 @@ export class Cosmos {
     return this.getQuery(generateEndpointGetDelegations(address));
   }
 
-  async getRewardsInfo(address: string): Promise<DistributionRewardsResponse> {
+  async getAccountRewardsInfo(
+    address: string,
+  ): Promise<DistributionRewardsResponse> {
     return this.getQuery(generateEndpointDistributionRewardsByAddress(address));
   }
 
-  async getUnDelegations(address: string): Promise<UndelegationResponse> {
+  async getAccountUnDelegations(
+    address: string,
+  ): Promise<GetUndelegationsResponse> {
     return this.getQuery(generateEndpointGetUndelegations(address));
   }
 
@@ -150,10 +159,8 @@ export class Cosmos {
       throw new Error('wallet_not_found');
     }
 
-    const transport = wallet.transport;
-
-    const accInfo = await this.getAccountInfo(transport.cosmosAddress);
-    const pubkey = await transport?.getPublicKey();
+    const accInfo = await this.getAccountInfo(wallet.cosmosAddress);
+    const pubkey = await wallet.transport?.getPublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
@@ -270,5 +277,97 @@ export class Cosmos {
     } catch (e) {
       console.log('err', e);
     }
+  }
+
+  sync(addressList: string[]) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+    const cache: Record<string, string[]> = {};
+
+    for (const row of rows) {
+      const k = `${row.validator}:${row.type}`;
+      cache[k] = (cache[k] ?? []).concat(row.hash);
+    }
+
+    return Promise.all(
+      addressList.reduce<Array<Promise<void>>>((memo, curr) => {
+        return memo.concat([
+          this.syncStakingDelegations(
+            cache[`${curr}:${StakingMetadataType.delegation}`] ?? [],
+            curr,
+          ),
+          this.syncStakingUnDelegations(
+            cache[`${curr}:${StakingMetadataType.undelegation}`] ?? [],
+            curr,
+          ),
+          this.syncStakingRewards(
+            cache[`${curr}:${StakingMetadataType.reward}`] ?? [],
+            curr,
+          ),
+        ]);
+      }, []),
+    );
+  }
+
+  async syncStakingDelegations(exists: string[], address: string) {
+    return this.getAccountDelegations(address)
+      .then(resp =>
+        resp.delegation_responses.map(d =>
+          StakingMetadata.createDelegation(
+            d.delegation.delegator_address,
+            d.delegation.validator_address,
+            d.balance.amount,
+          ),
+        ),
+      )
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => StakingMetadata.remove(r));
+      });
+  }
+
+  async syncStakingUnDelegations(exists: string[], address: string) {
+    return this.getAccountUnDelegations(address)
+      .then(resp => {
+        return resp.unbonding_responses
+          .map(ur => {
+            return ur.entries.map(ure =>
+              StakingMetadata.createUnDelegation(
+                ur.delegator_address,
+                ur.validator_address,
+                ure.balance,
+                ure.completion_time,
+              ),
+            );
+          })
+          .flat();
+      })
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => StakingMetadata.remove(r));
+      });
+  }
+
+  async syncStakingRewards(exists: string[], address: string) {
+    return this.getAccountRewardsInfo(address)
+      .then(resp => {
+        return resp.rewards
+          .map(r =>
+            r.reward.map(rr =>
+              StakingMetadata.createReward(
+                address,
+                r.validator_address,
+                rr.amount,
+              ),
+            ),
+          )
+          .flat();
+      })
+      .then(hashes => {
+        exists
+          .filter(r => !hashes.includes(r))
+          .map(r => StakingMetadata.remove(r));
+      });
   }
 }

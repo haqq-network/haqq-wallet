@@ -2,6 +2,7 @@ import Realm from 'realm';
 
 import {Contact} from './contact';
 import {Provider} from './provider';
+import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
 import {WalletRealm} from './wallet';
@@ -10,8 +11,15 @@ import {AppTheme, WalletType} from '../types';
 import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
 
 export const realm = new Realm({
-  schema: [WalletRealm, UserSchema, Transaction, Contact, Provider],
-  schemaVersion: 28,
+  schema: [
+    WalletRealm,
+    UserSchema,
+    Transaction,
+    Contact,
+    Provider,
+    StakingMetadata,
+  ],
+  schemaVersion: 29,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

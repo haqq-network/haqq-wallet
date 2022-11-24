@@ -7,14 +7,14 @@ import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
-export type StakingDelegateAccount = {
+export type VisibleAccountSelectorProps = {
   wallets: Wallet[];
   onPress: (address: string) => void;
 };
-export const StakingDelegateAccount = ({
+export const VisibleAccountSelector = ({
   wallets,
   onPress,
-}: StakingDelegateAccount) => {
+}: VisibleAccountSelectorProps) => {
   return (
     <PopupContainer style={styles.container}>
       <FlatList

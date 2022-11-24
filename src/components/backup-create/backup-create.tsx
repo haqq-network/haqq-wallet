@@ -17,7 +17,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {MnemonicWord} from './mnemonic-word';
@@ -38,12 +38,13 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
 
   return (
     <PopupContainer style={page.container}>
-      <Text t4 style={page.t4}>
-        {getText(I18N.backupCreateRecoveryPhrase)}
-      </Text>
-      <Text t11 color={getColor(Color.textBase2)} center>
-        {getText(I18N.backupCreateRecoverySaveWords)}
-      </Text>
+      <Text t4 style={page.t4} i18n={I18N.backupCreateRecoveryPhrase} />
+      <Text
+        t11
+        color={Color.textBase2}
+        center
+        i18n={I18N.backupCreateRecoverySaveWords}
+      />
       <Spacer style={page.space}>
         <View style={page.mnemonics}>
           <View style={page.column}>
@@ -65,23 +66,26 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
         </View>
         <CopyButton value={mnemonic ?? ''} style={page.copy}>
           <Copy height={22} width={22} color={getColor(Color.textGreen1)} />
-          <Text t9 style={page.copyText}>
-            {getText(I18N.copy)}
-          </Text>
+          <Text t9 style={page.copyText} i18n={I18N.copy} />
         </CopyButton>
       </Spacer>
-      <InfoBlock t15 type={InfoBlockType.warning} style={page.marginBottom}>
-        {getText(I18N.backupCreateRecoveryWarningMessage)}
-      </InfoBlock>
+      <InfoBlock
+        i18n={I18N.backupCreateRecoveryWarningMessage}
+        t15
+        type={InfoBlockType.warning}
+        style={page.marginBottom}
+      />
       <View style={page.agree}>
         <Checkbox value={checked} onPress={onClickCheck}>
-          <Text t13 style={page.agreeText}>
-            {getText(I18N.backupCreateRecoveryAgreement)}
-          </Text>
+          <Text
+            t13
+            style={page.agreeText}
+            i18n={I18N.backupCreateRecoveryAgreement}
+          />
         </Checkbox>
       </View>
       <Button
-        title={getText(I18N.continue)}
+        i18n={I18N.continue}
         style={page.submit}
         variant={ButtonVariant.contained}
         disabled={!checked}

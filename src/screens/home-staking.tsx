@@ -1,20 +1,31 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {View} from 'react-native';
-
-import {Button} from '@app/components/ui';
-import {RootStackParamList} from '@app/types';
+import {HomeStaking} from '@app/components/home-staking';
+import {Loading} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useWallets} from '@app/hooks';
+import {Cosmos} from '@app/services/cosmos';
 
 export const HomeStakingScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const [loading, setLoading] = useState(true);
+  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const wallets = useWallets();
+  const navigation = useTypedNavigation();
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
   }, [navigation]);
-  return (
-    <View>
-      <Button title="Validators" onPress={onPressValidators} />
-    </View>
-  );
+
+  useEffect(() => {
+    const addressList = wallets.visible.map(w => w.cosmosAddress);
+
+    cosmos.sync(addressList).then(() => {
+      setLoading(false);
+    });
+  }, [cosmos, wallets.visible]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  return <HomeStaking onPressValidators={onPressValidators} />;
 };

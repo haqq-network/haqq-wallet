@@ -42,6 +42,7 @@ import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
+import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
@@ -122,6 +123,7 @@ const stackScreenOptions = {
   presentation: 'modal',
   gestureEnabled: false,
 };
+
 export const App = () => {
   const theme = useTheme();
 
@@ -224,6 +226,10 @@ export const App = () => {
                   <Stack.Screen
                     name="stakingDelegate"
                     component={StakingDelegateScreen}
+                  />
+                  <Stack.Screen
+                    name="stakingUnDelegate"
+                    component={StakingUnDelegateScreen}
                   />
                 </Stack.Group>
                 <Stack.Screen

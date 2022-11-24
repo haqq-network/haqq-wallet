@@ -43,3 +43,13 @@ yarn android
 // to start iOS dev application
 yarn ios
 ```
+
+## Assets, typography and design links
+
+- [Design system](https://www.figma.com/file/KoyH6PqWqfOwyIVDjnLlOk/%F0%9F%93%B1-Wallet?t=M7ZT91FhlYgJRSiI-6)
+- [Typography](https://www.figma.com/file/95cNViNal0YIu3HYTNH0TO/Typography?node-id=0%3A1)
+- [Icons](https://www.figma.com/file/3NNIlmuGoRMq6GaGphfrOw/Icon?node-id=0%3A1)
+- [Colors and styles](https://www.figma.com/file/hVISlIFIJFPsnhlVmpNxrR/Style?node-id=0%3A1)
+- [Native elements](https://www.figma.com/file/S0H6bDoI2ySSSK2lsrif32/iOS-Native-Elements?node-id=0%3A1)
+- [Common elements](https://www.figma.com/file/lgQR66d0ixkg57MdSjmrOf/iOS-Library?node-id=122%3A2987)
+- [Lottie json animations](https://ysherwork.notion.site/Animation-d353911b01f448ab8c88c2cb4f0a3cf6)

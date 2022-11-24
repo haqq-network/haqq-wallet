@@ -36,7 +36,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
       <Spacer height={16} />
       <View style={styles.infoContainer}>
         <View style={styles.subInfoContainer}>
-          <Icon color={Color.graphicGreen1} s name="up" />
+          <Icon color={Color.graphicGreen1} i24 name="up" />
           <View style={styles.infoDescription}>
             <Text
               t12
@@ -53,7 +53,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
           </View>
         </View>
         <View style={styles.subInfoContainer}>
-          <Icon color={Color.graphicGreen1} s name="lock" />
+          <Icon color={Color.graphicGreen1} i24 name="lock" />
           <View style={styles.infoDescription}>
             <Text
               t12

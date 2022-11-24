@@ -80,10 +80,6 @@ const styles = createTheme({
     borderRadius: 16,
     paddingBottom: 16,
   },
-  animateViewFade: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   title: {
     marginBottom: 8,
   },

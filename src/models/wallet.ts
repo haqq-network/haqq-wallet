@@ -3,6 +3,7 @@ import {EventEmitter} from 'events';
 import {app} from '@app/contexts';
 import {decrypt, encrypt} from '@app/passworder';
 import {EthNetwork} from '@app/services';
+import {Cosmos} from '@app/services/cosmos';
 import {TransportHot} from '@app/services/transport-hot';
 import {TransportLedger} from '@app/services/transport-ledger';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
@@ -87,6 +88,8 @@ export class Wallet extends EventEmitter {
     rootAddress: undefined,
     publicKey: undefined,
   };
+
+  _cosmosAddress: string = '';
 
   static async create(walletParams: AddWalletParams, name = '') {
     const exist = realm.objectForPrimaryKey<Wallet>(
@@ -385,5 +388,13 @@ export class Wallet extends EventEmitter {
       default:
         throw new Error('transport_not_implemented');
     }
+  }
+
+  get cosmosAddress() {
+    if (!this._cosmosAddress) {
+      this._cosmosAddress = Cosmos.address(this._raw.address);
+    }
+
+    return this._cosmosAddress;
   }
 }
