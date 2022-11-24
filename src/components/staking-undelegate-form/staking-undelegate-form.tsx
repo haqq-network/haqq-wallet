@@ -63,8 +63,6 @@ export const StakingUnDelegateForm = ({
     [amount, balance, error],
   );
 
-  console.log('StakingUnDelegateForm', amount, balance);
-
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <Spacer />
@@ -81,8 +79,8 @@ export const StakingUnDelegateForm = ({
         {getText(I18N.stakingUnDelegateFormNetworkFee)}:{' '}
         {(fee / WEI).toFixed(15)} ISLM
       </Text>
+      <Spacer height={16} />
       <Button
-        style={styles.submit}
         disabled={!checked}
         variant={ButtonVariant.contained}
         title={getText(I18N.stakingUnDelegateFormPreview)}
@@ -96,16 +94,6 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  submit: {
-    marginVertical: 16,
-  },
-  subtitle: {
-    marginBottom: 4,
+    paddingVertical: 16,
   },
 });
