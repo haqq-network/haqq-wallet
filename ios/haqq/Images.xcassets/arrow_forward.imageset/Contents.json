@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "Arrow forward.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Arrow forward@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Arrow forward@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "Arrow forward.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

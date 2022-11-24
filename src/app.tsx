@@ -80,6 +80,7 @@ import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
+import {TrackActivityScreen} from './screens/track-activity';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WelcomeScreen} from './screens/welcome';
@@ -238,6 +239,11 @@ export const App = () => {
                 <Stack.Screen
                   name="notificationPopup"
                   component={NotificationPopupScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="trackActivity"
+                  component={TrackActivityScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen
