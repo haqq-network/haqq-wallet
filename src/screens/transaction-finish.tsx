@@ -6,6 +6,7 @@ import {StyleSheet, View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
 import {useContacts, useTransactions} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {
   BlockIcon,
@@ -47,6 +48,7 @@ export const TransactionFinishScreen = () => {
 
   useEffect(() => {
     setTransaction(transactions.getTransaction(route.params.hash));
+    vibrate(HapticEffects.success);
   }, [route.params.hash, transactions]);
 
   const short = useMemo(

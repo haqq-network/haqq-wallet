@@ -55,7 +55,7 @@ export const TransactionScreen = () => {
 
   return (
     <TransactionStack.Navigator
-      screenOptions={popupScreenOptions}
+      screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}
       initialRouteName={
         from || wallets.visible.length === 1
           ? 'transactionAddress'

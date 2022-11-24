@@ -10,13 +10,15 @@ import {useApp, useWallets} from '@app/hooks';
 import {RootStackParamList} from '../types';
 
 export const SettingsSecurityPinScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const {goBack} = useNavigation<StackNavigationProp<RootStackParamList>>();
   const app = useApp();
   const wallets = useWallets();
   const pinRef = useRef<PinInterface>();
   const [pin, setPin] = useState('');
+  const [isRepeatPin, setIsRepeatPin] = useState(false);
   const onPin = useCallback((newPin: string) => {
     setPin(newPin);
+    setIsRepeatPin(true);
   }, []);
 
   const onPinRepeated = useCallback(
@@ -27,25 +29,21 @@ export const SettingsSecurityPinScreen = () => {
         await app.updatePin(pin);
         hideModal();
         app.emit('notification', 'PIN code successfully changed');
-        navigation.goBack();
+        goBack();
       } else {
-        pinRef.current?.reset('pin not matched');
+        pinRef.current?.reset('Pin not matched');
         setPin('');
       }
     },
-    [app, navigation, pin, wallets],
+    [app, goBack, pin, wallets],
   );
-
-  if (pin === '') {
-    return <Pin onPin={onPin} title="Set 6-digital pin code" key="enter" />;
-  }
 
   return (
     <Pin
-      onPin={onPinRepeated}
-      title="Please repeat pin code"
+      onPin={isRepeatPin ? onPinRepeated : onPin}
+      title={isRepeatPin ? 'Please repeat pin code' : 'Set 6-digital pin code'}
       ref={pinRef}
-      key="confirm"
+      key={isRepeatPin ? 'enter' : 'confirm'}
     />
   );
 };

@@ -8,7 +8,9 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 
 import {Color, getColor} from '@app/colors';
+import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
+import {WalletRow} from '@app/components/wallet-row';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -17,9 +19,6 @@ import {LIGHT_GRAPHIC_RED_1, QR_STATUS_BAR} from '@app/variables';
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
 import {QrTopView} from './qr-top-view';
-
-import {BottomSheet} from '../../bottom-sheet';
-import {WalletRow} from '../../wallet-row';
 
 export type QRModalProps = {
   onClose?: () => void;
@@ -72,16 +71,6 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
 
-  const onSuccess = useCallback(
-    (e: BarCodeReadEvent) => {
-      if (e.data && e.data !== code) {
-        vibrate(HapticEffects.selection);
-        setCode(e.data);
-      }
-    },
-    [code],
-  );
-
   const checkAddress = useCallback(
     (address: string) => {
       if (utils.isAddress(address)) {
@@ -92,6 +81,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             from: rows[0].address.trim(),
           });
         } else {
+          vibrate(HapticEffects.success);
           setIsOpen(true);
         }
       } else {
@@ -102,7 +92,35 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [rows, prepareAddress, setIsOpen, app],
+    [rows, prepareAddress, app],
+  );
+
+  const onGetAddress = useCallback(
+    (slicedAddress: string) => {
+      if (slicedAddress && qrWithoutFrom) {
+        vibrate(HapticEffects.success);
+        app.emit('address', {
+          to: slicedAddress,
+        });
+      } else if (slicedAddress) {
+        checkAddress(slicedAddress);
+      }
+    },
+    [checkAddress, app, qrWithoutFrom],
+  );
+
+  const onSuccess = useCallback(
+    (e: BarCodeReadEvent) => {
+      if (e.data && e.data !== code) {
+        vibrate(HapticEffects.selection);
+        setCode(e.data);
+        const slicedAddress = prepareAddress(e.data);
+        if (slicedAddress) {
+          onGetAddress(slicedAddress);
+        }
+      }
+    },
+    [code, onGetAddress, prepareAddress],
   );
 
   const onClickGallery = useCallback(async () => {
@@ -115,25 +133,21 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           const data = await QRreader(first.uri);
           setCode(data);
           const slicedAddress = prepareAddress(data);
-
-          if (slicedAddress && qrWithoutFrom) {
-            app.emit('address', {
-              to: slicedAddress,
-            });
-          } else if (slicedAddress) {
-            checkAddress(slicedAddress);
+          if (slicedAddress) {
+            onGetAddress(slicedAddress);
           }
         } catch (err) {
           console.log(err);
         }
       }
     }
-  }, [prepareAddress, checkAddress, qrWithoutFrom, app]);
+  }, [prepareAddress, onGetAddress]);
 
   const onCloseBottomSheet = () => setIsOpen(false);
 
   const onToggleFlashMode = useCallback(() => {
     setFlashMode(pr => !pr);
+    vibrate(HapticEffects.impactLight);
   }, []);
 
   return (
@@ -163,7 +177,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       {error && (
         <View style={styles.bottomErrorContainer}>
           <View style={styles.bottomError}>
-            <Text t8 style={styles.bottomErrorText}>
+            <Text t8 color={getColor(Color.textBase3)}>
               Invalid code
             </Text>
           </View>
@@ -200,6 +214,5 @@ const styles = createTheme({
     right: 0,
     bottom: Dimensions.get('window').height / 2 - 135,
   },
-  bottomErrorText: {color: Color.textBase3, fontWeight: '600'},
   spacer: {height: 50},
 });

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@cosmjs/crypto/build/libsodium.js b/node_modules/@cosmjs/crypto/build/libsodium.js
+index f18f32a..6449f6c 100644
+--- a/node_modules/@cosmjs/crypto/build/libsodium.js
++++ b/node_modules/@cosmjs/crypto/build/libsodium.js
+@@ -9,7 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.Xchacha20poly1305Ietf = exports.xchacha20NonceLength = exports.Ed25519 = exports.Ed25519Keypair = exports.Argon2id = exports.isArgon2idOptions = void 0;
+ const utils_1 = require("@cosmjs/utils");
+-const libsodium_wrappers_1 = __importDefault(require("libsodium-wrappers"));
++// const libsodium_wrappers_1 = __importDefault(require("libsodium-wrappers"));
+ function isArgon2idOptions(thing) {
+     if (!(0, utils_1.isNonNullObject)(thing))
+         return false;

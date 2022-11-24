@@ -1,9 +1,18 @@
 import React from 'react';
 
+import {Validator} from '@evmos/provider';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
+import {I18N} from '@app/i18n';
+
 import {Transaction} from './models/transaction';
+
+export interface TransportWallet {
+  getPublicKey: () => Promise<string>;
+
+  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
+}
 
 export enum TransactionSource {
   unknown,
@@ -34,11 +43,8 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      privateKey: string;
-    }
-  | {
-      mnemonic: string;
-      privateKey?: string;
+      mnemonic?: string | boolean;
+      privateKey?: string | boolean;
     }
   | {
       address: string;
@@ -48,6 +54,9 @@ export type WalletInitialData =
 
 export type RootStackParamList = {
   home: undefined;
+  homeFeed: undefined;
+  homeStaking: undefined;
+  homeSettings: undefined;
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
@@ -56,12 +65,12 @@ export type RootStackParamList = {
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
-    nextScreen: keyof RootStackParamList;
+    nextScreen: 'onboardingSetupPin' | 'restoreStore';
   };
   restoreStore: {
-    mnemonic: string;
-    privateKey: string | false;
     nextScreen: NextScreenWithoutParamsT;
+    mnemonic: string | false;
+    privateKey: string | false;
   };
   register: undefined;
   backup: {
@@ -93,7 +102,7 @@ export type RootStackParamList = {
     mnemonic: string;
   };
   backupNotification: {
-    rootAddress: string;
+    address: string;
   };
   backupWarning: {
     address: string;
@@ -203,6 +212,32 @@ export type RootStackParamList = {
     name: string;
     address: string;
     isCreate?: boolean;
+  };
+  stakingValidators: undefined;
+  stakingInfo: {
+    validator: ValidatorItem;
+  };
+  stakingDelegate: {
+    validator: string;
+  };
+  stakingDelegateAccount: {
+    validator: ValidatorItem;
+  };
+  stakingDelegateForm: {
+    account: string;
+    validator: ValidatorItem;
+  };
+  stakingDelegatePreview: {
+    account: string;
+    amount: number;
+    fee: number;
+    validator: ValidatorItem;
+  };
+  stakingDelegateFinish: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: number;
   };
 };
 
@@ -314,7 +349,7 @@ export enum AppTheme {
   system = 'system',
 }
 
-export type AddWalletParams = {address: string} & (
+export type AddWalletParams = {address: string; publicKey: string} & (
   | {
       type: WalletType.mnemonic;
       mnemonic: string;
@@ -332,3 +367,13 @@ export type AddWalletParams = {address: string} & (
       deviceName: string;
     }
 );
+
+export enum ValidatorStatus {
+  active = I18N.validatorStatusActive,
+  inactive = I18N.validatorStatusInactive,
+  jailed = I18N.validatorStatusJailed,
+}
+
+export type ValidatorItem = Validator & {
+  localStatus: ValidatorStatus;
+};

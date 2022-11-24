@@ -25,7 +25,7 @@ export const SwipeableRow = ({
   }, [item]);
 
   const rActions = useMemo(
-    () => (progress: Animated.AnimatedInterpolation) =>
+    () => (progress: Animated.AnimatedInterpolation<number>) =>
       (
         <View style={[page.container, {width: rightActions.length * 74}]}>
           {rightActions.map((action, i) => (

@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
-import {Text} from './text';
+import {Color} from '@app/colors';
 
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {Text} from './text';
 
 export type DataContentProps = {
   title: React.ReactNode;
@@ -20,10 +20,15 @@ export const DataContent = ({
 }: DataContentProps) => {
   return (
     <View style={[reversed && page.reverse, style]}>
-      <Text t11 style={page.title} ellipsizeMode="tail" numberOfLines={1}>
+      <Text
+        t11
+        style={page.title}
+        color={Color.textBase1}
+        ellipsizeMode="tail"
+        numberOfLines={1}>
         {title}
       </Text>
-      <Text t14 style={page.subtitle}>
+      <Text t14 color={Color.textBase2}>
         {subtitle}
       </Text>
     </View>
@@ -31,14 +36,10 @@ export const DataContent = ({
 };
 const page = StyleSheet.create({
   title: {
-    color: LIGHT_TEXT_BASE_1,
     marginBottom: 2,
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
-  },
-  subtitle: {
-    color: LIGHT_TEXT_BASE_2,
   },
   reverse: {flexDirection: 'column-reverse'},
 });

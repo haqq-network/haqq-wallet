@@ -13,26 +13,25 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {EthNetwork} from '@app/services';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+
 import {captureException} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
-import {EthNetwork} from '../services/eth-network';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {generateUUID} from '../utils';
 import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
 
-type OptionalConfigObjectT = {
-  title: string;
-  imageColor: string;
-  fallbackLabel: string;
-};
-
-const optionalConfigObject: OptionalConfigObjectT = {
+const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
   imageColor: LIGHT_GRAPHIC_GREEN_1,
   fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
-  // unifiedErrors: false,
+};
+
+const isSupportedConfig = {
+  unifiedErrors: false,
 };
 
 enum AppStatus {
@@ -52,11 +51,12 @@ class App extends EventEmitter {
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
   private _lastTheme: AppTheme = AppTheme.light;
+  private _provider: Provider | undefined;
 
   constructor() {
     super();
 
-    TouchID.isSupported(optionalConfigObject)
+    TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {
         this._biometryType =
           Platform.select({
@@ -70,15 +70,16 @@ class App extends EventEmitter {
 
     this.user = this.loadUser();
 
-    const provider = Provider.getProvider(this.user.providerId);
+    this._provider = Provider.getProvider(this.user.providerId);
 
-    if (provider) {
-      EthNetwork.init(provider);
+    if (this._provider) {
+      EthNetwork.init(this._provider);
     }
 
     this.user.on('providerId', providerId => {
       const p = Provider.getProvider(providerId);
       if (p) {
+        this._provider = p;
         EthNetwork.init(p);
       }
     });
@@ -130,7 +131,7 @@ class App extends EventEmitter {
       });
     }
 
-    return new User(users[0]);
+    return new User(users[0] as UserType & Realm.Object<UserType>);
   }
 
   async clean() {
@@ -158,6 +159,10 @@ class App extends EventEmitter {
     }
 
     return Promise.reject();
+  }
+
+  get provider() {
+    return this._provider;
   }
 
   get biometryType() {
@@ -202,6 +207,7 @@ class App extends EventEmitter {
     if (this.biometry) {
       try {
         await this.biometryAuth();
+        vibrate(HapticEffects.success);
         this.authenticated = true;
       } catch (error) {
         console.log(error);

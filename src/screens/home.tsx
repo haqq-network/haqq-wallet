@@ -1,12 +1,18 @@
 import React from 'react';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HeaderTitleProps} from '@react-navigation/elements';
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
+import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
-import {Icon, Text} from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
+import {HomeStakingScreen} from '@app/screens/home-staking';
+import {RootStackParamList} from '@app/types';
 import {IS_IOS} from '@app/variables';
 
 import {HomeFeedScreen} from './home-feed';
@@ -14,12 +20,12 @@ import {HomeSettingsScreen} from './home-settings';
 
 const Tab = createBottomTabNavigator();
 
-interface HeaderTitleT extends HeaderTitleProps {
-  headerTitle?: string;
-}
-
-const screenOptions = {
-  headerTitle: ({headerTitle}: HeaderTitleT) => <Text t8>{headerTitle}</Text>,
+const screenOptions = ({
+  route,
+}: {
+  route: RouteProp<RootStackParamList>;
+  navigation: any;
+}): BottomTabNavigationOptions => ({
   headerShadowVisible: false,
   headerStyle: {
     backgroundColor: Color.transparent,
@@ -36,42 +42,32 @@ const screenOptions = {
     marginTop: IS_IOS ? 5 : 8,
     height: IS_IOS ? 50 : 40,
   },
-};
+  headerTitle: () => <HomeScreenTitle route={route} />,
+  tabBarIcon: ({focused}) => (
+    <HomeScreenTabBarIcon focused={focused} route={route} />
+  ),
+});
 
 export const HomeScreen = () => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
-        name="home-feed"
+        name="homeFeed"
         component={HomeFeedScreen}
         options={{
           title: getText(I18N.homeWallet),
-          headerTitle: () => <Text t8>{getText(I18N.homeWalletTitle)}</Text>,
-          headerRight: () => <QrScannerButton />,
-          tabBarIcon: ({focused}) => (
-            <Icon
-              s
-              name="wallet"
-              color={getColor(
-                focused ? Color.graphicGreen1 : Color.graphicBase2,
-              )}
-            />
-          ),
-        }}
-      />
-      {/* <Tab.Screen
-        name="home-market"
-        component={HomeMarketScreen}
-        options={{
-          title: 'Market',
-          headerTitle: 'Market screen',
-          tabBarIcon: ({focused}) => (
-            <MarketIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
-          ),
+          headerRight: QrScannerButton,
         }}
       />
       <Tab.Screen
-        name="home-swap"
+        name="homeStaking"
+        component={HomeStakingScreen}
+        options={{
+          title: getText(I18N.homeStaking),
+        }}
+      />
+      {/* <Tab.Screen
+        name="homeSwap"
         component={HomeSwapScreen}
         options={{
           title: 'Swap',
@@ -82,20 +78,10 @@ export const HomeScreen = () => {
         }}
       /> */}
       <Tab.Screen
-        name="home-settings"
+        name="homeSettings"
         component={HomeSettingsScreen}
         options={{
           title: getText(I18N.homeSettings),
-          headerTitle: () => <Text t8>{getText(I18N.homeSettingsTitle)}</Text>,
-          tabBarIcon: ({focused}) => (
-            <Icon
-              s
-              name="settings"
-              color={getColor(
-                focused ? Color.graphicGreen1 : Color.graphicBase2,
-              )}
-            />
-          ),
         }}
       />
     </Tab.Navigator>

@@ -4,11 +4,16 @@ import {IS_DEVELOPMENT} from '@env';
 import {ScrollView} from 'react-native';
 
 import {createTheme} from '@app/helpers';
+import {useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
 
 export const HomeSettings = () => {
+  const {theme} = useUser();
+  const capitalizedTheme = capitalize(theme);
+
   return (
     <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
@@ -23,15 +28,16 @@ export const HomeSettings = () => {
         next="settingsAddressBook"
       />
 
-      {/*<SettingsButton*/}
-      {/*  icon={<LanguageSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title={getText(I18N.homeSettingsLanguage)}*/}
-      {/*  onPress={onClickButton}*/}
-      {/*  next="settingsLanguage"*/}
-      {/*/>*/}
+      {/* <SettingsButton
+        icon="language"
+        rightTitle="EN"
+        title={getText(I18N.homeSettingsLanguage)}
+        next="settingsLanguage"
+      /> */}
 
       {IS_DEVELOPMENT === '1' && (
         <SettingsButton
+          rightTitle={capitalizedTheme}
           icon="brush"
           title={getText(I18N.homeSettingsAppearance)}
           next="settingsTheme"
@@ -65,11 +71,14 @@ export const HomeSettings = () => {
         style={page.button}
       />
 
-      {/*<SettingsButton*/}
-      {/*  icon={<ISLMSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title={getText(I18N.homeSettingsTest)}"*/}
-      {/*  next="settingsTest"*/}
-      {/*/>*/}
+      {IS_DEVELOPMENT === '1' && (
+        <SettingsButton
+          icon="settings"
+          title={getText(I18N.homeSettingsTest)}
+          next="settingsTest"
+          style={page.button}
+        />
+      )}
     </ScrollView>
   );
 };

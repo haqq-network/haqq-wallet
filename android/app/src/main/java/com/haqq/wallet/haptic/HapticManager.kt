@@ -23,6 +23,7 @@ class HapticManager(reactContext: ReactApplicationContext) :
     this.vibrateMap["success"] = longArrayOf(0, 40, 60, 20);
     this.vibrateMap["warning"] = longArrayOf(0, 20, 60, 40);
     this.vibrateMap["error"] = longArrayOf(0, 20, 40, 30, 40, 40);
+    this.vibrateMap["impactLight"] = longArrayOf(0, 20);
   }
 
   @ReactMethod

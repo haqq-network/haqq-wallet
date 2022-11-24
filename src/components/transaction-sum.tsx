@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
 import {
   Dimensions,
   StyleSheet,
@@ -8,14 +9,15 @@ import {
   View,
 } from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {useContacts} from '@app/hooks';
 import {EthNetwork} from '@app/services/eth-network';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {cleanNumber, isNumber, shortAddress} from '@app/utils';
 import {
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
 } from '@app/variables';
 
 import {
@@ -43,10 +45,11 @@ export const TransactionSum = ({
 }: TransactionSumProps) => {
   const contacts = useContacts();
   const [amount, setAmount] = useState('');
-  const [amountUsd, setAmountUsd] = useState('0');
+  // const [amountUsd, setAmountUsd] = useState('0');
   const [balance, setBalance] = useState(0);
   const [error, setError] = useState('');
   const [maxSum, setMaxSum] = useState(0);
+  const inputSumRef = useRef<TextInput>(null);
 
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
@@ -63,13 +66,19 @@ export const TransactionSum = ({
     setMaxSum(newBalance - fee * 2);
   }, [from, to]);
 
+  useFocusEffect(
+    useCallback(() => {
+      setTimeout(() => inputSumRef.current?.focus(), 500);
+    }, []),
+  );
+
   useEffect(() => {
     getBalance();
   }, [getBalance]);
 
-  useEffect(() => {
-    setAmountUsd(amount === '' ? '0' : amount);
-  }, [amount]);
+  // useEffect(() => {
+  //   setAmountUsd(amount === '' ? '0' : amount);
+  // }, [amount]);
 
   const checked = useMemo(
     () =>
@@ -85,6 +94,7 @@ export const TransactionSum = ({
   }, [amount, onAmount]);
 
   const onPressMax = useCallback(() => {
+    vibrate(HapticEffects.impactLight);
     setAmount(maxSum.toFixed(8));
   }, [maxSum]);
 
@@ -109,11 +119,11 @@ export const TransactionSum = ({
   // const onPressSwap = () => {};
 
   return (
-    <KeyboardSafeArea style={page.container}>
+    <KeyboardSafeArea isNumeric style={page.container}>
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock label="Send to" style={page.label}>
           <Text
-            style={{color: LIGHT_TEXT_BASE_1}}
+            color={LIGHT_TEXT_BASE_1}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -136,7 +146,7 @@ export const TransactionSum = ({
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={LIGHT_TEXT_BASE_2}
-          autoFocus
+          ref={inputSumRef}
           textAlign="left"
         />
         <View style={page.max}>
@@ -150,17 +160,17 @@ export const TransactionSum = ({
           )}
         </View>
       </View>
-      <View style={page.amount}>
-        <Text t15>$ {amountUsd}</Text>
-      </View>
+      {/*<View style={page.amount}>*/}
+      {/*  <Text t15>$ {amountUsd}</Text>*/}
+      {/*</View>*/}
       {error ? (
-        <Text clean style={[page.help, page.error]}>
+        <Text center color={getColor(Color.textRed1)} t14>
           {error}
         </Text>
       ) : (
-        <Text clean style={[page.help, page.available]}>
+        <Text center color={getColor(Color.textBase2)} t14>
           Available:{' '}
-          <Text clean style={{color: LIGHT_TEXT_GREEN_1}}>
+          <Text clean color={LIGHT_TEXT_GREEN_1}>
             {cleanNumber(balance.toFixed(8))} ISLM
           </Text>
         </Text>
@@ -179,7 +189,9 @@ export const TransactionSum = ({
 
 const page = StyleSheet.create({
   container: {justifyContent: 'space-between', paddingHorizontal: 20},
-  label: {marginBottom: 50},
+  label: {
+    marginBottom: 50,
+  },
   input: {
     alignSelf: 'center',
     fontWeight: '700',
@@ -214,23 +226,11 @@ const page = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  amount: {
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  available: {
-    color: LIGHT_TEXT_BASE_2,
-  },
-  error: {
-    color: LIGHT_TEXT_RED_1,
-  },
-  help: {
-    fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'center',
-  },
+  // amount: {
+  //   marginBottom: 10,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   submit: {
     marginVertical: 16,
   },
