@@ -29,8 +29,6 @@ export const BackupVerifyScreen = () => {
         vibrate(HapticEffects.error);
         setError(Math.random);
       }
-
-      navigation.navigate('backupFinish');
     },
     [navigation, mnemonic, rootAddress, wallets],
   );
