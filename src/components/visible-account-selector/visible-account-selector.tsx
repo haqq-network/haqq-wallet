@@ -16,7 +16,7 @@ export const VisibleAccountSelector = ({
   onPress,
 }: VisibleAccountSelectorProps) => {
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer plain style={styles.container}>
       <FlatList
         data={wallets}
         renderItem={({item}) => <WalletRow item={item} onPress={onPress} />}
