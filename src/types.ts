@@ -404,4 +404,7 @@ export enum ValidatorStatus {
 
 export type ValidatorItem = Validator & {
   localStatus: ValidatorStatus;
+  localDelegations?: number;
+  localRewards?: number;
+  localUnDelegations?: number;
 };
