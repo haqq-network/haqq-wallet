@@ -7,22 +7,31 @@ import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
+import {Icon, IconProps} from './icon';
 import {Text} from './text';
 
-export type ButtonValue = {title: string} | {i18n: I18N};
+export type ButtonValue =
+  | {title: string; i18n?: undefined}
+  | {i18n: I18N; title?: undefined};
+
+export type ButtonRightIconProps =
+  | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
+  | {iconRight?: undefined; iconRightColor?: undefined};
+
+export type ButtonLeftIconProps =
+  | {iconLeft: IconProps['name']; iconLeftColor: IconProps['color']}
+  | {iconLeft?: undefined; iconLeftColor?: undefined};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  title?: string;
-  i18n?: I18N;
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
-  iconRight?: React.ReactNode;
-  iconLeft?: React.ReactNode;
   loading?: boolean;
   textColor?: string;
-} & ButtonValue;
+} & ButtonValue &
+  ButtonRightIconProps &
+  ButtonLeftIconProps;
 
 export enum ButtonVariant {
   text = 'text',
@@ -47,7 +56,9 @@ export const Button = ({
   disabled,
   onPress,
   iconRight,
+  iconRightColor,
   iconLeft,
+  iconLeftColor,
   textColor,
   loading = false,
   ...props
@@ -92,16 +103,23 @@ export const Button = ({
       {loading ? (
         <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
       ) : (
-        <Text
-          t9={size !== ButtonSize.small}
-          t12={size === ButtonSize.small}
-          style={textStyle}
-          color={textColor}
-          i18n={i18n}>
-          {title}
-        </Text>
+        <>
+          {iconLeft && (
+            <Icon name={iconLeft} color={iconLeftColor} style={page.icon} />
+          )}
+          <Text
+            t9={size !== ButtonSize.small}
+            t12={size === ButtonSize.small}
+            style={textStyle}
+            color={textColor}
+            i18n={i18n}>
+            {title}
+          </Text>
+          {iconRight && (
+            <Icon name={iconRight} color={iconRightColor} style={page.icon} />
+          )}
+        </>
       )}
-      {iconRight}
     </TouchableOpacity>
   );
 };
@@ -175,5 +193,9 @@ const page = createTheme({
   // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledText: {
     color: Color.textSecond1,
+  },
+  icon: {
+    width: 22,
+    height: 22,
   },
 });

@@ -19,6 +19,7 @@ export enum IconsName {
   shield = 'shield',
   wallet = 'wallet',
   staking = 'staking',
+  ledger = 'ledger',
 }
 
 export type IconSize =
