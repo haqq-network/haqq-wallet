@@ -75,6 +75,12 @@ export enum I18N {
   modalPinForgotCode,
   pinManyAttempts,
   stakingValidators,
+  stakingValidatorsRowPower,
+  stakingValidatorsRowStaked,
+  stakingValidatorsRowReward,
+  stakingValidatorsRowWithdrawal,
+  stakingValidatorsStaked,
+  stakingValidatorsUnStaked,
   stakingInfo,
   stakingInfoAddress,
   stakingInfoDetail,
@@ -140,10 +146,13 @@ export enum I18N {
   welcomeRestoreWallet,
 }
 
-export function getText(key: I18N, ...args: string[]): string {
+export function getText(key: I18N, params?: Record<string, string>): string {
   let str = en[key];
-  if (args.length) {
-    return str.replace('{0}', args[0]);
+  if (params) {
+    return Object.entries(params).reduce(
+      (memo, [k, v]) => memo.replace(`{{${k}}}`, v),
+      str,
+    );
   }
   return str;
 }
@@ -232,7 +241,7 @@ const en: Record<I18N, string> = {
     'If you lose access to your wallet, we will not be able to restore your wallet if you do not make a backup',
   [I18N.modalPinTitle]: 'Welcome to ISLM Wallet',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
-  [I18N.pinManyAttempts]: 'Too many attempts, please wait for {0}',
+  [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
   [I18N.homeWallet]: 'Wallet',
   [I18N.homeWalletTitle]: 'Your wallets',
   [I18N.homeSettings]: 'Settings',
@@ -240,6 +249,12 @@ const en: Record<I18N, string> = {
   [I18N.homeStaking]: 'Staking',
   [I18N.homeStakingTitle]: 'Staking',
   [I18N.stakingValidators]: 'Validators list',
+  [I18N.stakingValidatorsRowPower]: 'Power: {{power}}',
+  [I18N.stakingValidatorsRowStaked]: 'Staked: {{staked}}',
+  [I18N.stakingValidatorsRowReward]: 'Reward: {{reward}}',
+  [I18N.stakingValidatorsRowWithdrawal]: 'Withdrawal in process',
+  [I18N.stakingValidatorsStaked]: 'Staked',
+  [I18N.stakingValidatorsUnStaked]: 'Unstaked',
   [I18N.stakingInfo]: 'Validator info',
   [I18N.stakingInfoAddress]: 'Address',
   [I18N.stakingInfoDetail]: 'Detail',
