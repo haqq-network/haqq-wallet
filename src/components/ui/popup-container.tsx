@@ -9,16 +9,17 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-interface PopupContainerProps {
-  (props: {plain: true} & ViewProps): JSX.Element;
-  (props: ScrollViewProps): JSX.Element;
-}
+type PopupContainerViewProps = {plain: true} & ViewProps;
+type PopupContainerScrollProps = {plain?: undefined} & ScrollViewProps;
+export type PopupContainerProps =
+  | PopupContainerViewProps
+  | PopupContainerScrollProps;
 
-export const PopupContainer: PopupContainerProps = ({
+export const PopupContainer = ({
   children,
   style,
   ...props
-}) => {
+}: PopupContainerProps) => {
   const insets = useSafeAreaInsets();
 
   const propStyle = StyleSheet.compose(
