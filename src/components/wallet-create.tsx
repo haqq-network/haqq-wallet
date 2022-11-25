@@ -7,7 +7,7 @@ import {Dimensions, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
-import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
+import {Button, ButtonSize, ButtonVariant, Inline, Spacer, Text} from './ui';
 
 import {RootStackParamList} from '../types';
 import {
@@ -40,12 +40,11 @@ export const WalletCreate = ({}: BalanceProps) => {
         }}
         style={page.create}
       />
-      <View style={page.buttons}>
+      <Inline gap={0}>
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
           title="Connect"
-          style={page.createSmall}
           iconRight="ledger"
           iconRightColor={Color.graphicGreen1}
           onPress={() => {
@@ -55,12 +54,11 @@ export const WalletCreate = ({}: BalanceProps) => {
         <Button
           size={ButtonSize.middle}
           title="Import"
-          style={page.createSmall}
           onPress={() => {
             navigation.navigate('restore');
           }}
         />
-      </View>
+      </Inline>
     </View>
   );
 };
@@ -99,15 +97,5 @@ const page = createTheme({
     paddingVertical: 12,
     lineHeight: 22,
     marginBottom: 8,
-  },
-  createSmall: {
-    flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-    lineHeight: 22,
-  },
-  buttons: {
-    alignSelf: 'center',
-    flexDirection: 'row',
   },
 });
