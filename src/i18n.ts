@@ -148,6 +148,11 @@ export enum I18N {
   popupNotificationDescription,
   popupNotificationTurnOn,
   popupNotificationNotNow,
+  welcomeTitle,
+  welcomeDescription,
+  welcomeCreateWallet,
+  welcomeLedgerWallet,
+  welcomeRestoreWallet,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -331,4 +336,10 @@ const en: Record<I18N, string> = {
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your wallet',
   [I18N.popupNotificationTurnOn]: 'Turn on notifications',
   [I18N.popupNotificationNotNow]: 'Not now',
+  [I18N.welcomeTitle]: 'No wallet is connected',
+  [I18N.welcomeDescription]:
+    'You can create a new wallet or connect any existing\u00A0one',
+  [I18N.welcomeCreateWallet]: 'Create Wallet',
+  [I18N.welcomeLedgerWallet]: 'Connect',
+  [I18N.welcomeRestoreWallet]: 'I already have a wallet',
 };
