@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {View, ViewProps} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
 import {Text} from './text';
@@ -30,8 +30,9 @@ export const LabeledBlock = ({
     () => [
       page.container,
       {
-        backgroundColor:
+        backgroundColor: getColor(
           variant === LabelBlockVariant.error ? Color.bg7 : Color.bg8,
+        ),
       },
       style,
     ],
