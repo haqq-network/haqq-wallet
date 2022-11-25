@@ -4,28 +4,34 @@ import {useCallback, useMemo} from 'react';
 import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {Icon, IconProps} from '@app/components/ui/icon';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
+import {Icon, IconProps} from './icon';
 import {Text} from './text';
 
-export type ButtonValue = {title: string} | {i18n: I18N};
+export type ButtonValue =
+  | {title: string; i18n?: undefined}
+  | {i18n: I18N; title?: undefined};
+
+export type ButtonRightIconProps =
+  | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
+  | {iconRight?: undefined; iconRightColor?: undefined};
+
+export type ButtonLeftIconProps =
+  | {iconLeft: IconProps['name']; iconLeftColor: IconProps['color']}
+  | {iconLeft?: undefined; iconLeftColor?: undefined};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  title?: string;
-  i18n?: I18N;
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
-  iconRight?: IconProps['name'];
-  iconRightColor?: IconProps['color'];
-  iconLeft?: IconProps['name'];
-  iconLeftColor?: IconProps['color'];
   loading?: boolean;
   textColor?: string;
-} & ButtonValue;
+} & ButtonValue &
+  ButtonRightIconProps &
+  ButtonLeftIconProps;
 
 export enum ButtonVariant {
   text = 'text',
@@ -99,11 +105,7 @@ export const Button = ({
       ) : (
         <>
           {iconLeft && (
-            <Icon
-              name={iconLeft}
-              color={iconLeftColor ?? textColor}
-              style={page.icon}
-            />
+            <Icon name={iconLeft} color={iconLeftColor} style={page.icon} />
           )}
           <Text
             t9={size !== ButtonSize.small}
@@ -114,11 +116,7 @@ export const Button = ({
             {title}
           </Text>
           {iconRight && (
-            <Icon
-              name={iconRight}
-              color={iconRightColor ?? textColor}
-              style={page.icon}
-            />
+            <Icon name={iconRight} color={iconRightColor} style={page.icon} />
           )}
         </>
       )}

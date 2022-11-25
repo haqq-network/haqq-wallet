@@ -301,7 +301,8 @@ const en: Record<I18N, string> = {
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.welcomeTitle]: 'No wallet is connected',
-  [I18N.welcomeDescription]: `You can create a new wallet or connect any existing${'\u00A0'}one`,
+  [I18N.welcomeDescription]:
+    'You can create a new wallet or connect any existing\u00A0one',
   [I18N.welcomeCreateWallet]: 'Create Wallet',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
