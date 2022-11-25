@@ -71,6 +71,7 @@ export enum I18N {
   homeSettingsTitle,
   homeStaking,
   homeStakingTitle,
+  homeStakingEmpty,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -234,6 +235,8 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeStaking]: 'Staking',
   [I18N.homeStakingTitle]: 'Staking',
+  [I18N.homeStakingEmpty]:
+    'Stake your ISLM in any validator and get additional ISLM',
   [I18N.stakingValidators]: 'Validators list',
   [I18N.stakingInfo]: 'Validator info',
   [I18N.stakingInfoAddress]: 'Address',
