@@ -146,4 +146,8 @@ export class StakingMetadata extends Realm.Object {
       `validator = '${address}' and type = '${StakingMetadataType.undelegation}'`,
     );
   }
+
+  static getAll() {
+    return realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+  }
 }
