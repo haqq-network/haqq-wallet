@@ -48,7 +48,7 @@ export const Pin = forwardRef(
               '0',
             )}:${String(interval % 60).padStart(2, '0')}`;
 
-            setError(getText(I18N.pinManyAttempts, left));
+            setError(getText(I18N.pinManyAttempts, {attempts: left}));
           } else {
             clearInterval(timer);
             setLocked(null);
