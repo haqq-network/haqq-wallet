@@ -6,10 +6,9 @@ import {Image, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
+import {Button, ButtonVariant, Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
-
-import {Button, ButtonVariant, Text} from '../components/ui';
-import {RootStackParamList} from '../types';
+import {RootStackParamList} from '@app/types';
 
 export const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

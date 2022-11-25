@@ -2,7 +2,7 @@ import React from 'react';
 
 import {NavigationProp} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions, Image, View} from 'react-native';
+import {Dimensions, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -12,7 +12,6 @@ import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
 import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_1,
-  LIGHT_GRAPHIC_GREEN_1,
   LIGHT_GRAPHIC_SECOND_1,
   LIGHT_TEXT_GREEN_1,
   MAGIC_CARD_HEIGHT,
@@ -47,7 +46,8 @@ export const WalletCreate = ({}: BalanceProps) => {
           size={ButtonSize.middle}
           title="Connect"
           style={page.createSmall}
-          iconRight={<Image source={{uri: 'ledger'}} style={page.ledgerIcon} />}
+          iconRight="ledger"
+          iconRightColor={Color.graphicGreen1}
           onPress={() => {
             navigation.navigate('ledger');
           }}
@@ -110,5 +110,4 @@ const page = createTheme({
     alignSelf: 'center',
     flexDirection: 'row',
   },
-  ledgerIcon: {width: 22, height: 22, tintColor: LIGHT_GRAPHIC_GREEN_1},
 });
