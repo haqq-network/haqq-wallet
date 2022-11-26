@@ -21,8 +21,8 @@ export const HomeStaking = ({
   onPressValidators,
   onPressGetRewards,
 }: StakingHomeProps) => {
-  const [hasStaking] = useState(true);
-  const [canGetRewards] = useState(true);
+  const [hasStaking, setHasStaking] = useState(false);
+  const [rewardsSum, setRewardsSum] = useState(0);
 
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const {visible} = useWalletsList();
@@ -34,14 +34,35 @@ export const HomeStaking = ({
 
   useEffect(() => {
     const addressList = visible.map(w => w.cosmosAddress);
-    cosmos.sync(addressList).then(validatorsList => {
-      console.log('🚀 - validatorsList', validatorsList);
+
+    addressList.forEach((address, id) => {
+      if (id === 0) {
+        setRewardsSum(0);
+      }
+      cosmos.getAccountRewardsInfo(address).then(res => {
+        const rewards = res.rewards.map(r => r.reward);
+
+        if (rewards.length > 0) {
+          setHasStaking(true);
+          const totalRewards = rewards.reduce(
+            (a, prev) => a + Number(prev[0].amount),
+            0,
+          );
+          setRewardsSum(pr => pr + totalRewards);
+        } else {
+          setHasStaking(false);
+        }
+      });
     });
   }, [cosmos, visible]);
 
+  const canGetRewards = rewardsSum > 0;
+
   const handleGetRewards = () => {
-    canGetRewards && onPressGetRewards?.();
-    stakingActiveRef.current?.getReward();
+    if (canGetRewards) {
+      onPressGetRewards?.();
+      stakingActiveRef.current?.getReward();
+    }
   };
 
   return (
@@ -50,7 +71,8 @@ export const HomeStaking = ({
         <StakingActive
           ref={stakingActiveRef}
           stakedSum={21}
-          rewardSum={40}
+          rewardSum={rewardsSum}
+          unboundedSum={0}
           availableSum={availableSum}
         />
       ) : (

@@ -19,6 +19,7 @@ interface StakingActiveProps {
   availableSum: number;
   rewardSum: number;
   stakedSum: number;
+  unboundedSum: number;
 }
 
 export interface StakingActiveInterface {
@@ -26,7 +27,10 @@ export interface StakingActiveInterface {
 }
 
 export const StakingActive = forwardRef(
-  ({availableSum, rewardSum, stakedSum}: StakingActiveProps, ref) => {
+  (
+    {availableSum, rewardSum, stakedSum, unboundedSum}: StakingActiveProps,
+    ref,
+  ) => {
     const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
     const lottieRef = useRef<AnimatedLottieView>(null);
     const isEndRef = useRef<Boolean>(false);
@@ -76,7 +80,7 @@ export const StakingActive = forwardRef(
         <Spacer height={20} />
         <Text t8 center i18n={I18N.rewards} />
         <Text t3 center color={Color.textGreen1}>
-          {(32).toFixed(4)} ISLM
+          {rewardSum.toFixed(4)} ISLM
         </Text>
         <Spacer height={28} />
         <View style={styles.blockContainer}>
@@ -114,7 +118,7 @@ export const StakingActive = forwardRef(
             <TextSum
               color={Color.textBase1}
               center
-              sum={rewardSum.toFixed(2)}
+              sum={unboundedSum.toFixed(2)}
             />
           </View>
         </View>
