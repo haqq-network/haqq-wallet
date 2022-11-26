@@ -1,58 +1,128 @@
-import React from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
+import Lottie from 'lottie-react-native';
+import type AnimatedLottieView from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextSum} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-export const StakingActive = () => {
-  return (
-    <>
-      <Spacer height={23} />
-      <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
-      <Spacer height={36} />
-      <View style={styles.circleIconContainer}>
-        <Icon color={Color.graphicSecond2} i32 name="logo" />
-      </View>
-      <Spacer height={20} />
-      <Text t8 center i18n={I18N.rewards} />
-      <Text t3 center color={Color.textGreen1}>
-        {(32).toFixed(2)} ISLM
-      </Text>
-      <Spacer height={28} />
-      <View style={styles.blockContainer}>
-        <View style={styles.infoBlock}>
-          <Text t15 center color={Color.textBase2} i18n={I18N.staked} />
-          <Spacer height={2} />
-          <Text t13 center color={Color.textGreen1}>
-            {(32).toFixed(2)} ISLM
-          </Text>
+interface StakingActiveProps {
+  availableSum: number;
+  rewardSum: number;
+  stakedSum: number;
+}
+
+export interface StakingActiveInterface {
+  getReward: () => void;
+}
+
+export const StakingActive = forwardRef(
+  ({availableSum, rewardSum, stakedSum}: StakingActiveProps, ref) => {
+    const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
+    const lottieRef = useRef<AnimatedLottieView>(null);
+    const isEndRef = useRef<Boolean>(false);
+
+    const animationFile = useMemo(() => {
+      switch (true) {
+        case isReceiveAnimation:
+          return require('../../../assets/animations/get-reward-light.json');
+        case stakedSum > 100:
+          return require('../../../assets/animations/stake-light-100.json');
+        case stakedSum > 20:
+          return require('../../../assets/animations/stake-light-20-100.json');
+        default:
+          return require('../../../assets/animations/stake-light-0-20.json');
+      }
+    }, [stakedSum, isReceiveAnimation]);
+
+    useImperativeHandle(ref, () => ({
+      getReward() {
+        isEndRef.current = false;
+        setIsReceiveAnimation(true);
+      },
+    }));
+
+    const onAnimationFinish = (isCancelled: boolean) => {
+      if (!isCancelled) {
+        lottieRef.current?.play();
+        if (isReceiveAnimation) {
+          setIsReceiveAnimation(false);
+        }
+      }
+    };
+
+    return (
+      <>
+        <Spacer height={23} />
+        <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
+        <Spacer height={36} />
+        <Lottie
+          source={animationFile}
+          autoPlay
+          onAnimationFinish={onAnimationFinish}
+          loop={false}
+          ref={lottieRef}
+          style={styles.circleIconContainer}
+        />
+        <Spacer height={20} />
+        <Text t8 center i18n={I18N.rewards} />
+        <Text t3 center color={Color.textGreen1}>
+          {(32).toFixed(4)} ISLM
+        </Text>
+        <Spacer height={28} />
+        <View style={styles.blockContainer}>
+          <View style={styles.infoBlock}>
+            <Text t15 center color={Color.textBase2} i18n={I18N.staked} />
+            <Spacer height={2} />
+            <TextSum center sum={stakedSum.toFixed(2)} />
+          </View>
         </View>
-      </View>
-      <Spacer height={12} />
-      <View style={styles.blockContainer}>
-        <View style={styles.infoBlock}>
-          <Text t15 center color={Color.textBase2} i18n={I18N.staked} />
-          <Spacer height={2} />
-          <Text t13 center color={Color.textGreen1}>
-            {(32).toFixed(2)} ISLM
-          </Text>
+        <Spacer height={12} />
+        <View style={styles.blockContainer}>
+          <View style={styles.infoBlock}>
+            <Text
+              t15
+              center
+              color={Color.textBase2}
+              i18n={I18N.sumBlockAvailable}
+            />
+            <Spacer height={2} />
+            <TextSum
+              color={Color.textBase1}
+              center
+              sum={availableSum.toFixed(0)}
+            />
+          </View>
+          <Spacer width={12} />
+          <View style={styles.infoBlock}>
+            <Text
+              t15
+              center
+              color={Color.textBase2}
+              i18n={I18N.homeStakingUnbounded}
+            />
+            <Spacer height={2} />
+            <TextSum
+              color={Color.textBase1}
+              center
+              sum={rewardSum.toFixed(2)}
+            />
+          </View>
         </View>
-        <Spacer width={12} />
-        <View style={styles.infoBlock}>
-          <Text t15 center color={Color.textBase2} i18n={I18N.staked} />
-          <Spacer height={2} />
-          <Text t13 center color={Color.textGreen1}>
-            {(32).toFixed(2)} ISLM
-          </Text>
-        </View>
-      </View>
-      <Spacer />
-    </>
-  );
-};
+        <Spacer />
+      </>
+    );
+  },
+);
 
 const styles = createTheme({
   circleIconContainer: {

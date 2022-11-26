@@ -1,20 +1,17 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
-export const StakingEmpty = () => {
-  const wallets = useWallets();
+interface StakingEmptyProps {
+  availableSum: number;
+}
 
-  const availableSum = useMemo(() => {
-    return wallets.getWallets().reduce((acc, w) => acc + w.balance, 0);
-  }, [wallets]);
-
+export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
   return (
     <>
       <Spacer />

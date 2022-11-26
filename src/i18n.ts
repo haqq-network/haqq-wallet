@@ -72,8 +72,8 @@ export enum I18N {
   homeSettings,
   homeSettingsTitle,
   homeStaking,
-  homeStakingTitle,
   homeStakingEmpty,
+  homeStakingUnbounded,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -138,10 +138,13 @@ export enum I18N {
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
 
-  stakingHomeButton,
+  stakingHomeValidators,
+  stakingHomeGetRewards,
 
   sumBlockMax,
   sumBlockAvailable,
+
+  notificationRewardReceived,
   welcomeTitle,
   welcomeDescription,
   welcomeCreateWallet,
@@ -252,9 +255,9 @@ const en: Record<I18N, string> = {
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeStaking]: 'Staking',
-  [I18N.homeStakingTitle]: 'Staking',
   [I18N.homeStakingEmpty]:
     'Stake your ISLM in any validator and get additional ISLM',
+  [I18N.homeStakingUnbounded]: 'Unbounded',
   [I18N.stakingValidators]: 'Validators list',
   [I18N.stakingValidatorsRowPower]: 'Power: {{power}}',
   [I18N.stakingValidatorsRowStaked]: 'Staked: {{staked}}',
@@ -317,11 +320,13 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
 
-  [I18N.stakingHomeButton]: 'Validators',
+  [I18N.stakingHomeValidators]: 'Validators',
+  [I18N.stakingHomeGetRewards]: 'Get rewards',
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
+  [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No wallet is connected',
   [I18N.welcomeDescription]:
     'You can create a new wallet or connect any existing\u00A0one',
