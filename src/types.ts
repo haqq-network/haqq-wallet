@@ -269,6 +269,8 @@ export type RootStackParamList = {
     amount: number;
     fee: number;
   };
+  notificationPopup: undefined;
+  trackActivity: undefined;
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';

@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "Brush.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Brush@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Brush@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "Brush.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

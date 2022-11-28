@@ -3,8 +3,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-
-import {Text} from '../ui';
+import {Text} from '@app/components/ui';
 
 export type MnemonicWordProps = {
   word: string;

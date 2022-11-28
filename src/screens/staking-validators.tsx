@@ -93,7 +93,7 @@ export const StakingValidatorsScreen = () => {
         ].flat(),
       );
     });
-  }, [cosmos, wallets.visible]);
+  }, [cosmos, wallets]);
   return (
     <StakingValidators
       stakedValidators={stakedValidators}

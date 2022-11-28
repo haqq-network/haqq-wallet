@@ -57,12 +57,14 @@ import {sleep} from '@app/utils';
 import {StatusBarColor} from './components/ui';
 import {migration} from './models/migration';
 import {BackupScreen} from './screens/backup';
-import {BackupNotificationScreen} from './screens/backup-notification';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {BackupNotificationScreen} from './screens/popup-backup-notification';
+import {NotificationPopupScreen} from './screens/popup-notification';
+import {TrackActivityScreen} from './screens/popup-track-activity';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -239,6 +241,16 @@ export const App = () => {
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="notificationPopup"
+                  component={NotificationPopupScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="trackActivity"
+                  component={TrackActivityScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen
