@@ -75,6 +75,7 @@ import {SettingsAddressBookScreen} from './screens/settings-address-book';
 import {SettingsContactEditScreen} from './screens/settings-contact-edit';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
@@ -311,7 +312,7 @@ export const App = () => {
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={{
-                      title: 'Providers',
+                      headerShown: false,
                     }}
                   />
                   <Stack.Screen
@@ -352,6 +353,14 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsContactEdit"
                     component={SettingsContactEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="settingsProviderForm"
+                    component={SettingsProviderEditScreen}
                     options={{
                       headerShown: false,
                     }}

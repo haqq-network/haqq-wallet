@@ -25,7 +25,7 @@ export const SettingsProvidersRow = ({
         <DataContent
           style={styles.info}
           title={item.name}
-          subtitle={`${item.name} (${item.chainId})`}
+          subtitle={`${item.name} (${item.ethChainId})`}
         />
         {providerId === item.id && (
           <CheckIcon color={LIGHT_GRAPHIC_GREEN_1} style={styles.icon} />

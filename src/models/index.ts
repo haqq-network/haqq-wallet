@@ -19,7 +19,7 @@ export const realm = new Realm({
     Provider,
     StakingMetadata,
   ],
-  schemaVersion: 29,
+  schemaVersion: 30,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -150,6 +150,18 @@ export const realm = new Realm({
           newObject.cosmosRestEndpoint = provider.cosmosRestEndpoint;
           newObject.tmRpcEndpoint = provider.tmRpcEndpoint;
         }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 30) {
+      const oldObjects = oldRealm.objects<{id: string}>('Provider');
+      const newObjects = newRealm.objects<{
+        isEditable: boolean;
+      }>('Provider');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.isEditable = false;
       }
     }
   },
