@@ -11,7 +11,6 @@ export const NotificationPopupScreen = () => {
 
   const onClickTurnOn = useCallback(() => {
     goBack();
-    console.log('onClickTurnOn');
   }, [goBack]);
 
   return (

@@ -11,7 +11,6 @@ export const TrackActivityScreen = () => {
 
   const onClickContinue = useCallback(() => {
     goBack();
-    console.log('onClickContinue');
   }, [goBack]);
 
   return (
