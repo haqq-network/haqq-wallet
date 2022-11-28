@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "Shield.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Shield@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Shield@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "Shield.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

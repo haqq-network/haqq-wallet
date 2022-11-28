@@ -5,11 +5,11 @@ import {Alert} from 'react-native';
 
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
-import {CustomHeader, Icon} from '@app/components/ui';
+import {CustomHeader} from '@app/components/ui';
 import {useContacts, useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {RootStackParamList} from '@app/types';
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
+import {LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
@@ -81,17 +81,13 @@ export const SettingsContactEditScreen = () => {
       <CustomHeader
         title={getText(I18N.settingsContactEditHeaderTitle)}
         onPressLeft={onPressLeft}
-        renderIconLeft={
-          isEdit
-            ? undefined
-            : () => <Icon s name="arrow_back" color={LIGHT_GRAPHIC_BASE_1} />
-        }
+        iconLeft={isEdit ? undefined : 'arrow_back'}
         textLeft={getText(I18N.cancel)}
         textRight={isEdit ? getText(I18N.save) : getText(I18N.edit)}
         disabledRight={!isChanged && isEdit}
         onPressRight={onPressRight}
-        textColorRight={LIGHT_GRAPHIC_GREEN_1}
-        textColorLeft={LIGHT_GRAPHIC_GREEN_1}
+        colorRight={LIGHT_GRAPHIC_GREEN_1}
+        colorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
       <SettingsAddressBookEdit
         onSubmit={onSubmit}

@@ -44,7 +44,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={onPressRow}>
-      <>
+      <View>
         <View style={styles.container}>
           <View style={styles.iconWrapper}>
             <ArrowSend color={getColor(Color.graphicBase1)} />
@@ -95,7 +95,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             />
           )}
         </View>
-      </>
+      </View>
     </TouchableWithoutFeedback>
   );
 };

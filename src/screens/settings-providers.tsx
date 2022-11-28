@@ -1,22 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {useUser} from '@app/hooks';
-
-import {SettingsProviders} from '../components/settings-providers/settings-providers';
-import {realm} from '../models';
-import {Provider} from '../models/provider';
+import {Color} from '@app/colors';
+import {SettingsProviders} from '@app/components/settings-providers/settings-providers';
+import {CustomHeader} from '@app/components/ui';
+import {useTypedNavigation, useUser} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {realm} from '@app/models';
+import {Provider} from '@app/models/provider';
 
 export const SettingsProvidersScreen = () => {
+  const navigation = useTypedNavigation();
   const user = useUser();
-  const [providers, setProviders] = useState(
-    realm.objects<Provider>('Provider').toJSON(),
+  const [providers, setProviders] = useState<Realm.Results<Provider>>(
+    realm.objects<Provider>('Provider'),
   );
 
   useEffect(() => {
     const list = realm.objects<Provider>('Provider');
 
     const callback = () => {
-      setProviders(realm.objects<Provider>('Provider').toJSON());
+      setProviders(realm.objects<Provider>('Provider'));
     };
 
     list.addListener(callback);
@@ -28,16 +31,32 @@ export const SettingsProvidersScreen = () => {
 
   const onSelectProvider = useCallback(
     (providerId: string) => {
-      user.providerId = providerId;
+      navigation.navigate('settingsProviderForm', {
+        id: providerId,
+      });
     },
-    [user],
+    [navigation],
   );
 
+  const onPressAdd = useCallback(() => {
+    navigation.push('settingsProviderForm', {});
+  }, [navigation]);
+
   return (
-    <SettingsProviders
-      providers={providers}
-      providerId={user.providerId}
-      onSelect={onSelectProvider}
-    />
+    <>
+      <CustomHeader
+        onPressLeft={navigation.goBack}
+        iconLeft="arrow_back"
+        title={getText(I18N.settingsProvidersTitle)}
+        textRight={getText(I18N.settingsProvidersTitleRight)}
+        colorRight={Color.textGreen1}
+        onPressRight={onPressAdd}
+      />
+      <SettingsProviders
+        providers={providers}
+        providerId={user.providerId}
+        onSelect={onSelectProvider}
+      />
+    </>
   );
 };
