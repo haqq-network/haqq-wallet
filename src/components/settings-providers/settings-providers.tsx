@@ -7,7 +7,7 @@ import {SettingsProvidersRow} from './settings-providers-row';
 import {Provider} from '../../models/provider';
 
 export type SettingsProvidersProps = {
-  providers: Provider[];
+  providers: Realm.Results<Provider>;
   providerId: string;
   onSelect: (providerId: string) => void;
 };
