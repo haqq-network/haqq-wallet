@@ -181,6 +181,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.name}
             name="name"
+            error={error?.name}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -189,6 +190,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.ethRpcEndpoint}
             name="ethRpcEndpoint"
+            error={error?.ethRpcEndpoint}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -197,6 +199,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.ethChainId}
             name="ethChainId"
+            error={error?.ethChainId}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -205,6 +208,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.explorer}
             name="explorer"
+            error={error?.explorer}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -213,6 +217,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.cosmosRestEndpoint}
             name="cosmosRestEndpoint"
+            error={error?.cosmosRestEndpoint}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -221,6 +226,7 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.cosmosChainId}
             name="cosmosChainId"
+            error={error?.cosmosChainId}
             onChange={onChangeField}
           />
 
