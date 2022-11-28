@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "Plus mid.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "Plus mid@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "Plus mid@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "Plus mid.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
