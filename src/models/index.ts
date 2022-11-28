@@ -19,7 +19,7 @@ export const realm = new Realm({
     Provider,
     StakingMetadata,
   ],
-  schemaVersion: 30,
+  schemaVersion: 31,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

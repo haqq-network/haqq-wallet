@@ -380,6 +380,7 @@ export class Cosmos {
           ),
         ),
       )
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
@@ -403,6 +404,7 @@ export class Cosmos {
           })
           .flat();
       })
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
@@ -425,6 +427,7 @@ export class Cosmos {
           )
           .flat();
       })
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
