@@ -22,10 +22,10 @@ export const BackupNotification = ({
   const theme = useTheme();
   const warningImage = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/images/backup-notification-dark.png');
+      return require('../../../../assets/images/backup-notification-dark.png');
     }
 
-    return require('../../../assets/images/backup-notification-light.png');
+    return require('../../../../assets/images/backup-notification-light.png');
   }, [theme]);
 
   const onSkip = useCallback(() => {

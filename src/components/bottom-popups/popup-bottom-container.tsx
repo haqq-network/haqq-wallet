@@ -1,7 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {View, useWindowDimensions} from 'react-native';
 import Animated, {
   Easing,
@@ -14,11 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
-import {BackupNotification} from '@app/components/backup-notification/backup-notification';
 import {createTheme} from '@app/helpers';
-import {useApp} from '@app/hooks';
-
-import {RootStackParamList} from '../types';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: 650,
@@ -30,49 +24,31 @@ const timingInAnimationConfig: WithTimingConfig = {
   easing: Easing.out(Easing.back()),
 };
 
-export const BackupNotificationScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'backupNotification'>>();
+interface BottomPopupContainerProps {
+  children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
+}
 
+export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
   const {height: H} = useWindowDimensions();
 
   const fullyOpen = 0;
   const fullyClosed = H * 0.85;
 
   const fadeAnim = useSharedValue(fullyClosed);
-  const app = useApp();
 
   const fadeOut = useCallback(
     (endCallback?: () => void) => {
-      const onEnd = () => {
-        navigation.goBack();
-        endCallback?.();
-      };
+      const onEnd = () => endCallback?.();
       fadeAnim.value = withTiming(fullyClosed, timingOutAnimationConfig, () =>
         runOnJS(onEnd)(),
       );
     },
-    [navigation, fullyClosed, fadeAnim],
+    [fullyClosed, fadeAnim],
   );
-
-  const onClickBackup = useCallback(() => {
-    if (route.params.address) {
-      fadeOut(() => {
-        navigation.navigate('backup', {
-          address: route.params.address,
-        });
-      });
-    }
-  }, [navigation, route, fadeOut]);
 
   useEffect(() => {
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
   }, [fadeAnim]);
-
-  const onClickSkip = useCallback(() => {
-    app.setSnoozeBackup();
-    fadeOut();
-  }, [app, fadeOut]);
 
   const bgAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [1, 0]),
@@ -86,10 +62,7 @@ export const BackupNotificationScreen = () => {
     <View style={page.container}>
       <Animated.View style={[page.animateView, bgAnimation]} />
       <Animated.View style={[page.animateViewFade, slideFromBottomAnimation]}>
-        <BackupNotification
-          onClickBackup={onClickBackup}
-          onClickSkip={onClickSkip}
-        />
+        {children(fadeOut)}
       </Animated.View>
     </View>
   );

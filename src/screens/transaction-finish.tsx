@@ -1,13 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
-import {useContacts, useTransactions} from '@app/hooks';
-import {HapticEffects, vibrate} from '@app/services/haptic';
-
+import {Color} from '@app/colors';
 import {
   BlockIcon,
   Button,
@@ -20,36 +16,44 @@ import {
   Spacer,
   Text,
   UserIcon,
-} from '../components/ui';
-import {openURL} from '../helpers';
-import {Transaction} from '../models/transaction';
-import {EthNetwork} from '../services/eth-network';
-import {RootStackParamList} from '../types';
-import {shortAddress} from '../utils';
+} from '@app/components/ui';
+import {createTheme, openURL} from '@app/helpers';
 import {
-  LIGHT_BG_8,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-} from '../variables';
+  useContacts,
+  useTransactions,
+  useTypedNavigation,
+  useTypedRoute,
+} from '@app/hooks';
+import {Transaction} from '@app/models/transaction';
+import {EthNetwork} from '@app/services/eth-network';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {shortAddress} from '@app/utils';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
 export const TransactionFinishScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'transactionFinish'>>();
+  const {navigate, getParent} = useTypedNavigation();
+  const {hash} = useTypedRoute<'transactionFinish'>().params;
+
   const contacts = useContacts();
   const transactions = useTransactions();
+
   const [transaction, setTransaction] = useState<Transaction | null>(
-    transactions.getTransaction(route.params.hash),
+    transactions.getTransaction(hash),
   );
 
   useEffect(() => {
-    setTransaction(transactions.getTransaction(route.params.hash));
+    setTransaction(transactions.getTransaction(hash));
     vibrate(HapticEffects.success);
-  }, [route.params.hash, transactions]);
+  }, [hash, navigate, transactions]);
+
+  useEffect(() => {
+    const notificationsIsEnabled = false;
+    if (!notificationsIsEnabled) {
+      getParent()?.navigate('notificationPopup');
+    }
+  }, [getParent]);
 
   const short = useMemo(
     () => shortAddress(transaction?.to ?? ''),
@@ -86,24 +90,28 @@ export const TransactionFinishScreen = () => {
     await openURL(url);
   };
 
+  const onSubmit = () => {
+    getParent()?.goBack();
+  };
+
   return (
     <PopupContainer style={page.container}>
       <View style={page.sub}>
         <LottieWrap source={icon} style={page.image} autoPlay loop={false} />
       </View>
-      <Text t4 style={page.title}>
+      <Text t4 style={page.title} center color={Color.textGreen1}>
         Sending Completed!
       </Text>
       <ISLMIcon color={LIGHT_GRAPHIC_GREEN_1} style={page.icon} />
       {transaction && (
-        <Text clean style={page.sum}>
+        <Text t5 center style={page.sum}>
           - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
         </Text>
       )}
-      <Text clean style={page.address}>
+      <Text t14 center style={page.address}>
         {short}
       </Text>
-      <Text clean style={page.fee}>
+      <Text t15 center color={Color.textBase2}>
         Network Fee: {transaction?.fee.toFixed(8)} ISLM
       </Text>
       <Spacer />
@@ -114,13 +122,13 @@ export const TransactionFinishScreen = () => {
           ) : (
             <UserIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
           )}
-          <Text clean style={page.buttonText}>
+          <Text clean t15 center color={Color.textBase2}>
             {contact ? 'Edit Contact' : 'Add Contact'}
           </Text>
         </IconButton>
         <IconButton onPress={onPressHash} style={page.button}>
           <BlockIcon color={LIGHT_GRAPHIC_BASE_2} style={page.buttonIcon} />
-          <Text clean style={page.buttonText}>
+          <Text t15 center color={Color.textBase2}>
             Hash
           </Text>
         </IconButton>
@@ -129,15 +137,13 @@ export const TransactionFinishScreen = () => {
         style={page.margin}
         variant={ButtonVariant.contained}
         title="Done"
-        onPress={() => {
-          navigation.getParent()?.goBack();
-        }}
+        onPress={onSubmit}
       />
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingHorizontal: 20,
   },
@@ -150,30 +156,13 @@ const page = StyleSheet.create({
   title: {
     marginTop: 32,
     marginBottom: 34,
-    color: LIGHT_TEXT_GREEN_1,
-    textAlign: 'center',
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
   sum: {
     marginBottom: 8,
-    fontWeight: '700',
-    fontSize: 22,
-    lineHeight: 30,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
   },
   address: {
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_1,
     marginBottom: 4,
-  },
-  fee: {
-    fontSize: 12,
-    lineHeight: 16,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
   },
   buttons: {
     flexDirection: 'row',
@@ -185,17 +174,11 @@ const page = StyleSheet.create({
     marginHorizontal: 6,
     paddingHorizontal: 4,
     paddingVertical: 12,
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 12,
   },
   buttonIcon: {
     marginBottom: 4,
-  },
-  buttonText: {
-    fontSize: 12,
-    lineHeight: 16,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
   },
   margin: {marginBottom: 16},
 });
