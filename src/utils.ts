@@ -147,10 +147,10 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
   )}${componentToHex(Math.round(255 * f(1)))}`;
 };
 
-export function cleanNumber(number: string | number) {
+export function cleanNumber(number: string | number, delimiter = ' ') {
   const [a, f] = String(number).trim().split('.');
 
-  const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
 
   return `${aFormatted}.${(f ?? '').replace(/0*$/g, '')}`
     .substring(0, Math.max(aFormatted.length, 12))

@@ -1,14 +1,23 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {Dimensions, StyleProp, TextInput, View, ViewStyle} from 'react-native';
+import {
+  PixelRatio,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {createTheme, windowWidth} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
+
+console.log(windowWidth - 180);
 
 export type SumBlockProps = {
   value: string;
@@ -44,6 +53,18 @@ export const SumBlock = ({
     [onChange],
   );
 
+  const ratio = useMemo(
+    () => (value.length > 0 ? (windowWidth - 180) / value.length : 30),
+    [value.length],
+  );
+
+  const fontSize = Math.max(
+    Math.min(PixelRatio.roundToNearestPixel(ratio / 0.61), 34),
+    18,
+  );
+
+  const lineHeight = PixelRatio.roundToNearestPixel(fontSize / 0.809);
+
   return (
     <View style={style}>
       <Text t8 center style={styles.subtitle} color={Color.textBase2}>
@@ -56,14 +77,15 @@ export const SumBlock = ({
           {/*</IconButton>*/}
         </View>
         <TextInput
-          style={styles.input}
+          allowFontScaling={false}
+          style={StyleSheet.compose(styles.input, {fontSize, lineHeight})}
           value={value}
           placeholder="0"
           onChangeText={onChangeValue}
           keyboardType="numeric"
           placeholderTextColor={getColor(Color.textBase2)}
           ref={inputSumRef}
-          textAlign="left"
+          textAlign="center"
         />
         <View style={styles.max}>
           {balance > 0 && (
@@ -117,12 +139,11 @@ const styles = createTheme({
     alignItems: 'flex-end',
   },
   input: {
-    alignSelf: 'center',
+    flex: 1,
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
     color: Color.textBase1,
     paddingVertical: 2,
-    maxWidth: Dimensions.get('window').width - 180,
   },
 });
