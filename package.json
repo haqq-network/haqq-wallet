@@ -74,6 +74,7 @@
     "rxjs": "^7.5.7",
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",
+    "validate.js": "^0.13.1",
     "vm-browserify": "0.0.4"
   },
   "devDependencies": {
