@@ -15,25 +15,24 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
   return (
     <>
       <Spacer />
-      <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
-      <Spacer height={36} />
-      <View style={styles.circleIconContainer}>
-        <Icon color={Color.graphicSecond2} i32 name="logo" />
+      <View>
+        <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
+        <Spacer height={36} />
+        <View style={styles.circleIconContainer}>
+          <Icon color={Color.graphicSecond2} i32 name="logo" />
+        </View>
+        <Spacer height={20} />
+        <Text t8 center i18n={I18N.sumBlockAvailable} />
+        <Text t3 center color={Color.textGreen1}>
+          {availableSum.toFixed(2)} ISLM
+        </Text>
       </View>
-      <Spacer height={20} />
-      <Text t8 center i18n={I18N.sumBlockAvailable} />
-      <Text t3 center color={Color.textGreen1} style={styles.sum}>
-        {availableSum.toFixed(2)} ISLM
-      </Text>
       <Spacer />
     </>
   );
 };
 
 const styles = createTheme({
-  sum: {
-    flex: 1,
-  },
   circleIconContainer: {
     width: 80,
     height: 80,

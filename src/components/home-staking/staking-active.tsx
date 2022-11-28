@@ -14,12 +14,13 @@ import {Color} from '@app/colors';
 import {Spacer, Text, TextSum} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {IS_IOS} from '@app/variables';
 
 interface StakingActiveProps {
   availableSum: number;
   rewardSum: number;
   stakedSum: number;
-  unboundedSum: number;
+  unDelegationSum: number;
 }
 
 export interface StakingActiveInterface {
@@ -28,7 +29,7 @@ export interface StakingActiveInterface {
 
 export const StakingActive = forwardRef(
   (
-    {availableSum, rewardSum, stakedSum, unboundedSum}: StakingActiveProps,
+    {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
     ref,
   ) => {
     const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
@@ -59,13 +60,17 @@ export const StakingActive = forwardRef(
       if (!isCancelled) {
         lottieRef.current?.play();
         if (isReceiveAnimation) {
-          setIsReceiveAnimation(false);
+          if (IS_IOS) {
+            setIsReceiveAnimation(false);
+          } else {
+            setTimeout(() => setIsReceiveAnimation(false), 2000);
+          }
         }
       }
     };
 
     return (
-      <>
+      <View>
         <Spacer height={23} />
         <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
         <Spacer height={36} />
@@ -118,12 +123,12 @@ export const StakingActive = forwardRef(
             <TextSum
               color={Color.textBase1}
               center
-              sum={unboundedSum.toFixed(2)}
+              sum={unDelegationSum.toFixed(2)}
             />
           </View>
         </View>
-        <Spacer />
-      </>
+        <Spacer height={20} />
+      </View>
     );
   },
 );
@@ -132,8 +137,6 @@ const styles = createTheme({
   circleIconContainer: {
     width: 80,
     height: 80,
-    borderRadius: 40,
-    backgroundColor: Color.bg3,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
