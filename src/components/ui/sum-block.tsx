@@ -17,8 +17,6 @@ import {createTheme, windowWidth} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
 
-console.log(windowWidth - 180);
-
 export type SumBlockProps = {
   value: string;
   error: string;

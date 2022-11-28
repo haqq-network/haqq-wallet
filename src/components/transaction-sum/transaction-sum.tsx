@@ -61,8 +61,11 @@ export const TransactionSum = ({
       setError(
         validate.single(amount, {
           numericality: {
+            notValid: 'Invalid number',
             greaterThan: 0,
             lessThanOrEqualTo: maxSum,
+            notGreaterThan: 'Should be greater than zero',
+            notLessThanOrEqualTo: "You don't have enough funds",
           },
         }),
       );
