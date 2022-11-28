@@ -46,8 +46,8 @@ export const SettingsAccountEdit = ({
         textRight={getText(I18N.save)}
         disabledRight={!isChanged}
         onPressRight={onPressRight}
-        textColorRight={LIGHT_GRAPHIC_GREEN_1}
-        textColorLeft={LIGHT_GRAPHIC_GREEN_1}
+        colorRight={LIGHT_GRAPHIC_GREEN_1}
+        colorLeft={LIGHT_GRAPHIC_GREEN_1}
       />
       <KeyboardSafeArea style={page.container}>
         <Input

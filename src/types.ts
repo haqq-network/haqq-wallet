@@ -4,6 +4,7 @@ import {Validator} from '@evmos/provider';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
+import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
@@ -214,6 +215,9 @@ export type RootStackParamList = {
     address: string;
     isCreate?: boolean;
   };
+  settingsProviderForm: {
+    id?: string;
+  };
   stakingValidators: undefined;
   stakingInfo: {
     validator: ValidatorItem;
@@ -406,3 +410,5 @@ export type ValidatorItem = Validator & {
   localRewards?: number;
   localUnDelegations?: number;
 };
+
+export type ColorType = Color | string;
