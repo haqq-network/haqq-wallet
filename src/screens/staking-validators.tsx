@@ -33,7 +33,6 @@ export const StakingValidatorsScreen = () => {
 
   useEffect(() => {
     const metadata = StakingMetadata.getAll();
-
     const cache = new Map();
 
     for (const row of metadata) {
