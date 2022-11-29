@@ -13,6 +13,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -51,10 +52,12 @@ class App extends EventEmitter {
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
   private _lastTheme: AppTheme = AppTheme.light;
-  private _provider: Provider | undefined;
+  private _provider: Provider | null;
 
   constructor() {
     super();
+
+    migration();
 
     TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {
