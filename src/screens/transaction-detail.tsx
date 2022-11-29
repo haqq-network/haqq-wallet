@@ -117,7 +117,7 @@ export const TransactionDetailScreen = () => {
               </View>
               <Text t11>
                 {' '}
-                Islamic coin{' '}
+                Islamic Coin{' '}
                 <Text clean style={page.subInfo}>
                   (ISLM)
                 </Text>
@@ -129,14 +129,7 @@ export const TransactionDetailScreen = () => {
           style={page.info}
         />
         <DataContent
-          title={
-            <>
-              HAQQ blockchain{' '}
-              <Text clean style={page.subInfo}>
-                (HQ)
-              </Text>
-            </>
-          }
+          title="HAQQ blockchain"
           subtitle="Network"
           reversed
           style={page.info}
