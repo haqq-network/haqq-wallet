@@ -373,4 +373,5 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.!",
   [I18N.backupFinishFinish]: 'Finish',
+
 };
