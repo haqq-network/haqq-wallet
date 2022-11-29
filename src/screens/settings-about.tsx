@@ -106,7 +106,7 @@ export const SettingsAboutScreen = () => {
         </IconButton>
       </View>
       <Text t11 style={page.terms}>
-        ©2022 IslamIQ. All Rights Reserved. Version {getAppVersion()} (
+        ©2022 Haqq. All Rights Reserved. Version {getAppVersion()} (
         {getBuildNumber()})
       </Text>
     </ScrollView>
