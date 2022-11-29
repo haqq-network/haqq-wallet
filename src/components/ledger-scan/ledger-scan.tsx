@@ -75,11 +75,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
     /**
      * these variable needs to correct work of ledger scan
      */
-
-    const _manager = new BleManager();
-    _manager.state().then(r => {
-      console.log(r);
-    });
+    new BleManager();
 
     let previousAvailable: boolean = false;
     const sub = new Observable<{available: boolean}>(
