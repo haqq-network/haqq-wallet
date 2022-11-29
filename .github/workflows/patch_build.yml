@@ -39,5 +39,6 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Build"
+          git log -1 --pretty="%H" > .last-commit
           git commit -am "build"
           git push --force-with-lease
