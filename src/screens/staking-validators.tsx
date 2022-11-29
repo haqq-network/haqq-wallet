@@ -33,7 +33,6 @@ export const StakingValidatorsScreen = () => {
 
   useEffect(() => {
     const metadata = StakingMetadata.getAll();
-
     const cache = new Map();
 
     for (const row of metadata) {
@@ -93,7 +92,7 @@ export const StakingValidatorsScreen = () => {
         ].flat(),
       );
     });
-  }, [cosmos, wallets.visible]);
+  }, [cosmos, wallets]);
   return (
     <StakingValidators
       stakedValidators={stakedValidators}

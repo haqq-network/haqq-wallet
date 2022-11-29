@@ -5,18 +5,23 @@ import {FlatList} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
+import {captureException} from '@app/helpers';
 import {useApp} from '@app/hooks';
 
 import {LedgerScanEmpty} from './ledger-scan-empty';
 import {LedgerScanHeader} from './ledger-scan-header';
 import {LedgerScanRow} from './ledger-scan-row';
 
-import {captureException} from '../../helpers';
-import {OnScanEvent} from '../../services/ledger';
 import {PopupContainer} from '../ui';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;
+};
+
+export type OnScanEvent = {
+  refreshing?: boolean;
+  error?: string;
+  device?: Device;
 };
 
 export const LedgerScan = ({onSelect}: LedgerScanProps) => {
@@ -70,8 +75,8 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
     /**
      * these variable needs to correct work of ledger scan
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _manager = new BleManager();
+    new BleManager();
+
     let previousAvailable: boolean = false;
     const sub = new Observable<{available: boolean}>(
       TransportBLE.observeState,
@@ -103,7 +108,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
   );
 
   return (
-    <PopupContainer>
+    <PopupContainer plain>
       <FlatList
         data={devices}
         ListEmptyComponent={LedgerScanEmpty}

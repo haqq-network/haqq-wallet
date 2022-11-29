@@ -7,6 +7,7 @@ export const SettingsAboutScreen = () => {
 
   return (
     <SettingsAbout/>
+
   );
 };
 

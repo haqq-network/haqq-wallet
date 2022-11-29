@@ -1,6 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {PermissionsAndroid, Platform, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {BleManager, State} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
@@ -88,12 +94,19 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
   return (
     <PopupContainer style={page.container}>
       <View style={page.animation}>
-        <LottieWrap
-          style={page.imageStyle}
-          source={require('../../../assets/animations/ledger-bluetooth.json')}
-          autoPlay
-          loop
-        />
+        {disabled.includes(btState) ? (
+          <Image
+            style={page.imageStyle}
+            source={require('../../../assets/images/bluetooth-failed.png')}
+          />
+        ) : (
+          <LottieWrap
+            style={page.imageStyle}
+            source={require('../../../assets/animations/ledger-bluetooth.json')}
+            autoPlay
+            loop
+          />
+        )}
       </View>
       <Text t4 style={page.title}>
         {getText(
