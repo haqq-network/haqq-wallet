@@ -56,11 +56,11 @@ export enum IconsName {
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
-  ledger = 'ledger',
 }
 
 export type IconSize =
   | {i12: boolean}
+  | {i16: boolean}
   | {i24: boolean}
   | {i32: boolean}
   | {i72: boolean}
@@ -79,6 +79,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
       StyleSheet.flatten([
         styles.i24Container,
         'i12' in props && styles.i12Container,
+        'i16' in props && styles.i16Container,
         'i24' in props && styles.i24Container,
         'i32' in props && styles.i32Container,
         'i72' in props && styles.i72Container,
@@ -108,6 +109,10 @@ const styles = StyleSheet.create({
   i24Container: {
     width: 24,
     height: 24,
+  },
+  i16Container: {
+    width: 16,
+    height: 16,
   },
   i12Container: {
     width: 12,

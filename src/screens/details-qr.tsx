@@ -1,15 +1,11 @@
 import React, {useRef} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
-import {useApp, useWallet} from '@app/hooks';
-
-import {BottomSheet} from '../components/bottom-sheet';
+import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Alert,
   Button,
@@ -19,9 +15,10 @@ import {
   InfoBlock,
   InfoBlockType,
   Text,
-} from '../components/ui';
-import {Wallet} from '../models/wallet';
-import {RootStackParamList} from '../types';
+} from '@app/components/ui';
+import {useApp, useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {
   GRADIENT_END,
   GRADIENT_START,
@@ -29,11 +26,11 @@ import {
   LIGHT_TEXT_BASE_3,
   LIGHT_TEXT_SECOND_2,
   LIGHT_TEXT_YELLOW_1,
-} from '../variables';
+} from '@app/variables';
 
 export const DetailsQrScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'detailsQr'>();
   const svg = useRef();
   const app = useApp();
   const wallet = useWallet(route.params.address) as Wallet;
@@ -42,7 +39,7 @@ export const DetailsQrScreen = () => {
 
   const onCopy = () => {
     Clipboard.setString(address);
-    app.emit('notification', 'Copied');
+    app.emit('notification', getText(I18N.notificationCopied));
   };
 
   const onShare = () => {

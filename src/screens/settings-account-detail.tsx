@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {Dimensions, StyleSheet, Switch, View} from 'react-native';
 
 import {useWallet} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 
 import {
   Card,
@@ -45,7 +46,7 @@ export const SettingsAccountDetailScreen = () => {
       wallet.isHidden = !wallet.isHidden;
 
       if (wallet.isHidden) {
-        app.emit('notification', 'The account was hidden');
+        app.emit('notification', getText(I18N.notificationAccountHidden));
       }
     }
   }, [wallet]);

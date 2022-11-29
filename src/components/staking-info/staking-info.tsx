@@ -4,18 +4,27 @@ import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
-import {Badge, Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
+import {Block} from '@app/components/staking-info/block';
+import {Markdown} from '@app/components/staking-info/markdown';
+import {
+  Badge,
+  Button,
+  ButtonVariant,
+  CopyButton,
+  Icon,
+  InfoBlock,
+  InfoBlockType,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {Inline} from '@app/components/ui/inline';
-import {createTheme, openURL, windowWidth} from '@app/helpers';
+import {createTheme, openURL} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables';
-
-import {Block} from './block';
-import {Markdown} from './markdown';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
@@ -28,7 +37,13 @@ export type StakingInfoProps = {
 };
 
 export const StakingInfo = ({
-  validator,
+  validator: {
+    localStatus,
+    operator_address,
+    tokens,
+    description: {website, moniker, details},
+    commission: {commission_rates},
+  },
   onDelegate,
   onUnDelegate,
   delegations,
@@ -37,54 +52,68 @@ export const StakingInfo = ({
   withdrawDelegatorRewardProgress,
 }: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
-  const textColor = useMemo(() => {
-    switch (validator.localStatus) {
+  const [labelColor, textColor, isActive] = useMemo(() => {
+    switch (localStatus) {
       case ValidatorStatus.active:
-        return Color.textGreen1;
+        return [Color.textGreen1, undefined, true];
       case ValidatorStatus.inactive:
-        return Color.textYellow1;
+        return [Color.bg6, Color.textYellow1, false];
       case ValidatorStatus.jailed:
-        return Color.textRed1;
+        return [Color.textRed1, undefined, false];
       default:
-        return Color.textBase1;
+        return [Color.textBase1];
     }
-  }, [validator.localStatus]);
+  }, [localStatus]);
 
   const votingPower = useMemo(() => {
-    return parseInt(validator.tokens ?? '0', 10) / WEI;
-  }, [validator.tokens]);
+    return parseInt(tokens ?? '0', 10) / WEI;
+  }, [tokens]);
 
   const onPressWebsite = useCallback(() => {
-    openURL(validator.description.website);
-  }, [validator.description.website]);
+    openURL(website);
+  }, [website]);
 
   const commission = useMemo(
     () => ({
-      current: formatPercents(validator.commission.commission_rates.rate),
-      max: formatPercents(validator.commission.commission_rates.max_rate),
-      maxChange: formatPercents(
-        validator.commission.commission_rates.max_change_rate,
-      ),
+      current: formatPercents(commission_rates.rate),
+      max: formatPercents(commission_rates.max_rate),
+      maxChange: formatPercents(commission_rates.max_change_rate),
     }),
-    [validator.commission],
+    [commission_rates],
   );
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.iconContainer}>
+          <Icon color={Color.graphicBase1} name="servers" i24 />
+        </View>
+        <Spacer height={16} />
         <Text t5 center style={styles.title}>
-          {validator.description.moniker}
+          {moniker}
         </Text>
         <Badge
-          text={getText(validator.localStatus as number)}
-          color={getColor(textColor)}
-          style={styles.badge}
+          text={getText(localStatus as number)}
+          labelColor={labelColor}
+          textColor={textColor}
         />
+        <Spacer height={20} />
+        {!isActive && (
+          <>
+            <InfoBlock
+              icon={<Icon color={Color.textYellow1} i24 name="warning" />}
+              style={styles.withHorizontalPadding}
+              type={InfoBlockType.warning}
+              i18n={I18N.stakingInfoInactive}
+            />
+            <Spacer height={16} />
+          </>
+        )}
         <View style={styles.infoBlock}>
-          <Block name={getText(I18N.stakingInfoVotingPower)}>
+          <Block i18n={I18N.stakingInfoVotingPower}>
             <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
           </Block>
-          <Block name={getText(I18N.stakingInfoCommission)}>
+          <Block i18n={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
               <View style={styles.infoBlockCommission}>
                 <Text i18n={I18N.stakingInfoCommissionCurrent} t14 />
@@ -112,33 +141,40 @@ export const StakingInfo = ({
               </View>
             </View>
           </Block>
-          {validator.description.website && (
-            <Block name={getText(I18N.stakingInfoWebsite)}>
+          {website && (
+            <Block i18n={I18N.stakingInfoWebsite}>
               <Text
                 t14
                 color={getColor(Color.textGreen1)}
                 onPress={onPressWebsite}>
-                {validator.description.website}
+                {website}
               </Text>
             </Block>
           )}
         </View>
-        <Block name={getText(I18N.stakingInfoAddress)}>
-          <Text t14 color={getColor(Color.textBase2)}>
-            {validator.operator_address}
-          </Text>
+        <Block
+          style={styles.withHorizontalPadding}
+          i18n={I18N.stakingInfoAddress}>
+          <CopyButton value={operator_address} activeOpacity={0.7}>
+            <Text t14 color={getColor(Color.textBase2)}>
+              {operator_address}
+              <Spacer width={3} />
+              <Icon name="copy" i16 color={Color.graphicGreen1} />
+            </Text>
+          </CopyButton>
         </Block>
-        {validator.description.details && (
-          <Block name={getText(I18N.stakingInfoDetail)}>
-            <Markdown>{validator.description.details}</Markdown>
+        {details && (
+          <Block i18n={I18N.stakingInfoDetail}>
+            <Markdown>{details}</Markdown>
           </Block>
         )}
+        <Spacer height={20} />
       </ScrollView>
       <View
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        {rewards?.length > 0 && (
+        {(rewards?.length ?? 0) > 0 && (
           <>
             <Button
               loading={withdrawDelegatorRewardProgress}
@@ -175,20 +211,19 @@ const styles = createTheme({
   title: {
     marginBottom: 8,
   },
-  badge: {
-    marginBottom: 24,
-  },
   infoBlock: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: Color.bg8,
-    width: windowWidth - 40,
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
     borderRadius: 12,
+    marginBottom: 8,
+  },
+  withHorizontalPadding: {
+    marginHorizontal: 20,
   },
   footer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
     bottom: 0,
     backgroundColor: Color.bg1,
     paddingHorizontal: 20,
@@ -200,5 +235,10 @@ const styles = createTheme({
   },
   infoBlockCommission: {
     marginHorizontal: 12,
+  },
+  iconContainer: {
+    padding: 9,
+    backgroundColor: Color.bg8,
+    borderRadius: 12,
   },
 });

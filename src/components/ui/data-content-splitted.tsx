@@ -3,6 +3,8 @@ import React, {useCallback} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
+import {I18N, getText} from '@app/i18n';
+
 import {Text} from './text';
 
 import {app} from '../../contexts/app';
@@ -23,7 +25,7 @@ export const DataContentSplitted = ({
 }: DataContentSplittedProps) => {
   const onPress = useCallback(() => {
     Clipboard.setString(to.join(''));
-    app.emit('notification', 'Copied');
+    app.emit('notification', getText(I18N.notificationCopied));
   }, [to]);
 
   return (

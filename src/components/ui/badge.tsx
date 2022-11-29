@@ -8,17 +8,23 @@ import {createTheme} from '@app/helpers';
 
 export type BadgeProps = {
   text: string;
-  color: string;
+  labelColor: string | Color;
+  textColor?: string | Color;
   style?: StyleProp<ViewStyle>;
 };
-export const Badge = ({text, color, style}: BadgeProps) => {
+export const Badge = ({
+  text,
+  labelColor,
+  textColor = Color.textBase3,
+  style,
+}: BadgeProps) => {
   const container = useMemo(
-    () => [styles.container, {backgroundColor: color}, style],
-    [color, style],
+    () => [styles.container, {backgroundColor: getColor(labelColor)}, style],
+    [labelColor, style],
   );
   return (
     <View style={container}>
-      <Text t13 color={getColor(Color.textBase3)}>
+      <Text t13 color={getColor(textColor)}>
         {text}
       </Text>
     </View>

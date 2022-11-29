@@ -1,16 +1,12 @@
 import React, {useCallback, useRef, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
 import {Pin, PinInterface} from '@app/components/pin';
 import {hideModal, showModal} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
-
-import {RootStackParamList} from '../types';
+import {useApp, useTypedNavigation, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 
 export const SettingsSecurityPinScreen = () => {
-  const {goBack} = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const {goBack} = useTypedNavigation();
   const app = useApp();
   const wallets = useWallets();
   const pinRef = useRef<PinInterface>();
@@ -28,7 +24,7 @@ export const SettingsSecurityPinScreen = () => {
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
         hideModal();
-        app.emit('notification', 'PIN code successfully changed');
+        app.emit('notification', getText(I18N.notificationPinChanged));
         goBack();
       } else {
         pinRef.current?.reset('Pin not matched');

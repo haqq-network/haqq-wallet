@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet} from 'react-native';
 
 import {useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {IconButton, TrashIcon} from './ui';
@@ -36,7 +37,7 @@ export const SettingsAccountRemoveButton = ({
           onPress: async () => {
             await wallets.removeWallet(address);
             navigation.goBack();
-            app.emit('notification', 'The account has been deleted');
+            app.emit('notification', getText(I18N.notificationAccountDeleted));
           },
         },
       ],
