@@ -4,6 +4,7 @@ import {Alert, Linking} from 'react-native';
 export const captureException = (
   error: unknown,
   source: string = 'unknown',
+  context: any = {},
 ) => {
   if (!error) {
     console.log(
@@ -13,8 +14,11 @@ export const captureException = (
     console.trace();
     return;
   }
-  console.error(source, 'captureException', error);
-  Sentry.captureException(error);
+  console.error('captureException', source, error, context);
+  Sentry.captureException(error, {
+    tags: {source},
+    extra: context,
+  });
 };
 
 export const openURL = async (url: string) => {
