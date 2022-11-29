@@ -165,7 +165,7 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
-  backupFinishcongrat,
+  backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish
 
@@ -370,7 +370,7 @@ const en: Record<I18N, string> = {
   [I18N.welcomeCreateWallet]: 'Create Wallet',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
-  [I18N.backupFinishcongrat]: 'Congratulations!',
+  [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.!",
   [I18N.backupFinishFinish]: "Finish",
 };

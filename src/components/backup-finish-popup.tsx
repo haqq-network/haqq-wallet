@@ -37,7 +37,7 @@ export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
           style={page.animation}
         />
       </Spacer>
-      <Text t4 center i18n={I18N.backupFinishcongrat}/>
+      <Text t4 center i18n={I18N.backupFinishCongratulation}/>
       <Text t4 center i18n={I18N.backupFinishSuccess} style={page.title}/>
       <Button
         style={page.button}
