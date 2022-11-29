@@ -155,6 +155,12 @@ export enum I18N {
   settingsAboutSocials,
   settingsAboutDiscord,
   settingsAboutRights,
+  settingsAccountDetailRenameTitle,
+  settingsAccountDetailRenameSubtitle,
+  settingsAccountDetailChangeStyleTitle,
+  settingsAccountDetailChangeStyleSubtitle,
+  settingsAccountDetailHideSubtitle,
+  settingsAccountDetailHideTitle
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -342,4 +348,10 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutSocials]: "Our Socials",
   [I18N.settingsAboutDiscord]: "Discord",
   [I18N.settingsAboutRights]: `©2022 IslamIQ. All Rights Reserved. Version ${getAppVersion()} (${getBuildNumber()})`,
+  [I18N.settingsAccountDetailRenameTitle]: `Rename account`,
+  [I18N.settingsAccountDetailRenameSubtitle]: `Change the account display name`,
+  [I18N.settingsAccountDetailChangeStyleTitle]: `Change style`,
+  [I18N.settingsAccountDetailChangeStyleSubtitle]: `Change the picture of the account`,
+  [I18N.settingsAccountDetailHideTitle]: `Hide account`,
+  [I18N.settingsAccountDetailHideSubtitle]: `Will be hidden from the general list`,
 };
