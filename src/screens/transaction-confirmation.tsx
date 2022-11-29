@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {useContacts, useUser, useWallet} from '@app/hooks';
 import {EthNetwork} from '@app/services';
 
@@ -121,37 +122,37 @@ export const TransactionConfirmationScreen = () => {
         </Text>
         <Text t11>{splittedTo[2]}</Text>
       </Text>
-
-      <View style={page.info}>
-        <DataView label="Cryptocurrency">
-          <Text t11 color={getColor(Color.textBase1)}>
-            Islamic coin{' '}
-            <Text clean color={getColor(Color.textBase2)}>
-              (ISLM)
+      <Spacer style={page.spacer}>
+        <View style={page.info}>
+          <DataView label="Cryptocurrency">
+            <Text t11 color={getColor(Color.textBase1)}>
+              Islamic coin{' '}
+              <Text clean color={getColor(Color.textBase2)}>
+                (ISLM)
+              </Text>
             </Text>
-          </Text>
-        </DataView>
-        <DataView label="Network">
-          <Text t11 color={getColor(Color.textBase1)}>
-            HAQQ blockchain{' '}
-            <Text clean color={getColor(Color.textBase2)}>
-              (HQ)
+          </DataView>
+          <DataView label="Network">
+            <Text t11 color={getColor(Color.textBase1)}>
+              HAQQ blockchain{' '}
+              <Text clean color={getColor(Color.textBase2)}>
+                (HQ)
+              </Text>
             </Text>
-          </Text>
-        </DataView>
-        <DataView label="Amount">
-          <Text t11 color={getColor(Color.textBase1)}>
-            {amount.toFixed(8)} ISLM
-          </Text>
-        </DataView>
-        <DataView label="Network Fee">
-          <Text t11 color={getColor(Color.textBase1)}>
-            {estimateFee.toFixed(8)} ISLM
-          </Text>
-        </DataView>
-      </View>
-      {error && <Text clean>{error}</Text>}
-      <Spacer />
+          </DataView>
+          <DataView label="Amount">
+            <Text t11 color={getColor(Color.textBase1)}>
+              {amount.toFixed(8)} ISLM
+            </Text>
+          </DataView>
+          <DataView label="Network Fee">
+            <Text t11 color={getColor(Color.textBase1)}>
+              {estimateFee.toFixed(8)} ISLM
+            </Text>
+          </DataView>
+        </View>
+        {error && <Text clean>{error}</Text>}
+      </Spacer>
       <Button
         disabled={estimateFee === 0 && !disabled}
         variant={ButtonVariant.contained}
@@ -164,7 +165,7 @@ export const TransactionConfirmationScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,
@@ -188,7 +189,10 @@ const page = StyleSheet.create({
     color: LIGHT_TEXT_BASE_2,
   },
   icon: {marginBottom: 16, alignSelf: 'center'},
-  info: {top: 40, borderRadius: 16, backgroundColor: LIGHT_BG_3},
+  info: {
+    borderRadius: 16,
+    backgroundColor: LIGHT_BG_3,
+  },
   sum: {
     marginBottom: 16,
     fontWeight: '700',
@@ -199,5 +203,8 @@ const page = StyleSheet.create({
   },
   submit: {
     marginVertical: 16,
+  },
+  spacer: {
+    justifyContent: 'center',
   },
 });
