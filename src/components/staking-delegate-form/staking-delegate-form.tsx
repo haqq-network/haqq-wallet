@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -13,9 +13,9 @@ import {
 import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
+import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {isNumber} from '@app/utils';
 import {WEI} from '@app/variables';
 
 export type StakingDelegateFormProps = {
@@ -32,47 +32,19 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const [amount, setAmount] = useState('');
-  const [error, setError] = useState('');
+  const amounts = useSumAmount('', balance - fee / WEI);
 
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
 
   const onDone = useCallback(() => {
-    onAmount(parseFloat(amount));
-  }, [amount, onAmount]);
-
-  const onChangeValue = useCallback(
-    (value: string) => {
-      const sum = value.replace(/,/g, '.');
-      setAmount(sum);
-      setError(() => {
-        if (!isNumber(sum)) {
-          return getText(I18N.stakingDelegateFormWrongSymbol);
-        }
-        if (parseFloat(sum) > balance) {
-          return getText(I18N.stakingDelegateFormNotEnough);
-        }
-
-        return '';
-      });
-    },
-    [balance],
-  );
+    onAmount(parseFloat(amounts.amount));
+  }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    setAmount((balance - fee / WEI).toFixed(2));
-  }, [fee, balance]);
-
-  const checked = useMemo(
-    () =>
-      parseFloat(amount) > 0 &&
-      balance > 0 &&
-      parseFloat(amount) < balance &&
-      !error,
-    [error, amount, balance],
-  );
+    amounts.setAmount(amounts.maxAmount.toFixed(4));
+  }, [amounts]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
@@ -85,11 +57,11 @@ export const StakingDelegateForm = ({
         <Text t10>{validatorCommission}%</Text>
       </View>
       <SumBlock
-        value={amount}
-        error={error}
+        value={amounts.amount}
+        error={amounts.error}
         currency="ISLM"
         balance={balance}
-        onChange={onChangeValue}
+        onChange={amounts.setAmount}
         onMax={onPressMax}
       />
       <Spacer />
@@ -100,7 +72,7 @@ export const StakingDelegateForm = ({
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}
-        disabled={!checked}
+        disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />

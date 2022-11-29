@@ -2,10 +2,10 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
 import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
-import validate from 'validate.js';
 
 import {SumBlock} from '@app/components/ui/sum-block';
 import {useContacts} from '@app/hooks';
+import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {EthNetwork} from '@app/services/eth-network';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
@@ -34,11 +34,9 @@ export const TransactionSum = ({
   onContact,
 }: TransactionSumProps) => {
   const contacts = useContacts();
-  const [amount, setAmount] = useState('');
-  // const [amountUsd, setAmountUsd] = useState('0');
+  const amounts = useSumAmount();
+
   const [balance, setBalance] = useState(0);
-  const [error, setError] = useState('');
-  const [maxSum, setMaxSum] = useState(0);
   const inputSumRef = useRef<TextInput>(null);
 
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
@@ -53,24 +51,8 @@ export const TransactionSum = ({
     setBalance(newBalance);
 
     const {fee} = await EthNetwork.estimateTransaction(from, to, newBalance);
-    setMaxSum(newBalance - fee * 2);
-  }, [from, to]);
-
-  useEffect(() => {
-    if (amount !== '') {
-      setError(
-        validate.single(amount, {
-          numericality: {
-            notValid: 'Invalid number',
-            greaterThan: 0.0001,
-            lessThanOrEqualTo: maxSum,
-            notGreaterThan: 'Should be greater than 0.0001',
-            notLessThanOrEqualTo: "You don't have enough funds",
-          },
-        }),
-      );
-    }
-  }, [amount, maxSum]);
+    amounts.setMaxAmount(newBalance - fee * 2);
+  }, [amounts, from, to]);
 
   useFocusEffect(
     useCallback(() => {
@@ -82,31 +64,14 @@ export const TransactionSum = ({
     getBalance();
   }, [getBalance]);
 
-  // useEffect(() => {
-  //   setAmountUsd(amount === '' ? '0' : amount);
-  // }, [amount]);
-
-  const checked = useMemo(
-    () =>
-      parseFloat(amount) > 0 &&
-      balance > 0 &&
-      parseFloat(amount) < balance &&
-      !error,
-    [error, amount, balance],
-  );
-
   const onDone = useCallback(() => {
-    onAmount(parseFloat(amount));
-  }, [amount, onAmount]);
+    onAmount(parseFloat(amounts.amount));
+  }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
     vibrate(HapticEffects.impactLight);
-    setAmount(maxSum.toFixed(8));
-  }, [maxSum]);
-
-  const onChangeValue = useCallback((value: string) => {
-    setAmount(value.replace(/,/g, '.').substring(0, 20));
-  }, []);
+    amounts.setAmount(amounts.maxAmount.toFixed(4));
+  }, [amounts]);
 
   return (
     <KeyboardSafeArea isNumeric style={page.container}>
@@ -122,17 +87,17 @@ export const TransactionSum = ({
       </TouchableWithoutFeedback>
       <Spacer height={50} />
       <SumBlock
-        value={amount}
-        error={error}
+        value={amounts.amount}
+        error={amounts.error}
         currency="ISLM"
         balance={balance}
-        onChange={onChangeValue}
+        onChange={amounts.setAmount}
         onMax={onPressMax}
       />
       <Spacer />
       <Button
         style={page.submit}
-        disabled={!checked}
+        disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         title="Preview"
         onPress={onDone}
