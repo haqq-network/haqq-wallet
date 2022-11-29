@@ -9,6 +9,10 @@ export enum StakingMetadataType {
   reward = 'reward',
 }
 
+type ValidatorInfo = (
+  address: string,
+) => Realm.Results<StakingMetadata & Realm.Object<unknown, never>>;
+
 export class StakingMetadata extends Realm.Object {
   hash!: string;
   type!: StakingMetadataType;
@@ -162,5 +166,27 @@ export class StakingMetadata extends Realm.Object {
 
   static getAll() {
     return realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+  }
+
+  static getSummaryInfo() {
+    const stakedValidators = StakingMetadata.getAll();
+    const sumReduce = (handler: ValidatorInfo) =>
+      stakedValidators.reduce(
+        (acc, val) =>
+          acc +
+          handler(val.validator).reduce((_acc, _val) => acc + val.amount, 0),
+        0,
+      );
+
+    const {
+      getRewardsForValidator,
+      getDelegationsForValidator,
+      getUnDelegationsForValidator,
+    } = StakingMetadata;
+
+    const rewardsSum = sumReduce(getRewardsForValidator) / WEI;
+    const stakingSum = sumReduce(getDelegationsForValidator) / WEI;
+    const unDelegationSum = sumReduce(getUnDelegationsForValidator);
+    return {rewardsSum, stakingSum, unDelegationSum};
   }
 }

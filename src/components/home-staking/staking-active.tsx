@@ -83,14 +83,19 @@ export const StakingActive = forwardRef(
           style={styles.circleIconContainer}
         />
         <Spacer height={20} />
-        <Text t8 center i18n={I18N.rewards} />
+        <Text t8 center i18n={I18N.homeStakingRewards} />
         <Text t3 center color={Color.textGreen1}>
           {rewardSum.toFixed(4)} ISLM
         </Text>
         <Spacer height={28} />
         <View style={styles.blockContainer}>
           <View style={styles.infoBlock}>
-            <Text t15 center color={Color.textBase2} i18n={I18N.staked} />
+            <Text
+              t15
+              center
+              color={Color.textBase2}
+              i18n={I18N.homeStakingStaked}
+            />
             <Spacer height={2} />
             <TextSum center sum={stakedSum.toFixed(2)} />
           </View>

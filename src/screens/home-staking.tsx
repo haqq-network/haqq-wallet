@@ -1,31 +1,39 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
-import {
-  useApp,
-  useTypedNavigation,
-  useValidators,
-  useWalletsList,
-} from '@app/hooks';
+import {useApp, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
 
+const initData = {
+  stakingSum: 0,
+  rewardsSum: 0,
+  unDelegationSum: 0,
+  loading: true,
+};
+
 export const HomeStakingScreen = () => {
   const app = useApp();
+  const [data, setData] = useState(initData);
 
   const {visible} = useWalletsList();
   const navigation = useTypedNavigation();
-  const {loading, stakingSum, rewardsSum, unDelegationSum} = useValidators();
   const cosmos = useRef(new Cosmos(app.provider!)).current;
-  const {stakedValidators} = useValidators({withValidatorLists: true});
+
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
   }, [navigation]);
 
+  useEffect(() => {
+    const newData = StakingMetadata.getSummaryInfo();
+    setData({...newData, loading: false});
+  }, []);
+
   const onPressGetRewards = useCallback(() => {
+    const stakedValidators = StakingMetadata.getAll();
     const rewards: Realm.Results<StakingMetadata>[] = stakedValidators.map(
-      ({operator_address}) => {
+      ({operator_address}: any) => {
         return StakingMetadata.getRewardsForValidator(operator_address);
       },
     );
@@ -39,7 +47,7 @@ export const HomeStakingScreen = () => {
             .map(w =>
               cosmos.multipleWithdrawDelegatorReward(
                 w.address,
-                stakedValidators.map(v => v.operator_address),
+                stakedValidators.map(v => v.validator),
               ),
             )
             .flat(),
@@ -49,7 +57,7 @@ export const HomeStakingScreen = () => {
       }
     });
     app.emit('notification', getText(I18N.notificationRewardReceived));
-  }, [cosmos, stakedValidators, visible, app]);
+  }, [cosmos, visible, app]);
 
   useEffect(() => {
     const addressList = visible.map(w => w.cosmosAddress);
@@ -59,10 +67,10 @@ export const HomeStakingScreen = () => {
 
   return (
     <HomeStaking
-      loading={loading}
-      stakingSum={stakingSum}
-      rewardsSum={rewardsSum}
-      unDelegationSum={unDelegationSum}
+      loading={data.loading}
+      stakingSum={data.stakingSum}
+      rewardsSum={data.rewardsSum}
+      unDelegationSum={data.unDelegationSum}
       onPressGetRewards={onPressGetRewards}
       onPressValidators={onPressValidators}
     />
