@@ -839,3 +839,25 @@ const styles = StyleSheet.create({
 All interactions with data should be in top level (screen folder)
 
 Components should be dummy, and only render (or have little data preparation) provided data
+
+## i18n
+
+Keys for i18n should  be specific to a particular component and accurately reflect the entity
+
+```jsx
+// bad
+
+export enum I18N {
+  ...
+    address,
+  ...
+}
+
+// good
+
+export enum I18N {
+  ...
+  myComponentNameAddress,
+  ...
+}
+```
