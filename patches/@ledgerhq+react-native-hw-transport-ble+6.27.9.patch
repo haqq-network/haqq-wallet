@@ -1,12 +1,12 @@
 diff --git a/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js b/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
-index a372ed7..be75707 100644
+index a372ed7..dd6eead 100644
 --- a/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
 +++ b/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
 @@ -95,12 +95,23 @@ var errors_1 = require("@ledgerhq/errors");
  var monitorCharacteristic_1 = require("./monitorCharacteristic");
  var awaitsBleOn_1 = require("./awaitsBleOn");
  var remapErrors_1 = require("./remapErrors");
-+const { BleManager } = require('react-native-ble-plx');
++
  var connectOptions = {
      requestMTU: 156,
      connectionPriority: 1
@@ -18,7 +18,7 @@ index a372ed7..be75707 100644
 +
 +function bleInstance() {
 +  if(!blemanagerSingletone) {
-+    blemanagerSingletone = new BleManager();
++    blemanagerSingletone = new react_native_ble_plx_1.BleManager();
 +  }
 +
 +  return blemanagerSingletone
