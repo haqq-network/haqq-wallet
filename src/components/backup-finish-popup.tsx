@@ -16,8 +16,12 @@ import { I18N } from '@app/i18n';
 
 const animationSize = Dimensions.get('window').width - 116;
 
-export const BackUpFinishPopUp = () => {
-  const navigation = useTypedNavigation();
+interface BackUpFinishPopUp {
+  onSubmit?: () => void;
+}
+
+export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
+  
 
   useEffect(() => {
     vibrate(HapticEffects.success);
@@ -30,7 +34,7 @@ export const BackUpFinishPopUp = () => {
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
           loop={false}
-          style={{width: animationSize, height: animationSize}}
+          style={page.animation}
         />
       </Spacer>
       <Text t4 center i18n={I18N.backupFinishcongrat}/>
@@ -39,9 +43,7 @@ export const BackUpFinishPopUp = () => {
         style={page.button}
         variant={ButtonVariant.contained}
         i18n={I18N.backupFinishFinish}
-        onPress={() => {
-          navigation.getParent()?.goBack();
-        }}
+        onPress={onSubmit}
       />
     </PopupContainer>
   );
@@ -52,4 +54,5 @@ const page = StyleSheet.create({
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
   button: {marginVertical: 16},
+  animation:{width: animationSize, height: animationSize}
 });
