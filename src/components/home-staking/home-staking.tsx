@@ -4,7 +4,7 @@ import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useValidators, useWalletsList} from '@app/hooks';
+import {useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables';
 
@@ -12,16 +12,23 @@ import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';
 
 export type StakingHomeProps = {
+  loading: boolean;
+  stakingSum: number;
+  rewardsSum: number;
+  unDelegationSum: number;
   onPressValidators: () => void;
   onPressGetRewards?: () => void;
 };
 
 export const HomeStaking = ({
+  loading,
+  stakingSum,
+  rewardsSum,
+  unDelegationSum,
   onPressValidators,
   onPressGetRewards,
 }: StakingHomeProps) => {
   const {visible} = useWalletsList();
-  const {loading, stakingSum, rewardsSum, unDelegationSum} = useValidators();
 
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 

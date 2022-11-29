@@ -16,6 +16,7 @@ export const HomeStakingScreen = () => {
 
   const {visible} = useWalletsList();
   const navigation = useTypedNavigation();
+  const {loading, stakingSum, rewardsSum, unDelegationSum} = useValidators();
   const cosmos = useRef(new Cosmos(app.provider!)).current;
   const {stakedValidators} = useValidators({withValidatorLists: true});
   const onPressValidators = useCallback(() => {
@@ -58,6 +59,10 @@ export const HomeStakingScreen = () => {
 
   return (
     <HomeStaking
+      loading={loading}
+      stakingSum={stakingSum}
+      rewardsSum={rewardsSum}
+      unDelegationSum={unDelegationSum}
       onPressGetRewards={onPressGetRewards}
       onPressValidators={onPressValidators}
     />
