@@ -4,10 +4,10 @@ import {EventEmitter} from 'events';
 
 import {utils} from 'ethers';
 
+import {calcFee, captureException} from '@app/helpers';
+
 import {app} from './app';
 
-import {captureException} from '../helpers';
-import {calcFee} from '../helpers/calc-fee';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {Transaction} from '../models/transaction';
@@ -145,22 +145,27 @@ class Transactions extends EventEmitter {
         const rows = await txList.json();
 
         for (const row of rows.result) {
-          const exists = this.getTransaction(row.hash);
-
-          if (!exists) {
-            realm.write(() => {
-              realm.create('Transaction', {
-                hash: row.hash,
-                account: address,
-                raw: JSON.stringify(row),
-                createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
-                from: row.from,
-                to: row.to,
-                value: Number(utils.formatEther(row.value)),
-                fee: calcFee(row.gasPrice, row.gasUsed),
-                confirmed: parseInt(row.confirmations, 10) > 10,
-                providerId,
+          try {
+            const exists = this.getTransaction(row.hash);
+            if (!exists) {
+              realm.write(() => {
+                realm.create('Transaction', {
+                  hash: row.hash,
+                  account: address,
+                  raw: JSON.stringify(row),
+                  createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
+                  from: row.from,
+                  to: row.to,
+                  value: Number(utils.formatEther(row.value)),
+                  fee: calcFee(row.gasPrice, row.gasUsed),
+                  confirmed: parseInt(row.confirmations, 10) > 10,
+                  providerId,
+                });
               });
+            }
+          } catch (e) {
+            captureException(e, 'loadTransactionsFromExplorer transaction', {
+              transaction: JSON.stringify(row),
             });
           }
         }

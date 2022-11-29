@@ -44,7 +44,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={onPressRow}>
-      <>
+      <View>
         <View style={styles.container}>
           <View style={styles.iconWrapper}>
             <ArrowSend color={getColor(Color.graphicBase1)} />
@@ -75,7 +75,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowStaked}
               i18params={{
-                staked: cleanNumber((item.localDelegations / WEI).toFixed(4)),
+                staked: cleanNumber(item.localDelegations.toFixed(4)),
               }}
             />
           )}
@@ -84,7 +84,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
               i18params={{
-                reward: cleanNumber((item.localRewards / WEI).toFixed(4)),
+                reward: cleanNumber(item.localRewards.toFixed(4)),
               }}
             />
           )}
@@ -95,7 +95,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             />
           )}
         </View>
-      </>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
