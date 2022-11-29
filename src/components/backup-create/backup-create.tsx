@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {MnemonicWord} from '@app/components/backup-create/mnemonic-word';
 import {
   Button,
   ButtonVariant,
@@ -20,6 +19,8 @@ import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+
+import {MnemonicWord} from './mnemonic-word';
 
 interface BackupCreateProps {
   onSubmit?: () => void;
