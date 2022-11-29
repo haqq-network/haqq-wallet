@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "ISLM.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "ISLM@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "ISLM@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "ISLM.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

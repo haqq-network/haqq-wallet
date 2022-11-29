@@ -13,7 +13,7 @@ import {
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {FontT} from '@app/types';
+import {ColorType, FontT} from '@app/types';
 
 export type TextValue =
   | {children: React.ReactNode}
@@ -45,7 +45,7 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   clean?: boolean;
   center?: boolean;
   right?: boolean;
-  color?: string | Color;
+  color?: ColorType;
   style?: StyleProp<ViewStyle>;
 } & TextValue;
 

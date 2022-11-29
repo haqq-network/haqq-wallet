@@ -7,7 +7,8 @@
     "explorer": "https://explorer.testedge2.haqq.network/",
     "cosmosChainId": "haqq_54211-3",
     "cosmosRestEndpoint": "https://rest.cosmos.testedge2.haqq.network",
-    "tmRpcEndpoint": "https://rpc.tm.testedge2.haqq.network"
+    "tmRpcEndpoint": "https://rpc.tm.testedge2.haqq.network",
+    "isEditable": false
   },
   {
     "id": "6d83b352-6da6-4a71-a250-ba222080e21f",
@@ -17,6 +18,7 @@
     "explorer": "https://explorer.haqq.network/",
     "cosmosChainId": "haqq_11235-1",
     "cosmosRestEndpoint": "https://rest.cosmos.haqq.network",
-    "tmRpcEndpoint": "https://rpc.tm.haqq.network"
+    "tmRpcEndpoint": "https://rpc.tm.haqq.network",
+    "isEditable": false
   }
 ]

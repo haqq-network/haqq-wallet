@@ -55,14 +55,15 @@ import {
 import {sleep} from '@app/utils';
 
 import {StatusBarColor} from './components/ui';
-import {migration} from './models/migration';
 import {BackupScreen} from './screens/backup';
-import {BackupNotificationScreen} from './screens/backup-notification';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {BackupNotificationScreen} from './screens/popup-backup-notification';
+import {NotificationPopupScreen} from './screens/popup-notification';
+import {TrackActivityScreen} from './screens/popup-track-activity';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -73,6 +74,7 @@ import {SettingsAddressBookScreen} from './screens/settings-address-book';
 import {SettingsContactEditScreen} from './screens/settings-contact-edit';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
@@ -135,7 +137,6 @@ export const App = () => {
     showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
-      .then(() => migration())
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
@@ -243,6 +244,16 @@ export const App = () => {
                   options={actionsSheet}
                 />
                 <Stack.Screen
+                  name="notificationPopup"
+                  component={NotificationPopupScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="trackActivity"
+                  component={TrackActivityScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
                   name="transactionDetail"
                   component={TransactionDetailScreen}
                   options={actionsSheet}
@@ -301,7 +312,7 @@ export const App = () => {
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={{
-                      title: 'Providers',
+                      headerShown: false,
                     }}
                   />
                   <Stack.Screen
@@ -342,6 +353,14 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsContactEdit"
                     component={SettingsContactEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="settingsProviderForm"
+                    component={SettingsProviderEditScreen}
                     options={{
                       headerShown: false,
                     }}

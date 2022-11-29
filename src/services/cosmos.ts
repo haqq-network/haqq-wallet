@@ -22,7 +22,9 @@ import {
   Chain,
   Fee,
   createTxMsgDelegate,
+  createTxMsgMultipleWithdrawDelegatorReward,
   createTxMsgUndelegate,
+  createTxMsgWithdrawDelegatorReward,
   createTxRawEIP712,
   signatureToWeb3Extension,
 } from '@evmos/transactions';
@@ -31,6 +33,7 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
+import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
 import {
@@ -174,7 +177,7 @@ export class Cosmos {
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
-  ) {
+  ): Promise<string | undefined> {
     const wallet = wallets.getWallet(ethAddress);
 
     // @ts-ignore
@@ -194,28 +197,35 @@ export class Cosmos {
     source: string,
     sender: Sender,
     msg: {
-      eipToSign: {
-        domain: Record<string, any>;
-        types: Record<string, Array<TypedDataField>>;
-        message: Record<string, any>;
-      };
       legacyAmino: {
         body: protoTxNamespace.txn.TxBody;
         authInfo: protoTxNamespace.txn.AuthInfo;
+      };
+      eipToSign: {
+        types: object;
+        primaryType: string;
+        domain: {
+          name: string;
+          version: string;
+          chainId: number;
+          verifyingContract: string;
+          salt: string;
+        };
+        message: object;
       };
     },
   ) {
     const signature = await this.signTypedData(
       source,
       msg.eipToSign.domain,
-      msg.eipToSign.types,
+      msg.eipToSign.types as Record<string, Array<TypedDataField>>,
       msg.eipToSign.message,
     );
 
     const extension = signatureToWeb3Extension(
       this.haqqChain,
       sender,
-      signature,
+      signature!,
     );
 
     const rawTx = createTxRawEIP712(
@@ -256,7 +266,7 @@ export class Cosmos {
   async delegate(source: string, address: string, amount: number) {
     try {
       const sender = await this.getSender(source);
-      console.log('sender', sender);
+
       const params = {
         validatorAddress: address,
         amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
@@ -275,7 +285,58 @@ export class Cosmos {
 
       return await this.sendMsg(source, sender, msg);
     } catch (e) {
-      console.log('err', e);
+      captureException(e, 'Cosmos.delegate');
+    }
+  }
+
+  async multipleWithdrawDelegatorReward(
+    source: string,
+    validatorAddresses: string[],
+  ) {
+    try {
+      const sender = await this.getSender(source);
+
+      const params = {
+        validatorAddresses,
+      };
+
+      const memo = '';
+
+      const msg = createTxMsgMultipleWithdrawDelegatorReward(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      return await this.sendMsg(source, sender, msg);
+    } catch (e) {
+      captureException(e, 'Cosmos.multipleWithdrawDelegatorReward');
+    }
+  }
+
+  async withdrawDelegatorReward(source: string, validatorAddress: string) {
+    try {
+      const sender = await this.getSender(source);
+
+      const params = {
+        validatorAddress,
+      };
+
+      const memo = '';
+
+      const msg = createTxMsgWithdrawDelegatorReward(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      return await this.sendMsg(source, sender, msg);
+    } catch (e) {
+      captureException(e, 'Cosmos.withdrawDelegatorReward');
     }
   }
 
@@ -319,6 +380,7 @@ export class Cosmos {
           ),
         ),
       )
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
@@ -342,6 +404,7 @@ export class Cosmos {
           })
           .flat();
       })
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
@@ -364,6 +427,7 @@ export class Cosmos {
           )
           .flat();
       })
+      .then(hashes => hashes.filter(Boolean))
       .then(hashes => {
         exists
           .filter(r => !hashes.includes(r))
