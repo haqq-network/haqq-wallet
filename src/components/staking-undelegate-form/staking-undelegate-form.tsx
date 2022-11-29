@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {Color} from '@app/colors';
 import {
@@ -10,8 +10,8 @@ import {
 } from '@app/components/ui';
 import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
+import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N, getText} from '@app/i18n';
-import {isNumber} from '@app/utils';
 import {WEI} from '@app/variables';
 
 export type StakingDelegateFormProps = {
@@ -25,63 +25,35 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const [amount, setAmount] = useState('');
-  const [error, setError] = useState('');
+  const amounts = useSumAmount('', balance - fee / WEI);
 
   const onDone = useCallback(() => {
-    onAmount(parseFloat(amount));
-  }, [amount, onAmount]);
-
-  const onChangeValue = useCallback(
-    (value: string) => {
-      const sum = value.replace(/,/g, '.');
-      setAmount(sum);
-      setError(() => {
-        if (!isNumber(sum)) {
-          return getText(I18N.stakingUnDelegateFormWrongSymbol);
-        }
-        if (parseFloat(sum) > balance) {
-          return getText(I18N.stakingUnDelegateFormNotEnough);
-        }
-
-        return '';
-      });
-    },
-    [balance],
-  );
+    onAmount(parseFloat(amounts.amount));
+  }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    setAmount((balance - fee / WEI).toFixed(4));
-  }, [fee, balance]);
-
-  const checked = useMemo(
-    () =>
-      parseFloat(amount) > 0 &&
-      balance > 0 &&
-      parseFloat(amount) < balance &&
-      !error,
-    [amount, balance, error],
-  );
+    amounts.setAmount(amounts.maxAmount.toFixed(4));
+  }, [amounts]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <Spacer />
-      <SumBlock
-        value={amount}
-        error={error}
-        currency="ISLM"
-        balance={balance}
-        onChange={onChangeValue}
-        onMax={onPressMax}
-      />
-      <Spacer />
+      <Spacer style={styles.space}>
+        <SumBlock
+          value={amounts.amount}
+          error={amounts.error}
+          currency="ISLM"
+          balance={balance}
+          onChange={amounts.setAmount}
+          onMax={onPressMax}
+        />
+      </Spacer>
       <Text t14 center color={Color.textBase2}>
         {getText(I18N.stakingUnDelegateFormNetworkFee)}:{' '}
         {(fee / WEI).toFixed(15)} ISLM
       </Text>
       <Spacer height={16} />
       <Button
-        disabled={!checked}
+        disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         title={getText(I18N.stakingUnDelegateFormPreview)}
         onPress={onDone}
@@ -95,5 +67,8 @@ const styles = createTheme({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
+  },
+  space: {
+    justifyContent: 'center',
   },
 });
