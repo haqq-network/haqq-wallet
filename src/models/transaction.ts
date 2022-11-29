@@ -4,6 +4,8 @@ import {
 } from '@ethersproject/abstract-provider';
 import {utils} from 'ethers';
 
+import {captureException} from '@app/helpers';
+
 import {calcFee} from '../helpers/calc-fee';
 import {TransactionSource} from '../types';
 import {cleanNumber} from '../utils';
@@ -67,10 +69,19 @@ export class Transaction extends Realm.Object {
   }
 
   setConfirmed(receipt: TransactionReceipt) {
-    realm.write(() => {
-      this.confirmed = true;
-      this.fee = calcFee(receipt.cumulativeGasUsed, receipt.effectiveGasPrice);
-    });
+    try {
+      realm.write(() => {
+        this.confirmed = true;
+        this.fee = calcFee(
+          receipt.effectiveGasPrice ?? 7,
+          receipt.cumulativeGasUsed,
+        );
+      });
+    } catch (e) {
+      captureException(e, 'Transaction.setConfirmed', {
+        receipt: JSON.stringify(receipt),
+      });
+    }
   }
 
   static createTransaction(
