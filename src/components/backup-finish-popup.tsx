@@ -11,8 +11,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import { useTypedNavigation } from '@app/hooks';
 import { I18N } from '@app/i18n';
+import { createTheme } from '@app/helpers';
 
 const animationSize = Dimensions.get('window').width - 116;
 
@@ -49,7 +49,7 @@ export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   popupContainer: {marginHorizontal: 20},
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
