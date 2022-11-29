@@ -22,7 +22,7 @@ import {
   LIGHT_GRAPHIC_SECOND_3,
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
-} from '@app/variables';
+} from '@app/variables'; 
 
 export const SettingsAbout = () => {
   const insets = useSafeAreaInsets();
