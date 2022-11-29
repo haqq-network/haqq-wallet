@@ -33,10 +33,11 @@ export const HomeStakingScreen = () => {
   const onPressGetRewards = useCallback(() => {
     const stakedValidators = StakingMetadata.getAll();
     const rewards: Realm.Results<StakingMetadata>[] = stakedValidators.map(
-      ({operator_address}: any) => {
-        return StakingMetadata.getRewardsForValidator(operator_address);
+      ({validator}) => {
+        return StakingMetadata.getRewardsForValidator(validator);
       },
     );
+
     rewards.forEach(rewardItem => {
       if (rewardItem.length) {
         const delegators = new Set(rewardItem.map(r => r.delegator));
@@ -47,7 +48,7 @@ export const HomeStakingScreen = () => {
             .map(w =>
               cosmos.multipleWithdrawDelegatorReward(
                 w.address,
-                stakedValidators.map(v => v.validator),
+                stakedValidators.map(v => v.delegator),
               ),
             )
             .flat(),

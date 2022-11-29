@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
@@ -29,6 +29,7 @@ export const HomeStaking = ({
   onPressGetRewards,
 }: StakingHomeProps) => {
   const {visible} = useWalletsList();
+  const [isAnimation, setIsAnimation] = useState(false);
 
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
@@ -40,8 +41,11 @@ export const HomeStaking = ({
 
   const handleGetRewards = () => {
     stakingActiveRef.current?.getReward();
+    setIsAnimation(true);
+    setTimeout(() => setIsAnimation(false), 2000);
     onPressGetRewards?.();
   };
+
   const hasStaking = stakingSum > 0;
 
   if (loading) {
@@ -72,7 +76,7 @@ export const HomeStaking = ({
           <Button
             i18n={I18N.stakingHomeGetRewards}
             variant={ButtonVariant.second}
-            disabled={!canGetRewards}
+            disabled={!canGetRewards || isAnimation}
             onPress={handleGetRewards}
             style={styles.margin}
           />
