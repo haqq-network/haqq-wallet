@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {IS_DEVELOPMENT} from '@env';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -59,13 +60,15 @@ export const HomeScreen = () => {
           headerRight: QrScannerButton,
         }}
       />
-      <Tab.Screen
-        name="homeStaking"
-        component={HomeStakingScreen}
-        options={{
-          title: getText(I18N.homeStaking),
-        }}
-      />
+      {IS_DEVELOPMENT === '1' && (
+        <Tab.Screen
+          name="homeStaking"
+          component={HomeStakingScreen}
+          options={{
+            title: getText(I18N.homeStaking),
+          }}
+        />
+      )}
       {/* <Tab.Screen
         name="homeSwap"
         component={HomeSwapScreen}

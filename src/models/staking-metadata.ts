@@ -1,6 +1,7 @@
 import createHash from 'create-hash';
 
 import {realm} from '@app/models/index';
+import {WEI} from '@app/variables';
 
 export enum StakingMetadataType {
   delegation = 'delegation',
@@ -23,7 +24,7 @@ export class StakingMetadata extends Realm.Object {
       type: 'string',
       delegator: 'string',
       validator: 'string',
-      amount: 'int',
+      amount: 'float',
       completion_time: 'string?',
     },
     primaryKey: 'hash',
@@ -34,6 +35,10 @@ export class StakingMetadata extends Realm.Object {
     validator: string,
     amount: string,
   ) {
+    if (!parseInt(amount, 10)) {
+      return null;
+    }
+
     const hash = createHash('sha1')
       .update(`${StakingMetadataType.delegation}:${delegator}:${validator}`)
       .digest()
@@ -47,7 +52,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.delegation,
           delegator,
           validator,
-          amount: parseFloat(amount),
+          amount: parseInt(amount, 10) / WEI,
         },
         Realm.UpdateMode.Modified,
       );
@@ -57,6 +62,10 @@ export class StakingMetadata extends Realm.Object {
   }
 
   static createReward(delegator: string, validator: string, amount: string) {
+    if (!parseInt(amount, 10)) {
+      return null;
+    }
+
     const hash = createHash('sha1')
       .update(`${StakingMetadataType.reward}:${delegator}:${validator}`)
       .digest()
@@ -70,7 +79,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.reward,
           delegator,
           validator,
-          amount: parseFloat(amount),
+          amount: parseInt(amount, 10) / WEI,
         },
         Realm.UpdateMode.Modified,
       );
@@ -85,6 +94,10 @@ export class StakingMetadata extends Realm.Object {
     amount: string,
     completion_time: string,
   ) {
+    if (!parseInt(amount, 10)) {
+      return null;
+    }
+
     const hash = createHash('sha1')
       .update(
         `${StakingMetadataType.undelegation}:${delegator}:${validator}:${completion_time}`,
@@ -100,7 +113,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.undelegation,
           delegator,
           validator,
-          amount: parseFloat(amount),
+          amount: parseInt(amount, 10) / WEI,
           completion_time,
         },
         Realm.UpdateMode.Modified,

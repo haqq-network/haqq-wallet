@@ -45,7 +45,7 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
   }, [deviceId]);
 
   return (
-    <PopupContainer>
+    <PopupContainer plain>
       <FlatList
         style={styles.container}
         contentContainerStyle={styles.grow}
