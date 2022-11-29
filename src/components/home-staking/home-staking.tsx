@@ -1,14 +1,11 @@
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useValidators, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {StakingMetadata} from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 import {IS_IOS} from '@app/variables';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
@@ -24,48 +21,19 @@ export const HomeStaking = ({
   onPressGetRewards,
 }: StakingHomeProps) => {
   const {visible} = useWalletsList();
-  const {loading, stakingSum, rewardsSum, unDelegationSum, stakedValidators} =
-    useValidators();
+  const {loading, stakingSum, rewardsSum, unDelegationSum} = useValidators();
 
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
   const availableSum = useMemo(() => {
     return visible.reduce((acc, w) => acc + w.balance, 0);
   }, [visible]);
 
-  const onWithdrawDelegatorRewards = useCallback(() => {
-    const rewards: Realm.Results<StakingMetadata>[] = stakedValidators.map(
-      ({operator_address}) => {
-        return StakingMetadata.getRewardsForValidator(operator_address);
-      },
-    );
-    rewards.forEach(rewardItem => {
-      if (rewardItem.length) {
-        const delegators = new Set(rewardItem.map(r => r.delegator));
-
-        Promise.all(
-          visible
-            .filter(w => delegators.has(w.cosmosAddress))
-            .map(w =>
-              stakedValidators.map(({operator_address}) =>
-                cosmos.withdrawDelegatorReward(w.address, operator_address),
-              ),
-            )
-            .flat(),
-        ).then(() => {
-          rewardItem.forEach(r => StakingMetadata.remove(r.hash));
-        });
-      }
-    });
-  }, [cosmos, stakedValidators, visible]);
-
   const canGetRewards = rewardsSum > 0;
 
   const handleGetRewards = () => {
     stakingActiveRef.current?.getReward();
     onPressGetRewards?.();
-    onWithdrawDelegatorRewards();
   };
   const hasStaking = stakingSum > 0;
 

@@ -6,7 +6,9 @@ import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
   const navigation = useTypedNavigation();
-  const {stakedValidators, unStakedValidators} = useValidators();
+  const {stakedValidators, unStakedValidators} = useValidators({
+    withValidatorLists: true,
+  });
 
   const onPressValidator = useCallback(
     (validator: ValidatorItem) => {

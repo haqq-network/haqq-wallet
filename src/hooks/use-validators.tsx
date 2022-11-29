@@ -19,7 +19,12 @@ const initialSumData = {
   unStakedValidators: [] as ValidatorItem[],
 };
 
-export const useValidators = () => {
+type useValidatorsProps = {
+  withValidatorLists?: boolean;
+};
+
+export const useValidators = (props?: useValidatorsProps) => {
+  const {withValidatorLists} = props || {};
   const cosmos = useRef(new Cosmos(app.provider!)).current;
 
   const [data, setData] = useState(initialSumData);
@@ -64,23 +69,28 @@ export const useValidators = () => {
         jailed: stackedJailed,
       } = validatorsSplit(staked);
 
-      const {
-        active: unStakedActive,
-        inactive: unStakedInactive,
-        jailed: unStackedJailed,
-      } = validatorsSplit(unStaked);
-
       const stakedValidators = [
         validatorsSort(stakedActive),
         validatorsSort(stakedInactive),
         validatorsSort(stackedJailed),
       ].flat();
 
-      const unStakedValidators = [
-        validatorsSort(unStakedActive),
-        validatorsSort(unStakedInactive),
-        validatorsSort(unStackedJailed),
-      ].flat();
+      let newData: any = {};
+
+      if (withValidatorLists) {
+        const {
+          active: unStakedActive,
+          inactive: unStakedInactive,
+          jailed: unStackedJailed,
+        } = validatorsSplit(unStaked);
+
+        const unStakedValidators = [
+          validatorsSort(unStakedActive),
+          validatorsSort(unStakedInactive),
+          validatorsSort(unStackedJailed),
+        ].flat();
+        newData.unStakedValidators = unStakedValidators;
+      }
 
       // stacked info
       const rewardsSum =
@@ -97,15 +107,18 @@ export const useValidators = () => {
           return acc + (v?.localUnDelegations ?? 0);
         }, 0) / WEI;
 
-      setData({
+      newData = {
+        unStakedValidators: newData.unStakedValidators || [],
         rewardsSum,
         stakingSum,
         unDelegationSum,
-        unStakedValidators,
+
         stakedValidators,
-      });
+      };
+
+      setData(newData);
       setLoading(false);
     });
-  }, [cosmos]);
+  }, [cosmos, withValidatorLists]);
   return {...data, loading};
 };
