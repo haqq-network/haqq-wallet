@@ -55,7 +55,6 @@ import {
 import {sleep} from '@app/utils';
 
 import {StatusBarColor} from './components/ui';
-import {migration} from './models/migration';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
@@ -137,7 +136,6 @@ export const App = () => {
     showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
-      .then(() => migration())
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
