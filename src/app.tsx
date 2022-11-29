@@ -83,6 +83,7 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WelcomeScreen} from './screens/welcome';
+import { getColor } from '@app/colors';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -202,6 +203,7 @@ export const App = () => {
       <AppContext.Provider value={app}>
         <StatusBarColor
           barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+          backgroundColor={getColor(Color.bg1)}
         />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>

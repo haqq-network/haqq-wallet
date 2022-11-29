@@ -14,6 +14,7 @@ export const HomeSettings = () => {
   const {theme} = useUser();
   const capitalizedTheme = capitalize(theme);
 
+
   return (
     <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
@@ -35,14 +36,14 @@ export const HomeSettings = () => {
         next="settingsLanguage"
       /> */}
 
-      {IS_DEVELOPMENT === '1' && (
+      {/* {IS_DEVELOPMENT === '1' && ( */}
         <SettingsButton
           rightTitle={capitalizedTheme}
           icon="brush"
           title={getText(I18N.homeSettingsAppearance)}
           next="settingsTheme"
         />
-      )}
+      {/* )} */}
 
       <SettingsButton
         icon="shield"
