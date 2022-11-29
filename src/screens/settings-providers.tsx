@@ -45,6 +45,8 @@ export const SettingsProvidersScreen = () => {
   return (
     <>
       <CustomHeader
+        onPressLeft={navigation.goBack}
+        iconLeft="arrow_back"
         title={getText(I18N.settingsProvidersTitle)}
         textRight={getText(I18N.settingsProvidersTitleRight)}
         colorRight={Color.textGreen1}
