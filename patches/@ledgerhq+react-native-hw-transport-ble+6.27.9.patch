@@ -1,0 +1,158 @@
+diff --git a/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js b/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
+index a372ed7..be75707 100644
+--- a/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
++++ b/node_modules/@ledgerhq/react-native-hw-transport-ble/lib/BleTransport.js
+@@ -95,12 +95,23 @@ var errors_1 = require("@ledgerhq/errors");
+ var monitorCharacteristic_1 = require("./monitorCharacteristic");
+ var awaitsBleOn_1 = require("./awaitsBleOn");
+ var remapErrors_1 = require("./remapErrors");
++const { BleManager } = require('react-native-ble-plx');
+ var connectOptions = {
+     requestMTU: 156,
+     connectionPriority: 1
+ };
+ var transportsCache = {};
+-var bleManager = new react_native_ble_plx_1.BleManager();
++
++var blemanagerSingletone = null
++
++function bleInstance() {
++  if(!blemanagerSingletone) {
++    blemanagerSingletone = new BleManager();
++  }
++
++  return blemanagerSingletone
++}
++
+ var retrieveInfos = function (device) {
+     if (!device || !device.serviceUUIDs)
+         return;
+@@ -122,6 +133,7 @@ function setReconnectionConfig(config) {
+ exports.setReconnectionConfig = setReconnectionConfig;
+ var delay = function (ms) { return new Promise(function (success) { return setTimeout(success, ms); }); };
+ function open(deviceOrId, needsReconnect) {
++    bleInstance()
+     return __awaiter(this, void 0, void 0, function () {
+         var device, devices, connectedDevices, connectedDevicesFiltered, e_1, e_2, res, characteristics, _a, _b, uuid, e_3, e_4_1, deviceModel, serviceUuid, writeUuid, writeCmdUuid, notifyUuid, writeC, writeCmdC, notifyC, characteristics_1, characteristics_1_1, c, notifyObservable, notif, transport, onDisconnect, disconnectedSub, beforeMTUTime, afterMTUTime;
+         var _c, _d, e_4, _e, e_5, _f;
+@@ -134,11 +146,11 @@ function open(deviceOrId, needsReconnect) {
+                         return [2 /*return*/, transportsCache[deviceOrId]];
+                     }
+                     (0, logs_1.log)("ble-verbose", "open(".concat(deviceOrId, ")"));
+-                    return [4 /*yield*/, (0, awaitsBleOn_1.awaitsBleOn)(bleManager)];
++                    return [4 /*yield*/, (0, awaitsBleOn_1.awaitsBleOn)(bleInstance())];
+                 case 1:
+                     _g.sent();
+                     if (!!device) return [3 /*break*/, 3];
+-                    return [4 /*yield*/, bleManager.devices([deviceOrId])];
++                    return [4 /*yield*/, bleInstance().devices([deviceOrId])];
+                 case 2:
+                     devices = _g.sent();
+                     (0, logs_1.log)("ble-verbose", "found ".concat(devices.length, " devices"));
+@@ -146,7 +158,7 @@ function open(deviceOrId, needsReconnect) {
+                     _g.label = 3;
+                 case 3:
+                     if (!!device) return [3 /*break*/, 5];
+-                    return [4 /*yield*/, bleManager.connectedDevices((0, devices_1.getBluetoothServiceUuids)())];
++                    return [4 /*yield*/, bleInstance().connectedDevices((0, devices_1.getBluetoothServiceUuids)())];
+                 case 4:
+                     connectedDevices = _g.sent();
+                     connectedDevicesFiltered = connectedDevices.filter(function (d) { return d.id === deviceOrId; });
+@@ -159,7 +171,7 @@ function open(deviceOrId, needsReconnect) {
+                     _g.label = 6;
+                 case 6:
+                     _g.trys.push([6, 8, , 12]);
+-                    return [4 /*yield*/, bleManager.connectToDevice(deviceOrId, connectOptions)];
++                    return [4 /*yield*/, bleInstance().connectToDevice(deviceOrId, connectOptions)];
+                 case 7:
+                     device = _g.sent();
+                     return [3 /*break*/, 12];
+@@ -168,7 +180,7 @@ function open(deviceOrId, needsReconnect) {
+                     if (!(e_1.errorCode === react_native_ble_plx_1.BleErrorCode.DeviceMTUChangeFailed)) return [3 /*break*/, 10];
+                     // eslint-disable-next-line require-atomic-updates
+                     connectOptions = {};
+-                    return [4 /*yield*/, bleManager.connectToDevice(deviceOrId)];
++                    return [4 /*yield*/, bleInstance().connectToDevice(deviceOrId)];
+                 case 9:
+                     device = _g.sent();
+                     return [3 /*break*/, 11];
+@@ -400,7 +412,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+                             (0, logs_1.log)("ble-error", "exchange got " + String(e_6));
+                             if (!this.notYetDisconnected) return [3 /*break*/, 4];
+                             // in such case we will always disconnect because something is bad.
+-                            return [4 /*yield*/, bleManager.cancelDeviceConnection(this.id)["catch"](function () { })];
++                            return [4 /*yield*/, bleInstance().cancelDeviceConnection(this.id)["catch"](function () { })];
+                         case 3:
+                             // in such case we will always disconnect because something is bad.
+                             _b.sent(); // but we ignore if disconnect worked.
+@@ -463,7 +475,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+                 available: type === "PoweredOn"
+             });
+         };
+-        bleManager.onStateChange(emitFromState, true);
++        bleInstance().onStateChange(emitFromState, true);
+         return {
+             unsubscribe: function () { }
+         };
+@@ -476,14 +488,14 @@ var BluetoothTransport = /** @class */ (function (_super) {
+         (0, logs_1.log)("ble-verbose", "listen...");
+         var unsubscribed;
+         // $FlowFixMe
+-        var stateSub = bleManager.onStateChange(function (state) { return __awaiter(_this, void 0, void 0, function () {
++        var stateSub = bleInstance().onStateChange(function (state) { return __awaiter(_this, void 0, void 0, function () {
+             var devices;
+             return __generator(this, function (_b) {
+                 switch (_b.label) {
+                     case 0:
+                         if (!(state === "PoweredOn")) return [3 /*break*/, 3];
+                         stateSub.remove();
+-                        return [4 /*yield*/, bleManager.connectedDevices((0, devices_1.getBluetoothServiceUuids)())];
++                        return [4 /*yield*/, bleInstance().connectedDevices((0, devices_1.getBluetoothServiceUuids)())];
+                     case 1:
+                         devices = _b.sent();
+                         if (unsubscribed)
+@@ -495,7 +507,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+                         _b.sent();
+                         if (unsubscribed)
+                             return [2 /*return*/];
+-                        bleManager.startDeviceScan((0, devices_1.getBluetoothServiceUuids)(), null, function (bleError, device) {
++                        bleInstance().startDeviceScan((0, devices_1.getBluetoothServiceUuids)(), null, function (bleError, device) {
+                             if (bleError) {
+                                 observer.error(bleError);
+                                 unsubscribe();
+@@ -518,7 +530,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+         }); }, true);
+         var unsubscribe = function () {
+             unsubscribed = true;
+-            bleManager.stopDeviceScan();
++            bleInstance().stopDeviceScan();
+             stateSub.remove();
+             (0, logs_1.log)("ble-verbose", "done listening.");
+         };
+@@ -564,7 +576,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+                                         case 2:
+                                             e_9 = _b.sent();
+                                             (0, logs_1.log)("ble-error", "inferMTU got " + String(e_9));
+-                                            return [4 /*yield*/, bleManager.cancelDeviceConnection(this.id)["catch"](function () { })];
++                                            return [4 /*yield*/, bleInstance().cancelDeviceConnection(this.id)["catch"](function () { })];
+                                         case 3:
+                                             _b.sent(); // but we ignore if disconnect worked.
+                                             throw (0, remapErrors_1.remapError)(e_9);
+@@ -624,7 +636,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+      *
+      */
+     BluetoothTransport.setLogLevel = function (level) {
+-        bleManager.setLogLevel(level);
++        bleInstance().setLogLevel(level);
+     };
+     BluetoothTransport.list = function () {
+         throw new Error("not implemented");
+@@ -637,7 +649,7 @@ var BluetoothTransport = /** @class */ (function (_super) {
+             switch (_b.label) {
+                 case 0:
+                     (0, logs_1.log)("ble-verbose", "user disconnect(".concat(id, ")"));
+-                    return [4 /*yield*/, bleManager.cancelDeviceConnection(id)];
++                    return [4 /*yield*/, bleInstance().cancelDeviceConnection(id)];
+                 case 1:
+                     _b.sent();
+                     return [2 /*return*/];
