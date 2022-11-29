@@ -519,19 +519,18 @@ const SomeReactComponent = () => {
   // ...
 };
 
-SomeReactComponent.displayName = 'SomeReactComponent'
-
-export default SomeReactComponent;
-
-// good
 function SomeReactComponent() {
   // ...
 };
+SomeReactComponent.displayName = 'SomeReactComponent'
 
-export default SomeReactComponent;
+// good
+export const SomeReactComponent = () => {
+  // ...
+};
 
 // best
-export default function SomeReactComponent() {
+export function SomeReactComponent() {
   // ...
 };
 ```
@@ -832,3 +831,11 @@ const styles = StyleSheet.create({
   }
 })
 ```
+
+# Architecture
+
+## 1. Separate data level and display level
+
+All interactions with data should be in top level (screen folder)
+
+Components should be dummy, and only render (or have little data preparation) provided data
