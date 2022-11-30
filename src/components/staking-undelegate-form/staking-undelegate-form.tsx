@@ -28,13 +28,13 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount('', balance - fee / WEI);
+  const amounts = useSumAmount(0, balance - fee / WEI);
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    amounts.setAmount(amounts.maxAmount.toFixed(4));
+    amounts.setMax();
   }, [amounts]);
 
   return (

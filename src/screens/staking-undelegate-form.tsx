@@ -1,10 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
-import {WEI} from '@app/variables';
 
 export const StakingUnDelegateFormScreen = () => {
   const navigation = useTypedNavigation();
@@ -12,9 +11,7 @@ export const StakingUnDelegateFormScreen = () => {
 
   const wallet = useWallet(account);
 
-  const [balance, setBalance] = useState(0);
-
-  useEffect(() => {
+  const balance = useMemo(() => {
     const delegations = StakingMetadata.getDelegationsForValidator(
       validator.operator_address,
     );
@@ -23,9 +20,7 @@ export const StakingUnDelegateFormScreen = () => {
       d => d.delegator === wallet?.cosmosAddress,
     );
 
-    if (delegation) {
-      setBalance(delegation.amount / WEI);
-    }
+    return delegation?.amount ?? 0;
   }, [validator.operator_address, wallet?.cosmosAddress]);
 
   const fee = parseInt(Cosmos.fee.amount, 10);

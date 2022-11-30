@@ -22,15 +22,16 @@ export const StakingUnDelegatePreviewScreen = () => {
 
         const cosmos = new Cosmos(app.provider!);
 
-        const resp = await cosmos.unDelegate(
-          account,
-          validator.operator_address,
-          amount,
-        );
+        const {tx_response} =
+          (await cosmos.unDelegate(
+            account,
+            validator.operator_address,
+            amount,
+          )) || {};
 
-        if (resp) {
+        if (tx_response?.txhash) {
           navigation.navigate('stakingUnDelegateFinish', {
-            txhash: txhash,
+            txhash: tx_response?.txhash,
             validator: validator,
             amount: amount,
             fee: fee,
