@@ -1,3 +1,5 @@
+import {getAppVersion, getBuildNumber} from '@app/services/version';
+
 export enum I18N {
   backupCreateRecoveryPhrase,
   backupCreateRecoverySaveWords,
@@ -165,6 +167,13 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  settingsAboutTitle,
+  settingsAboutVisit,
+  settingsAboutDocuments,
+  settingsAboutTerms,
+  settingsAboutSocials,
+  settingsAboutDiscord,
+  settingsAboutRights,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -366,4 +375,11 @@ const en: Record<I18N, string> = {
   [I18N.welcomeCreateWallet]: 'Create Wallet',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
+  [I18N.settingsAboutTitle]: 'About App',
+  [I18N.settingsAboutVisit]: 'Visit islamiccoin.net',
+  [I18N.settingsAboutDocuments]: 'Legal Documents',
+  [I18N.settingsAboutTerms]: 'Terms & Conditions',
+  [I18N.settingsAboutSocials]: 'Our Socials',
+  [I18N.settingsAboutDiscord]: 'Discord',
+  [I18N.settingsAboutRights]: `©2022 IslamIQ. All Rights Reserved. Version ${getAppVersion()} (${getBuildNumber()})`,
 };
