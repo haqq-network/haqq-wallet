@@ -57,7 +57,7 @@ jobs:
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribution" >> .env
-          
+
       - name: Install Fastlane
         run: |
           bundle install
@@ -144,3 +144,45 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+
+  patch_build:
+    name: Patch build versions
+    runs-on: macos-latest
+    needs:
+      - build_ios
+      - build_android
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1.2"
+      - name: Decode secrets
+        run: |
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+
+      - name: Install Fastlane
+        run: |
+          bundle install
+      - name: Execute Fastlane command
+        run: |
+          bundle exec fastlane ios patch_build
+          bundle exec fastlane android patch_build
+        env:
+          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
+          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
+
+      - name: Amend the last commit
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Build"
+          git log -1 --pretty="%H" > .last-build
+          git commit -am "build"
+          git push --force-with-lease

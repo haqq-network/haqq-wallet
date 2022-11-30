@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
 import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
@@ -6,7 +6,6 @@ import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
 import {SumBlock} from '@app/components/ui/sum-block';
 import {useContacts} from '@app/hooks';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
-import {EthNetwork} from '@app/services/eth-network';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
 import {LIGHT_TEXT_BASE_1} from '@app/variables';
@@ -21,6 +20,8 @@ import {
 } from '../ui';
 
 export type TransactionSumProps = {
+  balance: number;
+  fee: number;
   to: string;
   from: string;
   onAmount: (amount: number) => void;
@@ -29,14 +30,18 @@ export type TransactionSumProps = {
 
 export const TransactionSum = ({
   to,
-  from,
+  balance,
+  fee,
   onAmount,
   onContact,
 }: TransactionSumProps) => {
   const contacts = useContacts();
   const amounts = useSumAmount();
 
-  const [balance, setBalance] = useState(0);
+  useEffect(() => {
+    amounts.setMaxAmount(balance - 2 * fee);
+  }, [amounts, balance, fee]);
+
   const inputSumRef = useRef<TextInput>(null);
 
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
@@ -46,23 +51,11 @@ export const TransactionSum = ({
     [contact, to],
   );
 
-  const getBalance = useCallback(async () => {
-    const newBalance = await EthNetwork.getBalance(from);
-    setBalance(newBalance);
-
-    const {fee} = await EthNetwork.estimateTransaction(from, to, newBalance);
-    amounts.setMaxAmount(newBalance - fee * 2);
-  }, [amounts, from, to]);
-
   useFocusEffect(
     useCallback(() => {
       setTimeout(() => inputSumRef.current?.focus(), 500);
     }, []),
   );
-
-  useEffect(() => {
-    getBalance();
-  }, [getBalance]);
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
