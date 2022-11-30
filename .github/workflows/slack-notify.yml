@@ -10,19 +10,20 @@ jobs:
     steps:
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
-        payload: |
-          {
-            "text": "GitHub Action message",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "GitHub Action build result"
+        with:
+          payload: |
+            {
+              "text": "GitHub Action message",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "GitHub Action build result"
+                  }
                 }
-              }
-            ]
-          }
+              ]
+            }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
