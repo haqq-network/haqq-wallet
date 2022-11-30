@@ -23,8 +23,7 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
-import {getColor} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
