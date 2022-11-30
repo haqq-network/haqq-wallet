@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { Dimensions } from 'react-native';
+import React, {useEffect} from 'react';
 
-import { HapticEffects, vibrate } from '@app/services/haptic';
+import {Dimensions} from 'react-native';
 
 import {
   Button,
@@ -11,8 +10,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import { I18N } from '@app/i18n';
-import { createTheme } from '@app/helpers';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 const animationSize = Dimensions.get('window').width - 116;
 
@@ -21,8 +21,6 @@ interface BackUpFinishPopUp {
 }
 
 export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
-  
-
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
@@ -37,8 +35,8 @@ export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
           style={page.animation}
         />
       </Spacer>
-      <Text t4 center i18n={I18N.backupFinishCongratulation}/>
-      <Text t4 center i18n={I18N.backupFinishSuccess} style={page.title}/>
+      <Text t4 center i18n={I18N.backupFinishCongratulation} />
+      <Text t4 center i18n={I18N.backupFinishSuccess} style={page.title} />
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
@@ -54,5 +52,5 @@ const page = createTheme({
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
   button: {marginVertical: 16},
-  animation:{width: animationSize, height: animationSize}
+  animation: {width: animationSize, height: animationSize},
 });

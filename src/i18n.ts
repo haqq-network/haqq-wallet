@@ -167,7 +167,7 @@ export enum I18N {
   welcomeRestoreWallet,
   backupFinishCongratulation,
   backupFinishSuccess,
-  backupFinishFinish
+  backupFinishFinish,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
