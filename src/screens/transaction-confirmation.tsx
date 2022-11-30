@@ -147,7 +147,7 @@ export const TransactionConfirmationScreen = () => {
           </DataView>
           <DataView label="Network Fee">
             <Text t11 color={getColor(Color.textBase1)}>
-              {estimateFee.toFixed(8)} ISLM
+              {estimateFee.toFixed(15)} ISLM
             </Text>
           </DataView>
         </View>
