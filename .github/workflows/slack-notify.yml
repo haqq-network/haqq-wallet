@@ -14,7 +14,6 @@ jobs:
         run: |
           message=$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")
           echo "message=$message" >> $GITHUB_OUTPUT
-
       - name: Debug
         run: echo ${{ steps.vars.outputs.message }}
 
