@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
 import {RootStackParamList} from '@app/types';
 
@@ -19,6 +19,8 @@ export const HomeScreenTabBarIcon = ({
     switch (route.name) {
       case 'homeFeed':
         return IconsName.wallet;
+      case 'homeStaking':
+        return IconsName.staking;
       case 'homeSettings':
         return IconsName.settings;
     }
@@ -30,9 +32,8 @@ export const HomeScreenTabBarIcon = ({
 
   return (
     <Icon
-      s
       name={name}
-      color={getColor(focused ? Color.graphicGreen1 : Color.graphicBase2)}
+      color={focused ? Color.graphicGreen1 : Color.graphicBase2}
     />
   );
 };

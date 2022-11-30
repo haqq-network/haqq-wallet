@@ -1,37 +1,37 @@
-/* eslint-disable react-native/no-unused-styles */
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  ViewProps,
-} from 'react-native';
+import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
+
+import {Icon, IconProps} from './icon';
 import {Text} from './text';
 
-import {
-  LIGHT_BG_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_GREEN_1,
-  LIGHT_TEXT_RED_1,
-  LIGHT_TEXT_SECOND_1,
-} from '../../variables';
+export type ButtonValue =
+  | {title: string; i18n?: undefined}
+  | {i18n: I18N; title?: undefined};
+
+export type ButtonRightIconProps =
+  | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
+  | {iconRight?: undefined; iconRightColor?: undefined};
+
+export type ButtonLeftIconProps =
+  | {iconLeft: IconProps['name']; iconLeftColor: IconProps['color']}
+  | {iconLeft?: undefined; iconLeftColor?: undefined};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  title: string;
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
-  iconRight?: React.ReactNode;
-  iconLeft?: React.ReactNode;
   loading?: boolean;
   textColor?: string;
-};
+} & ButtonValue &
+  ButtonRightIconProps &
+  ButtonLeftIconProps;
 
 export enum ButtonVariant {
   text = 'text',
@@ -49,22 +49,25 @@ export enum ButtonSize {
 
 export const Button = ({
   title,
+  i18n,
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
   disabled,
   onPress,
   iconRight,
+  iconRightColor,
   iconLeft,
+  iconLeftColor,
   textColor,
   loading = false,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
-    if (!disabled) {
+    if (!(disabled || loading)) {
       onPress();
     }
-  }, [disabled, onPress]);
+  }, [disabled, loading, onPress]);
 
   const containerStyle = useMemo(
     () => [
@@ -98,22 +101,30 @@ export const Button = ({
       activeOpacity={0.7}
       {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={LIGHT_TEXT_BASE_3} />
+        <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
       ) : (
-        <Text
-          t9={size !== ButtonSize.small}
-          t12={size === ButtonSize.small}
-          style={textStyle}
-          color={textColor}>
-          {title}
-        </Text>
+        <>
+          {iconLeft && (
+            <Icon name={iconLeft} color={iconLeftColor} style={page.icon} />
+          )}
+          <Text
+            t9={size !== ButtonSize.small}
+            t12={size === ButtonSize.small}
+            style={textStyle}
+            color={textColor}
+            i18n={i18n}>
+            {title}
+          </Text>
+          {iconRight && (
+            <Icon name={iconRight} color={iconRightColor} style={page.icon} />
+          )}
+        </>
       )}
-      {iconRight}
     </TouchableOpacity>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -121,36 +132,41 @@ const page = StyleSheet.create({
     paddingVertical: 13, // originally 16 but for android 16 - 3
     paddingHorizontal: 28,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   smallContainer: {
     paddingVertical: 3, // originally 6 but for android 6 - 3
     paddingHorizontal: 12,
     height: 34,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   middleContainer: {
     paddingVertical: 9, // originally 12 but for android 12 - 3
     paddingHorizontal: 20,
     height: 46,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedContainer: {
-    backgroundColor: LIGHT_GRAPHIC_GREEN_1,
+    backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     height: 54,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
-  textContainer: {},
-  errorContainer: {},
+  // eslint-disable-next-line react-native/no-unused-styles
   outlinedContainer: {
-    borderColor: LIGHT_GRAPHIC_GREEN_1,
+    borderColor: Color.graphicGreen1,
     borderRadius: 12,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondContainer: {
-    backgroundColor: LIGHT_BG_2,
+    backgroundColor: Color.bg2,
     borderRadius: 12,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledContainer: {
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
   textIconRight: {
     marginRight: 8,
@@ -158,21 +174,28 @@ const page = StyleSheet.create({
   textIconLeft: {
     marginLeft: 8,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedText: {
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
   },
-  textText: {},
-  outlinedText: {},
+  // eslint-disable-next-line react-native/no-unused-styles
   errorText: {
-    color: LIGHT_TEXT_RED_1,
+    color: Color.textRed1,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondText: {
-    color: LIGHT_TEXT_GREEN_1,
+    color: Color.textGreen1,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledText: {
-    color: LIGHT_TEXT_SECOND_1,
+    color: Color.textSecond1,
+  },
+  icon: {
+    width: 22,
+    height: 22,
   },
 });

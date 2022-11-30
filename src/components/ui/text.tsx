@@ -13,11 +13,16 @@ import {
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {FontT} from '@app/types';
+import {ColorType, FontT} from '@app/types';
 
-export type TextValue = {children: React.ReactNode} | {i18n: I18N};
+export type TextValue =
+  | {children: React.ReactNode}
+  | {i18n: I18N; i18params?: Record<string, string>};
 
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
+  children?: React.ReactNode;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;
@@ -40,7 +45,7 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   clean?: boolean;
   center?: boolean;
   right?: boolean;
-  color?: string | Color;
+  color?: ColorType;
   style?: StyleProp<ViewStyle>;
 } & TextValue;
 
@@ -65,8 +70,9 @@ export const Text = ({
   t17,
   u0,
   style,
-  i18n,
-  children,
+  i18n = undefined,
+  i18params = undefined,
+  children = undefined,
   clean,
   center,
   right,
@@ -74,8 +80,8 @@ export const Text = ({
   ...props
 }: TextProps) => {
   const value = useMemo(
-    () => (typeof i18n !== 'undefined' ? getText(i18n) : children),
-    [children, i18n],
+    () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : children),
+    [children, i18n, i18params],
   );
 
   return (

@@ -40,6 +40,10 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {StakingDelegateScreen} from '@app/screens/staking-delegate';
+import {StakingInfoScreen} from '@app/screens/staking-info';
+import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
+import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
   AppTheme,
@@ -51,14 +55,15 @@ import {
 import {sleep} from '@app/utils';
 
 import {StatusBarColor} from './components/ui';
-import {migration} from './models/migration';
 import {BackupScreen} from './screens/backup';
-import {BackupNotificationScreen} from './screens/backup-notification';
 import {CreateScreen} from './screens/create';
 import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {BackupNotificationScreen} from './screens/popup-backup-notification';
+import {NotificationPopupScreen} from './screens/popup-notification';
+import {TrackActivityScreen} from './screens/popup-track-activity';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -69,6 +74,7 @@ import {SettingsAddressBookScreen} from './screens/settings-address-book';
 import {SettingsContactEditScreen} from './screens/settings-contact-edit';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
+import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
@@ -117,6 +123,7 @@ const stackScreenOptions = {
   presentation: 'modal',
   gestureEnabled: false,
 };
+
 export const App = () => {
   const theme = useTheme();
 
@@ -129,7 +136,6 @@ export const App = () => {
     showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
-      .then(() => migration())
       .then(() => app.init())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
@@ -216,6 +222,14 @@ export const App = () => {
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
                   <Stack.Screen name="ledger" component={LedgerScreen} />
+                  <Stack.Screen
+                    name="stakingDelegate"
+                    component={StakingDelegateScreen}
+                  />
+                  <Stack.Screen
+                    name="stakingUnDelegate"
+                    component={StakingUnDelegateScreen}
+                  />
                 </Stack.Group>
                 <Stack.Screen
                   name="detailsQr"
@@ -225,6 +239,16 @@ export const App = () => {
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="notificationPopup"
+                  component={NotificationPopupScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="trackActivity"
+                  component={TrackActivityScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen
@@ -286,7 +310,7 @@ export const App = () => {
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={{
-                      title: 'Providers',
+                      headerShown: false,
                     }}
                   />
                   <Stack.Screen
@@ -331,11 +355,35 @@ export const App = () => {
                       headerShown: false,
                     }}
                   />
+
+                  <Stack.Screen
+                    name="settingsProviderForm"
+                    component={SettingsProviderEditScreen}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
                   <Stack.Screen
                     name="settingsTheme"
                     component={SettingsThemeScreen}
                     options={{
                       title: getText(I18N.settingsThemeScreen),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="stakingValidators"
+                    component={StakingValidatorsScreen}
+                    options={{
+                      title: getText(I18N.stakingValidators),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="stakingInfo"
+                    component={StakingInfoScreen}
+                    options={{
+                      title: getText(I18N.stakingInfo),
                     }}
                   />
                 </Stack.Group>

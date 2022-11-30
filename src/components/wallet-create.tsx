@@ -2,16 +2,17 @@ import React from 'react';
 
 import {NavigationProp} from '@react-navigation/core';
 import {useNavigation} from '@react-navigation/native';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import {Dimensions, View} from 'react-native';
 
-import {Button, ButtonSize, ButtonVariant, Spacer, Text} from './ui';
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
+
+import {Button, ButtonSize, ButtonVariant, Inline, Spacer, Text} from './ui';
 
 import {RootStackParamList} from '../types';
 import {
   LIGHT_BG_1,
-  LIGHT_GRAPHIC_GREEN_1,
   LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
   MAGIC_CARD_HEIGHT,
   SHADOW_COLOR,
@@ -26,7 +27,7 @@ export const WalletCreate = ({}: BalanceProps) => {
       <Text t8 style={page.title}>
         Add accounts
       </Text>
-      <Text t14 style={page.subtitle}>
+      <Text t14 center color={Color.textBase2}>
         Import and create new accounts
       </Text>
       <Spacer />
@@ -39,13 +40,13 @@ export const WalletCreate = ({}: BalanceProps) => {
         }}
         style={page.create}
       />
-      <View style={page.buttons}>
+      <Inline gap={0}>
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
           title="Connect"
-          style={page.createSmall}
-          iconRight={<Image source={{uri: 'ledger'}} style={page.ledgerIcon} />}
+          iconRight="ledger"
+          iconRightColor={Color.graphicGreen1}
           onPress={() => {
             navigation.navigate('ledger');
           }}
@@ -53,19 +54,18 @@ export const WalletCreate = ({}: BalanceProps) => {
         <Button
           size={ButtonSize.middle}
           title="Import"
-          style={page.createSmall}
           onPress={() => {
             navigation.navigate('restore');
           }}
         />
-      </View>
+      </Inline>
     </View>
   );
 };
 
 const cardWidth = Dimensions.get('window').width - 40;
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     width: cardWidth,
@@ -91,10 +91,6 @@ const page = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 4,
   },
-  subtitle: {
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
-  },
   create: {
     flex: 0,
     paddingHorizontal: 8,
@@ -102,15 +98,4 @@ const page = StyleSheet.create({
     lineHeight: 22,
     marginBottom: 8,
   },
-  createSmall: {
-    flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-    lineHeight: 22,
-  },
-  buttons: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-  },
-  ledgerIcon: {width: 22, height: 22, tintColor: LIGHT_GRAPHIC_GREEN_1},
 });

@@ -1,9 +1,20 @@
 import React from 'react';
 
+import {Validator} from '@evmos/provider';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
+import {Color} from '@app/colors';
+import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
+
 import {Transaction} from './models/transaction';
+
+export interface TransportWallet {
+  getPublicKey: () => Promise<string>;
+
+  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
+}
 
 export enum TransactionSource {
   unknown,
@@ -46,6 +57,7 @@ export type WalletInitialData =
 export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
+  homeStaking: undefined;
   homeSettings: undefined;
   welcome: undefined;
   create: undefined;
@@ -203,6 +215,62 @@ export type RootStackParamList = {
     address: string;
     isCreate?: boolean;
   };
+  settingsProviderForm: {
+    id?: string;
+  };
+  stakingValidators: undefined;
+  stakingInfo: {
+    validator: ValidatorItem;
+  };
+  stakingDelegate: {
+    validator: string;
+  };
+  stakingDelegateAccount: {
+    validator: ValidatorItem;
+  };
+  stakingDelegateForm: {
+    account: string;
+    validator: ValidatorItem;
+  };
+  stakingDelegatePreview: {
+    account: string;
+    amount: number;
+    fee: number;
+    validator: ValidatorItem;
+  };
+  stakingDelegateFinish: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: number;
+  };
+  stakingUnDelegate: {
+    validator: string;
+  };
+  stakingUnDelegateAccount: {
+    available: Wallet[];
+    validator: ValidatorItem;
+    maxAmount: number;
+  };
+  stakingUnDelegateForm: {
+    account: string;
+    validator: ValidatorItem;
+    maxAmount: number;
+  };
+  stakingUnDelegatePreview: {
+    account: string;
+    amount: number;
+    fee: number;
+    validator: ValidatorItem;
+  };
+  stakingUnDelegateFinish: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: number;
+  };
+  notificationPopup: undefined;
+  trackActivity: undefined;
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
@@ -313,7 +381,7 @@ export enum AppTheme {
   system = 'system',
 }
 
-export type AddWalletParams = {address: string} & (
+export type AddWalletParams = {address: string; publicKey: string} & (
   | {
       type: WalletType.mnemonic;
       mnemonic: string;
@@ -331,3 +399,18 @@ export type AddWalletParams = {address: string} & (
       deviceName: string;
     }
 );
+
+export enum ValidatorStatus {
+  active = I18N.validatorStatusActive,
+  inactive = I18N.validatorStatusInactive,
+  jailed = I18N.validatorStatusJailed,
+}
+
+export type ValidatorItem = Validator & {
+  localStatus: ValidatorStatus;
+  localDelegations?: number;
+  localRewards?: number;
+  localUnDelegations?: number;
+};
+
+export type ColorType = Color | string;
