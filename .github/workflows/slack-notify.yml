@@ -10,14 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set environment variables
+        id: vars
         run: |
-          git fetch --prune --unshallow 1>&2
-          echo $(git rev-list HEAD)
-          echo $(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")
-          echo "MESSAGE=`$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")`" >> $GITHUB_ENV
+#          git fetch --prune --unshallow 1>&2
+
+          message=$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")
+          echo "message=$message" >> $GITHUB_OUTPUT
 
       - name: Debug
-        run: echo ${{ env.MESSAGE }}
+        run: echo ${{ steps.vars.outputs.message }}
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
@@ -30,7 +31,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ env.MESSAGE }}"
+                    "text": "${{ steps.vars.outputs.message }}"
                   }
                 }
               ]
