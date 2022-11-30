@@ -1,20 +1,16 @@
 import React, {useCallback, useState} from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
-
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
-
-import {RootStackParamList} from '../types';
 
 export const StakingUnDelegatePreviewScreen = () => {
   const navigation = useTypedNavigation();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'stakingDelegatePreview'>>();
+  const {account, amount, validator, fee} =
+    useTypedRoute<'stakingDelegatePreview'>().params;
 
-  const wallet = useWallet(route.params.account);
+  const wallet = useWallet(account);
 
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -27,21 +23,20 @@ export const StakingUnDelegatePreviewScreen = () => {
         const cosmos = new Cosmos(app.provider!);
 
         const resp = await cosmos.unDelegate(
-          route.params.account,
-          route.params.validator.operator_address,
-          route.params.amount,
+          account,
+          validator.operator_address,
+          amount,
         );
 
         if (resp) {
           navigation.navigate('stakingUnDelegateFinish', {
-            txhash: resp.tx_response.txhash,
-            validator: route.params.validator,
-            amount: route.params.amount,
-            fee: route.params.fee,
+            txhash: txhash,
+            validator: validator,
+            amount: amount,
+            fee: fee,
           });
         }
       } catch (e) {
-        console.log('onDone', e);
         if (e instanceof Error) {
           setError(e.message);
         }
@@ -49,20 +44,13 @@ export const StakingUnDelegatePreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [
-    wallet,
-    route.params.account,
-    route.params.validator,
-    route.params.amount,
-    route.params.fee,
-    navigation,
-  ]);
+  }, [wallet, account, validator, amount, fee, navigation]);
 
   return (
     <StakingUnDelegatePreview
-      amount={route.params.amount}
-      fee={route.params.fee}
-      validator={route.params.validator}
+      amount={amount}
+      fee={fee}
+      validator={validator}
       disabled={disabled}
       onSend={onDone}
       error={error}
