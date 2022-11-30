@@ -2,8 +2,10 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
 import {useApp, useTypedNavigation, useWalletsList} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
-import {StakingMetadata} from '@app/models/staking-metadata';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
 
 const initData = {
@@ -26,39 +28,40 @@ export const HomeStakingScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    const newData = StakingMetadata.getSummaryInfo();
-    setData({...newData, loading: false});
+    const listener = (newData: any) => {
+      setData({...newData, loading: false});
+    };
+    const unsub = StakingMetadata.getAll().addListener(
+      StakingMetadata.summaryInfoListener(listener),
+    );
+    return unsub;
   }, []);
 
-  const onPressGetRewards = useCallback(() => {
+  const onPressGetRewards = useCallback(async () => {
     const stakedValidators = StakingMetadata.getAll();
-    const rewards: Realm.Results<StakingMetadata>[] = stakedValidators.map(
-      ({validator}) => {
-        return StakingMetadata.getRewardsForValidator(validator);
-      },
+    const rewards: Realm.Results<StakingMetadata> = stakedValidators.filtered(
+      `type = '${StakingMetadataType.reward}'`,
     );
 
-    rewards.forEach(rewardItem => {
-      if (rewardItem.length) {
-        const delegators = new Set(rewardItem.map(r => r.delegator));
+    const delegators: any = {};
 
-        Promise.all(
-          visible
-            .filter(w => delegators.has(w.cosmosAddress))
-            .map(w =>
-              cosmos.multipleWithdrawDelegatorReward(
-                w.address,
-                stakedValidators.map(v => v.delegator),
-              ),
-            )
-            .flat(),
-        ).then(() => {
-          rewardItem.forEach(r => StakingMetadata.remove(r.hash));
-        });
-      }
-    });
-    app.emit('notification', getText(I18N.notificationRewardReceived));
-  }, [cosmos, visible, app]);
+    for (const row of rewards) {
+      delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
+        row.validator,
+      );
+    }
+    await Promise.all(
+      visible
+        .filter(w => w.cosmosAddress in delegators)
+        .map(w => {
+          return cosmos.multipleWithdrawDelegatorReward(
+            w.address,
+            delegators[w.cosmosAddress],
+          );
+        }),
+    );
+    rewards.forEach(r => StakingMetadata.remove(r.hash));
+  }, [cosmos, visible]);
 
   useEffect(() => {
     const addressList = visible.map(w => w.cosmosAddress);
