@@ -247,6 +247,7 @@ export const SettingsProviderEdit = memo(
                 variant={ButtonVariant.second}
                 i18n={I18N.settingsProviderEditUseProvider}
                 onPress={onSelect}
+                style={page.useProviderButton}
               />
             </>
           )}
@@ -269,10 +270,8 @@ const page = createTheme({
     marginTop: 12,
   },
   spaceInput: {height: 24},
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 16,
+  useProviderButton: {
+    marginVertical: 16,
   },
   buttonContainerRemove: {
     alignSelf: 'flex-start',
