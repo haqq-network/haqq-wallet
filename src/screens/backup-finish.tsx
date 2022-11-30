@@ -1,5 +1,6 @@
 import React from 'react';
-import { BackUpFinishPopUp } from '@app/components/backup-finish-popup'; 
+
+import { BackUpFinishPopUp } from '@app/components/backup-finish'; 
 import { useTypedNavigation } from '@app/hooks';
 
 
@@ -15,5 +16,4 @@ export const BackupFinishScreen = () => {
     <BackUpFinishPopUp onSubmit={onSubmit}/>
   );
 };
-
 
