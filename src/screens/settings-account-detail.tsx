@@ -6,8 +6,7 @@ import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {app} from '@app/contexts/app';
 import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
-
-import {RootStackParamList} from '../types';
+import {RootStackParamList} from '@app/types';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
