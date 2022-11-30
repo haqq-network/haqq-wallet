@@ -4,9 +4,8 @@ import {
 } from '@ethersproject/abstract-provider';
 import {utils} from 'ethers';
 
-import {captureException} from '@app/helpers';
+import {calcFee, captureException} from '@app/helpers';
 
-import {calcFee} from '../helpers/calc-fee';
 import {TransactionSource} from '../types';
 import {cleanNumber} from '../utils';
 import {realm} from './index';
@@ -65,7 +64,7 @@ export class Transaction extends Realm.Object {
   }
 
   get feeFormatted() {
-    return cleanNumber(this.fee.toFixed(8));
+    return this.fee.toFixed(15);
   }
 
   setConfirmed(receipt: TransactionReceipt) {
