@@ -28,19 +28,19 @@ export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
   }, []);
 
   return (
-    <PopupContainer style={page.popupContainer}>
-      <Spacer style={page.container}>
+    <PopupContainer style={styles.popupContainer}>
+      <Spacer style={styles.container}>
         <LottieWrap
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
           loop={false}
-          style={page.animation}
+          style={styles.animation}
         />
       </Spacer>
       <Text t4 center i18n={I18N.backupFinishCongratulation}/>
-      <Text t4 center i18n={I18N.backupFinishSuccess} style={page.title}/>
+      <Text t4 center i18n={I18N.backupFinishSuccess} style={styles.title}/>
       <Button
-        style={page.button}
+        style={styles.button}
         variant={ButtonVariant.contained}
         i18n={I18N.backupFinishFinish}
         onPress={onSubmit}
@@ -49,7 +49,7 @@ export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   popupContainer: {marginHorizontal: 20},
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
