@@ -168,10 +168,6 @@ export enum I18N {
   backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish
-<<<<<<< HEAD
-
-=======
->>>>>>> e9d8c7e8dc9520cca571f258f624a3bb6efb875a
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
