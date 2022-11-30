@@ -224,6 +224,7 @@ export type RootStackParamList = {
   };
   stakingDelegate: {
     validator: string;
+    selectedWalletAddress: string;
   };
   stakingDelegateAccount: {
     validator: ValidatorItem;
@@ -246,6 +247,7 @@ export type RootStackParamList = {
   };
   stakingUnDelegate: {
     validator: string;
+    selectedWalletAddress: string;
   };
   stakingUnDelegateAccount: {
     available: Wallet[];

@@ -14,7 +14,6 @@ export const StakingUnDelegateFormScreen = () => {
   const navigation = useTypedNavigation();
   const route =
     useRoute<RouteProp<RootStackParamList, 'stakingUnDelegateForm'>>();
-
   const wallet = useWallet(route.params.account);
 
   const [balance, setBalance] = useState(0);
