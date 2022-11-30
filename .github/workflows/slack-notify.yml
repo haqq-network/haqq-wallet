@@ -8,6 +8,10 @@ jobs:
     name: Slack notify
     runs-on: ubuntu-latest
     steps:
+      - name: Set environment variables
+        run: |
+          echo "MESSAGE=$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")" >> $GITHUB_ENV
+
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
         with:
@@ -19,7 +23,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result"
+                    "text": ${{ env.MESSAGE }}
                   }
                 }
               ]
