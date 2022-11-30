@@ -165,6 +165,12 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  settingsAccountDetailRenameTitle,
+  settingsAccountDetailRenameSubtitle,
+  settingsAccountDetailChangeStyleTitle,
+  settingsAccountDetailChangeStyleSubtitle,
+  settingsAccountDetailHideSubtitle,
+  settingsAccountDetailHideTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -366,4 +372,12 @@ const en: Record<I18N, string> = {
   [I18N.welcomeCreateWallet]: 'Create Wallet',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
+  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
+  [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
+  [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
+  [I18N.settingsAccountDetailChangeStyleSubtitle]:
+    'Change the picture of the account',
+  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
+  [I18N.settingsAccountDetailHideSubtitle]:
+    'Will be hidden from the general list',
 };
