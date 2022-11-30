@@ -1,9 +1,7 @@
-import {BigNumberish, utils} from 'ethers';
+import {BigNumberish} from 'ethers';
+
+import {WEI} from '@app/variables';
 
 export function calcFee(gasPrice: BigNumberish, gasUsed: BigNumberish): number {
-  return (
-    Number(utils.formatEther(gasPrice)) *
-    Number(utils.formatEther(gasUsed)) *
-    1000000000000000000
-  );
+  return (Number(gasPrice) * Number(gasUsed)) / WEI;
 }
