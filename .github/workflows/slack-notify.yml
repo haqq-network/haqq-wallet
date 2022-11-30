@@ -18,7 +18,7 @@ jobs:
         run: |
           log="$(git log $(cat .last-build)..HEAD --pretty=format:"{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\":  \"- <http://github.com/haqq-network/haqq-wallet/commit/%H|%h> - %s\"}}")"
           log="${log//'%'/'%25'}"
-          log="${log//$'\n'/'%0A'}"
+          log="${log//$'\n'/', '}"
           log="${log//$'\r'/'%0D'}"
           echo "log=$log" >> $GITHUB_OUTPUT
 
