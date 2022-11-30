@@ -20,10 +20,10 @@ jobs:
           log="${log//'%'/'%25'}"
           log="${log//$'\n'/'%0A'}"
           log="${log//$'\r'/'%0D'}"
-          echo "::set-output name=log::$log"
+          echo "log=$log" >> $GITHUB_OUTPUT
 
       - name: Debug
-        run: echo ${{ steps.vars.outputs.message }}
+        run: echo ${{ steps.changelog.outputs.log }}
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
