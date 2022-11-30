@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {Dimensions} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 
 import {
   Button,
@@ -14,13 +14,12 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-const animationSize = Dimensions.get('window').width - 116;
-
 type BackupFinishProps = {
   onSubmit: () => void;
 };
 
-export const BackupFinish = ({onSubmit = () => {}}: BackupFinishProps) => {
+export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
+  const animationSize = useWindowDimensions().width - 116;
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
@@ -32,7 +31,7 @@ export const BackupFinish = ({onSubmit = () => {}}: BackupFinishProps) => {
           source={require('../../assets/animations/backup-success-animation.json')}
           autoPlay
           loop={false}
-          style={page.animation}
+          style={{width: animationSize, height: animationSize}}
         />
       </Spacer>
       <Text t4 center i18n={I18N.backupFinishCongratulation} />
@@ -52,5 +51,4 @@ const page = createTheme({
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
   button: {marginVertical: 16},
-  animation: {width: animationSize, height: animationSize},
 });
