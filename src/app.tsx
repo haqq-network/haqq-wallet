@@ -24,6 +24,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
+import {getColor} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
@@ -85,7 +86,6 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WelcomeScreen} from './screens/welcome';
-import { getColor } from '@app/colors';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
