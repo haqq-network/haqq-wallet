@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Android Production App
 
+### android patch_build
+
+```sh
+[bundle exec] fastlane android patch_build
+```
+
+
+
 ### android distribute
 
 ```sh
@@ -48,6 +56,14 @@ IOS Production App
 
 ```sh
 [bundle exec] fastlane ios test
+```
+
+
+
+### ios patch_build
+
+```sh
+[bundle exec] fastlane ios patch_build
 ```
 
 
