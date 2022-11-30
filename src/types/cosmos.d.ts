@@ -1,10 +1,3 @@
-export enum CosmosTxV1beta1ModeInfoSingle {
-  SIGN_MODE_UNSPECIFIED = 'SIGN_MODE_UNSPECIFIED',
-  SIGN_MODE_DIRECT = 'SIGN_MODE_DIRECT',
-  SIGN_MODE_TEXTUAL = 'SIGN_MODE_TEXTUAL',
-  SIGN_MODE_LEGACY_AMINO_JSON = 'SIGN_MODE_LEGACY_AMINO_JSON',
-}
-
 export interface CosmosTxV1beta1ModeInfoMulti {
   bitarray: {
     extra_bits_stored: number;
