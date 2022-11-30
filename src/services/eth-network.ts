@@ -172,7 +172,7 @@ export class EthNetwork {
     ]);
 
     return {
-      fee: calcFee(result[0].maxFeePerGas!, result[1]),
+      fee: calcFee(result[0].gasPrice!, result[1]),
       feeData: result[0],
       estimateGas: result[1],
     };

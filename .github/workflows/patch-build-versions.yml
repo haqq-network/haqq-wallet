@@ -1,14 +1,16 @@
-name: Distribute app
+name: Patch build versions
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
+  patch_build:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SERVICE_TOKEN }}
+
       - uses: actions/cache@v3
         with:
           path: vendor/bundle
@@ -39,5 +41,6 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Build"
+          git log -1 --pretty="%H" > .last-build
           git commit -am "build"
           git push --force-with-lease
