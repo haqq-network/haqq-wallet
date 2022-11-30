@@ -53,3 +53,7 @@ yarn ios
 - [Native elements](https://www.figma.com/file/S0H6bDoI2ySSSK2lsrif32/iOS-Native-Elements?node-id=0%3A1)
 - [Common elements](https://www.figma.com/file/lgQR66d0ixkg57MdSjmrOf/iOS-Library?node-id=122%3A2987)
 - [Lottie json animations](https://ysherwork.notion.site/Animation-d353911b01f448ab8c88c2cb4f0a3cf6)
+
+## Contribution
+
+Please check the general guidelines for contributing: [docs/contribution.md](https://github.com/haqq-network/haqq-mobile/blob/main/docs/contribution.md)
