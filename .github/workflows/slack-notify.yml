@@ -16,7 +16,7 @@ jobs:
         shell: bash
         id: changelog
         run: |
-          log="$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")"
+          log="$(git log $(cat .last-build)..HEAD --pretty=format:"{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\":  \"- <http://github.com/haqq-network/haqq-wallet/commit/%H|%h> - %s\"}}")"
           log="${log//'%'/'%25'}"
           log="${log//$'\n'/'%0A'}"
           log="${log//$'\r'/'%0D'}"
@@ -29,18 +29,7 @@ jobs:
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            {
-              "text": "GitHub Action message",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ steps.changelog.outputs.log }}"
-                  }
-                }
-              ]
-            }
+            { "text": "GitHub Action message", "blocks": [ ${{ steps.changelog.outputs.log }} ] }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
