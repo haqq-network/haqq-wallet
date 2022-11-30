@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.spec.KeySpec
 import java.util.*
@@ -23,9 +24,37 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
   override fun getName() = "RNEncryption"
 
-  private val ENCRYPT_ALGO =
-    if (Build.VERSION.SDK_INT >= 28) "ChaCha20-Poly1305" else "AES/CBC/PKCS7Padding"
-  private val NONCE_LEN =  if (Build.VERSION.SDK_INT >= 28) 12 else 16
+  companion object {
+    private val ENCRYPT_ALGO =
+      if (Build.VERSION.SDK_INT >= 28) "ChaCha20-Poly1305" else "AES/CBC/PKCS7Padding"
+    private val NONCE_LEN =  if (Build.VERSION.SDK_INT >= 28) 12 else 16
+
+    private fun chaChaAvailable(algo: String): Boolean {
+      return try {
+        Cipher.getInstance(algo)
+        true
+      } catch (e: NoSuchAlgorithmException) {
+        false
+      }
+    }
+
+    fun getEncryptAlgo(): String {
+      if (chaChaAvailable(ENCRYPT_ALGO)) {
+        return ENCRYPT_ALGO
+      }
+
+      return "AES/CBC/PKCS7Padding"
+    }
+
+    fun getNonceLen(): Int {
+      if (chaChaAvailable(ENCRYPT_ALGO)) {
+        return NONCE_LEN
+      }
+
+      return 16
+    }
+  }
+
 
   @ReactMethod
   fun encrypt(password: String, data: String, promise: Promise) {
@@ -88,7 +117,7 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
   }
 
   private fun encryptWithKey(key: SecretKey, data: String, nonce: ByteArray): ByteArray {
-    val cipher: Cipher = Cipher.getInstance(ENCRYPT_ALGO)
+    val cipher: Cipher = Cipher.getInstance(getEncryptAlgo())
 
     val iv = IvParameterSpec(nonce)
     cipher.init(Cipher.ENCRYPT_MODE, key, iv)
@@ -97,7 +126,7 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
   }
 
   private fun decryptWithKey(key: SecretKey, data: String, nonce: ByteArray): ByteArray? {
-    val cipher = Cipher.getInstance(ENCRYPT_ALGO)
+    val cipher = Cipher.getInstance(getEncryptAlgo())
 
     val iv = IvParameterSpec(nonce)
 
@@ -109,7 +138,7 @@ class EncryptionManager(reactContext: ReactApplicationContext) :
   }
 
   private fun getNonce(): ByteArray {
-    val nonce = ByteArray(NONCE_LEN)
+    val nonce = ByteArray(getNonceLen())
     SecureRandom().nextBytes(nonce)
     return nonce
   }
