@@ -5,7 +5,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {format} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {useTransactions} from '@app/hooks';
+import {Provider} from '@app/models/provider';
+import {EthNetwork} from '@app/services';
 
 import {BottomSheet} from '../components/bottom-sheet';
 import {
@@ -18,7 +21,6 @@ import {
 } from '../components/ui';
 import {openURL} from '../helpers';
 import {Transaction} from '../models/transaction';
-import {EthNetwork} from '../services/eth-network';
 import {RootStackParamList, TransactionSource} from '../types';
 import {splitAddress} from '../utils';
 import {
@@ -38,6 +40,11 @@ export const TransactionDetailScreen = () => {
   const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(route.params.hash),
+  );
+
+  const provider = useMemo(
+    () => (transaction ? Provider.getProvider(transaction.providerId) : null),
+    [transaction],
   );
 
   const isSent = transaction?.source === TransactionSource.send;
@@ -117,8 +124,8 @@ export const TransactionDetailScreen = () => {
               </View>
               <Text t11>
                 {' '}
-                Islamic coin{' '}
-                <Text clean style={page.subInfo}>
+                Islamic Coin{' '}
+                <Text clean color={Color.textBase2}>
                   (ISLM)
                 </Text>
               </Text>
@@ -128,19 +135,14 @@ export const TransactionDetailScreen = () => {
           reversed
           style={page.info}
         />
-        <DataContent
-          title={
-            <>
-              HAQQ blockchain{' '}
-              <Text clean style={page.subInfo}>
-                (HQ)
-              </Text>
-            </>
-          }
-          subtitle="Network"
-          reversed
-          style={page.info}
-        />
+        {provider && (
+          <DataContent
+            title={provider.name}
+            subtitle="Network"
+            reversed
+            style={page.info}
+          />
+        )}
         <DataContent
           title={`${transaction.valueFormatted} ISLM`}
           subtitle="Amount"
@@ -196,5 +198,4 @@ const page = StyleSheet.create({
   iconView: {top: IS_IOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
-  subInfo: {color: LIGHT_TEXT_BASE_2},
 });
