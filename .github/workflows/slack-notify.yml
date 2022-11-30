@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: ✍️ Create Changelog
+      - name: Create Changelog
         shell: bash
         id: changelog
         run: |
@@ -21,9 +21,6 @@ jobs:
           log="${log//$'\n'/'%0A'}"
           log="${log//$'\r'/'%0D'}"
           echo "log=$log" >> $GITHUB_OUTPUT
-
-      - name: Debug
-        run: echo "${{ steps.changelog.outputs.log }}"
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
