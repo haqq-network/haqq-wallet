@@ -14,7 +14,7 @@ jobs:
           git fetch --prune --unshallow 1>&2
           echo $(git rev-list HEAD)
           echo $(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")
-          echo "MESSAGE=$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")" >> $GITHUB_ENV
+          echo "MESSAGE=`$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")`" >> $GITHUB_ENV
 
       - name: Debug
         run: echo ${{ env.MESSAGE }}
