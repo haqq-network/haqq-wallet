@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {BackUpFinishPopUp} from '@app/components/backup-finish';
+import {BackupFinish} from '@app/components/backup-finish';
 import {useTypedNavigation} from '@app/hooks';
 
 export const BackupFinishScreen = () => {
@@ -10,5 +10,5 @@ export const BackupFinishScreen = () => {
     navigation.getParent()?.goBack();
   };
 
-  return <BackUpFinishPopUp onSubmit={onSubmit} />;
+  return <BackupFinish onSubmit={onSubmit} />;
 };

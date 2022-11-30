@@ -16,11 +16,11 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 
 const animationSize = Dimensions.get('window').width - 116;
 
-interface BackUpFinishPopUp {
+interface BackupFinish {
   onSubmit?: () => void;
 }
 
-export const BackUpFinishPopUp = ({onSubmit = () => {}}: BackUpFinishPopUp) => {
+export const BackupFinish = ({onSubmit = () => {}}: BackupFinish) => {
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
