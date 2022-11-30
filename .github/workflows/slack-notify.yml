@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set environment variables
         run: |
+          git fetch --prune --unshallow 1>&2
           echo "MESSAGE=$(git log $(cat .last-build)..HEAD --pretty=format:"- [%h](http://github.com/${repo_url}/commit/%H) - %s")" >> $GITHUB_ENV
 
       - name: Debug
