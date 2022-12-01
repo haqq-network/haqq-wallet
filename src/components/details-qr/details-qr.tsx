@@ -5,8 +5,7 @@ import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
-import {useApp, useWallet, useTypedNavigation, useTypedRoute} from '@app/hooks';
-
+import {Color, getColor} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Alert,
@@ -18,16 +17,12 @@ import {
   InfoBlockType,
   Text,
 } from '@app/components/ui';
+import {useApp, useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  GRADIENT_END,
-  GRADIENT_START,
-} from '@app/variables';
-import { I18N } from '@app/i18n';
-import { Color, getColor } from '@app/colors';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables';
 
 export const DetailsQr = () => {
-
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'detailsQr'>();
   const svg = useRef();
