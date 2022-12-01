@@ -1,17 +1,12 @@
 import React, {useCallback, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
 import {BackupVerify} from '@app/components/backup-verify';
-import {useWallets} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {RootStackParamList} from '@app/types';
 
 export const BackupVerifyScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const {mnemonic, rootAddress} =
-    useRoute<RouteProp<RootStackParamList, 'backupVerify'>>().params;
+  const navigation = useTypedNavigation();
+  const {mnemonic, rootAddress} = useTypedRoute<'backupVerify'>().params;
 
   const wallets = useWallets();
   const [error, setError] = useState<number | null>(null);
@@ -35,7 +30,7 @@ export const BackupVerifyScreen = () => {
 
   return (
     <BackupVerify
-      error={Boolean(error)}
+      error={!!error}
       phrase={mnemonic}
       onDone={onDone}
       key={error}

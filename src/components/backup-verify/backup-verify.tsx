@@ -14,7 +14,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shuffleWords} from '@app/utils';
 
@@ -46,17 +46,23 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t4 style={styles.title}>
-        {getText(I18N.backupVerifyTitle)}
-      </Text>
+      <Text t4 style={styles.title} i18n={I18N.backupVerifyTitle} center />
       {error ? (
-        <Text t11 style={styles.error}>
-          {getText(I18N.backupVerifyError)}
-        </Text>
+        <Text
+          t11
+          style={styles.error}
+          color={Color.textRed1}
+          i18n={I18N.backupVerifyError}
+          center
+        />
       ) : (
-        <Text t11 style={styles.textStyle}>
-          {getText(I18N.backupVerifyDescription)}
-        </Text>
+        <Text
+          t11
+          style={styles.textStyle}
+          i18n={I18N.backupVerifyDescription}
+          center
+          color={Color.graphicBase2}
+        />
       )}
       <View style={styles.cells}>
         <View>
@@ -113,7 +119,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
       <Button
         disabled={selected.length < 12}
         variant={ButtonVariant.contained}
-        title={getText(I18N.backupVerifyCheck)}
+        i18n={I18N.backupVerifyCheck}
         onPress={onPressDone}
         style={styles.margin}
       />
@@ -125,11 +131,9 @@ const styles = createTheme({
   container: {
     marginHorizontal: 20,
   },
-  title: {marginTop: 20, marginBottom: 4, textAlign: 'center'},
+  title: {marginTop: 20, marginBottom: 4},
   textStyle: {
-    textAlign: 'center',
     marginBottom: 16,
-    color: Color.graphicBase1,
   },
   buttons: {
     flexDirection: 'row',
@@ -147,9 +151,7 @@ const styles = createTheme({
     fontSize: 16,
     lineHeight: 22,
     paddingVertical: 11,
-    textAlign: 'center',
     marginBottom: 16,
-    color: Color.textRed1,
   },
   buttonStyle: {margin: 6},
   margin: {marginVertical: 16},
