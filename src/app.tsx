@@ -23,7 +23,7 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
@@ -203,6 +203,7 @@ export const App = () => {
       <AppContext.Provider value={app}>
         <StatusBarColor
           barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+          backgroundColor={getColor(Color.bg1)}
         />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
