@@ -23,6 +23,8 @@ export const HomeScreenTabBarIcon = ({
         return IconsName.staking;
       case 'homeSettings':
         return IconsName.settings;
+      case 'homeGovernance':
+        return IconsName.governance;
     }
   }, [route.name]);
 
