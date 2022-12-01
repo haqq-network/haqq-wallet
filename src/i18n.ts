@@ -180,6 +180,13 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  settingsAddressBookLabel,
+  settingsAddressBookPlaceholder,
+  settingsAddressBookAdd,
+  settingsAddressBookAlertTitle,
+  settingsAddressBookAlertDesc,
+  settingsAddressBookAlertBtnFirst,
+  settingsAddressBookAlertBtnSecond,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -402,4 +409,12 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.proposalTitle]: 'Proposal',
+  [I18N.settingsAddressBookLabel]: 'Address',
+  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
+  [I18N.settingsAddressBookAdd]: 'Add Contact',
+  [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
+  [I18N.settingsAddressBookAlertDesc]:
+    'Are you sure you want to delete the selected contact?',
+  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
+  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
 };

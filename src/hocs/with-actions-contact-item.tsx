@@ -8,6 +8,7 @@ import {
 } from '@app/components/list-contact';
 import {useContacts} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 
 interface settings {
@@ -68,24 +69,24 @@ export const withActionsContactItem = (
 
     const onPressRemove = useCallback(
       (itemOrAddress: Contact | string) => {
-        Alert.alert(
-          'Delete Contact',
-          'Are you sure you want to delete the selected contact?',
-          [
-            {text: 'Cancel', style: 'cancel'},
-            {
-              text: 'Delete',
-              style: 'destructive',
-              onPress: () => {
-                const contactAddress =
-                  typeof itemOrAddress === 'string'
-                    ? itemOrAddress
-                    : 'account' in itemOrAddress && itemOrAddress.account;
-                contactAddress && contacts.removeContact(contactAddress);
-              },
+        const AlertTitle = getText(I18N.settingsAddressBookAlertTitle);
+        const AlertDesc = getText(I18N.settingsAddressBookAlertDesc);
+        const AlertBtnFirst = getText(I18N.settingsAddressBookAlertBtnFirst);
+        const AlertBtnSecond = getText(I18N.settingsAddressBookAlertBtnSecond);
+        Alert.alert(AlertTitle, AlertDesc, [
+          {text: AlertBtnFirst, style: 'cancel'},
+          {
+            text: AlertBtnSecond,
+            style: 'destructive',
+            onPress: () => {
+              const contactAddress =
+                typeof itemOrAddress === 'string'
+                  ? itemOrAddress
+                  : 'account' in itemOrAddress && itemOrAddress.account;
+              contactAddress && contacts.removeContact(contactAddress);
             },
-          ],
-        );
+          },
+        ]);
       },
       [contacts],
     );
