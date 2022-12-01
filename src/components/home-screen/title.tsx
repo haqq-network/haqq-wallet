@@ -16,7 +16,9 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
       case 'homeFeed':
         return getText(I18N.homeWalletTitle);
       case 'homeStaking':
-        return getText(I18N.homeStaking);
+        return getText(I18N.homeStakingTitle);
+      case 'homeGovernance':
+        return getText(I18N.homeGovernanceTitle);
       case 'homeSettings':
         return getText(I18N.homeSettingsTitle);
     }
