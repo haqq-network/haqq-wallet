@@ -3,6 +3,7 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color, getColor} from '@app/colors';
 import {
   ArrowForwardIcon,
   DiscordIcon,
@@ -15,13 +16,6 @@ import {
 } from '@app/components/ui';
 import {createTheme, windowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  LIGHT_BG_3,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_GRAPHIC_SECOND_3,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_BASE_2,
-} from '@app/variables';
 
 type SettingsAboutProps = {
   onPressSite: () => void;
@@ -59,35 +53,40 @@ export const SettingsAbout = ({
           <ArrowForwardIcon color={GRAPHIC_SECOND_3} />
         </IconButton> */}
         <IconButton onPress={onPressSite} style={styles.button}>
-          <GlobalIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <GlobalIcon color={getColor(Color.graphicBase1)} />
           <Text t11 i18n={I18N.settingsAboutVisit} style={styles.buttonText} />
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
       <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
       <View style={styles.buttons}>
         <IconButton onPress={onPressDoc} style={styles.button}>
-          <DocIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <DocIcon color={getColor(Color.graphicBase1)} />
           <Text t11 i18n={I18N.settingsAboutTerms} style={styles.buttonText} />
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
         <IconButton onPress={onPressDiscord} style={styles.button}>
-          <DiscordIcon color={LIGHT_GRAPHIC_BASE_1} />
+          <DiscordIcon color={getColor(Color.graphicBase1)} />
           <Text
             t11
             i18n={I18N.settingsAboutDiscord}
             style={styles.buttonText}
           />
           <Spacer />
-          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+          <ArrowForwardIcon color={getColor(Color.graphicSecond3)} />
         </IconButton>
       </View>
-      <Text t11 i18n={I18N.settingsAboutRights} style={styles.terms} />
+      <Text
+        t11
+        color={getColor(Color.textBase1)}
+        i18n={I18N.settingsAboutRights}
+        style={styles.terms}
+      />
     </ScrollView>
   );
 };
@@ -99,11 +98,11 @@ const styles = createTheme({
   },
   title: {
     marginBottom: 8,
-    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 4,
+    color: Color.textBase2,
   },
   buttons: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     borderRadius: 16,
     marginBottom: 24,
   },
@@ -113,11 +112,10 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   buttonText: {
-    color: LIGHT_TEXT_BASE_1,
     marginLeft: 12,
+    color: Color.textBase1,
   },
   terms: {
-    color: LIGHT_TEXT_BASE_1,
     marginBottom: 10,
   },
   animation: {
