@@ -146,7 +146,7 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
   slack_notify:
-    name: Patch build versions
+    name: Create changelogs
     runs-on: ubuntu-latest
     needs:
       - build_ios
