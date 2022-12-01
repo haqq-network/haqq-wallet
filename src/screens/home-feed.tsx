@@ -89,8 +89,6 @@ export const HomeFeedScreen = () => {
     };
   }, [onBackupMnemonic, onTransactionList, transactions, user, wallets]);
 
-  useEffect(() => {}, [wallets]);
-
   return (
     <FlatList
       key={user.providerId}

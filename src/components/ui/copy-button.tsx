@@ -7,7 +7,8 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
-import {useApp} from '@app/hooks';
+import {sendNotification} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;
@@ -19,11 +20,10 @@ export const CopyButton = ({
   style,
   ...props
 }: CopyButtonProps) => {
-  const app = useApp();
   const onPress = useCallback(() => {
     Clipboard.setString(value);
-    app.emit('notification', 'Copied');
-  }, [app, value]);
+    sendNotification(I18N.notificationCopied);
+  }, [value]);
 
   const containerStyle = useMemo(() => [page.container, style], [style]);
 

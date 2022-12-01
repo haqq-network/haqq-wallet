@@ -23,7 +23,7 @@ import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Notifications,
   PopupHeader,
@@ -40,6 +40,7 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
@@ -203,6 +204,7 @@ export const App = () => {
       <AppContext.Provider value={app}>
         <StatusBarColor
           barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+          backgroundColor={getColor(Color.bg1)}
         />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
@@ -384,6 +386,15 @@ export const App = () => {
                     component={StakingInfoScreen}
                     options={{
                       title: getText(I18N.stakingInfo),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="proposal"
+                    component={ProposalScreen}
+                    options={{
+                      title: getText(I18N.proposalTitle),
                     }}
                   />
                 </Stack.Group>
