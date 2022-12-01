@@ -418,5 +418,4 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.settingsAccountDetailNotifacation]: 'The account was hidden',
   [I18N.proposalTitle]: 'Proposal',
-
 };
