@@ -1,17 +1,15 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
-
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {app} from '@app/contexts/app';
 import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
-import {RootStackParamList} from '@app/types';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'settingsAccountDetail'>>();
+  const route = useTypedRoute<'settingsAccountDetail'>();
+
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {

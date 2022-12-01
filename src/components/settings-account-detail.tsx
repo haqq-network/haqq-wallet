@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {Switch, View, useWindowDimensions} from 'react-native';
 
 import {
@@ -14,10 +13,9 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useWallet} from '@app/hooks';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N} from '@app/i18n';
 import {LIGHT_BG_8} from '@app/variables';
-
-import {RootStackParamList} from '../types';
 
 type SettingsAccountDetailProps = {
   onPressRename: () => void;
@@ -30,8 +28,7 @@ export const SettingsAccountDetail = ({
   onPressStyle,
   onToggleIsHidden,
 }: SettingsAccountDetailProps) => {
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'settingsAccountDetail'>>();
+  const route = useTypedRoute<'settingsAccountDetail'>();
 
   const wallet = useWallet(route.params.address);
   const cardWidth = useWindowDimensions().width - 72;
