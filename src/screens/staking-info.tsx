@@ -57,8 +57,7 @@ export const StakingInfoScreen = () => {
             cosmos.withdrawDelegatorReward(w.address, operator_address),
           ),
       )
-        .then((...resp) => {
-          console.log(JSON.stringify(resp));
+        .then(() => {
           rewards.forEach(r => StakingMetadata.remove(r.hash));
         })
         .finally(() => {

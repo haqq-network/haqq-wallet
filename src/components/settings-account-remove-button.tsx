@@ -3,13 +3,12 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
+import {Icon, IconButton} from '@app/components/ui';
+import {sendNotification} from '@app/helpers';
 import {useWallets} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {IconButton, TrashIcon} from './ui';
-
-import {app} from '../contexts/app';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables';
 
 type SettingsAccountRemoveButtonProp = {
   address: string;
@@ -36,7 +35,7 @@ export const SettingsAccountRemoveButton = ({
           onPress: async () => {
             await wallets.removeWallet(address);
             navigation.goBack();
-            app.emit('notification', 'The account has been deleted');
+            sendNotification(I18N.notificationAccountDeleted);
           },
         },
       ],
@@ -45,7 +44,7 @@ export const SettingsAccountRemoveButton = ({
 
   return (
     <IconButton style={page.container} onPress={onClickRemove}>
-      <TrashIcon color={LIGHT_GRAPHIC_BASE_1} />
+      <Icon name="trash" color={Color.graphicBase1} />
     </IconButton>
   );
 };

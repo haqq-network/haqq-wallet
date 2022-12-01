@@ -1,11 +1,8 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {Dimensions, StyleSheet, Switch, View} from 'react-native';
+import {Dimensions, Switch, View} from 'react-native';
 
-import {useWallet} from '@app/hooks';
-
+import {Color} from '@app/colors';
 import {
   Card,
   CardMask,
@@ -14,19 +11,18 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from '../components/ui';
-import {app} from '../contexts/app';
-import {RootStackParamList} from '../types';
-import {LIGHT_BG_8} from '../variables';
+} from '@app/components/ui';
+import {createTheme, sendNotification} from '@app/helpers';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {I18N} from '@app/i18n';
 
 const cardWidth = Dimensions.get('window').width - 72;
 const cardMaskWidth = Dimensions.get('window').width - 112;
 const cardMaskHeight = cardMaskWidth * 0.547528517;
 
 export const SettingsAccountDetailScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'settingsAccountDetail'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'settingsAccountDetail'>();
 
   const wallet = useWallet(route.params.address);
 
@@ -45,7 +41,7 @@ export const SettingsAccountDetailScreen = () => {
       wallet.isHidden = !wallet.isHidden;
 
       if (wallet.isHidden) {
-        app.emit('notification', 'The account was hidden');
+        sendNotification(I18N.notificationAccountHidden);
       }
     }
   }, [wallet]);
@@ -101,7 +97,7 @@ export const SettingsAccountDetailScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginHorizontal: 20,
   },
@@ -110,7 +106,7 @@ const page = StyleSheet.create({
   },
   header: {
     marginTop: 15,
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
