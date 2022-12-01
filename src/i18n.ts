@@ -75,7 +75,13 @@ export enum I18N {
   homeSettings,
   homeSettingsTitle,
   homeStaking,
+  homeStakingEmpty,
+  homeStakingUnbounded,
+  homeStakingStaked,
+  homeStakingRewards,
   homeStakingTitle,
+  homeGovernance,
+  homeGovernanceTitle,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -139,7 +145,6 @@ export enum I18N {
   stakingUnDelegateFormNetworkFee,
   stakingUnDelegateAccountTitle,
   stakingUnDelegatePreviewTitle,
-
   stakingUnDelegatePreviewTotalAmount,
   stakingUnDelegatePreviewWithdrawFrom,
   stakingUnDelegatePreviewCommission,
@@ -147,19 +152,20 @@ export enum I18N {
   stakingUnDelegatePreviewNetworkFee,
   stakingUnDelegatePreviewButton,
   stakingUnDelegatePreviewAttention,
-
   stakingUnDelegateFinishTitle,
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
-
+  stakingUnDelegateSumWarning,
   stakingHomeButton,
-
+  stakingHomeValidators,
+  stakingHomeGetRewards,
   sumBlockMax,
   sumBlockAvailable,
   popupNotificationTitle,
   popupNotificationDescription,
   popupNotificationTurnOn,
   popupNotificationNotNow,
+  notificationRewardReceived,
   welcomeTitle,
   welcomeDescription,
   welcomeCreateWallet,
@@ -176,6 +182,7 @@ export enum I18N {
   settingsAccountStyleGradient,
   settingsAccountStyleCircle,
   settingsAccountStyleRhombus,
+  proposalTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -286,7 +293,14 @@ const en: Record<I18N, string> = {
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeStaking]: 'Staking',
+  [I18N.homeStakingEmpty]:
+    'Stake your ISLM in any validator and get additional ISLM',
+  [I18N.homeStakingUnbounded]: 'Unbounded',
   [I18N.homeStakingTitle]: 'Staking',
+  [I18N.homeGovernance]: 'Governance',
+  [I18N.homeGovernanceTitle]: 'Governance',
+  [I18N.homeStakingStaked]: 'Staked',
+  [I18N.homeStakingRewards]: 'Rewards',
   [I18N.settingsProvidersTitle]: 'Providers',
   [I18N.settingsProvidersTitleRight]: 'Add',
   [I18N.settingsProviderEditHeaderTitle]: 'Provider',
@@ -361,9 +375,12 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
 
-  [I18N.stakingHomeButton]: 'Validators',
+  [I18N.stakingHomeValidators]: 'Validators',
+  [I18N.stakingHomeGetRewards]: 'Get rewards',
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
+  [I18N.stakingUnDelegateSumWarning]:
+    'The funds will be undelegate within 21 days',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.popupNotificationTitle]: 'Turn on push notifications',
@@ -371,6 +388,7 @@ const en: Record<I18N, string> = {
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your wallet',
   [I18N.popupNotificationTurnOn]: 'Turn on notifications',
   [I18N.popupNotificationNotNow]: 'Not now',
+  [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No wallet is connected',
   [I18N.welcomeDescription]:
     'You can create a new wallet or connect any existing\u00A0one',
@@ -388,4 +406,5 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountStyleGradient]: 'Gradient',
   [I18N.settingsAccountStyleCircle]: 'Circle',
   [I18N.settingsAccountStyleRhombus]: 'Rhombus',
+  [I18N.proposalTitle]: 'Proposal',
 };
