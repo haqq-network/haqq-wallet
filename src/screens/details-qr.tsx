@@ -1,15 +1,12 @@
 import React, {useRef} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {Share, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
-import {useApp, useWallet} from '@app/hooks';
-
-import {BottomSheet} from '../components/bottom-sheet';
+import {Color} from '@app/colors';
+import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Alert,
   Button,
@@ -19,30 +16,24 @@ import {
   InfoBlock,
   InfoBlockType,
   Text,
-} from '../components/ui';
-import {Wallet} from '../models/wallet';
-import {RootStackParamList} from '../types';
-import {
-  GRADIENT_END,
-  GRADIENT_START,
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_SECOND_2,
-  LIGHT_TEXT_YELLOW_1,
-} from '../variables';
+} from '@app/components/ui';
+import {createTheme, sendNotification} from '@app/helpers';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables';
 
 export const DetailsQrScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'detailsQr'>();
   const svg = useRef();
-  const app = useApp();
   const wallet = useWallet(route.params.address) as Wallet;
   const {address} = route.params;
   const {width} = useWindowDimensions();
 
   const onCopy = () => {
     Clipboard.setString(address);
-    app.emit('notification', 'Copied');
+    sendNotification(I18N.notificationCopied);
   };
 
   const onShare = () => {
@@ -58,7 +49,7 @@ export const DetailsQrScreen = () => {
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.info}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
+        icon={<Alert color={Color.textYellow1} />}>
         Only ISLM related assets on HAQQ network are supported.
       </InfoBlock>
       <LinearGradient
@@ -114,7 +105,7 @@ export const DetailsQrScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   qrContainer: {
     position: 'relative',
     marginHorizontal: 36.5,
@@ -123,12 +114,12 @@ const page = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    color: LIGHT_TEXT_SECOND_2,
+    color: Color.textSecond2,
     fontWeight: '700',
     marginBottom: 4,
   },
   address: {
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
     marginBottom: 4,
   },
   buttons: {
@@ -143,7 +134,7 @@ const page = StyleSheet.create({
   card: {position: 'absolute', bottom: 0, left: 0, right: 0},
   qrStyle: {
     padding: 12,
-    backgroundColor: LIGHT_GRAPHIC_BASE_3,
+    backgroundColor: Color.graphicBase3,
     borderRadius: 12,
     marginBottom: 20,
   },

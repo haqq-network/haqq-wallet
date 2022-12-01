@@ -94,7 +94,7 @@ export enum Color {
 
 const styled = new Set(Object.keys(Color));
 
-export function getColor(key: Color) {
+export function getColor(key: Color | string) {
   if (!styled.has(key)) {
     return key;
   }
