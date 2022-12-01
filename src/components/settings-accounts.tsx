@@ -8,7 +8,6 @@ import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {LIGHT_GRAPHIC_SECOND_3, LIGHT_TEXT_SECOND_1} from '@app/variables';
 
 type SettingsAccountsProps = {
   onPressRow: (address: string) => void;
