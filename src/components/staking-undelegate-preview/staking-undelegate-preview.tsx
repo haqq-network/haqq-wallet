@@ -2,18 +2,21 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   DataView,
-  ISLMIcon,
+  ErrorText,
+  Icon,
+  InfoBlock,
+  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables';
@@ -39,7 +42,9 @@ export const StakingUnDelegatePreview = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <View style={styles.icon}>
+        <Icon name="logo" i42 color={Color.graphicBase3} />
+      </View>
       <Text
         t11
         center
@@ -60,19 +65,28 @@ export const StakingUnDelegatePreview = ({
       <Text t10 center style={styles.contact}>
         {validator.description.moniker}
       </Text>
-
       <View style={styles.info}>
-        <DataView label={getText(I18N.stakingUnDelegatePreviewAmount)}>
+        <DataView i18n={I18N.stakingUnDelegatePreviewAmount}>
           <Text t11>{cleanNumber(amount)} ISLM</Text>
         </DataView>
-        <DataView label={getText(I18N.stakingUnDelegatePreviewNetworkFee)}>
-          <Text t11 color={getColor(Color.textBase1)}>
+        <DataView i18n={I18N.stakingUnDelegatePreviewNetworkFee}>
+          <Text t11 color={Color.textBase1}>
             {feeValue.toFixed(15)} ISLM
           </Text>
         </DataView>
       </View>
-      {error && <Text clean>{error}</Text>}
+      <Spacer height={24} />
+      <InfoBlock
+        type={InfoBlockType.warning}
+        i18n={I18N.stakingUnDelegatePreviewAttention}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+      />
       <Spacer />
+      {error && (
+        <ErrorText center e0>
+          {error}
+        </ErrorText>
+      )}
       <Button
         variant={ButtonVariant.contained}
         i18n={I18N.stakingUnDelegatePreviewButton}
@@ -99,9 +113,12 @@ const styles = createTheme({
   icon: {
     marginBottom: 16,
     alignSelf: 'center',
+    padding: 11,
+    borderRadius: 16,
+    backgroundColor: Color.graphicGreen2,
   },
   info: {
-    top: 40,
+    marginTop: 40,
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },
