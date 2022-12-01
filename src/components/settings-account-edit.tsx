@@ -56,7 +56,7 @@ export const SettingsAccountEdit = ({
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <Icon name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon i24 name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }
