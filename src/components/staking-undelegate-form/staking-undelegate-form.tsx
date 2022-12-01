@@ -58,6 +58,7 @@ export const StakingUnDelegateForm = ({
         title={getText(I18N.stakingUnDelegateFormPreview)}
         onPress={onDone}
       />
+      <Spacer height={16} />
     </KeyboardSafeArea>
   );
 };

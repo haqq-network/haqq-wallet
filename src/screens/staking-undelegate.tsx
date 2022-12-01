@@ -40,6 +40,9 @@ export const StakingUnDelegateScreen = () => {
     });
   }, [cosmos, paramValidator]);
 
+  if (!validator) {
+    return <></>;
+  }
   return (
     <StakingUnDelegateStack.Navigator
       screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}

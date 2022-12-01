@@ -309,7 +309,7 @@ const en: Record<I18N, string> = {
   [I18N.validatorStatusActive]: 'Active',
   [I18N.validatorStatusInactive]: 'Inactive',
   [I18N.validatorStatusJailed]: 'Jailed',
-  [I18N.stakingDelegateFormTitle]: 'Stake',
+  [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
   [I18N.stakingDelegateFormNetworkFee]: 'Network fee',
   [I18N.stakingDelegateFormCommission]: 'Commission',

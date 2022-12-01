@@ -25,15 +25,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
+
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 
 import {useAndroidStatusBarAnimation} from '../hooks';
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_1,
-} from '../variables';
+import {LIGHT_BG_1, LIGHT_GRAPHIC_SECOND_2} from '../variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -201,6 +199,7 @@ export const BottomSheet = ({
           StyleSheet.absoluteFill,
           page.background,
           backgroundAnimatedStyle,
+          {height: height * 2, top: -(height / 3)},
         ]}
       />
       <TouchableWithoutFeedback onPress={onClosePopup}>
@@ -213,12 +212,12 @@ export const BottomSheet = ({
               <SwiperIcon color={LIGHT_GRAPHIC_SECOND_2} />
             </View>
             <View style={page.header}>
-              <Text t6 style={page.title}>
+              <Text t6 color={Color.textBase1}>
                 {title}
               </Text>
               <Spacer />
               <IconButton onPress={onClosePopup}>
-                <Icon s name="close_circle" color={LIGHT_GRAPHIC_SECOND_2} />
+                <Icon i24 name="close_circle" color={Color.graphicSecond2} />
               </IconButton>
             </View>
           </Animated.View>
@@ -241,13 +240,14 @@ export const BottomSheet = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
+    zIndex: 5,
   },
   space: {flex: 1},
   background: {
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
   },
   animateView: {
     justifyContent: 'flex-end',
@@ -271,5 +271,4 @@ const page = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  title: {fontWeight: '600', color: LIGHT_TEXT_BASE_1},
 });

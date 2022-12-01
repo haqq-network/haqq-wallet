@@ -31,7 +31,6 @@ export const StakingDelegateScreen = () => {
   const {
     params: {validator: paramValidator, selectedWalletAddress},
   } = useTypedRoute<'stakingDelegate'>();
-
   const [validator, setValidator] = useState<ValidatorItem | undefined>();
 
   useEffect(() => {
