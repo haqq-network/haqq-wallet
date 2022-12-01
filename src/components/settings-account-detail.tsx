@@ -39,24 +39,24 @@ export const SettingsAccountDetail = ({
   }
 
   return (
-    <PopupContainer style={page.container}>
-      <View style={[page.header, wallet.isHidden && page.opacity]}>
+    <PopupContainer style={styles.container}>
+      <View style={[styles.header, wallet.isHidden && styles.opacity]}>
         <Card
           width={cardWidth}
           height={cardMaskHeight + 40}
-          style={page.card}
+          style={styles.card}
           pattern={wallet.pattern}
           colorFrom={wallet.colorFrom}
           colorTo={wallet.colorTo}
           colorPattern={wallet.colorPattern}>
           <CardMask
             style={[
-              page.cardMask,
+              styles.cardMask,
               {width: cardMaskWidth, height: cardMaskHeight},
             ]}
           />
         </Card>
-        <Text t10 style={page.headerName}>
+        <Text t10 style={styles.headerName}>
           {wallet.name}
         </Text>
         <Text t14>{wallet?.address}</Text>
@@ -85,7 +85,7 @@ export const SettingsAccountDetail = ({
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     marginHorizontal: 20,
   },
