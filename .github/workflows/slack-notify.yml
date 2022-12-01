@@ -11,15 +11,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Create Changelog
         shell: bash
         id: changelog
         run: |
-          log="$(git log $(cat .last-build)..HEAD --pretty=format:"{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\":  \"- <http://github.com/haqq-network/haqq-wallet/commit/%H|%h> - %s\"}}")"
-          log="${log//'%'/'%25'}"
-          log="${log//$'\n'/', '}"
-          log="${log//$'\r'/'%0D'}"
+          log="$(node ./utils/changelog.js 2cb42246c646fb77bd10711a79108ec1ba50f49d)"
           echo "log=$log" >> $GITHUB_OUTPUT
 
       - name: Send GitHub Action trigger data to Slack workflow
