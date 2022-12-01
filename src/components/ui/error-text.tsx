@@ -1,10 +1,7 @@
 import * as React from 'react';
 
-import {TextProps} from 'react-native';
-
 import {Color, getColor} from '@app/colors';
-
-import {Text} from './text';
+import {Text, TextProps} from '@app/components/ui';
 
 type ErrorTextProps = {
   e0?: boolean;

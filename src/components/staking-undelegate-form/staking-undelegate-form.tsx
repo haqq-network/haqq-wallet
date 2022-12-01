@@ -4,6 +4,9 @@ import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  Icon,
+  InfoBlock,
+  InfoBlockType,
   KeyboardSafeArea,
   Spacer,
   Text,
@@ -25,14 +28,13 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount('', balance - fee / WEI);
-
+  const amounts = useSumAmount(0, balance - fee / WEI);
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    amounts.setAmount(amounts.maxAmount.toFixed(4));
+    amounts.setMax();
   }, [amounts]);
 
   return (
@@ -52,10 +54,16 @@ export const StakingUnDelegateForm = ({
         {(fee / WEI).toFixed(15)} ISLM
       </Text>
       <Spacer height={16} />
+      <InfoBlock
+        type={InfoBlockType.warning}
+        i18n={I18N.stakingUnDelegateSumWarning}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+      />
+      <Spacer height={16} />
       <Button
         disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
-        title={getText(I18N.stakingUnDelegateFormPreview)}
+        i18n={I18N.stakingUnDelegateFormPreview}
         onPress={onDone}
       />
       <Spacer height={16} />

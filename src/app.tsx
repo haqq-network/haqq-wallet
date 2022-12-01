@@ -40,6 +40,7 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
@@ -385,6 +386,15 @@ export const App = () => {
                     component={StakingInfoScreen}
                     options={{
                       title: getText(I18N.stakingInfo),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="proposal"
+                    component={ProposalScreen}
+                    options={{
+                      title: getText(I18N.proposalTitle),
                     }}
                   />
                 </Stack.Group>
