@@ -19,13 +19,17 @@ jobs:
         id: changelog
         run: |
           log="$(node ./utils/changelog.js 2cb42246c646fb77bd10711a79108ec1ba50f49d)"
+          echo "${{ steps.changelog.outputs.log }}"
+
+      - name: Debug
+        run: |
           echo "log=$log" >> $GITHUB_OUTPUT
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            { "text": "GitHub Action message", "blocks": [ ${{ steps.changelog.outputs.log }} ] }
+            ${{ steps.changelog.outputs.log }}
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
