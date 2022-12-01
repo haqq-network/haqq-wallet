@@ -75,7 +75,7 @@ export const StakingDelegateForm = ({
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}
-        disabled={amounts.isValid}
+        disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />
