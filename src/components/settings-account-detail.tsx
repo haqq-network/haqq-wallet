@@ -86,11 +86,11 @@ export const SettingsAccountDetail = ({
 };
 
 const styles = createTheme({
-  container: {
-    marginHorizontal: 20,
-  },
   card: {
     marginBottom: 12,
+  },
+  container: {
+    marginHorizontal: 20,
   },
   header: {
     marginTop: 15,
