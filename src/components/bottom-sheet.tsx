@@ -199,7 +199,6 @@ export const BottomSheet = ({
           StyleSheet.absoluteFill,
           page.background,
           backgroundAnimatedStyle,
-          {height: height * 2, top: -(height / 3)},
         ]}
       />
       <TouchableWithoutFeedback onPress={onClosePopup}>
