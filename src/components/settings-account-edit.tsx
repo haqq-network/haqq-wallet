@@ -3,16 +3,15 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 
 import {ActionsSheet} from '@app/components/actions-sheet';
-
 import {
   CustomHeader,
   Icon,
   IconButton,
   Input,
   KeyboardSafeArea,
-} from '../components/ui';
-import {I18N, getText} from '../i18n';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '../variables';
+} from '@app/components/ui';
+import {I18N, getText} from '@app/i18n';
+import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 interface SettingsAccountEditProps {
   actionSheetVisible: boolean;
@@ -57,7 +56,7 @@ export const SettingsAccountEdit = ({
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
               </IconButton>
             )
           }

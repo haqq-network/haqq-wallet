@@ -31,7 +31,6 @@ export enum IconsName {
   invoice = 'invoice',
   islm = 'islm',
   language = 'language',
-  ledger = 'ledger',
   list = 'list',
   lock = 'lock',
   market = 'market',
