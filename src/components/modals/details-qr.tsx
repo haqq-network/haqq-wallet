@@ -8,27 +8,28 @@ import QRCode from 'react-native-qrcode-svg';
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {
-  Alert,
   Button,
   ButtonSize,
   ButtonVariant,
   Card,
+  Icon,
   InfoBlock,
   InfoBlockType,
   Text,
 } from '@app/components/ui';
-import {createTheme, sendNotification} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {createTheme, hideModal, sendNotification} from '@app/helpers';
+import {useWallet} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables';
 
-export const DetailsQrScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'detailsQr'>();
+export interface DetailsQrModalProps {
+  address: string;
+}
+
+export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
   const svg = useRef();
-  const wallet = useWallet(route.params.address) as Wallet;
-  const {address} = route.params;
+  const wallet = useWallet(address) as Wallet;
   const {width} = useWindowDimensions();
 
   const onCopy = () => {
@@ -41,17 +42,19 @@ export const DetailsQrScreen = () => {
   };
 
   const onCloseBottomSheet = () => {
-    navigation.canGoBack() && navigation.goBack();
+    hideModal();
   };
 
   return (
-    <BottomSheet onClose={onCloseBottomSheet} title="Receive">
+    <BottomSheet
+      onClose={onCloseBottomSheet}
+      title={getText(I18N.modalDetailsQRReceive)}>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.info}
-        icon={<Alert color={Color.textYellow1} />}>
-        Only ISLM related assets on HAQQ network are supported.
-      </InfoBlock>
+        i18n={I18N.modalDetailsQRWarning}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+      />
       <LinearGradient
         colors={[wallet?.colorFrom, wallet?.colorTo]}
         style={page.qrContainer}
@@ -70,7 +73,7 @@ export const DetailsQrScreen = () => {
         <View style={page.qrStyle}>
           <QRCode
             ecl={'H'}
-            logo={require('../../assets/images/qr-logo.png')}
+            logo={require('../../../assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}
@@ -88,7 +91,7 @@ export const DetailsQrScreen = () => {
 
       <View style={page.buttons}>
         <Button
-          title="Share"
+          i18n={I18N.share}
           size={ButtonSize.middle}
           onPress={onShare}
           style={page.button}
@@ -97,7 +100,7 @@ export const DetailsQrScreen = () => {
           size={ButtonSize.middle}
           style={page.button}
           variant={ButtonVariant.second}
-          title="Copy"
+          i18n={I18N.copy}
           onPress={onCopy}
         />
       </View>
