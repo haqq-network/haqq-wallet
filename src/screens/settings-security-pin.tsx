@@ -1,9 +1,9 @@
 import React, {useCallback, useRef, useState} from 'react';
 
 import {Pin, PinInterface} from '@app/components/pin';
-import {hideModal, showModal} from '@app/helpers';
+import {hideModal, sendNotification, showModal} from '@app/helpers';
 import {useApp, useTypedNavigation, useWallets} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 export const SettingsSecurityPinScreen = () => {
   const {goBack} = useTypedNavigation();
@@ -24,7 +24,7 @@ export const SettingsSecurityPinScreen = () => {
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
         hideModal();
-        app.emit('notification', getText(I18N.notificationPinChanged));
+        sendNotification(I18N.notificationPinChanged);
         goBack();
       } else {
         pinRef.current?.reset('Pin not matched');

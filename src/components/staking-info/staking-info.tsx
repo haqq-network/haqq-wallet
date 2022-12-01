@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Block} from '@app/components/staking-info/block';
 import {Markdown} from '@app/components/staking-info/markdown';
 import {
@@ -14,13 +14,13 @@ import {
   Icon,
   InfoBlock,
   InfoBlockType,
+  Inline,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {Inline} from '@app/components/ui/inline';
 import {createTheme, openURL} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -93,7 +93,7 @@ export const StakingInfo = ({
           {moniker}
         </Text>
         <Badge
-          text={getText(localStatus as number)}
+          i18n={localStatus as number}
           labelColor={labelColor}
           textColor={textColor}
         />
@@ -143,10 +143,7 @@ export const StakingInfo = ({
           </Block>
           {website && (
             <Block i18n={I18N.stakingInfoWebsite}>
-              <Text
-                t14
-                color={getColor(Color.textGreen1)}
-                onPress={onPressWebsite}>
+              <Text t14 color={Color.textGreen1} onPress={onPressWebsite}>
                 {website}
               </Text>
             </Block>
@@ -156,7 +153,7 @@ export const StakingInfo = ({
           style={styles.withHorizontalPadding}
           i18n={I18N.stakingInfoAddress}>
           <CopyButton value={operator_address} activeOpacity={0.7}>
-            <Text t14 color={getColor(Color.textBase2)}>
+            <Text t14 color={Color.textBase2}>
               {operator_address}
               <Spacer width={3} />
               <Icon name="copy" i16 color={Color.graphicGreen1} />
