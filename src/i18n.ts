@@ -80,6 +80,8 @@ export enum I18N {
   homeStakingStaked,
   homeStakingRewards,
   homeStakingTitle,
+  homeGovernance,
+  homeGovernanceTitle,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -143,7 +145,6 @@ export enum I18N {
   stakingUnDelegateFormNetworkFee,
   stakingUnDelegateAccountTitle,
   stakingUnDelegatePreviewTitle,
-
   stakingUnDelegatePreviewTotalAmount,
   stakingUnDelegatePreviewWithdrawFrom,
   stakingUnDelegatePreviewCommission,
@@ -151,14 +152,12 @@ export enum I18N {
   stakingUnDelegatePreviewNetworkFee,
   stakingUnDelegatePreviewButton,
   stakingUnDelegatePreviewAttention,
-
   stakingUnDelegateFinishTitle,
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
-
+  stakingHomeButton,
   stakingHomeValidators,
   stakingHomeGetRewards,
-
   sumBlockMax,
   sumBlockAvailable,
   popupNotificationTitle,
@@ -174,6 +173,7 @@ export enum I18N {
   backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish,
+  proposalTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -288,6 +288,8 @@ const en: Record<I18N, string> = {
     'Stake your ISLM in any validator and get additional ISLM',
   [I18N.homeStakingUnbounded]: 'Unbounded',
   [I18N.homeStakingTitle]: 'Staking',
+  [I18N.homeGovernance]: 'Governance',
+  [I18N.homeGovernanceTitle]: 'Governance',
   [I18N.homeStakingStaked]: 'Staked',
   [I18N.homeStakingRewards]: 'Rewards',
   [I18N.settingsProvidersTitle]: 'Providers',
@@ -385,4 +387,5 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
+  [I18N.proposalTitle]: 'Proposal',
 };
