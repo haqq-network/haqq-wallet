@@ -12,6 +12,7 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {I18N, getText} from '@app/i18n';
+import {HomeGovernanceScreen} from '@app/screens/home-governance';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {RootStackParamList} from '@app/types';
 import {IS_IOS} from '@app/variables';
@@ -69,17 +70,15 @@ export const HomeScreen = () => {
           }}
         />
       )}
-      {/* <Tab.Screen
-        name="homeSwap"
-        component={HomeSwapScreen}
-        options={{
-          title: 'Swap',
-          headerTitle: 'Swap screen',
-          tabBarIcon: ({focused}) => (
-            <SwapIcon color={focused ? GRAPHIC_GREEN_1 : GRAPHIC_BASE_2} />
-          ),
-        }}
-      /> */}
+      {IS_DEVELOPMENT === '1' && (
+        <Tab.Screen
+          name="homeGovernance"
+          component={HomeGovernanceScreen}
+          options={{
+            title: getText(I18N.homeGovernance),
+          }}
+        />
+      )}
       <Tab.Screen
         name="homeSettings"
         component={HomeSettingsScreen}
