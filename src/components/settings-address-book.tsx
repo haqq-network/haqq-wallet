@@ -4,14 +4,7 @@ import {Color, getColor} from '@app/colors';
 import {AddressEmpty} from '@app/components/address-empty';
 import {AddressHeader} from '@app/components/address-header';
 import {ListContact} from '@app/components/list-contact';
-import {
-  Box,
-  Icon,
-  IconButton,
-  QRScanner,
-  Text,
-  TextField,
-} from '@app/components/ui';
+import {Box, Icon, IconButton, Text, TextField} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N, getText} from '@app/i18n';
