@@ -8,21 +8,25 @@ jobs:
     name: Slack notify
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create Changelog
+        shell: bash
+        id: changelog
+        run: |
+          log="$(git log $(cat .last-build)..HEAD --pretty=format:"{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\":  \"- <http://github.com/haqq-network/haqq-wallet/commit/%H|%h> - %s\"}}")"
+          log="${log//'%'/'%25'}"
+          log="${log//$'\n'/', '}"
+          log="${log//$'\r'/'%0D'}"
+          echo "log=$log" >> $GITHUB_OUTPUT
+
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
-        payload: |
-          {
-            "text": "GitHub Action message",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "GitHub Action build result"
-                }
-              }
-            ]
-          }
+        with:
+          payload: |
+            { "text": "GitHub Action message", "blocks": [ ${{ steps.changelog.outputs.log }} ] }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -9,6 +9,12 @@ export enum StakingMetadataType {
   reward = 'reward',
 }
 
+type SummaryInfoCallback = (sums: {
+  rewardsSum: number;
+  stakingSum: number;
+  unDelegationSum: number;
+}) => void;
+
 export class StakingMetadata extends Realm.Object {
   hash!: string;
   type!: StakingMetadataType;
@@ -163,4 +169,29 @@ export class StakingMetadata extends Realm.Object {
   static getAll() {
     return realm.objects<StakingMetadata>(StakingMetadata.schema.name);
   }
+
+  static summaryInfoListener =
+    (callback: SummaryInfoCallback) =>
+    (
+      data: Realm.Collection<StakingMetadata & Realm.Object<unknown, never>>,
+    ) => {
+      const sumReduce = (
+        stakingData: (StakingMetadata & Realm.Object<unknown, never>)[],
+      ) => stakingData.reduce((acc, val) => acc + val.amount, 0);
+
+      const rewards = data.filter(
+        val => val.type === StakingMetadataType.reward,
+      );
+      const delegations = data.filter(
+        val => val.type === StakingMetadataType.delegation,
+      );
+      const unDelegations = data.filter(
+        val => val.type === StakingMetadataType.undelegation,
+      );
+
+      const rewardsSum = sumReduce(rewards);
+      const stakingSum = sumReduce(delegations);
+      const unDelegationSum = sumReduce(unDelegations);
+      callback({rewardsSum, stakingSum, unDelegationSum});
+    };
 }
