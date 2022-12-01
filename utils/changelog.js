@@ -131,13 +131,6 @@ function formatBlock(type, variants = {}) {
         variant[0] === 'unknown'
           ? 'Other'
           : variant[0].substring(1, variant[0].length - 1);
-      block.push({
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `*${title}*`,
-        },
-      });
 
       const msg = variant[1]
         .map(v =>
@@ -155,7 +148,7 @@ function formatBlock(type, variants = {}) {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: msg,
+          text: `*${title}*\n${msg}`,
         },
       });
     }
