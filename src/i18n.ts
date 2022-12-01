@@ -175,6 +175,7 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  settingsAccountNoWallet,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -391,4 +392,5 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.proposalTitle]: 'Proposal',
+  [I18N.settingsAccountNoWallet]: 'No wallets',
 };
