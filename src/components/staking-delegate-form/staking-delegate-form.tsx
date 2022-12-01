@@ -32,7 +32,7 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount('', balance - fee / WEI);
+  const amounts = useSumAmount(0, balance - fee / WEI);
 
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
@@ -43,7 +43,7 @@ export const StakingDelegateForm = ({
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    amounts.setAmount(amounts.maxAmount.toFixed(4));
+    amounts.setMax();
   }, [amounts]);
 
   return (
