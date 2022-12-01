@@ -1,9 +1,7 @@
 import React, {useCallback} from 'react';
 
-
 import {SettingsAbout} from '@app/components/settings-about';
 import {openURL} from '@app/helpers';
-
 
 export const SettingsAboutScreen = () => {
   // const onPressRate = useCallback(() => {
@@ -26,10 +24,10 @@ export const SettingsAboutScreen = () => {
     openURL(url);
   }, []);
 
-  const onPressTwitter = useCallback(() => {
-    const url = 'https://twitter.com/Islamic_coin';
-    openURL(url);
-  }, []);
+  // const onPressTwitter = useCallback(() => {
+  //   const url = 'https://twitter.com/Islamic_coin';
+  //   openURL(url);
+  // }, []);
 
   // const onPressInstagram = useCallback(() => {
   //   const url = 'https://twitter.com/Islamic_coin';
@@ -44,4 +42,3 @@ export const SettingsAboutScreen = () => {
     />
   );
 };
-
