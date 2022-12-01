@@ -155,6 +155,7 @@ export enum I18N {
   stakingUnDelegateFinishTitle,
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
+  stakingUnDelegateSumWarning,
   stakingHomeButton,
   stakingHomeValidators,
   stakingHomeGetRewards,
@@ -370,6 +371,8 @@ const en: Record<I18N, string> = {
   [I18N.stakingHomeGetRewards]: 'Get rewards',
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
+  [I18N.stakingUnDelegateSumWarning]:
+    'The funds will be undelegate within 21 days',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.popupNotificationTitle]: 'Turn on push notifications',
