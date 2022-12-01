@@ -7,10 +7,12 @@ import {
   generateEndpointGetDelegations,
   generateEndpointGetUndelegations,
   generateEndpointGetValidators,
+  generateEndpointProposals,
   generatePostBodyBroadcast,
 } from '@evmos/provider';
 import {AccountResponse} from '@evmos/provider/dist/rest/account';
 import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
+import {Proposal, ProposalsResponse} from '@evmos/provider/dist/rest/gov';
 import {
   DistributionRewardsResponse,
   GetDelegationsResponse,
@@ -24,6 +26,7 @@ import {
   createTxMsgDelegate,
   createTxMsgMultipleWithdrawDelegatorReward,
   createTxMsgUndelegate,
+  createTxMsgVote,
   createTxMsgWithdrawDelegatorReward,
   createTxRawEIP712,
   signatureToWeb3Extension,
@@ -141,6 +144,16 @@ export class Cosmos {
     return this.getQuery(`/cosmos/tx/v1beta1/txs/${hash}`);
   }
 
+  async getProposals(): Promise<ProposalsResponse> {
+    return this.getQuery(
+      generateEndpointProposals() + '?pagination.reverse=true',
+    );
+  }
+
+  async getProposalDetails(id: string): Promise<{proposal: Proposal}> {
+    return this.getQuery(generateEndpointProposals() + `/${id}`);
+  }
+
   async broadcastTransaction(
     txToBroadcast: TxToSend,
   ): Promise<BroadcastTransactionResponse> {
@@ -235,6 +248,31 @@ export class Cosmos {
     );
 
     return await this.broadcastTransaction(rawTx);
+  }
+
+  async vote(source: string, proposalId: number, option: number) {
+    try {
+      const sender = await this.getSender(source);
+
+      const params = {
+        proposalId,
+        option,
+      };
+
+      const memo = '';
+
+      const msg = createTxMsgVote(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      return await this.sendMsg(source, sender, msg);
+    } catch (e) {
+      captureException(e, 'Cosmos.delegate');
+    }
   }
 
   async unDelegate(source: string, address: string, amount: number) {

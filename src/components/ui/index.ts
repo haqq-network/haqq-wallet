@@ -32,4 +32,5 @@ export * from '../lottie';
 export * from './text-field';
 export * from './status-bar-color';
 export * from './error-text';
-export * from './custom-header/custom-header';
+export * from './custom-header';
+export * from './text-sum';
