@@ -55,8 +55,19 @@ export const BackupNotification = ({
           style={styles.image}
         />
       </View>
-      <Text t7 style={styles.title} i18n={I18N.backupNotificationTitle} />
-      <Text t14 style={styles.t14} i18n={I18N.backupNotificationDescription} />
+      <Text
+        t7
+        style={styles.title}
+        i18n={I18N.backupNotificationTitle}
+        center
+      />
+      <Text
+        t14
+        style={styles.t14}
+        i18n={I18N.backupNotificationDescription}
+        center
+        color={Color.textBase2}
+      />
       <Button
         i18n={I18N.backupNotificationBackup}
         variant={ButtonVariant.contained}
@@ -84,11 +95,9 @@ const styles = createTheme({
   },
   title: {
     marginBottom: 8,
-    textAlign: 'center',
   },
   t14: {
     marginBottom: 28,
-    textAlign: 'center',
   },
   margin: {marginBottom: 8},
   image: {
