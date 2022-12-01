@@ -5,8 +5,7 @@ import {utils} from 'ethers';
 
 import {SettingsAddressBook} from '@app/components/settings-address-book';
 import {hideModal, showModal} from '@app/helpers/modal';
-import {useApp, useContacts} from '@app/hooks';
-import {useTypedNavigation} from '@app/hooks';
+import {useApp, useContacts, useTypedNavigation} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;

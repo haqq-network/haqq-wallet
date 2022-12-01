@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Color, getColor} from '@app/colors';
 import {AddressEmpty} from '@app/components/address-empty';
 import {AddressHeader} from '@app/components/address-header';
 import {ListContact} from '@app/components/list-contact';
@@ -14,11 +15,6 @@ import {
 import {createTheme} from '@app/helpers';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N, getText} from '@app/i18n';
-import {
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_GREEN_1,
-  LIGHT_TEXT_BASE_1,
-} from '@app/variables';
 
 const ListOfContacts = withActionsContactItem(ListContact, {
   nextScreen: 'settingsContactEdit',
@@ -56,11 +52,11 @@ export const SettingsAddressBook = ({
         rightAction={
           search === '' ? (
             <IconButton onPress={onPressQR}>
-              <QRScanner color={LIGHT_GRAPHIC_GREEN_1} style={styles.icon} />
+              <Icon name="qr_scanner" color={Color.graphicGreen1} />
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <Icon i24 name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+              <Icon name="close_circle" color={getColor(Color.graphicBase2)} />
             </IconButton>
           )
         }
@@ -69,9 +65,12 @@ export const SettingsAddressBook = ({
       {canAdd && (
         <IconButton onPress={onPressAdd} style={styles.addButton}>
           <Box style={styles.badge}>
-            <Icon i24 name="plus_mid" color={LIGHT_GRAPHIC_BASE_2} />
+            <Icon name="plus_mid" color={getColor(Color.graphicBase2)} />
           </Box>
-          <Text color={LIGHT_TEXT_BASE_1} i18n={I18N.settingsAddressBookAdd} />
+          <Text
+            color={getColor(Color.textBase2)}
+            i18n={I18N.settingsAddressBookAdd}
+          />
         </IconButton>
       )}
       <ListOfContacts
