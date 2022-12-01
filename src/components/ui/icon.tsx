@@ -28,6 +28,7 @@ export enum IconsName {
   governance = 'governance',
   help = 'help',
   image = 'image',
+  instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',
   language = 'language',
@@ -52,11 +53,11 @@ export enum IconsName {
   star = 'star',
   swap = 'swap',
   trash = 'trash',
+  twitter = 'twitter',
   up = 'up',
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
-  ledger = 'ledger',
 }
 
 export type IconSize =
