@@ -168,6 +168,14 @@ export enum I18N {
   backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish,
+  settingsAccountStyleChoseColor,
+  settingsAccountStyleGenerate,
+  settingsAccountStyleUseStyle,
+  settingsAccountStyleAlreadyUsed,
+  settingsAccountStyleFlat,
+  settingsAccountStyleGradient,
+  settingsAccountStyleCircle,
+  settingsAccountStyleRhombus,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -372,4 +380,12 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
+  [I18N.settingsAccountStyleChoseColor]: 'Choose color style',
+  [I18N.settingsAccountStyleGenerate]: 'Generate',
+  [I18N.settingsAccountStyleUseStyle]: 'Use this style',
+  [I18N.settingsAccountStyleAlreadyUsed]: 'This style is used',
+  [I18N.settingsAccountStyleFlat]: 'Flat',
+  [I18N.settingsAccountStyleGradient]: 'Gradient',
+  [I18N.settingsAccountStyleCircle]: 'Circle',
+  [I18N.settingsAccountStyleRhombus]: 'Rhombus',
 };
