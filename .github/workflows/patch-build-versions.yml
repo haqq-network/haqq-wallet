@@ -4,16 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  slack_notify:
-    name: Create changelogs
-    uses: ./.github/workflows/slack-notify.yml
-    secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
   patch_build:
     runs-on: macos-latest
-    needs:
-      - slack_notify
     steps:
       - uses: actions/checkout@v3
         with:
@@ -45,3 +37,11 @@ jobs:
           APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
 
+      - name: Amend the last commit
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Build"
+          git log -1 --pretty="%H" > .last-build
+          git commit -am "build"
+          git pull --rebase origin main
+          git push --force-with-lease

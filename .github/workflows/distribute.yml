@@ -147,8 +147,6 @@ jobs:
   slack_notify:
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
-    with:
-      non-pr-result: false
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
