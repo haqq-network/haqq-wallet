@@ -2,23 +2,22 @@ import React, {useEffect} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {windowWidth} from '../../helpers';
-import {hideModal} from '../../helpers/modal';
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_GRAPHIC_SECOND_4,
-} from '../../variables';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
   ErrorCreateAccountIcon,
   Text,
-} from '../ui';
+} from '@app/components/ui';
+import {windowWidth} from '@app/helpers';
+import {hideModal} from '@app/helpers/modal';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {
+  LIGHT_BG_1,
+  LIGHT_BG_9,
+  LIGHT_GRAPHIC_BASE_1,
+  LIGHT_GRAPHIC_SECOND_4,
+} from '@app/variables';
 
 export const ErrorCreateAccount = () => {
   useEffect(() => {
