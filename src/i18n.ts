@@ -171,6 +171,9 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  backupFinishCongratulation,
+  backupFinishSuccess,
+  backupFinishFinish,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -267,7 +270,7 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsLanguage]: 'Language',
   [I18N.backupNotificationTitle]: 'Backup your wallet, keep your assets safe',
   [I18N.backupNotificationDescription]:
-    "If your recovery phrase is misplaced or stolen, it's the equivalent of osing your wallet. It's the only way to access your wallet if you forget your account password.",
+    "If your recovery phrase is misplaced or stolen, it's the equivalent of losing your wallet. It's the only way to access your wallet if you forget your account password.",
   [I18N.backupNotificationBackup]: 'Backup now',
   [I18N.backupNotificationSkip]: 'I will risk it',
   [I18N.backupNotificationAlertTitle]: 'Proceed without backup?',
@@ -379,4 +382,7 @@ const en: Record<I18N, string> = {
   [I18N.welcomeCreateWallet]: 'Create Wallet',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
+  [I18N.backupFinishCongratulation]: 'Congratulations!',
+  [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
+  [I18N.backupFinishFinish]: 'Finish',
 };
