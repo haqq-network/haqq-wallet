@@ -2,6 +2,7 @@ import React from 'react';
 
 import {FlatList, View} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
@@ -19,13 +20,13 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
     return (
       <View style={styles.emptyContainer}>
         <NoTransactionsIcon
-          color={LIGHT_GRAPHIC_SECOND_3}
+          color={getColor(Color.graphicSecond3)}
           style={styles.space}
         />
         <Text
           t14
           i18n={I18N.settingsAccountNoWallet}
-          color={LIGHT_TEXT_SECOND_1}
+          color={getColor(Color.textSecond1)}
         />
       </View>
     );
