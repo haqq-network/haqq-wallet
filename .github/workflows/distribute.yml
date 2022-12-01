@@ -219,4 +219,5 @@ jobs:
           git config --global user.name "Build"
           git log -1 --pretty="%H" > .last-build
           git commit -am "build"
+          git pull --rebase origin main
           git push --force-with-lease
