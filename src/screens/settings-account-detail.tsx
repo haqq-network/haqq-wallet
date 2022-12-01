@@ -1,11 +1,15 @@
 import React, {useCallback} from 'react';
 
+
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {app} from '@app/contexts/app';
 import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
+import {sendNotification} from '@app/helpers';
+
+
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
@@ -26,11 +30,8 @@ export const SettingsAccountDetailScreen = () => {
   const onToggleIsHidden = useCallback(() => {
     if (wallet) {
       wallet.isHidden = !wallet.isHidden;
-      if (wallet.isHidden) {
-        const notificationTitle = getText(
-          I18N.settingsAccountDetailNotifacation,
-        );
-        app.emit('notification', notificationTitle);
+      if (wallet.isHidden) {     
+        sendNotification(I18N.notificationAccountHidden);
       }
     }
   }, [wallet]);

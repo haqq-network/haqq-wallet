@@ -1,31 +1,82 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
-import {Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
-import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useApp, useTypedNavigation, useWalletsList} from '@app/hooks';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
 
+const initData = {
+  stakingSum: 0,
+  rewardsSum: 0,
+  unDelegationSum: 0,
+  loading: true,
+};
+
 export const HomeStakingScreen = () => {
-  const [loading, setLoading] = useState(true);
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
-  const wallets = useWallets();
+  const app = useApp();
+  const [data, setData] = useState(initData);
+
+  const {visible} = useWalletsList();
   const navigation = useTypedNavigation();
+  const cosmos = useRef(new Cosmos(app.provider!)).current;
+
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
   }, [navigation]);
 
   useEffect(() => {
-    const addressList = wallets.visible.map(w => w.cosmosAddress);
+    const listener = (newData: any) => {
+      setData({...newData, loading: false});
+    };
+    const unsub = StakingMetadata.getAll().addListener(
+      StakingMetadata.summaryInfoListener(listener),
+    );
+    return unsub;
+  }, []);
 
-    cosmos.sync(addressList).then(() => {
-      setLoading(false);
-    });
-  }, [cosmos, wallets.visible]);
+  const onPressGetRewards = useCallback(async () => {
+    const stakedValidators = StakingMetadata.getAll();
+    const rewards: Realm.Results<StakingMetadata> = stakedValidators.filtered(
+      `type = '${StakingMetadataType.reward}'`,
+    );
 
-  if (loading) {
-    return <Loading />;
-  }
+    const delegators: any = {};
 
-  return <HomeStaking onPressValidators={onPressValidators} />;
+    for (const row of rewards) {
+      delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
+        row.validator,
+      );
+    }
+    await Promise.all(
+      visible
+        .filter(w => w.cosmosAddress in delegators)
+        .map(w => {
+          return cosmos.multipleWithdrawDelegatorReward(
+            w.address,
+            delegators[w.cosmosAddress],
+          );
+        }),
+    );
+    rewards.forEach(r => StakingMetadata.remove(r.hash));
+  }, [cosmos, visible]);
+
+  useEffect(() => {
+    const addressList = visible.map(w => w.cosmosAddress);
+
+    cosmos.sync(addressList);
+  }, [cosmos, visible]);
+
+  return (
+    <HomeStaking
+      loading={data.loading}
+      stakingSum={data.stakingSum}
+      rewardsSum={data.rewardsSum}
+      unDelegationSum={data.unDelegationSum}
+      onPressGetRewards={onPressGetRewards}
+      onPressValidators={onPressValidators}
+    />
+  );
 };

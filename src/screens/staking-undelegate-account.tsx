@@ -5,22 +5,19 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const StakingUnDelegateAccountScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'stakingUnDelegateAccount'>();
+  const params = useTypedRoute<'stakingUnDelegateAccount'>().params;
 
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate('stakingUnDelegateForm', {
-        ...route.params,
+        ...params,
         account: address,
       });
     },
-    [navigation, route.params],
+    [navigation, params],
   );
 
   return (
-    <VisibleAccountSelector
-      wallets={route.params.available}
-      onPress={onPressRow}
-    />
+    <VisibleAccountSelector wallets={params.available} onPress={onPressRow} />
   );
 };

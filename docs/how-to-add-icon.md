@@ -12,11 +12,11 @@ Icon can be added by png or svg formats
 3. Go to file attributes 
 4. Find `Scales` and choose `Single scale`
 
-![image info](./images/how-to-add-icon-ios.png)
+![image info](https://github.com/haqq-network/haqq-wallet/blob/main/docs/images/how-to-add-icon-ios.png)
 
 ## Android
 
-1. [Generate assets](https://romannurik.github.io/AndroidAssetStudio/icons-generic.html#source.type=image&source.space.trim=1&source.space.pad=0&size=32&padding=0&color=rgb(0%2C%200%2C%200)&name=iconname) for different resolutions
+1. [Generate assets](https://romannurik.github.io/AndroidAssetStudio/icons-generic.html#source.type=image&source.space.trim=0&source.space.pad=0&size=32&padding=0&color=rgb(0%2C%200%2C%200)&name=iconname) for different resolutions
 2. copy your assets into `android/app/src/main/res`
 
 ## Code
