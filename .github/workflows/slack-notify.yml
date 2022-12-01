@@ -2,9 +2,13 @@ name: Slack notify
 
 on:
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
-  test:
+  slack_notify:
     name: Slack notify
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +22,7 @@ jobs:
         shell: bash
         id: changelog
         run: |
-          log="$(node ./utils/changelog.js 2cb42246c646fb77bd10711a79108ec1ba50f49d)"
+          log="$(node ./utils/changelog.js $(cat .last-build))"
           echo "log=$log" >> $GITHUB_OUTPUT
 
       - name: Send GitHub Action trigger data to Slack workflow
