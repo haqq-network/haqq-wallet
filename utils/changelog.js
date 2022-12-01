@@ -19,23 +19,21 @@ new Promise(resolve => {
       }
 
       const cache = {};
-
       const rows = stdout.split('\n').map(r => r.split('||'));
 
       for (const row of rows) {
+        regex.lastIndex = 0;
         const msg = regex.exec(row[2]);
         if (msg) {
           if (!cache[msg[1]]) {
-            cache[msg[1]] = {
-              unknown: [],
-            };
-          }
-
-          if (msg[2] && !cache[msg[1]][msg[2]]) {
-            cache[msg[1]][msg[2]] = [];
+            cache[msg[1]] = {};
           }
 
           const key = msg[2] || 'unknown';
+
+          if (!cache[msg[1]][key]) {
+            cache[msg[1]][key] = [];
+          }
 
           cache[msg[1]][key].push({
             raw: row,

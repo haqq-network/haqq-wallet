@@ -21,10 +21,6 @@ jobs:
           log="$(node ./utils/changelog.js 2cb42246c646fb77bd10711a79108ec1ba50f49d)"
           echo "log=$log" >> $GITHUB_OUTPUT
 
-      - name: Debug
-        run: |
-          echo "${{ steps.changelog.outputs.log }}"
-
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
         with:
