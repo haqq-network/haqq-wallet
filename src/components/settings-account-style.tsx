@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -17,9 +18,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
-import {LIGHT_TEXT_BASE_1} from '@app/variables';
 
 const cardStyleVariants = [
   {
@@ -87,7 +88,7 @@ export const SettingsAccountStyle = ({
   }, [loading, opacity]);
 
   return (
-    <PopupContainer style={page.container}>
+    <PopupContainer style={styles.container}>
       <Animated.View style={animatedStyles}>
         <Card
           width={cardWidth}
@@ -96,17 +97,25 @@ export const SettingsAccountStyle = ({
           colorFrom={colors[0]}
           colorTo={colors[1]}
           colorPattern={colors[2]}
-          style={page.card}
+          style={styles.card}
         />
       </Animated.View>
-      <Text t10 i18n={I18N.settingsAccountStyleChoseColor} style={page.title} />
+      <Text
+        t10
+        i18n={I18N.settingsAccountStyleChoseColor}
+        style={styles.title}
+      />
       <SegmentedControl
         value={cardStyle}
         values={cardStyleVariants}
         onChange={onChangeType}
-        style={page.margin}
+        style={styles.margin}
       />
-      <Text t10 i18n={I18N.settingsAccountStyleChoseColor} style={page.title} />
+      <Text
+        t10
+        i18n={I18N.settingsAccountStyleChoseColor}
+        style={styles.title}
+      />
       <SegmentedControl
         value={patternStyle}
         values={patternVariants}
@@ -118,7 +127,7 @@ export const SettingsAccountStyle = ({
         size={ButtonSize.middle}
         i18n={I18N.settingsAccountStyleGenerate}
         onPress={onPressGenerate}
-        style={page.button}
+        style={styles.button}
         loading={loading}
       />
       <Button
@@ -131,13 +140,13 @@ export const SettingsAccountStyle = ({
         }
         disabled={!isStyleChanged}
         onPress={onPressApply}
-        style={page.button}
+        style={styles.button}
       />
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     marginHorizontal: 20,
   },
@@ -149,7 +158,7 @@ const page = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 23,
     fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
   button: {
     marginVertical: 8,

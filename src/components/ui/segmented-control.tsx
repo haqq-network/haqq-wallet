@@ -2,12 +2,11 @@ import React, {useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 import {Text} from './text';
-
-import {LIGHT_BG_1, LIGHT_BG_3, LIGHT_TEXT_BASE_1} from '../../variables';
 
 export type SegmentedControlValue<T> = {
   value: T;
@@ -42,7 +41,7 @@ export const SegmentedControl = ({
               t14={v.value !== value}
               t13={v.value === value}
               i18n={v.i18nName}
-              color={LIGHT_TEXT_BASE_1}>
+              color={getColor(Color.textBase1)}>
               {v.name}
             </Text>
           </View>
@@ -54,7 +53,7 @@ export const SegmentedControl = ({
 
 const styles = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     padding: 3,
     borderRadius: 14,
     flexDirection: 'row',
@@ -66,7 +65,7 @@ const styles = createTheme({
     padding: 8,
   },
   itemActive: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 12,
   },
 });
