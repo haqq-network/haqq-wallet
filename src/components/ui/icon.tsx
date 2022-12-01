@@ -56,7 +56,6 @@ export enum IconsName {
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
-  ledger = 'ledger',
 }
 
 export type IconSize =

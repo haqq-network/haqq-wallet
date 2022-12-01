@@ -76,6 +76,8 @@ export enum I18N {
   homeSettingsTitle,
   homeStaking,
   homeStakingTitle,
+  homeGovernance,
+  homeGovernanceTitle,
   modalPinTitle,
   modalPinForgotCode,
   pinManyAttempts,
@@ -139,7 +141,6 @@ export enum I18N {
   stakingUnDelegateFormNetworkFee,
   stakingUnDelegateAccountTitle,
   stakingUnDelegatePreviewTitle,
-
   stakingUnDelegatePreviewTotalAmount,
   stakingUnDelegatePreviewWithdrawFrom,
   stakingUnDelegatePreviewCommission,
@@ -147,13 +148,10 @@ export enum I18N {
   stakingUnDelegatePreviewNetworkFee,
   stakingUnDelegatePreviewButton,
   stakingUnDelegatePreviewAttention,
-
   stakingUnDelegateFinishTitle,
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
-
   stakingHomeButton,
-
   sumBlockMax,
   sumBlockAvailable,
   popupNotificationTitle,
@@ -168,6 +166,7 @@ export enum I18N {
   backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish,
+  proposalTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -279,6 +278,8 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeStaking]: 'Staking',
   [I18N.homeStakingTitle]: 'Staking',
+  [I18N.homeGovernance]: 'Governance',
+  [I18N.homeGovernanceTitle]: 'Governance',
   [I18N.settingsProvidersTitle]: 'Providers',
   [I18N.settingsProvidersTitleRight]: 'Add',
   [I18N.settingsProviderEditHeaderTitle]: 'Provider',
@@ -372,4 +373,5 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
+  [I18N.proposalTitle]: 'Proposal',
 };
