@@ -82,7 +82,6 @@ const styles = createTheme({
     marginBottom: 12,
     marginHorizontal: 20,
   },
-  icon: {width: 20, height: 20},
   badge: {
     marginRight: 12,
   },
