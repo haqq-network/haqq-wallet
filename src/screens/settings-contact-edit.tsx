@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {Alert} from 'react-native';
 
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
 import {CustomHeader} from '@app/components/ui';
 import {useContacts, useTypedNavigation} from '@app/hooks';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
-import {RootStackParamList} from '@app/types';
 import {LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
-    useRoute<RouteProp<RootStackParamList, 'settingsContactEdit'>>().params;
+    useTypedRoute<'settingsContactEdit'>().params;
+
   const contacts = useContacts();
   const {goBack} = useTypedNavigation();
 
@@ -32,21 +32,21 @@ export const SettingsContactEditScreen = () => {
     goBack();
   };
   const onRemove = () => {
-    Alert.alert(
-      'Delete Contact',
-      'Are you sure you want to delete the selected contact?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            contacts.removeContact(address);
-            goBack();
-          },
+    const DelateContact = getText(I18N.settingsContactEditDeleteContact);
+    const Sure = getText(I18N.settingsContactEditSure);
+    const Delete = getText(I18N.settingsContactEditDelete);
+    const Cencel = getText(I18N.cancel);
+    Alert.alert(DelateContact, Sure, [
+      {text: Cencel, style: 'cancel'},
+      {
+        text: Delete,
+        style: 'destructive',
+        onPress: () => {
+          contacts.removeContact(address);
+          goBack();
         },
-      ],
-    );
+      },
+    ]);
   };
   const onPressRight = () => {
     if (!isEdit) {

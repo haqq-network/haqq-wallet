@@ -183,6 +183,10 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  settingsContactEditDelateContact,
+  settingsContactEditSure,
+  settingsContactEditCancel,
+  settingsContactEditDelete,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -410,4 +414,8 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.proposalTitle]: 'Proposal',
+
+  [I18N.settingsContactEditSure]:
+    'Are you sure you want to delete the selected contact?',
+  [I18N.settingsContactEditDelete]: 'Delete',
 };
