@@ -7,9 +7,10 @@ import {Alert, StyleSheet, Switch, View} from 'react-native';
 import {Pin, PinInterface} from '@app/components/pin';
 import {useApp} from '@app/hooks';
 
-import {MenuNavigationButton, Spacer, Text} from '../components/ui';
-import {BiometryType, RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../variables';
+import {MenuNavigationButton, Spacer, Text} from '@app/components/ui';
+import {BiometryType, RootStackParamList} from '@app/types';
+import { I18N } from '@app/i18n';
+import { Color } from '@app/colors';
 
 const biometryName = {
   [BiometryType.faceId]: 'Face ID',
@@ -64,10 +65,10 @@ export const SettingsSecurityScreen = () => {
       <MenuNavigationButton
         onPress={() => navigation.navigate('settingsSecurityPin')}>
         <View>
-          <Text t11 style={page.menuTitle}>
+          <Text t11 color={Color.textBase1} style={page.menuTitle} i18n={I18N.SettingsSecurityChangePin}>
             Change PIN
           </Text>
-          <Text t14 style={page.menuSubtitle}>
+          <Text t14 color={Color.textBase2} i18n={I18N.setttingsSecurityEnterPin}>
             Enter new pin
           </Text>
         </View>
@@ -75,10 +76,19 @@ export const SettingsSecurityScreen = () => {
       {app.biometryType !== null && (
         <MenuNavigationButton hideArrow onPress={() => {}}>
           <View>
-            <Text t11 style={page.menuTitle}>
+            <Text 
+              t11
+              color={Color.textBase1}
+              style={page.menuTitle}
+            >
               {biometryName[app.biometryType]}
             </Text>
-            <Text t14 style={page.menuSubtitle}>
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.settingsSecurityBiometry}
+              i18params={{biometry: biometryName[app.biometryType]}}
+            >
               Use {biometryName[app.biometryType]} to unlock the app
             </Text>
           </View>
@@ -92,13 +102,11 @@ export const SettingsSecurityScreen = () => {
 };
 
 const page = StyleSheet.create({
-  container: {flex: 1, marginHorizontal: 20},
-
-  menuSubtitle: {
-    color: LIGHT_TEXT_BASE_2,
+  container: {
+    flex: 1,
+    marginHorizontal: 20
   },
   menuTitle: {
-    color: LIGHT_TEXT_BASE_1,
     marginBottom: 2,
   },
 });
