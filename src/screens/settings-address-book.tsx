@@ -60,16 +60,14 @@ export const SettingsAddressBookScreen =
     }, []);
 
     return (
-      <>
-        <SettingsAddressBook
-          onPressAdd={onPressAdd}
-          onPressAddress={onPressAddress}
-          onPressClear={onPressClear}
-          onPressQR={onPressQR}
-          canAdd={canAdd}
-          search={search}
-          setSearch={setSearch}
-        />
-      </>
+      <SettingsAddressBook
+        onPressAdd={onPressAdd}
+        onPressAddress={onPressAddress}
+        onPressClear={onPressClear}
+        onPressQR={onPressQR}
+        canAdd={canAdd}
+        search={search}
+        setSearch={setSearch}
+      />
     );
   };

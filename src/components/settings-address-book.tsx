@@ -45,11 +45,15 @@ export const SettingsAddressBook = ({
         rightAction={
           search === '' ? (
             <IconButton onPress={onPressQR}>
-              <Icon name="qr_scanner" color={Color.graphicGreen1} />
+              <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <Icon name="close_circle" color={getColor(Color.graphicBase2)} />
+              <Icon
+                i24
+                name="close_circle"
+                color={getColor(Color.graphicBase2)}
+              />
             </IconButton>
           )
         }
@@ -58,12 +62,9 @@ export const SettingsAddressBook = ({
       {canAdd && (
         <IconButton onPress={onPressAdd} style={styles.addButton}>
           <Box style={styles.badge}>
-            <Icon name="plus_mid" color={getColor(Color.graphicBase2)} />
+            <Icon name="plus_mid" color={Color.graphicBase2} />
           </Box>
-          <Text
-            color={getColor(Color.textBase2)}
-            i18n={I18N.settingsAddressBookAdd}
-          />
+          <Text color={Color.textBase2} i18n={I18N.settingsAddressBookAdd} />
         </IconButton>
       )}
       <ListOfContacts
