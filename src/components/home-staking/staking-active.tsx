@@ -11,7 +11,7 @@ import type AnimatedLottieView from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Spacer, Text, TextSum} from '@app/components/ui';
+import {InfoBlockAmount, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables';
@@ -88,49 +88,24 @@ export const StakingActive = forwardRef(
           {rewardSum.toFixed(4)} ISLM
         </Text>
         <Spacer height={28} />
-        <View style={styles.blockContainer}>
-          <View style={styles.infoBlock}>
-            <Text
-              t15
-              center
-              color={Color.textBase2}
-              i18n={I18N.homeStakingStaked}
-            />
-            <Spacer height={2} />
-            <TextSum center sum={stakedSum.toFixed(2)} />
-          </View>
-        </View>
+        <InfoBlockAmount
+          isLarge
+          amountColor={Color.textGreen1}
+          value={stakedSum}
+          titleI18N={I18N.homeStakingStaked}
+        />
         <Spacer height={12} />
         <View style={styles.blockContainer}>
-          <View style={styles.infoBlock}>
-            <Text
-              t15
-              center
-              color={Color.textBase2}
-              i18n={I18N.sumBlockAvailable}
-            />
-            <Spacer height={2} />
-            <TextSum
-              color={Color.textBase1}
-              center
-              sum={availableSum.toFixed(0)}
-            />
-          </View>
+          <InfoBlockAmount
+            toFixed={0}
+            value={availableSum}
+            titleI18N={I18N.sumBlockAvailable}
+          />
           <Spacer width={12} />
-          <View style={styles.infoBlock}>
-            <Text
-              t15
-              center
-              color={Color.textBase2}
-              i18n={I18N.homeStakingUnbounded}
-            />
-            <Spacer height={2} />
-            <TextSum
-              color={Color.textBase1}
-              center
-              sum={unDelegationSum.toFixed(2)}
-            />
-          </View>
+          <InfoBlockAmount
+            value={unDelegationSum}
+            titleI18N={I18N.homeStakingUnbounded}
+          />
         </View>
         <Spacer height={20} />
       </View>
@@ -145,13 +120,6 @@ const styles = createTheme({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-  },
-  infoBlock: {
-    borderWidth: 1,
-    borderColor: Color.graphicSecond1,
-    borderRadius: 12,
-    flex: 1,
-    padding: 12,
   },
   blockContainer: {
     flexDirection: 'row',

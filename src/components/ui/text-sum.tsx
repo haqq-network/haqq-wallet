@@ -13,14 +13,16 @@ interface TextSumProps {
   color?: Color;
   center?: boolean;
   right?: boolean;
+  suffix?: string;
   style?: StyleProp<ViewStyle>;
 }
 
 export function TextSum({
   sum,
-  color = Color.textGreen1,
+  color = Color.textBase1,
   center,
   right,
+  suffix = '',
   style,
 }: TextSumProps) {
   const viewStyles = StyleSheet.flatten([
@@ -36,7 +38,7 @@ export function TextSum({
       </Text>
       <Spacer width={2} />
       <Text t13 center style={styles.opacityText} color={color}>
-        ISLM
+        ISLM{suffix}
       </Text>
     </View>
   );
