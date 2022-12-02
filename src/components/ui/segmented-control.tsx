@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -41,7 +41,7 @@ export const SegmentedControl = ({
               t14={v.value !== value}
               t13={v.value === value}
               i18n={v.i18nName}
-              color={getColor(Color.textBase1)}>
+              color={Color.textBase1}>
               {v.name}
             </Text>
           </View>
