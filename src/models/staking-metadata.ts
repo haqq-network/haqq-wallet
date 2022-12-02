@@ -170,6 +170,10 @@ export class StakingMetadata extends Realm.Object {
     return realm.objects<StakingMetadata>(StakingMetadata.schema.name);
   }
 
+  static reduceAmounts(data: Realm.Results<StakingMetadata>) {
+    return data.reduce((sum, item) => sum + item.amount, 0);
+  }
+
   static summaryInfoListener =
     (callback: SummaryInfoCallback) =>
     (

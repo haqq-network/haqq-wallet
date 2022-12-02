@@ -8,6 +8,9 @@ import {
   ButtonVariant,
   DataView,
   ISLMIcon,
+  Icon,
+  InfoBlock,
+  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
@@ -82,6 +85,12 @@ export const StakingDelegatePreview = ({
       </View>
       {error && <Text clean>{error}</Text>}
       <Spacer />
+      <Spacer height={24} />
+      <InfoBlock
+        type={InfoBlockType.warning}
+        i18n={I18N.stakingUnDelegatePreviewAttention}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+      />
       <Button
         variant={ButtonVariant.contained}
         title={getText(I18N.stakingDelegatePreviewDelegate)}

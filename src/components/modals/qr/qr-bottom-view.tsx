@@ -3,8 +3,8 @@ import React from 'react';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
-import {FlashLightIcon, IconButton, ImageIcon} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {QR_BACKGROUND, SYSTEM_BLUR_3} from '@app/variables';
 
@@ -25,13 +25,12 @@ export const QrBottomView = ({
     <View style={[styles.bottomContainer, {paddingBottom: insets.bottom + 50}]}>
       <View style={styles.subContainer}>
         <IconButton onPress={onClickGallery} style={styles.iconButton}>
-          <ImageIcon color={getColor(Color.graphicBase3)} />
+          <Icon name="image" color={Color.graphicBase3} />
         </IconButton>
         <IconButton onPress={onToggleFlashMode} style={styles.iconButton}>
-          <FlashLightIcon
-            color={getColor(
-              flashMode ? Color.graphicGreen2 : Color.graphicBase3,
-            )}
+          <Icon
+            name="flashlight"
+            color={flashMode ? Color.graphicGreen2 : Color.graphicBase3}
           />
         </IconButton>
       </View>
