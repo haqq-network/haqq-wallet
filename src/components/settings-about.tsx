@@ -3,15 +3,8 @@ import React from 'react';
 import {ScrollView, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
-import {
-  DiscordIcon,
-  Icon,
-  IconButton,
-  LottieWrap,
-  Spacer,
-  Text,
-} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Icon, IconButton, LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -72,7 +65,7 @@ export const SettingsAbout = ({
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
         <IconButton onPress={onPressDiscord} style={styles.button}>
-          <DiscordIcon color={getColor(Color.graphicBase1)} />
+          <Icon name="discord" color={Color.graphicBase1} />
           <Text
             t11
             i18n={I18N.settingsAboutDiscord}
