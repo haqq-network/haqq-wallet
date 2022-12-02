@@ -5,10 +5,10 @@ import {View} from 'react-native';
 import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
+import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables';
-import { I18N } from '@app/i18n';
-import { cleanNumber } from '@app/utils';
 
 // const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
 const sourceEthAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
@@ -93,15 +93,15 @@ export const SettingsTest = () => {
         i18n={I18N.settingsTestReward}
         i18params={{reward: cleanNumber(reward)}}
       />
-      <Text 
-        clean 
+      <Text
+        clean
         style={styles.gap}
         i18n={I18N.settingsTestUnbounded}
         i18params={{unbounded: cleanNumber(unbounded)}}
       />
       <Input
         style={styles.gap}
-        label={"delegate"}
+        label={'delegate'}
         value={address}
         onChangeText={val => setAddress(val)}
         multiline
