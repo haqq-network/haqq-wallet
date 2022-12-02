@@ -2,7 +2,6 @@ import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {
   NativeSyntheticEvent,
-  StyleSheet,
   Text,
   TextInput,
   TextInputContentSizeChangeEventData,
@@ -20,15 +19,7 @@ import Animated, {
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {
-  IS_IOS,
-  LIGHT_BG_5,
-  LIGHT_BG_7,
-  LIGHT_BG_8,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_GREEN_1,
-  PLACEHOLDER_GRAY,
-} from '@app/variables';
+import {IS_IOS} from '@app/variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -140,7 +131,7 @@ export const TextField: React.FC<Props> = memo(
             <Text style={styles.placeholder}>{placeholder}</Text>
           )}
           <AnimatedTextInput
-            selectionColor={LIGHT_TEXT_GREEN_1}
+            selectionColor={getColor(Color.textGreen1)}
             allowFontScaling={false}
             style={[
               styles.input,
@@ -150,7 +141,7 @@ export const TextField: React.FC<Props> = memo(
               },
             ]}
             ref={inputRef}
-            placeholderTextColor={PLACEHOLDER_GRAY}
+            placeholderTextColor={Color.textBase2}
             {...restOfProps}
             value={value}
             multiline={multiline}
@@ -230,7 +221,7 @@ const styles = createTheme({
     marginLeft: 35,
     bottom: 8,
     fontSize: 12,
-    color: LIGHT_BG_5,
+    color: Color.bg5,
     fontFamily: 'SF Pro Display',
   },
   sub: {
