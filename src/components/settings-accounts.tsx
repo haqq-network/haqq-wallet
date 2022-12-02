@@ -2,7 +2,7 @@ import React from 'react';
 
 import {FlatList, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
@@ -18,14 +18,11 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
   if (!rows.length) {
     return (
       <View style={styles.emptyContainer}>
-        <NoTransactionsIcon
-          color={getColor(Color.graphicSecond3)}
-          style={styles.space}
-        />
+        <NoTransactionsIcon color={Color.graphicSecond3} style={styles.space} />
         <Text
           t14
           i18n={I18N.settingsAccountNoWallet}
-          color={getColor(Color.textSecond1)}
+          color={Color.textSecond1}
         />
       </View>
     );
