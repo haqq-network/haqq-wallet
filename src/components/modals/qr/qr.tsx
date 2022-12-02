@@ -191,7 +191,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           {rows.map((item, id) => (
             <WalletRow key={id} item={item} onPress={handleAddressEvent} />
           ))}
-          <Spacer style={styles.spacer} />
+          <Spacer height={50} />
         </BottomSheet>
       )}
     </>
@@ -213,5 +213,4 @@ const styles = createTheme({
     right: 0,
     bottom: Dimensions.get('window').height / 2 - 135,
   },
-  spacer: {height: 50},
 });

@@ -66,7 +66,7 @@ export const StakingUnDelegateForm = ({
         i18n={I18N.stakingUnDelegateFormPreview}
         onPress={onDone}
       />
-      <Spacer height={12} />
+      <Spacer height={16} />
     </KeyboardSafeArea>
   );
 };

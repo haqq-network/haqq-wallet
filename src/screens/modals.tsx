@@ -13,7 +13,15 @@ import {
   SplashModal,
   SplashModalProps,
 } from '@app/components/modals';
+import {
+  DetailsQrModal,
+  DetailsQrModalProps,
+} from '@app/components/modals/details-qr';
 import {QRModal, QRModalProps} from '@app/components/modals/qr';
+import {
+  WalletsBottomSheet,
+  WalletsBottomSheetProps,
+} from '@app/components/modals/wallets-bottom-sheet';
 import {app} from '@app/contexts';
 
 type Loading = {
@@ -36,7 +44,23 @@ type NoInternet = {
   type: 'qr' & QRModalProps;
 } & QRModalProps;
 
-type ModalState = Loading | Splash | Pin | QR | NoInternet | null;
+type WalletsBottomSheetParams = {
+  type?: 'wallets-bottom-sheet';
+} & WalletsBottomSheetProps;
+
+type DetailsQr = {
+  type: 'card-details-qr';
+} & DetailsQrModalProps;
+
+type ModalState =
+  | Loading
+  | Splash
+  | Pin
+  | QR
+  | NoInternet
+  | WalletsBottomSheetParams
+  | DetailsQr
+  | null;
 
 export type ModalProps = {
   initialModal?: ModalState;
@@ -91,6 +115,12 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return (
           <QRModal onClose={onClose} qrWithoutFrom={modal.qrWithoutFrom} />
         );
+      case 'wallets-bottom-sheet':
+        const props = {...modal};
+        delete props.type;
+        return <WalletsBottomSheet {...props} />;
+      case 'card-details-qr':
+        return <DetailsQrModal address={modal.address} />;
       case 'no-internet':
         return <NoInternet />;
       case 'error-account-added':
