@@ -19,7 +19,7 @@ import Animated, {
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS, PLACEHOLDER_GRAY} from '@app/variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -232,7 +232,7 @@ const styles = createTheme({
   },
   placeholder: {
     position: 'absolute',
-    color: Color.textBase2,
+    color: PLACEHOLDER_GRAY,
     top: IS_IOS ? 28 : 26,
     left: 18,
   },
