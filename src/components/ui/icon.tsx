@@ -28,6 +28,7 @@ export enum IconsName {
   governance = 'governance',
   help = 'help',
   image = 'image',
+  instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',
   language = 'language',
@@ -51,17 +52,19 @@ export enum IconsName {
   star = 'star',
   swap = 'swap',
   trash = 'trash',
+  twitter = 'twitter',
   up = 'up',
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
-  ledger = 'ledger',
 }
 
 export type IconSize =
   | {i12: boolean}
+  | {i16: boolean}
   | {i24: boolean}
   | {i32: boolean}
+  | {i42: boolean}
   | {i72: boolean}
   | {i120: boolean}
   | {};
@@ -78,8 +81,10 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
       StyleSheet.flatten([
         styles.i24Container,
         'i12' in props && styles.i12Container,
+        'i16' in props && styles.i16Container,
         'i24' in props && styles.i24Container,
         'i32' in props && styles.i32Container,
+        'i42' in props && styles.i42Container,
         'i72' in props && styles.i72Container,
         'i120' in props && styles.i120Container,
         style,
@@ -100,6 +105,10 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
   },
+  i42Container: {
+    width: 42,
+    height: 42,
+  },
   i32Container: {
     width: 32,
     height: 32,
@@ -107,6 +116,10 @@ const styles = StyleSheet.create({
   i24Container: {
     width: 24,
     height: 24,
+  },
+  i16Container: {
+    width: 16,
+    height: 16,
   },
   i12Container: {
     width: 12,

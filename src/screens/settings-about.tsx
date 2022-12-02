@@ -1,19 +1,22 @@
 import React, {useCallback} from 'react';
 
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import {Color} from '@app/colors';
 
 import {
   ArrowForwardIcon,
   DiscordIcon,
   DocIcon,
   GlobalIcon,
+  Icon,
   IconButton,
   LottieWrap,
   Spacer,
   Text,
 } from '../components/ui';
-import {openURL, windowWidth} from '../helpers';
+import {createTheme, openURL, windowWidth} from '../helpers';
 import {getAppVersion, getBuildNumber} from '../services/version';
 import {
   LIGHT_BG_3,
@@ -45,6 +48,16 @@ export const SettingsAboutScreen = () => {
     const url = 'https://discord.com/invite/aZMm8pekhZ';
     openURL(url);
   }, []);
+
+  const onPressTwitter = useCallback(() => {
+    const url = 'https://twitter.com/Islamic_coin';
+    openURL(url);
+  }, []);
+
+  // const onPressInstagram = useCallback(() => {
+  //   const url = 'https://twitter.com/Islamic_coin';
+  //   openURL(url);
+  // }, []);
 
   return (
     <ScrollView
@@ -104,16 +117,32 @@ export const SettingsAboutScreen = () => {
           <Spacer />
           <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
         </IconButton>
+        <IconButton onPress={onPressTwitter} style={page.button}>
+          <Icon name="twitter" color={Color.graphicBase1} />
+          <Text t11 style={page.buttonText}>
+            Twitter
+          </Text>
+          <Spacer />
+          <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />
+        </IconButton>
+        {/*<IconButton onPress={onPressInstagram} style={page.button}>*/}
+        {/*  <Icon name="instagram" color={Color.graphicBase1} />*/}
+        {/*  <Text t11 style={page.buttonText}>*/}
+        {/*    Instagram*/}
+        {/*  </Text>*/}
+        {/*  <Spacer />*/}
+        {/*  <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />*/}
+        {/*</IconButton>*/}
       </View>
+      <Text t11>©2022 Haqq. All Rights Reserved.</Text>
       <Text t11 style={page.terms}>
-        ©2022 Haqq. All Rights Reserved. Version {getAppVersion()} (
-        {getBuildNumber()})
+        Version {getAppVersion()} ({getBuildNumber()})
       </Text>
     </ScrollView>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   content: {
     marginHorizontal: 20,
     flexGrow: 1,

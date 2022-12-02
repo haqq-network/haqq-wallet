@@ -40,6 +40,7 @@ import {
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
@@ -57,7 +58,6 @@ import {sleep} from '@app/utils';
 import {StatusBarColor} from './components/ui';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
-import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
@@ -233,11 +233,6 @@ export const App = () => {
                   />
                 </Stack.Group>
                 <Stack.Screen
-                  name="detailsQr"
-                  component={DetailsQrScreen}
-                  options={actionsSheet}
-                />
-                <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
                   options={actionsSheet}
@@ -385,6 +380,15 @@ export const App = () => {
                     component={StakingInfoScreen}
                     options={{
                       title: getText(I18N.stakingInfo),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="proposal"
+                    component={ProposalScreen}
+                    options={{
+                      title: getText(I18N.proposalTitle),
                     }}
                   />
                 </Stack.Group>

@@ -27,30 +27,33 @@ export type StakingDelegateFormProps = {
 };
 
 export const StakingDelegateForm = ({
-  validator,
+  validator: {
+    commission: {commission_rates},
+    description,
+  },
   onAmount,
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount('', balance - fee / WEI);
+  const amounts = useSumAmount(0, balance - fee / WEI);
 
   const validatorCommission = useMemo(() => {
-    return formatPercents(validator.commission.commission_rates.rate);
-  }, [validator.commission.commission_rates]);
+    return formatPercents(commission_rates.rate);
+  }, [commission_rates]);
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
-    amounts.setAmount(amounts.maxAmount.toFixed(4));
+    amounts.setMax();
   }, [amounts]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
         <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
-        <Text t10>{validator.description.moniker}</Text>
+        <Text t10>{description.moniker}</Text>
       </View>
       <View style={styles.row}>
         <Text t14 i18n={I18N.stakingDelegateFormCommission} />

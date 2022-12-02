@@ -5,7 +5,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const StakingUnDelegateFinishScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'stakingUnDelegateFinish'>();
+  const {params} = useTypedRoute<'stakingUnDelegateFinish'>();
 
   const onDone = useCallback(() => {
     navigation.getParent()?.goBack();
@@ -14,9 +14,9 @@ export const StakingUnDelegateFinishScreen = () => {
   return (
     <StakingUnDelegateFinish
       onDone={onDone}
-      validator={route.params.validator}
-      amount={route.params.amount}
-      fee={route.params.fee}
+      validator={params.validator}
+      amount={params.amount}
+      fee={params.fee}
     />
   );
 };

@@ -3,13 +3,6 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
 
-import {SumBlock} from '@app/components/ui/sum-block';
-import {useContacts} from '@app/hooks';
-import {useSumAmount} from '@app/hooks/use-sum-amount';
-import {HapticEffects, vibrate} from '@app/services/haptic';
-import {shortAddress} from '@app/utils';
-import {LIGHT_TEXT_BASE_1} from '@app/variables';
-
 import {
   Button,
   ButtonVariant,
@@ -17,7 +10,13 @@ import {
   LabeledBlock,
   Spacer,
   Text,
-} from '../ui';
+} from '@app/components/ui';
+import {SumBlock} from '@app/components/ui/sum-block';
+import {useContacts} from '@app/hooks';
+import {useSumAmount} from '@app/hooks/use-sum-amount';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {shortAddress} from '@app/utils';
+import {LIGHT_TEXT_BASE_1} from '@app/variables';
 
 export type TransactionSumProps = {
   balance: number;
@@ -63,7 +62,7 @@ export const TransactionSum = ({
 
   const onPressMax = useCallback(() => {
     vibrate(HapticEffects.impactLight);
-    amounts.setAmount(amounts.maxAmount.toFixed(4));
+    amounts.setMax();
   }, [amounts]);
 
   return (

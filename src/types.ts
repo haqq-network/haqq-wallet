@@ -59,6 +59,7 @@ export type RootStackParamList = {
   homeFeed: undefined;
   homeStaking: undefined;
   homeSettings: undefined;
+  homeGovernance: undefined;
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
@@ -224,6 +225,7 @@ export type RootStackParamList = {
   };
   stakingDelegate: {
     validator: string;
+    selectedWalletAddress: string;
   };
   stakingDelegateAccount: {
     validator: ValidatorItem;
@@ -246,6 +248,7 @@ export type RootStackParamList = {
   };
   stakingUnDelegate: {
     validator: string;
+    selectedWalletAddress: string;
   };
   stakingUnDelegateAccount: {
     available: Wallet[];
@@ -271,6 +274,9 @@ export type RootStackParamList = {
   };
   notificationPopup: undefined;
   trackActivity: undefined;
+  proposal: {
+    id: string;
+  };
 };
 
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
