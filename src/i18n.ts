@@ -185,7 +185,6 @@ export enum I18N {
   backupFinishCongratulation,
   backupFinishSuccess,
   backupFinishFinish,
-  settingsAccountDetailNotifacation,
   proposalTitle,
 }
 
@@ -416,6 +415,5 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
-  [I18N.settingsAccountDetailNotifacation]: 'The account was hidden',
   [I18N.proposalTitle]: 'Proposal',
 };

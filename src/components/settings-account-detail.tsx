@@ -2,6 +2,7 @@ import React from 'react';
 
 import {Switch, View, useWindowDimensions} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Card,
   CardMask,
@@ -15,7 +16,6 @@ import {createTheme} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N} from '@app/i18n';
-import {LIGHT_BG_8} from '@app/variables';
 
 type SettingsAccountDetailProps = {
   onPressRename: () => void;
@@ -94,7 +94,7 @@ const styles = createTheme({
   },
   header: {
     marginTop: 15,
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
