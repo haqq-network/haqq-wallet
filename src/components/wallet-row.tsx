@@ -21,10 +21,7 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
     [item.isHidden],
   );
 
-  const pressCard = () => {
-    onPress(item.address);
-  };
-
+  const pressCard = () => onPress(item.address);
   return (
     <MenuNavigationButton onPress={pressCard} style={style}>
       <CardSmall
