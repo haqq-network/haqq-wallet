@@ -11,7 +11,7 @@ import {
   Input,
   KeyboardSafeArea,
 } from '@app/components/ui';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 interface SettingsAccountEditProps {
   actionSheetVisible: boolean;
@@ -39,10 +39,10 @@ export const SettingsAccountEdit = ({
   return (
     <>
       <CustomHeader
-        title={getText(I18N.settingsAccountEditHeaderTitle)}
+        i18nTitle={I18N.settingsAccountEditHeaderTitle}
         onPressLeft={onPressLeft}
-        textLeft={getText(I18N.cancel)}
-        textRight={getText(I18N.save)}
+        i18nTextLeft={I18N.cancel}
+        i18nTextRight={I18N.save}
         disabledRight={!isChanged}
         onPressRight={onPressRight}
         colorRight={Color.graphicGreen1}
@@ -51,7 +51,7 @@ export const SettingsAccountEdit = ({
       <KeyboardSafeArea style={page.container}>
         <Input
           onChangeText={onChange}
-          label={getText(I18N.name)}
+          i18nLabel={I18N.name}
           value={inputName}
           rightAction={
             inputName && (
