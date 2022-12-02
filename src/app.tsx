@@ -58,7 +58,6 @@ import {sleep} from '@app/utils';
 import {StatusBarColor} from './components/ui';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
-import {DetailsQrScreen} from './screens/details-qr';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
@@ -233,11 +232,6 @@ export const App = () => {
                     component={StakingUnDelegateScreen}
                   />
                 </Stack.Group>
-                <Stack.Screen
-                  name="detailsQr"
-                  component={DetailsQrScreen}
-                  options={actionsSheet}
-                />
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
