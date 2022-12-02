@@ -19,6 +19,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {
   IS_IOS,
   LIGHT_BG_5,
@@ -188,22 +189,22 @@ export const TextField: React.FC<Props> = memo(
   },
 );
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
   },
   containerError: {
-    backgroundColor: LIGHT_BG_7,
+    backgroundColor: Color.bg7,
   },
   input: {
     alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     top: IS_IOS ? 26 : 24,
     fontSize: 16,
     minHeight: 28,
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     position: 'absolute',
-    color: PLACEHOLDER_GRAY,
+    color: Color.textBase2,
     top: IS_IOS ? 28 : 26,
     left: 18,
   },
