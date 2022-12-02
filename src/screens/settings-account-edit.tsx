@@ -44,18 +44,16 @@ export const SettingsAccountEditScreen = () => {
   const onPressKeepEditing = () => setActionSheetVisible(false);
 
   return (
-    <>
-      <SettingsAccountEdit
-        actionSheetVisible={actionSheetVisible}
-        onPressLeft={onPressLeft}
-        isChanged={isChanged}
-        onPressRight={onPressRight}
-        onChange={onChange}
-        inputName={inputName}
-        cleanTextFile={cleanTextFile}
-        onPressKeepEditing={onPressKeepEditing}
-        onPressDiscard={onPressDiscard}
-      />
-    </>
+    <SettingsAccountEdit
+      actionSheetVisible={actionSheetVisible}
+      onPressLeft={onPressLeft}
+      isChanged={isChanged}
+      onPressRight={onPressRight}
+      onChange={onChange}
+      inputName={inputName}
+      cleanTextFile={cleanTextFile}
+      onPressKeepEditing={onPressKeepEditing}
+      onPressDiscard={onPressDiscard}
+    />
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {
   CustomHeader,
@@ -11,7 +12,6 @@ import {
   KeyboardSafeArea,
 } from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 interface SettingsAccountEditProps {
   actionSheetVisible: boolean;
@@ -45,8 +45,8 @@ export const SettingsAccountEdit = ({
         textRight={getText(I18N.save)}
         disabledRight={!isChanged}
         onPressRight={onPressRight}
-        colorRight={LIGHT_GRAPHIC_GREEN_1}
-        colorLeft={LIGHT_GRAPHIC_GREEN_1}
+        colorRight={Color.graphicGreen1}
+        colorLeft={Color.graphicGreen1}
       />
       <KeyboardSafeArea style={page.container}>
         <Input
@@ -56,7 +56,7 @@ export const SettingsAccountEdit = ({
           rightAction={
             inputName && (
               <IconButton onPress={cleanTextFile}>
-                <Icon i24 name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon i24 name="close_circle" color={Color.graphicBase2} />
               </IconButton>
             )
           }
