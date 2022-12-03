@@ -1,19 +1,16 @@
 import React, {useCallback} from 'react';
 
 import {TransactionResponse} from '@ethersproject/abstract-provider';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 
-import {useUser} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 
 import {TransactionLedger} from '../components/transaction-ledger';
 import {Transaction} from '../models/transaction';
-import {RootStackParamList} from '../types';
 
 export const TransactionLedgerScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'transactionConfirmation'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'transactionConfirmation'>();
+
   const user = useUser();
 
   const onDone = useCallback(
