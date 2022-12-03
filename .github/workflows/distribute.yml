@@ -145,6 +145,9 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
   slack_notify:
+    needs:
+      - build_ios
+      - build_android
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
     secrets:
