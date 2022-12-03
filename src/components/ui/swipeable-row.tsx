@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 
-import {Animated, StyleSheet, View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
 
-import {SwipeableButton} from './swipeable-button';
-
-import {SwipeableAction} from '../../types';
+import {SwipeableButton} from '@app/components/ui/swipeable-button';
+import {createTheme} from '@app/helpers';
+import {SwipeableAction} from '@app/types';
 
 export type SwipeableRowProps<T> = {
   children: React.ReactNode;
@@ -27,7 +27,7 @@ export const SwipeableRow = ({
   const rActions = useMemo(
     () => (progress: Animated.AnimatedInterpolation<number>) =>
       (
-        <View style={[page.container, {width: rightActions.length * 74}]}>
+        <View style={[styles.container, {width: rightActions.length * 74}]}>
           {rightActions.map((action, i) => (
             <SwipeableButton
               backgroundColor={action.backgroundColor}
@@ -51,7 +51,7 @@ export const SwipeableRow = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
   },

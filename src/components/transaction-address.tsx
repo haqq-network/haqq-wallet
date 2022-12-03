@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {StyleSheet, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
 import {
   Button,
@@ -12,8 +13,6 @@ import {
   Icon,
   IconButton,
   KeyboardSafeArea,
-  PasteIcon,
-  QRScanner,
   Spacer,
   TextField,
 } from '@app/components/ui';
@@ -23,7 +22,6 @@ import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
-import {LIGHT_GRAPHIC_BASE_2, LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export type TransactionAddressProps = {
   initial?: string;
@@ -122,24 +120,24 @@ export const TransactionAddress = ({
           address === '' ? (
             <View style={page.inputButtonContainer}>
               <IconButton onPress={onPressPaste}>
-                <PasteIcon
-                  color={LIGHT_GRAPHIC_GREEN_1}
-                  width={25}
-                  height={25}
+                <Icon
+                  style={page.icon}
+                  name="paste"
+                  color={Color.graphicGreen1}
                 />
               </IconButton>
               <Spacer width={12} />
               <IconButton onPress={onPressQR}>
-                <QRScanner
-                  color={LIGHT_GRAPHIC_GREEN_1}
-                  width={25}
-                  height={25}
+                <Icon
+                  style={page.icon}
+                  name="qr_scanner"
+                  color={Color.graphicGreen1}
                 />
               </IconButton>
             </View>
           ) : (
             <IconButton onPress={onPressClear}>
-              <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+              <Icon i24 name="close_circle" color={Color.graphicBase2} />
             </IconButton>
           )
         }
@@ -171,5 +169,9 @@ const page = StyleSheet.create({
   button: {
     marginHorizontal: 20,
     marginVertical: 16,
+  },
+  icon: {
+    width: 25,
+    height: 25,
   },
 });
