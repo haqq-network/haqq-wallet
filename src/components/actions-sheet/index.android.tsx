@@ -15,10 +15,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers/create-theme';
 import {I18N, getText} from '@app/i18n';
 import {LIGHT_TEXT_BLUE_1} from '@app/variables';
-
-import {createTheme} from './../../helpers/create-theme';
 
 import {ActionsSheetProps} from '.';
 
@@ -78,21 +77,25 @@ export const ActionsSheet = ({
           {paddingBottom: bottom},
         ]}>
         <View style={styles.top}>
-          <Text t14 style={styles.t8}>
-            {getText(I18N.actionSheetMessage)}
-          </Text>
+          <Text i18n={I18N.actionSheetMessage} t14 style={styles.t8} />
           <View style={styles.line} />
           <TouchableOpacity style={styles.margin} onPress={handleDiscard}>
-            <Text color={Color.graphicRed1} t14 style={styles.tButton}>
-              {getText(I18N.actionSheetDiscard)}
-            </Text>
+            <Text
+              i18n={I18N.actionSheetDiscard}
+              color={Color.graphicRed1}
+              t14
+              style={styles.tButton}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.bottom}>
           <TouchableOpacity style={styles.margin} onPress={handleKeepEditing}>
-            <Text color={LIGHT_TEXT_BLUE_1} t14 style={styles.tButton}>
-              {getText(I18N.actionSheetKeepEditing)}
-            </Text>
+            <Text
+              color={LIGHT_TEXT_BLUE_1}
+              i18n={I18N.actionSheetKeepEditing}
+              t14
+              style={styles.tButton}
+            />
           </TouchableOpacity>
         </View>
       </Animated.View>
