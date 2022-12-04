@@ -2,10 +2,11 @@ import React, {useEffect} from 'react';
 
 import {Dimensions, StyleSheet} from 'react-native';
 
-import {captureException} from '../../helpers';
-import {runUntil} from '../../helpers/run-until';
-import {ETH_HD_PATH} from '../../variables';
-import {LottieWrap, PopupContainer, Text} from '../ui';
+import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
+import {captureException} from '@app/helpers';
+import {runUntil} from '@app/helpers/run-until';
+import {I18N, getText} from '@app/i18n';
+import {ETH_HD_PATH} from '@app/variables';
 
 export type LedgerInfo = {
   address: string;
@@ -52,9 +53,8 @@ export const LedgerVerify = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t9 style={styles.text}>
-        Verify address {address} on your Ledger Nano X by pressing both buttons
-        together
+      <Text t9 center>
+        {getText(I18N.ledgerVerifyAddress, {address})}
       </Text>
       <LottieWrap
         style={styles.lottie}
@@ -74,8 +74,5 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: Dimensions.get('window').width,
-  },
-  text: {
-    textAlign: 'center',
   },
 });
