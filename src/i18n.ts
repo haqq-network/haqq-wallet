@@ -190,6 +190,8 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  onboardingSetupPinSetPinCode,
+  onboardingSetupPinProjectWallet,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -425,4 +427,7 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.proposalTitle]: 'Proposal',
+  [I18N.onboardingSetupPinSetPinCode]: 'Set 6-digital pin code',
+  [I18N.onboardingSetupPinProjectWallet]:
+    'Project your wallet. PIN code for increases wallet security in the event your phone\u00A0is\u00A0stolen',
 };
