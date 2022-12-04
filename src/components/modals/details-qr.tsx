@@ -1,48 +1,40 @@
 import React, {useRef} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {Share, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
-import {useApp, useWallet} from '@app/hooks';
-
-import {BottomSheet} from '../components/bottom-sheet';
+import {Color} from '@app/colors';
+import {BottomSheet} from '@app/components/bottom-sheet';
 import {
-  Alert,
   Button,
   ButtonSize,
   ButtonVariant,
   Card,
+  Icon,
   InfoBlock,
   InfoBlockType,
   Text,
-} from '../components/ui';
-import {Wallet} from '../models/wallet';
-import {RootStackParamList} from '../types';
-import {
-  GRADIENT_END,
-  GRADIENT_START,
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_SECOND_2,
-  LIGHT_TEXT_YELLOW_1,
-} from '../variables';
+} from '@app/components/ui';
+import {createTheme, hideModal, sendNotification} from '@app/helpers';
+import {useWallet} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables';
 
-export const DetailsQrScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'detailsQr'>>();
+export interface DetailsQrModalProps {
+  address: string;
+}
+
+export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
   const svg = useRef();
-  const app = useApp();
-  const wallet = useWallet(route.params.address) as Wallet;
-  const {address} = route.params;
+  const wallet = useWallet(address) as Wallet;
   const {width} = useWindowDimensions();
 
   const onCopy = () => {
     Clipboard.setString(address);
-    app.emit('notification', 'Copied');
+    sendNotification(I18N.notificationCopied);
   };
 
   const onShare = () => {
@@ -50,17 +42,19 @@ export const DetailsQrScreen = () => {
   };
 
   const onCloseBottomSheet = () => {
-    navigation.canGoBack() && navigation.goBack();
+    hideModal();
   };
 
   return (
-    <BottomSheet onClose={onCloseBottomSheet} title="Receive">
+    <BottomSheet
+      onClose={onCloseBottomSheet}
+      title={getText(I18N.modalDetailsQRReceive)}>
       <InfoBlock
         type={InfoBlockType.warning}
         style={page.info}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
-        Only ISLM related assets on HAQQ network are supported.
-      </InfoBlock>
+        i18n={I18N.modalDetailsQRWarning}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+      />
       <LinearGradient
         colors={[wallet?.colorFrom, wallet?.colorTo]}
         style={page.qrContainer}
@@ -79,7 +73,7 @@ export const DetailsQrScreen = () => {
         <View style={page.qrStyle}>
           <QRCode
             ecl={'H'}
-            logo={require('../../assets/images/qr-logo.png')}
+            logo={require('../../../assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}
@@ -97,7 +91,7 @@ export const DetailsQrScreen = () => {
 
       <View style={page.buttons}>
         <Button
-          title="Share"
+          i18n={I18N.share}
           size={ButtonSize.middle}
           onPress={onShare}
           style={page.button}
@@ -106,7 +100,7 @@ export const DetailsQrScreen = () => {
           size={ButtonSize.middle}
           style={page.button}
           variant={ButtonVariant.second}
-          title="Copy"
+          i18n={I18N.copy}
           onPress={onCopy}
         />
       </View>
@@ -114,7 +108,7 @@ export const DetailsQrScreen = () => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   qrContainer: {
     position: 'relative',
     marginHorizontal: 36.5,
@@ -123,12 +117,12 @@ const page = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    color: LIGHT_TEXT_SECOND_2,
+    color: Color.textSecond2,
     fontWeight: '700',
     marginBottom: 4,
   },
   address: {
-    color: LIGHT_TEXT_BASE_3,
+    color: Color.textBase3,
     marginBottom: 4,
   },
   buttons: {
@@ -143,7 +137,7 @@ const page = StyleSheet.create({
   card: {position: 'absolute', bottom: 0, left: 0, right: 0},
   qrStyle: {
     padding: 12,
-    backgroundColor: LIGHT_GRAPHIC_BASE_3,
+    backgroundColor: Color.graphicBase3,
     borderRadius: 12,
     marginBottom: 20,
   },

@@ -2,27 +2,34 @@ name: Slack notify
 
 on:
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
 
 jobs:
-  test:
+  slack_notify:
     name: Slack notify
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Create Changelog
+        shell: bash
+        id: changelog
+        run: |
+          log="$(node ./utils/changelog.js $(cat .last-build))"
+          echo "log=$log" >> $GITHUB_OUTPUT
+
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
-        payload: |
-          {
-            "text": "GitHub Action message",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "GitHub Action build result"
-                }
-              }
-            ]
-          }
+        with:
+          payload: |
+            ${{ steps.changelog.outputs.log }}
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

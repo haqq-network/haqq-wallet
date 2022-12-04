@@ -121,8 +121,7 @@ jobs:
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
-          echo "ENVIRONMENT=distribute" >> .env
-          echo "IS_LEDGER_ENABLED=1" >> .env
+          echo "ENVIRONMENT=distribution" >> .env
 
       - name: Execute build
         run: |
@@ -145,14 +144,22 @@ jobs:
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
+  slack_notify:
+    name: Create changelogs
+    uses: ./.github/workflows/slack-notify.yml
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   patch_build:
     name: Patch build versions
     runs-on: macos-latest
     needs:
-      - build_ios
-      - build_android
+      - slack_notify
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SERVICE_TOKEN }}
+
       - uses: actions/cache@v3
         with:
           path: vendor/bundle
@@ -185,4 +192,5 @@ jobs:
           git config --global user.name "Build"
           git log -1 --pretty="%H" > .last-build
           git commit -am "build"
+          git pull --rebase origin main
           git push --force-with-lease
