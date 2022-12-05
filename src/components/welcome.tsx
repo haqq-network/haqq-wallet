@@ -9,15 +9,15 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 type WelcomeProps = {
-  naviagteToSignup: () => void;
-  naviagteToLedger: () => void;
-  naviagteToSignin: () => void;
+  onPressSignup: () => void;
+  onPressLedger: () => void;
+  onPressSignIn: () => void;
 };
 
 export const Welcome = ({
-  naviagteToSignup,
-  naviagteToLedger,
-  naviagteToSignin,
+  onPressSignup,
+  onPressLedger,
+  onPressSignIn,
 }: WelcomeProps) => {
   const insets = useSafeAreaInsets();
 
@@ -47,7 +47,7 @@ export const Welcome = ({
         testID="welcome_signup"
         style={styles.button}
         variant={ButtonVariant.contained}
-        onPress={naviagteToSignup}
+        onPress={onPressSignup}
       />
       <Button
         testID="welcome_ledger"
@@ -56,13 +56,13 @@ export const Welcome = ({
         iconRightColor={Color.graphicGreen1}
         style={styles.button}
         variant={ButtonVariant.second}
-        onPress={naviagteToLedger}
+        onPress={onPressLedger}
       />
       <Button
         testID="welcome_signin"
         i18n={I18N.welcomeRestoreWallet}
         style={styles.button}
-        onPress={naviagteToSignin}
+        onPress={onPressSignIn}
       />
     </View>
   );

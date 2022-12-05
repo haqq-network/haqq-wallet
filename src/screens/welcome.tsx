@@ -6,16 +6,14 @@ import {useTypedNavigation} from '@app/hooks';
 export const WelcomeScreen = () => {
   const navigation = useTypedNavigation();
 
-  const naviagteToSignup = () =>
-    navigation.navigate('signup', {next: 'create'});
-  const naviagteToLedger = () => 'ledger';
-  const naviagteToSignin = () =>
-    navigation.navigate('signin', {next: 'restore'});
+  const onPressSignup = () => navigation.navigate('signup', {next: 'create'});
+  const onPressLedger = () => navigation.navigate('ledger');
+  const onPressSignIn = () => navigation.navigate('signin', {next: 'restore'});
   return (
     <Welcome
-      naviagteToSignup={naviagteToSignup}
-      naviagteToLedger={naviagteToLedger}
-      naviagteToSignin={naviagteToSignin}
+      onPressSignup={onPressSignup}
+      onPressLedger={onPressLedger}
+      onPressSignIn={onPressSignIn}
     />
   );
 };
