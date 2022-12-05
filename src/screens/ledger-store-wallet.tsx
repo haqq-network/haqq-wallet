@@ -13,8 +13,7 @@ export const LedgerStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    const SAVING = getText(I18N.LedgerStoreWalletSaving);
-    showModal('loading', {text: SAVING});
+    showModal('loading', {text: getText(I18N.LedgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
