@@ -1,0 +1,31 @@
+name: Check PR labels
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.check-labels.outputs.status }}
+    steps:
+      - id: check-labels
+        uses: mheap/github-action-required-labels@v2
+        with:
+          mode: exactly
+          count: 1
+          labels: "no-qa, need-qa"
+          exit_type: success
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: label
+    steps:
+      - run: echo SUCCESS
+        if: needs.label.outputs.status == 'success'
+      - run: echo FAILURE && exit 1
+        if: needs.label.outputs.status == 'failure'
