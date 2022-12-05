@@ -34,3 +34,4 @@ export * from './status-bar-color';
 export * from './error-text';
 export * from './custom-header';
 export * from './text-sum';
+export * from './info-block-amount';
