@@ -16,8 +16,8 @@ export const SigninStoreWallet = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal(getText(I18N.singinStoreLoading), {
-      text: getText(I18N.singinStoreWallet),
+    showModal(getText(I18N.singinStoreWalletLoading), {
+      text: getText(I18N.singinStoreWalletText),
     });
   }, []);
 
