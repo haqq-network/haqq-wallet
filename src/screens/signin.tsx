@@ -22,7 +22,7 @@ const screenOptions: ScreenOptionType = {
 };
 
 export const SignInScreen = () => {
-  const title = 'Restore wallet';
+  const title = 'Recovery account';
   return (
     <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen

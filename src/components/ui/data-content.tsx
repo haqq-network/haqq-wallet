@@ -3,20 +3,25 @@ import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {I18N} from '@app/i18n';
 
 import {Text} from './text';
 
 export type DataContentProps = {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   subtitle?: string;
   style?: ViewStyle;
   reversed?: boolean;
+  titleI18n?: I18N;
+  subtitleI18n?: I18N;
 };
 export const DataContent = ({
   title,
   subtitle,
   style,
   reversed,
+  titleI18n,
+  subtitleI18n,
 }: DataContentProps) => {
   return (
     <View style={[reversed && page.reverse, style]}>
@@ -25,10 +30,11 @@ export const DataContent = ({
         style={page.title}
         color={Color.textBase1}
         ellipsizeMode="tail"
+        i18n={titleI18n}
         numberOfLines={1}>
         {title}
       </Text>
-      <Text t14 color={Color.textBase2}>
+      <Text t14 i18n={subtitleI18n} color={Color.textBase2}>
         {subtitle}
       </Text>
     </View>
