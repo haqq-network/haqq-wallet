@@ -4,6 +4,7 @@ import {NavigationProp} from '@react-navigation/core/src/types';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 
+import {showModal} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 
 import {
@@ -65,8 +66,8 @@ export const WalletCard = ({address}: BalanceProps) => {
   }, [navigation, address]);
 
   const onPressQR = useCallback(() => {
-    navigation.navigate('detailsQr', {address: address});
-  }, [navigation, address]);
+    showModal('card-details-qr', {address});
+  }, [address]);
 
   const onClickBackup = useCallback(() => {
     navigation.navigate('backup', {address: address});
