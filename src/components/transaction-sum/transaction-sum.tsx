@@ -10,12 +10,11 @@ import {
   KeyboardSafeArea,
   LabeledBlock,
   Spacer,
+  SumBlock,
   Text,
 } from '@app/components/ui';
-import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
-import {useContacts} from '@app/hooks';
-import {useSumAmount} from '@app/hooks/use-sum-amount';
+import {useContacts, useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
