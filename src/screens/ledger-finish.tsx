@@ -30,7 +30,7 @@ export const LedgerFinishScreen = () => {
 
   return (
     <Finish
-      title="Сongratulations! You have successfully added a new wallet"
+      title="Сongratulations! You have successfully added a new account"
       onFinish={onEnd}
       testID="ledger_finish"
     />
