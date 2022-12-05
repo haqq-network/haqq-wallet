@@ -5,7 +5,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
 import {captureException} from '@app/helpers';
 import {runUntil} from '@app/helpers/run-until';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {ETH_HD_PATH} from '@app/variables';
 
 export type LedgerInfo = {
