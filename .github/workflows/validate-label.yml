@@ -31,6 +31,8 @@ jobs:
       - name: Comment PR
         if: needs.label.outputs.status == 'failure'
         uses: thollander/actions-comment-pull-request@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           message: |
             Requires exactly 1 of: no-qa, need-qa labels
