@@ -11,12 +11,12 @@ import {createTheme} from '@app/helpers';
 import {AppLanguage} from '@app/types';
 
 type SettingsLanguageProps = {
-  updateLanguage: (lang: AppLanguage) => void;
+  onUpdatelanguage: (lang: AppLanguage) => void;
   language: AppLanguage;
 };
 
 export const SettingsLanguage = ({
-  updateLanguage,
+  onUpdatelanguage,
   language,
 }: SettingsLanguageProps) => {
   return (
@@ -24,7 +24,7 @@ export const SettingsLanguage = ({
       <IconButton
         style={styles.button}
         onPress={() => {
-          updateLanguage(AppLanguage.ar);
+          onUpdatelanguage(AppLanguage.ar);
         }}>
         <DataContent title="Arabic" subtitle="العربية" />
         {language === AppLanguage.ar && (
@@ -34,7 +34,7 @@ export const SettingsLanguage = ({
       <IconButton
         style={styles.button}
         onPress={() => {
-          updateLanguage(AppLanguage.en);
+          onUpdatelanguage(AppLanguage.en);
         }}>
         <DataContent title="English" subtitle="English" />
         {language === AppLanguage.en && (

@@ -8,12 +8,12 @@ export const SettingsLanguageScreen = () => {
   const app = useApp();
   const [language, setLanguage] = useState(app.language);
 
-  const updateLanguage = (lang: AppLanguage) => {
+  const onUpdatelanguage = (lang: AppLanguage) => {
     app.language = lang;
     setLanguage(app.language);
   };
 
   return (
-    <SettingsLanguage language={language} updateLanguage={updateLanguage} />
+    <SettingsLanguage language={language} onUpdatelanguage={onUpdatelanguage} />
   );
 };
