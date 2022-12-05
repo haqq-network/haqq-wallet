@@ -1,8 +1,12 @@
 import React from 'react';
 
 import {Color} from '@app/colors';
-import {DataContent, IconButton, PopupContainer} from '@app/components/ui';
-import {Icon} from '@app/components/ui';
+import {
+  DataContent,
+  Icon,
+  IconButton,
+  PopupContainer,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AppLanguage} from '@app/types';
 
