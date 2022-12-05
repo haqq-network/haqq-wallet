@@ -2,9 +2,11 @@ import React, {useEffect, useRef} from 'react';
 
 import {Pressable, View} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Icon,
+  ProgressLine,
+  ProgressLineInterface,
   Spacer,
   Text,
   TextSum,
@@ -20,6 +22,9 @@ type VotingCardActiveProps = {
   daysLeft: number;
   hourLeft: number;
   minLeft: number;
+  depositNeeds?: number;
+  depositCollected?: number;
+  yourDeposit?: number;
   votes?: votesType;
   isVoted?: boolean;
   onPress?: () => void;
@@ -28,9 +33,16 @@ type VotingCardActiveProps = {
 
 const initialVotes = {
   yes: 1,
-  no: 1,
+  no: 2,
   abstain: 1,
   veto: 1,
+};
+
+const colorVotes = {
+  yes: Color.graphicGreen1,
+  no: Color.textRed1,
+  abstain: Color.graphicSecond4,
+  veto: Color.textYellow1,
 };
 
 export const VotingCardActive = ({
@@ -42,29 +54,67 @@ export const VotingCardActive = ({
   isVoted,
   onPress,
   orderNumber = 0,
+  depositNeeds,
+  depositCollected,
+  yourDeposit,
 }: VotingCardActiveProps) => {
-  const lineRef = useRef<VotingLineInterface>(null);
+  const linesRef = useRef<VotingLineInterface>(null);
+  const depositProgressRef = useRef<ProgressLineInterface>(null);
+
+  const votesList = Object.entries(votes) as [keyof typeof votes, number][];
+  const [majorityVotes] = votesList.reduce((prev, cur) => {
+    return prev[1] > cur[1] ? prev : cur;
+  }, votesList[0]);
+
+  const primaryColor = getColor(
+    depositNeeds ? Color.graphicBlue1 : colorVotes[majorityVotes],
+  );
 
   useEffect(() => {
-    lineRef.current?.updateValues(votes);
+    linesRef.current?.updateValues(votes);
   }, [votes]);
 
+  useEffect(() => {
+    if (depositNeeds && depositCollected) {
+      depositProgressRef.current?.updateProgress(
+        depositCollected / depositNeeds,
+      );
+    }
+  }, [depositNeeds, depositCollected]);
+
   return (
-    <Pressable onPress={onPress} style={styles.backgroundContainer}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.backgroundContainer, {backgroundColor: primaryColor}]}>
       <View style={styles.topInfoBlock}>
-        <Icon i18 color={Color.graphicBase3} name="time" />
+        <Icon
+          i18
+          color={Color.graphicBase3}
+          name={depositNeeds ? 'deposit' : 'time'}
+        />
         <Spacer width={5.5} />
         <Text
           t12
           color={Color.textBase3}
-          i18n={I18N.homeGovernanceVotingCardVoting}
+          i18n={
+            depositNeeds
+              ? I18N.homeGovernanceVotingCardDepositPeriod
+              : I18N.homeGovernanceVotingCardVoting
+          }
         />
         <Spacer />
-        {isVoted && (
+        {isVoted && !yourDeposit && (
           <Text
             t17
             color={Color.textBase3}
             i18n={I18N.homeGovernanceVotingCardYouVoted}
+          />
+        )}
+        {yourDeposit && (
+          <Text
+            t17
+            color={Color.textBase3}
+            i18n={I18N.homeGovernanceVotingCardYouDeposited}
           />
         )}
       </View>
@@ -78,7 +128,7 @@ export const VotingCardActive = ({
         </Text>
         <Spacer height={12} />
         <View style={styles.timeContainer}>
-          <Icon i42 color={Color.graphicGreen1} name="timer_governance" />
+          <Icon i42 color={primaryColor} name="timer_governance" />
           <View style={styles.timeRightContainer}>
             <Text
               t14
@@ -106,7 +156,18 @@ export const VotingCardActive = ({
           </View>
         </View>
         <Spacer height={16} />
-        <VotingLine ref={lineRef} initialVotes={initialVotes} />
+        {depositNeeds ? (
+          <>
+            <ProgressLine ref={depositProgressRef} initialProgress={0.1} />
+            <Spacer height={8} />
+            <Text t15 color={Color.textBase2}>
+              {depositCollected?.toFixed(0)} ISLM from{' '}
+              {depositNeeds?.toFixed(0)} ISLM
+            </Text>
+          </>
+        ) : (
+          <VotingLine ref={linesRef} initialVotes={initialVotes} />
+        )}
       </View>
     </Pressable>
   );
@@ -114,7 +175,6 @@ export const VotingCardActive = ({
 
 const styles = createTheme({
   backgroundContainer: {
-    backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     paddingTop: 6,
   },

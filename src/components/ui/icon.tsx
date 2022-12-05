@@ -23,6 +23,7 @@ export enum IconsName {
   color_gradient = 'color_gradient',
   copy = 'copy',
   doc = 'doc',
+  deposit = 'deposit',
   flash = 'flash',
   flashlight = 'flashlight',
   global = 'global',

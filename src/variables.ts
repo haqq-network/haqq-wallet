@@ -41,6 +41,9 @@ export const DARK_GRAPHIC_BASE_3 = '#FFFFFF';
 export const LIGHT_GRAPHIC_RED_1 = '#E16363';
 export const DARK_GRAPHIC_RED_1 = '#E16363';
 
+export const LIGHT_GRAPHIC_BLUE_1 = '#0489D4';
+export const DARK_GRAPHIC_BLUE_1 = '#0489D4';
+
 export const LIGHT_GRAPHIC_GREEN_1 = '#01B26E';
 export const DARK_GRAPHIC_GREEN_1 = '#01B26E';
 

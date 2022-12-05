@@ -38,3 +38,4 @@ export * from './info-block-amount';
 export * from './tag';
 export * from './voting-card';
 export * from './voting-line';
+export * from './progress-line';
