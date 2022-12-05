@@ -419,4 +419,11 @@ export type ValidatorItem = Validator & {
   localUnDelegations?: number;
 };
 
+export type votesType = {
+  yes: number;
+  no: number;
+  abstain: number;
+  veto: number;
+};
+
 export type ColorType = Color | string;

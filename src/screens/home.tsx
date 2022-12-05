@@ -75,6 +75,7 @@ export const HomeScreen = () => {
           name="homeGovernance"
           component={HomeGovernanceScreen}
           options={{
+            headerShown: false,
             title: getText(I18N.homeGovernance),
           }}
         />

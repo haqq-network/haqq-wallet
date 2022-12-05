@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {HomeGovernance} from '@app/components/home-governance';
 
 export const HomeGovernanceScreen = () => {
-  return <View />;
+  return <HomeGovernance />;
 };

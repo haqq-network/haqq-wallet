@@ -5,11 +5,13 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 
 import {Spacer} from './spacer';
 
 interface TextSumProps {
   sum: string;
+  rightText?: I18N;
   color?: Color;
   center?: boolean;
   right?: boolean;
@@ -19,12 +21,16 @@ interface TextSumProps {
 
 export function TextSum({
   sum,
+  rightText,
   color = Color.textBase1,
   center,
   right,
   suffix = '',
   style,
 }: TextSumProps) {
+  const hasRightText = typeof rightText !== 'undefined';
+  const text = hasRightText ? getText(rightText) : 'ISLM' + suffix;
+
   const viewStyles = StyleSheet.flatten([
     center && styles.center,
     right && styles.right,
@@ -38,7 +44,7 @@ export function TextSum({
       </Text>
       <Spacer width={2} />
       <Text t13 center style={styles.opacityText} color={color}>
-        ISLM{suffix}
+        {text}
       </Text>
     </View>
   );
