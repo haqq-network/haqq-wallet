@@ -4,6 +4,7 @@ import {View, ViewProps} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 import {Text} from './text';
 
@@ -13,15 +14,17 @@ export enum LabelBlockVariant {
 }
 
 export type LabeledBlockProps = ViewProps & {
-  label: string;
+  label?: string;
   variant?: LabelBlockVariant;
   rightAction?: React.ReactNode;
+  i18nLabel?: I18N;
 };
 
 export const LabeledBlock = ({
   children,
   style,
   label,
+  i18nLabel,
   rightAction,
   variant = LabelBlockVariant.default,
   ...props
@@ -49,7 +52,7 @@ export const LabeledBlock = ({
     <View style={containerStyle} {...props}>
       <View style={page.flex}>
         {label && (
-          <Text t14 color={placeholderColor}>
+          <Text i18n={i18nLabel} t14 color={placeholderColor}>
             {label}
           </Text>
         )}
