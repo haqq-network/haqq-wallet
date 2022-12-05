@@ -1,25 +1,30 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
+import {useWindowDimensions} from 'react-native';
+
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
 
-type rewardsStateType = Realm.Results<StakingMetadata> | null;
-
 export const StakingInfoScreen = () => {
-  const wallets = useWallets();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
-
   const {validator} = useTypedRoute<'stakingInfo'>().params;
   const {operator_address} = validator;
-
   const navigation = useTypedNavigation();
+
+  const {visible} = useWallets();
+  const cosmos = useRef(new Cosmos(app.provider!)).current;
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
     useState(false);
-  const [rewards, setRewards] = useState<rewardsStateType>(null);
+  const [rewards, setRewards] = useState<Realm.Results<StakingMetadata> | null>(
+    null,
+  );
+
+  const closeDistance = useWindowDimensions().height / 6;
 
   useEffect(() => {
     const r = StakingMetadata.getRewardsForValidator(operator_address);
@@ -41,7 +46,7 @@ export const StakingInfoScreen = () => {
       const delegators = new Set(rewards.map(r => r.delegator));
 
       Promise.all(
-        wallets.visible
+        visible
           .filter(w => delegators.has(w.cosmosAddress))
           .map(w =>
             cosmos.withdrawDelegatorReward(w.address, operator_address),
@@ -54,19 +59,63 @@ export const StakingInfoScreen = () => {
           setWithdrawDelegatorRewardProgress(false);
         });
     }
-  }, [cosmos, rewards, operator_address, wallets]);
+  }, [cosmos, rewards, operator_address, visible]);
 
-  const onDelegate = useCallback(() => {
-    navigation.push('stakingDelegate', {
-      validator: operator_address,
-    });
-  }, [navigation, operator_address]);
+  const onDelegate = useCallback(
+    (address?: string) => {
+      if (address) {
+        navigation.push('stakingDelegate', {
+          validator: operator_address,
+          selectedWalletAddress: address,
+        });
+      } else {
+        showModal('wallets-bottom-sheet', {
+          wallets: visible,
+          closeDistance,
+          title: I18N.stakingDelegateAccountTitle,
+          eventSuffix: '-delegate',
+        });
+      }
+    },
 
-  const onUnDelegate = useCallback(() => {
-    navigation.push('stakingUnDelegate', {
-      validator: operator_address,
-    });
-  }, [navigation, operator_address]);
+    [navigation, operator_address, visible, closeDistance],
+  );
+
+  const onUnDelegate = useCallback(
+    (address?: string) => {
+      const delegations = new Set(
+        StakingMetadata.getDelegationsForValidator(operator_address).map(
+          v => v.delegator,
+        ),
+      );
+      const available = visible.filter(w => delegations.has(w.cosmosAddress));
+
+      if (address) {
+        navigation.push('stakingUnDelegate', {
+          validator: operator_address,
+          selectedWalletAddress: address,
+        });
+      } else {
+        showModal('wallets-bottom-sheet', {
+          wallets: available,
+          closeDistance,
+          title: I18N.stakingDelegateAccountTitle,
+          eventSuffix: '-undelegate',
+        });
+      }
+    },
+
+    [navigation, operator_address, closeDistance, visible],
+  );
+
+  useEffect(() => {
+    app.addListener('wallet-selected-delegate', onDelegate);
+    app.addListener('wallet-selected-undelegate', onUnDelegate);
+    return () => {
+      app.removeListener('wallet-selected-delegate', onDelegate);
+      app.removeListener('wallet-selected-undelegate', onUnDelegate);
+    };
+  }, [onDelegate, onUnDelegate]);
 
   const delegated =
     StakingMetadata.getDelegationsForValidator(operator_address);

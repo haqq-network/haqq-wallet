@@ -13,6 +13,7 @@ import {
   CopyButton,
   Icon,
   InfoBlock,
+  InfoBlockAmount,
   InfoBlockType,
   Inline,
   Spacer,
@@ -20,7 +21,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -52,6 +53,7 @@ export const StakingInfo = ({
   withdrawDelegatorRewardProgress,
 }: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
+
   const [labelColor, textColor, isActive] = useMemo(() => {
     switch (localStatus) {
       case ValidatorStatus.active:
@@ -64,6 +66,39 @@ export const StakingInfo = ({
         return [Color.textBase1];
     }
   }, [localStatus]);
+
+  const sumData = useMemo(() => {
+    const {
+      reduceAmounts,
+      getDelegationsForValidator,
+      getRewardsForValidator,
+      getUnDelegationsForValidator,
+    } = StakingMetadata;
+
+    const formatDate = (date?: string) => {
+      const curDate = Date.now();
+      const days = Math.ceil(
+        (new Date(date ?? 0).getTime() - curDate) / 86400000,
+      );
+      return getText(
+        days > 1
+          ? I18N.StakingInfoUnDelegationDays
+          : I18N.StakingInfoUnDelegationDay,
+        {days: String(days)},
+      );
+    };
+
+    const staked = reduceAmounts(getDelegationsForValidator(operator_address));
+    const reward = reduceAmounts(getRewardsForValidator(operator_address));
+    const undelegated = getUnDelegationsForValidator(operator_address).map(
+      a => ({
+        amount: a.amount,
+        suffix: formatDate(a.completion_time),
+      }),
+    );
+
+    return {staked, reward, undelegated};
+  }, [operator_address]);
 
   const votingPower = useMemo(() => {
     return parseInt(tokens ?? '0', 10) / WEI;
@@ -97,18 +132,36 @@ export const StakingInfo = ({
           labelColor={labelColor}
           textColor={textColor}
         />
-        <Spacer height={20} />
         {!isActive && (
           <>
+            <Spacer height={12} />
             <InfoBlock
               icon={<Icon color={Color.textYellow1} i24 name="warning" />}
               style={styles.withHorizontalPadding}
               type={InfoBlockType.warning}
               i18n={I18N.stakingInfoInactive}
             />
-            <Spacer height={16} />
           </>
         )}
+        <Spacer height={isActive ? 20 : 12} />
+        <View style={styles.flexRow}>
+          <InfoBlockAmount
+            value={sumData.staked}
+            titleI18N={I18N.homeStakingStaked}
+          />
+          <Spacer width={12} />
+          <InfoBlockAmount
+            value={sumData.reward}
+            titleI18N={I18N.validatorInfoReward}
+          />
+        </View>
+        <Spacer height={12} />
+        <InfoBlockAmount
+          isLarge
+          values={sumData.undelegated}
+          titleI18N={I18N.validatorInfoUndelegateInProcess}
+        />
+        <Spacer height={12} />
         <View style={styles.infoBlock}>
           <Block i18n={I18N.stakingInfoVotingPower}>
             <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
@@ -237,5 +290,8 @@ const styles = createTheme({
     padding: 9,
     backgroundColor: Color.bg8,
     borderRadius: 12,
+  },
+  flexRow: {
+    flexDirection: 'row',
   },
 });
