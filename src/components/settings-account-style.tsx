@@ -110,10 +110,10 @@ export const SettingsAccountStyle = ({
       pattern: WPattern,
     } = wallet;
     if (
-      WCardStyle !== cardStyle ||
-      colors[0] !== colorFrom ||
-      colors[1] !== colorTo ||
-      colors[2] !== colorPattern ||
+      WCardStyle !== cardStyle ??
+      colors[0] !== colorFrom ??
+      colors[1] !== colorTo ??
+      colors[2] !== colorPattern ??
       WPattern !== pattern
     ) {
       !isStyleChanged && setIsStyleChanged(true);
