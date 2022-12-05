@@ -69,14 +69,14 @@ export const withActionsContactItem = (
 
     const onPressRemove = useCallback(
       (itemOrAddress: Contact | string) => {
-        const AlertTitle = getText(I18N.settingsAddressBookAlertTitle);
-        const AlertDesc = getText(I18N.settingsAddressBookAlertDesc);
-        const AlertBtnFirst = getText(I18N.settingsAddressBookAlertBtnFirst);
-        const AlertBtnSecond = getText(I18N.settingsAddressBookAlertBtnSecond);
-        Alert.alert(AlertTitle, AlertDesc, [
-          {text: AlertBtnFirst, style: 'cancel'},
+        const alertTitle = getText(I18N.settingsAddressBookAlertTitle);
+        const alertDesc = getText(I18N.settingsAddressBookAlertDesc);
+        const alertBtnFirst = getText(I18N.settingsAddressBookAlertBtnFirst);
+        const alertBtnSecond = getText(I18N.settingsAddressBookAlertBtnSecond);
+        Alert.alert(alertTitle, alertDesc, [
+          {text: alertBtnFirst, style: 'cancel'},
           {
-            text: AlertBtnSecond,
+            text: alertBtnSecond,
             style: 'destructive',
             onPress: () => {
               const contactAddress =
