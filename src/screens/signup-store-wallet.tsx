@@ -22,7 +22,7 @@ export const SignupStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal('loading', {text: 'Creating a wallet'});
+    showModal('loading', {text: 'Creating an account'});
   }, []);
 
   useEffect(() => {
