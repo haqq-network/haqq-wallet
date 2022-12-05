@@ -53,9 +53,7 @@ export const LedgerVerify = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t9 center>
-        {getText(I18N.ledgerVerifyAddress, {address})}
-      </Text>
+      <Text t9 i18n={I18N.ledgerVerifyAddress} i18params={{address}} center />
       <LottieWrap
         style={styles.lottie}
         source={require('../../../assets/animations/ledger-verify.json')}
