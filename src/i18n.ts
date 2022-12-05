@@ -183,10 +183,8 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
-  settingsContactEditDelateContact,
-  settingsContactEditSure,
-  settingsContactEditCancel,
   settingsContactEditDelete,
+  settingsContactEditSure,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
