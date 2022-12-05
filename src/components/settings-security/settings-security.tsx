@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin';
 import {MenuNavigationButton, Spacer, Text} from '@app/components/ui';
 import {useApp} from '@app/hooks';
-import {getText, I18N} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {BiometryType} from '@app/types';
 
 const biometryName = {
@@ -60,7 +60,9 @@ export const SettingsSecurity = ({
   }, [app, biometry]);
 
   if (!loggedIn) {
-    return <Pin title={getText(I18N.settingsSecurityWalletPin)} onPin={onPin} ref={pinRef} />;
+    return (
+      <Pin i18n={I18N.settingsSecurityWalletPin} onPin={onPin} ref={pinRef} />
+    );
   }
 
   return (
