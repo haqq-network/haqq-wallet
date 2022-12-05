@@ -4,15 +4,16 @@ import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
-import {getText, I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {EthNetwork} from '@app/services';
 import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
-
 export const SigninStoreWallet = () => {
-  const navigation = useTypedNavigation()
+  const navigation = useTypedNavigation();
+  const {nextScreen, mnemonic, privateKey} =
+    useTypedRoute<'restoreStore'>().params;
   const wallets = useWallets();
 
   useEffect(() => {
@@ -22,9 +23,10 @@ export const SigninStoreWallet = () => {
   }, []);
 
   useEffect(() => {
+    const goBack = () => {
+      navigation.getParent()?.goBack();
+    };
     setTimeout(async () => {
-    const goBack = () => {navigation.getParent()?.goBack();}
-    const {nextScreen, mnemonic, privateKey} = useTypedRoute<'restoreStore'>().params
       try {
         if (mnemonic) {
           let canNext = true;
@@ -106,7 +108,7 @@ export const SigninStoreWallet = () => {
         }
       }
     }, 350);
-  }, [navigation, wallets]);
+  }, [navigation, nextScreen, mnemonic, privateKey, wallets]);
 
   return <View />;
 };
