@@ -8,20 +8,20 @@ import {Cosmos} from '@app/services/cosmos';
 export const StakingUnDelegateFormScreen = () => {
   const navigation = useTypedNavigation();
   const {validator, account} = useTypedRoute<'stakingUnDelegateForm'>().params;
+  const {operator_address} = validator;
 
   const wallet = useWallet(account);
 
   const balance = useMemo(() => {
-    const delegations = StakingMetadata.getDelegationsForValidator(
-      validator.operator_address,
-    );
+    const delegations =
+      StakingMetadata.getDelegationsForValidator(operator_address);
 
     const delegation = delegations.find(
       d => d.delegator === wallet?.cosmosAddress,
     );
 
     return delegation?.amount ?? 0;
-  }, [validator.operator_address, wallet?.cosmosAddress]);
+  }, [operator_address, wallet?.cosmosAddress]);
 
   const fee = parseInt(Cosmos.fee.amount, 10);
 
