@@ -51,7 +51,7 @@ export const LabeledBlock = ({
   return (
     <View style={containerStyle} {...props}>
       <View style={styles.flex}>
-        {(label || i18nLabel) && (
+        {(label ?? i18nLabel) && (
           <Text t14 i18n={i18nLabel} color={placeholderColor}>
             {label}
           </Text>
