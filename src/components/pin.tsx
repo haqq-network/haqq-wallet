@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react';
 
@@ -11,6 +12,7 @@ import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {moderateVerticalScale} from '@app/helpers/scaling-utils';
+import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_SECOND_2,
@@ -22,11 +24,13 @@ import {NumericKeyboard} from './pin/numeric-keyboard';
 import {ErrorText, Spacer, Text} from './ui';
 
 export type PinProps = {
-  title: string;
+  title?: string;
   onPin: (pin: string) => void;
   subtitle?: string;
   onLock?: () => void;
   additionButton?: React.ReactNode;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
 };
 
 export interface PinInterface {
@@ -35,11 +39,26 @@ export interface PinInterface {
 }
 
 export const Pin = forwardRef(
-  ({title, subtitle, onPin, onLock, additionButton}: PinProps, ref) => {
+  (
+    {
+      title,
+      subtitle,
+      onPin,
+      onLock,
+      additionButton,
+      i18n = undefined,
+      i18params = undefined,
+    }: PinProps,
+    ref,
+  ) => {
     const insets = useSafeAreaInsets();
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const [locked, setLocked] = useState<Date | null>(null);
+    const valueTitle = useMemo(
+      () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : title),
+      [title, i18n, i18params],
+    );
 
     useEffect(() => {
       if (locked !== null) {
@@ -112,7 +131,7 @@ export const Pin = forwardRef(
     return (
       <View style={[page.container, {paddingBottom: insets.bottom}]}>
         <Text t4 style={page.title}>
-          {title}
+          {valueTitle}
         </Text>
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
