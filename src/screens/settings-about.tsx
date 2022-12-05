@@ -134,7 +134,7 @@ export const SettingsAboutScreen = () => {
         {/*  <ArrowForwardIcon color={LIGHT_GRAPHIC_SECOND_3} />*/}
         {/*</IconButton>*/}
       </View>
-      <Text t11>©2022 Haqq. All Rights Reserved.</Text>
+      <Text t11>©2022 BORED GEN DMCC. All Rights Reserved.</Text>
       <Text t11 style={page.terms}>
         Version {getAppVersion()} ({getBuildNumber()})
       </Text>
