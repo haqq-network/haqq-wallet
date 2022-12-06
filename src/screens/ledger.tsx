@@ -3,7 +3,6 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {useUser} from '@app/hooks';
 
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerAgreementScreen} from './ledger-agreement';
@@ -30,8 +29,6 @@ const screenOptionsTitle: ScreenOptionType = {
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 export const LedgerScreen = () => {
-  const user = useUser();
-
   return (
     <LedgerStack.Navigator screenOptions={popupScreenOptions}>
       <LedgerStack.Screen

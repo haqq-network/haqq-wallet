@@ -2,10 +2,15 @@ import React, {useEffect, useState} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  DataContent,
+} from '@app/components/ui';
+import {I18N} from '@app/i18n';
 import {EthNetwork} from '@app/services/eth-network';
 import {cleanNumber, shortAddress} from '@app/utils';
-import {Button, ButtonSize, ButtonVariant, DataContent} from '@app/components/ui';
-import {I18N} from '@app/i18n';
 
 export type LedgerAccountsRowProps = {
   item: string;
