@@ -11,8 +11,14 @@ on:
           - 1
 jobs:
   build_ios:
-    name: Distribute iOS
-    uses: ./.github/workflows/distribute-ios-build.yml
-    secrets: inherit
-    with:
-      IS_DEVELOPMENT: ${{ github.event.inputs.IS_DEVELOPMENT }}
+    - name: Decode secrets
+      run: |
+        echo "IS_DEVELOPER=${{inputs.IS_DEVELOPER}}"
+    - name: Decode secrets
+      run: |
+        echo "IS_DEVELOPER=${{github.event.inputs.IS_DEVELOPER}}"
+    - name: Distribute iOS
+      uses: ./.github/workflows/distribute-ios-test.yml
+      secrets: inherit
+      with:
+        IS_DEVELOPMENT: ${{ github.event.inputs.IS_DEVELOPMENT }}

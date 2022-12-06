@@ -1,0 +1,20 @@
+name: Distribute iOS app
+
+on:
+  workflow_call:
+    inputs:
+      IS_DEVELOPMENT:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build and distribute iOS app
+    runs-on: macos-latest
+    steps:
+      - name: Decode secrets
+        run: |
+          echo "IS_DEVELOPER=${{inputs.IS_DEVELOPER}}"
+      - name: Decode secrets
+        run: |
+          echo "IS_DEVELOPER=${{github.event.inputs.IS_DEVELOPMENT}}"
