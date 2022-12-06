@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -50,7 +50,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
         t11
         center
         style={styles.disclaimer}
-        color={getColor(Color.textBase2)}
+        color={Color.textBase2}
         i18n={I18N.restoreAgreementText}
       />
       <Spacer />
