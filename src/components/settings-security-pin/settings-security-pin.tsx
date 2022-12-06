@@ -25,7 +25,7 @@ export const SettingsSecurityPin = ({
   const onPinRepeated = useCallback(
     async (repeatedPin: string) => {
       if (pin === repeatedPin) {
-        showModal(getText(I18N.settingsSecurityPinLoading));
+        showModal('loading');
         await wallets.updateWalletsData(pin);
         await app.updatePin(pin);
         hideModal();
