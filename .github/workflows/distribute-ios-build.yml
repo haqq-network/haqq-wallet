@@ -55,7 +55,7 @@ jobs:
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribution" >> .env
-          echo "IS_DEVELOPER=${{inputs.IS_DEVELOPER}}" >> .env
+          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
 
       - name: Execute build
         run: |
