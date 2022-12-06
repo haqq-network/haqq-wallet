@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   workflow_call:
     secrets:
-      IS_DEVELOPER: 0
+      IS_DEVELOPER:
+        required: true
 
 secrets:
   IS_DEVELOPER: 1
