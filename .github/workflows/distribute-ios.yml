@@ -11,7 +11,7 @@ on:
           - 1
 jobs:
   build_ios:
-    name: Build and distribute iOS app
+    name: Distribute iOS
     uses: ./.github/workflows/distribute-ios-build.yml
     secrets: inherit
     with:
