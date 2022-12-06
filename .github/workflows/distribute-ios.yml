@@ -3,7 +3,7 @@ name: Distribute iOS develop app
 on:
   workflow_dispatch:
 
-secrets:
+env:
   IS_DEVELOPMENT: 1
 
 jobs:
@@ -11,3 +11,5 @@ jobs:
     name: Build and distribute iOS app
     uses: ./.github/workflows/distribute-ios-build.yml
     secrets: inherit
+    with:
+      IS_DEVELOPMENT: ${{ env.IS_DEVELOPMENT }}
