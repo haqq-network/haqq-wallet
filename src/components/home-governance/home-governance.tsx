@@ -74,7 +74,7 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
           daysLeft={90}
           hourLeft={3}
           minLeft={58}
-          votes={{yes: 100, no: 10, abstain: 0, veto: 0}}
+          votes={{yes: 100, no: 0, abstain: 0, veto: 0}}
           isVoted={true}
           title="Parameter change: Decrease proposal deposit amount to 5"
         />

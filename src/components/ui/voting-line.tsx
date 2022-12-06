@@ -42,33 +42,39 @@ export const VotingLine = memo(
     }));
 
     const yesVotesWidth = useAnimatedStyle(() => ({
-      width: `${(yesVotes.value / totalVotes.value) * 97}%`,
+      width: `${(yesVotes.value / totalVotes.value) * 100}%`,
+      paddingHorizontal: yesVotes.value / totalVotes.value === 1 ? 0 : 2,
     }));
 
     const noVotesWidth = useAnimatedStyle(() => ({
-      width: `${(noVotes.value / totalVotes.value) * 97}%`,
+      width: `${(noVotes.value / totalVotes.value) * 100}%`,
+      paddingHorizontal: noVotes.value / totalVotes.value === 1 ? 0 : 2,
     }));
 
     const abstainVotesWidth = useAnimatedStyle(() => ({
-      width: `${(abstainVotes.value / totalVotes.value) * 97}%`,
+      width: `${(abstainVotes.value / totalVotes.value) * 100}%`,
+      paddingHorizontal: abstainVotes.value / totalVotes.value === 1 ? 0 : 2,
     }));
 
     const vetoVotesWidth = useAnimatedStyle(() => ({
-      width: `${(vetoVotes.value / totalVotes.value) * 97}%`,
+      width: `${(vetoVotes.value / totalVotes.value) * 100}%`,
+      paddingHorizontal: vetoVotes.value / totalVotes.value === 1 ? 0 : 2,
     }));
 
     return (
       <View style={styles.container}>
-        <Animated.View
-          style={[styles.lineStyle, styles.green, yesVotesWidth]}
-        />
-        <Animated.View style={[styles.lineStyle, styles.red, noVotesWidth]} />
-        <Animated.View
-          style={[styles.lineStyle, styles.gray, abstainVotesWidth]}
-        />
-        <Animated.View
-          style={[styles.lineStyle, styles.yellow, vetoVotesWidth]}
-        />
+        <Animated.View style={[yesVotesWidth, styles.leftLine]}>
+          <View style={[styles.lineStyle, styles.green, styles.leftLine]} />
+        </Animated.View>
+        <Animated.View style={noVotesWidth}>
+          <View style={[styles.lineStyle, styles.red]} />
+        </Animated.View>
+        <Animated.View style={abstainVotesWidth}>
+          <View style={[styles.lineStyle, styles.gray]} />
+        </Animated.View>
+        <Animated.View style={[vetoVotesWidth, styles.rightLine]}>
+          <View style={[styles.lineStyle, styles.yellow]} />
+        </Animated.View>
       </View>
     );
   }),
@@ -79,9 +85,16 @@ const styles = createTheme({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  rightLine: {
+    paddingRight: 0,
+  },
+  leftLine: {
+    paddingLeft: 0,
+  },
   lineStyle: {
     borderRadius: 4,
     height: 12,
+    width: '100%',
   },
   green: {
     backgroundColor: Color.graphicGreen1,
