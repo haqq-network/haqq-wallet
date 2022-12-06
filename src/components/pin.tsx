@@ -12,7 +12,7 @@ import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {moderateVerticalScale} from '@app/helpers/scaling-utils';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_SECOND_2,
@@ -55,10 +55,6 @@ export const Pin = forwardRef(
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const [locked, setLocked] = useState<Date | null>(null);
-    const valueTitle = useMemo(
-      () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : title),
-      [title, i18n, i18params],
-    );
 
     useEffect(() => {
       if (locked !== null) {
@@ -130,8 +126,8 @@ export const Pin = forwardRef(
 
     return (
       <View style={[page.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 style={page.title}>
-          {valueTitle}
+        <Text t4 i18n={i18n} i18params={i18params} style={page.title}>
+          {title}
         </Text>
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
