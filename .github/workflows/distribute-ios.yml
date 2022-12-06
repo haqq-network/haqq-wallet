@@ -10,15 +10,18 @@ on:
           - 0
           - 1
 jobs:
-  build_ios:
+  test:
     - name: Decode secrets
       run: |
         echo "IS_DEVELOPER=${{inputs.IS_DEVELOPER}}"
     - name: Decode secrets
       run: |
         echo "IS_DEVELOPER=${{github.event.inputs.IS_DEVELOPER}}"
-    - name: Distribute iOS
-      uses: ./.github/workflows/distribute-ios-test.yml
-      secrets: inherit
-      with:
-        IS_DEVELOPMENT: ${{ github.event.inputs.IS_DEVELOPMENT }}
+  build_ios:
+    name: Distribute iOS
+    needs:
+      - test
+    uses: ./.github/workflows/distribute-ios-test.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: ${{ github.event.inputs.IS_DEVELOPMENT }}
