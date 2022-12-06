@@ -21,6 +21,10 @@ export enum I18N {
   ledgerAgreementText,
   ledgerAgreementTitle,
   ledgerAgreementAgree,
+  ledgerAccountsAdd,
+  ledgerAccountsAdded,
+  ledgerAccountsWaiting,
+  ledgerAccountsConfirm,
   backupVerifyTitle,
   backupVerifyError,
   backupVerifyDescription,
@@ -248,6 +252,10 @@ const en: Record<I18N, string> = {
   [I18N.ledgerAgreementText]:
     'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
   [I18N.ledgerAgreementAgree]: 'Connect',
+  [I18N.ledgerAccountsAdd]: 'Add',
+  [I18N.ledgerAccountsAdded]: 'Added',
+  [I18N.ledgerAccountsWaiting]: 'Waiting for confirmation of pairing',
+  [I18N.ledgerAccountsConfirm]: 'Confirm pairing on your Ledger',
   [I18N.backupVerifyTitle]: 'Verify backup phrase',
   [I18N.backupVerifyError]: 'Ooops, mistake in one of the words',
   [I18N.backupVerifyDescription]:
