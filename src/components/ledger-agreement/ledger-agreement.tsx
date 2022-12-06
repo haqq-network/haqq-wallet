@@ -2,11 +2,17 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {windowWidth} from '@app/helpers';
 import {Color} from '@app/colors';
-import {I18N} from '@app/i18n';
 import {LottieWrap} from '@app/components/lottie';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {windowWidth} from '@app/helpers';
+import {I18N} from '@app/i18n';
 // import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
@@ -24,7 +30,12 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
           loop
         />
       </View>
-      <Text t4 center={true} style={page.title} i18n={I18N.ledgerAgreementTitle} />
+      <Text
+        t4
+        center={true}
+        style={page.title}
+        i18n={I18N.ledgerAgreementTitle}
+      />
       <Text
         t11
         color={Color.textBase2}
