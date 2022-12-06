@@ -7,5 +7,6 @@ jobs:
   build_ios:
     name: Build and distribute iOS app
     uses: ./.github/workflows/distribute-ios-build.yml
-    secrets:
+    secrets: inherit
+    inputs:
       IS_DEVELOPER: 1
