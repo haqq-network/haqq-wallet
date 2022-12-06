@@ -2,11 +2,17 @@ name: Distribute iOS develop app
 
 on:
   workflow_dispatch:
-
+    inputs:
+      name:
+        type: choice
+        description: IS_DEVELOPMENT
+        options:
+          - 0
+          - 1
 jobs:
   build_ios:
     name: Build and distribute iOS app
     uses: ./.github/workflows/distribute-ios-build.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: 1
+      IS_DEVELOPMENT: ${{ github.event.inputs.name }}
