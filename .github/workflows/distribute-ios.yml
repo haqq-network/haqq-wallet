@@ -14,3 +14,5 @@ jobs:
     name: Build and distribute iOS app
     uses: ./.github/workflows/distribute-ios-build.yml
     secrets: inherit
+    with:
+      IS_DEVELOPMENT: ${{ github.event.inputs.IS_DEVELOPMENT }}
