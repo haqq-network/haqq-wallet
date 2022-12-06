@@ -13,18 +13,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers/create-theme';
+import {I18N} from '@app/i18n';
+import {LIGHT_TEXT_BLUE_1} from '@app/variables';
+
 import {ActionsSheetProps} from '.';
-import {I18N, getText} from '../../i18n';
-import {
-  DARK_GRAPHIC_RED_1,
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_BASE_2,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_BLUE_1,
-  LIGHT_TEXT_SECOND_1,
-} from '../../variables';
-import {Text} from '../ui';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: 550,
@@ -74,29 +69,33 @@ export const ActionsSheet = ({
 
   return (
     <View style={StyleSheet.absoluteFillObject}>
-      <Animated.View style={[page.animateView, bgAnimation]} />
+      <Animated.View style={[styles.animateView, bgAnimation]} />
       <Animated.View
         style={[
-          page.animateViewFade,
+          styles.animateViewFade,
           slideFromBottomAnimation,
           {paddingBottom: bottom},
         ]}>
-        <View style={page.top}>
-          <Text t14 style={page.t8}>
-            {getText(I18N.actionSheetMessage)}
-          </Text>
-          <View style={page.line} />
-          <TouchableOpacity style={page.margin} onPress={handleDiscard}>
-            <Text color={DARK_GRAPHIC_RED_1} t14 style={page.tButton}>
-              {getText(I18N.actionSheetDiscard)}
-            </Text>
+        <View style={styles.top}>
+          <Text i18n={I18N.actionSheetMessage} t14 style={styles.t8} />
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.margin} onPress={handleDiscard}>
+            <Text
+              i18n={I18N.actionSheetDiscard}
+              color={Color.graphicRed1}
+              t14
+              style={styles.tButton}
+            />
           </TouchableOpacity>
         </View>
-        <View style={page.bottom}>
-          <TouchableOpacity style={page.margin} onPress={handleKeepEditing}>
-            <Text color={LIGHT_TEXT_BLUE_1} t14 style={page.tButton}>
-              {getText(I18N.actionSheetKeepEditing)}
-            </Text>
+        <View style={styles.bottom}>
+          <TouchableOpacity style={styles.margin} onPress={handleKeepEditing}>
+            <Text
+              color={LIGHT_TEXT_BLUE_1}
+              i18n={I18N.actionSheetKeepEditing}
+              t14
+              style={styles.tButton}
+            />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -104,14 +103,14 @@ export const ActionsSheet = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   top: {
     borderRadius: 13,
-    backgroundColor: LIGHT_GRAPHIC_SECOND_1,
+    backgroundColor: Color.graphicSecond1,
   },
   bottom: {
     borderRadius: 13,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     marginVertical: 8,
   },
   animateView: {
@@ -120,7 +119,7 @@ const page = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: LIGHT_BG_9,
+    backgroundColor: Color.bg9,
   },
   animateViewFade: {
     flex: 1,
@@ -131,7 +130,7 @@ const page = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 12,
     textAlign: 'center',
-    color: LIGHT_GRAPHIC_BASE_2,
+    color: Color.graphicBase2,
   },
   tButton: {
     fontFamily: 'SF Pro Display',
@@ -142,7 +141,7 @@ const page = StyleSheet.create({
   line: {
     width: '100%',
     height: 0.3,
-    backgroundColor: LIGHT_TEXT_SECOND_1,
+    backgroundColor: Color.textSecond1,
   },
   margin: {
     paddingVertical: 18,
