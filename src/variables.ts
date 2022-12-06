@@ -105,6 +105,8 @@ export const HR_GRAY = '#EEEEEE';
 
 export const TRANSPARENT = 'transparent';
 
+export const MAIN_ACCOUNT_NAME = 'Main account';
+
 export const MAGIC_CARD_HEIGHT = 0.632835821;
 
 export const IS_ANDROID = Platform.OS === 'android';
