@@ -11,6 +11,9 @@ on:
           - 1
 jobs:
   test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
     - name: Decode secrets
       run: |
         echo "IS_DEVELOPER=${{inputs.IS_DEVELOPER}}"
