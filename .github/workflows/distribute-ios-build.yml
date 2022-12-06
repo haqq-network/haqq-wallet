@@ -7,11 +7,9 @@ on:
         required: true
 
 jobs:
-  build_ios:
+  build:
     name: Build and distribute iOS app
     runs-on: macos-latest
-    needs:
-      - test
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
