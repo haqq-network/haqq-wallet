@@ -13,6 +13,7 @@ export enum VotingCompletedStatuses {
   passed = I18N.homeGovernanceVotingCardPassed,
   rejected = I18N.homeGovernanceVotingCardRejected,
 }
+export type VotingCompletedStatusesKeys = keyof typeof VotingCompletedStatuses;
 
 type VotingCardCompletedProps = {
   title: string;

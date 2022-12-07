@@ -427,3 +427,13 @@ export type votesType = {
 };
 
 export type ColorType = Color | string;
+
+export type ProposalsTagKeys = 'all' | 'voting' | 'passed' | 'rejected';
+export type ProposalsTagType = [ProposalsTagKeys, I18N];
+
+export const ProposalsTags: ProposalsTagType[] = [
+  ['all', I18N.homeGovernanceTagAll],
+  ['voting', I18N.homeGovernanceTagVoting],
+  ['passed', I18N.homeGovernanceTagPassed],
+  ['rejected', I18N.homeGovernanceTagRejected],
+];

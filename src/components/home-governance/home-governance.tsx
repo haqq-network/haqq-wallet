@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {FlatList, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -10,33 +10,25 @@ import {
   VotingCardActive,
   VotingCardCompleted,
   VotingCompletedStatuses,
+  VotingCompletedStatusesKeys,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useCosmos, useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
-
-const Tags = {
-  all: I18N.homeGovernanceTagAll,
-  voting: I18N.homeGovernanceTagVoting,
-  passed: I18N.homeGovernanceTagPassed,
-  rejected: I18N.homeGovernanceTagRejected,
-};
-
-const tagList = Object.values(Tags);
+import {ProposalsTagType, ProposalsTags} from '@app/types';
 
 export interface HomeGovernanceProps {}
 
 export const HomeGovernance = ({}: HomeGovernanceProps) => {
-  const [selectedTag, setSelectedTag] = useState(tagList[0]);
   const cosmos = useCosmos();
-  const proposals = useProposals();
+  const {proposals, setStatusFilter, statusFilter} = useProposals();
 
   useEffect(() => {
     cosmos.syncGovernanceVoting();
   });
 
-  const onSelect = (tagName: I18N) => () => {
-    setSelectedTag(tagName);
+  const onSelect = (tag: ProposalsTagType) => () => {
+    setStatusFilter(tag[0]);
   };
 
   const listHeader = () => <Spacer height={12} />;
@@ -51,19 +43,22 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.tagsContainer}>
-          {tagList.map(tagName => {
-            const tagVariant = selectedTag === tagName ? 'active' : 'inactive';
+          {ProposalsTags.map(tag => {
+            const [tagKey, tagTitle] = tag;
+            const tagVariant = statusFilter === tagKey ? 'active' : 'inactive';
+
             return (
               <Tag
-                key={tagName}
-                onPress={onSelect(tagName)}
-                i18n={tagName}
+                key={tagKey}
+                onPress={onSelect(tag)}
+                i18n={tagTitle}
                 tagVariant={tagVariant}
               />
             );
           })}
         </ScrollView>
       </View>
+      <Spacer height={12} />
       <FlatList
         ListHeaderComponent={listHeader}
         renderItem={({
@@ -87,16 +82,21 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
                 votes={proposalVotes}
               />
             );
+          } else if (!proposalVotes) {
+            return <></>;
           } else {
+            const statusKey =
+              VotingCompletedStatuses[status as VotingCompletedStatusesKeys];
+
             return (
               <VotingCardCompleted
                 orderNumber={orderNumber}
                 isVoted={false}
                 endDate={dateEnd}
                 startDate={dateStart}
-                status={VotingCompletedStatuses[status]}
-                votes={{yes: 5, no: 1, abstain: 1, veto: 1}}
-                title="Voting Card Completed"
+                status={statusKey}
+                votes={proposalVotes}
+                title={title}
               />
             );
           }
