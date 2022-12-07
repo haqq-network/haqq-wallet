@@ -393,7 +393,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsContactEditDelete]: 'Delete',
   [I18N.settingsContactEditSure]:
     'Are you sure you want to delete the selected contact?',
-      [I18N.settingsAddressBookLabel]: 'Address',
+  [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
   [I18N.settingsAddressBookAdd]: 'Add Contact',
   [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
@@ -505,5 +505,4 @@ const en: Record<I18N, string> = {
   [I18N.finishProceed]: 'Proceed',
   [I18N.ledgerFinishTitle]:
     'Congratulations!\nYou have successfully added a new account',
-
 };
