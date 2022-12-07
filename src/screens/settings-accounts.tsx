@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {SettingsAccounts} from '@app/components/settings-accounts';
-import {useWallets} from '@app/hooks';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useWallets} from '@app/hooks';
 
 export const SettingsAccountsScreen = () => {
   const navigation = useTypedNavigation();
