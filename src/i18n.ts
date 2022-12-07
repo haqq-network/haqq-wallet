@@ -201,6 +201,7 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  LedgerStoreWalletSaving,
   ledgerVerifyAddress,
   onboardingFinishCreate,
   onboardingFinishRecover,
@@ -455,6 +456,7 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
   [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
+  [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
   [I18N.onboardingFinishCreate]:
