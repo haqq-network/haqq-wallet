@@ -3,8 +3,8 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {useCosmos} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
 import {WEI} from '@app/variables';
 
@@ -13,7 +13,7 @@ const sourceEthAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
 
 export const SettingsTestScreen = () => {
   const live = useRef(true);
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
   const [amount, setAmount] = useState('0.001');
   const [staked, setStaked] = useState(0);
   const [reward, setReward] = useState(0);

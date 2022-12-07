@@ -1,20 +1,18 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingValidators} from '@app/components/staking-validators';
-import {app} from '@app/contexts';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
-import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useWallets} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
   const wallets = useWallets();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
   const [stakedValidators, setStakedValidators] = useState<ValidatorItem[]>([]);
   const [unStakedValidators, setUnStakedValidators] = useState<ValidatorItem[]>(
     [],

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -9,9 +9,10 @@ import {
   Tag,
   VotingCardActive,
   VotingCardCompleted,
-  VotingStatus,
+  VotingCompletedStatuses,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {useCosmos} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 const Tags = {
@@ -27,6 +28,11 @@ export interface HomeGovernanceProps {}
 
 export const HomeGovernance = ({}: HomeGovernanceProps) => {
   const [selectedTag, setSelectedTag] = useState(tagList[0]);
+  const cosmos = useCosmos();
+
+  useEffect(() => {
+    cosmos.syncGovernanceVoting();
+  });
 
   const onSelect = (tagName: I18N) => () => {
     setSelectedTag(tagName);
@@ -97,7 +103,7 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
           isVoted
           endDate={new Date()}
           startDate={new Date(1653334400000)}
-          status={VotingStatus.passed}
+          status={VotingCompletedStatuses.passed}
           votes={{yes: 5, no: 1, abstain: 1, veto: 1}}
           title="Voting Card Completed"
         />
@@ -107,7 +113,7 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
           isVoted={false}
           endDate={new Date()}
           startDate={new Date(-1)}
-          status={VotingStatus.rejected}
+          status={VotingCompletedStatuses.rejected}
           votes={{yes: 5, no: 1, abstain: 1, veto: 1}}
           title="Voting Card Completed 2"
         />

@@ -9,7 +9,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {votesType} from '@app/types';
 
-export enum VotingStatus {
+export enum VotingCompletedStatuses {
   passed = I18N.homeGovernanceVotingCardPassed,
   rejected = I18N.homeGovernanceVotingCardRejected,
 }
@@ -18,7 +18,7 @@ type VotingCardCompletedProps = {
   title: string;
   startDate: Date;
   endDate: Date;
-  status: VotingStatus;
+  status: VotingCompletedStatuses;
   votes: votesType;
   isVoted?: boolean;
   onPress?: () => void;
@@ -35,7 +35,7 @@ export const VotingCardCompleted = ({
   onPress,
   orderNumber = 0,
 }: VotingCardCompletedProps) => {
-  const isRejected = status === VotingStatus.rejected;
+  const isRejected = status === VotingCompletedStatuses.rejected;
   const statusColor = isRejected ? Color.textRed1 : Color.textGreen1;
 
   return (

@@ -95,7 +95,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i72' in props && styles.i72Container,
         'i120' in props && styles.i120Container,
         style,
-        {tintColor: getColor(color as Color)},
+        {tintColor: getColor(color)},
       ]),
     [color, props, style],
   );

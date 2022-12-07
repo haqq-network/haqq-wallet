@@ -1,6 +1,7 @@
 import Realm from 'realm';
 
 import {Contact} from './contact';
+import {GovernanceVoting} from './governance-voting';
 import {Provider} from './provider';
 import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
@@ -18,6 +19,7 @@ export const realm = new Realm({
     Contact,
     Provider,
     StakingMetadata,
+    GovernanceVoting,
   ],
   schemaVersion: 31,
   onMigration: (oldRealm, newRealm) => {

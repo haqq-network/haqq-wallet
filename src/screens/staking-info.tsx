@@ -1,14 +1,18 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useWindowDimensions} from 'react-native';
 
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {
+  useCosmos,
+  useTypedNavigation,
+  useTypedRoute,
+  useWallets,
+} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -16,7 +20,7 @@ export const StakingInfoScreen = () => {
   const navigation = useTypedNavigation();
 
   const {visible} = useWallets();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
     useState(false);

@@ -38,6 +38,7 @@ import {utils} from 'ethers';
 import {wallets} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
+import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {
   StakingMetadata,
@@ -471,5 +472,62 @@ export class Cosmos {
           .filter(r => !hashes.includes(r))
           .map(r => StakingMetadata.remove(r));
       });
+  }
+
+  async syncGovernanceVoting() {
+    try {
+      const rows = realm.objects<GovernanceVoting>(
+        GovernanceVoting.schema.name,
+      );
+      const cache: string[] = [];
+
+      for (const row of rows) {
+        cache.push(row.hash);
+      }
+
+      const proposals = await this.getProposals();
+      const hashes = proposals.proposals
+        .map(
+          ({
+            status,
+            voting_end_time,
+            voting_start_time,
+            total_deposit,
+            deposit_end_time,
+            proposal_id,
+            final_tally_result,
+            content,
+          }) => {
+            const veto = final_tally_result.no_with_veto;
+
+            const copy: any = {...final_tally_result};
+            delete copy.no_with_veto;
+            const votes: any = {};
+
+            Object.entries({...copy, veto}).map(([key, val]) => {
+              votes[key] = Math.round(Number(val));
+            });
+
+            return GovernanceVoting.createVoting({
+              status: status.split('_').reverse()[0].toLowerCase(),
+              endDate: voting_end_time,
+              startDate: voting_start_time,
+              depositNeeds: JSON.stringify(total_deposit),
+              depositEndTime: deposit_end_time,
+              orderNumber: Number(proposal_id),
+              description: content.description,
+              title: content.title,
+              votes: JSON.stringify(votes),
+            });
+          },
+        )
+        .filter(Boolean);
+
+      cache
+        .filter(r => !hashes.includes(r))
+        .forEach(r => GovernanceVoting.remove(r));
+    } catch (e) {
+      captureException(e, 'Cosmos.syncGovernanceVoting');
+    }
   }
 }

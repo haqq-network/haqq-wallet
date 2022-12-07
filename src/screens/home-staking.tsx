@@ -1,12 +1,11 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
-import {useApp, useTypedNavigation, useWalletsList} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 
 const initData = {
   stakingSum: 0,
@@ -16,12 +15,11 @@ const initData = {
 };
 
 export const HomeStakingScreen = () => {
-  const app = useApp();
   const [data, setData] = useState(initData);
 
   const {visible} = useWalletsList();
   const navigation = useTypedNavigation();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
 
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
