@@ -1,7 +1,8 @@
-import { I18N } from '@app/i18n';
 import React from 'react';
 
 import {StyleSheet} from 'react-native';
+
+import {I18N} from '@app/i18n';
 
 import {
   Button,
@@ -20,7 +21,13 @@ export type FinishProps = {
   testID?: string;
 };
 
-export const Finish = ({title = undefined, onFinish, testID, i18n = undefined, i18params = undefined}: FinishProps) => {
+export const Finish = ({
+  title = undefined,
+  onFinish,
+  testID,
+  i18n = undefined,
+  i18params = undefined,
+}: FinishProps) => {
   return (
     <PopupContainer>
       <Spacer>

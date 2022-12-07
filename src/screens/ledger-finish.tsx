@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
+import {LedgerFinish} from '@app/components/ledger-finish';
 import {useApp, useTypedNavigation} from '@app/hooks';
-import { LedgerFinish } from '@app/components/ledger-finish';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
@@ -15,5 +15,5 @@ export const LedgerFinishScreen = () => {
     }
   }, [app, navigation]);
 
-  return <LedgerFinish onEnd={onEnd} />
+  return <LedgerFinish onEnd={onEnd} />;
 };

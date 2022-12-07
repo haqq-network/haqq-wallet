@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 
-import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {I18N} from '@app/i18n';
 import {Finish} from '@app/components/finish';
 import {hideModal} from '@app/helpers/modal';
+import {I18N} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 interface LedgerFinishProps {
-    onEnd: () => void
+  onEnd: () => void;
 }
 
 export const LedgerFinish = ({onEnd}: LedgerFinishProps) => {
