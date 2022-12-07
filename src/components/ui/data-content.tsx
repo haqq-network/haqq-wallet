@@ -44,8 +44,7 @@ export const DataContent = ({
 };
 const styles = StyleSheet.create({
   container: {
-    minHeight: 54,
-    justifyContent: 'center',
+    paddingVertical: 16,
   },
   title: {
     marginBottom: 2,

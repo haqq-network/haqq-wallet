@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
@@ -29,7 +29,7 @@ export const MenuNavigationButton = ({
       <View style={[page.container, style]}>
         <View style={page.content}>{children}</View>
         {!hideArrow && (
-          <Icon s name="arrow_forward" color={getColor(Color.graphicSecond3)} />
+          <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
         )}
       </View>
     </TouchableWithoutFeedback>
@@ -38,7 +38,6 @@ export const MenuNavigationButton = ({
 
 const page = createTheme({
   container: {
-    paddingVertical: 13,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
