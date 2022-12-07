@@ -1,19 +1,21 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Text} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useCosmos} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
+import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables';
 
 // const sourceEthAddress = '0x866e2B80Cc5b887C571f98199C1beCa15FF82084';
 const sourceEthAddress = '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B';
 
-export const SettingsTestScreen = () => {
+export const SettingsTest = () => {
   const live = useRef(true);
-  const cosmos = useCosmos();
+  const cosmos = useRef(new Cosmos(app.provider!)).current;
   const [amount, setAmount] = useState('0.001');
   const [staked, setStaked] = useState(0);
   const [reward, setReward] = useState(0);
@@ -83,14 +85,23 @@ export const SettingsTestScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>staked: {staked}</Text>
-      <Text>reward: {reward}</Text>
-      <Text clean style={styles.gap}>
-        unbounded: {unbounded}
-      </Text>
+      <Text
+        i18n={I18N.settingsTestStaked}
+        i18params={{staked: cleanNumber(staked)}}
+      />
+      <Text
+        i18n={I18N.settingsTestReward}
+        i18params={{reward: cleanNumber(reward)}}
+      />
+      <Text
+        clean
+        style={styles.gap}
+        i18n={I18N.settingsTestUnbounded}
+        i18params={{unbounded: cleanNumber(unbounded)}}
+      />
       <Input
         style={styles.gap}
-        label="delegate"
+        label={'delegate'}
         value={address}
         onChangeText={val => setAddress(val)}
         multiline
@@ -104,18 +115,35 @@ export const SettingsTestScreen = () => {
       />
       <View style={styles.buttons}>
         <Button
+          i18n={I18N.settingsTestDelegate}
           style={styles.btn}
-          title="delegate"
           onPress={onPressDelegate}
           variant={ButtonVariant.contained}
         />
         <Button
+          i18n={I18N.settingsTestUndelegate}
           style={styles.btn}
-          title="undelegate"
           onPress={onPressUnDelegate}
           variant={ButtonVariant.second}
         />
       </View>
     </View>
   );
+};
 
+const styles = createTheme({
+  container: {
+    paddingHorizontal: 20,
+  },
+  gap: {
+    marginBottom: 20,
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginHorizontal: -8,
+  },
+  btn: {
+    flex: 1,
+    marginHorizontal: 8,
+  },
+});
