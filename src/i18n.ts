@@ -104,6 +104,11 @@ export enum I18N {
   settingsProviderEditCosmosChainId,
   settingsProviderEditDeleteProvider,
   settingsProviderEditUseProvider,
+  settingsTestDelegate,
+  settingsTestReward,
+  settingsTestStaked,
+  settingsTestUnbounded,
+  settingsTestUndelegate,
   stakingValidators,
   stakingValidatorsRowPower,
   stakingValidatorsRowStaked,
@@ -203,6 +208,12 @@ export enum I18N {
   settingsAddressBookAlertDesc,
   settingsAddressBookAlertBtnFirst,
   settingsAddressBookAlertBtnSecond,
+  LedgerStoreWalletSaving,
+  ledgerVerifyAddress,
+  onboardingFinishCreate,
+  onboardingFinishRecover,
+  finishProceed,
+  ledgerFinishTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -340,6 +351,11 @@ const en: Record<I18N, string> = {
   [I18N.settingsProviderEditCosmosEndpoint]: 'Cosmos RPC endpoint',
   [I18N.settingsProviderEditCosmosChainId]: 'Cosmos chain id',
   [I18N.settingsProviderEditDeleteProvider]: 'Delete Provider',
+  [I18N.settingsTestDelegate]: 'Delegate',
+  [I18N.settingsTestReward]: 'Reward: {{reward}}',
+  [I18N.settingsTestStaked]: 'Staked: {{staked}}',
+  [I18N.settingsTestUnbounded]: 'Unbounded: {{unbounded}}',
+  [I18N.settingsTestUndelegate]: 'Undelegate',
   [I18N.settingsProviderEditUseProvider]: 'Use this provider',
   [I18N.stakingValidators]: 'Validators list',
   [I18N.stakingValidatorsRowPower]: 'Power: {{power}}',
@@ -445,7 +461,7 @@ const en: Record<I18N, string> = {
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Finish',
+  [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
   [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
@@ -455,4 +471,14 @@ const en: Record<I18N, string> = {
     'Are you sure you want to delete the selected contact?',
   [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
   [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
+  [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
+  [I18N.ledgerVerifyAddress]:
+    'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
+  [I18N.onboardingFinishCreate]:
+    'Congratulations!\nYou have successfully added a new account',
+  [I18N.onboardingFinishRecover]:
+    'Congratulations!\nYou have successfully recovered an account',
+  [I18N.finishProceed]: 'Proceed',
+  [I18N.ledgerFinishTitle]:
+    'Congratulations!\nYou have successfully added a new account',
 };
