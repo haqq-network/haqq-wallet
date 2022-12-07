@@ -17,8 +17,8 @@ export type VotingCompletedStatusesKeys = keyof typeof VotingCompletedStatuses;
 
 type VotingCardCompletedProps = {
   title: string;
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  endDate?: Date;
   status: VotingCompletedStatuses;
   votes: votesType;
   isVoted?: boolean;
@@ -72,7 +72,7 @@ export const VotingCardCompleted = ({
             />
             <Spacer height={4} />
             <Text t14 color={Color.textBase1}>
-              {format(startDate, 'dd MMM yyyy, H:mm')}
+              {startDate && format(startDate, 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
           <Spacer width={16} />
@@ -84,7 +84,7 @@ export const VotingCardCompleted = ({
             />
             <Spacer height={4} />
             <Text t14 color={Color.textBase1}>
-              {format(endDate, 'dd MMM yyyy, H:mm')}
+              {endDate && format(endDate, 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
         </View>

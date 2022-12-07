@@ -3,15 +3,7 @@ import React, {useEffect} from 'react';
 import {FlatList, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-import {
-  CustomHeader,
-  Spacer,
-  Tag,
-  VotingCardActive,
-  VotingCardCompleted,
-  VotingCompletedStatuses,
-  VotingCompletedStatusesKeys,
-} from '@app/components/ui';
+import {CustomHeader, Spacer, Tag, VotingCard} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useCosmos, useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -61,46 +53,19 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
       <Spacer height={12} />
       <FlatList
         ListHeaderComponent={listHeader}
-        renderItem={({
-          item: {
-            orderNumber,
-            title,
-            proposalVotes,
-            dataDifference,
-            dateEnd,
-            dateStart,
-            status,
-          },
-        }) => {
-          if (dataDifference.isActive) {
-            return (
-              <VotingCardActive
-                orderNumber={orderNumber}
-                {...dataDifference}
-                isVoted={false}
-                title={title}
-                votes={proposalVotes}
-              />
-            );
-          } else if (!proposalVotes) {
-            return <></>;
-          } else {
-            const statusKey =
-              VotingCompletedStatuses[status as VotingCompletedStatusesKeys];
-
-            return (
-              <VotingCardCompleted
-                orderNumber={orderNumber}
-                isVoted={false}
-                endDate={dateEnd}
-                startDate={dateStart}
-                status={statusKey}
-                votes={proposalVotes}
-                title={title}
-              />
-            );
-          }
-        }}
+        renderItem={({item}) => (
+          <VotingCard
+            {...item}
+            status={item.status}
+            proposalDepositNeeds={item.proposalDepositNeeds}
+            title={item.title}
+            dateEnd={item.dateEnd}
+            dateStart={item.dateStart}
+            dataDifference={item.dataDifference}
+            proposalVotes={item.proposalVotes}
+            isVoted={item.isVoted}
+          />
+        )}
         ItemSeparatorComponent={listSeparator}
         data={proposals}
         showsVerticalScrollIndicator={false}
