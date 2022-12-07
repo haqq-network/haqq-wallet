@@ -19,7 +19,7 @@ export const SigninStoreWalletScreen = () => {
 
   useEffect(() => {
     showModal('loading', {
-      text: 'Wallet recovery in progress',
+      text: 'Account recovery in progress',
     });
   }, []);
 
@@ -53,6 +53,7 @@ export const SigninStoreWalletScreen = () => {
                     mnemonic: node.mnemonic,
                     path: node.path,
                     rootAddress: node.rootAddress,
+                    publicKey: '',
                   },
                   name,
                 );
