@@ -78,7 +78,7 @@ export const SettingsAccountStyle = ({
 }: SettingsAccountStyleProps) => {
   const opacity = useSharedValue(1);
   const heightCard = 192;
-  const timerRef: {current: NodeJS.Timeout | null} = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cardWidth = useWindowDimensions().width - 72;
   const [loading, setLoading] = useState<boolean>(false);
   const [isStyleChanged, setIsStyleChanged] = useState(false);
@@ -110,10 +110,10 @@ export const SettingsAccountStyle = ({
       pattern: WPattern,
     } = wallet;
     if (
-      WCardStyle !== cardStyle ??
-      colors[0] !== colorFrom ??
-      colors[1] !== colorTo ??
-      colors[2] !== colorPattern ??
+      WCardStyle !== cardStyle ||
+      colors[0] !== colorFrom ||
+      colors[1] !== colorTo ||
+      colors[2] !== colorPattern ||
       WPattern !== pattern
     ) {
       !isStyleChanged && setIsStyleChanged(true);

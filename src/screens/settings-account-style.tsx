@@ -15,7 +15,7 @@ export const SettingsAccountStyleScreen = () => {
   const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
-    wallet.cardStyle ?? WalletCardStyle.flat,
+    wallet.cardStyle || WalletCardStyle.flat,
   );
 
   const [colors, setColors] = useState([
