@@ -1,24 +1,11 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-import {useApp} from '@app/hooks';
-import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {Finish} from '../components/finish';
-import {hideModal} from '../helpers/modal';
-import {RootStackParamList} from '../types';
+import {useApp, useTypedNavigation} from '@app/hooks';
+import { LedgerFinish } from '@app/components/ledger-finish';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  useEffect(() => {
-    hideModal();
-    vibrate(HapticEffects.success);
-  }, []);
-
+  const navigation = useTypedNavigation();
   const onEnd = useCallback(() => {
     if (app.getUser().onboarded) {
       navigation.getParent()?.goBack();
@@ -28,11 +15,5 @@ export const LedgerFinishScreen = () => {
     }
   }, [app, navigation]);
 
-  return (
-    <Finish
-      title="Сongratulations! You have successfully added a new account"
-      onFinish={onEnd}
-      testID="ledger_finish"
-    />
-  );
+  return <LedgerFinish onEnd={onEnd} />
 };
