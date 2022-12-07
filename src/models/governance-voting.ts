@@ -13,7 +13,7 @@ export const GovernanceVotingState = {
   deposit: I18N.homeGovernanceVotingCardDepositPeriod,
 };
 
-type GovernanceVotingType = {
+export type GovernanceVotingType = {
   status: string;
   orderNumber: number;
   title: string;
@@ -84,6 +84,10 @@ export class GovernanceVoting extends Realm.Object {
     return hash;
   }
 
+  get isVoted() {
+    return false;
+  }
+
   get dateEnd() {
     return new Date(this.endDate);
   }
@@ -113,9 +117,12 @@ export class GovernanceVoting extends Realm.Object {
     }
   }
 
-  get proposalDepositNeeds(): Coin[] | undefined {
+  get proposalDepositNeeds(): number | undefined {
     if (this.depositNeeds) {
-      return JSON.parse(this.depositNeeds);
+      return JSON.parse(this.depositNeeds).reduce(
+        (acc: number, item: Coin) => acc + item.amount,
+        0,
+      );
     } else {
       return;
     }
