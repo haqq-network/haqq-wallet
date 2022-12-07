@@ -3,6 +3,11 @@ export enum I18N {
   backupCreateRecoverySaveWords,
   backupCreateRecoveryWarningMessage,
   backupCreateRecoveryAgreement,
+  backupWarningButton,
+  backupWarningInfoBlock1,
+  backupWarningInfoBlock2,
+  backupWarningTitle,
+  backupWarningParagraph,
   ledgerBluetoothAllow,
   ledgerBluetoothTitleUnknown,
   ledgerBluetoothTitleDisabled,
@@ -235,6 +240,14 @@ const en: Record<I18N, string> = {
     'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
   [I18N.backupCreateRecoveryAgreement]:
     'I understand that if I lose my recovery phrase, I will not be able to restore access to my account',
+  [I18N.backupWarningButton]: 'Understood',
+  [I18N.backupWarningInfoBlock1]:
+    'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
+  [I18N.backupWarningInfoBlock2]:
+    'This phrase is your only chance to recover access to your funds if your usual device is unavailable to you.',
+  [I18N.backupWarningTitle]: 'Important about backup',
+  [I18N.backupWarningParagraph]:
+    'A backup is a restoring phrase of 12 words. It is better to write down the phrase on paper and not keep it online.',
   [I18N.ledgerBluetoothAllow]: 'Allow',
   [I18N.ledgerBluetoothTitleUnknown]: 'Allow using Bluetooth',
   [I18N.ledgerBluetoothTitleDisabled]: 'No access to Bluetooth',
