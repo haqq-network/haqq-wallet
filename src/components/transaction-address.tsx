@@ -120,19 +120,11 @@ export const TransactionAddress = ({
           address === '' ? (
             <View style={page.inputButtonContainer}>
               <IconButton onPress={onPressPaste}>
-                <Icon
-                  style={page.icon}
-                  name="paste"
-                  color={Color.graphicGreen1}
-                />
+                <Icon i24 name="paste" color={Color.graphicGreen1} />
               </IconButton>
               <Spacer width={12} />
               <IconButton onPress={onPressQR}>
-                <Icon
-                  style={page.icon}
-                  name="qr_scanner"
-                  color={Color.graphicGreen1}
-                />
+                <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
               </IconButton>
             </View>
           ) : (
@@ -169,9 +161,5 @@ const page = StyleSheet.create({
   button: {
     marginHorizontal: 20,
     marginVertical: 16,
-  },
-  icon: {
-    width: 25,
-    height: 25,
   },
 });
