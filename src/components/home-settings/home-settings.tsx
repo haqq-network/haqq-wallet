@@ -13,6 +13,7 @@ import {SettingsButton} from './settings-button';
 export const HomeSettings = () => {
   const {theme} = useUser();
   const capitalizedTheme = capitalize(theme);
+  console.log(IS_DEVELOPMENT);
 
   return (
     <ScrollView contentContainerStyle={page.container}>

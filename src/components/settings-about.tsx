@@ -4,21 +4,13 @@ import {ScrollView, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, LottieWrap, Spacer, Text} from '@app/components/ui';
+import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-type SettingsAboutProps = {
-  onPressSite: () => void;
-  onPressDoc: () => void;
-  onPressDiscord: () => void;
-};
+import {IconSettingsAbout} from './IconSettingsAbout';
 
-export const SettingsAbout = ({
-  onPressSite,
-  onPressDoc,
-  onPressDiscord,
-}: SettingsAboutProps) => {
+export const SettingsAbout = () => {
   const insets = useSafeAreaInsets();
   const windowWidth = useWindowDimensions().width;
   return (
@@ -46,34 +38,36 @@ export const SettingsAbout = ({
           <Spacer />
            <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
         </IconButton> */}
-        <IconButton onPress={onPressSite} style={styles.button}>
-          <Icon i24 name="global" color={Color.graphicBase1} />
-          <Text t11 i18n={I18N.settingsAboutVisit} style={styles.buttonText} />
-          <Spacer />
-          <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
-        </IconButton>
+        <IconSettingsAbout
+          name="global"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutVisit}
+          url="https://islamiccoin.net"
+        />
       </View>
       <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
       <View style={styles.buttons}>
-        <IconButton onPress={onPressDoc} style={styles.button}>
-          <Icon i24 name="doc" color={Color.graphicBase1} />
-          <Text t11 i18n={I18N.settingsAboutTerms} style={styles.buttonText} />
-          <Spacer />
-          <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
-        </IconButton>
+        <IconSettingsAbout
+          name="doc"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutTerms}
+          url="https://islamiccoin.net"
+        />
       </View>
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
-        <IconButton onPress={onPressDiscord} style={styles.button}>
-          <Icon name="discord" color={Color.graphicBase1} />
-          <Text
-            t11
-            i18n={I18N.settingsAboutDiscord}
-            style={styles.buttonText}
-          />
-          <Spacer />
-          <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
-        </IconButton>
+        <IconSettingsAbout
+          name="discord"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutDiscord}
+          url="https://discord.com/invite/aZMm8pekhZ"
+        />
+        <IconSettingsAbout
+          name="twitter"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutTwitter}
+          url="https://twitter.com/Islamic_coin"
+        />
       </View>
       <Text
         t11
@@ -99,15 +93,6 @@ const styles = createTheme({
     backgroundColor: Color.bg3,
     borderRadius: 16,
     marginBottom: 24,
-  },
-  button: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    flexDirection: 'row',
-  },
-  buttonText: {
-    marginLeft: 12,
-    color: Color.textBase1,
   },
   terms: {
     marginBottom: 10,
