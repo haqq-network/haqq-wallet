@@ -9,3 +9,4 @@ export * from './use-wallets';
 export * from './use-app';
 export * from './use-typed-route';
 export * from './use-cosmos';
+export * from './use-proposals';

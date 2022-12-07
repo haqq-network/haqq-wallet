@@ -1,5 +1,6 @@
 import {Coin} from '@evmos/transactions';
 import createHash from 'create-hash';
+import {differenceInSeconds, secondsToHours, secondsToMinutes} from 'date-fns';
 
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
@@ -30,8 +31,8 @@ export class GovernanceVoting extends Realm.Object {
   orderNumber!: number;
   title!: string;
   description!: string;
-  endDate!: string;
-  startDate!: string;
+  private endDate!: string;
+  private startDate!: string;
   private votes?: string;
   private depositNeeds?: string;
   depositEndTime?: string;
@@ -67,7 +68,10 @@ export class GovernanceVoting extends Realm.Object {
   }
 
   static createVoting(proposal: GovernanceVotingType) {
-    const hash = createHash('sha1').digest().toString('hex');
+    const hash = createHash('sha1')
+      .update(`${proposal.orderNumber}:${proposal.startDate}`)
+      .digest()
+      .toString('hex');
 
     realm.write(() => {
       realm.create<GovernanceVoting>(
@@ -78,6 +82,27 @@ export class GovernanceVoting extends Realm.Object {
     });
 
     return hash;
+  }
+
+  get dateEnd() {
+    return new Date(this.endDate);
+  }
+
+  get dateStart() {
+    return new Date(this.startDate);
+  }
+
+  get dataDifference() {
+    const diff = differenceInSeconds(
+      new Date(this.endDate),
+      new Date(Date.now()),
+    );
+    return {
+      daysLeft: secondsToHours(diff) / 24,
+      hourLeft: secondsToHours(diff),
+      minLeft: secondsToMinutes(diff),
+      isActive: diff > 0,
+    };
   }
 
   get proposalVotes(): votesType | undefined {
