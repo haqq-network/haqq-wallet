@@ -201,6 +201,10 @@ export enum I18N {
   backupFinishSuccess,
   backupFinishFinish,
   proposalTitle,
+  onboardingFinishCreate,
+  onboardingFinishRecover,
+  finishProceed,
+  ledgerFinishTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -448,6 +452,13 @@ const en: Record<I18N, string> = {
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Finish',
+  [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
+  [I18N.onboardingFinishCreate]:
+    'Congratulations!\nYou have successfully added a new account',
+  [I18N.onboardingFinishRecover]:
+    'Congratulations!\nYou have successfully recovered an account',
+  [I18N.finishProceed]: 'Proceed',
+  [I18N.ledgerFinishTitle]:
+    'Congratulations!\nYou have successfully added a new account',
 };
