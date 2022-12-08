@@ -3,6 +3,11 @@ export enum I18N {
   backupCreateRecoverySaveWords,
   backupCreateRecoveryWarningMessage,
   backupCreateRecoveryAgreement,
+  backupWarningButton,
+  backupWarningInfoBlock1,
+  backupWarningInfoBlock2,
+  backupWarningTitle,
+  backupWarningParagraph,
   ledgerBluetoothAllow,
   ledgerBluetoothTitleUnknown,
   ledgerBluetoothTitleDisabled,
@@ -104,6 +109,11 @@ export enum I18N {
   settingsProviderEditCosmosChainId,
   settingsProviderEditDeleteProvider,
   settingsProviderEditUseProvider,
+  settingsTestDelegate,
+  settingsTestReward,
+  settingsTestStaked,
+  settingsTestUnbounded,
+  settingsTestUndelegate,
   stakingValidators,
   stakingValidatorsRowPower,
   stakingValidatorsRowStaked,
@@ -198,6 +208,19 @@ export enum I18N {
   proposalTitle,
   transactionSumSend,
   transactionSumPereview,
+  settingsAddressBookLabel,
+  settingsAddressBookPlaceholder,
+  settingsAddressBookAdd,
+  settingsAddressBookAlertTitle,
+  settingsAddressBookAlertDesc,
+  settingsAddressBookAlertBtnFirst,
+  settingsAddressBookAlertBtnSecond,
+  LedgerStoreWalletSaving,
+  ledgerVerifyAddress,
+  onboardingFinishCreate,
+  onboardingFinishRecover,
+  finishProceed,
+  ledgerFinishTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -219,6 +242,14 @@ const en: Record<I18N, string> = {
     'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
   [I18N.backupCreateRecoveryAgreement]:
     'I understand that if I lose my recovery phrase, I will not be able to restore access to my account',
+  [I18N.backupWarningButton]: 'Understood',
+  [I18N.backupWarningInfoBlock1]:
+    'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
+  [I18N.backupWarningInfoBlock2]:
+    'This phrase is your only chance to recover access to your funds if your usual device is unavailable to you.',
+  [I18N.backupWarningTitle]: 'Important about backup',
+  [I18N.backupWarningParagraph]:
+    'A backup is a restoring phrase of 12 words. It is better to write down the phrase on paper and not keep it online.',
   [I18N.ledgerBluetoothAllow]: 'Allow',
   [I18N.ledgerBluetoothTitleUnknown]: 'Allow using Bluetooth',
   [I18N.ledgerBluetoothTitleDisabled]: 'No access to Bluetooth',
@@ -335,6 +366,11 @@ const en: Record<I18N, string> = {
   [I18N.settingsProviderEditCosmosEndpoint]: 'Cosmos RPC endpoint',
   [I18N.settingsProviderEditCosmosChainId]: 'Cosmos chain id',
   [I18N.settingsProviderEditDeleteProvider]: 'Delete Provider',
+  [I18N.settingsTestDelegate]: 'Delegate',
+  [I18N.settingsTestReward]: 'Reward: {{reward}}',
+  [I18N.settingsTestStaked]: 'Staked: {{staked}}',
+  [I18N.settingsTestUnbounded]: 'Unbounded: {{unbounded}}',
+  [I18N.settingsTestUndelegate]: 'Undelegate',
   [I18N.settingsProviderEditUseProvider]: 'Use this provider',
   [I18N.stakingValidators]: 'Validators list',
   [I18N.stakingValidatorsRowPower]: 'Power: {{power}}',
@@ -440,8 +476,26 @@ const en: Record<I18N, string> = {
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Finish',
+  [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
   [I18N.transactionSumSend]: 'Send to',
   [I18N.transactionSumPereview]: 'Preview',
+  [I18N.settingsAddressBookLabel]: 'Address',
+  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
+  [I18N.settingsAddressBookAdd]: 'Add Contact',
+  [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
+  [I18N.settingsAddressBookAlertDesc]:
+    'Are you sure you want to delete the selected contact?',
+  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
+  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
+  [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
+  [I18N.ledgerVerifyAddress]:
+    'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
+  [I18N.onboardingFinishCreate]:
+    'Congratulations!\nYou have successfully added a new account',
+  [I18N.onboardingFinishRecover]:
+    'Congratulations!\nYou have successfully recovered an account',
+  [I18N.finishProceed]: 'Proceed',
+  [I18N.ledgerFinishTitle]:
+    'Congratulations!\nYou have successfully added a new account',
 };
