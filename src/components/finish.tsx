@@ -2,8 +2,6 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {I18N} from '@app/i18n';
-
 import {
   Button,
   ButtonVariant,
@@ -11,7 +9,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {I18N} from '@app/i18n';
 
 export type FinishProps = {
   title: I18N;
@@ -29,9 +28,9 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
           loop={false}
         />
       </Spacer>
-      <Text t4 i18n={title} style={page.title} />
+      <Text t4 i18n={title} style={styles.title} />
       <Button
-        style={page.button}
+        style={styles.button}
         variant={ButtonVariant.contained}
         i18n={I18N.finishProceed}
         testID={`${testID}_finish`}
@@ -41,7 +40,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   title: {
     marginBottom: 76,
     textAlign: 'center',
