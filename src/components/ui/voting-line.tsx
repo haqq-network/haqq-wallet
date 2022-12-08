@@ -2,13 +2,13 @@ import React, {forwardRef, memo, useImperativeHandle, useState} from 'react';
 
 import {View} from 'react-native';
 import Animated, {
+  WithTimingConfig,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
@@ -28,73 +28,92 @@ const votes: {name: voteNames; dotColor: Color; i18n: I18N}[] = [
   {name: 'veto', dotColor: Color.textYellow1, i18n: I18N.voteVeto},
 ];
 
-const AnimText = Animated.createAnimatedComponent(Text);
-
 export interface VotingLineInterface {
   updateValues: (newVotes: votesType) => void;
+  setSelected: React.Dispatch<React.SetStateAction<voteNames>>;
 }
+
+const animConfig: WithTimingConfig = {
+  duration: 500,
+};
 
 export const VotingLine = memo(
   forwardRef(({initialVotes, showBottomText}: VotingLineProps, ref) => {
-    const yesVotes = useSharedValue(initialVotes.yes);
-    const noVotes = useSharedValue(initialVotes.no);
-    const abstainVotes = useSharedValue(initialVotes.abstain);
-    const vetoVotes = useSharedValue(initialVotes.veto);
+    const initialSum =
+      Object.values(initialVotes).reduce((a, b) => a + b, 0) / 100;
+    const initPercentYes = initialVotes.yes / initialSum;
+    const initPercentNo = initialVotes.no / initialSum;
+    const initPercentAbstain = initialVotes.abstain / initialSum;
+    const initPercentVeto = initialVotes.veto / initialSum;
 
-    const [selected, setSelected] = useState<voteNames>('yes');
+    const yesVotes = useSharedValue(initPercentYes);
+    const noVotes = useSharedValue(initPercentNo);
+    const abstainVotes = useSharedValue(initPercentAbstain);
+    const vetoVotes = useSharedValue(initPercentVeto);
 
-    const totalVotes = useDerivedValue(
-      () =>
-        yesVotes.value + noVotes.value + abstainVotes.value + vetoVotes.value,
-    );
+    const [selected, setSelected] = useState<voteNames | undefined>();
+    const [percents, setPercents] = useState<{[name: string]: number}>({
+      yes: initPercentYes,
+      no: initPercentNo,
+      abstain: initPercentAbstain,
+      veto: initPercentVeto,
+    });
 
     useImperativeHandle(ref, () => ({
       updateValues(newVotes: votesType) {
-        yesVotes.value = withTiming(newVotes.yes, {duration: 500});
-        noVotes.value = withTiming(newVotes.no, {duration: 500});
-        abstainVotes.value = withTiming(newVotes.abstain, {duration: 500});
-        vetoVotes.value = withTiming(newVotes.veto, {duration: 500});
+        const factor = Object.values(newVotes).reduce((a, b) => a + b, 0) / 100;
+        const yes = newVotes.yes / factor;
+        const no = newVotes.no / factor;
+        const abstain = newVotes.abstain / factor;
+        const veto = newVotes.veto / factor;
+
+        yesVotes.value = withTiming(yes, animConfig);
+        noVotes.value = withTiming(no, animConfig);
+        abstainVotes.value = withTiming(abstain, animConfig);
+        vetoVotes.value = withTiming(veto, animConfig);
+
+        setPercents({yes, no, abstain, veto});
       },
       setSelected,
     }));
 
-    const yesPercent = useDerivedValue(
-      () => (yesVotes.value / totalVotes.value) * 100,
-    );
-    const yesVotesWidth = useAnimatedStyle(() => ({
-      width: `${yesPercent.value}%`,
-      paddingHorizontal: yesPercent.value === 100 ? 0 : 2,
-    }));
+    const yesVotesStyle = useAnimatedStyle(() => {
+      const {value} = yesVotes;
+      return {
+        width: `${value}%`,
+        paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
+      };
+    });
 
-    const noPercent = useDerivedValue(
-      () => (noVotes.value / totalVotes.value) * 100,
-    );
-    const noVotesWidth = useAnimatedStyle(() => ({
-      width: `${noPercent.value}%`,
-      paddingHorizontal: noPercent.value === 100 ? 0 : 2,
-    }));
+    const noVotesWidth = useAnimatedStyle(() => {
+      const {value} = noVotes;
+      return {
+        width: `${value}%`,
+        paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
+      };
+    });
 
-    const abstainPercent = useDerivedValue(
-      () => (abstainVotes.value / totalVotes.value) * 100,
-    );
-    const abstainVotesWidth = useAnimatedStyle(() => ({
-      width: `${abstainPercent.value}%`,
-      paddingHorizontal: abstainPercent.value === 100 ? 0 : 2,
-    }));
+    const abstainVotesWidth = useAnimatedStyle(() => {
+      const {value} = abstainVotes;
+      return {
+        width: `${value}%`,
+        paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
+      };
+    });
 
-    const vetoPercent = useDerivedValue(
-      () => (vetoVotes.value / totalVotes.value) * 100,
-    );
-    const vetoVotesWidth = useAnimatedStyle(() => ({
-      width: `${vetoPercent.value}%`,
-      paddingHorizontal: vetoPercent.value === 100 ? 0 : 2,
-    }));
+    const vetoVotesWidth = useAnimatedStyle(() => {
+      const {value} = vetoVotes;
+      return {
+        width: `${value}%`,
+        paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
+      };
+    });
 
     return (
       <View style={styles.container}>
         <View style={styles.lineContainer}>
-          <Animated.View style={[yesVotesWidth, styles.leftLine]}>
-            <View style={[styles.lineStyle, styles.green, styles.leftLine]} />
+          <Animated.View style={[styles.leftLine, yesVotesStyle]}>
+            <View style={[styles.lineStyle, styles.green]} />
           </Animated.View>
           <Animated.View style={noVotesWidth}>
             <View style={[styles.lineStyle, styles.red]} />
@@ -102,27 +121,24 @@ export const VotingLine = memo(
           <Animated.View style={abstainVotesWidth}>
             <View style={[styles.lineStyle, styles.gray]} />
           </Animated.View>
-          <Animated.View style={[vetoVotesWidth, styles.rightLine]}>
+          <Animated.View style={[styles.rightLine, vetoVotesWidth]}>
             <View style={[styles.lineStyle, styles.yellow]} />
           </Animated.View>
         </View>
         {showBottomText && (
           <View style={styles.statisticContainer}>
-            {votes.map(({name, dotColor, i18n}, id) => {
-              const isSelected = selected === name;
-              const {value} = [
-                yesPercent,
-                noPercent,
-                abstainPercent,
-                vetoPercent,
-              ][id];
+            {votes.map(({name, dotColor, i18n}) => {
+              const isSelected =
+                selected === name || typeof selected === 'undefined';
               return (
                 <View
-                  style={[styles.textItem, isSelected && styles.withOpacity]}>
-                  <View style={[styles.dot, {backgroundColor: dotColor}]} />
-                  <AnimText color={dotColor}>
-                    ${getText(i18n)} {value.toFixed(0)}%
-                  </AnimText>
+                  style={[styles.textItem, !isSelected && styles.withOpacity]}>
+                  <View
+                    style={[styles.dot, {backgroundColor: getColor(dotColor)}]}
+                  />
+                  <Text t13 color={Color.textBase1}>
+                    {getText(i18n)} {percents[name].toFixed(0)}%
+                  </Text>
                 </View>
               );
             })}
@@ -173,6 +189,7 @@ const styles = createTheme({
   },
   textItem: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   withOpacity: {
     opacity: 0.7,

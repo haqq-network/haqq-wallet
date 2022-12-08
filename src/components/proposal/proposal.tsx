@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
@@ -10,6 +10,7 @@ import {
   Text,
   TextSum,
   VotingLine,
+  VotingLineInterface,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
@@ -19,6 +20,7 @@ import {ProposalsTags} from '@app/types';
 
 export function Proposal() {
   const {hash} = useTypedRoute<'proposal'>().params;
+  const lineRef = useRef<VotingLineInterface>();
   const item = useMemo(() => {
     return GovernanceVoting.getByHash(hash);
   }, [hash]);
@@ -99,7 +101,7 @@ export function Proposal() {
             <Spacer height={12} />
           </>
         )}
-        <VotingLine showBottomText initialVotes={proposalVotes} />
+        <VotingLine ref={lineRef} showBottomText initialVotes={proposalVotes} />
       </View>
     </ScrollView>
   );

@@ -27,7 +27,6 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
 
   const listHeader = () => <Spacer height={12} />;
   const listSeparator = () => <Spacer height={24} />;
-
   return (
     <>
       <CustomHeader i18nTitle={I18N.homeGovernance} iconRight="search" />
@@ -57,8 +56,8 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
         ListHeaderComponent={listHeader}
         renderItem={({item}) => (
           <VotingCard
-            {...item}
             hash={item.hash}
+            orderNumber={item.orderNumber}
             onPress={onPressCard}
             status={item.status}
             proposalDepositNeeds={item.proposalDepositNeeds}
