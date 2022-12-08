@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import {hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {Finish} from '../components/finish';
@@ -18,8 +19,8 @@ export const OnboardingFinishScreen = () => {
   const title = useMemo(
     () =>
       route.params.action === 'create'
-        ? 'Congratulations!\nYou have successfully added a new account'
-        : 'Congratulations!\nYou have successfully recovered an account',
+        ? I18N.onboardingFinishCreate
+        : I18N.onboardingFinishRecover,
     [route.params.action],
   );
 
