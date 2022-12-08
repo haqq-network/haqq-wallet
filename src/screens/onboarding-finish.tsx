@@ -41,7 +41,6 @@ export const OnboardingFinishScreen = () => {
     hideModal();
     vibrate(HapticEffects.success);
   }, []);
-  console.log(title);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };

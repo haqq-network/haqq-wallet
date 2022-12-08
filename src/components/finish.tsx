@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
@@ -10,7 +10,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/types';
 
 export type FinishProps = {
   title: I18N;
@@ -19,14 +21,18 @@ export type FinishProps = {
 };
 
 export const Finish = ({title, onFinish, testID}: FinishProps) => {
+  const theme = useTheme();
+  const animation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../assets/animations/backup-success-dark.json');
+    }
+
+    return require('../../assets/animations/backup-success-light.json');
+  }, [theme]);
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap
-          source={require('../../assets/animations/success-animation.json')}
-          autoPlay
-          loop={false}
-        />
+        <LottieWrap source={animation} autoPlay loop={false} />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} />
       <Button
