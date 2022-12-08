@@ -429,7 +429,13 @@ export type votesType = {
 
 export type ColorType = Color | string;
 
-export type ProposalsTagKeys = 'all' | 'voting' | 'passed' | 'rejected';
+export type ProposalsTagKeys =
+  | 'all'
+  | 'voting'
+  | 'deposited'
+  | 'passed'
+  | 'rejected';
+
 export type ProposalsTagType = [
   ProposalsTagKeys,
   I18N,
@@ -452,6 +458,13 @@ export const ProposalsTags: ProposalsTagType[] = [
     Color.graphicGreen1,
     Color.textBase3,
     IconsNameUI.time,
+  ],
+  [
+    'deposited',
+    I18N.homeGovernanceTagDeposited,
+    Color.graphicBlue1,
+    Color.textBase3,
+    IconsNameUI.deposit,
   ],
   [
     'passed',

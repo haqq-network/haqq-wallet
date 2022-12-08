@@ -132,6 +132,7 @@ export const VotingLine = memo(
                 selected === name || typeof selected === 'undefined';
               return (
                 <View
+                  key={name}
                   style={[styles.textItem, !isSelected && styles.withOpacity]}>
                   <View
                     style={[styles.dot, {backgroundColor: getColor(dotColor)}]}

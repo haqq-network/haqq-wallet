@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 
 import {FlatList, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 
 import {CustomHeader, Spacer, Tag, VotingCard} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useCosmos, useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {ProposalsTagType, ProposalsTags} from '@app/types';
+import {ProposalsTagKeys, ProposalsTagType, ProposalsTags} from '@app/types';
 
 export interface HomeGovernanceProps {
   onPressCard?: (hash: string) => void;
@@ -32,24 +31,26 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
       <CustomHeader i18nTitle={I18N.homeGovernance} iconRight="search" />
       <Spacer height={12} />
       <View>
-        <ScrollView
+        <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.tagsContainer}>
-          {ProposalsTags.map(tag => {
-            const [tagKey, tagTitle] = tag;
+          contentContainerStyle={styles.tagsContainer}
+          data={ProposalsTags}
+          keyExtractor={item => item[0]}
+          renderItem={({item}) => {
+            const [tagKey, tagTitle] = item;
             const tagVariant = statusFilter === tagKey ? 'active' : 'inactive';
 
             return (
               <Tag
                 key={tagKey}
-                onPress={onSelect(tag)}
+                onPress={onSelect(item)}
                 i18n={tagTitle}
                 tagVariant={tagVariant}
               />
             );
-          })}
-        </ScrollView>
+          }}
+        />
       </View>
       <Spacer height={12} />
       <FlatList
@@ -57,16 +58,8 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
         renderItem={({item}) => (
           <VotingCard
             hash={item.hash}
-            orderNumber={item.orderNumber}
             onPress={onPressCard}
-            status={item.status}
-            proposalDepositNeeds={item.proposalDepositNeeds}
-            title={item.title}
-            dateEnd={item.dateEnd}
-            dateStart={item.dateStart}
-            dataDifference={item.dataDifference}
-            proposalVotes={item.proposalVotes}
-            isVoted={item.isVoted}
+            status={item.status as ProposalsTagKeys}
           />
         )}
         ItemSeparatorComponent={listSeparator}
@@ -82,10 +75,7 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
 
 const styles = createTheme({
   tagsContainer: {
-    flexDirection: 'column',
     paddingHorizontal: 16,
-    flex: 0,
-    flexShrink: 0,
   },
   scrollContainer: {
     paddingHorizontal: 20,

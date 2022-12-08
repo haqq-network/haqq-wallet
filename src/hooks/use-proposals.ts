@@ -1,34 +1,61 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 
-import {GovernanceVoting} from '@app/models/governance-voting';
+import {
+  GovernanceVoting,
+  ProposalRealmSubType,
+  ProposalsRealmType,
+} from '@app/models/governance-voting';
 import {ProposalsTagKeys} from '@app/types';
 
+type proposalsPart = {
+  hash: string;
+  status: string;
+}[];
+
+function prepareProposals(list: ProposalsRealmType) {
+  return list.map(({status, hash}) => ({
+    status,
+    hash,
+  }));
+}
+
 export function useProposals() {
-  const [allProposals, setAllProposals] =
-    useState<Realm.Results<GovernanceVoting & Realm.Object<unknown, never>>>();
+  const [allProposals, setAllProposals] = useState<proposalsPart>([]);
   const [statusFilter, setStatusFilter] = useState<ProposalsTagKeys>('all');
 
-  useEffect(() => {
-    const proposalsList = GovernanceVoting.getAll();
-    setAllProposals(proposalsList);
+  const proposalsRef = useRef<ProposalsRealmType>();
 
-    const onEvent = () => {
-      setAllProposals(GovernanceVoting.getAll());
+  useEffect(() => {
+    proposalsRef.current = GovernanceVoting.getAll();
+    const proposals = prepareProposals(proposalsRef.current);
+
+    setAllProposals(proposals);
+
+    const onEvent: ProposalRealmSubType = data => {
+      const newData = prepareProposals(data.snapshot());
+      setAllProposals(newData);
     };
 
-    proposalsList.addListener(onEvent);
+    proposalsRef.current.addListener(onEvent);
     return () => {
-      proposalsList.removeListener(onEvent);
+      proposalsRef.current?.removeListener(onEvent);
     };
   }, []);
 
   const proposals = useMemo(() => {
-    if (statusFilter === 'all' || !allProposals || !statusFilter) {
+    if (statusFilter === 'all' || !statusFilter) {
       return allProposals;
     } else {
-      return allProposals.filtered(`status == "${statusFilter}"`);
+      const filtered = proposalsRef.current?.filtered(
+        `status == "${statusFilter}"`,
+      );
+      if (filtered) {
+        return prepareProposals(filtered);
+      } else {
+        return allProposals;
+      }
     }
-  }, [allProposals, statusFilter]);
+  }, [statusFilter, allProposals]);
 
   return {proposals, setStatusFilter, statusFilter};
 }

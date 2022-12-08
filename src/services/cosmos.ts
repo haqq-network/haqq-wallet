@@ -509,7 +509,7 @@ export class Cosmos {
             });
 
             return GovernanceVoting.createVoting({
-              status: status.split('_').reverse()[0].toLowerCase(),
+              status: GovernanceVoting.keyFromStatus(status.toLowerCase()),
               endDate: voting_end_time,
               startDate: voting_start_time,
               depositNeeds: JSON.stringify(total_deposit),

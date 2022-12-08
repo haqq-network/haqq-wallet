@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 
 import {Pressable, View} from 'react-native';
 
@@ -15,26 +15,19 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {votesType} from '@app/types';
+import {
+  GovernanceVoting,
+  ProposalRealmType,
+} from '@app/models/governance-voting';
 
 type VotingCardActiveProps = {
   hash: string;
-  title: string;
-  daysLeft: number;
-  hourLeft: number;
-  minLeft: number;
-  depositNeeds?: number;
-  depositCollected?: number;
-  yourDeposit?: number;
-  votes?: votesType;
-  isVoted?: boolean;
   onPress?: (hash: string) => void;
-  orderNumber?: number;
 };
 
 const initialVotes = {
   yes: 1,
-  no: 2,
+  no: 1,
   abstain: 1,
   veto: 1,
 };
@@ -46,43 +39,44 @@ const colorVotes = {
   veto: Color.textYellow1,
 };
 
-export const VotingCardActive = ({
-  hash,
-  title,
-  daysLeft,
-  hourLeft,
-  minLeft,
-  votes = initialVotes,
-  isVoted,
-  onPress,
-  orderNumber = 0,
-  depositNeeds,
-  depositCollected,
-  yourDeposit,
-}: VotingCardActiveProps) => {
+export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
+  const item = useMemo(() => {
+    return GovernanceVoting.getByHash(hash) as ProposalRealmType;
+  }, [hash]);
+  const isVoted = true; // PASS
+  const yourDeposit = 100; // PASS
+
+  const {daysLeft, hourLeft, minLeft} = item.dataDifference;
+
   const linesRef = useRef<VotingLineInterface>(null);
   const depositProgressRef = useRef<ProgressLineInterface>(null);
 
-  const votesList = Object.entries(votes) as [keyof typeof votes, number][];
+  const votesList = Object.entries(item.proposalVotes) as [
+    keyof typeof item.proposalVotes,
+    number,
+  ][];
+
+  const isDeposited = item.status === 'deposited';
+
   const [majorityVotes] = votesList.reduce((prev, cur) => {
     return prev[1] > cur[1] ? prev : cur;
   }, votesList[0]);
 
   const primaryColor = getColor(
-    depositNeeds ? Color.graphicBlue1 : colorVotes[majorityVotes],
+    isDeposited ? Color.graphicBlue1 : colorVotes[majorityVotes],
   );
 
   useEffect(() => {
-    linesRef.current?.updateValues(votes);
-  }, [votes]);
+    linesRef.current?.updateValues(item.proposalVotes);
+  }, [item.proposalVotes]);
 
   useEffect(() => {
-    if (depositNeeds && depositCollected) {
+    if (item.proposalDepositNeeds && isDeposited) {
       depositProgressRef.current?.updateProgress(
-        depositCollected / depositNeeds,
+        /*depositCollected*/ 100 / item.proposalDepositNeeds, // PASS
       );
     }
-  }, [depositNeeds, depositCollected]);
+  }, [item.proposalDepositNeeds, isDeposited]);
 
   const handlePress = () => onPress?.(hash);
 
@@ -94,27 +88,27 @@ export const VotingCardActive = ({
         <Icon
           i18
           color={Color.graphicBase3}
-          name={depositNeeds ? 'deposit' : 'time'}
+          name={isDeposited ? 'deposit' : 'time'}
         />
         <Spacer width={5.5} />
         <Text
           t12
           color={Color.textBase3}
           i18n={
-            depositNeeds
+            isDeposited
               ? I18N.homeGovernanceVotingCardDepositPeriod
               : I18N.homeGovernanceVotingCardVoting
           }
         />
         <Spacer />
-        {isVoted && !yourDeposit && (
+        {isVoted && !isDeposited && (
           <Text
             t17
             color={Color.textBase3}
             i18n={I18N.homeGovernanceVotingCardYouVoted}
           />
         )}
-        {yourDeposit && (
+        {isDeposited && yourDeposit && (
           <Text
             t17
             color={Color.textBase3}
@@ -124,11 +118,11 @@ export const VotingCardActive = ({
       </View>
       <View style={styles.container}>
         <Text t14 color={Color.textBase2}>
-          #{orderNumber}
+          #{item.orderNumber}
         </Text>
         <Spacer height={2} />
         <Text t8 numberOfLines={2} color={Color.textBase1}>
-          {title}
+          {item.title}
         </Text>
         <Spacer height={12} />
         <View style={styles.timeContainer}>
@@ -160,13 +154,13 @@ export const VotingCardActive = ({
           </View>
         </View>
         <Spacer height={16} />
-        {depositNeeds ? (
+        {isDeposited ? (
           <>
             <ProgressLine ref={depositProgressRef} initialProgress={0.1} />
             <Spacer height={8} />
             <Text t15 color={Color.textBase2}>
-              {depositCollected?.toFixed(0)} ISLM from{' '}
-              {depositNeeds?.toFixed(0)} ISLM
+              {/* PASS */ (100).toFixed(0)} ISLM from{' '}
+              {item.proposalDepositNeeds?.toFixed(0) ?? '0'} ISLM
             </Text>
           </>
         ) : (
