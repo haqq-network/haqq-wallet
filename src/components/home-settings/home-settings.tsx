@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 import {useUser} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
@@ -18,13 +18,13 @@ export const HomeSettings = () => {
     <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
         icon="wallet"
-        title={getText(I18N.homeSettingsAccounts)}
+        title={I18N.homeSettingsAccounts}
         next="settingsAccounts"
       />
 
       <SettingsButton
         icon="address_book"
-        title={getText(I18N.homeSettingsAddressBook)}
+        title={I18N.homeSettingsAddressBook}
         next="settingsAddressBook"
       />
 
@@ -39,20 +39,20 @@ export const HomeSettings = () => {
         <SettingsButton
           rightTitle={capitalizedTheme}
           icon="brush"
-          title={getText(I18N.homeSettingsAppearance)}
+          title={I18N.homeSettingsAppearance}
           next="settingsTheme"
         />
       )}
 
       <SettingsButton
         icon="shield"
-        title={getText(I18N.homeSettingsSecurity)}
+        title={I18N.homeSettingsSecurity}
         next="settingsSecurity"
       />
 
       <SettingsButton
         icon="providers"
-        title={getText(I18N.homeSettingsProviders)}
+        title={I18N.homeSettingsProviders}
         next="settingsProviders"
         style={page.button}
       />
@@ -66,7 +66,7 @@ export const HomeSettings = () => {
 
       <SettingsButton
         icon="islm"
-        title={getText(I18N.homeSettingsAbout)}
+        title={I18N.homeSettingsAbout}
         next="settingsAbout"
         style={page.button}
       />
@@ -74,7 +74,7 @@ export const HomeSettings = () => {
       {IS_DEVELOPMENT === '1' && (
         <SettingsButton
           icon="settings"
-          title={getText(I18N.homeSettingsTest)}
+          title={I18N.homeSettingsTest}
           next="settingsTest"
           style={page.button}
         />
