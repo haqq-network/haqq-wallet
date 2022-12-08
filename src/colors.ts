@@ -24,6 +24,7 @@ import {
   DARK_TEXT_BASE_1,
   DARK_TEXT_BASE_2,
   DARK_TEXT_BASE_3,
+  DARK_TEXT_BLUE_1,
   DARK_TEXT_GREEN_1,
   DARK_TEXT_RED_1,
   DARK_TEXT_SECOND_1,
@@ -52,6 +53,7 @@ import {
   LIGHT_TEXT_BASE_1,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_BASE_3,
+  LIGHT_TEXT_BLUE_1,
   LIGHT_TEXT_GREEN_1,
   LIGHT_TEXT_RED_1,
   LIGHT_TEXT_SECOND_1,
@@ -70,6 +72,7 @@ export enum Color {
   textGreen1 = 'textGreen1',
   textRed1 = 'textRed1',
   textYellow1 = 'textYellow1',
+  textBlue1 = 'textBlue1',
   bg1 = 'bg1',
   bg2 = 'bg2',
   bg3 = 'bg3',
@@ -94,7 +97,7 @@ export enum Color {
 
 const styled = new Set(Object.keys(Color));
 
-export function getColor(key: Color) {
+export function getColor(key: Color | string) {
   if (!styled.has(key)) {
     return key;
   }
@@ -116,6 +119,7 @@ const light = {
   [Color.textGreen1]: LIGHT_TEXT_GREEN_1,
   [Color.textRed1]: LIGHT_TEXT_RED_1,
   [Color.textYellow1]: LIGHT_TEXT_YELLOW_1,
+  [Color.textBlue1]: LIGHT_TEXT_BLUE_1,
   [Color.bg1]: LIGHT_BG_1,
   [Color.bg2]: LIGHT_BG_2,
   [Color.bg3]: LIGHT_BG_3,
@@ -148,6 +152,7 @@ const dark = {
   [Color.textGreen1]: DARK_TEXT_GREEN_1,
   [Color.textRed1]: DARK_TEXT_RED_1,
   [Color.textYellow1]: DARK_TEXT_YELLOW_1,
+  [Color.textBlue1]: DARK_TEXT_BLUE_1,
   [Color.bg1]: DARK_BG_1,
   [Color.bg2]: DARK_BG_2,
   [Color.bg3]: DARK_BG_3,

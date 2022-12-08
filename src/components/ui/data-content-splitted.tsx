@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
-import {Text} from './text';
-
-import {app} from '../../contexts/app';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
+import {createTheme, sendNotification} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 export type DataContentSplittedProps = {
   to: string[];
@@ -23,7 +23,7 @@ export const DataContentSplitted = ({
 }: DataContentSplittedProps) => {
   const onPress = useCallback(() => {
     Clipboard.setString(to.join(''));
-    app.emit('notification', 'Copied');
+    sendNotification(I18N.notificationCopied);
   }, [to]);
 
   return (
@@ -32,14 +32,14 @@ export const DataContentSplitted = ({
         <Text t11 style={page.address}>
           {to[0]}
         </Text>
-        <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+        <Text t11 color={Color.textBase2}>
           {to[1]}
         </Text>
         <Text t11>{to[2]}</Text>
       </Text>
-      <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+      <Text t11 color={Color.textBase2}>
         {
-          <Text t11 style={{color: LIGHT_TEXT_BASE_2}}>
+          <Text t11 color={Color.textBase2}>
             {title}
           </Text>
         }
@@ -47,12 +47,12 @@ export const DataContentSplitted = ({
     </View>
   );
 };
-const page = StyleSheet.create({
+const page = createTheme({
   address: {
     minHeight: 22,
     marginBottom: 2,
     textAlign: 'left',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     width: '100%',
   },
   reverse: {flexDirection: 'column-reverse'},

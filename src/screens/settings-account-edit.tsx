@@ -1,20 +1,16 @@
 import React, {useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
+import {SettingsAccountEdit} from '@app/components/settings-account-edit';
 import {useWallet} from '@app/hooks';
-
-import {SettingsAccountEdit} from '../components/settings-account-edit';
-import {RootStackParamList} from '../types';
+import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 
 export const SettingsAccountEditScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const {address} =
-    useRoute<RouteProp<RootStackParamList, 'settingsAccountEdit'>>().params;
+  const navigation = useTypedNavigation();
+  const {address} = useTypedRoute<'settingsAccountEdit'>().params;
 
   const wallet = useWallet(address);
-  const [inputName, setInputName] = useState(wallet?.name || '');
+  const [inputName, setInputName] = useState(wallet?.name ?? '');
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const isChanged = inputName !== wallet?.name;
@@ -48,18 +44,16 @@ export const SettingsAccountEditScreen = () => {
   const onPressKeepEditing = () => setActionSheetVisible(false);
 
   return (
-    <>
-      <SettingsAccountEdit
-        actionSheetVisible={actionSheetVisible}
-        onPressLeft={onPressLeft}
-        isChanged={isChanged}
-        onPressRight={onPressRight}
-        onChange={onChange}
-        inputName={inputName}
-        cleanTextFile={cleanTextFile}
-        onPressKeepEditing={onPressKeepEditing}
-        onPressDiscard={onPressDiscard}
-      />
-    </>
+    <SettingsAccountEdit
+      actionSheetVisible={actionSheetVisible}
+      onPressLeft={onPressLeft}
+      isChanged={isChanged}
+      onPressRight={onPressRight}
+      onChange={onChange}
+      inputName={inputName}
+      cleanTextFile={cleanTextFile}
+      onPressKeepEditing={onPressKeepEditing}
+      onPressDiscard={onPressDiscard}
+    />
   );
 };

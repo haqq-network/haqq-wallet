@@ -3,12 +3,12 @@ import React, {useCallback, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {Finish} from '@app/components/finish';
+import {hideModal} from '@app/helpers';
 import {useApp} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {Finish} from '../components/finish';
-import {hideModal} from '../helpers/modal';
-import {RootStackParamList} from '../types';
+import {RootStackParamList} from '@app/types';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
@@ -30,7 +30,7 @@ export const LedgerFinishScreen = () => {
 
   return (
     <Finish
-      title="Сongratulations! You have successfully added a new wallet"
+      title={I18N.ledgerFinishTitle}
       onFinish={onEnd}
       testID="ledger_finish"
     />
