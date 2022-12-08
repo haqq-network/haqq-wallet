@@ -2,8 +2,9 @@ import React, {useEffect} from 'react';
 
 import {ActionSheetIOS} from 'react-native';
 
+import {I18N, getText} from '@app/i18n';
+
 import {ActionsSheetProps} from '.';
-import {I18N, getText} from '../../i18n';
 
 export const ActionsSheet = ({
   onPressDiscard,
