@@ -6,19 +6,19 @@ import {createTheme} from '@app/helpers';
 import {openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-type IconSettingsAboutProps = {
+type SettingsAboutButtonProps = {
   i18n: I18N;
   name: IconsName | keyof typeof IconsName;
   color: Color;
   url: string;
 };
 
-export const IconSettingsAbout = ({
+export const SettingsAboutButton = ({
   i18n,
   name,
   color,
   url,
-}: IconSettingsAboutProps) => {
+}: SettingsAboutButtonProps) => {
   const onPress = useCallback(() => {
     openURL(url);
   }, [url]);

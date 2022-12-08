@@ -8,7 +8,7 @@ import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-import {IconSettingsAbout} from './IconSettingsAbout';
+import {SettingsAboutButton} from './settings-about-button';
 
 export const SettingsAbout = () => {
   const insets = useSafeAreaInsets();
@@ -38,7 +38,7 @@ export const SettingsAbout = () => {
           <Spacer />
            <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
         </IconButton> */}
-        <IconSettingsAbout
+        <SettingsAboutButton
           name="global"
           color={Color.graphicBase1}
           i18n={I18N.settingsAboutVisit}
@@ -47,7 +47,7 @@ export const SettingsAbout = () => {
       </View>
       <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
       <View style={styles.buttons}>
-        <IconSettingsAbout
+        <SettingsAboutButton
           name="doc"
           color={Color.graphicBase1}
           i18n={I18N.settingsAboutTerms}
@@ -56,13 +56,13 @@ export const SettingsAbout = () => {
       </View>
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
-        <IconSettingsAbout
+        <SettingsAboutButton
           name="discord"
           color={Color.graphicBase1}
           i18n={I18N.settingsAboutDiscord}
           url="https://discord.com/invite/aZMm8pekhZ"
         />
-        <IconSettingsAbout
+        <SettingsAboutButton
           name="twitter"
           color={Color.graphicBase1}
           i18n={I18N.settingsAboutTwitter}
