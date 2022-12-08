@@ -20,6 +20,8 @@ import {
   ProposalRealmType,
 } from '@app/models/governance-voting';
 
+import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
+
 type VotingCardActiveProps = {
   hash: string;
   onPress?: (hash: string) => void;
@@ -47,7 +49,7 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
   const yourDeposit = 100; // PASS
 
   const {daysLeft, hourLeft, minLeft} = item.dataDifference;
-
+  const circleRef = useRef<ProgressCircleInterface>();
   const linesRef = useRef<VotingLineInterface>(null);
   const depositProgressRef = useRef<ProgressLineInterface>(null);
 
@@ -65,6 +67,10 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
   const primaryColor = getColor(
     isDeposited ? Color.graphicBlue1 : colorVotes[majorityVotes],
   );
+
+  useEffect(() => {
+    circleRef.current?.animateTo(40);
+  }, []);
 
   useEffect(() => {
     linesRef.current?.updateValues(item.proposalVotes);
@@ -126,7 +132,10 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
         </Text>
         <Spacer height={12} />
         <View style={styles.timeContainer}>
-          <Icon i42 color={primaryColor} name="timer_governance" />
+          <ProgressCircle ref={circleRef} color={primaryColor}>
+            <Icon i24 color={primaryColor} name="timer" />
+          </ProgressCircle>
+
           <View style={styles.timeRightContainer}>
             <Text
               t14
@@ -155,14 +164,13 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
         </View>
         <Spacer height={16} />
         {isDeposited ? (
-          <>
-            <ProgressLine ref={depositProgressRef} initialProgress={0.1} />
-            <Spacer height={8} />
-            <Text t15 color={Color.textBase2}>
-              {/* PASS */ (100).toFixed(0)} ISLM from{' '}
-              {item.proposalDepositNeeds?.toFixed(0) ?? '0'} ISLM
-            </Text>
-          </>
+          <ProgressLine
+            ref={depositProgressRef}
+            initialProgress={0}
+            showBottomInfo
+            depositNeeds={item.proposalDepositNeeds}
+            depositCollected={95}
+          />
         ) : (
           <VotingLine ref={linesRef} initialVotes={initialVotes} />
         )}

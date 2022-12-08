@@ -1,15 +1,20 @@
 import React, {useMemo, useRef} from 'react';
 
+import {format} from 'date-fns';
 import {ScrollView, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {
   Badge,
+  Button,
+  ButtonVariant,
   Icon,
+  InfoBlock,
+  InfoBlockType,
   Spacer,
   Text,
-  TextSum,
-  VotingLine,
+  VotingCardDetail,
   VotingLineInterface,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
@@ -20,21 +25,35 @@ import {ProposalsTags} from '@app/types';
 
 export function Proposal() {
   const {hash} = useTypedRoute<'proposal'>().params;
-  const lineRef = useRef<VotingLineInterface>();
+  const votingRef = useRef<VotingLineInterface>();
+  const {bottom} = useSafeAreaInsets();
+
   const item = useMemo(() => {
     return GovernanceVoting.getByHash(hash);
   }, [hash]);
 
+  const onDeposit = () => {
+    console.log('onDeposit'); // PASS
+  };
+  // useEffect(() => {
+  //   if (item?.orderNumber) {
+  //     (async () => {
+  //       const response = await GovernanceVoting.requestDetailFor(
+  //         String(item.orderNumber),
+  //       );
+  //       // setDetails({
+
+  //       // })
+  //       console.log('🚀 - details', JSON.stringify(response.proposal));
+  //     })();
+  //   }
+  // }, [item?.orderNumber]);
+
   if (!item) {
     return <></>;
   }
-  const {
-    status,
-    dataDifference: {daysLeft, minLeft, hourLeft, isActive},
-    orderNumber,
-    title,
-    proposalVotes,
-  } = item;
+  const {status, orderNumber, title, description, isDeposited} = item;
+
   const badgePropsByStatus = () => {
     const props = ProposalsTags.find(tag => tag[0] === status);
     return {
@@ -46,91 +65,135 @@ export function Proposal() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Spacer height={32} />
-      <Badge {...badgePropsByStatus()} />
-      <Spacer height={16} />
-      <Text color={Color.textBase1} t14>
-        #{orderNumber}
-      </Text>
-      <Spacer height={2} />
-      <Text t5>{title}</Text>
-      <Spacer height={24} />
+    <>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Spacer height={24} />
+        <Badge center {...badgePropsByStatus()} />
+        <Spacer height={16} />
+        <Text center color={Color.textBase1} t14>
+          #{orderNumber}
+        </Text>
+        <Spacer height={2} />
+        <Text center t5>
+          {title}
+        </Text>
+        <Spacer height={24} />
+        <VotingCardDetail votingRef={votingRef} item={item} />
+        {isDeposited && (
+          <InfoBlock
+            style={styles.infoBlockMargin}
+            type={InfoBlockType.warning}
+            t14
+            icon={<Icon name="warning" color={Color.textYellow1} />}
+            i18n={I18N.proposalDepositAttention}
+          />
+        )}
+        <Spacer height={24} />
+        <Text t9 i18n={I18N.proposalInfo} />
 
-      <View style={styles.cardInfo}>
         <View style={styles.row}>
-          <Text t9 i18n={I18N.proposalVoteResults} />
-          <Spacer width={12} />
-          <Text t15 color={Color.textBase2} i18n={I18N.proposalVoteResults} />
-          <Spacer width={4} />
-          <Text t15 color={Color.textGreen1}>
-            YES
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
+            <Spacer height={4} />
+            <Text t14>PASS</Text>
+          </View>
+          <Spacer width={16} />
+          <View style={styles.block}>
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.proposalTotalDeposit}
+            />
+            <Spacer height={4} />
+            <Text t14>PASS</Text>
+          </View>
+        </View>
+
+        <View style={styles.block}>
+          <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
+          <Spacer height={4} />
+          <Text t14>{description}</Text>
+        </View>
+
+        <Spacer height={24} />
+        <Text t9 i18n={I18N.proposalChanges} />
+        <Spacer height={12} />
+        <View style={styles.codeBlock}>
+          <Text t14 color={Color.textBase1}>
+            {`[
+  PASS
+]`}
           </Text>
         </View>
-        <Spacer height={12} />
-        {!isActive && (
-          <>
-            <View style={styles.timeContainer}>
-              <Icon i42 color={Color.graphicGreen1} name="timer_governance" />
-              <View style={styles.timeRightContainer}>
-                <Text
-                  t14
-                  color={Color.textBase2}
-                  i18n={I18N.homeGovernanceVotingCardVotingEnd}
-                />
-                <Spacer height={4} />
-                <View style={styles.row}>
-                  <TextSum
-                    style={styles.timeUnit}
-                    sum={daysLeft.toFixed(0)}
-                    rightText={I18N.homeGovernanceVotingCardDay}
-                  />
-                  <TextSum
-                    style={styles.timeUnit}
-                    sum={hourLeft.toFixed(0)}
-                    rightText={I18N.homeGovernanceVotingCardHour}
-                  />
-                  <TextSum
-                    style={styles.timeUnit}
-                    sum={minLeft.toFixed(0)}
-                    rightText={I18N.homeGovernanceVotingCardMin}
-                  />
-                </View>
-              </View>
-            </View>
-            <Spacer height={12} />
-          </>
-        )}
-        <VotingLine ref={lineRef} showBottomText initialVotes={proposalVotes} />
-      </View>
-    </ScrollView>
+
+        <Spacer height={24} />
+        <Text t9 i18n={I18N.proposalDate} />
+        <View style={styles.row}>
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.createdAt && format(item.createdAt, 'dd MMM yyyy, H:mm')}
+            </Text>
+            <Spacer height={8} />
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.dateStart && format(item.dateStart, 'dd MMM yyyy, H:mm')}
+            </Text>
+          </View>
+          <Spacer width={16} />
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalDepositEnd} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.depositEnd && format(item.depositEnd, 'dd MMM yyyy, H:mm')}
+            </Text>
+            <Spacer height={8} />
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.dateEnd && format(item.dateEnd, 'dd MMM yyyy, H:mm')}
+            </Text>
+          </View>
+        </View>
+        <Spacer height={(isDeposited ? 0 : bottom) + 28} />
+      </ScrollView>
+      {isDeposited && (
+        <View style={styles.depositButtonContainer}>
+          <Button
+            variant={ButtonVariant.contained}
+            onPress={onDeposit}
+            i18n={I18N.proposalDeposit}
+          />
+          <Spacer height={bottom} />
+        </View>
+      )}
+    </>
   );
 }
 
 const styles = createTheme({
   container: {
-    alignItems: 'center',
     paddingHorizontal: 20,
   },
-  cardInfo: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    backgroundColor: Color.bg8,
-    width: '100%',
-    borderRadius: 12,
-  },
-  timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  timeRightContainer: {
-    marginLeft: 12,
+  block: {
+    marginTop: 12,
+    flex: 1,
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
-  timeUnit: {
-    marginRight: 8,
+  codeBlock: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Color.graphicSecond1,
+    padding: 12,
+  },
+  infoBlockMargin: {
+    marginTop: 8,
+  },
+  depositButtonContainer: {
+    padding: 20,
   },
 });

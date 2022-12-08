@@ -79,35 +79,44 @@ export const VotingLine = memo(
 
     const yesVotesStyle = useAnimatedStyle(() => {
       const {value} = yesVotes;
+      const isSelected = selected === 'yes' || typeof selected === 'undefined';
       return {
         width: `${value}%`,
+        opacity: !isSelected ? 0.5 : 1,
         paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
       };
-    });
+    }, [selected]);
 
     const noVotesWidth = useAnimatedStyle(() => {
       const {value} = noVotes;
+      const isSelected = selected === 'no' || typeof selected === 'undefined';
       return {
         width: `${value}%`,
+        opacity: !isSelected ? 0.5 : 1,
         paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
       };
-    });
+    }, [selected]);
 
     const abstainVotesWidth = useAnimatedStyle(() => {
       const {value} = abstainVotes;
+      const isSelected =
+        selected === 'abstain' || typeof selected === 'undefined';
       return {
         width: `${value}%`,
+        opacity: !isSelected ? 0.5 : 1,
         paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
       };
-    });
+    }, [selected]);
 
     const vetoVotesWidth = useAnimatedStyle(() => {
       const {value} = vetoVotes;
+      const isSelected = selected === 'veto' || typeof selected === 'undefined';
       return {
         width: `${value}%`,
+        opacity: !isSelected ? 0.5 : 1,
         paddingHorizontal: value === 100 || value < 4 ? 0 : 2,
       };
-    });
+    }, [selected]);
 
     return (
       <View style={styles.container}>
@@ -158,6 +167,7 @@ const styles = createTheme({
   },
   statisticContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 12,
@@ -193,7 +203,7 @@ const styles = createTheme({
     alignItems: 'center',
   },
   withOpacity: {
-    opacity: 0.7,
+    opacity: 0.5,
   },
   dot: {
     width: 8,

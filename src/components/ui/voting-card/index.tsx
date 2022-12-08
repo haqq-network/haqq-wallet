@@ -21,3 +21,4 @@ export function VotingCard({hash, onPress, status}: VotingCardProps) {
 
 export * from './voting-card-active';
 export * from './voting-card-completed';
+export * from './voting-card-detail';

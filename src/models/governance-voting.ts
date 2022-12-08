@@ -2,8 +2,10 @@ import {Coin} from '@evmos/transactions';
 import createHash from 'create-hash';
 import {differenceInSeconds, getSeconds} from 'date-fns';
 
+import {app} from '@app/contexts';
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
+import {Cosmos} from '@app/services/cosmos';
 import {votesType} from '@app/types';
 
 export const GovernanceVotingState = {
@@ -23,6 +25,7 @@ export type GovernanceVotingType = {
   votes?: string;
   depositNeeds?: string;
   depositEndTime?: string;
+  createdAtTime?: string;
 };
 
 export class GovernanceVoting extends Realm.Object {
@@ -35,7 +38,8 @@ export class GovernanceVoting extends Realm.Object {
   private startDate!: string;
   private votes?: string;
   private depositNeeds?: string;
-  depositEndTime?: string;
+  private depositEndTime?: string;
+  private createdAtTime?: string;
 
   static schema = {
     name: 'GovernanceVoting',
@@ -50,12 +54,33 @@ export class GovernanceVoting extends Realm.Object {
       votes: 'string?',
       depositNeeds: 'string?',
       depositEndTime: 'string?',
+      createdAtTime: 'string?',
     },
     primaryKey: 'hash',
   };
 
+  get isDeposited() {
+    return this.status === 'deposited';
+  }
+
   get isVoted() {
     return false;
+  }
+
+  get depositEnd() {
+    if (this.depositEndTime) {
+      return new Date(this.depositEndTime);
+    } else {
+      return new Date();
+    }
+  }
+
+  get createdAt() {
+    if (this.createdAtTime) {
+      return new Date(this.createdAtTime);
+    } else {
+      return new Date();
+    }
   }
 
   get dateEnd() {
@@ -156,6 +181,12 @@ export class GovernanceVoting extends Realm.Object {
     });
 
     return hash;
+  }
+
+  static async requestDetailFor(hash: string) {
+    const cosmos = new Cosmos(app.provider!);
+    const details = await cosmos.getProposalDetails(hash);
+    return details;
   }
 
   static getAll() {

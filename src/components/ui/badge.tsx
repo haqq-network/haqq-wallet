@@ -14,9 +14,11 @@ export type BadgeProps = {
   labelColor?: string | Color;
   textColor?: string | Color;
   style?: StyleProp<ViewStyle>;
+  center?: boolean;
 };
 export const Badge = ({
   text,
+  center,
   iconLeftName,
   i18n,
   labelColor,
@@ -32,7 +34,7 @@ export const Badge = ({
     [labelColor, style],
   );
   return (
-    <View style={container}>
+    <View style={[container, center && styles.center]}>
       {iconLeftName && (
         <>
           <Icon i18 name={iconLeftName} color={textColor} />
@@ -49,6 +51,7 @@ export const Badge = ({
 const styles = createTheme({
   container: {
     flexDirection: 'row',
+    alignSelf: 'stretch',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
@@ -56,5 +59,8 @@ const styles = createTheme({
   bordered: {
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
+  },
+  center: {
+    alignSelf: 'center',
   },
 });

@@ -461,7 +461,7 @@ export const ProposalsTags: ProposalsTagType[] = [
   ],
   [
     'deposited',
-    I18N.homeGovernanceTagDeposited,
+    I18N.homeGovernanceVotingCardDepositPeriod,
     Color.graphicBlue1,
     Color.textBase3,
     IconsNameUI.deposit,
