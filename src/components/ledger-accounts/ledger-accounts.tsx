@@ -23,11 +23,10 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
     const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, false));
     requestAnimationFrame(async () => {
       let done = false;
-      let address: string;
       do {
         const resp = await iter.next();
         done = resp.done;
-        address = resp.value.address;
+        const address = resp.value.address;
         if (resp.value) {
           setAddresses(list =>
             list.includes(address) ? list : list.concat([address]),

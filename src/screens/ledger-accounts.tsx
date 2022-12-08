@@ -14,10 +14,10 @@ export const LedgerAccountsScreen = () => {
   const onPressAdd = useCallback(
     (address: string) => {
       navigation.navigate('ledgerVerify', {
-        nextScreen: nextScreen,
+        nextScreen,
         address,
-        deviceId: deviceId,
-        deviceName: deviceName,
+        deviceId,
+        deviceName,
       });
     },
     [navigation, deviceId, deviceName, nextScreen],
