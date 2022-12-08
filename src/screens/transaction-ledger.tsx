@@ -2,10 +2,9 @@ import React, {useCallback} from 'react';
 
 import {TransactionResponse} from '@ethersproject/abstract-provider';
 
+import {TransactionLedger} from '@app/components/transaction-ledger';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
-
-import {TransactionLedger} from '../components/transaction-ledger';
-import {Transaction} from '../models/transaction';
+import {Transaction} from '@app/models/transaction';
 
 export const TransactionLedgerScreen = () => {
   const navigation = useTypedNavigation();
