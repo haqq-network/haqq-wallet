@@ -14,14 +14,14 @@ export type LedgerScanRowProps = {
 export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
-      <Text color={Color.bg3} style={page.container} t11>
+      <Text color={Color.bg3} style={style.container} t11>
         {item.name}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const page = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     borderRadius: 16,
     paddingHorizontal: 20,
