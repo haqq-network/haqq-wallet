@@ -105,7 +105,6 @@ const page = StyleSheet.create({
   },
   input: {
     marginBottom: 8,
-    backgroundColor: getColor(Color.graphicSecond1),
   },
   submit: {
     marginVertical: 16,
