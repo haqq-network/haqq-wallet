@@ -69,8 +69,8 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
   );
 
   useEffect(() => {
-    circleRef.current?.animateTo(40);
-  }, []);
+    circleRef.current?.animateTo(item.timeLeftPercent);
+  }, [item.timeLeftPercent]);
 
   useEffect(() => {
     linesRef.current?.updateValues(item.proposalVotes);
