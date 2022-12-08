@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {View} from 'react-native';
 
@@ -16,6 +16,8 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
 
+import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
+
 interface VotingCardDetailProps {
   item: ProposalRealmType;
   votingRef: React.RefObject<VotingLineInterface | undefined>;
@@ -27,6 +29,11 @@ export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
     proposalVotes,
     isDeposited,
   } = item;
+  const circleRef = useRef<ProgressCircleInterface>();
+
+  useEffect(() => {
+    circleRef.current?.animateTo(item.timeLeftPercent);
+  }, [item.timeLeftPercent]);
 
   const iconColor = isDeposited ? Color.textBlue1 : Color.graphicGreen1;
   return (
@@ -45,7 +52,9 @@ export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
         {(isActive || isDeposited) && (
           <>
             <View style={styles.timeContainer}>
-              <Icon i42 color={iconColor} name="timer_governance" />
+              <ProgressCircle ref={circleRef} color={iconColor}>
+                <Icon i24 color={iconColor} name="timer" />
+              </ProgressCircle>
               <View style={styles.timeRightContainer}>
                 <Text
                   t14

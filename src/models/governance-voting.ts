@@ -1,6 +1,10 @@
 import {Coin} from '@evmos/transactions';
 import createHash from 'create-hash';
-import {differenceInSeconds, getSeconds} from 'date-fns';
+import {
+  differenceInMilliseconds,
+  differenceInSeconds,
+  getSeconds,
+} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {I18N} from '@app/i18n';
@@ -58,6 +62,21 @@ export class GovernanceVoting extends Realm.Object {
     },
     primaryKey: 'hash',
   };
+
+  get timeLeftPercent() {
+    const dateEnd = new Date(this.endDate);
+    const dateStart = new Date(this.startDate);
+    const dateEndDeposit = new Date(this.depositEndTime ?? '');
+
+    const startAndEndDiffMS = differenceInMilliseconds(
+      getSeconds(dateEnd) > 1 ? dateEnd : dateEndDeposit,
+      dateStart,
+    );
+
+    const leftPercent = 100 - startAndEndDiffMS / Date.now();
+
+    return leftPercent;
+  }
 
   get isDeposited() {
     return this.status === 'deposited';
