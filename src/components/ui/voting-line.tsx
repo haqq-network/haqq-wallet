@@ -1,4 +1,4 @@
-import React, {forwardRef, memo, useImperativeHandle} from 'react';
+import React, {forwardRef, memo, useImperativeHandle, useState} from 'react';
 
 import {View} from 'react-native';
 import Animated, {
@@ -9,13 +9,26 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {votesType} from '@app/types';
 
 export type VotingLineProps = {
   initialVotes: votesType;
   showBottomText?: boolean;
 };
+
+type voteNames = 'yes' | 'no' | 'abstain' | 'veto';
+
+const votes: {name: voteNames; dotColor: Color; i18n: I18N}[] = [
+  {name: 'yes', dotColor: Color.graphicGreen1, i18n: I18N.yes},
+  {name: 'no', dotColor: Color.textRed1, i18n: I18N.no},
+  {name: 'abstain', dotColor: Color.graphicSecond4, i18n: I18N.voteAbstain},
+  {name: 'veto', dotColor: Color.textYellow1, i18n: I18N.voteVeto},
+];
+
+const AnimText = Animated.createAnimatedComponent(Text);
 
 export interface VotingLineInterface {
   updateValues: (newVotes: votesType) => void;
@@ -27,6 +40,8 @@ export const VotingLine = memo(
     const noVotes = useSharedValue(initialVotes.no);
     const abstainVotes = useSharedValue(initialVotes.abstain);
     const vetoVotes = useSharedValue(initialVotes.veto);
+
+    const [selected, setSelected] = useState<voteNames>('yes');
 
     const totalVotes = useDerivedValue(
       () =>
@@ -40,6 +55,7 @@ export const VotingLine = memo(
         abstainVotes.value = withTiming(newVotes.abstain, {duration: 500});
         vetoVotes.value = withTiming(newVotes.veto, {duration: 500});
       },
+      setSelected,
     }));
 
     const yesPercent = useDerivedValue(
@@ -92,12 +108,24 @@ export const VotingLine = memo(
         </View>
         {showBottomText && (
           <View style={styles.statisticContainer}>
-            <Animated.Text>Yes {yesPercent.value.toFixed(0)}%</Animated.Text>
-            <Animated.Text>No {noPercent.value.toFixed(0)}%</Animated.Text>
-            <Animated.Text>
-              Abstain {abstainPercent.value.toFixed(0)}%
-            </Animated.Text>
-            <Animated.Text>Veto {vetoPercent.value.toFixed(0)}%</Animated.Text>
+            {votes.map(({name, dotColor, i18n}, id) => {
+              const isSelected = selected === name;
+              const {value} = [
+                yesPercent,
+                noPercent,
+                abstainPercent,
+                vetoPercent,
+              ][id];
+              return (
+                <View
+                  style={[styles.textItem, isSelected && styles.withOpacity]}>
+                  <View style={[styles.dot, {backgroundColor: dotColor}]} />
+                  <AnimText color={dotColor}>
+                    ${getText(i18n)} {value.toFixed(0)}%
+                  </AnimText>
+                </View>
+              );
+            })}
           </View>
         )}
       </View>
@@ -142,5 +170,17 @@ const styles = createTheme({
   },
   yellow: {
     backgroundColor: Color.textYellow1,
+  },
+  textItem: {
+    flexDirection: 'row',
+  },
+  withOpacity: {
+    opacity: 0.7,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 2,
   },
 });
