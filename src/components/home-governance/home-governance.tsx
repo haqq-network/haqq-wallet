@@ -9,9 +9,11 @@ import {useCosmos, useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ProposalsTagType, ProposalsTags} from '@app/types';
 
-export interface HomeGovernanceProps {}
+export interface HomeGovernanceProps {
+  onPressCard?: (hash: string) => void;
+}
 
-export const HomeGovernance = ({}: HomeGovernanceProps) => {
+export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
   const cosmos = useCosmos();
   const {proposals, setStatusFilter, statusFilter} = useProposals();
 
@@ -56,6 +58,8 @@ export const HomeGovernance = ({}: HomeGovernanceProps) => {
         renderItem={({item}) => (
           <VotingCard
             {...item}
+            hash={item.hash}
+            onPress={onPressCard}
             status={item.status}
             proposalDepositNeeds={item.proposalDepositNeeds}
             title={item.title}

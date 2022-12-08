@@ -5,6 +5,7 @@ import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {IconsName as IconsNameUI} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
@@ -275,7 +276,7 @@ export type RootStackParamList = {
   notificationPopup: undefined;
   trackActivity: undefined;
   proposal: {
-    id: string;
+    hash: string;
   };
 };
 
@@ -429,11 +430,41 @@ export type votesType = {
 export type ColorType = Color | string;
 
 export type ProposalsTagKeys = 'all' | 'voting' | 'passed' | 'rejected';
-export type ProposalsTagType = [ProposalsTagKeys, I18N];
+export type ProposalsTagType = [
+  ProposalsTagKeys,
+  I18N,
+  Color | undefined,
+  Color,
+  IconsNameUI | undefined,
+];
 
 export const ProposalsTags: ProposalsTagType[] = [
-  ['all', I18N.homeGovernanceTagAll],
-  ['voting', I18N.homeGovernanceTagVoting],
-  ['passed', I18N.homeGovernanceTagPassed],
-  ['rejected', I18N.homeGovernanceTagRejected],
+  [
+    'all',
+    I18N.homeGovernanceTagAll,
+    Color.graphicGreen1,
+    Color.textBase3,
+    undefined,
+  ],
+  [
+    'voting',
+    I18N.homeGovernanceTagVoting,
+    Color.graphicGreen1,
+    Color.textBase3,
+    IconsNameUI.time,
+  ],
+  [
+    'passed',
+    I18N.homeGovernanceTagPassed,
+    undefined,
+    Color.textGreen1,
+    IconsNameUI.check,
+  ],
+  [
+    'rejected',
+    I18N.homeGovernanceTagRejected,
+    undefined,
+    Color.textRed1,
+    IconsNameUI.close,
+  ],
 ];

@@ -205,6 +205,8 @@ export enum I18N {
   popupNotificationDescription,
   popupNotificationTurnOn,
   popupNotificationNotNow,
+  proposalVoteResults,
+  proposalYouVoted,
   notificationRewardReceived,
   welcomeTitle,
   welcomeDescription,
@@ -486,6 +488,8 @@ const en: Record<I18N, string> = {
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
   [I18N.popupNotificationTurnOn]: 'Turn on notifications',
   [I18N.popupNotificationNotNow]: 'Not now',
+  [I18N.proposalVoteResults]: 'Vote results',
+  [I18N.proposalYouVoted]: 'You voted',
   [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No account is connected',
   [I18N.welcomeDescription]:

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {Proposal} from '@app/components/proposal';
 
 export const ProposalScreen = () => {
-  return <View />;
+  return <Proposal />;
 };

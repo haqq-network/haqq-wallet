@@ -109,11 +109,16 @@ export class GovernanceVoting extends Realm.Object {
     };
   }
 
-  get proposalVotes(): votesType | undefined {
+  get proposalVotes(): votesType {
     if (this.votes) {
       return JSON.parse(this.votes);
     } else {
-      return;
+      return {
+        yes: 1,
+        no: 1,
+        veto: 1,
+        abstain: 1,
+      };
     }
   }
 
@@ -126,6 +131,13 @@ export class GovernanceVoting extends Realm.Object {
     } else {
       return;
     }
+  }
+
+  static getByHash(hash: string) {
+    return realm.objectForPrimaryKey<GovernanceVoting>(
+      GovernanceVoting.schema.name,
+      hash,
+    );
   }
 
   static getAll() {

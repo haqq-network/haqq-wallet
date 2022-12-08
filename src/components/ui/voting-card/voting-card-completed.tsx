@@ -16,17 +16,19 @@ export enum VotingCompletedStatuses {
 export type VotingCompletedStatusesKeys = keyof typeof VotingCompletedStatuses;
 
 type VotingCardCompletedProps = {
+  hash: string;
   title: string;
   startDate?: Date;
   endDate?: Date;
   status: VotingCompletedStatuses;
   votes: votesType;
   isVoted?: boolean;
-  onPress?: () => void;
+  onPress?: (hash: string) => void;
   orderNumber?: number;
 };
 
 export const VotingCardCompleted = ({
+  hash,
   title,
   startDate,
   endDate,
@@ -39,8 +41,10 @@ export const VotingCardCompleted = ({
   const isRejected = status === VotingCompletedStatuses.rejected;
   const statusColor = isRejected ? Color.textRed1 : Color.textGreen1;
 
+  const handlePress = () => onPress?.(hash);
+
   return (
-    <Pressable onPress={onPress} style={styles.backgroundContainer}>
+    <Pressable onPress={handlePress} style={styles.backgroundContainer}>
       <View style={styles.topInfoBlock}>
         <Icon i18 color={statusColor} name={isRejected ? 'close' : 'check'} />
         <Spacer width={5.5} />

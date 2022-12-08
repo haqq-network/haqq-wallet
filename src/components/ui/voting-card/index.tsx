@@ -12,6 +12,8 @@ import {
 export function VotingCard({
   orderNumber,
   title = '',
+  hash = '',
+  onPress,
   proposalVotes,
   dataDifference,
   dateEnd,
@@ -19,12 +21,14 @@ export function VotingCard({
   proposalDepositNeeds = 0,
   status,
   isVoted,
-}: Partial<GovernanceVoting>) {
+}: Partial<GovernanceVoting> & {onPress?: (hash: string) => void}) {
   if (dataDifference?.isActive) {
     return (
       <VotingCardActive
+        hash={hash}
         orderNumber={orderNumber}
         {...dataDifference}
+        onPress={onPress}
         depositNeeds={proposalDepositNeeds}
         isVoted={isVoted}
         title={title}
@@ -39,6 +43,8 @@ export function VotingCard({
 
     return (
       <VotingCardCompleted
+        hash={hash}
+        onPress={onPress}
         orderNumber={orderNumber}
         isVoted={isVoted}
         endDate={dateEnd}

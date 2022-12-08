@@ -18,6 +18,7 @@ import {I18N} from '@app/i18n';
 import {votesType} from '@app/types';
 
 type VotingCardActiveProps = {
+  hash: string;
   title: string;
   daysLeft: number;
   hourLeft: number;
@@ -27,7 +28,7 @@ type VotingCardActiveProps = {
   yourDeposit?: number;
   votes?: votesType;
   isVoted?: boolean;
-  onPress?: () => void;
+  onPress?: (hash: string) => void;
   orderNumber?: number;
 };
 
@@ -46,6 +47,7 @@ const colorVotes = {
 };
 
 export const VotingCardActive = ({
+  hash,
   title,
   daysLeft,
   hourLeft,
@@ -82,9 +84,11 @@ export const VotingCardActive = ({
     }
   }, [depositNeeds, depositCollected]);
 
+  const handlePress = () => onPress?.(hash);
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       style={[styles.backgroundContainer, {backgroundColor: primaryColor}]}>
       <View style={styles.topInfoBlock}>
         <Icon
@@ -139,17 +143,17 @@ export const VotingCardActive = ({
             <View style={styles.timeValuesContainer}>
               <TextSum
                 style={styles.timeUnit}
-                sum={String(daysLeft)}
+                sum={daysLeft.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardDay}
               />
               <TextSum
                 style={styles.timeUnit}
-                sum={String(hourLeft)}
+                sum={hourLeft.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardHour}
               />
               <TextSum
                 style={styles.timeUnit}
-                sum={String(minLeft)}
+                sum={minLeft.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardMin}
               />
             </View>
