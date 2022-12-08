@@ -97,6 +97,11 @@ export enum I18N {
   notificationAccountDeleted,
   notificationAccountHidden,
   notificationPinChanged,
+  onboardingRepeatPinInvalidCode,
+  onboardingRepeatPinRepeat,
+  onboardingRepeatPinSecurity,
+  onboardingFinishCreate,
+  onboardingFinishRecover,
   pinManyAttempts,
   settingsProvidersTitle,
   settingsProvidersTitleRight,
@@ -219,8 +224,6 @@ export enum I18N {
   settingsAddressBookAlertBtnSecond,
   LedgerStoreWalletSaving,
   ledgerVerifyAddress,
-  onboardingFinishCreate,
-  onboardingFinishRecover,
   finishProceed,
   ledgerFinishTitle,
 }
@@ -343,6 +346,14 @@ const en: Record<I18N, string> = {
   [I18N.notificationAccountDeleted]: 'The account has been deleted',
   [I18N.notificationAccountHidden]: 'The account was hidden',
   [I18N.notificationPinChanged]: 'PIN code successfully changed',
+  [I18N.onboardingFinishCreate]:
+    'Congratulations!\nYou have successfully added a new account',
+  [I18N.onboardingFinishRecover]:
+    'Congratulations!\nYou have successfully recovered an account',
+  [I18N.onboardingRepeatPinInvalidCode]: 'Invalid code. Try again',
+  [I18N.onboardingRepeatPinRepeat]: 'Please repeat pin code',
+  [I18N.onboardingRepeatPinSecurity]:
+    "For security, we don't have a “Restore pin” button.",
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
   [I18N.homeWallet]: 'Accounts',
@@ -495,10 +506,6 @@ const en: Record<I18N, string> = {
   [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
-  [I18N.onboardingFinishCreate]:
-    'Congratulations!\nYou have successfully added a new account',
-  [I18N.onboardingFinishRecover]:
-    'Congratulations!\nYou have successfully recovered an account',
   [I18N.finishProceed]: 'Proceed',
   [I18N.ledgerFinishTitle]:
     'Congratulations!\nYou have successfully added a new account',
