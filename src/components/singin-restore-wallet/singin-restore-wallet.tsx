@@ -16,13 +16,19 @@ import {
   TextField,
 } from '@app/components/ui';
 import {hideModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 
-export const SignInRestore = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'restorePhrase'>();
-  const [seed, setSeed] = useState('');
+interface SinginRestoreWalletProps {
+  onDoneTry: () => void;
+  seed: string;
+  setSeed: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SignInRestore = ({
+  onDoneTry,
+  seed,
+  setSeed,
+}: SinginRestoreWalletProps) => {
   const [disabled, setDisabled] = useState(false);
 
   const checked = useMemo(
@@ -33,22 +39,19 @@ export const SignInRestore = () => {
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      navigation.push(route.params.nextScreen ?? 'onboardingSetupPin', {
-        mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
-        privateKey: utils.isHexString(seed.trim()) && seed.trim(),
-      });
+      onDoneTry();
     } catch (e) {
       Sentry.captureException(e);
     } finally {
       setDisabled(false);
       hideModal();
     }
-  }, [seed, navigation, route]);
+  }, [onDoneTry]);
 
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();
     setSeed(text);
-  }, []);
+  }, [setSeed]);
 
   return (
     <ScrollView
@@ -74,7 +77,11 @@ export const SignInRestore = () => {
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
-          <Text t14 i18n={I18N.singinRestoreWalletPhraseOrKey} />
+          <Text
+            t14
+            color={Color.graphicGreen2}
+            i18n={I18N.singinRestoreWalletPasteClipboard}
+          />
         </IconButton>
         <Spacer />
         <Button
@@ -98,6 +105,7 @@ const page = StyleSheet.create({
   },
   input: {
     marginBottom: 8,
+    backgroundColor: getColor(Color.graphicSecond1),
   },
   submit: {
     marginVertical: 16,
