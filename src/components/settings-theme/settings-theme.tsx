@@ -1,14 +1,9 @@
 import React from 'react';
 
-import {Color, getColor} from '@app/colors';
-import {
-  CheckIcon,
-  DataContent,
-  IconButton,
-  PopupContainer,
-} from '@app/components/ui';
+import {ThemedButton} from '@app/components/settings-theme/theme-button';
+import {PopupContainer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
 
 export type SettingsThemeProps = {
@@ -19,45 +14,24 @@ export type SettingsThemeProps = {
 export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
   return (
     <PopupContainer style={styles.container}>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onChangeTheme(AppTheme.light);
-        }}>
-        <DataContent title={getText(I18N.settingsThemeLight)} />
-        {theme === AppTheme.light && (
-          <CheckIcon
-            color={getColor(Color.graphicGreen1)}
-            style={styles.icon}
-          />
-        )}
-      </IconButton>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onChangeTheme(AppTheme.dark);
-        }}>
-        <DataContent title={getText(I18N.settingsThemeDark)} />
-        {theme === AppTheme.dark && (
-          <CheckIcon
-            color={getColor(Color.graphicGreen1)}
-            style={styles.icon}
-          />
-        )}
-      </IconButton>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onChangeTheme(AppTheme.system);
-        }}>
-        <DataContent title={getText(I18N.settingsThemeSystem)} />
-        {theme === AppTheme.system && (
-          <CheckIcon
-            color={getColor(Color.graphicGreen1)}
-            style={styles.icon}
-          />
-        )}
-      </IconButton>
+      <ThemedButton
+        value={AppTheme.light}
+        name={I18N.settingsThemeLight}
+        active={theme === AppTheme.light}
+        onChange={onChangeTheme}
+      />
+      <ThemedButton
+        value={AppTheme.dark}
+        name={I18N.settingsThemeDark}
+        active={theme === AppTheme.dark}
+        onChange={onChangeTheme}
+      />
+      <ThemedButton
+        value={AppTheme.system}
+        name={I18N.settingsThemeSystem}
+        active={theme === AppTheme.system}
+        onChange={onChangeTheme}
+      />
     </PopupContainer>
   );
 };
@@ -65,14 +39,5 @@ export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
-  },
-  button: {
-    paddingVertical: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
 });
