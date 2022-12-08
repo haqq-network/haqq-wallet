@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
+import {OnboardingBiometry} from '@app/components/onboarding-biometry';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import { OnboardingBiometry } from '@app/components/onboarding-biometry';
 
 export const OnboardingBiometryScreen = () => {
   const navigation = useTypedNavigation();
@@ -15,5 +15,7 @@ export const OnboardingBiometryScreen = () => {
     });
   }, [route, navigation]);
 
-  return <OnboardingBiometry onClickSkip={onClickSkip} biometryType={biometryType} />
+  return (
+    <OnboardingBiometry onClickSkip={onClickSkip} biometryType={biometryType} />
+  );
 };

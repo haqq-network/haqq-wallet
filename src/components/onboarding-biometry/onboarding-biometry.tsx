@@ -2,8 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {useApp} from '@app/hooks';
-
+import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -15,22 +14,25 @@ import {
   Text,
   TouchIdIcon,
 } from '@app/components/ui';
-import {BiometryType} from '@app/types';
-import {
-  BIOMETRY_TYPES_NAMES,
-} from '@app/variables';
-import {Color, getColor} from '@app/colors';
+import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {BiometryType} from '@app/types';
+import {BIOMETRY_TYPES_NAMES} from '@app/variables';
 
 interface OnboardingBiometryProps {
-    onClickSkip: () => void;
-    biometryType: BiometryType;
+  onClickSkip: () => void;
+  biometryType: BiometryType;
 }
 
-export const OnboardingBiometry = ({onClickSkip, biometryType}: OnboardingBiometryProps) => {
+export const OnboardingBiometry = ({
+  onClickSkip,
+  biometryType,
+}: OnboardingBiometryProps) => {
   const app = useApp();
   const [error, setError] = useState('');
-  const enableBiometry = getText(I18N.onboardingBiometryEnable, {biometry: BIOMETRY_TYPES_NAMES[biometryType]})
+  const enableBiometry = getText(I18N.onboardingBiometryEnable, {
+    biometry: BIOMETRY_TYPES_NAMES[biometryType],
+  });
 
   const onClickEnable = useCallback(async () => {
     try {
@@ -52,7 +54,10 @@ export const OnboardingBiometry = ({onClickSkip, biometryType}: OnboardingBiomet
         return <TouchIdIcon color={Color.graphicBase1} style={style.icon} />;
       case BiometryType.fingerprint:
         return (
-          <FingerprintIcon color={getColor(Color.graphicBase1)} style={style.icon} />
+          <FingerprintIcon
+            color={getColor(Color.graphicBase1)}
+            style={style.icon}
+          />
         );
       default:
         return null;
@@ -66,7 +71,12 @@ export const OnboardingBiometry = ({onClickSkip, biometryType}: OnboardingBiomet
         <Text t4 style={style.title} testID="onboarding_biometry_title">
           {enableBiometry}
         </Text>
-        <Text t11 color={Color.textBase2} i18n={I18N.onboardingBiometrySafeFast} center={true} />
+        <Text
+          t11
+          color={Color.textBase2}
+          i18n={I18N.onboardingBiometrySafeFast}
+          center={true}
+        />
         {error && (
           <ErrorText e2 center={true} style={style.error}>
             {error}
@@ -95,7 +105,6 @@ const style = StyleSheet.create({
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},
-  textStyle: {textAlign: 'center'},
   margin: {marginBottom: 16},
   error: {top: 20},
 });

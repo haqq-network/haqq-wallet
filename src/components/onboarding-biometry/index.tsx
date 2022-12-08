@@ -1,1 +1,1 @@
-export * from './onboarding-biometry'
+export * from './onboarding-biometry';
