@@ -2,9 +2,9 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import { getText, I18N } from '@app/i18n';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useUser} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {ScreenOptionType} from '@app/types';
 
 import {LedgerAccountsScreen} from './ledger-accounts';
@@ -17,7 +17,6 @@ import {LedgerVerifyScreen} from './ledger-verify';
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-
 
 const LedgerStack = createStackNavigator();
 
