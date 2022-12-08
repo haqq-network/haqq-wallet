@@ -1,7 +1,10 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
-import {LedgerFinish} from '@app/components/ledger-finish';
+import {Finish} from '@app/components/finish';
+import {hideModal} from '@app/helpers/modal';
 import {useApp, useTypedNavigation} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
@@ -15,5 +18,16 @@ export const LedgerFinishScreen = () => {
     }
   }, [app, navigation]);
 
-  return <LedgerFinish onEnd={onEnd} />;
+  useEffect(() => {
+    hideModal();
+    vibrate(HapticEffects.success);
+  }, []);
+
+  return (
+    <Finish
+      i18n={I18N.ledgerFinishCongratulations}
+      onFinish={onEnd}
+      testID="ledger_finish"
+    />
+  );
 };
