@@ -8,7 +8,7 @@ import {I18N, getText} from '@app/i18n';
 import {EthNetwork} from '@app/services';
 import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH} from '@app/variables';
+import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
 export const SigninStoreWallet = () => {
   const navigation = useTypedNavigation();
@@ -27,15 +27,16 @@ export const SigninStoreWallet = () => {
       navigation.getParent()?.goBack();
     };
     setTimeout(async () => {
+      const accountNumber = getText(I18N.singinStoreWalletAccountNumber, {
+        number: getText(wallets.getSize() + 1),
+      });
       try {
         if (mnemonic) {
           let canNext = true;
           let index = 0;
           while (canNext) {
             const name =
-              wallets.getSize() === 0
-                ? getText(I18N.singinStoreWalletMainAccount)
-                : `Account #${wallets.getSize() + 1}`;
+              wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
             const node = await restoreFromMnemonic(
               String(mnemonic),
@@ -78,9 +79,7 @@ export const SigninStoreWallet = () => {
           }
         } else if (privateKey) {
           const name =
-            wallets.getSize() === 0
-              ? getText(I18N.singinStoreWalletMainAccount)
-              : `Account #${wallets.getSize() + 1}`;
+            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
           const wallet = await wallets.addWalletFromPrivateKey(
             privateKey,
