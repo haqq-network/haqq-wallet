@@ -2,11 +2,17 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {windowWidth} from '../../helpers';
-import {I18N, getText} from '../../i18n';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
-import {LottieWrap} from '../lottie';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
+import {Color} from '@app/colors';
+import {LottieWrap} from '@app/components/lottie';
+import {
+  Button,
+  ButtonVariant,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {windowWidth} from '@app/helpers';
+import {I18N} from '@app/i18n';
 // import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
@@ -24,17 +30,24 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
           loop
         />
       </View>
-      <Text t4 style={page.title}>
-        {getText(I18N.ledgerAgreementTitle)}
-      </Text>
-      <Text t11 style={page.disclaimer}>
-        {getText(I18N.ledgerAgreementText)}
-      </Text>
+      <Text
+        t4
+        center={true}
+        style={page.title}
+        i18n={I18N.ledgerAgreementTitle}
+      />
+      <Text
+        t11
+        color={Color.textBase2}
+        center={true}
+        style={page.disclaimer}
+        i18n={I18N.ledgerAgreementText}
+      />
       <Spacer />
       <Button
         style={page.submit}
         variant={ButtonVariant.contained}
-        title={getText(I18N.ledgerAgreementAgree)}
+        i18n={I18N.ledgerAgreementAgree}
         onPress={onDone}
       />
       {/*<Terms style={page.agreement} />*/}
@@ -54,12 +67,9 @@ const page = StyleSheet.create({
   title: {
     marginBottom: 4,
     marginHorizontal: 20,
-    textAlign: 'center',
   },
   disclaimer: {
     marginBottom: 20,
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
