@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
@@ -14,7 +14,6 @@ import {
   Text,
   TouchIdIcon,
 } from '@app/components/ui';
-import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
 import {BIOMETRY_TYPES_NAMES} from '@app/variables';
@@ -23,7 +22,7 @@ interface OnboardingBiometryProps {
   onClickSkip: () => void;
   onClickEnable: () => void;
   biometryType: BiometryType;
-  error: string
+  error: string;
 }
 
 export const OnboardingBiometry = ({

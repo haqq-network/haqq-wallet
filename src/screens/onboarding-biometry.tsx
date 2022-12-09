@@ -34,6 +34,7 @@ export const OnboardingBiometryScreen = () => {
       onClickSkip={onClickSkip}
       onClickEnable={onClickEnable}
       error={error}
-      biometryType={biometryType} />
+      biometryType={biometryType}
+    />
   );
 };
