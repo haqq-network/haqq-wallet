@@ -1,17 +1,19 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 
-import {CardSmall, DataContent, MenuNavigationButton} from './ui';
-
-import {Wallet} from '../models/wallet';
-import {shortAddress} from '../utils';
+import {CardSmall, DataContent, MenuNavigationButton} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {Wallet} from '@app/models/wallet';
+import {shortAddress} from '@app/utils';
 
 export type WalletRowProps = {
   item: Wallet;
   style?: StyleProp<ViewStyle>;
   onPress: (address: string) => void;
 };
+const CARD_WIDTH = 78;
+const CARD_RADIUS = 8;
 
 export const WalletRow = ({item, onPress}: WalletRowProps) => {
   const style = useMemo(
@@ -19,18 +21,19 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
     [item.isHidden],
   );
 
+  const pressCard = () => onPress(item.address);
   return (
-    <MenuNavigationButton onPress={() => onPress(item.address)} style={style}>
+    <MenuNavigationButton onPress={pressCard} style={style}>
       <CardSmall
-        width={78}
-        borderRadius={8}
+        width={CARD_WIDTH}
+        borderRadius={CARD_RADIUS}
         pattern={item.pattern}
         colorFrom={item.colorFrom}
         colorTo={item.colorTo}
         colorPattern={item.colorPattern}
       />
       <DataContent
-        style={page.info}
+        style={styles.info}
         title={item.name}
         subtitle={shortAddress(item.address)}
       />
@@ -38,7 +41,7 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   info: {
     marginLeft: 12,
     flex: 1,
