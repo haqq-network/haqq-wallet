@@ -12,7 +12,7 @@ import {
   KeyboardSafeArea,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 interface SettingsAddressBookEditProps {
   initName?: string;
@@ -76,7 +76,7 @@ export const SettingsAddressBookEdit = memo(
           <View style={styles.buttonContainer}>
             <Button
               disabled={initName === inputName}
-              title={getText(I18N.continue)}
+              i18n={I18N.continue}
               onPress={handleSubmit}
               variant={ButtonVariant.contained}
             />
