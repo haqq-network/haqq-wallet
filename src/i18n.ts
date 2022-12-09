@@ -1,3 +1,5 @@
+import {getAppVersion, getBuildNumber} from '@app/services/version';
+
 export enum I18N {
   backupCreateRecoveryPhrase,
   backupCreateRecoverySaveWords,
@@ -231,6 +233,14 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  settingsAboutTitle,
+  settingsAboutVisit,
+  settingsAboutDocuments,
+  settingsAboutTerms,
+  settingsAboutSocials,
+  settingsAboutDiscord,
+  settingsAboutTwitter,
+  settingsAboutRights,
   settingsAccountDetailRenameTitle,
   settingsAccountDetailRenameSubtitle,
   settingsAccountDetailChangeStyleTitle,
@@ -533,7 +543,22 @@ const en: Record<I18N, string> = {
   [I18N.welcomeCreateWallet]: 'Create Account',
   [I18N.welcomeLedgerWallet]: 'Connect',
   [I18N.welcomeRestoreWallet]: 'I already have a wallet',
-
+  [I18N.settingsAboutTitle]: 'About App',
+  [I18N.settingsAboutVisit]: 'Visit islamiccoin.net',
+  [I18N.settingsAboutDocuments]: 'Legal Documents',
+  [I18N.settingsAboutTerms]: 'Terms & Conditions',
+  [I18N.settingsAboutSocials]: 'Our Socials',
+  [I18N.settingsAboutDiscord]: 'Discord',
+  [I18N.settingsAboutTwitter]: 'Twitter',
+  [I18N.settingsAboutRights]: `©2022 IslamIQ. All Rights Reserved. Version ${getAppVersion()} (${getBuildNumber()})`,
+  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
+  [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
+  [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
+  [I18N.settingsAccountDetailChangeStyleSubtitle]:
+    'Change the picture of the account',
+  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
+  [I18N.settingsAccountDetailHideSubtitle]:
+    'Will be hidden from the general list',
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
