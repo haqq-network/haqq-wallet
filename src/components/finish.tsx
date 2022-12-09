@@ -24,15 +24,15 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
   const theme = useTheme();
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../assets/animations/backup-success-dark.json');
+      return require('../../assets/animations/success-animation-dark.json');
     }
 
-    return require('../../assets/animations/backup-success-light.json');
+    return require('../../assets/animations/success-animation.json');
   }, [theme]);
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap source={animation} autoPlay loop={true} />
+        <LottieWrap source={animation} autoPlay loop={false} />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} />
       <Button
