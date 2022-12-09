@@ -349,7 +349,7 @@ const en: Record<I18N, string> = {
   [I18N.notificationAccountHidden]: 'The account was hidden',
   [I18N.notificationPinChanged]: 'PIN code successfully changed',
   [I18N.onboardingSetupPinProjectWallet]:
-    'Project your wallet. PIN code for increases wallet security in the event your phone{{first}}is{{second}}stolen',
+    'Project your wallet. PIN code for increases wallet security in the event your phone\u00A0is\u00A0stolen',
   [I18N.onboardingSetupPinSet]: 'Set 6-digital pin code',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',

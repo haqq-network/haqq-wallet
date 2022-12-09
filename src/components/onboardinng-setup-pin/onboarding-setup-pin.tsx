@@ -24,7 +24,6 @@ export const OnboardingSetupPin = ({
         color={Color.textBase2}
         center
         i18n={I18N.onboardingSetupPinProjectWallet}
-        i18params={{first: '\u00A0', second: '\u00A0'}}
       />
       <Spacer style={page.spacer}>
         <View style={page.dots}>
