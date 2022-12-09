@@ -39,6 +39,9 @@ export enum I18N {
   ledgerAgreementTitle,
   ledgerAgreementAgree,
   ledgerFinishTitle,
+  ledgerConnect,
+  ledgerChooseAccount,
+  ledgerVerify,
   transactionContactEditHeaderTitle,
   transactionAddressPlaceholder,
   transactionAddressError,
@@ -111,6 +114,10 @@ export enum I18N {
   notificationAccountDeleted,
   notificationAccountHidden,
   notificationPinChanged,
+  onboardingRepeatPinInvalidCode,
+  onboardingRepeatPinRepeat,
+  onboardingRepeatPinSecurity,
+
   pinManyAttempts,
   proposalTitle,
   settingsProvidersTitle,
@@ -314,7 +321,6 @@ const en: Record<I18N, string> = {
   [I18N.backupVerifyDescription]:
     'Please choose the correct backup phrase according to the serial number',
   [I18N.backupVerifyCheck]: 'Check',
-  [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
   [I18N.backupFinishFinish]: 'Finish',
   [I18N.modalQRTitle]: 'Scan QR Code',
@@ -324,6 +330,14 @@ const en: Record<I18N, string> = {
   [I18N.modalQRSendFunds]: 'Send funds from',
   [I18N.modalDetailsQRWarning]:
     'Only ISLM related assets on HAQQ network are supported.',
+  [I18N.onboardingFinishCreate]:
+    'Congratulations!\nYou have successfully added a new account',
+  [I18N.onboardingFinishRecover]:
+    'Congratulations!\nYou have successfully recovered an account',
+  [I18N.onboardingRepeatPinInvalidCode]: 'Invalid code. Try again',
+  [I18N.onboardingRepeatPinRepeat]: 'Please repeat pin code',
+  [I18N.onboardingRepeatPinSecurity]:
+    "For security, we don't have a “Restore pin” button.",
   [I18N.modalDetailsQRReceive]: 'Receive',
   [I18N.transactionContactEditHeaderTitle]: 'Edit Contact',
   [I18N.transactionAddressPlaceholder]: 'Address (0x) or contact name',
@@ -386,12 +400,14 @@ const en: Record<I18N, string> = {
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
   [I18N.popupNotificationTurnOn]: 'Turn on notifications',
   [I18N.popupNotificationNotNow]: 'Not now',
-  [I18N.proposalTitle]: 'Proposal',
   [I18N.homeWallet]: 'Accounts',
   [I18N.homeWalletTitle]: 'Your accounts',
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeStaking]: 'Staking',
+  [I18N.ledgerConnect]: 'Connect ledger',
+  [I18N.ledgerChooseAccount]: 'Choose account',
+  [I18N.ledgerVerify]: 'Verify',
   [I18N.homeStakingEmpty]:
     'Stake your ISLM in any validator and get additional ISLM',
   [I18N.homeStakingUnbounded]: 'Unbounded',
@@ -416,12 +432,10 @@ const en: Record<I18N, string> = {
   [I18N.settingsTestUnbounded]: 'Unbounded: {{unbounded}}',
   [I18N.settingsTestUndelegate]: 'Undelegate',
   [I18N.settingsProviderEditUseProvider]: 'Use this provider',
-  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
   [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
   [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
   [I18N.settingsAccountDetailChangeStyleSubtitle]:
     'Change the picture of the account',
-  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
   [I18N.settingsAccountDetailHideSubtitle]:
     'Will be hidden from the general list',
   [I18N.settingsContactEditDelete]: 'Delete',
@@ -532,7 +546,6 @@ const en: Record<I18N, string> = {
     'You can create a new account or connect any existing\u00A0one',
   [I18N.welcomeCreateWallet]: 'Create Account',
   [I18N.welcomeLedgerWallet]: 'Connect',
-  [I18N.welcomeRestoreWallet]: 'I already have a wallet',
   [I18N.settingsAboutTitle]: 'About App',
   [I18N.settingsAboutVisit]: 'Visit islamiccoin.net',
   [I18N.settingsAboutDocuments]: 'Legal Documents',
@@ -542,38 +555,18 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutTwitter]: 'Twitter',
   [I18N.settingsAboutRights]: `©2022 IslamIQ. All Rights Reserved. Version ${getAppVersion()} (${getBuildNumber()})`,
   [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
-  [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
-  [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
-  [I18N.settingsAccountDetailChangeStyleSubtitle]:
-    'Change the picture of the account',
   [I18N.settingsAccountDetailHideTitle]: 'Hide account',
-  [I18N.settingsAccountDetailHideSubtitle]:
-    'Will be hidden from the general list',
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
-  [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
   [I18N.transactionSumSend]: 'Send to',
   [I18N.transactionSumPereview]: 'Preview',
   [I18N.transactions]: 'Transactions',
   [I18N.to]: 'to {{address}}',
   [I18N.settingsAccountNoWallet]: 'No wallets',
-  [I18N.settingsAddressBookLabel]: 'Address',
-  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
-  [I18N.settingsAddressBookAdd]: 'Add Contact',
-  [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
-  [I18N.settingsAddressBookAlertDesc]:
-    'Are you sure you want to delete the selected contact?',
-  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
-  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
   [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
-  [I18N.onboardingFinishCreate]:
-    'Congratulations!\nYou have successfully added a new account',
-  [I18N.onboardingFinishRecover]:
-    'Congratulations!\nYou have successfully recovered an account',
   [I18N.finishProceed]: 'Proceed',
   [I18N.ledgerFinishTitle]:
     'Congratulations!\nYou have successfully added a new account',

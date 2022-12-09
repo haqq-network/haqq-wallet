@@ -28,7 +28,9 @@ export const LedgerScreen = () => {
   const user = useUser();
 
   return (
-    <LedgerStack.Navigator screenOptions={popupScreenOptions}>
+    <LedgerStack.Navigator
+      initialRouteName="onboardingRepeatPin"
+      screenOptions={popupScreenOptions}>
       <LedgerStack.Screen
         name="ledgerAgreement"
         component={LedgerAgreementScreen}

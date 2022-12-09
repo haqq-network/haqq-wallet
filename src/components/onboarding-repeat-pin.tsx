@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
-import {verticalScale} from '@app/helpers';
+import {createTheme, verticalScale} from '@app/helpers';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {vibrate} from '@app/services/haptic';
@@ -80,7 +80,7 @@ export const OnboardingRepeatPin = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     alignItems: 'center',
     marginTop: verticalScale(40),
