@@ -14,7 +14,6 @@ export const LottieWrap = (props: AnimatedLottie) => {
   const ref = useRef<AnimatedLottieView>(null);
 
   useEffect(() => {
-    console.log(1232222);
     AppState.addEventListener('change', state => {
       if (state === 'active') {
         ref?.current?.resume();
