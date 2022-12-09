@@ -32,14 +32,14 @@ export const SettingsContactEditScreen = () => {
     goBack();
   };
   const onRemove = () => {
-    const DelateContact = getText(I18N.settingsContactEditDeleteContact);
-    const Sure = getText(I18N.settingsContactEditSure);
-    const Delete = getText(I18N.settingsContactEditDelete);
-    const Cancel = getText(I18N.cancel);
-    Alert.alert(DelateContact, Sure, [
-      {text: Cancel, style: 'cancel'},
+    const delateContact = getText(I18N.settingsContactEditDeleteContact);
+    const sure = getText(I18N.settingsContactEditSure);
+    const deleteWord = getText(I18N.settingsContactEditDelete);
+    const cancel = getText(I18N.cancel);
+    Alert.alert(delateContact, sure, [
+      {text: cancel, style: 'cancel'},
       {
-        text: Delete,
+        text: deleteWord,
         style: 'destructive',
         onPress: () => {
           contacts.removeContact(address);
