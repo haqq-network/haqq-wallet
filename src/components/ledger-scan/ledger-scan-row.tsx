@@ -14,7 +14,7 @@ export type LedgerScanRowProps = {
 export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
-      <Text color={Color.bg3} style={style.container} t11>
+      <Text color={Color.bg3} style={style.textName} t11>
         {item.name}
       </Text>
     </TouchableOpacity>
@@ -22,7 +22,7 @@ export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
 };
 
 const style = StyleSheet.create({
-  container: {
+  textName: {
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 12,
