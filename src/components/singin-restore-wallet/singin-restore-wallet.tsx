@@ -19,17 +19,12 @@ import {hideModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 
 interface SinginRestoreWalletProps {
-  onDoneTry: () => void;
-  seed: string;
-  setSeed: React.Dispatch<React.SetStateAction<string>>;
+  onDoneTry: (seed: string) => void;
 }
 
-export const SignInRestore = ({
-  onDoneTry,
-  seed,
-  setSeed,
-}: SinginRestoreWalletProps) => {
+export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
   const [disabled, setDisabled] = useState(false);
+  const [seed, setSeed] = useState('');
 
   const checked = useMemo(
     () => utils.isValidMnemonic(seed.trim()) || utils.isHexString(seed.trim()),
@@ -39,14 +34,14 @@ export const SignInRestore = ({
   const onDone = useCallback(() => {
     setDisabled(true);
     try {
-      onDoneTry();
+      onDoneTry(seed);
     } catch (e) {
       Sentry.captureException(e);
     } finally {
       setDisabled(false);
       hideModal();
     }
-  }, [onDoneTry]);
+  }, [seed, onDoneTry]);
 
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();
