@@ -1,13 +1,13 @@
 import React, {useEffect, useRef} from 'react';
 
 import {TransactionResponse} from '@ethersproject/abstract-provider';
-import {Dimensions, StyleSheet} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 
+import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {useWallet} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {EthNetwork} from '@app/services/eth-network';
-
-import {LottieWrap, PopupContainer, Text} from '../ui';
 
 export type TransactionVerifyProps = {
   from: string;
@@ -24,7 +24,7 @@ export const TransactionLedger = ({
 }: TransactionVerifyProps) => {
   const wallet = useWallet(from);
   const ethNetworkProvider = useRef(new EthNetwork(wallet!)).current;
-
+  const screenWidth = useWindowDimensions().width;
   useEffect(() => {
     requestAnimationFrame(async () => {
       try {
@@ -47,11 +47,9 @@ export const TransactionLedger = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t9 style={styles.text}>
-        {getText(I18N.transactionLedgerBluetoothConfirmation)}
-      </Text>
+      <Text i18n={I18N.transactionLedgerBluetoothConfirmation} t9 center />
       <LottieWrap
-        style={styles.lottie}
+        style={{width: screenWidth}}
         source={require('../../../assets/animations/transaction-ledger.json')}
         autoPlay
         loop={false}
@@ -60,16 +58,10 @@ export const TransactionLedger = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  lottie: {
-    width: Dimensions.get('window').width,
-  },
-  text: {
-    textAlign: 'center',
   },
 });
