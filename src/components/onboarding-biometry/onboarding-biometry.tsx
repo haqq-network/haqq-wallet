@@ -21,30 +21,20 @@ import {BIOMETRY_TYPES_NAMES} from '@app/variables';
 
 interface OnboardingBiometryProps {
   onClickSkip: () => void;
+  onClickEnable: () => void;
   biometryType: BiometryType;
+  error: string
 }
 
 export const OnboardingBiometry = ({
   onClickSkip,
+  onClickEnable,
   biometryType,
+  error,
 }: OnboardingBiometryProps) => {
-  const app = useApp();
-  const [error, setError] = useState('');
   const enableBiometry = getText(I18N.onboardingBiometryEnable, {
     biometry: BIOMETRY_TYPES_NAMES[biometryType],
   });
-
-  const onClickEnable = useCallback(async () => {
-    try {
-      await app.biometryAuth();
-      app.biometry = true;
-      onClickSkip();
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
-      }
-    }
-  }, [app, onClickSkip]);
 
   const icon = useMemo(() => {
     switch (biometryType) {
