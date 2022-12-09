@@ -32,7 +32,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap source={animation} autoPlay loop={false} />
+        <LottieWrap source={animation} autoPlay loop={true} />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} />
       <Button
