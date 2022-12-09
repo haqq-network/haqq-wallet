@@ -12,7 +12,7 @@ import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
 import {RootStackParamList, WalletType} from '../types';
 
-export const SigninStoreWalletScreen = () => {
+export const SignInStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'restoreStore'>>();
   const wallets = useWallets();

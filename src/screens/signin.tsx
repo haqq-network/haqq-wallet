@@ -10,7 +10,7 @@ import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {SignInAgreementScreen} from './signin-agreement';
 import {SignInRestoreScreen} from './signin-restore-wallet';
-import {SigninStoreWalletScreen} from './signin-store-wallet';
+import {SignInStoreWalletScreen} from './signin-store-wallet';
 
 import {ScreenOptionType} from '../types';
 
@@ -60,7 +60,7 @@ export const SignInScreen = () => {
       />
       <SignInStack.Screen
         name="signinStoreWallet"
-        component={SigninStoreWalletScreen}
+        component={SignInStoreWalletScreen}
         options={screenOptions}
         initialParams={{action: 'restore'}}
       />

@@ -3,17 +3,18 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
 import {SignInAgreementScreen} from '@app/screens/signin-agreement';
 import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
-import {SigninStoreWalletScreen} from '@app/screens/signin-store-wallet';
+import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {ScreenOptionType} from '@app/types';
 
 const SignInStack = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
-const title = 'Restore wallet';
+const title = getText(I18N.restoreWalletScreenTitle);
 
 const screenOptionsTitle: ScreenOptionType = {
   title,
@@ -37,7 +38,7 @@ export const RestoreScreen = () => {
       />
       <SignInStack.Screen
         name="restoreStore"
-        component={SigninStoreWalletScreen}
+        component={SignInStoreWalletScreen}
         options={screenOptions}
         initialParams={{nextScreen: 'restoreFinish'}}
       />

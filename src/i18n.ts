@@ -231,6 +231,7 @@ export enum I18N {
   onboardingFinishRecover,
   finishProceed,
   ledgerFinishTitle,
+  restoreWalletScreenTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -518,4 +519,5 @@ const en: Record<I18N, string> = {
   [I18N.finishProceed]: 'Proceed',
   [I18N.ledgerFinishTitle]:
     'Congratulations!\nYou have successfully added a new account',
+  [I18N.restoreWalletScreenTitle]: 'Restore wallet',
 };
