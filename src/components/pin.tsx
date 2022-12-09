@@ -11,6 +11,7 @@ import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {moderateVerticalScale} from '@app/helpers/scaling-utils';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_SECOND_2,
@@ -22,11 +23,13 @@ import {NumericKeyboard} from './pin/numeric-keyboard';
 import {ErrorText, Spacer, Text} from './ui';
 
 export type PinProps = {
-  title: string;
+  title?: string;
   onPin: (pin: string) => void;
   subtitle?: string;
   onLock?: () => void;
   additionButton?: React.ReactNode;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
 };
 
 export interface PinInterface {
@@ -35,7 +38,18 @@ export interface PinInterface {
 }
 
 export const Pin = forwardRef(
-  ({title, subtitle, onPin, onLock, additionButton}: PinProps, ref) => {
+  (
+    {
+      title,
+      subtitle,
+      onPin,
+      onLock,
+      additionButton,
+      i18n = undefined,
+      i18params = undefined,
+    }: PinProps,
+    ref,
+  ) => {
     const insets = useSafeAreaInsets();
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
@@ -111,7 +125,7 @@ export const Pin = forwardRef(
 
     return (
       <View style={[page.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 style={page.title}>
+        <Text t4 i18n={i18n} i18params={i18params} style={page.title}>
           {title}
         </Text>
         {error && <ErrorText e0>{error}</ErrorText>}
