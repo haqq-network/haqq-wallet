@@ -52,7 +52,6 @@ export enum I18N {
   backupVerifyError,
   backupVerifyDescription,
   backupVerifyCheck,
-  ledgerFinishTitle,
   transactionContactEditHeaderTitle,
   transactionAddressPlaceholder,
   transactionAddressError,
