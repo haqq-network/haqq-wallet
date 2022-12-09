@@ -1,31 +1,42 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
-  Alert,
   Button,
   ButtonVariant,
+  Icon,
   InfoBlock,
   InfoBlockType,
   LottieWrap,
   PopupContainer,
   Spacer,
   Text,
-} from '../components/ui';
-import {app} from '../contexts/app';
-import {useWallet} from '../hooks';
-import {RootStackParamList} from '../types';
-import {LIGHT_TEXT_BASE_2, LIGHT_TEXT_YELLOW_1} from '../variables';
-
-const warningImage = require('../../assets/animations/recover-animation.json');
+} from '@app/components/ui';
+import {app} from '@app/contexts/app';
+import {
+  useTheme,
+  useTypedNavigation,
+  useTypedRoute,
+  useWallet,
+} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/types';
 
 export const BackupWarningScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'backupWarning'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'backupWarning'>();
   const wallet = useWallet(route.params.address);
+  const theme = useTheme();
+
+  const animation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../assets/animations/backup-start-dark.json');
+    }
+
+    return require('../../assets/animations/backup-start-light.json');
+  }, [theme]);
 
   const onPressBackup = async () => {
     const password = await app.getPassword();
@@ -37,49 +48,48 @@ export const BackupWarningScreen = () => {
   };
 
   return (
-    <PopupContainer style={page.container}>
-      <Spacer style={page.imageContainer}>
-        <LottieWrap source={warningImage} style={page.image} autoPlay loop />
+    <PopupContainer style={styles.container}>
+      <Spacer style={styles.imageContainer}>
+        <LottieWrap source={animation} style={styles.image} autoPlay loop />
       </Spacer>
-      <Text t4 style={page.title}>
-        Important about backup
-      </Text>
-      <Text t11 style={page.paragraph}>
-        A backup is a restoring phrase of 12 words. It is better to write down
-        the phrase on paper and not keep it online.
-      </Text>
+      <Text t4 style={styles.title} i18n={I18N.backupWarningTitle} center />
+      <Text
+        t11
+        style={styles.paragraph}
+        color={Color.textBase2}
+        i18n={I18N.backupWarningParagraph}
+        center
+      />
       <InfoBlock
         type={InfoBlockType.warning}
-        style={page.infoBlock1}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
-        If you lose your recovery phrase, you will be unable to access your
-        funds, as nobody will be able to restore it.
-      </InfoBlock>
+        style={styles.infoBlock1}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+        i18n={I18N.backupWarningInfoBlock1}
+      />
       <InfoBlock
         type={InfoBlockType.warning}
-        style={page.infoBlock2}
-        icon={<Alert color={LIGHT_TEXT_YELLOW_1} />}>
-        This phrase is your only chance to recover access to your funds if your
-        usual device is unavailable to you.
-      </InfoBlock>
+        style={styles.infoBlock2}
+        icon={<Icon name="warning" color={Color.textYellow1} />}
+        i18n={I18N.backupWarningInfoBlock2}
+      />
       <Button
         variant={ButtonVariant.contained}
-        style={page.submit}
-        title="Understood"
+        style={styles.submit}
+        i18n={I18N.backupWarningButton}
         onPress={onPressBackup}
       />
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
   imageContainer: {justifyContent: 'center', alignItems: 'center'},
   image: {width: 200, height: 200},
-  title: {marginBottom: 4, textAlign: 'center'},
-  paragraph: {marginBottom: 20, textAlign: 'center', color: LIGHT_TEXT_BASE_2},
+  title: {marginBottom: 4},
+  paragraph: {marginBottom: 20},
   infoBlock1: {marginBottom: 20},
   infoBlock2: {marginBottom: 34},
   submit: {marginVertical: 16},

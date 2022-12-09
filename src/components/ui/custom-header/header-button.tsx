@@ -1,9 +1,11 @@
 import React from 'react';
 
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton, IconProps, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
 import {DEFAULT_HITSLOP} from '@app/variables';
 
@@ -13,6 +15,7 @@ export type HeaderButtonProps = {
   color?: ColorType;
   icon?: IconProps['name'];
   text?: string;
+  i18n?: I18N;
 };
 
 export const HeaderButton = ({
@@ -21,6 +24,7 @@ export const HeaderButton = ({
   color,
   icon,
   text,
+  i18n,
 }: HeaderButtonProps) => {
   if (icon) {
     return (
@@ -36,17 +40,17 @@ export const HeaderButton = ({
   if (text) {
     return (
       <Pressable onPress={() => !disabled && onPress?.()}>
-        <Text t10 color={disabled ? Color.textBase2 : color} center>
+        <Text i18n={i18n} t10 color={disabled ? Color.textBase2 : color} center>
           {text || ''}
         </Text>
       </Pressable>
     );
   }
 
-  return <View style={page.spacer} />;
+  return <View style={styles.spacer} />;
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   spacer: {
     width: 24,
     height: 24,
