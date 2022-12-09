@@ -1,8 +1,9 @@
 import {useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
+import {User} from '@app/models/user';
 
-export function useUser() {
+export function useUser(): User {
   const user = app.getUser();
   const [, setDate] = useState(new Date());
   useEffect(() => {
