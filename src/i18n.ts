@@ -35,6 +35,7 @@ export enum I18N {
   restoreAgreementText,
   restoreAgreementTitle,
   restoreAgreementAgree,
+  ledgerFinishTitle,
   ledgerConnect,
   ledgerChooseAccount,
   ledgerVerify,
