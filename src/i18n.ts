@@ -97,6 +97,8 @@ export enum I18N {
   notificationAccountDeleted,
   notificationAccountHidden,
   notificationPinChanged,
+  onboardingSetupPinProjectWallet,
+  onboardingSetupPinSet,
   pinManyAttempts,
   settingsProvidersTitle,
   settingsProvidersTitleRight,
@@ -346,6 +348,9 @@ const en: Record<I18N, string> = {
   [I18N.notificationAccountDeleted]: 'The account has been deleted',
   [I18N.notificationAccountHidden]: 'The account was hidden',
   [I18N.notificationPinChanged]: 'PIN code successfully changed',
+  [I18N.onboardingSetupPinProjectWallet]:
+    'Project your wallet. PIN code for increases wallet security in the event your phone{{first}}is{{second}}stolen',
+  [I18N.onboardingSetupPinSet]: 'Set 6-digital pin code',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
   [I18N.homeWallet]: 'Accounts',
