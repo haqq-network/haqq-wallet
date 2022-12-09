@@ -18,10 +18,11 @@ class PushNotifications extends EventEmitter {
   }
 
   async requestPermissions() {
+    console.log('requestPermissions', this.isAvailable, this.path);
     if (!this.isAvailable) {
       throw new Error('push messages unavailable');
     }
-
+    console.log('w');
     const authStatus = await messaging().requestPermission();
 
     const enabled =
@@ -32,8 +33,10 @@ class PushNotifications extends EventEmitter {
       console.log('Authorization status:', authStatus);
 
       const token = await messaging().getToken();
-
-      app.getUser().subscription = await this.createNotificationToken(token);
+      console.log('token', token);
+      const subscription = await this.createNotificationToken(token);
+      console.log('subscription', subscription);
+      app.getUser().subscription = subscription;
     }
   }
 
@@ -46,12 +49,16 @@ class PushNotifications extends EventEmitter {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
+    console.log('postQuery', this.getPath(path), data);
     const resp = await fetch(this.getPath(path), {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
       body: data,
     });
-
+    console.log('resp', resp);
     return await resp.json();
   }
 
@@ -75,6 +82,8 @@ class PushNotifications extends EventEmitter {
         params,
       }),
     );
+
+    console.log('response', response);
 
     if (response.id !== String(this.last_id)) {
       throw new Error('wrong response');

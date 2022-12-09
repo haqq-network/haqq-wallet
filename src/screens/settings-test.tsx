@@ -5,6 +5,7 @@ import {View} from 'react-native';
 
 import {Button, ButtonVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
@@ -28,17 +29,7 @@ messaging()
 
 export const SettingsTestScreen = () => {
   const onPressRequestPermissions = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-
-      const token = await messaging().getToken();
-      console.log(token);
-    }
+    await pushNotifications.requestPermissions();
   };
 
   return (

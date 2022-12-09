@@ -60,6 +60,8 @@ export class User extends EventEmitter {
 
     this._raw = user;
 
+    console.log('user', this._raw.toJSON());
+
     this._raw.addListener((obj, changes) => {
       if (changes.changedProperties.length) {
         this.emit('change');
