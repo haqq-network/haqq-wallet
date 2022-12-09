@@ -47,7 +47,6 @@ jobs:
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
-          echo ${{secrets.GOOGLE_SERVICES_ANDROID}} | base64 -d > android/app/google-services.json
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
 
           echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env

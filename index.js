@@ -11,6 +11,7 @@ import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {Overview} from './src/overview';
+import './src/events';
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
