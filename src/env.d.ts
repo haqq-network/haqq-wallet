@@ -7,4 +7,5 @@ declare module '@env' {
   export const PATTERNS_SOURCE: string;
   export const ENVIRONMENT: string;
   export const IS_DEVELOPMENT: string;
+  export const PUSH_NOTIFICATIONS: string;
 }
