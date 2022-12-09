@@ -178,7 +178,7 @@ export const App = () => {
         isConnected ? hideModal('no-internet') : showModal('no-internet');
       };
 
-      const linkingSubscription = ({url}) => {
+      const linkingSubscription = ({url}: {url: string}) => {
         if (url.startsWith('haqq:')) {
           app.emit(Events.onDeepLink, url);
         }
