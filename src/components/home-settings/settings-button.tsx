@@ -2,12 +2,14 @@ import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {RootStackParamList} from '@app/types';
 
-import {Icon, IconsName, MenuNavigationButton, Text} from '../ui';
+import {DataContent, Icon, IconsName, MenuNavigationButton, Text} from '../ui';
 
 export type SettingsButtonProps = {
   next:
@@ -19,7 +21,7 @@ export type SettingsButtonProps = {
     | 'settingsTheme'
     | 'settingsTest';
   icon: IconsName | keyof typeof IconsName;
-  title: string;
+  title: I18N;
   rightTitle?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
@@ -38,17 +40,11 @@ export const SettingsButton = ({
 
   return (
     <MenuNavigationButton onPress={onClickButton} style={style}>
-      <View style={page.container}>
-        <Icon s name={icon} color={getColor(Color.graphicBase1)} />
-        <Text t11 style={page.text} color={getColor(Color.textBase1)}>
-          {title}
-        </Text>
+      <View style={styles.container}>
+        <Icon i24 name={icon} color={Color.graphicBase1} />
+        <DataContent titleI18n={title} style={styles.text} />
         {rightTitle && (
-          <Text
-            t11
-            right
-            style={page.textRight}
-            color={getColor(Color.textBase2)}>
+          <Text t11 right style={styles.textRight} color={Color.textBase2}>
             {rightTitle}
           </Text>
         )}
@@ -57,7 +53,7 @@ export const SettingsButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
     flexDirection: 'row',
