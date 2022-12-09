@@ -79,13 +79,14 @@ export const WalletCard = ({address}: BalanceProps) => {
           {wallet.name || 'name'}
         </Text>
         <IconButton onPress={onPressQR} style={styles.qrButton}>
-          <Icon name="qr_code" color={Color.graphicBase3} />
+          <Icon i24 name="qr_code" color={Color.graphicBase3} />
         </IconButton>
         <CopyButton style={styles.copyButton} value={wallet.address}>
           <Text t14 color={Color.textBase3}>
             {formattedAddress}
           </Text>
           <Icon
+            i24
             name="copy"
             color={Color.graphicBase3}
             style={styles.marginLeft}
@@ -109,14 +110,14 @@ export const WalletCard = ({address}: BalanceProps) => {
         <View style={styles.button}>
           {IS_IOS && <BlurView action="sent" cardState={cardState} />}
           <IconButton style={styles.spacer} onPress={onPressSend}>
-            <Icon name="arrow_send" color={Color.graphicBase3} />
+            <Icon i24 name="arrow_send" color={Color.graphicBase3} />
             <Text i18n={I18N.walletCardSend} color={Color.textBase3} />
           </IconButton>
         </View>
         <View style={styles.button}>
           {IS_IOS && <BlurView action="receive" cardState={cardState} />}
           <IconButton style={styles.spacer} onPress={onPressQR}>
-            <Icon name="arrow_receive" color={Color.graphicBase3} />
+            <Icon i24 name="arrow_receive" color={Color.graphicBase3} />
             <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />
           </IconButton>
         </View>
