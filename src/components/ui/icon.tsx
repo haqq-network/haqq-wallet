@@ -32,7 +32,6 @@ export enum IconsName {
   invoice = 'invoice',
   islm = 'islm',
   language = 'language',
-  ledger = 'ledger',
   list = 'list',
   lock = 'lock',
   market = 'market',
@@ -58,6 +57,7 @@ export enum IconsName {
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
+  discord = 'discord',
 }
 
 export type IconSize =

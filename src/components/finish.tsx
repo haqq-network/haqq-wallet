@@ -2,6 +2,8 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {I18N} from '@app/i18n';
+
 import {
   Button,
   ButtonVariant,
@@ -12,7 +14,7 @@ import {
 } from './ui';
 
 export type FinishProps = {
-  title: string;
+  title: I18N;
   onFinish: () => void;
   testID?: string;
 };
@@ -27,13 +29,11 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
           loop={false}
         />
       </Spacer>
-      <Text t4 style={page.title}>
-        {title}
-      </Text>
+      <Text t4 i18n={title} style={page.title} />
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
-        title="Finish"
+        i18n={I18N.finishProceed}
         testID={`${testID}_finish`}
         onPress={onFinish}
       />
