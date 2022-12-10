@@ -64,8 +64,8 @@ buck-out/
 /tmp/*
 
 google-account.json
-google-services.json
-GoogleService-Info.plist
+#google-services.json
+#GoogleService-Info.plist
 .env
 /haqq.app.dSYM.zip
 

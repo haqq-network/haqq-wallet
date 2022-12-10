@@ -1,24 +1,14 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-import {useApp} from '@app/hooks';
+import {Finish} from '@app/components/finish';
+import {hideModal} from '@app/helpers/modal';
+import {useApp, useTypedNavigation} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {Finish} from '../components/finish';
-import {hideModal} from '../helpers/modal';
-import {RootStackParamList} from '../types';
 
 export const LedgerFinishScreen = () => {
   const app = useApp();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  useEffect(() => {
-    hideModal();
-    vibrate(HapticEffects.success);
-  }, []);
-
+  const navigation = useTypedNavigation();
   const onEnd = useCallback(() => {
     if (app.getUser().onboarded) {
       navigation.getParent()?.goBack();
@@ -28,9 +18,14 @@ export const LedgerFinishScreen = () => {
     }
   }, [app, navigation]);
 
+  useEffect(() => {
+    hideModal();
+    vibrate(HapticEffects.success);
+  }, []);
+
   return (
     <Finish
-      title="Сongratulations! You have successfully added a new account"
+      i18n={I18N.ledgerFinishCongratulations}
       onFinish={onEnd}
       testID="ledger_finish"
     />

@@ -4,6 +4,7 @@ import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance} from 'react-native';
 
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 
 import {AppLanguage, AppTheme} from '../types';
 import {
@@ -27,6 +28,8 @@ export const UserSchema = {
     pinBanned: 'date?',
     providerId: 'string',
     theme: 'string',
+    notifications: 'bool?',
+    subscription: 'string?',
   },
   primaryKey: 'username',
 };
@@ -42,6 +45,8 @@ export type UserType = {
   onboarded: boolean | null;
   providerId: string;
   theme: AppTheme;
+  notifications: boolean | null;
+  subscription: string | null;
 };
 
 export class User extends EventEmitter {
@@ -55,12 +60,20 @@ export class User extends EventEmitter {
 
     this._raw = user;
 
+    console.log('user', this._raw.toJSON());
+
     this._raw.addListener((obj, changes) => {
       if (changes.changedProperties.length) {
         this.emit('change');
 
         if (changes.changedProperties.includes('theme')) {
           app.emit('theme', obj.theme);
+        }
+
+        if (changes.changedProperties.includes('subscription')) {
+          if (obj.subscription) {
+            app.emit(Events.onPushSubscriptionAdd);
+          }
         }
       }
     });
@@ -122,6 +135,20 @@ export class User extends EventEmitter {
     realm.write(() => {
       this._raw.language = language;
     });
+  }
+
+  set subscription(subscription) {
+    realm.write(() => {
+      this._raw.subscription = subscription;
+    });
+  }
+
+  get subscription() {
+    return this._raw.subscription;
+  }
+
+  get notifications() {
+    return this._raw.notifications;
   }
 
   get theme(): AppTheme {
