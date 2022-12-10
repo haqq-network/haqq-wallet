@@ -14,12 +14,20 @@ import {
 } from './ui';
 
 export type FinishProps = {
-  title: I18N;
+  title?: string;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
   onFinish: () => void;
   testID?: string;
 };
 
-export const Finish = ({title, onFinish, testID}: FinishProps) => {
+export const Finish = ({
+  title = undefined,
+  onFinish,
+  testID,
+  i18n = undefined,
+  i18params = undefined,
+}: FinishProps) => {
   return (
     <PopupContainer>
       <Spacer>
@@ -29,7 +37,9 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
           loop={false}
         />
       </Spacer>
-      <Text t4 i18n={title} style={page.title} />
+      <Text t4 i18n={i18n} i18params={i18params} style={page.title}>
+        {title}
+      </Text>
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
