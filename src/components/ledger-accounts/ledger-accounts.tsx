@@ -2,14 +2,13 @@ import React, {useEffect, useState} from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
 
+import {PopupContainer} from '@app/components/ui';
+import {runUntil} from '@app/helpers/run-until';
 import {useWallets} from '@app/hooks';
+import {ETH_HD_PATH} from '@app/variables';
 
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {LedgerAccountsRow} from './ledger-accounts-row';
-
-import {runUntil} from '../../helpers/run-until';
-import {ETH_HD_PATH} from '../../variables';
-import {PopupContainer} from '../ui';
 
 export type LedgerDeviceProps = {
   deviceId: string;
@@ -27,11 +26,10 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
       do {
         const resp = await iter.next();
         done = resp.done;
+        const address = resp.value.address;
         if (resp.value) {
           setAddresses(list =>
-            list.includes(resp.value.address)
-              ? list
-              : list.concat([resp.value.address]),
+            list.includes(address) ? list : list.concat([address]),
           );
         }
       } while (!done);
