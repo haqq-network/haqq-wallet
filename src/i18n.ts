@@ -124,6 +124,8 @@ export enum I18N {
   notificationAccountDeleted,
   notificationAccountHidden,
   notificationPinChanged,
+  onboardingSetupPinProjectWallet,
+  onboardingSetupPinSet,
   onboardingBiometryEnable,
   onboardingBiometrySafeFast,
   onboardingBiometrySkip,
@@ -410,6 +412,9 @@ const en: Record<I18N, string> = {
   [I18N.notificationAccountDeleted]: 'The account has been deleted',
   [I18N.notificationAccountHidden]: 'The account was hidden',
   [I18N.notificationPinChanged]: 'PIN code successfully changed',
+  [I18N.onboardingSetupPinProjectWallet]:
+    'Project your wallet. PIN code for increases wallet security in the event your phone\u00A0is\u00A0stolen',
+  [I18N.onboardingSetupPinSet]: 'Set 6-digital pin code',
   [I18N.onboardingBiometryEnable]: 'Enable {{biometry}}',
   [I18N.onboardingBiometrySafeFast]: 'Safe and fast',
   [I18N.onboardingBiometrySkip]: 'Skip',
