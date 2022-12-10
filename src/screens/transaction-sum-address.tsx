@@ -1,17 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-import {useApp} from '@app/hooks';
-
-import {TransactionAddress} from '../components/transaction-address';
-import {RootStackParamList} from '../types';
+import {TransactionAddress} from '@app/components/transaction-address';
+import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const TransactionSumAddressScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'transactionSumAddress'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'transactionSumAddress'>();
+
   const app = useApp();
   const onDone = useCallback(
     (address: string) => {
