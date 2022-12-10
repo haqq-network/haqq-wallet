@@ -29,7 +29,7 @@ export const Finish = ({title, onFinish, testID, i18n}: FinishProps) => {
       return require('../../assets/animations/success-animation-dark.json');
     }
 
-    return require('../../assets/animations/success-animation.json');
+    return require('../../assets/animations/success-animation-light.json');
   }, [theme]);
 
   return (
