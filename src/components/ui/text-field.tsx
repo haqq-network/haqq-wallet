@@ -2,7 +2,6 @@ import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {
   NativeSyntheticEvent,
-  StyleSheet,
   Text,
   TextInput,
   TextInputContentSizeChangeEventData,
@@ -19,15 +18,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
-import {
-  IS_IOS,
-  LIGHT_BG_5,
-  LIGHT_BG_7,
-  LIGHT_BG_8,
-  LIGHT_TEXT_BASE_1,
-  LIGHT_TEXT_GREEN_1,
-  PLACEHOLDER_GRAY,
-} from '@app/variables';
+import {createTheme} from '@app/helpers';
+import {IS_IOS, PLACEHOLDER_GRAY} from '@app/variables';
 
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
@@ -139,7 +131,7 @@ export const TextField: React.FC<Props> = memo(
             <Text style={styles.placeholder}>{placeholder}</Text>
           )}
           <AnimatedTextInput
-            selectionColor={LIGHT_TEXT_GREEN_1}
+            selectionColor={getColor(Color.textGreen1)}
             allowFontScaling={false}
             style={[
               styles.input,
@@ -149,7 +141,7 @@ export const TextField: React.FC<Props> = memo(
               },
             ]}
             ref={inputRef}
-            placeholderTextColor={PLACEHOLDER_GRAY}
+            placeholderTextColor={Color.textBase2}
             {...restOfProps}
             value={value}
             multiline={multiline}
@@ -188,22 +180,22 @@ export const TextField: React.FC<Props> = memo(
   },
 );
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 16,
     borderRadius: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: LIGHT_BG_8,
+    backgroundColor: Color.bg8,
   },
   containerError: {
-    backgroundColor: LIGHT_BG_7,
+    backgroundColor: Color.bg7,
   },
   input: {
     alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
     top: IS_IOS ? 26 : 24,
     fontSize: 16,
     minHeight: 28,
@@ -229,7 +221,7 @@ const styles = StyleSheet.create({
     marginLeft: 35,
     bottom: 8,
     fontSize: 12,
-    color: LIGHT_BG_5,
+    color: Color.bg5,
     fontFamily: 'SF Pro Display',
   },
   sub: {

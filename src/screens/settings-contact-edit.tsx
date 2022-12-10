@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {Alert} from 'react-native';
 
+import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
 import {CustomHeader} from '@app/components/ui';
 import {useContacts, useTypedNavigation} from '@app/hooks';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
-import {RootStackParamList} from '@app/types';
-import {LIGHT_GRAPHIC_GREEN_1} from '@app/variables';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
-    useRoute<RouteProp<RootStackParamList, 'settingsContactEdit'>>().params;
+    useTypedRoute<'settingsContactEdit'>().params;
+
   const contacts = useContacts();
   const {goBack} = useTypedNavigation();
 
@@ -32,21 +32,21 @@ export const SettingsContactEditScreen = () => {
     goBack();
   };
   const onRemove = () => {
-    Alert.alert(
-      'Delete Contact',
-      'Are you sure you want to delete the selected contact?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            contacts.removeContact(address);
-            goBack();
-          },
+    const delateContact = getText(I18N.settingsContactEditDeleteContact);
+    const sure = getText(I18N.settingsContactEditSure);
+    const deleteWord = getText(I18N.settingsContactEditDelete);
+    const cancel = getText(I18N.cancel);
+    Alert.alert(delateContact, sure, [
+      {text: cancel, style: 'cancel'},
+      {
+        text: deleteWord,
+        style: 'destructive',
+        onPress: () => {
+          contacts.removeContact(address);
+          goBack();
         },
-      ],
-    );
+      },
+    ]);
   };
   const onPressRight = () => {
     if (!isEdit) {
@@ -79,15 +79,15 @@ export const SettingsContactEditScreen = () => {
   return (
     <>
       <CustomHeader
-        title={getText(I18N.settingsContactEditHeaderTitle)}
+        i18nTitle={I18N.settingsContactEditHeaderTitle}
         onPressLeft={onPressLeft}
         iconLeft={isEdit ? undefined : 'arrow_back'}
-        textLeft={getText(I18N.cancel)}
-        textRight={isEdit ? getText(I18N.save) : getText(I18N.edit)}
+        i18nTextLeft={I18N.cancel}
+        i18nTextRight={isEdit ? I18N.save : I18N.edit}
         disabledRight={!isChanged && isEdit}
         onPressRight={onPressRight}
-        colorRight={LIGHT_GRAPHIC_GREEN_1}
-        colorLeft={LIGHT_GRAPHIC_GREEN_1}
+        colorRight={Color.graphicGreen1}
+        colorLeft={Color.graphicGreen1}
       />
       <SettingsAddressBookEdit
         onSubmit={onSubmit}
