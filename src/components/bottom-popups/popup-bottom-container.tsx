@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
   Easing,
   WithTimingConfig,
@@ -26,9 +26,17 @@ const timingInAnimationConfig: WithTimingConfig = {
 
 interface BottomPopupContainerProps {
   children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
+  transparent?: boolean;
+  onPressOutContent?: () => void;
+  closeOnPressOut?: boolean;
 }
 
-export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
+export const BottomPopupContainer = ({
+  children,
+  transparent,
+  onPressOutContent,
+  closeOnPressOut,
+}: BottomPopupContainerProps) => {
   const {height: H} = useWindowDimensions();
 
   const fullyOpen = 0;
@@ -58,24 +66,29 @@ export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
     transform: [{translateY: fadeAnim.value}],
   }));
 
+  const handlePressOut = () => {
+    closeOnPressOut && fadeOut(onPressOutContent);
+  };
+
   return (
-    <View style={page.container}>
-      <Animated.View style={[page.animateView, bgAnimation]} />
-      <Animated.View style={[page.animateViewFade, slideFromBottomAnimation]}>
+    <View style={styles.container}>
+      <Animated.View
+        style={[styles.fullFill, bgAnimation, !transparent && styles.bgColor]}
+      />
+      <Animated.View style={[styles.animateViewFade, slideFromBottomAnimation]}>
+        <Pressable style={styles.fullFill} onPress={handlePressOut} />
         {children(fadeOut)}
       </Animated.View>
     </View>
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {flex: 1},
-  animateView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  fullFill: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  bgColor: {
     backgroundColor: Color.bg9,
   },
   animateViewFade: {

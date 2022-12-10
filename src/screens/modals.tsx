@@ -10,6 +10,8 @@ import {
   NoInternet,
   PinModal,
   PinModalProps,
+  ProposalVote,
+  ProposalVoteProps,
   SplashModal,
   SplashModalProps,
 } from '@app/components/modals';
@@ -52,6 +54,10 @@ type DetailsQr = {
   type: 'card-details-qr';
 } & DetailsQrModalProps;
 
+type ProposalVoteParams = {
+  type: 'proposal-vote';
+} & ProposalVoteProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -60,6 +66,7 @@ type ModalState =
   | NoInternet
   | WalletsBottomSheetParams
   | DetailsQr
+  | ProposalVoteParams
   | null;
 
 export type ModalProps = {
@@ -121,6 +128,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <WalletsBottomSheet {...props} />;
       case 'card-details-qr':
         return <DetailsQrModal address={modal.address} />;
+      case 'proposal-vote':
+        return <ProposalVote eventSuffix={modal.eventSuffix} />;
       case 'no-internet':
         return <NoInternet />;
       case 'error-account-added':

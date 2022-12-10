@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 
 import {format} from 'date-fns';
 import {ScrollView, View} from 'react-native';
@@ -17,16 +17,17 @@ import {
   VotingCardDetail,
   VotingLineInterface,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
+import {createTheme, showModal} from '@app/helpers';
+import {useApp, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {GovernanceVoting} from '@app/models/governance-voting';
-import {ProposalsTags} from '@app/types';
+import {ProposalsTags, VoteNamesType} from '@app/types';
 
 export function Proposal() {
   const {hash} = useTypedRoute<'proposal'>().params;
   const votingRef = useRef<VotingLineInterface>();
   const {bottom} = useSafeAreaInsets();
+  const app = useApp();
 
   const item = useMemo(() => {
     return GovernanceVoting.getByHash(hash);
@@ -35,6 +36,19 @@ export function Proposal() {
   const onDeposit = () => {
     console.log('onDeposit'); // PASS
   };
+
+  useEffect(() => {
+    showModal('proposal-vote', {eventSuffix: '-proposal'});
+
+    const onVote = (vote: VoteNamesType) => {
+      console.log(vote);
+    };
+
+    app.on('proposal-vote-proposal', onVote);
+    return () => {
+      app.off('proposal-vote-proposal', onVote);
+    };
+  }, [app]);
   // useEffect(() => {
   //   if (item?.orderNumber) {
   //     (async () => {

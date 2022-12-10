@@ -420,13 +420,6 @@ export type ValidatorItem = Validator & {
   localUnDelegations?: number;
 };
 
-export type votesType = {
-  yes: number;
-  no: number;
-  abstain: number;
-  veto: number;
-};
-
 export type ColorType = Color | string;
 
 export type ProposalsTagKeys =
@@ -481,3 +474,12 @@ export const ProposalsTags: ProposalsTagType[] = [
     IconsNameUI.close,
   ],
 ];
+
+export type VotesType = {
+  yes: number;
+  no: number;
+  abstain: number;
+  veto: number;
+};
+
+export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';

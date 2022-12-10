@@ -11,26 +11,18 @@ import Animated, {
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
-import {votesType} from '@app/types';
+import {getText} from '@app/i18n';
+import {VoteNamesType, VotesType} from '@app/types';
+import {VOTES} from '@app/variables';
 
 export type VotingLineProps = {
-  initialVotes: votesType;
+  initialVotes: VotesType;
   showBottomText?: boolean;
 };
 
-type voteNames = 'yes' | 'no' | 'abstain' | 'veto';
-
-const votes: {name: voteNames; dotColor: Color; i18n: I18N}[] = [
-  {name: 'yes', dotColor: Color.graphicGreen1, i18n: I18N.yes},
-  {name: 'no', dotColor: Color.textRed1, i18n: I18N.no},
-  {name: 'abstain', dotColor: Color.graphicSecond4, i18n: I18N.voteAbstain},
-  {name: 'veto', dotColor: Color.textYellow1, i18n: I18N.voteVeto},
-];
-
 export interface VotingLineInterface {
-  updateValues: (newVotes: votesType) => void;
-  setSelected: React.Dispatch<React.SetStateAction<voteNames>>;
+  updateValues: (newVotes: VotesType) => void;
+  setSelected: React.Dispatch<React.SetStateAction<VoteNamesType>>;
 }
 
 const animConfig: WithTimingConfig = {
@@ -51,7 +43,7 @@ export const VotingLine = memo(
     const abstainVotes = useSharedValue(initPercentAbstain);
     const vetoVotes = useSharedValue(initPercentVeto);
 
-    const [selected, setSelected] = useState<voteNames | undefined>();
+    const [selected, setSelected] = useState<VoteNamesType | undefined>();
     const [percents, setPercents] = useState<{[name: string]: number}>({
       yes: initPercentYes,
       no: initPercentNo,
@@ -60,7 +52,7 @@ export const VotingLine = memo(
     });
 
     useImperativeHandle(ref, () => ({
-      updateValues(newVotes: votesType) {
+      updateValues(newVotes: VotesType) {
         const factor = Object.values(newVotes).reduce((a, b) => a + b, 0) / 100;
         const yes = newVotes.yes / factor;
         const no = newVotes.no / factor;
@@ -136,7 +128,7 @@ export const VotingLine = memo(
         </View>
         {showBottomText && (
           <View style={styles.statisticContainer}>
-            {votes.map(({name, dotColor, i18n}) => {
+            {VOTES.map(({name, color, i18n}) => {
               const isSelected =
                 selected === name || typeof selected === 'undefined';
               return (
@@ -144,7 +136,7 @@ export const VotingLine = memo(
                   key={name}
                   style={[styles.textItem, !isSelected && styles.withOpacity]}>
                   <View
-                    style={[styles.dot, {backgroundColor: getColor(dotColor)}]}
+                    style={[styles.dot, {backgroundColor: getColor(color)}]}
                   />
                   <Text t13 color={Color.textBase1}>
                     {getText(i18n)} {percents[name].toFixed(0)}%

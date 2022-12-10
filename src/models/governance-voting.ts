@@ -10,7 +10,7 @@ import {app} from '@app/contexts';
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
 import {Cosmos} from '@app/services/cosmos';
-import {votesType} from '@app/types';
+import {VotesType} from '@app/types';
 
 export const GovernanceVotingState = {
   passed: I18N.homeGovernanceTagPassed,
@@ -130,7 +130,7 @@ export class GovernanceVoting extends Realm.Object {
     };
   }
 
-  get proposalVotes(): votesType {
+  get proposalVotes(): VotesType {
     if (this.votes) {
       return JSON.parse(this.votes);
     } else {

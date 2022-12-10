@@ -2,21 +2,21 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {windowWidth} from '../../helpers';
+import {NoInternetIcon, Text} from '@app/components/ui';
+import {windowWidth} from '@app/helpers';
 import {
   LIGHT_BG_1,
   LIGHT_BG_9,
   LIGHT_GRAPHIC_SECOND_4,
   LIGHT_TEXT_BASE_1,
-} from '../../variables';
-import {NoInternetIcon, Text} from '../ui';
+} from '@app/variables';
 
 export const NoInternet = () => {
   return (
     <View style={page.container}>
       <View style={page.modalView}>
         <View style={page.modalContent}>
-          <Text t5 style={page.titleText}>
+          <Text t5 center>
             No Internet
           </Text>
           <Text t14 style={page.descriptionText}>
@@ -36,9 +36,6 @@ const page = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: LIGHT_BG_9,
     paddingBottom: 30,
-  },
-  titleText: {
-    textAlign: 'center',
   },
   descriptionText: {
     textAlign: 'center',
