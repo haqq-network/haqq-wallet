@@ -7,10 +7,10 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const SignInRestoreScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'restorePhrase'>();
+  const {nextScreen} = useTypedRoute<'restorePhrase'>().params;
 
   const onDoneTry = (seed: string) => {
-    navigation.push(route.params.nextScreen ?? 'onboardingSetupPin', {
+    navigation.push(nextScreen ?? 'onboardingSetupPin', {
       mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
       privateKey: utils.isHexString(seed.trim()) && seed.trim(),
     });
