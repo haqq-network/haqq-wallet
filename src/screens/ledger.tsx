@@ -3,6 +3,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {useUser} from '@app/hooks';
 
 import {LedgerAccountsScreen} from './ledger-accounts';
 import {LedgerAgreementScreen} from './ledger-agreement';
@@ -16,7 +17,6 @@ import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 
 import {ScreenOptionType} from '../types';
-import {useUser} from '@app/hooks';
 
 const LedgerStack = createStackNavigator();
 
@@ -62,7 +62,7 @@ export const LedgerScreen = () => {
         initialParams={{
           nextScreen: user.onboarded
             ? 'ledgerStoreWallet'
-            : 'onboardingSetupPin'
+            : 'onboardingSetupPin',
         }}
       />
       <LedgerStack.Screen
