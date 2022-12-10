@@ -56,32 +56,32 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
         <Text
           t11
           color={getColor(Color.textBase2)}
-          i18n={I18N.singinRestoreWalletPhraseOrKey}
+          i18n={I18N.signinRestoreWalletPhraseOrKey}
           style={page.intro}
         />
         <TextField
           size="large"
           autoFocus
-          placeholder={getText(I18N.singinRestoreWalletTextFieldPlaceholder)}
+          placeholder={getText(I18N.signinRestoreWalletTextFieldPlaceholder)}
           style={page.input}
-          label={getText(I18N.singinRestoreWalletTextFieldLabel)}
+          label={getText(I18N.signinRestoreWalletTextFieldLabel)}
           value={seed}
           onChangeText={setSeed}
           multiline
-          errorText={getText(I18N.singinRestoreWalletTextFieldError)}
+          errorText={getText(I18N.signinRestoreWalletTextFieldError)}
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
           <Text
             t14
             color={Color.graphicGreen2}
-            i18n={I18N.singinRestoreWalletPasteClipboard}
+            i18n={I18N.signinRestoreWalletPasteClipboard}
           />
         </IconButton>
         <Spacer />
         <Button
           disabled={!checked || disabled}
-          i18n={I18N.singinRestoreWalletRecovery}
+          i18n={I18N.signinRestoreWalletRecovery}
           onPress={onDone}
           variant={ButtonVariant.contained}
           style={page.submit}

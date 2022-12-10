@@ -1,1 +1,1 @@
-export * from './singin-restore-wallet';
+export * from './signin-restore-wallet';
