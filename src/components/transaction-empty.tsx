@@ -13,7 +13,7 @@ export const TransactionEmpty = () => {
         color={getColor(Color.graphicSecond3)}
         style={styles.space}
       />
-      <Text t14 i18n={I18N.TransactionEmpty} color={Color.textSecond1} />
+      <Text t14 i18n={I18N.transactionsEmpty} color={Color.textSecond1} />
     </View>
   );
 };

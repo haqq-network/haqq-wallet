@@ -26,9 +26,9 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         </View>
         <DataContent
           style={styles.infoContainer}
-          titleI18n={I18N.sent}
+          titleI18n={I18N.transactionSendTitle}
           subtitleI18nParams={{address: shortAddress(item.to, '•')}}
-          subtitleI18n={I18N.to}
+          subtitleI18n={I18N.transactionSendTo}
         />
         <Text t11 color={Color.textRed1}>
           {`- ${item.value.toFixed(2)} ISLM`}
