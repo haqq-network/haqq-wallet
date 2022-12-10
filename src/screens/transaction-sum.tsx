@@ -1,18 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-import {useApp} from '@app/hooks';
+import {TransactionSum} from '@app/components/transaction-sum';
+import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {EthNetwork} from '@app/services';
-
-import {TransactionSum} from '../components/transaction-sum';
-import {RootStackParamList} from '../types';
-import {generateUUID, splitAddress} from '../utils';
+import {generateUUID, splitAddress} from '@app/utils';
 
 export const TransactionSumScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'transactionSum'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'transactionSum'>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
