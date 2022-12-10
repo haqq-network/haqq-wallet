@@ -42,6 +42,7 @@ export enum I18N {
   ledgerAgreementText,
   ledgerAgreementTitle,
   ledgerAgreementAgree,
+  ledgerFinishCongratulations,
   ledgerScanTitle,
   ledgerScanDescription1,
   ledgerScanDescription2,
@@ -339,6 +340,8 @@ const en: Record<I18N, string> = {
   [I18N.ledgerAgreementText]:
     'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
   [I18N.ledgerAgreementAgree]: 'Connect',
+  [I18N.ledgerFinishCongratulations]:
+    'Сongratulations!You have successfully added a new account',
   [I18N.ledgerScanTitle]: 'Looking for devices',
   [I18N.ledgerScanDescription1]: 'Please make sure your Ledger Nano X is ',
   [I18N.ledgerScanDescription2]: 'unlocked',
