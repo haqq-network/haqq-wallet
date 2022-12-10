@@ -208,9 +208,7 @@ export const App = () => {
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
             <NavigationContainer ref={navigator} theme={navTheme}>
-              <Stack.Navigator
-                initialRouteName="restore"
-                screenOptions={basicScreenOptions}>
+              <Stack.Navigator screenOptions={basicScreenOptions}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
 

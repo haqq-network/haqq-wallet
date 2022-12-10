@@ -29,9 +29,7 @@ const screenOptionsTitle: ScreenOptionType = {
 
 export const RestoreScreen = () => {
   return (
-    <SignInStack.Navigator
-      initialRouteName="restoreFinish"
-      screenOptions={popupScreenOptions}>
+    <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
         name="restoreAgreement"
         component={SignInAgreementScreen}
