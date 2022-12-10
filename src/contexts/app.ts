@@ -202,6 +202,10 @@ class App extends EventEmitter {
     }
   }
 
+  get notifications() {
+    return this.user.notifications && this.user.subscription;
+  }
+
   get snoozeBackup(): Date {
     return this.user?.snoozeBackup || subMinutes(new Date(), 1);
   }
