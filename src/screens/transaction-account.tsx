@@ -1,18 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet} from 'react-native';
-
-import {useWallets} from '@app/hooks';
-
-import {PopupContainer} from '../components/ui';
-import {WalletRow} from '../components/wallet-row';
-import {RootStackParamList} from '../types';
+import {TransactionAccount} from '@app/components/transaction-account';
+import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 
 export const TransactionAccountScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'transactionAccount'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'transactionAccount'>();
   const wallets = useWallets();
   const onPressRow = useCallback(
     (address: string) => {
@@ -39,18 +32,5 @@ export const TransactionAccountScreen = () => {
     };
   }, [wallets]);
 
-  return (
-    <PopupContainer style={styles.container}>
-      <FlatList
-        data={rows}
-        renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
-      />
-    </PopupContainer>
-  );
+  return <TransactionAccount rows={rows} onPressRow={onPressRow} />;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 20,
-  },
-});
