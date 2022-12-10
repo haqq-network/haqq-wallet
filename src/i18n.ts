@@ -277,13 +277,6 @@ export enum I18N {
   transactionSumSend,
   transactionSumPereview,
   settingsAccountNoWallet,
-  settingsAddressBookLabel,
-  settingsAddressBookPlaceholder,
-  settingsAddressBookAdd,
-  settingsAddressBookAlertTitle,
-  settingsAddressBookAlertDesc,
-  settingsAddressBookAlertBtnFirst,
-  settingsAddressBookAlertBtnSecond,
   LedgerStoreWalletSaving,
   ledgerVerifyAddress,
 }
@@ -611,14 +604,6 @@ const en: Record<I18N, string> = {
   [I18N.transactionSumSend]: 'Send to',
   [I18N.transactionSumPereview]: 'Preview',
   [I18N.settingsAccountNoWallet]: 'No wallets',
-  [I18N.settingsAddressBookLabel]: 'Address',
-  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
-  [I18N.settingsAddressBookAdd]: 'Add Contact',
-  [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
-  [I18N.settingsAddressBookAlertDesc]:
-    'Are you sure you want to delete the selected contact?',
-  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
-  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
   [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',

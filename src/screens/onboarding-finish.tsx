@@ -17,7 +17,7 @@ export const OnboardingFinishScreen = () => {
 
   const app = useApp();
   const wallets = useWallets();
-  const title = useMemo(
+  const title: I18N = useMemo(
     () =>
       route.params.action === 'create'
         ? I18N.onboardingFinishCreate
@@ -42,5 +42,5 @@ export const OnboardingFinishScreen = () => {
     vibrate(HapticEffects.success);
   }, []);
 
-  return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
+  return <Finish i18n={title} onFinish={onEnd} testID="onboarding_finish" />;
 };
