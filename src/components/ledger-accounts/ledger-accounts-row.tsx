@@ -2,9 +2,15 @@ import React, {useEffect, useState} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {EthNetwork} from '../../services/eth-network';
-import {cleanNumber, shortAddress} from '../../utils';
-import {Button, ButtonSize, ButtonVariant, DataContent} from '../ui';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  DataContent,
+} from '@app/components/ui';
+import {I18N} from '@app/i18n';
+import {EthNetwork} from '@app/services/eth-network';
+import {cleanNumber, shortAddress} from '@app/utils';
 
 export type LedgerAccountsRowProps = {
   item: string;
@@ -40,14 +46,14 @@ export const LedgerAccountsRow = ({
           disabled
           variant={ButtonVariant.second}
           size={ButtonSize.small}
-          title="Added"
+          i18n={I18N.ledgerAccountsAdded}
           onPress={onPressButton}
         />
       ) : (
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.small}
-          title="Add"
+          i18n={I18N.ledgerAccountsAdd}
           onPress={onPressButton}
         />
       )}
