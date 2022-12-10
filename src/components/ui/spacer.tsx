@@ -1,6 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {StyleSheet, View, ViewProps} from 'react-native';
+import {View, ViewProps} from 'react-native';
+
+import {createTheme} from '@app/helpers';
 
 export type SpacerProps = ViewProps & {height?: number; width?: number};
 
@@ -13,7 +15,7 @@ export const Spacer = ({
 }: SpacerProps) => {
   const container = useMemo(() => {
     const hasSizeProp = !!height || !!width;
-    return [hasSizeProp ? {height, width} : page.flexOne, style].filter(
+    return [hasSizeProp ? {height, width} : styles.flexOne, style].filter(
       Boolean,
     );
   }, [style, height, width]);
@@ -25,6 +27,6 @@ export const Spacer = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   flexOne: {flex: 1},
 });

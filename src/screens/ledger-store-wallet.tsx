@@ -1,21 +1,19 @@
 import React, {useEffect} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
-import {useWallets} from '@app/hooks';
-import {RootStackParamList} from '@app/types';
+import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ledgerStore'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'ledgerStore'>();
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal('loading', {text: 'Wallet saving in progress'});
+    showModal('loading', {text: getText(I18N.LedgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {

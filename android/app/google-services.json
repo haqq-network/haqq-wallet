@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "915453653093",
+    "project_id": "haqq-test",
+    "storage_bucket": "haqq-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915453653093:android:d69f18643b8b3f2954568c",
+        "android_client_info": {
+          "package_name": "com.haqq.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915453653093-fdhklkpj2di7a4hebts3r9k6s8fm0f46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ2-xZ3BLlKIJU-z3GBxC2MamwhSWcZdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915453653093-fdhklkpj2di7a4hebts3r9k6s8fm0f46.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.haqq.wallet"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
