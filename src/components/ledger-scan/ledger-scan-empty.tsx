@@ -2,7 +2,7 @@ import React from 'react';
 
 import {ActivityIndicator, StyleSheet} from 'react-native';
 
-import {PopupContainer} from '../ui';
+import {PopupContainer} from '@app/components/ui';
 
 export const LedgerScanEmpty = () => {
   return (
