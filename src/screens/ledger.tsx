@@ -16,6 +16,7 @@ import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 
 import {ScreenOptionType} from '../types';
+import {useUser} from '@app/hooks';
 
 const LedgerStack = createStackNavigator();
 
@@ -29,6 +30,7 @@ const screenOptionsTitle: ScreenOptionType = {
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 export const LedgerScreen = () => {
+  const user = useUser();
   return (
     <LedgerStack.Navigator screenOptions={popupScreenOptions}>
       <LedgerStack.Screen
@@ -56,6 +58,11 @@ export const LedgerScreen = () => {
         component={LedgerVerifyScreen}
         options={{
           title: 'Verify',
+        }}
+        initialParams={{
+          nextScreen: user.onboarded
+            ? 'ledgerStoreWallet'
+            : 'onboardingSetupPin'
         }}
       />
       <LedgerStack.Screen

@@ -7,20 +7,17 @@ export const LedgerAccountsScreen = () => {
   const user = useUser();
   const navigation = useTypedNavigation();
   const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
-  const nextScreen = user.onboarded
-    ? 'ledgerStoreWallet'
-    : 'onboardingSetupPin';
 
   const onPressAdd = useCallback(
     (address: string) => {
       navigation.navigate('ledgerVerify', {
-        nextScreen,
+        nextScreen:'ledgerStoreWallet',
         address,
         deviceId,
         deviceName,
       });
     },
-    [navigation, deviceId, deviceName, nextScreen],
+    [navigation, deviceId, deviceName],
   );
 
   return <LedgerAccounts deviceId={deviceId} onAdd={onPressAdd} />;
