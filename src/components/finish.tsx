@@ -43,7 +43,7 @@ export const Finish = ({
       <Button
         style={page.button}
         variant={ButtonVariant.contained}
-        title="Finish"
+        i18n={I18N.finishProceed}
         testID={`${testID}_finish`}
         onPress={onFinish}
       />

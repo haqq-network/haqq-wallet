@@ -24,23 +24,28 @@ export const DataContent = ({
   subtitleI18n,
 }: DataContentProps) => {
   return (
-    <View style={[reversed && page.reverse, style]}>
+    <View style={[styles.container, reversed && styles.reverse, style]}>
       <Text
         t11
-        style={page.title}
+        style={styles.title}
         color={Color.textBase1}
         ellipsizeMode="tail"
         i18n={titleI18n}
         numberOfLines={1}>
         {title}
       </Text>
-      <Text t14 i18n={subtitleI18n} color={Color.textBase2}>
-        {subtitle}
-      </Text>
+      {(subtitleI18n || subtitle) && (
+        <Text t14 i18n={subtitleI18n} color={Color.textBase2}>
+          {subtitle}
+        </Text>
+      )}
     </View>
   );
 };
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 16,
+  },
   title: {
     marginBottom: 2,
     alignItems: 'center',

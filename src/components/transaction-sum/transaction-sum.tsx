@@ -1,22 +1,23 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
+import {TextInput, TouchableWithoutFeedback} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   KeyboardSafeArea,
   LabeledBlock,
   Spacer,
+  SumBlock,
   Text,
 } from '@app/components/ui';
-import {SumBlock} from '@app/components/ui/sum-block';
-import {useContacts} from '@app/hooks';
-import {useSumAmount} from '@app/hooks/use-sum-amount';
+import {createTheme} from '@app/helpers';
+import {useContacts, useSumAmount} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
-import {LIGHT_TEXT_BASE_1} from '@app/variables';
 
 export type TransactionSumProps = {
   balance: number;
@@ -66,11 +67,11 @@ export const TransactionSum = ({
   }, [amounts]);
 
   return (
-    <KeyboardSafeArea isNumeric style={page.container}>
+    <KeyboardSafeArea isNumeric style={styles.container}>
       <TouchableWithoutFeedback onPress={onContact}>
-        <LabeledBlock label="Send to">
+        <LabeledBlock i18nLabel={I18N.transactionSumSend}>
           <Text
-            color={LIGHT_TEXT_BASE_1}
+            color={Color.textBase1}
             numberOfLines={1}
             ellipsizeMode="middle">
             {formattedAddress}
@@ -88,17 +89,17 @@ export const TransactionSum = ({
       />
       <Spacer />
       <Button
-        style={page.submit}
+        style={styles.submit}
         disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
-        title="Preview"
+        i18n={I18N.transactionSumPereview}
         onPress={onDone}
       />
     </KeyboardSafeArea>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {justifyContent: 'space-between', paddingHorizontal: 20},
   submit: {
     marginVertical: 16,
