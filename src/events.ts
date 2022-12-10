@@ -1,9 +1,9 @@
 import base64 from 'react-native-base64';
 
 import {app} from '@app/contexts';
-import {navigator} from '@app/navigator';
 import {captureException} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {navigator} from '@app/navigator';
 import {pushNotifications} from '@app/services/push-notifications';
 
 export enum Events {
