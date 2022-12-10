@@ -17,10 +17,19 @@ import {VOTES} from '@app/variables';
 
 export type PopupProposalVoteProps = {
   onSubmitVote: (vote: VoteNamesType) => void;
+  onChangeVote?: (vote: VoteNamesType) => void;
 };
 
-export const PopupProposalVote = ({onSubmitVote}: PopupProposalVoteProps) => {
+export const PopupProposalVote = ({
+  onSubmitVote,
+  onChangeVote,
+}: PopupProposalVoteProps) => {
   const [selected, setSelected] = useState(VOTES[0].name);
+
+  const handleChange = (vote: VoteNamesType) => {
+    setSelected(vote);
+    onChangeVote?.(vote);
+  };
 
   return (
     <View style={styles.sub}>
@@ -49,7 +58,7 @@ export const PopupProposalVote = ({onSubmitVote}: PopupProposalVoteProps) => {
               textColor={isSelected ? Color.textBase3 : Color.textBase1}
               i18n={i18n}
               onPress={() =>
-                isSelected ? onSubmitVote(name) : setSelected(name)
+                isSelected ? onSubmitVote(name) : handleChange(name)
               }
             />
           );

@@ -213,6 +213,7 @@ export enum I18N {
   popupProposalVoteDescription,
   proposalVoteResults,
   proposalYouVoted,
+  proposalAccountTitle,
   notificationRewardReceived,
   welcomeTitle,
   welcomeDescription,
@@ -515,6 +516,7 @@ const en: Record<I18N, string> = {
     'You can change your vote while the voting is in progress',
   [I18N.proposalVoteResults]: 'Vote results',
   [I18N.proposalYouVoted]: 'You voted',
+  [I18N.proposalAccountTitle]: 'Vote from',
   [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No account is connected',
   [I18N.welcomeDescription]:

@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 
 import {format} from 'date-fns';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -18,16 +18,21 @@ import {
   VotingLineInterface,
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
-import {useApp, useTypedRoute} from '@app/hooks';
+import {useApp, useTypedRoute, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {ProposalsTags, VoteNamesType} from '@app/types';
+import {VOTES} from '@app/variables';
 
 export function Proposal() {
   const {hash} = useTypedRoute<'proposal'>().params;
-  const votingRef = useRef<VotingLineInterface>();
   const {bottom} = useSafeAreaInsets();
+  const votingRef = useRef<VotingLineInterface>();
+  const voteSelectedRef = useRef<VoteNamesType>();
+
   const app = useApp();
+  const {visible} = useWalletsList();
+  const closeDistance = useWindowDimensions().height / 6;
 
   const item = useMemo(() => {
     return GovernanceVoting.getByHash(hash);
@@ -38,17 +43,45 @@ export function Proposal() {
   };
 
   useEffect(() => {
-    showModal('proposal-vote', {eventSuffix: '-proposal'});
+    const onVotedSubmit = (address: string) => {
+      const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
 
-    const onVote = (vote: VoteNamesType) => {
-      console.log(vote);
+      if (item) {
+        item.newVote(address, opinion);
+      }
     };
-
-    app.on('proposal-vote-proposal', onVote);
+    app.addListener('wallet-selected-proposal', onVotedSubmit);
     return () => {
-      app.off('proposal-vote-proposal', onVote);
+      app.removeListener('wallet-selected-proposal', onVotedSubmit);
     };
-  }, [app]);
+  }, [app, item]);
+
+  useEffect(() => {
+    if (item?.status === 'voting') {
+      showModal('proposal-vote', {eventSuffix: '-proposal'});
+
+      const onVote = (vote: VoteNamesType) => {
+        voteSelectedRef.current = vote;
+        votingRef.current?.setSelected(vote);
+        showModal('wallets-bottom-sheet', {
+          wallets: visible,
+          closeDistance,
+          title: I18N.proposalAccountTitle,
+          eventSuffix: '-proposal',
+        });
+      };
+
+      const onVoteChange = (vote: VoteNamesType) =>
+        votingRef.current?.setSelected(vote);
+
+      app.on('proposal-vote-proposal', onVote);
+      app.on('proposal-vote-change-proposal', onVoteChange);
+      return () => {
+        app.off('proposal-vote-proposal', onVote);
+        app.off('proposal-vote-change-proposal', onVoteChange);
+      };
+    }
+  }, [app, item, closeDistance, visible]);
   // useEffect(() => {
   //   if (item?.orderNumber) {
   //     (async () => {

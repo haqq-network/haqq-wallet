@@ -17,13 +17,17 @@ export function ProposalVote({eventSuffix = ''}: ProposalVoteProps) {
   const app = useApp();
 
   const onPressVote = (vote: VoteNamesType) => () => {
-    app.emit(`proposal-vote${eventSuffix}`, vote);
     hideModal();
+    app.emit(`proposal-vote${eventSuffix}`, vote);
   };
 
   const onPressOutContent = () => {
     app.emit(`proposal-vote-close${eventSuffix}`);
     hideModal();
+  };
+
+  const onChangeVote = (vote: VoteNamesType) => {
+    app.emit(`proposal-vote-change${eventSuffix}`, vote);
   };
 
   return (
@@ -32,7 +36,10 @@ export function ProposalVote({eventSuffix = ''}: ProposalVoteProps) {
       onPressOutContent={onPressOutContent}
       transparent>
       {onClose => (
-        <PopupProposalVote onSubmitVote={vote => onClose(onPressVote(vote))} />
+        <PopupProposalVote
+          onChangeVote={onChangeVote}
+          onSubmitVote={vote => onClose(onPressVote(vote))}
+        />
       )}
     </BottomPopupContainer>
   );

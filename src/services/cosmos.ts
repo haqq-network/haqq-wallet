@@ -272,7 +272,7 @@ export class Cosmos {
 
       return await this.sendMsg(source, sender, msg);
     } catch (e) {
-      captureException(e, 'Cosmos.delegate');
+      captureException(e, 'Cosmos.vote');
     }
   }
 

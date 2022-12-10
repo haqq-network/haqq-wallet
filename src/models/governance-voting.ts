@@ -154,6 +154,11 @@ export class GovernanceVoting extends Realm.Object {
     }
   }
 
+  newVote(address: string, vote: number) {
+    const cosmos = new Cosmos(app.provider!);
+    cosmos.vote(address, this.orderNumber, vote);
+  }
+
   static getByHash(hash: string) {
     return realm.objectForPrimaryKey<GovernanceVoting>(
       GovernanceVoting.schema.name,
