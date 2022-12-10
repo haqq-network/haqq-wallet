@@ -2,22 +2,23 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {NoTransactionsIcon, Text} from './ui';
-
-import {LIGHT_GRAPHIC_SECOND_3, LIGHT_TEXT_SECOND_1} from '../variables';
+import {Color, getColor} from '@app/colors';
+import {NoTransactionsIcon, Text} from '@app/components/ui';
+import {I18N} from '@app/i18n';
 
 export const TransactionEmpty = () => {
   return (
-    <View style={page.container}>
-      <NoTransactionsIcon color={LIGHT_GRAPHIC_SECOND_3} style={page.space} />
-      <Text t14 style={{color: LIGHT_TEXT_SECOND_1}}>
-        No transactions
-      </Text>
+    <View style={styles.container}>
+      <NoTransactionsIcon
+        color={getColor(Color.graphicSecond3)}
+        style={styles.space}
+      />
+      <Text t14 i18n={I18N.transactionsEmpty} color={Color.textSecond1} />
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
