@@ -15,10 +15,13 @@ import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
 
 export type FinishProps = {
-  title: I18N;
+  title?: string;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
   onFinish: () => void;
   testID?: string;
 };
+
 
 export const Finish = ({title, onFinish, testID}: FinishProps) => {
   const theme = useTheme();
@@ -29,6 +32,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
 
     return require('../../assets/animations/success-animation.json');
   }, [theme]);
+
   return (
     <PopupContainer>
       <Spacer>
