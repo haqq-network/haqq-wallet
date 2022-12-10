@@ -1,53 +1,40 @@
 import React, {useState} from 'react';
 
-import {Alert} from 'react-native';
-
 import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
 import {CustomHeader} from '@app/components/ui';
-import {useContacts, useTypedNavigation} from '@app/hooks';
-import {useTypedRoute} from '@app/hooks/use-typed-route';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
-export const SettingsContactEdit = () => {
-  const {name, address, isCreate} =
-    useTypedRoute<'settingsContactEdit'>().params;
+type SettingsContactEditProps = {
+  address: string;
+  name: string;
+  actionSheetVisible: boolean;
+  isCreate: boolean | undefined;
+  onRemove: () => void;
+  onSubmit: (value?: string) => void;
+  onPressDiscard: () => void;
+  goBack: () => void;
+  setInputName: React.Dispatch<React.SetStateAction<string>>;
+  setActionSheetVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const contacts = useContacts();
-  const {goBack} = useTypedNavigation();
-
+export const SettingsContactEdit = ({
+  address,
+  name,
+  isCreate,
+  actionSheetVisible,
+  onRemove,
+  onSubmit,
+  onPressDiscard,
+  goBack,
+  setActionSheetVisible,
+}: SettingsContactEditProps) => {
   const [inputName, setInputName] = useState(name);
   const [isEdit, setIsEdit] = useState(!!isCreate);
-  const [actionSheetVisible, setActionSheetVisible] = useState(false);
 
   const isChanged = inputName !== name;
 
-  const onSubmit = (newName?: string) => {
-    if (isCreate) {
-      contacts.createContact(address, newName || inputName);
-    } else {
-      contacts.updateContact(address, newName || inputName);
-    }
-    goBack();
-  };
-  const onRemove = () => {
-    const delateContact = getText(I18N.settingsContactEditDeleteContact);
-    const sure = getText(I18N.settingsContactEditSure);
-    const deleteWord = getText(I18N.settingsContactEditDelete);
-    const cancel = getText(I18N.cancel);
-    Alert.alert(delateContact, sure, [
-      {text: cancel, style: 'cancel'},
-      {
-        text: deleteWord,
-        style: 'destructive',
-        onPress: () => {
-          contacts.removeContact(address);
-          goBack();
-        },
-      },
-    ]);
-  };
   const onPressRight = () => {
     if (!isEdit) {
       setIsEdit(true);
@@ -66,10 +53,6 @@ export const SettingsContactEdit = () => {
     }
   };
 
-  const onPressDiscard = () => {
-    setActionSheetVisible(false);
-    goBack();
-  };
   const onChangeAddress = (text: string) => {
     setInputName(text);
   };
