@@ -20,20 +20,25 @@ export type CreateAgreementProps = {
   testID?: string;
 };
 
-const {height: windowHeight, width: windowWidth} = useWindowDimensions();
-
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   const animation = require('../../../assets/animations/first-screen-animation.json');
+  const {height: windowHeight, width: windowWidth} = useWindowDimensions();
+  const animationHeight = {
+    height: Math.min(windowWidth, windowHeight * 0.355),
+  };
+  const imageHeight = {
+    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
+  };
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
-      <View pointerEvents="none" style={styles.animation}>
+      <View pointerEvents="none" style={[styles.animation, animationHeight]}>
         <LottieWrap
           source={animation}
           autoPlay
           loop={false}
           resizeMode="center"
-          style={styles.image}
+          style={imageHeight}
         />
       </View>
       <Text t4 center style={styles.title} i18n={I18N.createAgreementTitle} />
@@ -64,7 +69,6 @@ const styles = createTheme({
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: Math.min(windowWidth, windowHeight * 0.355),
   },
   title: {
     marginBottom: 4,
@@ -75,7 +79,4 @@ const styles = createTheme({
     marginBottom: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  image: {
-    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
-  },
 });
