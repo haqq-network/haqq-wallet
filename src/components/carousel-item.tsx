@@ -12,7 +12,7 @@ export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
   return (
     <Animated.View
       style={[
-        page.container,
+        styles.container,
         {
           transform: [
             {
@@ -35,7 +35,7 @@ export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

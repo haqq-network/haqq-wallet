@@ -1,19 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet} from 'react-native';
-
-import {useWallets} from '@app/hooks';
-
-import {PopupContainer} from '../components/ui';
-import {WalletRow} from '../components/wallet-row';
-import {RootStackParamList} from '../types';
+import {TransactionAccount} from '@app/components/transaction-account';
+import {useTypedNavigation, useTypedRoute, useWalletsList} from '@app/hooks';
 
 export const TransactionAccountScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'transactionAccount'>>();
-  const wallets = useWallets();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'transactionAccount'>();
+  const rows = useWalletsList();
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate('transactionAddress', {
@@ -24,33 +17,5 @@ export const TransactionAccountScreen = () => {
     [navigation, route.params],
   );
 
-  const [rows, setRows] = useState(wallets.getWallets());
-
-  useEffect(() => {
-    setRows(wallets.getWallets());
-
-    const callback = () => {
-      setRows(wallets.getWallets());
-    };
-
-    wallets.on('wallets', callback);
-    return () => {
-      wallets.off('wallets', callback);
-    };
-  }, [wallets]);
-
-  return (
-    <PopupContainer style={styles.container}>
-      <FlatList
-        data={rows}
-        renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
-      />
-    </PopupContainer>
-  );
+  return <TransactionAccount rows={rows.wallets} onPressRow={onPressRow} />;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 20,
-  },
-});
