@@ -2,13 +2,13 @@ import {PATTERNS_SOURCE} from '@env';
 import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
 
-import {Transaction} from './models/transaction';
+import {Transaction} from '@app/models/transaction';
 import {
   TransactionList,
   TransactionListReceive,
   TransactionListSend,
   TransactionSource,
-} from './types';
+} from '@app/types';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
