@@ -153,6 +153,13 @@ export enum I18N {
   settingsTestStaked,
   settingsTestUnbounded,
   settingsTestUndelegate,
+  settingsAddressBookLabel,
+  settingsAddressBookPlaceholder,
+  settingsAddressBookAdd,
+  settingsAddressBookAlertTitle,
+  settingsAddressBookAlertDesc,
+  settingsAddressBookAlertBtnFirst,
+  settingsAddressBookAlertBtnSecond,
   transactionSendTitle,
   signinStoreWalletText,
   signinStoreWalletAccountNumber,
@@ -486,8 +493,6 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountDetailChangeStyleSubtitle]:
     'Change the picture of the account',
   [I18N.settingsAccountDetailHideTitle]: 'Hide account',
-  [I18N.settingsAccountDetailHideSubtitle]:
-    'Will be hidden from the general list',
   [I18N.settingsContactEditDelete]: 'Delete',
   [I18N.settingsContactEditSure]:
     'Are you sure you want to delete the selected contact?',
@@ -605,12 +610,6 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutDiscord]: 'Discord',
   [I18N.settingsAboutTwitter]: 'Twitter',
   [I18N.settingsAboutRights]: `©2022 IslamIQ. All Rights Reserved. Version ${getAppVersion()} (${getBuildNumber()})`,
-  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
-  [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
-  [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
-  [I18N.settingsAccountDetailChangeStyleSubtitle]:
-    'Change the picture of the account',
-  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
   [I18N.settingsAccountDetailHideSubtitle]:
     'Will be hidden from the general list',
   [I18N.welcomeRestoreWallet]: 'I already have an account',
