@@ -27,9 +27,7 @@ const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 export const LedgerScreen = () => {
   const user = useUser();
   return (
-    <LedgerStack.Navigator
-      initialRouteName="onboardingRepeatPin"
-      screenOptions={popupScreenOptions}>
+    <LedgerStack.Navigator screenOptions={popupScreenOptions}>
       <LedgerStack.Screen
         name="ledgerAgreement"
         component={LedgerAgreementScreen}
