@@ -1,42 +1,43 @@
 import React, {useEffect} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
-import {captureException, showModal} from '@app/helpers';
-import {useWallets} from '@app/hooks';
+import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {EthNetwork} from '@app/services';
 import {restoreFromMnemonic} from '@app/services/eth-utils';
+import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
-import {RootStackParamList, WalletType} from '../types';
-
 export const SignInStoreWalletScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'restoreStore'>>();
+  const navigation = useTypedNavigation();
+  const {nextScreen, mnemonic, privateKey} =
+    useTypedRoute<'restoreStore'>().params;
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal('loading', {
-      text: 'Account recovery in progress',
-    });
+    showLoadingWithText(I18N.signinStoreWalletText);
   }, []);
 
   useEffect(() => {
+    const goBack = () => {
+      navigation.getParent()?.goBack();
+    };
     setTimeout(async () => {
+      const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+        number: `${wallets.getSize() + 1}`,
+      });
       try {
-        if (route.params.mnemonic) {
+        if (mnemonic) {
           let canNext = true;
           let index = 0;
           while (canNext) {
             const name =
-              wallets.getSize() === 0
-                ? MAIN_ACCOUNT_NAME
-                : `Account #${wallets.getSize() + 1}`;
+              wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
             const node = await restoreFromMnemonic(
-              String(route.params.mnemonic),
+              String(mnemonic),
               `${ETH_HD_SHORT_PATH}/${index}`,
             );
 
@@ -74,14 +75,12 @@ export const SignInStoreWalletScreen = () => {
 
             index += 1;
           }
-        } else if (route.params.privateKey) {
+        } else if (privateKey) {
           const name =
-            wallets.getSize() === 0
-              ? MAIN_ACCOUNT_NAME
-              : `Account #${wallets.getSize() + 1}`;
+            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
           const wallet = await wallets.addWalletFromPrivateKey(
-            route.params.privateKey,
+            privateKey,
             name,
           );
 
@@ -90,23 +89,23 @@ export const SignInStoreWalletScreen = () => {
           }
         }
 
-        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+        navigation.navigate(nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
             showModal('error-account-added');
-            navigation.getParent()?.goBack();
+            goBack();
             break;
           default:
             if (error instanceof Error) {
               showModal('error-create-account');
               captureException(error, 'restoreStore');
-              navigation.getParent()?.goBack();
+              goBack();
             }
         }
       }
     }, 350);
-  }, [navigation, route, wallets]);
+  }, [navigation, nextScreen, mnemonic, privateKey, wallets]);
 
   return <View />;
 };

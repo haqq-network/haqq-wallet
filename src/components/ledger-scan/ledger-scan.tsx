@@ -5,14 +5,13 @@ import {FlatList} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
+import {PopupContainer} from '@app/components/ui';
 import {captureException} from '@app/helpers';
 import {useApp} from '@app/hooks';
 
 import {LedgerScanEmpty} from './ledger-scan-empty';
 import {LedgerScanHeader} from './ledger-scan-header';
 import {LedgerScanRow} from './ledger-scan-row';
-
-import {PopupContainer} from '../ui';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;

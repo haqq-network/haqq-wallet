@@ -1,14 +1,12 @@
 import React, {useEffect} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
-import {useWallets} from '@app/hooks';
+import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {generateMnemonic} from '@app/services/eth-utils';
-import {RootStackParamList} from '@app/types';
 import {
   ETH_HD_PATH,
   ETH_HD_SHORT_PATH,
@@ -16,17 +14,20 @@ import {
 } from '@app/variables';
 
 export const SignupStoreWalletScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'createStoreWallet'>>();
+  const navigation = useTypedNavigation();
+  const {nextScreen} = useTypedRoute<'createStoreWallet'>().params;
 
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal('loading', {text: 'Creating an account'});
+    showLoadingWithText(I18N.signupStoreWalletCreatingAccount);
   }, []);
 
   useEffect(() => {
     setTimeout(async () => {
+      const accountNumber = getText(I18N.signupStoreWalletAccountNumber, {
+        number: `${wallets.getSize() + 1}`,
+      });
       try {
         const main = wallets.getMain();
 
@@ -35,9 +36,7 @@ export const SignupStoreWalletScreen = () => {
           const wallet = await wallets.addWalletFromMnemonic(
             mnemonic,
             ETH_HD_PATH,
-            wallets.getSize() === 0
-              ? MAIN_ACCOUNT_NAME
-              : `Account #${wallets.getSize() + 1}`,
+            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber,
           );
           if (wallet) {
             wallet.isMain = true;
@@ -59,7 +58,7 @@ export const SignupStoreWalletScreen = () => {
           const wallet = await wallets.addWalletFromMnemonic(
             mnemonic,
             `${ETH_HD_SHORT_PATH}/${last + 1}`,
-            `Account #${wallets.getSize() + 1}`,
+            accountNumber,
           );
 
           if (wallet) {
@@ -67,7 +66,7 @@ export const SignupStoreWalletScreen = () => {
           }
         }
 
-        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+        navigation.navigate(nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
@@ -83,7 +82,7 @@ export const SignupStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [navigation, route, wallets]);
+  }, [navigation, nextScreen, wallets]);
 
   return <View />;
 };

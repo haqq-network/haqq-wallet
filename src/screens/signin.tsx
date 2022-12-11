@@ -3,6 +3,8 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {popupScreenOptions} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {ScreenOptionType} from '@app/types';
 
 import {OnboardingBiometryScreen} from './onboarding-biometry';
 import {OnboardingFinishScreen} from './onboarding-finish';
@@ -12,8 +14,6 @@ import {SignInAgreementScreen} from './signin-agreement';
 import {SignInRestoreScreen} from './signin-restore-wallet';
 import {SignInStoreWalletScreen} from './signin-store-wallet';
 
-import {ScreenOptionType} from '../types';
-
 const SignInStack = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {
@@ -22,7 +22,7 @@ const screenOptions: ScreenOptionType = {
 };
 
 export const SignInScreen = () => {
-  const title = 'Recovery account';
+  const title = getText(I18N.signInTitle);
   return (
     <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
