@@ -4,7 +4,7 @@ import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings-providers/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {useTypedNavigation, useUser} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
 
@@ -47,8 +47,8 @@ export const SettingsProvidersScreen = () => {
       <CustomHeader
         onPressLeft={navigation.goBack}
         iconLeft="arrow_back"
-        title={getText(I18N.settingsProvidersTitle)}
-        textRight={getText(I18N.settingsProvidersTitleRight)}
+        i18nTitle={I18N.settingsProvidersTitle}
+        i18nTextRight={I18N.settingsProvidersTitleRight}
         colorRight={Color.textGreen1}
         onPressRight={onPressAdd}
       />
