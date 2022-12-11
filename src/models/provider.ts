@@ -47,14 +47,17 @@ export class Provider extends Realm.Object {
   }
 
   static create(params: Partial<Provider>) {
+    let id = generateUUID();
     realm.write(() => {
       realm.create(Provider.schema.name, {
         ...params,
         tmRpcEndpoint: '',
         isEditable: true,
-        id: generateUUID(),
+        id,
       });
     });
+
+    return id;
   }
 
   static remove(id: string) {
