@@ -38,9 +38,16 @@ export const OnboardingBiometry = ({
   const icon = useMemo(() => {
     switch (biometryType) {
       case BiometryType.faceId:
-        return <FaceIdIcon color={Color.graphicBase1} style={style.icon} />;
+        return (
+          <FaceIdIcon color={getColor(Color.graphicBase1)} style={style.icon} />
+        );
       case BiometryType.touchId:
-        return <TouchIdIcon color={Color.graphicBase1} style={style.icon} />;
+        return (
+          <TouchIdIcon
+            color={getColor(Color.graphicBase1)}
+            style={style.icon}
+          />
+        );
       case BiometryType.fingerprint:
         return (
           <FingerprintIcon
