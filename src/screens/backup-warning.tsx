@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {BackupWarning} from '@app/components/backup-warning';
 import {app} from '@app/contexts/app';
@@ -8,15 +8,6 @@ export const BackupWarningScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'backupWarning'>();
   const wallet = useWallet(route.params.address);
-  const theme = useTheme();
-
-  const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('../../assets/animations/backup-start-dark.json');
-    }
-
-    return require('../../assets/animations/backup-start-light.json');
-  }, [theme]);
 
   const onPressBackup = async () => {
     const password = await app.getPassword();
@@ -27,7 +18,5 @@ export const BackupWarningScreen = () => {
     });
   };
 
-
   return <BackupWarning onPressBackup={onPressBackup} />;
 };
-
