@@ -1,42 +1,53 @@
 import React from 'react';
 
-import {Dimensions, View} from 'react-native';
+import {View} from 'react-native';
 
-import {createTheme, windowHeight} from '../../helpers';
-import {I18N, getText} from '../../i18n';
-import {LottieWrap} from '../lottie';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
+import {Color} from '@app/colors';
+import {
+  Button,
+  ButtonVariant,
+  LottieWrap,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {createTheme, windowHeight, windowWidth} from '@app/helpers';
+import {I18N} from '@app/i18n';
 // import {Terms} from '../ui/terms';
 
 export type CreateAgreementProps = {
   onDone: () => void;
   testID?: string;
 };
-const windowWidth = Dimensions.get('window').width;
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
+  const animation = require('../../../assets/animations/first-screen-animation.json');
+
   return (
-    <PopupContainer style={page.container} testID={testID}>
-      <View pointerEvents="none" style={page.animation}>
+    <PopupContainer style={styles.container} testID={testID}>
+      <View pointerEvents="none" style={styles.animation}>
         <LottieWrap
-          source={require('../../../assets/animations/first-screen-animation.json')}
+          source={animation}
           autoPlay
           loop={false}
-          style={page.image}
+          resizeMode="center"
+          style={styles.image}
         />
       </View>
-      <Text t4 style={page.title}>
-        {getText(I18N.createAgreementTitle)}
-      </Text>
-      <Text t11 style={page.disclaimer}>
-        {getText(I18N.createAgreementText)}
-      </Text>
+      <Text t4 center style={styles.title} i18n={I18N.createAgreementTitle} />
+      <Text
+        t11
+        center
+        style={styles.disclaimer}
+        i18n={I18N.createAgreementText}
+        color={Color.textBase2}
+      />
       <Spacer />
       <Button
         testID={`${testID}_agree`}
-        style={page.submit}
+        style={styles.submit}
         variant={ButtonVariant.contained}
-        title={getText(I18N.createAgreementAgree)}
+        i18n={I18N.createAgreementAgree}
         onPress={onDone}
       />
       {/*<Terms style={page.agreement} />*/}
