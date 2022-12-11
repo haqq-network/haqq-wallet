@@ -1,14 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {Device} from 'react-native-ble-plx';
 
-import {LedgerScan} from '../components/ledger-scan';
-import {RootStackParamList} from '../types';
+import {LedgerScan} from '@app/components/ledger-scan';
+import {useTypedNavigation} from '@app/hooks';
 
 export const LedgerScanScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
 
   const onPress = useCallback(
     (item: Device) => {

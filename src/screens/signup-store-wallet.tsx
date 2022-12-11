@@ -15,7 +15,7 @@ import {
   MAIN_ACCOUNT_NAME,
 } from '@app/variables';
 
-export const SignupStoreWalletScreen = () => {
+export const SignUpStoreWalletScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'createStoreWallet'>>();
 
