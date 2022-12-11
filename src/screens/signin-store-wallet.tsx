@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {captureException, showModal} from '@app/helpers';
+import {captureException, showLoadingWithText, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {EthNetwork} from '@app/services';
@@ -17,9 +17,7 @@ export const SigninStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showModal('loading', {
-      text: getText(I18N.signinStoreWalletText),
-    });
+    showLoadingWithText(I18N.signinStoreWalletText);
   }, []);
 
   useEffect(() => {
