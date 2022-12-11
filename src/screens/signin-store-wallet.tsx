@@ -18,7 +18,7 @@ export const SigninStoreWalletScreen = () => {
 
   useEffect(() => {
     showModal('loading', {
-      text: getText(I18N.singinStoreWalletText),
+      text: getText(I18N.signinStoreWalletText),
     });
   }, []);
 
@@ -27,8 +27,8 @@ export const SigninStoreWalletScreen = () => {
       navigation.getParent()?.goBack();
     };
     setTimeout(async () => {
-      const accountNumber = getText(I18N.singinStoreWalletAccountNumber, {
-        number: getText(wallets.getSize() + 1),
+      const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+        number: `${wallets.getSize() + 1}`,
       });
       try {
         if (mnemonic) {
