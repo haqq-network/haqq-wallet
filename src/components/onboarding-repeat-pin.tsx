@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {View} from 'react-native';
 
@@ -6,19 +6,42 @@ import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme, verticalScale} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {useTypedRoute} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {vibrate} from '@app/services/haptic';
 
 type OnboardingRepeatPinProps = {
-  onKeyboard: (value: number) => void;
-  pin: string;
-  error: string;
+  onSetPin: (pin: string) => void;
 };
 
-export const OnboardingRepeatPin = ({
-  onKeyboard,
-  pin,
-  error,
-}: OnboardingRepeatPinProps) => {
+export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState('');
+  const route = useTypedRoute<'onboardingRepeatPin'>();
+  const {currentPin} = route.params;
+
+  const onKeyboard = useCallback((value: number) => {
+    vibrate();
+    if (value > -1) {
+      setPin(p => `${p}${value}`.slice(0, 6));
+    } else {
+      setPin(p => p.slice(0, p.length - 1));
+    }
+    setError('');
+  }, []);
+
+  useEffect(() => {
+    if (pin.length === 6) {
+      if (pin === currentPin) {
+        onSetPin(pin);
+      } else {
+        const invalidCode = getText(I18N.onboardingRepeatPinInvalidCode);
+        setError(invalidCode);
+        setPin('');
+      }
+    }
+  }, [pin, currentPin, route, onSetPin]);
+
   return (
     <PopupContainer style={styles.container}>
       <Text t4 i18n={I18N.onboardingRepeatPinRepeat} />
