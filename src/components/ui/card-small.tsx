@@ -4,11 +4,8 @@ import {PATTERNS_SOURCE} from '@env';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {
-  CARD_DEFAULT_STYLE,
-  GRADIENT_END,
-  GRADIENT_START,
-} from '../../variables';
+import {createTheme} from '@app/helpers';
+import {CARD_DEFAULT_STYLE, GRADIENT_END, GRADIENT_START} from '@app/variables';
 
 export type CardSmallProps = {
   children?: React.ReactNode;
@@ -38,7 +35,7 @@ export const CardSmall = ({
       start={GRADIENT_START}
       end={GRADIENT_END}
       style={[
-        page.container,
+        styles.container,
         {
           width: width,
           height: width * 0.692307692,
@@ -63,7 +60,7 @@ export const CardSmall = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     padding: 16,
     overflow: 'hidden',

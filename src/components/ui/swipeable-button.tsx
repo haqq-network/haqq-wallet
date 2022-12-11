@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
 
-import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {Animated, TouchableWithoutFeedback} from 'react-native';
 
-import {SwipeableAction} from '../../types';
+import {createTheme} from '@app/helpers';
+import {SwipeableAction} from '@app/types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {
   progress: Animated.AnimatedInterpolation<number>;
@@ -47,7 +48,7 @@ export const SwipeableButton = ({
   return (
     <Animated.View
       style={[
-        page.container,
+        styles.container,
         {
           backgroundColor: backgroundColor,
           transform: [{translateX: buttonPosition}],
@@ -63,13 +64,13 @@ export const SwipeableButton = ({
           ],
         }}
         onPress={pressHandler}>
-        <Animated.View style={page.iconContainer}>{icon}</Animated.View>
+        <Animated.View style={styles.iconContainer}>{icon}</Animated.View>
       </AnimatedTouchableWithoutFeedback>
     </Animated.View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {width: 74},
   iconContainer: {
     width: '100%',

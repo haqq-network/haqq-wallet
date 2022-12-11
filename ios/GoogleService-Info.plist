@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CLIENT_ID</key>
+  <string>915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com</string>
+  <key>REVERSED_CLIENT_ID</key>
+  <string>com.googleusercontent.apps.915453653093-22njaj5n8vs0o332485b85iamk0vlt2f</string>
+  <key>API_KEY</key>
+  <string>AIzaSyDDybcesuHP8g6k4mtqgxnpWClLeuJqvWg</string>
+  <key>GCM_SENDER_ID</key>
+  <string>915453653093</string>
+  <key>PLIST_VERSION</key>
+  <string>1</string>
+  <key>BUNDLE_ID</key>
+  <string>com.haqq.wallet</string>
+  <key>PROJECT_ID</key>
+  <string>haqq-test</string>
+  <key>STORAGE_BUCKET</key>
+  <string>haqq-test.appspot.com</string>
+  <key>IS_ADS_ENABLED</key>
+  <false></false>
+  <key>IS_ANALYTICS_ENABLED</key>
+  <false></false>
+  <key>IS_APPINVITE_ENABLED</key>
+  <true></true>
+  <key>IS_GCM_ENABLED</key>
+  <true></true>
+  <key>IS_SIGNIN_ENABLED</key>
+  <true></true>
+  <key>GOOGLE_APP_ID</key>
+  <string>1:915453653093:ios:980a66805cb19f9054568c</string>
+</dict>
+</plist>

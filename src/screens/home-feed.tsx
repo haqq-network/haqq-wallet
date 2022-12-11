@@ -1,18 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FlatList, StyleSheet} from 'react-native';
-
-import {useTransactions, useUser, useWallets} from '@app/hooks';
-
-import {TransactionEmpty} from '../components/transaction-empty';
-import {TransactionRow} from '../components/transaction-row';
-import {Wallets} from '../components/wallets';
-import {Transaction} from '../models/transaction';
-import {Wallet} from '../models/wallet';
-import {RootStackParamList, TransactionList} from '../types';
-import {prepareTransactions} from '../utils';
+import {HomeFeed} from '@app/components/home-feed';
+import {
+  useTransactions,
+  useTypedNavigation,
+  useUser,
+  useWallets,
+} from '@app/hooks';
+import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
+import {TransactionList} from '@app/types';
+import {prepareTransactions} from '@app/utils';
 
 const filterTransactions = (
   transactions: Transaction[],
@@ -24,14 +22,11 @@ const filterTransactions = (
 };
 
 export const HomeFeedScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const user = useUser();
-
-  const wallets = useWallets();
+  const navigation = useTypedNavigation();
   const transactions = useTransactions();
-
+  const wallets = useWallets();
+  const user = useUser();
   const [refreshing, setRefreshing] = useState(false);
-
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
       wallets.addressList,
@@ -39,6 +34,14 @@ export const HomeFeedScreen = () => {
     ),
   );
 
+  const onTransactionList = useCallback(() => {
+    setTransactionsList(
+      prepareTransactions(
+        wallets.addressList,
+        filterTransactions(transactions.transactions, user.providerId),
+      ),
+    );
+  }, [wallets.addressList, transactions.transactions, user.providerId]);
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
 
@@ -52,15 +55,6 @@ export const HomeFeedScreen = () => {
       setRefreshing(false);
     });
   }, [transactions, wallets]);
-
-  const onTransactionList = useCallback(() => {
-    setTransactionsList(
-      prepareTransactions(
-        wallets.addressList,
-        filterTransactions(transactions.transactions, user.providerId),
-      ),
-    );
-  }, [wallets.addressList, transactions.transactions, user.providerId]);
 
   const onBackupMnemonic = useCallback(
     (wallet: Wallet) => {
@@ -88,29 +82,13 @@ export const HomeFeedScreen = () => {
       user.off('change', onTransactionList);
     };
   }, [onBackupMnemonic, onTransactionList, transactions, user, wallets]);
-
   return (
-    <FlatList
-      key={user.providerId}
-      style={page.container}
+    <HomeFeed
+      transactionsList={transactionsList}
       refreshing={refreshing}
-      onRefresh={onWalletsRefresh}
-      scrollEnabled={Boolean(transactionsList.length)}
-      ListHeaderComponent={Wallets}
-      contentContainerStyle={page.grow}
-      ListEmptyComponent={TransactionEmpty}
-      data={transactionsList}
-      renderItem={({item}) => (
-        <TransactionRow item={item} onPress={onPressRow} />
-      )}
-      keyExtractor={item => item.hash}
+      user={user}
+      onWalletsRefresh={onWalletsRefresh}
+      onPressRow={onPressRow}
     />
   );
 };
-
-const page = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  grow: {flexGrow: 1},
-});
