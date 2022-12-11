@@ -71,6 +71,7 @@ export enum I18N {
   transactionLedgerBluetoothConfirmation,
   termsAgreement,
   termsPrivacyPolicy,
+  signInTitle,
   transactionSumSend,
   transactionSumPereview,
   name,
@@ -406,6 +407,7 @@ const en: Record<I18N, string> = {
   [I18N.trackActivityPrivacy]: 'Security and privacy',
   [I18N.trackActivityPrivacyDescription]:
     'We securely store the data we receive. All data is non-personalized',
+  [I18N.signInTitle]: 'Recovery account',
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',

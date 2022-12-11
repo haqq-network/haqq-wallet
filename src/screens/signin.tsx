@@ -3,16 +3,15 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {popupScreenOptions} from '@app/helpers';
-
-import {OnboardingBiometryScreen} from './onboarding-biometry';
-import {OnboardingFinishScreen} from './onboarding-finish';
-import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
-import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-import {SignInAgreementScreen} from './signin-agreement';
-import {SignInRestoreScreen} from './signin-restore-wallet';
-import {SigninStoreWalletScreen} from './signin-store-wallet';
-
-import {ScreenOptionType} from '../types';
+import {I18N, getText} from '@app/i18n';
+import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
+import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
+import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
+import {SignInAgreementScreen} from '@app/screens/signin-agreement';
+import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
+import {SigninStoreWalletScreen} from '@app/screens/signin-store-wallet';
+import {ScreenOptionType} from '@app/types';
 
 const SignInStack = createStackNavigator();
 
@@ -22,7 +21,7 @@ const screenOptions: ScreenOptionType = {
 };
 
 export const SignInScreen = () => {
-  const title = 'Recovery account';
+  const title = getText(I18N.signInTitle);
   return (
     <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
