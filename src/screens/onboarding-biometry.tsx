@@ -1,35 +1,14 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleSheet} from 'react-native';
-
-import {useApp} from '@app/hooks';
-
-import {
-  Button,
-  ButtonVariant,
-  ErrorText,
-  FaceIdIcon,
-  FingerprintIcon,
-  PopupContainer,
-  Spacer,
-  Text,
-  TouchIdIcon,
-} from '../components/ui';
-import {BiometryType, RootStackParamList} from '../types';
-import {
-  BIOMETRY_TYPES_NAMES,
-  LIGHT_GRAPHIC_BASE_1,
-  LIGHT_TEXT_BASE_2,
-} from '../variables';
+import {OnboardingBiometry} from '@app/components/onboarding-biometry';
+import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const OnboardingBiometryScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'onboardingBiometry'>>();
-  const {biometryType} = route.params;
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'onboardingBiometry'>();
   const app = useApp();
   const [error, setError] = useState('');
+  const {biometryType} = route.params;
 
   const onClickSkip = useCallback(() => {
     requestAnimationFrame(() => {
@@ -50,60 +29,12 @@ export const OnboardingBiometryScreen = () => {
     }
   }, [app, onClickSkip]);
 
-  const icon = useMemo(() => {
-    switch (biometryType) {
-      case BiometryType.faceId:
-        return <FaceIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
-      case BiometryType.touchId:
-        return <TouchIdIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />;
-      case BiometryType.fingerprint:
-        return (
-          <FingerprintIcon color={LIGHT_GRAPHIC_BASE_1} style={page.icon} />
-        );
-      default:
-        return null;
-    }
-  }, [biometryType]);
-
   return (
-    <PopupContainer style={page.container}>
-      <Spacer style={page.space}>
-        {icon}
-        <Text t4 style={page.title} testID="onboarding_biometry_title">
-          Enable {BIOMETRY_TYPES_NAMES[biometryType]}
-        </Text>
-        <Text t11 style={page.textStyle}>
-          Safe and fast
-        </Text>
-        {error && (
-          <ErrorText e2 style={page.error}>
-            {error}
-          </ErrorText>
-        )}
-      </Spacer>
-      <Button
-        style={page.margin}
-        variant={ButtonVariant.contained}
-        title={`Enable ${BIOMETRY_TYPES_NAMES[biometryType]}`}
-        testID="onboarding_biometry_enable"
-        onPress={onClickEnable}
-      />
-      <Button
-        style={page.margin}
-        title="Skip"
-        testID="onboarding_biometry_skip"
-        onPress={onClickSkip}
-      />
-    </PopupContainer>
+    <OnboardingBiometry
+      onClickSkip={onClickSkip}
+      onClickEnable={onClickEnable}
+      error={error}
+      biometryType={biometryType}
+    />
   );
 };
-
-const page = StyleSheet.create({
-  container: {marginHorizontal: 20},
-  title: {marginBottom: 12},
-  space: {justifyContent: 'center', alignItems: 'center'},
-  icon: {marginBottom: 40},
-  textStyle: {textAlign: 'center', color: LIGHT_TEXT_BASE_2},
-  margin: {marginBottom: 16},
-  error: {top: 20, textAlign: 'center'},
-});

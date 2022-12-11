@@ -5,10 +5,9 @@ import {
 import {utils} from 'ethers';
 
 import {calcFee, captureException} from '@app/helpers';
-
-import {TransactionSource} from '../types';
-import {cleanNumber} from '../utils';
-import {realm} from './index';
+import {realm} from '@app/models/index';
+import {TransactionSource} from '@app/types';
+import {cleanNumber} from '@app/utils';
 
 export class Transaction extends Realm.Object {
   hash!: string;

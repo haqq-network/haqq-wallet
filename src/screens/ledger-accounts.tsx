@@ -1,25 +1,23 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-import {LedgerAccounts} from '../components/ledger-accounts';
-import {RootStackParamList} from '../types';
+import {LedgerAccounts} from '@app/components/ledger-accounts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const LedgerAccountsScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ledgerAccounts'>>();
+  const navigation = useTypedNavigation();
+  const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
 
   const onPressAdd = useCallback(
     (address: string) => {
       navigation.navigate('ledgerVerify', {
+        nextScreen: 'ledgerStoreWallet',
         address,
-        deviceId: route.params.deviceId,
-        deviceName: route.params.deviceName,
+        deviceId,
+        deviceName,
       });
     },
-    [navigation, route.params.deviceId, route.params.deviceName],
+    [navigation, deviceId, deviceName],
   );
 
-  return <LedgerAccounts deviceId={route.params.deviceId} onAdd={onPressAdd} />;
+  return <LedgerAccounts deviceId={deviceId} onAdd={onPressAdd} />;
 };
