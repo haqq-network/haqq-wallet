@@ -13,13 +13,18 @@ import {ScreenOptionType} from '../types';
 
 const SignInStack = createStackNavigator();
 
-const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
+const screenOptions: ScreenOptionType = {
+  title: '',
+  headerBackHidden: true,
+  tab: false,
+};
 
 const title = 'Restore wallet';
 
 const screenOptionsTitle: ScreenOptionType = {
   title,
   ...hideBack,
+  tab: true,
 };
 
 export const RestoreScreen = () => {
@@ -46,7 +51,7 @@ export const RestoreScreen = () => {
       <SignInStack.Screen
         name="restoreFinish"
         component={OnboardingFinishScreen}
-        options={screenOptionsTitle}
+        options={screenOptions}
         initialParams={{action: 'restore', hide: true}}
       />
     </SignInStack.Navigator>

@@ -14,3 +14,7 @@ export function hideModal(modalName: String | null = null) {
 export function sendNotification(text: I18N) {
   app.emit('notification', getText(text));
 }
+
+export function showLoadingWithText(text: I18N) {
+  app.emit('modal', {type: 'loading', text: getText(text)});
+}
