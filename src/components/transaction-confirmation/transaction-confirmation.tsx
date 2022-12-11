@@ -136,7 +136,7 @@ export const TransactionConfirmation = ({
               <Text
                 color={Color.textBase2}
                 i18n={I18N.transactionConfirmationISLM}
-            />
+              />
             </Text>
           </DataView>
           <DataView label="Network">
@@ -161,7 +161,9 @@ export const TransactionConfirmation = ({
               t11
               color={Color.textBase1}
               i18n={I18N.transactionConfirmationestimateFee}
-              i18params={{estimateFee: `${+estimateFee.toFixed(15)*10**15}`}}
+              i18params={{
+                estimateFee: `${+estimateFee.toFixed(15) * 10 ** 15}`,
+              }}
             />
           </DataView>
         </View>
