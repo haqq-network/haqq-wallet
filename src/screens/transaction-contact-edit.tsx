@@ -4,8 +4,7 @@ import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edi
 import {useContacts, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const TransactionContactEditScreen = () => {
-  const {name, address} =
-    useTypedRoute<'transactionContactEdit'>().params;
+  const {name, address} = useTypedRoute<'transactionContactEdit'>().params;
   const contacts = useContacts();
   const {goBack} = useTypedNavigation();
 
