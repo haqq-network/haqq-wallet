@@ -1,29 +1,34 @@
 import React from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-
-import {OnboardingBiometryScreen} from './onboarding-biometry';
-import {OnboardingFinishScreen} from './onboarding-finish';
-import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
-import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-import {SignUpAgreementScreen} from './signup-agreement';
-import {SignUpStoreWalletScreen} from './signup-store-wallet';
-
-import {RootStackParamList, ScreenOptionType} from '../types';
+import {useTypedRoute} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
+import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
+import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
+import {SignUpAgreementScreen} from '@app/screens/signup-agreement';
+import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
+import {ScreenOptionType} from '@app/types';
 
 const SignUpStack = createStackNavigator();
 
-const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
+const screenOptions: ScreenOptionType = {
+  title: '',
+  headerBackHidden: true,
+};
 
-const title = 'Create a wallet';
+const title = getText(I18N.signUpTitle);
 
-const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
+const screenOptionsBiometry: ScreenOptionType = {
+  title,
+  headerBackHidden: true,
+};
 
 export const SignUpScreen = () => {
-  const route = useRoute<RouteProp<RootStackParamList, 'signup'>>();
+  const route = useTypedRoute<'signup'>();
   return (
     <SignUpStack.Navigator screenOptions={popupScreenOptions}>
       <SignUpStack.Screen
