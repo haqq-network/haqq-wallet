@@ -27,9 +27,9 @@ export const DataContentSplitted = ({
   }, [to]);
 
   return (
-    <View style={[reversed && page.reverse, style]}>
-      <Text t11 style={page.address} onPress={onPress}>
-        <Text t11 style={page.address}>
+    <View style={[reversed && styles.reverse, style]}>
+      <Text t11 style={styles.address} onPress={onPress}>
+        <Text t11 style={styles.address}>
           {to[0]}
         </Text>
         <Text t11 color={Color.textBase2}>
@@ -47,7 +47,7 @@ export const DataContentSplitted = ({
     </View>
   );
 };
-const page = createTheme({
+const styles = createTheme({
   address: {
     minHeight: 22,
     marginBottom: 2,
