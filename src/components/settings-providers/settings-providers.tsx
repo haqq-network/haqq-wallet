@@ -2,9 +2,9 @@ import React from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
 
-import {SettingsProvidersRow} from './settings-providers-row';
+import {Provider} from '@app/models/provider';
 
-import {Provider} from '../../models/provider';
+import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
   providers: Realm.Results<Provider>;
