@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+
 import {CreateAgreement} from '@app/components/create-agreement';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const SignUpAgreementScreen = () => {
   const navigation = useTypedNavigation();
@@ -10,10 +11,5 @@ export const SignUpAgreementScreen = () => {
     navigation.navigate(route.params.nextScreen ?? 'onboardingSetupPin');
   }, [navigation, route.params.nextScreen]);
 
-  return (
-    <CreateAgreement
-      testID="signup_agreement"
-      onDone={onPressAgree}
-    />
-  );
+  return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;
 };
