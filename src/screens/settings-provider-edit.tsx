@@ -6,7 +6,7 @@ import {Provider} from '@app/models/provider';
 
 export const SettingsProviderEditScreen = () => {
   const user = useUser();
-  const {goBack} = useTypedNavigation();
+  const {goBack, setParams} = useTypedNavigation();
   const route = useTypedRoute<'settingsProviderForm'>();
   const provider = useMemo(
     () => (route.params?.id ? Provider.getProvider(route.params?.id) : null),
@@ -18,11 +18,13 @@ export const SettingsProviderEditScreen = () => {
       if (provider) {
         provider.update(data);
       } else {
-        Provider.create(data);
+        let id = Provider.create(data);
+        setParams({
+          id,
+        });
       }
-      goBack();
     },
-    [goBack, provider],
+    [provider, setParams],
   );
 
   const onDelete = useCallback(() => {
@@ -39,10 +41,22 @@ export const SettingsProviderEditScreen = () => {
     goBack();
   }, [goBack, provider, user]);
 
+  const providerData = useMemo(() => {
+    if (provider) {
+      return provider.toJSON();
+    }
+
+    if (route.params.data) {
+      return {...route.params.data, isChanged: true};
+    }
+
+    return null;
+  }, [provider, route.params.data]);
+
   return (
     <>
       <SettingsProviderEdit
-        provider={provider}
+        provider={providerData}
         onSubmit={onSubmit}
         onDelete={onDelete}
         onSelect={onSelect}
