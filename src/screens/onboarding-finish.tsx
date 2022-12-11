@@ -1,22 +1,23 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
+import {Finish} from '@app/components/finish';
 import {hideModal} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
+import {
+  useApp,
+  useTypedNavigation,
+  useTypedRoute,
+  useWallets,
+} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {Finish} from '../components/finish';
-import {RootStackParamList} from '../types';
-
 export const OnboardingFinishScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'createFinish'>>();
+  const navigation = useTypedNavigation();
+  const route = useTypedRoute<'createFinish'>();
+
   const app = useApp();
   const wallets = useWallets();
-  const title = useMemo(
+  const title: I18N = useMemo(
     () =>
       route.params.action === 'create'
         ? I18N.onboardingFinishCreate
@@ -41,5 +42,5 @@ export const OnboardingFinishScreen = () => {
     vibrate(HapticEffects.success);
   }, []);
 
-  return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
+  return <Finish i18n={title} onFinish={onEnd} testID="onboarding_finish" />;
 };
