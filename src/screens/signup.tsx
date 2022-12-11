@@ -56,7 +56,7 @@ export const SignUpScreen = () => {
       />
       <SignUpStack.Screen
         name="signupStoreWallet"
-        component={SignupStoreWalletScreen}
+        component={SignUpStoreWalletScreen}
         options={{
           title,
           header: () => null,
