@@ -26,8 +26,8 @@ export const MenuNavigationButton = ({
 }: MenuNavigationButtonProps) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[page.container, style]}>
-        <View style={page.content}>{children}</View>
+      <View style={[styles.container, style]}>
+        <View style={styles.content}>{children}</View>
         {!hideArrow && (
           <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
         )}
@@ -36,7 +36,7 @@ export const MenuNavigationButton = ({
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',

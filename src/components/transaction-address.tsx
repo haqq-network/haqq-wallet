@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -16,6 +16,7 @@ import {
   Spacer,
   TextField,
 } from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
 import {useApp} from '@app/hooks';
@@ -142,7 +143,7 @@ export const TransactionAddress = ({
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
-        title={getText(I18N.continue)}
+        i18n={I18N.continue}
         onPress={onDone}
         style={styles.button}
       />
@@ -150,7 +151,7 @@ export const TransactionAddress = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   input: {
     marginBottom: 12,
     marginHorizontal: 20,
