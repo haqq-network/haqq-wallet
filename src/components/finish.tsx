@@ -1,8 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
-
-import {I18N} from '@app/i18n';
 
 import {
   Button,
@@ -11,27 +9,39 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {useTheme} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/types';
 
 export type FinishProps = {
-  title: I18N;
+  title?: string;
+  i18n?: I18N;
+  i18params?: Record<string, string>;
   onFinish: () => void;
   testID?: string;
 };
 
-export const Finish = ({title, onFinish, testID}: FinishProps) => {
+export const Finish = ({title, onFinish, testID, i18n}: FinishProps) => {
+  const theme = useTheme();
+  const animation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../assets/animations/success-animation-dark.json');
+    }
+
+    return require('../../assets/animations/success-animation-light.json');
+  }, [theme]);
+
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap
-          source={require('../../assets/animations/success-animation.json')}
-          autoPlay
-          loop={false}
-        />
+        <LottieWrap source={animation} autoPlay loop={false} />
       </Spacer>
-      <Text t4 i18n={title} style={page.title} />
+      <Text t4 i18n={i18n} style={styles.title}>
+        {title}
+      </Text>
       <Button
-        style={page.button}
+        style={styles.button}
         variant={ButtonVariant.contained}
         i18n={I18N.finishProceed}
         testID={`${testID}_finish`}
@@ -41,7 +51,7 @@ export const Finish = ({title, onFinish, testID}: FinishProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   title: {
     marginBottom: 76,
     textAlign: 'center',

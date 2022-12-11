@@ -1,6 +1,9 @@
+import base64 from 'react-native-base64';
+
 import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {navigator} from '@app/navigator';
 import {pushNotifications} from '@app/services/push-notifications';
 
 export enum Events {
@@ -8,7 +11,30 @@ export enum Events {
   onWalletRemove = 'onWalletRemove',
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
   onPushSubscriptionRemove = 'onPushSubscriptionRemove',
+  onDeepLink = 'onDeepLink',
 }
+
+app.on(Events.onDeepLink, async (link: string) => {
+  console.log('onDeepLink');
+  if (link && link.startsWith('haqq:')) {
+    let params = link.split(':');
+
+    if (params.length === 2) {
+      navigator.navigate('transaction', {
+        to: params[1],
+      });
+    } else if (params.length === 3) {
+      switch (params[1]) {
+        case 'provider':
+          navigator.navigate('homeSettings', {
+            screen: 'settingsProviderForm',
+            params: {data: JSON.parse(base64.decode(params[2]))},
+          });
+          break;
+      }
+    }
+  }
+});
 
 app.on(Events.onWalletCreate, async (wallet: Wallet) => {
   try {

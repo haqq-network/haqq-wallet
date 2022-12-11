@@ -1,19 +1,16 @@
 import React, {useMemo} from 'react';
 
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 
-import {Text} from './text';
-
-import {LIGHT_BG_1, LIGHT_BG_3, LIGHT_TEXT_BASE_1} from '../../variables';
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui/text';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 export type SegmentedControlValue<T> = {
   value: T;
   name: string;
+  i18nName?: I18N;
 };
 
 export type SegmentedControlProps<T> = {
@@ -29,7 +26,7 @@ export const SegmentedControl = ({
   style,
   onChange,
 }: SegmentedControlProps<any>) => {
-  const container = useMemo(() => [page.container, style], [style]);
+  const container = useMemo(() => [styles.container, style], [style]);
   return (
     <View style={container}>
       {values.map(v => (
@@ -38,11 +35,12 @@ export const SegmentedControl = ({
           onPress={() => {
             onChange(v.value);
           }}>
-          <View style={[page.item, v.value === value && page.itemActive]}>
+          <View style={[styles.item, v.value === value && styles.itemActive]}>
             <Text
               t14={v.value !== value}
               t13={v.value === value}
-              style={page.text}>
+              i18n={v.i18nName}
+              color={Color.textBase1}>
               {v.name}
             </Text>
           </View>
@@ -52,9 +50,9 @@ export const SegmentedControl = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
-    backgroundColor: LIGHT_BG_3,
+    backgroundColor: Color.bg3,
     padding: 3,
     borderRadius: 14,
     flexDirection: 'row',
@@ -66,10 +64,7 @@ const page = StyleSheet.create({
     padding: 8,
   },
   itemActive: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 12,
-  },
-  text: {
-    color: LIGHT_TEXT_BASE_1,
   },
 });

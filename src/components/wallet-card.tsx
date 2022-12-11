@@ -1,48 +1,33 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {NavigationProp} from '@react-navigation/core/src/types';
-import {useNavigation} from '@react-navigation/native';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
-import {showModal} from '@app/helpers';
-import {useWallet} from '@app/hooks';
-
+import {Color} from '@app/colors';
 import {
-  ArrowReceive,
-  ArrowSend,
   BlurView,
   Card,
-  Copy,
   CopyButton,
+  Icon,
   IconButton,
-  QRCode,
   Spacer,
   Text,
-} from './ui';
-
-import {RootStackParamList} from '../types';
-import {cleanNumber, shortAddress} from '../utils';
-import {
-  IS_IOS,
-  LIGHT_BG_1,
-  LIGHT_BG_5,
-  LIGHT_GRAPHIC_BASE_3,
-  LIGHT_TEXT_BASE_3,
-  LIGHT_TEXT_SECOND_2,
-  SHADOW_COLOR,
-  SYSTEM_BLUR_2,
-  TRANSPARENT,
-} from '../variables';
+} from '@app/components/ui';
+import {createTheme, showModal} from '@app/helpers';
+import {useTypedNavigation, useWallet} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {cleanNumber, shortAddress} from '@app/utils';
+import {IS_IOS, SHADOW_COLOR, SYSTEM_BLUR_2} from '@app/variables';
 
 export type BalanceProps = {
   address: string;
 };
 
 export const WalletCard = ({address}: BalanceProps) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
   const wallet = useWallet(address);
   const [balance, setBalance] = useState(wallet?.balance ?? 0);
   const [cardState, setCardState] = useState('loading');
+  const screenWidth = useWindowDimensions().width;
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -83,53 +68,57 @@ export const WalletCard = ({address}: BalanceProps) => {
       colorTo={wallet?.colorTo}
       colorPattern={wallet?.colorPattern}
       pattern={wallet?.pattern}
-      style={page.container}
-      width={Dimensions.get('window').width - 40}
+      style={styles.container}
+      width={screenWidth - 40}
       onLoad={() => {
         setCardState('laded');
       }}>
-      <View style={[page.topNav, !wallet.mnemonicSaved && page.marginBottom]}>
-        <Text t12 style={page.name} ellipsizeMode="tail" numberOfLines={1}>
+      <View
+        style={[styles.topNav, !wallet.mnemonicSaved && styles.marginBottom]}>
+        <Text t12 style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
           {wallet.name || 'name'}
         </Text>
-        <IconButton onPress={onPressQR} style={page.qrButton}>
-          <QRCode color={LIGHT_GRAPHIC_BASE_3} />
+        <IconButton onPress={onPressQR} style={styles.qrButton}>
+          <Icon i24 name="qr_code" color={Color.graphicBase3} />
         </IconButton>
-        <CopyButton style={page.copyButton} value={wallet.address}>
-          <Text t14 style={page.address}>
+        <CopyButton style={styles.copyButton} value={wallet.address}>
+          <Text t14 color={Color.textBase3}>
             {formattedAddress}
           </Text>
-          <Copy color={LIGHT_GRAPHIC_BASE_3} style={page.marginLeft} />
+          <Icon
+            i24
+            name="copy"
+            color={Color.graphicBase3}
+            style={styles.marginLeft}
+          />
         </CopyButton>
       </View>
       {!wallet.mnemonicSaved && (
-        <IconButton onPress={onClickBackup} style={page.cacheButton}>
-          <Text clean style={page.cacheText}>
-            Without backup
-          </Text>
+        <IconButton onPress={onClickBackup} style={styles.cacheButton}>
+          <Text
+            t15
+            i18n={I18N.walletCardWithoutBackup}
+            color={Color.textBase3}
+          />
         </IconButton>
       )}
-      <Text t0 style={page.balance} numberOfLines={1} adjustsFontSizeToFit>
+      <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
         {cleanNumber(balance.toFixed(2))} ISLM
       </Text>
       <Spacer />
-      <View style={page.buttonsContainer}>
-        <View style={page.button}>
+      <View style={styles.buttonsContainer}>
+        <View style={styles.button}>
           {IS_IOS && <BlurView action="sent" cardState={cardState} />}
-          <IconButton style={page.spacer} onPress={onPressSend}>
-            <ArrowSend color={LIGHT_GRAPHIC_BASE_3} />
-            <Text clean style={page.buttonText}>
-              Send
-            </Text>
+          <IconButton style={styles.spacer} onPress={onPressSend}>
+            <Icon i24 name="arrow_send" color={Color.graphicBase3} />
+            <Text i18n={I18N.walletCardSend} color={Color.textBase3} />
           </IconButton>
         </View>
-        <View style={page.button}>
+        <View style={styles.button}>
           {IS_IOS && <BlurView action="receive" cardState={cardState} />}
-          <IconButton style={page.spacer} onPress={onPressQR}>
-            <ArrowReceive color={LIGHT_GRAPHIC_BASE_3} />
-            <Text clean style={page.buttonText}>
-              Receive
-            </Text>
+          <IconButton style={styles.spacer} onPress={onPressQR}>
+            <Icon i24 name="arrow_receive" color={Color.graphicBase3} />
+            <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />
           </IconButton>
         </View>
       </View>
@@ -137,10 +126,10 @@ export const WalletCard = ({address}: BalanceProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     justifyContent: 'space-between',
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     shadowColor: SHADOW_COLOR,
     shadowOffset: {
       width: 0,
@@ -160,16 +149,8 @@ const page = StyleSheet.create({
   marginBottom: {marginBottom: 4},
   name: {
     flex: 1,
-    color: LIGHT_TEXT_SECOND_2,
+    color: Color.textSecond2,
     marginRight: 8,
-  },
-  address: {
-    color: LIGHT_TEXT_BASE_3,
-  },
-  balance: {
-    fontSize: 40,
-    lineHeight: 54,
-    color: LIGHT_TEXT_BASE_3,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -180,13 +161,10 @@ const page = StyleSheet.create({
     height: 54,
     marginHorizontal: 6,
     flex: 1,
-    backgroundColor: IS_IOS ? TRANSPARENT : SYSTEM_BLUR_2,
+    backgroundColor: IS_IOS ? Color.transparent : SYSTEM_BLUR_2,
     borderRadius: 16,
     padding: 6,
     overflow: 'hidden',
-  },
-  buttonText: {
-    color: LIGHT_TEXT_BASE_3,
   },
   copyButton: {
     flexDirection: 'row',
@@ -197,14 +175,9 @@ const page = StyleSheet.create({
   cacheButton: {
     alignSelf: 'flex-start',
     marginBottom: 8,
-    backgroundColor: LIGHT_BG_5,
+    backgroundColor: Color.bg5,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
-  },
-  cacheText: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: LIGHT_TEXT_BASE_3,
   },
 });
