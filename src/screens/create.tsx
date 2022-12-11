@@ -3,12 +3,11 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {ScreenOptionType} from '@app/types';
 
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {SignUpAgreementScreen} from './signup-agreement';
-import {SignupStoreWalletScreen} from './signup-store-wallet';
-
-import {ScreenOptionType} from '../types';
+import {SignUpStoreWalletScreen} from './signup-store-wallet';
 
 const SignUpStack = createStackNavigator();
 
@@ -29,7 +28,7 @@ export const CreateScreen = () => {
       />
       <SignUpStack.Screen
         name="createStoreWallet"
-        component={SignupStoreWalletScreen}
+        component={SignUpStoreWalletScreen}
         options={{
           title,
           header: () => null,

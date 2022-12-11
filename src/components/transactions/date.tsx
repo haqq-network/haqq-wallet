@@ -3,9 +3,9 @@ import React, {useMemo} from 'react';
 import {format, isSameYear, isToday} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
-import {TransactionListDate} from '../../types';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
-import {Text} from '../ui';
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
+import {TransactionListDate} from '@app/types';
 
 export type TransactionDate = {
   item: TransactionListDate;
@@ -23,24 +23,18 @@ export const TransactionDate = ({item}: TransactionDate) => {
   }, [item.date]);
 
   return (
-    <View style={page.container}>
-      <Text t13 style={page.text}>
+    <View style={styles.container}>
+      <Text t13 color={Color.textBase2}>
         {date}
       </Text>
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingTop: 16,
     paddingBottom: 8,
     paddingHorizontal: 24,
-  },
-  text: {
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
   },
 });
