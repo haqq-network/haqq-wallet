@@ -1,4 +1,11 @@
-import React, {memo, useCallback, useMemo, useReducer, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 
 import {Alert, View} from 'react-native';
 import {validate} from 'validate.js';
@@ -28,7 +35,7 @@ export type SettingsProviderEditData = Omit<
 };
 
 export type SettingsProviderEditProps = {
-  provider: Provider | null;
+  provider: Partial<Provider> | null;
   buttonType?: 'save' | 'del';
   onSubmit: (provider: Partial<Provider>) => void;
   onDelete: () => void;
@@ -36,13 +43,25 @@ export type SettingsProviderEditProps = {
   onSelect: () => void;
 };
 
-function reducer(
-  state: SettingsProviderEditData,
-  action: {type: string; key: string; value: string},
-) {
+type ReducerActionUpdate = {
+  type: 'update';
+  key: string;
+  value: string;
+};
+
+type ReducerActionReset = {
+  type: 'reset';
+  data: Record<string, any>;
+};
+
+type ReducerAction = ReducerActionUpdate | ReducerActionReset;
+
+function reducer(state: SettingsProviderEditData, action: ReducerAction) {
   switch (action.type) {
     case 'update':
       return {...state, isChanged: true, [action.key]: action.value};
+    case 'reset':
+      return {isChanged: false, ...action.data};
     default:
       throw new Error();
   }
@@ -81,13 +100,19 @@ export const SettingsProviderEdit = memo(
     onSelect,
   }: SettingsProviderEditProps) => {
     const [actionSheetVisible, setActionSheetVisible] = useState(false);
-    const [isEdit, setIsEdit] = useState(!provider);
+    const [isEdit, setIsEdit] = useState(!provider?.id);
     const [state, dispatch] = useReducer(reducer, {
       isChanged: false,
       ...(provider
-        ? {...provider?.toJSON(), ethChainId: String(provider?.ethChainId)}
+        ? {...provider, ethChainId: String(provider?.ethChainId)}
         : {}),
     });
+
+    useEffect(() => {
+      if (provider?.id) {
+        setIsEdit(false);
+      }
+    }, [provider?.id]);
 
     const error = useMemo(() => validate(state, constraints), [state]);
 
@@ -99,7 +124,14 @@ export const SettingsProviderEdit = memo(
 
     const onPressDiscard = () => {
       setActionSheetVisible(false);
-      onCancel();
+      setIsEdit(false);
+      dispatch({
+        type: 'reset',
+        data: {
+          ...provider,
+          ethChainId: String(provider?.ethChainId),
+        },
+      });
     };
 
     const onRemove = () => {
@@ -153,7 +185,7 @@ export const SettingsProviderEdit = memo(
             if (state.isChanged) {
               setActionSheetVisible(true);
             } else {
-              onCancel();
+              setIsEdit(false);
             }
           },
           textLeft: getText(I18N.cancel),
@@ -230,7 +262,7 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
           />
 
-          {isEdit && provider && (
+          {isEdit && provider?.id && (
             <View style={page.buttonContainerRemove}>
               <Button
                 variant={ButtonVariant.error}

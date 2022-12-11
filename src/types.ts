@@ -6,6 +6,7 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
@@ -58,7 +59,12 @@ export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
-  homeSettings: undefined;
+  homeSettings:
+    | undefined
+    | {
+        screen: keyof RootStackParamList;
+        params: any;
+      };
   homeGovernance: undefined;
   welcome: undefined;
   create: undefined;
@@ -218,6 +224,7 @@ export type RootStackParamList = {
   };
   settingsProviderForm: {
     id?: string;
+    data?: Partial<Provider>;
   };
   stakingValidators: undefined;
   stakingInfo: {
