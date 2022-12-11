@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -11,14 +11,16 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, windowHeight, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-// import {Terms} from '../ui/terms';
+// import {Terms} from '@app/components/ui/terms';
 
 export type CreateAgreementProps = {
   onDone: () => void;
   testID?: string;
 };
+
+const {height: windowHeight, width: windowWidth} = useWindowDimensions();
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   const animation = require('../../../assets/animations/first-screen-animation.json');
@@ -50,7 +52,7 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
         i18n={I18N.createAgreementAgree}
         onPress={onDone}
       />
-      {/*<Terms style={page.agreement} />*/}
+      {/*<Terms style={styles.agreement} />*/}
     </PopupContainer>
   );
 };

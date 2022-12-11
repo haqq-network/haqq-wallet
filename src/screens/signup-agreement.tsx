@@ -5,11 +5,11 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const SignUpAgreementScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'createAgreement'>();
+  const {nextScreen} = useTypedRoute<'createAgreement'>().params;
 
   const onPressAgree = useCallback(() => {
-    navigation.navigate(route.params.nextScreen ?? 'onboardingSetupPin');
-  }, [navigation, route.params.nextScreen]);
+    navigation.navigate(nextScreen ?? 'onboardingSetupPin');
+  }, [navigation, nextScreen]);
 
   return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;
 };
