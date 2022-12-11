@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
 
@@ -6,52 +6,19 @@ import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme, verticalScale} from '@app/helpers';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
-import {vibrate} from '@app/services/haptic';
+import {I18N} from '@app/i18n';
 
-export const OnboardingRepeatPin = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'onboardingRepeatPin'>();
-  const app = useApp();
-  const {currentPin} = route.params;
-  const [pin, setPin] = useState('');
-  const [error, setError] = useState('');
-  const onKeyboard = useCallback((value: number) => {
-    vibrate();
-    if (value > -1) {
-      setPin(p => `${p}${value}`.slice(0, 6));
-    } else {
-      setPin(p => p.slice(0, p.length - 1));
-    }
-    setError('');
-  }, []);
+type OnboardingRepeatPinProps = {
+  onKeyboard: (value: number) => void;
+  pin: string;
+  error: string;
+};
 
-  useEffect(() => {
-    if (pin.length === 6) {
-      if (pin === currentPin) {
-        const {nextScreen, ...params} = route.params;
-
-        app.setPin(pin).then(() => {
-          if (app.biometryType !== null) {
-            navigation.navigate('onboardingBiometry', {
-              ...params,
-              biometryType: app.biometryType,
-            });
-          } else {
-            navigation.navigate(nextScreen ?? 'signupStoreWallet', {
-              ...params,
-            });
-          }
-        });
-      } else {
-        const invalidCode = getText(I18N.onboardingRepeatPinInvalidCode);
-        setError(invalidCode);
-        setPin('');
-      }
-    }
-  }, [pin, currentPin, app, navigation, route]);
-
+export const OnboardingRepeatPin = ({
+  onKeyboard,
+  pin,
+  error,
+}: OnboardingRepeatPinProps) => {
   return (
     <PopupContainer style={styles.container}>
       <Text t4 i18n={I18N.onboardingRepeatPinRepeat} />
