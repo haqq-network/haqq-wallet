@@ -10,7 +10,7 @@ import {OnboardingFinishScreen} from './onboarding-finish';
 import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
 import {SignUpAgreementScreen} from './signup-agreement';
-import {SignupStoreWalletScreen} from './signup-store-wallet';
+import {SignUpStoreWalletScreen} from './signup-store-wallet';
 
 import {RootStackParamList, ScreenOptionType} from '../types';
 
@@ -51,7 +51,7 @@ export const SignUpScreen = () => {
       />
       <SignUpStack.Screen
         name="signupStoreWallet"
-        component={SignupStoreWalletScreen}
+        component={SignUpStoreWalletScreen}
         options={{
           title,
           header: () => null,
