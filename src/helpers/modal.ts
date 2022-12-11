@@ -15,6 +15,6 @@ export function sendNotification(text: I18N) {
   app.emit('notification', getText(text));
 }
 
-export function showLoadinfWithText(text: I18N) {
+export function showLoadingWithText(text: I18N) {
   app.emit('modal', {type: 'loading', text: getText(text)});
 }
