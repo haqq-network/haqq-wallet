@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
 import {View} from 'react-native';
@@ -43,7 +43,7 @@ export const TransactionConfirmation = ({
 
   const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
-  const onDone = useCallback(async () => {
+  const onDone = async () => {
     if (wallet) {
       if (wallet.type === WalletType.ledgerBt) {
         onDoneLedgerBt(estimateFee);
@@ -73,15 +73,7 @@ export const TransactionConfirmation = ({
         setDisabled(false);
       }
     }
-  }, [
-    wallet,
-    to,
-    amount,
-    estimateFee,
-    providerId,
-    onDoneLedgerBt,
-    onDoneTransaction,
-  ]);
+  };
 
   useEffect(() => {
     EthNetwork.estimateTransaction(from, to, amount).then(result =>
@@ -90,20 +82,20 @@ export const TransactionConfirmation = ({
   }, [from, to, amount]);
 
   return (
-    <PopupContainer style={style.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen2)} style={style.icon} />
+    <PopupContainer style={styles.container}>
+      <ISLMIcon color={getColor(Color.graphicGreen2)} style={styles.icon} />
       <Text
         t11
         color={Color.textBase2}
         center
-        style={style.subtitle}
+        style={styles.subtitle}
         i18n={I18N.transactionConfirmationTotalAmount}
       />
       <Text
         t11
         color={Color.textBase1}
         center
-        style={style.sum}
+        style={styles.sum}
         i18n={I18N.transactionConfirmationSum}
         i18params={{sum: `${+(amount + estimateFee).toFixed(8)}`}}
       />
@@ -111,16 +103,16 @@ export const TransactionConfirmation = ({
         t11
         color={Color.textBase2}
         center
-        style={style.subtitle}
+        style={styles.subtitle}
         i18n={I18N.transactionConfirmationSendTo}
       />
       {contact && (
-        <Text t11 color={Color.textBase1} center style={style.contact}>
+        <Text t11 color={Color.textBase1} center style={styles.contact}>
           {contact.name}
         </Text>
       )}
-      <Text t11 color={Color.textBase1} center style={style.address}>
-        <Text t11 color={Color.textBase1} center style={style.address}>
+      <Text t11 color={Color.textBase1} center style={styles.address}>
+        <Text t11 color={Color.textBase1} center style={styles.address}>
           {splittedTo[0]}
         </Text>
         <Text t11 color={Color.textBase2}>
@@ -128,8 +120,8 @@ export const TransactionConfirmation = ({
         </Text>
         <Text t11>{splittedTo[2]}</Text>
       </Text>
-      <Spacer style={style.spacer}>
-        <View style={style.info}>
+      <Spacer style={styles.spacer}>
+        <View style={styles.info}>
           <DataView label="Cryptocurrency">
             <Text t11 color={Color.textBase1}>
               <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
@@ -174,14 +166,14 @@ export const TransactionConfirmation = ({
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onDone}
-        style={style.submit}
+        style={styles.submit}
         loading={disabled}
       />
     </PopupContainer>
   );
 };
 
-const style = createTheme({
+const styles = createTheme({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,
@@ -201,7 +193,7 @@ const style = createTheme({
   icon: {marginBottom: 16, alignSelf: 'center'},
   info: {
     borderRadius: 16,
-    backgroundColor: getColor(Color.bg3),
+    backgroundColor: Color.bg3,
   },
   sum: {
     marginBottom: 16,
