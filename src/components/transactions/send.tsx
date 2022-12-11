@@ -3,11 +3,11 @@ import React from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {TransactionListSend} from '@app/types';
 import {shortAddress} from '@app/utils';
-
-import {DataContent, Icon, Text} from '../ui';
 
 export type TransactionPreviewProps = {
   item: TransactionListSend;
@@ -20,14 +20,15 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
       onPress={() => {
         onPress(item.hash);
       }}>
-      <View style={page.container}>
-        <View style={page.iconWrapper}>
+      <View style={styles.container}>
+        <View style={styles.iconWrapper}>
           <Icon name="arrow_send" color={Color.graphicBase1} />
         </View>
         <DataContent
-          style={page.infoContainer}
-          title="Sent"
-          subtitle={`to ${shortAddress(item.to, '•')}`}
+          style={styles.infoContainer}
+          titleI18n={I18N.transactionSendTitle}
+          subtitleI18nParams={{address: shortAddress(item.to, '•')}}
+          subtitleI18n={I18N.transactionSendTo}
         />
         <Text t11 color={Color.textRed1}>
           {`- ${item.value.toFixed(2)} ISLM`}
@@ -37,7 +38,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',
