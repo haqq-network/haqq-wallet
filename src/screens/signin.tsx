@@ -4,14 +4,15 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
-import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
-import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
-import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
-import {SignInAgreementScreen} from '@app/screens/signin-agreement';
-import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
-import {SigninStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {ScreenOptionType} from '@app/types';
+
+import {OnboardingBiometryScreen} from './onboarding-biometry';
+import {OnboardingFinishScreen} from './onboarding-finish';
+import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
+import {SignInAgreementScreen} from './signin-agreement';
+import {SignInRestoreScreen} from './signin-restore-wallet';
+import {SignInStoreWalletScreen} from './signin-store-wallet';
 
 const SignInStack = createStackNavigator();
 
@@ -59,7 +60,7 @@ export const SignInScreen = () => {
       />
       <SignInStack.Screen
         name="signinStoreWallet"
-        component={SigninStoreWalletScreen}
+        component={SignInStoreWalletScreen}
         options={screenOptions}
         initialParams={{action: 'restore'}}
       />

@@ -330,6 +330,7 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  restoreWalletScreenTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -734,4 +735,5 @@ const en: Record<I18N, string> = {
   [I18N.walletCreateImport]: 'Import',
   [I18N.walletCardSend]: 'Send',
   [I18N.walletCardWithoutBackup]: 'Without backup',
+  [I18N.restoreWalletScreenTitle]: 'Restore wallet',
 };
