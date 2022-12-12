@@ -1,38 +1,37 @@
 import React from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {DismissPopupButton} from '@app/components/dismiss-popup-button';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useWallets} from '@app/hooks';
+import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
-import {RootStackParamList, ScreenOptionType} from '@app/types';
-
-import {TransactionAccountScreen} from './transaction-account';
-import {TransactionAddressScreen} from './transaction-address';
-import {TransactionConfirmationScreen} from './transaction-confirmation';
-import {TransactionContactEditScreen} from './transaction-contact-edit';
-import {TransactionFinishScreen} from './transaction-finish';
-import {TransactionLedgerScreen} from './transaction-ledger';
-import {TransactionSumScreen} from './transaction-sum';
-import {TransactionSumAddressScreen} from './transaction-sum-address';
+import {TransactionAccountScreen} from '@app/screens/transaction-account';
+import {TransactionAddressScreen} from '@app/screens/transaction-address';
+import {TransactionConfirmationScreen} from '@app/screens/transaction-confirmation';
+import {TransactionContactEditScreen} from '@app/screens/transaction-contact-edit';
+import {TransactionFinishScreen} from '@app/screens/transaction-finish';
+import {TransactionLedgerScreen} from '@app/screens/transaction-ledger';
+import {TransactionSumScreen} from '@app/screens/transaction-sum';
+import {TransactionSumAddressScreen} from '@app/screens/transaction-sum-address';
+import {ScreenOptionType} from '@app/types';
 
 const TransactionStack = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
 const screenOptionsSend: ScreenOptionType = {
-  title: 'Send',
+  title: getText(I18N.transactionSumSendTitle),
   ...hideBack,
 };
 
 const screenOptionsAddress: ScreenOptionType = {
-  title: 'Address',
+  title: getText(I18N.transactionSumAddressTitle),
 };
 
 const screenOptionsSendFunds: ScreenOptionType = {
-  title: 'Send funds from',
+  title: getText(I18N.transactionAccountSendFundsTitle),
   ...hideBack,
 };
 
@@ -41,14 +40,21 @@ const screenOptionsEditContact: ScreenOptionType = {
   headerRight: DismissPopupButton,
 };
 
+const screenOptionsLedger: ScreenOptionType = {
+  title: getText(I18N.transactionLedgerConfirmationTitle),
+};
+const screenOptionsConfirmation: ScreenOptionType = {
+  title: getText(I18N.transactionConfirmationPreviewTitle),
+};
+
 export const TransactionScreen = () => {
   const wallets = useWallets();
   const {
     params: {from, to},
-  } = useRoute<RouteProp<RootStackParamList, 'transaction'>>();
+  } = useTypedRoute<'transaction'>();
 
   const screenOptionsAddressRoute: ScreenOptionType = {
-    title: 'Address',
+    title: getText(I18N.transactionSumAddressTitle),
     headerBackHidden: from || wallets.visible.length === 1,
     headerRight: DismissPopupButton,
   };
@@ -75,7 +81,7 @@ export const TransactionScreen = () => {
       <TransactionStack.Screen
         name="transactionConfirmation"
         component={TransactionConfirmationScreen}
-        options={{title: 'Preview'}}
+        options={screenOptionsConfirmation}
       />
       <TransactionStack.Screen
         name="transactionFinish"
@@ -91,7 +97,7 @@ export const TransactionScreen = () => {
       <TransactionStack.Screen
         name="transactionLedger"
         component={TransactionLedgerScreen}
-        options={{title: 'Confirmation'}}
+        options={screenOptionsLedger}
       />
       <TransactionStack.Screen
         name="transactionSumAddress"
