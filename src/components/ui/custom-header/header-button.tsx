@@ -37,7 +37,7 @@ export const HeaderButton = ({
     );
   }
 
-  if (text) {
+  if (text || i18n) {
     return (
       <Pressable onPress={() => !disabled && onPress?.()}>
         <Text i18n={i18n} t10 color={disabled ? Color.textBase2 : color} center>
