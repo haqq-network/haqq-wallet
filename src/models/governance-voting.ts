@@ -142,7 +142,12 @@ export class GovernanceVoting extends Realm.Object {
 
   get proposalVotes(): VotesType {
     if (this.votes) {
-      return JSON.parse(this.votes);
+      const rawObj = JSON.parse(this.votes);
+      let preparedObj: any = {};
+      Object.keys(rawObj).forEach(key => {
+        preparedObj[key] = isNaN(rawObj[key]) ? 0 : rawObj[key];
+      });
+      return preparedObj;
     } else {
       return {
         yes: 1,

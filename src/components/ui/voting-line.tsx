@@ -3,6 +3,8 @@ import React, {forwardRef, memo, useImperativeHandle, useState} from 'react';
 import {View} from 'react-native';
 import Animated, {
   WithTimingConfig,
+  interpolateColor,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -33,15 +35,28 @@ export const VotingLine = memo(
   forwardRef(({initialVotes, showBottomText}: VotingLineProps, ref) => {
     const initialSum =
       Object.values(initialVotes).reduce((a, b) => a + b, 0) / 100;
-    const initPercentYes = initialVotes.yes / initialSum;
-    const initPercentNo = initialVotes.no / initialSum;
-    const initPercentAbstain = initialVotes.abstain / initialSum;
-    const initPercentVeto = initialVotes.veto / initialSum;
+    const initPercentYes = initialSum && initialVotes.yes / initialSum;
+    const initPercentNo = initialSum && initialVotes.no / initialSum;
+    const initPercentAbstain = initialSum && initialVotes.abstain / initialSum;
+    const initPercentVeto = initialSum && initialVotes.veto / initialSum;
 
     const yesVotes = useSharedValue(initPercentYes);
     const noVotes = useSharedValue(initPercentNo);
     const abstainVotes = useSharedValue(initPercentAbstain);
     const vetoVotes = useSharedValue(initPercentVeto);
+    const emptyLineOpacity = useSharedValue(0);
+
+    useAnimatedReaction(
+      () =>
+        yesVotes.value + noVotes.value + abstainVotes.value + vetoVotes.value,
+      res => {
+        if (res !== 0) {
+          emptyLineOpacity.value = withTiming(0, animConfig);
+        } else {
+          emptyLineOpacity.value = withTiming(1, animConfig);
+        }
+      },
+    );
 
     const [selected, setSelected] = useState<VoteNamesType | undefined>();
     const [percents, setPercents] = useState<{[name: string]: number}>({
@@ -110,9 +125,18 @@ export const VotingLine = memo(
       };
     }, [selected]);
 
+    const bgLineColor = getColor(Color.graphicSecond1);
+    const lineContainerAnimation = useAnimatedStyle(() => ({
+      backgroundColor: interpolateColor(
+        emptyLineOpacity.value,
+        [0, 1],
+        ['transparent', bgLineColor],
+      ),
+    }));
+
     return (
       <View style={styles.container}>
-        <View style={styles.lineContainer}>
+        <Animated.View style={[styles.lineContainer, lineContainerAnimation]}>
           <Animated.View style={[styles.leftLine, yesVotesStyle]}>
             <View style={[styles.lineStyle, styles.green]} />
           </Animated.View>
@@ -125,7 +149,7 @@ export const VotingLine = memo(
           <Animated.View style={[styles.rightLine, vetoVotesWidth]}>
             <View style={[styles.lineStyle, styles.yellow]} />
           </Animated.View>
-        </View>
+        </Animated.View>
         {showBottomText && (
           <View style={styles.statisticContainer}>
             {VOTES.map(({name, color, i18n}) => {
