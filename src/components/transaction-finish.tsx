@@ -1,7 +1,6 @@
-import React, {useCallback, useMemo} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
-import prompt from 'react-native-prompt-android';
 
 import {Color} from '@app/colors';
 import {
@@ -15,55 +14,28 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
-import {useContacts} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services/eth-network';
-import {shortAddress} from '@app/utils';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
 type TransactionFinishProps = {
   transaction: Transaction | null;
   onSubmit: () => void;
+  onPressContact: () => void;
+  contact: Contact | null;
+  short: string;
 };
 
 export const TransactionFinish = ({
   transaction,
   onSubmit,
+  onPressContact,
+  contact,
+  short,
 }: TransactionFinishProps) => {
-  const contacts = useContacts();
-
-  const short = useMemo(
-    () => shortAddress(transaction?.to ?? ''),
-    [transaction?.to],
-  );
-
-  const contact = useMemo(
-    () => contacts.getContact(transaction?.to ?? ''),
-    [contacts, transaction?.to],
-  );
-
-  const onPressContact = useCallback(() => {
-    if (transaction?.to) {
-      prompt(
-        contact ? 'Edit contact' : 'Add contact',
-        `Address: ${short}`,
-        value => {
-          if (contact) {
-            contacts.updateContact(transaction.to, value);
-          } else {
-            contacts.createContact(transaction.to, value);
-          }
-        },
-        {
-          defaultValue: contact?.name ?? '',
-          placeholder: 'Contact name',
-        },
-      );
-    }
-  }, [transaction?.to, contact, short, contacts]);
-
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
     await openURL(url);
