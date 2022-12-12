@@ -25,13 +25,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
 
 import {useAndroidStatusBarAnimation} from '../hooks';
-import {LIGHT_BG_1, LIGHT_GRAPHIC_SECOND_2} from '../variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -208,7 +207,7 @@ export const BottomSheet = ({
         <GestureDetector gesture={headerGesture}>
           <Animated.View>
             <View style={page.swipe}>
-              <SwiperIcon color={LIGHT_GRAPHIC_SECOND_2} />
+              <SwiperIcon color={getColor(Color.graphicSecond2)} />
             </View>
             <View style={page.header}>
               <Text t6 color={Color.textBase1}>
@@ -258,7 +257,7 @@ const page = createTheme({
   },
   content: {
     width: Dimensions.get('window').width,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 20,
