@@ -12,7 +12,7 @@ import {generateUUID} from '../utils';
 export const Notifications = () => {
   const app = useApp();
   const insets = useSafeAreaInsets();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{message: string; id: string}[]>([]);
 
   useEffect(() => {
     const subscription = (message: string) => {
@@ -34,7 +34,7 @@ export const Notifications = () => {
     <View
       pointerEvents="none"
       style={[page.container, {paddingTop: insets.top}]}>
-      {messages.map(({message, id}) => (
+      {messages.slice(-2).map(({message, id}) => (
         <NotificationMessage
           message={message}
           id={id}
