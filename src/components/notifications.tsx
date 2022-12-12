@@ -16,7 +16,7 @@ export const Notifications = () => {
 
   useEffect(() => {
     const subscription = (message: string) => {
-      setMessages(msgs => msgs.concat({message, id: generateUUID()}));
+      setMessages(msgs => msgs.concat({message, id: generateUUID()}).slice(-2));
     };
 
     app.on('notification', subscription);
@@ -34,7 +34,7 @@ export const Notifications = () => {
     <View
       pointerEvents="none"
       style={[page.container, {paddingTop: insets.top}]}>
-      {messages.slice(-2).map(({message, id}) => (
+      {messages.map(({message, id}) => (
         <NotificationMessage
           message={message}
           id={id}
