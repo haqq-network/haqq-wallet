@@ -30,6 +30,7 @@ export const TransactionReceive = ({
           style={styles.infoContainer}
           title="Received"
           subtitle={`from ${shortAddress(item.from, '•')}`}
+          short
         />
         <Text t11 color={Color.textGreen1}>
           {`+${item.value.toFixed(2)} ISLM`}
