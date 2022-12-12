@@ -372,7 +372,7 @@ const en: Record<I18N, string> = {
   [I18N.homeGovernanceTagPassed]: 'Passed',
   [I18N.homeGovernanceTagRejected]: 'Rejected',
   [I18N.homeGovernanceVotingCardVoting]: 'Voting',
-  [I18N.homeGovernanceVotingCardDepositPeriod]: 'Deposit period',
+  [I18N.homeGovernanceVotingCardDepositPeriod]: 'Deposit',
   [I18N.homeGovernanceVotingCardYouVoted]: 'You voted',
   [I18N.homeGovernanceVotingCardYouDeposited]: 'You deposited',
   [I18N.homeGovernanceVotingCardVotingEnd]: 'Voting end',
