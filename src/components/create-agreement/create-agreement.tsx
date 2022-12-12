@@ -1,72 +1,83 @@
 import React from 'react';
 
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
-import {windowHeight} from '../../helpers';
-import {I18N, getText} from '../../i18n';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
-import {LottieWrap} from '../lottie';
-import {Button, ButtonVariant, PopupContainer, Spacer, Text} from '../ui';
-// import {Terms} from '../ui/terms';
+import {Color} from '@app/colors';
+import {
+  Button,
+  ButtonVariant,
+  LottieWrap,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
+// import {Terms} from '@app/components/ui/terms';
 
 export type CreateAgreementProps = {
   onDone: () => void;
   testID?: string;
 };
-const windowWidth = Dimensions.get('window').width;
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
+  const animation = require('../../../assets/animations/first-screen-animation.json');
+  const {height: windowHeight, width: windowWidth} = useWindowDimensions();
+  const calculatedHeight = Math.min(windowWidth, windowHeight * 0.355);
+  const animationHeight = {
+    height: calculatedHeight,
+  };
+  const imageHeight = {
+    height: calculatedHeight - 20,
+  };
+
   return (
-    <PopupContainer style={page.container} testID={testID}>
-      <View pointerEvents="none" style={page.animation}>
+    <PopupContainer style={styles.container} testID={testID}>
+      <View pointerEvents="none" style={[styles.animation, animationHeight]}>
         <LottieWrap
-          source={require('../../../assets/animations/first-screen-animation.json')}
+          source={animation}
           autoPlay
           loop={false}
-          style={page.image}
+          resizeMode="center"
+          style={imageHeight}
         />
       </View>
-      <Text t4 style={page.title}>
-        {getText(I18N.createAgreementTitle)}
-      </Text>
-      <Text t11 style={page.disclaimer}>
-        {getText(I18N.createAgreementText)}
-      </Text>
+      <Text t4 center style={styles.title} i18n={I18N.createAgreementTitle} />
+      <Text
+        t11
+        center
+        style={styles.disclaimer}
+        i18n={I18N.createAgreementText}
+        color={Color.textBase2}
+      />
       <Spacer />
       <Button
         testID={`${testID}_agree`}
-        style={page.submit}
+        style={styles.submit}
         variant={ButtonVariant.contained}
-        title={getText(I18N.createAgreementAgree)}
+        i18n={I18N.createAgreementAgree}
         onPress={onDone}
       />
-      {/*<Terms style={page.agreement} />*/}
+      {/*<Terms style={styles.agreement} />*/}
     </PopupContainer>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: Math.min(windowWidth, windowHeight * 0.355),
   },
   title: {
     marginBottom: 4,
     marginHorizontal: 20,
-    textAlign: 'center',
   },
   disclaimer: {
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
     marginBottom: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  image: {
-    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
-  },
 });
