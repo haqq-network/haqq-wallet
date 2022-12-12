@@ -64,18 +64,15 @@ export class GovernanceVoting extends Realm.Object {
   };
 
   get timeLeftPercent() {
-    const dateEnd = new Date(this.endDate);
-    const dateStart = new Date(this.startDate);
-    const dateEndDeposit = new Date(this.depositEndTime ?? '');
-
-    const startAndEndDiffMS = differenceInMilliseconds(
-      getSeconds(dateEnd) > 1 ? dateEnd : dateEndDeposit,
-      dateStart,
+    const start =
+      this.dateStart.getTime() > 1000 ? this.dateStart : this.createdAt;
+    const diff = differenceInMilliseconds(
+      this.dateEnd.getTime() > 1000 ? this.dateEnd : this.depositEnd,
+      start,
     );
-
-    const leftPercent = 100 - startAndEndDiffMS / Date.now();
-
-    return leftPercent;
+    const timeBeforeEnd = Date.now() - start.getTime();
+    const leftPercent = timeBeforeEnd / diff;
+    return leftPercent * 100;
   }
 
   get isDeposited() {
@@ -124,7 +121,7 @@ export class GovernanceVoting extends Realm.Object {
 
     const daysLeft = Math.floor(diff / 86400);
     const hourLeft = Math.floor(diff / (60 * 60)) - daysLeft * 24;
-    const minLeft = Math.floor(diff / 60) - hourLeft * 60;
+    const minLeft = Math.floor(diff / 60) - hourLeft * 60 - daysLeft * 24 * 60;
 
     return {
       daysLeft,
