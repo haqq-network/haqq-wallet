@@ -10,7 +10,7 @@ import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables';
 
-export const SigninStoreWalletScreen = () => {
+export const SignInStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
   const {nextScreen, mnemonic, privateKey} =
     useTypedRoute<'restoreStore'>().params;
