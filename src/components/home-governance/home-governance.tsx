@@ -1,8 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {FlatList, View} from 'react-native';
 
-import {CustomHeader, Spacer, Tag, VotingCard} from '@app/components/ui';
+import {
+  CustomHeader,
+  Loading,
+  Spacer,
+  Tag,
+  VotingCard,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useCosmos, useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -15,10 +21,17 @@ export interface HomeGovernanceProps {
 export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
   const cosmos = useCosmos();
   const {proposals, setStatusFilter, statusFilter} = useProposals();
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    cosmos.syncGovernanceVoting();
-  });
+    cosmos.syncGovernanceVoting().finally(() => setLoading(false));
+  }, [cosmos]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    cosmos.syncGovernanceVoting().finally(() => setRefreshing(false));
+  };
 
   const onSelect = (tag: ProposalsTagType) => () => {
     setStatusFilter(tag[0]);
@@ -53,21 +66,28 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
         />
       </View>
       <Spacer height={12} />
-      <FlatList
-        ListHeaderComponent={listHeader}
-        renderItem={({item}) => (
-          <VotingCard
-            hash={item.hash}
-            onPress={onPressCard}
-            status={item.status as ProposalsTagKeys}
-          />
-        )}
-        ItemSeparatorComponent={listSeparator}
-        data={proposals}
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollContainer}
-        keyExtractor={item => item.hash}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          //ListEmptyComponent={Loading}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          ListHeaderComponent={listHeader}
+          renderItem={({item}) => (
+            <VotingCard
+              hash={item.hash}
+              onPress={onPressCard}
+              status={item.status as ProposalsTagKeys}
+            />
+          )}
+          ItemSeparatorComponent={listSeparator}
+          data={proposals}
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollContainer}
+          keyExtractor={item => item.hash}
+        />
+      )}
       <Spacer height={12} />
     </>
   );

@@ -242,6 +242,8 @@ export enum I18N {
   proposalChanges,
   proposalDepositAttention,
   proposalDeposit,
+  proposalNotEnough,
+  proposalNotEnoughDescription,
   settingsAddressBookLabel,
   settingsAddressBookPlaceholder,
   settingsAddressBookAdd,
@@ -550,6 +552,9 @@ const en: Record<I18N, string> = {
   [I18N.proposalDepositAttention]:
     'If the proposal does not collect the required number of deposits in a certain time, it will reject',
   [I18N.proposalDeposit]: 'Deposit',
+  [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
+  [I18N.proposalNotEnoughDescription]:
+    'If the proposal does not get the required number of votes in a certain time, then it will reject',
   [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
   [I18N.settingsAddressBookAdd]: 'Add Contact',

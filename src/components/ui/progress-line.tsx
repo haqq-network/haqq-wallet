@@ -14,9 +14,10 @@ import {createTheme} from '@app/helpers';
 export type ProgressLineProps = {
   initialProgress?: number;
   color?: Color | string;
-  depositNeeds?: number;
-  depositCollected?: number;
+  max?: number;
+  total?: number;
   showBottomInfo?: true;
+  markPosition?: number;
 };
 
 export interface ProgressLineInterface {
@@ -29,8 +30,9 @@ export const ProgressLine = memo(
       {
         initialProgress = 0,
         color = Color.graphicBlue1,
-        depositNeeds = 0,
-        depositCollected = 0,
+        max = 0,
+        total = 0,
+        markPosition,
         showBottomInfo,
       }: ProgressLineProps,
       ref,
@@ -57,12 +59,16 @@ export const ProgressLine = memo(
                 progressWidth,
               ]}
             />
+            {markPosition !== undefined && (
+              <View
+                style={[styles.markLine, {left: `${markPosition * 100}%`}]}
+              />
+            )}
           </View>
           <Spacer height={8} />
           {showBottomInfo && (
             <Text t15 color={Color.textBase2}>
-              {depositCollected.toFixed(0)} ISLM from {depositNeeds.toFixed(0)}{' '}
-              ISLM
+              {total.toFixed(0)} ISLM from {max.toFixed(0)} ISLM
             </Text>
           )}
         </>
@@ -82,5 +88,13 @@ const styles = createTheme({
   lineStyle: {
     borderRadius: 40,
     height: 8,
+  },
+  markLine: {
+    position: 'absolute',
+    height: 10,
+    width: 1,
+    transform: [{translateY: -1}, {translateX: -0.5}],
+    borderRadius: 5,
+    backgroundColor: Color.graphicSecond4,
   },
 });

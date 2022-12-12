@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 import {format} from 'date-fns';
 import {ScrollView, View, useWindowDimensions} from 'react-native';
@@ -15,7 +15,7 @@ import {
   Spacer,
   Text,
   VotingCardDetail,
-  VotingLineInterface,
+  VotingCardDetailRefInterface,
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {useApp, useTypedRoute, useWalletsList} from '@app/hooks';
@@ -27,8 +27,9 @@ import {VOTES} from '@app/variables';
 export function Proposal() {
   const {hash} = useTypedRoute<'proposal'>().params;
   const {bottom} = useSafeAreaInsets();
-  const votingRef = useRef<VotingLineInterface>();
+  const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
+  const [vote, setVote] = useState<VoteNamesType>();
 
   const app = useApp();
   const {visible} = useWalletsList();
@@ -57,12 +58,16 @@ export function Proposal() {
   }, [app, item]);
 
   useEffect(() => {
+    item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
+  }, [item]);
+
+  useEffect(() => {
     if (item?.status === 'voting') {
       showModal('proposal-vote', {eventSuffix: '-proposal'});
 
-      const onVote = (vote: VoteNamesType) => {
-        voteSelectedRef.current = vote;
-        votingRef.current?.setSelected(vote);
+      const onVote = (decision: VoteNamesType) => {
+        voteSelectedRef.current = decision;
+        cardRef.current?.setSelected(decision);
         showModal('wallets-bottom-sheet', {
           wallets: visible,
           closeDistance,
@@ -71,8 +76,10 @@ export function Proposal() {
         });
       };
 
-      const onVoteChange = (vote: VoteNamesType) =>
-        votingRef.current?.setSelected(vote);
+      const onVoteChange = (decision: VoteNamesType) => {
+        cardRef.current?.setSelected(decision);
+        setVote(decision);
+      };
 
       app.on('proposal-vote-proposal', onVote);
       app.on('proposal-vote-change-proposal', onVoteChange);
@@ -82,6 +89,7 @@ export function Proposal() {
       };
     }
   }, [app, item, closeDistance, visible]);
+
   // useEffect(() => {
   //   if (item?.orderNumber) {
   //     (async () => {
@@ -125,7 +133,7 @@ export function Proposal() {
           {title}
         </Text>
         <Spacer height={24} />
-        <VotingCardDetail votingRef={votingRef} item={item} />
+        <VotingCardDetail yourVote={vote} ref={cardRef} item={item} />
         {isDeposited && (
           <InfoBlock
             style={styles.infoBlockMargin}

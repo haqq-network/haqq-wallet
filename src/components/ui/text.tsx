@@ -41,6 +41,7 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t15?: boolean;
   t16?: boolean;
   t17?: boolean;
+  t18?: boolean;
   u0?: boolean;
   clean?: boolean;
   center?: boolean;
@@ -68,6 +69,7 @@ export const Text = ({
   t15,
   t16,
   t17,
+  t18,
   u0,
   style,
   i18n = undefined,
@@ -110,6 +112,7 @@ export const Text = ({
         t15 && StyleSheet.flatten([page.t15Style, style]),
         t16 && StyleSheet.flatten([page.t16Style, style]),
         t17 && StyleSheet.flatten([page.t17Style, style]),
+        t18 && StyleSheet.flatten([page.t18Style, style]),
         u0 && StyleSheet.flatten([page.u0Style, style]),
         !!color && {color: getColor(color as Color)},
         center && page.center,
@@ -308,6 +311,12 @@ const page = createTheme({
     ...sfProTextMedium500,
     fontSize: 10,
     lineHeight: 12,
+    color: Color.textBase1,
+  },
+  t18Style: {
+    ...sfProTextSemibold600,
+    fontSize: 12,
+    lineHeight: 16,
     color: Color.textBase1,
   },
 });

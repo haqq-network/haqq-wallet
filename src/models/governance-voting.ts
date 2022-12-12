@@ -82,6 +82,10 @@ export class GovernanceVoting extends Realm.Object {
     return this.status === 'deposited';
   }
 
+  get isVoting() {
+    return this.status === 'voting';
+  }
+
   get isVoted() {
     return false;
   }
@@ -128,6 +132,15 @@ export class GovernanceVoting extends Realm.Object {
       minLeft,
       isActive: diff > 0,
     };
+  }
+
+  get yesPercent() {
+    const allVotes = this.proposalVotes;
+    const allVotesSum = Object.values(allVotes).reduce(
+      (acc: number, item: number) => acc + item,
+      0,
+    );
+    return (allVotes.yes / allVotesSum) * 100;
   }
 
   get proposalVotes(): VotesType {

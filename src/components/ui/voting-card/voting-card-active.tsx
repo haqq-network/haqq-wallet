@@ -168,8 +168,8 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
             ref={depositProgressRef}
             initialProgress={0}
             showBottomInfo
-            depositNeeds={item.proposalDepositNeeds}
-            depositCollected={95}
+            max={item.proposalDepositNeeds}
+            total={95}
           />
         ) : (
           <VotingLine ref={linesRef} initialVotes={initialVotes} />

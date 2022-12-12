@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 
 import {View} from 'react-native';
 
@@ -6,6 +6,7 @@ import {Color} from '@app/colors';
 import {
   Icon,
   ProgressLine,
+  ProgressLineInterface,
   Spacer,
   Text,
   TextSum,
@@ -15,25 +16,50 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
+import {VoteNamesType} from '@app/types';
+import {VOTES} from '@app/variables';
 
 import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
 
+export type VotingCardDetailRefInterface =
+  | ({
+      updateNotEnoughProgress: (value: number) => void;
+    } & VotingLineInterface)
+  | undefined;
+
 interface VotingCardDetailProps {
   item: ProposalRealmType;
-  votingRef: React.RefObject<VotingLineInterface | undefined>;
+  yourVote?: VoteNamesType;
 }
 
-export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
+export const VotingCardDetail = forwardRef<
+  VotingCardDetailRefInterface,
+  VotingCardDetailProps
+>(({item, yourVote}, ref) => {
   const {
     dataDifference: {daysLeft, minLeft, hourLeft, isActive},
     proposalVotes,
     isDeposited,
+    isVoting,
   } = item;
   const circleRef = useRef<ProgressCircleInterface>();
+  const votingRef = useRef<VotingLineInterface | undefined>();
+  const notEnoughVotesRef = useRef<ProgressLineInterface | undefined>();
+
+  const {i18n, color} = VOTES.find(v => v.name === yourVote) || {};
+
+  useImperativeHandle(ref, () => ({
+    setSelected: (...params) => votingRef.current?.setSelected(...params),
+    updateNotEnoughProgress: (...params) =>
+      notEnoughVotesRef.current?.updateProgress(...params),
+    updateValues: (...params) => votingRef.current?.updateValues(...params),
+  }));
 
   useEffect(() => {
     circleRef.current?.animateTo(item.timeLeftPercent);
   }, [item.timeLeftPercent]);
+
+  const isNotEnoughVotes = item.yesPercent < 51;
 
   const iconColor = isDeposited ? Color.textBlue1 : Color.graphicGreen1;
   return (
@@ -42,11 +68,13 @@ export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
         <View style={styles.row}>
           <Text t9 i18n={I18N.proposalVoteResults} />
           <Spacer width={12} />
-          <Text t15 color={Color.textBase2} i18n={I18N.proposalVoteResults} />
-          <Spacer width={4} />
-          <Text t15 color={Color.textGreen1}>
-            YES
-          </Text>
+          {i18n && (
+            <>
+              <Text t15 color={Color.textBase2} i18n={I18N.proposalYouVoted} />
+              <Spacer width={4} />
+              <Text t15 color={color} i18n={i18n} />
+            </>
+          )}
         </View>
         <Spacer height={12} />
         {(isActive || isDeposited) && (
@@ -88,8 +116,8 @@ export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
           <ProgressLine
             initialProgress={0.1}
             showBottomInfo
-            depositNeeds={item.proposalDepositNeeds}
-            depositCollected={95}
+            max={item.proposalDepositNeeds}
+            total={95}
           />
         ) : (
           <VotingLine
@@ -99,9 +127,33 @@ export function VotingCardDetail({item, votingRef}: VotingCardDetailProps) {
           />
         )}
       </View>
+      {isVoting && isNotEnoughVotes && (
+        <View style={styles.subContainer}>
+          <ProgressLine
+            ref={notEnoughVotesRef}
+            initialProgress={0}
+            markPosition={0.51}
+            color={Color.graphicSecond2}
+          />
+          <Spacer height={8} />
+          <Text>
+            <Text
+              t18
+              i18params={{percent: item.yesPercent.toFixed(0)}}
+              color={Color.textBase2}
+              i18n={I18N.proposalNotEnough}
+            />
+            <Text
+              t15
+              color={Color.textBase2}
+              i18n={I18N.proposalNotEnoughDescription}
+            />
+          </Text>
+        </View>
+      )}
     </>
   );
-}
+});
 
 const styles = createTheme({
   cardInfo: {
@@ -124,5 +176,13 @@ const styles = createTheme({
   },
   timeUnit: {
     marginRight: 8,
+  },
+  subContainer: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Color.graphicSecond1,
+    borderRadius: 12,
   },
 });
