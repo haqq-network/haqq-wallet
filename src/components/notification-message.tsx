@@ -32,10 +32,10 @@ export const NotificationMessage = ({
   }, [close, pan]);
 
   return (
-    <TouchableWithoutFeedback style={page.flex} onPress={close}>
+    <TouchableWithoutFeedback style={styles.flex} onPress={close}>
       <Animated.View
         style={[
-          page.container,
+          styles.container,
           {
             transform: [
               {
@@ -56,7 +56,7 @@ export const NotificationMessage = ({
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     marginVertical: 4,
     maxWidth: Dimensions.get('window').width - 40,
