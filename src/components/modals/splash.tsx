@@ -1,27 +1,29 @@
 import React from 'react';
 
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-import {LIGHT_GRAPHIC_GREEN_2} from '../../variables';
-import {Waiting} from '../ui';
+import {Color} from '@app/colors';
+import {Waiting} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {useAndroidSystemColors} from '@app/hooks';
 
 export type SplashModalProps = {};
+
 export const SplashModal = ({}: SplashModalProps) => {
+  useAndroidSystemColors();
+
   return (
-    <>
-      <StatusBar backgroundColor={LIGHT_GRAPHIC_GREEN_2} />
-      <View style={page.container}>
-        <Waiting />
-      </View>
-    </>
+    <View style={styles.container}>
+      <Waiting />
+    </View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: LIGHT_GRAPHIC_GREEN_2,
+    backgroundColor: Color.graphicGreen2,
   },
 });
