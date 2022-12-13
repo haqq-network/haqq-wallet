@@ -7,13 +7,13 @@ import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {calcFee, runUntil} from '@app/helpers';
+import {calcFeeWei, runUntil} from '@app/helpers';
 
 import {Provider} from '../models/provider';
 import {Wallet} from '../models/wallet';
 import {getDefaultChainId, getDefaultNetwork} from '../network';
 import {WalletType} from '../types';
-import {ETH_HD_PATH} from '../variables';
+import {ETH_HD_PATH, WEI} from '../variables';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
@@ -159,6 +159,7 @@ export class EthNetwork {
     amount: number,
   ): Promise<{
     fee: number;
+    feeWei: number;
     feeData: FeeData;
     estimateGas: BigNumberish;
   }> {
@@ -171,8 +172,11 @@ export class EthNetwork {
       } as Deferrable<TransactionRequest>),
     ]);
 
+    const feeWei = calcFeeWei(result[0].gasPrice!, result[1]);
+
     return {
-      fee: calcFee(result[0].gasPrice!, result[1]),
+      fee: feeWei / WEI,
+      feeWei,
       feeData: result[0],
       estimateGas: result[1],
     };

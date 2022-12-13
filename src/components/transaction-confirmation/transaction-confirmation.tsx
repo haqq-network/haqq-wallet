@@ -1,6 +1,5 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 
-import {ethers} from 'ethers';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -14,72 +13,31 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useContacts, useTypedRoute, useUser, useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Transaction} from '@app/models/transaction';
-import {EthNetwork} from '@app/services';
-import {WalletType} from '@app/types';
+import {Contact} from '@app/models/contact';
+import {splitAddress} from '@app/utils';
+import {WEI} from '@app/variables';
 
 interface TransactionConfirmationProps {
-  onDoneLedgerBt: (estimateFee: number) => void;
-  onDoneTransaction: (
-    transaction: ethers.providers.TransactionResponse,
-  ) => void;
+  to: string;
+  amount: number;
+  fee: number;
+  contact: Contact | null;
+  error?: string;
+  disabled?: boolean;
+  onConfirmTransaction: () => void;
 }
 
 export const TransactionConfirmation = ({
-  onDoneLedgerBt,
-  onDoneTransaction,
+  error,
+  disabled,
+  contact,
+  to,
+  amount,
+  fee,
+  onConfirmTransaction,
 }: TransactionConfirmationProps) => {
-  const providerId = useUser().providerId;
-  const {from, to, amount, fee, splittedTo} =
-    useTypedRoute<'transactionConfirmation'>().params;
-  const contacts = useContacts();
-  const wallet = useWallet(from);
-
-  const [estimateFee, setEstimateFee] = useState(fee ?? 0);
-  const [error, setError] = useState('');
-  const [disabled, setDisabled] = useState(false);
-
-  const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
-
-  const onDone = async () => {
-    if (wallet) {
-      if (wallet.type === WalletType.ledgerBt) {
-        onDoneLedgerBt(estimateFee);
-        return;
-      }
-
-      try {
-        setDisabled(true);
-
-        const ethNetworkProvider = new EthNetwork(wallet);
-
-        const transaction = await ethNetworkProvider.sendTransaction(
-          to,
-          amount,
-        );
-
-        if (transaction) {
-          Transaction.createTransaction(transaction, providerId, estimateFee);
-          onDoneTransaction(transaction);
-        }
-      } catch (e) {
-        console.log('onDone', e);
-        if (e instanceof Error) {
-          setError(e.message);
-        }
-      } finally {
-        setDisabled(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    EthNetwork.estimateTransaction(from, to, amount).then(result =>
-      setEstimateFee(result.fee),
-    );
-  }, [from, to, amount]);
+  const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   return (
     <PopupContainer style={styles.container}>
@@ -97,7 +55,7 @@ export const TransactionConfirmation = ({
         center
         style={styles.sum}
         i18n={I18N.transactionConfirmationSum}
-        i18params={{sum: `${+(amount + estimateFee).toFixed(8)}`}}
+        i18params={{sum: `${+(amount + fee).toFixed(8)}`}}
       />
       <Text
         t11
@@ -154,7 +112,7 @@ export const TransactionConfirmation = ({
               color={Color.textBase1}
               i18n={I18N.transactionConfirmationestimateFee}
               i18params={{
-                estimateFee: `${+estimateFee.toFixed(15) * 10 ** 15}`,
+                estimateFee: `${+fee * WEI}`,
               }}
             />
           </DataView>
@@ -162,10 +120,10 @@ export const TransactionConfirmation = ({
         {error && <Text clean>{error}</Text>}
       </Spacer>
       <Button
-        disabled={estimateFee === 0 && !disabled}
+        disabled={fee === 0 && !disabled}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
-        onPress={onDone}
+        onPress={onConfirmTransaction}
         style={styles.submit}
         loading={disabled}
       />

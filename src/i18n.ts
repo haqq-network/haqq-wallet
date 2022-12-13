@@ -700,7 +700,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionConfirmationTotalAmount]: 'Total Amount',
   [I18N.transactionConfirmationSum]: '{{sum}} ISLM',
   [I18N.transactionFinishSendingComplate]: 'Sending Completed!',
-  [I18N.transactionFinishNetworkFee]: 'Network Fee: {{fee}} ISLM',
+  [I18N.transactionFinishNetworkFee]: 'Network Fee: {{fee}} aISLM',
   [I18N.transactionFinishEditContact]: 'Edit Contact',
   [I18N.transactionFinishAddContact]: 'Add Contact',
   [I18N.transactionFinishHash]: 'Hash',
