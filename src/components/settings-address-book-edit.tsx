@@ -60,7 +60,7 @@ export const SettingsAddressBookEdit = memo(
             inputName &&
             isEdit && (
               <IconButton onPress={cleanTextFile}>
-                <Icon i24 name="close_circle" color={Color.graphicBase3} />
+                <Icon i24 name="close_circle" color={Color.graphicBase2} />
               </IconButton>
             )
           }
