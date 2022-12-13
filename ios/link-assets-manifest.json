@@ -126,6 +126,18 @@
       "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
     },
     {
+      "path": "assets/images/islm_icon.png",
+      "sha1": "f86efa71452726b2e0c02634de0e3a6493b81e6d"
+    },
+    {
+      "path": "assets/images/islm_icon@2x.png",
+      "sha1": "d411e2f2097993fdb32ac9f56efdba47efebfa2b"
+    },
+    {
+      "path": "assets/images/islm_icon@3x.png",
+      "sha1": "72ca926eadbb16697b80c117d9c789fd5fb25cd7"
+    },
+    {
       "path": "assets/images/logo-empty.png",
       "sha1": "300decd99701800b8b6957377536306035d71025"
     },
