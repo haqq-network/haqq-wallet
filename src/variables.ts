@@ -1,4 +1,5 @@
 import {Dimensions, Platform} from 'react-native';
+import {Easing} from 'react-native-reanimated';
 
 import {BiometryType} from './types';
 
@@ -182,3 +183,6 @@ export const WEI = 10 ** 18;
 export const WINDOW_WIDTH = Dimensions.get('window').width;
 export const WINDOW_HEIGHT = Dimensions.get('window').height;
 export const WINDOW_RATIO = WINDOW_WIDTH / 541;
+
+export const ANIMATION_DURATION = 300;
+export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);

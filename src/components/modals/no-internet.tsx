@@ -1,64 +1,50 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-import {
-  LIGHT_BG_1,
-  LIGHT_BG_9,
-  LIGHT_GRAPHIC_SECOND_4,
-  LIGHT_TEXT_BASE_1,
-  WINDOW_WIDTH,
-} from '../../variables';
-import {NoInternetIcon, Text} from '../ui';
+import {Color} from '@app/colors';
+import {NoInternetIcon, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
+import {LIGHT_GRAPHIC_SECOND_4} from '@app/variables';
+
+import {BottomPopupContainer} from '../bottom-popups';
 
 export const NoInternet = () => {
   return (
-    <View style={page.container}>
-      <View style={page.modalView}>
-        <View style={page.modalContent}>
-          <Text t5 style={page.titleText}>
-            No Internet
-          </Text>
-          <Text t14 style={page.descriptionText}>
-            Make sure you are connected to Wi-Fi or a cellular network
-          </Text>
+    <BottomPopupContainer>
+      {() => (
+        <View style={page.modalView}>
+          <Text t5 center i18n={I18N.noInternetPopupTitle} />
+          <Text
+            t14
+            center
+            style={page.descriptionText}
+            i18n={I18N.noInternetPopupDescription}
+          />
           <NoInternetIcon color={LIGHT_GRAPHIC_SECOND_4} style={page.icon} />
         </View>
-      </View>
-    </View>
+      )}
+    </BottomPopupContainer>
   );
 };
 
-const page = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: LIGHT_BG_9,
-    paddingBottom: 30,
-  },
-  titleText: {
-    textAlign: 'center',
-  },
+const page = createTheme({
   descriptionText: {
-    textAlign: 'center',
     paddingTop: 6,
     width: 290,
-    color: LIGHT_TEXT_BASE_1,
   },
   icon: {
     marginTop: 24,
   },
-  modalContent: {
-    height: 298,
-    width: WINDOW_WIDTH - 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    bottom: 0,
-  },
   modalView: {
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 16,
     alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 40,
+    padding: 24,
+    justifyContent: 'center',
+    minHeight: 298,
   },
 });
