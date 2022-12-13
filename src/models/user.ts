@@ -80,6 +80,8 @@ export class User extends EventEmitter {
 
     this._systemTheme = Appearance.getColorScheme() as AppTheme;
 
+    console.log('Appearance.getColorScheme()', Appearance.getColorScheme());
+
     Appearance.addChangeListener(this.listenTheme);
 
     AppState.addEventListener('change', this.listenTheme);
@@ -87,6 +89,8 @@ export class User extends EventEmitter {
 
   listenTheme = () => {
     const theme = Appearance.getColorScheme() as AppTheme;
+
+    console.log('listenTheme', theme, this._systemTheme);
 
     if (theme !== this._systemTheme) {
       this._systemTheme = theme;
