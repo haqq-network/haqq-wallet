@@ -1,18 +1,26 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  useApp,
+  useContacts,
+  useTypedNavigation,
+  useTypedRoute,
+} from '@app/hooks';
 import {EthNetwork} from '@app/services';
-import {generateUUID, splitAddress} from '@app/utils';
+import {generateUUID} from '@app/utils';
 
 export const TransactionSumScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionSum'>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
+  const contacts = useContacts();
   const [to, setTo] = useState(route.params.to);
+
   const [balance, setBalance] = useState(0);
   const [fee, setFee] = useState(0);
+  const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
   const onAddress = useCallback((address: string) => {
     setTo(address);
@@ -26,8 +34,6 @@ export const TransactionSumScreen = () => {
     };
   }, [app, event, onAddress]);
 
-  const splittedTo = useMemo(() => splitAddress(to), [to]);
-
   const onAmount = useCallback(
     (amount: number) => {
       navigation.navigate('transactionConfirmation', {
@@ -35,10 +41,9 @@ export const TransactionSumScreen = () => {
         from: route.params.from,
         to,
         amount,
-        splittedTo,
       });
     },
-    [fee, navigation, route.params.from, splittedTo, to],
+    [fee, navigation, route.params.from, to],
   );
 
   const onContact = useCallback(() => {
@@ -62,6 +67,7 @@ export const TransactionSumScreen = () => {
 
   return (
     <TransactionSum
+      contact={contact}
       balance={balance}
       fee={fee}
       to={to}
