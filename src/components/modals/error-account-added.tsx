@@ -4,9 +4,13 @@ import {StyleSheet, View} from 'react-native';
 
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {windowWidth} from '../../helpers';
 import {hideModal} from '../../helpers/modal';
-import {LIGHT_BG_1, LIGHT_BG_9, LIGHT_GRAPHIC_SECOND_4} from '../../variables';
+import {
+  LIGHT_BG_1,
+  LIGHT_BG_9,
+  LIGHT_GRAPHIC_SECOND_4,
+  WINDOW_WIDTH,
+} from '../../variables';
 import {AccountAddedIcon, Button, ButtonSize, ButtonVariant, Text} from '../ui';
 
 export const ErrorAccountAdded = () => {
@@ -60,7 +64,7 @@ const page = StyleSheet.create({
   modalContent: {
     top: 10,
     height: 382,
-    width: windowWidth - 32,
+    width: WINDOW_WIDTH - 32,
     justifyContent: 'center',
     alignItems: 'center',
     bottom: 0,
@@ -71,7 +75,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    width: windowWidth - 90,
+    width: WINDOW_WIDTH - 90,
     marginTop: 45,
     marginBottom: 20,
   },

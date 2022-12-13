@@ -29,6 +29,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           titleI18n={I18N.transactionSendTitle}
           subtitleI18nParams={{address: shortAddress(item.to, '•')}}
           subtitleI18n={I18N.transactionSendTo}
+          short
         />
         <Text t11 color={Color.textRed1}>
           {`- ${item.value.toFixed(2)} ISLM`}

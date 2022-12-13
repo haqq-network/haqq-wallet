@@ -2,12 +2,12 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {windowWidth} from '../../helpers';
 import {
   LIGHT_BG_1,
   LIGHT_BG_9,
   LIGHT_GRAPHIC_SECOND_4,
   LIGHT_TEXT_BASE_1,
+  WINDOW_WIDTH,
 } from '../../variables';
 import {NoInternetIcon, Text} from '../ui';
 
@@ -51,7 +51,7 @@ const page = StyleSheet.create({
   },
   modalContent: {
     height: 298,
-    width: windowWidth - 32,
+    width: WINDOW_WIDTH - 32,
     justifyContent: 'center',
     alignItems: 'center',
     bottom: 0,

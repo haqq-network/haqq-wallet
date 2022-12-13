@@ -1,18 +1,13 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
-import {
-  DataContent,
-  DataContentSplitted,
-  Icon,
-  IconButton,
-  Text,
-} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
+import {createTheme, sendNotification} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
@@ -40,14 +35,16 @@ export const TransactionDetail = ({
   const title = isSent
     ? getText(I18N.transactionDetailSent)
     : getText(I18N.transactionDetailRecive);
-  const titleAddress = isSent
-    ? getText(I18N.transactionDetailSentTo)
-    : getText(I18N.transactionDetailReciveFrom);
 
   const splitted = useMemo(
-    () => (isSent ? splitAddress(to) : splitAddress(from)),
+    () => splitAddress(isSent ? to : from),
     [from, isSent, to],
   );
+
+  const onPressAddress = useCallback(() => {
+    Clipboard.setString(to);
+    sendNotification(I18N.notificationCopied);
+  }, [to]);
 
   if (!transaction) {
     return null;
@@ -66,31 +63,31 @@ export const TransactionDetail = ({
         style={styles.sum}>
         {transaction.totalFormatted} ISLM
       </Text>
-      {/*<Text t14 style={page.subSum}>*/}
-      {/*  - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM*/}
-      {/*</Text>*/}
       <View style={styles.infoContainer}>
         <DataContent
           title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
           subtitleI18n={I18N.transactionDetailDate}
           reversed
-          style={styles.info}
+          short
         />
-        {isSent ? (
-          <DataContentSplitted
-            to={splitted}
-            title={titleAddress}
-            style={styles.info}
-            reversed
-          />
-        ) : (
-          <DataContentSplitted
-            to={splitted}
-            title={titleAddress}
-            style={styles.info}
-            reversed
-          />
-        )}
+        <DataContent
+          title={
+            <>
+              {splitted[0]}
+              <Text color={Color.textBase2}>{splitted[1]}</Text>
+              {splitted[2]}
+            </>
+          }
+          numberOfLines={2}
+          subtitleI18n={
+            isSent
+              ? I18N.transactionDetailSentTo
+              : I18N.transactionDetailReciveFrom
+          }
+          reversed
+          short
+          onPress={onPressAddress}
+        />
         <DataContent
           title={
             <>
@@ -104,37 +101,33 @@ export const TransactionDetail = ({
               </View>
               <Text t11>
                 {' '}
-                Islamic Coin{' '}
-                <Text clean color={Color.textBase2}>
-                  (ISLM)
-                </Text>
+                Islamic Coin <Text color={Color.textBase2}>(ISLM)</Text>
               </Text>
             </>
           }
-          subtitle="Cryptocurrency"
+          subtitleI18n={I18N.transactionDetailCryptocurrency}
           reversed
-          style={styles.info}
+          short
         />
         {provider && (
           <DataContent
             title={provider.name}
             subtitleI18n={I18N.transactionDetailNetwork}
             reversed
-            style={styles.info}
+            short
           />
         )}
         <DataContent
           title={`${transaction.valueFormatted} ISLM`}
           subtitleI18n={I18N.transactionDetailAmount}
           reversed
-          style={styles.info}
+          short
         />
         <DataContent
           title={`${transaction.feeFormatted} ISLM`}
-          subtitle="Network Fee"
           subtitleI18n={I18N.transactionDetailNetworkFee}
           reversed
-          style={styles.info}
+          short
         />
       </View>
       <IconButton onPress={onPressInfo} style={styles.iconButton}>
@@ -161,9 +154,6 @@ const styles = createTheme({
     backgroundColor: Color.bg3,
     borderRadius: 16,
     marginBottom: 24,
-  },
-  info: {
-    marginVertical: 8,
   },
   amount: {marginBottom: 2, color: Color.textBase2},
   icon: {
