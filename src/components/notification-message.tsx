@@ -1,16 +1,12 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {
-  Animated,
-  Dimensions,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {Animated, Dimensions, TouchableWithoutFeedback} from 'react-native';
 
-import {Text} from './ui';
-
-import {asyncTiming, sleep} from '../utils';
-import {LIGHT_BG_1, LIGHT_TEXT_BASE_1, SHADOW_COLOR} from '../variables';
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {asyncTiming, sleep} from '@app/utils';
+import {SHADOW_COLOR} from '@app/variables';
 
 export type NotificationMessageProps = {
   message: string;
@@ -52,7 +48,7 @@ export const NotificationMessage = ({
             opacity: pan,
           },
         ]}>
-        <Text t14 style={page.t14}>
+        <Text t14 center>
           {message}
         </Text>
       </Animated.View>
@@ -60,13 +56,13 @@ export const NotificationMessage = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     marginVertical: 4,
     maxWidth: Dimensions.get('window').width - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,
-    backgroundColor: LIGHT_BG_1,
+    backgroundColor: Color.bg1,
     borderRadius: 24,
     shadowColor: SHADOW_COLOR,
     shadowOffset: {
@@ -78,5 +74,4 @@ const page = StyleSheet.create({
     elevation: 5,
   },
   flex: {flex: 1},
-  t14: {fontWeight: '600', color: LIGHT_TEXT_BASE_1, textAlign: 'center'},
 });
