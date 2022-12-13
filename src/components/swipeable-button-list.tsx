@@ -5,6 +5,7 @@ import {Animated, View} from 'react-native';
 import {SwipeableButton} from '@app/components/ui/swipeable-button';
 import {createTheme} from '@app/helpers';
 import {SwipeableAction} from '@app/types';
+
 export type SwipeableButtonListProps<T> = {
   rightActions: SwipeableAction<T>[];
   progress: Animated.AnimatedInterpolation<number>;

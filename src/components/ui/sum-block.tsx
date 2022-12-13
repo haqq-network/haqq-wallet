@@ -13,9 +13,10 @@ import {
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
-import {createTheme, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
+import {WINDOW_WIDTH} from '@app/variables';
 
 export type SumBlockProps = {
   value: string;
@@ -52,7 +53,7 @@ export const SumBlock = ({
   );
 
   const ratio = useMemo(
-    () => (value.length > 0 ? (windowWidth - 180) / value.length : 30),
+    () => (value.length > 0 ? (WINDOW_WIDTH - 180) / value.length : 30),
     [value.length],
   );
 

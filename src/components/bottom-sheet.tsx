@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {
-  Dimensions,
   Animated as RNAnimated,
   StatusBar,
   StyleSheet,
@@ -26,11 +25,10 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
+import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-
-import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
-
-import {useAndroidStatusBarAnimation} from '../hooks';
+import {useAndroidStatusBarAnimation} from '@app/hooks';
+import {WINDOW_WIDTH} from '@app/variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -256,7 +254,7 @@ const page = createTheme({
     marginBottom: 2,
   },
   content: {
-    width: Dimensions.get('window').width,
+    width: WINDOW_WIDTH,
     backgroundColor: Color.bg1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
