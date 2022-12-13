@@ -14,7 +14,6 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
-  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -152,7 +151,7 @@ export const BottomSheet = ({
       closedSnapPoint,
       {
         duration: ANIMATION_DURATION,
-        easing: Easing.out(ANIMATION_TYPE),
+        easing: ANIMATION_TYPE,
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -162,7 +161,7 @@ export const BottomSheet = ({
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
       duration: ANIMATION_DURATION,
-      easing: Easing.in(ANIMATION_TYPE),
+      easing: ANIMATION_TYPE,
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 

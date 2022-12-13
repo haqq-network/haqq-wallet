@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 
 import {View, useWindowDimensions} from 'react-native';
 import Animated, {
-  Easing,
   WithTimingConfig,
   interpolate,
   runOnJS,
@@ -17,12 +16,12 @@ import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: ANIMATION_DURATION,
-  easing: Easing.in(ANIMATION_TYPE),
+  easing: ANIMATION_TYPE,
 };
 
 const timingInAnimationConfig: WithTimingConfig = {
   duration: ANIMATION_DURATION,
-  easing: Easing.out(ANIMATION_TYPE),
+  easing: ANIMATION_TYPE,
 };
 
 interface BottomPopupContainerProps {
