@@ -4,7 +4,8 @@ import messaging from '@react-native-firebase/messaging';
 import {View} from 'react-native';
 
 import {Button, ButtonVariant} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, showModal} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -28,8 +29,13 @@ messaging()
   });
 
 export const SettingsTestScreen = () => {
+  const navigation = useTypedNavigation();
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
+  };
+
+  const onPressPopup = () => {
+    navigation.navigate('notificationPopup');
   };
 
   return (
@@ -37,6 +43,16 @@ export const SettingsTestScreen = () => {
       <Button
         title="Request permissions"
         onPress={onPressRequestPermissions}
+        variant={ButtonVariant.contained}
+      />
+      <Button
+        title="Show popup"
+        onPress={onPressPopup}
+        variant={ButtonVariant.contained}
+      />
+      <Button
+        title="Show no internet"
+        onPress={() => showModal('error-create-account')}
         variant={ButtonVariant.contained}
       />
     </View>
