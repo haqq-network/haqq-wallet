@@ -3,12 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
-import {
-  useContacts,
-  useTransactions,
-  useTypedNavigation,
-  useTypedRoute,
-} from '@app/hooks';
+import {useTransactions, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
@@ -20,12 +16,12 @@ export const TransactionFinishScreen = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(hash),
   );
-  const contacts = useContacts();
 
   const contact = useMemo(
-    () => contacts.getContact(transaction?.to ?? ''),
-    [contacts, transaction?.to],
+    () => Contact.getById(transaction?.to ?? ''),
+    [transaction?.to],
   );
+
   const short = useMemo(
     () => shortAddress(transaction?.to ?? ''),
     [transaction?.to],
@@ -42,9 +38,11 @@ export const TransactionFinishScreen = () => {
         `Address: ${short}`,
         value => {
           if (contact) {
-            contacts.updateContact(transaction.to, value);
+            contact.update({
+              name: value,
+            });
           } else {
-            contacts.createContact(transaction.to, value);
+            Contact.create(transaction.to, {name: value});
           }
         },
         {
@@ -53,7 +51,7 @@ export const TransactionFinishScreen = () => {
         },
       );
     }
-  }, [transaction?.to, contact, short, contacts]);
+  }, [transaction?.to, contact, short]);
 
   useEffect(() => {
     setTransaction(transactions.getTransaction(hash));
