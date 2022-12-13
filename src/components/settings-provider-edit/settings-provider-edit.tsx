@@ -75,16 +75,17 @@ const constraints = {
     presence: {allowEmpty: false},
     url: true,
   },
-  ethChainId: {
-    presence: {allowEmpty: false},
-    numericality: true,
-  },
   cosmosRestEndpoint: {
     presence: {allowEmpty: false},
     url: true,
   },
   cosmosChainId: {
     presence: {allowEmpty: false},
+    format: {
+      pattern: /(\w+)_(\d{1,10})-(\d{1,10})/,
+      flags: 'i',
+      message: 'invalid Chain ID',
+    },
   },
   explorer: {
     url: true,
@@ -154,15 +155,22 @@ export const SettingsProviderEdit = memo(
         return {
           textRight: getText(I18N.save),
           disabledRight: !(state.isChanged && !error),
-          onPressRight: () =>
-            onSubmit({
-              name: state.name,
-              ethRpcEndpoint: state.ethRpcEndpoint,
-              ethChainId: parseInt(state.ethChainId!, 10),
-              cosmosRestEndpoint: state.cosmosRestEndpoint,
-              cosmosChainId: state.cosmosChainId,
-              explorer: state.explorer,
-            }),
+          onPressRight: () => {
+            const id = /(\w+)_(\d{1,10})-(\d{1,10})/.exec(
+              state.cosmosChainId ?? '',
+            );
+
+            if (id) {
+              onSubmit({
+                name: state.name,
+                ethRpcEndpoint: state.ethRpcEndpoint,
+                ethChainId: parseInt(id[2], 10),
+                cosmosRestEndpoint: state.cosmosRestEndpoint,
+                cosmosChainId: state.cosmosChainId,
+                explorer: state.explorer,
+              });
+            }
+          },
           textColorRight: Color.graphicGreen1,
         };
       }
@@ -213,43 +221,8 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.name}
             name="name"
+            placeholder={I18N.settingsProviderEditNamePlaceholder}
             error={error?.name}
-            onChange={onChangeField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditEthEndpoint}
-            isEditable={isEdit ?? false}
-            value={state.ethRpcEndpoint}
-            name="ethRpcEndpoint"
-            error={error?.ethRpcEndpoint}
-            onChange={onChangeField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditEthChainId}
-            isEditable={isEdit ?? false}
-            value={state.ethChainId}
-            name="ethChainId"
-            error={error?.ethChainId}
-            onChange={onChangeField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditExplorer}
-            isEditable={isEdit ?? false}
-            value={state.explorer}
-            name="explorer"
-            error={error?.explorer}
-            onChange={onChangeField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditCosmosEndpoint}
-            isEditable={isEdit ?? false}
-            value={state.cosmosRestEndpoint}
-            name="cosmosRestEndpoint"
-            error={error?.cosmosRestEndpoint}
             onChange={onChangeField}
           />
           <Spacer height={24} />
@@ -259,6 +232,37 @@ export const SettingsProviderEdit = memo(
             value={state.cosmosChainId}
             name="cosmosChainId"
             error={error?.cosmosChainId}
+            placeholder={I18N.settingsProviderEditCosmosChainIdPlaceholder}
+            onChange={onChangeField}
+          />
+          <Spacer height={24} />
+          <WrappedInput
+            label={I18N.settingsProviderEditCosmosEndpoint}
+            isEditable={isEdit ?? false}
+            value={state.cosmosRestEndpoint}
+            name="cosmosRestEndpoint"
+            error={error?.cosmosRestEndpoint}
+            placeholder={I18N.settingsProviderEditCosmosEndpointPlaceholder}
+            onChange={onChangeField}
+          />
+          <Spacer height={24} />
+          <WrappedInput
+            label={I18N.settingsProviderEditEthEndpoint}
+            isEditable={isEdit ?? false}
+            value={state.ethRpcEndpoint}
+            name="ethRpcEndpoint"
+            error={error?.ethRpcEndpoint}
+            placeholder={I18N.settingsProviderEditEthEndpointPlaceholder}
+            onChange={onChangeField}
+          />
+          <Spacer height={24} />
+          <WrappedInput
+            label={I18N.settingsProviderEditExplorer}
+            isEditable={isEdit ?? false}
+            value={state.explorer}
+            name="explorer"
+            error={error?.explorer}
+            placeholder={I18N.settingsProviderEditExplorerPlaceholder}
             onChange={onChangeField}
           />
 
