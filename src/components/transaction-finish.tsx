@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -55,7 +55,10 @@ export const TransactionFinish = ({
         center
         color={Color.textGreen1}
       />
-      <Icon name="islm" i24 color={Color.graphicGreen1} style={styles.icon} />
+      <Image
+        source={require('../../assets/images/islm_icon.png')}
+        style={styles.icon}
+      />
       {transaction && (
         <Text t5 center style={styles.sum}>
           - {cleanNumber((transaction?.value).toFixed(8))} ISLM
@@ -139,7 +142,12 @@ const styles = createTheme({
     marginTop: 32,
     marginBottom: 34,
   },
-  icon: {marginBottom: 16, alignSelf: 'center'},
+  icon: {
+    marginBottom: 16,
+    alignSelf: 'center',
+    width: 64,
+    height: 64,
+  },
   sum: {
     marginBottom: 8,
   },
