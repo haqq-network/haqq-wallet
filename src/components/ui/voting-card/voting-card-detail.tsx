@@ -24,18 +24,20 @@ import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
 export type VotingCardDetailRefInterface =
   | ({
       updateNotEnoughProgress: (value: number) => void;
+      updateDepositProgress: (value: number) => void;
     } & VotingLineInterface)
   | undefined;
 
 interface VotingCardDetailProps {
   item: ProposalRealmType;
   yourVote?: VoteNamesType;
+  totalCollected?: number;
 }
 
 export const VotingCardDetail = forwardRef<
   VotingCardDetailRefInterface,
   VotingCardDetailProps
->(({item, yourVote}, ref) => {
+>(({item, yourVote, totalCollected}, ref) => {
   const {
     dataDifference: {daysLeft, minLeft, hourLeft, isActive},
     proposalVotes,
@@ -44,6 +46,7 @@ export const VotingCardDetail = forwardRef<
   } = item;
   const circleRef = useRef<ProgressCircleInterface>();
   const votingRef = useRef<VotingLineInterface | undefined>();
+  const depositLineRef = useRef<ProgressLineInterface | undefined>();
   const notEnoughVotesRef = useRef<ProgressLineInterface | undefined>();
 
   const {i18n, color} = VOTES.find(v => v.name === yourVote) || {};
@@ -53,6 +56,8 @@ export const VotingCardDetail = forwardRef<
     updateNotEnoughProgress: (...params) =>
       notEnoughVotesRef.current?.updateProgress(...params),
     updateValues: (...params) => votingRef.current?.updateValues(...params),
+    updateDepositProgress: (...params) =>
+      depositLineRef.current?.updateProgress(...params),
   }));
 
   useEffect(() => {
@@ -114,10 +119,11 @@ export const VotingCardDetail = forwardRef<
         )}
         {isDeposited ? (
           <ProgressLine
-            initialProgress={0.1}
+            initialProgress={0}
             showBottomInfo
+            ref={depositLineRef}
             max={item.proposalDepositNeeds}
-            total={95}
+            total={totalCollected}
           />
         ) : (
           <VotingLine

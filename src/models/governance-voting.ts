@@ -7,10 +7,11 @@ import {
 } from 'date-fns';
 
 import {app} from '@app/contexts';
+import {captureException} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
 import {Cosmos} from '@app/services/cosmos';
-import {VotesType} from '@app/types';
+import {DepositResponse, VotesType} from '@app/types';
 
 export const GovernanceVotingState = {
   passed: I18N.homeGovernanceTagPassed,
@@ -166,6 +167,50 @@ export class GovernanceVoting extends Realm.Object {
       );
     } else {
       return;
+    }
+  }
+
+  async getVoter(address: string) {
+    try {
+      const cosmos = new Cosmos(app.provider!);
+      const details = await cosmos.getProposalVoter(this.orderNumber, address);
+      return details;
+    } catch (error) {
+      captureException(error);
+    }
+  }
+
+  static depositSum(response?: DepositResponse) {
+    if (!response) {
+      return 0;
+    }
+    return response.result.reduce(
+      (acc, item) => acc + item.amount.reduce((a, b) => a + +b.amount, 0),
+      0,
+    );
+  }
+
+  async getDeposits() {
+    try {
+      const cosmos = new Cosmos(app.provider!);
+      const details = await cosmos.getProposalDeposits(this.orderNumber);
+      return details;
+    } catch (error) {
+      captureException(error);
+    }
+  }
+
+  async getDepositor(address: string) {
+    try {
+      const cosmos = new Cosmos(app.provider!);
+      const details = await cosmos.getProposalDepositor(
+        this.orderNumber,
+        address,
+      );
+      return details;
+    } catch (error) {
+      captureException(error);
+      return [];
     }
   }
 

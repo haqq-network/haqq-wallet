@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Svg, {Path, Rect} from 'react-native-svg';
+import Svg, {Circle, Path, Rect} from 'react-native-svg';
 import {SvgProps} from 'react-native-svg/src/elements/Svg';
 
 export const Alert = ({style, color}: SvgProps) => (
@@ -295,6 +295,46 @@ export const NoTransactionsIcon = (props: SvgProps) => (
     <Rect x="14.5" y="42" width="8" height="2" rx="1" fill="currentColor" />
     <Rect x="26.5" y="52" width="40" height="2" rx="1" fill="currentColor" />
     <Rect x="14.5" y="52" width="8" height="2" rx="1" fill="currentColor" />
+  </Svg>
+);
+
+export const NoProposalVotingIcon = (props: SvgProps) => (
+  <Svg width={80} height={80} viewBox="0 0 80 80" fill="none" {...props}>
+    <Rect
+      x={7.5}
+      y={1}
+      width={66}
+      height={78}
+      rx={7}
+      stroke="currentColor"
+      strokeWidth={2}
+    />
+    <Rect x={20.5} y={18} width={40} height={2} rx={1} fill="currentColor" />
+    <Rect x={31.5} y={23} width={9} height={2} rx={1} fill="currentColor" />
+    <Rect x={31.5} y={27} width={21} height={2} rx={1} fill="currentColor" />
+    <Circle cx={24.5} cy={26} r={3} stroke="currentColor" strokeWidth={2} />
+    <Rect
+      x={15.5}
+      y={13}
+      width={50}
+      height={22}
+      rx={2}
+      stroke="currentColor"
+      strokeWidth={2}
+    />
+    <Rect x={20.5} y={48} width={40} height={2} rx={1} fill="currentColor" />
+    <Rect x={31.5} y={53} width={9} height={2} rx={1} fill="currentColor" />
+    <Rect x={31.5} y={57} width={21} height={2} rx={1} fill="currentColor" />
+    <Circle cx={24.5} cy={56} r={3} stroke="currentColor" strokeWidth={2} />
+    <Rect
+      x={15.5}
+      y={43}
+      width={50}
+      height={22}
+      rx={2}
+      stroke="currentColor"
+      strokeWidth={2}
+    />
   </Svg>
 );
 

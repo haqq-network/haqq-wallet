@@ -30,6 +30,7 @@ export function Proposal() {
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
   const [vote, setVote] = useState<VoteNamesType>();
+  const [collectedDeposit, setCollectedDeposit] = useState(0);
 
   const app = useApp();
   const {visible} = useWalletsList();
@@ -59,7 +60,10 @@ export function Proposal() {
 
   useEffect(() => {
     item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
-  }, [item]);
+    cardRef.current?.updateDepositProgress(
+      collectedDeposit / (item?.proposalDepositNeeds ?? 0),
+    );
+  }, [collectedDeposit, item]);
 
   useEffect(() => {
     if (item?.status === 'voting') {
@@ -90,19 +94,24 @@ export function Proposal() {
     }
   }, [app, item, closeDistance, visible]);
 
-  // useEffect(() => {
-  //   if (item?.orderNumber) {
-  //     (async () => {
-  //       const response = await GovernanceVoting.requestDetailFor(
-  //         String(item.orderNumber),
-  //       );
-  //       // setDetails({
+  useEffect(() => {
+    item?.getDeposits().then(voter => {
+      const sum = GovernanceVoting.depositSum(voter);
+      setCollectedDeposit(sum);
+    });
 
-  //       // })
-  //       console.log('🚀 - details', JSON.stringify(response.proposal));
-  //     })();
-  //   }
-  // }, [item?.orderNumber]);
+    // if (item?.orderNumber) {
+    //   (async () => {
+    //     const response = await GovernanceVoting.requestDetailFor(
+    //       String(item.orderNumber),
+    //     );
+    //     // setDetails({
+
+    //     // })
+    //     console.log('🚀 - details', JSON.stringify(response.proposal));
+    //   })();
+    // }
+  }, [item]);
 
   if (!item) {
     return <></>;
@@ -133,7 +142,12 @@ export function Proposal() {
           {title}
         </Text>
         <Spacer height={24} />
-        <VotingCardDetail yourVote={vote} ref={cardRef} item={item} />
+        <VotingCardDetail
+          totalCollected={collectedDeposit}
+          yourVote={vote}
+          ref={cardRef}
+          item={item}
+        />
         {isDeposited && (
           <InfoBlock
             style={styles.infoBlockMargin}

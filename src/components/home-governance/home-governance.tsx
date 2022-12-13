@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {FlatList, View} from 'react-native';
 
+import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {
   CustomHeader,
   Loading,
@@ -70,7 +71,7 @@ export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
         <Loading />
       ) : (
         <FlatList
-          //ListEmptyComponent={Loading}
+          ListEmptyComponent={ProposalVotingEmpty}
           refreshing={refreshing}
           onRefresh={onRefresh}
           ListHeaderComponent={listHeader}

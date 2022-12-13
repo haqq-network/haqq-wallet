@@ -24,6 +24,7 @@ import {
   Chain,
   Fee,
   createTxMsgDelegate,
+  createTxMsgDeposit,
   createTxMsgMultipleWithdrawDelegatorReward,
   createTxMsgUndelegate,
   createTxMsgVote,
@@ -44,6 +45,7 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {DepositResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -148,6 +150,37 @@ export class Cosmos {
   async getProposals(): Promise<ProposalsResponse> {
     return this.getQuery(
       generateEndpointProposals() + '?pagination.reverse=true',
+    );
+  }
+
+  async deposit(source: string, proposalId: number, amount: number) {
+    const sender = await this.getSender(source);
+    const memo = '';
+    const params = {
+      proposalId,
+      deposit: {
+        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+        denom: 'aISLM',
+      },
+    };
+    createTxMsgDeposit(this.haqqChain, sender, Cosmos.fee, memo, params);
+  }
+
+  getProposalDepositor(proposal_id: number | string, depositor: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits/${depositor}`,
+    );
+  }
+
+  getProposalDeposits(proposal_id: number | string) {
+    return this.getQuery<DepositResponse>(
+      `/gov/proposals/${proposal_id}/deposits`,
+    );
+  }
+
+  getProposalVoter(proposal_id: string | number, voter: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/votes/${voter}`,
     );
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Validator} from '@evmos/provider';
+import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
@@ -483,3 +484,12 @@ export type VotesType = {
 };
 
 export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
+
+export type DepositResponse = {
+  height: string;
+  result: {
+    amount: Coin[];
+    depositor: string;
+    proposal_id: string;
+  }[];
+};

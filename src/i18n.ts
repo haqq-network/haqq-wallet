@@ -244,6 +244,7 @@ export enum I18N {
   proposalDeposit,
   proposalNotEnough,
   proposalNotEnoughDescription,
+  proposalNoVoting,
   settingsAddressBookLabel,
   settingsAddressBookPlaceholder,
   settingsAddressBookAdd,
@@ -555,6 +556,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
+  [I18N.proposalNoVoting]: 'No Voting proposal',
   [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
   [I18N.settingsAddressBookAdd]: 'Add Contact',
