@@ -18,6 +18,8 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services/eth-network';
+import {cleanNumber} from '@app/utils';
+import {WEI} from '@app/variables';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
@@ -56,7 +58,7 @@ export const TransactionFinish = ({
       <Icon name="islm" i24 color={Color.graphicGreen1} style={styles.icon} />
       {transaction && (
         <Text t5 center style={styles.sum}>
-          - {(transaction?.value + transaction?.fee).toFixed(8)} ISLM
+          - {cleanNumber((transaction?.value).toFixed(8))} ISLM
         </Text>
       )}
       <Text t14 center style={styles.address}>
@@ -66,7 +68,7 @@ export const TransactionFinish = ({
         t15
         center
         i18n={I18N.transactionFinishNetworkFee}
-        i18params={{fee: `${transaction?.fee.toFixed(8)}`}}
+        i18params={{fee: `${(transaction?.fee ?? 0) * WEI}`}}
         color={Color.textBase2}
       />
       <Spacer />

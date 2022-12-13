@@ -14,8 +14,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useContacts, useSumAmount} from '@app/hooks';
+import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
 
@@ -24,6 +25,7 @@ export type TransactionSumProps = {
   fee: number;
   to: string;
   from: string;
+  contact: Contact | null;
   onAmount: (amount: number) => void;
   onContact: () => void;
 };
@@ -32,10 +34,10 @@ export const TransactionSum = ({
   to,
   balance,
   fee,
+  contact,
   onAmount,
   onContact,
 }: TransactionSumProps) => {
-  const contacts = useContacts();
   const amounts = useSumAmount();
 
   useEffect(() => {
@@ -43,8 +45,6 @@ export const TransactionSum = ({
   }, [amounts, balance, fee]);
 
   const inputSumRef = useRef<TextInput>(null);
-
-  const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
 
   const formattedAddress = useMemo(
     () => (contact ? `${contact.name} ${shortAddress(to)}` : shortAddress(to)),
@@ -100,7 +100,10 @@ export const TransactionSum = ({
 };
 
 const styles = createTheme({
-  container: {justifyContent: 'space-between', paddingHorizontal: 20},
+  container: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
   submit: {
     marginVertical: 16,
   },
