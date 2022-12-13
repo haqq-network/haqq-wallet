@@ -2,8 +2,7 @@ import React, {useCallback} from 'react';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton, IconsName, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {openURL} from '@app/helpers';
+import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 type SettingsAboutButtonProps = {

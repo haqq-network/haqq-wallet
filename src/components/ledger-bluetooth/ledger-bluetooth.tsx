@@ -19,9 +19,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {windowHeight, windowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {User} from '@app/models/user';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
 
 export type LedgerBluetooth = {
   user: User;
@@ -146,8 +146,8 @@ const page = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animation: {
-    width: windowWidth,
-    height: Math.min(windowWidth * 0.8, windowHeight * 0.355),
+    width: WINDOW_WIDTH,
+    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -163,8 +163,8 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   imageStyle: {
-    width: windowWidth,
-    height: Math.min(windowWidth * 0.8, windowHeight * 0.355) - 20,
+    width: WINDOW_WIDTH,
+    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355) - 20,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',

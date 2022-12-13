@@ -25,6 +25,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL} from '@app/variables';
+
 const cardStyleVariants = [
   {
     value: WalletCardStyle.flat,
