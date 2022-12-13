@@ -71,6 +71,7 @@
     "react-native-screens": "^3.15.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.4.3",
+    "react-native-system-navigation-bar": "^2.1.0",
     "react-native-touch-id": "^4.4.1",
     "readable-stream": "^4.1.0",
     "realm": "11.2.0",
