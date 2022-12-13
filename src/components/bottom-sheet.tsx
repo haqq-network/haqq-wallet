@@ -48,9 +48,9 @@ export const BottomSheet = ({
   closeDistance,
 }: BottomSheetProps) => {
   const {height} = useWindowDimensions();
-  const {bottom: bottomInsets} = useSafeAreaInsets();
+  const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
 
-  const bottomSheetHeight = height * 0.75;
+  const bottomSheetHeight = height - (topInsets + 12);
   const snapPointFromTop: pointsT = [0, bottomSheetHeight];
 
   const fullyOpenSnapPoint = snapPointFromTop[0];
@@ -173,7 +173,7 @@ export const BottomSheet = ({
     const opacity = interpolate(
       clampedTranslateY.value,
       snapPointFromTop,
-      [0.5, 0],
+      [1, 0],
     );
     return {
       opacity,

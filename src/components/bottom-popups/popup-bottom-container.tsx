@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {
+  Animated as RNAnimated,
+  StatusBar,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolate,
@@ -12,6 +17,7 @@ import Animated, {
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables';
 
 const timingOutAnimationConfig: WithTimingConfig = {
@@ -24,6 +30,7 @@ const timingInAnimationConfig: WithTimingConfig = {
   easing: ANIMATION_TYPE,
 };
 
+const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 interface BottomPopupContainerProps {
   children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
 }
@@ -33,22 +40,26 @@ export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
 
   const fullyOpen = 0;
   const fullyClosed = H * 0.85;
-
+  const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
+    animatedValueRange: [fullyOpen, fullyClosed],
+  });
   const fadeAnim = useSharedValue(fullyClosed);
 
   const fadeOut = useCallback(
     (endCallback?: () => void) => {
       const onEnd = () => endCallback?.();
+      toLight();
       fadeAnim.value = withTiming(fullyClosed, timingOutAnimationConfig, () =>
         runOnJS(onEnd)(),
       );
     },
-    [fullyClosed, fadeAnim],
+    [fullyClosed, fadeAnim, toLight],
   );
 
   useEffect(() => {
+    toDark();
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
-  }, [fadeAnim]);
+  }, [fadeAnim, toDark]);
 
   const bgAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [1, 0]),
@@ -60,6 +71,7 @@ export const BottomPopupContainer = ({children}: BottomPopupContainerProps) => {
 
   return (
     <View style={page.container}>
+      <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View style={[page.animateView, bgAnimation]} />
       <Animated.View style={[page.animateViewFade, slideFromBottomAnimation]}>
         {children(fadeOut)}
