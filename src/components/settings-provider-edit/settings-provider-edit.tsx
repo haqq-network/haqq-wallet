@@ -81,6 +81,11 @@ const constraints = {
   },
   cosmosChainId: {
     presence: {allowEmpty: false},
+    format: {
+      pattern: /(\w+)_(\d{1,10})-(\d{1,10})/,
+      flags: 'i',
+      message: 'invalid Chain ID',
+    },
   },
   explorer: {
     url: true,
@@ -154,7 +159,7 @@ export const SettingsProviderEdit = memo(
             const id = /(\w+)_(\d{1,10})-(\d{1,10})/.exec(
               state.cosmosChainId ?? '',
             );
-            console.log('id', id);
+
             if (id) {
               onSubmit({
                 name: state.name,
