@@ -163,6 +163,7 @@ const page = createTheme({
   secondContainer: {
     backgroundColor: Color.bg2,
     borderRadius: 12,
+    minHeight: 54,
   },
   // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledContainer: {
