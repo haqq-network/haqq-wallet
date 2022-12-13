@@ -19,7 +19,7 @@ export class Contact extends Realm.Object {
         Contact.schema.name,
         {
           ...params,
-          account: address,
+          account: address.toLowerCase(),
         },
         Realm.UpdateMode.Modified,
       );
@@ -42,7 +42,10 @@ export class Contact extends Realm.Object {
   }
 
   static getById(address: string) {
-    return realm.objectForPrimaryKey<Contact>(Contact.schema.name, address);
+    return realm.objectForPrimaryKey<Contact>(
+      Contact.schema.name,
+      address.toLowerCase(),
+    );
   }
 
   update(params: Partial<Contact>) {

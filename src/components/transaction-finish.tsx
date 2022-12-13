@@ -50,7 +50,7 @@ export const TransactionFinish = ({
       </View>
       <Text
         t4
-        i18n={I18N.transactionFinishSendingComplate}
+        i18n={I18N.transactionFinishSendingComplete}
         style={styles.title}
         center
         color={Color.textGreen1}
