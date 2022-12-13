@@ -70,6 +70,9 @@
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
+		5BE71B5F1BD4484DA64C807B /* bluetooth-failed.png in Resources */ = {isa = PBXBuildFile; fileRef = B69D3B93ADC540F38D4C3FC8 /* bluetooth-failed.png */; };
+		54E5DA1DB73A48BDA8D02993 /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A486B7EB46EF4167B961B07B /* bluetooth-failed@2x.png */; };
+		17BF1336E4F14B4ABB08F9EE /* bluetooth-failed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B47CE96594C04FC3BCF72BAE /* bluetooth-failed@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +162,9 @@
 		EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0@3x.png"; path = "../assets/images/card-rhombus-0@3x.png"; sourceTree = "<group>"; };
 		F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light@3x.png"; path = "../assets/images/backup-notification-light@3x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
+		B69D3B93ADC540F38D4C3FC8 /* bluetooth-failed.png */ = {isa = PBXFileReference; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A486B7EB46EF4167B961B07B /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B47CE96594C04FC3BCF72BAE /* bluetooth-failed@3x.png */ = {isa = PBXFileReference; name = "bluetooth-failed@3x.png"; path = "../assets/images/bluetooth-failed@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -374,6 +380,9 @@
 				D9104D65DCF749C09FAD59A3 /* backup-notification-light.png */,
 				04A660904CAA421CA4511E30 /* backup-notification-light@2x.png */,
 				F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */,
+				B69D3B93ADC540F38D4C3FC8 /* bluetooth-failed.png */,
+				A486B7EB46EF4167B961B07B /* bluetooth-failed@2x.png */,
+				B47CE96594C04FC3BCF72BAE /* bluetooth-failed@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -516,6 +525,9 @@
 				BA44CAA6FB524AA7A1D71E4F /* backup-notification-light.png in Resources */,
 				81CA5137D28D4C508D5C9C6F /* backup-notification-light@2x.png in Resources */,
 				AB8DBE0E79714E818C6F1E66 /* backup-notification-light@3x.png in Resources */,
+				5BE71B5F1BD4484DA64C807B /* bluetooth-failed.png in Resources */,
+				54E5DA1DB73A48BDA8D02993 /* bluetooth-failed@2x.png in Resources */,
+				17BF1336E4F14B4ABB08F9EE /* bluetooth-failed@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

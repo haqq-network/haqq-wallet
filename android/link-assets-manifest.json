@@ -78,6 +78,18 @@
       "sha1": "12bb8524ca6f9b624f755e2423d09e49f4a7268a"
     },
     {
+      "path": "assets/images/bluetooth-failed.png",
+      "sha1": "b9d8c4cc635ea070af925b6f1f3c3408808c934e"
+    },
+    {
+      "path": "assets/images/bluetooth-failed@2x.png",
+      "sha1": "a4eaa21e73606f8e13333f69bf28a317e1484dc3"
+    },
+    {
+      "path": "assets/images/bluetooth-failed@3x.png",
+      "sha1": "5a8044b8498e646a623306f2ce2d07bf1312ec5b"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
