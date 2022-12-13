@@ -4,7 +4,7 @@ import {Image, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {Button, ButtonVariant, Text} from '@app/components/ui';
+import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -48,6 +48,7 @@ export const Welcome = ({
         style={styles.button}
         variant={ButtonVariant.contained}
         onPress={onPressSignup}
+        size={ButtonSize.large}
       />
       <Button
         testID="welcome_ledger"
@@ -57,12 +58,14 @@ export const Welcome = ({
         style={styles.button}
         variant={ButtonVariant.second}
         onPress={onPressLedger}
+        size={ButtonSize.large}
       />
       <Button
         testID="welcome_signin"
         i18n={I18N.welcomeRestoreWallet}
         style={styles.button}
         onPress={onPressSignIn}
+        size={ButtonSize.large}
       />
     </View>
   );
