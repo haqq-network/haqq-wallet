@@ -28,7 +28,7 @@ import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
-import {WINDOW_WIDTH} from '@app/variables';
+import {ANIMATION_DURATION, ANIMATION_TYPE, WINDOW_WIDTH} from '@app/variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -98,7 +98,7 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       destSnapPoint,
       {
-        duration: 250,
+        duration: ANIMATION_DURATION,
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
@@ -151,8 +151,8 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       closedSnapPoint,
       {
-        duration: 250,
-        easing: Easing.out(Easing.exp),
+        duration: ANIMATION_DURATION,
+        easing: Easing.out(ANIMATION_TYPE),
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -161,8 +161,8 @@ export const BottomSheet = ({
   const onOpenPopup = useCallback(() => {
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-      duration: 250,
-      easing: Easing.in(Easing.exp),
+      duration: ANIMATION_DURATION,
+      easing: Easing.in(ANIMATION_TYPE),
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 

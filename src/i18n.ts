@@ -332,6 +332,13 @@ export enum I18N {
   welcomeLedgerWallet,
   welcomeRestoreWallet,
   restoreWalletScreenTitle,
+  noInternetPopupTitle,
+  noInternetPopupDescription,
+  errorAccountAddedTitle,
+  errorAccountAddedClose,
+  errorCreateAccountPopupTitle,
+  errorCreateAccountPopupDescription,
+  errorCreateAccountPopupClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -738,4 +745,12 @@ const en: Record<I18N, string> = {
   [I18N.walletCardSend]: 'Send',
   [I18N.walletCardWithoutBackup]: 'Without backup',
   [I18N.restoreWalletScreenTitle]: 'Restore wallet',
+  [I18N.noInternetPopupTitle]: 'No Internet',
+  [I18N.noInternetPopupDescription]:
+    'Make sure you are connected to Wi-Fi or a cellular network',
+  [I18N.errorAccountAddedTitle]: 'This account has already been added',
+  [I18N.errorAccountAddedClose]: 'Close',
+  [I18N.errorCreateAccountPopupTitle]: 'Failed to create an account',
+  [I18N.errorCreateAccountPopupDescription]: 'Please try again later',
+  [I18N.errorCreateAccountPopupClose]: 'Close',
 };
