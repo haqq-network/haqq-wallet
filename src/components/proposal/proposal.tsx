@@ -41,7 +41,17 @@ export function Proposal() {
   }, [hash]);
 
   const onDeposit = () => {
-    console.log('onDeposit'); // PASS
+    showModal('wallets-bottom-sheet', {
+      wallets: visible,
+      closeDistance,
+      title: I18N.proposalAccountTitle,
+      eventSuffix: '-proposal-deposit',
+    });
+    const onDepositSubmit = async (address: string) => {
+      await item?.sendDeposit(address, 0.00000005);
+      app.removeListener('wallet-selected-proposal-deposit', onDepositSubmit);
+    };
+    app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
   };
 
   useEffect(() => {

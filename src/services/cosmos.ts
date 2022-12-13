@@ -154,23 +154,28 @@ export class Cosmos {
   }
 
   async deposit(source: string, proposalId: number, amount: number) {
-    const sender = await this.getSender(source);
-    const memo = '';
-    const params = {
-      proposalId,
-      deposit: {
-        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
-        denom: 'aISLM',
-      },
-    };
-    const msg = createTxMsgDeposit(
-      this.haqqChain,
-      sender,
-      Cosmos.fee,
-      memo,
-      params,
-    );
-    return await this.sendMsg(source, sender, msg);
+    try {
+      const sender = await this.getSender(source);
+      const memo = '';
+      const params = {
+        proposalId,
+        deposit: {
+          amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+          denom: 'aISLM',
+        },
+      };
+      const msg = createTxMsgDeposit(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      console.log('🚀 - ', await this.sendMsg(source, sender, msg));
+    } catch (error) {
+      captureException(error, 'Cosmos.deposit');
+    }
   }
 
   getProposalDepositor(proposal_id: number | string, depositor: string) {
