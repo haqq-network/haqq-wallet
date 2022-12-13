@@ -39,7 +39,7 @@ export const SettingsContactEdit = ({
     if (!isEdit) {
       setIsEdit(true);
     } else {
-      onSubmit();
+      onSubmit(inputName);
     }
   };
 

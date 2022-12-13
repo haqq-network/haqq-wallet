@@ -6,8 +6,8 @@ import React, {
   useState,
 } from 'react';
 
-import Lottie from 'lottie-react-native';
 import type AnimatedLottieView from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';

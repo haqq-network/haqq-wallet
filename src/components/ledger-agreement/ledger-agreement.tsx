@@ -11,8 +11,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {windowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {WINDOW_WIDTH} from '@app/variables';
 // import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
@@ -62,7 +62,7 @@ const page = StyleSheet.create({
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: Math.min(windowWidth, 330),
+    height: Math.min(WINDOW_WIDTH, 330),
   },
   title: {
     marginBottom: 4,
@@ -78,6 +78,6 @@ const page = StyleSheet.create({
   //   marginBottom: 16,
   // },
   image: {
-    height: Math.min(windowWidth, 330) - 20,
+    height: Math.min(WINDOW_WIDTH, 330) - 20,
   },
 });

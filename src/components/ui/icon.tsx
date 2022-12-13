@@ -37,6 +37,7 @@ export enum IconsName {
   market = 'market',
   paste = 'paste',
   pen = 'pen',
+  ledger = 'ledger',
   logo = 'logo',
   plus_big = 'plus_big',
   plus_mid = 'plus_mid',

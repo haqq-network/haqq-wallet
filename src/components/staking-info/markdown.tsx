@@ -4,7 +4,8 @@ import RNMarkdown, {ASTNode} from 'react-native-markdown-display';
 
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
+import {WINDOW_WIDTH} from '@app/variables';
 
 const rules = {
   paragraph: (node: ASTNode, children: ReactNode[]) => {
@@ -31,6 +32,6 @@ export const Markdown = ({children}: MarkdownProps) => {
 const styles = createTheme({
   // eslint-disable-next-line react-native/no-unused-styles
   body: {
-    width: windowWidth - 40,
+    width: WINDOW_WIDTH - 40,
   },
 });
