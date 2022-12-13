@@ -3,12 +3,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
-import {
-  useContacts,
-  useTransactions,
-  useTypedNavigation,
-  useTypedRoute,
-} from '@app/hooks';
+import {sendNotification} from '@app/helpers';
+import {useTransactions, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
@@ -20,12 +18,17 @@ export const TransactionFinishScreen = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(
     transactions.getTransaction(hash),
   );
-  const contacts = useContacts();
 
-  const contact = useMemo(
-    () => contacts.getContact(transaction?.to ?? ''),
-    [contacts, transaction?.to],
+  const [contact, setContact] = useState(
+    Contact.getById(transaction?.to ?? ''),
   );
+
+  useEffect(() => {
+    if (contact?.account !== transaction?.to) {
+      setContact(Contact.getById(transaction?.to ?? ''));
+    }
+  }, [contact?.account, transaction?.to]);
+
   const short = useMemo(
     () => shortAddress(transaction?.to ?? ''),
     [transaction?.to],
@@ -38,22 +41,33 @@ export const TransactionFinishScreen = () => {
   const onPressContact = useCallback(() => {
     if (transaction?.to) {
       prompt(
-        contact ? 'Edit contact' : 'Add contact',
-        `Address: ${short}`,
+        getText(
+          contact
+            ? I18N.transactionFinishEditContact
+            : I18N.transactionFinishAddContact,
+        ),
+        getText(I18N.transactionFinishContactMessage, {
+          address: short,
+        }),
         value => {
           if (contact) {
-            contacts.updateContact(transaction.to, value);
+            contact.update({
+              name: value,
+            });
+            sendNotification(I18N.transactionFinishContactUpdated);
           } else {
-            contacts.createContact(transaction.to, value);
+            Contact.create(transaction.to, {name: value});
+            sendNotification(I18N.transactionFinishContactAdded);
+            setContact(Contact.getById(transaction?.to ?? ''));
           }
         },
         {
           defaultValue: contact?.name ?? '',
-          placeholder: 'Contact name',
+          placeholder: getText(I18N.transactionFinishContactMessagePlaceholder),
         },
       );
     }
-  }, [transaction?.to, contact, short, contacts]);
+  }, [transaction?.to, contact, short]);
 
   useEffect(() => {
     setTransaction(transactions.getTransaction(hash));

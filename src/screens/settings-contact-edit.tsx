@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {Alert} from 'react-native';
 
 import {SettingsContactEdit} from '@app/components/settings-contact-edit';
-import {useContacts, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
     useTypedRoute<'settingsContactEdit'>().params;
-  const contacts = useContacts();
+  const contact = useMemo(() => Contact.getById(address), [address]);
   const {goBack} = useTypedNavigation();
   const [inputName, setInputName] = useState(name);
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
@@ -24,7 +25,7 @@ export const SettingsContactEditScreen = () => {
         text: deleteWord,
         style: 'destructive',
         onPress: () => {
-          contacts.removeContact(address);
+          Contact.remove(address);
           goBack();
         },
       },
@@ -32,10 +33,14 @@ export const SettingsContactEditScreen = () => {
   };
 
   const onSubmit = (newName?: string) => {
-    if (isCreate) {
-      contacts.createContact(address, newName || inputName);
+    if (!contact) {
+      Contact.create(address, {
+        name: newName || inputName,
+      });
     } else {
-      contacts.updateContact(address, newName || inputName);
+      contact.update({
+        name: newName || inputName,
+      });
     }
     goBack();
   };
