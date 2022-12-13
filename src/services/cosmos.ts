@@ -163,7 +163,14 @@ export class Cosmos {
         denom: 'aISLM',
       },
     };
-    createTxMsgDeposit(this.haqqChain, sender, Cosmos.fee, memo, params);
+    const msg = createTxMsgDeposit(
+      this.haqqChain,
+      sender,
+      Cosmos.fee,
+      memo,
+      params,
+    );
+    return await this.sendMsg(source, sender, msg);
   }
 
   getProposalDepositor(proposal_id: number | string, depositor: string) {
@@ -174,7 +181,7 @@ export class Cosmos {
 
   getProposalDeposits(proposal_id: number | string) {
     return this.getQuery<DepositResponse>(
-      `/gov/proposals/${proposal_id}/deposits`,
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits`,
     );
   }
 

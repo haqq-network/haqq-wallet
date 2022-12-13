@@ -486,10 +486,10 @@ export type VotesType = {
 export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
 
 export type DepositResponse = {
-  height: string;
-  result: {
-    amount: Coin[];
-    depositor: string;
+  deposits: {
     proposal_id: string;
+    depositor: string;
+    amount: Coin[];
   }[];
+  pagination: {next_key: any; total: string};
 };

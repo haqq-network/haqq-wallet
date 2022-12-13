@@ -79,7 +79,7 @@ export const Button = ({
       styles[`${variant}Container`] ?? null,
       styles[`${size}Container`] ?? null,
       circleBorders && styles.circleBorders,
-      disabled && `${variant}DisabledContainer` in stylesstyles
+      disabled && `${variant}DisabledContainer` in styles
         ? styles[`${variant}DisabledContainer`]
         : null,
       color && {backgroundColor: getColor(color)},

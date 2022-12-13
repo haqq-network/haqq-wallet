@@ -128,6 +128,7 @@ export const StakingInfo = ({
           {moniker}
         </Text>
         <Badge
+          center
           i18n={localStatus as number}
           labelColor={labelColor}
           textColor={textColor}

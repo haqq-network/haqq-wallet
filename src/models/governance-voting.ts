@@ -170,6 +170,11 @@ export class GovernanceVoting extends Realm.Object {
     }
   }
 
+  async sendDeposit(address: string, amount: number) {
+    const cosmos = new Cosmos(app.provider!);
+    cosmos.deposit(address, this.orderNumber, amount);
+  }
+
   async getVoter(address: string) {
     try {
       const cosmos = new Cosmos(app.provider!);
@@ -184,7 +189,7 @@ export class GovernanceVoting extends Realm.Object {
     if (!response) {
       return 0;
     }
-    return response.result.reduce(
+    return response.deposits.reduce(
       (acc, item) => acc + item.amount.reduce((a, b) => a + +b.amount, 0),
       0,
     );
