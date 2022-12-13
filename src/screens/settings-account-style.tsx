@@ -1,9 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {SettingsAccountStyle} from '@app/components/settings-account-style';
-import {useWallet} from '@app/hooks';
-import {useTypedNavigation} from '@app/hooks';
-import {useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 

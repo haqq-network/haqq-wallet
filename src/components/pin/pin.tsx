@@ -12,8 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {moderateVerticalScale} from '@app/helpers';
+import {createTheme, moderateVerticalScale} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
