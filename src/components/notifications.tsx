@@ -12,11 +12,11 @@ import {generateUUID} from '../utils';
 export const Notifications = () => {
   const app = useApp();
   const insets = useSafeAreaInsets();
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{message: string; id: string}[]>([]);
 
   useEffect(() => {
     const subscription = (message: string) => {
-      setMessages(msgs => msgs.concat({message, id: generateUUID()}));
+      setMessages(msgs => msgs.concat({message, id: generateUUID()}).slice(-2));
     };
 
     app.on('notification', subscription);
