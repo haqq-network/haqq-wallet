@@ -29,7 +29,7 @@ export const MenuNavigationButton = ({
       <View style={[styles.container, style]}>
         <View style={styles.content}>{children}</View>
         {!hideArrow && (
-          <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
+          <Icon i24 name="arrow_forward_small" color={Color.graphicSecond3} />
         )}
       </View>
     </TouchableWithoutFeedback>
