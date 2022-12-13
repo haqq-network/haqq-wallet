@@ -11,10 +11,11 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, windowHeight, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
 
 // import {Terms} from '../ui/terms';
 
@@ -71,7 +72,7 @@ const styles = createTheme({
     justifyContent: 'flex-end',
   },
   animation: {
-    height: Math.min(windowWidth, windowHeight * 0.355),
+    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -88,7 +89,7 @@ const styles = createTheme({
   //   marginBottom: 16,
   // },
   image: {
-    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
+    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355) - 20,
     top: -10,
   },
 });

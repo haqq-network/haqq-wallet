@@ -9,7 +9,6 @@ import {
   ErrorCreateAccountIcon,
   Text,
 } from '@app/components/ui';
-import {windowWidth} from '@app/helpers';
 import {hideModal} from '@app/helpers/modal';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
@@ -17,6 +16,7 @@ import {
   LIGHT_BG_9,
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_GRAPHIC_SECOND_4,
+  WINDOW_WIDTH,
 } from '@app/variables';
 
 export const ErrorCreateAccount = () => {
@@ -77,7 +77,7 @@ const page = StyleSheet.create({
   modalContent: {
     top: 10,
     height: 382,
-    width: windowWidth - 32,
+    width: WINDOW_WIDTH - 32,
     justifyContent: 'center',
     alignItems: 'center',
     bottom: 0,
@@ -88,7 +88,7 @@ const page = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    width: windowWidth - 90,
+    width: WINDOW_WIDTH - 90,
     marginTop: 45,
     marginBottom: 20,
   },
