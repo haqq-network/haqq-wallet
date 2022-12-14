@@ -107,7 +107,7 @@ export const TransactionAddress = ({
   return (
     <KeyboardSafeArea>
       <TextField
-        label={getText(I18N.transactionAddressLabel)}
+        label={I18N.transactionAddressLabel}
         style={styles.input}
         value={address}
         onChangeText={setAddress}
@@ -115,8 +115,7 @@ export const TransactionAddress = ({
         errorText={getText(I18N.transactionAddressError)}
         autoFocus
         multiline
-        twoIcons={address === ''}
-        placeholder={getText(I18N.transactionAddressPlaceholder)}
+        placeholder={I18N.transactionAddressPlaceholder}
         rightAction={
           address === '' ? (
             <View style={styles.inputButtonContainer}>
