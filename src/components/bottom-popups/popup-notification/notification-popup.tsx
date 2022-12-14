@@ -14,7 +14,7 @@ import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {SHADOW_COLOR} from '@app/variables';
+import {SHADOW_COLOR_1} from '@app/variables';
 
 export type NotificationPopupProps = {
   onClickTurnOn: () => void;
@@ -94,7 +94,7 @@ const styles = createTheme({
     borderColor: Color.graphicSecond1,
     borderWidth: 1,
     borderRadius: 12,
-    shadowColor: SHADOW_COLOR,
+    shadowColor: SHADOW_COLOR_1,
     shadowOffset: {
       width: 0,
       height: 6,
