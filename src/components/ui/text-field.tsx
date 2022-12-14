@@ -37,7 +37,6 @@ type Props = Omit<TextInputProps, 'placeholder'> & {
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 export const TextField: React.FC<Props> = memo(
   ({
@@ -59,7 +58,7 @@ export const TextField: React.FC<Props> = memo(
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<TextInput>(null);
     const left = useSharedValue(40);
-    const height = useSharedValue(lines * 22);
+    const height = useSharedValue(lines * 22 + 36);
     const focusAnim = useSharedValue(!value || autoFocus ? 0 : 1);
 
     const onLayout = useCallback(
@@ -74,7 +73,7 @@ export const TextField: React.FC<Props> = memo(
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    }, []);
+    }, [inputRef]);
 
     const onBlurEvent = useCallback(
       (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
@@ -94,7 +93,10 @@ export const TextField: React.FC<Props> = memo(
 
     const contentSizeChangeEvent = useCallback(
       (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-        height.value = Math.max(e.nativeEvent.contentSize.height, lines * 22);
+        height.value =
+          Math.max(Math.ceil(e.nativeEvent.contentSize.height), lines * 22) +
+          36;
+        console.log(height.value);
       },
       [lines, height],
     );
@@ -131,7 +133,12 @@ export const TextField: React.FC<Props> = memo(
 
     return (
       <View onLayout={onLayout} style={style}>
-        <View style={[styles.container, error && styles.containerError]}>
+        <Animated.View
+          style={[
+            styles.container,
+            error && styles.containerError,
+            inputAnimStyle,
+          ]}>
           <View style={styles.inputContainer}>
             <AnimatedPressable style={labelAnimStyle} onPress={onLabel}>
               <Text t14 color={color} i18n={label} />
@@ -144,16 +151,10 @@ export const TextField: React.FC<Props> = memo(
                 i18n={placeholder}
               />
             )}
-            <AnimatedTextInput
+            <TextInput
               selectionColor={getColor(Color.textGreen1)}
               allowFontScaling={false}
-              style={[
-                styles.input,
-                {
-                  borderColor: color,
-                },
-                inputAnimStyle,
-              ]}
+              style={styles.input}
               ref={inputRef}
               placeholderTextColor={getColor(Color.textBase2)}
               {...restOfProps}
@@ -166,7 +167,7 @@ export const TextField: React.FC<Props> = memo(
             />
           </View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
-        </View>
+        </Animated.View>
         {!!error && (errorText || errorTextI18n) && (
           <>
             <Spacer height={8} />
@@ -192,6 +193,7 @@ const styles = createTheme({
     borderRadius: 16,
     backgroundColor: Color.bg8,
     flexDirection: 'row',
+    flex: 0,
   },
   containerError: {
     backgroundColor: Color.bg7,
