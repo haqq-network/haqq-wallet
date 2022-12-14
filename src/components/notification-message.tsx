@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {asyncTiming, sleep} from '@app/utils';
-import {SHADOW_COLOR} from '@app/variables';
+import {SHADOW_COLOR_2} from '@app/variables';
 
 export type NotificationMessageProps = {
   message: string;
@@ -64,7 +64,7 @@ const styles = createTheme({
     paddingVertical: 16,
     backgroundColor: Color.bg1,
     borderRadius: 24,
-    shadowColor: SHADOW_COLOR,
+    shadowColor: SHADOW_COLOR_2,
     shadowOffset: {
       width: 0,
       height: 2,

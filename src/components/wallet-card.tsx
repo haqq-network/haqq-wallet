@@ -16,7 +16,7 @@ import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation, useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {cleanNumber, shortAddress} from '@app/utils';
-import {IS_IOS, SHADOW_COLOR, SYSTEM_BLUR_2} from '@app/variables';
+import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables';
 
 export type BalanceProps = {
   address: string;
@@ -130,7 +130,7 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     backgroundColor: Color.bg1,
-    shadowColor: SHADOW_COLOR,
+    shadowColor: SHADOW_COLOR_1,
     shadowOffset: {
       width: 0,
       height: 6,
