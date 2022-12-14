@@ -107,6 +107,7 @@ new Promise(resolve => {
 
       resolve({
         icon_emoji: ':iphone:',
+        name: 'New build',
         blocks,
       });
     },
