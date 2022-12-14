@@ -150,7 +150,7 @@ export const SettingsProviderEdit = memo(
 
     const onBlurField = useCallback(
       (name: string) => {
-        if (!!state[name]) {
+        if (state[name]) {
           let err = single(state[name] ?? '', constraints[name] ?? {});
 
           if (err) {
