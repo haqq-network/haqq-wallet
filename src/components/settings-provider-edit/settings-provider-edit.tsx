@@ -217,6 +217,7 @@ export const SettingsProviderEdit = memo(
         />
         <KeyboardSafeArea style={page.container}>
           <WrappedInput
+            autoFocus={true}
             label={I18N.settingsProviderEditName}
             isEditable={isEdit ?? false}
             value={state.name}

@@ -533,7 +533,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsProvidersTitle]: 'Providers',
   [I18N.settingsProvidersTitleRight]: 'Add',
   [I18N.settingsProviderEditHeaderTitle]: 'Provider',
-  [I18N.settingsProviderEditName]: 'Name',
+  [I18N.settingsProviderEditName]: 'Name Name Name Name Name',
   [I18N.settingsProviderEditNamePlaceholder]: 'Haqq Network',
   [I18N.settingsProviderEditEthEndpoint]: 'EVM RPC',
   [I18N.settingsProviderEditEthEndpointPlaceholder]:
