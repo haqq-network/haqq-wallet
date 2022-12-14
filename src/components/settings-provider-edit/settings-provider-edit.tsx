@@ -13,10 +13,6 @@ import {single, validate} from 'validate.js';
 import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {WrappedInput} from '@app/components/settings-provider-edit/wrapped-input';
-import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
-
 import {
   Button,
   ButtonVariant,
@@ -24,7 +20,10 @@ import {
   IconsName,
   KeyboardSafeArea,
   Spacer,
-} from '../ui';
+} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 export type SettingsProviderEditData = Omit<
   Partial<Provider>,
@@ -52,13 +51,12 @@ type ReducerActionUpdate = {
 
 type ReducerActionReset = {
   type: 'reset';
-  data: Record<string, any>;
-  errors: Record<string, any>;
+  data: Record<keyof Provider, any>;
 };
 
 type ReducerActionError = {
   type: 'error';
-  key: string;
+  key: keyof Provider;
   value: string;
 };
 
@@ -149,7 +147,7 @@ export const SettingsProviderEdit = memo(
     }, []);
 
     const onBlurField = useCallback(
-      (name: string) => {
+      (name: keyof Provider) => {
         if (state[name]) {
           let err = single(state[name] ?? '', constraints[name] ?? {});
 
@@ -168,15 +166,19 @@ export const SettingsProviderEdit = memo(
     const onPressKeepEditing = () => setActionSheetVisible(false);
 
     const onPressDiscard = () => {
-      setActionSheetVisible(false);
-      setIsEdit(false);
-      dispatch({
-        type: 'reset',
-        data: {
-          ...provider,
-          ethChainId: String(provider?.ethChainId),
-        },
-      });
+      if (provider) {
+        setActionSheetVisible(false);
+        setIsEdit(false);
+        dispatch({
+          type: 'reset',
+          data: {
+            ...provider,
+            ethChainId: String(provider?.ethChainId),
+          },
+        });
+      } else {
+        onCancel();
+      }
     };
 
     const onRemove = () => {
@@ -206,7 +208,7 @@ export const SettingsProviderEdit = memo(
               for (const [key, err] of Object.entries(errors)) {
                 dispatch({
                   type: 'error',
-                  key: key,
+                  key,
                   value: err.join('\n'),
                 });
               }
@@ -250,7 +252,11 @@ export const SettingsProviderEdit = memo(
             if (state.isChanged) {
               setActionSheetVisible(true);
             } else {
-              setIsEdit(false);
+              if (provider) {
+                setIsEdit(false);
+              } else {
+                onCancel();
+              }
             }
           },
           textLeft: getText(I18N.cancel),
@@ -263,7 +269,7 @@ export const SettingsProviderEdit = memo(
         iconLeft: IconsName.arrow_back,
         textColorLeft: Color.graphicGreen1,
       };
-    }, [onCancel, state, isEdit]);
+    }, [isEdit, onCancel, state.isChanged, provider]);
 
     return (
       <>

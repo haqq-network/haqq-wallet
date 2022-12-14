@@ -3,17 +3,18 @@ import React, {useCallback} from 'react';
 import {Color} from '@app/colors';
 import {Icon, IconButton, TextField} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 export type WrappedInputProps = {
   autoFocus?: boolean;
   isEditable: boolean;
   value: string | undefined;
   error?: string;
-  onChange: (key: string, value: string) => void;
-  onBlur: (key: string) => void;
+  onChange: (key: keyof Provider, value: string) => void;
+  onBlur: (key: keyof Provider) => void;
   label: I18N;
   placeholder: I18N;
-  name: string;
+  name: keyof Provider;
 };
 export const WrappedInput = ({
   name,
