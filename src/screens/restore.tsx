@@ -23,7 +23,6 @@ const title = getText(I18N.restoreWalletScreenTitle);
 const screenOptionsTitle: ScreenOptionType = {
   title,
   ...hideBack,
-  tab: true,
 };
 
 export const RestoreScreen = () => {
