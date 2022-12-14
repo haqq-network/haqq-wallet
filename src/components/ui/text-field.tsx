@@ -1,48 +1,52 @@
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {
+  LayoutChangeEvent,
   NativeSyntheticEvent,
-  Text,
+  Pressable,
   TextInput,
   TextInputContentSizeChangeEventData,
+  TextInputFocusEventData,
+  TextInputProps,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import Animated, {
   Easing,
   interpolate,
   useAnimatedStyle,
-  useEvent,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
+import {Spacer} from '@app/components/ui/spacer';
+import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
-import {IS_IOS, PLACEHOLDER_GRAY} from '@app/variables';
+import {I18N} from '@app/i18n';
+import {IS_IOS} from '@app/variables';
 
-type Props = React.ComponentProps<typeof TextInput> & {
-  label: string;
-  error?: boolean;
+type Props = Omit<TextInputProps, 'placeholder'> & {
+  label: I18N;
+  placeholder: I18N;
   errorText?: string | null;
-  placeholder?: string;
+  errorTextI18n?: I18N | null;
+  error?: boolean;
   rightAction?: React.ReactNode;
   multiline?: boolean;
-  twoIcons?: boolean;
-  size?: 'small' | 'large';
+  lines?: number;
 };
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-type sizeChangeEventType =
-  NativeSyntheticEvent<TextInputContentSizeChangeEventData>;
-type nativeEventType = sizeChangeEventType['nativeEvent'];
 
 export const TextField: React.FC<Props> = memo(
   ({
-    size = 'small',
+    autoFocus = false,
+    lines = 1,
     label,
     error,
     errorText,
+    errorTextI18n,
     value,
     style,
     onBlur,
@@ -50,68 +54,75 @@ export const TextField: React.FC<Props> = memo(
     placeholder,
     rightAction,
     multiline,
-    twoIcons,
     ...restOfProps
   }) => {
-    const isLarge = size === 'large';
-    const {width} = useWindowDimensions();
     const [isFocused, setIsFocused] = useState(false);
-
     const inputRef = useRef<TextInput>(null);
-    const height = useSharedValue(30);
-    const focusAnim = useSharedValue(0);
+    const left = useSharedValue(40);
+    const height = useSharedValue(lines * 22);
+    const focusAnim = useSharedValue(!value || autoFocus ? 0 : 1);
 
-    const onChangeContentSize = (newHeight: number) => {
-      'worklet';
-      const inputH = Math.max(newHeight, 28);
-      height.value = inputH + 30;
-    };
-
-    const contentSizeChangeEvent = useEvent(
-      ({contentSize}: nativeEventType) => {
-        'worklet';
-        onChangeContentSize(contentSize.height);
+    const onLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        const l = e.nativeEvent.layout.width - 32;
+        left.value = ((l * 1.33 - l) / 2) * 0.75;
       },
+      [left],
     );
 
-    const contentSizeChangeEventIOS = ({
-      nativeEvent: {contentSize},
-    }: sizeChangeEventType) => {
-      'worklet';
-      onChangeContentSize(contentSize.height);
-    };
+    const onLabel = useCallback(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, []);
+
+    const onBlurEvent = useCallback(
+      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        setIsFocused(false);
+        onBlur?.(event);
+      },
+      [onBlur],
+    );
+
+    const onFocusEvent = useCallback(
+      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        setIsFocused(true);
+        onFocus?.(event);
+      },
+      [onFocus],
+    );
+
+    const contentSizeChangeEvent = useCallback(
+      (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
+        height.value = Math.max(e.nativeEvent.contentSize.height, lines * 22);
+      },
+      [lines, height],
+    );
 
     useEffect(() => {
-      focusAnim.value = withTiming(isFocused || !!value ? 1 : 0, {
+      focusAnim.value = withTiming(isFocused || !!value ? 0 : 1, {
         duration: 150,
         easing: Easing.bezier(0.4, 0, 0.2, 1),
       });
     }, [value, focusAnim, isFocused]);
 
-    let color = getColor(Color.textBase2);
-    if (error) {
-      color = getColor(Color.textRed1);
-    }
+    let color = getColor(error ? Color.textRed1 : Color.textBase2);
 
     const labelAnimStyle = useAnimatedStyle(
       () => ({
         transform: [
           {
-            scale: interpolate(focusAnim.value, [0, 1], [1, 0.75]),
+            scale: interpolate(focusAnim.value, [0, 1], [1, 1.33]),
           },
           {
-            translateY: interpolate(focusAnim.value, [0, 1], [24, 9]),
+            translateY: interpolate(focusAnim.value, [0, 1], [0, 10]),
           },
           {
-            translateX: interpolate(
-              focusAnim.value,
-              [0, 1],
-              [isLarge ? 5 : 0, isLarge ? -12 : -8],
-            ),
+            translateX: interpolate(focusAnim.value, [0, 1], [0, left.value]),
           },
         ],
       }),
-      [isLarge],
+      [left],
     );
 
     const inputAnimStyle = useAnimatedStyle(() => ({
@@ -119,121 +130,97 @@ export const TextField: React.FC<Props> = memo(
     }));
 
     return (
-      <>
-        <Animated.View
-          style={[
-            styles.container,
-            style,
-            error && styles.containerError,
-            inputAnimStyle,
-          ]}>
-          {!value && isFocused && (
-            <Text style={styles.placeholder}>{placeholder}</Text>
-          )}
-          <AnimatedTextInput
-            selectionColor={getColor(Color.textGreen1)}
-            allowFontScaling={false}
-            style={[
-              styles.input,
-              {
-                borderColor: color,
-                width: width - (twoIcons ? 100 + 45 : 100),
-              },
-            ]}
-            ref={inputRef}
-            placeholderTextColor={Color.textBase2}
-            {...restOfProps}
-            value={value}
-            multiline={multiline}
-            onContentSizeChange={
-              IS_IOS ? contentSizeChangeEventIOS : contentSizeChangeEvent
-            }
-            onBlur={event => {
-              setIsFocused(false);
-              onBlur?.(event);
-            }}
-            onFocus={event => {
-              setIsFocused(true);
-              onFocus?.(event);
-            }}
-          />
-          <Animated.View
-            style={[styles.labelContainer, labelAnimStyle]}
-            pointerEvents="none">
-            <Text
+      <View onLayout={onLayout} style={style}>
+        <View style={[styles.container, error && styles.containerError]}>
+          <View style={styles.inputContainer}>
+            <AnimatedPressable style={labelAnimStyle} onPress={onLabel}>
+              <Text t14 color={color} i18n={label} />
+            </AnimatedPressable>
+            {!value && isFocused && (
+              <Text
+                t11
+                color={Color.textBase2}
+                style={styles.placeholder}
+                i18n={placeholder}
+              />
+            )}
+            <AnimatedTextInput
+              selectionColor={getColor(Color.textGreen1)}
               allowFontScaling={false}
               style={[
-                styles.label,
-                isLarge && styles.labelMultiline,
+                styles.input,
                 {
-                  color,
+                  borderColor: color,
                 },
-              ]}>
-              {label}
-            </Text>
-          </Animated.View>
+                inputAnimStyle,
+              ]}
+              ref={inputRef}
+              placeholderTextColor={getColor(Color.textBase2)}
+              {...restOfProps}
+              value={value}
+              multiline={multiline}
+              onContentSizeChange={contentSizeChangeEvent}
+              onBlur={onBlurEvent}
+              onFocus={onFocusEvent}
+              autoFocus={autoFocus}
+            />
+          </View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
-        </Animated.View>
-        {!!error && <Text style={styles.error}>{errorText}</Text>}
-      </>
+        </View>
+        {!!error && (errorText || errorTextI18n) && (
+          <>
+            <Spacer height={8} />
+            <Text
+              t14
+              i18n={errorTextI18n}
+              color={Color.textRed1}
+              style={styles.error}>
+              {errorText}
+            </Text>
+          </>
+        )}
+      </View>
     );
   },
 );
 
 const styles = createTheme({
   container: {
+    minHeight: 58,
     paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     backgroundColor: Color.bg8,
+    flexDirection: 'row',
   },
   containerError: {
     backgroundColor: Color.bg7,
   },
+  inputContainer: {
+    flex: 1,
+  },
   input: {
-    alignSelf: 'flex-start',
     fontFamily: 'SF Pro Display',
     fontWeight: '400',
     color: Color.textBase1,
-    top: IS_IOS ? 26 : 24,
     fontSize: 16,
     minHeight: 28,
     paddingTop: 0,
     paddingBottom: 0,
     textAlignVertical: 'center',
     right: IS_IOS ? 0 : 4.5,
-  },
-  labelContainer: {
-    position: 'absolute',
-    paddingHorizontal: 14,
-  },
-  label: {
-    fontFamily: 'SF Pro Display',
-    fontSize: 18,
-    top: -4,
-    left: 0,
-  },
-  labelMultiline: {
-    left: -4.5,
+    flex: 1,
   },
   error: {
-    marginLeft: 35,
-    bottom: 8,
-    fontSize: 12,
-    color: Color.bg5,
-    fontFamily: 'SF Pro Display',
+    marginLeft: 4,
   },
   sub: {
-    position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'center',
-    right: 16,
   },
   placeholder: {
     position: 'absolute',
-    color: PLACEHOLDER_GRAY,
-    top: IS_IOS ? 28 : 26,
-    left: 18,
+    height: 28,
+    top: 18,
   },
 });

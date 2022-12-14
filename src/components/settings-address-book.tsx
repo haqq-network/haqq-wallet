@@ -1,13 +1,13 @@
 import React from 'react';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {AddressEmpty} from '@app/components/address-empty';
 import {AddressHeader} from '@app/components/address-header';
 import {ListContact} from '@app/components/list-contact';
 import {Box, Icon, IconButton, Text, TextField} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {withActionsContactItem} from '@app/hocs';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 const ListOfContacts = withActionsContactItem(ListContact, {
   nextScreen: 'settingsContactEdit',
@@ -35,9 +35,9 @@ export const SettingsAddressBook = ({
   return (
     <>
       <TextField
-        label={getText(I18N.settingsAddressBookLabel)}
+        label={I18N.settingsAddressBookLabel}
         style={styles.input}
-        placeholder={getText(I18N.settingsAddressBookPlaceholder)}
+        placeholder={I18N.settingsAddressBookPlaceholder}
         value={search}
         onChangeText={setSearch}
         multiline
@@ -49,11 +49,7 @@ export const SettingsAddressBook = ({
             </IconButton>
           ) : (
             <IconButton onPress={onPressClear}>
-              <Icon
-                i24
-                name="close_circle"
-                color={getColor(Color.graphicBase2)}
-              />
+              <Icon i24 name="close_circle" color={Color.graphicBase2} />
             </IconButton>
           )
         }
