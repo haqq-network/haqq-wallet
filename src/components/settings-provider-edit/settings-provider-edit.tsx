@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import {Alert, View} from 'react-native';
-import {validate} from 'validate.js';
+import {single, validate} from 'validate.js';
 
 import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
@@ -32,6 +32,7 @@ export type SettingsProviderEditData = Omit<
 > & {
   isChanged: boolean;
   ethChainId?: string;
+  errors: Partial<Record<keyof Provider, string | undefined>>;
 };
 
 export type SettingsProviderEditProps = {
@@ -52,16 +53,42 @@ type ReducerActionUpdate = {
 type ReducerActionReset = {
   type: 'reset';
   data: Record<string, any>;
+  errors: Record<string, any>;
 };
 
-type ReducerAction = ReducerActionUpdate | ReducerActionReset;
+type ReducerActionError = {
+  type: 'error';
+  key: string;
+  value: string;
+};
+
+type ReducerAction =
+  | ReducerActionUpdate
+  | ReducerActionReset
+  | ReducerActionError;
 
 function reducer(state: SettingsProviderEditData, action: ReducerAction) {
   switch (action.type) {
     case 'update':
-      return {...state, isChanged: true, [action.key]: action.value};
+      return {
+        ...state,
+        isChanged: true,
+        [action.key]: action.value,
+        errors: {
+          ...state.errors,
+          [action.key]: undefined,
+        },
+      };
     case 'reset':
-      return {isChanged: false, ...action.data};
+      return {isChanged: false, ...action.data, errors: {}};
+    case 'error':
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.key]: action.value,
+        },
+      };
     default:
       throw new Error();
   }
@@ -102,8 +129,10 @@ export const SettingsProviderEdit = memo(
   }: SettingsProviderEditProps) => {
     const [actionSheetVisible, setActionSheetVisible] = useState(false);
     const [isEdit, setIsEdit] = useState(!provider?.id);
+
     const [state, dispatch] = useReducer(reducer, {
       isChanged: false,
+      errors: {},
       ...(provider
         ? {...provider, ethChainId: String(provider?.ethChainId)}
         : {}),
@@ -115,11 +144,26 @@ export const SettingsProviderEdit = memo(
       }
     }, [provider?.id]);
 
-    const error = useMemo(() => validate(state, constraints), [state]);
-
     const onChangeField = useCallback((key: string, value: string) => {
       dispatch({type: 'update', key, value});
     }, []);
+
+    const onBlurField = useCallback(
+      (name: string) => {
+        if (!!state[name]) {
+          let err = single(state[name] ?? '', constraints[name] ?? {});
+
+          if (err) {
+            dispatch({
+              type: 'error',
+              key: name,
+              value: err.join('\n'),
+            });
+          }
+        }
+      },
+      [state],
+    );
 
     const onPressKeepEditing = () => setActionSheetVisible(false);
 
@@ -154,8 +198,21 @@ export const SettingsProviderEdit = memo(
       if (isEdit) {
         return {
           textRight: getText(I18N.save),
-          disabledRight: !(state.isChanged && !error),
+          disabledRight: !state.isChanged,
           onPressRight: () => {
+            const errors = validate(state, constraints);
+
+            if (errors) {
+              for (const [key, err] of Object.entries(errors)) {
+                dispatch({
+                  type: 'error',
+                  key: key,
+                  value: err.join('\n'),
+                });
+              }
+              return;
+            }
+
             const id = /(\w+)_(\d{1,10})-(\d{1,10})/.exec(
               state.cosmosChainId ?? '',
             );
@@ -184,7 +241,7 @@ export const SettingsProviderEdit = memo(
         onPressRight: () => setIsEdit(true),
         textColorRight: Color.graphicGreen1,
       };
-    }, [error, isEdit, onSubmit, provider, state]);
+    }, [isEdit, onSubmit, provider, state]);
 
     const left = useMemo(() => {
       if (isEdit) {
@@ -223,8 +280,9 @@ export const SettingsProviderEdit = memo(
             value={state.name}
             name="name"
             placeholder={I18N.settingsProviderEditNamePlaceholder}
-            error={error?.name}
+            error={state.errors.name}
             onChange={onChangeField}
+            onBlur={onBlurField}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -232,9 +290,10 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.cosmosChainId}
             name="cosmosChainId"
-            error={error?.cosmosChainId}
+            error={state.errors.cosmosChainId}
             placeholder={I18N.settingsProviderEditCosmosChainIdPlaceholder}
             onChange={onChangeField}
+            onBlur={onBlurField}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -242,9 +301,10 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.cosmosRestEndpoint}
             name="cosmosRestEndpoint"
-            error={error?.cosmosRestEndpoint}
+            error={state.errors.cosmosRestEndpoint}
             placeholder={I18N.settingsProviderEditCosmosEndpointPlaceholder}
             onChange={onChangeField}
+            onBlur={onBlurField}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -252,9 +312,10 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.ethRpcEndpoint}
             name="ethRpcEndpoint"
-            error={error?.ethRpcEndpoint}
+            error={state.errors.ethRpcEndpoint}
             placeholder={I18N.settingsProviderEditEthEndpointPlaceholder}
             onChange={onChangeField}
+            onBlur={onBlurField}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -262,9 +323,10 @@ export const SettingsProviderEdit = memo(
             isEditable={isEdit ?? false}
             value={state.explorer}
             name="explorer"
-            error={error?.explorer}
+            error={state.errors.explorer}
             placeholder={I18N.settingsProviderEditExplorerPlaceholder}
             onChange={onChangeField}
+            onBlur={onBlurField}
           />
 
           {isEdit && provider?.id && (

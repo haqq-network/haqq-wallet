@@ -10,6 +10,7 @@ export type WrappedInputProps = {
   value: string | undefined;
   error?: string;
   onChange: (key: string, value: string) => void;
+  onBlur: (key: string) => void;
   label: I18N;
   placeholder: I18N;
   name: string;
@@ -19,6 +20,7 @@ export const WrappedInput = ({
   value,
   error,
   label,
+  onBlur,
   onChange,
   autoFocus,
   isEditable,
@@ -35,6 +37,10 @@ export const WrappedInput = ({
     [name, onChange],
   );
 
+  const onBlurEvent = useCallback(() => {
+    onBlur(name);
+  }, [name, onBlur]);
+
   return (
     <TextField
       label={label}
@@ -43,6 +49,7 @@ export const WrappedInput = ({
       placeholder={placeholder}
       onChangeText={onChangeText}
       multiline
+      onBlur={onBlurEvent}
       rightAction={
         value &&
         isEditable && (
@@ -52,7 +59,7 @@ export const WrappedInput = ({
         )
       }
       editable={isEditable}
-      error={value !== undefined && Boolean(error)}
+      error={Boolean(error)}
       errorText={error}
     />
   );
