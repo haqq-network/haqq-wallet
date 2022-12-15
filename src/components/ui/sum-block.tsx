@@ -3,6 +3,7 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   PixelRatio,
+  Pressable,
   StyleProp,
   StyleSheet,
   TextInput,
@@ -64,6 +65,10 @@ export const SumBlock = ({
 
   const lineHeight = PixelRatio.roundToNearestPixel(fontSize / 0.809);
 
+  const onFocusInput = () => {
+    inputSumRef.current?.focus();
+  };
+
   return (
     <View style={style}>
       <Text t8 center style={styles.subtitle} color={Color.textBase2}>
@@ -75,17 +80,19 @@ export const SumBlock = ({
           {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
           {/*</IconButton>*/}
         </View>
-        <TextInput
-          allowFontScaling={false}
-          style={StyleSheet.compose(styles.input, {fontSize, lineHeight})}
-          value={value}
-          placeholder="0"
-          onChangeText={onChangeValue}
-          keyboardType="numeric"
-          placeholderTextColor={getColor(Color.textBase2)}
-          ref={inputSumRef}
-          textAlign="center"
-        />
+        <Pressable onPress={onFocusInput} style={styles.inputContainer}>
+          <TextInput
+            allowFontScaling={false}
+            style={StyleSheet.compose(styles.input, {fontSize, lineHeight})}
+            value={value}
+            placeholder="0"
+            onChangeText={onChangeValue}
+            keyboardType="numeric"
+            placeholderTextColor={getColor(Color.textBase2)}
+            ref={inputSumRef}
+            textAlign="left"
+          />
+        </Pressable>
         <View style={styles.max}>
           {balance > 0 && (
             <Button
@@ -138,11 +145,16 @@ const styles = createTheme({
     alignItems: 'flex-end',
   },
   input: {
-    flex: 1,
+    width: 'auto',
+    alignSelf: 'center',
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
     color: Color.textBase1,
     paddingVertical: 2,
+    paddingHorizontal: 0,
+  },
+  inputContainer: {
+    flex: 1,
   },
 });
