@@ -78,7 +78,7 @@ export const TransactionSum = ({
           </Text>
         </LabeledBlock>
       </TouchableWithoutFeedback>
-      <Spacer height={50} />
+      <Spacer />
       <SumBlock
         value={amounts.amount}
         error={amounts.error}
