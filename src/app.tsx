@@ -23,11 +23,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
-import {
-  Notifications,
-  PopupHeader,
-  SettingsAccountRemoveButton,
-} from '@app/components';
+import {PopupHeader, SettingsAccountRemoveButton} from '@app/components';
 import {
   AppContext,
   TransactionsContext,
@@ -403,7 +399,6 @@ export const App = () => {
               </Stack.Navigator>
             </NavigationContainer>
             <Modals initialModal={{type: 'splash'}} />
-            <Notifications />
           </WalletsContext.Provider>
         </TransactionsContext.Provider>
       </AppContext.Provider>

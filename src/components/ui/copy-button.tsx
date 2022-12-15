@@ -7,8 +7,8 @@ import {
   TouchableOpacityProps,
 } from 'react-native';
 
-import {sendNotification} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {sendNotification} from '@app/services';
 
 export type CopyButtonProps = TouchableOpacityProps & {
   value: string;
