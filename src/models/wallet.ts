@@ -179,7 +179,7 @@ export class Wallet extends EventEmitter {
       result = realm.create<WalletRealm>(WalletRealm.schema.name, {
         ...Wallet.defaultData,
         data,
-        address: walletParams.address,
+        address: walletParams.address.toLowerCase(),
         mnemonicSaved,
         name: name ?? Wallet.defaultData.name,
         pattern,
