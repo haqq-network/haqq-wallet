@@ -33,6 +33,8 @@ const screenOptions = ({
   headerStyle: {
     backgroundColor: Color.transparent,
   },
+  headerTitleAlign: 'center',
+  headerStatusBarHeight: IS_IOS ? undefined : 0,
   tabBarStyle: {
     backgroundColor: Color.transparent,
     borderTopWidth: 0,
@@ -73,7 +75,7 @@ export const HomeScreen = () => {
   const provider = Provider.getProvider(user.providerId);
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator mode="modal" headerMode="none" screenOptions={screenOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedScreen}
