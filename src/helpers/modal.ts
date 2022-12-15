@@ -11,8 +11,8 @@ export function hideModal(modalName: String | null = null) {
   app.emit('hideModal', {type: modalName});
 }
 
-export function sendNotification(text: I18N) {
-  app.emit('notification', getText(text));
+export function sendNotification(text: I18N, isOverlap?: boolean) {
+  app.emit('notification', getText(text), isOverlap);
 }
 
 export function showLoadingWithText(text: I18N) {

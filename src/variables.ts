@@ -99,7 +99,8 @@ export const SYSTEM_BLUR_3 = 'rgba(255, 255, 255, 0.3)';
 export const DEFAULT_CARD_BACKGROUND = '#03BF77';
 export const DEFAULT_CARD_PATTERN = '#0DAC6F';
 
-export const SHADOW_COLOR = 'rgba(25, 26, 28, 0.08)';
+export const SHADOW_COLOR_1 = 'rgba(25, 26, 28, 0.06)';
+export const SHADOW_COLOR_2 = 'rgba(25, 26, 28, 0.5)';
 
 export const PLACEHOLDER_GRAY = '#AAAAAA';
 export const HR_GRAY = '#EEEEEE';
