@@ -78,8 +78,8 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
 
         <IconButton onPress={onPressPaste} style={page.button}>
           <Text
+            color={Color.textGreen1}
             t14
-            color={Color.graphicGreen2}
             i18n={I18N.signinRestoreWalletPasteClipboard}
           />
         </IconButton>
