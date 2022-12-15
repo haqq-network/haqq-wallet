@@ -31,6 +31,8 @@ target 'haqq' do
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
+  pod "ToastViewSwift"
+
   target 'haqqTests' do
     inherit! :complete
     # Pods for testing
