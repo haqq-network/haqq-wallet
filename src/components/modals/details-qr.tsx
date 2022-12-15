@@ -34,7 +34,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
 
   const onCopy = () => {
     Clipboard.setString(address);
-    sendNotification(I18N.notificationCopied);
+    sendNotification(I18N.notificationCopied, true);
   };
 
   const onShare = () => {

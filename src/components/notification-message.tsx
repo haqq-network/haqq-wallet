@@ -73,5 +73,5 @@ const styles = createTheme({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  flex: {flex: 1},
+  flex: {alignSelf: 'stretch'},
 });
