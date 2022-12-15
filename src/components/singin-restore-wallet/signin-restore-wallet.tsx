@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@app/components/ui';
 import {hideModal} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 interface SinginRestoreWalletProps {
   onDoneTry: (seed: string) => void;
@@ -27,7 +27,10 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
   const [seed, setSeed] = useState('');
 
   const checked = useMemo(
-    () => utils.isValidMnemonic(seed.trim()) || utils.isHexString(seed.trim()),
+    () =>
+      utils.isValidMnemonic(seed.trim()) ||
+      utils.isHexString(seed.trim()) ||
+      utils.isHexString(`0x${seed}`.trim()),
     [seed],
   );
 
@@ -43,10 +46,14 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
     }
   }, [seed, onDoneTry]);
 
+  const onChangeKey = useCallback((key: string) => {
+    setSeed(key.replace(/\n/gm, ''));
+  }, []);
+
   const onPressPaste = useCallback(async () => {
     const text = await Clipboard.getString();
-    setSeed(text);
-  }, [setSeed]);
+    onChangeKey(text.trim());
+  }, [onChangeKey]);
 
   return (
     <ScrollView
@@ -60,15 +67,13 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           style={page.intro}
         />
         <TextField
-          size="large"
-          autoFocus
-          placeholder={getText(I18N.signinRestoreWalletTextFieldPlaceholder)}
+          placeholder={I18N.signinRestoreWalletTextFieldPlaceholder}
           style={page.input}
-          label={getText(I18N.signinRestoreWalletTextFieldLabel)}
+          label={I18N.signinRestoreWalletTextFieldLabel}
           value={seed}
-          onChangeText={setSeed}
+          onChangeText={onChangeKey}
           multiline
-          errorText={getText(I18N.signinRestoreWalletTextFieldError)}
+          errorTextI18n={I18N.signinRestoreWalletTextFieldError}
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>

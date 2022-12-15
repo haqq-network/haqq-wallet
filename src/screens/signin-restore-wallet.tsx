@@ -10,9 +10,20 @@ export const SignInRestoreScreen = () => {
   const {nextScreen} = useTypedRoute<'restorePhrase'>().params;
 
   const onDoneTry = (seed: string) => {
+    let privateKey =
+      utils.isHexString(seed.trim()) || utils.isHexString(`0x${seed}`.trim())
+        ? seed.trim()
+        : false;
+
+    if (privateKey && !privateKey.startsWith('0x')) {
+      privateKey = `0x${privateKey}`;
+    }
+
+    const mnemonic = utils.isValidMnemonic(seed.trim()) ? seed.trim() : false;
+
     navigation.push(nextScreen ?? 'onboardingSetupPin', {
-      mnemonic: utils.isValidMnemonic(seed.trim()) && seed.trim(),
-      privateKey: utils.isHexString(seed.trim()) && seed.trim(),
+      mnemonic,
+      privateKey,
     });
   };
 

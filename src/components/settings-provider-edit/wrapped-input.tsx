@@ -1,24 +1,29 @@
 import React, {useCallback} from 'react';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, Input, Spacer, Text} from '@app/components/ui';
-import {I18N, getText} from '@app/i18n';
+import {Icon, IconButton, TextField} from '@app/components/ui';
+import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 export type WrappedInputProps = {
+  autoFocus?: boolean;
   isEditable: boolean;
   value: string | undefined;
   error?: string;
-  onChange: (key: string, value: string) => void;
+  onChange: (key: keyof Provider, value: string) => void;
+  onBlur: (key: keyof Provider) => void;
   label: I18N;
-  placeholder?: I18N;
-  name: string;
+  placeholder: I18N;
+  name: keyof Provider;
 };
 export const WrappedInput = ({
   name,
   value,
   error,
   label,
+  onBlur,
   onChange,
+  autoFocus,
   isEditable,
   placeholder,
 }: WrappedInputProps) => {
@@ -33,31 +38,30 @@ export const WrappedInput = ({
     [name, onChange],
   );
 
+  const onBlurEvent = useCallback(() => {
+    onBlur(name);
+  }, [name, onBlur]);
+
   return (
-    <>
-      <Input
-        onChangeText={onChangeText}
-        label={getText(label)}
-        editable={isEditable}
-        placeholder={placeholder ? getText(placeholder) : ''}
-        value={value}
-        rightAction={
-          value &&
-          isEditable && (
-            <IconButton onPress={onClean}>
-              <Icon name="close_circle" color={Color.graphicBase2} />
-            </IconButton>
-          )
-        }
-      />
-      {value !== undefined && error && (
-        <>
-          <Spacer height={8} />
-          <Text t14 color={Color.textRed1}>
-            {error}
-          </Text>
-        </>
-      )}
-    </>
+    <TextField
+      label={label}
+      value={value}
+      autoFocus={autoFocus}
+      placeholder={placeholder}
+      onChangeText={onChangeText}
+      multiline
+      onBlur={onBlurEvent}
+      rightAction={
+        value &&
+        isEditable && (
+          <IconButton onPress={onClean}>
+            <Icon name="close_circle" color={Color.graphicBase2} />
+          </IconButton>
+        )
+      }
+      editable={isEditable}
+      error={Boolean(error)}
+      errorText={error}
+    />
   );
 };
