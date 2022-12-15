@@ -19,7 +19,7 @@ export const realm = new Realm({
     Provider,
     StakingMetadata,
   ],
-  schemaVersion: 32,
+  schemaVersion: 33,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -162,6 +162,26 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.isEditable = false;
+      }
+    }
+
+    if (oldRealm.schemaVersion < 33) {
+      const oldObjects = oldRealm.objects<{
+        address: string;
+        rootAddress?: string;
+      }>('Wallet');
+      const newObjects = newRealm.objects<{
+        address: string;
+        rootAddress?: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.address = newObject.address.toLowerCase();
+
+        if (newObject.rootAddress) {
+          newObject.rootAddress = newObject.rootAddress.toLowerCase();
+        }
       }
     }
   },

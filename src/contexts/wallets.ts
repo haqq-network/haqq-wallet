@@ -155,7 +155,7 @@ class Wallets extends EventEmitter {
   }
 
   async removeWallet(address: string) {
-    const wallet = this._wallets.get(address);
+    const wallet = this._wallets.get(address.toLowerCase());
 
     if (wallet) {
       if (wallet.isMain) {
@@ -171,7 +171,7 @@ class Wallets extends EventEmitter {
 
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
         WalletRealm.schema.name,
-        address,
+        address.toLowerCase(),
       );
 
       this.deAttachWallet(wallet);
@@ -238,7 +238,7 @@ class Wallets extends EventEmitter {
   getForRootAddress(rootAddress: string) {
     const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
     return wallets
-      .filtered(`rootAddress = '${rootAddress}'`)
+      .filtered(`rootAddress = '${rootAddress.toLowerCase()}'`)
       .map(w => new Wallet(w));
   }
 
