@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import {FlatList, View} from 'react-native';
 
@@ -11,28 +11,24 @@ import {
   VotingCard,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useCosmos, useProposals} from '@app/hooks';
+import {useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ProposalsTagKeys, ProposalsTagType, ProposalsTags} from '@app/types';
 
 export interface HomeGovernanceProps {
   onPressCard?: (hash: string) => void;
+  onRefresh?: () => void;
+  refreshing?: boolean;
+  loading?: boolean;
 }
 
-export const HomeGovernance = ({onPressCard}: HomeGovernanceProps) => {
-  const cosmos = useCosmos();
+export const HomeGovernance = ({
+  onPressCard,
+  onRefresh,
+  loading,
+  refreshing,
+}: HomeGovernanceProps) => {
   const {proposals, setStatusFilter, statusFilter} = useProposals();
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    cosmos.syncGovernanceVoting().finally(() => setLoading(false));
-  }, [cosmos]);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    cosmos.syncGovernanceVoting().finally(() => setRefreshing(false));
-  };
 
   const onSelect = (tag: ProposalsTagType) => () => {
     setStatusFilter(tag[0]);
