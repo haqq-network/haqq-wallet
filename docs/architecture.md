@@ -1,5 +1,7 @@
 # Architecture
 
+![architecture](https://github.com/haqq-network/haqq-wallet/blob/main/docs/images/architecture.png)
+
 ## Controller
 
 Responsible for receiving data from models, passing data to the display, and interacting with internal (navigation) and external services.
