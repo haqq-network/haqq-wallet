@@ -3,20 +3,16 @@ import React from 'react';
 import {FlatList, View} from 'react-native';
 
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
-import {
-  CustomHeader,
-  Loading,
-  Spacer,
-  Tag,
-  VotingCard,
-} from '@app/components/ui';
+import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ProposalsTagKeys, ProposalsTagType, ProposalsTags} from '@app/types';
 
+import {VotingCard} from './voting-card';
+
 export interface HomeGovernanceProps {
-  onPressCard?: (hash: string) => void;
+  onPressCard?: (id: number) => void;
   onRefresh?: () => void;
   refreshing?: boolean;
   loading?: boolean;
@@ -73,7 +69,7 @@ export const HomeGovernance = ({
           ListHeaderComponent={listHeader}
           renderItem={({item}) => (
             <VotingCard
-              hash={item.hash}
+              id={item.id}
               onPress={onPressCard}
               status={item.status as ProposalsTagKeys}
             />
@@ -82,7 +78,7 @@ export const HomeGovernance = ({
           data={proposals}
           showsVerticalScrollIndicator={false}
           style={styles.scrollContainer}
-          keyExtractor={item => item.hash}
+          keyExtractor={item => String(item.id)}
         />
       )}
       <Spacer height={12} />

@@ -5,6 +5,8 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {
   Icon,
+  ProgressCircle,
+  ProgressCircleInterface,
   ProgressLine,
   ProgressLineInterface,
   Spacer,
@@ -18,8 +20,6 @@ import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables';
-
-import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
 
 export type VotingCardDetailRefInterface =
   | ({

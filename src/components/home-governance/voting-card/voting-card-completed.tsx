@@ -19,18 +19,18 @@ export enum VotingCompletedStatuses {
 export type VotingCompletedStatusesKeys = keyof typeof VotingCompletedStatuses;
 
 type VotingCardCompletedProps = {
-  hash: string;
+  id: number;
 
-  onPress?: (hash: string) => void;
+  onPress?: (id: number) => void;
 };
 
 export const VotingCardCompleted = ({
-  hash,
+  id,
   onPress,
 }: VotingCardCompletedProps) => {
   const item = useMemo(() => {
-    return GovernanceVoting.getByHash(hash) as ProposalRealmType;
-  }, [hash]);
+    return GovernanceVoting.getById(id) as ProposalRealmType;
+  }, [id]);
 
   const isVoted = true; // PASS
 
@@ -40,7 +40,7 @@ export const VotingCardCompleted = ({
   const isRejected = status === VotingCompletedStatuses.rejected;
   const statusColor = isRejected ? Color.textRed1 : Color.textGreen1;
 
-  const handlePress = () => onPress?.(hash);
+  const handlePress = () => onPress?.(id);
 
   return (
     <Pressable onPress={handlePress} style={styles.backgroundContainer}>

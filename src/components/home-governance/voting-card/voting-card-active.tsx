@@ -5,6 +5,8 @@ import {Pressable, View} from 'react-native';
 import {Color, getColor} from '@app/colors';
 import {
   Icon,
+  ProgressCircle,
+  ProgressCircleInterface,
   ProgressLine,
   ProgressLineInterface,
   Spacer,
@@ -20,11 +22,9 @@ import {
   ProposalRealmType,
 } from '@app/models/governance-voting';
 
-import {ProgressCircle, ProgressCircleInterface} from './progress-circle';
-
 type VotingCardActiveProps = {
-  hash: string;
-  onPress?: (hash: string) => void;
+  id: number;
+  onPress?: (hash: number) => void;
 };
 
 const initialVotes = {
@@ -41,10 +41,10 @@ const colorVotes = {
   veto: Color.textYellow1,
 };
 
-export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
+export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
   const item = useMemo(() => {
-    return GovernanceVoting.getByHash(hash) as ProposalRealmType;
-  }, [hash]);
+    return GovernanceVoting.getById(id) as ProposalRealmType;
+  }, [id]);
   const isVoted = true; // PASS
   const yourDeposit = 100; // PASS
 
@@ -84,7 +84,7 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
     }
   }, [item.proposalDepositNeeds, isDeposited]);
 
-  const handlePress = () => onPress?.(hash);
+  const handlePress = () => onPress?.(id);
 
   return (
     <Pressable
@@ -96,7 +96,7 @@ export const VotingCardActive = ({hash, onPress}: VotingCardActiveProps) => {
           color={Color.graphicBase3}
           name={isDeposited ? 'deposit' : 'time'}
         />
-        <Spacer width={5.5} />
+        <Spacer width={6} />
         <Text
           t12
           color={Color.textBase3}

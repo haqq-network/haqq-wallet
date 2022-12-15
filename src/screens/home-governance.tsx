@@ -13,8 +13,8 @@ export const HomeGovernanceScreen = () => {
     cosmos.syncGovernanceVoting().finally(() => setLoading(false));
   }, [cosmos]);
 
-  const onPressCard = (hash: string) => {
-    navigate('proposal', {hash});
+  const onPressCard = (id: number) => {
+    navigate('proposal', {id});
   };
 
   const onRefresh = () => {

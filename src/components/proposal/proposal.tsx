@@ -14,8 +14,6 @@ import {
   InfoBlockType,
   Spacer,
   Text,
-  VotingCardDetail,
-  VotingCardDetailRefInterface,
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {useApp, useTypedRoute, useWalletsList} from '@app/hooks';
@@ -24,8 +22,13 @@ import {GovernanceVoting} from '@app/models/governance-voting';
 import {ProposalsTags, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables';
 
+import {
+  VotingCardDetail,
+  VotingCardDetailRefInterface,
+} from './voting-card-detail';
+
 export function Proposal() {
-  const {hash} = useTypedRoute<'proposal'>().params;
+  const {id} = useTypedRoute<'proposal'>().params;
   const {bottom} = useSafeAreaInsets();
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
@@ -37,8 +40,8 @@ export function Proposal() {
   const closeDistance = useWindowDimensions().height / 6;
 
   const item = useMemo(() => {
-    return GovernanceVoting.getByHash(hash);
-  }, [hash]);
+    return GovernanceVoting.getById(id);
+  }, [id]);
 
   const onDeposit = () => {
     showModal('wallets-bottom-sheet', {

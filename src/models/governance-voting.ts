@@ -1,5 +1,4 @@
 import {Coin} from '@evmos/transactions';
-import createHash from 'create-hash';
 import {
   differenceInMilliseconds,
   differenceInSeconds,
@@ -34,7 +33,6 @@ export type GovernanceVotingType = {
 };
 
 export class GovernanceVoting extends Realm.Object {
-  hash!: string;
   status!: string;
   orderNumber!: number;
   title!: string;
@@ -49,7 +47,6 @@ export class GovernanceVoting extends Realm.Object {
   static schema = {
     name: 'GovernanceVoting',
     properties: {
-      hash: 'string',
       status: 'string',
       orderNumber: 'int',
       title: 'string',
@@ -61,7 +58,7 @@ export class GovernanceVoting extends Realm.Object {
       depositEndTime: 'string?',
       createdAtTime: 'string?',
     },
-    primaryKey: 'hash',
+    primaryKey: 'orderNumber',
   };
 
   get timeLeftPercent() {
@@ -224,10 +221,10 @@ export class GovernanceVoting extends Realm.Object {
     cosmos.vote(address, this.orderNumber, vote);
   }
 
-  static getByHash(hash: string) {
+  static getById(id: number) {
     return realm.objectForPrimaryKey<GovernanceVoting>(
       GovernanceVoting.schema.name,
-      hash,
+      id,
     );
   }
 
@@ -242,10 +239,10 @@ export class GovernanceVoting extends Realm.Object {
     );
   }
 
-  static remove(hash: string) {
+  static remove(id: string) {
     const obj = realm.objectForPrimaryKey<GovernanceVoting>(
       GovernanceVoting.schema.name,
-      hash,
+      id,
     );
 
     if (obj) {
@@ -256,25 +253,20 @@ export class GovernanceVoting extends Realm.Object {
   }
 
   static createVoting(proposal: GovernanceVotingType) {
-    const hash = createHash('sha1')
-      .update(`${proposal.orderNumber}:${proposal.startDate}`)
-      .digest()
-      .toString('hex');
-
     realm.write(() => {
       realm.create<GovernanceVoting>(
         GovernanceVoting.schema.name,
-        {...proposal, hash},
+        {...proposal},
         Realm.UpdateMode.Modified,
       );
     });
 
-    return hash;
+    return proposal.orderNumber;
   }
 
-  static async requestDetailFor(hash: string) {
+  static async requestDetailFor(id: string) {
     const cosmos = new Cosmos(app.provider!);
-    const details = await cosmos.getProposalDetails(hash);
+    const details = await cosmos.getProposalDetails(id);
     return details;
   }
 

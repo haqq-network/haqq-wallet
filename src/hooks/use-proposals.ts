@@ -8,14 +8,14 @@ import {
 import {ProposalsTagKeys} from '@app/types';
 
 type proposalsPart = {
-  hash: string;
+  id: number;
   status: string;
 }[];
 
 function prepareProposals(list: ProposalsRealmType) {
-  return list.map(({status, hash}) => ({
+  return list.map(({status, orderNumber}) => ({
     status,
-    hash,
+    id: orderNumber,
   }));
 }
 

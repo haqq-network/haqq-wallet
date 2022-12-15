@@ -36,6 +36,6 @@ export * from './custom-header';
 export * from './text-sum';
 export * from './info-block-amount';
 export * from './tag';
-export * from './voting-card';
 export * from './voting-line';
 export * from './progress-line';
+export * from './progress-circle';

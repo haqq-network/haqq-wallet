@@ -277,7 +277,7 @@ export type RootStackParamList = {
   notificationPopup: undefined;
   trackActivity: undefined;
   proposal: {
-    hash: string;
+    id: number;
   };
 };
 
