@@ -10,7 +10,7 @@ All controllers placed in src/screens
 
 ## View
 
-Deals exclusively with data rendering which came from controller, in some cases it can manipulate data (except for writing to the model). can interact with the controller via callbacks
+Deals exclusively with data rendering which came from controller, in some cases it can convert/transform the data only for  match the display format. Сan interact with the controller via callbacks
 
 All views placed in src/components
 
