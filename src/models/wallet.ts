@@ -191,7 +191,7 @@ export class Wallet extends EventEmitter {
         deviceId,
         deviceName,
         path,
-        rootAddress,
+        rootAddress: rootAddress?.toLowerCase(),
         publicKey: walletParams.publicKey,
       });
     });
