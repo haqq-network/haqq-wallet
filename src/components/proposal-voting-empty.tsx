@@ -2,16 +2,18 @@ import React from 'react';
 
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {NoProposalVotingIcon, Text} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Icon, Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 
 export const ProposalVotingEmpty = () => {
   const height = useWindowDimensions().height / 1.5;
   return (
     <View style={[styles.container, {height}]}>
-      <NoProposalVotingIcon
-        color={getColor(Color.graphicSecond3)}
+      <Icon
+        i80
+        name="no_proposal_voting"
+        color={Color.graphicSecond3}
         style={styles.icon}
       />
       <Text t14 color={Color.textSecond1} i18n={I18N.proposalNoVoting} />

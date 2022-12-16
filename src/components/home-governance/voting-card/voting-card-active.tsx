@@ -12,9 +12,8 @@ import {
   Spacer,
   Text,
   TextSum,
-  VotingLine,
-  VotingLineInterface,
 } from '@app/components/ui';
+import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {

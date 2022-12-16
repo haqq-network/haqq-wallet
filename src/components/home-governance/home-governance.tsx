@@ -5,33 +5,38 @@ import {FlatList, View} from 'react-native';
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useProposals} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {ProposalsTagKeys, ProposalsTagType, ProposalsTags} from '@app/types';
+import {
+  ProposalsCroppedList,
+  ProposalsTagKeys,
+  ProposalsTagType,
+  ProposalsTags,
+} from '@app/types';
 
 import {VotingCard} from './voting-card';
 
 export interface HomeGovernanceProps {
+  proposals: ProposalsCroppedList;
+  statusFilter: ProposalsTagKeys;
   onPressCard?: (id: number) => void;
   onRefresh?: () => void;
   refreshing?: boolean;
   loading?: boolean;
+  onSelect?: (tag: ProposalsTagType) => () => void;
 }
 
 export const HomeGovernance = ({
+  proposals,
+  statusFilter,
   onPressCard,
   onRefresh,
-  loading,
   refreshing,
+  loading,
+  onSelect,
 }: HomeGovernanceProps) => {
-  const {proposals, setStatusFilter, statusFilter} = useProposals();
-
-  const onSelect = (tag: ProposalsTagType) => () => {
-    setStatusFilter(tag[0]);
-  };
-
   const listHeader = () => <Spacer height={12} />;
   const listSeparator = () => <Spacer height={24} />;
+
   return (
     <>
       <CustomHeader i18nTitle={I18N.homeGovernance} iconRight="search" />
@@ -50,7 +55,7 @@ export const HomeGovernance = ({
             return (
               <Tag
                 key={tagKey}
-                onPress={onSelect(item)}
+                onPress={onSelect?.(item)}
                 i18n={tagTitle}
                 tagVariant={tagVariant}
               />

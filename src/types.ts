@@ -493,3 +493,8 @@ export type DepositResponse = {
   }[];
   pagination: {next_key: any; total: string};
 };
+
+export type ProposalsCroppedList = {
+  id: number;
+  status: string;
+}[];

@@ -524,10 +524,10 @@ export class Cosmos {
       const rows = realm.objects<GovernanceVoting>(
         GovernanceVoting.schema.name,
       );
-      const cache: string[] = [];
+      const cache: number[] = [];
 
       for (const row of rows) {
-        cache.push(row.hash);
+        cache.push(row.orderNumber);
       }
 
       try {

@@ -37,6 +37,7 @@ export enum IconsName {
   list = 'list',
   lock = 'lock',
   market = 'market',
+  no_proposal_voting = 'no_proposal_voting',
   paste = 'paste',
   pen = 'pen',
   logo = 'logo',
@@ -72,6 +73,7 @@ export type IconSize =
   | {i32: boolean}
   | {i42: boolean}
   | {i72: boolean}
+  | {i80: boolean}
   | {i120: boolean}
   | {};
 
@@ -93,6 +95,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
         'i72' in props && styles.i72Container,
+        'i80' in props && styles.i80Container,
         'i120' in props && styles.i120Container,
         style,
         {tintColor: getColor(color)},
@@ -107,6 +110,10 @@ const styles = StyleSheet.create({
   i120Container: {
     width: 120,
     height: 120,
+  },
+  i80Container: {
+    width: 80,
+    height: 80,
   },
   i72Container: {
     width: 72,

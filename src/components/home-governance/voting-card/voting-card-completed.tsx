@@ -4,7 +4,8 @@ import {format} from 'date-fns';
 import {Pressable, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Spacer, Text, VotingLine} from '@app/components/ui';
+import {Icon, Spacer, Text} from '@app/components/ui';
+import {VotingLine} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {

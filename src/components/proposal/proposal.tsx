@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {format} from 'date-fns';
 import {ScrollView, View, useWindowDimensions} from 'react-native';
@@ -16,9 +16,12 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
-import {useApp, useTypedRoute, useWalletsList} from '@app/hooks';
+import {useApp, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {GovernanceVoting} from '@app/models/governance-voting';
+import {
+  GovernanceVoting,
+  ProposalRealmType,
+} from '@app/models/governance-voting';
 import {ProposalsTags, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables';
 
@@ -27,8 +30,12 @@ import {
   VotingCardDetailRefInterface,
 } from './voting-card-detail';
 
-export function Proposal() {
-  const {id} = useTypedRoute<'proposal'>().params;
+interface ProposalProps {
+  item: ProposalRealmType;
+  onDepositSubmit?: (address: string) => Promise<void>;
+}
+
+export function Proposal({item, onDepositSubmit}: ProposalProps) {
   const {bottom} = useSafeAreaInsets();
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
@@ -39,10 +46,6 @@ export function Proposal() {
   const {visible} = useWalletsList();
   const closeDistance = useWindowDimensions().height / 6;
 
-  const item = useMemo(() => {
-    return GovernanceVoting.getById(id);
-  }, [id]);
-
   const onDeposit = () => {
     showModal('wallets-bottom-sheet', {
       wallets: visible,
@@ -50,11 +53,9 @@ export function Proposal() {
       title: I18N.proposalAccountTitle,
       eventSuffix: '-proposal-deposit',
     });
-    const onDepositSubmit = async (address: string) => {
-      await item?.sendDeposit(address, 0.00000005);
-      app.removeListener('wallet-selected-proposal-deposit', onDepositSubmit);
-    };
-    app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
+    if (onDepositSubmit) {
+      app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
+    }
   };
 
   useEffect(() => {

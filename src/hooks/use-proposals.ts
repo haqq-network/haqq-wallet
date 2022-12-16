@@ -5,12 +5,7 @@ import {
   ProposalRealmSubType,
   ProposalsRealmType,
 } from '@app/models/governance-voting';
-import {ProposalsTagKeys} from '@app/types';
-
-type proposalsPart = {
-  id: number;
-  status: string;
-}[];
+import {ProposalsCroppedList, ProposalsTagKeys} from '@app/types';
 
 function prepareProposals(list: ProposalsRealmType) {
   return list.map(({status, orderNumber}) => ({
@@ -20,7 +15,7 @@ function prepareProposals(list: ProposalsRealmType) {
 }
 
 export function useProposals() {
-  const [allProposals, setAllProposals] = useState<proposalsPart>([]);
+  const [allProposals, setAllProposals] = useState<ProposalsCroppedList>([]);
   const [statusFilter, setStatusFilter] = useState<ProposalsTagKeys>('all');
 
   const proposalsRef = useRef<ProposalsRealmType>();

@@ -12,9 +12,8 @@ import {
   Spacer,
   Text,
   TextSum,
-  VotingLine,
-  VotingLineInterface,
 } from '@app/components/ui';
+import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
@@ -39,7 +38,8 @@ export const VotingCardDetail = forwardRef<
   VotingCardDetailProps
 >(({item, yourVote, totalCollected}, ref) => {
   const {
-    dataDifference: {daysLeft, minLeft, hourLeft, isActive},
+    dataDifference: {daysLeft, minLeft, hourLeft},
+    isActive,
     proposalVotes,
     isDeposited,
     isVoting,

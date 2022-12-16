@@ -125,8 +125,11 @@ export class GovernanceVoting extends Realm.Object {
       daysLeft,
       hourLeft,
       minLeft,
-      isActive: diff > 0,
     };
+  }
+
+  get isActive() {
+    return this.status === 'voting' || this.status === 'deposited';
   }
 
   get yesPercent() {
@@ -239,7 +242,7 @@ export class GovernanceVoting extends Realm.Object {
     );
   }
 
-  static remove(id: string) {
+  static remove(id: number) {
     const obj = realm.objectForPrimaryKey<GovernanceVoting>(
       GovernanceVoting.schema.name,
       id,

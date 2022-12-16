@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
 import {HomeGovernance} from '@app/components/home-governance';
-import {useCosmos, useTypedNavigation} from '@app/hooks';
+import {useCosmos, useProposals, useTypedNavigation} from '@app/hooks';
+import {ProposalsTagType} from '@app/types';
 
 export const HomeGovernanceScreen = () => {
   const {navigate} = useTypedNavigation();
@@ -22,12 +23,23 @@ export const HomeGovernanceScreen = () => {
     cosmos.syncGovernanceVoting().finally(() => setRefreshing(false));
   };
 
+  const {proposals, setStatusFilter, statusFilter} = useProposals();
+
+  const onSelect = (tag: ProposalsTagType) => () => {
+    setStatusFilter(tag[0]);
+  };
+
   return (
     <HomeGovernance
-      onRefresh={onRefresh}
-      refreshing={refreshing}
-      loading={loading}
-      onPressCard={onPressCard}
+      {...{
+        onSelect,
+        proposals,
+        statusFilter,
+        onRefresh,
+        refreshing,
+        loading,
+        onPressCard,
+      }}
     />
   );
 };
