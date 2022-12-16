@@ -30,16 +30,11 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
           loop
         />
       </View>
-      <Text
-        t4
-        center={true}
-        style={page.title}
-        i18n={I18N.ledgerAgreementTitle}
-      />
+      <Text t4 center style={page.title} i18n={I18N.ledgerAgreementTitle} />
       <Text
         t11
         color={Color.textBase2}
-        center={true}
+        center
         style={page.disclaimer}
         i18n={I18N.ledgerAgreementText}
       />

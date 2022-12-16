@@ -7,6 +7,7 @@ import {
   StyleProp,
   StyleSheet,
   TextInput,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
@@ -83,7 +84,10 @@ export const SumBlock = ({
         <Pressable onPress={onFocusInput} style={styles.inputContainer}>
           <TextInput
             allowFontScaling={false}
-            style={StyleSheet.compose(styles.input, {fontSize, lineHeight})}
+            style={StyleSheet.compose<TextStyle>(styles.input, {
+              fontSize,
+              lineHeight,
+            })}
             value={value}
             placeholder="0"
             onChangeText={onChangeValue}

@@ -5,7 +5,7 @@ import {StackHeaderProps} from '@react-navigation/stack';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {DEFAULT_HITSLOP} from '@app/variables';
@@ -49,7 +49,7 @@ export const PopupHeader = ({
       ) : (
         <View style={page.spacer} />
       )}
-      <Text t8 center color={getColor(Color.textBase1)}>
+      <Text t8 center color={Color.textBase1}>
         {options.title}
       </Text>
       {options.headerRight ? (

@@ -1,6 +1,16 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 
 export enum I18N {
+  numericKeyboard0,
+  numericKeyboard1,
+  numericKeyboard2,
+  numericKeyboard3,
+  numericKeyboard4,
+  numericKeyboard5,
+  numericKeyboard6,
+  numericKeyboard7,
+  numericKeyboard8,
+  numericKeyboard9,
   actionSheetDiscard,
   actionSheetKeepEditing,
   actionSheetMessage,
@@ -169,6 +179,7 @@ export enum I18N {
   settingsTestStaked,
   settingsTestUnbounded,
   settingsTestUndelegate,
+  settingsAddressBookTitle,
   settingsAddressBookPlaceholder,
   settingsAddressBookAdd,
   settingsAddressBookAlertBtnSecond,
@@ -363,6 +374,16 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.numericKeyboard0]: '0',
+  [I18N.numericKeyboard1]: '1',
+  [I18N.numericKeyboard2]: '2',
+  [I18N.numericKeyboard3]: '3',
+  [I18N.numericKeyboard4]: '4',
+  [I18N.numericKeyboard5]: '5',
+  [I18N.numericKeyboard6]: '6',
+  [I18N.numericKeyboard7]: '7',
+  [I18N.numericKeyboard8]: '8',
+  [I18N.numericKeyboard9]: '9',
   [I18N.backupCreateRecoveryPhrase]: 'Your recovery phrase',
   [I18N.backupCreateRecoverySaveWords]:
     'Write down or copy these words in the right order and save them somewhere safe.',
@@ -577,6 +598,7 @@ const en: Record<I18N, string> = {
     'Are you sure you want to delete the selected contact?',
   [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
+  [I18N.settingsAddressBookTitle]: 'My contacts',
   [I18N.settingsAddressBookAdd]: 'Add Contact',
   [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
   [I18N.settingsAddressBookAlertDesc]:
