@@ -19,7 +19,6 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
 
 export type StakingDelegatePreviewProps = {
   amount: number;
@@ -38,8 +37,6 @@ export const StakingUnDelegatePreview = ({
   disabled,
   onSend,
 }: StakingDelegatePreviewProps) => {
-  const feeValue = fee / WEI;
-
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.icon}>
@@ -53,7 +50,7 @@ export const StakingUnDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber((amount + feeValue).toFixed(15))} ISLM
+        {cleanNumber(amount.toFixed(15))} ISLM
       </Text>
       <Text
         t11
@@ -71,7 +68,7 @@ export const StakingUnDelegatePreview = ({
         </DataView>
         <DataView i18n={I18N.stakingUnDelegatePreviewNetworkFee}>
           <Text t11 color={Color.textBase1}>
-            {feeValue.toFixed(15)} ISLM
+            {cleanNumber(fee)} aISLM
           </Text>
         </DataView>
       </View>

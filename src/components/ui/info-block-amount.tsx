@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {TouchableOpacity, View} from 'react-native';
+import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text, TextSum} from '@app/components/ui';
@@ -12,23 +12,25 @@ type valueType = {
   suffix?: string;
 };
 
-interface InfoBlockAmountProps {
+export type InfoBlockAmountProps = {
+  style?: StyleProp<ViewStyle>;
   titleI18N: I18N;
   values?: number[] | valueType[];
   value?: number | valueType;
   toFixed?: number;
   amountColor?: Color;
   isLarge?: boolean;
-}
+};
 
-export function InfoBlockAmount({
+export const InfoBlockAmount = ({
+  style,
   values = [],
   value = 0,
   titleI18N,
   amountColor = Color.textBase1,
   toFixed = 2,
   isLarge,
-}: InfoBlockAmountProps) {
+}: InfoBlockAmountProps) => {
   const [isShow, setIsShow] = useState(false);
 
   let mapValues = values;
@@ -49,7 +51,7 @@ export function InfoBlockAmount({
   };
 
   return (
-    <View style={[styles.blockContainer, !isLarge && styles.flexOne]}>
+    <View style={[styles.blockContainer, !isLarge && styles.flexOne, style]}>
       <View style={styles.infoBlock}>
         <Text t15 center color={Color.textBase2} i18n={titleI18N} />
         <Spacer height={2} />
@@ -76,7 +78,7 @@ export function InfoBlockAmount({
       </View>
     </View>
   );
-}
+};
 
 const styles = createTheme({
   infoBlock: {

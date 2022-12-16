@@ -246,6 +246,7 @@ export enum I18N {
   stakingDelegateFinishTitle,
   stakingDelegateFinishTotalAmount,
   stakingDelegateFinishDone,
+  stakingDelegateFinishFee,
   stakingUnDelegateFormTitle,
   stakingUnDelegateFormWrongSymbol,
   stakingUnDelegateFormNotEnough,
@@ -360,6 +361,7 @@ export enum I18N {
   errorCreateAccountPopupTitle,
   errorCreateAccountPopupDescription,
   errorCreateAccountPopupClose,
+  networkFee,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -642,7 +644,7 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegateFormTitle]: 'Stake',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
-  [I18N.stakingDelegateFormNetworkFee]: 'Network fee',
+  [I18N.stakingDelegateFormNetworkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.stakingDelegateFormCommission]: 'Commission',
   [I18N.stakingDelegateFormPreview]: 'Preview',
   [I18N.stakingDelegateFormWrongSymbol]: 'Wrong symbol',
@@ -660,8 +662,9 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
   [I18N.stakingDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingDelegateFinishDone]: 'Done',
+  [I18N.stakingDelegateFinishFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.stakingUnDelegateFormTitle]: 'Undelegate',
-  [I18N.stakingUnDelegateFormNetworkFee]: 'Network fee',
+  [I18N.stakingUnDelegateFormNetworkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.stakingUnDelegateFormCommission]: 'Commission',
   [I18N.stakingUnDelegateFormPreview]: 'Preview',
   [I18N.stakingUnDelegateFormWrongSymbol]: 'Wrong symbol',
@@ -796,4 +799,5 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupTitle]: 'Failed to create an account',
   [I18N.errorCreateAccountPopupDescription]: 'Please try again later',
   [I18N.errorCreateAccountPopupClose]: 'Close',
+  [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
 };
