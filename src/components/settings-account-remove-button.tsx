@@ -5,9 +5,9 @@ import {Alert, StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
-import {sendNotification} from '@app/helpers';
 import {useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 type SettingsAccountRemoveButtonProp = {
