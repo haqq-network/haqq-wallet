@@ -12,14 +12,14 @@ export const LedgerAccountsEmpty = () => {
       <ActivityIndicator style={styles.emptyActivity} />
       <Text
         t9
-        center={true}
+        center
         i18n={I18N.ledgerAccountsWaiting}
         style={styles.emptyTitle}
       />
       <Text
         t14
         color={Color.textBase2}
-        center={true}
+        center
         i18n={I18N.ledgerAccountsConfirm}
       />
     </PopupContainer>
