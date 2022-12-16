@@ -1,10 +1,13 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+
+import {Validator} from '@evmos/provider/dist/rest/staking';
 
 import {StakingValidators} from '@app/components/staking-validators';
 import {app} from '@app/contexts';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
-import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
+import {useThrottle} from '@app/hooks/use-throttle';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -13,14 +16,51 @@ import {Cosmos} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
-  const wallets = useWallets();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
-  const [stakedValidators, setStakedValidators] = useState<ValidatorItem[]>([]);
-  const [unStakedValidators, setUnStakedValidators] = useState<ValidatorItem[]>(
-    [],
-  );
-
   const navigation = useTypedNavigation();
+
+  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const [stakingCache, setStakingCache] = useState<
+    Record<string, Record<StakingMetadataType, number>>
+  >({});
+  const [validators, setValidators] = useState<Validator[]>([]);
+
+  const onCache = useThrottle(() => {
+    console.log(new Date(), 'onCache');
+    const cache = StakingMetadata.getAll().reduce<Record<string, any>>(
+      (memo, row) => {
+        const value = memo[row.validator] || {
+          [StakingMetadataType.delegation]: 0,
+          [StakingMetadataType.undelegation]: 0,
+          [StakingMetadataType.reward]: 0,
+        };
+
+        memo[row.validator] = {
+          ...value,
+          [row.type]: value[row.type] + row.amount,
+        };
+
+        return memo;
+      },
+      {},
+    );
+    setStakingCache(cache);
+  }, 1000);
+
+  useEffect(() => {
+    const rows = StakingMetadata.getAll();
+    rows.addListener(onCache);
+
+    onCache();
+    return () => {
+      rows.removeListener(onCache);
+    };
+  }, [onCache]);
+
+  useEffect(() => {
+    cosmos.getAllValidators(1000).then(validatorsList => {
+      setValidators(validatorsList.validators);
+    });
+  }, [cosmos]);
 
   const onPressValidator = useCallback(
     (validator: ValidatorItem) => {
@@ -31,68 +71,49 @@ export const StakingValidatorsScreen = () => {
     [navigation],
   );
 
-  useEffect(() => {
-    const metadata = StakingMetadata.getAll();
-    const cache = new Map();
-
-    for (const row of metadata) {
-      const value = cache.get(row.validator) ?? {
-        [StakingMetadataType.delegation]: 0,
-        [StakingMetadataType.undelegation]: 0,
-        [StakingMetadataType.reward]: 0,
-      };
-      cache.set(row.validator, {
-        ...value,
-        [row.type]: value[row.type] + row.amount,
-      });
+  const [stakedValidators, unStakedValidators] = useMemo(() => {
+    const staked = [];
+    const unStaked = [];
+    for (const validator of validators) {
+      const info = stakingCache[validator.operator_address];
+      if (info) {
+        staked.push({
+          ...validator,
+          localDelegations: info[StakingMetadataType.delegation],
+          localRewards: info[StakingMetadataType.reward],
+          localUnDelegations: info[StakingMetadataType.undelegation],
+        });
+      } else {
+        unStaked.push(validator);
+      }
     }
 
-    cosmos.getAllValidators(1000).then(validatorsList => {
-      const staked = [];
-      const unStaked = [];
-      for (const validator of validatorsList.validators) {
-        const info = cache.get(validator.operator_address);
-        if (info) {
-          staked.push({
-            ...validator,
-            localDelegations: info[StakingMetadataType.delegation],
-            localRewards: info[StakingMetadataType.reward],
-            localUnDelegations: info[StakingMetadataType.undelegation],
-          });
-        } else {
-          unStaked.push(validator);
-        }
-      }
+    const {
+      active: stakedActive,
+      inactive: stakedInactive,
+      jailed: stackedJailed,
+    } = validatorsSplit(staked);
 
-      const {
-        active: stakedActive,
-        inactive: stakedInactive,
-        jailed: stackedJailed,
-      } = validatorsSplit(staked);
+    const {
+      active: unStakedActive,
+      inactive: unStakedInactive,
+      jailed: unStackedJailed,
+    } = validatorsSplit(unStaked);
 
-      const {
-        active: unStakedActive,
-        inactive: unStakedInactive,
-        jailed: unStackedJailed,
-      } = validatorsSplit(unStaked);
+    return [
+      [
+        validatorsSort(stakedActive),
+        validatorsSort(stakedInactive),
+        validatorsSort(stackedJailed),
+      ].flat(),
+      [
+        validatorsSort(unStakedActive),
+        validatorsSort(unStakedInactive),
+        validatorsSort(unStackedJailed),
+      ].flat(),
+    ];
+  }, [stakingCache, validators]);
 
-      setStakedValidators(
-        [
-          validatorsSort(stakedActive),
-          validatorsSort(stakedInactive),
-          validatorsSort(stackedJailed),
-        ].flat(),
-      );
-
-      setUnStakedValidators(
-        [
-          validatorsSort(unStakedActive),
-          validatorsSort(unStakedInactive),
-          validatorsSort(unStackedJailed),
-        ].flat(),
-      );
-    });
-  }, [cosmos, wallets]);
   return (
     <StakingValidators
       stakedValidators={stakedValidators}

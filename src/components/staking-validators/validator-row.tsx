@@ -58,7 +58,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               <Text
                 t14
                 color={getColor(Color.textBase2)}
-                i18n={I18N.stakingInfoVotingPower}
+                i18n={I18N.stakingValidatorsRowPower}
                 i18params={{power: cleanNumber(votingPower.toFixed(2))}}
               />
               <Text
