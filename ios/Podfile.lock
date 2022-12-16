@@ -456,6 +456,8 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-slider (4.3.3):
+    - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
   - React-perflogger (0.70.6)
@@ -529,6 +531,8 @@ PODS:
   - RNCAsyncStorage (1.12.1):
     - React-Core
   - RNCClipboard (1.11.1):
+    - React-Core
+  - RNDateTimePicker (6.7.1):
     - React-Core
   - RNFBApp (16.4.6):
     - Firebase/CoreOnly (= 10.2.0)
@@ -657,6 +661,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -673,6 +678,7 @@ DEPENDENCIES:
   - RealmJS (from `../node_modules/realm`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -793,6 +799,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-randombytes"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
@@ -825,6 +833,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -911,6 +921,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: f80db8cac2151405633324cb645c60af098ee461
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-slider: 7d19220da2f2ae7cbb9aa80127cb73c597fa221f
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466
@@ -927,6 +938,7 @@ SPEC CHECKSUMS:
   RealmJS: d0e94d35363a3a9ebd27981d9ac0aa4b63f66c85
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
+  RNDateTimePicker: 0530a73a6f3a1a85814cbde0802736993b9e675e
   RNFBApp: a6a92a67882cde38e6b466a446312de6c6c9b384
   RNFBMessaging: 4a184e1af5bff970cbf70eab2263c85f612683eb
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3

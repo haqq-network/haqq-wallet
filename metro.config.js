@@ -9,8 +9,8 @@ module.exports = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
-        experimentalImportSupport: true,
-        inlineRequires: true,
+        experimentalImportSupport: false,
+        inlineRequires: false,
       },
     }),
     minifierPath: 'metro-minify-terser',
@@ -20,5 +20,6 @@ module.exports = {
     blacklistRE: blacklist([
       /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
     ]),
+    resolverMainFields: ['sbmodern', 'react-native', 'browser', 'main'],
   },
 };
