@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
 
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
-import {sendNotification} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N} from '@app/i18n';
+import {sendNotification} from '@app/services';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();

@@ -12,6 +12,7 @@ import com.haqq.wallet.ethutils.EthUtilsPackage
 import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
+import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
 
 class MainApplication : Application(), ReactApplication {
@@ -28,6 +29,7 @@ class MainApplication : Application(), ReactApplication {
             packages.add(HapticPackage())
             packages.add(VersionPackage())
             packages.add(EthUtilsPackage())
+            packages.add(ToastPackage())
             return packages
         }
 
