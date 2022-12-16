@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
 
@@ -67,7 +67,7 @@ export const StakingDelegateFinish = ({
       <Button
         style={styles.margin}
         variant={ButtonVariant.contained}
-        title={getText(I18N.stakingDelegateFinishDone)}
+        i18n={I18N.stakingDelegateFinishDone}
         onPress={onDone}
       />
     </PopupContainer>
