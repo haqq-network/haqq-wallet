@@ -61,9 +61,11 @@ export const PinModal = () => {
           <TouchableOpacity
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
-            <Text clean style={page.additionButtonText}>
-              {getText(I18N.modalPinForgotCode)}
-            </Text>
+            <Text
+              clean
+              i18n={I18N.modalPinForgotCode}
+              style={page.additionButtonText}
+            />
           </TouchableOpacity>
         }
       />

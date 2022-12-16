@@ -11,7 +11,7 @@ export const LedgerScanHeader = () => {
     <View style={styles.container}>
       <Text
         t9
-        center={true}
+        center
         color={Color.textBase1}
         i18n={I18N.ledgerScanTitle}
         style={styles.title}

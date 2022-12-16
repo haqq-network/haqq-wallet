@@ -3,15 +3,15 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 
-import {Icon, IconButton} from './ui';
+import {Color} from '@app/colors';
 
-import {LIGHT_GRAPHIC_SECOND_2} from '../variables';
+import {Icon, IconButton} from './ui';
 
 export const DismissPopupButton = () => {
   const navigation = useNavigation();
   return (
     <IconButton style={page.container} onPress={navigation.goBack}>
-      <Icon s name="close_circle" color={LIGHT_GRAPHIC_SECOND_2} />
+      <Icon i24 name="close_circle" color={Color.graphicSecond2} />
     </IconButton>
   );
 };

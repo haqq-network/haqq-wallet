@@ -50,7 +50,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
       if (transport.current) {
         transport.current?.unsubscribe();
       }
-      console.log('listen');
+
       transport.current = new Observable(TransportBLE.listen).subscribe({
         complete: () => {
           subscription({refreshing: false});
@@ -61,7 +61,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
           }
         },
         error: e => {
-          console.log('error', e);
           subscription({refreshing: false, error: e});
         },
       });
@@ -81,7 +80,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
       TransportBLE.observeState,
     ).subscribe(e => {
       if (e.available !== previousAvailable) {
-        console.log(e);
         previousAvailable = e.available;
         if (e.available) {
           listen();

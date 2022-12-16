@@ -31,6 +31,7 @@ const timingInAnimationConfig: WithTimingConfig = {
 };
 
 const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
+
 interface BottomPopupContainerProps {
   children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
 }
