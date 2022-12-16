@@ -58,7 +58,6 @@ export const WalletCreate = ({}: BalanceProps) => {
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
           i18n={I18N.walletCreateConnect}
-          title="Connect"
           iconRight="ledger"
           iconRightColor={Color.graphicGreen1}
           onPress={() => {

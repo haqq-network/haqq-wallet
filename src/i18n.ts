@@ -1,6 +1,16 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 
 export enum I18N {
+  numericKeyboard0,
+  numericKeyboard1,
+  numericKeyboard2,
+  numericKeyboard3,
+  numericKeyboard4,
+  numericKeyboard5,
+  numericKeyboard6,
+  numericKeyboard7,
+  numericKeyboard8,
+  numericKeyboard9,
   actionSheetDiscard,
   actionSheetKeepEditing,
   actionSheetMessage,
@@ -364,6 +374,16 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.numericKeyboard0]: '0',
+  [I18N.numericKeyboard0]: '1',
+  [I18N.numericKeyboard0]: '2',
+  [I18N.numericKeyboard0]: '3',
+  [I18N.numericKeyboard0]: '4',
+  [I18N.numericKeyboard0]: '5',
+  [I18N.numericKeyboard0]: '6',
+  [I18N.numericKeyboard0]: '7',
+  [I18N.numericKeyboard0]: '8',
+  [I18N.numericKeyboard0]: '9',
   [I18N.backupCreateRecoveryPhrase]: 'Your recovery phrase',
   [I18N.backupCreateRecoverySaveWords]:
     'Write down or copy these words in the right order and save them somewhere safe.',
