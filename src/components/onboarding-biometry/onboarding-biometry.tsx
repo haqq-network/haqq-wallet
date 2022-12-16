@@ -71,10 +71,10 @@ export const OnboardingBiometry = ({
           t11
           color={Color.textBase2}
           i18n={I18N.onboardingBiometrySafeFast}
-          center={true}
+          center
         />
         {error && (
-          <ErrorText e2 center={true} style={style.error}>
+          <ErrorText e2 center style={style.error}>
             {error}
           </ErrorText>
         )}

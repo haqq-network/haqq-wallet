@@ -46,8 +46,12 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      mnemonic?: string | boolean;
-      privateKey?: string | boolean;
+      mnemonic: string;
+      privateKey: false;
+    }
+  | {
+      mnemonic: false;
+      privateKey: string;
     }
   | {
       address: string;
@@ -205,7 +209,10 @@ export type RootStackParamList = {
   ledgerFinish: undefined;
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
-  } & WalletInitialData;
+    address: string;
+    deviceId: string;
+    deviceName: string;
+  };
   ledgerStore: {
     address: string;
     deviceId: string;

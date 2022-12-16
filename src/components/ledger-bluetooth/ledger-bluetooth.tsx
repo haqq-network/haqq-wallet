@@ -110,7 +110,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
       </View>
       <Text
         t4
-        center={true}
+        center
         i18n={
           disabled.includes(btState)
             ? I18N.ledgerBluetoothTitleDisabled
@@ -120,7 +120,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
       />
       <Text
         t11
-        center={true}
+        center
         color={Color.textBase2}
         i18n={
           disabled.includes(btState)

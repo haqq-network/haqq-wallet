@@ -2,15 +2,13 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Text} from './ui';
+import {I18N} from '@app/i18n';
 
-import {LIGHT_TEXT_BASE_1} from '../variables';
+import {Text} from './ui';
 
 export const AddressHeader = () => {
   return (
-    <Text t6 style={page.container}>
-      My contacts
-    </Text>
+    <Text t6 i18n={I18N.settingsAddressBookTitle} style={page.container} />
   );
 };
 
@@ -18,7 +16,5 @@ const page = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     marginVertical: 12,
-    fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
   },
 });

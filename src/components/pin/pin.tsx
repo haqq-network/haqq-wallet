@@ -10,7 +10,7 @@ import {isBefore} from 'date-fns';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme, moderateVerticalScale} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
@@ -104,7 +104,7 @@ export const Pin = forwardRef(
         </Text>
         {error && <Text clean>{error}</Text>}
         {subtitle && !error && (
-          <Text t11 color={getColor(Color.textBase2)} center>
+          <Text t11 color={Color.textBase2} center>
             {subtitle}
           </Text>
         )}
