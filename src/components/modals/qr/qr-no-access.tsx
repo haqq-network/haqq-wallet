@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {QrTopView} from '@app/components/modals/qr/qr-top-view';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 
 export type QrNoAccessProps = {
   onClose: () => void;
@@ -17,12 +17,19 @@ export const QrNoAccess = ({onClose}: QrNoAccessProps) => {
     <View style={styles.background}>
       <QrTopView onClose={onClose} />
       <View style={styles.backgroundInfo}>
-        <Text t4 style={styles.backgroundTitle}>
-          {getText(I18N.modalQRNoAccessTitle)}
-        </Text>
-        <Text t11 style={styles.backgroundDescription}>
-          {getText(I18N.modalQRNoAccessDescription)}
-        </Text>
+        <Text
+          t4
+          center
+          color={Color.textBase3}
+          i18n={I18N.modalQRNoAccessTitle}
+        />
+        <Text
+          t11
+          center
+          i18n={I18N.modalQRNoAccessDescription}
+          color={Color.textBase2}
+          style={styles.backgroundDescription}
+        />
       </View>
     </View>
   );
@@ -39,13 +46,7 @@ const styles = createTheme({
     flex: 1,
     justifyContent: 'center',
   },
-  backgroundTitle: {
-    color: Color.textBase3,
-    textAlign: 'center',
-  },
   backgroundDescription: {
     marginTop: 4,
-    color: Color.textBase2,
-    textAlign: 'center',
   },
 });

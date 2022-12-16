@@ -177,7 +177,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       {error && (
         <View style={styles.bottomErrorContainer}>
           <View style={styles.bottomError}>
-            <Text t8 color={getColor(Color.textBase3)}>
+            <Text t8 color={Color.textBase3}>
               Invalid code
             </Text>
           </View>

@@ -169,6 +169,7 @@ export enum I18N {
   settingsTestStaked,
   settingsTestUnbounded,
   settingsTestUndelegate,
+  settingsAddressBookTitle,
   settingsAddressBookPlaceholder,
   settingsAddressBookAdd,
   settingsAddressBookAlertBtnSecond,
@@ -577,6 +578,7 @@ const en: Record<I18N, string> = {
     'Are you sure you want to delete the selected contact?',
   [I18N.settingsAddressBookLabel]: 'Address',
   [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
+  [I18N.settingsAddressBookTitle]: 'My contacts',
   [I18N.settingsAddressBookAdd]: 'Add Contact',
   [I18N.settingsAddressBookAlertTitle]: 'Delete Contact',
   [I18N.settingsAddressBookAlertDesc]:
