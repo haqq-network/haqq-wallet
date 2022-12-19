@@ -25,6 +25,7 @@ export const StakingDelegateFinishScreen = () => {
       validator={route.params.validator}
       amount={route.params.amount}
       fee={route.params.fee}
+      txhash={route.params.txhash}
     />
   );
 };
