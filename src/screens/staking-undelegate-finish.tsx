@@ -20,6 +20,7 @@ export const StakingUnDelegateFinishScreen = () => {
       validator={params.validator}
       amount={params.amount}
       fee={params.fee}
+      txhash={params.txhash}
     />
   );
 };

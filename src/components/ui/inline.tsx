@@ -37,10 +37,10 @@ export const Inline = ({gap, children, style = {}}: InlineProps) => {
           child &&
           // @ts-ignore
           React.cloneElement(child, {
-            style: {
+            style: StyleSheet.compose(child?.props?.style, {
               marginHorizontal: gap * 0.5,
               flex: 1,
-            },
+            }),
           }),
       )}
     </View>
