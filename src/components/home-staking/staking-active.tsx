@@ -6,14 +6,15 @@ import React, {
   useState,
 } from 'react';
 
-import Lottie from 'lottie-react-native';
 import type AnimatedLottieView from 'lottie-react-native';
+import Lottie from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {InfoBlockAmount, Spacer, Text} from '@app/components/ui';
+import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {cleanNumber} from '@app/utils';
 import {IS_IOS} from '@app/variables';
 
 interface StakingActiveProps {
@@ -85,7 +86,7 @@ export const StakingActive = forwardRef(
         <Spacer height={20} />
         <Text t8 center i18n={I18N.homeStakingRewards} />
         <Text t3 center color={Color.textGreen1}>
-          {rewardSum.toFixed(4)} ISLM
+          {cleanNumber(rewardSum.toFixed(4))} ISLM
         </Text>
         <Spacer height={28} />
         <InfoBlockAmount
@@ -95,18 +96,17 @@ export const StakingActive = forwardRef(
           titleI18N={I18N.homeStakingStaked}
         />
         <Spacer height={12} />
-        <View style={styles.blockContainer}>
+        <Inline gap={12}>
           <InfoBlockAmount
             toFixed={0}
             value={availableSum}
             titleI18N={I18N.sumBlockAvailable}
           />
-          <Spacer width={12} />
           <InfoBlockAmount
             value={unDelegationSum}
             titleI18N={I18N.homeStakingUnbounded}
           />
-        </View>
+        </Inline>
         <Spacer height={20} />
       </View>
     );
@@ -120,8 +120,5 @@ const styles = createTheme({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-  },
-  blockContainer: {
-    flexDirection: 'row',
   },
 });

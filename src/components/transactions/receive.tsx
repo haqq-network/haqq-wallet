@@ -3,11 +3,10 @@ import React from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {TransactionListReceive} from '@app/types';
 import {shortAddress} from '@app/utils';
-
-import {DataContent, Icon, Text} from '../ui';
 
 export type TransactionPreviewProps = {
   item: TransactionListReceive;
@@ -23,14 +22,15 @@ export const TransactionReceive = ({
       onPress={() => {
         onPress(item.hash);
       }}>
-      <View style={page.container}>
-        <View style={page.iconWrapper}>
+      <View style={styles.container}>
+        <View style={styles.iconWrapper}>
           <Icon name="arrow_receive" color={Color.graphicBase1} />
         </View>
         <DataContent
-          style={page.infoContainer}
+          style={styles.infoContainer}
           title="Received"
           subtitle={`from ${shortAddress(item.from, '•')}`}
+          short
         />
         <Text t11 color={Color.textGreen1}>
           {`+${item.value.toFixed(2)} ISLM`}
@@ -40,7 +40,7 @@ export const TransactionReceive = ({
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',

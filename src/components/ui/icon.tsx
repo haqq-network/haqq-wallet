@@ -40,6 +40,7 @@ export enum IconsName {
   no_proposal_voting = 'no_proposal_voting',
   paste = 'paste',
   pen = 'pen',
+  ledger = 'ledger',
   logo = 'logo',
   plus_big = 'plus_big',
   plus_mid = 'plus_mid',
@@ -63,12 +64,14 @@ export enum IconsName {
   user = 'user',
   wallet = 'wallet',
   warning = 'warning',
+  discord = 'discord',
 }
 
 export type IconSize =
   | {i12: boolean}
   | {i16: boolean}
   | {i18: boolean}
+  | {i22: boolean}
   | {i24: boolean}
   | {i32: boolean}
   | {i42: boolean}
@@ -91,6 +94,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i12' in props && styles.i12Container,
         'i16' in props && styles.i16Container,
         'i18' in props && styles.i18Container,
+        'i22' in props && styles.i22Container,
         'i24' in props && styles.i24Container,
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
@@ -130,6 +134,10 @@ const styles = StyleSheet.create({
   i24Container: {
     width: 24,
     height: 24,
+  },
+  i22Container: {
+    width: 22,
+    height: 22,
   },
   i18Container: {
     width: 18,

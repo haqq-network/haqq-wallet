@@ -8,6 +8,7 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Color} from '@app/colors';
 import {IconsName as IconsNameUI} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
@@ -47,8 +48,12 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      mnemonic?: string | boolean;
-      privateKey?: string | boolean;
+      mnemonic: string;
+      privateKey: false;
+    }
+  | {
+      mnemonic: false;
+      privateKey: string;
     }
   | {
       address: string;
@@ -60,7 +65,12 @@ export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
-  homeSettings: undefined;
+  homeSettings:
+    | undefined
+    | {
+        screen: keyof RootStackParamList;
+        params: any;
+      };
   homeGovernance: undefined;
   welcome: undefined;
   create: undefined;
@@ -174,7 +184,6 @@ export type RootStackParamList = {
     from: string;
     to: string;
     amount: number;
-    splittedTo: string[];
     fee?: number;
   };
   transactionLedger: {
@@ -202,7 +211,10 @@ export type RootStackParamList = {
   ledgerFinish: undefined;
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
-  } & WalletInitialData;
+    address: string;
+    deviceId: string;
+    deviceName: string;
+  };
   ledgerStore: {
     address: string;
     deviceId: string;
@@ -220,6 +232,7 @@ export type RootStackParamList = {
   };
   settingsProviderForm: {
     id?: string;
+    data?: Partial<Provider>;
   };
   stakingValidators: undefined;
   stakingInfo: {

@@ -12,6 +12,7 @@ import com.haqq.wallet.ethutils.EthUtilsPackage
 import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
+import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
 
 class MainApplication : Application(), ReactApplication {
@@ -28,6 +29,7 @@ class MainApplication : Application(), ReactApplication {
             packages.add(HapticPackage())
             packages.add(VersionPackage())
             packages.add(EthUtilsPackage())
+            packages.add(ToastPackage())
             return packages
         }
 
@@ -46,7 +48,6 @@ class MainApplication : Application(), ReactApplication {
 
     override fun onCreate() {
         super.onCreate()
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         // If you opted-in for the New Architecture, we enable the TurboModule system
         ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
         SoLoader.init(this,  /* native exopackage */false)

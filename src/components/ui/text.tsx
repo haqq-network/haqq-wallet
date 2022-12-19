@@ -16,13 +16,10 @@ import {I18N, getText} from '@app/i18n';
 import {ColorType, FontT} from '@app/types';
 
 export type TextValue =
-  | {children: React.ReactNode}
-  | {i18n: I18N; i18params?: Record<string, string>};
+  | {children: React.ReactNode; i18n?: undefined; i18params?: undefined}
+  | {i18n: I18N; i18params?: Record<string, string>; children?: undefined};
 
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
-  children?: React.ReactNode;
-  i18n?: I18N;
-  i18params?: Record<string, string>;
   t0?: boolean;
   t1?: boolean;
   t2?: boolean;

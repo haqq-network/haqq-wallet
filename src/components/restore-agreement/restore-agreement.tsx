@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -11,10 +11,11 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, windowHeight, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
 
 // import {Terms} from '../ui/terms';
 
@@ -45,21 +46,19 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
           loop
         />
       </View>
-      <Text t4 center style={styles.title}>
-        {getText(I18N.restoreAgreementTitle)}
-      </Text>
+      <Text t4 center i18n={I18N.restoreAgreementTitle} style={styles.title} />
       <Text
         t11
         center
         style={styles.disclaimer}
-        color={getColor(Color.textBase2)}>
-        {getText(I18N.restoreAgreementText)}
-      </Text>
+        color={Color.textBase2}
+        i18n={I18N.restoreAgreementText}
+      />
       <Spacer />
       <Button
         style={styles.submit}
         variant={ButtonVariant.contained}
-        title={getText(I18N.restoreAgreementAgree)}
+        i18n={I18N.restoreAgreementAgree}
         testID={`${testID}_agree`}
         onPress={onDone}
       />
@@ -73,7 +72,7 @@ const styles = createTheme({
     justifyContent: 'flex-end',
   },
   animation: {
-    height: Math.min(windowWidth, windowHeight * 0.355),
+    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -90,7 +89,7 @@ const styles = createTheme({
   //   marginBottom: 16,
   // },
   image: {
-    height: Math.min(windowWidth, windowHeight * 0.355) - 20,
+    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355) - 20,
     top: -10,
   },
 });

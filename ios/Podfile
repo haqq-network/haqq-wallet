@@ -27,9 +27,11 @@ target 'haqq' do
   pod 'secp256k1Swift', '~> 0.7.4'
   pod 'secp256k1Wrapper', :modular_headers => true
 
-#   pod 'Firebase', :modular_headers => true
-#   pod 'FirebaseCore', :modular_headers => true
-#   pod 'GoogleUtilities', :modular_headers => true
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+
+  pod "ToastViewSwift"
 
   target 'haqqTests' do
     inherit! :complete

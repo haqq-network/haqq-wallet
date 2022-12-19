@@ -17,10 +17,11 @@ import {
   InfoBlockType,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal, sendNotification} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables';
 
 export interface DetailsQrModalProps {

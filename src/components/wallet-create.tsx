@@ -1,50 +1,63 @@
 import React from 'react';
 
-import {NavigationProp} from '@react-navigation/core';
-import {useNavigation} from '@react-navigation/native';
-import {Dimensions, View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
-
-import {Button, ButtonSize, ButtonVariant, Inline, Spacer, Text} from './ui';
-
-import {RootStackParamList} from '../types';
 import {
-  LIGHT_BG_1,
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_GREEN_1,
-  MAGIC_CARD_HEIGHT,
-  SHADOW_COLOR,
-} from '../variables';
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Inline,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables';
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
+  const cardWidth = useWindowDimensions().width - 40;
 
   return (
-    <View style={page.container}>
-      <Text t8 style={page.title}>
-        Add accounts
-      </Text>
-      <Text t14 center color={Color.textBase2}>
-        Import and create new accounts
-      </Text>
+    <View
+      style={[
+        styles.container,
+        {
+          width: cardWidth,
+          height: Math.max(cardWidth * MAGIC_CARD_HEIGHT, 212),
+        },
+      ]}>
+      <Text
+        t8
+        i18n={I18N.walletCreateAddAccount}
+        color={Color.textGreen1}
+        center
+        style={styles.title}
+      />
+      <Text
+        t14
+        center
+        i18n={I18N.walletCreateImportAndCreate}
+        color={Color.textBase2}
+      />
       <Spacer />
       <Button
         variant={ButtonVariant.contained}
         size={ButtonSize.middle}
-        title="Create new"
+        i18n={I18N.walletCreateNew}
         onPress={() => {
           navigation.navigate('create');
         }}
-        style={page.create}
+        style={styles.create}
       />
       <Inline gap={0}>
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
-          title="Connect"
+          i18n={I18N.walletCreateConnect}
           iconRight="ledger"
           iconRightColor={Color.graphicGreen1}
           onPress={() => {
@@ -53,7 +66,7 @@ export const WalletCreate = ({}: BalanceProps) => {
         />
         <Button
           size={ButtonSize.middle}
-          title="Import"
+          i18n={I18N.walletCreateImport}
           onPress={() => {
             navigation.navigate('restore');
           }}
@@ -63,20 +76,17 @@ export const WalletCreate = ({}: BalanceProps) => {
   );
 };
 
-const cardWidth = Dimensions.get('window').width - 40;
-
-const page = createTheme({
+const styles = createTheme({
   container: {
     justifyContent: 'space-between',
-    width: cardWidth,
-    height: Math.max(cardWidth * MAGIC_CARD_HEIGHT, 212),
-    borderColor: LIGHT_GRAPHIC_SECOND_1,
+
+    borderColor: Color.graphicSecond1,
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
-    backgroundColor: LIGHT_BG_1,
-    shadowColor: SHADOW_COLOR,
+    backgroundColor: Color.bg1,
+    shadowColor: SHADOW_COLOR_1,
     shadowOffset: {
       width: 0,
       height: 6,
@@ -86,9 +96,6 @@ const page = createTheme({
     elevation: 13,
   },
   title: {
-    fontWeight: '600',
-    color: LIGHT_TEXT_GREEN_1,
-    textAlign: 'center',
     marginBottom: 4,
   },
   create: {

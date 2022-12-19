@@ -3,9 +3,11 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   PixelRatio,
+  Pressable,
   StyleProp,
   StyleSheet,
   TextInput,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
@@ -13,9 +15,10 @@ import {
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
-import {createTheme, windowWidth} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
+import {WINDOW_WIDTH} from '@app/variables';
 
 export type SumBlockProps = {
   value: string;
@@ -52,7 +55,7 @@ export const SumBlock = ({
   );
 
   const ratio = useMemo(
-    () => (value.length > 0 ? (windowWidth - 180) / value.length : 30),
+    () => (value.length > 0 ? (WINDOW_WIDTH - 180) / value.length : 30),
     [value.length],
   );
 
@@ -62,6 +65,10 @@ export const SumBlock = ({
   );
 
   const lineHeight = PixelRatio.roundToNearestPixel(fontSize / 0.809);
+
+  const onFocusInput = () => {
+    inputSumRef.current?.focus();
+  };
 
   return (
     <View style={style}>
@@ -74,17 +81,22 @@ export const SumBlock = ({
           {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
           {/*</IconButton>*/}
         </View>
-        <TextInput
-          allowFontScaling={false}
-          style={StyleSheet.compose(styles.input, {fontSize, lineHeight})}
-          value={value}
-          placeholder="0"
-          onChangeText={onChangeValue}
-          keyboardType="numeric"
-          placeholderTextColor={getColor(Color.textBase2)}
-          ref={inputSumRef}
-          textAlign="center"
-        />
+        <Pressable onPress={onFocusInput} style={styles.inputContainer}>
+          <TextInput
+            allowFontScaling={false}
+            style={StyleSheet.compose<TextStyle>(styles.input, {
+              fontSize,
+              lineHeight,
+            })}
+            value={value}
+            placeholder="0"
+            onChangeText={onChangeValue}
+            keyboardType="numeric"
+            placeholderTextColor={getColor(Color.textBase2)}
+            ref={inputSumRef}
+            textAlign="left"
+          />
+        </Pressable>
         <View style={styles.max}>
           {balance > 0 && (
             <Button
@@ -137,11 +149,16 @@ const styles = createTheme({
     alignItems: 'flex-end',
   },
   input: {
-    flex: 1,
+    width: 'auto',
+    alignSelf: 'center',
     fontWeight: '700',
     fontSize: 34,
     lineHeight: 42,
     color: Color.textBase1,
     paddingVertical: 2,
+    paddingHorizontal: 0,
+  },
+  inputContainer: {
+    flex: 1,
   },
 });

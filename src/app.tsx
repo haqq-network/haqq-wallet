@@ -16,7 +16,6 @@ import {
   NavigationContainer,
   StackActions,
   Theme,
-  createNavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AppState, Linking} from 'react-native';
@@ -24,11 +23,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
-import {
-  Notifications,
-  PopupHeader,
-  SettingsAccountRemoveButton,
-} from '@app/components';
+import {PopupHeader, SettingsAccountRemoveButton} from '@app/components';
 import {
   AppContext,
   TransactionsContext,
@@ -37,9 +32,11 @@ import {
   transactions,
   wallets,
 } from '@app/contexts';
+import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {navigator} from '@app/navigator';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -50,7 +47,6 @@ import {
   AppTheme,
   HeaderButtonProps,
   PresentationNavigation,
-  RootStackParamList,
   ScreenOptionType,
 } from '@app/types';
 import {sleep} from '@app/utils';
@@ -113,8 +109,6 @@ const actionsSheet: ActionSheetType = {
   animationDuration: 0,
 };
 
-export const navigator = createNavigationContainerRef<RootStackParamList>();
-
 const basicScreenOptions = {
   headerShown: false,
   gestureEnabled: false,
@@ -154,9 +148,7 @@ export const App = () => {
         const initialUrl = await Linking.getInitialURL();
 
         if (initialUrl && initialUrl.startsWith('haqq:')) {
-          navigator.navigate('transaction', {
-            to: initialUrl.substring(5),
-          });
+          app.emit(Events.onDeepLink, initialUrl);
         }
 
         hideModal();
@@ -182,7 +174,18 @@ export const App = () => {
         isConnected ? hideModal('no-internet') : showModal('no-internet');
       };
 
+      const linkingSubscription = ({url}: {url: string}) => {
+        if (url.startsWith('haqq:')) {
+          app.emit(Events.onDeepLink, url);
+        }
+      };
+
       NetInfo.fetch().then(subscription);
+
+      const unsubscribeLinking = Linking.addListener(
+        'url',
+        linkingSubscription,
+      );
       const unsubscribeNet = NetInfo.addEventListener(subscription);
       const unsubscribeApp = AppState.addEventListener('change', () => {
         if (AppState.currentState === 'active') {
@@ -193,6 +196,7 @@ export const App = () => {
       return () => {
         unsubscribeNet();
         unsubscribeApp.remove();
+        unsubscribeLinking.remove();
       };
     }
   }, [initialized]);
@@ -395,7 +399,6 @@ export const App = () => {
               </Stack.Navigator>
             </NavigationContainer>
             <Modals initialModal={{type: 'splash'}} />
-            <Notifications />
           </WalletsContext.Provider>
         </TransactionsContext.Provider>
       </AppContext.Provider>

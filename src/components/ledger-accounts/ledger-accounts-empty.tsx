@@ -2,19 +2,26 @@ import React from 'react';
 
 import {ActivityIndicator, StyleSheet} from 'react-native';
 
-import {LIGHT_TEXT_BASE_2} from '../../variables';
-import {PopupContainer, Text} from '../ui';
+import {Color} from '@app/colors';
+import {PopupContainer, Text} from '@app/components/ui';
+import {I18N} from '@app/i18n';
 
 export const LedgerAccountsEmpty = () => {
   return (
     <PopupContainer style={styles.emptyContainer}>
       <ActivityIndicator style={styles.emptyActivity} />
-      <Text t9 style={styles.emptyTitle}>
-        Waiting for confirmation of pairing
-      </Text>
-      <Text t14 style={styles.emptyDescription}>
-        Confirm pairing on your Ledger
-      </Text>
+      <Text
+        t9
+        center
+        i18n={I18N.ledgerAccountsWaiting}
+        style={styles.emptyTitle}
+      />
+      <Text
+        t14
+        color={Color.textBase2}
+        center
+        i18n={I18N.ledgerAccountsConfirm}
+      />
     </PopupContainer>
   );
 };
@@ -29,10 +36,5 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     marginBottom: 8,
-    textAlign: 'center',
-  },
-  emptyDescription: {
-    color: LIGHT_TEXT_BASE_2,
-    textAlign: 'center',
   },
 });

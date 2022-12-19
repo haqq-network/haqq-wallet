@@ -1,46 +1,76 @@
 import React from 'react';
 
-import {StyleSheet, View, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Text} from '@app/components/ui/text';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-
-import {Text} from './text';
 
 export type DataContentProps = {
   title?: React.ReactNode;
-  subtitle?: string;
+  subtitle?: string | React.ReactNode;
   style?: ViewStyle;
   reversed?: boolean;
+  short?: boolean;
+  numberOfLines?: number;
   titleI18n?: I18N;
   subtitleI18n?: I18N;
+  subtitleI18nParams?: Record<string, string>;
+  titleI18nParams?: Record<string, string>;
+  onPress?: () => void;
 };
 export const DataContent = ({
   title,
+  short,
   subtitle,
   style,
   reversed,
+  onPress,
   titleI18n,
   subtitleI18n,
+  subtitleI18nParams,
+  titleI18nParams,
+  numberOfLines = 1,
 }: DataContentProps) => {
   return (
-    <View style={[reversed && page.reverse, style]}>
+    <View
+      style={[
+        styles.container,
+        reversed && styles.reverse,
+        short && styles.short,
+        style,
+      ]}>
       <Text
         t11
-        style={page.title}
+        style={styles.title}
         color={Color.textBase1}
         ellipsizeMode="tail"
         i18n={titleI18n}
-        numberOfLines={1}>
+        i18params={titleI18nParams}
+        numberOfLines={numberOfLines}
+        onPress={onPress}>
         {title}
       </Text>
-      <Text t14 i18n={subtitleI18n} color={Color.textBase2}>
-        {subtitle}
-      </Text>
+      {(subtitleI18n || subtitle) && (
+        <Text
+          t14
+          i18n={subtitleI18n}
+          i18params={subtitleI18nParams}
+          color={Color.textBase2}>
+          {subtitle}
+        </Text>
+      )}
     </View>
   );
 };
-const page = StyleSheet.create({
+const styles = createTheme({
+  container: {
+    paddingVertical: 16,
+  },
+  short: {
+    paddingVertical: 8,
+  },
   title: {
     marginBottom: 2,
     alignItems: 'center',

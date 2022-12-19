@@ -1,7 +1,8 @@
 import React, {memo, useState} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -9,10 +10,9 @@ import {
   IconButton,
   Input,
   KeyboardSafeArea,
-} from './ui';
-
-import {I18N, getText} from '../i18n';
-import {LIGHT_BG_7, LIGHT_GRAPHIC_BASE_2} from '../variables';
+} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 interface SettingsAddressBookEditProps {
   initName?: string;
@@ -50,45 +50,45 @@ export const SettingsAddressBookEdit = memo(
     const handleRemove = () => onRemove?.();
 
     return (
-      <KeyboardSafeArea style={page.container}>
+      <KeyboardSafeArea style={styles.container}>
         <Input
           onChangeText={onChange}
-          label={getText(I18N.name)}
+          i18nLabel={I18N.name}
           editable={isEdit}
           value={inputName}
           rightAction={
             inputName &&
             isEdit && (
               <IconButton onPress={cleanTextFile}>
-                <Icon s name="close_circle" color={LIGHT_GRAPHIC_BASE_2} />
+                <Icon i24 name="close_circle" color={Color.graphicBase2} />
               </IconButton>
             )
           }
         />
-        <View style={page.spaceInput} />
+        <View style={styles.spaceInput} />
         <Input
           multiline
-          label={getText(I18N.address)}
+          i18nLabel={I18N.address}
           editable={false}
           value={initAddress}
         />
         {buttonType === 'save' ? (
-          <View style={page.buttonContainer}>
+          <View style={styles.buttonContainer}>
             <Button
               disabled={initName === inputName}
-              title={getText(I18N.continue)}
+              i18n={I18N.continue}
               onPress={handleSubmit}
               variant={ButtonVariant.contained}
             />
           </View>
         ) : (
-          <View style={page.buttonContainerRemove}>
+          <View style={styles.buttonContainerRemove}>
             {isEdit && !isCreate && (
               <Button
                 variant={ButtonVariant.error}
-                style={page.errorButton}
+                style={styles.errorButton}
                 onPress={handleRemove}
-                title={getText(I18N.settingsContactEditDeleteContact)}
+                i18n={I18N.settingsContactEditDeleteContact}
               />
             )}
           </View>
@@ -98,7 +98,7 @@ export const SettingsAddressBookEdit = memo(
   },
 );
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
     marginHorizontal: 20,
@@ -115,7 +115,7 @@ const page = StyleSheet.create({
     marginTop: 24,
   },
   errorButton: {
-    backgroundColor: LIGHT_BG_7,
+    backgroundColor: Color.bg7,
     borderRadius: 12,
   },
 });

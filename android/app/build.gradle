@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 apply plugin: 'kotlinx-serialization'
@@ -143,7 +144,7 @@ android {
     applicationId "com.haqq.wallet"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 37
+    versionCode 41
     versionName "0.0.1"
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
@@ -272,11 +273,12 @@ android {
 
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
-
+  implementation 'com.android.support:appcompat-v7:23.2.0'
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+  implementation 'com.google.firebase:firebase-analytics'
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
   implementation 'fr.acinq.secp256k1:secp256k1-kmp-jvm:0.7.0'
   implementation 'fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.7.0'

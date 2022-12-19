@@ -1,4 +1,5 @@
-import {Platform} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
+import {Easing} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
@@ -103,7 +104,8 @@ export const SYSTEM_BLUR_3 = 'rgba(255, 255, 255, 0.3)';
 export const DEFAULT_CARD_BACKGROUND = '#03BF77';
 export const DEFAULT_CARD_PATTERN = '#0DAC6F';
 
-export const SHADOW_COLOR = 'rgba(25, 26, 28, 0.08)';
+export const SHADOW_COLOR_1 = 'rgba(25, 26, 28, 0.06)';
+export const SHADOW_COLOR_2 = 'rgba(25, 26, 28, 0.5)';
 
 export const PLACEHOLDER_GRAY = '#AAAAAA';
 export const HR_GRAY = '#EEEEEE';
@@ -191,3 +193,9 @@ export const PRIVACY_POLICY = 'https://boredgen.net/privacy_policy';
 
 export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
+export const WINDOW_WIDTH = Dimensions.get('window').width;
+export const WINDOW_HEIGHT = Dimensions.get('window').height;
+export const WINDOW_RATIO = WINDOW_WIDTH / 541;
+
+export const ANIMATION_DURATION = 300;
+export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);

@@ -1,20 +1,20 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Animated, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
+import {CarouselItem} from '@app/components/carousel-item';
+import {Icon, Text} from '@app/components/ui';
+import {WalletCard} from '@app/components/wallet-card';
+import {WalletCreate} from '@app/components/wallet-create';
+import {createTheme} from '@app/helpers';
 import {useWallets} from '@app/hooks';
-
-import {CarouselItem} from './carousel-item';
-import {Icon, Text} from './ui';
-import {WalletCard} from './wallet-card';
-import {WalletCreate} from './wallet-create';
-
-import {LIGHT_GRAPHIC_BASE_1, LIGHT_TEXT_BASE_1} from '../variables';
+import {I18N} from '@app/i18n';
 
 export const Wallets = () => {
   const wallets = useWallets();
   const [visibleRows, setVisibleRows] = useState(wallets.visible);
+  const screenWidth = useWindowDimensions().width;
 
   const pan = useRef(new Animated.Value(0)).current;
 
@@ -31,7 +31,7 @@ export const Wallets = () => {
   }, [updateWallets, wallets]);
 
   return (
-    <View style={page.container}>
+    <View style={styles.container}>
       <ScrollView
         pagingEnabled
         horizontal
@@ -39,12 +39,10 @@ export const Wallets = () => {
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={({nativeEvent}) => {
-          pan.setValue(
-            nativeEvent.contentOffset.x / Dimensions.get('window').width,
-          );
+          pan.setValue(nativeEvent.contentOffset.x / screenWidth);
         }}
-        style={page.scroll}
-        contentContainerStyle={page.scrollInner}>
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollInner}>
         {visibleRows.map((w, i) => (
           <CarouselItem index={i} pan={pan} key={w.address}>
             <WalletCard address={w.address} />
@@ -54,12 +52,12 @@ export const Wallets = () => {
           <WalletCreate />
         </CarouselItem>
       </ScrollView>
-      <View style={page.sub}>
+      <View style={styles.sub}>
         {visibleRows.map((w, i) => (
           <Animated.View
             key={w.address}
             style={[
-              page.animateViewList,
+              styles.animateViewList,
               {
                 opacity: pan.interpolate({
                   inputRange: [i - 1, i, i + 1],
@@ -72,7 +70,7 @@ export const Wallets = () => {
         ))}
         <Animated.View
           style={[
-            page.animateView,
+            styles.animateView,
             {
               opacity: pan.interpolate({
                 inputRange: [wallets.getSize() - 1, wallets.getSize()],
@@ -84,14 +82,12 @@ export const Wallets = () => {
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
-      <Text t6 style={page.t6}>
-        Transactions
-      </Text>
+      <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingTop: 24,
   },
@@ -109,7 +105,7 @@ const page = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     margin: 3,
-    backgroundColor: LIGHT_GRAPHIC_BASE_1,
+    backgroundColor: Color.graphicBase1,
   },
   animateView: {
     width: 12,
@@ -119,7 +115,6 @@ const page = StyleSheet.create({
     marginVertical: 12,
     textAlign: 'left',
     paddingHorizontal: 20,
-    fontWeight: '600',
-    color: LIGHT_TEXT_BASE_1,
+    color: Color.textBase1,
   },
 });

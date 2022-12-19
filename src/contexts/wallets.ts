@@ -6,7 +6,6 @@ import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
 import {app} from '@app/contexts';
-import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
 import {Wallet, WalletRealm} from '@app/models/wallet';
 import {
@@ -144,25 +143,19 @@ class Wallets extends EventEmitter {
   }
 
   async addWallet(walletParams: AddWalletParams, name = '') {
-    try {
-      const wallet = await Wallet.create(walletParams, name);
+    const wallet = await Wallet.create(walletParams, name);
 
-      this.attachWallet(wallet);
+    this.attachWallet(wallet);
 
-      requestAnimationFrame(() => {
-        app.emit('addWallet', wallet.address);
-      });
+    requestAnimationFrame(() => {
+      app.emit('addWallet', wallet.address);
+    });
 
-      return wallet;
-    } catch (e) {
-      captureException(e, 'createWallet');
-    }
-
-    return null;
+    return wallet;
   }
 
   async removeWallet(address: string) {
-    const wallet = this._wallets.get(address);
+    const wallet = this._wallets.get(address.toLowerCase());
 
     if (wallet) {
       if (wallet.isMain) {
@@ -178,7 +171,7 @@ class Wallets extends EventEmitter {
 
       const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
         WalletRealm.schema.name,
-        address,
+        address.toLowerCase(),
       );
 
       this.deAttachWallet(wallet);
@@ -245,7 +238,7 @@ class Wallets extends EventEmitter {
   getForRootAddress(rootAddress: string) {
     const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
     return wallets
-      .filtered(`rootAddress = '${rootAddress}'`)
+      .filtered(`rootAddress = '${rootAddress.toLowerCase()}'`)
       .map(w => new Wallet(w));
   }
 

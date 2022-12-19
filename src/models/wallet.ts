@@ -43,6 +43,7 @@ export class WalletRealm extends Realm.Object {
   path: string | undefined;
   rootAddress: string | undefined;
   publicKey: string | undefined;
+  subscription: string | null;
 
   static schema = {
     name: 'Wallet',
@@ -64,6 +65,7 @@ export class WalletRealm extends Realm.Object {
       deviceName: 'string?',
       rootAddress: 'string?',
       publicKey: 'string?',
+      subscription: 'string?',
     },
     primaryKey: 'address',
   };
@@ -90,6 +92,10 @@ export class Wallet extends EventEmitter {
   };
 
   _cosmosAddress: string = '';
+
+  static getAll() {
+    return realm.objects<WalletRealm>(WalletRealm.schema.name);
+  }
 
   static async create(walletParams: AddWalletParams, name = '') {
     const exist = realm.objectForPrimaryKey<Wallet>(
@@ -173,7 +179,7 @@ export class Wallet extends EventEmitter {
       result = realm.create<WalletRealm>(WalletRealm.schema.name, {
         ...Wallet.defaultData,
         data,
-        address: walletParams.address,
+        address: walletParams.address.toLowerCase(),
         mnemonicSaved,
         name: name ?? Wallet.defaultData.name,
         pattern,
@@ -185,7 +191,7 @@ export class Wallet extends EventEmitter {
         deviceId,
         deviceName,
         path,
-        rootAddress,
+        rootAddress: rootAddress?.toLowerCase(),
         publicKey: walletParams.publicKey,
       });
     });
@@ -194,7 +200,11 @@ export class Wallet extends EventEmitter {
       throw new Error('wallet_error');
     }
 
-    return new Wallet(result);
+    let wallet = new Wallet(result);
+
+    app.emit('wallet:create', wallet);
+
+    return wallet;
   }
 
   private _raw: WalletRealm;
@@ -266,6 +276,16 @@ export class Wallet extends EventEmitter {
     realm.write(() => {
       this._raw.mnemonicSaved = value;
     });
+  }
+
+  set subscription(subscription) {
+    realm.write(() => {
+      this._raw.subscription = subscription;
+    });
+  }
+
+  get subscription() {
+    return this._raw.subscription;
   }
 
   get isHidden() {
@@ -357,6 +377,7 @@ export class Wallet extends EventEmitter {
   set balance(value: number) {
     this._balance = value;
     this.emit('balance', {balance: this.balance});
+    app.emit('balance', this.address);
   }
 
   get balance() {

@@ -7,13 +7,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {BleManager, State} from 'react-native-ble-plx';
+import {BleManager, Subscription as BleSub, State} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
-import {windowHeight, windowWidth} from '../../helpers';
-import {I18N, getText} from '../../i18n';
-import {User} from '../../models/user';
-import {LIGHT_TEXT_BASE_2} from '../../variables';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -21,7 +18,10 @@ import {
   PopupContainer,
   Spacer,
   Text,
-} from '../ui';
+} from '@app/components/ui';
+import {I18N} from '@app/i18n';
+import {User} from '@app/models/user';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
 
 export type LedgerBluetooth = {
   user: User;
@@ -48,7 +48,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
         ]);
       }
       const manager = new BleManager();
-      let sub = null;
+      let sub: BleSub;
       let previousState = State.Unknown;
       subscription.current = new Observable<State>(observer => {
         manager.state().then(state => {
@@ -108,26 +108,33 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
           />
         )}
       </View>
-      <Text t4 style={page.title}>
-        {getText(
+      <Text
+        t4
+        center
+        i18n={
           disabled.includes(btState)
             ? I18N.ledgerBluetoothTitleDisabled
-            : I18N.ledgerBluetoothTitleUnknown,
-        )}
-      </Text>
-      <Text t11 style={page.disclaimer}>
-        {getText(
+            : I18N.ledgerBluetoothTitleUnknown
+        }
+        style={page.title}
+      />
+      <Text
+        t11
+        center
+        color={Color.textBase2}
+        i18n={
           disabled.includes(btState)
             ? I18N.ledgerBluetoothDescriptionDisabled
-            : I18N.ledgerBluetoothDescriptionUnknown,
-        )}
-      </Text>
+            : I18N.ledgerBluetoothDescriptionUnknown
+        }
+        style={page.disclaimer}
+      />
       <Spacer />
       <Button
         disabled={disabled.includes(btState)}
         style={page.submit}
         variant={ButtonVariant.contained}
-        title={getText(I18N.ledgerBluetoothAllow)}
+        i18n={I18N.ledgerBluetoothAllow}
         onPress={onPressAllow}
       />
     </PopupContainer>
@@ -139,19 +146,16 @@ const page = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animation: {
-    width: windowWidth,
-    height: Math.min(windowWidth * 0.8, windowHeight * 0.355),
+    width: WINDOW_WIDTH,
+    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
     marginBottom: 4,
     marginHorizontal: 20,
-    textAlign: 'center',
   },
   disclaimer: {
-    textAlign: 'center',
-    color: LIGHT_TEXT_BASE_2,
     marginHorizontal: 20,
   },
   submit: {
@@ -159,8 +163,8 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   imageStyle: {
-    width: windowWidth,
-    height: Math.min(windowWidth * 0.8, windowHeight * 0.355) - 20,
+    width: WINDOW_WIDTH,
+    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355) - 20,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',

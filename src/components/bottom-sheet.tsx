@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {
-  Dimensions,
   Animated as RNAnimated,
   StatusBar,
   StyleSheet,
@@ -15,7 +14,6 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
-  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -25,13 +23,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
+import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-
-import {Icon, IconButton, Spacer, SwiperIcon, Text} from './ui';
-
-import {useAndroidStatusBarAnimation} from '../hooks';
-import {LIGHT_BG_1, LIGHT_GRAPHIC_SECOND_2} from '../variables';
+import {useAndroidStatusBarAnimation} from '@app/hooks';
+import {ANIMATION_DURATION, ANIMATION_TYPE, WINDOW_WIDTH} from '@app/variables';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -52,9 +48,9 @@ export const BottomSheet = ({
   closeDistance,
 }: BottomSheetProps) => {
   const {height} = useWindowDimensions();
-  const {bottom: bottomInsets} = useSafeAreaInsets();
+  const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
 
-  const bottomSheetHeight = height * 0.75;
+  const bottomSheetHeight = height - (topInsets + 12);
   const snapPointFromTop: pointsT = [0, bottomSheetHeight];
 
   const fullyOpenSnapPoint = snapPointFromTop[0];
@@ -101,7 +97,7 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       destSnapPoint,
       {
-        duration: 250,
+        duration: ANIMATION_DURATION,
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
@@ -154,8 +150,8 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       closedSnapPoint,
       {
-        duration: 250,
-        easing: Easing.out(Easing.exp),
+        duration: ANIMATION_DURATION,
+        easing: ANIMATION_TYPE,
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -164,8 +160,8 @@ export const BottomSheet = ({
   const onOpenPopup = useCallback(() => {
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-      duration: 250,
-      easing: Easing.in(Easing.exp),
+      duration: ANIMATION_DURATION,
+      easing: ANIMATION_TYPE,
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
@@ -177,7 +173,7 @@ export const BottomSheet = ({
     const opacity = interpolate(
       clampedTranslateY.value,
       snapPointFromTop,
-      [0.5, 0],
+      [1, 0],
     );
     return {
       opacity,
@@ -208,7 +204,7 @@ export const BottomSheet = ({
         <GestureDetector gesture={headerGesture}>
           <Animated.View>
             <View style={page.swipe}>
-              <SwiperIcon color={LIGHT_GRAPHIC_SECOND_2} />
+              <SwiperIcon color={getColor(Color.graphicSecond2)} />
             </View>
             <View style={page.header}>
               <Text t6 color={Color.textBase1}>
@@ -257,8 +253,8 @@ const page = createTheme({
     marginBottom: 2,
   },
   content: {
-    width: Dimensions.get('window').width,
-    backgroundColor: LIGHT_BG_1,
+    width: WINDOW_WIDTH,
+    backgroundColor: Color.bg1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 20,

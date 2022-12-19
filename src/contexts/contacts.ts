@@ -6,32 +6,22 @@ import {realm} from '../models';
 import {Contact} from '../models/contact';
 
 class Contacts extends EventEmitter {
-  async init(): Promise<void> {}
+  private _contacts: Realm.Results<Contact>;
 
-  getContacts() {
-    return realm.objects<Contact>('Contact');
-  }
+  constructor() {
+    super();
 
-  createContact(address: string, name: string) {
-    realm.write(() => {
-      realm.create('Contact', {
-        account: address,
-        name: name,
-      });
+    this._contacts = realm.objects<Contact>('Contact');
 
+    this._contacts.addListener(() => {
       this.emit('contacts');
     });
   }
 
-  updateContact(address: string, name: string) {
-    const contact = this.getContact(address);
-    if (contact) {
-      realm.write(() => {
-        contact.name = name;
-      });
+  async init(): Promise<void> {}
 
-      this.emit('contacts');
-    }
+  getContacts() {
+    return realm.objects<Contact>('Contact');
   }
 
   removeContact(address: string) {

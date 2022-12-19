@@ -5,14 +5,13 @@ import {FlatList} from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
 import {Observable, Subscription} from 'rxjs';
 
+import {PopupContainer} from '@app/components/ui';
 import {captureException} from '@app/helpers';
 import {useApp} from '@app/hooks';
 
 import {LedgerScanEmpty} from './ledger-scan-empty';
 import {LedgerScanHeader} from './ledger-scan-header';
 import {LedgerScanRow} from './ledger-scan-row';
-
-import {PopupContainer} from '../ui';
 
 export type LedgerScanProps = {
   onSelect: (device: Device) => void;
@@ -51,7 +50,7 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
       if (transport.current) {
         transport.current?.unsubscribe();
       }
-      console.log('listen');
+
       transport.current = new Observable(TransportBLE.listen).subscribe({
         complete: () => {
           subscription({refreshing: false});
@@ -62,7 +61,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
           }
         },
         error: e => {
-          console.log('error', e);
           subscription({refreshing: false, error: e});
         },
       });
@@ -82,7 +80,6 @@ export const LedgerScan = ({onSelect}: LedgerScanProps) => {
       TransportBLE.observeState,
     ).subscribe(e => {
       if (e.available !== previousAvailable) {
-        console.log(e);
         previousAvailable = e.available;
         if (e.available) {
           listen();

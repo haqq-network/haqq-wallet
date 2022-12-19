@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {IS_DEVELOPMENT} from '@env';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -11,7 +10,9 @@ import {Color} from '@app/colors';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
+import {useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {HomeGovernanceScreen} from '@app/screens/home-governance';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {RootStackParamList} from '@app/types';
@@ -32,6 +33,8 @@ const screenOptions = ({
   headerStyle: {
     backgroundColor: Color.transparent,
   },
+  headerTitleAlign: 'center',
+  headerStatusBarHeight: IS_IOS ? undefined : 0,
   tabBarStyle: {
     backgroundColor: Color.transparent,
     borderTopWidth: 0,
@@ -50,42 +53,54 @@ const screenOptions = ({
   ),
 });
 
+const feedOptions = {
+  title: getText(I18N.homeWallet),
+  headerRight: QrScannerButton,
+};
+
+const stakingOptions = {
+  title: getText(I18N.homeStaking),
+  unmountOnBlur: true,
+};
+
+const governanceOptions = {
+  headerShown: false,
+  title: getText(I18N.homeGovernance),
+};
+
+const settingsOptions = {
+  title: getText(I18N.homeSettings),
+};
+
 export const HomeScreen = () => {
+  const user = useUser();
+  const provider = Provider.getProvider(user.providerId);
+
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator mode="modal" headerMode="none" screenOptions={screenOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedScreen}
-        options={{
-          title: getText(I18N.homeWallet),
-          headerRight: QrScannerButton,
-        }}
+        options={feedOptions}
       />
-      {IS_DEVELOPMENT === '1' && (
+      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeStaking"
           component={HomeStakingScreen}
-          options={{
-            title: getText(I18N.homeStaking),
-          }}
+          options={stakingOptions}
         />
       )}
-      {IS_DEVELOPMENT === '1' && (
+      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeGovernance"
           component={HomeGovernanceScreen}
-          options={{
-            headerShown: false,
-            title: getText(I18N.homeGovernance),
-          }}
+          options={governanceOptions}
         />
       )}
       <Tab.Screen
         name="homeSettings"
         component={HomeSettingsScreen}
-        options={{
-          title: getText(I18N.homeSettings),
-        }}
+        options={settingsOptions}
       />
     </Tab.Navigator>
   );

@@ -8,13 +8,13 @@ import {
   InfoBlock,
   InfoBlockType,
   KeyboardSafeArea,
+  NetworkFee,
   Spacer,
-  Text,
 } from '@app/components/ui';
 import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {WEI} from '@app/variables';
 
 export type StakingDelegateFormProps = {
@@ -28,7 +28,7 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(0, balance - fee / WEI);
+  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001));
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
@@ -49,10 +49,7 @@ export const StakingUnDelegateForm = ({
           onMax={onPressMax}
         />
       </Spacer>
-      <Text t14 center color={Color.textBase2}>
-        {getText(I18N.stakingUnDelegateFormNetworkFee)}:{' '}
-        {(fee / WEI).toFixed(15)} ISLM
-      </Text>
+      <NetworkFee fee={fee} />
       <Spacer height={16} />
       <InfoBlock
         type={InfoBlockType.warning}

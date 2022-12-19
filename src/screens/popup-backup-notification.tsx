@@ -1,7 +1,9 @@
 import React, {useCallback} from 'react';
 
-import {BottomPopupContainer} from '@app/components/bottom-popups';
-import {BackupNotification} from '@app/components/bottom-popups';
+import {
+  BackupNotification,
+  BottomPopupContainer,
+} from '@app/components/bottom-popups';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const BackupNotificationScreen = () => {

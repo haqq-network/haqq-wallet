@@ -1,19 +1,16 @@
-import React from 'react';
-
-import {RouteProp, useRoute} from '@react-navigation/native';
+import React, {useMemo} from 'react';
 
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
-import {useContacts, useTypedNavigation} from '@app/hooks';
-import {RootStackParamList} from '@app/types';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 
 export const TransactionContactEditScreen = () => {
-  const {name, address} =
-    useRoute<RouteProp<RootStackParamList, 'transactionContactEdit'>>().params;
-  const contacts = useContacts();
+  const {name, address} = useTypedRoute<'transactionContactEdit'>().params;
+  const contact = useMemo(() => Contact.getById(address), [address]);
   const {goBack} = useTypedNavigation();
 
   const onSubmit = (newName: string) => {
-    contacts.updateContact(address, newName);
+    contact?.update({name: newName});
     goBack();
   };
 
