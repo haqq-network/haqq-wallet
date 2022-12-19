@@ -31,15 +31,13 @@ export const HomeGovernanceScreen = () => {
 
   return (
     <HomeGovernance
-      {...{
-        onSelect,
-        proposals,
-        statusFilter,
-        onRefresh,
-        refreshing,
-        loading,
-        onPressCard,
-      }}
+      onSelect={onSelect}
+      proposals={proposals}
+      statusFilter={statusFilter}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+      loading={loading}
+      onPressCard={onPressCard}
     />
   );
 };
