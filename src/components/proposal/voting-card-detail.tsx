@@ -18,7 +18,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
-import {VOTES} from '@app/variables';
+import {VOTES} from '@app/variables/votes';
 
 export type VotingCardDetailRefInterface =
   | ({

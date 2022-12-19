@@ -22,8 +22,9 @@ import {
   GovernanceVoting,
   ProposalRealmType,
 } from '@app/models/governance-voting';
-import {ProposalsTags, VoteNamesType} from '@app/types';
-import {VOTES} from '@app/variables';
+import {VoteNamesType} from '@app/types';
+import {ProposalsTags} from '@app/variables/proposal';
+import {VOTES} from '@app/variables/votes';
 
 import {
   VotingCardDetail,

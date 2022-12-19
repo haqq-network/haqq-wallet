@@ -14,7 +14,7 @@ import {WalletRow} from '@app/components/wallet-row';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {QR_STATUS_BAR} from '@app/variables';
+import {QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';

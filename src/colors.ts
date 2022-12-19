@@ -62,7 +62,7 @@ import {
   LIGHT_TEXT_SECOND_2,
   LIGHT_TEXT_YELLOW_1,
   TRANSPARENT,
-} from '@app/variables';
+} from '@app/variables/common';
 
 export enum Color {
   transparent = 'transparent',

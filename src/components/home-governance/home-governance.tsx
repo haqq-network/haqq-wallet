@@ -6,12 +6,8 @@ import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  ProposalsCroppedList,
-  ProposalsTagKeys,
-  ProposalsTagType,
-  ProposalsTags,
-} from '@app/types';
+import {ProposalsCroppedList, ProposalsTagKeys} from '@app/types';
+import {ProposalsTagType, ProposalsTags} from '@app/variables/proposal';
 
 import {VotingCard} from './voting-card';
 

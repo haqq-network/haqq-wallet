@@ -17,7 +17,7 @@ import {
   LIGHT_GRAPHIC_SECOND_2,
   LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
-} from '@app/variables';
+} from '@app/variables/common';
 
 import {NumericKeyboard} from './pin/numeric-keyboard';
 import {ErrorText, Spacer, Text} from './ui';

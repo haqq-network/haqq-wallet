@@ -17,7 +17,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
 import {I18N} from '@app/i18n';
-import {LIGHT_TEXT_BLUE_1} from '@app/variables';
+import {LIGHT_TEXT_BLUE_1} from '@app/variables/common';
 
 import {ActionsSheetProps} from '.';
 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {HomeGovernance} from '@app/components/home-governance';
 import {useCosmos, useProposals, useTypedNavigation} from '@app/hooks';
-import {ProposalsTagType} from '@app/types';
+import {ProposalsTagType} from '@app/variables/proposal';
 
 export const HomeGovernanceScreen = () => {
   const {navigate} = useTypedNavigation();

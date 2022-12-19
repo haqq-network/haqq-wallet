@@ -47,7 +47,7 @@ import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
 } from '@app/types/cosmos';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type GetValidatorResponse = {
   validator: Validator;

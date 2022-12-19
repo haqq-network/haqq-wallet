@@ -23,7 +23,11 @@ import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
 import {generateUUID} from '../utils';
-import {LIGHT_GRAPHIC_GREEN_1, MAIN_NETWORK, TEST_NETWORK} from '../variables';
+import {
+  LIGHT_GRAPHIC_GREEN_1,
+  MAIN_NETWORK,
+  TEST_NETWORK,
+} from '../variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android

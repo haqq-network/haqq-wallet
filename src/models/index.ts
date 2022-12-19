@@ -9,7 +9,7 @@ import {UserSchema} from './user';
 import {WalletRealm} from './wallet';
 
 import {AppTheme, WalletType} from '../types';
-import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
+import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables/common';
 
 export const realm = new Realm({
   schema: [

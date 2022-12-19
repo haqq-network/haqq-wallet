@@ -15,7 +15,7 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   balance: number;

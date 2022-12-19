@@ -15,7 +15,7 @@ import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {getText} from '@app/i18n';
 import {VoteNamesType, VotesType} from '@app/types';
-import {VOTES} from '@app/variables';
+import {VOTES} from '@app/variables/votes';
 
 export type VotingLineProps = {
   initialVotes: VotesType;

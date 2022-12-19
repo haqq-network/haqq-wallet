@@ -1,9 +1,7 @@
 import {Dimensions, Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
-import {I18N} from '@app/i18n';
-import {BiometryType, VoteNamesType} from '@app/types';
+import {BiometryType} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -174,13 +172,6 @@ export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
   [BiometryType.fingerprint]: 'Fingerprint',
   [BiometryType.unknown]: '',
 };
-
-export const VOTES: {name: VoteNamesType; color: Color; i18n: I18N}[] = [
-  {name: 'yes', color: Color.graphicGreen1, i18n: I18N.yes},
-  {name: 'no', color: Color.textRed1, i18n: I18N.no},
-  {name: 'abstain', color: Color.graphicSecond4, i18n: I18N.voteAbstain},
-  {name: 'veto', color: Color.textYellow1, i18n: I18N.voteVeto},
-];
 
 export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path

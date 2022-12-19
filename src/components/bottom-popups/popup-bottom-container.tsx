@@ -20,7 +20,7 @@ import Animated, {
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
-import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables';
+import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 const timingOutAnimationConfig: WithTimingConfig = {
   duration: ANIMATION_DURATION,
@@ -89,10 +89,10 @@ export const BottomPopupContainer = ({
       <Animated.View
         style={[styles.fullFill, bgAnimation, !transparent && styles.bgColor]}
       />
-      <Pressable style={styles.fullFill} onPress={handlePressOut} />
       <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View style={[styles.fullFill, bgAnimation]} />
       <Animated.View style={[styles.animateViewFade, slideFromBottomAnimation]}>
+        <Pressable style={styles.fullFill} onPress={handlePressOut} />
         {children(fadeOut)}
       </Animated.View>
     </View>

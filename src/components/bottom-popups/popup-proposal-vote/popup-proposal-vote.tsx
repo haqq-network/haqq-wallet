@@ -13,7 +13,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {VoteNamesType} from '@app/types';
-import {VOTES} from '@app/variables';
+import {VOTES} from '@app/variables/votes';
 
 export type PopupProposalVoteProps = {
   onSubmitVote: (vote: VoteNamesType) => void;

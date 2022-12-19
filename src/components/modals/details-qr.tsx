@@ -22,7 +22,7 @@ import {useWallet} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {GRADIENT_END, GRADIENT_START} from '@app/variables';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface DetailsQrModalProps {
   address: string;

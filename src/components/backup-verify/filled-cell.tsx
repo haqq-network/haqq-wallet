@@ -5,7 +5,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type FilledCellProps = {
   word: string;

@@ -1,7 +1,7 @@
 import createHash from 'create-hash';
 
 import {realm} from '@app/models/index';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export enum StakingMetadataType {
   delegation = 'delegation',
