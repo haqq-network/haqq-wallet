@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {Proposal} from '@app/components/proposal';
 import {app} from '@app/contexts';
-import {useTypedRoute} from '@app/hooks';
+import {useCosmos, useTypedRoute} from '@app/hooks';
 import {
   GovernanceVoting,
   ProposalRealmType,
@@ -10,13 +10,14 @@ import {
 
 export const ProposalScreen = () => {
   const {id} = useTypedRoute<'proposal'>().params;
+  const cosmos = useCosmos();
 
   const item = useMemo(() => {
     return GovernanceVoting.getById(id) as ProposalRealmType;
   }, [id]);
 
   const onDepositSubmit = async (address: string) => {
-    await item?.sendDeposit(address, 0.00000005);
+    cosmos.deposit(address, item.orderNumber, 0.00000005);
     app.removeListener('wallet-selected-proposal-deposit', onDepositSubmit);
   };
 

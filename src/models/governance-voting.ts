@@ -5,11 +5,8 @@ import {
   getSeconds,
 } from 'date-fns';
 
-import {app} from '@app/contexts';
-import {captureException} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
-import {Cosmos} from '@app/services/cosmos';
 import {DepositResponse, VotesType} from '@app/types';
 
 export const GovernanceVotingState = {
@@ -170,21 +167,6 @@ export class GovernanceVoting extends Realm.Object {
     }
   }
 
-  async sendDeposit(address: string, amount: number) {
-    const cosmos = new Cosmos(app.provider!);
-    cosmos.deposit(address, this.orderNumber, amount);
-  }
-
-  async getVoter(address: string) {
-    try {
-      const cosmos = new Cosmos(app.provider!);
-      const details = await cosmos.getProposalVoter(this.orderNumber, address);
-      return details;
-    } catch (error) {
-      captureException(error);
-    }
-  }
-
   static depositSum(response?: DepositResponse) {
     if (!response) {
       return 0;
@@ -195,34 +177,19 @@ export class GovernanceVoting extends Realm.Object {
     );
   }
 
-  async getDeposits() {
-    try {
-      const cosmos = new Cosmos(app.provider!);
-      const details = await cosmos.getProposalDeposits(this.orderNumber);
-      return details;
-    } catch (error) {
-      captureException(error);
-    }
-  }
-
-  async getDepositor(address: string) {
-    try {
-      const cosmos = new Cosmos(app.provider!);
-      const details = await cosmos.getProposalDepositor(
-        this.orderNumber,
-        address,
-      );
-      return details;
-    } catch (error) {
-      captureException(error);
-      return [];
-    }
-  }
-
-  newVote(address: string, vote: number) {
-    const cosmos = new Cosmos(app.provider!);
-    cosmos.vote(address, this.orderNumber, vote);
-  }
+  // async getDepositor(address: string) {
+  //   try {
+  //     const cosmos = new Cosmos(app.provider!);
+  //     const details = await cosmos.getProposalDepositor(
+  //       this.orderNumber,
+  //       address,
+  //     );
+  //     return details;
+  //   } catch (error) {
+  //     captureException(error);
+  //     return [];
+  //   }
+  // }
 
   static getById(id: number) {
     return realm.objectForPrimaryKey<GovernanceVoting>(
@@ -265,12 +232,6 @@ export class GovernanceVoting extends Realm.Object {
     });
 
     return proposal.orderNumber;
-  }
-
-  static async requestDetailFor(id: string) {
-    const cosmos = new Cosmos(app.provider!);
-    const details = await cosmos.getProposalDetails(id);
-    return details;
   }
 
   static getAll() {

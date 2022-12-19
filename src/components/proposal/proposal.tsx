@@ -16,7 +16,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
-import {useApp, useWalletsList} from '@app/hooks';
+import {useApp, useCosmos, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   GovernanceVoting,
@@ -42,6 +42,7 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
   const [vote, setVote] = useState<VoteNamesType>();
   const [collectedDeposit, setCollectedDeposit] = useState(0);
 
+  const cosmos = useCosmos();
   const app = useApp();
   const {visible} = useWalletsList();
   const closeDistance = useWindowDimensions().height / 6;
@@ -63,14 +64,14 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
       const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
 
       if (item) {
-        item.newVote(address, opinion);
+        cosmos.vote(address, item.orderNumber, opinion);
       }
     };
     app.addListener('wallet-selected-proposal', onVotedSubmit);
     return () => {
       app.removeListener('wallet-selected-proposal', onVotedSubmit);
     };
-  }, [app, item]);
+  }, [app, item, cosmos]);
 
   useEffect(() => {
     item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
@@ -109,27 +110,25 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
   }, [app, item, closeDistance, visible]);
 
   useEffect(() => {
-    item?.getDeposits().then(voter => {
+    cosmos.getProposalDeposits(item.orderNumber).then(voter => {
       const sum = GovernanceVoting.depositSum(voter);
       setCollectedDeposit(sum);
     });
-
     // if (item?.orderNumber) {
     //   (async () => {
-    //     const response = await GovernanceVoting.requestDetailFor(
-    //       String(item.orderNumber),
-    //     );
+    //     const details = await cosmos.getProposalDetails(id);
     //     // setDetails({
 
     //     // })
     //     console.log('🚀 - details', JSON.stringify(response.proposal));
     //   })();
     // }
-  }, [item]);
+  }, [item.orderNumber, cosmos]);
 
   if (!item) {
     return <></>;
   }
+
   const {status, orderNumber, title, description, isDeposited} = item;
 
   const badgePropsByStatus = () => {
