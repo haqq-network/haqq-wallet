@@ -93,6 +93,7 @@
     "@types/pbkdf2": "^3.1.0",
     "@types/randombytes": "^2.0.0",
     "@types/react-native": "^0.70.6",
+    "@types/react-native-base64": "^0.2.0",
     "@types/react-test-renderer": "^18.0.0",
     "@types/sha.js": "^2.4.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",

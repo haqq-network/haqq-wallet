@@ -4,7 +4,9 @@ import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {Cosmos} from '@app/services/cosmos';
 import {pushNotifications} from '@app/services/push-notifications';
+import {throttle} from '@app/utils';
 
 export enum Events {
   onWalletCreate = 'onWalletCreate',
@@ -12,6 +14,7 @@ export enum Events {
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
   onPushSubscriptionRemove = 'onPushSubscriptionRemove',
   onDeepLink = 'onDeepLink',
+  onStakingSync = 'onStakingSync',
 }
 
 app.on(Events.onDeepLink, async (link: string) => {
@@ -82,3 +85,16 @@ app.on(Events.onPushSubscriptionAdd, async () => {
     }),
   );
 });
+
+app.on(
+  Events.onStakingSync,
+  throttle(async () => {
+    const wallets = Wallet.getAll();
+
+    const cosmos = new Cosmos(app.provider!);
+    const addressList = wallets
+      .filtered('isHidden != true')
+      .map(w => Cosmos.address(w.address));
+    await cosmos.sync(addressList);
+  }, 1000),
+);

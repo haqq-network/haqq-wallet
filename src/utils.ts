@@ -168,3 +168,42 @@ export function shuffleWords(words: Map<string, string>) {
 export function capitalize(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+export function debounce<T extends Array<any>>(
+  func: (...param: T) => void,
+  wait: number,
+) {
+  let timeout: string | number | NodeJS.Timeout | undefined;
+  return (...args: T) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(null, args), wait);
+  };
+}
+
+export function throttle<T extends Array<any>>(
+  func: (...param: T) => void,
+  delay: number,
+) {
+  let shouldWait = false;
+  let waitingArgs: T | null = null;
+  const timeoutFunc = () => {
+    if (waitingArgs == null) {
+      shouldWait = false;
+    } else {
+      func(...waitingArgs);
+      waitingArgs = null;
+      setTimeout(timeoutFunc, delay);
+    }
+  };
+
+  return (...args: T) => {
+    if (shouldWait) {
+      waitingArgs = args;
+      return;
+    }
+
+    func(...args);
+    shouldWait = true;
+    setTimeout(timeoutFunc, delay);
+  };
+}
