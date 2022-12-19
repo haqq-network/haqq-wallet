@@ -1,7 +1,7 @@
 [
   {
     "id": "75a6778b-0a79-4a06-96c9-daddc8d2c013",
-    "name": "Testedge 2",
+    "name": "TestEdge2",
     "ethRpcEndpoint": "https://rpc.eth.testedge2.haqq.network",
     "ethChainId": 54211,
     "explorer": "https://explorer.testedge2.haqq.network/",
