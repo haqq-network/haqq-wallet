@@ -13,7 +13,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
 
   useEffect(() => {
-    setMaxAmount(initialMaxSum);
+    setMaxAmount(initialMaxSum - 0.0001);
   }, [initialMaxSum]);
 
   const [error, setError] = useState('');
@@ -24,7 +24,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
         validate.single(amount, {
           numericality: {
             notValid: 'Invalid number',
-            greaterThan: 0.0001,
+            greaterThanOrEqualTo: 0.0001,
             lessThanOrEqualTo: maxAmount,
             notGreaterThan: 'Should be greater than 0.0001',
             notLessThanOrEqualTo: "You don't have enough funds",

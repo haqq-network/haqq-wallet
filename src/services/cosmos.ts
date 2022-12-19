@@ -37,12 +37,8 @@ import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
 import {captureException} from '@app/helpers';
-import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
-import {
-  StakingMetadata,
-  StakingMetadataType,
-} from '@app/models/staking-metadata';
+import {StakingMetadata} from '@app/models/staking-metadata';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -379,35 +375,27 @@ export class Cosmos {
   }
 
   sync(addressList: string[]) {
-    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
-    const cache: Record<string, string[]> = {};
-
-    for (const row of rows) {
-      const k = `${row.validator}:${row.type}`;
-      cache[k] = (cache[k] ?? []).concat(row.hash);
-    }
+    const rows = StakingMetadata.getAll().snapshot();
 
     return Promise.all(
-      addressList.reduce<Array<Promise<void>>>((memo, curr) => {
+      addressList.reduce<Promise<string[]>[]>((memo, curr) => {
         return memo.concat([
-          this.syncStakingDelegations(
-            cache[`${curr}:${StakingMetadataType.delegation}`] ?? [],
-            curr,
-          ),
-          this.syncStakingUnDelegations(
-            cache[`${curr}:${StakingMetadataType.undelegation}`] ?? [],
-            curr,
-          ),
-          this.syncStakingRewards(
-            cache[`${curr}:${StakingMetadataType.reward}`] ?? [],
-            curr,
-          ),
+          this.syncStakingDelegations(curr),
+          this.syncStakingUnDelegations(curr),
+          this.syncStakingRewards(curr),
         ]);
       }, []),
-    );
+    ).then(results => {
+      const hashes = new Set(results.flat());
+      for (const e of rows) {
+        if (!hashes.has(e.hash)) {
+          StakingMetadata.remove(e.hash);
+        }
+      }
+    });
   }
 
-  async syncStakingDelegations(exists: string[], address: string) {
+  async syncStakingDelegations(address: string): Promise<string[]> {
     return this.getAccountDelegations(address)
       .then(resp =>
         resp.delegation_responses.map(d =>
@@ -418,15 +406,10 @@ export class Cosmos {
           ),
         ),
       )
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
-          .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 
-  async syncStakingUnDelegations(exists: string[], address: string) {
+  async syncStakingUnDelegations(address: string): Promise<string[]> {
     return this.getAccountUnDelegations(address)
       .then(resp => {
         return resp.unbonding_responses
@@ -442,15 +425,10 @@ export class Cosmos {
           })
           .flat();
       })
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
-          .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 
-  async syncStakingRewards(exists: string[], address: string) {
+  async syncStakingRewards(address: string): Promise<string[]> {
     return this.getAccountRewardsInfo(address)
       .then(resp => {
         return resp.rewards
@@ -465,11 +443,6 @@ export class Cosmos {
           )
           .flat();
       })
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
-          .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 }

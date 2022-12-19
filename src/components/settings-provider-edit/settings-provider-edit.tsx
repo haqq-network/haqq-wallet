@@ -228,6 +228,7 @@ export const SettingsProviderEdit = memo(
                 cosmosChainId: state.cosmosChainId,
                 explorer: state.explorer,
               });
+              setIsEdit(false);
             }
           },
           textColorRight: Color.graphicGreen1,
