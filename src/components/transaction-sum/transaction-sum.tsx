@@ -41,7 +41,7 @@ export const TransactionSum = ({
   const amounts = useSumAmount();
 
   useEffect(() => {
-    amounts.setMaxAmount(balance - 2 * fee);
+    amounts.setMaxAmount(balance - Math.max(2 * fee, 0.00001));
   }, [amounts, balance, fee]);
 
   const inputSumRef = useRef<TextInput>(null);
