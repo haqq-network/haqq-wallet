@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
 
 import {StakingUnDelegateFinish} from '@app/components/staking-undelegate-finish';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const StakingUnDelegateFinishScreen = () => {
@@ -8,6 +10,7 @@ export const StakingUnDelegateFinishScreen = () => {
   const {params} = useTypedRoute<'stakingUnDelegateFinish'>();
 
   const onDone = useCallback(() => {
+    app.emit(Events.onStakingSync);
     navigation.getParent()?.goBack();
   }, [navigation]);
 

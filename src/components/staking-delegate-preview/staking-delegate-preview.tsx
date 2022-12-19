@@ -79,7 +79,7 @@ export const StakingDelegatePreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {feeValue.toFixed(15)} ISLM
+            {feeValue * WEI} aISLM
           </Text>
         </DataView>
       </View>

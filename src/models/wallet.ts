@@ -377,6 +377,7 @@ export class Wallet extends EventEmitter {
   set balance(value: number) {
     this._balance = value;
     this.emit('balance', {balance: this.balance});
+    app.emit('balance', this.address);
   }
 
   get balance() {

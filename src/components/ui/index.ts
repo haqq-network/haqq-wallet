@@ -17,6 +17,7 @@ export * from './keyboard-safe-area';
 export * from './labeled-block';
 export * from './loading';
 export * from './menu-navigation-button';
+export * from './network-fee';
 export * from './info-block';
 export * from './text';
 export * from './popup-container';

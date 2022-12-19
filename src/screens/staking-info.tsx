@@ -7,7 +7,10 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {StakingMetadata} from '@app/models/staking-metadata';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {Cosmos} from '@app/services/cosmos';
 
 export const StakingInfoScreen = () => {
@@ -20,21 +23,29 @@ export const StakingInfoScreen = () => {
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
     useState(false);
-  const [rewards, setRewards] = useState<Realm.Results<StakingMetadata> | null>(
-    null,
-  );
+
+  const [rewards, setRewards] = useState<StakingMetadata[]>([]);
+  const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
+  const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
 
   const closeDistance = useWindowDimensions().height / 6;
 
   useEffect(() => {
-    const r = StakingMetadata.getRewardsForValidator(operator_address);
+    const r = StakingMetadata.getAllByValidator(operator_address);
 
     const subscription = () => {
-      setRewards(StakingMetadata.getRewardsForValidator(operator_address));
+      const data = r.snapshot();
+
+      setRewards(data.filter(row => row.type === StakingMetadataType.reward));
+      setDelegated(
+        data.filter(row => row.type === StakingMetadataType.delegation),
+      );
+      setUndelegated(
+        data.filter(row => row.type === StakingMetadataType.undelegation),
+      );
     };
 
     r.addListener(subscription);
-    setRewards(r);
     return () => {
       r.removeListener(subscription);
     };
@@ -117,9 +128,6 @@ export const StakingInfoScreen = () => {
     };
   }, [onDelegate, onUnDelegate]);
 
-  const delegated =
-    StakingMetadata.getDelegationsForValidator(operator_address);
-
   return (
     <StakingInfo
       withdrawDelegatorRewardProgress={withdrawDelegatorRewardProgress}
@@ -127,6 +135,7 @@ export const StakingInfoScreen = () => {
       onDelegate={onDelegate}
       onUnDelegate={onUnDelegate}
       onWithdrawDelegatorReward={onWithdrawDelegatorReward}
+      unDelegations={undelegated}
       delegations={delegated}
       rewards={rewards}
     />

@@ -60,6 +60,7 @@ const feedOptions = {
 
 const stakingOptions = {
   title: getText(I18N.homeStaking),
+  unmountOnBlur: true,
 };
 
 const governanceOptions = {

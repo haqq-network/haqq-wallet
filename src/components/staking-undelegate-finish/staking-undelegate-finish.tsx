@@ -8,6 +8,7 @@ import {
   ButtonVariant,
   ISLMIcon,
   LottieWrap,
+  NetworkFee,
   PopupContainer,
   Spacer,
   Text,
@@ -16,7 +17,6 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
@@ -62,9 +62,7 @@ export const StakingUnDelegateFinish = ({
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <Text t15 center color={Color.textBase2}>
-        Network Fee: {(fee / WEI).toFixed(15)} ISLM
-      </Text>
+      <NetworkFee fee={fee} />
       <Spacer />
       <Button
         style={styles.margin}

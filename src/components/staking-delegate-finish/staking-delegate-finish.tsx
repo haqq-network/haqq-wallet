@@ -12,11 +12,11 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
@@ -62,14 +62,12 @@ export const StakingDelegateFinish = ({
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <Text t15 center color={Color.textBase2}>
-        Network Fee: {(fee / WEI).toFixed(15)} ISLM
-      </Text>
+      <NetworkFee fee={fee} />
       <Spacer />
       <Button
         style={styles.margin}
         variant={ButtonVariant.contained}
-        title={getText(I18N.stakingDelegateFinishDone)}
+        i18n={I18N.stakingDelegateFinishDone}
         onPress={onDone}
       />
     </PopupContainer>
