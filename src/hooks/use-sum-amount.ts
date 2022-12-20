@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [{amount, amountText}, setAmount] = useState({

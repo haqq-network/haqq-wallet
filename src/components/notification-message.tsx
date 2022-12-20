@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {asyncTiming, sleep} from '@app/utils';
-import {SHADOW_COLOR_2} from '@app/variables';
+import {SHADOW_COLOR_2} from '@app/variables/common';
 
 export type NotificationMessageProps = {
   message: string;
