@@ -27,7 +27,11 @@ import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
-import {ANIMATION_DURATION, ANIMATION_TYPE, WINDOW_WIDTH} from '@app/variables';
+import {
+  ANIMATION_DURATION,
+  ANIMATION_TYPE,
+  WINDOW_WIDTH,
+} from '@app/variables/common';
 
 export type BottomSheetProps = {
   children: React.ReactNode;

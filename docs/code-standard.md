@@ -521,8 +521,8 @@ const SomeReactComponent = () => {
 
 function SomeReactComponent() {
   // ...
-};
-SomeReactComponent.displayName = 'SomeReactComponent'
+}
+SomeReactComponent.displayName = 'SomeReactComponent';
 
 // good
 export const SomeReactComponent = () => {
@@ -532,16 +532,10 @@ export const SomeReactComponent = () => {
 // best
 export function SomeReactComponent() {
   // ...
-};
+}
 ```
 
-## 4. Don’t use useSelector in redux to avoid re-renders
-
-Explanation: How to Make useSelector Not a Disaster
-
-For more info about how use redux with a project see this document: State Manager
-
-## 5. Extract reusable logic into custom hooks
+## 4. Extract reusable logic into custom hooks
 
 Examples can be found in the project folder - `src/hooks`
 
@@ -549,7 +543,7 @@ Examples can be found in the project folder - `src/hooks`
 
 [Creating and using custom React Hooks to promote reusability of logics](https://medium.com/geekculture/creating-and-using-custom-react-hooks-to-promote-reusability-of-logics-632a0b7fcbe9)
 
-## 6. Use absolute path everywhere
+## 5. Use absolute path everywhere
 
 ```jsx
 // bad
@@ -561,7 +555,7 @@ import ... from '../../folder/lib'
 import ... from 'root/folder/lib'
 ```
 
-## 7. Lock Dependencies
+## 6. Lock Dependencies
 
 This will ensure that you don’t import breaking changes from the new versions of the library into your project.
 
@@ -579,7 +573,7 @@ This will ensure that you don’t import breaking changes from the new versions 
 }
 ```
 
-## 8. Don’t use callbacks in the JSX
+## 7. Don’t use callbacks in the JSX
 
 ```jsx
 // bad
@@ -619,7 +613,7 @@ function Component() {
 }
 ```
 
-## 9. Keep your key prop unique across your whole app
+## 8. Keep your key prop unique across your whole app
 
 Using the key prop is important because it helps React identify the exact element that has changed, is added, or is removed.
 
@@ -664,7 +658,7 @@ function UserList() {
 }
 ```
 
-## 10. Use shorthand for boolean props
+## 9. Use shorthand for boolean props
 
 ```jsx
 // bad
@@ -674,7 +668,7 @@ function UserList() {
 <Form hasValidation withErrors />
 ```
 
-## 11. Avoid curly braces
+## 10. Avoid curly braces
 
 For string props and always use double quotes (") for JSX attributes, but single quotes (') for all other JS. eslint: jsx-quotes
 Regular HTML attributes also typically use double quotes instead of single, so JSX attributes mirror this convention.
@@ -690,7 +684,7 @@ Regular HTML attributes also typically use double quotes instead of single, so J
 <Paragraph variant="h5" />
 ```
 
-## 12. Use logical && operator instead of inline If in JSX in the next cases
+## 11. Use logical && operator instead of inline If in JSX in the next cases
 
 ```jsx
 // bad
@@ -717,7 +711,7 @@ Regular HTML attributes also typically use double quotes instead of single, so J
 </div>
 ```
 
-## 13. Use the following order of code organization in the component file:
+## 12. Use the following order of code organization in the component file:
 
 imports - constants - component - helpers - screens
 
@@ -842,7 +836,7 @@ Components should be dummy, and only render (or have little data preparation) pr
 
 ## i18n
 
-Keys for i18n should  be specific to a particular component and accurately reflect the entity
+Keys for i18n should be specific to a particular component and accurately reflect the entity
 
 ```jsx
 // bad

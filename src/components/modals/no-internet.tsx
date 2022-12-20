@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {NoInternetIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {LIGHT_GRAPHIC_SECOND_4} from '@app/variables';
+import {LIGHT_GRAPHIC_SECOND_4} from '@app/variables/common';
 
 import {BottomPopupContainer} from '../bottom-popups';
 

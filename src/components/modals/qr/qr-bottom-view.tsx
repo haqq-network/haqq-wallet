@@ -6,7 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {QR_BACKGROUND, SYSTEM_BLUR_3} from '@app/variables';
+import {QR_BACKGROUND, SYSTEM_BLUR_3} from '@app/variables/common';
 
 export type QrBottomView = {
   onClickGallery: () => void;

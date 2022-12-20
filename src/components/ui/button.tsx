@@ -28,7 +28,9 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   size?: ButtonSize;
   onPress: () => void;
   loading?: boolean;
-  textColor?: string;
+  textColor?: Color | string;
+  color?: Color | string;
+  circleBorders?: boolean;
 } & ButtonValue &
   ButtonRightIconProps &
   ButtonLeftIconProps;
@@ -53,6 +55,7 @@ export const Button = ({
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
+  circleBorders,
   disabled,
   onPress,
   iconRight,
@@ -60,6 +63,7 @@ export const Button = ({
   iconLeft,
   iconLeftColor,
   textColor,
+  color,
   loading = false,
   ...props
 }: ButtonProps) => {
@@ -71,24 +75,26 @@ export const Button = ({
 
   const containerStyle = useMemo(
     () => [
-      page.container,
-      page[`${variant}Container`] ?? null,
-      page[`${size}Container`] ?? null,
-      disabled && `${variant}DisabledContainer` in page
-        ? page[`${variant}DisabledContainer`]
+      styles.container,
+      styles[`${variant}Container`] ?? null,
+      styles[`${size}Container`] ?? null,
+      circleBorders && styles.circleBorders,
+      disabled && `${variant}DisabledContainer` in styles
+        ? styles[`${variant}DisabledContainer`]
         : null,
+      color && {backgroundColor: getColor(color)},
       style,
     ],
-    [size, disabled, style, variant],
+    [size, disabled, style, variant, color, circleBorders],
   );
 
   const textStyle = useMemo(
     () => [
-      iconLeft && page.textIconLeft,
-      iconRight && page.textIconRight,
-      page[`${variant}Text`] ?? null,
-      disabled && `${variant}DisabledText` in page
-        ? page[`${variant}DisabledText`]
+      iconLeft && styles.textIconLeft,
+      iconRight && styles.textIconRight,
+      styles[`${variant}Text`] ?? null,
+      disabled && `${variant}DisabledText` in styles
+        ? styles[`${variant}DisabledText`]
         : null,
     ],
     [disabled, iconLeft, iconRight, variant],
@@ -105,7 +111,7 @@ export const Button = ({
       ) : (
         <>
           {iconLeft && (
-            <Icon name={iconLeft} color={iconLeftColor} style={page.icon} />
+            <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
           )}
           <Text
             t9={size !== ButtonSize.small}
@@ -116,7 +122,7 @@ export const Button = ({
             {title}
           </Text>
           {iconRight && (
-            <Icon name={iconRight} color={iconRightColor} style={page.icon} />
+            <Icon name={iconRight} color={iconRightColor} style={styles.icon} />
           )}
         </>
       )}
@@ -124,13 +130,16 @@ export const Button = ({
   );
 };
 
-const page = createTheme({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 13, // originally 16 but for android 16 - 3
     paddingHorizontal: 28,
+  },
+  circleBorders: {
+    borderRadius: 100,
   },
   // eslint-disable-next-line react-native/no-unused-styles
   smallContainer: {

@@ -7,7 +7,7 @@ import {Icon, IconButton, IconProps, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
-import {DEFAULT_HITSLOP} from '@app/variables';
+import {DEFAULT_HITSLOP} from '@app/variables/common';
 
 export type HeaderButtonProps = {
   onPress?: () => void;

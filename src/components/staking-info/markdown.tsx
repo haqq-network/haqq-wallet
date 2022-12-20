@@ -5,7 +5,7 @@ import RNMarkdown, {ASTNode} from 'react-native-markdown-display';
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 const rules = {
   paragraph: (node: ASTNode, children: ReactNode[]) => {
