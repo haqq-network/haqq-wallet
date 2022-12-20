@@ -23,7 +23,7 @@ import {Spacer} from '@app/components/ui/spacer';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS} from '@app/variables/common';
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
   label: I18N;

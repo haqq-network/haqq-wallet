@@ -14,7 +14,7 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 });
 
 type SettingsAddressBookProps = {
-  onPressAddress: () => void;
+  onPressAddress: (address: string) => void;
   onPressAdd: () => void;
   onPressClear: () => void;
   onPressQR: () => void;

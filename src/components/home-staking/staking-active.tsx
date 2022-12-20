@@ -15,7 +15,7 @@ import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {
   availableSum: number;

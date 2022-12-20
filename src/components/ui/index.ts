@@ -35,3 +35,6 @@ export * from './custom-header';
 export * from './text-sum';
 export * from './info-block-amount';
 export * from './sum-block';
+export * from './tag';
+export * from './progress-line';
+export * from './progress-circle';

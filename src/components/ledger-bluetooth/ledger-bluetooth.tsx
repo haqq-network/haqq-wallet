@@ -21,7 +21,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {User} from '@app/models/user';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerBluetooth = {
   user: User;

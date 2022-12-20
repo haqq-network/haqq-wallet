@@ -1,6 +1,6 @@
 import {NativeModules} from 'react-native';
 
-import {ETH_HD_PATH} from '../variables';
+import {ETH_HD_PATH} from '../variables/common';
 
 const {RNEthUtils} = NativeModules;
 

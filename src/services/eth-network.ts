@@ -13,7 +13,7 @@ import {Provider} from '../models/provider';
 import {Wallet} from '../models/wallet';
 import {getDefaultChainId, getDefaultNetwork} from '../network';
 import {WalletType} from '../types';
-import {ETH_HD_PATH, WEI} from '../variables';
+import {ETH_HD_PATH, WEI} from '../variables/common';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
