@@ -31,6 +31,7 @@
     "@react-navigation/stack": "^6.2.3",
     "@sentry/react-native": "5.0.0-alpha.4",
     "@tradle/react-native-http": "^2.0.0",
+    "add": "^2.0.6",
     "assert": "^2.0.0",
     "bech32-converting": "^1.0.9",
     "big-integer": "^1.6.51",
@@ -58,6 +59,7 @@
     "react-native-gesture-handler": "^2.6.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-image-picker": "^4.10.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-keychain": "^8.1.1",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-markdown-display": "^7.0.0-alpha.2",
@@ -79,7 +81,8 @@
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",
     "validate.js": "^0.13.1",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
