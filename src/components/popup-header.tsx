@@ -10,12 +10,26 @@ import {Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {DEFAULT_HITSLOP} from '@app/variables';
 
+type HeaderRightProps = {
+  navigation: StackHeaderProps['navigation'];
+  route: StackHeaderProps['route'];
+};
+
+export type PopupHeaderProps = Omit<StackHeaderProps, 'options'> & {
+  options: StackHeaderProps['options'] & {
+    headerBackHidden?: boolean;
+    tab?: boolean;
+    title: string;
+    headerRight?: (props: HeaderRightProps) => React.ReactNode;
+  };
+};
+
 export const PopupHeader = ({
   options,
   back,
   navigation,
   route,
-}: StackHeaderProps) => {
+}: PopupHeaderProps) => {
   const insets = useSafeAreaInsets();
 
   const canGoBack = useMemo(

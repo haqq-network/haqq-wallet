@@ -39,6 +39,7 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t16?: boolean;
   t17?: boolean;
   u0?: boolean;
+  u1?: boolean;
   clean?: boolean;
   center?: boolean;
   right?: boolean;
@@ -66,6 +67,7 @@ export const Text = ({
   t16,
   t17,
   u0,
+  u1,
   style,
   i18n = undefined,
   i18params = undefined,
@@ -110,6 +112,7 @@ export const Text = ({
             t16 && StyleSheet.flatten([page.t16Style, style]),
             t17 && StyleSheet.flatten([page.t17Style, style]),
             u0 && StyleSheet.flatten([page.u0Style, style]),
+            u1 && StyleSheet.flatten([page.u1Style, style]),
             !!color && {color: getColor(color as Color)},
             center && page.center,
             right && page.right,
@@ -195,6 +198,12 @@ const page = createTheme({
     fontSize: 36,
     lineHeight: 43,
     letterSpacing: 0.38,
+  },
+  u1Style: {
+    fontFamily: 'SF Pro Display',
+    fontStyle: 'normal',
+    fontSize: 20,
+    lineHeight: 25,
   },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',

@@ -292,6 +292,11 @@ export type RootStackParamList = {
   };
 };
 
+export type StackPresentationTypes =
+  | 'card'
+  | 'modal'
+  | 'transparentModal'
+  | undefined;
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
 export type IconName = 'Face ID';
 
@@ -361,11 +366,11 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export interface ScreenOptionType extends StackNavigationOptions {
+export type ScreenOptionType = StackNavigationOptions & {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-}
+};
 
 export type HeaderButtonProps = {
   tintColor?: string;
