@@ -23,12 +23,11 @@ import {NumericKeyboard} from './pin/numeric-keyboard';
 import {ErrorText, Spacer, Text} from './ui';
 
 export type PinProps = {
-  title?: string;
   onPin: (pin: string) => void;
   subtitle?: string;
   onLock?: () => void;
   additionButton?: React.ReactNode;
-  i18n?: I18N;
+  title: I18N;
   i18params?: Record<string, string>;
 };
 
@@ -40,12 +39,11 @@ export interface PinInterface {
 export const Pin = forwardRef(
   (
     {
-      title,
       subtitle,
       onPin,
       onLock,
       additionButton,
-      i18n = undefined,
+      title,
       i18params = undefined,
     }: PinProps,
     ref,
@@ -125,9 +123,7 @@ export const Pin = forwardRef(
 
     return (
       <View style={[page.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 i18n={i18n} i18params={i18params} style={page.title}>
-          {title}
-        </Text>
+        <Text t4 i18n={title} i18params={i18params} style={page.title} />
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
           <Text t11 color={LIGHT_TEXT_BASE_2} center>

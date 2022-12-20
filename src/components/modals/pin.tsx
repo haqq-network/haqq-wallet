@@ -3,14 +3,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Pin, PinInterface} from '@app/components/pin/pin';
+import {RestorePassword} from '@app/components/restore-password';
+import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
-
-import {Pin, PinInterface} from '../pin/pin';
-import {RestorePassword} from '../restore-password';
-import {Text} from '../ui';
 
 export type PinModalProps = {};
 

@@ -5,23 +5,23 @@ import {NativeSyntheticEvent, TextInputFocusEventData} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, IconButton, TextField} from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {ProviderKeys} from '@app/models/provider';
 
 export type WrappedInputProps = {
   autoFocus?: boolean;
   isEditable: boolean;
   value: string | undefined;
   error?: string;
-  onChange: (key: keyof Provider, value: string) => void;
-  onBlur: (key: keyof Provider) => void;
+  onChange: (key: ProviderKeys, value: string) => void;
+  onBlur: (key: ProviderKeys) => void;
   onFocus: (
-    key: keyof Provider,
+    key: ProviderKeys,
     event: NativeSyntheticEvent<TextInputFocusEventData>,
   ) => void;
   label: I18N;
   hint: I18N;
   placeholder: I18N;
-  name: keyof Provider;
+  name: ProviderKeys;
 };
 export const WrappedInput = ({
   name,

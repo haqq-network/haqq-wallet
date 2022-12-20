@@ -17,7 +17,6 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
 import {I18N} from '@app/i18n';
-import {LIGHT_TEXT_BLUE_1} from '@app/variables/common';
 
 import {ActionsSheetProps} from '.';
 
@@ -80,21 +79,15 @@ export const ActionsSheet = ({
           <Text i18n={I18N.actionSheetMessage} t14 style={styles.t8} />
           <View style={styles.line} />
           <TouchableOpacity style={styles.margin} onPress={handleDiscard}>
-            <Text
-              i18n={I18N.actionSheetDiscard}
-              color={Color.graphicRed1}
-              t14
-              style={styles.tButton}
-            />
+            <Text i18n={I18N.actionSheetDiscard} color={Color.graphicRed1} u1 />
           </TouchableOpacity>
         </View>
         <View style={styles.bottom}>
           <TouchableOpacity style={styles.margin} onPress={handleKeepEditing}>
             <Text
-              color={LIGHT_TEXT_BLUE_1}
+              color={Color.textBlue1}
               i18n={I18N.actionSheetKeepEditing}
-              t14
-              style={styles.tButton}
+              u1
             />
           </TouchableOpacity>
         </View>
@@ -131,12 +124,6 @@ const styles = createTheme({
     marginVertical: 12,
     textAlign: 'center',
     color: Color.graphicBase2,
-  },
-  tButton: {
-    fontFamily: 'SF Pro Display',
-    fontStyle: 'normal',
-    fontSize: 20,
-    lineHeight: 25,
   },
   line: {
     width: '100%',

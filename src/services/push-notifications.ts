@@ -35,8 +35,9 @@ class PushNotifications extends EventEmitter {
       const token = await messaging().getToken();
       console.log('token', token);
       const subscription = await this.createNotificationToken(token);
-      console.log('subscription', subscription);
-      app.getUser().subscription = subscription;
+      if (subscription) {
+        app.getUser().subscription = subscription;
+      }
     }
   }
 
@@ -66,7 +67,7 @@ class PushNotifications extends EventEmitter {
     path: string,
     method: string,
     ...params: string[]
-  ): Promise<T> {
+  ): Promise<T | undefined> {
     this.last_id += 1;
 
     const response = await this.postQuery<{
@@ -98,7 +99,7 @@ class PushNotifications extends EventEmitter {
     }
   }
 
-  createNotificationToken(token: string): Promise<string> {
+  createNotificationToken(token: string): Promise<string | undefined> {
     return this.jsonRpcRequest<string>('/', 'createNotificationToken', token);
   }
 
