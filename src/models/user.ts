@@ -12,7 +12,7 @@ import {
   PIN_BANNED_TIMEOUT_SECONDS,
   SNOOZE_WALLET_BACKUP_MINUTES,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
-} from '../variables';
+} from '../variables/common';
 import {realm} from './index';
 
 export const UserSchema = {

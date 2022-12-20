@@ -20,7 +20,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
   amount: number;

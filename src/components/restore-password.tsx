@@ -5,7 +5,7 @@ import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 import {captureException} from '@app/helpers';
 import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {LIGHT_TEXT_BASE_2} from '@app/variables';
+import {LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
 import {BottomSheet} from './bottom-sheet';
 import {Button, ButtonVariant, Text} from './ui';
