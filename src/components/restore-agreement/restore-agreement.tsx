@@ -15,7 +15,7 @@ import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 // import {Terms} from '../ui/terms';
 

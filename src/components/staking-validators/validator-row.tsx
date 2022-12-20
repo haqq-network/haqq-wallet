@@ -10,7 +10,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
