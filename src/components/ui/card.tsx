@@ -9,7 +9,7 @@ import {
   GRADIENT_END,
   GRADIENT_START,
   MAGIC_CARD_HEIGHT,
-} from '../../variables';
+} from '../../variables/common';
 
 export type CardProps = {
   children?: React.ReactNode;

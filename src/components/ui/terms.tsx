@@ -6,7 +6,7 @@ import {Color, getColor} from '@app/colors';
 
 import {openURL} from '../../helpers';
 import {I18N, getText} from '../../i18n';
-import {LIGHT_GRAPHIC_GREEN_1, PRIVACY_POLICY} from '../../variables';
+import {LIGHT_GRAPHIC_GREEN_1, PRIVACY_POLICY} from '../../variables/common';
 import {Text} from '../ui';
 
 export type TermsProps = {

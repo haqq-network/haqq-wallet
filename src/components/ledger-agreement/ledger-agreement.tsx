@@ -12,7 +12,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_WIDTH} from '@app/variables/common';
 // import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
