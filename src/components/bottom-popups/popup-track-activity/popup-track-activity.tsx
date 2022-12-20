@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {SHADOW_COLOR_1} from '@app/variables';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type TrackActivityProps = {
   onClick: () => void;
