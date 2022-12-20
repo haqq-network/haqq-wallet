@@ -5,35 +5,30 @@ import {Alert, StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
-import {useWallets} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {useTypedRoute, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-type SettingsAccountRemoveButtonProp = {
-  address: string;
-};
-
-export const SettingsAccountRemoveButton = ({
-  address,
-}: SettingsAccountRemoveButtonProp) => {
+export const SettingsAccountRemoveButton = () => {
   const navigation = useNavigation();
+  const route = useTypedRoute<'settingsAccountDetail'>();
   const wallets = useWallets();
   const onClickRemove = () => {
     vibrate(HapticEffects.warning);
     Alert.alert(
-      'Attention. You may lose all your funds! Are you sure you want to delete your account?',
-      'Do not delete the account if you are not sure that you can restore them. To restore, you will need a backup phrase of 12 words that you made for your account',
+      getText(I18N.settingsAccountRemoveTitle),
+      getText(I18N.settingsAccountRemoveMessage),
       [
         {
-          text: 'Cancel',
+          text: getText(I18N.settingsAccountRemoveReject),
           style: 'cancel',
         },
         {
           style: 'destructive',
-          text: 'Delete',
+          text: getText(I18N.settingsAccountRemoveConfirm),
           onPress: async () => {
-            await wallets.removeWallet(address);
+            await wallets.removeWallet(route.params.address);
             navigation.goBack();
             sendNotification(I18N.notificationAccountDeleted);
           },

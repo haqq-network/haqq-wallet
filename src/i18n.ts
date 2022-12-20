@@ -272,6 +272,10 @@ export enum I18N {
   settingsAboutTwitter,
   settingsAboutRights,
   to,
+  settingsAccountRemoveTitle,
+  settingsAccountRemoveMessage,
+  settingsAccountRemoveConfirm,
+  settingsAccountRemoveReject,
   settingsAccountDetailRenameTitle,
   settingsAccountDetailRenameSubtitle,
   settingsAccountNoWallet,
@@ -579,6 +583,12 @@ const en: Record<I18N, string> = {
     'Enter or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
+  [I18N.settingsAccountRemoveTitle]:
+    'Attention. You may lose all your funds! Are you sure you want to delete your account?',
+  [I18N.settingsAccountRemoveMessage]:
+    'Do not delete the account if you are not sure that you can restore them. To restore, you will need a backup phrase of 12 words that you made for your account',
+  [I18N.settingsAccountRemoveConfirm]: 'Delete',
+  [I18N.settingsAccountRemoveReject]: 'Cancel',
   [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
   [I18N.settingsAccountDetailRenameSubtitle]: 'Change the account display name',
   [I18N.settingsAccountDetailChangeStyleTitle]: 'Change style',
