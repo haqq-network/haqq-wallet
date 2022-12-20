@@ -54,14 +54,12 @@ export const SettingsProviderEditScreen = () => {
   }, [provider, route.params.data]);
 
   return (
-    <>
-      <SettingsProviderEdit
-        provider={providerData}
-        onSubmit={onSubmit}
-        onDelete={onDelete}
-        onSelect={onSelect}
-        onCancel={goBack}
-      />
-    </>
+    <SettingsProviderEdit
+      provider={providerData}
+      onSubmit={onSubmit}
+      onDelete={onDelete}
+      onSelect={onSelect}
+      onCancel={goBack}
+    />
   );
 };

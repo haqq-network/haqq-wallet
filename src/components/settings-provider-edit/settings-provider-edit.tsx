@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 
-import {Alert, View} from 'react-native';
+import {Alert, ScrollView, View} from 'react-native';
 import {single, validate} from 'validate.js';
 
 import {Color} from '@app/colors';
@@ -280,72 +280,74 @@ export const SettingsProviderEdit = memo(
           {...right}
         />
         <KeyboardSafeArea style={page.container}>
-          <WrappedInput
-            autoFocus={true}
-            label={I18N.settingsProviderEditName}
-            isEditable={isEdit ?? false}
-            value={state.name}
-            name="name"
-            placeholder={I18N.settingsProviderEditNamePlaceholder}
-            error={state.errors.name}
-            onChange={onChangeField}
-            onBlur={onBlurField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditCosmosChainId}
-            isEditable={isEdit ?? false}
-            value={state.cosmosChainId}
-            name="cosmosChainId"
-            error={state.errors.cosmosChainId}
-            placeholder={I18N.settingsProviderEditCosmosChainIdPlaceholder}
-            onChange={onChangeField}
-            onBlur={onBlurField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditCosmosEndpoint}
-            isEditable={isEdit ?? false}
-            value={state.cosmosRestEndpoint}
-            name="cosmosRestEndpoint"
-            error={state.errors.cosmosRestEndpoint}
-            placeholder={I18N.settingsProviderEditCosmosEndpointPlaceholder}
-            onChange={onChangeField}
-            onBlur={onBlurField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditEthEndpoint}
-            isEditable={isEdit ?? false}
-            value={state.ethRpcEndpoint}
-            name="ethRpcEndpoint"
-            error={state.errors.ethRpcEndpoint}
-            placeholder={I18N.settingsProviderEditEthEndpointPlaceholder}
-            onChange={onChangeField}
-            onBlur={onBlurField}
-          />
-          <Spacer height={24} />
-          <WrappedInput
-            label={I18N.settingsProviderEditExplorer}
-            isEditable={isEdit ?? false}
-            value={state.explorer}
-            name="explorer"
-            error={state.errors.explorer}
-            placeholder={I18N.settingsProviderEditExplorerPlaceholder}
-            onChange={onChangeField}
-            onBlur={onBlurField}
-          />
+          <ScrollView>
+            <WrappedInput
+              autoFocus={true}
+              label={I18N.settingsProviderEditName}
+              isEditable={isEdit ?? false}
+              value={state.name}
+              name="name"
+              placeholder={I18N.settingsProviderEditNamePlaceholder}
+              error={state.errors.name}
+              onChange={onChangeField}
+              onBlur={onBlurField}
+            />
+            <Spacer height={24} />
+            <WrappedInput
+              label={I18N.settingsProviderEditCosmosChainId}
+              isEditable={isEdit ?? false}
+              value={state.cosmosChainId}
+              name="cosmosChainId"
+              error={state.errors.cosmosChainId}
+              placeholder={I18N.settingsProviderEditCosmosChainIdPlaceholder}
+              onChange={onChangeField}
+              onBlur={onBlurField}
+            />
+            <Spacer height={24} />
+            <WrappedInput
+              label={I18N.settingsProviderEditCosmosEndpoint}
+              isEditable={isEdit ?? false}
+              value={state.cosmosRestEndpoint}
+              name="cosmosRestEndpoint"
+              error={state.errors.cosmosRestEndpoint}
+              placeholder={I18N.settingsProviderEditCosmosEndpointPlaceholder}
+              onChange={onChangeField}
+              onBlur={onBlurField}
+            />
+            <Spacer height={24} />
+            <WrappedInput
+              label={I18N.settingsProviderEditEthEndpoint}
+              isEditable={isEdit ?? false}
+              value={state.ethRpcEndpoint}
+              name="ethRpcEndpoint"
+              error={state.errors.ethRpcEndpoint}
+              placeholder={I18N.settingsProviderEditEthEndpointPlaceholder}
+              onChange={onChangeField}
+              onBlur={onBlurField}
+            />
+            <Spacer height={24} />
+            <WrappedInput
+              label={I18N.settingsProviderEditExplorer}
+              isEditable={isEdit ?? false}
+              value={state.explorer}
+              name="explorer"
+              error={state.errors.explorer}
+              placeholder={I18N.settingsProviderEditExplorerPlaceholder}
+              onChange={onChangeField}
+              onBlur={onBlurField}
+            />
 
-          {isEdit && provider?.id && (
-            <View style={page.buttonContainerRemove}>
-              <Button
-                variant={ButtonVariant.error}
-                style={page.errorButton}
-                onPress={onRemove}
-                title={getText(I18N.settingsProviderEditDeleteProvider)}
-              />
-            </View>
-          )}
+            {isEdit && provider?.id && (
+              <View style={page.buttonContainerRemove}>
+                <Button
+                  variant={ButtonVariant.error}
+                  style={page.errorButton}
+                  onPress={onRemove}
+                  title={getText(I18N.settingsProviderEditDeleteProvider)}
+                />
+              </View>
+            )}
+          </ScrollView>
           {!isEdit && provider && (
             <>
               <Spacer />
