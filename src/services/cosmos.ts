@@ -324,7 +324,7 @@ export class Cosmos {
 
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+        amount: ((amount ?? 0) * WEI).toString(),
         denom: 'aISLM',
       };
 
@@ -350,7 +350,7 @@ export class Cosmos {
 
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+        amount: ((amount ?? 0) * WEI).toString(),
         denom: 'aISLM',
       };
 
