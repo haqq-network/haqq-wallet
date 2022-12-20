@@ -106,13 +106,13 @@ export function getColor(key: Color | string) {
   }
 
   if (app.getTheme() === AppTheme.dark) {
-    return dark[key];
+    return dark[key as Color];
   }
 
-  return light[key];
+  return light[key as Color];
 }
 
-const light = {
+const light: Record<Color, string> = {
   [Color.transparent]: TRANSPARENT,
   [Color.textBase1]: LIGHT_TEXT_BASE_1,
   [Color.textBase2]: LIGHT_TEXT_BASE_2,
@@ -146,7 +146,7 @@ const light = {
   [Color.graphicBlue1]: LIGHT_GRAPHIC_BLUE_1,
 };
 
-const dark = {
+const dark: Record<Color, string> = {
   [Color.transparent]: TRANSPARENT,
   [Color.textBase1]: DARK_TEXT_BASE_1,
   [Color.textBase2]: DARK_TEXT_BASE_2,

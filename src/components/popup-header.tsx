@@ -10,7 +10,6 @@ import {Icon, IconButton, Text} from '@app/components/ui';
 import {DEFAULT_HITSLOP} from '@app/variables/common';
 
 export const PopupHeader = ({options, back, navigation}: StackHeaderProps) => {
-  console.log(options);
   const insets = useSafeAreaInsets();
 
   const canGoBack = useMemo(

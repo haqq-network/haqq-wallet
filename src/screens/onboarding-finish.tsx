@@ -42,5 +42,5 @@ export const OnboardingFinishScreen = () => {
     vibrate(HapticEffects.success);
   }, []);
 
-  return <Finish i18n={title} onFinish={onEnd} testID="onboarding_finish" />;
+  return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };

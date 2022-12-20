@@ -47,6 +47,7 @@ import {
   AppTheme,
   PresentationNavigation,
   ScreenOptionType,
+  StackPresentationTypes,
 } from '@app/types';
 import {sleep} from '@app/utils';
 
@@ -112,8 +113,9 @@ const basicScreenOptions = {
   headerShown: false,
   gestureEnabled: false,
 };
+
 const stackScreenOptions = {
-  presentation: 'modal',
+  presentation: 'modal' as StackPresentationTypes,
   gestureEnabled: false,
 };
 

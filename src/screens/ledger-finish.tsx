@@ -25,7 +25,7 @@ export const LedgerFinishScreen = () => {
 
   return (
     <Finish
-      i18n={I18N.ledgerFinishCongratulations}
+      title={I18N.ledgerFinishCongratulations}
       onFinish={onEnd}
       testID="ledger_finish"
     />

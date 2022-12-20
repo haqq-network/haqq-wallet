@@ -26,13 +26,9 @@ export const ErrorCreateAccount = () => {
     <BottomPopupContainer>
       {onClose => (
         <View style={page.modalView}>
-          <Text t5 center i18n={I18N.errorCreateAccountPopupTitle}>
-            Failed to create an account
-          </Text>
+          <Text t5 center i18n={I18N.errorCreateAccountPopupTitle} />
           <Spacer height={8} />
-          <Text t14 center i18n={I18N.errorCreateAccountPopupDescription}>
-            Please try again later
-          </Text>
+          <Text t14 center i18n={I18N.errorCreateAccountPopupDescription} />
           <Spacer height={40} />
           <ErrorCreateAccountIcon
             color={getColor(Color.graphicSecond4)}

@@ -142,10 +142,10 @@ export const StakingInfo = ({
         />
         <Spacer height={12} />
         <View style={styles.infoBlock}>
-          <Block i18n={I18N.stakingInfoVotingPower}>
+          <Block name={I18N.stakingInfoVotingPower}>
             <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
           </Block>
-          <Block i18n={I18N.stakingInfoCommission}>
+          <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
               <View style={styles.infoBlockCommission}>
                 <Text i18n={I18N.stakingInfoCommissionCurrent} t14 />
@@ -174,7 +174,7 @@ export const StakingInfo = ({
             </View>
           </Block>
           {website && (
-            <Block i18n={I18N.stakingInfoWebsite}>
+            <Block name={I18N.stakingInfoWebsite}>
               <Text t14 color={Color.textGreen1} onPress={onPressWebsite}>
                 {website}
               </Text>
@@ -183,7 +183,7 @@ export const StakingInfo = ({
         </View>
         <Block
           style={styles.withHorizontalPadding}
-          i18n={I18N.stakingInfoAddress}>
+          name={I18N.stakingInfoAddress}>
           <CopyButton value={operator_address} activeOpacity={0.7}>
             <Text t14 color={Color.textBase2}>
               {operator_address}
@@ -193,7 +193,7 @@ export const StakingInfo = ({
           </CopyButton>
         </Block>
         {details && (
-          <Block i18n={I18N.stakingInfoDetail}>
+          <Block name={I18N.stakingInfoDetail}>
             <Markdown>{details}</Markdown>
           </Block>
         )}

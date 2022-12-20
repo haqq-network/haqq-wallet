@@ -41,12 +41,12 @@ export const SettingsSecurityPin = ({
 
   return (
     <Pin
-      onPin={isRepeatPin ? onPinRepeated : onPin}
       title={
         isRepeatPin
-          ? getText(I18N.settingsSecurityPinRepeat)
-          : getText(I18N.settingsSecurityPinSet)
+          ? I18N.settingsSecurityPinRepeat
+          : I18N.settingsSecurityPinSet
       }
+      onPin={isRepeatPin ? onPinRepeated : onPin}
       ref={pinRef}
       key={
         isRepeatPin
