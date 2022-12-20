@@ -34,6 +34,7 @@ import {
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
 import converter from 'bech32-converting';
+import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
@@ -154,10 +155,11 @@ export class Cosmos {
     try {
       const sender = await this.getSender(source);
       const memo = '';
+      const strAmount = new Decimal(amount).mul(WEI);
       const params = {
         proposalId,
         deposit: {
-          amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+          amount: strAmount.toFixed(),
           denom: 'aISLM',
         },
       };
@@ -169,7 +171,7 @@ export class Cosmos {
         params,
       );
 
-      console.log('🚀 - ', await this.sendMsg(source, sender, msg));
+      return await this.sendMsg(source, sender, msg);
     } catch (error) {
       captureException(error, 'Cosmos.deposit');
     }
@@ -322,9 +324,11 @@ export class Cosmos {
     try {
       const sender = await this.getSender(source);
 
+      const strAmount = new Decimal(amount).mul(WEI);
+
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toString(),
+        amount: strAmount.toFixed(),
         denom: 'aISLM',
       };
 
@@ -347,10 +351,10 @@ export class Cosmos {
   async delegate(source: string, address: string, amount: number) {
     try {
       const sender = await this.getSender(source);
-
+      const strAmount = new Decimal(amount).mul(WEI);
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toString(),
+        amount: strAmount.toFixed(),
         denom: 'aISLM',
       };
 
