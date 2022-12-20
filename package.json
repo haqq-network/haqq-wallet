@@ -77,7 +77,7 @@
     "react-native-system-navigation-bar": "^2.1.0",
     "react-native-touch-id": "^4.4.1",
     "readable-stream": "^4.1.0",
-    "realm": "11.2.0",
+    "realm": "11.3.0",
     "rxjs": "^7.5.7",
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",

@@ -9171,10 +9171,10 @@ readonly-date@^1.0.0:
   resolved "https://registry.yarnpkg.com/readonly-date/-/readonly-date-1.0.0.tgz#5af785464d8c7d7c40b9d738cbde8c646f97dcd9"
   integrity sha512-tMKIV7hlk0h4mO3JTmmVuIlJVXjKk3Sep9Bf5OH0O+758ruuVkUy2J9SttDLm91IEX/WHlXPSpxMGjPj4beMIQ==
 
-realm@11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-11.2.0.tgz#b880a7db719694f03604713815743cf7a4f71683"
-  integrity sha512-hQ9tHOyDtIToeFafYLGg+F2ditYwKjUPKBK2V1EPcdU2amQks9UTcJJWKbdJ3l6W/w72IvjryX62zFomCwPfZQ==
+realm@11.3.0:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/realm/-/realm-11.3.0.tgz#fee7988a3af88a9d182bb3d31bc5a8b7814b9259"
+  integrity sha512-/IHkzsuGMx6gxryK3Mu3+dH+ZZMG6UUavNyc5AADc8T8z/TZvBQ0jkbCUCGA5b6c8JD5NSSzaw9qyg4wdIad0w==
   dependencies:
     "@realm/common" "^0.1.4"
     "@realm/network-transport" "^0.7.2"
