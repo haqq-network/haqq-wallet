@@ -9,8 +9,7 @@ import {I18N} from '@app/i18n';
 
 export type SegmentedControlValue<T> = {
   value: T;
-  name: string;
-  i18nName?: I18N;
+  name: I18N;
 };
 
 export type SegmentedControlProps<T> = {
@@ -39,10 +38,9 @@ export const SegmentedControl = ({
             <Text
               t14={v.value !== value}
               t13={v.value === value}
-              i18n={v.i18nName}
-              color={Color.textBase1}>
-              {v.name}
-            </Text>
+              i18n={v.name}
+              color={Color.textBase1}
+            />
           </View>
         </TouchableWithoutFeedback>
       ))}
