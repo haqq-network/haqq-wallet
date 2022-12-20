@@ -154,6 +154,11 @@ const styles = createTheme({
     height: 46,
   },
   // eslint-disable-next-line react-native/no-unused-styles
+  largeContainer: {
+    paddingVertical: 16, // originally 6 but for android 6 - 3
+    paddingHorizontal: 12,
+  },
+  // eslint-disable-next-line react-native/no-unused-styles
   containedContainer: {
     backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
