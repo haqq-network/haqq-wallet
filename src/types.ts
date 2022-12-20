@@ -330,11 +330,6 @@ export type SwipeableAction<T> = {
 };
 
 export enum WalletCardStyle {
-  defaultGreen = 'defaultGreen',
-  defaultYellow = 'defaultYellow',
-  defaultBlue = 'defaultBlue',
-  defaultBlack = 'defaultBlack',
-  defaultViolet = 'defaultViolet',
   flat = 'flat',
   gradient = 'gradient',
 }
