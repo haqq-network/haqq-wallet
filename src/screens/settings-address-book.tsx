@@ -55,9 +55,16 @@ export const SettingsAddressBookScreen =
       setSearch('');
     }, [navigate, search]);
 
-    const onPressAddress = useCallback(() => {
-      vibrate(HapticEffects.impactLight);
-    }, []);
+    const onPressAddress = useCallback(
+      (address: string) => {
+        vibrate(HapticEffects.impactLight);
+        navigate('settingsContactEdit', {
+          name: contacts.getContact(address)?.name || '',
+          address: address,
+        });
+      },
+      [navigate, contacts],
+    );
 
     return (
       <SettingsAddressBook
