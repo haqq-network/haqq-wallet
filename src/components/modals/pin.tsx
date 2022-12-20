@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {PIN_BANNED_ATTEMPTS} from '@app/variables';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 import {Pin, PinInterface} from '../pin/pin';
 import {RestorePassword} from '../restore-password';

@@ -24,6 +24,7 @@ import {
   Chain,
   Fee,
   createTxMsgDelegate,
+  createTxMsgDeposit,
   createTxMsgMultipleWithdrawDelegatorReward,
   createTxMsgUndelegate,
   createTxMsgVote,
@@ -37,13 +38,16 @@ import {utils} from 'ethers';
 
 import {wallets} from '@app/contexts';
 import {captureException} from '@app/helpers';
+import {realm} from '@app/models';
+import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
+import {DepositResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
 } from '@app/types/cosmos';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -143,6 +147,49 @@ export class Cosmos {
   async getProposals(): Promise<ProposalsResponse> {
     return this.getQuery(
       generateEndpointProposals() + '?pagination.reverse=true',
+    );
+  }
+
+  async deposit(source: string, proposalId: number, amount: number) {
+    try {
+      const sender = await this.getSender(source);
+      const memo = '';
+      const params = {
+        proposalId,
+        deposit: {
+          amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+          denom: 'aISLM',
+        },
+      };
+      const msg = createTxMsgDeposit(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      console.log('🚀 - ', await this.sendMsg(source, sender, msg));
+    } catch (error) {
+      captureException(error, 'Cosmos.deposit');
+    }
+  }
+
+  getProposalDepositor(proposal_id: number | string, depositor: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits/${depositor}`,
+    );
+  }
+
+  getProposalDeposits(proposal_id: number | string) {
+    return this.getQuery<DepositResponse>(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits`,
+    );
+  }
+
+  getProposalVoter(proposal_id: string | number, voter: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/votes/${voter}`,
     );
   }
 
@@ -267,7 +314,7 @@ export class Cosmos {
 
       return await this.sendMsg(source, sender, msg);
     } catch (e) {
-      captureException(e, 'Cosmos.delegate');
+      captureException(e, 'Cosmos.vote');
     }
   }
 
@@ -444,5 +491,68 @@ export class Cosmos {
           .flat();
       })
       .then(hashes => hashes.filter(Boolean) as string[]);
+  }
+
+  async syncGovernanceVoting() {
+    try {
+      const rows = realm.objects<GovernanceVoting>(
+        GovernanceVoting.schema.name,
+      );
+      const cache: number[] = [];
+
+      for (const row of rows) {
+        cache.push(row.orderNumber);
+      }
+
+      try {
+        const proposals = await this.getProposals();
+        const hashes = proposals.proposals
+          .map(
+            ({
+              status,
+              voting_end_time,
+              voting_start_time,
+              total_deposit,
+              deposit_end_time,
+              proposal_id,
+              final_tally_result,
+              content,
+              submit_time,
+            }) => {
+              const veto = final_tally_result.no_with_veto;
+
+              const copy: any = {...final_tally_result};
+              delete copy.no_with_veto;
+              const votes: any = {};
+
+              Object.entries({...copy, veto}).map(([key, val]) => {
+                votes[key] = Math.round(Number(val));
+              });
+
+              return GovernanceVoting.createVoting({
+                status: GovernanceVoting.keyFromStatus(status.toLowerCase()),
+                endDate: voting_end_time,
+                startDate: voting_start_time,
+                depositNeeds: JSON.stringify(total_deposit),
+                depositEndTime: deposit_end_time,
+                createdAtTime: submit_time,
+                orderNumber: Number(proposal_id),
+                description: content.description,
+                title: content.title,
+                votes: JSON.stringify(votes),
+              });
+            },
+          )
+          .filter(Boolean);
+
+        cache
+          .filter(r => !hashes.includes(r))
+          .forEach(r => GovernanceVoting.remove(r));
+      } catch (e) {
+        captureException(e, 'Cosmos.syncGovernanceVoting.getProposals');
+      }
+    } catch (e) {
+      captureException(e, 'Cosmos.syncGovernanceVoting');
+    }
   }
 }

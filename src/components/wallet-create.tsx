@@ -14,7 +14,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables';
+import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {

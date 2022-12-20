@@ -14,6 +14,7 @@ import {
   DARK_GRAPHIC_BASE_1,
   DARK_GRAPHIC_BASE_2,
   DARK_GRAPHIC_BASE_3,
+  DARK_GRAPHIC_BLUE_1,
   DARK_GRAPHIC_GREEN_1,
   DARK_GRAPHIC_GREEN_2,
   DARK_GRAPHIC_RED_1,
@@ -43,6 +44,7 @@ import {
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_BASE_3,
+  LIGHT_GRAPHIC_BLUE_1,
   LIGHT_GRAPHIC_GREEN_1,
   LIGHT_GRAPHIC_GREEN_2,
   LIGHT_GRAPHIC_RED_1,
@@ -60,7 +62,7 @@ import {
   LIGHT_TEXT_SECOND_2,
   LIGHT_TEXT_YELLOW_1,
   TRANSPARENT,
-} from '@app/variables';
+} from '@app/variables/common';
 
 export enum Color {
   transparent = 'transparent',
@@ -87,6 +89,7 @@ export enum Color {
   graphicBase2 = 'graphicBase2',
   graphicBase3 = 'graphicBase3',
   graphicRed1 = 'graphicRed1',
+  graphicBlue1 = 'graphicBlue1',
   graphicGreen1 = 'graphicGreen1',
   graphicGreen2 = 'graphicGreen2',
   graphicSecond1 = 'graphicSecond1',
@@ -140,6 +143,7 @@ const light = {
   [Color.graphicSecond2]: LIGHT_GRAPHIC_SECOND_2,
   [Color.graphicSecond3]: LIGHT_GRAPHIC_SECOND_3,
   [Color.graphicSecond4]: LIGHT_GRAPHIC_SECOND_4,
+  [Color.graphicBlue1]: LIGHT_GRAPHIC_BLUE_1,
 };
 
 const dark = {
@@ -173,4 +177,5 @@ const dark = {
   [Color.graphicSecond2]: DARK_GRAPHIC_SECOND_2,
   [Color.graphicSecond3]: DARK_GRAPHIC_SECOND_3,
   [Color.graphicSecond4]: DARK_GRAPHIC_SECOND_4,
+  [Color.graphicBlue1]: DARK_GRAPHIC_BLUE_1,
 };

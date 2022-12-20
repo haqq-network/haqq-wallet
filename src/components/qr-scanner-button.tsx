@@ -11,7 +11,7 @@ import {IconButton, QRScanner} from './ui';
 
 import {hideModal, showModal} from '../helpers/modal';
 import {RootStackParamList} from '../types';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables';
+import {LIGHT_GRAPHIC_BASE_1} from '../variables/common';
 
 export const QrScannerButton = () => {
   const app = useApp();
