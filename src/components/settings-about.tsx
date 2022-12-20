@@ -74,6 +74,7 @@ export const SettingsAbout = () => {
       </View>
       <Text
         t11
+        center
         color={Color.textBase1}
         i18n={I18N.settingsAboutRights}
         style={styles.terms}

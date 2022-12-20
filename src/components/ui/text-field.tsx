@@ -28,6 +28,7 @@ import {IS_IOS} from '@app/variables/common';
 type Props = Omit<TextInputProps, 'placeholder'> & {
   label: I18N;
   placeholder: I18N;
+  hint?: I18N | undefined;
   errorText?: string | null;
   errorTextI18n?: I18N | null;
   error?: boolean;
@@ -43,6 +44,7 @@ export const TextField: React.FC<Props> = memo(
     autoFocus = false,
     lines = 1,
     label,
+    hint,
     error,
     errorText,
     errorTextI18n,
@@ -178,6 +180,12 @@ export const TextField: React.FC<Props> = memo(
               style={styles.error}>
               {errorText}
             </Text>
+          </>
+        )}
+        {!error && hint && (
+          <>
+            <Spacer height={8} />
+            <Text t14 i18n={hint} style={styles.error} />
           </>
         )}
       </View>
