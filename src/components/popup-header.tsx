@@ -9,12 +9,8 @@ import {Color} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {DEFAULT_HITSLOP} from '@app/variables/common';
 
-export const PopupHeader = ({
-  options,
-  back,
-  navigation,
-  route,
-}: StackHeaderProps) => {
+export const PopupHeader = ({options, back, navigation}: StackHeaderProps) => {
+  console.log(options);
   const insets = useSafeAreaInsets();
 
   const canGoBack = useMemo(
@@ -52,7 +48,7 @@ export const PopupHeader = ({
         {options.title}
       </Text>
       {options.headerRight ? (
-        options.headerRight({navigation, route})
+        options.headerRight({})
       ) : (
         <View style={page.spacer} />
       )}
