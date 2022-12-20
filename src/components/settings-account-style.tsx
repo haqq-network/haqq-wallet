@@ -24,31 +24,27 @@ import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
-import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL} from '@app/variables';
+import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL} from '@app/variables/common';
 
 const cardStyleVariants = [
   {
     value: WalletCardStyle.flat,
-    name: 'Flat',
-    i18nName: I18N.settingsAccountStyleFlat,
+    name: I18N.settingsAccountStyleFlat,
   },
   {
     value: WalletCardStyle.gradient,
-    name: 'Gradient',
-    i18nName: I18N.settingsAccountStyleGenerate,
+    name: I18N.settingsAccountStyleGenerate,
   },
 ];
 
 const patternVariants = [
   {
     value: WalletCardPattern.circle,
-    name: 'Circle',
-    i18nName: I18N.settingsAccountStyleCircle,
+    name: I18N.settingsAccountStyleCircle,
   },
   {
     value: WalletCardPattern.rhombus,
-    name: 'Rhombus',
-    i18nName: I18N.settingsAccountStyleRhombus,
+    name: I18N.settingsAccountStyleRhombus,
   },
 ];
 
@@ -181,6 +177,8 @@ export const SettingsAccountStyle = ({
     },
     [setCardStyle, setColors],
   );
+  console.log('patternVariants', patternStyle, patternVariants);
+
   return (
     <PopupContainer style={styles.container}>
       <Animated.View style={animatedStyles}>

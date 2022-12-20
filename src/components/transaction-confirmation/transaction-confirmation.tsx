@@ -16,7 +16,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {splitAddress} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   to: string;

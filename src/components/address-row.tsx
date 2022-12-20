@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 
 import {Box, DataContent, Text} from './ui';
 
@@ -35,7 +36,7 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -43,6 +44,7 @@ const page = StyleSheet.create({
   },
   badge: {
     marginRight: 12,
+    backgroundColor: Color.bg8,
   },
   info: {justifyContent: 'space-between'},
 });

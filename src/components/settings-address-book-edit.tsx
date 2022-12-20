@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
   Icon,
   IconButton,
@@ -86,7 +87,7 @@ export const SettingsAddressBookEdit = memo(
             {isEdit && !isCreate && (
               <Button
                 variant={ButtonVariant.error}
-                style={styles.errorButton}
+                size={ButtonSize.middle}
                 onPress={handleRemove}
                 i18n={I18N.settingsContactEditDeleteContact}
               />
@@ -113,9 +114,5 @@ const styles = createTheme({
   buttonContainerRemove: {
     alignSelf: 'flex-start',
     marginTop: 24,
-  },
-  errorButton: {
-    backgroundColor: Color.bg7,
-    borderRadius: 12,
   },
 });

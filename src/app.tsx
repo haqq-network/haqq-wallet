@@ -45,7 +45,6 @@ import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
   AppTheme,
-  HeaderButtonProps,
   PresentationNavigation,
   ScreenOptionType,
   StackPresentationTypes,
@@ -271,13 +270,7 @@ export const App = () => {
                     component={SettingsAccountDetailScreen}
                     options={{
                       title: 'Account details',
-                      headerRight: (
-                        props: HeaderButtonProps,
-                      ): React.ReactNode => (
-                        <SettingsAccountRemoveButton
-                          address={props?.route?.params?.address!} // non-null assertion in TypeScript
-                        />
-                      ),
+                      headerRight: SettingsAccountRemoveButton,
                     }}
                   />
                   <Stack.Screen

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Validator} from '@evmos/provider';
+import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
@@ -288,7 +289,7 @@ export type RootStackParamList = {
   notificationPopup: undefined;
   trackActivity: undefined;
   proposal: {
-    id: string;
+    id: number;
   };
 };
 
@@ -334,11 +335,6 @@ export type SwipeableAction<T> = {
 };
 
 export enum WalletCardStyle {
-  defaultGreen = 'defaultGreen',
-  defaultYellow = 'defaultYellow',
-  defaultBlue = 'defaultBlue',
-  defaultBlack = 'defaultBlack',
-  defaultViolet = 'defaultViolet',
   flat = 'flat',
   gradient = 'gradient',
 }
@@ -438,3 +434,33 @@ export type ValidatorItem = Validator & {
 };
 
 export type ColorType = Color | string;
+
+export type ProposalsTagKeys =
+  | 'all'
+  | 'voting'
+  | 'deposited'
+  | 'passed'
+  | 'rejected';
+
+export type VotesType = {
+  yes: number;
+  no: number;
+  abstain: number;
+  veto: number;
+};
+
+export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
+
+export type DepositResponse = {
+  deposits: {
+    proposal_id: string;
+    depositor: string;
+    amount: Coin[];
+  }[];
+  pagination: {next_key: any; total: string};
+};
+
+export type ProposalsCroppedList = {
+  id: number;
+  status: string;
+}[];

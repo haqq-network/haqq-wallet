@@ -14,7 +14,7 @@ import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {SHADOW_COLOR_1} from '@app/variables';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {
   onClickTurnOn: () => void;

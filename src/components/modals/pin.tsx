@@ -9,7 +9,7 @@ import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {PIN_BANNED_ATTEMPTS} from '@app/variables';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export type PinModalProps = {};
 

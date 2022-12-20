@@ -26,7 +26,7 @@ import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
@@ -109,6 +109,7 @@ export const StakingInfo = ({
           {moniker}
         </Text>
         <Badge
+          center
           i18n={localStatus as number}
           labelColor={labelColor}
           textColor={textColor}
