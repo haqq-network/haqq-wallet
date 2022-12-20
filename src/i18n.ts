@@ -715,6 +715,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountStyleFlat]: 'Flat',
   [I18N.settingsAccountStyleGradient]: 'Gradient',
   [I18N.settingsAccountStyleCircle]: 'Circle',
+  [I18N.settingsAccountStyleRhombus]: 'Rhombus',
   [I18N.backupFinishSuccess]: "You've successfully protected your account.",
   [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',

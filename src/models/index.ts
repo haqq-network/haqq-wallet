@@ -31,7 +31,7 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.isHidden = false;
-        newObject.cardStyle = 'defaultGreen';
+        newObject.cardStyle = 'flat';
       }
     }
 
