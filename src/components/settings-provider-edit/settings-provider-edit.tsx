@@ -24,6 +24,7 @@ import {ActionsSheet} from '@app/components/actions-sheet';
 import {WrappedInput} from '@app/components/settings-provider-edit/wrapped-input';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
   CustomHeader,
   IconsName,
@@ -370,6 +371,7 @@ export const SettingsProviderEdit = memo(
             <View style={page.buttonContainerRemove}>
               <Button
                 variant={ButtonVariant.error}
+                size={ButtonSize.middle}
                 style={page.errorButton}
                 onPress={onRemove}
                 title={getText(I18N.settingsProviderEditDeleteProvider)}

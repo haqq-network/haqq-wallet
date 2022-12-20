@@ -151,6 +151,7 @@ const styles = createTheme({
   middleContainer: {
     paddingVertical: 9, // originally 12 but for android 12 - 3
     paddingHorizontal: 20,
+    borderRadius: 12,
     height: 46,
   },
   // eslint-disable-next-line react-native/no-unused-styles
@@ -181,6 +182,10 @@ const styles = createTheme({
   // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
+  },
+  // eslint-disable-next-line react-native/no-unused-styles
+  errorContainer: {
+    backgroundColor: Color.bg7,
   },
   textIconRight: {
     marginRight: 8,
