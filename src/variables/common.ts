@@ -82,7 +82,7 @@ export const LIGHT_BG_6 = '#FCEDCE';
 export const DARK_BG_6 = '#48361B';
 
 export const LIGHT_BG_7 = '#F9EEEE';
-export const DARK_BG_7 = '#F9EEEE';
+export const DARK_BG_7 = '#574747';
 
 export const LIGHT_BG_8 = '#F4F5F8';
 export const DARK_BG_8 = '#292E2D';
