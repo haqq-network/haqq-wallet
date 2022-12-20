@@ -5,13 +5,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {utils} from 'ethers';
 import {StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
+import {Icon, IconButton} from '@app/components/ui';
+import {hideModal, showModal} from '@app/helpers';
 import {useApp} from '@app/hooks';
-
-import {IconButton, QRScanner} from './ui';
-
-import {hideModal, showModal} from '../helpers/modal';
-import {RootStackParamList} from '../types';
-import {LIGHT_GRAPHIC_BASE_1} from '../variables/common';
+import {RootStackParamList} from '@app/types';
 
 export const QrScannerButton = () => {
   const app = useApp();
@@ -32,7 +30,7 @@ export const QrScannerButton = () => {
 
   return (
     <IconButton onPress={onPressQR} style={page.container}>
-      <QRScanner color={LIGHT_GRAPHIC_BASE_1} />
+      <Icon name="qr_scanner" color={Color.graphicBase1} />
     </IconButton>
   );
 };
