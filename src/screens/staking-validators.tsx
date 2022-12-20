@@ -1,24 +1,22 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Validator} from '@evmos/provider/dist/rest/staking';
 
 import {StakingValidators} from '@app/components/staking-validators';
-import {app} from '@app/contexts';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
-import {useTypedNavigation} from '@app/hooks';
+import {useCosmos, useTypedNavigation} from '@app/hooks';
 import {useThrottle} from '@app/hooks/use-throttle';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 import {ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
   const navigation = useTypedNavigation();
 
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
   const [stakingCache, setStakingCache] = useState<
     Record<string, Record<StakingMetadataType, number>>
   >({});

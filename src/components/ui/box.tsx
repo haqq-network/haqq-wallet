@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet, View, ViewProps} from 'react-native';
 
-import {LIGHT_BG_8} from '../../variables';
+import {LIGHT_BG_8} from '../../variables/common';
 
 export const Box = ({children, style, ...props}: ViewProps) => {
   const container = useMemo(() => [page.container, style], [style]);

@@ -11,7 +11,7 @@ import {
   ETH_HD_PATH,
   ETH_HD_SHORT_PATH,
   MAIN_ACCOUNT_NAME,
-} from '@app/variables';
+} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation();

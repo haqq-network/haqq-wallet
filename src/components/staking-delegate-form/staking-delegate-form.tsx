@@ -16,7 +16,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;

@@ -4,7 +4,7 @@ import {StatusBar} from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 import {Color, getColor} from '@app/colors';
-import {IS_ANDROID} from '@app/variables';
+import {IS_ANDROID} from '@app/variables/common';
 
 export const useAndroidSystemColors = () => {
   useEffect(() => {
