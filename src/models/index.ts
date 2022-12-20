@@ -1,6 +1,7 @@
 import Realm from 'realm';
 
 import {Contact} from './contact';
+import {GovernanceVoting} from './governance-voting';
 import {Provider} from './provider';
 import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
@@ -8,7 +9,7 @@ import {UserSchema} from './user';
 import {WalletRealm} from './wallet';
 
 import {AppTheme, WalletType} from '../types';
-import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables';
+import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables/common';
 
 export const realm = new Realm({
   schema: [
@@ -18,6 +19,7 @@ export const realm = new Realm({
     Contact,
     Provider,
     StakingMetadata,
+    GovernanceVoting,
   ],
   schemaVersion: 33,
   onMigration: (oldRealm, newRealm) => {

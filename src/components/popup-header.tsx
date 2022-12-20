@@ -2,13 +2,12 @@ import React, {useEffect, useMemo} from 'react';
 
 import {NavigationAction} from '@react-navigation/routers';
 import {StackHeaderProps} from '@react-navigation/stack';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {DEFAULT_HITSLOP} from '@app/variables';
+import {DEFAULT_HITSLOP} from '@app/variables/common';
 
 export const PopupHeader = ({
   options,
@@ -61,7 +60,7 @@ export const PopupHeader = ({
   );
 };
 
-const page = createTheme({
+const page = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',

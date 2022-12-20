@@ -15,7 +15,7 @@ import {
   DEFAULT_CARD_PATTERN,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
-} from '@app/variables';
+} from '@app/variables/common';
 
 import {
   AddWalletParams,

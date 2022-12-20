@@ -14,7 +14,7 @@ import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS} from '@app/variables/common';
 
 type TransactionDetailProps = {
   onCloseBottomSheet: () => void;

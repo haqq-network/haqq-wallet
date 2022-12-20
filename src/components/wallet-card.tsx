@@ -16,7 +16,7 @@ import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation, useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {cleanNumber, shortAddress} from '@app/utils';
-import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables';
+import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
   address: string;
