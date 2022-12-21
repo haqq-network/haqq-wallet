@@ -23,7 +23,7 @@ export const StakingDelegatePreviewScreen = () => {
         const cosmos = new Cosmos(app.provider!);
 
         const resp = await cosmos.delegate(
-          account,
+          wallet.transport,
           validator.operator_address,
           amount,
         );
@@ -44,7 +44,7 @@ export const StakingDelegatePreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, account, validator, amount, fee, navigation]);
+  }, [wallet, validator, amount, fee, navigation]);
 
   return (
     <StakingDelegatePreview

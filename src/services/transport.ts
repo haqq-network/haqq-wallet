@@ -6,4 +6,8 @@ export class Transport {
   constructor(wallet: Wallet) {
     this._wallet = wallet;
   }
+
+  getCosmosAddress() {
+    return this._wallet.cosmosAddress;
+  }
 }
