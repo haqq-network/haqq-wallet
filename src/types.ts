@@ -219,6 +219,28 @@ export type RootStackParamList = {
     deviceId: string;
     deviceName: string;
   };
+  proposalDepositForm: {
+    account: string;
+    proposalId: number;
+    title: string;
+  };
+  proposalDepositPreview: {
+    title: string;
+    fee: number;
+    account: string;
+    amount: number;
+    proposalId: number;
+  };
+  proposalDepositFinish: {
+    title: string;
+    fee: number;
+    txhash: string;
+    amount: number;
+  };
+  proposalDeposit: {
+    proposalId: number;
+    account: string;
+  };
   settingsAccountEdit: {address: string};
   transactionContactEdit: {
     name: string;
