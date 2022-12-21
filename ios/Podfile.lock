@@ -446,7 +446,7 @@ PODS:
     - React-Core
   - react-native-image-picker (4.10.1):
     - React-Core
-  - react-native-netinfo (9.3.6):
+  - react-native-netinfo (9.3.7):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -524,7 +524,7 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
-  - RealmJS (11.2.0):
+  - RealmJS (11.3.0):
     - React
   - RNCAsyncStorage (1.12.1):
     - React-Core
@@ -911,7 +911,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: f2ab1215d17bcfe27b0eb6417cc236fd1f4775e7
-  react-native-netinfo: f80db8cac2151405633324cb645c60af098ee461
+  react-native-netinfo: 2517ad504b3d303e90d7a431b0fcaef76d207983
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
@@ -927,7 +927,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
-  RealmJS: d0e94d35363a3a9ebd27981d9ac0aa4b63f66c85
+  RealmJS: 951b827ee81c21da54a7edb9dd355cbb9d330204
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNFBApp: a6a92a67882cde38e6b466a446312de6c6c9b384
