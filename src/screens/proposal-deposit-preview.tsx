@@ -22,7 +22,7 @@ export const ProposalDepositPreviewScreen = () => {
 
         const cosmos = new Cosmos(app.provider!);
 
-        const resp = await cosmos.deposit(account, proposalId, amount);
+        const resp = await cosmos.deposit(wallet.transport, proposalId, amount);
 
         if (resp) {
           navigation.navigate('proposalDepositFinish', {
@@ -40,7 +40,7 @@ export const ProposalDepositPreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, account, amount, fee, navigation, proposalId, title]);
+  }, [wallet, amount, fee, navigation, proposalId, title]);
 
   return (
     <ProposalDepositPreview
