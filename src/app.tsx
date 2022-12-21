@@ -23,7 +23,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
-import {PopupHeader, SettingsAccountRemoveButton} from '@app/components';
+import {PopupHeader} from '@app/components';
 import {
   AppContext,
   TransactionsContext,
@@ -118,6 +118,10 @@ const basicScreenOptions = {
 const stackScreenOptions = {
   presentation: 'modal' as StackPresentationTypes,
   gestureEnabled: false,
+};
+
+const withoutHeader = {
+  headerShown: false,
 };
 
 export const App = () => {
@@ -273,10 +277,7 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsAccountDetail"
                     component={SettingsAccountDetailScreen}
-                    options={{
-                      title: 'Account details',
-                      headerRight: SettingsAccountRemoveButton,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"
@@ -309,9 +310,7 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsSecurityPin"
@@ -344,24 +343,18 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsAccountEdit"
                     component={SettingsAccountEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsContactEdit"
                     component={SettingsContactEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
 
                   <Stack.Screen
                     name="settingsProviderForm"
                     component={SettingsProviderEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsTheme"
