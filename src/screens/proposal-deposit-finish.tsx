@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
 
-import {StakingDelegateFinish} from '@app/components/staking-delegate-finish/staking-delegate-finish';
+import {ProposalDepositFinish} from '@app/components/proposal-deposit-finish';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
-export const StakingDelegateFinishScreen = () => {
+export const ProposalDepositFinishScreen = () => {
   const navigation = useTypedNavigation();
-  const {params} = useTypedRoute<'stakingDelegateFinish'>();
+  const {params} = useTypedRoute<'proposalDepositFinish'>();
 
   const onDone = useCallback(() => {
     app.emit(Events.onStakingSync);
@@ -15,12 +15,12 @@ export const StakingDelegateFinishScreen = () => {
   }, [navigation]);
 
   return (
-    <StakingDelegateFinish
+    <ProposalDepositFinish
       onDone={onDone}
-      validator={params.validator}
+      txhash={params.txhash}
+      title={params.title}
       amount={params.amount}
       fee={params.fee}
-      txhash={params.txhash}
     />
   );
 };
