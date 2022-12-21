@@ -1,31 +1,23 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
-import {ScrollView, View, useWindowDimensions} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {
   Badge,
-  // Button,
-  // ButtonVariant,
   Icon,
   InfoBlock,
   InfoBlockType,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
-import {useApp, useCosmos, useWalletsList} from '@app/hooks';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  GovernanceVoting,
-  ProposalRealmType,
-} from '@app/models/governance-voting';
-import {Wallet} from '@app/models/wallet';
+import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
 import {ProposalsTags} from '@app/variables/proposal';
-import {VOTES} from '@app/variables/votes';
 
 import {
   VotingCardDetail,
@@ -34,47 +26,14 @@ import {
 
 interface ProposalProps {
   item: ProposalRealmType;
-  onDepositSubmit?: (address: string) => Promise<void>;
+  collectedDeposit: number;
+  vote?: VoteNamesType;
+  onDeposit?: () => void;
 }
 
-export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
+export function Proposal({item, collectedDeposit, vote}: ProposalProps) {
   const {bottom} = useSafeAreaInsets();
   const cardRef = useRef<VotingCardDetailRefInterface>();
-  const voteSelectedRef = useRef<VoteNamesType>();
-  const [vote, setVote] = useState<VoteNamesType>();
-  const [collectedDeposit, setCollectedDeposit] = useState(0);
-
-  const cosmos = useCosmos();
-  const app = useApp();
-  const {visible} = useWalletsList();
-  const closeDistance = useWindowDimensions().height / 6;
-
-  // const onDeposit = () => {
-  //   showModal('wallets-bottom-sheet', {
-  //     wallets: visible,
-  //     closeDistance,
-  //     title: I18N.proposalAccountTitle,
-  //     eventSuffix: '-proposal-deposit',
-  //   });
-  //   if (onDepositSubmit) {
-  //     app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
-  //   }
-  // };
-
-  useEffect(() => {
-    const onVotedSubmit = async (address: string) => {
-      const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
-      const wallet = Wallet.getById(address);
-      if (!(wallet && item)) {
-        return;
-      }
-      await cosmos.vote(wallet.transport, item.orderNumber, opinion);
-    };
-    app.addListener('wallet-selected-proposal', onVotedSubmit);
-    return () => {
-      app.removeListener('wallet-selected-proposal', onVotedSubmit);
-    };
-  }, [app, item, cosmos]);
 
   useEffect(() => {
     item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
@@ -82,51 +41,6 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
       collectedDeposit / (item?.proposalDepositNeeds ?? 0),
     );
   }, [collectedDeposit, item]);
-
-  useEffect(() => {
-    if (item?.status === 'voting') {
-      showModal('proposal-vote', {eventSuffix: '-proposal'});
-
-      const onVote = (decision: VoteNamesType) => {
-        voteSelectedRef.current = decision;
-        cardRef.current?.setSelected(decision);
-        showModal('wallets-bottom-sheet', {
-          wallets: visible,
-          closeDistance,
-          title: I18N.proposalAccountTitle,
-          eventSuffix: '-proposal',
-        });
-      };
-
-      const onVoteChange = (decision: VoteNamesType) => {
-        cardRef.current?.setSelected(decision);
-        setVote(decision);
-      };
-
-      app.on('proposal-vote-proposal', onVote);
-      app.on('proposal-vote-change-proposal', onVoteChange);
-      return () => {
-        app.off('proposal-vote-proposal', onVote);
-        app.off('proposal-vote-change-proposal', onVoteChange);
-      };
-    }
-  }, [app, item, closeDistance, visible]);
-
-  useEffect(() => {
-    cosmos.getProposalDeposits(item.orderNumber).then(voter => {
-      const sum = GovernanceVoting.depositSum(voter);
-      setCollectedDeposit(sum);
-    });
-    // if (item?.orderNumber) {
-    //   (async () => {
-    //     const details = await cosmos.getProposalDetails(id);
-    //     // setDetails({
-
-    //     // })
-    //     console.log('🚀 - details', JSON.stringify(response.proposal));
-    //   })();
-    // }
-  }, [item.orderNumber, cosmos]);
 
   if (!item) {
     return <></>;
