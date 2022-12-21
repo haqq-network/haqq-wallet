@@ -13,6 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {Transaction} from './models/transaction';
 
 export interface TransportWallet {
+  getCosmosAddress: () => string;
   getPublicKey: () => Promise<string>;
 
   signTypedData: (domainHash: string, valueHash: string) => Promise<string>;

@@ -22,6 +22,7 @@ import {
   GovernanceVoting,
   ProposalRealmType,
 } from '@app/models/governance-voting';
+import {Wallet} from '@app/models/wallet';
 import {VoteNamesType} from '@app/types';
 import {ProposalsTags} from '@app/variables/proposal';
 import {VOTES} from '@app/variables/votes';
@@ -61,12 +62,13 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
   };
 
   useEffect(() => {
-    const onVotedSubmit = (address: string) => {
+    const onVotedSubmit = async (address: string) => {
       const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
-
-      if (item) {
-        cosmos.vote(address, item.orderNumber, opinion);
+      const wallet = Wallet.getById(address);
+      if (!(wallet && item)) {
+        return;
       }
+      await cosmos.vote(wallet.transport, item.orderNumber, opinion);
     };
     app.addListener('wallet-selected-proposal', onVotedSubmit);
     return () => {
