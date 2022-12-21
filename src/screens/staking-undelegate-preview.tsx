@@ -24,7 +24,7 @@ export const StakingUnDelegatePreviewScreen = () => {
 
         const {tx_response} =
           (await cosmos.unDelegate(
-            account,
+            wallet.transport,
             validator.operator_address,
             amount,
           )) || {};
@@ -45,7 +45,7 @@ export const StakingUnDelegatePreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, account, validator, amount, fee, navigation]);
+  }, [wallet, validator, amount, fee, navigation]);
 
   return (
     <StakingUnDelegatePreview
