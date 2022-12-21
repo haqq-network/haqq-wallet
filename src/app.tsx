@@ -60,6 +60,7 @@ import {Modals} from './screens/modals';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
+import {ProposalDepositScreen} from './screens/proposal-deposit';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -235,6 +236,10 @@ export const App = () => {
                   <Stack.Screen
                     name="stakingUnDelegate"
                     component={StakingUnDelegateScreen}
+                  />
+                  <Stack.Screen
+                    name="proposalDeposit"
+                    component={ProposalDepositScreen}
                   />
                 </Stack.Group>
                 <Stack.Screen
