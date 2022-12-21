@@ -7,8 +7,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {
   Badge,
-  Button,
-  ButtonVariant,
+  // Button,
+  // ButtonVariant,
   Icon,
   InfoBlock,
   InfoBlockType,
@@ -37,7 +37,7 @@ interface ProposalProps {
   onDepositSubmit?: (address: string) => Promise<void>;
 }
 
-export function Proposal({item, onDepositSubmit}: ProposalProps) {
+export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
   const {bottom} = useSafeAreaInsets();
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
@@ -49,17 +49,17 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
   const {visible} = useWalletsList();
   const closeDistance = useWindowDimensions().height / 6;
 
-  const onDeposit = () => {
-    showModal('wallets-bottom-sheet', {
-      wallets: visible,
-      closeDistance,
-      title: I18N.proposalAccountTitle,
-      eventSuffix: '-proposal-deposit',
-    });
-    if (onDepositSubmit) {
-      app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
-    }
-  };
+  // const onDeposit = () => {
+  //   showModal('wallets-bottom-sheet', {
+  //     wallets: visible,
+  //     closeDistance,
+  //     title: I18N.proposalAccountTitle,
+  //     eventSuffix: '-proposal-deposit',
+  //   });
+  //   if (onDepositSubmit) {
+  //     app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
+  //   }
+  // };
 
   useEffect(() => {
     const onVotedSubmit = async (address: string) => {
@@ -244,7 +244,7 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
         </View>
         <Spacer height={(isDeposited ? 0 : bottom) + 28} />
       </ScrollView>
-      {isDeposited && (
+      {/* {isDeposited && (
         <View style={styles.depositButtonContainer}>
           <Button
             variant={ButtonVariant.contained}
@@ -253,7 +253,7 @@ export function Proposal({item, onDepositSubmit}: ProposalProps) {
           />
           <Spacer height={bottom} />
         </View>
-      )}
+      )} */}
     </>
   );
 }
@@ -278,7 +278,7 @@ const styles = createTheme({
   infoBlockMargin: {
     marginTop: 8,
   },
-  depositButtonContainer: {
-    padding: 20,
-  },
+  // depositButtonContainer: {
+  //   padding: 20,
+  // },
 });
