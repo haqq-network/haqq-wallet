@@ -64,7 +64,7 @@ export const StakingInfoScreen = () => {
         visible
           .filter(w => delegators.has(w.cosmosAddress))
           .map(w =>
-            cosmos.withdrawDelegatorReward(w.address, operator_address),
+            cosmos.withdrawDelegatorReward(w.transport, operator_address),
           ),
       )
         .then(() => {

@@ -84,7 +84,6 @@ export const runUntil = (
       };
     },
     abort: async () => {
-      console.log('abort');
       if (transport) {
         aborted = true;
         await transport.close();

@@ -37,13 +37,12 @@ import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
-import {wallets} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {DepositResponse} from '@app/types';
+import {DepositResponse, TransportWallet} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -151,9 +150,13 @@ export class Cosmos {
     );
   }
 
-  async deposit(source: string, proposalId: number, amount: number) {
+  async deposit(
+    transport: TransportWallet,
+    proposalId: number,
+    amount: number,
+  ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
       const memo = '';
       const strAmount = new Decimal(amount).mul(WEI);
       const params = {
@@ -171,7 +174,7 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (error) {
       captureException(error, 'Cosmos.deposit');
     }
@@ -213,15 +216,9 @@ export class Cosmos {
     }
   }
 
-  async getSender(ethAddress: string) {
-    const wallet = wallets.getWallet(ethAddress);
-
-    if (!wallet) {
-      throw new Error('wallet_not_found');
-    }
-
-    const accInfo = await this.getAccountInfo(wallet.cosmosAddress);
-    const pubkey = await wallet.transport?.getPublicKey();
+  async getSender(transport: TransportWallet) {
+    const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
+    const pubkey = await transport.getPublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
@@ -231,13 +228,11 @@ export class Cosmos {
   }
 
   async signTypedData(
-    ethAddress: string,
+    transport: TransportWallet,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    const wallet = wallets.getWallet(ethAddress);
-
     // @ts-ignore
     const {EIP712Domain, ...othTypes} = types;
 
@@ -248,11 +243,11 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    return await wallet?.transport.signTypedData(domainHash, valuesHash);
+    return await transport.signTypedData(domainHash, valuesHash);
   }
 
   async sendMsg(
-    source: string,
+    transport: TransportWallet,
     sender: Sender,
     msg: {
       legacyAmino: {
@@ -274,7 +269,7 @@ export class Cosmos {
     },
   ) {
     const signature = await this.signTypedData(
-      source,
+      transport,
       msg.eipToSign.domain,
       msg.eipToSign.types as Record<string, Array<TypedDataField>>,
       msg.eipToSign.message,
@@ -295,9 +290,9 @@ export class Cosmos {
     return await this.broadcastTransaction(rawTx);
   }
 
-  async vote(source: string, proposalId: number, option: number) {
+  async vote(transport: TransportWallet, proposalId: number, option: number) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         proposalId,
@@ -314,15 +309,19 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.vote');
     }
   }
 
-  async unDelegate(source: string, address: string, amount: number) {
+  async unDelegate(
+    transport: TransportWallet,
+    address: string,
+    amount: number,
+  ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const strAmount = new Decimal(amount).mul(WEI);
 
@@ -342,15 +341,15 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       console.log('err', e);
     }
   }
 
-  async delegate(source: string, address: string, amount: number) {
+  async delegate(transport: TransportWallet, address: string, amount: number) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
       const strAmount = new Decimal(amount).mul(WEI);
       const params = {
         validatorAddress: address,
@@ -368,18 +367,18 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.delegate');
     }
   }
 
   async multipleWithdrawDelegatorReward(
-    source: string,
+    transport: TransportWallet,
     validatorAddresses: string[],
   ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         validatorAddresses,
@@ -395,15 +394,18 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.multipleWithdrawDelegatorReward');
     }
   }
 
-  async withdrawDelegatorReward(source: string, validatorAddress: string) {
+  async withdrawDelegatorReward(
+    transport: TransportWallet,
+    validatorAddress: string,
+  ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         validatorAddress,
@@ -419,7 +421,7 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.withdrawDelegatorReward');
     }

@@ -81,7 +81,7 @@ export const HomeStakingScreen = () => {
         .filter(w => w.cosmosAddress in delegators)
         .map(w => {
           return cosmos.multipleWithdrawDelegatorReward(
-            w.address,
+            w.transport,
             delegators[w.cosmosAddress],
           );
         }),

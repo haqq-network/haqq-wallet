@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {Device} from 'react-native-ble-plx';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 
 export type LedgerScanRowProps = {
   item: Device;
@@ -14,14 +15,14 @@ export type LedgerScanRowProps = {
 export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
   return (
     <TouchableOpacity onPress={() => onPress(item)}>
-      <Text color={Color.bg3} style={style.textName} t11>
+      <Text style={style.textName} t11>
         {item.name}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const style = StyleSheet.create({
+const style = createTheme({
   textName: {
     borderRadius: 16,
     paddingHorizontal: 20,
@@ -29,5 +30,6 @@ const style = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 6,
     overflow: 'hidden',
+    backgroundColor: Color.bg3,
   },
 });
