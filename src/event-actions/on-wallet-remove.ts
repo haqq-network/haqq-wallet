@@ -1,4 +1,4 @@
-import {Events} from '@app/event-actions/index';
+import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {pushNotifications} from '@app/services/push-notifications';
