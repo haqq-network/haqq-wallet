@@ -91,7 +91,9 @@ RCTRootView* overview = nil;
 {
 #if DEBUG
   NSString *storybookEnabled = [ReactNativeConfig envFor:@"STORYBOOK_ENABLED"];
-  #if storybookEnabled == "1"
+  NSString *trueString = @"1";
+  BOOL stringsAreEqual = [trueString isEqualToString:storybookEnabled];
+  #if stringsAreEqual
     return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"storybook-index"];
   #else
     return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"default-index"];
