@@ -78,9 +78,6 @@ export const WalletCard = ({address}: BalanceProps) => {
         <Text t12 style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
           {wallet.name || 'name'}
         </Text>
-        <IconButton onPress={onPressQR} style={styles.qrButton}>
-          <Icon i24 name="qr_code" color={Color.graphicBase3} />
-        </IconButton>
         <CopyButton style={styles.copyButton} value={wallet.address}>
           <Text t14 color={Color.textBase3}>
             {formattedAddress}
@@ -142,6 +139,7 @@ const styles = createTheme({
   topNav: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginBottom: 30,
   },
   spacer: {flex: 1},
@@ -171,7 +169,6 @@ const styles = createTheme({
     justifyContent: 'space-between',
     marginLeft: 12,
   },
-  qrButton: {},
   cacheButton: {
     alignSelf: 'flex-start',
     marginBottom: 8,
