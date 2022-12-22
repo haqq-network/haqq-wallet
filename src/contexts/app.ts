@@ -96,8 +96,9 @@ class App extends EventEmitter {
     });
 
     this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
-    setInterval(this.checkBalance.bind(this), 6000);
+    this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
+    setInterval(this.checkBalance, 6000);
   }
 
   async init(): Promise<void> {
@@ -108,6 +109,10 @@ class App extends EventEmitter {
       return Promise.reject('user_not_found');
     }
     await this.auth();
+
+    await new Promise(resolve => {
+      this.emit(Events.onWalletsBalanceCheck, resolve);
+    });
 
     this.authenticated = true;
 

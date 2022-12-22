@@ -4,10 +4,8 @@ import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 
 export async function onWalletsBalanceCheck(callback?: () => void) {
-  const wallets = Wallet.getAll();
-
   Promise.all(
-    wallets.map(w => {
+    Wallet.getAll().map(w => {
       return EthNetwork.getBalance(w.address).then(balance => {
         return [w.address, balance];
       });

@@ -8,7 +8,7 @@ import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check
 import {Events} from '@app/events';
 import {throttle} from '@app/utils';
 
-app.on(Events.onWalletsBalanceCheck, onWalletsBalanceCheck);
+app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 app.on(Events.onDeepLink, onDeepLink);
 app.on(Events.onWalletCreate, onWalletCreate);
 app.on(Events.onWalletRemove, onWalletRemove);
