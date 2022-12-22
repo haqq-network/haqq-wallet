@@ -13,6 +13,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {Events} from '@app/events';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -58,6 +59,7 @@ class App extends EventEmitter {
   private _lastTheme: AppTheme = AppTheme.light;
   private _provider: Provider | null;
 
+  private _balance: Map<string, number> = new Map();
   constructor() {
     super();
 
@@ -88,8 +90,13 @@ class App extends EventEmitter {
       if (p) {
         this._provider = p;
         EthNetwork.init(p);
+        app.emit(Events.onProviderChanged);
       }
     });
+
+    this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
+    setInterval(this.checkBalance.bind(this), 6000);
+    this.checkBalance();
   }
 
   async init(): Promise<void> {
@@ -314,6 +321,28 @@ class App extends EventEmitter {
 
   setSnoozeBackup() {
     return this.user?.setSnoozeBackup();
+  }
+
+  checkBalance() {
+    app.emit(Events.onWalletsBalanceCheck);
+  }
+
+  onWalletsBalance(balance: Record<string, number>) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      if (this._balance.get(entry[0]) !== entry[1]) {
+        this._balance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      app.emit('balance');
+    }
+  }
+
+  getBalance(address: string) {
+    return this._balance.get(address) ?? 0;
   }
 }
 

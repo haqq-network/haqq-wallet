@@ -2,7 +2,6 @@ import {EventEmitter} from 'events';
 
 import {app} from '@app/contexts';
 import {decrypt, encrypt} from '@app/passworder';
-import {EthNetwork} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
 import {TransportHot} from '@app/services/transport-hot';
 import {TransportLedger} from '@app/services/transport-ledger';
@@ -228,38 +227,34 @@ export class Wallet extends EventEmitter {
 
   constructor(data: WalletRealm) {
     super();
-
     this._raw = data;
-
-    const interval = setInterval(this.checkBalance, 6000);
-
-    this.on('checkBalance', this.checkBalance);
-
-    this._raw.addListener((_object, changes) => {
-      if (changes.deleted) {
-        clearInterval(interval);
-      } else {
-        this.emit('change');
-      }
-    });
-
-    this.checkBalance();
   }
 
   get address() {
     return this._raw.address;
   }
 
-  async getPrivateKey(password: string) {
+  async getPrivateKey() {
     switch (this.type) {
       case WalletType.hot:
       case WalletType.mnemonic: {
+        const password = await app.getPassword();
         const decrypted = await decrypt(password, this._raw.data);
         return decrypted.privateKey;
       }
       default:
         throw new Error('wallet_no_pk');
     }
+  }
+
+  get publicKey() {
+    return this._raw.publicKey;
+  }
+
+  set publicKey(value) {
+    realm.write(() => {
+      this._raw.publicKey = value;
+    });
   }
 
   get name() {
@@ -374,12 +369,6 @@ export class Wallet extends EventEmitter {
     return this._raw.deviceName;
   }
 
-  checkBalance = () => {
-    EthNetwork.getBalance(this.address).then(balance => {
-      this.balance = balance;
-    });
-  };
-
   async getMnemonic(password: string) {
     const decrypted = await decrypt(password, this._raw.data);
 
@@ -388,16 +377,6 @@ export class Wallet extends EventEmitter {
         ? decrypted.mnemonic
         : decrypted.mnemonic.phrase) ?? ''
     );
-  }
-
-  set balance(value: number) {
-    this._balance = value;
-    this.emit('balance', {balance: this.balance});
-    app.emit('balance', this.address);
-  }
-
-  get balance() {
-    return this._balance;
   }
 
   async updateWalletData(oldPin: string, newPin: string) {
@@ -418,6 +397,7 @@ export class Wallet extends EventEmitter {
   get transportExists() {
     return !!this._transport;
   }
+
   get transport(): TransportWallet {
     if (!this._transport) {
       switch (this.type) {

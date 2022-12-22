@@ -219,7 +219,7 @@ export class Cosmos {
 
   async getSender(transport: TransportWallet) {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
-    const pubkey = await transport.getPublicKey();
+    const pubkey = await transport.getBase64PublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),

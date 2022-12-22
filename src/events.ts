@@ -4,11 +4,15 @@ import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {EthNetwork} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
 import {pushNotifications} from '@app/services/push-notifications';
 import {throttle} from '@app/utils';
 
 export enum Events {
+  onProviderChanged = 'onProviderChanged',
+  onWalletsBalanceCheck = 'onWalletsBalanceCheck',
+  onWalletsBalance = 'onWalletsBalance',
   onWalletCreate = 'onWalletCreate',
   onWalletRemove = 'onWalletRemove',
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
@@ -16,6 +20,24 @@ export enum Events {
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
 }
+
+app.on(Events.onWalletsBalanceCheck, async (callback?: () => void) => {
+  const wallets = Wallet.getAll();
+
+  Promise.all(
+    wallets.map(w => {
+      return EthNetwork.getBalance(w.address).then(balance => {
+        return [w, balance];
+      });
+    }),
+  )
+    .then(responses => {
+      app.emit(Events.onWalletsBalance, Object.fromEntries(responses));
+    })
+    .finally(() => {
+      callback?.();
+    });
+});
 
 app.on(Events.onDeepLink, async (link: string) => {
   console.log('onDeepLink');

@@ -20,7 +20,7 @@ export interface TransportWallet {
   ) => Promise<string>;
   getEthAddress: () => string;
   getCosmosAddress: () => string;
-  getPublicKey: () => Promise<string>;
+  getBase64PublicKey: () => Promise<string>;
 
   signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
 

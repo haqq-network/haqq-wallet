@@ -6,17 +6,8 @@ import {utils} from 'ethers';
 import {runUntil} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {Transport} from '@app/services/transport';
+import {compressPublicKey} from '@app/services/transport-utils';
 import {TransportWallet} from '@app/types';
-
-const compressPublicKey = (publicKey: string) => {
-  let pk = Buffer.from(publicKey, 'hex');
-
-  // eslint-disable-next-line no-bitwise
-  let prefix = (pk[64] & 1) !== 0 ? 0x03 : 0x02;
-  let prefixBuffer = Buffer.alloc(1);
-  prefixBuffer[0] = prefix;
-  return Buffer.concat([prefixBuffer, pk.slice(1, 1 + 32)]).toString('hex');
-};
 
 export class TransportLedger extends Transport implements TransportWallet {
   public stop: boolean = false;
@@ -25,25 +16,28 @@ export class TransportLedger extends Transport implements TransportWallet {
     super(wallet);
   }
 
-  async getPublicKey() {
-    this.stop = false;
-    let response = null;
+  async getBase64PublicKey() {
+    if (!this._wallet.publicKey) {
+      this.stop = false;
+      let response = null;
 
-    const iter = runUntil(this._wallet.deviceId!, eth => {
-      return eth.getAddress(this._wallet.path);
-    });
+      const iter = runUntil(this._wallet.deviceId!, eth => {
+        return eth.getAddress(this._wallet.path);
+      });
 
-    let done = false;
-    do {
-      const resp = await iter.next();
-      response = resp.value;
-      done = resp.done;
-    } while (!done && !this.stop);
+      let done = false;
+      do {
+        const resp = await iter.next();
+        response = resp.value;
+        done = resp.done;
+      } while (!done && !this.stop);
 
-    await iter.abort();
-    const compressedPk = compressPublicKey(response.publicKey);
+      await iter.abort();
 
-    return Buffer.from(compressedPk, 'hex').toString('base64');
+      this._wallet.publicKey = compressPublicKey(response.publicKey);
+    }
+
+    return Buffer.from(this._wallet.publicKey, 'hex').toString('base64');
   }
 
   async getSignedTx(transaction: UnsignedTransaction | TransactionRequest) {
