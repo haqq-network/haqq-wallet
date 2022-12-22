@@ -60,6 +60,7 @@ class App extends EventEmitter {
   private _provider: Provider | null;
 
   private _balance: Map<string, number> = new Map();
+
   constructor() {
     super();
 
@@ -324,7 +325,7 @@ class App extends EventEmitter {
   }
 
   checkBalance() {
-    app.emit(Events.onWalletsBalanceCheck);
+    this.emit(Events.onWalletsBalanceCheck);
   }
 
   onWalletsBalance(balance: Record<string, number>) {
@@ -337,7 +338,7 @@ class App extends EventEmitter {
     }
 
     if (changed) {
-      app.emit('balance');
+      this.emit('balance');
     }
   }
 

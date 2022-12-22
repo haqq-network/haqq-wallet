@@ -53,7 +53,7 @@ export const HomeFeedScreen = () => {
 
     actions.push(
       new Promise(resolve => {
-        app.emit(Events.onWalletsBalanceCheck, wallets.addressList, resolve);
+        app.emit(Events.onWalletsBalanceCheck, resolve);
       }),
     );
 
