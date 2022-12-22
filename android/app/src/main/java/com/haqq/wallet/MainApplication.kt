@@ -32,7 +32,11 @@ class MainApplication : Application(), ReactApplication {
         }
 
         override fun getJSMainModuleName(): String {
-            return "index"
+            return if (BuildConfig.STORYBOOK_ENABLED=="1") {
+                "storybook-index"
+            } else {
+                "default-index"
+            }
         }
     }
     private val mNewArchitectureNativeHost: ReactNativeHost = MainApplicationReactNativeHost(this)

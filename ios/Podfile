@@ -31,6 +31,8 @@ target 'haqq' do
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
+  pod 'react-native-config/Extension', :path => '../node_modules/react-native-config'
+
   target 'haqqTests' do
     inherit! :complete
     # Pods for testing

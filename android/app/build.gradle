@@ -81,6 +81,14 @@ import com.android.build.OutputFile
  * ]
  */
 
+project.ext.envConfigFiles = [
+  debug: ".env",
+  release: ".env",
+  dev: ".env",
+  stage: ".env",
+];
+apply from: project(":react-native-config").projectDir.getPath() + "/dotenv.gradle"
+
 project.ext.react = [
   enableHermes: false,  // clean and rebuild if changing
 //  entryFile: "index.js",
