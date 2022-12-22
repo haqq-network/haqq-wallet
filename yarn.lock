@@ -1667,10 +1667,10 @@
   dependencies:
     invariant "2"
 
-"@ledgerhq/cryptoassets@^6.37.0":
-  version "6.37.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/cryptoassets/-/cryptoassets-6.37.0.tgz#302833777bcd210809ca7820afb82cff8da5c296"
-  integrity sha512-xwrDKTS9koQBNNzc7CqgV6zfGHvNFWJjlIL0Kc4O4DVWYR2vUdztUHcvwHD1KPjxNYhVnsgIopmtq47fHt3nMg==
+"@ledgerhq/cryptoassets@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/cryptoassets/-/cryptoassets-7.0.0.tgz#9f700ef022e65c25b73377ac2513cd012e6aebfb"
+  integrity sha512-mjx5rcmYtZdgHGQlSy8KVKGUNWwmdFeFWDkyBluvXX9/lruuAXrUMai2eAz4EaZ2S48bPpxWpLKloEA1KEo4Yw==
   dependencies:
     invariant "2"
 
@@ -1730,28 +1730,28 @@
     bignumber.js "^9.0.1"
     rlp "^2.2.6"
 
-"@ledgerhq/hw-app-eth@^6.30.0":
-  version "6.30.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-6.30.0.tgz#a8e5878b0eac725f0f4fa5e9222ab6e71b536063"
-  integrity sha512-Mr0apxn/oUXD4DZ2gw3fWJQ1rHDzLCzvoGV7Y1/CLoLy85A3w5nROTrFY0+SZNAIB/tqzWZJ9SQpBg5yXVzmmA==
+"@ledgerhq/hw-app-eth@^6.30.1":
+  version "6.30.2"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-6.30.2.tgz#bcc43d2483dcd525701de3596e31a8497d7f6981"
+  integrity sha512-2Bs6aaeSiMvSGhGCepz4YwitlBMwSZPw+4SX62hrU3rTfMTALlI6yUnrn6M7Ld70Rbw9g1pLzY1heR5al6SVLQ==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@ethersproject/rlp" "^5.5.0"
-    "@ledgerhq/cryptoassets" "^6.37.0"
-    "@ledgerhq/errors" "^6.12.0"
-    "@ledgerhq/hw-transport" "^6.27.7"
-    "@ledgerhq/hw-transport-mocker" "^6.27.7"
+    "@ledgerhq/cryptoassets" "^7.0.0"
+    "@ledgerhq/errors" "^6.12.1"
+    "@ledgerhq/hw-transport" "^6.27.8"
+    "@ledgerhq/hw-transport-mocker" "^6.27.8"
     "@ledgerhq/logs" "^6.10.1"
     axios "^0.26.1"
     bignumber.js "^9.1.0"
     crypto-js "^4.1.1"
 
-"@ledgerhq/hw-transport-mocker@^6.27.7":
-  version "6.27.7"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-mocker/-/hw-transport-mocker-6.27.7.tgz#7f3e14f3db8b576c912f016aae24a479b2ffc887"
-  integrity sha512-naghEqtwbdpcBsfT4AvtGNI9ahIns2K55zO65dn08qUSj6LlfVzdN9vSbSiNHDcMoRmXttRFJdRQXeEDBMOd0w==
+"@ledgerhq/hw-transport-mocker@^6.27.8":
+  version "6.27.8"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-mocker/-/hw-transport-mocker-6.27.8.tgz#33a08d0853bd7972296770f9202e4f2ab893a6e8"
+  integrity sha512-I9/TMQK0+3rgvm5+AZVFFB84wyEREqVpVVmkwhuYZj084g0Z+WRINOlr1ep3d21E67li4tzxFtkG1dzfVPD45w==
   dependencies:
-    "@ledgerhq/hw-transport" "^6.27.7"
+    "@ledgerhq/hw-transport" "^6.27.8"
     "@ledgerhq/logs" "^6.10.1"
 
 "@ledgerhq/hw-transport-node-hid-noevents@^5.26.0":
@@ -1835,14 +1835,14 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.1.tgz#5bd16082261d7364eabb511c788f00937dac588d"
   integrity sha512-z+ILK8Q3y+nfUl43ctCPuR4Y2bIxk/ooCQFwZxhtci1EhAtMDzMAx2W25qx8G1PPL9UUOdnUax19+F0OjXoj4w==
 
-"@ledgerhq/react-native-hw-transport-ble@^6.27.9":
-  version "6.27.9"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/react-native-hw-transport-ble/-/react-native-hw-transport-ble-6.27.9.tgz#4ed065a4d22e4810b6a35430b6d615cced15c683"
-  integrity sha512-C/eohF5Jz/TekdNoih0dC0E+ZDuvBCI3Y5iHSCpXBkXyMD5lgpYvJjOVEhNJ+FdkHFRPfeiWRGhea93tLVgcrw==
+"@ledgerhq/react-native-hw-transport-ble@^6.27.10":
+  version "6.27.11"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/react-native-hw-transport-ble/-/react-native-hw-transport-ble-6.27.11.tgz#568c342337ada7c7eb30d3d1a4f8ac12bc64ab04"
+  integrity sha512-Xu/eleYDlNNwDMby+pHcl0EPDTZyDnRXPWgy0jYJgWiwl0XAtN8ceuhuyY7eFzGK4gnPWR9IIeQTXQ3ckL1ARQ==
   dependencies:
-    "@ledgerhq/devices" "^7.0.4"
-    "@ledgerhq/errors" "^6.12.0"
-    "@ledgerhq/hw-transport" "^6.27.7"
+    "@ledgerhq/devices" "^7.0.5"
+    "@ledgerhq/errors" "^6.12.1"
+    "@ledgerhq/hw-transport" "^6.27.8"
     "@ledgerhq/logs" "^6.10.1"
     invariant "^2.2.4"
     react-native-ble-plx "2.0.3"
@@ -2218,11 +2218,6 @@
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.12.tgz#14ac1189e0778039c178bd4a6f8da075094896b4"
   integrity sha512-iVcLIYg/XJk1p6X1rSFhNhCjAJ3ORqNT2/bJqw7I/liujeJAoz1oZ5JDoEcZaA0wMDts1txxLuqAYJmhCgU2aA==
 
-"@react-navigation/elements@^1.3.7":
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.7.tgz#40d80a7f34d645b605289da10bc4b6c3a7667215"
-  integrity sha512-OZg2N/dd2tl6qkfrWvmUjFsYsbEyHEv4NbZSBuT+CR+d1pzmexN2IeVmi4cEMoR7U7GwhFcHRevF36yBsjU/dw==
-
 "@react-navigation/native@^6.0.16":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@react-navigation/native/-/native-6.1.1.tgz#79d91db04fbad277f355a10405516df4f67cd308"
@@ -2240,12 +2235,12 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@react-navigation/stack@^6.2.3":
-  version "6.3.5"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.3.5.tgz#c616ef78cbaa55938da993d871d9fc41801d41f4"
-  integrity sha512-G706Ow+8fhiLT5Cf48566YsjboU5h5ll9nva90xX3br7V6x0JMoGMvXjvbORZyzLuUytQO3mf0T3nVUuO52vZQ==
+"@react-navigation/stack@^6.3.7":
+  version "6.3.10"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-6.3.10.tgz#8a17377c97d978baa5a87a67932463267cfa54cd"
+  integrity sha512-mghQpCbGBI9jpwYmhXDI5drGOxz6F9hLxQgLeu1IsTSA9767Edov7TDt5n/PTJqhpOru7/xoNMs4yhp9ykVhng==
   dependencies:
-    "@react-navigation/elements" "^1.3.7"
+    "@react-navigation/elements" "^1.3.12"
     color "^4.2.3"
     warn-once "^0.1.0"
 
@@ -7215,10 +7210,10 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
-lottie-ios@3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/lottie-ios/-/lottie-ios-3.4.1.tgz#1c264066d1df04644f970cce4c2f82e27086c660"
-  integrity sha512-oZh9BcCMicLFeKC0KO5cfJ6Pzb+qfB7qZ4vqh5R+buXcCRZKnFhHkt9TZfd62ZJi2XC3kirXYVYyU7c+jqpo9g==
+lottie-ios@3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/lottie-ios/-/lottie-ios-3.5.0.tgz#ed909dffbf1125a180df1614cf02aadee43b7840"
+  integrity sha512-DM6BYLhHTzvUsK89AjY+K9RwVGkOBwbH/iytjyZUmFbXz8DVsoPEyy+c7L5NZmVouZHvLnOQp6NaYTkwMo+iOg==
 
 lottie-react-native@5.1.4:
   version "5.1.4"
