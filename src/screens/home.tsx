@@ -16,7 +16,7 @@ import {Provider} from '@app/models/provider';
 import {HomeGovernanceScreen} from '@app/screens/home-governance';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {RootStackParamList} from '@app/types';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS} from '@app/variables/common';
 
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
@@ -60,9 +60,11 @@ const feedOptions = {
 
 const stakingOptions = {
   title: getText(I18N.homeStaking),
+  unmountOnBlur: true,
 };
 
 const governanceOptions = {
+  headerShown: false,
   title: getText(I18N.homeGovernance),
 };
 

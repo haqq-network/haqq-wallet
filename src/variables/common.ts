@@ -1,7 +1,7 @@
 import {Dimensions, Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
-import {BiometryType} from './types';
+import {BiometryType} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -42,6 +42,9 @@ export const DARK_GRAPHIC_BASE_3 = '#FFFFFF';
 export const LIGHT_GRAPHIC_RED_1 = '#E16363';
 export const DARK_GRAPHIC_RED_1 = '#E16363';
 
+export const LIGHT_GRAPHIC_BLUE_1 = '#0489D4';
+export const DARK_GRAPHIC_BLUE_1 = '#0489D4';
+
 export const LIGHT_GRAPHIC_GREEN_1 = '#01B26E';
 export const DARK_GRAPHIC_GREEN_1 = '#01B26E';
 
@@ -79,7 +82,7 @@ export const LIGHT_BG_6 = '#FCEDCE';
 export const DARK_BG_6 = '#48361B';
 
 export const LIGHT_BG_7 = '#F9EEEE';
-export const DARK_BG_7 = '#F9EEEE';
+export const DARK_BG_7 = '#574747';
 
 export const LIGHT_BG_8 = '#F4F5F8';
 export const DARK_BG_8 = '#292E2D';

@@ -18,10 +18,12 @@ export enum IconsName {
   circle_pattern = 'circle_pattern',
   clear = 'clear',
   close_circle = 'close_circle',
+  close = 'close',
   color_flat = 'color_flat',
   color_gradient = 'color_gradient',
   copy = 'copy',
   doc = 'doc',
+  deposit = 'deposit',
   flash = 'flash',
   flashlight = 'flashlight',
   global = 'global',
@@ -35,6 +37,7 @@ export enum IconsName {
   list = 'list',
   lock = 'lock',
   market = 'market',
+  no_proposal_voting = 'no_proposal_voting',
   paste = 'paste',
   pen = 'pen',
   ledger = 'ledger',
@@ -52,6 +55,9 @@ export enum IconsName {
   staking = 'staking',
   star = 'star',
   swap = 'swap',
+  time = 'time',
+  timer_governance = 'timer_governance',
+  timer = 'timer',
   trash = 'trash',
   twitter = 'twitter',
   up = 'up',
@@ -64,10 +70,13 @@ export enum IconsName {
 export type IconSize =
   | {i12: boolean}
   | {i16: boolean}
+  | {i18: boolean}
+  | {i22: boolean}
   | {i24: boolean}
   | {i32: boolean}
   | {i42: boolean}
   | {i72: boolean}
+  | {i80: boolean}
   | {i120: boolean}
   | {};
 
@@ -84,13 +93,16 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         styles.i24Container,
         'i12' in props && styles.i12Container,
         'i16' in props && styles.i16Container,
+        'i18' in props && styles.i18Container,
+        'i22' in props && styles.i22Container,
         'i24' in props && styles.i24Container,
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
         'i72' in props && styles.i72Container,
+        'i80' in props && styles.i80Container,
         'i120' in props && styles.i120Container,
         style,
-        {tintColor: getColor(color as Color)},
+        {tintColor: getColor(color)},
       ]),
     [color, props, style],
   );
@@ -102,6 +114,10 @@ const styles = StyleSheet.create({
   i120Container: {
     width: 120,
     height: 120,
+  },
+  i80Container: {
+    width: 80,
+    height: 80,
   },
   i72Container: {
     width: 72,
@@ -118,6 +134,14 @@ const styles = StyleSheet.create({
   i24Container: {
     width: 24,
     height: 24,
+  },
+  i22Container: {
+    width: 22,
+    height: 22,
+  },
+  i18Container: {
+    width: 18,
+    height: 18,
   },
   i16Container: {
     width: 16,

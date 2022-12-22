@@ -4,6 +4,8 @@ import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
 
+export type ProviderKeys = keyof Omit<Provider, 'id'>;
+
 export class Provider extends Realm.Object {
   id!: string;
   name!: string;

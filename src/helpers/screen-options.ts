@@ -10,7 +10,7 @@ export const actionSheet: ActionSheetType = {
 };
 
 export const hideBack = {
-  headerBackHidden: true,
+  headerBackVisible: false,
   headerRight: DismissPopupButton,
 };
 

@@ -24,6 +24,7 @@ import {
   Chain,
   Fee,
   createTxMsgDelegate,
+  createTxMsgDeposit,
   createTxMsgMultipleWithdrawDelegatorReward,
   createTxMsgUndelegate,
   createTxMsgVote,
@@ -33,21 +34,20 @@ import {
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
 import converter from 'bech32-converting';
+import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
-import {wallets} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
+import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
-import {
-  StakingMetadata,
-  StakingMetadataType,
-} from '@app/models/staking-metadata';
+import {StakingMetadata} from '@app/models/staking-metadata';
+import {DepositResponse, TransportWallet} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
 } from '@app/types/cosmos';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -62,7 +62,7 @@ export class Cosmos {
   public stop = false;
   static fee: Fee = {
     amount: '5000',
-    gas: '600000',
+    gas: '1400000',
     denom: 'aISLM',
   };
 
@@ -150,6 +150,54 @@ export class Cosmos {
     );
   }
 
+  async deposit(
+    transport: TransportWallet,
+    proposalId: number,
+    amount: number,
+  ) {
+    try {
+      const sender = await this.getSender(transport);
+      const memo = '';
+      const strAmount = new Decimal(amount).mul(WEI);
+      const params = {
+        proposalId,
+        deposit: {
+          amount: strAmount.toFixed(),
+          denom: 'aISLM',
+        },
+      };
+      const msg = createTxMsgDeposit(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      return await this.sendMsg(transport, sender, msg);
+    } catch (error) {
+      captureException(error, 'Cosmos.deposit');
+    }
+  }
+
+  getProposalDepositor(proposal_id: number | string, depositor: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits/${depositor}`,
+    );
+  }
+
+  getProposalDeposits(proposal_id: number | string) {
+    return this.getQuery<DepositResponse>(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits`,
+    );
+  }
+
+  getProposalVoter(proposal_id: string | number, voter: string) {
+    return this.getQuery(
+      `/cosmos/gov/v1beta1/proposals/${proposal_id}/votes/${voter}`,
+    );
+  }
+
   async getProposalDetails(id: string): Promise<{proposal: Proposal}> {
     return this.getQuery(generateEndpointProposals() + `/${id}`);
   }
@@ -168,15 +216,9 @@ export class Cosmos {
     }
   }
 
-  async getSender(ethAddress: string) {
-    const wallet = wallets.getWallet(ethAddress);
-
-    if (!wallet) {
-      throw new Error('wallet_not_found');
-    }
-
-    const accInfo = await this.getAccountInfo(wallet.cosmosAddress);
-    const pubkey = await wallet.transport?.getPublicKey();
+  async getSender(transport: TransportWallet) {
+    const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
+    const pubkey = await transport.getPublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
@@ -186,13 +228,11 @@ export class Cosmos {
   }
 
   async signTypedData(
-    ethAddress: string,
+    transport: TransportWallet,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    const wallet = wallets.getWallet(ethAddress);
-
     // @ts-ignore
     const {EIP712Domain, ...othTypes} = types;
 
@@ -203,11 +243,11 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    return await wallet?.transport.signTypedData(domainHash, valuesHash);
+    return await transport.signTypedData(domainHash, valuesHash);
   }
 
   async sendMsg(
-    source: string,
+    transport: TransportWallet,
     sender: Sender,
     msg: {
       legacyAmino: {
@@ -229,7 +269,7 @@ export class Cosmos {
     },
   ) {
     const signature = await this.signTypedData(
-      source,
+      transport,
       msg.eipToSign.domain,
       msg.eipToSign.types as Record<string, Array<TypedDataField>>,
       msg.eipToSign.message,
@@ -250,9 +290,9 @@ export class Cosmos {
     return await this.broadcastTransaction(rawTx);
   }
 
-  async vote(source: string, proposalId: number, option: number) {
+  async vote(transport: TransportWallet, proposalId: number, option: number) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         proposalId,
@@ -269,19 +309,25 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
-      captureException(e, 'Cosmos.delegate');
+      captureException(e, 'Cosmos.vote');
     }
   }
 
-  async unDelegate(source: string, address: string, amount: number) {
+  async unDelegate(
+    transport: TransportWallet,
+    address: string,
+    amount: number,
+  ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
+
+      const strAmount = new Decimal(amount).mul(WEI);
 
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+        amount: strAmount.toFixed(),
         denom: 'aISLM',
       };
 
@@ -295,19 +341,19 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       console.log('err', e);
     }
   }
 
-  async delegate(source: string, address: string, amount: number) {
+  async delegate(transport: TransportWallet, address: string, amount: number) {
     try {
-      const sender = await this.getSender(source);
-
+      const sender = await this.getSender(transport);
+      const strAmount = new Decimal(amount).mul(WEI);
       const params = {
         validatorAddress: address,
-        amount: ((amount ?? 0) * WEI).toLocaleString().replace(/,/g, ''),
+        amount: strAmount.toFixed(),
         denom: 'aISLM',
       };
 
@@ -321,18 +367,18 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.delegate');
     }
   }
 
   async multipleWithdrawDelegatorReward(
-    source: string,
+    transport: TransportWallet,
     validatorAddresses: string[],
   ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         validatorAddresses,
@@ -348,15 +394,18 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.multipleWithdrawDelegatorReward');
     }
   }
 
-  async withdrawDelegatorReward(source: string, validatorAddress: string) {
+  async withdrawDelegatorReward(
+    transport: TransportWallet,
+    validatorAddress: string,
+  ) {
     try {
-      const sender = await this.getSender(source);
+      const sender = await this.getSender(transport);
 
       const params = {
         validatorAddress,
@@ -372,42 +421,34 @@ export class Cosmos {
         params,
       );
 
-      return await this.sendMsg(source, sender, msg);
+      return await this.sendMsg(transport, sender, msg);
     } catch (e) {
       captureException(e, 'Cosmos.withdrawDelegatorReward');
     }
   }
 
   sync(addressList: string[]) {
-    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
-    const cache: Record<string, string[]> = {};
-
-    for (const row of rows) {
-      const k = `${row.validator}:${row.type}`;
-      cache[k] = (cache[k] ?? []).concat(row.hash);
-    }
+    const rows = StakingMetadata.getAll().snapshot();
 
     return Promise.all(
-      addressList.reduce<Array<Promise<void>>>((memo, curr) => {
+      addressList.reduce<Promise<string[]>[]>((memo, curr) => {
         return memo.concat([
-          this.syncStakingDelegations(
-            cache[`${curr}:${StakingMetadataType.delegation}`] ?? [],
-            curr,
-          ),
-          this.syncStakingUnDelegations(
-            cache[`${curr}:${StakingMetadataType.undelegation}`] ?? [],
-            curr,
-          ),
-          this.syncStakingRewards(
-            cache[`${curr}:${StakingMetadataType.reward}`] ?? [],
-            curr,
-          ),
+          this.syncStakingDelegations(curr),
+          this.syncStakingUnDelegations(curr),
+          this.syncStakingRewards(curr),
         ]);
       }, []),
-    );
+    ).then(results => {
+      const hashes = new Set(results.flat());
+      for (const e of rows) {
+        if (!hashes.has(e.hash)) {
+          StakingMetadata.remove(e.hash);
+        }
+      }
+    });
   }
 
-  async syncStakingDelegations(exists: string[], address: string) {
+  async syncStakingDelegations(address: string): Promise<string[]> {
     return this.getAccountDelegations(address)
       .then(resp =>
         resp.delegation_responses.map(d =>
@@ -418,15 +459,10 @@ export class Cosmos {
           ),
         ),
       )
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
-          .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 
-  async syncStakingUnDelegations(exists: string[], address: string) {
+  async syncStakingUnDelegations(address: string): Promise<string[]> {
     return this.getAccountUnDelegations(address)
       .then(resp => {
         return resp.unbonding_responses
@@ -442,15 +478,10 @@ export class Cosmos {
           })
           .flat();
       })
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
-          .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 
-  async syncStakingRewards(exists: string[], address: string) {
+  async syncStakingRewards(address: string): Promise<string[]> {
     return this.getAccountRewardsInfo(address)
       .then(resp => {
         return resp.rewards
@@ -465,11 +496,69 @@ export class Cosmos {
           )
           .flat();
       })
-      .then(hashes => hashes.filter(Boolean))
-      .then(hashes => {
-        exists
+      .then(hashes => hashes.filter(Boolean) as string[]);
+  }
+
+  async syncGovernanceVoting() {
+    try {
+      const rows = realm.objects<GovernanceVoting>(
+        GovernanceVoting.schema.name,
+      );
+      const cache: number[] = [];
+
+      for (const row of rows) {
+        cache.push(row.orderNumber);
+      }
+
+      try {
+        const proposals = await this.getProposals();
+        const hashes = proposals.proposals
+          .map(
+            ({
+              status,
+              voting_end_time,
+              voting_start_time,
+              total_deposit,
+              deposit_end_time,
+              proposal_id,
+              final_tally_result,
+              content,
+              submit_time,
+            }) => {
+              const veto = final_tally_result.no_with_veto;
+
+              const copy: any = {...final_tally_result};
+              delete copy.no_with_veto;
+              const votes: any = {};
+
+              Object.entries({...copy, veto}).map(([key, val]) => {
+                votes[key] = Math.round(Number(val));
+              });
+
+              return GovernanceVoting.createVoting({
+                status: GovernanceVoting.keyFromStatus(status.toLowerCase()),
+                endDate: voting_end_time,
+                startDate: voting_start_time,
+                depositNeeds: JSON.stringify(total_deposit),
+                depositEndTime: deposit_end_time,
+                createdAtTime: submit_time,
+                orderNumber: Number(proposal_id),
+                description: content.description,
+                title: content.title,
+                votes: JSON.stringify(votes),
+              });
+            },
+          )
+          .filter(Boolean);
+
+        cache
           .filter(r => !hashes.includes(r))
-          .map(r => StakingMetadata.remove(r));
-      });
+          .forEach(r => GovernanceVoting.remove(r));
+      } catch (e) {
+        captureException(e, 'Cosmos.syncGovernanceVoting.getProposals');
+      }
+    } catch (e) {
+      captureException(e, 'Cosmos.syncGovernanceVoting');
+    }
   }
 }

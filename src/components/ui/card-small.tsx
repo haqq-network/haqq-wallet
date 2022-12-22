@@ -5,7 +5,11 @@ import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {createTheme} from '@app/helpers';
-import {CARD_DEFAULT_STYLE, GRADIENT_END, GRADIENT_START} from '@app/variables';
+import {
+  CARD_DEFAULT_STYLE,
+  GRADIENT_END,
+  GRADIENT_START,
+} from '@app/variables/common';
 
 export type CardSmallProps = {
   children?: React.ReactNode;

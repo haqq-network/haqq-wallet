@@ -1,27 +1,26 @@
 import React, {useCallback} from 'react';
 
-import {RouteProp, useRoute} from '@react-navigation/native';
-
 import {StakingDelegateFinish} from '@app/components/staking-delegate-finish/staking-delegate-finish';
-import {useTypedNavigation} from '@app/hooks';
-
-import {RootStackParamList} from '../types';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const StakingDelegateFinishScreen = () => {
   const navigation = useTypedNavigation();
-  const route =
-    useRoute<RouteProp<RootStackParamList, 'stakingDelegateFinish'>>();
+  const {params} = useTypedRoute<'stakingDelegateFinish'>();
 
   const onDone = useCallback(() => {
+    app.emit(Events.onStakingSync);
     navigation.getParent()?.goBack();
   }, [navigation]);
 
   return (
     <StakingDelegateFinish
       onDone={onDone}
-      validator={route.params.validator}
-      amount={route.params.amount}
-      fee={route.params.fee}
+      validator={params.validator}
+      amount={params.amount}
+      fee={params.fee}
+      txhash={params.txhash}
     />
   );
 };

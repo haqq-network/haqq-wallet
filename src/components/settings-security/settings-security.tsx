@@ -61,7 +61,7 @@ export const SettingsSecurity = ({
 
   if (!loggedIn) {
     return (
-      <Pin i18n={I18N.settingsSecurityWalletPin} onPin={onPin} ref={pinRef} />
+      <Pin title={I18N.settingsSecurityWalletPin} onPin={onPin} ref={pinRef} />
     );
   }
 

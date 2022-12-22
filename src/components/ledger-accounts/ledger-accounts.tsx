@@ -5,7 +5,7 @@ import {FlatList, StyleSheet} from 'react-native';
 import {PopupContainer} from '@app/components/ui';
 import {runUntil} from '@app/helpers/run-until';
 import {useWallets} from '@app/hooks';
-import {ETH_HD_PATH} from '@app/variables';
+import {ETH_HD_PATH} from '@app/variables/common';
 
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {LedgerAccountsRow} from './ledger-accounts-row';
@@ -26,8 +26,8 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
       do {
         const resp = await iter.next();
         done = resp.done;
-        const address = resp.value.address;
         if (resp.value) {
+          const address = resp.value.address;
           setAddresses(list =>
             list.includes(address) ? list : list.concat([address]),
           );

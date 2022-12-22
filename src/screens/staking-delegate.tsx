@@ -1,17 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
-import {useTypedRoute} from '@app/hooks';
+import {useCosmos, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {StakingDelegateFinishScreen} from '@app/screens/staking-delegate-finish';
 import {StakingDelegateFormScreen} from '@app/screens/staking-delegate-form';
 import {StakingDelegatePreviewScreen} from '@app/screens/staking-delegate-preview';
-import {Cosmos} from '@app/services/cosmos';
 import {ScreenOptionType, ValidatorItem} from '@app/types';
 
 const StakingDelegateStack = createStackNavigator();
@@ -27,7 +25,7 @@ const screenOptionsForm: ScreenOptionType = {
 };
 
 export const StakingDelegateScreen = () => {
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
   const {
     params: {validator: paramValidator, selectedWalletAddress},
   } = useTypedRoute<'stakingDelegate'>();

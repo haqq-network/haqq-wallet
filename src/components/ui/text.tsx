@@ -38,7 +38,9 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t15?: boolean;
   t16?: boolean;
   t17?: boolean;
+  t18?: boolean;
   u0?: boolean;
+  u1?: boolean;
   clean?: boolean;
   center?: boolean;
   right?: boolean;
@@ -65,7 +67,9 @@ export const Text = ({
   t15,
   t16,
   t17,
+  t18,
   u0,
+  u1,
   style,
   i18n = undefined,
   i18params = undefined,
@@ -81,44 +85,42 @@ export const Text = ({
     [children, i18n, i18params],
   );
 
-  return (
-    <>
-      {clean ? (
-        <RNText style={style} allowFontScaling={false} {...props}>
-          {children}
-        </RNText>
-      ) : (
-        <RNText
-          allowFontScaling={false}
-          style={[
-            t0 && StyleSheet.flatten([page.t0Style, style]),
-            t1 && StyleSheet.flatten([page.t1Style, style]),
-            t2 && StyleSheet.flatten([page.t2Style, style]),
-            t3 && StyleSheet.flatten([page.t3Style, style]),
-            t4 && StyleSheet.flatten([page.t4Style, style]),
-            t5 && StyleSheet.flatten([page.t5Style, style]),
-            t6 && StyleSheet.flatten([page.t6Style, style]),
-            t7 && StyleSheet.flatten([page.t7Style, style]),
-            t8 && StyleSheet.flatten([page.t8Style, style]),
-            t9 && StyleSheet.flatten([page.t9Style, style]),
-            t10 && StyleSheet.flatten([page.t10Style, style]),
-            t11 && StyleSheet.flatten([page.t11Style, style]),
-            t12 && StyleSheet.flatten([page.t12Style, style]),
-            t13 && StyleSheet.flatten([page.t13Style, style]),
-            t14 && StyleSheet.flatten([page.t14Style, style]),
-            t15 && StyleSheet.flatten([page.t15Style, style]),
-            t16 && StyleSheet.flatten([page.t16Style, style]),
-            t17 && StyleSheet.flatten([page.t17Style, style]),
-            u0 && StyleSheet.flatten([page.u0Style, style]),
-            !!color && {color: getColor(color as Color)},
-            center && page.center,
-            right && page.right,
-          ]}
-          {...props}>
-          {value}
-        </RNText>
-      )}
-    </>
+  return clean ? (
+    <RNText style={style} allowFontScaling={false} {...props}>
+      {children}
+    </RNText>
+  ) : (
+    <RNText
+      allowFontScaling={false}
+      style={[
+        t0 && StyleSheet.flatten([page.t0Style, style]),
+        t1 && StyleSheet.flatten([page.t1Style, style]),
+        t2 && StyleSheet.flatten([page.t2Style, style]),
+        t3 && StyleSheet.flatten([page.t3Style, style]),
+        t4 && StyleSheet.flatten([page.t4Style, style]),
+        t5 && StyleSheet.flatten([page.t5Style, style]),
+        t6 && StyleSheet.flatten([page.t6Style, style]),
+        t7 && StyleSheet.flatten([page.t7Style, style]),
+        t8 && StyleSheet.flatten([page.t8Style, style]),
+        t9 && StyleSheet.flatten([page.t9Style, style]),
+        t10 && StyleSheet.flatten([page.t10Style, style]),
+        t11 && StyleSheet.flatten([page.t11Style, style]),
+        t12 && StyleSheet.flatten([page.t12Style, style]),
+        t13 && StyleSheet.flatten([page.t13Style, style]),
+        t14 && StyleSheet.flatten([page.t14Style, style]),
+        t15 && StyleSheet.flatten([page.t15Style, style]),
+        t16 && StyleSheet.flatten([page.t16Style, style]),
+        t17 && StyleSheet.flatten([page.t17Style, style]),
+        t18 && StyleSheet.flatten([page.t18Style, style]),
+        u0 && StyleSheet.flatten([page.u0Style, style]),
+        u1 && StyleSheet.flatten([page.u1Style, style]),
+        !!color && {color: getColor(color as Color)},
+        center && page.center,
+        right && page.right,
+      ]}
+      {...props}>
+      {value}
+    </RNText>
   );
 };
 
@@ -195,6 +197,12 @@ const page = createTheme({
     fontSize: 36,
     lineHeight: 43,
     letterSpacing: 0.38,
+  },
+  u1Style: {
+    fontFamily: 'SF Pro Display',
+    fontStyle: 'normal',
+    fontSize: 20,
+    lineHeight: 25,
   },
   t0Style: {
     fontFamily: 'ElMessiri-Bold',
@@ -309,6 +317,12 @@ const page = createTheme({
     ...sfProTextMedium500,
     fontSize: 10,
     lineHeight: 12,
+    color: Color.textBase1,
+  },
+  t18Style: {
+    ...sfProTextSemibold600,
+    fontSize: 12,
+    lineHeight: 16,
     color: Color.textBase1,
   },
 });

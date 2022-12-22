@@ -20,7 +20,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
   amount: number;
@@ -55,7 +55,7 @@ export const StakingDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber((amount + feeValue).toFixed(15))} ISLM
+        {cleanNumber(amount.toFixed(4))} ISLM
       </Text>
       <Text
         t11
@@ -79,7 +79,7 @@ export const StakingDelegatePreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {feeValue.toFixed(15)} ISLM
+            {feeValue * WEI} aISLM
           </Text>
         </DataView>
       </View>

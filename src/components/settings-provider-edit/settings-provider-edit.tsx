@@ -4,10 +4,19 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from 'react';
 
-import {Alert, View} from 'react-native';
+import {
+  Alert,
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  View,
+  findNodeHandle,
+} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {single, validate} from 'validate.js';
 
 import {Color} from '@app/colors';
@@ -15,15 +24,15 @@ import {ActionsSheet} from '@app/components/actions-sheet';
 import {WrappedInput} from '@app/components/settings-provider-edit/wrapped-input';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
   CustomHeader,
   IconsName,
-  KeyboardSafeArea,
   Spacer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderKeys} from '@app/models/provider';
 
 export type SettingsProviderEditData = Omit<
   Partial<Provider>,
@@ -31,7 +40,7 @@ export type SettingsProviderEditData = Omit<
 > & {
   isChanged: boolean;
   ethChainId?: string;
-  errors: Partial<Record<keyof Provider, string | undefined>>;
+  errors: Partial<Record<ProviderKeys, string | undefined>>;
 };
 
 export type SettingsProviderEditProps = {
@@ -45,18 +54,18 @@ export type SettingsProviderEditProps = {
 
 type ReducerActionUpdate = {
   type: 'update';
-  key: string;
+  key: ProviderKeys;
   value: string;
 };
 
 type ReducerActionReset = {
   type: 'reset';
-  data: Record<keyof Provider, any>;
+  data: Partial<Record<ProviderKeys, any>>;
 };
 
 type ReducerActionError = {
   type: 'error';
-  key: keyof Provider;
+  key: ProviderKeys;
   value: string;
 };
 
@@ -92,7 +101,7 @@ function reducer(state: SettingsProviderEditData, action: ReducerAction) {
   }
 }
 
-const constraints = {
+const constraints: Partial<Record<ProviderKeys, any>> = {
   name: {
     presence: {allowEmpty: false},
   },
@@ -125,16 +134,17 @@ export const SettingsProviderEdit = memo(
     onCancel,
     onSelect,
   }: SettingsProviderEditProps) => {
+    const insets = useSafeAreaInsets();
     const [actionSheetVisible, setActionSheetVisible] = useState(false);
     const [isEdit, setIsEdit] = useState(!provider?.id);
-
+    const scroll = useRef<JSX.Element | null>(null);
     const [state, dispatch] = useReducer(reducer, {
       isChanged: false,
       errors: {},
       ...(provider
         ? {...provider, ethChainId: String(provider?.ethChainId)}
         : {}),
-    });
+    } as SettingsProviderEditData);
 
     useEffect(() => {
       if (provider?.id) {
@@ -142,15 +152,14 @@ export const SettingsProviderEdit = memo(
       }
     }, [provider?.id]);
 
-    const onChangeField = useCallback((key: string, value: string) => {
+    const onChangeField = useCallback((key: ProviderKeys, value: string) => {
       dispatch({type: 'update', key, value});
     }, []);
 
     const onBlurField = useCallback(
-      (name: keyof Provider) => {
-        if (state[name]) {
+      (name: ProviderKeys) => {
+        if (state[name] && constraints[name]) {
           let err = single(state[name] ?? '', constraints[name] ?? {});
-
           if (err) {
             dispatch({
               type: 'error',
@@ -202,13 +211,15 @@ export const SettingsProviderEdit = memo(
           textRight: getText(I18N.save),
           disabledRight: !state.isChanged,
           onPressRight: () => {
-            const errors = validate(state, constraints);
+            const errors = validate(state, constraints) as Partial<
+              Record<ProviderKeys, string[]>
+            >;
 
             if (errors) {
               for (const [key, err] of Object.entries(errors)) {
                 dispatch({
                   type: 'error',
-                  key,
+                  key: key as ProviderKeys,
                   value: err.join('\n'),
                 });
               }
@@ -228,6 +239,7 @@ export const SettingsProviderEdit = memo(
                 cosmosChainId: state.cosmosChainId,
                 explorer: state.explorer,
               });
+              setIsEdit(false);
             }
           },
           textColorRight: Color.graphicGreen1,
@@ -271,6 +283,14 @@ export const SettingsProviderEdit = memo(
       };
     }, [isEdit, onCancel, state.isChanged, provider]);
 
+    const onFocusField = useCallback(
+      (name, e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        console.log(findNodeHandle(e.target));
+        scroll.current?.props?.scrollToFocusedInput(findNodeHandle(e.target));
+      },
+      [scroll],
+    );
+
     return (
       <>
         <CustomHeader
@@ -278,7 +298,10 @@ export const SettingsProviderEdit = memo(
           {...left}
           {...right}
         />
-        <KeyboardSafeArea style={page.container}>
+        <KeyboardAwareScrollView
+          style={[page.container, {paddingBottom: insets.bottom}]}
+          innerRef={ref => (scroll.current = ref)}
+          extraHeight={250}>
           <WrappedInput
             autoFocus={true}
             label={I18N.settingsProviderEditName}
@@ -289,6 +312,8 @@ export const SettingsProviderEdit = memo(
             error={state.errors.name}
             onChange={onChangeField}
             onBlur={onBlurField}
+            onFocus={onFocusField}
+            hint={I18N.settingsProviderEditNameHint}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -300,6 +325,8 @@ export const SettingsProviderEdit = memo(
             placeholder={I18N.settingsProviderEditCosmosChainIdPlaceholder}
             onChange={onChangeField}
             onBlur={onBlurField}
+            onFocus={onFocusField}
+            hint={I18N.settingsProviderEditCosmosChainIdHint}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -311,6 +338,8 @@ export const SettingsProviderEdit = memo(
             placeholder={I18N.settingsProviderEditCosmosEndpointPlaceholder}
             onChange={onChangeField}
             onBlur={onBlurField}
+            onFocus={onFocusField}
+            hint={I18N.settingsProviderEditCosmosEndpointHint}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -322,6 +351,8 @@ export const SettingsProviderEdit = memo(
             placeholder={I18N.settingsProviderEditEthEndpointPlaceholder}
             onChange={onChangeField}
             onBlur={onBlurField}
+            onFocus={onFocusField}
+            hint={I18N.settingsProviderEditEthEndpointHint}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -333,12 +364,15 @@ export const SettingsProviderEdit = memo(
             placeholder={I18N.settingsProviderEditExplorerPlaceholder}
             onChange={onChangeField}
             onBlur={onBlurField}
+            onFocus={onFocusField}
+            hint={I18N.settingsProviderEditExplorerHint}
           />
 
           {isEdit && provider?.id && (
             <View style={page.buttonContainerRemove}>
               <Button
                 variant={ButtonVariant.error}
+                size={ButtonSize.middle}
                 style={page.errorButton}
                 onPress={onRemove}
                 title={getText(I18N.settingsProviderEditDeleteProvider)}
@@ -356,7 +390,7 @@ export const SettingsProviderEdit = memo(
               />
             </>
           )}
-        </KeyboardSafeArea>
+        </KeyboardAwareScrollView>
         {actionSheetVisible && (
           <ActionsSheet
             onPressKeepEditing={onPressKeepEditing}
@@ -371,7 +405,7 @@ export const SettingsProviderEdit = memo(
 const page = createTheme({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginTop: 12,
   },
   spaceInput: {height: 24},

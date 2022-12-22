@@ -9,6 +9,7 @@ import {
   Icon,
   IconButton,
   LottieWrap,
+  NetworkFee,
   PopupContainer,
   Spacer,
   Text,
@@ -19,7 +20,7 @@ import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services/eth-network';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 const icon = require('../../assets/animations/transaction-finish.json');
 
@@ -67,13 +68,7 @@ export const TransactionFinish = ({
       <Text t14 center style={styles.address}>
         {short}
       </Text>
-      <Text
-        t15
-        center
-        i18n={I18N.transactionFinishNetworkFee}
-        i18params={{fee: `${(transaction?.fee ?? 0) * WEI}`}}
-        color={Color.textBase2}
-      />
+      <NetworkFee fee={(transaction?.fee ?? 0) * WEI} />
       <Spacer />
       <View style={styles.buttons}>
         <IconButton onPress={onPressContact} style={styles.button}>

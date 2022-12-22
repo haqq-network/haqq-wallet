@@ -12,7 +12,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {WINDOW_WIDTH} from '@app/variables';
+import {WINDOW_WIDTH} from '@app/variables/common';
 // import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
@@ -30,16 +30,11 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
           loop
         />
       </View>
-      <Text
-        t4
-        center={true}
-        style={page.title}
-        i18n={I18N.ledgerAgreementTitle}
-      />
+      <Text t4 center style={page.title} i18n={I18N.ledgerAgreementTitle} />
       <Text
         t11
         color={Color.textBase2}
-        center={true}
+        center
         style={page.disclaimer}
         i18n={I18N.ledgerAgreementText}
       />

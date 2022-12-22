@@ -7,21 +7,25 @@ import {
   Button,
   ButtonVariant,
   ISLMIcon,
+  Icon,
+  IconButton,
+  Inline,
   LottieWrap,
+  NetworkFee,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
   amount: number;
   fee: number;
+  txhash: string;
   onDone: () => void;
 };
 
@@ -30,7 +34,13 @@ export const StakingUnDelegateFinish = ({
   validator,
   amount,
   fee,
+  txhash,
 }: StakingDelegateFinishProps) => {
+  const onPressHash = async () => {
+    const url = `https://haqq.explorers.guru/transaction/${txhash}`;
+    await openURL(url);
+  };
+
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
@@ -62,10 +72,25 @@ export const StakingUnDelegateFinish = ({
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <Text t15 center color={Color.textBase2}>
-        Network Fee: {(fee / WEI).toFixed(15)} ISLM
-      </Text>
+      <NetworkFee fee={fee} />
       <Spacer />
+      <Inline gap={12}>
+        <IconButton onPress={onPressHash} style={styles.button}>
+          <Icon
+            name="block"
+            color={Color.graphicBase2}
+            style={styles.buttonIcon}
+            i22
+          />
+          <Text
+            t15
+            center
+            i18n={I18N.transactionFinishHash}
+            color={Color.textBase2}
+          />
+        </IconButton>
+      </Inline>
+      <Spacer height={28} />
       <Button
         style={styles.margin}
         variant={ButtonVariant.contained}
@@ -101,4 +126,14 @@ const styles = createTheme({
     marginBottom: 4,
   },
   margin: {marginBottom: 16},
+  button: {
+    marginHorizontal: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 12,
+    backgroundColor: Color.bg8,
+    borderRadius: 12,
+  },
+  buttonIcon: {
+    marginBottom: 4,
+  },
 });

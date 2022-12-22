@@ -33,6 +33,8 @@ target 'haqq' do
 
   pod 'react-native-config/Extension', :path => '../node_modules/react-native-config'
 
+  pod "ToastViewSwift"
+
   target 'haqqTests' do
     inherit! :complete
     # Pods for testing

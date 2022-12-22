@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 
-import {Dimensions, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
 import {captureException} from '@app/helpers';
 import {runUntil} from '@app/helpers/run-until';
 import {I18N} from '@app/i18n';
-import {ETH_HD_PATH} from '@app/variables';
+import {ETH_HD_PATH, WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerInfo = {
   address: string;
@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lottie: {
-    width: Dimensions.get('window').width,
+    width: WINDOW_WIDTH,
   },
 });

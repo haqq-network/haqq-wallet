@@ -23,11 +23,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
-import {
-  Notifications,
-  PopupHeader,
-  SettingsAccountRemoveButton,
-} from '@app/components';
+import {PopupHeader} from '@app/components';
 import {
   AppContext,
   TransactionsContext,
@@ -49,9 +45,9 @@ import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
   AppTheme,
-  HeaderButtonProps,
   PresentationNavigation,
   ScreenOptionType,
+  StackPresentationTypes,
 } from '@app/types';
 import {sleep} from '@app/utils';
 
@@ -64,6 +60,7 @@ import {Modals} from './screens/modals';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
+import {ProposalDepositScreen} from './screens/proposal-deposit';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -117,9 +114,14 @@ const basicScreenOptions = {
   headerShown: false,
   gestureEnabled: false,
 };
+
 const stackScreenOptions = {
-  presentation: 'modal',
+  presentation: 'modal' as StackPresentationTypes,
   gestureEnabled: false,
+};
+
+const withoutHeader = {
+  headerShown: false,
 };
 
 export const App = () => {
@@ -239,6 +241,10 @@ export const App = () => {
                     name="stakingUnDelegate"
                     component={StakingUnDelegateScreen}
                   />
+                  <Stack.Screen
+                    name="proposalDeposit"
+                    component={ProposalDepositScreen}
+                  />
                 </Stack.Group>
                 <Stack.Screen
                   name="backupNotification"
@@ -271,16 +277,7 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsAccountDetail"
                     component={SettingsAccountDetailScreen}
-                    options={{
-                      title: 'Account details',
-                      headerRight: (
-                        props: HeaderButtonProps,
-                      ): React.ReactNode => (
-                        <SettingsAccountRemoveButton
-                          address={props?.route?.params?.address!} // non-null assertion in TypeScript
-                        />
-                      ),
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"
@@ -313,9 +310,7 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsSecurityPin"
@@ -348,24 +343,18 @@ export const App = () => {
                   <Stack.Screen
                     name="settingsAccountEdit"
                     component={SettingsAccountEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsContactEdit"
                     component={SettingsContactEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
 
                   <Stack.Screen
                     name="settingsProviderForm"
                     component={SettingsProviderEditScreen}
-                    options={{
-                      headerShown: false,
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="settingsTheme"
@@ -403,7 +392,6 @@ export const App = () => {
               </Stack.Navigator>
             </NavigationContainer>
             <Modals initialModal={{type: 'splash'}} />
-            <Notifications />
           </WalletsContext.Provider>
         </TransactionsContext.Provider>
       </AppContext.Provider>

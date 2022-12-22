@@ -1,12 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
-import {useApp, useTypedNavigation, useWalletsList} from '@app/hooks';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {sumReduce} from '@app/helpers/staking';
+import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
 
 const initData = {
   stakingSum: 0,
@@ -16,32 +18,56 @@ const initData = {
 };
 
 export const HomeStakingScreen = () => {
-  const app = useApp();
-  const [data, setData] = useState(initData);
-
   const {visible} = useWalletsList();
+
+  const [data, setData] = useState({
+    ...initData,
+    availableSum: visible.reduce((acc, w) => acc + w.balance, 0),
+  });
   const navigation = useTypedNavigation();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
 
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
   }, [navigation]);
 
   useEffect(() => {
-    const listener = (newData: any) => {
-      setData({...newData, loading: false});
+    const rows = StakingMetadata.getAll();
+
+    const listener = () => {
+      const rewards = rows.filter(
+        val => val.type === StakingMetadataType.reward,
+      );
+      const delegations = rows.filter(
+        val => val.type === StakingMetadataType.delegation,
+      );
+      const unDelegations = rows.filter(
+        val => val.type === StakingMetadataType.undelegation,
+      );
+
+      const rewardsSum = sumReduce(rewards);
+      const stakingSum = sumReduce(delegations);
+      const unDelegationSum = sumReduce(unDelegations);
+      const availableSum = visible.reduce((acc, w) => acc + w.balance, 0);
+      setData({
+        rewardsSum,
+        stakingSum,
+        unDelegationSum,
+        availableSum,
+        loading: false,
+      });
     };
-    const unsub = StakingMetadata.getAll().addListener(
-      StakingMetadata.summaryInfoListener(listener),
-    );
-    return unsub;
-  }, []);
+
+    rows.addListener(listener);
+    app.addListener('balance', listener);
+    return () => {
+      rows.removeListener(listener);
+      app.removeListener('balance', listener);
+    };
+  }, [visible]);
 
   const onPressGetRewards = useCallback(async () => {
-    const stakedValidators = StakingMetadata.getAll();
-    const rewards: Realm.Results<StakingMetadata> = stakedValidators.filtered(
-      `type = '${StakingMetadataType.reward}'`,
-    );
+    const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
 
     const delegators: any = {};
 
@@ -55,7 +81,7 @@ export const HomeStakingScreen = () => {
         .filter(w => w.cosmosAddress in delegators)
         .map(w => {
           return cosmos.multipleWithdrawDelegatorReward(
-            w.address,
+            w.transport,
             delegators[w.cosmosAddress],
           );
         }),
@@ -64,14 +90,22 @@ export const HomeStakingScreen = () => {
   }, [cosmos, visible]);
 
   useEffect(() => {
-    const addressList = visible.map(w => w.cosmosAddress);
+    const sync = async () => {
+      app.emit(Events.onStakingSync);
+    };
 
-    cosmos.sync(addressList);
-  }, [cosmos, visible]);
+    app.emit(Events.onStakingSync);
+
+    const interval = setInterval(sync, 15000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <HomeStaking
       loading={data.loading}
+      availableSum={data.availableSum}
       stakingSum={data.stakingSum}
       rewardsSum={data.rewardsSum}
       unDelegationSum={data.unDelegationSum}

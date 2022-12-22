@@ -15,10 +15,11 @@ import {
   DEFAULT_CARD_PATTERN,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
-} from '@app/variables';
+} from '@app/variables/common';
 
 import {
   AddWalletParams,
+  TransportWallet,
   WalletCardPattern,
   WalletCardStyle,
   WalletType,
@@ -92,9 +93,23 @@ export class Wallet extends EventEmitter {
   };
 
   _cosmosAddress: string = '';
+  _transport: TransportWallet | null = null;
 
   static getAll() {
     return realm.objects<WalletRealm>(WalletRealm.schema.name);
+  }
+
+  static getById(id: string) {
+    const item = realm.objectForPrimaryKey<WalletRealm>(
+      WalletRealm.schema.name,
+      id,
+    );
+
+    if (!item) {
+      return null;
+    }
+
+    return new Wallet(item);
   }
 
   static async create(walletParams: AddWalletParams, name = '') {
@@ -377,6 +392,7 @@ export class Wallet extends EventEmitter {
   set balance(value: number) {
     this._balance = value;
     this.emit('balance', {balance: this.balance});
+    app.emit('balance', this.address);
   }
 
   get balance() {
@@ -398,16 +414,19 @@ export class Wallet extends EventEmitter {
     }
   }
 
-  get transport() {
-    switch (this.type) {
-      case WalletType.mnemonic:
-      case WalletType.hot:
-        return new TransportHot(this);
-      case WalletType.ledgerBt:
-        return new TransportLedger(this);
-      default:
-        throw new Error('transport_not_implemented');
+  get transport(): TransportWallet {
+    if (!this._transport) {
+      switch (this.type) {
+        case WalletType.mnemonic:
+        case WalletType.hot:
+          return new TransportHot(this);
+        case WalletType.ledgerBt:
+          return new TransportLedger(this);
+        default:
+          throw new Error('transport_not_implemented');
+      }
     }
+    return this._transport;
   }
 
   get cosmosAddress() {

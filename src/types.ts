@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Validator} from '@evmos/provider';
+import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
@@ -12,6 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {Transaction} from './models/transaction';
 
 export interface TransportWallet {
+  getCosmosAddress: () => string;
   getPublicKey: () => Promise<string>;
 
   signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
@@ -46,8 +48,12 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
-      mnemonic?: string | boolean;
-      privateKey?: string | boolean;
+      mnemonic: string;
+      privateKey: false;
+    }
+  | {
+      mnemonic: false;
+      privateKey: string;
     }
   | {
       address: string;
@@ -205,11 +211,36 @@ export type RootStackParamList = {
   ledgerFinish: undefined;
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
-  } & WalletInitialData;
+    address: string;
+    deviceId: string;
+    deviceName: string;
+  };
   ledgerStore: {
     address: string;
     deviceId: string;
     deviceName: string;
+  };
+  proposalDepositForm: {
+    account: string;
+    proposalId: number;
+    title: string;
+  };
+  proposalDepositPreview: {
+    title: string;
+    fee: number;
+    account: string;
+    amount: number;
+    proposalId: number;
+  };
+  proposalDepositFinish: {
+    title: string;
+    fee: number;
+    txhash: string;
+    amount: number;
+  };
+  proposalDeposit: {
+    proposalId: number;
+    account: string;
   };
   settingsAccountEdit: {address: string};
   transactionContactEdit: {
@@ -281,10 +312,15 @@ export type RootStackParamList = {
   notificationPopup: undefined;
   trackActivity: undefined;
   proposal: {
-    id: string;
+    id: number;
   };
 };
 
+export type StackPresentationTypes =
+  | 'card'
+  | 'modal'
+  | 'transparentModal'
+  | undefined;
 export type IconsName = 'face-id' | 'arrow-back' | 'clear' | 'touch-id';
 export type IconName = 'Face ID';
 
@@ -322,11 +358,6 @@ export type SwipeableAction<T> = {
 };
 
 export enum WalletCardStyle {
-  defaultGreen = 'defaultGreen',
-  defaultYellow = 'defaultYellow',
-  defaultBlue = 'defaultBlue',
-  defaultBlack = 'defaultBlack',
-  defaultViolet = 'defaultViolet',
   flat = 'flat',
   gradient = 'gradient',
 }
@@ -354,11 +385,11 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export interface ScreenOptionType extends StackNavigationOptions {
+export type ScreenOptionType = StackNavigationOptions & {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-}
+};
 
 export type HeaderButtonProps = {
   tintColor?: string;
@@ -426,3 +457,33 @@ export type ValidatorItem = Validator & {
 };
 
 export type ColorType = Color | string;
+
+export type ProposalsTagKeys =
+  | 'all'
+  | 'voting'
+  | 'deposited'
+  | 'passed'
+  | 'rejected';
+
+export type VotesType = {
+  yes: number;
+  no: number;
+  abstain: number;
+  veto: number;
+};
+
+export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
+
+export type DepositResponse = {
+  deposits: {
+    proposal_id: string;
+    depositor: string;
+    amount: Coin[];
+  }[];
+  pagination: {next_key: any; total: string};
+};
+
+export type ProposalsCroppedList = {
+  id: number;
+  status: string;
+}[];

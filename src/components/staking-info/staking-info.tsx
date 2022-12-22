@@ -21,16 +21,18 @@ import {
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
-import {I18N, getText} from '@app/i18n';
+import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
+import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
-  delegations: Realm.Results<StakingMetadata> | null;
-  rewards: Realm.Results<StakingMetadata> | null;
+  delegations: StakingMetadata[];
+  rewards: StakingMetadata[];
+  unDelegations: StakingMetadata[];
   validator: ValidatorItem;
   onDelegate: () => void;
   onUnDelegate: () => void;
@@ -47,6 +49,7 @@ export const StakingInfo = ({
   },
   onDelegate,
   onUnDelegate,
+  unDelegations,
   delegations,
   rewards,
   onWithdrawDelegatorReward,
@@ -67,38 +70,16 @@ export const StakingInfo = ({
     }
   }, [localStatus]);
 
-  const sumData = useMemo(() => {
-    const {
-      reduceAmounts,
-      getDelegationsForValidator,
-      getRewardsForValidator,
-      getUnDelegationsForValidator,
-    } = StakingMetadata;
-
-    const formatDate = (date?: string) => {
-      const curDate = Date.now();
-      const days = Math.ceil(
-        (new Date(date ?? 0).getTime() - curDate) / 86400000,
-      );
-      return getText(
-        days > 1
-          ? I18N.StakingInfoUnDelegationDays
-          : I18N.StakingInfoUnDelegationDay,
-        {days: String(days)},
-      );
-    };
-
-    const staked = reduceAmounts(getDelegationsForValidator(operator_address));
-    const reward = reduceAmounts(getRewardsForValidator(operator_address));
-    const undelegated = getUnDelegationsForValidator(operator_address).map(
-      a => ({
+  const staked = useMemo(() => reduceAmounts(delegations), [delegations]);
+  const reward = useMemo(() => reduceAmounts(rewards), [rewards]);
+  const undelegated = useMemo(
+    () =>
+      unDelegations.map(a => ({
         amount: a.amount,
-        suffix: formatDate(a.completion_time),
-      }),
-    );
-
-    return {staked, reward, undelegated};
-  }, [operator_address]);
+        suffix: formatStakingDate(a.completion_time),
+      })),
+    [unDelegations],
+  );
 
   const votingPower = useMemo(() => {
     return parseInt(tokens ?? '0', 10) / WEI;
@@ -128,6 +109,7 @@ export const StakingInfo = ({
           {moniker}
         </Text>
         <Badge
+          center
           i18n={localStatus as number}
           labelColor={labelColor}
           textColor={textColor}
@@ -144,29 +126,26 @@ export const StakingInfo = ({
           </>
         )}
         <Spacer height={isActive ? 20 : 12} />
-        <View style={styles.flexRow}>
+        <Inline gap={12} style={styles.withHorizontalPadding}>
+          <InfoBlockAmount value={staked} titleI18N={I18N.homeStakingStaked} />
           <InfoBlockAmount
-            value={sumData.staked}
-            titleI18N={I18N.homeStakingStaked}
-          />
-          <Spacer width={12} />
-          <InfoBlockAmount
-            value={sumData.reward}
+            value={reward}
             titleI18N={I18N.validatorInfoReward}
           />
-        </View>
+        </Inline>
         <Spacer height={12} />
         <InfoBlockAmount
           isLarge
-          values={sumData.undelegated}
+          values={undelegated}
           titleI18N={I18N.validatorInfoUndelegateInProcess}
+          style={styles.withHorizontalPadding}
         />
         <Spacer height={12} />
         <View style={styles.infoBlock}>
-          <Block i18n={I18N.stakingInfoVotingPower}>
+          <Block name={I18N.stakingInfoVotingPower}>
             <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
           </Block>
-          <Block i18n={I18N.stakingInfoCommission}>
+          <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
               <View style={styles.infoBlockCommission}>
                 <Text i18n={I18N.stakingInfoCommissionCurrent} t14 />
@@ -195,7 +174,7 @@ export const StakingInfo = ({
             </View>
           </Block>
           {website && (
-            <Block i18n={I18N.stakingInfoWebsite}>
+            <Block name={I18N.stakingInfoWebsite}>
               <Text t14 color={Color.textGreen1} onPress={onPressWebsite}>
                 {website}
               </Text>
@@ -204,7 +183,7 @@ export const StakingInfo = ({
         </View>
         <Block
           style={styles.withHorizontalPadding}
-          i18n={I18N.stakingInfoAddress}>
+          name={I18N.stakingInfoAddress}>
           <CopyButton value={operator_address} activeOpacity={0.7}>
             <Text t14 color={Color.textBase2}>
               {operator_address}
@@ -214,7 +193,7 @@ export const StakingInfo = ({
           </CopyButton>
         </Block>
         {details && (
-          <Block i18n={I18N.stakingInfoDetail}>
+          <Block name={I18N.stakingInfoDetail}>
             <Markdown>{details}</Markdown>
           </Block>
         )}
@@ -290,8 +269,5 @@ const styles = createTheme({
     padding: 9,
     backgroundColor: Color.bg8,
     borderRadius: 12,
-  },
-  flexRow: {
-    flexDirection: 'row',
   },
 });

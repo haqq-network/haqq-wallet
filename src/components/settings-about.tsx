@@ -21,7 +21,10 @@ export const SettingsAbout = () => {
         <LottieWrap
           style={[
             styles.imageStyle,
-            {width: windowWidth, height: windowWidth * 0.9},
+            {
+              width: windowWidth * 0.8,
+              height: windowWidth * 0.8,
+            },
           ]}
           source={require('../../assets/animations/first-screen-animation.json')}
           autoPlay
@@ -71,6 +74,7 @@ export const SettingsAbout = () => {
       </View>
       <Text
         t11
+        center
         color={Color.textBase1}
         i18n={I18N.settingsAboutRights}
         style={styles.terms}
@@ -102,8 +106,9 @@ const styles = createTheme({
     alignItems: 'center',
   },
   imageStyle: {
-    marginTop: -10,
-    marginBottom: -20,
     alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'visible',
   },
 });

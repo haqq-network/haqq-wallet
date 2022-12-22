@@ -1,16 +1,20 @@
 import React, {useCallback} from 'react';
 
+import {Alert} from 'react-native';
+
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
-import {sendNotification} from '@app/helpers';
-import {useWallet} from '@app/hooks';
+import {CustomHeader, IconsName} from '@app/components/ui';
+import {useWallet, useWallets} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
+import {sendNotification} from '@app/services';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'settingsAccountDetail'>();
-
+  const wallets = useWallets();
   const wallet = useWallet(route.params.address);
 
   const onPressRename = useCallback(() => {
@@ -32,11 +36,43 @@ export const SettingsAccountDetailScreen = () => {
     }
   }, [wallet]);
 
+  const onRemove = useCallback(() => {
+    vibrate(HapticEffects.warning);
+    Alert.alert(
+      getText(I18N.settingsAccountRemoveTitle),
+      getText(I18N.settingsAccountRemoveMessage),
+      [
+        {
+          text: getText(I18N.settingsAccountRemoveReject),
+          style: 'cancel',
+        },
+        {
+          style: 'destructive',
+          text: getText(I18N.settingsAccountRemoveConfirm),
+          onPress: async () => {
+            await wallets.removeWallet(route.params.address);
+            navigation.goBack();
+            sendNotification(I18N.notificationAccountDeleted);
+          },
+        },
+      ],
+    );
+  }, [navigation, route.params.address, wallets]);
+
   return (
-    <SettingsAccountDetail
-      onPressRename={onPressRename}
-      onPressStyle={onPressStyle}
-      onToggleIsHidden={onToggleIsHidden}
-    />
+    <>
+      <CustomHeader
+        title={getText(I18N.settingsAccountDetailHeaderTitle)}
+        onPressLeft={navigation.goBack}
+        iconLeft={IconsName.arrow_back}
+        iconRight={IconsName.trash}
+        onPressRight={onRemove}
+      />
+      <SettingsAccountDetail
+        onPressRename={onPressRename}
+        onPressStyle={onPressStyle}
+        onToggleIsHidden={onToggleIsHidden}
+      />
+    </>
   );
 };

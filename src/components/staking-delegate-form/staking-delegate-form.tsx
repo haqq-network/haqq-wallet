@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -10,13 +9,14 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {WEI} from '@app/variables';
+import {WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
@@ -35,7 +35,7 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(0, balance - fee / WEI);
+  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001));
 
   const validatorCommission = useMemo(() => {
     return formatPercents(commission_rates.rate);
@@ -68,10 +68,7 @@ export const StakingDelegateForm = ({
         onMax={onPressMax}
       />
       <Spacer />
-      <Text t14 center color={Color.textBase2}>
-        {getText(I18N.stakingDelegateFormNetworkFee)}: {(fee / WEI).toFixed(15)}{' '}
-        ISLM
-      </Text>
+      <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}

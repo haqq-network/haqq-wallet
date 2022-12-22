@@ -1,14 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useWindowDimensions} from 'react-native';
 
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {
+  useCosmos,
+  useTypedNavigation,
+  useTypedRoute,
+  useWallets,
+} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {StakingMetadata} from '@app/models/staking-metadata';
-import {Cosmos} from '@app/services/cosmos';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -16,25 +23,33 @@ export const StakingInfoScreen = () => {
   const navigation = useTypedNavigation();
 
   const {visible} = useWallets();
-  const cosmos = useRef(new Cosmos(app.provider!)).current;
+  const cosmos = useCosmos();
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
     useState(false);
-  const [rewards, setRewards] = useState<Realm.Results<StakingMetadata> | null>(
-    null,
-  );
+
+  const [rewards, setRewards] = useState<StakingMetadata[]>([]);
+  const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
+  const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
 
   const closeDistance = useWindowDimensions().height / 6;
 
   useEffect(() => {
-    const r = StakingMetadata.getRewardsForValidator(operator_address);
+    const r = StakingMetadata.getAllByValidator(operator_address);
 
     const subscription = () => {
-      setRewards(StakingMetadata.getRewardsForValidator(operator_address));
+      const data = r.snapshot();
+
+      setRewards(data.filter(row => row.type === StakingMetadataType.reward));
+      setDelegated(
+        data.filter(row => row.type === StakingMetadataType.delegation),
+      );
+      setUndelegated(
+        data.filter(row => row.type === StakingMetadataType.undelegation),
+      );
     };
 
     r.addListener(subscription);
-    setRewards(r);
     return () => {
       r.removeListener(subscription);
     };
@@ -49,7 +64,7 @@ export const StakingInfoScreen = () => {
         visible
           .filter(w => delegators.has(w.cosmosAddress))
           .map(w =>
-            cosmos.withdrawDelegatorReward(w.address, operator_address),
+            cosmos.withdrawDelegatorReward(w.transport, operator_address),
           ),
       )
         .then(() => {
@@ -117,9 +132,6 @@ export const StakingInfoScreen = () => {
     };
   }, [onDelegate, onUnDelegate]);
 
-  const delegated =
-    StakingMetadata.getDelegationsForValidator(operator_address);
-
   return (
     <StakingInfo
       withdrawDelegatorRewardProgress={withdrawDelegatorRewardProgress}
@@ -127,6 +139,7 @@ export const StakingInfoScreen = () => {
       onDelegate={onDelegate}
       onUnDelegate={onUnDelegate}
       onWithdrawDelegatorReward={onWithdrawDelegatorReward}
+      unDelegations={undelegated}
       delegations={delegated}
       rewards={rewards}
     />

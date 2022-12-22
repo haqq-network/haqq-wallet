@@ -30,6 +30,11 @@
 		210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AC29112EDC002A27EB /* Mnemonic.swift */; };
 		210F81AF29113FFF002A27EB /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AE29113FFF002A27EB /* HDKey.swift */; };
 		211199A52939DBE900657915 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 211199A42939DBE900657915 /* GoogleService-Info.plist */; };
+		212B00FB294AD39900E57091 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FA294AD39900E57091 /* Toast.m */; };
+		212B00FD294AD3B700E57091 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FC294AD3B700E57091 /* Toast.swift */; };
+		212B00FF294ADDB800E57091 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FE294ADDB800E57091 /* ToastView.swift */; };
+		212B0101294AE0AB00E57091 /* variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0100294AE0AB00E57091 /* variables.swift */; };
+		212B0103294AE1A600E57091 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0102294AE1A600E57091 /* Theme.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
@@ -118,6 +123,11 @@
 		210F81AE29113FFF002A27EB /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
 		211199A12939D73200657915 /* haqq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = haqq.entitlements; path = haqq/haqq.entitlements; sourceTree = "<group>"; };
 		211199A42939DBE900657915 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		212B00FA294AD39900E57091 /* Toast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Toast.m; sourceTree = "<group>"; };
+		212B00FC294AD3B700E57091 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		212B00FE294ADDB800E57091 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		212B0100294AE0AB00E57091 /* variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = variables.swift; sourceTree = "<group>"; };
+		212B0102294AE1A600E57091 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
@@ -133,7 +143,7 @@
 		32498C55D7F34FD7BC90FB54 /* card-rhombus-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0.png"; path = "../assets/images/card-rhombus-0.png"; sourceTree = "<group>"; };
 		39C798432F4740AEAB663A0C /* card-circles-0@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@2x.png"; path = "../assets/images/card-circles-0@2x.png"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
-		488C9C1D585343429E028AD9 /* islm_icon@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@2x.png"; path = "../assets/images/islm_icon@2x.png"; sourceTree = "<group>"; };
+		488C9C1D585343429E028AD9 /* islm_icon@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@2x.png"; path = "../assets/images/islm_icon@2x.png"; sourceTree = "<group>"; };
 		50B69DDC52A44B5F929EDD17 /* logo-empty.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty.png"; path = "../assets/images/logo-empty.png"; sourceTree = "<group>"; };
 		53AC42AE6B69462FBD5FE33F /* backup-notification-dark@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark@3x.png"; path = "../assets/images/backup-notification-dark@3x.png"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
@@ -235,6 +245,7 @@
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				212B00F9294AD37800E57091 /* Toast */,
 				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
 				210DBD2628E6CBD70036A851 /* Encryption */,
@@ -244,6 +255,8 @@
 				210F81AE29113FFF002A27EB /* HDKey.swift */,
 				21E6B18A291224440055570A /* Wallet.swift */,
 				21E6B18E291247A60055570A /* logger.swift */,
+				212B0100294AE0AB00E57091 /* variables.swift */,
+				212B0102294AE1A600E57091 /* Theme.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -282,6 +295,16 @@
 				210F818F29112548002A27EB /* Data+hexEncodedString.swift */,
 			);
 			path = extensions;
+			sourceTree = "<group>";
+		};
+		212B00F9294AD37800E57091 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				212B00FA294AD39900E57091 /* Toast.m */,
+				212B00FC294AD3B700E57091 /* Toast.swift */,
+				212B00FE294ADDB800E57091 /* ToastView.swift */,
+			);
+			path = Toast;
 			sourceTree = "<group>";
 		};
 		21D7A7882910DA8B00399978 /* EthUtils */ = {
@@ -741,6 +764,8 @@
 				21E6B18B291224440055570A /* Wallet.swift in Sources */,
 				210F81AF29113FFF002A27EB /* HDKey.swift in Sources */,
 				210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */,
+				212B00FD294AD3B700E57091 /* Toast.swift in Sources */,
+				212B00FF294ADDB800E57091 /* ToastView.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
 				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
@@ -751,8 +776,11 @@
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
+				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
+				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
 				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
+				212B00FB294AD39900E57091 /* Toast.m in Sources */,
 				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
 				21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */,
 			);
@@ -846,7 +874,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
@@ -884,7 +912,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";

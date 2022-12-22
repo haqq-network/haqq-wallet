@@ -16,7 +16,7 @@ import {
 } from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
-import {BIOMETRY_TYPES_NAMES} from '@app/variables';
+import {BIOMETRY_TYPES_NAMES} from '@app/variables/common';
 
 interface OnboardingBiometryProps {
   onClickSkip: () => void;
@@ -71,10 +71,10 @@ export const OnboardingBiometry = ({
           t11
           color={Color.textBase2}
           i18n={I18N.onboardingBiometrySafeFast}
-          center={true}
+          center
         />
         {error && (
-          <ErrorText e2 center={true} style={style.error}>
+          <ErrorText e2 center style={style.error}>
             {error}
           </ErrorText>
         )}

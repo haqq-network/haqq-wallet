@@ -14,7 +14,7 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 });
 
 type SettingsAddressBookProps = {
-  onPressAddress: () => void;
+  onPressAddress: (address: string) => void;
   onPressAdd: () => void;
   onPressClear: () => void;
   onPressQR: () => void;
@@ -60,7 +60,7 @@ export const SettingsAddressBook = ({
           <Box style={styles.badge}>
             <Icon name="plus_mid" color={Color.graphicBase2} />
           </Box>
-          <Text color={Color.textBase2} i18n={I18N.settingsAddressBookAdd} />
+          <Text color={Color.textBase1} i18n={I18N.settingsAddressBookAdd} />
         </IconButton>
       )}
       <ListOfContacts
@@ -81,6 +81,7 @@ const styles = createTheme({
   },
   badge: {
     marginRight: 12,
+    backgroundColor: Color.bg8,
   },
   addButton: {
     flexDirection: 'row',

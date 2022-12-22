@@ -1,9 +1,10 @@
 import React, {useCallback, useRef, useState} from 'react';
 
 import {Pin, PinInterface} from '@app/components/pin';
-import {hideModal, sendNotification, showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {sendNotification} from '@app/services';
 
 interface SettingsSecurityPinProps {
   goBack?: () => void;
@@ -40,12 +41,12 @@ export const SettingsSecurityPin = ({
 
   return (
     <Pin
-      onPin={isRepeatPin ? onPinRepeated : onPin}
       title={
         isRepeatPin
-          ? getText(I18N.settingsSecurityPinRepeat)
-          : getText(I18N.settingsSecurityPinSet)
+          ? I18N.settingsSecurityPinRepeat
+          : I18N.settingsSecurityPinSet
       }
+      onPin={isRepeatPin ? onPinRepeated : onPin}
       ref={pinRef}
       key={
         isRepeatPin

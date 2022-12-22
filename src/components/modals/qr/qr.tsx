@@ -14,7 +14,7 @@ import {WalletRow} from '@app/components/wallet-row';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {QR_STATUS_BAR} from '@app/variables';
+import {QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
@@ -177,7 +177,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       {error && (
         <View style={styles.bottomErrorContainer}>
           <View style={styles.bottomError}>
-            <Text t8 color={getColor(Color.textBase3)}>
+            <Text t8 color={Color.textBase3}>
               Invalid code
             </Text>
           </View>

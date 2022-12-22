@@ -1,18 +1,18 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {IS_IOS} from '@app/variables';
+import {IS_IOS} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';
 
 export type StakingHomeProps = {
   loading: boolean;
+  availableSum: number;
   stakingSum: number;
   rewardsSum: number;
   unDelegationSum: number;
@@ -24,18 +24,13 @@ export const HomeStaking = ({
   loading,
   stakingSum,
   rewardsSum,
+  availableSum,
   unDelegationSum,
   onPressValidators,
   onPressGetRewards,
 }: StakingHomeProps) => {
-  const {visible} = useWalletsList();
   const [isAnimation, setIsAnimation] = useState(false);
-
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
-
-  const availableSum = useMemo(() => {
-    return visible.reduce((acc, w) => acc + w.balance, 0);
-  }, [visible]);
 
   const canGetRewards = rewardsSum > 0;
 
