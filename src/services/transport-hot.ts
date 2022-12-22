@@ -1,5 +1,7 @@
+import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {hexConcat, joinSignature} from '@ethersproject/bytes';
 import {keccak256} from '@ethersproject/keccak256';
+import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
 
 import {app} from '@app/contexts';
@@ -18,6 +20,18 @@ export class TransportHot extends Transport implements TransportWallet {
       ethWallet._signingKey().compressedPublicKey.slice(2),
       'hex',
     ).toString('base64');
+  }
+
+  async getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
+    const password = await app.getPassword();
+    const privateKey = await this._wallet.getPrivateKey(password);
+
+    if (!privateKey) {
+      throw new Error('private_key_not_found');
+    }
+    const wallet = new EthersWallet(privateKey, EthNetwork.network);
+
+    return wallet.signTransaction(transaction as TransactionRequest);
   }
 
   async signTypedData(domainHash: string, valuesHash: string) {

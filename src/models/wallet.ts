@@ -147,6 +147,7 @@ export class Wallet extends EventEmitter {
       case WalletType.ledgerBt:
         deviceId = walletParams.deviceId;
         deviceName = walletParams.deviceName;
+        path = walletParams.path;
         mnemonicSaved = true;
         break;
     }
@@ -414,6 +415,9 @@ export class Wallet extends EventEmitter {
     }
   }
 
+  get transportExists() {
+    return !!this._transport;
+  }
   get transport(): TransportWallet {
     if (!this._transport) {
       switch (this.type) {

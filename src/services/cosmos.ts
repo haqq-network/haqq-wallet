@@ -1,6 +1,7 @@
 import {TypedDataField} from '@ethersproject/abstract-signer';
 import {protoTxNamespace} from '@evmos/proto';
 import {
+  BroadcastMode,
   generateEndpointAccount,
   generateEndpointBroadcast,
   generateEndpointDistributionRewardsByAddress,
@@ -208,7 +209,7 @@ export class Cosmos {
     try {
       return this.postQuery(
         generateEndpointBroadcast(),
-        generatePostBodyBroadcast(txToBroadcast),
+        generatePostBodyBroadcast(txToBroadcast, BroadcastMode.Block),
       );
     } catch (error) {
       console.error((error as any).message);

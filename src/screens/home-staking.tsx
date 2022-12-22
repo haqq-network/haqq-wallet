@@ -90,7 +90,7 @@ export const HomeStakingScreen = () => {
   }, [cosmos, visible]);
 
   useEffect(() => {
-    const sync = async () => {
+    const sync = () => {
       app.emit(Events.onStakingSync);
     };
 
@@ -101,6 +101,12 @@ export const HomeStakingScreen = () => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      visible.map(w => w.transportExists && w.transport.abort());
+    };
+  }, [visible]);
 
   return (
     <HomeStaking
