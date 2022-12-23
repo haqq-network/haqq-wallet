@@ -20,7 +20,7 @@ import Animated, {
 
 import {Color, getColor} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';
-import {Text} from '@app/components/ui/text';
+import {Text, TextProps} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables/common';
@@ -29,8 +29,8 @@ type Props = Omit<TextInputProps, 'placeholder'> & {
   label: I18N;
   placeholder: I18N;
   hint?: I18N | undefined;
-  errorText?: string | null;
-  errorTextI18n?: I18N | null;
+  errorText?: TextProps['children'] | undefined;
+  errorTextI18n?: TextProps['i18n'] | undefined;
   error?: boolean;
   rightAction?: React.ReactNode;
   multiline?: boolean;
@@ -172,6 +172,7 @@ export const TextField: React.FC<Props> = memo(
         {!!error && (errorText || errorTextI18n) && (
           <>
             <Spacer height={8} />
+            {/* @ts-expect-error */}
             <Text
               t14
               i18n={errorTextI18n}

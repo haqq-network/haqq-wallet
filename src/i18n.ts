@@ -1,6 +1,7 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 
 export enum I18N {
+  empty,
   numericKeyboard0,
   numericKeyboard1,
   numericKeyboard2,
@@ -52,7 +53,7 @@ export enum I18N {
   ledgerConnect,
   ledgerChooseAccount,
   ledgerVerify,
-  LedgerStoreWalletSaving,
+  ledgerStoreWalletSaving,
   ledgerVerifyAddress,
   ledgerAccountsAdd,
   ledgerAccountsAdded,
@@ -169,8 +170,6 @@ export enum I18N {
   settingsProviderEditEthEndpoint,
   settingsProviderEditEthEndpointPlaceholder,
   settingsProviderEditEthEndpointHint,
-  settingsProviderEditEthChainId,
-  settingsProviderEditEthChainIdPlaceholder,
   settingsProviderEditExplorer,
   settingsProviderEditExplorerPlaceholder,
   settingsProviderEditExplorerHint,
@@ -424,6 +423,7 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.empty]: '',
   [I18N.numericKeyboard0]: '0',
   [I18N.numericKeyboard1]: '1',
   [I18N.numericKeyboard2]: '2',
@@ -493,8 +493,6 @@ const en: Record<I18N, string> = {
   [I18N.backupVerifyDescription]:
     'Please choose the correct backup phrase according to the serial number',
   [I18N.backupVerifyCheck]: 'Check',
-  [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Finish',
   [I18N.modalQRTitle]: 'Scan QR Code',
   [I18N.modalQRNoAccessTitle]: 'No access to the camera',
   [I18N.modalQRNoAccessDescription]:
@@ -582,11 +580,6 @@ const en: Record<I18N, string> = {
   [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
-  [I18N.popupNotificationTitle]: 'Turn on push notifications',
-  [I18N.popupNotificationDescription]:
-    'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
-  [I18N.popupNotificationTurnOn]: 'Turn on notifications',
-  [I18N.popupNotificationNotNow]: 'Not now',
   [I18N.homeWallet]: 'Accounts',
   [I18N.homeWalletTitle]: 'Your accounts',
   [I18N.homeSettings]: 'Settings',
@@ -730,7 +723,6 @@ const en: Record<I18N, string> = {
   [I18N.validatorInfoHide]: 'Hide',
   [I18N.voteAbstain]: 'Abstain',
   [I18N.voteVeto]: 'Veto',
-  [I18N.stakingDelegateFormTitle]: 'Stake',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
   [I18N.stakingDelegateFormCommission]: 'Commission',
@@ -774,15 +766,6 @@ const en: Record<I18N, string> = {
     'The funds will be undelegate within 21 days',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
-  [I18N.validatorStatusActive]: 'Active',
-  [I18N.validatorStatusInactive]: 'Inactive',
-  [I18N.validatorStatusJailed]: 'Jailed',
-  [I18N.validatorInfoReward]: 'Reward',
-  [I18N.validatorInfoStaked]: 'Staked',
-  [I18N.validatorInfoUndelegateInProcess]: 'Undelegate in process',
-  [I18N.validatorInfoShowOther]: 'Show other',
-  [I18N.validatorInfoHide]: 'Hide',
-
   [I18N.popupNotificationTitle]: 'Turn on push notifications',
   [I18N.popupNotificationDescription]:
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
@@ -801,7 +784,6 @@ const en: Record<I18N, string> = {
   [I18N.proposalDepositDepositFrom]: 'Deposit from',
   [I18N.proposalDepositTitle]: 'Deposit Completed',
   [I18N.proposalDepositTotalAmount]: 'Total Amount',
-  [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No account is connected',
   [I18N.welcomeDescription]:
     'You can create a new account or connect any existing\u00A0one',
@@ -814,16 +796,9 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutSocials]: 'Our Socials',
   [I18N.settingsAboutDiscord]: 'Discord',
   [I18N.settingsAboutTwitter]: 'Twitter',
-  [I18N.settingsAboutRights]: `©2022 HAQQ. All Rights Reserved. \nVersion ${getAppVersion()} (${getBuildNumber()})`,
-  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
-  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
-  [I18N.welcomeRestoreWallet]: 'I already have an account',
-  [I18N.settingsAccountDetailHideSubtitle]:
-    'Will be hidden from the general list',
+  [I18N.settingsAboutRights]: `Version ${getAppVersion()} (${getBuildNumber()})`,
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
-  [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
-  [I18N.backupFinishFinish]: 'Finish',
   [I18N.settingsAccountStyleChoseColor]: 'Choose color style',
   [I18N.settingsAccountStyleGenerate]: 'Generate',
   [I18N.settingsAccountStyleUseStyle]: 'Use this style',
@@ -877,14 +852,8 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
   [I18N.proposalNoVoting]: 'No Voting proposal',
-  [I18N.settingsAddressBookLabel]: 'Address',
-  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
-  [I18N.settingsAddressBookAdd]: 'Add Contact',
-  [I18N.settingsAddressBookAlertDesc]:
-    'Are you sure you want to delete the selected contact?',
-  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
-  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
-  [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
+
+  [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
   [I18N.finishProceed]: 'Proceed',

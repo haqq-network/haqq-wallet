@@ -14,7 +14,6 @@ import {
   Icon,
   InfoBlock,
   InfoBlockAmount,
-  InfoBlockType,
   Inline,
   Spacer,
   Text,
@@ -120,7 +119,7 @@ export const StakingInfo = ({
             <InfoBlock
               icon={<Icon color={Color.textYellow1} i24 name="warning" />}
               style={styles.withHorizontalPadding}
-              type={InfoBlockType.warning}
+              warning
               i18n={I18N.stakingInfoInactive}
             />
           </>

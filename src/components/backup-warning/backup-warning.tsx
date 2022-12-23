@@ -8,7 +8,6 @@ import {
   ButtonVariant,
   Icon,
   InfoBlock,
-  InfoBlockType,
   LottieWrap,
   PopupContainer,
   Spacer,
@@ -46,13 +45,13 @@ export function BackupWarning({onPressBackup}: BackupWarningProps) {
         center
       />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         style={styles.infoBlock1}
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
         i18n={I18N.backupWarningInfoBlock1}
       />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         style={styles.infoBlock2}
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
         i18n={I18N.backupWarningInfoBlock2}

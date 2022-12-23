@@ -19,6 +19,7 @@ export const DataView = ({label, i18n, children, style}: DataViewProps) => {
   const containerStyle = useMemo(() => [page.container, style], [style]);
   return (
     <View style={containerStyle}>
+      {/* @ts-expect-error */}
       <Text i18n={i18n} t11 color={Color.textBase2}>
         {label}
       </Text>

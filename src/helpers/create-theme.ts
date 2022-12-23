@@ -33,6 +33,7 @@ export function createTheme<T extends NamedStyles<T> | NamedStyles<any>>(
       get() {
         const k = `${key}_${app.getTheme()}`;
         if (!cache.has(k)) {
+          // @ts-ignore
           const res = Object.entries(styles[key]).reduce(
             (memo, [prop, value]) => {
               return {

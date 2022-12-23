@@ -57,9 +57,10 @@ export const TransactionConfirmationScreen = () => {
       try {
         setDisabled(true);
 
-        const ethNetworkProvider = new EthNetwork(wallet);
+        const ethNetworkProvider = new EthNetwork();
 
         const transaction = await ethNetworkProvider.sendTransaction(
+          wallet.transport,
           route.params.to,
           route.params.amount,
         );
@@ -88,6 +89,12 @@ export const TransactionConfirmationScreen = () => {
     user.providerId,
     wallet,
   ]);
+
+  useEffect(() => {
+    return () => {
+      wallet?.transportExists && wallet.transport.abort();
+    };
+  }, [wallet]);
 
   return (
     <TransactionConfirmation

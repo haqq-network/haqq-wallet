@@ -14,7 +14,6 @@ import {
   Card,
   Icon,
   InfoBlock,
-  InfoBlockType,
   Text,
 } from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
@@ -51,7 +50,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
       onClose={onCloseBottomSheet}
       title={getText(I18N.modalDetailsQRReceive)}>
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         style={page.info}
         i18n={I18N.modalDetailsQRWarning}
         icon={<Icon name="warning" color={Color.textYellow1} />}

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {app} from '@app/contexts';
@@ -46,6 +46,12 @@ export const StakingUnDelegatePreviewScreen = () => {
       }
     }
   }, [wallet, validator, amount, fee, navigation]);
+
+  useEffect(() => {
+    return () => {
+      wallet?.transportExists && wallet?.transport.abort();
+    };
+  }, [wallet]);
 
   return (
     <StakingUnDelegatePreview

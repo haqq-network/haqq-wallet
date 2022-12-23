@@ -84,11 +84,13 @@ class Wallets extends EventEmitter {
       publicKey,
       deviceId,
       deviceName,
+      path,
     }: {
       address: string;
       deviceId: string;
       deviceName: string;
       publicKey: string;
+      path: string;
     },
     name?: string,
   ): Promise<Wallet | null> {
@@ -99,6 +101,7 @@ class Wallets extends EventEmitter {
         deviceName,
         address,
         publicKey,
+        path,
       },
       name,
     );
@@ -248,10 +251,6 @@ class Wallets extends EventEmitter {
 
   get addressList(): string[] {
     return Array.from(this._wallets.keys());
-  }
-
-  checkBalance() {
-    return Promise.all([...this._wallets.values()].map(w => w.checkBalance()));
   }
 }
 

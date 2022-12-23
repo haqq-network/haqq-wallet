@@ -10,7 +10,6 @@ import {
   ISLMIcon,
   Icon,
   InfoBlock,
-  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
@@ -87,7 +86,7 @@ export const StakingDelegatePreview = ({
       <Spacer />
       <Spacer height={24} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegatePreviewAttention}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
@@ -119,7 +118,7 @@ const styles = createTheme({
     alignSelf: 'center',
   },
   info: {
-    top: 40,
+    marginTop: 40,
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },
