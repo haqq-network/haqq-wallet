@@ -294,7 +294,7 @@ export const SettingsProviderEdit = memo(
     return (
       <>
         <CustomHeader
-          title={getText(I18N.settingsContactEditHeaderTitle)}
+          title={I18N.settingsContactEditHeaderTitle}
           {...left}
           {...right}
         />
