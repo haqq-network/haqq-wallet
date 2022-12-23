@@ -314,6 +314,7 @@ class App extends EventEmitter {
           if (this.user?.isOutdatedLastActivity()) {
             this.authenticated = false;
             await this.auth();
+            this.emit('modal', null);
           }
           break;
         case AppStatus.inactive:
