@@ -6,7 +6,6 @@ import {
   ButtonVariant,
   Icon,
   InfoBlock,
-  InfoBlockType,
   KeyboardSafeArea,
   NetworkFee,
   Spacer,
@@ -52,7 +51,7 @@ export const StakingUnDelegateForm = ({
       <NetworkFee fee={fee} />
       <Spacer height={16} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegateSumWarning}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />

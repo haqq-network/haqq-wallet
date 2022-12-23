@@ -52,9 +52,12 @@ export const LabeledBlock = ({
     <View style={containerStyle} {...props}>
       <View style={styles.flex}>
         {(label || i18nLabel) && (
-          <Text t14 i18n={i18nLabel} color={placeholderColor}>
-            {label}
-          </Text>
+          <>
+            {/* @ts-expect-error */}
+            <Text t14 i18n={i18nLabel} color={placeholderColor}>
+              {label}
+            </Text>
+          </>
         )}
         <View style={styles.inner}>{children}</View>
       </View>

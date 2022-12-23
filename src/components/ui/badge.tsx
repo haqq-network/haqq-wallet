@@ -37,6 +37,7 @@ export const Badge = ({
     ],
     [labelColor, style],
   );
+
   return (
     <View style={[container, center && styles.center]}>
       {iconLeftName && (
@@ -45,6 +46,7 @@ export const Badge = ({
           <Spacer width={4} />
         </>
       )}
+      {/* @ts-expect-error */}
       <Text t13 color={textColor} i18n={i18n} i18params={i18params}>
         {text}
       </Text>
