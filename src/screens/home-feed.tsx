@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {HomeFeed} from '@app/components/home-feed';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {
   useTransactions,
   useTypedNavigation,
@@ -49,7 +51,11 @@ export const HomeFeedScreen = () => {
       transactions.loadTransactionsFromExplorer(address),
     );
 
-    actions.push(wallets.checkBalance());
+    actions.push(
+      new Promise(resolve => {
+        app.emit(Events.onWalletsBalanceCheck, resolve);
+      }),
+    );
 
     Promise.all(actions).then(() => {
       setRefreshing(false);
