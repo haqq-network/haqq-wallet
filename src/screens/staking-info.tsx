@@ -85,7 +85,7 @@ export const StakingInfoScreen = () => {
         });
       } else {
         showModal('wallets-bottom-sheet', {
-          wallets: visible,
+          visibleOnly: true,
           closeDistance,
           title: I18N.stakingDelegateAccountTitle,
           eventSuffix: '-delegate',
@@ -93,7 +93,7 @@ export const StakingInfoScreen = () => {
       }
     },
 
-    [navigation, operator_address, visible, closeDistance],
+    [navigation, operator_address, closeDistance],
   );
 
   const onUnDelegate = useCallback(

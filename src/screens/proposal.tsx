@@ -6,12 +6,7 @@ import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWalletsList,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Wallet} from '@app/models/wallet';
@@ -25,7 +20,7 @@ export const ProposalScreen = () => {
 
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
-  const {visible} = useWalletsList();
+
   const closeDistance = useWindowDimensions().height / 6;
 
   const [vote, setVote] = useState<VoteNamesType>();
@@ -45,7 +40,7 @@ export const ProposalScreen = () => {
 
   const onDeposit = () => {
     showModal('wallets-bottom-sheet', {
-      wallets: visible,
+      visibleOnly: true,
       closeDistance,
       title: I18N.proposalAccountTitle,
       eventSuffix: '-proposal-deposit',
@@ -78,7 +73,7 @@ export const ProposalScreen = () => {
         voteSelectedRef.current = decision;
         cardRef.current?.setSelected(decision);
         showModal('wallets-bottom-sheet', {
-          wallets: visible,
+          visibleOnly: true,
           closeDistance,
           title: I18N.proposalAccountTitle,
           eventSuffix: '-proposal',
@@ -97,7 +92,7 @@ export const ProposalScreen = () => {
         app.off('proposal-vote-change-proposal', onVoteChange);
       };
     }
-  }, [item, closeDistance, visible]);
+  }, [item, closeDistance]);
 
   useEffect(() => {
     if (item?.orderNumber) {
