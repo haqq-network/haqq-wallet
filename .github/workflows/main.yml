@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build bundles
-      - run: |
-          yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle
-          yarn react-native bundle --platform android --dev false --entry-file index.js --bundle-output ./index.android.bundle
+      - name: Build ios bundle
+        run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle
+      - name: Build android bundle
+        run: yarn react-native bundle --platform android --dev false --entry-file index.js --bundle-output ./index.android.bundle
