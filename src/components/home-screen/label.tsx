@@ -23,6 +23,10 @@ export const HomeScreenLabel = ({route, focused}: HomeScreenLabelProps) => {
     }
   }, [route]);
 
+  if (!name) {
+    return null;
+  }
+
   return (
     <Text
       t17

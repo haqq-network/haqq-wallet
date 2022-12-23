@@ -43,6 +43,7 @@ export const Tag = memo(
 
     return (
       <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={container}>
+        {/* @ts-expect-error */}
         <Text t13 color={variant.text} i18n={i18n}>
           {text}
         </Text>

@@ -21,5 +21,9 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
     }
   }, [route]);
 
+  if (!name) {
+    return null;
+  }
+
   return <Text t8 i18n={name} />;
 };

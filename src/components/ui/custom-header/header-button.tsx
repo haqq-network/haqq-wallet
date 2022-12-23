@@ -40,6 +40,7 @@ export const HeaderButton = ({
   if (text || i18n) {
     return (
       <Pressable onPress={() => !disabled && onPress?.()}>
+        {/* @ts-expect-error */}
         <Text i18n={i18n} t10 color={disabled ? Color.textBase2 : color} center>
           {text || ''}
         </Text>

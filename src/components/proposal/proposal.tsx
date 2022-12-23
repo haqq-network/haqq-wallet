@@ -5,14 +5,7 @@ import {ScrollView, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {
-  Badge,
-  Icon,
-  InfoBlock,
-  InfoBlockType,
-  Spacer,
-  Text,
-} from '@app/components/ui';
+import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {useApp, useCosmos, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -165,7 +158,7 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
         {isDeposited && (
           <InfoBlock
             style={styles.infoBlockMargin}
-            type={InfoBlockType.warning}
+            warning
             t14
             icon={<Icon name="warning" color={Color.textYellow1} />}
             i18n={I18N.proposalDepositAttention}
