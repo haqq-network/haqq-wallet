@@ -796,7 +796,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutSocials]: 'Our Socials',
   [I18N.settingsAboutDiscord]: 'Discord',
   [I18N.settingsAboutTwitter]: 'Twitter',
-  [I18N.settingsAboutRights]: `©2022 HAQQ. All Rights Reserved. \nVersion ${getAppVersion()} (${getBuildNumber()})`,
+  [I18N.settingsAboutRights]: `Version ${getAppVersion()} (${getBuildNumber()})`,
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.settingsAccountStyleChoseColor]: 'Choose color style',
