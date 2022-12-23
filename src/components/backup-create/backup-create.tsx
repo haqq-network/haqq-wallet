@@ -70,7 +70,6 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
       </Spacer>
       <InfoBlock
         i18n={I18N.backupCreateRecoveryWarningMessage}
-        t15
         warning
         style={page.marginBottom}
       />

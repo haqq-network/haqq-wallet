@@ -153,7 +153,6 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
           <InfoBlock
             style={styles.infoBlockMargin}
             warning
-            t14
             icon={<Icon name="warning" color={Color.textYellow1} />}
             i18n={I18N.proposalDepositAttention}
           />

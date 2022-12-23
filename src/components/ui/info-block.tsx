@@ -17,8 +17,6 @@ export type InfoBlockProps = {
   children?: React.ReactNode;
   i18n?: I18N;
   style?: StyleProp<ViewStyle>;
-  t14?: boolean;
-  t15?: boolean;
   warning?: boolean;
 };
 
@@ -28,8 +26,6 @@ export const InfoBlock = ({
   i18n,
   icon,
   style,
-  t14 = true,
-  t15 = false,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [styles.container, warning && styles.warningContainer, style],
@@ -50,7 +46,7 @@ export const InfoBlock = ({
     <View style={containerStyle}>
       {icon}
       {/* @ts-expect-error */}
-      <Text i18n={i18n} t14={t14} t15={t15} style={textStyle} color={textColor}>
+      <Text i18n={i18n} t14 style={textStyle} color={textColor}>
         {children}
       </Text>
     </View>
