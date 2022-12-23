@@ -12,8 +12,7 @@ import {HeaderButton, HeaderButtonProps} from './header-button';
 import {Text} from '../index';
 
 interface CustomHeaderProps {
-  title?: string;
-  i18nTitle?: I18N;
+  title?: I18N;
   iconLeft?: HeaderButtonProps['icon'];
   textLeft?: HeaderButtonProps['text'];
   i18nTextLeft?: HeaderButtonProps['i18n'];
@@ -39,8 +38,7 @@ export const CustomHeader = ({
   iconRight,
   textLeft,
   textRight,
-  title,
-  i18nTitle,
+  title = I18N.empty,
   i18nTextRight,
   i18nTextLeft,
 }: CustomHeaderProps) => {
@@ -56,9 +54,7 @@ export const CustomHeader = ({
         icon={iconLeft}
         i18n={i18nTextLeft}
       />
-      <Text t8 i18n={i18nTitle} center>
-        {title || ''}
-      </Text>
+      <Text t8 i18n={title} center />
       <HeaderButton
         onPress={onPressRight}
         disabled={disabledRight}

@@ -1,6 +1,7 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 
 export enum I18N {
+  empty,
   numericKeyboard0,
   numericKeyboard1,
   numericKeyboard2,
@@ -424,6 +425,7 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.empty]: '',
   [I18N.numericKeyboard0]: '0',
   [I18N.numericKeyboard1]: '1',
   [I18N.numericKeyboard2]: '2',
