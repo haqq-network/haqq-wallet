@@ -4,13 +4,16 @@
  *
  * @format
  */
+const dotenv = require('dotenv');
+dotenv.config();
+
 const blacklist = require('metro-config/src/defaults/exclusionList');
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
+        experimentalImportSupport: true,
+        inlineRequires: process.env.STORYBOOK_ENABLED !== '1',
       },
     }),
     minifierPath: 'metro-minify-terser',
