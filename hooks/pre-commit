@@ -21,20 +21,20 @@ do
 done
 
 ./node_modules/.bin/prettier --check $STAGED_FILES
-#for FILE in $STAGED_FILES
-#do
-#  ./node_modules/.bin/prettier --check "$FILE"
-#
-#  if [[ "$?" != 0 ]]; then
-#    echo "\033[41mPrettier Failed: $FILE\033[0m"
-#    PASS=false
-#  fi
-#done
+
+echo "\nValidating Typescript types...\n"
+
+./node_modules/.bin/tsc
+
+if [[ "$?" != 0 ]]; then
+  echo "\033[41mTypescript failed\033[0m"
+  PASS=false
+fi
 
 echo "\nJavascript validation completed!\n"
 
 if ! $PASS; then
-  echo "\033[41mCOMMIT FAILED:\033[0m Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors and try again.\n"
+  echo "\033[41mCOMMIT FAILED:\033[0m Your commit contains files that should pass ESLint as tsc but do not. Please fix the ESLint and typescript errors and try again.\n"
   exit 1
 else
   echo "\033[42mCOMMIT SUCCEEDED\033[0m\n"

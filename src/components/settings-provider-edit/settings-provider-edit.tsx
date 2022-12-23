@@ -1,4 +1,5 @@
 import React, {
+  Reducer,
   memo,
   useCallback,
   useEffect,
@@ -138,13 +139,15 @@ export const SettingsProviderEdit = memo(
     const [actionSheetVisible, setActionSheetVisible] = useState(false);
     const [isEdit, setIsEdit] = useState(!provider?.id);
     const scroll = useRef<JSX.Element | null>(null);
-    const [state, dispatch] = useReducer(reducer, {
+    const [state, dispatch] = useReducer<
+      Reducer<SettingsProviderEditData, ReducerAction>
+    >(reducer, {
       isChanged: false,
       errors: {},
       ...(provider
         ? {...provider, ethChainId: String(provider?.ethChainId)}
         : {}),
-    } as SettingsProviderEditData);
+    });
 
     useEffect(() => {
       if (provider?.id) {
@@ -284,8 +287,10 @@ export const SettingsProviderEdit = memo(
     }, [isEdit, onCancel, state.isChanged, provider]);
 
     const onFocusField = useCallback(
-      (name, e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-        console.log(findNodeHandle(e.target));
+      (
+        name: ProviderKeys,
+        e: NativeSyntheticEvent<TextInputFocusEventData>,
+      ) => {
         scroll.current?.props?.scrollToFocusedInput(findNodeHandle(e.target));
       },
       [scroll],

@@ -33,6 +33,7 @@ jobs:
       - name: Run linters
         run: |
           yarn lint
+          yarn typescript:check
           yarn prettier:check
 
   build:
@@ -53,5 +54,5 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      # - name: Build applications
-      # - run: yarn build
+      - name: Build ios bundle
+        run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle

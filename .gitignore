@@ -71,3 +71,5 @@ google-account.json
 
 # coverage
 /coverage-ts
+/index.ios.bundle
+/index.android.bundle

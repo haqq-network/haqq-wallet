@@ -10,7 +10,6 @@ import {
   Copy,
   CopyButton,
   InfoBlock,
-  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
@@ -71,8 +70,7 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
       </Spacer>
       <InfoBlock
         i18n={I18N.backupCreateRecoveryWarningMessage}
-        t15
-        type={InfoBlockType.warning}
+        warning
         style={page.marginBottom}
       />
       <View style={page.agree}>

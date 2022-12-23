@@ -67,7 +67,8 @@ export type WalletInitialData =
       address: string;
       deviceId: string;
       deviceName: string;
-    };
+    }
+  | {};
 
 export type RootStackParamList = {
   home: undefined;
@@ -76,8 +77,8 @@ export type RootStackParamList = {
   homeSettings:
     | undefined
     | {
-        screen: keyof RootStackParamList;
-        params: any;
+        screen: 'settingsProviderForm';
+        params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
   welcome: undefined;
