@@ -99,6 +99,12 @@ export type RootStackParamList = {
   settingsSecurityPinRepeat: {
     pin: string;
   };
+  settingsSecurityPinMnemonic: {
+    address: string;
+  };
+  settingsViewRecoveryPhrase: {
+    mnemonic: string;
+  };
   settingsFaq: undefined;
   settingsAbout: undefined;
   backupVerify: {

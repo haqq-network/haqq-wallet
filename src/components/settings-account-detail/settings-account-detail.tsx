@@ -21,12 +21,14 @@ type SettingsAccountDetailProps = {
   onPressRename: () => void;
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
+  onViewingRecoveryPhrase: () => void;
 };
 
 export const SettingsAccountDetail = ({
   onPressRename,
   onPressStyle,
   onToggleIsHidden,
+  onViewingRecoveryPhrase,
 }: SettingsAccountDetailProps) => {
   const route = useTypedRoute<'settingsAccountDetail'>();
 
@@ -71,6 +73,12 @@ export const SettingsAccountDetail = ({
         <DataContent
           titleI18n={I18N.settingsAccountDetailChangeStyleTitle}
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
+        />
+      </MenuNavigationButton>
+      <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
+        <DataContent
+          titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
+          subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
         />
       </MenuNavigationButton>
       <MenuNavigationButton onPress={onPressRename} hideArrow>

@@ -76,8 +76,10 @@ import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsSecurityPinMnemonicScreen} from './screens/settings-security-pin-mnemonic';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
+import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
@@ -332,10 +334,24 @@ export const App = () => {
                     }}
                   />
                   <Stack.Screen
+                    name="settingsSecurityPinMnemonic"
+                    component={SettingsSecurityPinMnemonicScreen}
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    component={SettingsViewRecoveryPhraseScreen}
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhrase),
+                    }}
+                  />
+                  <Stack.Screen
                     name="settingsFaq"
                     component={SettingsFAQScreen}
                     options={{
-                      title: 'Security',
+                      title: getText(I18N.settingsSecurity),
                     }}
                   />
                   <Stack.Screen
