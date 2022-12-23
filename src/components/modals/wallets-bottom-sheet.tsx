@@ -1,27 +1,40 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {hideModal} from '@app/helpers';
-import {useApp} from '@app/hooks';
+import {useApp, useWalletsList} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
 export interface WalletsBottomSheetProps {
-  wallets: Wallet[];
-  closeDistance?: number;
   title: I18N;
+  visibleOnly?: boolean;
+  closeDistance?: number;
   eventSuffix?: string;
+  wallets?: Wallet[];
 }
 
 export function WalletsBottomSheet({
   closeDistance,
-  wallets,
+  visibleOnly,
   title,
   eventSuffix = '',
+  wallets,
 }: WalletsBottomSheetProps) {
   const app = useApp();
+  const {visible, wallets: allWallets} = useWalletsList();
+
+  const curWalletList = useMemo(() => {
+    if (wallets) {
+      return wallets;
+    } else if (visibleOnly) {
+      return visible;
+    } else {
+      return allWallets;
+    }
+  }, [wallets, visible, visibleOnly, allWallets]);
 
   const onPressWallet = useCallback(
     (address: string) => {
@@ -36,18 +49,18 @@ export function WalletsBottomSheet({
   };
 
   useEffect(() => {
-    if (wallets.length === 1) {
-      onPressWallet(wallets[0].address);
+    if (curWalletList.length === 1) {
+      onPressWallet(curWalletList[0].address);
       hideModal();
     }
-  }, [wallets, onPressWallet]);
+  }, [curWalletList, onPressWallet]);
 
   return (
     <BottomSheet
       onClose={onClose}
       closeDistance={closeDistance}
       title={getText(title)}>
-      {wallets.map((item, id) => (
+      {curWalletList.map((item, id) => (
         <WalletRow key={id} item={item} onPress={onPressWallet} />
       ))}
       <Spacer height={50} />
