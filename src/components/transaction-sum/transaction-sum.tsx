@@ -69,8 +69,11 @@ export const TransactionSum = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <TouchableWithoutFeedback onPress={onContact}>
-        <LabeledBlock i18nLabel={I18N.transactionSumSend}>
+        <LabeledBlock
+          i18nLabel={I18N.transactionSumSend}
+          style={styles.sumblock}>
           <Text
+            t11
             color={Color.textBase1}
             numberOfLines={1}
             ellipsizeMode="middle">
@@ -100,6 +103,9 @@ export const TransactionSum = ({
 };
 
 const styles = createTheme({
+  sumblock: {
+    paddingBottom: 8,
+  },
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,

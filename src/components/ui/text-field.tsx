@@ -98,7 +98,6 @@ export const TextField: React.FC<Props> = memo(
         height.value =
           Math.max(Math.ceil(e.nativeEvent.contentSize.height), lines * 22) +
           36;
-        console.log(height.value);
       },
       [lines, height],
     );
