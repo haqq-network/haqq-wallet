@@ -4,8 +4,6 @@
  *
  * @format
  */
-const dotenv = require('dotenv');
-dotenv.config();
 
 const blacklist = require('metro-config/src/defaults/exclusionList');
 module.exports = {
@@ -13,11 +11,11 @@ module.exports = {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: true,
-        inlineRequires: process.env.STORYBOOK_ENABLED !== '1',
+        inlineRequires: true,
       },
+      minifierPath: 'metro-minify-terser',
+      // plugins: ['@babel/plugin-proposal-numeric-separator'],
     }),
-    minifierPath: 'metro-minify-terser',
-    // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
   resolver: {
     blacklistRE: blacklist([

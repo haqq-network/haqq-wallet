@@ -16,13 +16,11 @@ import "@storybook/addon-ondevice-actions/register";
 import { argsEnhancers } from "@storybook/addon-actions/dist/modern/preset/addArgs";
 
 import { decorators, parameters } from "./preview";
-import {LogBox} from "react-native"
-import * as Button from '../components/Button/Button.stories.tsx'
 
 if (decorators) {
   if (__DEV__) {
     // stops the warning from showing on every HMR
-    LogBox.ignoreLogs([
+    require("react-native").LogBox.ignoreLogs([
       "`clearDecorators` is deprecated and will be removed in Storybook 7.0",
     ]);
   }
@@ -40,7 +38,7 @@ try {
 } catch {}
 
 const getStories = () => {
-  return [Button];
+  return [require("../src/components/ui/text/text.stories.tsx")];
 };
 
 configure(getStories, module, false);
