@@ -393,11 +393,11 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export type ScreenOptionType = StackNavigationOptions & {
+export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-};
+}
 
 export type HeaderButtonProps = {
   tintColor?: string;
