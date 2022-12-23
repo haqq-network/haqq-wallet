@@ -78,7 +78,7 @@ export const SettingsSecurity = ({
           <Text
             t14
             color={Color.textBase2}
-            i18n={I18N.setttingsSecurityEnterPin}
+            i18n={I18N.settingsSecurityEnterPin}
           />
         </View>
       </MenuNavigationButton>
