@@ -119,7 +119,7 @@ const styles = createTheme({
     alignSelf: 'center',
   },
   info: {
-    top: 40,
+    marginTop: 40,
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },
