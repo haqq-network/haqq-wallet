@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 import {format} from 'date-fns';
 import {ScrollView, View, useWindowDimensions} from 'react-native';
@@ -108,38 +108,32 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
       const sum = GovernanceVoting.depositSum(voter);
       setCollectedDeposit(sum);
     });
-    // if (item?.orderNumber) {
-    //   (async () => {
-    //     const details = await cosmos.getProposalDetails(id);
-    //     // setDetails({
-
-    //     // })
-    //     console.log('🚀 - details', JSON.stringify(response.proposal));
-    //   })();
-    // }
   }, [item.orderNumber, cosmos]);
+
+  const badgeStatus = useMemo(
+    () => ProposalsTags.find(tag => tag[0] === item?.status),
+    [item?.status],
+  );
 
   if (!item) {
     return <></>;
   }
 
-  const {status, orderNumber, title, description, isDeposited} = item;
-
-  const badgePropsByStatus = () => {
-    const props = ProposalsTags.find(tag => tag[0] === status);
-    return {
-      i18n: props?.[1],
-      labelColor: props?.[2],
-      textColor: props?.[3],
-      iconLeftName: props?.[4],
-    };
-  };
+  const {orderNumber, title, description, isDeposited} = item;
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <Spacer height={24} />
-        <Badge center {...badgePropsByStatus()} />
+        {badgeStatus && (
+          <Badge
+            center
+            i18n={badgeStatus[1]}
+            labelColor={badgeStatus[2]}
+            textColor={badgeStatus[3]}
+            iconLeftName={badgeStatus[4]}
+          />
+        )}
         <Spacer height={16} />
         <Text center color={Color.textBase1} t14>
           #{orderNumber}

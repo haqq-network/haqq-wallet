@@ -33,6 +33,7 @@ jobs:
       - name: Run linters
         run: |
           yarn lint
+          yarn typescript:check
           yarn prettier:check
 
   build:
