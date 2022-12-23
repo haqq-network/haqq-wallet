@@ -35,7 +35,7 @@ export const HomeGovernance = ({
 
   return (
     <>
-      <CustomHeader i18nTitle={I18N.homeGovernance} iconRight="search" />
+      <CustomHeader title={I18N.homeGovernance} iconRight="search" />
       <Spacer height={12} />
       <View>
         <FlatList

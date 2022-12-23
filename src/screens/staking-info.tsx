@@ -55,6 +55,12 @@ export const StakingInfoScreen = () => {
     };
   }, [operator_address]);
 
+  useEffect(() => {
+    return () => {
+      visible.map(w => w.transportExists && w.transport.abort());
+    };
+  }, [visible]);
+
   const onWithdrawDelegatorReward = useCallback(() => {
     if (rewards?.length) {
       setWithdrawDelegatorRewardProgress(true);

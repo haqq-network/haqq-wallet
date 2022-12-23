@@ -7,8 +7,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {
   Badge,
-  // Button,
-  // ButtonVariant,
   Icon,
   InfoBlock,
   InfoBlockType,

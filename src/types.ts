@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {TransactionRequest} from '@ethersproject/abstract-provider';
+import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
@@ -13,10 +15,16 @@ import {Wallet} from '@app/models/wallet';
 import {Transaction} from './models/transaction';
 
 export interface TransportWallet {
+  getSignedTx: (
+    transaction: TransactionRequest | UnsignedTransaction,
+  ) => Promise<string>;
+  getEthAddress: () => string;
   getCosmosAddress: () => string;
-  getPublicKey: () => Promise<string>;
+  getBase64PublicKey: () => Promise<string>;
 
   signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
+
+  abort: () => void;
 }
 
 export enum TransactionSource {
@@ -385,11 +393,11 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export type ScreenOptionType = StackNavigationOptions & {
+export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-};
+}
 
 export type HeaderButtonProps = {
   tintColor?: string;
@@ -438,6 +446,7 @@ export type AddWalletParams = {address: string; publicKey: string} & (
     }
   | {
       type: WalletType.ledgerBt;
+      path: string;
       deviceId: string;
       deviceName: string;
     }

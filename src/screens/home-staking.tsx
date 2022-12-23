@@ -22,7 +22,10 @@ export const HomeStakingScreen = () => {
 
   const [data, setData] = useState({
     ...initData,
-    availableSum: visible.reduce((acc, w) => acc + w.balance, 0),
+    availableSum: visible.reduce(
+      (acc, w) => acc + app.getBalance(w.address),
+      0,
+    ),
   });
   const navigation = useTypedNavigation();
   const cosmos = useCosmos();
@@ -48,7 +51,10 @@ export const HomeStakingScreen = () => {
       const rewardsSum = sumReduce(rewards);
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
-      const availableSum = visible.reduce((acc, w) => acc + w.balance, 0);
+      const availableSum = visible.reduce(
+        (acc, w) => acc + app.getBalance(w.address),
+        0,
+      );
       setData({
         rewardsSum,
         stakingSum,
@@ -90,7 +96,7 @@ export const HomeStakingScreen = () => {
   }, [cosmos, visible]);
 
   useEffect(() => {
-    const sync = async () => {
+    const sync = () => {
       app.emit(Events.onStakingSync);
     };
 
@@ -101,6 +107,12 @@ export const HomeStakingScreen = () => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      visible.map(w => w.transportExists && w.transport.abort());
+    };
+  }, [visible]);
 
   return (
     <HomeStaking
