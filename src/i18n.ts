@@ -873,7 +873,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
-  [I18N.proposalNoVoting]: 'No Voting proposal',
+  [I18N.proposalNoVoting]: 'No {{votingCategory}} proposal',
 
   [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
