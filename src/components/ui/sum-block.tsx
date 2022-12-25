@@ -118,7 +118,7 @@ export const SumBlock = ({
       ) : (
         <Text center color={Color.textBase2} t14>
           {getText(I18N.sumBlockAvailable)}:{' '}
-          <Text clean color={Color.textGreen1}>
+          <Text t14 color={Color.textGreen1}>
             {cleanNumber(balance.toFixed(2))} {currency}
           </Text>
         </Text>

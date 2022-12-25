@@ -3,7 +3,13 @@ import React, {useCallback, useMemo} from 'react';
 import {Alert, Dimensions, Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Button, ButtonVariant, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -63,21 +69,25 @@ export const BackupNotification = ({
       />
       <Text
         t14
-        style={styles.t14}
         i18n={I18N.backupNotificationDescription}
         center
         color={Color.textBase2}
       />
+      <Spacer height={20} />
       <Button
         i18n={I18N.backupNotificationBackup}
         variant={ButtonVariant.contained}
         onPress={onClickBackup}
         style={styles.margin}
+        size={ButtonSize.middle}
       />
       <Button
         i18n={I18N.backupNotificationSkip}
-        variant={ButtonVariant.error}
+        variant={ButtonVariant.third}
+        error
         onPress={onSkip}
+        size={ButtonSize.middle}
+        style={styles.margin}
       />
     </View>
   );
@@ -96,10 +106,7 @@ const styles = createTheme({
   title: {
     marginBottom: 8,
   },
-  t14: {
-    marginBottom: 28,
-  },
-  margin: {marginBottom: 8},
+  margin: {marginVertical: 8},
   image: {
     width: Dimensions.get('window').width - 80,
   },

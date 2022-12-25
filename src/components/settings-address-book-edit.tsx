@@ -86,7 +86,8 @@ export const SettingsAddressBookEdit = memo(
           <View style={styles.buttonContainerRemove}>
             {isEdit && !isCreate && (
               <Button
-                variant={ButtonVariant.error}
+                error
+                variant={ButtonVariant.second}
                 size={ButtonSize.middle}
                 onPress={handleRemove}
                 i18n={I18N.settingsContactEditDeleteContact}

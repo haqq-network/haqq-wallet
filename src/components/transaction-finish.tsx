@@ -65,10 +65,33 @@ export const TransactionFinish = ({
           - {cleanNumber((transaction?.value).toFixed(8))} ISLM
         </Text>
       )}
-      <Text t14 center style={styles.address}>
-        {short}
-      </Text>
+
+      <View style={styles.contactLine}>
+        {contact?.name && (
+          <Text t13 center style={styles.address}>
+            {contact.name + ' '}
+          </Text>
+        )}
+        <Text t14 center style={styles.address}>
+          {short}
+        </Text>
+      </View>
+
       <NetworkFee fee={(transaction?.fee ?? 0) * WEI} />
+
+      <View style={styles.providerContainer}>
+        <Text
+          t14
+          color={Color.textBase2}
+          i18n={I18N.transactionConfirmationHAQQ}
+        />
+        <Text
+          t14
+          color={Color.textBase2}
+          i18n={I18N.transactionConfirmationHQ}
+        />
+      </View>
+
       <Spacer />
       <View style={styles.buttons}>
         <IconButton onPress={onPressContact} style={styles.button}>
@@ -166,4 +189,17 @@ const styles = createTheme({
     marginBottom: 4,
   },
   margin: {marginBottom: 16},
+  contactLine: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  providerContainer: {
+    backgroundColor: Color.bg8,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: 16,
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
 });

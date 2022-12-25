@@ -3,6 +3,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {BackupCreateScreen} from '@app/screens/backup-create';
 import {BackupFinishScreen} from '@app/screens/backup-finish';
 import {BackupVerifyScreen} from '@app/screens/backup-verify';
@@ -17,7 +18,7 @@ const screenOptions: ScreenOptionType = {
 };
 
 const stackScreenOptions = {
-  title: 'Backup phrase',
+  title: getText(I18N.backupCreateVerifyTitle),
   ...popupScreenOptions,
 };
 

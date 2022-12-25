@@ -306,6 +306,7 @@ export const SettingsProviderEdit = memo(
         <KeyboardAwareScrollView
           style={[page.container, {paddingBottom: insets.bottom}]}
           innerRef={ref => (scroll.current = ref)}
+          contentContainerStyle={page.containerWrapper}
           extraHeight={250}>
           <WrappedInput
             autoFocus={true}
@@ -318,7 +319,7 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
             onBlur={onBlurField}
             onFocus={onFocusField}
-            hint={I18N.settingsProviderEditNameHint}
+            hint={isEdit ? I18N.settingsProviderEditNameHint : null}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -331,7 +332,7 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
             onBlur={onBlurField}
             onFocus={onFocusField}
-            hint={I18N.settingsProviderEditCosmosChainIdHint}
+            hint={isEdit ? I18N.settingsProviderEditCosmosChainIdHint : null}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -344,7 +345,7 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
             onBlur={onBlurField}
             onFocus={onFocusField}
-            hint={I18N.settingsProviderEditCosmosEndpointHint}
+            hint={isEdit ? I18N.settingsProviderEditCosmosEndpointHint : null}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -357,7 +358,7 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
             onBlur={onBlurField}
             onFocus={onFocusField}
-            hint={I18N.settingsProviderEditEthEndpointHint}
+            hint={isEdit ? I18N.settingsProviderEditEthEndpointHint : null}
           />
           <Spacer height={24} />
           <WrappedInput
@@ -370,17 +371,17 @@ export const SettingsProviderEdit = memo(
             onChange={onChangeField}
             onBlur={onBlurField}
             onFocus={onFocusField}
-            hint={I18N.settingsProviderEditExplorerHint}
+            hint={isEdit ? I18N.settingsProviderEditExplorerHint : null}
           />
 
           {isEdit && provider?.id && (
             <View style={page.buttonContainerRemove}>
               <Button
-                variant={ButtonVariant.error}
+                error
+                variant={ButtonVariant.second}
                 size={ButtonSize.middle}
-                style={page.errorButton}
                 onPress={onRemove}
-                title={getText(I18N.settingsProviderEditDeleteProvider)}
+                i18n={I18N.settingsProviderEditDeleteProvider}
               />
             </View>
           )}
@@ -413,6 +414,9 @@ const page = createTheme({
     paddingHorizontal: 20,
     marginTop: 12,
   },
+  containerWrapper: {
+    flexGrow: 1,
+  },
   spaceInput: {height: 24},
   useProviderButton: {
     marginVertical: 16,
@@ -420,9 +424,5 @@ const page = createTheme({
   buttonContainerRemove: {
     alignSelf: 'flex-start',
     marginTop: 24,
-  },
-  errorButton: {
-    backgroundColor: Color.bg7,
-    borderRadius: 12,
   },
 });

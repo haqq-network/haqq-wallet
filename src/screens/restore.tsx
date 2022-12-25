@@ -20,9 +20,10 @@ const screenOptions: ScreenOptionType = {
 
 const title = getText(I18N.restoreWalletScreenTitle);
 
-const screenOptionsTitle: ScreenOptionType = {
-  title,
+const restoreScreenOptions: ScreenOptionType = {
+  title: '',
   ...hideBack,
+  headerBackHidden: true,
 };
 
 export const RestoreScreen = () => {
@@ -31,7 +32,7 @@ export const RestoreScreen = () => {
       <SignInStack.Screen
         name="restoreAgreement"
         component={SignInAgreementScreen}
-        options={screenOptionsTitle}
+        options={restoreScreenOptions}
         initialParams={{nextScreen: 'restorePhrase'}}
       />
       <SignInStack.Screen

@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
-import {Button, ButtonVariant, Loading} from '@app/components/ui';
+import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables/common';
@@ -82,6 +82,7 @@ export const HomeStaking = ({
           onPress={onPressValidators}
           style={styles.margin}
         />
+        <Spacer height={12} />
       </View>
     </ScrollView>
   );
@@ -93,7 +94,7 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   margin: {
-    marginBottom: 20,
+    marginVertical: 8,
   },
   content: {
     height: IS_IOS ? '100%' : 'auto',

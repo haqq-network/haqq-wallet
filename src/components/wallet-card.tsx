@@ -78,7 +78,7 @@ export const WalletCard = ({
             {formattedAddress}
           </Text>
           <Icon
-            i24
+            i16
             name="copy"
             color={Color.graphicBase3}
             style={styles.marginLeft}

@@ -227,6 +227,7 @@ const styles = createTheme({
   sub: {
     justifyContent: 'center',
     alignSelf: 'center',
+    marginLeft: 14,
   },
   placeholder: {
     position: 'absolute',

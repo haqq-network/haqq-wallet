@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
+import {I18N, getText} from '@app/i18n';
 import {WEI} from '@app/variables/common';
 
 export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
@@ -26,8 +27,8 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
             notValid: 'Invalid number',
             greaterThanOrEqualTo: 0.0001,
             lessThanOrEqualTo: maxAmount,
-            notGreaterThan: 'Should be greater than 0.0001',
-            notLessThanOrEqualTo: "You don't have enough funds",
+            notGreaterThan: getText(I18N.sumAmountTooLow),
+            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
           },
         }),
       );

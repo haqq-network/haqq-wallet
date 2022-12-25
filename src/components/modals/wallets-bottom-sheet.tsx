@@ -5,7 +5,7 @@ import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {hideModal} from '@app/helpers';
 import {useApp} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
 export interface WalletsBottomSheetProps {
@@ -46,7 +46,7 @@ export function WalletsBottomSheet({
     <BottomSheet
       onClose={onClose}
       closeDistance={closeDistance}
-      title={getText(title)}>
+      i18nTitle={title}>
       {wallets.map((item, id) => (
         <WalletRow key={id} item={item} onPress={onPressWallet} />
       ))}

@@ -2,8 +2,8 @@ import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {ArrowSend, Text} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Icon, Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
@@ -47,7 +47,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
       <View>
         <View style={styles.container}>
           <View style={styles.iconWrapper}>
-            <ArrowSend color={getColor(Color.graphicBase1)} />
+            <Icon name="servers" color={Color.graphicBase1} />
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
@@ -57,15 +57,11 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             <View style={styles.infoRow}>
               <Text
                 t14
-                color={getColor(Color.textBase2)}
+                color={Color.textBase2}
                 i18n={I18N.stakingValidatorsRowPower}
                 i18params={{power: cleanNumber(votingPower.toFixed(2))}}
               />
-              <Text
-                t14
-                color={getColor(textColor)}
-                i18n={item.localStatus as number}
-              />
+              <Text t14 color={textColor} i18n={item.localStatus as number} />
             </View>
           </View>
         </View>
@@ -124,6 +120,7 @@ const styles = createTheme({
   badges: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    flexWrap: 'wrap',
     marginHorizontal: 15,
     marginBottom: 6,
   },

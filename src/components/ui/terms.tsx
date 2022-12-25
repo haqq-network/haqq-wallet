@@ -1,35 +1,50 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
-import {Text as RNText, StyleProp, StyleSheet, TextStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
+import {openURL} from '@app/helpers';
+import {I18N} from '@app/i18n';
+import {PRIVACY_POLICY} from '@app/variables/common';
 
-import {openURL} from '../../helpers';
-import {I18N, getText} from '../../i18n';
-import {LIGHT_GRAPHIC_GREEN_1, PRIVACY_POLICY} from '../../variables/common';
-import {Text} from '../ui';
-
-export type TermsProps = {
-  style?: StyleProp<TextStyle> | undefined;
-};
+interface TermsProps {
+  style?: StyleProp<ViewStyle>;
+}
 
 export const Terms = ({style}: TermsProps) => {
-  const onPressPP = useCallback(() => {
+  const onPressPP = () => {
     openURL(PRIVACY_POLICY);
-  }, []);
+  };
+
+  const onPressTOS = () => {
+    openURL('https://www.google.com');
+  };
 
   return (
-    <Text t11 center color={getColor(Color.textBase2)} style={style}>
-      {getText(I18N.termsAgreement)}{' '}
-      <RNText onPress={onPressPP} style={styles.link}>
-        {getText(I18N.termsPrivacyPolicy)}
-      </RNText>
-    </Text>
+    <View style={[styles.container, style]}>
+      <Text t11 i18n={I18N.termsAgreementFirst} color={Color.textBase2} />
+      <Text
+        onPress={onPressTOS}
+        t11
+        i18n={I18N.termsOfService}
+        color={Color.textGreen1}
+      />
+      <Text t11 i18n={I18N.termsAgreementSecond} color={Color.textBase2} />
+      <Text
+        onPress={onPressPP}
+        t11
+        i18n={I18N.termsPrivacyPolicy}
+        color={Color.textGreen1}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  link: {
-    color: LIGHT_GRAPHIC_GREEN_1,
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
 });
