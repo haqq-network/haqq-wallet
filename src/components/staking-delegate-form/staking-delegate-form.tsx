@@ -59,15 +59,16 @@ export const StakingDelegateForm = ({
         <Text t14 i18n={I18N.stakingDelegateFormCommission} />
         <Text t10>{validatorCommission}%</Text>
       </View>
-      <SumBlock
-        value={amounts.amount}
-        error={amounts.error}
-        currency="ISLM"
-        balance={balance}
-        onChange={amounts.setAmount}
-        onMax={onPressMax}
-      />
-      <Spacer />
+      <Spacer centered>
+        <SumBlock
+          value={amounts.amount}
+          error={amounts.error}
+          currency="ISLM"
+          balance={balance}
+          onChange={amounts.setAmount}
+          onMax={onPressMax}
+        />
+      </Spacer>
       <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}

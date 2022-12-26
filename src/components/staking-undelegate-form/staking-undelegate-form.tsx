@@ -38,7 +38,7 @@ export const StakingUnDelegateForm = ({
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <Spacer style={styles.space}>
+      <Spacer centered>
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
@@ -72,8 +72,5 @@ const styles = createTheme({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-  },
-  space: {
-    justifyContent: 'center',
   },
 });
