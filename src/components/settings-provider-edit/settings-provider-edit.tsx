@@ -377,11 +377,11 @@ export const SettingsProviderEdit = memo(
           {isEdit && provider?.id && (
             <View style={page.buttonContainerRemove}>
               <Button
-                variant={ButtonVariant.error}
+                error
+                variant={ButtonVariant.second}
                 size={ButtonSize.middle}
-                style={page.errorButton}
                 onPress={onRemove}
-                title={getText(I18N.settingsProviderEditDeleteProvider)}
+                i18n={I18N.settingsProviderEditDeleteProvider}
               />
             </View>
           )}
@@ -424,9 +424,5 @@ const page = createTheme({
   buttonContainerRemove: {
     alignSelf: 'flex-start',
     marginTop: 24,
-  },
-  errorButton: {
-    backgroundColor: Color.bg7,
-    borderRadius: 12,
   },
 });
