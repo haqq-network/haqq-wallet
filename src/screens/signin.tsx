@@ -2,7 +2,7 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {hideBack, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {ScreenOptionType} from '@app/types';
 
@@ -28,7 +28,7 @@ export const SignInScreen = () => {
       <SignInStack.Screen
         name="signinAgreement"
         component={SignInAgreementScreen}
-        options={{title}}
+        options={{...hideBack, ...screenOptions}}
         initialParams={{
           nextScreen: 'signinRestoreWallet',
         }}
@@ -55,7 +55,7 @@ export const SignInScreen = () => {
       <SignInStack.Screen
         name="onboardingBiometry"
         component={OnboardingBiometryScreen}
-        options={screenOptions}
+        options={{title}}
         initialParams={{nextScreen: 'signinStoreWallet'}}
       />
       <SignInStack.Screen

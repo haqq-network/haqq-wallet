@@ -47,7 +47,7 @@ export const TransactionFinishScreen = () => {
             : I18N.transactionFinishAddContact,
         ),
         getText(I18N.transactionFinishContactMessage, {
-          address: short,
+          address: transaction?.to,
         }),
         value => {
           if (contact) {
@@ -67,7 +67,7 @@ export const TransactionFinishScreen = () => {
         },
       );
     }
-  }, [transaction?.to, contact, short]);
+  }, [transaction?.to, contact]);
 
   useEffect(() => {
     setTransaction(transactions.getTransaction(hash));

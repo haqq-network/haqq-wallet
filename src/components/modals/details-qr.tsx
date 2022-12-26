@@ -18,7 +18,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
 import {useWallet} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -48,7 +48,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
   return (
     <BottomSheet
       onClose={onCloseBottomSheet}
-      title={getText(I18N.modalDetailsQRReceive)}>
+      i18nTitle={I18N.modalDetailsQRReceive}>
       <InfoBlock
         warning
         style={page.info}
