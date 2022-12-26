@@ -13,6 +13,7 @@ import {Spacer, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {QR_STATUS_BAR} from '@app/variables/common';
 
@@ -187,7 +188,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         <BottomSheet
           onClose={onCloseBottomSheet}
           closeDistance={closeDistance}
-          title="Send funds from">
+          i18nTitle={I18N.qrModalSendFunds}>
           {rows.map((item, id) => (
             <WalletRow key={id} item={item} onPress={handleAddressEvent} />
           ))}

@@ -7,9 +7,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
+import {ScreenOptionType} from '@app/types';
 import {DEFAULT_HITSLOP} from '@app/variables/common';
 
-export const PopupHeader = ({options, back, navigation}: StackHeaderProps) => {
+type PopupHeaderProps = StackHeaderProps & {
+  options: ScreenOptionType;
+};
+
+export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
   const insets = useSafeAreaInsets();
 
   const canGoBack = useMemo(

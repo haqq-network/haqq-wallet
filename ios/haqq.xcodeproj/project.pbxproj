@@ -161,12 +161,12 @@
 		93FCDB04C0264A779D1F806D /* card-maks@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks@3x.png"; path = "../assets/images/card-maks@3x.png"; sourceTree = "<group>"; };
 		9D873BDE961E4AC3BBF823AF /* mnemonic-notify@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify@3x.png"; path = "../assets/images/mnemonic-notify@3x.png"; sourceTree = "<group>"; };
 		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; };
-		A486B7EB46EF4167B961B07B /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; };
+		A486B7EB46EF4167B961B07B /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; };
 		AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.ttf"; path = "../assets/fonts/SF-Pro-Display-Bold.ttf"; sourceTree = "<group>"; };
-		B47CE96594C04FC3BCF72BAE /* bluetooth-failed@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@3x.png"; path = "../assets/images/bluetooth-failed@3x.png"; sourceTree = "<group>"; };
+		B47CE96594C04FC3BCF72BAE /* bluetooth-failed@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@3x.png"; path = "../assets/images/bluetooth-failed@3x.png"; sourceTree = "<group>"; };
 		B593B56E9C8247AE9EDAAB18 /* qr-logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo.png"; path = "../assets/images/qr-logo.png"; sourceTree = "<group>"; };
 		B62F68B77BB844B9B19878FB /* logo-empty@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty@2x.png"; path = "../assets/images/logo-empty@2x.png"; sourceTree = "<group>"; };
-		B69D3B93ADC540F38D4C3FC8 /* bluetooth-failed.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; };
+		B69D3B93ADC540F38D4C3FC8 /* bluetooth-failed.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; };
 		B841EDBC4B79491D9D704E78 /* ElMessiri-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Regular.ttf"; path = "../assets/fonts/ElMessiri-Regular.ttf"; sourceTree = "<group>"; };
 		BFA231F063EE4AAB923850B7 /* card-circles-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@3x.png"; path = "../assets/images/card-circles-0@3x.png"; sourceTree = "<group>"; };
 		D35B5E77C48142A29F3DBC95 /* card-maks.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks.png"; path = "../assets/images/card-maks.png"; sourceTree = "<group>"; };
@@ -178,8 +178,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EFA52ADE980847D68DFF3292 /* card-rhombus-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0@3x.png"; path = "../assets/images/card-rhombus-0@3x.png"; sourceTree = "<group>"; };
 		F216086F1A7E454BBD1B0026 /* backup-notification-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light@3x.png"; path = "../assets/images/backup-notification-light@3x.png"; sourceTree = "<group>"; };
-		F6F6841FA9AE40C380CDD01F /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
-		F9BF90B80AC14765A3CCFFDC /* islm_icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = islm_icon.png; path = ../assets/images/islm_icon.png; sourceTree = "<group>"; };
+		F6F6841FA9AE40C380CDD01F /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
+		F9BF90B80AC14765A3CCFFDC /* islm_icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = islm_icon.png; path = ../assets/images/islm_icon.png; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -874,7 +874,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 74;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
@@ -912,7 +912,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 74;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";

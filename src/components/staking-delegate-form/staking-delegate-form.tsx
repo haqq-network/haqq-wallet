@@ -29,7 +29,6 @@ export type StakingDelegateFormProps = {
 export const StakingDelegateForm = ({
   validator: {
     commission: {commission_rates},
-    description,
   },
   onAmount,
   fee,
@@ -52,22 +51,19 @@ export const StakingDelegateForm = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
-        <Text t10>{description.moniker}</Text>
-      </View>
-      <View style={styles.row}>
         <Text t14 i18n={I18N.stakingDelegateFormCommission} />
         <Text t10>{validatorCommission}%</Text>
       </View>
-      <SumBlock
-        value={amounts.amount}
-        error={amounts.error}
-        currency="ISLM"
-        balance={balance}
-        onChange={amounts.setAmount}
-        onMax={onPressMax}
-      />
-      <Spacer />
+      <Spacer centered>
+        <SumBlock
+          value={amounts.amount}
+          error={amounts.error}
+          currency="ISLM"
+          balance={balance}
+          onChange={amounts.setAmount}
+          onMax={onPressMax}
+        />
+      </Spacer>
       <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}

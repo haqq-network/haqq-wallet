@@ -10,7 +10,6 @@ import {
   ErrorText,
   Icon,
   InfoBlock,
-  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
@@ -74,7 +73,7 @@ export const StakingUnDelegatePreview = ({
       </View>
       <Spacer height={24} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegatePreviewAttention}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />

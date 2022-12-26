@@ -4,8 +4,8 @@ import {FlatList, StyleSheet} from 'react-native';
 
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
-import {Wallets} from '@app/components/wallets';
 import {User} from '@app/models/user';
+import {WalletsWrapper} from '@app/screens/wallets';
 import {TransactionList} from '@app/types';
 
 type HomeFeedProps = {
@@ -30,7 +30,7 @@ export const HomeFeed = ({
       refreshing={refreshing}
       onRefresh={onWalletsRefresh}
       scrollEnabled={Boolean(transactionsList.length)}
-      ListHeaderComponent={Wallets}
+      ListHeaderComponent={WalletsWrapper}
       contentContainerStyle={styles.grow}
       ListEmptyComponent={TransactionEmpty}
       data={transactionsList}

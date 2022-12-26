@@ -1,13 +1,10 @@
 import React, {useMemo} from 'react';
 
-import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
-
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
-import {RootStackParamList} from '@app/types';
 
 export type HomeScreenTabBarIconProps = {
-  route: RouteProp<RootStackParamList>;
+  route: string;
   focused: boolean;
 };
 
@@ -16,7 +13,7 @@ export const HomeScreenTabBarIcon = ({
   route,
 }: HomeScreenTabBarIconProps) => {
   const name = useMemo(() => {
-    switch (route.name) {
+    switch (route) {
       case 'homeFeed':
         return IconsName.wallet;
       case 'homeStaking':
@@ -26,7 +23,7 @@ export const HomeScreenTabBarIcon = ({
       case 'homeGovernance':
         return IconsName.governance;
     }
-  }, [route.name]);
+  }, [route]);
 
   if (!name) {
     return null;
