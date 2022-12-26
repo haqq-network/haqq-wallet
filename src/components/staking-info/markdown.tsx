@@ -1,6 +1,6 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useRef} from 'react';
 
-import RNMarkdown, {ASTNode} from 'react-native-markdown-display';
+import RNMarkdown, {ASTNode, MarkdownIt} from 'react-native-markdown-display';
 
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
@@ -22,8 +22,14 @@ export type MarkdownProps = {
 };
 
 export const Markdown = ({children}: MarkdownProps) => {
+  const markdownIt = useRef(
+    MarkdownIt({
+      typographer: true,
+    }),
+  );
+
   return (
-    <RNMarkdown style={styles} rules={rules}>
+    <RNMarkdown style={styles} rules={rules} markdownit={markdownIt.current}>
       {children}
     </RNMarkdown>
   );
