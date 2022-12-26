@@ -100,6 +100,7 @@ export const StakingInfo = ({
   return (
     <>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Spacer height={24} />
         <View style={styles.iconContainer}>
           <Icon color={Color.graphicBase1} name="servers" i24 />
         </View>
