@@ -91,8 +91,10 @@ export enum I18N {
   trackActivityPrivacyDescription,
   transactionLedgerBluetoothDisabled,
   transactionLedgerBluetoothConfirmation,
-  termsAgreement,
+  termsOfService,
   termsPrivacyPolicy,
+  termsAgreementFirst,
+  termsAgreementSecond,
   signUpTitle,
   signInTitle,
   transactionSumSend,
@@ -477,8 +479,10 @@ const en: Record<I18N, string> = {
   [I18N.createAgreementText]:
     'Islm Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the Haqq Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
   [I18N.createAgreementAgree]: 'Agree',
+  [I18N.termsAgreementFirst]: 'By clicking Agree you agree to ',
+  [I18N.termsOfService]: 'Terms of Service',
+  [I18N.termsAgreementSecond]: ' and ',
   [I18N.termsPrivacyPolicy]: 'Privacy Policy',
-  [I18N.termsAgreement]: 'By clicking Agree you agree to ',
   // 'By clicking Agree you agree to the Terms of Service and',
   [I18N.restoreAgreementTitle]:
     'Do you have your recovery phrase or private key?',
