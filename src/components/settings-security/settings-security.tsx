@@ -2,9 +2,8 @@ import React, {useCallback, useRef, useState} from 'react';
 
 import {Alert, StyleSheet, Switch, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin';
-import {MenuNavigationButton, Spacer, Text} from '@app/components/ui';
+import {DataContent, MenuNavigationButton, Spacer} from '@app/components/ui';
 import {useApp} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {BiometryType} from '@app/types';
@@ -68,33 +67,18 @@ export const SettingsSecurity = ({
   return (
     <View style={page.container}>
       <MenuNavigationButton onPress={onSubmit}>
-        <View>
-          <Text
-            t11
-            color={Color.textBase1}
-            style={page.menuTitle}
-            i18n={I18N.SettingsSecurityChangePin}
-          />
-          <Text
-            t14
-            color={Color.textBase2}
-            i18n={I18N.setttingsSecurityEnterPin}
-          />
-        </View>
+        <DataContent
+          titleI18n={I18N.SettingsSecurityChangePin}
+          subtitleI18n={I18N.setttingsSecurityEnterPin}
+        />
       </MenuNavigationButton>
       {app.biometryType !== null && (
         <MenuNavigationButton hideArrow onPress={() => {}}>
-          <View>
-            <Text t11 color={Color.textBase1} style={page.menuTitle}>
-              {biometryName[app.biometryType]}
-            </Text>
-            <Text
-              t14
-              color={Color.textBase2}
-              i18n={I18N.settingsSecurityBiometry}
-              i18params={{biometry: biometryName[app.biometryType]}}
-            />
-          </View>
+          <DataContent
+            title={biometryName[app.biometryType]}
+            subtitleI18n={I18N.settingsSecurityBiometry}
+            subtitleI18nParams={{biometry: biometryName[app.biometryType]}}
+          />
           <Spacer />
           <Switch value={biometry} onChange={onToggleBiometry} />
         </MenuNavigationButton>
@@ -108,8 +92,5 @@ const page = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 20,
-  },
-  menuTitle: {
-    marginBottom: 2,
   },
 });
