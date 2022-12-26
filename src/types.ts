@@ -93,17 +93,10 @@ export type RootStackParamList = {
   settingsAccountStyle: {address: string};
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
-  settingsSecurity: undefined;
   settingsSecurityPin: undefined;
   settingsProviders: undefined;
   settingsSecurityPinRepeat: {
     pin: string;
-  };
-  settingsSecurityPinMnemonic: {
-    address: string;
-  };
-  settingsViewRecoveryPhrase: {
-    mnemonic: string;
   };
   settingsFaq: undefined;
   settingsAbout: undefined;
@@ -318,6 +311,15 @@ export type RootStackParamList = {
   proposal: {
     id: number;
   };
+  settingsViewRecoveryPhrase: {
+    mnemonic: string;
+  };
+  pinGuard: {
+    nextScreen: 'settingsSecurity' | 'viewRecoveryPhrase';
+    address?: string;
+    screenParams?: any;
+  };
+  settingsSecurity: undefined;
 };
 
 export type StackPresentationTypes =

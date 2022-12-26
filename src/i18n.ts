@@ -236,7 +236,7 @@ export enum I18N {
   settingsAccountDetailHideTitle,
   settingsAccountDetailViewRecoveryPhraseTitle,
   settingsAccountDetailViewRecoveryPhraseSubtitle,
-  settingsViewRecoveryPhrase,
+  settingsViewRecoveryPhraseTitle,
   stakingValidators,
   stakingValidatorsRowPower,
   stakingValidatorsRowStaked,
@@ -705,7 +705,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountDetailHideTitle]: 'Hide account',
   [I18N.settingsAccountDetailViewRecoveryPhraseSubtitle]:
     'Change the picture of the account',
-  [I18N.settingsViewRecoveryPhrase]: 'View Recovery phrase',
+  [I18N.settingsViewRecoveryPhraseTitle]: 'View Recovery phrase',
   [I18N.settingsAccountDetailViewRecoveryPhraseTitle]: 'View Recovery phrase',
   [I18N.settingsContactEditDelete]: 'Delete',
   [I18N.settingsContactEditSure]:

@@ -38,8 +38,9 @@ export const SettingsAccountDetailScreen = () => {
   }, [wallet]);
 
   const onViewingRecoveryPhrase = () => {
-    navigation.navigate('settingsSecurityPinMnemonic', {
+    navigation.navigate('pinGuard', {
       address,
+      nextScreen: 'viewRecoveryPhrase',
     });
   };
 

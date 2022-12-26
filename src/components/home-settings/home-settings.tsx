@@ -46,6 +46,7 @@ export const HomeSettings = () => {
         icon="shield"
         title={I18N.homeSettingsSecurity}
         next="settingsSecurity"
+        params={{screenName: 'settingsSecurity'}}
       />
 
       <SettingsButton
