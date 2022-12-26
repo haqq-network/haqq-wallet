@@ -31,11 +31,12 @@ export type ButtonLeftIconProps =
   | {iconLeft?: undefined; iconLeftColor?: undefined};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
+  error?: boolean;
   loading?: boolean;
+  disabled?: boolean;
   textColor?: ColorType;
   color?: ColorType;
   circleBorders?: boolean;
@@ -45,10 +46,9 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
 
 export enum ButtonVariant {
   text = 'text',
-  error = 'error',
   contained = 'contained',
-  outlined = 'outlined',
   second = 'second',
+  third = 'third',
 }
 
 export enum ButtonSize {
@@ -64,7 +64,6 @@ export const Button = ({
   size = ButtonSize.large,
   style,
   circleBorders,
-  disabled,
   onPress,
   iconRight,
   iconRightColor,
@@ -72,7 +71,9 @@ export const Button = ({
   iconLeftColor,
   textColor,
   color,
-  loading = false,
+  error,
+  disabled,
+  loading,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -85,14 +86,15 @@ export const Button = ({
     () =>
       StyleSheet.flatten([
         styles.container,
-        variant === ButtonVariant.error && styles.errorContainer,
         variant === ButtonVariant.second && styles.secondContainer,
         variant === ButtonVariant.contained && styles.containedContainer,
-        variant === ButtonVariant.outlined && styles.outlinedContainer,
         size === ButtonSize.small && styles.smallContainer,
         size === ButtonSize.middle && styles.middleContainer,
         size === ButtonSize.large && styles.largeContainer,
         circleBorders && styles.circleBorders,
+        error &&
+          variant === ButtonVariant.second &&
+          styles.secondErrorContainer,
         disabled &&
           variant === ButtonVariant.second &&
           styles.secondDisabledContainer,
@@ -102,7 +104,7 @@ export const Button = ({
         color && {backgroundColor: getColor(color)},
         style,
       ]),
-    [size, disabled, style, variant, color, circleBorders],
+    [variant, size, circleBorders, error, disabled, color, style],
   );
 
   const textStyle = useMemo(
@@ -110,9 +112,9 @@ export const Button = ({
       StyleSheet.flatten<TextStyle>([
         iconLeft && styles.textIconLeft,
         iconRight && styles.textIconRight,
-        variant === ButtonVariant.error && styles.errorText,
         variant === ButtonVariant.second && styles.secondText,
         variant === ButtonVariant.contained && styles.containedText,
+        error && styles.errorText,
         disabled &&
           variant === ButtonVariant.second &&
           styles.secondDisabledText,
@@ -120,7 +122,7 @@ export const Button = ({
           variant === ButtonVariant.contained &&
           styles.containedDisabledText,
       ]),
-    [disabled, iconLeft, iconRight, variant],
+    [iconLeft, iconRight, variant, error, disabled],
   );
 
   return (
@@ -188,10 +190,6 @@ const styles = createTheme({
   containedDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
-  outlinedContainer: {
-    borderColor: Color.graphicGreen1,
-    borderRadius: 12,
-  },
   secondContainer: {
     backgroundColor: Color.bg2,
     borderRadius: 12,
@@ -199,7 +197,7 @@ const styles = createTheme({
   secondDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
-  errorContainer: {
+  secondErrorContainer: {
     backgroundColor: Color.bg7,
   },
   textIconRight: {
