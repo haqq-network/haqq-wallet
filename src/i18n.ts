@@ -671,7 +671,7 @@ const en: Record<I18N, string> = {
   [I18N.signinRestoreWalletPhraseOrKey]: 'Recovery phrase or Private key',
   [I18N.signinRestoreWalletRecovery]: 'Recovery',
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
-  [I18N.signinRestoreWalletTextFieldLabel]: '',
+  [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
     'Enter or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
