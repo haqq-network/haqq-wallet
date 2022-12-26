@@ -4,6 +4,7 @@ import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
 import {captureException} from '@app/helpers';
 import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
@@ -47,16 +48,16 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const onClickReset = useCallback(() => {
     vibrate(HapticEffects.warning);
     Alert.alert(
-      'Attention. You may lose all your funds!',
-      'Do not reset the application if you are not sure that you can restore your account. To restore, you will need a backup phrase of 12 words that you made for your account',
+      getText(I18N.restorePasswordAttentionTitle),
+      getText(I18N.restorePasswordAttentionSubtitle),
       [
         {
-          text: 'Cancel',
+          text: getText(I18N.cancel),
           style: 'cancel',
         },
         {
           style: 'destructive',
-          text: 'Reset',
+          text: getText(I18N.restorePasswordReset),
           onPress: async () => {
             try {
               wallet.clean();
@@ -82,7 +83,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   return (
     <BottomSheet
       onClose={onClosePopup}
-      title="Forgot the code?"
+      i18nTitle={I18N.restorePasswordForgot}
       closeDistance={closeDistance}>
       <Text clean style={page.warning}>
         Unfortunately, the password cannot be reset. Try to wait a bit and
