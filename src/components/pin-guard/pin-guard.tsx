@@ -5,17 +5,16 @@ import {app} from '@app/contexts';
 import {captureException, hideModal, showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 
-interface SettingsSecurityPinMnemonicProps {
+interface PinGuardProps {
   onSuccess: () => Promise<void>;
 }
 
-export const SettingsSecurityPinMnemonic = ({
-  onSuccess,
-}: SettingsSecurityPinMnemonicProps) => {
+export const PinGuard = ({onSuccess}: PinGuardProps) => {
   const pinRef = useRef<PinInterface>();
 
   const onPin = useCallback(
     async (pin: string) => {
+      const start = Date.now();
       showModal('loading');
       try {
         await app.comparePin(pin);
@@ -25,7 +24,12 @@ export const SettingsSecurityPinMnemonic = ({
         pinRef.current?.reset(getText(I18N.settingsSecurityPinNotMatched));
         captureException(error, 'settings-security-pin-mnemonic');
       }
-      hideModal();
+      const end = Date.now();
+      if (end - start < 500) {
+        setTimeout(() => hideModal(), 1000);
+      } else {
+        hideModal();
+      }
     },
     [onSuccess],
   );

@@ -1,13 +1,11 @@
 import React from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {RootStackParamList} from '@app/types';
 
 import {DataContent, Icon, IconsName, MenuNavigationButton, Text} from '../ui';
 
@@ -25,6 +23,7 @@ export type SettingsButtonProps = {
   rightTitle?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  params?: any;
 };
 
 export const SettingsButton = ({
@@ -32,11 +31,12 @@ export const SettingsButton = ({
   title,
   next,
   style,
+  params,
   rightTitle,
 }: SettingsButtonProps) => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation();
 
-  const onClickButton = () => navigation.navigate(next);
+  const onClickButton = () => navigation.navigate(next, params);
 
   return (
     <MenuNavigationButton onPress={onClickButton} style={style}>

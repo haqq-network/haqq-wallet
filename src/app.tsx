@@ -57,6 +57,7 @@ import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {PinGuardScreen} from './screens/pin-guard';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
@@ -75,7 +76,6 @@ import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
-import {SettingsSecurityPinMnemonicScreen} from './screens/settings-security-pin-mnemonic';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
 import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
@@ -303,13 +303,6 @@ export const App = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="settingsSecurity"
-                    component={SettingsSecurityScreen}
-                    options={{
-                      title: 'Security',
-                    }}
-                  />
-                  <Stack.Screen
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={withoutHeader}
@@ -319,20 +312,6 @@ export const App = () => {
                     component={SettingsSecurityPinScreen}
                     options={{
                       title: 'Change PIN',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsSecurityPinMnemonic"
-                    component={SettingsSecurityPinMnemonicScreen}
-                    options={{
-                      title: getText(I18N.settingsSecurity),
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsViewRecoveryPhrase"
-                    component={SettingsViewRecoveryPhraseScreen}
-                    options={{
-                      title: getText(I18N.settingsViewRecoveryPhrase),
                     }}
                   />
                   <Stack.Screen
@@ -378,6 +357,27 @@ export const App = () => {
                     options={{
                       title: getText(I18N.settingsThemeScreen),
                     }}
+                  />
+                  <Stack.Screen
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    name="pinGuard"
+                    component={PinGuardScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhraseTitle),
+                    }}
+                    component={SettingsViewRecoveryPhraseScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    component={SettingsSecurityScreen}
                   />
                 </Stack.Group>
                 <Stack.Group screenOptions={screenOptions}>
