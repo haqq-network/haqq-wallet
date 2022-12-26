@@ -8,7 +8,7 @@ import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
@@ -34,8 +34,8 @@ export const TransactionDetail = ({
   const from = transaction?.from ? transaction.from : ' ';
 
   const title = isSent
-    ? getText(I18N.transactionDetailSent)
-    : getText(I18N.transactionDetailRecive);
+    ? I18N.transactionDetailSent
+    : I18N.transactionDetailRecive;
 
   const splitted = useMemo(
     () => splitAddress(isSent ? to : from),
@@ -52,7 +52,7 @@ export const TransactionDetail = ({
   }
 
   return (
-    <BottomSheet onClose={onCloseBottomSheet} title={title}>
+    <BottomSheet onClose={onCloseBottomSheet} i18nTitle={title}>
       <Text
         i18n={I18N.transactionDetailTotalAmount}
         t14

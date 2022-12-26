@@ -9,7 +9,6 @@ export const HomeSettingsScreen = () => {
 
   useEffect(() => {
     if (route?.params?.screen) {
-      console.log(route.params);
       navigation.navigate(route.params.screen, route.params.params);
     }
   }, [navigation, route]);

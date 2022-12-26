@@ -1,6 +1,7 @@
 import {TypedDataField} from '@ethersproject/abstract-signer';
 import {protoTxNamespace} from '@evmos/proto';
 import {
+  BroadcastMode,
   generateEndpointAccount,
   generateEndpointBroadcast,
   generateEndpointDistributionRewardsByAddress,
@@ -208,7 +209,7 @@ export class Cosmos {
     try {
       return this.postQuery(
         generateEndpointBroadcast(),
-        generatePostBodyBroadcast(txToBroadcast),
+        generatePostBodyBroadcast(txToBroadcast, BroadcastMode.Block),
       );
     } catch (error) {
       console.error((error as any).message);
@@ -218,7 +219,7 @@ export class Cosmos {
 
   async getSender(transport: TransportWallet) {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
-    const pubkey = await transport.getPublicKey();
+    const pubkey = await transport.getBase64PublicKey();
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),

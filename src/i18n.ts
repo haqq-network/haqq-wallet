@@ -1,6 +1,7 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 
 export enum I18N {
+  empty,
   numericKeyboard0,
   numericKeyboard1,
   numericKeyboard2,
@@ -18,6 +19,9 @@ export enum I18N {
   backupCreateRecoverySaveWords,
   backupCreateRecoveryWarningMessage,
   backupCreateRecoveryAgreement,
+  backupCreateScreenshotWarningTitle,
+  backupCreateScreenshotWarningSubtitle,
+  backupCreateVerifyTitle,
   backupWarningButton,
   backupWarningInfoBlock1,
   backupWarningInfoBlock2,
@@ -45,6 +49,10 @@ export enum I18N {
   restoreAgreementText,
   restoreAgreementTitle,
   restoreAgreementAgree,
+  restorePasswordAttentionTitle,
+  restorePasswordAttentionSubtitle,
+  restorePasswordReset,
+  restorePasswordForgot,
   ledgerAgreementText,
   ledgerAgreementTitle,
   ledgerAgreementAgree,
@@ -52,7 +60,7 @@ export enum I18N {
   ledgerConnect,
   ledgerChooseAccount,
   ledgerVerify,
-  LedgerStoreWalletSaving,
+  ledgerStoreWalletSaving,
   ledgerVerifyAddress,
   ledgerAccountsAdd,
   ledgerAccountsAdded,
@@ -169,8 +177,6 @@ export enum I18N {
   settingsProviderEditEthEndpoint,
   settingsProviderEditEthEndpointPlaceholder,
   settingsProviderEditEthEndpointHint,
-  settingsProviderEditEthChainId,
-  settingsProviderEditEthChainIdPlaceholder,
   settingsProviderEditExplorer,
   settingsProviderEditExplorerPlaceholder,
   settingsProviderEditExplorerHint,
@@ -283,6 +289,8 @@ export enum I18N {
   stakingHomeGetRewards,
   sumBlockMax,
   sumBlockAvailable,
+  sumAmountNotEnough,
+  sumAmountTooLow,
   settingsAboutTitle,
   settingsAboutVisit,
   settingsAboutDocuments,
@@ -410,6 +418,7 @@ export enum I18N {
   errorCreateAccountPopupDescription,
   errorCreateAccountPopupClose,
   networkFee,
+  qrModalSendFunds,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -424,6 +433,7 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 }
 
 const en: Record<I18N, string> = {
+  [I18N.empty]: '',
   [I18N.numericKeyboard0]: '0',
   [I18N.numericKeyboard1]: '1',
   [I18N.numericKeyboard2]: '2',
@@ -441,12 +451,16 @@ const en: Record<I18N, string> = {
     'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
   [I18N.backupCreateRecoveryAgreement]:
     'I understand that if I lose my recovery phrase, I will not be able to restore access to my account',
+  [I18N.backupCreateScreenshotWarningTitle]: 'Warning!',
+  [I18N.backupCreateScreenshotWarningSubtitle]:
+    'Taking a screenshot of your recovery phrase increases security risks of your account.',
+  [I18N.backupCreateVerifyTitle]: 'Recovery phrase',
   [I18N.backupWarningButton]: 'Understood',
   [I18N.backupWarningInfoBlock1]:
     'If you lose your recovery phrase, you will be unable to access your funds, as nobody will be able to restore it.',
   [I18N.backupWarningInfoBlock2]:
-    'This phrase is your only chance to recover access to your funds if your usual device is unavailable to you.',
-  [I18N.backupWarningTitle]: 'Important about backup',
+    'This phrase is your only chance to recover access to your funds if your device is unavailable to you.',
+  [I18N.backupWarningTitle]: 'Important Recovery Info',
   [I18N.backupWarningParagraph]:
     'A backup is a restoring phrase of 12 words. It is better to write down the phrase on paper and not keep it online.',
   [I18N.ledgerBluetoothAllow]: 'Allow',
@@ -471,6 +485,12 @@ const en: Record<I18N, string> = {
   [I18N.restoreAgreementText]:
     'The recovery phrase is a 12-word phrase that you received when you created the account. A private key is a key created by you in the application',
   [I18N.restoreAgreementAgree]: 'Agree',
+  [I18N.restorePasswordAttentionTitle]:
+    'Attention. You may lose all your funds!',
+  [I18N.restorePasswordAttentionSubtitle]:
+    'Do not reset the application if you are not sure that you can restore your account. To restore, you will need a recovery phrase of 12 words that you have created for your account',
+  [I18N.restorePasswordReset]: 'Reset',
+  [I18N.restorePasswordForgot]: 'Forgot your password?',
   [I18N.ledgerAgreementTitle]: 'Connect your Ledger',
   [I18N.ledgerAgreementText]:
     'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
@@ -488,13 +508,11 @@ const en: Record<I18N, string> = {
   [I18N.ledgerScanDescription4]: ' and ',
   [I18N.ledgerScanDescription5]: 'Ethereum app on your Ledger is installed',
   [I18N.ledgerScanDescription6]: ' and opened',
-  [I18N.backupVerifyTitle]: 'Verify backup phrase',
+  [I18N.backupVerifyTitle]: 'Verify recovery phrase',
   [I18N.backupVerifyError]: 'Ooops, mistake in one of the words',
   [I18N.backupVerifyDescription]:
-    'Please choose the correct backup phrase according to the serial number',
+    'Please choose the correct  according to the serial number',
   [I18N.backupVerifyCheck]: 'Check',
-  [I18N.backupFinishSuccess]: "You've successfully protected your account.",
-  [I18N.backupFinishFinish]: 'Finish',
   [I18N.modalQRTitle]: 'Scan QR Code',
   [I18N.modalQRNoAccessTitle]: 'No access to the camera',
   [I18N.modalQRNoAccessDescription]:
@@ -528,7 +546,7 @@ const en: Record<I18N, string> = {
   [I18N.trackActivityPrivacy]: 'Security and privacy',
   [I18N.trackActivityPrivacyDescription]:
     'We securely store the data we receive. All data is non-personalized',
-  [I18N.signInTitle]: 'Recovery account',
+  [I18N.signInTitle]: 'Recover your account',
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
@@ -574,19 +592,14 @@ const en: Record<I18N, string> = {
   [I18N.notificationAccountHidden]: 'The account was hidden',
   [I18N.notificationPinChanged]: 'PIN code successfully changed',
   [I18N.onboardingSetupPinProjectWallet]:
-    'Project your wallet. PIN code for increases wallet security in the event your phone\u00A0is\u00A0stolen',
-  [I18N.onboardingSetupPinSet]: 'Set 6-digital pin code',
+    'Protect your wallet. PIN code increases wallet security in the event your phone is stolen',
+  [I18N.onboardingSetupPinSet]: 'Set 6-digit pin code',
   [I18N.onboardingBiometryEnable]: 'Enable {{biometry}}',
   [I18N.onboardingBiometrySafeFast]: 'Safe and fast',
   [I18N.onboardingBiometrySkip]: 'Skip',
   [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
-  [I18N.popupNotificationTitle]: 'Turn on push notifications',
-  [I18N.popupNotificationDescription]:
-    'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
-  [I18N.popupNotificationTurnOn]: 'Turn on notifications',
-  [I18N.popupNotificationNotNow]: 'Not now',
   [I18N.homeWallet]: 'Accounts',
   [I18N.homeWalletTitle]: 'Your accounts',
   [I18N.homeSettings]: 'Settings',
@@ -648,13 +661,13 @@ const en: Record<I18N, string> = {
   [I18N.settingsTestUnbounded]: 'Unbounded: {{unbounded}}',
   [I18N.settingsTestUndelegate]: 'Undelegate',
   [I18N.settingsProviderEditUseProvider]: 'Use this provider',
-  [I18N.signupStoreWalletCreatingAccount]: 'Creating an account',
+  [I18N.signupStoreWalletCreatingAccount]: 'Creating your account',
   [I18N.signupStoreWalletAccountNumber]: 'Account #{{number}}',
   [I18N.signinRestoreWalletPasteClipboard]: 'Paste from Clipboard',
   [I18N.signinRestoreWalletPhraseOrKey]: 'Recovery phrase or Private key',
   [I18N.signinRestoreWalletRecovery]: 'Recovery',
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
-  [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
+  [I18N.signinRestoreWalletTextFieldLabel]: '',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
     'Enter or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
@@ -662,7 +675,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountRemoveTitle]:
     'Attention. You may lose all your funds! Are you sure you want to delete your account?',
   [I18N.settingsAccountRemoveMessage]:
-    'Do not delete the account if you are not sure that you can restore them. To restore, you will need a backup phrase of 12 words that you made for your account',
+    'Do not delete the account if you are not sure that you can restore them. To restore, you will need a  of 12 words that you made for your account',
   [I18N.settingsAccountRemoveConfirm]: 'Delete',
   [I18N.settingsAccountRemoveReject]: 'Cancel',
   [I18N.settingsAccountDetailHeaderTitle]: 'Account details',
@@ -730,7 +743,6 @@ const en: Record<I18N, string> = {
   [I18N.validatorInfoHide]: 'Hide',
   [I18N.voteAbstain]: 'Abstain',
   [I18N.voteVeto]: 'Veto',
-  [I18N.stakingDelegateFormTitle]: 'Stake',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
   [I18N.stakingDelegateFormCommission]: 'Commission',
@@ -774,15 +786,8 @@ const en: Record<I18N, string> = {
     'The funds will be undelegate within 21 days',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
-  [I18N.validatorStatusActive]: 'Active',
-  [I18N.validatorStatusInactive]: 'Inactive',
-  [I18N.validatorStatusJailed]: 'Jailed',
-  [I18N.validatorInfoReward]: 'Reward',
-  [I18N.validatorInfoStaked]: 'Staked',
-  [I18N.validatorInfoUndelegateInProcess]: 'Undelegate in process',
-  [I18N.validatorInfoShowOther]: 'Show other',
-  [I18N.validatorInfoHide]: 'Hide',
-
+  [I18N.sumAmountNotEnough]: "You don't have enough ISLM to pay the fee",
+  [I18N.sumAmountTooLow]: 'Should be greater than 0.0001',
   [I18N.popupNotificationTitle]: 'Turn on push notifications',
   [I18N.popupNotificationDescription]:
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',
@@ -801,7 +806,6 @@ const en: Record<I18N, string> = {
   [I18N.proposalDepositDepositFrom]: 'Deposit from',
   [I18N.proposalDepositTitle]: 'Deposit Completed',
   [I18N.proposalDepositTotalAmount]: 'Total Amount',
-  [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.welcomeTitle]: 'No account is connected',
   [I18N.welcomeDescription]:
     'You can create a new account or connect any existing\u00A0one',
@@ -814,16 +818,9 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutSocials]: 'Our Socials',
   [I18N.settingsAboutDiscord]: 'Discord',
   [I18N.settingsAboutTwitter]: 'Twitter',
-  [I18N.settingsAboutRights]: `©2022 HAQQ. All Rights Reserved. \nVersion ${getAppVersion()} (${getBuildNumber()})`,
-  [I18N.settingsAccountDetailRenameTitle]: 'Rename account',
-  [I18N.settingsAccountDetailHideTitle]: 'Hide account',
-  [I18N.welcomeRestoreWallet]: 'I already have an account',
-  [I18N.settingsAccountDetailHideSubtitle]:
-    'Will be hidden from the general list',
+  [I18N.settingsAboutRights]: `Version ${getAppVersion()} (${getBuildNumber()})`,
   [I18N.welcomeRestoreWallet]: 'I already have an account',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
-  [I18N.backupFinishSuccess]: "You've successfully protected your wallet.",
-  [I18N.backupFinishFinish]: 'Finish',
   [I18N.settingsAccountStyleChoseColor]: 'Choose color style',
   [I18N.settingsAccountStyleGenerate]: 'Generate',
   [I18N.settingsAccountStyleUseStyle]: 'Use this style',
@@ -850,14 +847,14 @@ const en: Record<I18N, string> = {
   [I18N.transactionConfirmationSendTo]: 'Send to',
   [I18N.transactionConfirmationTotalAmount]: 'Total Amount',
   [I18N.transactionConfirmationSum]: '{{sum}} ISLM',
-  [I18N.transactionFinishSendingComplete]: 'Sending Completed!',
+  [I18N.transactionFinishSendingComplete]: 'Transaction Completed!',
   [I18N.transactionFinishEditContact]: 'Edit Contact',
   [I18N.transactionFinishAddContact]: 'Add Contact',
   [I18N.transactionFinishHash]: 'Hash',
   [I18N.transactionFinishDone]: 'Done',
   [I18N.transactionFinishContactAdded]: 'Contact added',
   [I18N.transactionFinishContactUpdated]: 'Contact updated',
-  [I18N.transactionFinishContactMessage]: 'Address: {{address}}',
+  [I18N.transactionFinishContactMessage]: 'Address:\n{{address}}',
   [I18N.transactionFinishContactMessagePlaceholder]: 'Contact name',
   [I18N.settingsAccountNoWallet]: 'No wallets',
   [I18N.proposalInfo]: 'Info',
@@ -877,14 +874,8 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
   [I18N.proposalNoVoting]: 'No Voting proposal',
-  [I18N.settingsAddressBookLabel]: 'Address',
-  [I18N.settingsAddressBookPlaceholder]: 'Search or add a contact',
-  [I18N.settingsAddressBookAdd]: 'Add Contact',
-  [I18N.settingsAddressBookAlertDesc]:
-    'Are you sure you want to delete the selected contact?',
-  [I18N.settingsAddressBookAlertBtnFirst]: 'Cancel',
-  [I18N.settingsAddressBookAlertBtnSecond]: 'Delete',
-  [I18N.LedgerStoreWalletSaving]: 'Account saving in progress',
+
+  [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
   [I18N.finishProceed]: 'Proceed',
@@ -908,7 +899,7 @@ const en: Record<I18N, string> = {
   [I18N.walletCreateImport]: 'Import',
   [I18N.walletCardSend]: 'Send',
   [I18N.walletCardWithoutBackup]: 'Without backup',
-  [I18N.restoreWalletScreenTitle]: 'Restore wallet',
+  [I18N.restoreWalletScreenTitle]: 'Recover your account',
   [I18N.noInternetPopupTitle]: 'No Internet',
   [I18N.noInternetPopupDescription]:
     'Make sure you are connected to Wi-Fi or a cellular network',
@@ -918,4 +909,5 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupDescription]: 'Please try again later',
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
+  [I18N.qrModalSendFunds]: 'Send funds from',
 };

@@ -6,7 +6,6 @@ import {
   ButtonVariant,
   Icon,
   InfoBlock,
-  InfoBlockType,
   KeyboardSafeArea,
   NetworkFee,
   Spacer,
@@ -39,7 +38,7 @@ export const StakingUnDelegateForm = ({
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <Spacer style={styles.space}>
+      <Spacer centered>
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
@@ -52,7 +51,7 @@ export const StakingUnDelegateForm = ({
       <NetworkFee fee={fee} />
       <Spacer height={16} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegateSumWarning}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
@@ -73,8 +72,5 @@ const styles = createTheme({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-  },
-  space: {
-    justifyContent: 'center',
   },
 });

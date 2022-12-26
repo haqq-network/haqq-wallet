@@ -6,6 +6,7 @@ import {captureException, showLoadingWithText, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sleep} from '@app/utils';
+import {ETH_HD_PATH} from '@app/variables/common';
 
 export const LedgerStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
@@ -13,7 +14,7 @@ export const LedgerStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.LedgerStoreWalletSaving);
+    showLoadingWithText(I18N.ledgerStoreWalletSaving);
   }, []);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export const LedgerStoreWalletScreen = () => {
       actions.push(
         wallets.addWalletFromLedger(
           {
+            path: ETH_HD_PATH,
             address: route.params.address,
             deviceId: route?.params?.deviceId,
             deviceName: route?.params?.deviceName,

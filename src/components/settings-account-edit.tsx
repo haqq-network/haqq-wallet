@@ -39,7 +39,7 @@ export const SettingsAccountEdit = ({
   return (
     <>
       <CustomHeader
-        i18nTitle={I18N.settingsAccountEditHeaderTitle}
+        title={I18N.settingsAccountEditHeaderTitle}
         onPressLeft={onPressLeft}
         i18nTextLeft={I18N.cancel}
         i18nTextRight={I18N.save}

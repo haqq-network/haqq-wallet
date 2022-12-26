@@ -7,7 +7,13 @@ export class Transport {
     this._wallet = wallet;
   }
 
+  getEthAddress() {
+    return this._wallet.address;
+  }
+
   getCosmosAddress() {
     return this._wallet.cosmosAddress;
   }
+
+  abort() {}
 }

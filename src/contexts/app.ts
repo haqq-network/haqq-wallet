@@ -13,6 +13,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {Events} from '@app/events';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -58,6 +59,8 @@ class App extends EventEmitter {
   private _lastTheme: AppTheme = AppTheme.light;
   private _provider: Provider | null;
 
+  private _balance: Map<string, number> = new Map();
+
   constructor() {
     super();
 
@@ -88,8 +91,14 @@ class App extends EventEmitter {
       if (p) {
         this._provider = p;
         EthNetwork.init(p);
+        app.emit(Events.onProviderChanged);
       }
     });
+
+    this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
+    this.checkBalance = this.checkBalance.bind(this);
+    this.checkBalance();
+    setInterval(this.checkBalance, 6000);
   }
 
   async init(): Promise<void> {
@@ -100,6 +109,10 @@ class App extends EventEmitter {
       return Promise.reject('user_not_found');
     }
     await this.auth();
+
+    await new Promise(resolve => {
+      this.emit(Events.onWalletsBalanceCheck, resolve);
+    });
 
     this.authenticated = true;
 
@@ -301,6 +314,7 @@ class App extends EventEmitter {
           if (this.user?.isOutdatedLastActivity()) {
             this.authenticated = false;
             await this.auth();
+            this.emit('modal', null);
           }
           break;
         case AppStatus.inactive:
@@ -314,6 +328,28 @@ class App extends EventEmitter {
 
   setSnoozeBackup() {
     return this.user?.setSnoozeBackup();
+  }
+
+  checkBalance() {
+    this.emit(Events.onWalletsBalanceCheck);
+  }
+
+  onWalletsBalance(balance: Record<string, number>) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      if (this._balance.get(entry[0]) !== entry[1]) {
+        this._balance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit('balance');
+    }
+  }
+
+  getBalance(address: string) {
+    return this._balance.get(address) ?? 0;
   }
 }
 

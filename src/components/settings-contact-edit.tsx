@@ -62,7 +62,7 @@ export const SettingsContactEdit = ({
   return (
     <>
       <CustomHeader
-        i18nTitle={I18N.settingsContactEditHeaderTitle}
+        title={I18N.settingsContactEditHeaderTitle}
         onPressLeft={onPressLeft}
         iconLeft={isEdit ? undefined : 'arrow_back'}
         i18nTextLeft={I18N.cancel}

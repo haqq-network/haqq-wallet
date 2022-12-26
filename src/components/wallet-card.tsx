@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {View, useWindowDimensions} from 'react-native';
 
@@ -12,20 +12,27 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
-import {useTypedNavigation, useWallet} from '@app/hooks';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {cleanNumber, shortAddress} from '@app/utils';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
-  address: string;
+  wallet: Wallet;
+  balance: number;
+  onPressSend: (address: string) => void;
+  onPressQR: (address: string) => void;
+  onPressBackup: (address: string) => void;
 };
 
-export const WalletCard = ({address}: BalanceProps) => {
-  const navigation = useTypedNavigation();
-  const wallet = useWallet(address);
-  const [balance, setBalance] = useState(wallet?.balance ?? 0);
+export const WalletCard = ({
+  wallet,
+  balance,
+  onPressSend,
+  onPressQR,
+  onPressBackup,
+}: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
 
@@ -34,29 +41,17 @@ export const WalletCard = ({address}: BalanceProps) => {
     [wallet?.address],
   );
 
-  const updateBalance = useCallback((e: {balance: number}) => {
-    setBalance(e.balance);
-  }, []);
+  const onQr = () => {
+    onPressQR(wallet.address);
+  };
 
-  useEffect(() => {
-    wallet?.on('balance', updateBalance);
-    return () => {
-      wallet?.off('balance', updateBalance);
-    };
-  }, [updateBalance, wallet]);
+  const onBackup = () => {
+    onPressBackup(wallet.address);
+  };
 
-  const onPressSend = useCallback(() => {
-    console.log('onPressSend', address);
-    navigation.navigate('transaction', {from: address});
-  }, [navigation, address]);
-
-  const onPressQR = useCallback(() => {
-    showModal('card-details-qr', {address});
-  }, [address]);
-
-  const onClickBackup = useCallback(() => {
-    navigation.navigate('backup', {address: address});
-  }, [navigation, address]);
+  const onSend = () => {
+    onPressSend(wallet.address);
+  };
 
   if (!wallet) {
     return null;
@@ -91,7 +86,7 @@ export const WalletCard = ({address}: BalanceProps) => {
         </CopyButton>
       </View>
       {!wallet.mnemonicSaved && (
-        <IconButton onPress={onClickBackup} style={styles.cacheButton}>
+        <IconButton onPress={onBackup} style={styles.cacheButton}>
           <Text
             t15
             i18n={I18N.walletCardWithoutBackup}
@@ -106,14 +101,14 @@ export const WalletCard = ({address}: BalanceProps) => {
       <View style={styles.buttonsContainer}>
         <View style={styles.button}>
           {IS_IOS && <BlurView action="sent" cardState={cardState} />}
-          <IconButton style={styles.spacer} onPress={onPressSend}>
+          <IconButton style={styles.spacer} onPress={onSend}>
             <Icon i24 name="arrow_send" color={Color.graphicBase3} />
             <Text i18n={I18N.walletCardSend} color={Color.textBase3} />
           </IconButton>
         </View>
         <View style={styles.button}>
           {IS_IOS && <BlurView action="receive" cardState={cardState} />}
-          <IconButton style={styles.spacer} onPress={onPressQR}>
+          <IconButton style={styles.spacer} onPress={onQr}>
             <Icon i24 name="arrow_receive" color={Color.graphicBase3} />
             <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />
           </IconButton>

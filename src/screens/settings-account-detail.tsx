@@ -62,9 +62,9 @@ export const SettingsAccountDetailScreen = () => {
   return (
     <>
       <CustomHeader
-        title={getText(I18N.settingsAccountDetailHeaderTitle)}
-        onPressLeft={navigation.goBack}
+        title={I18N.settingsAccountDetailHeaderTitle}
         iconLeft={IconsName.arrow_back}
+        onPressLeft={navigation.goBack}
         iconRight={IconsName.trash}
         onPressRight={onRemove}
       />
