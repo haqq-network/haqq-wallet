@@ -29,7 +29,6 @@ export type StakingDelegateFormProps = {
 export const StakingDelegateForm = ({
   validator: {
     commission: {commission_rates},
-    description,
   },
   onAmount,
   fee,
@@ -51,10 +50,6 @@ export const StakingDelegateForm = ({
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
-        <Text t10>{description.moniker}</Text>
-      </View>
       <View style={styles.row}>
         <Text t14 i18n={I18N.stakingDelegateFormCommission} />
         <Text t10>{validatorCommission}%</Text>
