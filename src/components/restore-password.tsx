@@ -92,7 +92,8 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         backup phrase, then you will not be able to restore the wallet
       </Text>
       <Button
-        variant={ButtonVariant.error}
+        error
+        variant={ButtonVariant.second}
         title="Reset wallet"
         onPress={onClickReset}
         style={page.button}
