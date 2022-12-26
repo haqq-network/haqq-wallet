@@ -6,7 +6,13 @@ import {Color} from '@app/colors';
 import {Icon, Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 
-export const ProposalVotingEmpty = () => {
+interface ProposalVotingEmptyProps {
+  votingCategory: string;
+}
+
+export const ProposalVotingEmpty = ({
+  votingCategory,
+}: ProposalVotingEmptyProps) => {
   const height = useWindowDimensions().height / 1.5;
   return (
     <View style={[styles.container, {height}]}>
@@ -16,7 +22,12 @@ export const ProposalVotingEmpty = () => {
         color={Color.graphicSecond3}
         style={styles.icon}
       />
-      <Text t14 color={Color.textSecond1} i18n={I18N.proposalNoVoting} />
+      <Text
+        t14
+        color={Color.textSecond1}
+        i18params={{votingCategory}}
+        i18n={I18N.proposalNoVoting}
+      />
     </View>
   );
 };

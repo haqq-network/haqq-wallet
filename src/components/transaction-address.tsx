@@ -138,7 +138,7 @@ export const TransactionAddress = ({
       <Spacer>
         <ListOfContacts onPressAddress={onPressAddress} />
       </Spacer>
-
+      <Spacer height={16} />
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
@@ -146,6 +146,7 @@ export const TransactionAddress = ({
         onPress={onDone}
         style={styles.button}
       />
+      <Spacer height={32} />
     </KeyboardSafeArea>
   );
 };
@@ -160,6 +161,5 @@ const styles = createTheme({
   },
   button: {
     marginHorizontal: 20,
-    marginVertical: 16,
   },
 });

@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {formatDistance} from 'date-fns';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -22,6 +23,7 @@ import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
+  unboundingTime: number;
   amount: number;
   fee: number;
   validator: ValidatorItem;
@@ -36,12 +38,18 @@ export const StakingDelegatePreview = ({
   validator,
   error,
   disabled,
+  unboundingTime,
   onSend,
 }: StakingDelegatePreviewProps) => {
   const feeValue = fee / WEI;
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
+
+  const time = useMemo(
+    () => formatDistance(new Date(unboundingTime), new Date(0)),
+    [unboundingTime],
+  );
 
   return (
     <PopupContainer style={styles.container}>
@@ -88,6 +96,7 @@ export const StakingDelegatePreview = ({
       <InfoBlock
         warning
         i18n={I18N.stakingUnDelegatePreviewAttention}
+        i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Button

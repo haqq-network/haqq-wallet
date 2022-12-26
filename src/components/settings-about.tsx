@@ -48,15 +48,15 @@ export const SettingsAbout = () => {
           url="https://islamiccoin.net"
         />
       </View>
-      <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
-      <View style={styles.buttons}>
-        <SettingsAboutButton
-          name="doc"
-          color={Color.graphicBase1}
-          i18n={I18N.settingsAboutTerms}
-          url="https://islamiccoin.net"
-        />
-      </View>
+      {/*<Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />*/}
+      {/*<View style={styles.buttons}>*/}
+      {/*  <SettingsAboutButton*/}
+      {/*    name="doc"*/}
+      {/*    color={Color.graphicBase1}*/}
+      {/*    i18n={I18N.settingsAboutTerms}*/}
+      {/*    url="https://islamiccoin.net"*/}
+      {/*  />*/}
+      {/*</View>*/}
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
         <SettingsAboutButton

@@ -16,6 +16,7 @@ export type InfoBlockProps = {
   icon?: React.ReactNode;
   children?: React.ReactNode;
   i18n?: I18N;
+  i18params?: Record<string, string>;
   style?: StyleProp<ViewStyle>;
   warning?: boolean;
 };
@@ -24,6 +25,7 @@ export const InfoBlock = ({
   warning,
   children,
   i18n,
+  i18params,
   icon,
   style,
 }: InfoBlockProps) => {
@@ -46,7 +48,12 @@ export const InfoBlock = ({
     <View style={containerStyle}>
       {icon}
       {/* @ts-expect-error */}
-      <Text i18n={i18n} t14 style={textStyle} color={textColor}>
+      <Text
+        i18n={i18n}
+        i18params={i18params}
+        t14
+        style={textStyle}
+        color={textColor}>
         {children}
       </Text>
     </View>

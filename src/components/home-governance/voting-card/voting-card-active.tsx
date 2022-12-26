@@ -20,6 +20,7 @@ import {
   GovernanceVoting,
   ProposalRealmType,
 } from '@app/models/governance-voting';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 type VotingCardActiveProps = {
   id: number;
@@ -182,6 +183,14 @@ const styles = createTheme({
   backgroundContainer: {
     borderRadius: 12,
     paddingTop: 6,
+    shadowColor: SHADOW_COLOR_1,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowRadius: 8,
+    shadowOpacity: 1,
+    elevation: 13,
   },
   container: {
     backgroundColor: Color.bg1,

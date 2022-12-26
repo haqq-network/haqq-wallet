@@ -64,7 +64,9 @@ export const HomeGovernance = ({
         <Loading />
       ) : (
         <FlatList
-          ListEmptyComponent={ProposalVotingEmpty}
+          ListEmptyComponent={
+            <ProposalVotingEmpty votingCategory={statusFilter} />
+          }
           refreshing={refreshing}
           onRefresh={onRefresh}
           ListHeaderComponent={listHeader}

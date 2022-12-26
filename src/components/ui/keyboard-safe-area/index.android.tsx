@@ -10,6 +10,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {createTheme} from '@app/helpers';
+import {useKeyboardDismissInBackground} from '@app/hooks';
 
 import {KeyboardSafeAreaProps} from '.';
 
@@ -22,6 +23,7 @@ export const KeyboardSafeArea = ({
   const {bottom} = useSafeAreaInsets();
   const paddingBottom = useSharedValue(0);
   const prevHeight = useRef(0);
+  useKeyboardDismissInBackground();
 
   useFocusEffect(
     useCallback(() => {

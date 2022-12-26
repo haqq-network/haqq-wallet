@@ -98,7 +98,7 @@ export enum I18N {
   signUpTitle,
   signInTitle,
   transactionSumSend,
-  transactionSumPereview,
+  transactionSumPreview,
   copy,
   yes,
   no,
@@ -169,6 +169,7 @@ export enum I18N {
   pinManyAttempts,
   settingsAccountEditHeaderTitle,
   settingsContactEditHeaderTitle,
+  settingsContactEditNamePlaceholder,
   settingsContactEditDeleteContact,
   settingsProvidersTitle,
   settingsProvidersTitleRight,
@@ -271,7 +272,6 @@ export enum I18N {
   stakingDelegatePreviewAmount,
   stakingDelegatePreviewNetworkFee,
   stakingDelegatePreviewDelegate,
-  stakingDelegatePreviewAttention,
   stakingDelegateFinishTitle,
   stakingDelegateFinishTotalAmount,
   stakingDelegateFinishDone,
@@ -558,6 +558,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
+  [I18N.settingsContactEditNamePlaceholder]: 'Enter a name',
   [I18N.signUpTitle]: 'Create a wallet',
   [I18N.copy]: 'Copy',
   [I18N.yes]: 'Yes',
@@ -675,7 +676,7 @@ const en: Record<I18N, string> = {
   [I18N.signinRestoreWalletPhraseOrKey]: 'Recovery phrase or Private key',
   [I18N.signinRestoreWalletRecovery]: 'Recovery',
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
-  [I18N.signinRestoreWalletTextFieldLabel]: '',
+  [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
     'Enter or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
@@ -767,8 +768,6 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegatePreviewAmount]: 'Amount',
   [I18N.stakingDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingDelegatePreviewDelegate]: 'Delegate',
-  [I18N.stakingDelegatePreviewAttention]:
-    'Attention! If in the future you want to withdraw the staked funds, it will take 21 days',
   [I18N.stakingDelegateAccountTitle]: 'Account',
   [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
   [I18N.stakingDelegateFinishTotalAmount]: 'Total Amount',
@@ -785,8 +784,7 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingUnDelegatePreviewButton]: 'Undelegate',
   [I18N.stakingUnDelegatePreviewAttention]:
-    'Attention! If in the future you want to undelegate the staked funds, it will take 21 days',
-
+    'Attention! If in the future you want to undelegate the staked funds, it will take {{time}}',
   [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
@@ -796,7 +794,7 @@ const en: Record<I18N, string> = {
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.stakingUnDelegateSumWarning]:
-    'The funds will be undelegate within 21 days',
+    'The funds will be undelegate within {{time}}',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.sumAmountNotEnough]: "You don't have enough ISLM to pay the fee",
@@ -846,7 +844,7 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
   [I18N.transactionSumSend]: 'Send to',
-  [I18N.transactionSumPereview]: 'Preview',
+  [I18N.transactionSumPreview]: 'Preview',
   [I18N.transactions]: 'Transactions',
   [I18N.to]: 'to {{address}}',
   [I18N.transactionSendTo]: 'to {{address}}',
@@ -886,7 +884,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
-  [I18N.proposalNoVoting]: 'No Voting proposal',
+  [I18N.proposalNoVoting]: 'No {{votingCategory}} proposal',
 
   [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
