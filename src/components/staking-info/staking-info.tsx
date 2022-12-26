@@ -174,7 +174,7 @@ export const StakingInfo = ({
           </Block>
           {website && (
             <Block name={I18N.stakingInfoWebsite}>
-              <Text t14 color={Color.textGreen1} onPress={onPressWebsite}>
+              <Text t11 color={Color.textGreen1} onPress={onPressWebsite}>
                 {website}
               </Text>
             </Block>
