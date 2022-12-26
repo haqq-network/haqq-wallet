@@ -142,7 +142,7 @@ export const StakingInfo = ({
         <Spacer height={12} />
         <View style={styles.infoBlock}>
           <Block name={I18N.stakingInfoVotingPower}>
-            <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
+            <Text t11>{cleanNumber(votingPower.toFixed(2))}</Text>
           </Block>
           <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
