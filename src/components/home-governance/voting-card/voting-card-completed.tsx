@@ -12,6 +12,7 @@ import {
   GovernanceVoting,
   ProposalRealmType,
 } from '@app/models/governance-voting';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export enum VotingCompletedStatuses {
   passed = I18N.homeGovernanceVotingCardPassed,
@@ -34,7 +35,7 @@ export const VotingCardCompleted = ({
     return GovernanceVoting.getById(id) as ProposalRealmType;
   }, [id]);
 
-  const isVoted = true; // PASS
+  const isVoted = false; // PASS
 
   const status =
     VotingCompletedStatuses[item.status as VotingCompletedStatusesKeys];
@@ -106,6 +107,14 @@ const styles = createTheme({
     paddingTop: 6,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
+    shadowColor: SHADOW_COLOR_1,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    backgroundColor: Color.bg1,
+    shadowRadius: 24,
+    elevation: 13,
   },
   container: {
     borderRadius: 12,
@@ -113,6 +122,8 @@ const styles = createTheme({
     paddingVertical: 20,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
+    marginHorizontal: -1,
+    marginBottom: -1,
   },
   topInfoBlock: {
     flexDirection: 'row',

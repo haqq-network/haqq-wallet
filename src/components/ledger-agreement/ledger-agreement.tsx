@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
@@ -11,7 +11,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/types';
 import {WINDOW_WIDTH} from '@app/variables/common';
 // import {Terms} from '../ui/terms';
 
@@ -20,15 +22,19 @@ export type LedgerAgreementProps = {
 };
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
+  const theme = useTheme();
+
+  const lottieAnimation = useMemo(() => {
+    if (theme === AppTheme.dark) {
+      return require('../../../assets/animations/body-ledger-dark.json');
+    }
+    return require('../../../assets/animations/body-ledger-light.json');
+  }, [theme]);
+
   return (
     <PopupContainer style={page.container}>
       <View style={page.animation}>
-        <LottieWrap
-          source={require('../../../assets/animations/ledger-agreement.json')}
-          style={page.image}
-          autoPlay
-          loop
-        />
+        <LottieWrap source={lottieAnimation} style={page.image} autoPlay loop />
       </View>
       <Text t4 center style={page.title} i18n={I18N.ledgerAgreementTitle} />
       <Text

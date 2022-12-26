@@ -6,6 +6,7 @@ import {createTheme} from '@app/helpers';
 
 export type SpacerProps = ViewProps & {
   height?: number;
+  minHeight?: number;
   width?: number;
   centered?: boolean;
 };
@@ -15,22 +16,24 @@ export const Spacer = ({
   style,
   height,
   width,
+  minHeight,
   centered,
   ...props
 }: SpacerProps) => {
   const container = useMemo(() => {
-    const hasSizeProp = !!height || !!width;
+    const hasSizeProp = !!(height || minHeight || width);
     return [
       hasSizeProp
         ? {
             height,
             width,
+            minHeight,
           }
         : styles.flexOne,
       centered && styles.centered,
       style,
     ].filter(Boolean);
-  }, [height, width, centered, style]);
+  }, [height, minHeight, width, centered, style]);
 
   return (
     <View style={container} {...props}>

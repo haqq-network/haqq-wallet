@@ -493,6 +493,16 @@ export type DepositResponse = {
   pagination: {next_key: any; total: string};
 };
 
+export type StakingParamsResponse = {
+  params: {
+    unbonding_time: string;
+    max_validators: number;
+    max_entries: number;
+    historical_entries: number;
+    bond_denom: string;
+  };
+};
+
 export type ProposalsCroppedList = {
   id: number;
   status: string;

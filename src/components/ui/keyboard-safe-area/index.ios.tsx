@@ -4,6 +4,8 @@ import {useHeaderHeight} from '@react-navigation/elements';
 import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {useKeyboardDismissInBackground} from '@app/hooks';
+
 import {KeyboardSafeAreaProps} from '.';
 
 export const KeyboardSafeArea = ({
@@ -13,6 +15,7 @@ export const KeyboardSafeArea = ({
 }: KeyboardSafeAreaProps) => {
   const header = useHeaderHeight();
   const {bottom, top} = useSafeAreaInsets();
+  useKeyboardDismissInBackground();
 
   return (
     <KeyboardAvoidingView

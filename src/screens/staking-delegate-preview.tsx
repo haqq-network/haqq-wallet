@@ -1,9 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview/staking-delegate-preview';
-import {app} from '@app/contexts';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
-import {Cosmos} from '@app/services/cosmos';
+import {
+  useCosmos,
+  useTypedNavigation,
+  useTypedRoute,
+  useWallet,
+} from '@app/hooks';
 
 export const StakingDelegatePreviewScreen = () => {
   const navigation = useTypedNavigation();
@@ -11,16 +14,26 @@ export const StakingDelegatePreviewScreen = () => {
     useTypedRoute<'stakingDelegatePreview'>().params;
 
   const wallet = useWallet(account);
+  const cosmos = useCosmos();
 
+  const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    cosmos.getStakingParams().then(resp => {
+      const regex = /(\d+)s/gm;
+      const m = regex.exec(resp.params.unbonding_time);
+      if (m) {
+        setUnboundingTime(parseInt(m[1], 10) * 1000);
+      }
+    });
+  }, [cosmos]);
 
   const onDone = useCallback(async () => {
     if (wallet) {
       try {
         setDisabled(true);
-
-        const cosmos = new Cosmos(app.provider!);
 
         const resp = await cosmos.delegate(
           wallet.transport,
@@ -44,7 +57,7 @@ export const StakingDelegatePreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, validator, amount, fee, navigation]);
+  }, [cosmos, wallet, validator, amount, fee, navigation]);
 
   useEffect(() => {
     return () => {
@@ -54,6 +67,7 @@ export const StakingDelegatePreviewScreen = () => {
 
   return (
     <StakingDelegatePreview
+      unboundingTime={unboundingTime}
       amount={amount}
       fee={fee}
       validator={validator}

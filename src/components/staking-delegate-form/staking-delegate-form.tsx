@@ -29,7 +29,6 @@ export type StakingDelegateFormProps = {
 export const StakingDelegateForm = ({
   validator: {
     commission: {commission_rates},
-    description,
   },
   onAmount,
   fee,
@@ -52,10 +51,6 @@ export const StakingDelegateForm = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormStakeTo} />
-        <Text t10>{description.moniker}</Text>
-      </View>
-      <View style={styles.row}>
         <Text t14 i18n={I18N.stakingDelegateFormCommission} />
         <Text t10>{validatorCommission}%</Text>
       </View>
@@ -72,11 +67,11 @@ export const StakingDelegateForm = ({
       <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
-        style={styles.submit}
         disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />
+      <Spacer height={16} />
     </KeyboardSafeArea>
   );
 };
@@ -85,13 +80,11 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingBottom: 16,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 12,
-  },
-  submit: {
-    marginVertical: 16,
   },
 });
