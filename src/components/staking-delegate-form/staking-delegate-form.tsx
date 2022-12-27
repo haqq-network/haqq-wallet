@@ -67,11 +67,11 @@ export const StakingDelegateForm = ({
       <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
-        style={styles.submit}
         disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />
+      <Spacer height={32} />
     </KeyboardSafeArea>
   );
 };
@@ -85,8 +85,5 @@ const styles = createTheme({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 12,
-  },
-  submit: {
-    marginVertical: 16,
   },
 });
