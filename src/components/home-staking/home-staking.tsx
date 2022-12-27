@@ -40,7 +40,7 @@ export const HomeStaking = ({
     onPressGetRewards?.();
   };
 
-  const hasStaking = stakingSum > 0;
+  const hasStaking = stakingSum > 0.0001;
 
   if (loading) {
     return <Loading />;
