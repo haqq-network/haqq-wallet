@@ -92,7 +92,7 @@ export const TransactionFinish = ({
         />
       </View>
 
-      <Spacer />
+      <Spacer minHeight={20} />
       <View style={styles.buttons}>
         <IconButton onPress={onPressContact} style={styles.button}>
           {contact ? (
