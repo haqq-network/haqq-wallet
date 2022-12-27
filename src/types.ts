@@ -312,12 +312,7 @@ export type RootStackParamList = {
     id: number;
   };
   settingsViewRecoveryPhrase: {
-    mnemonic: string;
-  };
-  pinGuard: {
-    nextScreen: 'settingsSecurity' | 'viewRecoveryPhrase';
-    address?: string;
-    screenParams?: any;
+    address: string;
   };
   settingsSecurity: undefined;
 };

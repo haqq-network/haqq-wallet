@@ -38,9 +38,8 @@ export const SettingsAccountDetailScreen = () => {
   }, [wallet]);
 
   const onViewingRecoveryPhrase = () => {
-    navigation.navigate('pinGuard', {
+    navigation.navigate('settingsViewRecoveryPhrase', {
       address,
-      nextScreen: 'viewRecoveryPhrase',
     });
   };
 

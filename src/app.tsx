@@ -58,7 +58,6 @@ import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
-import {PinGuardScreen} from './screens/pin-guard';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
@@ -369,13 +368,6 @@ export const App = () => {
                     options={{
                       title: getText(I18N.settingsThemeScreen),
                     }}
-                  />
-                  <Stack.Screen
-                    options={{
-                      title: getText(I18N.settingsSecurity),
-                    }}
-                    name="pinGuard"
-                    component={PinGuardScreen}
                   />
                   <Stack.Screen
                     name="settingsViewRecoveryPhrase"
