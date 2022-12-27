@@ -42,7 +42,7 @@ export const Badge = ({
     <View style={[container, center && styles.center]}>
       {iconLeftName && (
         <>
-          <Icon i18 name={iconLeftName} color={textColor} />
+          <Icon i20 name={iconLeftName} color={textColor} />
           <Spacer width={4} />
         </>
       )}
