@@ -71,7 +71,7 @@ export const StakingDelegateForm = ({
         variant={ButtonVariant.contained}
         onPress={onDone}
       />
-      <Spacer height={32} />
+      <Spacer height={16} />
     </KeyboardSafeArea>
   );
 };
@@ -80,6 +80,7 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingBottom: 16,
   },
   row: {
     flexDirection: 'row',
