@@ -203,7 +203,7 @@ export const StakingInfo = ({
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        {(rewards?.length ?? 0) > 0 && (
+        {(rewards?.length ?? 0) > 0.0001 && (
           <>
             <Button
               loading={withdrawDelegatorRewardProgress}
