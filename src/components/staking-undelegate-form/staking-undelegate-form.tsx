@@ -1,4 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
+
+import {formatDistance} from 'date-fns';
 
 import {Color} from '@app/colors';
 import {
@@ -20,9 +22,11 @@ export type StakingDelegateFormProps = {
   balance: number;
   onAmount: (amount: number) => void;
   fee: number;
+  unboundingTime: number;
 };
 
 export const StakingUnDelegateForm = ({
+  unboundingTime,
   balance,
   onAmount,
   fee,
@@ -31,6 +35,11 @@ export const StakingUnDelegateForm = ({
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
+
+  const time = useMemo(
+    () => formatDistance(new Date(unboundingTime), new Date(0)),
+    [unboundingTime],
+  );
 
   const onPressMax = useCallback(() => {
     amounts.setMax();
@@ -53,6 +62,7 @@ export const StakingUnDelegateForm = ({
       <InfoBlock
         warning
         i18n={I18N.stakingUnDelegateSumWarning}
+        i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Spacer height={16} />

@@ -268,7 +268,6 @@ export enum I18N {
   stakingDelegatePreviewAmount,
   stakingDelegatePreviewNetworkFee,
   stakingDelegatePreviewDelegate,
-  stakingDelegatePreviewAttention,
   stakingDelegateFinishTitle,
   stakingDelegateFinishTotalAmount,
   stakingDelegateFinishDone,
@@ -760,8 +759,6 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegatePreviewAmount]: 'Amount',
   [I18N.stakingDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingDelegatePreviewDelegate]: 'Delegate',
-  [I18N.stakingDelegatePreviewAttention]:
-    'Attention! If in the future you want to withdraw the staked funds, it will take 21 days',
   [I18N.stakingDelegateAccountTitle]: 'Account',
   [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
   [I18N.stakingDelegateFinishTotalAmount]: 'Total Amount',
@@ -778,8 +775,7 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingUnDelegatePreviewButton]: 'Undelegate',
   [I18N.stakingUnDelegatePreviewAttention]:
-    'Attention! If in the future you want to undelegate the staked funds, it will take 21 days',
-
+    'Attention! If in the future you want to undelegate the staked funds, it will take {{time}}',
   [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
@@ -789,7 +785,7 @@ const en: Record<I18N, string> = {
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.stakingUnDelegateSumWarning]:
-    'The funds will be undelegate within 21 days',
+    'The funds will be undelegate within {{time}}',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.sumAmountNotEnough]: "You don't have enough ISLM to pay the fee",
