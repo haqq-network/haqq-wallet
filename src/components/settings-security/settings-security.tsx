@@ -1,8 +1,7 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {Alert, StyleSheet, Switch, View} from 'react-native';
 
-import {Pin, PinInterface} from '@app/components/pin';
 import {DataContent, MenuNavigationButton, Spacer} from '@app/components/ui';
 import {useApp} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -24,20 +23,6 @@ export const SettingsSecurity = ({
 }: SettingsSecurityProps) => {
   const app = useApp();
   const [biometry, setBiometry] = useState(app.biometry);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const pinRef = useRef<PinInterface>();
-
-  const onPin = useCallback(
-    async (pin: string) => {
-      try {
-        await app.comparePin(pin);
-        setLoggedIn(true);
-      } catch (e) {
-        pinRef.current?.reset('wrong pin');
-      }
-    },
-    [app],
-  );
 
   const onToggleBiometry = useCallback(async () => {
     if (!biometry) {
@@ -57,12 +42,6 @@ export const SettingsSecurity = ({
       setBiometry(false);
     }
   }, [app, biometry]);
-
-  if (!loggedIn) {
-    return (
-      <Pin title={I18N.settingsSecurityWalletPin} onPin={onPin} ref={pinRef} />
-    );
-  }
 
   return (
     <View style={page.container}>

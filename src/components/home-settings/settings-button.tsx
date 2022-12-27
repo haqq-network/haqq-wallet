@@ -23,7 +23,6 @@ export type SettingsButtonProps = {
   rightTitle?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
-  params?: any;
 };
 
 export const SettingsButton = ({
@@ -31,12 +30,11 @@ export const SettingsButton = ({
   title,
   next,
   style,
-  params,
   rightTitle,
 }: SettingsButtonProps) => {
   const navigation = useTypedNavigation();
 
-  const onClickButton = () => navigation.navigate(next, params);
+  const onClickButton = () => navigation.navigate(next);
 
   return (
     <MenuNavigationButton onPress={onClickButton} style={style}>
