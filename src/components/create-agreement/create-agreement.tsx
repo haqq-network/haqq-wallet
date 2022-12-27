@@ -38,7 +38,7 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
           source={animation}
           autoPlay
           loop={false}
-          resizeMode="center"
+          resizeMode="contain"
           style={imageHeight}
         />
       </View>

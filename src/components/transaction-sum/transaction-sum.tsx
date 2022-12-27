@@ -81,23 +81,24 @@ export const TransactionSum = ({
           </Text>
         </LabeledBlock>
       </TouchableWithoutFeedback>
-      <Spacer />
-      <SumBlock
-        value={amounts.amount}
-        error={amounts.error}
-        currency="ISLM"
-        balance={balance}
-        onChange={amounts.setAmount}
-        onMax={onPressMax}
-      />
-      <Spacer />
+      <Spacer centered>
+        <SumBlock
+          value={amounts.amount}
+          error={amounts.error}
+          currency="ISLM"
+          balance={balance}
+          onChange={amounts.setAmount}
+          onMax={onPressMax}
+        />
+      </Spacer>
+      <Spacer minHeight={16} />
       <Button
-        style={styles.submit}
         disabled={!amounts.isValid}
         variant={ButtonVariant.contained}
-        i18n={I18N.transactionSumPereview}
+        i18n={I18N.transactionSumPreview}
         onPress={onDone}
       />
+      <Spacer height={16} />
     </KeyboardSafeArea>
   );
 };
@@ -109,8 +110,6 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-  },
-  submit: {
-    marginVertical: 16,
+    paddingBottom: 16,
   },
 });

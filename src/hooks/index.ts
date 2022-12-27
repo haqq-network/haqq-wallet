@@ -12,3 +12,4 @@ export * from './use-cosmos';
 export * from './use-proposals';
 export * from './use-sum-amount';
 export * from './use-android-system-colors';
+export * from './use-keyboard-dismiss-in-background';
