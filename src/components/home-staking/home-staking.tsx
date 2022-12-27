@@ -5,7 +5,6 @@ import {ScrollView, View} from 'react-native';
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {IS_IOS} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';
@@ -50,10 +49,7 @@ export const HomeStaking = ({
   return (
     <ScrollView
       bounces={false}
-      contentContainerStyle={[
-        styles.content,
-        !hasStaking && styles.contentEmpty,
-      ]}
+      contentContainerStyle={styles.content}
       style={styles.container}>
       {hasStaking ? (
         <StakingActive
@@ -97,10 +93,7 @@ const styles = createTheme({
     marginVertical: 8,
   },
   content: {
-    height: IS_IOS ? '100%' : 'auto',
+    flexGrow: 1,
     justifyContent: 'space-between',
-  },
-  contentEmpty: {
-    height: '100%',
   },
 });
