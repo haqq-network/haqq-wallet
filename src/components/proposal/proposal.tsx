@@ -135,7 +135,7 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
           />
         )}
         <Spacer height={16} />
-        <Text center color={Color.textBase1} t14>
+        <Text center color={Color.textBase2} t14>
           #{orderNumber}
         </Text>
         <Spacer height={2} />
