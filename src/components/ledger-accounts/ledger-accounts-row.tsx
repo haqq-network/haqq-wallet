@@ -26,7 +26,7 @@ export const LedgerAccountsRow = ({item, onPress}: LedgerAccountsRowProps) => {
   return (
     <View style={styles.container}>
       <DataContent
-        title={`${cleanNumber(item.balance.toFixed(8))} ISML`}
+        title={`${cleanNumber(item.balance)} ISML`}
         subtitle={shortAddress(item.address)}
       />
       {item.exists ? (

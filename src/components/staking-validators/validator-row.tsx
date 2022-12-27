@@ -59,7 +59,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
                 t14
                 color={Color.textBase2}
                 i18n={I18N.stakingValidatorsRowPower}
-                i18params={{power: cleanNumber(votingPower.toFixed(2))}}
+                i18params={{power: cleanNumber(votingPower)}}
               />
               <Text t14 color={textColor} i18n={item.localStatus as number} />
             </View>
@@ -71,7 +71,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowStaked}
               i18params={{
-                staked: cleanNumber(item.localDelegations.toFixed(4)),
+                staked: cleanNumber(item.localDelegations),
               }}
             />
           )}
@@ -80,7 +80,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
               i18params={{
-                reward: cleanNumber(item.localRewards.toFixed(4)),
+                reward: cleanNumber(item.localRewards),
               }}
             />
           )}
