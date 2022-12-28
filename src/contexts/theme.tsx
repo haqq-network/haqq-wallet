@@ -10,7 +10,7 @@ interface ProvidedValue {
   colors: ThemeColorsType;
   name: ThemeNameType;
   isSystem: boolean;
-  isDarkSystem: boolean;
+  isDark: boolean;
   toggleTheme: (name: ThemeNameType) => void;
   enableSystemTheme: () => void;
 }
@@ -18,7 +18,7 @@ interface ProvidedValue {
 export const ThemeContext = createContext<ProvidedValue>({
   colors: ThemeDictionary.light,
   name: 'light',
-  isDarkSystem: false,
+  isDark: false,
   isSystem: true,
   toggleTheme: () => {},
   enableSystemTheme: () => {},
@@ -48,14 +48,14 @@ export const ThemeProvider = ({children}: ThemeProviderProps) => {
   const providedValue = useMemo(() => {
     const value: ProvidedValue = {
       name: theme,
-      isDarkSystem: colorScheme === 'dark',
+      isDark: theme === 'dark',
       isSystem: isSystemTheme,
       colors: ThemeDictionary[theme],
       toggleTheme,
       enableSystemTheme,
     };
     return value;
-  }, [theme, colorScheme, isSystemTheme, toggleTheme, enableSystemTheme]);
+  }, [theme, isSystemTheme, toggleTheme, enableSystemTheme]);
 
   return (
     <ThemeContext.Provider value={providedValue}>

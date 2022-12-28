@@ -21,14 +21,14 @@ interface BackupWarningProps {
 }
 
 export function BackupWarning({onPressBackup}: BackupWarningProps) {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
 
   const animation = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../../assets/animations/backup-start-dark.json');
     }
     return require('../../../assets/animations/backup-start-light.json');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   return (
     <PopupContainer style={styles.container}>

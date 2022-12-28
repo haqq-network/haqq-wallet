@@ -21,14 +21,15 @@ export type FinishProps = {
 };
 
 export const Finish = ({onFinish, testID, title}: FinishProps) => {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
+
   const animation = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../assets/animations/success-animation-dark.json');
     }
 
     return require('../../assets/animations/success-animation-light.json');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   return (
     <PopupContainer>

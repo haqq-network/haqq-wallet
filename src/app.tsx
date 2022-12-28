@@ -94,18 +94,18 @@ const withoutHeader = {
 };
 
 export const App = () => {
-  const {colors, isDarkSystem} = useTheme();
+  const {colors, isDark} = useTheme();
 
   const navTheme = useMemo(
     () => ({
-      dark: isDarkSystem,
+      dark: isDark,
       colors: {
         ...DefaultTheme.colors,
         primary: colors.graphicGreen1,
         background: colors.bg1,
       },
     }),
-    [isDarkSystem, colors],
+    [isDark, colors],
   );
 
   useEffect(() => {

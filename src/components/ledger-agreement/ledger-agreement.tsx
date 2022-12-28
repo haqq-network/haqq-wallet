@@ -21,14 +21,14 @@ export type LedgerAgreementProps = {
 };
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
 
   const lottieAnimation = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../../assets/animations/body-ledger-dark.json');
     }
     return require('../../../assets/animations/body-ledger-light.json');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   return (
     <PopupContainer style={page.container}>

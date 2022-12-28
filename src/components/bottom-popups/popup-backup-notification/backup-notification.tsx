@@ -23,15 +23,15 @@ export const BackupNotification = ({
   onClickBackup,
   onClickSkip,
 }: BackupNotificationProps) => {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
   const styles = useThematicStyles(stylesObj);
   const warningImage = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../../../assets/images/backup-notification-dark.png');
     }
 
     return require('../../../../assets/images/backup-notification-light.png');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   const onSkip = useCallback(() => {
     return Alert.alert(

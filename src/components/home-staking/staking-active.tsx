@@ -33,7 +33,7 @@ export const StakingActive = forwardRef(
     {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
     ref,
   ) => {
-    const {isDarkSystem} = useTheme();
+    const {isDark} = useTheme();
     const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
     const lottieRef = useRef<AnimatedLottieView>(null);
     const isEndRef = useRef<Boolean>(false);
@@ -41,30 +41,30 @@ export const StakingActive = forwardRef(
     const animationFile = useMemo(() => {
       switch (true) {
         case isReceiveAnimation:
-          if (isDarkSystem) {
+          if (isDark) {
             return require('../../../assets/animations/get-reward-dark.json');
           }
           return require('../../../assets/animations/get-reward-light.json');
         case stakedSum > 100:
-          if (isDarkSystem) {
+          if (isDark) {
             return require('../../../assets/animations/stake-dark-100.json');
           }
 
           return require('../../../assets/animations/stake-light-100.json');
         case stakedSum > 20:
-          if (isDarkSystem) {
+          if (isDark) {
             return require('../../../assets/animations/stake-dark-20-100.json');
           }
 
           return require('../../../assets/animations/stake-light-20-100.json');
         default:
-          if (isDarkSystem) {
+          if (isDark) {
             return require('../../../assets/animations/stake-dark-0-20.json');
           }
 
           return require('../../../assets/animations/stake-light-0-20.json');
       }
-    }, [isReceiveAnimation, isDarkSystem, stakedSum]);
+    }, [isReceiveAnimation, isDark, stakedSum]);
 
     useImperativeHandle(ref, () => ({
       getReward() {

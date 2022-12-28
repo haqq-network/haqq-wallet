@@ -23,15 +23,15 @@ export const NotificationPopup = ({
   onClickTurnOn,
   onClickNotNow,
 }: NotificationPopupProps) => {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
   const styles = useThematicStyles(stylesObj);
 
   const lottieAnimation = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../../../assets/animations/notification-popup-dark.json');
     }
     return require('../../../../assets/animations/notification-popup-light.json');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   return (
     <View style={styles.sub}>

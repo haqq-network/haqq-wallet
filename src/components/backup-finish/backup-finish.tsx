@@ -19,19 +19,19 @@ type BackupFinishProps = {
 };
 
 export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
-  const {isDarkSystem} = useTheme();
+  const {isDark} = useTheme();
   const animationSize = useWindowDimensions().width - 116;
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
 
   const animation = useMemo(() => {
-    if (isDarkSystem) {
+    if (isDark) {
       return require('../../../assets/animations/backup-success-dark.json');
     }
 
     return require('../../../assets/animations/backup-success-light.json');
-  }, [isDarkSystem]);
+  }, [isDark]);
 
   return (
     <PopupContainer style={page.popupContainer}>

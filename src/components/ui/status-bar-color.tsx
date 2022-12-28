@@ -6,14 +6,14 @@ import {Color} from '@app/colors';
 import {useTheme} from '@app/hooks';
 
 export function StatusBarColor({backgroundColor = Color.bg1, ...props}) {
-  const {colors, isDarkSystem} = useTheme();
+  const {colors, isDark} = useTheme();
 
   return (
     <View
       style={[styles.statusBar, {backgroundColor: colors[backgroundColor]}]}>
       <StatusBar
         translucent
-        barStyle={isDarkSystem ? 'light-content' : 'dark-content'}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
         backgroundColor={colors[backgroundColor]}
         {...props}
       />

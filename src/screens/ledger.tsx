@@ -24,6 +24,11 @@ const title = getText(I18N.ledgerConnect);
 
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
+const screenOptionsLedgerAgreement: ScreenOptionType = {
+  ...hideBack,
+  headerBackHidden: true,
+};
+
 export const LedgerScreen = () => {
   const user = useUser();
   return (
@@ -31,7 +36,7 @@ export const LedgerScreen = () => {
       <LedgerStack.Screen
         name="ledgerAgreement"
         component={LedgerAgreementScreen}
-        options={hideBack}
+        options={screenOptionsLedgerAgreement}
       />
       <LedgerStack.Screen
         name="ledgerBluetooth"
