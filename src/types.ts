@@ -108,7 +108,6 @@ export type RootStackParamList = {
   settingsAccountStyle: {address: string};
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
-  settingsSecurity: undefined;
   settingsSecurityPin: undefined;
   settingsProviders: undefined;
   settingsSecurityPinRepeat: {
@@ -323,6 +322,10 @@ export type RootStackParamList = {
   proposal: {
     id: number;
   };
+  settingsViewRecoveryPhrase: {
+    address: string;
+  };
+  settingsSecurity: undefined;
 };
 
 export type StackPresentationTypes =

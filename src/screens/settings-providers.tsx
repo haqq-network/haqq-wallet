@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {Color} from '@app/colors';
-import {SettingsProviders} from '@app/components/settings-providers/settings-providers';
+import {SettingsProviders} from '@app/components/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N} from '@app/i18n';
