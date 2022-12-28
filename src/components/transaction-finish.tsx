@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -14,7 +14,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
@@ -43,6 +44,7 @@ export const TransactionFinish = ({
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
     await openURL(url);
   };
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <PopupContainer style={styles.container}>
@@ -146,7 +148,7 @@ export const TransactionFinish = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

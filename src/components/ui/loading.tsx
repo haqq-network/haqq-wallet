@@ -1,19 +1,19 @@
 import React from 'react';
 
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 
 export const Loading = () => {
+  const {colors} = useTheme();
   return (
     <View style={styles.container}>
-      <ActivityIndicator color={getColor(Color.graphicGreen1)} />
+      <ActivityIndicator color={colors.graphicGreen1} />
     </View>
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

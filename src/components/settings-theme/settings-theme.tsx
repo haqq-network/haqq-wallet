@@ -1,42 +1,43 @@
 import React from 'react';
 
+import {StyleSheet} from 'react-native';
+
+import {ThemeNameType} from '@app/colors';
 import {ThemedButton} from '@app/components/settings-theme/theme-button';
 import {PopupContainer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 
 export type SettingsThemeProps = {
-  theme: AppTheme;
-  onChangeTheme: (theme: AppTheme) => void;
+  theme: ThemeNameType | 'system';
+  onChangeTheme: (theme: ThemeNameType | 'system') => void;
 };
 
 export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
   return (
     <PopupContainer style={styles.container}>
       <ThemedButton
-        value={AppTheme.light}
+        value={'light'}
         name={I18N.settingsThemeLight}
-        active={theme === AppTheme.light}
+        active={theme === 'light'}
         onChange={onChangeTheme}
       />
       <ThemedButton
-        value={AppTheme.dark}
+        value={'dark'}
         name={I18N.settingsThemeDark}
-        active={theme === AppTheme.dark}
+        active={theme === 'dark'}
         onChange={onChangeTheme}
       />
       <ThemedButton
-        value={AppTheme.system}
+        value={'system'}
         name={I18N.settingsThemeSystem}
-        active={theme === AppTheme.system}
+        active={theme === 'system'}
         onChange={onChangeTheme}
       />
     </PopupContainer>
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

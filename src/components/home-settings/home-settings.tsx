@@ -1,18 +1,17 @@
 import React from 'react';
 
 import {IS_DEVELOPMENT} from '@env';
-import {ScrollView} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {useUser} from '@app/hooks';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
 
 export const HomeSettings = () => {
-  const {theme} = useUser();
-  const capitalizedTheme = capitalize(theme);
+  const {name, isSystem} = useTheme();
+  const capitalizedTheme = capitalize(isSystem ? 'system' : name);
 
   return (
     <ScrollView contentContainerStyle={page.container}>
@@ -81,7 +80,7 @@ export const HomeSettings = () => {
   );
 };
 
-const page = createTheme({
+const page = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

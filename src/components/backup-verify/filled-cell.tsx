@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type FilledCellProps = {
@@ -12,6 +12,7 @@ export type FilledCellProps = {
 };
 
 export const FilledCell = ({word}: FilledCellProps) => {
+  const styles = useThematicStyles(stylesObj);
   return (
     <View style={styles.cell}>
       <Text t14 center color={Color.textBase3}>
@@ -21,7 +22,7 @@ export const FilledCell = ({word}: FilledCellProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   cell: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -7,12 +7,13 @@ import React, {
 } from 'react';
 
 import {isBefore} from 'date-fns';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
-import {createTheme, moderateVerticalScale} from '@app/helpers';
+import {moderateVerticalScale} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -36,6 +37,8 @@ export const Pin = forwardRef(
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const [locked, setLocked] = useState<Date | null>(null);
+
+    const styles = useThematicStyles(stylesObj);
 
     useEffect(() => {
       if (locked !== null) {
@@ -125,7 +128,7 @@ export const Pin = forwardRef(
   },
 );
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',

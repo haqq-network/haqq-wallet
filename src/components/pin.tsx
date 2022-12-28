@@ -10,12 +10,12 @@ import {isBefore} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
 import {moderateVerticalScale} from '@app/helpers/scaling-utils';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_2,
   LIGHT_TEXT_GREEN_1,
 } from '@app/variables/common';
 
@@ -126,7 +126,7 @@ export const Pin = forwardRef(
         <Text t4 i18n={title} i18params={i18params} style={page.title} />
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
-          <Text t11 color={LIGHT_TEXT_BASE_2} center>
+          <Text t11 color={Color.textBase2} center>
             {subtitle}
           </Text>
         )}

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {useCallback, useMemo} from 'react';
+import React, {memo} from 'react';
+import {useCallback} from 'react';
 
 import {
   ActivityIndicator,
@@ -10,10 +10,9 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color} from '@app/colors';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {ColorType} from '@app/types';
 
 import {Icon, IconProps} from './icon';
 import {Text} from './text';
@@ -37,8 +36,8 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   error?: boolean;
   loading?: boolean;
   disabled?: boolean;
-  textColor?: ColorType;
-  color?: ColorType;
+  textColor?: Color;
+  color?: Color;
   circleBorders?: boolean;
 } & ButtonValue &
   ButtonRightIconProps &
@@ -57,106 +56,102 @@ export enum ButtonSize {
   large = 'large',
 }
 
-export const Button = ({
-  title,
-  i18n,
-  variant = ButtonVariant.text,
-  size = ButtonSize.large,
-  style,
-  circleBorders,
-  onPress,
-  iconRight,
-  iconRightColor,
-  iconLeft,
-  iconLeftColor,
-  textColor,
-  color,
-  error,
-  disabled,
-  loading,
-  ...props
-}: ButtonProps) => {
-  const onPressButton = useCallback(() => {
-    if (!(disabled || loading)) {
-      onPress();
-    }
-  }, [disabled, loading, onPress]);
+export const Button = memo(
+  ({
+    title,
+    i18n,
+    variant = ButtonVariant.text,
+    size = ButtonSize.large,
+    style,
+    circleBorders,
+    onPress,
+    iconRight,
+    iconRightColor,
+    iconLeft,
+    iconLeftColor,
+    textColor,
+    color,
+    error,
+    disabled,
+    loading,
+    ...props
+  }: ButtonProps) => {
+    const onPressButton = useCallback(() => {
+      if (!(disabled || loading)) {
+        onPress();
+      }
+    }, [disabled, loading, onPress]);
+    const styles = useThematicStyles(stylesObj);
+    const {colors} = useTheme();
 
-  const containerStyle = useMemo(
-    () =>
-      StyleSheet.flatten([
-        styles.container,
-        variant === ButtonVariant.second && styles.secondContainer,
-        variant === ButtonVariant.contained && styles.containedContainer,
-        size === ButtonSize.small && styles.smallContainer,
-        size === ButtonSize.middle && styles.middleContainer,
-        size === ButtonSize.large && styles.largeContainer,
-        circleBorders && styles.circleBorders,
-        error &&
-          variant === ButtonVariant.second &&
-          styles.secondErrorContainer,
-        disabled &&
-          variant === ButtonVariant.second &&
-          styles.secondDisabledContainer,
-        disabled &&
-          variant === ButtonVariant.contained &&
-          styles.containedDisabledContainer,
-        color && {backgroundColor: getColor(color)},
-        style,
-      ]),
-    [variant, size, circleBorders, error, disabled, color, style],
-  );
+    const containerStyle = StyleSheet.flatten([
+      styles.container,
+      variant === ButtonVariant.second && styles.secondContainer,
+      variant === ButtonVariant.contained && styles.containedContainer,
+      size === ButtonSize.small && styles.smallContainer,
+      size === ButtonSize.middle && styles.middleContainer,
+      size === ButtonSize.large && styles.largeContainer,
+      circleBorders && styles.circleBorders,
+      error && variant === ButtonVariant.second && styles.secondErrorContainer,
+      disabled &&
+        variant === ButtonVariant.second &&
+        styles.secondDisabledContainer,
+      disabled &&
+        variant === ButtonVariant.contained &&
+        styles.containedDisabledContainer,
+      color && {backgroundColor: colors[color]},
+      style,
+    ]);
 
-  const textStyle = useMemo(
-    () =>
-      StyleSheet.flatten<TextStyle>([
-        iconLeft && styles.textIconLeft,
-        iconRight && styles.textIconRight,
-        variant === ButtonVariant.second && styles.secondText,
-        variant === ButtonVariant.contained && styles.containedText,
-        error && styles.errorText,
-        disabled &&
-          variant === ButtonVariant.second &&
-          styles.secondDisabledText,
-        disabled &&
-          variant === ButtonVariant.contained &&
-          styles.containedDisabledText,
-      ]),
-    [iconLeft, iconRight, variant, error, disabled],
-  );
+    const textStyle = StyleSheet.flatten<TextStyle>([
+      iconLeft && styles.textIconLeft,
+      iconRight && styles.textIconRight,
+      variant === ButtonVariant.second && styles.secondText,
+      variant === ButtonVariant.contained && styles.containedText,
+      error && styles.errorText,
+      disabled && variant === ButtonVariant.second && styles.secondDisabledText,
+      disabled &&
+        variant === ButtonVariant.contained &&
+        styles.containedDisabledText,
+    ]);
 
-  return (
-    <TouchableOpacity
-      style={containerStyle as ViewStyle}
-      onPress={onPressButton}
-      activeOpacity={0.7}
-      {...props}>
-      {loading ? (
-        <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
-      ) : (
-        <>
-          {iconLeft && (
-            <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
-          )}
-          {/* @ts-expect-error */}
-          <Text
-            t9={size !== ButtonSize.small}
-            t12={size === ButtonSize.small}
-            style={textStyle}
-            color={textColor}
-            i18n={i18n}>
-            {title}
-          </Text>
-          {iconRight && (
-            <Icon name={iconRight} color={iconRightColor} style={styles.icon} />
-          )}
-        </>
-      )}
-    </TouchableOpacity>
-  );
-};
+    return (
+      <TouchableOpacity
+        style={containerStyle as ViewStyle}
+        onPress={onPressButton}
+        activeOpacity={0.7}
+        {...props}>
+        {loading ? (
+          <ActivityIndicator size="small" color={colors[Color.textBase3]} />
+        ) : (
+          <>
+            {iconLeft && (
+              <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+            )}
+            {/* @ts-ignore */}
+            <Text
+              t9={size !== ButtonSize.small}
+              t12={size === ButtonSize.small}
+              style={textStyle}
+              color={textColor}
+              i18n={i18n}>
+              {title}
+            </Text>
+            {iconRight && (
+              <Icon
+                name={iconRight}
+                color={iconRightColor}
+                style={styles.icon}
+              />
+            )}
+          </>
+        )}
+      </TouchableOpacity>
+    );
+  },
+);
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',

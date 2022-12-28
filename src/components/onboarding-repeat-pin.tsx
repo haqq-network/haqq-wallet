@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
-import {createTheme, verticalScale} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
+import {verticalScale} from '@app/helpers';
+import {useThematicStyles, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {vibrate} from '@app/services/haptic';
 
@@ -19,6 +19,7 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
   const [error, setError] = useState('');
   const route = useTypedRoute<'onboardingRepeatPin'>();
   const {currentPin} = route.params;
+  const styles = useThematicStyles(stylesObj);
 
   const onKeyboard = useCallback((value: number) => {
     vibrate();
@@ -70,7 +71,7 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginTop: verticalScale(40),

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 interface StakingEmptyProps {
@@ -12,6 +12,7 @@ interface StakingEmptyProps {
 }
 
 export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
+  const styles = useThematicStyles(stylesObj);
   return (
     <>
       <Spacer />
@@ -32,7 +33,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   circleIconContainer: {
     width: 80,
     height: 80,

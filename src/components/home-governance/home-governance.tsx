@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {FlatList, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalsCroppedList, ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType, ProposalsTags} from '@app/variables/proposal';
@@ -89,7 +88,7 @@ export const HomeGovernance = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   tagsContainer: {
     paddingHorizontal: 16,
   },

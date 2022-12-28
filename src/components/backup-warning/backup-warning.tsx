@@ -15,21 +15,20 @@ import {
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
 }
 
 export function BackupWarning({onPressBackup}: BackupWarningProps) {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
 
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../../assets/animations/backup-start-dark.json');
     }
     return require('../../../assets/animations/backup-start-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <PopupContainer style={styles.container}>

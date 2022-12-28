@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -10,7 +10,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
@@ -25,6 +25,7 @@ export const PopupProposalVote = ({
   onChangeVote,
 }: PopupProposalVoteProps) => {
   const [selected, setSelected] = useState(VOTES[0].name);
+  const styles = useThematicStyles(stylesObj);
 
   const handleChange = (vote: VoteNamesType) => {
     setSelected(vote);
@@ -68,7 +69,7 @@ export const PopupProposalVote = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   sub: {
     marginHorizontal: 16,
     marginVertical: 35,

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 
 import {Box, DataContent, Text} from './ui';
 
@@ -15,19 +15,20 @@ export type AddressRowProps = {
   onPress?: (address: string) => void;
 };
 export const AddressRow = ({item, onPress}: AddressRowProps) => {
+  const styles = useThematicStyles(stylesObj);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         onPress?.(item.account);
       }}>
-      <View style={page.container}>
-        <Box style={page.badge}>
+      <View style={styles.container}>
+        <Box style={styles.badge}>
           <Text t13 color={Color.textBase2}>
             {item.name.slice(0, 1)}
           </Text>
         </Box>
         <DataContent
-          style={page.info}
+          style={styles.info}
           title={item.name}
           subtitle={shortAddress(item.account)}
         />
@@ -36,7 +37,7 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',

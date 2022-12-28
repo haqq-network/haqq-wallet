@@ -1,10 +1,14 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {Animated, Dimensions, TouchableWithoutFeedback} from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {asyncTiming, sleep} from '@app/utils';
 import {SHADOW_COLOR_2} from '@app/variables/common';
 
@@ -56,7 +60,7 @@ export const NotificationMessage = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     marginVertical: 4,
     maxWidth: Dimensions.get('window').width - 40,

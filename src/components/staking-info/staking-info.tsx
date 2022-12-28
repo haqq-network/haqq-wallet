@@ -18,9 +18,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
@@ -55,6 +56,7 @@ export const StakingInfo = ({
   withdrawDelegatorRewardProgress,
 }: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
+  const styles = useThematicStyles(stylesObj);
 
   const [labelColor, textColor, isActive] = useMemo(() => {
     switch (localStatus) {
@@ -233,7 +235,7 @@ export const StakingInfo = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   contentContainer: {
     alignItems: 'center',
   },

@@ -8,14 +8,12 @@ import React, {
 
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie from 'lottie-react-native';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {cleanNumber} from '@app/utils';
 import {IS_IOS} from '@app/variables/common';
 
@@ -35,7 +33,7 @@ export const StakingActive = forwardRef(
     {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
     ref,
   ) => {
-    const theme = useTheme();
+    const {isDarkSystem} = useTheme();
     const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
     const lottieRef = useRef<AnimatedLottieView>(null);
     const isEndRef = useRef<Boolean>(false);
@@ -43,30 +41,30 @@ export const StakingActive = forwardRef(
     const animationFile = useMemo(() => {
       switch (true) {
         case isReceiveAnimation:
-          if (theme === AppTheme.dark) {
+          if (isDarkSystem) {
             return require('../../../assets/animations/get-reward-dark.json');
           }
           return require('../../../assets/animations/get-reward-light.json');
         case stakedSum > 100:
-          if (theme === AppTheme.dark) {
+          if (isDarkSystem) {
             return require('../../../assets/animations/stake-dark-100.json');
           }
 
           return require('../../../assets/animations/stake-light-100.json');
         case stakedSum > 20:
-          if (theme === AppTheme.dark) {
+          if (isDarkSystem) {
             return require('../../../assets/animations/stake-dark-20-100.json');
           }
 
           return require('../../../assets/animations/stake-light-20-100.json');
         default:
-          if (theme === AppTheme.dark) {
+          if (isDarkSystem) {
             return require('../../../assets/animations/stake-dark-0-20.json');
           }
 
           return require('../../../assets/animations/stake-light-0-20.json');
       }
-    }, [isReceiveAnimation, theme, stakedSum]);
+    }, [isReceiveAnimation, isDarkSystem, stakedSum]);
 
     useImperativeHandle(ref, () => ({
       getReward() {
@@ -131,7 +129,7 @@ export const StakingActive = forwardRef(
   },
 );
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   circleIconContainer: {
     width: 80,
     height: 80,

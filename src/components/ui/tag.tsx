@@ -1,10 +1,10 @@
 import React, {memo} from 'react';
 
-import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 const TagColors = {
@@ -31,11 +31,12 @@ export const Tag = memo(
     onPress,
   }: TagProps) => {
     const variant = TagColors[tagVariant];
+    const {colors} = useTheme();
 
     const container = [
       styles.container,
       {
-        backgroundColor: getColor(variant.bg),
+        backgroundColor: colors[variant.bg],
         marginHorizontal,
       },
       style,
@@ -52,7 +53,7 @@ export const Tag = memo(
   },
 );
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     paddingVertical: 7,

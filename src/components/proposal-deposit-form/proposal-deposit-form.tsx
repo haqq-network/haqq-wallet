@@ -1,5 +1,7 @@
 import React, {useCallback} from 'react';
 
+import {StyleSheet} from 'react-native';
+
 import {
   Button,
   ButtonVariant,
@@ -8,7 +10,6 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
-import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {WEI} from '@app/variables/common';
@@ -59,7 +60,7 @@ export const ProposalDepositForm = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,

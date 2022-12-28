@@ -1,6 +1,6 @@
 import React, {forwardRef, useImperativeHandle} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Animated, {
   useAnimatedProps,
   useSharedValue,
@@ -8,13 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Circle} from 'react-native-svg';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
-import {ColorType} from '@app/types';
+import {Color} from '@app/colors';
+import {useTheme} from '@app/hooks';
 
 interface ProgressCircleProps {
   strokeWidth?: number;
-  color?: ColorType;
+  color?: Color;
   children?: React.ReactNode;
 }
 
@@ -35,6 +34,7 @@ export const ProgressCircle = forwardRef(
   ) => {
     const innerRadius = 20 - strokeWidth / 2;
     const circumfrence = 2 * Math.PI * innerRadius;
+    const {colors} = useTheme();
 
     useImperativeHandle(ref, () => ({
       animateTo(percent: number) {
@@ -63,7 +63,7 @@ export const ProgressCircle = forwardRef(
             cx={20}
             cy={20}
             r={19}
-            stroke={getColor(Color.graphicSecond2)}
+            stroke={colors.graphicSecond2}
             strokeWidth={2}
             strokeDasharray="2 4"
           />
@@ -73,7 +73,7 @@ export const ProgressCircle = forwardRef(
             cy={20}
             r={innerRadius}
             fill={'transparent'}
-            stroke={getColor(color)}
+            stroke={colors[color]}
             strokeDasharray={`${circumfrence} ${circumfrence}`}
             strokeWidth={strokeWidth}
             strokeDashoffset={2 * Math.PI * (innerRadius * 0.5)}
@@ -86,7 +86,7 @@ export const ProgressCircle = forwardRef(
   },
 );
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     width: 40,
     height: 40,

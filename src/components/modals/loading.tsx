@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useAndroidSystemColors} from '@app/hooks';
+import {useAndroidSystemColors, useThematicStyles} from '@app/hooks';
 
 export type LoadingModalProps = {
   text?: string;
@@ -13,7 +12,7 @@ export type LoadingModalProps = {
 
 export const LoadingModal = ({text}: LoadingModalProps) => {
   useAndroidSystemColors();
-
+  const styles = useThematicStyles(stylesObj);
   return (
     <View style={styles.container}>
       <Waiting style={styles.waiting} />
@@ -26,7 +25,7 @@ export const LoadingModal = ({text}: LoadingModalProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

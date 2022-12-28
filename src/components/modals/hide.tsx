@@ -1,18 +1,18 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useAndroidSystemColors} from '@app/hooks';
+import {Text} from '@app/components/ui';
+import {useAndroidSystemColors, useThematicStyles} from '@app/hooks';
 
 export const HideModal = () => {
   useAndroidSystemColors();
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <View style={styles.container}>
-      <Icon i120 name="logo" color={Color.graphicBase3} />
+      {/* <Icon i120 name="logo" color={Color.graphicBase3} /> */}
       <Text color={Color.textBase3} t2 center style={styles.text}>
         ISLM Wallet
       </Text>
@@ -20,7 +20,7 @@ export const HideModal = () => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

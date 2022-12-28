@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 
-import {View, ViewProps} from 'react-native';
+import {StyleSheet, View, ViewProps} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color} from '@app/colors';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 import {Text} from './text';
@@ -23,23 +23,22 @@ export type LabeledBlockProps = ViewProps & {
 export const LabeledBlock = ({
   children,
   style,
-  label,
   i18nLabel,
   rightAction,
   variant = LabelBlockVariant.default,
   ...props
 }: LabeledBlockProps) => {
+  const {colors} = useTheme();
   const containerStyle = useMemo(
     () => [
       styles.container,
       {
-        backgroundColor: getColor(
-          variant === LabelBlockVariant.error ? Color.bg7 : Color.bg8,
-        ),
+        backgroundColor:
+          variant === LabelBlockVariant.error ? colors.bg7 : colors.bg8,
       },
       style,
     ],
-    [style, variant],
+    [style, variant, colors],
   );
 
   const placeholderColor = useMemo(() => {
@@ -51,14 +50,7 @@ export const LabeledBlock = ({
   return (
     <View style={containerStyle} {...props}>
       <View style={styles.flex}>
-        {(label || i18nLabel) && (
-          <>
-            {/* @ts-expect-error */}
-            <Text t14 i18n={i18nLabel} color={placeholderColor}>
-              {label}
-            </Text>
-          </>
-        )}
+        {i18nLabel && <Text t14 i18n={i18nLabel} color={placeholderColor} />}
         <View style={styles.inner}>{children}</View>
       </View>
       {rightAction && <View style={styles.sub}>{rightAction}</View>}
@@ -66,7 +58,7 @@ export const LabeledBlock = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     paddingTop: 8,
     paddingBottom: 5,

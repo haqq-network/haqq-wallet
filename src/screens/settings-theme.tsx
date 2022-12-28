@@ -1,15 +1,24 @@
 import React from 'react';
 
+import {ThemeNameType} from '@app/colors';
 import {SettingsTheme} from '@app/components/settings-theme';
-import {useUser} from '@app/hooks';
-import {AppTheme} from '@app/types';
+import {useTheme} from '@app/hooks';
 
 export const SettingsThemeScreen = () => {
-  const user = useUser();
+  const {enableSystemTheme, toggleTheme, name, isSystem} = useTheme();
 
-  const updateTheme = (theme: AppTheme) => {
-    user.theme = theme;
+  const updateTheme = (theme: ThemeNameType | 'system') => {
+    if (theme === 'system') {
+      enableSystemTheme();
+    } else {
+      toggleTheme(theme);
+    }
   };
 
-  return <SettingsTheme theme={user.theme} onChangeTheme={updateTheme} />;
+  return (
+    <SettingsTheme
+      theme={isSystem ? 'system' : name}
+      onChangeTheme={updateTheme}
+    />
+  );
 };

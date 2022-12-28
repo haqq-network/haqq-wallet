@@ -3,13 +3,14 @@ import {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
-import {Color, getColor} from '@app/colors';
+import {useTheme} from '@app/hooks';
 import {IS_ANDROID} from '@app/variables/common';
 
 export const useAndroidSystemColors = () => {
+  const {colors} = useTheme();
   useEffect(() => {
-    const activeColor = getColor(Color.graphicGreen2);
-    const defaultColor = getColor(Color.bg1);
+    const activeColor = colors.graphicGreen2;
+    const defaultColor = colors.bg1;
 
     if (IS_ANDROID) {
       StatusBar.setBackgroundColor(activeColor);
@@ -19,5 +20,5 @@ export const useAndroidSystemColors = () => {
         StatusBar.setBackgroundColor(defaultColor);
       };
     }
-  }, []);
+  }, [colors]);
 };

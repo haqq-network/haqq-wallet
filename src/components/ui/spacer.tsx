@@ -1,8 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View, ViewProps} from 'react-native';
-
-import {createTheme} from '@app/helpers';
+import {StyleSheet, View, ViewProps} from 'react-native';
 
 export type SpacerProps = ViewProps & {
   height?: number;
@@ -42,7 +40,7 @@ export const Spacer = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   flexOne: {flex: 1},
   centered: {justifyContent: 'center'},
 });

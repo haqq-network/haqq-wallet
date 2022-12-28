@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {
   Button,
@@ -11,7 +11,6 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
-import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
@@ -76,7 +75,7 @@ export const StakingDelegateForm = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,

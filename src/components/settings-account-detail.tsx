@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Switch, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Switch, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -12,9 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useWallet} from '@app/hooks';
-import {useTypedRoute} from '@app/hooks/use-typed-route';
+import {useThematicStyles, useTypedRoute, useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 type SettingsAccountDetailProps = {
@@ -29,6 +27,7 @@ export const SettingsAccountDetail = ({
   onToggleIsHidden,
 }: SettingsAccountDetailProps) => {
   const route = useTypedRoute<'settingsAccountDetail'>();
+  const styles = useThematicStyles(stylesObj);
 
   const wallet = useWallet(route.params.address);
   const cardWidth = useWindowDimensions().width - 72;
@@ -85,7 +84,7 @@ export const SettingsAccountDetail = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   card: {
     marginBottom: 12,
   },

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,7 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
@@ -35,17 +35,19 @@ export const ProposalDepositPreview = ({
   onSend,
 }: ProposalDepositPreviewProps) => {
   const feeValue = fee / WEI;
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <ISLMIcon color={colors.graphicGreen1} style={styles.icon} />
       <Text
         t11
         center
         i18n={I18N.proposalDepositTotalAmount}
         color={Color.textBase2}
-        style={styles.subtitle}
       />
+      <Spacer height={4} />
       <Text t3 center style={styles.sum}>
         {cleanNumber(amount.toFixed(4))} ISLM
       </Text>
@@ -54,7 +56,6 @@ export const ProposalDepositPreview = ({
         center
         i18n={I18N.proposalDepositDepositFrom}
         color={Color.textBase2}
-        style={styles.subtitle}
       />
       <Text t10 center style={styles.contact}>
         {title}
@@ -65,7 +66,7 @@ export const ProposalDepositPreview = ({
           <Text t11>{cleanNumber(amount)}</Text>
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
-          <Text t11 color={getColor(Color.textBase1)}>
+          <Text t11 color={Color.textBase1}>
             {feeValue * WEI} aISLM
           </Text>
         </DataView>
@@ -85,7 +86,7 @@ export const ProposalDepositPreview = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,
@@ -93,9 +94,6 @@ const styles = createTheme({
   contact: {
     marginHorizontal: 27.5,
     height: 30,
-  },
-  subtitle: {
-    marginBottom: 4,
   },
   icon: {
     marginBottom: 16,

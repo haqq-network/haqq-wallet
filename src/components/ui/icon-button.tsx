@@ -16,7 +16,7 @@ export const IconButton = ({
   ...props
 }: IconButtonProps) => {
   const containerStyle = useMemo(
-    () => [page.container, style, disabled && page.disabled],
+    () => [styles.container, style, disabled && styles.disabled],
     [style, disabled],
   );
 
@@ -33,7 +33,7 @@ export const IconButton = ({
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',

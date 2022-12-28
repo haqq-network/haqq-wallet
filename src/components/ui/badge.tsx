@@ -1,12 +1,11 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {ColorType} from '@app/types';
 
 export type BadgeValue =
   | {text: string; i18n?: undefined; i18params?: undefined}
@@ -14,8 +13,8 @@ export type BadgeValue =
 
 export type BadgeProps = {
   iconLeftName?: IconsName;
-  labelColor?: ColorType;
-  textColor?: ColorType;
+  labelColor?: Color;
+  textColor?: Color;
   style?: StyleProp<ViewStyle>;
   center?: boolean;
 } & BadgeValue;
@@ -29,13 +28,16 @@ export const Badge = ({
   textColor = Color.textBase3,
   style,
 }: BadgeProps) => {
+  const {colors} = useTheme();
+  const styles = useThematicStyles(stylesObj);
+
   const container = useMemo(
     () => [
       styles.container,
-      labelColor ? {backgroundColor: getColor(labelColor)} : styles.bordered,
+      labelColor ? {backgroundColor: colors[labelColor]} : styles.bordered,
       style,
     ],
-    [labelColor, style],
+    [labelColor, style, colors, styles],
   );
 
   return (
@@ -54,7 +56,7 @@ export const Badge = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignSelf: 'stretch',

@@ -1,9 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 
 import {CardSmall, DataContent, MenuNavigationButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {shortAddress} from '@app/utils';
 
@@ -41,7 +40,7 @@ export const WalletRow = ({item, onPress}: WalletRowProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   info: {
     marginLeft: 12,
     flex: 1,

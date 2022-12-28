@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -10,10 +10,8 @@ import {
   LottieWrap,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {
@@ -25,14 +23,15 @@ export const NotificationPopup = ({
   onClickTurnOn,
   onClickNotNow,
 }: NotificationPopupProps) => {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
+  const styles = useThematicStyles(stylesObj);
 
   const lottieAnimation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../../../assets/animations/notification-popup-dark.json');
     }
     return require('../../../../assets/animations/notification-popup-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <View style={styles.sub}>
@@ -69,7 +68,7 @@ export const NotificationPopup = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   sub: {
     marginHorizontal: 16,
     marginVertical: 35,

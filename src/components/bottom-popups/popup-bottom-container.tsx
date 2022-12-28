@@ -18,8 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
-import {useAndroidStatusBarAnimation} from '@app/hooks';
+import {useAndroidStatusBarAnimation, useThematicStyles} from '@app/hooks';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 const timingOutAnimationConfig: WithTimingConfig = {
@@ -55,6 +54,7 @@ export const BottomPopupContainer = ({
     animatedValueRange: [fullyOpen, fullyClosed],
   });
   const fadeAnim = useSharedValue(fullyClosed);
+  const styles = useThematicStyles(stylesObj);
 
   const fadeOut = useCallback(
     (endCallback?: () => void) => {
@@ -99,7 +99,7 @@ export const BottomPopupContainer = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {flex: 1},
   fullFill: {
     ...StyleSheet.absoluteFillObject,

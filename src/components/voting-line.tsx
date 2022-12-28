@@ -1,6 +1,6 @@
 import React, {forwardRef, memo, useImperativeHandle, useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolateColor,
@@ -10,9 +10,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {getText} from '@app/i18n';
 import {VoteNamesType, VotesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
@@ -33,6 +33,8 @@ const animConfig: WithTimingConfig = {
 
 export const VotingLine = memo(
   forwardRef(({initialVotes, showBottomText}: VotingLineProps, ref) => {
+    const styles = useThematicStyles(stylesObj);
+    const {colors} = useTheme();
     const initialSum =
       Object.values(initialVotes).reduce((a, b) => a + b, 0) / 100;
     const initPercentYes = initialSum && initialVotes.yes / initialSum;
@@ -125,7 +127,7 @@ export const VotingLine = memo(
       };
     }, [selected]);
 
-    const bgLineColor = getColor(Color.graphicSecond1);
+    const bgLineColor = colors.graphicSecond1;
     const lineContainerAnimation = useAnimatedStyle(() => ({
       backgroundColor: interpolateColor(
         emptyLineOpacity.value,
@@ -160,7 +162,7 @@ export const VotingLine = memo(
                   key={name}
                   style={[styles.textItem, !isSelected && styles.withOpacity]}>
                   <View
-                    style={[styles.dot, {backgroundColor: getColor(color)}]}
+                    style={[styles.dot, {backgroundColor: colors[color]}]}
                   />
                   <Text t13 color={Color.textBase1}>
                     {getText(i18n)} {percents[name].toFixed(0)}%
@@ -175,7 +177,7 @@ export const VotingLine = memo(
   }),
 );
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   lineContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

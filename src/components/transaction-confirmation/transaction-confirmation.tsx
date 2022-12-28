@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,7 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {splitAddress} from '@app/utils';
@@ -38,10 +38,12 @@ export const TransactionConfirmation = ({
   onConfirmTransaction,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen2)} style={styles.icon} />
+      <ISLMIcon color={colors.graphicGreen2} style={styles.icon} />
       <Text
         t11
         color={Color.textBase2}
@@ -131,7 +133,7 @@ export const TransactionConfirmation = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,

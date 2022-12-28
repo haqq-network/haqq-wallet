@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {FlatList, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {createTheme} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
@@ -15,11 +15,12 @@ type SettingsAccountsProps = {
 };
 
 export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
+  const {colors} = useTheme();
   if (!rows.length) {
     return (
       <View style={styles.emptyContainer}>
         <NoTransactionsIcon
-          color={getColor(Color.graphicSecond3)}
+          color={colors.graphicSecond3}
           style={styles.space}
         />
         <Text
@@ -41,7 +42,7 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {paddingHorizontal: 20, flex: 1},
   emptyContainer: {
     justifyContent: 'center',

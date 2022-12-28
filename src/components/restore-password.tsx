@@ -2,11 +2,11 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
 import {captureException} from '@app/helpers';
 import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
 import {BottomSheet} from './bottom-sheet';
 import {Button, ButtonVariant, Text} from './ui';
@@ -85,7 +85,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
       onClose={onClosePopup}
       i18nTitle={I18N.restorePasswordForgot}
       closeDistance={closeDistance}>
-      <Text clean style={page.warning}>
+      <Text color={Color.textBase2} t14 style={page.warning}>
         Unfortunately, the password cannot be reset. Try to wait a bit and
         remember the password. If it does not work, then click the ‘Reset wallet
         button and use the backup phrase to restore the wallet. If there is no
@@ -108,8 +108,5 @@ const page = StyleSheet.create({
   },
   warning: {
     marginBottom: 24,
-    fontSize: 14,
-    lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
   },
 });

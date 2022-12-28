@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -12,7 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
@@ -21,6 +21,8 @@ export type TrackActivityProps = {
 };
 
 export const TrackActivity = ({onClick}: TrackActivityProps) => {
+  const styles = useThematicStyles(stylesObj);
+
   return (
     <View style={styles.sub}>
       <Spacer height={4} />
@@ -82,7 +84,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   sub: {
     marginHorizontal: 16,
     marginVertical: 35,

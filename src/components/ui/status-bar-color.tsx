@@ -2,18 +2,24 @@ import React from 'react';
 
 import {StatusBar, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {useTheme} from '@app/hooks';
 
-export const StatusBarColor = ({
-  backgroundColor = getColor(Color.bg1),
-  ...props
-}) => {
+export function StatusBarColor({backgroundColor = Color.bg1, ...props}) {
+  const {colors, isDarkSystem} = useTheme();
+
   return (
-    <View style={[styles.statusBar, {backgroundColor}]}>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    <View
+      style={[styles.statusBar, {backgroundColor: colors[backgroundColor]}]}>
+      <StatusBar
+        translucent
+        barStyle={isDarkSystem ? 'light-content' : 'dark-content'}
+        backgroundColor={colors[backgroundColor]}
+        {...props}
+      />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   statusBar: {

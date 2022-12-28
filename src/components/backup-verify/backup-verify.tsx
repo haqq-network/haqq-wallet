@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {EmptyCell} from '@app/components/backup-verify/empty-cell';
@@ -13,7 +13,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shuffleWords} from '@app/utils';
@@ -127,7 +126,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

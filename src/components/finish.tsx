@@ -12,7 +12,6 @@ import {
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 
 export type FinishProps = {
   title: I18N;
@@ -22,14 +21,14 @@ export type FinishProps = {
 };
 
 export const Finish = ({onFinish, testID, title}: FinishProps) => {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../assets/animations/success-animation-dark.json');
     }
 
     return require('../../assets/animations/success-animation-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <PopupContainer>

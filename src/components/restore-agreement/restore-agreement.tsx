@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -12,10 +12,8 @@ import {
   // Terms,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type RestoreAgreementProps = {
@@ -24,15 +22,15 @@ export type RestoreAgreementProps = {
 };
 
 export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
 
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../../assets/animations/backup-start-dark.json');
     }
 
     return require('../../../assets/animations/backup-start-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -66,7 +64,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
   },

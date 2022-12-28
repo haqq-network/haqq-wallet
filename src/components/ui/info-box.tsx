@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 
 import {Text, TextProps} from './text';
 
@@ -15,6 +15,7 @@ export type InfoBoxProps = {
 };
 
 export const InfoBox = ({children, style, i18n, i18params}: InfoBoxProps) => {
+  const styles = useThematicStyles(stylesObj);
   return (
     <View style={StyleSheet.compose(styles.container as ViewStyle, style)}>
       {/* @ts-expect-error */}
@@ -25,7 +26,7 @@ export const InfoBox = ({children, style, i18n, i18params}: InfoBoxProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     padding: 8,
     borderRadius: 8,

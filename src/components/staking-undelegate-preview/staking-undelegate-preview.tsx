@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -15,7 +15,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -43,6 +43,8 @@ export const StakingUnDelegatePreview = ({
     () => formatDistance(new Date(unboundingTime), new Date(0)),
     [unboundingTime],
   );
+
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <PopupContainer style={styles.container}>
@@ -103,7 +105,7 @@ export const StakingUnDelegatePreview = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,

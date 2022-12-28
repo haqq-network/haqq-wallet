@@ -15,7 +15,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers/create-theme';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 import {ActionsSheetProps} from '.';
@@ -36,6 +36,7 @@ export const ActionsSheet = ({
 }: ActionsSheetProps) => {
   const {height: H} = useWindowDimensions();
   const {bottom} = useSafeAreaInsets();
+  const styles = useThematicStyles(stylesObj);
 
   const fullyOpen = 0;
   const fullyClosed = H * 0.45;
@@ -96,7 +97,7 @@ export const ActionsSheet = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   top: {
     borderRadius: 13,
     backgroundColor: Color.graphicSecond1,

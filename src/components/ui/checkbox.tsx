@@ -6,7 +6,7 @@ import Svg, {Circle, Path} from 'react-native-svg';
 import {
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_GREEN_1,
-} from '../../variables/common';
+} from '@app/variables/common';
 
 const CheckboxEmpty = ({color}: {color: string}) => (
   <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>

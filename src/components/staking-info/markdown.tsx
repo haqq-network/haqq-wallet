@@ -1,16 +1,16 @@
 import React, {ReactNode} from 'react';
 
+import {StyleSheet} from 'react-native';
 import RNMarkdown, {ASTNode} from 'react-native-markdown-display';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 const rules = {
   paragraph: (node: ASTNode, children: ReactNode[]) => {
     return (
-      <Text key={node.key} t14 color={getColor(Color.textBase2)}>
+      <Text key={node.key} t14 color={Color.textBase2}>
         {children}
       </Text>
     );
@@ -29,8 +29,7 @@ export const Markdown = ({children}: MarkdownProps) => {
   );
 };
 
-const styles = createTheme({
-  // eslint-disable-next-line react-native/no-unused-styles
+const styles = StyleSheet.create({
   body: {
     width: WINDOW_WIDTH - 40,
   },

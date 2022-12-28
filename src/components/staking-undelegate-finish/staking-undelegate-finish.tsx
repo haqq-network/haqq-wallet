@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,7 +16,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -40,6 +41,8 @@ export const StakingUnDelegateFinish = ({
     const url = `https://haqq.explorers.guru/transaction/${txhash}`;
     await openURL(url);
   };
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   return (
     <PopupContainer style={styles.container}>
@@ -58,7 +61,7 @@ export const StakingUnDelegateFinish = ({
         style={styles.title}
         color={Color.textGreen1}
       />
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <ISLMIcon color={colors.graphicGreen1} style={styles.icon} />
       <Text
         t11
         center
@@ -101,7 +104,7 @@ export const StakingUnDelegateFinish = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

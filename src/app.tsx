@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, {useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
@@ -15,25 +5,15 @@ import {
   DefaultTheme,
   NavigationContainer,
   StackActions,
-  Theme,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AppState, Linking} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
-import {
-  AppContext,
-  TransactionsContext,
-  WalletsContext,
-  app,
-  transactions,
-  wallets,
-} from '@app/contexts';
+import {app, transactions, wallets} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme, hideModal, showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
@@ -44,19 +24,16 @@ import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
 import {
   ActionSheetType,
-  AppTheme,
   PresentationNavigation,
   ScreenOptionType,
   StackPresentationTypes,
 } from '@app/types';
 import {sleep} from '@app/utils';
 
-import {StatusBarColor} from './components/ui';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
-import {Modals} from './screens/modals';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
@@ -96,14 +73,6 @@ const screenOptions: ScreenOptionType = {
 
 const Stack = createStackNavigator();
 
-const appTheme = createTheme({
-  colors: {
-    ...DefaultTheme.colors,
-    primary: Color.graphicGreen1,
-    background: Color.bg1,
-  },
-});
-
 const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
   animation: 'fade',
@@ -125,11 +94,18 @@ const withoutHeader = {
 };
 
 export const App = () => {
-  const theme = useTheme();
+  const {colors, isDarkSystem} = useTheme();
 
   const navTheme = useMemo(
-    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
-    [theme],
+    () => ({
+      dark: isDarkSystem,
+      colors: {
+        ...DefaultTheme.colors,
+        primary: colors.graphicGreen1,
+        background: colors.bg1,
+      },
+    }),
+    [isDarkSystem, colors],
   );
 
   useEffect(() => {
@@ -207,194 +183,177 @@ export const App = () => {
     }
   }, [initialized]);
 
-  // @ts-ignore
   return (
-    <SafeAreaProvider>
-      <AppContext.Provider value={app}>
-        <StatusBarColor
-          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor={getColor(Color.bg1)}
+    <NavigationContainer ref={navigator} theme={navTheme}>
+      <Stack.Navigator screenOptions={basicScreenOptions}>
+        <Stack.Screen name="home" component={HomeScreen} />
+        <Stack.Screen name="welcome" component={WelcomeScreen} />
+
+        <Stack.Group screenOptions={stackScreenOptions}>
+          <Stack.Screen name="backup" component={BackupScreen} />
+          <Stack.Screen name="signin" component={SignInScreen} />
+          <Stack.Screen name="signup" component={SignUpScreen} />
+          <Stack.Screen name="transaction" component={TransactionScreen} />
+          <Stack.Screen name="restore" component={RestoreScreen} />
+          <Stack.Screen name="create" component={CreateScreen} />
+          <Stack.Screen name="ledger" component={LedgerScreen} />
+          <Stack.Screen
+            name="stakingDelegate"
+            component={StakingDelegateScreen}
+          />
+          <Stack.Screen
+            name="stakingUnDelegate"
+            component={StakingUnDelegateScreen}
+          />
+          <Stack.Screen
+            name="proposalDeposit"
+            component={ProposalDepositScreen}
+          />
+        </Stack.Group>
+        <Stack.Screen
+          name="backupNotification"
+          component={BackupNotificationScreen}
+          options={actionsSheet}
         />
-        <TransactionsContext.Provider value={transactions}>
-          <WalletsContext.Provider value={wallets}>
-            <NavigationContainer ref={navigator} theme={navTheme}>
-              <Stack.Navigator screenOptions={basicScreenOptions}>
-                <Stack.Screen name="home" component={HomeScreen} />
-                <Stack.Screen name="welcome" component={WelcomeScreen} />
+        <Stack.Screen
+          name="notificationPopup"
+          component={NotificationPopupScreen}
+          options={actionsSheet}
+        />
+        <Stack.Screen
+          name="trackActivity"
+          component={TrackActivityScreen}
+          options={actionsSheet}
+        />
+        <Stack.Screen
+          name="transactionDetail"
+          component={TransactionDetailScreen}
+          options={actionsSheet}
+        />
+        <Stack.Group screenOptions={screenOptions}>
+          <Stack.Screen
+            name="settingsAccounts"
+            component={SettingsAccountsScreen}
+            options={{
+              title: 'Manage accounts',
+            }}
+          />
+          <Stack.Screen
+            name="settingsAccountDetail"
+            component={SettingsAccountDetailScreen}
+            options={withoutHeader}
+          />
+          <Stack.Screen
+            name="settingsAccountStyle"
+            component={SettingsAccountStyleScreen}
+            options={{
+              title: 'Change style',
+            }}
+          />
+          <Stack.Screen
+            name="settingsAddressBook"
+            component={SettingsAddressBookScreen}
+            options={{
+              title: 'Address book',
+            }}
+          />
+          <Stack.Screen
+            name="settingsLanguage"
+            component={SettingsLanguageScreen}
+            options={{
+              title: 'Language',
+            }}
+          />
+          <Stack.Screen
+            name="settingsSecurity"
+            component={SettingsSecurityScreen}
+            options={{
+              title: 'Security',
+            }}
+          />
+          <Stack.Screen
+            name="settingsProviders"
+            component={SettingsProvidersScreen}
+            options={withoutHeader}
+          />
+          <Stack.Screen
+            name="settingsSecurityPin"
+            component={SettingsSecurityPinScreen}
+            options={{
+              title: 'Change PIN',
+            }}
+          />
+          <Stack.Screen
+            name="settingsFaq"
+            component={SettingsFAQScreen}
+            options={{
+              title: 'Security',
+            }}
+          />
+          <Stack.Screen
+            name="settingsAbout"
+            component={SettingsAboutScreen}
+            options={{
+              title: 'About',
+            }}
+          />
+          <Stack.Screen
+            name="settingsTest"
+            component={SettingsTestScreen}
+            options={{
+              title: 'Test',
+            }}
+          />
+          <Stack.Screen
+            name="settingsAccountEdit"
+            component={SettingsAccountEditScreen}
+            options={withoutHeader}
+          />
+          <Stack.Screen
+            name="settingsContactEdit"
+            component={SettingsContactEditScreen}
+            options={withoutHeader}
+          />
 
-                <Stack.Group screenOptions={stackScreenOptions}>
-                  <Stack.Screen name="backup" component={BackupScreen} />
-                  <Stack.Screen name="signin" component={SignInScreen} />
-                  <Stack.Screen name="signup" component={SignUpScreen} />
-                  <Stack.Screen
-                    name="transaction"
-                    component={TransactionScreen}
-                  />
-                  <Stack.Screen name="restore" component={RestoreScreen} />
-                  <Stack.Screen name="create" component={CreateScreen} />
-                  <Stack.Screen name="ledger" component={LedgerScreen} />
-                  <Stack.Screen
-                    name="stakingDelegate"
-                    component={StakingDelegateScreen}
-                  />
-                  <Stack.Screen
-                    name="stakingUnDelegate"
-                    component={StakingUnDelegateScreen}
-                  />
-                  <Stack.Screen
-                    name="proposalDeposit"
-                    component={ProposalDepositScreen}
-                  />
-                </Stack.Group>
-                <Stack.Screen
-                  name="backupNotification"
-                  component={BackupNotificationScreen}
-                  options={actionsSheet}
-                />
-                <Stack.Screen
-                  name="notificationPopup"
-                  component={NotificationPopupScreen}
-                  options={actionsSheet}
-                />
-                <Stack.Screen
-                  name="trackActivity"
-                  component={TrackActivityScreen}
-                  options={actionsSheet}
-                />
-                <Stack.Screen
-                  name="transactionDetail"
-                  component={TransactionDetailScreen}
-                  options={actionsSheet}
-                />
-                <Stack.Group screenOptions={screenOptions}>
-                  <Stack.Screen
-                    name="settingsAccounts"
-                    component={SettingsAccountsScreen}
-                    options={{
-                      title: 'Manage accounts',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsAccountDetail"
-                    component={SettingsAccountDetailScreen}
-                    options={withoutHeader}
-                  />
-                  <Stack.Screen
-                    name="settingsAccountStyle"
-                    component={SettingsAccountStyleScreen}
-                    options={{
-                      title: 'Change style',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsAddressBook"
-                    component={SettingsAddressBookScreen}
-                    options={{
-                      title: 'Address book',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsLanguage"
-                    component={SettingsLanguageScreen}
-                    options={{
-                      title: 'Language',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsSecurity"
-                    component={SettingsSecurityScreen}
-                    options={{
-                      title: 'Security',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsProviders"
-                    component={SettingsProvidersScreen}
-                    options={withoutHeader}
-                  />
-                  <Stack.Screen
-                    name="settingsSecurityPin"
-                    component={SettingsSecurityPinScreen}
-                    options={{
-                      title: 'Change PIN',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsFaq"
-                    component={SettingsFAQScreen}
-                    options={{
-                      title: 'Security',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsAbout"
-                    component={SettingsAboutScreen}
-                    options={{
-                      title: 'About',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsTest"
-                    component={SettingsTestScreen}
-                    options={{
-                      title: 'Test',
-                    }}
-                  />
-                  <Stack.Screen
-                    name="settingsAccountEdit"
-                    component={SettingsAccountEditScreen}
-                    options={withoutHeader}
-                  />
-                  <Stack.Screen
-                    name="settingsContactEdit"
-                    component={SettingsContactEditScreen}
-                    options={withoutHeader}
-                  />
-
-                  <Stack.Screen
-                    name="settingsProviderForm"
-                    component={SettingsProviderEditScreen}
-                    options={withoutHeader}
-                  />
-                  <Stack.Screen
-                    name="settingsTheme"
-                    component={SettingsThemeScreen}
-                    options={{
-                      title: getText(I18N.settingsThemeScreen),
-                    }}
-                  />
-                </Stack.Group>
-                <Stack.Group screenOptions={screenOptions}>
-                  <Stack.Screen
-                    name="stakingValidators"
-                    component={StakingValidatorsScreen}
-                    options={{
-                      title: getText(I18N.stakingValidators),
-                    }}
-                  />
-                  <Stack.Screen
-                    name="stakingInfo"
-                    component={StakingInfoScreen}
-                    options={{
-                      title: getText(I18N.stakingInfo),
-                    }}
-                  />
-                </Stack.Group>
-                <Stack.Group screenOptions={screenOptions}>
-                  <Stack.Screen
-                    name="proposal"
-                    component={ProposalScreen}
-                    options={{
-                      title: getText(I18N.proposalTitle),
-                    }}
-                  />
-                </Stack.Group>
-              </Stack.Navigator>
-            </NavigationContainer>
-            <Modals initialModal={{type: 'splash'}} />
-          </WalletsContext.Provider>
-        </TransactionsContext.Provider>
-      </AppContext.Provider>
-    </SafeAreaProvider>
+          <Stack.Screen
+            name="settingsProviderForm"
+            component={SettingsProviderEditScreen}
+            options={withoutHeader}
+          />
+          <Stack.Screen
+            name="settingsTheme"
+            component={SettingsThemeScreen}
+            options={{
+              title: getText(I18N.settingsThemeScreen),
+            }}
+          />
+        </Stack.Group>
+        <Stack.Group screenOptions={screenOptions}>
+          <Stack.Screen
+            name="stakingValidators"
+            component={StakingValidatorsScreen}
+            options={{
+              title: getText(I18N.stakingValidators),
+            }}
+          />
+          <Stack.Screen
+            name="stakingInfo"
+            component={StakingInfoScreen}
+            options={{
+              title: getText(I18N.stakingInfo),
+            }}
+          />
+        </Stack.Group>
+        <Stack.Group screenOptions={screenOptions}>
+          <Stack.Screen
+            name="proposal"
+            component={ProposalScreen}
+            options={{
+              title: getText(I18N.proposalTitle),
+            }}
+          />
+        </Stack.Group>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };

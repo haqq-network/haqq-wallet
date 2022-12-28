@@ -4,7 +4,6 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
 
@@ -51,7 +50,7 @@ export function TextSum({
   );
 }
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },

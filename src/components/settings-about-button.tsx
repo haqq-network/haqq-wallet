@@ -1,8 +1,11 @@
 import React, {useCallback} from 'react';
 
+import {StyleSheet} from 'react-native';
+
 import {Color} from '@app/colors';
 import {Icon, IconButton, IconsName, Spacer, Text} from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 type SettingsAboutButtonProps = {
@@ -21,6 +24,7 @@ export const SettingsAboutButton = ({
   const onPress = useCallback(() => {
     openURL(url);
   }, [url]);
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <IconButton onPress={onPress} style={styles.button}>
@@ -32,7 +36,7 @@ export const SettingsAboutButton = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   button: {
     paddingHorizontal: 20,
     paddingVertical: 12,

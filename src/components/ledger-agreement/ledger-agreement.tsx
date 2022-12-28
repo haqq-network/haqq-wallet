@@ -13,7 +13,6 @@ import {
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {WINDOW_WIDTH} from '@app/variables/common';
 // import {Terms} from '../ui/terms';
 
@@ -22,14 +21,14 @@ export type LedgerAgreementProps = {
 };
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
 
   const lottieAnimation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../../assets/animations/body-ledger-dark.json');
     }
     return require('../../../assets/animations/body-ledger-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <PopupContainer style={page.container}>

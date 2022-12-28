@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 import {format} from 'date-fns';
-import {ScrollView, View, useWindowDimensions} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
-import {useApp, useCosmos, useWalletsList} from '@app/hooks';
+import {showModal} from '@app/helpers';
+import {useApp, useCosmos, useThematicStyles, useWalletsList} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   GovernanceVoting,
@@ -34,6 +34,7 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
   const voteSelectedRef = useRef<VoteNamesType>();
   const [vote, setVote] = useState<VoteNamesType>();
   const [collectedDeposit, setCollectedDeposit] = useState(0);
+  const styles = useThematicStyles(stylesObj);
 
   const cosmos = useCosmos();
   const app = useApp();
@@ -242,7 +243,7 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
   );
 }
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

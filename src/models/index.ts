@@ -1,5 +1,12 @@
 import Realm from 'realm';
 
+import {WalletType} from '@app/types';
+import {
+  CARD_DEFAULT_STYLE,
+  ETH_HD_PATH,
+  TEST_NETWORK,
+} from '@app/variables/common';
+
 import {Contact} from './contact';
 import {GovernanceVoting} from './governance-voting';
 import {Provider} from './provider';
@@ -7,13 +14,6 @@ import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
 import {WalletRealm} from './wallet';
-
-import {AppTheme, WalletType} from '../types';
-import {
-  CARD_DEFAULT_STYLE,
-  ETH_HD_PATH,
-  TEST_NETWORK,
-} from '../variables/common';
 
 export const realm = new Realm({
   schema: [
@@ -25,7 +25,7 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
   ],
-  schemaVersion: 35,
+  schemaVersion: 36,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -117,7 +117,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.theme = AppTheme.light;
+        newObject.theme = 'light';
       }
     }
 

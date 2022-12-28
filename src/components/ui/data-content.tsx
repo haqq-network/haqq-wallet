@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {View, ViewStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 export type DataContentProps = {
@@ -68,7 +67,7 @@ export const DataContent = ({
     </View>
   );
 };
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     paddingVertical: 16,
   },

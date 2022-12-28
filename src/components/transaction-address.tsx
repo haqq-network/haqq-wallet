@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -16,7 +16,6 @@ import {
   Spacer,
   TextField,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
 import {useApp} from '@app/hooks';
@@ -151,7 +150,7 @@ export const TransactionAddress = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   input: {
     marginBottom: 12,
     marginHorizontal: 20,

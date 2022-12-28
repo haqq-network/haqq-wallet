@@ -2,7 +2,8 @@ import React, {useMemo} from 'react';
 
 import {Image, ImageStyle, StyleProp, StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {useTheme} from '@app/hooks';
 
 export enum IconsName {
   address_book = 'address_book',
@@ -83,11 +84,12 @@ export type IconSize =
 
 export type IconProps = {
   name: IconsName | keyof typeof IconsName;
-  color: string | Color;
+  color: Color;
   style?: StyleProp<ImageStyle>;
 } & IconSize;
 
-export const Icon = ({name, style, color, ...props}: IconProps) => {
+export function Icon({name, style, color, ...props}: IconProps) {
+  const {colors} = useTheme();
   const container = useMemo(
     () =>
       StyleSheet.flatten([
@@ -104,13 +106,13 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i80' in props && styles.i80Container,
         'i120' in props && styles.i120Container,
         style,
-        {tintColor: getColor(color)},
+        {tintColor: colors[color]},
       ]),
-    [color, props, style],
+    [color, colors, props, style],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
   return <Image source={icon} style={container} />;
-};
+}
 
 const styles = StyleSheet.create({
   i120Container: {

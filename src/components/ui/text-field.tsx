@@ -4,6 +4,7 @@ import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   Pressable,
+  StyleSheet,
   TextInput,
   TextInputContentSizeChangeEventData,
   TextInputFocusEventData,
@@ -18,10 +19,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables/common';
 
@@ -62,6 +63,9 @@ export const TextField: React.FC<Props> = memo(
     const left = useSharedValue(40);
     const height = useSharedValue(lines * 22 + 36);
     const focusAnim = useSharedValue(!value || autoFocus ? 0 : 1);
+
+    const styles = useThematicStyles(stylesObj);
+    const {colors} = useTheme();
 
     const onLayout = useCallback(
       (e: LayoutChangeEvent) => {
@@ -109,7 +113,7 @@ export const TextField: React.FC<Props> = memo(
       });
     }, [value, focusAnim, isFocused]);
 
-    let color = getColor(error ? Color.textRed1 : Color.textBase2);
+    let color = error ? Color.textRed1 : Color.textBase2;
 
     const labelAnimStyle = useAnimatedStyle(
       () => ({
@@ -153,11 +157,11 @@ export const TextField: React.FC<Props> = memo(
               />
             )}
             <TextInput
-              selectionColor={getColor(Color.textGreen1)}
+              selectionColor={colors.textGreen1}
               allowFontScaling={false}
               style={styles.input}
               ref={inputRef}
-              placeholderTextColor={getColor(Color.textBase2)}
+              placeholderTextColor={colors.textBase2}
               {...restOfProps}
               value={value}
               multiline={multiline}
@@ -193,7 +197,7 @@ export const TextField: React.FC<Props> = memo(
   },
 );
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     minHeight: 58,
     paddingHorizontal: 16,

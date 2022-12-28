@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -11,8 +11,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useTypedNavigation} from '@app/hooks';
+import {useThematicStyles, useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 
@@ -20,6 +19,7 @@ export type BalanceProps = {};
 export const WalletCreate = ({}: BalanceProps) => {
   const navigation = useTypedNavigation();
   const cardWidth = useWindowDimensions().width - 40;
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <View
@@ -76,7 +76,7 @@ export const WalletCreate = ({}: BalanceProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
 

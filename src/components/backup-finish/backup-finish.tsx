@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 
-import {useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 import {
   Button,
@@ -10,30 +10,28 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {AppTheme} from '@app/types';
 
 type BackupFinishProps = {
   onSubmit: () => void;
 };
 
 export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
-  const theme = useTheme();
+  const {isDarkSystem} = useTheme();
   const animationSize = useWindowDimensions().width - 116;
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
 
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (isDarkSystem) {
       return require('../../../assets/animations/backup-success-dark.json');
     }
 
     return require('../../../assets/animations/backup-success-light.json');
-  }, [theme]);
+  }, [isDarkSystem]);
 
   return (
     <PopupContainer style={page.popupContainer}>
@@ -57,7 +55,7 @@ export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
   );
 };
 
-const page = createTheme({
+const page = StyleSheet.create({
   popupContainer: {marginHorizontal: 20},
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},

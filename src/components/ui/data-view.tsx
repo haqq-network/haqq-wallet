@@ -1,9 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 import {Text} from './text';
@@ -28,7 +27,7 @@ export const DataView = ({label, i18n, children, style}: DataViewProps) => {
   );
 };
 
-const page = createTheme({
+const page = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
