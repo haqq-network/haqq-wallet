@@ -14,7 +14,7 @@ export const HideModal = () => {
     <View style={styles.container}>
       <Icon i120 name="logo" color={Color.graphicBase3} />
       <Text color={Color.textBase3} t2 center style={styles.text}>
-        Haqq Wallet
+        HAQQ Wallet
       </Text>
     </View>
   );
