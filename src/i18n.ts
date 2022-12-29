@@ -475,9 +475,9 @@ const en: Record<I18N, string> = {
   [I18N.transactionLedgerBluetoothDisabled]: 'No access to Bluetooth',
   [I18N.transactionLedgerBluetoothConfirmation]:
     'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
-  [I18N.createAgreementTitle]: 'Islm - DeFi Wallet',
+  [I18N.createAgreementTitle]: 'Haqq - DeFi Wallet',
   [I18N.createAgreementText]:
-    'Islm Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the Haqq Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
+    'Haqq Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the Haqq Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
   [I18N.createAgreementAgree]: 'Agree',
   [I18N.termsAgreementFirst]: 'By clicking Agree you agree to ',
   [I18N.termsOfService]: 'Terms of Service',
@@ -497,7 +497,7 @@ const en: Record<I18N, string> = {
   [I18N.restorePasswordForgot]: 'Forgot your password?',
   [I18N.ledgerAgreementTitle]: 'Connect your Ledger',
   [I18N.ledgerAgreementText]:
-    'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
+    'If you have a Ledger Nano X, then you can connect it via Bluetooth to Haqq Wallet. You will be able to manage funds from Ledger using Islm Wallet',
   [I18N.ledgerAgreementAgree]: 'Connect',
   [I18N.ledgerAccountsAdd]: 'Add',
   [I18N.ledgerAccountsAdded]: 'Added',
@@ -523,7 +523,7 @@ const en: Record<I18N, string> = {
     'The app does not have access to your camera. Please go to your phone settings and allow the app to use camera. Without this, we will not be able to scan QR Code',
   [I18N.modalQRSendFunds]: 'Send funds from',
   [I18N.modalDetailsQRWarning]:
-    'Only ISLM related assets on HAQQ network are supported.',
+    'Only ISLM related assets on Haqq network are supported.',
   [I18N.onboardingFinishCreate]:
     'Congratulations!\nYou have successfully added a new account',
   [I18N.onboardingFinishRecover]:
@@ -543,7 +543,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionAddressError]: 'Incorrect address',
   [I18N.transactionAddressLabel]: 'Send to',
   [I18N.transactionsEmpty]: 'No transactions',
-  [I18N.trackActivityTitle]: 'Allow ISLM Wallet track your activity',
+  [I18N.trackActivityTitle]: 'Allow Haqq Wallet track your activity',
   [I18N.trackActivityImprovement]: 'Improvement',
   [I18N.trackActivityImprovementDescription]:
     'This will help us to collect more information about the problems of the application',
@@ -591,7 +591,7 @@ const en: Record<I18N, string> = {
   [I18N.backupNotificationAlertTitle]: 'Proceed without backup?',
   [I18N.backupNotificationAlertDescription]:
     'If you lose access to your wallet, we will not be able to restore your account if you do not make a backup',
-  [I18N.modalPinTitle]: 'Welcome to ISLM Wallet',
+  [I18N.modalPinTitle]: 'Welcome to Haqq Wallet',
   [I18N.notificationCopied]: 'Copied',
   [I18N.notificationAccountDeleted]: 'The account has been deleted',
   [I18N.notificationAccountHidden]: 'The account was hidden',
@@ -712,7 +712,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsSecurityBiometry]: 'Use {{biometry}} to unlock the app',
   [I18N.SettingsSecurityChangePin]: 'Change PIN',
   [I18N.setttingsSecurityEnterPin]: 'Enter new PIN',
-  [I18N.settingsSecurityWalletPin]: 'Enter ISLM Wallet PIN',
+  [I18N.settingsSecurityWalletPin]: 'Enter Haqq Wallet PIN',
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.stakingValidators]: 'Validators list',
