@@ -14,37 +14,35 @@ import {WalletType} from '@app/types';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'transactionConfirmation'>();
+  const {params} = useTypedRoute<'transactionConfirmation'>();
 
   const user = useUser();
-  const wallet = useWallet(route.params.from);
+  const wallet = useWallet(params.from);
   const contacts = useContacts();
   const contact = useMemo(
-    () => contacts.getContact(route.params.to),
-    [contacts, route.params.to],
+    () => contacts.getContact(params.to),
+    [contacts, params.to],
   );
 
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? 0);
+  const [fee, setFee] = useState(params.fee ?? 0);
 
   useEffect(() => {
-    EthNetwork.estimateTransaction(
-      route.params.from,
-      route.params.to,
-      route.params.amount,
-    ).then(result => setFee(result.fee));
-  }, [route.params.from, route.params.to, route.params.amount]);
+    EthNetwork.estimateTransaction(params.from, params.to, params.amount).then(
+      result => setFee(result.fee),
+    );
+  }, [params.from, params.to, params.amount]);
 
   const onDoneLedgerBt = useCallback(
     () =>
       navigation.navigate('transactionLedger', {
-        from: route.params.from,
-        to: route.params.to,
-        amount: route.params.amount,
+        from: params.from,
+        to: params.to,
+        amount: params.amount,
         fee: fee,
       }),
-    [fee, navigation, route.params.amount, route.params.from, route.params.to],
+    [fee, navigation, params.amount, params.from, params.to],
   );
 
   const onConfirmTransaction = useCallback(async () => {
@@ -61,8 +59,8 @@ export const TransactionConfirmationScreen = () => {
 
         const transaction = await ethNetworkProvider.sendTransaction(
           wallet.transport,
-          route.params.to,
-          route.params.amount,
+          params.to,
+          params.amount,
         );
 
         if (transaction) {
@@ -84,8 +82,8 @@ export const TransactionConfirmationScreen = () => {
     fee,
     navigation,
     onDoneLedgerBt,
-    route.params.amount,
-    route.params.to,
+    params.amount,
+    params.to,
     user.providerId,
     wallet,
   ]);
@@ -101,8 +99,8 @@ export const TransactionConfirmationScreen = () => {
       error={error}
       disabled={disabled}
       contact={contact}
-      to={route.params.to}
-      amount={route.params.amount}
+      to={params.to}
+      amount={params.amount}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
     />

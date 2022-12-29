@@ -12,11 +12,11 @@ import {generateUUID} from '@app/utils';
 
 export const TransactionSumScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'transactionSum'>();
+  const {params} = useTypedRoute<'transactionSum'>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
   const contacts = useContacts();
-  const [to, setTo] = useState(route.params.to);
+  const [to, setTo] = useState(params.to);
 
   const [balance, setBalance] = useState(0);
   const [fee, setFee] = useState(0);
@@ -38,12 +38,12 @@ export const TransactionSumScreen = () => {
     (amount: number) => {
       navigation.navigate('transactionConfirmation', {
         fee,
-        from: route.params.from,
+        from: params.from,
         to,
         amount,
       });
     },
-    [fee, navigation, route.params.from, to],
+    [fee, navigation, params.from, to],
   );
 
   const onContact = useCallback(() => {
@@ -54,16 +54,16 @@ export const TransactionSumScreen = () => {
   }, [event, navigation, to]);
 
   useEffect(() => {
-    EthNetwork.getBalance(route.params.from)
+    EthNetwork.getBalance(params.from)
       .then(b => {
         setBalance(b);
         return b;
       })
-      .then(b => EthNetwork.estimateTransaction(route.params.from, to, b))
+      .then(b => EthNetwork.estimateTransaction(params.from, to, b))
       .then(estimateFee => {
         setFee(estimateFee.fee);
       });
-  }, [route.params.from, to]);
+  }, [params.from, to]);
 
   return (
     <TransactionSum
@@ -71,7 +71,7 @@ export const TransactionSumScreen = () => {
       balance={balance}
       fee={fee}
       to={to}
-      from={route.params.from}
+      from={params.from}
       onAmount={onAmount}
       onContact={onContact}
     />
