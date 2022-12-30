@@ -506,4 +506,5 @@ export type StakingParamsResponse = {
 export type ProposalsCroppedList = {
   id: number;
   status: string;
+  title: string;
 }[];
