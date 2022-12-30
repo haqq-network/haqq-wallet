@@ -1,8 +1,9 @@
 import React from 'react';
 
-import {PinGuard} from '@app/components/pin-guard';
 import {SettingsSecurity} from '@app/components/settings-security';
 import {useTypedNavigation} from '@app/hooks';
+
+import {PinGuardScreen} from './pin-guard';
 
 export const SettingsSecurityScreen = () => {
   const navigation = useTypedNavigation();
@@ -12,8 +13,8 @@ export const SettingsSecurityScreen = () => {
   };
 
   return (
-    <PinGuard>
+    <PinGuardScreen>
       <SettingsSecurity onSubmit={onSubmit} />
-    </PinGuard>
+    </PinGuardScreen>
   );
 };

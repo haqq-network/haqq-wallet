@@ -1,22 +1,26 @@
 import React, {useState} from 'react';
 
-import {PinGuard} from '@app/components/pin-guard';
 import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
-import {app, wallets} from '@app/contexts';
-import {useTypedRoute} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedRoute, useWallet} from '@app/hooks';
+
+import {PinGuardScreen} from './pin-guard';
 
 export const SettingsViewRecoveryPhraseScreen = () => {
   const {address} = useTypedRoute<'settingsViewRecoveryPhrase'>().params;
+  const wallet = useWallet(address);
   const [mnemonic, setMnemonic] = useState('');
 
-  const onSuccess = async () => {
+  const onEnter = async () => {
     const password = await app.getPassword();
-    setMnemonic(await wallets.getWallet(address)?.getMnemonic(password));
+    const m = await wallet?.getMnemonic(password);
+
+    setMnemonic(m);
   };
 
   return (
-    <PinGuard onSuccess={onSuccess}>
-      <SettingsViewRecoveryPhrase mnemonic={mnemonic} />
-    </PinGuard>
+    <PinGuardScreen onEnter={onEnter}>
+      {mnemonic && <SettingsViewRecoveryPhrase mnemonic={mnemonic} />}
+    </PinGuardScreen>
   );
 };
