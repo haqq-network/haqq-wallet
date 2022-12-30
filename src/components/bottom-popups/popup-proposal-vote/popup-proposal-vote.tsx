@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, View, useWindowDimensions} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {
@@ -27,7 +27,7 @@ export const PopupProposalVote = ({
   isLoading,
 }: PopupProposalVoteProps) => {
   const [selected, setSelected] = useState(VOTES[0].name);
-
+  const width = useWindowDimensions().width - 32;
   const handleChange = (vote: VoteNamesType) => {
     setSelected(vote);
     onChangeVote?.(vote);
@@ -35,7 +35,7 @@ export const PopupProposalVote = ({
 
   if (isLoading) {
     return (
-      <View style={[styles.sub, styles.centered]}>
+      <View style={[styles.sub, styles.centered, {width}]}>
         <Spacer height={25} />
         <ActivityIndicator color={getColor(Color.graphicBase2)} />
         <Spacer height={10} />
@@ -46,7 +46,7 @@ export const PopupProposalVote = ({
   }
 
   return (
-    <View style={styles.sub}>
+    <View style={[styles.sub, {width}]}>
       <Text t7 i18n={I18N.popupProposalVoteTitle} />
       <Spacer height={2} />
       <Text
@@ -84,8 +84,6 @@ export const PopupProposalVote = ({
 
 const styles = createTheme({
   sub: {
-    marginHorizontal: 16,
-    marginVertical: 35,
     backgroundColor: Color.bg1,
     flex: 0,
     paddingHorizontal: 16,

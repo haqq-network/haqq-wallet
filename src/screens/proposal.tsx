@@ -27,6 +27,8 @@ export const ProposalScreen = () => {
   const voteSelectedRef = useRef<VoteNamesType>();
   const [vote, setVote] = useState<VoteNamesType>();
   const [collectedDeposit, setCollectedDeposit] = useState(0);
+  const [modalIsLoading, setModalIsLoading] = useState(false);
+  const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const cosmos = useCosmos();
   const {visible} = useWalletsList();
@@ -41,7 +43,7 @@ export const ProposalScreen = () => {
       account: address,
       proposalId: id,
     });
-    app.removeListener('wallet-selected-proposal-deposit', onDepositSubmit);
+    app.off('wallet-selected-proposal-deposit', onDepositSubmit);
   };
 
   useEffect(() => {
@@ -49,17 +51,27 @@ export const ProposalScreen = () => {
       const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
       const wallet = Wallet.getById(address);
       if (!(wallet && item)) {
+        sendNotification(I18N.voteNotRegistered);
         return;
       }
       try {
         await cosmos.vote(wallet.transport, item.orderNumber, opinion);
+        setModalIsVisible(false);
+        sendNotification(I18N.voteRegistered);
       } catch (error) {
+        sendNotification(I18N.voteNotRegistered);
         captureException(error, 'proposal.vite');
       }
+
+      setModalIsLoading(false);
     };
-    app.addListener('wallet-selected-proposal', onVotedSubmit);
+    const onCloseWallets = () => setModalIsLoading(false);
+
+    app.on('wallet-selected-proposal', onVotedSubmit);
+    app.on('wallet-bottom-sheet-close-proposal', onCloseWallets);
     return () => {
-      app.removeListener('wallet-selected-proposal', onVotedSubmit);
+      app.off('wallet-selected-proposal', onVotedSubmit);
+      app.off('wallet-bottom-sheet-close-proposal', onCloseWallets);
     };
   }, [item, cosmos]);
 
@@ -72,39 +84,28 @@ export const ProposalScreen = () => {
     }
   }, [item, cosmos]);
 
+  const onVote = (decision: VoteNamesType) => {
+    setModalIsLoading(true);
+    voteSelectedRef.current = decision;
+    cardRef.current?.setSelected(decision);
+    showModal('wallets-bottom-sheet', {
+      wallets: visible,
+      closeDistance,
+      title: I18N.proposalAccountTitle,
+      eventSuffix: '-proposal',
+    });
+  };
+
+  const onVoteChange = (decision: VoteNamesType) => {
+    cardRef.current?.setSelected(decision);
+    setVote(decision);
+  };
+
   useEffect(() => {
     if (item?.status === 'voting') {
-      showModal('proposal-vote', {eventSuffix: '-proposal'});
-
-      const onVote = (decision: VoteNamesType) => {
-        voteSelectedRef.current = decision;
-        cardRef.current?.setSelected(decision);
-
-        setTimeout(() => {
-          setTimeout(() => sendNotification(I18N.voteRegistered), 600);
-          app.emit('proposal-vote-loading-end-proposal');
-        }, 1500);
-        // showModal('wallets-bottom-sheet', {
-        //   wallets: visible,
-        //   closeDistance,
-        //   title: I18N.proposalAccountTitle,
-        //   eventSuffix: '-proposal',
-        // });
-      };
-
-      const onVoteChange = (decision: VoteNamesType) => {
-        cardRef.current?.setSelected(decision);
-        setVote(decision);
-      };
-
-      app.on('proposal-vote-proposal', onVote);
-      app.on('proposal-vote-change-proposal', onVoteChange);
-      return () => {
-        app.off('proposal-vote-proposal', onVote);
-        app.off('proposal-vote-change-proposal', onVoteChange);
-      };
+      setModalIsVisible(true);
     }
-  }, [item, closeDistance, visible]);
+  }, [item]);
 
   if (!item) {
     return <></>;
@@ -112,11 +113,16 @@ export const ProposalScreen = () => {
 
   return (
     <Proposal
+      onTouchContent={() => setModalIsVisible(false)}
       cardRef={cardRef}
       vote={vote}
       collectedDeposit={collectedDeposit}
       onDepositSubmit={onDepositSubmit}
       item={item}
+      modalIsLoading={modalIsLoading}
+      modalIsVisible={modalIsVisible}
+      modalOnChangeVote={onVoteChange}
+      modalOnVote={onVote}
     />
   );
 };
