@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
-import {View} from 'react-native';
+import {ActivityIndicator, View, useWindowDimensions} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -18,21 +18,35 @@ import {VOTES} from '@app/variables/votes';
 export type PopupProposalVoteProps = {
   onSubmitVote: (vote: VoteNamesType) => void;
   onChangeVote?: (vote: VoteNamesType) => void;
+  isLoading?: boolean;
 };
 
 export const PopupProposalVote = ({
   onSubmitVote,
   onChangeVote,
+  isLoading,
 }: PopupProposalVoteProps) => {
   const [selected, setSelected] = useState(VOTES[0].name);
-
+  const width = useWindowDimensions().width - 32;
   const handleChange = (vote: VoteNamesType) => {
     setSelected(vote);
     onChangeVote?.(vote);
   };
 
+  if (isLoading) {
+    return (
+      <View style={[styles.sub, styles.centered, {width}]}>
+        <Spacer height={25} />
+        <ActivityIndicator color={getColor(Color.graphicBase2)} />
+        <Spacer height={10} />
+        <Text color={Color.textBase2} i18n={I18N.proposalVoteSendingVote} />
+        <Spacer height={25} />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.sub}>
+    <View style={[styles.sub, {width}]}>
       <Text t7 i18n={I18N.popupProposalVoteTitle} />
       <Spacer height={2} />
       <Text
@@ -70,8 +84,6 @@ export const PopupProposalVote = ({
 
 const styles = createTheme({
   sub: {
-    marginHorizontal: 16,
-    marginVertical: 35,
     backgroundColor: Color.bg1,
     flex: 0,
     paddingHorizontal: 16,
@@ -79,6 +91,10 @@ const styles = createTheme({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
+  },
+  centered: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   row: {
     flexDirection: 'row',
