@@ -54,6 +54,12 @@ module.exports = {
         'react-native/no-single-element-style-arrays': 2,
       },
     },
+    {
+      files: ['*.stories.ts', '*.stories.tsx', '*.stories.js', '*.stories.jsx'],
+      rules: {
+        'import/no-default-export': 0,
+      },
+    },
   ],
   parserOptions: {
     ecmaFeatures: {

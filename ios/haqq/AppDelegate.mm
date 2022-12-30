@@ -8,7 +8,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import <React/RCTLinkingManager.h>
-
+#import <ReactNativeConfig.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -91,7 +91,14 @@ RCTRootView* overview = nil;
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG
-  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+  NSString *storybookEnabled = [ReactNativeConfig envFor:@"STORYBOOK_ENABLED"];
+  NSString *trueString = @"1";
+
+  if ([storybookEnabled isEqualToString:trueString]){
+    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"storybook-index"];
+  } else {
+    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"default-index"];
+  }
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
