@@ -23,10 +23,10 @@ export const LedgerAccountsScreen = () => {
         const balance = await EthNetwork.getBalance(resp.address);
 
         addressList.push({
-          address: resp.address,
+          address: resp.address.toLowerCase(),
           hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
           publicKey: resp.publicKey,
-          exists: wallets.addressList.includes(resp.address),
+          exists: wallets.addressList.includes(resp.address.toLowerCase()),
           balance,
         });
       }

@@ -41,7 +41,10 @@ export const LedgerVerifyScreen = () => {
             verifiedAddress = resp.value.address;
           }
         } while (!done);
-        if (verifiedAddress && verifiedAddress === route.params.address) {
+        if (
+          verifiedAddress &&
+          verifiedAddress.toLowerCase() === route.params.address
+        ) {
           onDone();
         }
       } catch (e) {
