@@ -1,47 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';
-import {runUntil} from '@app/helpers/run-until';
-import {useWallets} from '@app/hooks';
-import {ETH_HD_PATH} from '@app/variables/common';
+import {LedgerAccountItem} from '@app/types';
 
 import {LedgerAccountsEmpty} from './ledger-accounts-empty';
 import {LedgerAccountsRow} from './ledger-accounts-row';
 
 export type LedgerDeviceProps = {
-  deviceId: string;
-  onAdd: (address: string) => void;
+  addresses: LedgerAccountItem[];
+  onAdd: (address: LedgerAccountItem) => void;
 };
 
-export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
-  const [addresses, setAddresses] = useState<string[]>([]);
-  const wallets = useWallets();
-
-  useEffect(() => {
-    const iter = runUntil(deviceId, eth => eth.getAddress(ETH_HD_PATH, false));
-    requestAnimationFrame(async () => {
-      let done = false;
-      do {
-        const resp = await iter.next();
-        done = resp.done;
-        if (resp.value) {
-          const address = resp.value.address;
-          setAddresses(list =>
-            list.includes(address) ? list : list.concat([address]),
-          );
-        }
-      } while (!done);
-      await iter.abort();
-    });
-
-    return () => {
-      console.log('LedgerAccounts ret');
-      iter.abort();
-    };
-  }, [deviceId]);
-
+export const LedgerAccounts = ({addresses, onAdd}: LedgerDeviceProps) => {
   return (
     <PopupContainer plain>
       <FlatList
@@ -50,11 +22,7 @@ export const LedgerAccounts = ({deviceId, onAdd}: LedgerDeviceProps) => {
         data={addresses}
         ListEmptyComponent={LedgerAccountsEmpty}
         renderItem={({item}) => (
-          <LedgerAccountsRow
-            item={item}
-            onPress={onAdd}
-            wallets={wallets.addressList}
-          />
+          <LedgerAccountsRow item={item} onPress={onAdd} />
         )}
       />
     </PopupContainer>
