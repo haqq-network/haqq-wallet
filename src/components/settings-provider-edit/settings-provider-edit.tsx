@@ -195,8 +195,8 @@ export const SettingsProviderEdit = memo(
 
     const onRemove = () => {
       Alert.alert(
-        'Delete Contact',
-        'Are you sure you want to delete the selected contact?',
+        'Delete provider',
+        'Are you sure you want to delete the selected provider?',
         [
           {text: 'Cancel', style: 'cancel'},
           {
@@ -299,7 +299,7 @@ export const SettingsProviderEdit = memo(
     return (
       <>
         <CustomHeader
-          title={I18N.settingsContactEditHeaderTitle}
+          title={I18N.settingsProviderEditHeaderTitle}
           {...left}
           {...right}
         />

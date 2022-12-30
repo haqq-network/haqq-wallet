@@ -224,6 +224,7 @@ class App extends EventEmitter {
   }
 
   async auth() {
+    this.emit('modal', {type: 'pin'});
     if (this.biometry) {
       try {
         await this.biometryAuth();
@@ -246,7 +247,6 @@ class App extends EventEmitter {
 
   pinAuth() {
     return new Promise<void>(async (resolve, _reject) => {
-      this.emit('modal', {type: 'pin'});
       const password = await this.getPassword();
 
       const callback = (value: string) => {
@@ -293,6 +293,7 @@ class App extends EventEmitter {
       switch (appStatus) {
         case AppStatus.active:
           if (this.user?.isOutdatedLastActivity()) {
+            this.emit('modal', {type: 'splash'});
             this.authenticated = false;
             await this.auth();
             this.emit('modal', null);

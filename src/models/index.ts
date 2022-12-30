@@ -223,5 +223,26 @@ export const realm = new Realm({
         }
       }
     }
+
+    if (oldRealm.schemaVersion < 36) {
+      const oldObjects = oldRealm.objects<{
+        mnemonicSaved: boolean;
+      }>('Wallet');
+      const newObjects = newRealm.objects<{
+        mnemonicSaved: boolean;
+        type: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (
+          newObject.type === WalletType.ledgerBt ||
+          newObject.type === WalletType.hot
+        ) {
+          newObject.mnemonicSaved = true;
+        }
+      }
+    }
   },
 });
