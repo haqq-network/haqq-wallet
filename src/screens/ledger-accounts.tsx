@@ -2,13 +2,19 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {runUntil} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {
+  useTypedNavigation,
+  useTypedRoute,
+  useUser,
+  useWallets,
+} from '@app/hooks';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 export const LedgerAccountsScreen = () => {
   const navigation = useTypedNavigation();
+  const user = useUser();
   const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
 
   const [addresses, setAddresses] = useState<LedgerAccountItem[]>([]);
@@ -46,7 +52,6 @@ export const LedgerAccountsScreen = () => {
     });
 
     return () => {
-      console.log('LedgerAccounts ret');
       iter.abort();
     };
   }, [wallets, deviceId]);
@@ -54,7 +59,7 @@ export const LedgerAccountsScreen = () => {
   const onPressAdd = useCallback(
     (item: LedgerAccountItem) => {
       navigation.navigate('ledgerVerify', {
-        nextScreen: 'ledgerStoreWallet',
+        nextScreen: user.onboarded ? 'ledgerStoreWallet' : 'onboardingSetupPin',
         address: item.address,
         hdPath: item.hdPath,
         publicKey: item.publicKey,
@@ -62,7 +67,7 @@ export const LedgerAccountsScreen = () => {
         deviceName,
       });
     },
-    [navigation, deviceId, deviceName],
+    [navigation, user.onboarded, deviceId, deviceName],
   );
 
   return <LedgerAccounts onAdd={onPressAdd} addresses={addresses} />;
