@@ -221,11 +221,15 @@ export type RootStackParamList = {
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
   ledgerStore: {
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
@@ -507,3 +511,11 @@ export type ProposalsCroppedList = {
   id: number;
   status: string;
 }[];
+
+export type LedgerAccountItem = {
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  exists: boolean;
+  balance: number;
+};

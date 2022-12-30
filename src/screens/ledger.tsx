@@ -3,7 +3,6 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ScreenOptionType} from '@app/types';
 
@@ -25,7 +24,6 @@ const title = getText(I18N.ledgerConnect);
 const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 export const LedgerScreen = () => {
-  const user = useUser();
   return (
     <LedgerStack.Navigator screenOptions={popupScreenOptions}>
       <LedgerStack.Screen
@@ -55,11 +53,6 @@ export const LedgerScreen = () => {
         name="ledgerVerify"
         component={LedgerVerifyScreen}
         options={{title: getText(I18N.ledgerVerify)}}
-        initialParams={{
-          nextScreen: user.onboarded
-            ? 'ledgerStoreWallet'
-            : 'onboardingSetupPin',
-        }}
       />
       <LedgerStack.Screen
         name="onboardingSetupPin"
