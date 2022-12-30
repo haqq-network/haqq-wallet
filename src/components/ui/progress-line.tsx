@@ -1,19 +1,19 @@
 import React, {forwardRef, memo, useImperativeHandle} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 
 export type ProgressLineProps = {
   initialProgress?: number;
-  color?: Color | string;
+  color?: Color;
   max?: number;
   total?: number;
   showBottomInfo?: true;
@@ -38,6 +38,8 @@ export const ProgressLine = memo(
       ref,
     ) => {
       const width = useSharedValue(initialProgress);
+      const styles = useThematicStyles(stylesObj);
+      const {colors} = useTheme();
 
       useImperativeHandle(ref, () => ({
         updateProgress(percent: number) {
@@ -55,7 +57,7 @@ export const ProgressLine = memo(
             <Animated.View
               style={[
                 styles.lineStyle,
-                {backgroundColor: getColor(color)},
+                {backgroundColor: colors[color]},
                 progressWidth,
               ]}
             />
@@ -77,7 +79,7 @@ export const ProgressLine = memo(
   ),
 );
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',

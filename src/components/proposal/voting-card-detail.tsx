@@ -1,6 +1,6 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -14,7 +14,7 @@ import {
   TextSum,
 } from '@app/components/ui';
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
@@ -50,6 +50,7 @@ export const VotingCardDetail = forwardRef<
   const notEnoughVotesRef = useRef<ProgressLineInterface | undefined>();
 
   const {i18n, color} = VOTES.find(v => v.name === yourVote) || {};
+  const styles = useThematicStyles(stylesObj);
 
   useImperativeHandle(ref, () => ({
     setSelected: (...params) => votingRef.current?.setSelected(...params),
@@ -161,7 +162,7 @@ export const VotingCardDetail = forwardRef<
   );
 });
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   cardInfo: {
     paddingHorizontal: 16,
     paddingVertical: 20,

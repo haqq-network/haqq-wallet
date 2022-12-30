@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   AccountAddedIcon,
@@ -12,7 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
+import {hideModal} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -20,6 +21,8 @@ export const ErrorAccountAdded = () => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   return (
     <BottomPopupContainer>
@@ -28,7 +31,7 @@ export const ErrorAccountAdded = () => {
           <Text t5 i18n={I18N.errorAccountAddedTitle} center />
           <Spacer height={42} />
           <AccountAddedIcon
-            color={getColor(Color.graphicSecond4)}
+            color={colors.graphicSecond4}
             width={116}
             height={116}
           />
@@ -46,7 +49,7 @@ export const ErrorAccountAdded = () => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   modalView: {
     backgroundColor: Color.bg1,
     borderRadius: 16,

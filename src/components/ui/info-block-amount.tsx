@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
 
-import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text, TextSum} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 type valueType = {
@@ -32,6 +38,7 @@ export const InfoBlockAmount = ({
   isLarge,
 }: InfoBlockAmountProps) => {
   const [isShow, setIsShow] = useState(false);
+  const styles = useThematicStyles(stylesObj);
 
   let mapValues = values;
   if (mapValues.length === 0) {
@@ -80,7 +87,7 @@ export const InfoBlockAmount = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   infoBlock: {
     borderWidth: 1,
     borderColor: Color.graphicSecond1,

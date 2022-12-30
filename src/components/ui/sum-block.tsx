@@ -12,10 +12,10 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
 import {WINDOW_WIDTH} from '@app/variables/common';
@@ -39,6 +39,8 @@ export const SumBlock = ({
   style,
 }: SumBlockProps) => {
   const inputSumRef = useRef<TextInput>(null);
+  const {colors} = useTheme();
+  const styles = useThematicStyles(stylesObj);
 
   useFocusEffect(
     useCallback(() => {
@@ -92,7 +94,7 @@ export const SumBlock = ({
             placeholder="0"
             onChangeText={onChangeValue}
             keyboardType="numeric"
-            placeholderTextColor={getColor(Color.textBase2)}
+            placeholderTextColor={colors.textBase2}
             ref={inputSumRef}
             textAlign="left"
           />
@@ -127,7 +129,7 @@ export const SumBlock = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   subtitle: {
     marginBottom: 4,
   },

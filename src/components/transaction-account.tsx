@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
 type TransactionAccountProps = {
@@ -26,7 +25,7 @@ export const TransactionAccount = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

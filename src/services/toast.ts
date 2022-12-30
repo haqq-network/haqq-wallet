@@ -1,12 +1,11 @@
-import {NativeModules} from 'react-native';
+import {Appearance, NativeModules} from 'react-native';
 
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 
 const {RNToast} = NativeModules;
 
 export const message = (msg: string) => {
-  RNToast.message(msg, app.getTheme());
+  RNToast.message(msg, Appearance.getColorScheme());
 };
 
 export function sendNotification(text: I18N) {

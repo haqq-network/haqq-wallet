@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
-import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -17,6 +17,7 @@ export type ValidatorRowProps = {
   onPress: (validator: ValidatorItem) => void;
 };
 export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
+  const styles = useThematicStyles(stylesObj);
   const validatorCommission = useMemo(() => {
     return formatPercents(item.commission.commission_rates.rate);
   }, [item.commission.commission_rates]);
@@ -96,7 +97,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',

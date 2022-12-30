@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {TextInput, TouchableWithoutFeedback} from 'react-native';
+import {StyleSheet, TextInput, TouchableWithoutFeedback} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -13,7 +13,6 @@ import {
   SumBlock,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -103,7 +102,7 @@ export const TransactionSum = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   sumblock: {
     paddingBottom: 8,
   },

@@ -1,13 +1,19 @@
 import React, {useRef} from 'react';
 
-import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
+import {
+  Animated,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CarouselItem} from '@app/components/carousel-item';
 import {Icon, Text} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
@@ -26,6 +32,7 @@ export const Wallets = ({
   onPressBackup,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
+  const styles = useThematicStyles(stylesObj);
 
   const pan = useRef(new Animated.Value(0)).current;
 
@@ -92,7 +99,7 @@ export const Wallets = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingTop: 24,
   },

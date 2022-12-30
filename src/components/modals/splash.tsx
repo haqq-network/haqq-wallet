@@ -1,17 +1,16 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Waiting} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useAndroidSystemColors} from '@app/hooks';
+import {useAndroidSystemColors, useThematicStyles} from '@app/hooks';
 
 export type SplashModalProps = {};
 
 export const SplashModal = ({}: SplashModalProps) => {
   useAndroidSystemColors();
-
+  const styles = useThematicStyles(stylesObj);
   return (
     <View style={styles.container}>
       <Waiting />
@@ -19,7 +18,7 @@ export const SplashModal = ({}: SplashModalProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',

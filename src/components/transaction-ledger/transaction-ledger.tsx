@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 export type TransactionVerifyProps = {
@@ -28,7 +27,7 @@ export const TransactionLedger = ({}: TransactionVerifyProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     justifyContent: 'center',

@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {SectionList} from 'react-native';
+import {SectionList, StyleSheet} from 'react-native';
 
 import {Loading} from '@app/components/ui';
 import {SectionHeader} from '@app/components/ui/section-header';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 
@@ -39,7 +38,7 @@ export const StakingValidators = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

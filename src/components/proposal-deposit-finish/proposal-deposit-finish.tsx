@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,7 +16,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {cleanNumber} from '@app/utils';
 
@@ -39,6 +40,8 @@ export const ProposalDepositFinish = ({
     const url = `https://haqq.explorers.guru/transaction/${txhash}`;
     await openURL(url);
   };
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   return (
     <PopupContainer style={styles.container}>
@@ -57,7 +60,7 @@ export const ProposalDepositFinish = ({
         style={styles.title}
         color={Color.textGreen1}
       />
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <ISLMIcon color={colors.graphicGreen1} style={styles.icon} />
       <Text t3 center style={styles.sum}>
         {cleanNumber(amount.toFixed(2))} ISLM
       </Text>
@@ -93,7 +96,7 @@ export const ProposalDepositFinish = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

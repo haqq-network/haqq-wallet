@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {TransactionListSend} from '@app/types';
 import {shortAddress} from '@app/utils';
@@ -15,6 +15,8 @@ export type TransactionPreviewProps = {
 };
 
 export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
+  const styles = useThematicStyles(stylesObj);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -39,7 +41,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingVertical: 8,
     flexDirection: 'row',

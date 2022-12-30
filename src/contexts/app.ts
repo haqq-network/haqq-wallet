@@ -2,7 +2,7 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
+import {ENVIRONMENT} from '@env';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
 import Keychain, {
@@ -14,21 +14,19 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 
 import {Events} from '@app/events';
+import {realm} from '@app/models';
 import {migration} from '@app/models/migration';
+import {Provider} from '@app/models/provider';
+import {User, UserType} from '@app/models/user';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {captureException} from '../helpers';
-import {realm} from '../models';
-import {Provider} from '../models/provider';
-import {User, UserType} from '../models/user';
-import {AppLanguage, AppTheme, BiometryType} from '../types';
-import {generateUUID} from '../utils';
+import {AppLanguage, BiometryType} from '@app/types';
+import {generateUUID} from '@app/utils';
 import {
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
   TEST_NETWORK,
-} from '../variables/common';
+} from '@app/variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
@@ -56,7 +54,6 @@ class App extends EventEmitter {
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
   private _biometryType: BiometryType | null = null;
-  private _lastTheme: AppTheme = AppTheme.light;
   private _provider: Provider | null;
 
   private _balance: Map<string, number> = new Map();
@@ -142,7 +139,6 @@ class App extends EventEmitter {
           biometry: false,
           bluetooth: false,
           language: AppLanguage.en,
-          theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
           providerId:
             ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
               ? MAIN_NETWORK
@@ -289,21 +285,6 @@ class App extends EventEmitter {
 
   getUser() {
     return this.user;
-  }
-
-  getTheme() {
-    try {
-      if (this.user) {
-        this._lastTheme =
-          this.user.theme === AppTheme.system
-            ? this.user.systemTheme
-            : this.user.theme;
-      }
-    } catch (e) {
-      captureException(e, 'app.getTheme');
-    } finally {
-      return this._lastTheme;
-    }
   }
 
   async onAppStatusChanged() {

@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {createTheme} from '@app/helpers';
+import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
-import {ColorType} from '@app/types';
 
 import {HeaderButton, HeaderButtonProps} from './header-button';
 
@@ -18,11 +17,11 @@ interface CustomHeaderProps {
   i18nTextLeft?: HeaderButtonProps['i18n'];
   onPressLeft?: HeaderButtonProps['onPress'];
   disabledLeft?: HeaderButtonProps['disabled'];
-  colorLeft?: ColorType;
+  colorLeft?: Color;
   iconRight?: HeaderButtonProps['icon'];
   textRight?: HeaderButtonProps['text'];
   i18nTextRight?: HeaderButtonProps['i18n'];
-  colorRight?: ColorType;
+  colorRight?: Color;
   onPressRight?: HeaderButtonProps['onPress'];
   disabledRight?: HeaderButtonProps['disabled'];
 }
@@ -67,7 +66,7 @@ export const CustomHeader = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',

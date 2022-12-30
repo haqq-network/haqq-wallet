@@ -1,6 +1,6 @@
 import React, {memo, useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -12,7 +12,6 @@ import {
   Input,
   KeyboardSafeArea,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 
 interface SettingsAddressBookEditProps {
@@ -101,7 +100,7 @@ export const SettingsAddressBookEdit = memo(
   },
 );
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 20,

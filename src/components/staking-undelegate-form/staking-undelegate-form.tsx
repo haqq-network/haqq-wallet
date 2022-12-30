@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
+import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -13,7 +14,6 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {SumBlock} from '@app/components/ui/sum-block';
-import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {WEI} from '@app/variables/common';
@@ -77,7 +77,7 @@ export const StakingUnDelegateForm = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     paddingHorizontal: 20,

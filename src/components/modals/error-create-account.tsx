@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
@@ -12,8 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {hideModal} from '@app/helpers/modal';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -22,16 +22,19 @@ export const ErrorCreateAccount = () => {
     vibrate(HapticEffects.error);
   }, []);
 
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
+
   return (
     <BottomPopupContainer>
       {onClose => (
-        <View style={page.modalView}>
+        <View style={styles.modalView}>
           <Text t5 center i18n={I18N.errorCreateAccountPopupTitle} />
           <Spacer height={8} />
           <Text t14 center i18n={I18N.errorCreateAccountPopupDescription} />
           <Spacer height={40} />
           <ErrorCreateAccountIcon
-            color={getColor(Color.graphicSecond4)}
+            color={colors.graphicSecond4}
             width={116}
             height={116}
           />
@@ -41,7 +44,7 @@ export const ErrorCreateAccount = () => {
             onPress={() => onClose(hideModal)}
             variant={ButtonVariant.second}
             size={ButtonSize.middle}
-            style={page.button}
+            style={styles.button}
           />
         </View>
       )}
@@ -49,7 +52,7 @@ export const ErrorCreateAccount = () => {
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   modalView: {
     backgroundColor: Color.bg1,
     borderRadius: 16,

@@ -2,10 +2,9 @@ import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {RootStackParamList} from '@app/types';
 
@@ -53,7 +52,7 @@ export const SettingsButton = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',

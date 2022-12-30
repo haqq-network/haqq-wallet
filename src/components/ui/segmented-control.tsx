@@ -1,10 +1,15 @@
 import React, {useMemo} from 'react';
 
-import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 export type SegmentedControlValue<T> = {
@@ -25,7 +30,8 @@ export const SegmentedControl = ({
   style,
   onChange,
 }: SegmentedControlProps<any>) => {
-  const container = useMemo(() => [styles.container, style], [style]);
+  const styles = useThematicStyles(stylesObj);
+  const container = useMemo(() => [styles.container, style], [style, styles]);
   return (
     <View style={container}>
       {values.map(v => (
@@ -48,7 +54,7 @@ export const SegmentedControl = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     backgroundColor: Color.bg3,
     padding: 3,

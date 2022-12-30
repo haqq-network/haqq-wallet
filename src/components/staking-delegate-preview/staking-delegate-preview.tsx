@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -15,8 +15,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
+import {useThematicStyles, useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
 import {cleanNumber} from '@app/utils';
@@ -46,6 +46,8 @@ export const StakingDelegatePreview = ({
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
 
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
   const time = useMemo(
     () => formatDistance(new Date(unboundingTime), new Date(0)),
     [unboundingTime],
@@ -53,7 +55,7 @@ export const StakingDelegatePreview = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <ISLMIcon color={colors.graphicGreen1} style={styles.icon} />
       <Text
         t11
         center
@@ -77,7 +79,7 @@ export const StakingDelegatePreview = ({
 
       <View style={styles.info}>
         <DataView label={getText(I18N.stakingDelegatePreviewCommission)}>
-          <Text t11 color={getColor(Color.textBase1)}>
+          <Text t11 color={Color.textBase1}>
             {validatorCommission}%
           </Text>
         </DataView>
@@ -85,7 +87,7 @@ export const StakingDelegatePreview = ({
           <Text t11>{cleanNumber(amount)}</Text>
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
-          <Text t11 color={getColor(Color.textBase1)}>
+          <Text t11 color={Color.textBase1}>
             {feeValue * WEI} aISLM
           </Text>
         </DataView>
@@ -110,7 +112,7 @@ export const StakingDelegatePreview = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,

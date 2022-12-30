@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {QrTopView} from '@app/components/modals/qr/qr-top-view';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 export type QrNoAccessProps = {
@@ -13,6 +13,7 @@ export type QrNoAccessProps = {
 };
 
 export const QrNoAccess = ({onClose}: QrNoAccessProps) => {
+  const styles = useThematicStyles(stylesObj);
   return (
     <View style={styles.background}>
       <QrTopView onClose={onClose} />
@@ -35,7 +36,7 @@ export const QrNoAccess = ({onClose}: QrNoAccessProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: Color.bg10,

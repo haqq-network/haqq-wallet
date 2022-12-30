@@ -1,9 +1,8 @@
 import React, {useRef, useState} from 'react';
 
-import {ScrollView, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
@@ -84,7 +83,7 @@ export const HomeStaking = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,

@@ -1,18 +1,17 @@
 import {EventEmitter} from 'events';
 
 import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
-import {AppState, Appearance} from 'react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-
-import {AppLanguage, AppTheme} from '../types';
+import {AppLanguage} from '@app/types';
 import {
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
   SNOOZE_WALLET_BACKUP_MINUTES,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
-} from '../variables/common';
+} from '@app/variables/common';
+
 import {realm} from './index';
 
 export const UserSchema = {
@@ -27,7 +26,6 @@ export const UserSchema = {
     pinAttempts: 'int?',
     pinBanned: 'date?',
     providerId: 'string',
-    theme: 'string',
     notifications: 'bool?',
     subscription: 'string?',
   },
@@ -44,7 +42,6 @@ export type UserType = {
   bluetooth: boolean | null;
   onboarded: boolean | null;
   providerId: string;
-  theme: AppTheme;
   notifications: boolean | null;
   subscription: string | null;
 };
@@ -52,7 +49,6 @@ export type UserType = {
 export class User extends EventEmitter {
   private last_activity: Date;
   private _raw: UserType & Realm.Object<UserType>;
-  private _systemTheme: AppTheme;
 
   constructor(user: UserType & Realm.Object<UserType>) {
     super();
@@ -66,10 +62,6 @@ export class User extends EventEmitter {
       if (changes.changedProperties.length) {
         this.emit('change');
 
-        if (changes.changedProperties.includes('theme')) {
-          app.emit('theme', obj.theme);
-        }
-
         if (changes.changedProperties.includes('subscription')) {
           if (obj.subscription) {
             app.emit(Events.onPushSubscriptionAdd);
@@ -77,25 +69,7 @@ export class User extends EventEmitter {
         }
       }
     });
-
-    this._systemTheme = Appearance.getColorScheme() as AppTheme;
-
-    Appearance.addChangeListener(this.listenTheme);
-
-    AppState.addEventListener('change', this.listenTheme);
   }
-
-  listenTheme = () => {
-    const theme = Appearance.getColorScheme() as AppTheme;
-
-    if (theme !== this._systemTheme) {
-      this._systemTheme = theme;
-
-      if (this._raw.theme === AppTheme.system) {
-        app.emit('theme');
-      }
-    }
-  };
 
   get uuid() {
     return this._raw.username;
@@ -149,20 +123,6 @@ export class User extends EventEmitter {
 
   get notifications() {
     return this._raw.notifications;
-  }
-
-  get theme(): AppTheme {
-    return this._raw.theme;
-  }
-
-  get systemTheme(): AppTheme {
-    return this._systemTheme;
-  }
-
-  set theme(value) {
-    realm.write(() => {
-      this._raw.theme = value;
-    });
   }
 
   get bluetooth() {

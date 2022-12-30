@@ -2,7 +2,7 @@ import {useCallback, useRef} from 'react';
 
 import {Animated} from 'react-native';
 
-import {LIGHT_BG_9, TRANSPARENT} from '../variables/common';
+import {LIGHT_BG_9, TRANSPARENT} from '@app/variables/common';
 
 interface useAndroidStatusBarAnimationT {
   animatedValueRange: [number, number];

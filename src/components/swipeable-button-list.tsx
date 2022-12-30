@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {Animated, View} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 
 import {SwipeableButton} from '@app/components/ui/swipeable-button';
-import {createTheme} from '@app/helpers';
 import {SwipeableAction} from '@app/types';
 
 export type SwipeableButtonListProps<T> = {
@@ -34,7 +33,7 @@ export const SwipeableButtonList = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },

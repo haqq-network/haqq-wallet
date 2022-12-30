@@ -1,7 +1,7 @@
 import React, {useCallback, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {Keyboard} from 'react-native';
+import {Keyboard, StyleSheet} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +9,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {createTheme} from '@app/helpers';
 import {useKeyboardDismissInBackground} from '@app/hooks';
 
 import {KeyboardSafeAreaProps} from '.';
@@ -66,7 +65,7 @@ export const KeyboardSafeArea = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

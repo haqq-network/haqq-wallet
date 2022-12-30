@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -57,18 +57,18 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
 
   return (
     <ScrollView
-      contentContainerStyle={page.scrollContent}
+      contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}>
-      <KeyboardSafeArea style={page.container} testID="signin_restore">
+      <KeyboardSafeArea style={styles.container} testID="signin_restore">
         <Text
           t11
-          color={getColor(Color.textBase2)}
+          color={Color.textBase2}
           i18n={I18N.signinRestoreWalletPhraseOrKey}
-          style={page.intro}
+          style={styles.intro}
         />
         <TextField
           placeholder={I18N.signinRestoreWalletTextFieldPlaceholder}
-          style={page.input}
+          style={styles.input}
           label={I18N.signinRestoreWalletTextFieldLabel}
           value={seed}
           onChangeText={onChangeKey}
@@ -76,7 +76,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           errorTextI18n={I18N.signinRestoreWalletTextFieldError}
         />
 
-        <IconButton onPress={onPressPaste} style={page.button}>
+        <IconButton onPress={onPressPaste} style={styles.button}>
           <Text
             color={Color.textGreen1}
             t14
@@ -89,14 +89,14 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           i18n={I18N.signinRestoreWalletRecovery}
           onPress={onDone}
           variant={ButtonVariant.contained}
-          style={page.submit}
+          style={styles.submit}
         />
       </KeyboardSafeArea>
     </ScrollView>
   );
 };
 
-const page = StyleSheet.create({
+const styles = StyleSheet.create({
   scrollContent: {flexGrow: 1},
   container: {paddingHorizontal: 20, paddingTop: 20},
   button: {alignSelf: 'flex-start'},

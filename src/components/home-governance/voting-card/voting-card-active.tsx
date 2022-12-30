@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 
-import {Pressable, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Icon,
   ProgressCircle,
@@ -14,7 +14,7 @@ import {
   TextSum,
 } from '@app/components/ui';
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   GovernanceVoting,
@@ -45,6 +45,7 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
   const item = useMemo(() => {
     return GovernanceVoting.getById(id) as ProposalRealmType;
   }, [id]);
+  const styles = useThematicStyles(stylesObj);
   const isVoted = true; // PASS
   const yourDeposit = 100; // PASS
 
@@ -64,9 +65,9 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
     return prev[1] > cur[1] ? prev : cur;
   }, votesList[0]);
 
-  const primaryColor = getColor(
-    isDeposited ? Color.graphicBlue1 : colorVotes[majorityVotes],
-  );
+  const primaryColor = isDeposited
+    ? Color.graphicBlue1
+    : colorVotes[majorityVotes];
 
   useEffect(() => {
     circleRef.current?.animateTo(item.timeLeftPercent);
@@ -179,7 +180,7 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   backgroundContainer: {
     borderRadius: 12,
     paddingTop: 6,

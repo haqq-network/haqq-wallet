@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Share, View, useWindowDimensions} from 'react-native';
+import {Share, StyleSheet, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -16,8 +16,8 @@ import {
   InfoBlock,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
-import {useWallet} from '@app/hooks';
+import {hideModal} from '@app/helpers';
+import {useThematicStyles, useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
@@ -45,22 +45,24 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
     hideModal();
   };
 
+  const styles = useThematicStyles(stylesObj);
+
   return (
     <BottomSheet
       onClose={onCloseBottomSheet}
       i18nTitle={I18N.modalDetailsQRReceive}>
       <InfoBlock
         warning
-        style={page.info}
+        style={styles.info}
         i18n={I18N.modalDetailsQRWarning}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <LinearGradient
         colors={[wallet?.colorFrom, wallet?.colorTo]}
-        style={page.qrContainer}
+        style={styles.qrContainer}
         start={GRADIENT_START}
         end={GRADIENT_END}>
-        <View style={page.card}>
+        <View style={styles.card}>
           <Card
             transparent
             width={width - 113}
@@ -70,7 +72,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
             colorPattern={wallet?.colorPattern}
           />
         </View>
-        <View style={page.qrStyle}>
+        <View style={styles.qrStyle}>
           <QRCode
             ecl={'H'}
             logo={require('../../../assets/images/qr-logo.png')}
@@ -81,24 +83,24 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
             logoBorderRadius={8}
           />
         </View>
-        <Text t14 style={page.title}>
+        <Text t14 style={styles.title}>
           {wallet?.name}
         </Text>
-        <Text t10 style={page.address}>
+        <Text t10 style={styles.address}>
           {address}
         </Text>
       </LinearGradient>
 
-      <View style={page.buttons}>
+      <View style={styles.buttons}>
         <Button
           i18n={I18N.share}
           size={ButtonSize.middle}
           onPress={onShare}
-          style={page.button}
+          style={styles.button}
         />
         <Button
           size={ButtonSize.middle}
-          style={page.button}
+          style={styles.button}
           variant={ButtonVariant.second}
           i18n={I18N.copy}
           onPress={onCopy}
@@ -108,7 +110,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   qrContainer: {
     position: 'relative',
     marginHorizontal: 36.5,

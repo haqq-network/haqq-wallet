@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useApp} from '@app/hooks';
+import {useApp, useThematicStyles} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
@@ -17,7 +16,7 @@ export const PinModal = () => {
   const app = useApp();
   const pinRef = useRef<PinInterface>();
   const [showRestore, setShowRestore] = useState(false);
-
+  const styles = useThematicStyles(stylesObj);
   useEffect(() => {
     if (app.pinBanned) {
       pinRef?.current?.locked(app.pinBanned);
@@ -47,19 +46,19 @@ export const PinModal = () => {
   );
 
   return (
-    <View style={page.container}>
+    <View style={styles.container}>
       <Pin
         ref={pinRef}
         title={getText(I18N.modalPinTitle)}
         onPin={onPin}
         additionButton={
           <TouchableOpacity
-            style={page.additionButton}
+            style={styles.additionButton}
             onPress={() => setShowRestore(true)}>
             <Text
               clean
               i18n={I18N.modalPinForgotCode}
-              style={page.additionButtonText}
+              style={styles.additionButtonText}
             />
           </TouchableOpacity>
         }
@@ -69,7 +68,7 @@ export const PinModal = () => {
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     backgroundColor: Color.bg1,
     flex: 1,

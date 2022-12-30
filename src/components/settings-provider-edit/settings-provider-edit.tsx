@@ -12,6 +12,7 @@ import React, {
 import {
   Alert,
   NativeSyntheticEvent,
+  StyleSheet,
   TextInputFocusEventData,
   View,
   findNodeHandle,
@@ -31,7 +32,6 @@ import {
   IconsName,
   Spacer,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider, ProviderKeys} from '@app/models/provider';
 
@@ -408,7 +408,7 @@ export const SettingsProviderEdit = memo(
   },
 );
 
-const page = createTheme({
+const page = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,

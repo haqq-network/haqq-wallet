@@ -1,8 +1,7 @@
 import React, {useCallback} from 'react';
 
-import {Animated, TouchableWithoutFeedback} from 'react-native';
+import {Animated, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {SwipeableAction} from '@app/types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {
@@ -70,7 +69,7 @@ export const SwipeableButton = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {width: 74},
   iconContainer: {
     width: '100%',

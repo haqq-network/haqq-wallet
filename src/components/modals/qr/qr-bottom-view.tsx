@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {QR_BACKGROUND, SYSTEM_BLUR_3} from '@app/variables/common';
 
 export type QrBottomView = {
@@ -38,7 +37,7 @@ export const QrBottomView = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
     backgroundColor: QR_BACKGROUND,

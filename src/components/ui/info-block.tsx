@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 import {Text} from './text';
@@ -14,8 +14,7 @@ export enum InfoBlockType {
 
 export type InfoBlockProps = {
   icon?: React.ReactNode;
-  children?: React.ReactNode;
-  i18n?: I18N;
+  i18n: I18N;
   i18params?: Record<string, string>;
   style?: StyleProp<ViewStyle>;
   warning?: boolean;
@@ -23,20 +22,21 @@ export type InfoBlockProps = {
 
 export const InfoBlock = ({
   warning,
-  children,
   i18n,
   i18params,
   icon,
   style,
 }: InfoBlockProps) => {
+  const styles = useThematicStyles(stylesObj);
+
   const containerStyle = useMemo(
     () => [styles.container, warning && styles.warningContainer, style],
-    [style, warning],
+    [style, warning, styles],
   );
 
   const textStyle = useMemo(
     () => [styles.text, icon ? styles.iconText : null],
-    [icon],
+    [icon, styles],
   );
 
   const textColor = useMemo(
@@ -47,20 +47,18 @@ export const InfoBlock = ({
   return (
     <View style={containerStyle}>
       {icon}
-      {/* @ts-expect-error */}
       <Text
         i18n={i18n}
         i18params={i18params}
         t14
         style={textStyle}
-        color={textColor}>
-        {children}
-      </Text>
+        color={textColor}
+      />
     </View>
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderRadius: 16,

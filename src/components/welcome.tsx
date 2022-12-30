@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 type WelcomeProps = {
@@ -20,6 +20,7 @@ export const Welcome = ({
   onPressSignIn,
 }: WelcomeProps) => {
   const insets = useSafeAreaInsets();
+  const styles = useThematicStyles(stylesObj);
 
   return (
     <View
@@ -71,7 +72,7 @@ export const Welcome = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 20,

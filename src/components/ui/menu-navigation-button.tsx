@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   StyleProp,
+  StyleSheet,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
@@ -9,7 +10,6 @@ import {
 
 import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 
 export type MenuNavigationButtonProps = {
   onPress: () => void;
@@ -36,7 +36,7 @@ export const MenuNavigationButton = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',

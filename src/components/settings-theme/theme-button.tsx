@@ -1,16 +1,16 @@
 import React from 'react';
 
-import {Color} from '@app/colors';
+import {StyleSheet} from 'react-native';
+
+import {Color, ThemeNameType} from '@app/colors';
 import {DataContent, Icon, IconButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 
 export type ThemeButtonProps = {
-  value: AppTheme;
+  value: ThemeNameType | 'system';
   name: I18N;
   active: boolean;
-  onChange: (value: AppTheme) => void;
+  onChange: (value: ThemeNameType | 'system') => void;
 };
 export const ThemedButton = ({
   onChange,
@@ -30,7 +30,7 @@ export const ThemedButton = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     justifyContent: 'space-between',

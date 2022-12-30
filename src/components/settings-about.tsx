@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {ScrollView, View, useWindowDimensions} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 import {SettingsAboutButton} from './settings-about-button';
@@ -13,6 +13,7 @@ import {SettingsAboutButton} from './settings-about-button';
 export const SettingsAbout = () => {
   const insets = useSafeAreaInsets();
   const windowWidth = useWindowDimensions().width;
+  const styles = useThematicStyles(stylesObj);
   return (
     <ScrollView
       style={{paddingBottom: insets.bottom}}
@@ -83,7 +84,7 @@ export const SettingsAbout = () => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   content: {
     marginHorizontal: 20,
     flexGrow: 1,

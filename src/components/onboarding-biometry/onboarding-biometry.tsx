@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,6 +14,7 @@ import {
   Text,
   TouchIdIcon,
 } from '@app/components/ui';
+import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
 import {BIOMETRY_TYPES_NAMES} from '@app/variables/common';
@@ -31,6 +32,7 @@ export const OnboardingBiometry = ({
   biometryType,
   error,
 }: OnboardingBiometryProps) => {
+  const {colors} = useTheme();
   const enableBiometry = getText(I18N.onboardingBiometryEnable, {
     biometry: BIOMETRY_TYPES_NAMES[biometryType],
   });
@@ -38,33 +40,23 @@ export const OnboardingBiometry = ({
   const icon = useMemo(() => {
     switch (biometryType) {
       case BiometryType.faceId:
-        return (
-          <FaceIdIcon color={getColor(Color.graphicBase1)} style={style.icon} />
-        );
+        return <FaceIdIcon color={colors.graphicBase1} style={styles.icon} />;
       case BiometryType.touchId:
-        return (
-          <TouchIdIcon
-            color={getColor(Color.graphicBase1)}
-            style={style.icon}
-          />
-        );
+        return <TouchIdIcon color={colors.graphicBase1} style={styles.icon} />;
       case BiometryType.fingerprint:
         return (
-          <FingerprintIcon
-            color={getColor(Color.graphicBase1)}
-            style={style.icon}
-          />
+          <FingerprintIcon color={colors.graphicBase1} style={styles.icon} />
         );
       default:
         return null;
     }
-  }, [biometryType]);
+  }, [biometryType, colors]);
 
   return (
-    <PopupContainer style={style.container}>
-      <Spacer style={style.space}>
+    <PopupContainer style={styles.container}>
+      <Spacer style={styles.space}>
         {icon}
-        <Text t4 style={style.title} testID="onboarding_biometry_title">
+        <Text t4 style={styles.title} testID="onboarding_biometry_title">
           {enableBiometry}
         </Text>
         <Text
@@ -74,20 +66,20 @@ export const OnboardingBiometry = ({
           center
         />
         {error && (
-          <ErrorText e2 center style={style.error}>
+          <ErrorText e2 center style={styles.error}>
             {error}
           </ErrorText>
         )}
       </Spacer>
       <Button
-        style={style.margin}
+        style={styles.margin}
         variant={ButtonVariant.contained}
         title={enableBiometry}
         testID="onboarding_biometry_enable"
         onPress={onClickEnable}
       />
       <Button
-        style={style.margin}
+        style={styles.margin}
         i18n={I18N.onboardingBiometrySkip}
         testID="onboarding_biometry_skip"
         onPress={onClickSkip}
@@ -96,7 +88,7 @@ export const OnboardingBiometry = ({
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {marginHorizontal: 20},
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},

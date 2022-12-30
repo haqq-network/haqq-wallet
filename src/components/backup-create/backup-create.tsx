@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,8 +14,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
+import {useThematicStyles, useTheme, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -27,6 +26,8 @@ interface BackupCreateProps {
 
 export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
   const {mnemonic} = useTypedRoute<'backupCreate'>().params;
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   const [checked, setChecked] = useState(false);
 
@@ -36,17 +37,17 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
   };
 
   return (
-    <PopupContainer style={page.container}>
-      <Text t4 style={page.t4} i18n={I18N.backupCreateRecoveryPhrase} />
+    <PopupContainer style={styles.container}>
+      <Text t4 style={styles.t4} i18n={I18N.backupCreateRecoveryPhrase} />
       <Text
         t11
         color={Color.textBase2}
         center
         i18n={I18N.backupCreateRecoverySaveWords}
       />
-      <Spacer style={page.space}>
-        <View style={page.mnemonics}>
-          <View style={page.column}>
+      <Spacer style={styles.space}>
+        <View style={styles.mnemonics}>
+          <View style={styles.column}>
             {mnemonic
               .split(' ')
               .slice(0, 6)
@@ -54,7 +55,7 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
                 <MnemonicWord key={`${t}${i}`} word={t} index={i + 1} />
               ))}
           </View>
-          <View style={page.column}>
+          <View style={styles.column}>
             {mnemonic
               .split(' ')
               .slice(6, 12)
@@ -63,28 +64,28 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
               ))}
           </View>
         </View>
-        <CopyButton value={mnemonic ?? ''} style={page.copy}>
-          <Copy height={22} width={22} color={getColor(Color.textGreen1)} />
-          <Text t9 style={page.copyText} i18n={I18N.copy} />
+        <CopyButton value={mnemonic ?? ''} style={styles.copy}>
+          <Copy height={22} width={22} color={colors.textGreen1} />
+          <Text t9 style={styles.copyText} i18n={I18N.copy} />
         </CopyButton>
       </Spacer>
       <InfoBlock
         i18n={I18N.backupCreateRecoveryWarningMessage}
         warning
-        style={page.marginBottom}
+        style={styles.marginBottom}
       />
-      <View style={page.agree}>
+      <View style={styles.agree}>
         <Checkbox value={checked} onPress={onClickCheck}>
           <Text
             t13
-            style={page.agreeText}
+            style={styles.agreeText}
             i18n={I18N.backupCreateRecoveryAgreement}
           />
         </Checkbox>
       </View>
       <Button
         i18n={I18N.continue}
-        style={page.submit}
+        style={styles.submit}
         variant={ButtonVariant.contained}
         disabled={!checked}
         onPress={onSubmit}
@@ -93,7 +94,7 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingTop: 20,

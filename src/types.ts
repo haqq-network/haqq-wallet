@@ -7,7 +7,6 @@ import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
-import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -427,12 +426,6 @@ export enum AppLanguage {
   ar = 'ar',
 }
 
-export enum AppTheme {
-  light = 'light',
-  dark = 'dark',
-  system = 'system',
-}
-
 export type AddWalletParams = {address: string; publicKey: string} & (
   | {
       type: WalletType.mnemonic;
@@ -465,8 +458,6 @@ export type ValidatorItem = Validator & {
   localRewards?: number;
   localUnDelegations?: number;
 };
-
-export type ColorType = Color | string;
 
 export type ProposalsTagKeys =
   | 'all'
@@ -507,3 +498,47 @@ export type ProposalsCroppedList = {
   id: number;
   status: string;
 }[];
+
+export type ThemeColorsType = {
+  transparent: string;
+  textBase1: string;
+  textBase2: string;
+  textBase3: string;
+  textSecond1: string;
+  textSecond2: string;
+  textGreen1: string;
+  textRed1: string;
+  textYellow1: string;
+  textBlue1: string;
+  bg1: string;
+  bg2: string;
+  bg3: string;
+  bg4: string;
+  bg5: string;
+  bg6: string;
+  bg7: string;
+  bg8: string;
+  bg9: string;
+  bg10: string;
+  graphicBase1: string;
+  graphicBase2: string;
+  graphicBase3: string;
+  graphicBlue1: string;
+  graphicRed1: string;
+  graphicGreen1: string;
+  graphicGreen2: string;
+  graphicSecond1: string;
+  graphicSecond2: string;
+  graphicSecond3: string;
+  graphicSecond4: string;
+};
+
+export interface ThemeDictionaryType {
+  [key: string]: ThemeColorsType;
+}
+
+export type SomeStyle = ViewStyle | TextStyle | ImageStyle;
+
+export type NamedStyles<T> = {
+  [P in keyof T]: SomeStyle;
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -11,7 +11,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 // import {Terms} from '@app/components/ui/terms';
 
@@ -63,7 +62,7 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
   },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Text, TextProps} from '@app/components/ui';
 
 type ErrorTextProps = {
@@ -24,7 +24,7 @@ export const ErrorText = ({
       t14={e1}
       t11={e2}
       t8={e3}
-      color={getColor(Color.textRed1)}
+      color={Color.textRed1}
       style={style}
       {...props}
     />

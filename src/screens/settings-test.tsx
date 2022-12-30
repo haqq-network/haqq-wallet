@@ -1,10 +1,10 @@
 import React from 'react';
 
 import messaging from '@react-native-firebase/messaging';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Button, ButtonVariant} from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {pushNotifications} from '@app/services/push-notifications';
 
@@ -59,7 +59,7 @@ export const SettingsTestScreen = () => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },

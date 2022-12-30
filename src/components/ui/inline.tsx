@@ -2,8 +2,6 @@ import React, {useMemo} from 'react';
 
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-
 export type InlineProps = {
   gap: number;
   children: React.ReactNode;
@@ -48,7 +46,7 @@ export const Inline = ({gap, children, style = {}}: InlineProps) => {
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',

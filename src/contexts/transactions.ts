@@ -4,14 +4,12 @@ import {EventEmitter} from 'events';
 
 import {utils} from 'ethers';
 
+import {app} from '@app/contexts/app';
 import {calcFee, captureException} from '@app/helpers';
-
-import {app} from './app';
-
-import {realm} from '../models';
-import {Provider} from '../models/provider';
-import {Transaction} from '../models/transaction';
-import {Wallet} from '../models/wallet';
+import {realm} from '@app/models';
+import {Provider} from '@app/models/provider';
+import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 
 class Transactions extends EventEmitter {
   private _transactions: Realm.Results<Transaction>;

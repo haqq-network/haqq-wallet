@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {StyleSheet} from 'react-native';
+
 import {Color} from '@app/colors';
 import {
   DataContent,
@@ -7,7 +9,6 @@ import {
   IconButton,
   PopupContainer,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {AppLanguage} from '@app/types';
 
 type SettingsLanguageProps = {
@@ -45,7 +46,7 @@ export const SettingsLanguage = ({
   );
 };
 
-const styles = createTheme({
+const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

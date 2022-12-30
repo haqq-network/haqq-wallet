@@ -5,7 +5,7 @@ import 'react-native-get-random-values';
 import '@ethersproject/shims';
 import {AppRegistry} from 'react-native';
 
-import {App} from './src/app';
+import {AppWithProviders} from './src/AppWithProviders';
 import {name as appName} from './app.json';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
@@ -74,7 +74,7 @@ JsonRpcProvider.prototype.send = async function (method, params) {
   return result;
 };
 
-const Wrapped = Sentry.wrap(App);
+const Wrapped = Sentry.wrap(AppWithProviders);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 

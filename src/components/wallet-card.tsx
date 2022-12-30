@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -12,7 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {cleanNumber, shortAddress} from '@app/utils';
@@ -35,6 +35,7 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
+  const styles = useThematicStyles(stylesObj);
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -118,7 +119,7 @@ export const WalletCard = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     backgroundColor: Color.bg1,

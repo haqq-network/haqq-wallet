@@ -2,8 +2,8 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {realm} from '../models';
-import {Contact} from '../models/contact';
+import {realm} from '@app/models';
+import {Contact} from '@app/models/contact';
 
 class Contacts extends EventEmitter {
   private _contacts: Realm.Results<Contact>;

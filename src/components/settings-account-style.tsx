@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -18,7 +18,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -79,6 +79,7 @@ export const SettingsAccountStyle = ({
   const cardWidth = useWindowDimensions().width - 72;
   const [loading, setLoading] = useState<boolean>(false);
   const [isStyleChanged, setIsStyleChanged] = useState(false);
+  const styles = useThematicStyles(stylesObj);
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -238,7 +239,7 @@ export const SettingsAccountStyle = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },

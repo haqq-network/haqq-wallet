@@ -1,18 +1,24 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {utils} from 'ethers';
-import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
+import {
+  Dimensions,
+  StatusBar,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {createTheme, hideModal} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
+import {hideModal} from '@app/helpers';
+import {useApp, useThematicStyles, useTheme, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {QR_STATUS_BAR} from '@app/variables/common';
@@ -30,6 +36,8 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const wallets = useWallets();
   const app = useApp();
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   const closeDistance = useWindowDimensions().height / 6;
   const [rows, setRows] = useState(wallets.visible);
@@ -162,7 +170,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         flashMode={flashMode}
         hintText=""
         isShowScanBar={false}
-        cornerColor={getColor(error ? Color.graphicRed1 : Color.graphicBase3)}
+        cornerColor={error ? colors.graphicRed1 : colors.graphicBase3}
         cornerWidth={7}
         zoom={0}
         notAuthorizedView={() => <QrNoAccess onClose={onClose} />}
@@ -199,7 +207,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   container: {flex: 1},
   bottomError: {
     backgroundColor: Color.graphicRed1,

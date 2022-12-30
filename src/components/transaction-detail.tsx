@@ -2,12 +2,12 @@ import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
-import {View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {useThematicStyles} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
@@ -32,6 +32,7 @@ export const TransactionDetail = ({
   const isSent = transaction?.source === TransactionSource.send;
   const to = isSent ? transaction.to : ' ';
   const from = transaction?.from ? transaction.from : ' ';
+  const styles = useThematicStyles(stylesObj);
 
   const title = isSent
     ? I18N.transactionDetailSent
@@ -143,7 +144,7 @@ export const TransactionDetail = ({
   );
 };
 
-const styles = createTheme({
+const stylesObj = StyleSheet.create({
   sum: {
     marginBottom: 20,
     fontWeight: '700',

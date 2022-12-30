@@ -23,10 +23,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useAndroidStatusBarAnimation} from '@app/hooks';
+import {
+  useAndroidStatusBarAnimation,
+  useThematicStyles,
+  useTheme,
+} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   ANIMATION_DURATION,
@@ -54,6 +57,8 @@ export const BottomSheet = ({
 }: BottomSheetProps) => {
   const {height} = useWindowDimensions();
   const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
+  const styles = useThematicStyles(stylesObj);
+  const {colors} = useTheme();
 
   const bottomSheetHeight = height - (topInsets + 12);
   const snapPointFromTop: pointsT = [0, bottomSheetHeight];
@@ -193,25 +198,26 @@ export const BottomSheet = ({
   });
 
   return (
-    <View style={[StyleSheet.absoluteFill, page.container]}>
+    <View style={[StyleSheet.absoluteFill, styles.container]}>
       <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View
         style={[
           StyleSheet.absoluteFill,
-          page.background,
+          styles.background,
           backgroundAnimatedStyle,
         ]}
       />
       <TouchableWithoutFeedback onPress={onClosePopup}>
-        <View style={page.space} />
+        <View style={styles.space} />
       </TouchableWithoutFeedback>
-      <Animated.View style={[page.animateView, page.content, bottomSheetStyle]}>
+      <Animated.View
+        style={[styles.animateView, styles.content, bottomSheetStyle]}>
         <GestureDetector gesture={headerGesture}>
           <Animated.View>
-            <View style={page.swipe}>
-              <SwiperIcon color={getColor(Color.graphicSecond2)} />
+            <View style={styles.swipe}>
+              <SwiperIcon color={colors.graphicSecond2} />
             </View>
-            <View style={page.header}>
+            <View style={styles.header}>
               <Text t6 color={Color.textBase1} i18n={i18nTitle} />
               <Spacer />
               <IconButton onPress={onClosePopup}>
@@ -238,7 +244,7 @@ export const BottomSheet = ({
   );
 };
 
-const page = createTheme({
+const stylesObj = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     zIndex: 5,
