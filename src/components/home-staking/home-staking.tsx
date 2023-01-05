@@ -5,6 +5,7 @@ import {ScrollView, View} from 'react-native';
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {NUM_PRECISION} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';
@@ -31,7 +32,7 @@ export const HomeStaking = ({
   const [isAnimation, setIsAnimation] = useState(false);
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
-  const canGetRewards = rewardsSum > 0;
+  const canGetRewards = rewardsSum >= 1 / NUM_PRECISION;
 
   const handleGetRewards = () => {
     stakingActiveRef.current?.getReward();
@@ -40,7 +41,7 @@ export const HomeStaking = ({
     onPressGetRewards?.();
   };
 
-  const hasStaking = stakingSum > 0.0001;
+  const hasStaking = stakingSum >= 1 / NUM_PRECISION;
 
   if (loading) {
     return <Loading />;

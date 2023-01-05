@@ -25,7 +25,7 @@ import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {NUM_PRECISION, WEI} from '@app/variables/common';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
@@ -143,7 +143,7 @@ export const StakingInfo = ({
         <Spacer height={12} />
         <View style={styles.infoBlock}>
           <Block name={I18N.stakingInfoVotingPower}>
-            <Text t11>{cleanNumber(votingPower.toFixed(2))}</Text>
+            <Text t11>{cleanNumber(votingPower)}</Text>
           </Block>
           <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
@@ -203,7 +203,7 @@ export const StakingInfo = ({
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        {(rewards?.length ?? 0) > 0.0001 && (
+        {(rewards?.length ?? 0) >= 1 / NUM_PRECISION && (
           <>
             <Button
               loading={withdrawDelegatorRewardProgress}

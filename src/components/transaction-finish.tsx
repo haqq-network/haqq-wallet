@@ -62,7 +62,7 @@ export const TransactionFinish = ({
       />
       {transaction && (
         <Text t5 center style={styles.sum}>
-          - {cleanNumber((transaction?.value).toFixed(8))} ISLM
+          - {cleanNumber(transaction?.value)} ISLM
         </Text>
       )}
 
