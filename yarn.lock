@@ -1340,6 +1340,14 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@haqq/provider-base@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.2.tgz#4b922fbf2af79cec8811dbf63dbc70fca8992c2b"
+  integrity sha512-lc8wyPYANIkh0yG9+OTJqM6A/vhL8U01DujH1Smx/XruRKsCJnO5emYPkBbnQFNJmSrmMK8PKt8bZXn9sUJW6A==
+  dependencies:
+    "@ethersproject/abstract-provider" "^5.7.0"
+    bech32-converting "^1.0.9"
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

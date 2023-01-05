@@ -3,12 +3,16 @@ import {hexConcat, joinSignature} from '@ethersproject/bytes';
 import {keccak256} from '@ethersproject/keccak256';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
 import {Wallet as EthersWallet} from '@ethersproject/wallet';
+import {
+  Provider as ProviderBase,
+  ProviderInterface,
+  compressPublicKey,
+} from '@haqq/provider-base';
 
-import {Transport} from '@app/services/transport';
-import {compressPublicKey} from '@app/services/transport-utils';
-import {TransportWallet} from '@app/types';
-
-export class TransportHot extends Transport implements TransportWallet {
+export class TransportHot
+  extends ProviderBase<{}>
+  implements ProviderInterface
+{
   async getBase64PublicKey() {
     if (!this._wallet.publicKey) {
       const privateKey = await this._wallet.getPrivateKey();
