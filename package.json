@@ -47,6 +47,7 @@
     "https-browserify": "~0.0.0",
     "lottie-ios": "3.4.4",
     "lottie-react-native": "5.1.4",
+    "markdown-it": "^13.0.1",
     "metro-minify-terser": "^0.73.3",
     "patch-package": "^6.4.7",
     "randombytes": "^2.1.0",
