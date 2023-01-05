@@ -18,6 +18,7 @@
     "@ethersproject/shims": "^5.6.0",
     "@evmos/provider": "^0.2.8",
     "@evmos/transactions": "^0.2.12",
+    "@haqq/provider-base": "^0.0.3",
     "@ledgerhq/hw-app-eth": "6.30.0",
     "@ledgerhq/hw-transport": "^6.27.8",
     "@ledgerhq/react-native-hw-transport-ble": "6.27.9",

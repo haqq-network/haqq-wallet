@@ -1,5 +1,7 @@
 import {EventEmitter} from 'events';
 
+import {WalletInterface} from '@haqq/provider-base';
+
 import {app} from '@app/contexts';
 import {decrypt, encrypt} from '@app/passworder';
 import {Cosmos} from '@app/services/cosmos';
@@ -71,7 +73,7 @@ export class WalletRealm extends Realm.Object {
   };
 }
 
-export class Wallet extends EventEmitter {
+export class Wallet extends EventEmitter implements WalletInterface {
   static defaultData = {
     data: '',
     name: '',
@@ -248,7 +250,7 @@ export class Wallet extends EventEmitter {
   }
 
   get publicKey() {
-    return this._raw.publicKey;
+    return this._raw.publicKey!;
   }
 
   set publicKey(value) {
@@ -362,7 +364,7 @@ export class Wallet extends EventEmitter {
   }
 
   get deviceId() {
-    return this._raw.deviceId;
+    return this._raw.deviceId!;
   }
 
   get deviceName() {
@@ -403,9 +405,9 @@ export class Wallet extends EventEmitter {
       switch (this.type) {
         case WalletType.mnemonic:
         case WalletType.hot:
-          return new TransportHot(this);
+          return new TransportHot(this, {cosmosPrefix: 'haqq'});
         case WalletType.ledgerBt:
-          return new TransportLedger(this);
+          return new TransportLedger(this, {cosmosPrefix: 'haqq'});
         default:
           throw new Error('transport_not_implemented');
       }
