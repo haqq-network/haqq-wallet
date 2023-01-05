@@ -221,11 +221,15 @@ export type RootStackParamList = {
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
   ledgerStore: {
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
@@ -493,7 +497,25 @@ export type DepositResponse = {
   pagination: {next_key: any; total: string};
 };
 
+export type StakingParamsResponse = {
+  params: {
+    unbonding_time: string;
+    max_validators: number;
+    max_entries: number;
+    historical_entries: number;
+    bond_denom: string;
+  };
+};
+
 export type ProposalsCroppedList = {
   id: number;
   status: string;
 }[];
+
+export type LedgerAccountItem = {
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  exists: boolean;
+  balance: number;
+};

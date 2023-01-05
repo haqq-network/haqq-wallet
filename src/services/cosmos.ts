@@ -43,7 +43,11 @@ import {realm} from '@app/models';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {DepositResponse, TransportWallet} from '@app/types';
+import {
+  DepositResponse,
+  StakingParamsResponse,
+  TransportWallet,
+} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -151,34 +155,8 @@ export class Cosmos {
     );
   }
 
-  async deposit(
-    transport: TransportWallet,
-    proposalId: number,
-    amount: number,
-  ) {
-    try {
-      const sender = await this.getSender(transport);
-      const memo = '';
-      const strAmount = new Decimal(amount).mul(WEI);
-      const params = {
-        proposalId,
-        deposit: {
-          amount: strAmount.toFixed(),
-          denom: 'aISLM',
-        },
-      };
-      const msg = createTxMsgDeposit(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
-
-      return await this.sendMsg(transport, sender, msg);
-    } catch (error) {
-      captureException(error, 'Cosmos.deposit');
-    }
+  async getStakingParams(): Promise<StakingParamsResponse> {
+    return this.getQuery('/cosmos/staking/v1beta1/params');
   }
 
   getProposalDepositor(proposal_id: number | string, depositor: string) {
@@ -289,6 +267,36 @@ export class Cosmos {
     );
 
     return await this.broadcastTransaction(rawTx);
+  }
+
+  async deposit(
+    transport: TransportWallet,
+    proposalId: number,
+    amount: number,
+  ) {
+    try {
+      const sender = await this.getSender(transport);
+      const memo = '';
+      const strAmount = new Decimal(amount).mul(WEI);
+      const params = {
+        proposalId,
+        deposit: {
+          amount: strAmount.toFixed(),
+          denom: 'aISLM',
+        },
+      };
+      const msg = createTxMsgDeposit(
+        this.haqqChain,
+        sender,
+        Cosmos.fee,
+        memo,
+        params,
+      );
+
+      return await this.sendMsg(transport, sender, msg);
+    } catch (error) {
+      captureException(error, 'Cosmos.deposit');
+    }
   }
 
   async vote(transport: TransportWallet, proposalId: number, option: number) {

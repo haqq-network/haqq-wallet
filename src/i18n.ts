@@ -91,12 +91,14 @@ export enum I18N {
   trackActivityPrivacyDescription,
   transactionLedgerBluetoothDisabled,
   transactionLedgerBluetoothConfirmation,
-  termsAgreement,
+  termsOfService,
   termsPrivacyPolicy,
+  termsAgreementFirst,
+  termsAgreementSecond,
   signUpTitle,
   signInTitle,
   transactionSumSend,
-  transactionSumPereview,
+  transactionSumPreview,
   copy,
   yes,
   no,
@@ -167,6 +169,7 @@ export enum I18N {
   pinManyAttempts,
   settingsAccountEditHeaderTitle,
   settingsContactEditHeaderTitle,
+  settingsContactEditNamePlaceholder,
   settingsContactEditDeleteContact,
   settingsProvidersTitle,
   settingsProvidersTitleRight,
@@ -253,6 +256,8 @@ export enum I18N {
   StakingInfoUnDelegationDay,
   voteAbstain,
   voteVeto,
+  voteRegistered,
+  voteNotRegistered,
   stakingDelegateFormTitle,
   stakingDelegateFormStakeTo,
   stakingDelegateFormCommission,
@@ -265,7 +270,6 @@ export enum I18N {
   stakingDelegatePreviewAmount,
   stakingDelegatePreviewNetworkFee,
   stakingDelegatePreviewDelegate,
-  stakingDelegatePreviewAttention,
   stakingDelegateFinishTitle,
   stakingDelegateFinishTotalAmount,
   stakingDelegateFinishDone,
@@ -311,6 +315,7 @@ export enum I18N {
   popupProposalVoteTitle,
   popupProposalVoteDescription,
   proposalVoteResults,
+  proposalVoteSendingVote,
   proposalYouVoted,
   proposalAccountTitle,
   proposalDepositFinishDone,
@@ -473,12 +478,14 @@ const en: Record<I18N, string> = {
   [I18N.transactionLedgerBluetoothDisabled]: 'No access to Bluetooth',
   [I18N.transactionLedgerBluetoothConfirmation]:
     'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
-  [I18N.createAgreementTitle]: 'Islm - DeFi Wallet',
+  [I18N.createAgreementTitle]: 'HAQQ - DeFi Wallet',
   [I18N.createAgreementText]:
-    'Islm Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the Haqq Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
+    'HAQQ Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the HAQQ Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
   [I18N.createAgreementAgree]: 'Agree',
+  [I18N.termsAgreementFirst]: 'By clicking Agree you agree to ',
+  [I18N.termsOfService]: 'Terms of Service',
+  [I18N.termsAgreementSecond]: ' and ',
   [I18N.termsPrivacyPolicy]: 'Privacy Policy',
-  [I18N.termsAgreement]: 'By clicking Agree you agree to ',
   // 'By clicking Agree you agree to the Terms of Service and',
   [I18N.restoreAgreementTitle]:
     'Do you have your recovery phrase or private key?',
@@ -493,7 +500,7 @@ const en: Record<I18N, string> = {
   [I18N.restorePasswordForgot]: 'Forgot your password?',
   [I18N.ledgerAgreementTitle]: 'Connect your Ledger',
   [I18N.ledgerAgreementText]:
-    'If you have a Ledger Nano X, then you can connect it via Bluetooth to Islm Wallet. You will be able to manage funds from Ledger using Islm Wallet',
+    'If you have a Ledger Nano X, then you can connect it via Bluetooth to HAQQ Wallet. You will be able to manage funds from Ledger using Islm Wallet',
   [I18N.ledgerAgreementAgree]: 'Connect',
   [I18N.ledgerAccountsAdd]: 'Add',
   [I18N.ledgerAccountsAdded]: 'Added',
@@ -539,7 +546,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionAddressError]: 'Incorrect address',
   [I18N.transactionAddressLabel]: 'Send to',
   [I18N.transactionsEmpty]: 'No transactions',
-  [I18N.trackActivityTitle]: 'Allow ISLM Wallet track your activity',
+  [I18N.trackActivityTitle]: 'Allow HAQQ Wallet track your activity',
   [I18N.trackActivityImprovement]: 'Improvement',
   [I18N.trackActivityImprovementDescription]:
     'This will help us to collect more information about the problems of the application',
@@ -550,6 +557,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAccountEditHeaderTitle]: 'Edit account name',
   [I18N.settingsContactEditHeaderTitle]: 'Contact',
   [I18N.settingsContactEditDeleteContact]: 'Delete Contact',
+  [I18N.settingsContactEditNamePlaceholder]: 'Enter a name',
   [I18N.signUpTitle]: 'Create a wallet',
   [I18N.copy]: 'Copy',
   [I18N.yes]: 'Yes',
@@ -586,7 +594,7 @@ const en: Record<I18N, string> = {
   [I18N.backupNotificationAlertTitle]: 'Proceed without backup?',
   [I18N.backupNotificationAlertDescription]:
     'If you lose access to your wallet, we will not be able to restore your account if you do not make a backup',
-  [I18N.modalPinTitle]: 'Welcome to ISLM Wallet',
+  [I18N.modalPinTitle]: 'Welcome to HAQQ Wallet',
   [I18N.notificationCopied]: 'Copied',
   [I18N.notificationAccountDeleted]: 'The account has been deleted',
   [I18N.notificationAccountHidden]: 'The account was hidden',
@@ -637,7 +645,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsProviderEditName]: 'Name',
   [I18N.settingsProviderEditNamePlaceholder]: 'Provider name',
   [I18N.settingsProviderEditNameHint]:
-    'You can enter any name that suits you. \nExample: Haqq Network',
+    'You can enter any name that suits you. \nExample: HAQQ Network',
   [I18N.settingsProviderEditEthEndpoint]: 'EVM RPC',
   [I18N.settingsProviderEditEthEndpointPlaceholder]: 'URL',
   [I18N.settingsProviderEditEthEndpointHint]:
@@ -667,7 +675,7 @@ const en: Record<I18N, string> = {
   [I18N.signinRestoreWalletPhraseOrKey]: 'Recovery phrase or Private key',
   [I18N.signinRestoreWalletRecovery]: 'Recovery',
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
-  [I18N.signinRestoreWalletTextFieldLabel]: '',
+  [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
     'Enter or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
@@ -707,7 +715,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsSecurityBiometry]: 'Use {{biometry}} to unlock the app',
   [I18N.SettingsSecurityChangePin]: 'Change PIN',
   [I18N.setttingsSecurityEnterPin]: 'Enter new PIN',
-  [I18N.settingsSecurityWalletPin]: 'Enter ISLM Wallet PIN',
+  [I18N.settingsSecurityWalletPin]: 'Enter HAQQ Wallet PIN',
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.stakingValidators]: 'Validators list',
@@ -743,6 +751,8 @@ const en: Record<I18N, string> = {
   [I18N.validatorInfoHide]: 'Hide',
   [I18N.voteAbstain]: 'Abstain',
   [I18N.voteVeto]: 'Veto',
+  [I18N.voteRegistered]: 'The vote was registered',
+  [I18N.voteNotRegistered]: 'Error. The vote was not sent',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
   [I18N.stakingDelegateFormCommission]: 'Commission',
@@ -754,8 +764,6 @@ const en: Record<I18N, string> = {
   [I18N.stakingDelegatePreviewAmount]: 'Amount',
   [I18N.stakingDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingDelegatePreviewDelegate]: 'Delegate',
-  [I18N.stakingDelegatePreviewAttention]:
-    'Attention! If in the future you want to withdraw the staked funds, it will take 21 days',
   [I18N.stakingDelegateAccountTitle]: 'Account',
   [I18N.stakingDelegateFinishTitle]: 'Delegate Completed',
   [I18N.stakingDelegateFinishTotalAmount]: 'Total Amount',
@@ -772,8 +780,7 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegatePreviewNetworkFee]: 'Network fee',
   [I18N.stakingUnDelegatePreviewButton]: 'Undelegate',
   [I18N.stakingUnDelegatePreviewAttention]:
-    'Attention! If in the future you want to undelegate the staked funds, it will take 21 days',
-
+    'Attention! If in the future you want to undelegate the staked funds, it will take {{time}}',
   [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
@@ -783,7 +790,7 @@ const en: Record<I18N, string> = {
 
   [I18N.stakingUnDelegateAccountTitle]: 'Account',
   [I18N.stakingUnDelegateSumWarning]:
-    'The funds will be undelegate within 21 days',
+    'The funds will be undelegate within {{time}}',
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.sumAmountNotEnough]: "You don't have enough ISLM to pay the fee",
@@ -797,6 +804,7 @@ const en: Record<I18N, string> = {
   [I18N.popupProposalVoteDescription]:
     'You can change your vote while the voting is in progress',
   [I18N.proposalVoteResults]: 'Vote results',
+  [I18N.proposalVoteSendingVote]: 'We are sending your vote...',
   [I18N.proposalYouVoted]: 'You voted',
   [I18N.proposalAccountTitle]: 'Vote from',
   [I18N.proposalDepositFinishDone]: 'Done',
@@ -833,7 +841,7 @@ const en: Record<I18N, string> = {
   [I18N.backupFinishFinish]: 'Proceed',
   [I18N.proposalTitle]: 'Proposal',
   [I18N.transactionSumSend]: 'Send to',
-  [I18N.transactionSumPereview]: 'Preview',
+  [I18N.transactionSumPreview]: 'Preview',
   [I18N.transactions]: 'Transactions',
   [I18N.to]: 'to {{address}}',
   [I18N.transactionSendTo]: 'to {{address}}',
@@ -873,7 +881,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
-  [I18N.proposalNoVoting]: 'No Voting proposal',
+  [I18N.proposalNoVoting]: 'No {{votingCategory}} proposal',
 
   [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:

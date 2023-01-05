@@ -36,7 +36,7 @@ export const SettingsAbout = () => {
         {/* <IconButton onPress={onPressRate} style={page.button}>
           <StarIcon color={GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
-            Rate ISLM wallet App
+            Rate HAQQ wallet App
           </Text>
           <Spacer />
            <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
@@ -48,15 +48,15 @@ export const SettingsAbout = () => {
           url="https://islamiccoin.net"
         />
       </View>
-      <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
-      <View style={styles.buttons}>
-        <SettingsAboutButton
-          name="doc"
-          color={Color.graphicBase1}
-          i18n={I18N.settingsAboutTerms}
-          url="https://islamiccoin.net"
-        />
-      </View>
+      {/*<Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />*/}
+      {/*<View style={styles.buttons}>*/}
+      {/*  <SettingsAboutButton*/}
+      {/*    name="doc"*/}
+      {/*    color={Color.graphicBase1}*/}
+      {/*    i18n={I18N.settingsAboutTerms}*/}
+      {/*    url="https://islamiccoin.net"*/}
+      {/*  />*/}
+      {/*</View>*/}
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
         <SettingsAboutButton
