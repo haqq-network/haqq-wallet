@@ -9,6 +9,7 @@ import {
   TransactionListSend,
   TransactionSource,
 } from '@app/types';
+import {NUM_PRECISION} from '@app/variables/common';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -148,7 +149,11 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function cleanNumber(number: string | number, delimiter = ' ') {
-  const [a, f] = String(number).trim().split('.');
+  const raw =
+    Math.floor(parseFloat(String(number).trim()) * 10 ** NUM_PRECISION) /
+    10 ** NUM_PRECISION;
+
+  const [a, f] = String(raw.toFixed(NUM_PRECISION)).split('.');
 
   const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
 

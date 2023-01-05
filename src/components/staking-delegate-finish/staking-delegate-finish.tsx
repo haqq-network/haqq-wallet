@@ -67,7 +67,7 @@ export const StakingDelegateFinish = ({
         style={styles.totalAmount}
       />
       <Text t3 center style={styles.sum}>
-        - {cleanNumber(amount.toFixed(2))} ISLM
+        - {cleanNumber(amount)} ISLM
       </Text>
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
