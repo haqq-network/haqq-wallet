@@ -60,13 +60,12 @@ export const SignInStoreWalletScreen = () => {
                 );
 
                 if (wallet) {
-                  wallet.mnemonicSaved = true;
-
                   const main = wallets.getMain();
 
-                  if (!main) {
-                    wallet.isMain = true;
-                  }
+                  wallet.update({
+                    mnemonicSaved: true,
+                    isMain: !main,
+                  });
                 }
               } else {
                 canNext = false;
@@ -85,7 +84,7 @@ export const SignInStoreWalletScreen = () => {
           );
 
           if (wallet) {
-            wallet.mnemonicSaved = true;
+            wallet.update({mnemonicSaved: true});
           }
         }
 

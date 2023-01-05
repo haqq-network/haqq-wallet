@@ -24,7 +24,9 @@ export const SettingsAccountEditScreen = () => {
   };
   const onPressRight = () => {
     if (wallet) {
-      wallet.name = inputName;
+      wallet.update({
+        name: inputName,
+      });
     }
     navigation.goBack();
   };

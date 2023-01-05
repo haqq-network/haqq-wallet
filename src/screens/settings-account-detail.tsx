@@ -29,7 +29,7 @@ export const SettingsAccountDetailScreen = () => {
 
   const onToggleIsHidden = useCallback(() => {
     if (wallet) {
-      wallet.isHidden = !wallet.isHidden;
+      wallet.update({isHidden: !wallet.isHidden});
       if (wallet.isHidden) {
         sendNotification(I18N.notificationAccountHidden);
       }
@@ -59,6 +59,10 @@ export const SettingsAccountDetailScreen = () => {
     );
   }, [navigation, route.params.address, wallets]);
 
+  if (!wallet) {
+    return null;
+  }
+
   return (
     <>
       <CustomHeader
@@ -69,6 +73,7 @@ export const SettingsAccountDetailScreen = () => {
         onPressRight={onRemove}
       />
       <SettingsAccountDetail
+        wallet={wallet}
         onPressRename={onPressRename}
         onPressStyle={onPressStyle}
         onToggleIsHidden={onToggleIsHidden}
