@@ -25,7 +25,7 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
   ],
-  schemaVersion: 35,
+  schemaVersion: 36,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -220,6 +220,27 @@ export const realm = new Realm({
 
         if (newObject.type === WalletType.ledgerBt) {
           newObject.path = ETH_HD_PATH;
+        }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 36) {
+      const oldObjects = oldRealm.objects<{
+        mnemonicSaved: boolean;
+      }>('Wallet');
+      const newObjects = newRealm.objects<{
+        mnemonicSaved: boolean;
+        type: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (
+          newObject.type === WalletType.ledgerBt ||
+          newObject.type === WalletType.hot
+        ) {
+          newObject.mnemonicSaved = true;
         }
       }
     }

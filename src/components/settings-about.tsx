@@ -36,7 +36,7 @@ export const SettingsAbout = () => {
         {/* <IconButton onPress={onPressRate} style={page.button}>
           <StarIcon color={GRAPHIC_BASE_1} />
           <Text t11 style={page.buttonText}>
-            Rate ISLM wallet App
+            Rate HAQQ wallet App
           </Text>
           <Spacer />
            <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />

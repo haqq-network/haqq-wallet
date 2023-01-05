@@ -1,20 +1,20 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
+import {
+  Provider as ProviderBase,
+  ProviderInterface,
+  compressPublicKey,
+} from '@haqq/provider-base';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {utils} from 'ethers';
 
 import {runUntil} from '@app/helpers';
-import {Wallet} from '@app/models/wallet';
-import {Transport} from '@app/services/transport';
-import {compressPublicKey} from '@app/services/transport-utils';
-import {TransportWallet} from '@app/types';
 
-export class TransportLedger extends Transport implements TransportWallet {
+export class TransportLedger
+  extends ProviderBase<{}>
+  implements ProviderInterface
+{
   public stop: boolean = false;
-
-  constructor(wallet: Wallet) {
-    super(wallet);
-  }
 
   async getBase64PublicKey() {
     if (!this._wallet.publicKey) {
@@ -81,7 +81,7 @@ export class TransportLedger extends Transport implements TransportWallet {
   async signTypedData(domainHash: string, valuesHash: string) {
     this.stop = false;
     let signature = null;
-    const iter = runUntil(this._wallet.deviceId!, eth =>
+    const iter = runUntil(this._wallet.deviceId, eth =>
       eth.signEIP712HashedMessage(this._wallet.path, domainHash, valuesHash),
     );
 

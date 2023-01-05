@@ -95,7 +95,7 @@ export const WalletCard = ({
         </IconButton>
       )}
       <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-        {cleanNumber(balance.toFixed(2))} ISLM
+        {cleanNumber(balance)} ISLM
       </Text>
       <Spacer />
       <View style={styles.buttonsContainer}>
