@@ -1,14 +1,14 @@
 import {useEffect, useState} from 'react';
 
-import {wallets} from '@app/contexts';
+import {Wallet} from '@app/models/wallet';
 
 export function useWallet(address: string) {
   const [, setDate] = useState(new Date());
-  const [wallet, setWallet] = useState(wallets.getWallet(address));
+  const [wallet, setWallet] = useState(Wallet.getById(address));
 
   useEffect(() => {
     setDate(new Date());
-    setWallet(wallets.getWallet(address));
+    setWallet(Wallet.getById(address));
   }, [address]);
 
   useEffect(() => {
@@ -16,10 +16,10 @@ export function useWallet(address: string) {
       setDate(new Date());
     };
 
-    wallet?.on('change', subscription);
+    wallet?.addListener(subscription);
 
     return () => {
-      wallet?.off('change', subscription);
+      wallet?.removeListener(subscription);
     };
   }, [wallet, address]);
 

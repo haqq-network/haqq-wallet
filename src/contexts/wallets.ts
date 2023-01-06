@@ -7,7 +7,7 @@ import {Image} from 'react-native';
 
 import {app} from '@app/contexts';
 import {realm} from '@app/models';
-import {Wallet, WalletRealm} from '@app/models/wallet';
+import {Wallet} from '@app/models/wallet';
 import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
@@ -22,7 +22,7 @@ class Wallets extends EventEmitter {
   constructor() {
     super();
     this._wallets = new Map();
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
 
     wallets.addListener(() => {
       this.emit('wallets');
@@ -30,7 +30,7 @@ class Wallets extends EventEmitter {
 
     for (const rawWallet of wallets) {
       try {
-        this.attachWallet(new Wallet(rawWallet));
+        this.attachWallet(rawWallet);
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
@@ -148,11 +148,13 @@ class Wallets extends EventEmitter {
   async addWallet(walletParams: AddWalletParams, name = '') {
     const wallet = await Wallet.create(walletParams, name);
 
-    this.attachWallet(wallet);
+    if (wallet !== null) {
+      this.attachWallet(wallet);
 
-    requestAnimationFrame(() => {
-      app.emit('addWallet', wallet.address);
-    });
+      requestAnimationFrame(() => {
+        app.emit('addWallet', wallet.address);
+      });
+    }
 
     return wallet;
   }
@@ -163,31 +165,23 @@ class Wallets extends EventEmitter {
     if (wallet) {
       if (wallet.isMain) {
         const wallets = realm
-          .objects<WalletRealm>(WalletRealm.schema.name)
+          .objects<Wallet>(Wallet.schema.name)
           .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
 
         if (wallets.length) {
-          const w = new Wallet(wallets[0]);
-          w.isMain = true;
+          const w = wallets[0];
+          w.update({isMain: true});
         }
       }
 
-      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        WalletRealm.schema.name,
-        address.toLowerCase(),
-      );
-
       this.deAttachWallet(wallet);
-      if (realmWallet) {
-        realm.write(() => {
-          realm.delete(realmWallet);
-        });
-      }
+
+      Wallet.remove(address.toLowerCase());
     }
 
     requestAnimationFrame(() => {
-      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        WalletRealm.schema.name,
+      const realmWallet = realm.objectForPrimaryKey<Wallet>(
+        Wallet.schema.name,
         address,
       );
       if (!realmWallet) {
@@ -199,7 +193,7 @@ class Wallets extends EventEmitter {
   clean() {
     this._wallets = new Map();
     this.emit('wallets');
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
 
     for (const wallet of wallets) {
       realm.write(() => {
@@ -228,21 +222,19 @@ class Wallets extends EventEmitter {
   }
 
   getMain() {
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
     const main = wallets.filtered('isMain = true');
 
     if (!main.length) {
       return null;
     }
 
-    return new Wallet(main[0]);
+    return main[0];
   }
 
   getForRootAddress(rootAddress: string) {
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
-    return wallets
-      .filtered(`rootAddress = '${rootAddress.toLowerCase()}'`)
-      .map(w => new Wallet(w));
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
+    return wallets.filtered(`rootAddress = '${rootAddress.toLowerCase()}'`);
   }
 
   get visible() {
