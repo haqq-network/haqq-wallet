@@ -424,6 +424,8 @@ export enum I18N {
   errorCreateAccountPopupClose,
   networkFee,
   qrModalSendFunds,
+  ledgerAttentionTitle,
+  ledgerAttentionClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -918,4 +920,7 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.qrModalSendFunds]: 'Send funds from',
+  [I18N.ledgerAttentionTitle]:
+    'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
+  [I18N.ledgerAttentionClose]: 'Close',
 };

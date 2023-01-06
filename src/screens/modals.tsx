@@ -5,6 +5,7 @@ import {Modal} from 'react-native';
 import {
   ErrorAccountAdded,
   ErrorCreateAccount,
+  LedgerAttention,
   LoadingModal,
   LoadingModalProps,
   NoInternet,
@@ -127,6 +128,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <ErrorAccountAdded />;
       case 'error-create-account':
         return <ErrorCreateAccount />;
+      case 'ledger-attention':
+        return <LedgerAttention />;
       default:
         return null;
     }

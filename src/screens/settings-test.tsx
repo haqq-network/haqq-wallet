@@ -51,8 +51,8 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Button
-        title="Show no internet"
-        onPress={() => showModal('error-create-account')}
+        title="Show Ledger attention"
+        onPress={() => showModal('ledger-attention')}
         variant={ButtonVariant.contained}
       />
     </View>
