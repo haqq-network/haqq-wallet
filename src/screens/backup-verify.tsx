@@ -16,7 +16,7 @@ export const BackupVerifyScreen = () => {
       if (selected === mnemonic) {
         const walletList = wallets.getForRootAddress(rootAddress);
         for (const wallet of walletList) {
-          wallet.mnemonicSaved = true;
+          wallet.update({mnemonicSaved: true});
         }
 
         navigation.navigate('backupFinish');
