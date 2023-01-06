@@ -8,4 +8,5 @@ declare module '@env' {
   export const ENVIRONMENT: string;
   export const IS_DEVELOPMENT: string;
   export const PUSH_NOTIFICATIONS: string;
+  export const PROVIDER_BASE_PACKAGE: string;
 }

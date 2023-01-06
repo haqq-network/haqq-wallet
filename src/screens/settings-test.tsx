@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {multiply} from '@haqq/provider-base';
 import messaging from '@react-native-firebase/messaging';
 import {View} from 'react-native';
 
@@ -38,6 +39,11 @@ export const SettingsTestScreen = () => {
     navigation.navigate('notificationPopup');
   };
 
+  const onPressMultiply = async () => {
+    const result = await multiply(2, 2);
+    console.log('multiply', result);
+  };
+
   return (
     <View style={styles.container}>
       <Button
@@ -55,6 +61,7 @@ export const SettingsTestScreen = () => {
         onPress={() => showModal('ledger-attention')}
         variant={ButtonVariant.contained}
       />
+      <Button onPress={onPressMultiply} title="multiply" />
     </View>
   );
 };

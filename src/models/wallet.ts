@@ -1,7 +1,6 @@
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface, decrypt, encrypt} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
-import {decrypt, encrypt} from '@app/passworder';
 import {Cosmos} from '@app/services/cosmos';
 import {TransportHot} from '@app/services/transport-hot';
 import {TransportLedger} from '@app/services/transport-ledger';
@@ -212,8 +211,10 @@ export class Wallet extends Realm.Object {
       case WalletType.hot:
       case WalletType.mnemonic: {
         const password = await app.getPassword();
-        const decrypted = await decrypt(password, this.data);
-        console.log('decrypted', this.address, JSON.stringify(decrypted));
+        const decrypted = await decrypt<{privateKey: string}>(
+          password,
+          this.data,
+        );
         return decrypted.privateKey;
       }
       default:
@@ -252,7 +253,7 @@ export class Wallet extends Realm.Object {
   }
 
   async getMnemonic(password: string) {
-    const decrypted = await decrypt(password, this.data);
+    const decrypted = await decrypt<{mnemonic: {phrase: string} | string}>(password, this.data);
 
     return (
       (typeof decrypted.mnemonic === 'string'
