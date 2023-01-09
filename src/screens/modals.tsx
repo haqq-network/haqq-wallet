@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Modal} from 'react-native';
 
@@ -24,6 +24,7 @@ import {
   WalletsBottomSheetProps,
 } from '@app/components/modals/wallets-bottom-sheet';
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 
 type Loading = {
   type: 'loading';
@@ -96,10 +97,11 @@ export const Modals = ({initialModal = null}: ModalProps) => {
     };
   }, []);
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setModal(null);
     app.emit('onCloseQr');
-  };
+    app.emit(Events.onCloseModal, modal?.type);
+  }, [modal?.type]);
 
   const entry = useMemo(() => {
     if (!modal) {
@@ -129,11 +131,11 @@ export const Modals = ({initialModal = null}: ModalProps) => {
       case 'error-create-account':
         return <ErrorCreateAccount />;
       case 'ledger-attention':
-        return <LedgerAttention />;
+        return <LedgerAttention onClose={onClose} />;
       default:
         return null;
     }
-  }, [modal]);
+  }, [modal, onClose]);
 
   return (
     <Modal animationType="none" visible={!!modal} transparent={true}>

@@ -17,14 +17,14 @@ import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const LedgerAttention = () => {
+export const LedgerAttention = ({onClose}: {onClose: () => void}) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
 
   return (
     <BottomPopupContainer>
-      {onClose => (
+      {onCloseModal => (
         <View style={page.modalView}>
           <Text t9 center i18n={I18N.ledgerAttentionTitle} />
           <Spacer centered minHeight={200}>
@@ -38,7 +38,12 @@ export const LedgerAttention = () => {
           </Spacer>
           <Button
             i18n={I18N.ledgerAttentionClose}
-            onPress={() => onClose(hideModal)}
+            onPress={() =>
+              onCloseModal(() => {
+                hideModal();
+                onClose();
+              })
+            }
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

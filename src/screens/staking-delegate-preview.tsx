@@ -1,12 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {StakingDelegatePreview} from '@app/components/staking-delegate-preview/staking-delegate-preview';
+import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   useCosmos,
   useTypedNavigation,
   useTypedRoute,
   useWallet,
 } from '@app/hooks';
+import {WalletType} from '@app/types';
 
 export const StakingDelegatePreviewScreen = () => {
   const navigation = useTypedNavigation();
@@ -35,11 +37,19 @@ export const StakingDelegatePreviewScreen = () => {
       try {
         setDisabled(true);
 
-        const resp = await cosmos.delegate(
-          wallet.transport,
+        const transport = wallet.transport;
+
+        const query = cosmos.delegate(
+          transport,
           validator.operator_address,
           amount,
         );
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForLedger(transport);
+        }
+
+        const resp = await query;
 
         if (resp) {
           navigation.navigate('stakingDelegateFinish', {

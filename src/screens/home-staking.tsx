@@ -3,12 +3,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {sumReduce} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {WalletType} from '@app/types';
+import {MIN_AMOUNT} from '@app/variables/common';
 
 const initData = {
   stakingSum: 0,
@@ -78,20 +81,65 @@ export const HomeStakingScreen = () => {
     const delegators: any = {};
 
     for (const row of rewards) {
-      delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
-        row.validator,
-      );
+      if (row.amount > MIN_AMOUNT) {
+        delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
+          row.validator,
+        );
+      }
     }
-    await Promise.all(
-      visible
-        .filter(w => w.cosmosAddress in delegators)
-        .map(w => {
-          return cosmos.multipleWithdrawDelegatorReward(
+
+    const exists = visible.filter(w => w.cosmosAddress in delegators);
+
+    const queue = exists
+      .filter(w => w.type !== WalletType.ledgerBt)
+      .map(w => {
+        return cosmos
+          .multipleWithdrawDelegatorReward(
             w.transport,
             delegators[w.cosmosAddress],
-          );
-        }),
-    );
+          )
+          .then(() => [w.cosmosAddress, delegators[w.cosmosAddress]]);
+      });
+
+    const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
+
+    while (ledger.length) {
+      const current = ledger.shift();
+
+      if (current) {
+        const transport = current.transport;
+
+        queue.push(
+          cosmos
+            .multipleWithdrawDelegatorReward(
+              transport,
+              delegators[current.cosmosAddress],
+            )
+            .then(() => [
+              current.cosmosAddress,
+              delegators[current.cosmosAddress],
+            ]),
+        );
+
+        await awaitForLedger(transport);
+      }
+    }
+
+    const responses = await Promise.allSettled(queue);
+
+    for (const resp of responses) {
+      if (resp.status === 'fulfilled' && resp.value) {
+        for (const reward of rewards) {
+          if (
+            reward.delegator === resp.value[0] &&
+            reward.validator === resp.value[1]
+          ) {
+            StakingMetadata.remove(reward.hash);
+          }
+        }
+      }
+    }
+
     rewards.forEach(r => StakingMetadata.remove(r.hash));
   }, [cosmos, visible]);
 

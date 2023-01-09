@@ -1,14 +1,13 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {Deferrable} from '@ethersproject/properties';
+import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
 import {calcFeeWei} from '@app/helpers';
-
-import {Provider} from '../models/provider';
-import {getDefaultChainId, getDefaultNetwork} from '../network';
-import {TransportWallet} from '../types';
-import {WEI} from '../variables/common';
+import {Provider} from '@app/models/provider';
+import {getDefaultChainId, getDefaultNetwork} from '@app/network';
+import {WEI} from '@app/variables/common';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
@@ -17,7 +16,7 @@ export class EthNetwork {
   public stop = false;
 
   async sendTransaction(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     to: string,
     amount: string | number,
   ) {
