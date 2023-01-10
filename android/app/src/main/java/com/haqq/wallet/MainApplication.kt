@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.facebook.react.*
 import com.facebook.react.config.ReactFeatureFlags
-import com.haqq.wallet.encryption.EncryptionPackage
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.version.VersionPackage
 import com.haqq.wallet.ethutils.EthUtilsPackage
@@ -25,7 +24,6 @@ class MainApplication : Application(), ReactApplication {
             val packages: MutableList<ReactPackage> = PackageList(this).packages
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(new MyReactNativePackage());
-            packages.add(EncryptionPackage())
             packages.add(HapticPackage())
             packages.add(VersionPackage())
             packages.add(EthUtilsPackage())
