@@ -19,7 +19,9 @@ export const SignInRestoreScreen = () => {
       privateKey = `0x${privateKey}`;
     }
 
-    const mnemonic = utils.isValidMnemonic(seed.trim()) ? seed.trim() : false;
+    const mnemonic = utils.isValidMnemonic(seed.trim().toLowerCase())
+      ? seed.trim().toLowerCase()
+      : false;
 
     navigation.push(nextScreen ?? 'onboardingSetupPin', {
       mnemonic,
