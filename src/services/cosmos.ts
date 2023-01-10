@@ -34,6 +34,7 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
+import {ProviderInterface} from '@haqq/provider-base';
 import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
@@ -43,11 +44,7 @@ import {realm} from '@app/models';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {
-  DepositResponse,
-  StakingParamsResponse,
-  TransportWallet,
-} from '@app/types';
+import {DepositResponse, StakingParamsResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -177,7 +174,7 @@ export class Cosmos {
     );
   }
 
-  async getProposalDetails(id: string): Promise<{proposal: Proposal}> {
+  async getProposalDetails(id: string | number): Promise<{proposal: Proposal}> {
     return this.getQuery(generateEndpointProposals() + `/${id}`);
   }
 
@@ -195,9 +192,10 @@ export class Cosmos {
     }
   }
 
-  async getSender(transport: TransportWallet) {
+  async getSender(transport: ProviderInterface) {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
     const pubkey = await transport.getBase64PublicKey();
+
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
@@ -207,7 +205,7 @@ export class Cosmos {
   }
 
   async signTypedData(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
@@ -226,7 +224,7 @@ export class Cosmos {
   }
 
   async sendMsg(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     sender: Sender,
     msg: {
       legacyAmino: {
@@ -270,7 +268,7 @@ export class Cosmos {
   }
 
   async deposit(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     proposalId: number,
     amount: number,
   ) {
@@ -299,7 +297,7 @@ export class Cosmos {
     }
   }
 
-  async vote(transport: TransportWallet, proposalId: number, option: number) {
+  async vote(transport: ProviderInterface, proposalId: number, option: number) {
     try {
       const sender = await this.getSender(transport);
 
@@ -325,7 +323,7 @@ export class Cosmos {
   }
 
   async unDelegate(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     address: string,
     amount: number,
   ) {
@@ -356,7 +354,11 @@ export class Cosmos {
     }
   }
 
-  async delegate(transport: TransportWallet, address: string, amount: number) {
+  async delegate(
+    transport: ProviderInterface,
+    address: string,
+    amount: number,
+  ) {
     try {
       const sender = await this.getSender(transport);
       const strAmount = new Decimal(amount).mul(WEI);
@@ -383,7 +385,7 @@ export class Cosmos {
   }
 
   async multipleWithdrawDelegatorReward(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     validatorAddresses: string[],
   ) {
     try {
@@ -410,7 +412,7 @@ export class Cosmos {
   }
 
   async withdrawDelegatorReward(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     validatorAddress: string,
   ) {
     try {

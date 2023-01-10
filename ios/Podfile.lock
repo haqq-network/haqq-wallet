@@ -183,6 +183,9 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.10.0):
     - GoogleUtilities/Logger
+  - HaqqProviderBase (0.0.6):
+    - CryptoSwift (= 1.6.0)
+    - React-Core
   - hermes-engine (0.70.6)
   - libevent (2.1.12)
   - lottie-ios (3.4.4)
@@ -588,7 +591,7 @@ PODS:
     - Sentry/Core (= 7.25.1)
   - Sentry/Core (7.25.1)
   - SocketRocket (0.6.0)
-  - ToastViewSwift (1.2.0)
+  - ToastViewSwift (1.3.0)
   - TouchID (4.4.1):
     - React
   - Yoga (1.14.0)
@@ -627,6 +630,7 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - GoogleUtilities
+  - "HaqqProviderBase (from `../node_modules/@haqq/provider-base`)"
   - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - lottie-ios (from `../node_modules/lottie-ios`)
@@ -741,6 +745,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  HaqqProviderBase:
+    :path: "../node_modules/@haqq/provider-base"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
   lottie-ios:
@@ -885,6 +891,7 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
+  HaqqProviderBase: 69af077b0dbc196b27e3404fe2ded7e69f9eae92
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
@@ -949,7 +956,7 @@ SPEC CHECKSUMS:
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: dd29c18c32b0af9269949f079cf631d581ca76ca
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  ToastViewSwift: 1fb8f01bc9545f540ac0e4a0cae44aeb30e6e3f0
+  ToastViewSwift: 7a865114a3b6a84b2775cf4ad4e3699542930b16
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

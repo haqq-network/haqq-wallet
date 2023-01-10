@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
@@ -13,19 +11,6 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
-
-export interface TransportWallet {
-  getSignedTx: (
-    transaction: TransactionRequest | UnsignedTransaction,
-  ) => Promise<string>;
-  getEthAddress: () => string;
-  getCosmosAddress: () => string;
-  getBase64PublicKey: () => Promise<string>;
-
-  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
-
-  abort: () => void;
-}
 
 export enum TransactionSource {
   unknown,

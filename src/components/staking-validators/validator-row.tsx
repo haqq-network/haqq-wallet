@@ -10,7 +10,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {MIN_AMOUNT, WEI} from '@app/variables/common';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
@@ -66,7 +66,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
           </View>
         </View>
         <View style={styles.badges}>
-          {!!item.localDelegations && item.localDelegations > 0 && (
+          {!!item.localDelegations && item.localDelegations > MIN_AMOUNT && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowStaked}
@@ -75,7 +75,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               }}
             />
           )}
-          {!!item.localRewards && item.localRewards > 0 && (
+          {!!item.localRewards && item.localRewards > MIN_AMOUNT && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
@@ -84,12 +84,13 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               }}
             />
           )}
-          {!!item.localUnDelegations && item.localUnDelegations > 0 && (
-            <InfoBox
-              style={styles.badge}
-              i18n={I18N.stakingValidatorsRowWithdrawal}
-            />
-          )}
+          {!!item.localUnDelegations &&
+            item.localUnDelegations > MIN_AMOUNT && (
+              <InfoBox
+                style={styles.badge}
+                i18n={I18N.stakingValidatorsRowWithdrawal}
+              />
+            )}
         </View>
       </View>
     </TouchableWithoutFeedback>

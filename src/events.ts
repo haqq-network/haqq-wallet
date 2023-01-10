@@ -8,4 +8,5 @@ export enum Events {
   onPushSubscriptionRemove = 'onPushSubscriptionRemove',
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
+  onCloseModal = 'onCloseModal',
 }

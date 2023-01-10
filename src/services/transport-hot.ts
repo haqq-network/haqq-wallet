@@ -36,10 +36,21 @@ export class TransportHot
   }
 
   async signTypedData(domainHash: string, valuesHash: string) {
-    const privateKey = await this._wallet.getPrivateKey();
-    const ethWallet = new EthersWallet(privateKey);
-    const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
-    const hash = keccak256(concatHash);
-    return joinSignature(ethWallet._signingKey().signDigest(hash));
+    try {
+      const privateKey = await this._wallet.getPrivateKey();
+      const ethWallet = new EthersWallet(privateKey);
+      const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+      const hash = keccak256(concatHash);
+      const response = joinSignature(ethWallet._signingKey().signDigest(hash));
+      this.emit('signTypedData', true);
+
+      return response;
+    } catch (e) {
+      if (e instanceof Error) {
+        this.emit('signTypedData', false, e.message);
+        throw new Error(e.message);
+      }
+      return '';
+    }
   }
 }

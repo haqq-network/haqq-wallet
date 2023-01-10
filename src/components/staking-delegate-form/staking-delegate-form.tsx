@@ -65,6 +65,7 @@ export const StakingDelegateForm = ({
         />
       </Spacer>
       <NetworkFee fee={fee} />
+      <Spacer height={16} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         disabled={!amounts.isValid}
