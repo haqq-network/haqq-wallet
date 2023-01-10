@@ -1,4 +1,5 @@
-import {ProviderInterface, decrypt, encrypt} from '@haqq/provider-base';
+import {decrypt, encrypt} from '@haqq/encryption-react-native';
+import {WalletInterface} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
 import {Cosmos} from '@app/services/cosmos';
