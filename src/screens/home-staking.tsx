@@ -125,12 +125,26 @@ export const HomeStakingScreen = () => {
       }
     }
 
-    const responses = await Promise.allSettled(queue);
+    const responses = await Promise.all(
+      queue.map(p =>
+        p
+          .then(value => ({
+            status: 'fulfilled',
+            value,
+          }))
+          .catch(reason => ({
+            status: 'rejected',
+            reason,
+            value: null,
+          })),
+      ),
+    );
 
     for (const resp of responses) {
       if (resp.status === 'fulfilled' && resp.value) {
         for (const reward of rewards) {
           if (
+            reward &&
             reward.delegator === resp.value[0] &&
             reward.validator === resp.value[1]
           ) {

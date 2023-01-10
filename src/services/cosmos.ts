@@ -34,6 +34,7 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
+import {ProviderInterface} from '@haqq/provider-base';
 import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
@@ -49,8 +50,6 @@ import {
   CosmosTxV1beta1TxResponse,
 } from '@app/types/cosmos';
 import {WEI} from '@app/variables/common';
-
-import {ProviderInterface} from '../../../provider-base';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -196,6 +195,7 @@ export class Cosmos {
   async getSender(transport: ProviderInterface) {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
     const pubkey = await transport.getBase64PublicKey();
+
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),

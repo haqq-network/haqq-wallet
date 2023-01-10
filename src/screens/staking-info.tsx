@@ -18,7 +18,6 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {WalletType} from '@app/types';
-import {MIN_AMOUNT} from '@app/variables/common';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -67,10 +66,10 @@ export const StakingInfoScreen = () => {
   const onWithdrawDelegatorReward = useCallback(async () => {
     if (rewards?.length) {
       setWithdrawDelegatorRewardProgress(true);
-      const delegators = new Set(
-        rewards.filter(r => r.amount > MIN_AMOUNT).map(r => r.delegator),
-      );
+      const delegators = new Set(rewards.map(r => r.delegator));
       const exists = visible.filter(w => delegators.has(w.cosmosAddress));
+
+      console.log(exists);
 
       const queue = exists
         .filter(w => w.type !== WalletType.ledgerBt)
@@ -98,12 +97,26 @@ export const StakingInfoScreen = () => {
         }
       }
 
-      const responses = await Promise.allSettled(queue);
+      const responses = await Promise.all(
+        queue.map(p =>
+          p
+            .then(value => ({
+              status: 'fulfilled',
+              value,
+            }))
+            .catch(reason => ({
+              status: 'rejected',
+              reason,
+              value: null,
+            })),
+        ),
+      );
 
       for (const resp of responses) {
         if (resp.status === 'fulfilled' && resp.value) {
           for (const reward of rewards) {
             if (
+              reward &&
               reward.delegator === resp.value[0] &&
               reward.validator === resp.value[1]
             ) {

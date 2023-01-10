@@ -213,6 +213,7 @@ export class Wallet extends Realm.Object {
       case WalletType.mnemonic: {
         const password = await app.getPassword();
         const decrypted = await decrypt(password, this.data);
+        console.log('decrypted', this.address, JSON.stringify(decrypted));
         return decrypted.privateKey;
       }
       default:
@@ -306,6 +307,12 @@ export class Wallet extends Realm.Object {
     return this._cosmosAddress;
   }
 
+  setPublicKey(publicKey: string) {
+    realm.write(() => {
+      this.publicKey = publicKey;
+    });
+  }
+
   getAccountData() {
     // eslint-disable-next-line consistent-this
     const self = this;
@@ -323,7 +330,7 @@ export class Wallet extends Realm.Object {
         return self.publicKey ?? '';
       },
       set publicKey(value: string) {
-        self.publicKey = value;
+        self.setPublicKey(value);
       },
       getPrivateKey(): Promise<string> {
         return self.getPrivateKey();
