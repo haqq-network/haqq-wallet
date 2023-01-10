@@ -19,8 +19,6 @@
 		17F5D67167C5425FBEAB229E /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD4BF65C3D8F4812A58B909F /* SF-Pro-Display-Medium.ttf */; };
 		190985DBEC7E4053958308AF /* qr-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C93E93755F64A57B52344CA /* qr-logo@3x.png */; };
 		1BFF98E646594B19BB5C3FB9 /* mnemonic-notify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 72BFF8B9B7A245238E0CC28E /* mnemonic-notify@2x.png */; };
-		210AE02428DC693F008D739C /* Encryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210AE02328DC693F008D739C /* Encryption.swift */; };
-		210AE02628DC6A8A008D739C /* Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 210AE02528DC6A8A008D739C /* Encryption.m */; };
 		210DBD2128E6A8D90036A851 /* Haptic.m in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2028E6A8D90036A851 /* Haptic.m */; };
 		210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2228E6A8E70036A851 /* Haptic.swift */; };
 		210E9B952907F09400AC3C34 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B942907F09400AC3C34 /* Version.m */; };
@@ -110,8 +108,6 @@
 		16464E6CF9A24E1590282D07 /* SF-Pro-Display-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Semibold.ttf"; path = "../assets/fonts/SF-Pro-Display-Semibold.ttf"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		210AE02228DC693F008D739C /* haqq-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqq-Bridging-Header.h"; sourceTree = "<group>"; };
-		210AE02328DC693F008D739C /* Encryption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
-		210AE02528DC6A8A008D739C /* Encryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Encryption.m; sourceTree = "<group>"; };
 		210DBD2028E6A8D90036A851 /* Haptic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Haptic.m; sourceTree = "<group>"; };
 		210DBD2228E6A8E70036A851 /* Haptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptic.swift; sourceTree = "<group>"; };
 		210E9B942907F09400AC3C34 /* Version.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
@@ -248,7 +244,6 @@
 				212B00F9294AD37800E57091 /* Toast */,
 				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
-				210DBD2628E6CBD70036A851 /* Encryption */,
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
 				21D7A78D2910DC5800399978 /* Mnemonic.swift */,
 				21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */,
@@ -268,15 +263,6 @@
 				210DBD2228E6A8E70036A851 /* Haptic.swift */,
 			);
 			path = Haptic;
-			sourceTree = "<group>";
-		};
-		210DBD2628E6CBD70036A851 /* Encryption */ = {
-			isa = PBXGroup;
-			children = (
-				210AE02328DC693F008D739C /* Encryption.swift */,
-				210AE02528DC6A8A008D739C /* Encryption.m */,
-			);
-			path = Encryption;
 			sourceTree = "<group>";
 		};
 		210E9B932907F07B00AC3C34 /* Version */ = {
@@ -767,11 +753,9 @@
 				212B00FD294AD3B700E57091 /* Toast.swift in Sources */,
 				212B00FF294ADDB800E57091 /* ToastView.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
-				210AE02428DC693F008D739C /* Encryption.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
 				21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */,
-				210AE02628DC6A8A008D739C /* Encryption.m in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
