@@ -1,3 +1,5 @@
+import {ProviderInterface} from '@haqq/provider-base';
+
 import {app} from '@app/contexts';
 import {decrypt, encrypt} from '@app/passworder';
 import {Cosmos} from '@app/services/cosmos';
@@ -16,7 +18,6 @@ import {
 
 import {
   AddWalletParams,
-  TransportWallet,
   WalletCardPattern,
   WalletCardStyle,
   WalletType,
@@ -69,7 +70,7 @@ export class Wallet extends Realm.Object {
   };
 
   _cosmosAddress: string = '';
-  _transport: TransportWallet | null = null;
+  _transport: ProviderInterface | null = null;
 
   static getAll() {
     return realm.objects<Wallet>(Wallet.schema.name);
@@ -212,6 +213,7 @@ export class Wallet extends Realm.Object {
       case WalletType.mnemonic: {
         const password = await app.getPassword();
         const decrypted = await decrypt(password, this.data);
+        console.log('decrypted', this.address, JSON.stringify(decrypted));
         return decrypted.privateKey;
       }
       default:
@@ -278,7 +280,7 @@ export class Wallet extends Realm.Object {
     return !!this._transport;
   }
 
-  get transport(): TransportWallet {
+  get transport(): ProviderInterface {
     if (!this._transport) {
       switch (this.type) {
         case WalletType.mnemonic:
@@ -305,6 +307,12 @@ export class Wallet extends Realm.Object {
     return this._cosmosAddress;
   }
 
+  setPublicKey(publicKey: string) {
+    realm.write(() => {
+      this.publicKey = publicKey;
+    });
+  }
+
   getAccountData() {
     // eslint-disable-next-line consistent-this
     const self = this;
@@ -322,7 +330,7 @@ export class Wallet extends Realm.Object {
         return self.publicKey ?? '';
       },
       set publicKey(value: string) {
-        self.publicKey = value;
+        self.setPublicKey(value);
       },
       getPrivateKey(): Promise<string> {
         return self.getPrivateKey();

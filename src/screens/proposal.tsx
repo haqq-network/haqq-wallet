@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {useWindowDimensions} from 'react-native';
 
@@ -6,6 +6,7 @@ import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   useCosmos,
   useTypedNavigation,
@@ -16,7 +17,7 @@ import {I18N} from '@app/i18n';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {VoteNamesType} from '@app/types';
+import {VoteNamesType, WalletType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = () => {
@@ -26,6 +27,7 @@ export const ProposalScreen = () => {
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
   const [vote, setVote] = useState<VoteNamesType>();
+  const [item, setItem] = useState(GovernanceVoting.getById(id));
   const [collectedDeposit, setCollectedDeposit] = useState(0);
   const [modalIsLoading, setModalIsLoading] = useState(false);
   const [modalIsVisible, setModalIsVisible] = useState(false);
@@ -34,8 +36,8 @@ export const ProposalScreen = () => {
   const {visible} = useWalletsList();
   const closeDistance = useWindowDimensions().height / 6;
 
-  const item = useMemo(() => {
-    return GovernanceVoting.getById(id);
+  useEffect(() => {
+    setItem(GovernanceVoting.getById(id));
   }, [id]);
 
   const onDepositSubmit = async (address: string) => {
@@ -55,7 +57,16 @@ export const ProposalScreen = () => {
         return;
       }
       try {
-        await cosmos.vote(wallet.transport, item.orderNumber, opinion);
+        const transport = wallet.transport;
+
+        const query = cosmos.vote(wallet.transport, item.orderNumber, opinion);
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForLedger(transport);
+        }
+
+        await query;
+
         setModalIsVisible(false);
         sendNotification(I18N.voteRegistered);
       } catch (error) {

@@ -5,6 +5,7 @@ import {useWindowDimensions} from 'react-native';
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   useCosmos,
   useTypedNavigation,
@@ -16,6 +17,7 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {WalletType} from '@app/types';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -61,24 +63,70 @@ export const StakingInfoScreen = () => {
     };
   }, [visible]);
 
-  const onWithdrawDelegatorReward = useCallback(() => {
+  const onWithdrawDelegatorReward = useCallback(async () => {
     if (rewards?.length) {
       setWithdrawDelegatorRewardProgress(true);
       const delegators = new Set(rewards.map(r => r.delegator));
+      const exists = visible.filter(w => delegators.has(w.cosmosAddress));
 
-      Promise.all(
-        visible
-          .filter(w => delegators.has(w.cosmosAddress))
-          .map(w =>
-            cosmos.withdrawDelegatorReward(w.transport, operator_address),
-          ),
-      )
-        .then(() => {
-          rewards.forEach(r => StakingMetadata.remove(r.hash));
-        })
-        .finally(() => {
-          setWithdrawDelegatorRewardProgress(false);
+      console.log(exists);
+
+      const queue = exists
+        .filter(w => w.type !== WalletType.ledgerBt)
+        .map(w => {
+          return cosmos
+            .withdrawDelegatorReward(w.transport, operator_address)
+            .then(() => [w.cosmosAddress, operator_address]);
         });
+
+      const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
+
+      while (ledger.length) {
+        const current = ledger.shift();
+
+        if (current) {
+          const transport = current.transport;
+
+          queue.push(
+            cosmos
+              .withdrawDelegatorReward(transport, operator_address)
+              .then(() => [current.cosmosAddress, operator_address]),
+          );
+
+          await awaitForLedger(transport);
+        }
+      }
+
+      const responses = await Promise.all(
+        queue.map(p =>
+          p
+            .then(value => ({
+              status: 'fulfilled',
+              value,
+            }))
+            .catch(reason => ({
+              status: 'rejected',
+              reason,
+              value: null,
+            })),
+        ),
+      );
+
+      for (const resp of responses) {
+        if (resp.status === 'fulfilled' && resp.value) {
+          for (const reward of rewards) {
+            if (
+              reward &&
+              reward.delegator === resp.value[0] &&
+              reward.validator === resp.value[1]
+            ) {
+              StakingMetadata.remove(reward.hash);
+            }
+          }
+        }
+      }
+
+      setWithdrawDelegatorRewardProgress(false);
     }
   }, [cosmos, rewards, operator_address, visible]);
 

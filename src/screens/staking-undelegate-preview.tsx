@@ -1,12 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   useCosmos,
   useTypedNavigation,
   useTypedRoute,
   useWallet,
 } from '@app/hooks';
+import {WalletType} from '@app/types';
 
 export const StakingUnDelegatePreviewScreen = () => {
   const navigation = useTypedNavigation();
@@ -35,16 +37,23 @@ export const StakingUnDelegatePreviewScreen = () => {
       try {
         setDisabled(true);
 
-        const {tx_response} =
-          (await cosmos.unDelegate(
-            wallet.transport,
-            validator.operator_address,
-            amount,
-          )) || {};
+        const transport = wallet.transport;
 
-        if (tx_response?.txhash) {
+        const query = cosmos.unDelegate(
+          transport,
+          validator.operator_address,
+          amount,
+        );
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForLedger(transport);
+        }
+
+        const resp = await query;
+
+        if (resp) {
           navigation.navigate('stakingUnDelegateFinish', {
-            txhash: tx_response?.txhash,
+            txhash: resp.tx_response.txhash,
             validator: validator,
             amount: amount,
             fee: fee,
