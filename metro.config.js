@@ -22,7 +22,13 @@ module.exports = {
     blacklistRE: blacklist([
       /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
     ]),
-    nodeModulesPaths: [process.env.PROVIDER_BASE_PACKAGE].filter(Boolean),
+    nodeModulesPaths: [
+      process.env.PROVIDER_BASE_PACKAGE,
+      process.env.ENCRYPTION_RN_PACKAGE,
+    ].filter(Boolean),
   },
-  watchFolders: [process.env.PROVIDER_BASE_PACKAGE].filter(Boolean),
+  watchFolders: [
+    process.env.PROVIDER_BASE_PACKAGE,
+    process.env.ENCRYPTION_RN_PACKAGE,
+  ].filter(Boolean),
 };

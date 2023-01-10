@@ -1340,10 +1340,15 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@haqq/provider-base@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.6.tgz#418e87d5598368cdefad30ef3eff45e86151eb36"
-  integrity sha512-oaUZDtIsYUSbotUd7PI7eEhUzYctEcFOz6taPUoY/5nRUbkTM6MmixZkNLLLHsLzsWVEa6dVdHzR5piYSW/uOA==
+"@haqq/encryption-react-native@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.1.tgz#4307eff76660aed018884f1f2895c286f610ed0a"
+  integrity sha512-V3qvgGBrzOR75pxuNQ4Rgp/75enD6rbbLGlU6WGiyltYuKZErZL02e0PU1TpsYmTNXdo8LaHnoTWfprtxA3oWA==
+
+"@haqq/provider-base@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.7.tgz#884155e4e661f849f364df93c361009b6d0a59e5"
+  integrity sha512-mfH3peWrlBDcpj+eKHyRmkWDKjI878Ml2XdTKX+zhjKwwRH9LLetq4uXi+weAcJ5bW70qtxwR4XLY/rX49Qj8g==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     bech32-converting "^1.0.9"
