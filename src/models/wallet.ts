@@ -1,5 +1,5 @@
 import {decrypt, encrypt} from '@haqq/encryption-react-native';
-import {WalletInterface} from '@haqq/provider-base';
+import {ProviderInterface} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
 import {Cosmos} from '@app/services/cosmos';
@@ -254,7 +254,10 @@ export class Wallet extends Realm.Object {
   }
 
   async getMnemonic(password: string) {
-    const decrypted = await decrypt<{mnemonic: {phrase: string} | string}>(password, this.data);
+    const decrypted = await decrypt<{mnemonic: {phrase: string} | string}>(
+      password,
+      this.data,
+    );
 
     return (
       (typeof decrypted.mnemonic === 'string'
