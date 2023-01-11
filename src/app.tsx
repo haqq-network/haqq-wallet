@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
@@ -18,6 +18,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import * as Sentry from '@sentry/react-native';
 import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -207,6 +208,14 @@ export const App = () => {
     }
   }, [initialized]);
 
+  const onStateChange = useCallback(() => {
+    Sentry.addBreadcrumb({
+      category: 'navigation',
+      message: navigator.getCurrentRoute()?.name,
+      level: 'info',
+    });
+  }, []);
+
   // @ts-ignore
   return (
     <SafeAreaProvider>
@@ -217,7 +226,10 @@ export const App = () => {
         />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
-            <NavigationContainer ref={navigator} theme={navTheme}>
+            <NavigationContainer
+              ref={navigator}
+              theme={navTheme}
+              onStateChange={onStateChange}>
               <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
