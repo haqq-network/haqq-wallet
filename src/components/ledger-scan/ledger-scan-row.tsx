@@ -1,7 +1,7 @@
 import React from 'react';
 
+import {Device} from '@haqq/provider-ledger-react-native';
 import {TouchableOpacity} from 'react-native';
-import {Device} from 'react-native-ble-plx';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
