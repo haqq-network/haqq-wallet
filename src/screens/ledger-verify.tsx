@@ -3,7 +3,6 @@ import React, {useCallback, useEffect} from 'react';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
-import {captureException} from '@app/helpers';
 import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
@@ -44,7 +43,7 @@ export const LedgerVerifyScreen = () => {
           onDone();
         }
       } catch (e) {
-        captureException(e, 'LedgerVerify');
+        navigation.goBack();
       }
     });
 
@@ -56,6 +55,7 @@ export const LedgerVerifyScreen = () => {
     route.params.hdPath,
     onDone,
     route.params.address,
+    navigation,
   ]);
 
   return <LedgerVerify address={route.params.address} />;
