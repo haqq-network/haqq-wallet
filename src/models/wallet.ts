@@ -290,15 +290,20 @@ export class Wallet extends Realm.Object {
       switch (this.type) {
         case WalletType.mnemonic:
         case WalletType.hot:
-          return new TransportHot(this.getAccountData(), {
+          this._transport = new TransportHot(this.getAccountData(), {
             cosmosPrefix: 'haqq',
           });
+          break;
         case WalletType.ledgerBt:
-          return new ProviderLedgerReactNative(this.getAccountData(), {
-            cosmosPrefix: 'haqq',
-            deviceId: this.deviceId!,
-            hdPath: this.path ?? '',
-          });
+          this._transport = new ProviderLedgerReactNative(
+            this.getAccountData(),
+            {
+              cosmosPrefix: 'haqq',
+              deviceId: this.deviceId!,
+              hdPath: this.path ?? '',
+            },
+          );
+          break;
         default:
           throw new Error('transport_not_implemented');
       }
