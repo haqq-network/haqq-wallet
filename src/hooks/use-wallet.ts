@@ -1,5 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 
+import {ObjectChangeSet} from 'realm';
+
 import {Wallet} from '@app/models/wallet';
 
 export function useWallet(address: string) {
@@ -15,10 +17,16 @@ export function useWallet(address: string) {
 
   useEffect(() => {
     if (wallet && wallet.isValid()) {
-      wallet?.addListener(updateWallet);
+      const sub = (_: unknown, params: ObjectChangeSet<Wallet>) => {
+        if (params.changedProperties.length || params.deleted) {
+          updateWallet();
+        }
+      };
+
+      wallet?.addListener(sub);
 
       return () => {
-        wallet?.removeListener(updateWallet);
+        wallet?.removeListener(sub);
       };
     }
   }, [wallet, updateWallet]);
