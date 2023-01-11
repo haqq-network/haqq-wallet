@@ -1,10 +1,10 @@
 import {decrypt, encrypt} from '@haqq/encryption-react-native';
 import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {app} from '@app/contexts';
 import {Cosmos} from '@app/services/cosmos';
 import {TransportHot} from '@app/services/transport-hot';
-import {TransportLedger} from '@app/services/transport-ledger';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
@@ -294,8 +294,10 @@ export class Wallet extends Realm.Object {
             cosmosPrefix: 'haqq',
           });
         case WalletType.ledgerBt:
-          return new TransportLedger(this.getAccountData(), {
+          return new ProviderLedgerReactNative(this.getAccountData(), {
             cosmosPrefix: 'haqq',
+            deviceId: this.deviceId!,
+            hdPath: this.path ?? '',
           });
         default:
           throw new Error('transport_not_implemented');

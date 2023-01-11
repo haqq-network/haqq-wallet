@@ -1354,6 +1354,19 @@
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
+"@haqq/provider-ledger-react-native@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.2.tgz#93be5a66f819efcbb7405f866b34f21ac7ccfdff"
+  integrity sha512-OjzuV5gOfqxAwmmZ3ZD+RbDo/ELGLbLd56dVZPwh0a3wnXzlIecODzDh9TXcyI7W97KTpi315Ze82Q2vGot9iw==
+  dependencies:
+    "@ethersproject/abstract-provider" "^5.7.0"
+    "@ledgerhq/hw-app-eth" "6.30.0"
+    "@ledgerhq/hw-transport" "^6.27.8"
+    "@ledgerhq/react-native-hw-transport-ble" "6.27.9"
+    ethers "^5.7.2"
+    events "^3.3.0"
+    rxjs "^7.8.0"
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -4974,7 +4987,7 @@ ethereumjs-util@^6.0.0, ethereumjs-util@^6.2.1:
     ethjs-util "0.1.6"
     rlp "^2.2.3"
 
-ethers@^5.6.9, ethers@^5.7.0:
+ethers@^5.6.9, ethers@^5.7.0, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
@@ -9516,7 +9529,7 @@ rxjs@6:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.5.7:
+rxjs@^7.5.7, rxjs@^7.8.0:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.0.tgz#90a938862a82888ff4c7359811a595e14e1e09a4"
   integrity sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==
