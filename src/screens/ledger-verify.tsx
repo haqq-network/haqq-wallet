@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
 
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+
 import {LedgerVerify} from '@app/components/ledger-verify';
-import {captureException, runUntil} from '@app/helpers';
+import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const LedgerVerifyScreen = () => {
@@ -27,39 +29,33 @@ export const LedgerVerifyScreen = () => {
   ]);
 
   useEffect(() => {
-    const iter = runUntil(route.params.deviceId, eth =>
-      eth.getAddress(route.params.hdPath, true),
-    );
+    const provider = new ProviderLedgerReactNative(mockForWallet, {
+      cosmosPrefix: 'haqq',
+      deviceId: route.params.deviceId,
+      hdPath: '',
+    });
+
     requestAnimationFrame(async () => {
       try {
-        let verifiedAddress = null;
-        let done = false;
-        do {
-          const resp = await iter.next();
-          done = resp.done;
-          if (resp.value) {
-            verifiedAddress = resp.value.address;
-          }
-        } while (!done);
-        if (
-          verifiedAddress &&
-          verifiedAddress.toLowerCase() === route.params.address
-        ) {
+        const address = await provider.confirmAddress(route.params.hdPath);
+
+        if (address && address.toLowerCase() === route.params.address) {
           onDone();
         }
       } catch (e) {
-        captureException(e, 'LedgerVerify');
+        navigation.goBack();
       }
     });
 
     return () => {
-      iter.abort();
+      provider.abort();
     };
   }, [
     route.params.deviceId,
     route.params.hdPath,
     onDone,
     route.params.address,
+    navigation,
   ]);
 
   return <LedgerVerify address={route.params.address} />;

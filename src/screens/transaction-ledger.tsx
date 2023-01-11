@@ -50,14 +50,14 @@ export const TransactionLedgerScreen = () => {
             await onDone(transaction);
           }
         } catch (e) {
-          console.log('onDone', e);
+          navigation.goBack();
         }
       });
     }
     return () => {
       wallet?.transportExists && wallet?.transport.abort();
     };
-  }, [wallet, route.params.amount, onDone, route.params.to]);
+  }, [wallet, route.params.amount, onDone, route.params.to, navigation]);
 
   return (
     <TransactionLedger
