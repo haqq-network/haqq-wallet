@@ -26,13 +26,19 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
   const [disabled, setDisabled] = useState(false);
   const [seed, setSeed] = useState('');
 
-  const checked = useMemo(
-    () =>
-      utils.isValidMnemonic(seed.trim()) ||
-      utils.isHexString(seed.trim()) ||
-      utils.isHexString(`0x${seed}`.trim()),
-    [seed],
-  );
+  const checked = useMemo(() => {
+    let s = seed.trim();
+
+    if (utils.isValidMnemonic(s.toLowerCase())) {
+      return true;
+    }
+
+    if (!s.startsWith('0x')) {
+      s = `0x${seed}`;
+    }
+
+    return utils.isHexString(s, 32);
+  }, [seed]);
 
   const onDone = useCallback(() => {
     setDisabled(true);
