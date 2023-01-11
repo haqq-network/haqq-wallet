@@ -579,17 +579,15 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSentry (5.0.0-alpha.4):
+  - RNSentry (5.0.0-alpha.10):
     - React-Core
-    - Sentry (= 7.25.1)
+    - Sentry/HybridSDK (= 7.31.2)
   - RNSVG (12.5.0):
     - React-Core
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
-  - Sentry (7.25.1):
-    - Sentry/Core (= 7.25.1)
-  - Sentry/Core (7.25.1)
+  - Sentry/HybridSDK (7.31.2)
   - SocketRocket (0.6.0)
   - ToastViewSwift (1.3.0)
   - TouchID (4.4.1):
@@ -950,11 +948,11 @@ SPEC CHECKSUMS:
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSentry: f63b860631c855cae811b15f1d574176e91dcf73
+  RNSentry: 56e67020e45e81cc94231819df968dbc41890364
   RNSVG: 6adc5c52d2488a476248413064b7f2832e639057
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
-  Sentry: dd29c18c32b0af9269949f079cf631d581ca76ca
+  Sentry: b15765d11769852fe78c9add942f7df60ed5dbf5
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   ToastViewSwift: 7a865114a3b6a84b2775cf4ad4e3699542930b16
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
