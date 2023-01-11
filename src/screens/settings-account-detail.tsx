@@ -59,7 +59,7 @@ export const SettingsAccountDetailScreen = () => {
     );
   }, [navigation, route.params.address, wallets]);
 
-  if (!wallet) {
+  if (!(wallet && wallet.isValid())) {
     return null;
   }
 
