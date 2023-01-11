@@ -23,15 +23,19 @@ export const HomeGovernanceScreen = () => {
     cosmos.syncGovernanceVoting().finally(() => setRefreshing(false));
   };
 
-  const {proposals, setStatusFilter, statusFilter} = useProposals();
+  const {proposals, setStatusFilter, statusFilter, setSearchText} =
+    useProposals();
 
   const onSelect = (tag: ProposalsTagType) => () => {
     setStatusFilter(tag[0]);
   };
 
+  const onSearchChange = (text: string) => setSearchText(text);
+
   return (
     <HomeGovernance
       onSelect={onSelect}
+      onSearchChange={onSearchChange}
       proposals={proposals}
       statusFilter={statusFilter}
       onRefresh={onRefresh}

@@ -8,15 +8,17 @@ import {
 import {ProposalsCroppedList, ProposalsTagKeys} from '@app/types';
 
 function prepareProposals(list: ProposalsRealmType) {
-  return list.map(({status, orderNumber}) => ({
+  return list.map(({status, orderNumber, title}) => ({
     status,
     id: orderNumber,
+    title,
   }));
 }
 
 export function useProposals() {
   const [allProposals, setAllProposals] = useState<ProposalsCroppedList>([]);
   const [statusFilter, setStatusFilter] = useState<ProposalsTagKeys>('all');
+  const [searchText, setSearchText] = useState<string>('');
 
   const proposalsRef = useRef<ProposalsRealmType>();
 
@@ -52,5 +54,12 @@ export function useProposals() {
     }
   }, [statusFilter, allProposals]);
 
-  return {proposals, setStatusFilter, statusFilter};
+  return {
+    proposals: proposals.filter(a =>
+      a.title.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()),
+    ),
+    setSearchText,
+    setStatusFilter,
+    statusFilter,
+  };
 }
