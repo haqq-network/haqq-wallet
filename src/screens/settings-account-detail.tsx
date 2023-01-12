@@ -13,19 +13,20 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'settingsAccountDetail'>();
+  const params = useTypedRoute<'settingsAccountDetail'>().params;
+  const {address} = params;
   const wallets = useWallets();
-  const wallet = useWallet(route.params.address);
+  const wallet = useWallet(address);
 
   const onPressRename = useCallback(() => {
-    navigation.navigate('settingsAccountEdit', route.params);
-  }, [navigation, route.params]);
+    navigation.navigate('settingsAccountEdit', params);
+  }, [navigation, params]);
 
   const onPressStyle = useCallback(() => {
     navigation.navigate('settingsAccountStyle', {
-      address: route.params.address,
+      address: address,
     });
-  }, [navigation, route.params.address]);
+  }, [navigation, address]);
 
   const onToggleIsHidden = useCallback(() => {
     if (wallet) {
@@ -35,6 +36,12 @@ export const SettingsAccountDetailScreen = () => {
       }
     }
   }, [wallet]);
+
+  const onViewingRecoveryPhrase = () => {
+    navigation.navigate('settingsViewRecoveryPhrase', {
+      address,
+    });
+  };
 
   const onRemove = useCallback(() => {
     vibrate(HapticEffects.warning);
@@ -50,14 +57,14 @@ export const SettingsAccountDetailScreen = () => {
           style: 'destructive',
           text: getText(I18N.settingsAccountRemoveConfirm),
           onPress: async () => {
-            await wallets.removeWallet(route.params.address);
+            await wallets.removeWallet(address);
             navigation.goBack();
             sendNotification(I18N.notificationAccountDeleted);
           },
         },
       ],
     );
-  }, [navigation, route.params.address, wallets]);
+  }, [navigation, address, wallets]);
 
   if (!(wallet && wallet.isValid())) {
     return null;
@@ -77,6 +84,7 @@ export const SettingsAccountDetailScreen = () => {
         onPressRename={onPressRename}
         onPressStyle={onPressStyle}
         onToggleIsHidden={onToggleIsHidden}
+        onViewingRecoveryPhrase={onViewingRecoveryPhrase}
       />
     </>
   );
