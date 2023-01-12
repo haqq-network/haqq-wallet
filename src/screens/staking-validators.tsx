@@ -83,7 +83,11 @@ export const StakingValidatorsScreen = () => {
             `${validator.description.moniker} ${validator.description.details} ${validator.description.website}`.toLowerCase(),
         });
       } else {
-        unStaked.push(validator);
+        unStaked.push({
+          ...validator,
+          searchString:
+            `${validator.description.moniker} ${validator.description.details} ${validator.description.website}`.toLowerCase(),
+        });
       }
     }
 

@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Platform, TextInput, View} from 'react-native';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -30,11 +31,17 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
     onCancel?.();
   }, [onCancel, onChange]);
 
-  useEffect(() => {
-    inputWidth.value = withTiming(1, {duration: 200}, () => {
+  const onShown = useCallback(() => {
+    requestAnimationFrame(() => {
       inputRef.current?.focus();
     });
-  }, [inputWidth]);
+  }, []);
+
+  useEffect(() => {
+    inputWidth.value = withTiming(1, {duration: 200}, () => {
+      runOnJS(onShown)();
+    });
+  }, [inputWidth, onShown]);
 
   const inputAnimation = useAnimatedStyle(() => ({
     flex: inputWidth.value,
@@ -47,6 +54,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
           <Icon color={Color.graphicBase2} name="search" i18 />
         </View>
         <TextInput
+          ref={inputRef}
           style={styles.input}
           selectionColor={getColor(Color.textGreen1)}
           allowFontScaling={false}
