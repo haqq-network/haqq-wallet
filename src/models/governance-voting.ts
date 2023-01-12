@@ -1,3 +1,4 @@
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {
   differenceInMilliseconds,
@@ -222,16 +223,35 @@ export class GovernanceVoting extends Realm.Object {
     }
   }
 
-  static createVoting(proposal: GovernanceVotingType) {
+  static create(proposal: Proposal) {
+    const {no_with_veto: veto, ...copy}: any = proposal.final_tally_result;
+    delete copy.no_with_veto;
+    const votes: any = {};
+
+    Object.entries({...copy, veto}).map(([key, val]) => {
+      votes[key] = Math.round(Number(val));
+    });
+
     realm.write(() => {
-      realm.create<GovernanceVoting>(
+      realm.create(
         GovernanceVoting.schema.name,
-        {...proposal},
+        {
+          status: GovernanceVoting.keyFromStatus(proposal.status.toLowerCase()),
+          endDate: proposal.voting_end_time,
+          startDate: proposal.voting_start_time,
+          depositNeeds: JSON.stringify(proposal.total_deposit),
+          depositEndTime: proposal.deposit_end_time,
+          createdAtTime: proposal.submit_time,
+          orderNumber: Number(proposal.proposal_id),
+          description: proposal.content.description,
+          title: proposal.content.title,
+          votes: JSON.stringify(votes),
+        },
         Realm.UpdateMode.Modified,
       );
     });
 
-    return proposal.orderNumber;
+    return Number(proposal.proposal_id);
   }
 
   static getAll() {
