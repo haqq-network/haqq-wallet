@@ -1,14 +1,7 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React from 'react';
 
-import {
-  Image,
-  PermissionsAndroid,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {BleManager, Subscription as BleSub, State} from 'react-native-ble-plx';
-import {Observable, Subscription} from 'rxjs';
+import {Image, StyleSheet, View} from 'react-native';
+import {State} from 'react-native-ble-plx';
 
 import {Color} from '@app/colors';
 import {
@@ -20,77 +13,21 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {User} from '@app/models/user';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerBluetooth = {
-  user: User;
-  onDone: () => void;
+  onPressAllow: () => void;
+  btState: State;
+  loading: boolean;
 };
 
 const disabled = [State.PoweredOff, State.Unauthorized];
 
-export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
-  const subscription = useRef<null | Subscription>(null);
-  const [btState, setBtState] = useState(State.Unknown);
-
-  const tryToInit = useCallback(async () => {
-    try {
-      if (subscription.current) {
-        subscription.current?.unsubscribe();
-      }
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
-        ]);
-      }
-      const manager = new BleManager();
-      let sub: BleSub;
-      let previousState = State.Unknown;
-      subscription.current = new Observable<State>(observer => {
-        manager.state().then(state => {
-          observer.next(state);
-        });
-
-        sub = manager.onStateChange(state => {
-          observer.next(state);
-        }, true);
-      }).subscribe(e => {
-        if (e !== previousState) {
-          previousState = e;
-          switch (e) {
-            case State.PoweredOn:
-              onDone();
-              sub.remove();
-              break;
-            default:
-              setBtState(e);
-          }
-        }
-      });
-    } catch (e) {
-      console.log('aaa', e);
-    }
-  }, [onDone]);
-
-  useEffect(() => {
-    if (user.bluetooth) {
-      tryToInit();
-    }
-    return () => {
-      if (subscription.current) {
-        subscription.current?.unsubscribe();
-      }
-    };
-  }, [user.bluetooth, tryToInit]);
-
-  const onPressAllow = useCallback(async () => {
-    await tryToInit();
-  }, [tryToInit]);
-
+export const LedgerBluetooth = ({
+  onPressAllow,
+  btState,
+  loading,
+}: LedgerBluetooth) => {
   return (
     <PopupContainer style={page.container}>
       <View style={page.animation}>
@@ -132,6 +69,7 @@ export const LedgerBluetooth = ({user, onDone}: LedgerBluetooth) => {
       <Spacer />
       <Button
         disabled={disabled.includes(btState)}
+        loading={loading}
         style={page.submit}
         variant={ButtonVariant.contained}
         i18n={I18N.ledgerBluetoothAllow}

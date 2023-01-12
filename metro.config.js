@@ -25,10 +25,12 @@ module.exports = {
     nodeModulesPaths: [
       process.env.PROVIDER_BASE_PACKAGE,
       process.env.ENCRYPTION_RN_PACKAGE,
+      // process.env.PROVIDER_LEDGER_RN_PACKAGE,
     ].filter(Boolean),
   },
   watchFolders: [
     process.env.PROVIDER_BASE_PACKAGE,
     process.env.ENCRYPTION_RN_PACKAGE,
+    // process.env.PROVIDER_LEDGER_RN_PACKAGE,
   ].filter(Boolean),
 };

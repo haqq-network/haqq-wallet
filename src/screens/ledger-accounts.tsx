@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+
 import {LedgerAccounts} from '@app/components/ledger-accounts';
-import {runUntil} from '@app/helpers';
+import {mockForWallet} from '@app/helpers/mockForWallet';
 import {
   useTypedNavigation,
   useTypedRoute,
@@ -21,39 +23,33 @@ export const LedgerAccountsScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    const iter = runUntil(deviceId, async eth => {
-      const addressList = [];
-      for (let i = 0; i < 5; i += 1) {
-        const resp = await eth.getAddress(`${ETH_HD_SHORT_PATH}/${i}`);
+    const provider = new ProviderLedgerReactNative(mockForWallet, {
+      cosmosPrefix: 'haqq',
+      deviceId,
+      hdPath: '',
+    });
 
-        const balance = await EthNetwork.getBalance(resp.address);
+    requestAnimationFrame(async () => {
+      const addressList: LedgerAccountItem[] = [];
+
+      for (let i = 0; i < 5; i += 1) {
+        const data = await provider.getPublicKeyAndAddressForHDPath(
+          `${ETH_HD_SHORT_PATH}/${i}`,
+        );
+
+        const balance = await EthNetwork.getBalance(data.address);
 
         addressList.push({
-          address: resp.address.toLowerCase(),
+          address: data.address.toLowerCase(),
           hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
-          publicKey: resp.publicKey,
-          exists: wallets.addressList.includes(resp.address.toLowerCase()),
+          publicKey: data.publicKey,
+          exists: wallets.addressList.includes(data.address.toLowerCase()),
           balance,
         });
       }
 
-      return addressList;
+      setAddresses(list => list.concat(addressList));
     });
-    requestAnimationFrame(async () => {
-      let done = false;
-      do {
-        const resp = await iter.next();
-        done = resp.done;
-        if (resp.value) {
-          setAddresses(resp.value);
-        }
-      } while (!done);
-      await iter.abort();
-    });
-
-    return () => {
-      iter.abort();
-    };
   }, [wallets, deviceId]);
 
   const onPressAdd = useCallback(
