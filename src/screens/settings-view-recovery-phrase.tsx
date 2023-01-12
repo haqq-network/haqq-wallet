@@ -9,13 +9,13 @@ import {PinGuardScreen} from './pin-guard';
 export const SettingsViewRecoveryPhraseScreen = () => {
   const {address} = useTypedRoute<'settingsViewRecoveryPhrase'>().params;
   const wallet = useWallet(address);
-  const [mnemonic, setMnemonic] = useState('');
+  const [mnemonic, setMnemonic] = useState<string>('');
 
   const onEnter = async () => {
     const password = await app.getPassword();
     const m = await wallet?.getMnemonic(password);
 
-    setMnemonic(m);
+    setMnemonic(m ?? '');
   };
 
   return (

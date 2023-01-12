@@ -47,8 +47,8 @@ export const SettingsSecurity = ({
     <View style={page.container}>
       <MenuNavigationButton onPress={onSubmit}>
         <DataContent
-          titleI18n={I18N.SettingsSecurityChangePin}
-          subtitleI18n={I18N.setttingsSecurityEnterPin}
+          titleI18n={I18N.settingsSecurityChangePin}
+          subtitleI18n={I18N.settingsSecurityEnterPin}
         />
       </MenuNavigationButton>
       {app.biometryType !== null && (
