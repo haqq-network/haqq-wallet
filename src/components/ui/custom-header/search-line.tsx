@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Platform, TextInput, View} from 'react-native';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -25,11 +26,22 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
   const inputWidth = useSharedValue(0.9);
   const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => {
-    inputWidth.value = withTiming(1, {duration: 200}, () => {
+  const onPressCancel = useCallback(() => {
+    onChange?.('');
+    onCancel?.();
+  }, [onCancel, onChange]);
+
+  const onShown = useCallback(() => {
+    requestAnimationFrame(() => {
       inputRef.current?.focus();
     });
-  }, [inputWidth]);
+  }, []);
+
+  useEffect(() => {
+    inputWidth.value = withTiming(1, {duration: 200}, () => {
+      runOnJS(onShown)();
+    });
+  }, [inputWidth, onShown]);
 
   const inputAnimation = useAnimatedStyle(() => ({
     flex: inputWidth.value,
@@ -42,6 +54,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
           <Icon color={Color.graphicBase2} name="search" i18 />
         </View>
         <TextInput
+          ref={inputRef}
           style={styles.input}
           selectionColor={getColor(Color.textGreen1)}
           allowFontScaling={false}
@@ -52,7 +65,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
       </Animated.View>
       <Spacer width={14} />
       <HeaderButton
-        onPress={onCancel}
+        onPress={onPressCancel}
         color={Color.textGreen1}
         i18n={I18N.cancel}
       />
