@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
@@ -16,23 +16,32 @@ import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 export const LedgerAccountsScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
   const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
-
+  const user = useUser();
+  const provider = useRef(
+    new ProviderLedgerReactNative(mockForWallet, {
+      cosmosPrefix: 'haqq',
+      deviceId,
+      hdPath: '',
+    }),
+  ).current;
+  const [lastIndex, setLastIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<LedgerAccountItem[]>([]);
   const wallets = useWallets();
 
   useEffect(() => {
-    const provider = new ProviderLedgerReactNative(mockForWallet, {
-      cosmosPrefix: 'haqq',
-      deviceId,
-      hdPath: '',
-    });
+    return () => {
+      provider.abort();
+    };
+  }, [provider]);
 
+  const loadAccounts = useCallback(() => {
+    setLoading(true);
     requestAnimationFrame(async () => {
       const addressList: LedgerAccountItem[] = [];
 
-      for (let i = 0; i < 5; i += 1) {
+      for (let i = lastIndex; i < lastIndex + 5; i += 1) {
         const data = await provider.getPublicKeyAndAddressForHDPath(
           `${ETH_HD_SHORT_PATH}/${i}`,
         );
@@ -49,8 +58,16 @@ export const LedgerAccountsScreen = () => {
       }
 
       setAddresses(list => list.concat(addressList));
+      setLastIndex(lastIndex + 5);
+      setLoading(false);
     });
-  }, [wallets, deviceId]);
+  }, [lastIndex, provider, wallets.addressList]);
+
+  useEffect(() => {
+    if (lastIndex === 0 && !loading) {
+      loadAccounts();
+    }
+  }, [loading, lastIndex, loadAccounts]);
 
   const onPressAdd = useCallback(
     (item: LedgerAccountItem) => {
@@ -66,5 +83,12 @@ export const LedgerAccountsScreen = () => {
     [navigation, user.onboarded, deviceId, deviceName],
   );
 
-  return <LedgerAccounts onAdd={onPressAdd} addresses={addresses} />;
+  return (
+    <LedgerAccounts
+      onAdd={onPressAdd}
+      addresses={addresses}
+      loading={loading}
+      loadMore={loadAccounts}
+    />
+  );
 };
