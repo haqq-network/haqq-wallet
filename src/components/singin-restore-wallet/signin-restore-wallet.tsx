@@ -76,9 +76,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           placeholder={I18N.signinRestoreWalletTextFieldPlaceholder}
           style={page.input}
           label={I18N.signinRestoreWalletTextFieldLabel}
-          value={
-            'coyote tree average deposit claw few west mixed leave journey whisper source'
-          }
+          value={seed}
           onChangeText={onChangeKey}
           multiline
           errorTextI18n={I18N.signinRestoreWalletTextFieldError}
