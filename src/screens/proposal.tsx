@@ -1,12 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-import {useWindowDimensions} from 'react-native';
-
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {
   useCosmos,
   useTypedNavigation,
@@ -18,6 +17,7 @@ import {GovernanceVoting} from '@app/models/governance-voting';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {VoteNamesType, WalletType} from '@app/types';
+import {WINDOW_HEIGHT} from '@app/variables/common';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = () => {
@@ -34,7 +34,6 @@ export const ProposalScreen = () => {
 
   const cosmos = useCosmos();
   const {visible} = useWalletsList();
-  const closeDistance = useWindowDimensions().height / 6;
 
   useEffect(() => {
     setItem(GovernanceVoting.getById(id));
@@ -57,15 +56,19 @@ export const ProposalScreen = () => {
         return;
       }
       try {
-        const transport = wallet.transport;
+        const transport = getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.vote(wallet.transport, item.orderNumber, opinion);
+        const query = cosmos.vote(transport, item.orderNumber, opinion);
 
         if (wallet.type === WalletType.ledgerBt) {
           await awaitForLedger(transport);
         }
 
         await query;
+
+        const proposal = await cosmos.getProposalDetails(item.orderNumber);
+        GovernanceVoting.create(proposal.proposal);
+        setItem(GovernanceVoting.getById(item.orderNumber));
 
         setModalIsVisible(false);
         sendNotification(I18N.voteRegistered);
@@ -101,7 +104,7 @@ export const ProposalScreen = () => {
     cardRef.current?.setSelected(decision);
     showModal('wallets-bottom-sheet', {
       wallets: visible,
-      closeDistance,
+      closeDistance: WINDOW_HEIGHT / 6,
       title: I18N.proposalAccountTitle,
       eventSuffix: '-proposal',
     });
@@ -118,7 +121,7 @@ export const ProposalScreen = () => {
     }
   }, [item]);
 
-  if (!item) {
+  if (!(item && item.isValid())) {
     return <></>;
   }
 

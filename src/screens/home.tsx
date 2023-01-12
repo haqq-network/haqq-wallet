@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {IS_DEVELOPMENT} from '@env';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -86,7 +85,7 @@ export const HomeScreen = () => {
           options={stakingOptions}
         />
       )}
-      {IS_DEVELOPMENT === '1' && (
+      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeGovernance"
           component={HomeGovernanceScreen}
