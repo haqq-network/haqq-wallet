@@ -457,6 +457,7 @@ export type ValidatorItem = Validator & {
   localDelegations?: number;
   localRewards?: number;
   localUnDelegations?: number;
+  searchString?: string;
 };
 
 export type ColorType = Color | string;

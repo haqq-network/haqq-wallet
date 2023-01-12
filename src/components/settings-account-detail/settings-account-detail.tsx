@@ -15,6 +15,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
   wallet: Wallet;
@@ -70,12 +71,14 @@ export const SettingsAccountDetail = ({
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
         />
       </MenuNavigationButton>
-      <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
-        <DataContent
-          titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
-          subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
-        />
-      </MenuNavigationButton>
+      {wallet.type === WalletType.mnemonic && (
+        <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
+          <DataContent
+            titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
+            subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
+          />
+        </MenuNavigationButton>
+      )}
       <MenuNavigationButton onPress={onPressRename} hideArrow>
         <DataContent
           titleI18n={I18N.settingsAccountDetailHideTitle}

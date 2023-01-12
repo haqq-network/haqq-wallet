@@ -388,9 +388,7 @@ export const App = () => {
                   <Stack.Screen
                     name="stakingValidators"
                     component={StakingValidatorsScreen}
-                    options={{
-                      title: getText(I18N.stakingValidators),
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="stakingInfo"
