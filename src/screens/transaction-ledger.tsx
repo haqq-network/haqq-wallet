@@ -1,63 +1,65 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
-import {TransactionResponse} from '@ethersproject/abstract-provider';
+import {ProviderInterface} from '@haqq/provider-base';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
-import {
-  useTypedNavigation,
-  useTypedRoute,
-  useUser,
-  useWallet,
-} from '@app/hooks';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
+import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 
 export const TransactionLedgerScreen = () => {
+  const transport = useRef<ProviderInterface | null>(null);
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionConfirmation'>();
-  const wallet = useWallet(route.params.from);
   const user = useUser();
 
-  const onDone = useCallback(
-    async (transaction: TransactionResponse) => {
-      if (transaction) {
-        await Transaction.createTransaction(
-          transaction,
-          user.providerId,
-          route.params.fee,
+  const tryToSingTransaction = useCallback(async () => {
+    const wallet = Wallet.getById(route.params.from);
+    if (wallet && wallet.isValid()) {
+      try {
+        transport.current = getProviderInstanceForWallet(wallet);
+
+        const ethNetworkProvider = new EthNetwork();
+        const transaction = await ethNetworkProvider.sendTransaction(
+          transport.current!,
+          route.params.to,
+          route.params.amount,
         );
 
-        navigation.navigate('transactionFinish', {
-          hash: transaction.hash,
-        });
-      }
-    },
-    [user.providerId, route.params.fee, navigation],
-  );
-
-  useEffect(() => {
-    if (wallet) {
-      requestAnimationFrame(async () => {
-        try {
-          const ethNetworkProvider = new EthNetwork();
-          const transaction = await ethNetworkProvider.sendTransaction(
-            wallet.transport,
-            route.params.to,
-            route.params.amount,
+        if (transaction) {
+          await Transaction.createTransaction(
+            transaction,
+            user.providerId,
+            route.params.fee,
           );
 
-          if (transaction) {
-            await onDone(transaction);
-          }
-        } catch (e) {
-          console.log('onDone', e);
+          navigation.navigate('transactionFinish', {
+            hash: transaction.hash,
+          });
         }
-      });
+      } catch (e) {
+        navigation.goBack();
+      }
     }
+  }, [
+    navigation,
+    route.params.amount,
+    route.params.from,
+    route.params.fee,
+    route.params.to,
+    user,
+  ]);
+
+  useEffect(() => {
+    requestAnimationFrame(async () => {
+      await tryToSingTransaction();
+    });
     return () => {
-      wallet?.transportExists && wallet?.transport.abort();
+      transport.current && transport.current.abort();
     };
-  }, [wallet, route.params.amount, onDone, route.params.to]);
+  }, [tryToSingTransaction]);
 
   return (
     <TransactionLedger
