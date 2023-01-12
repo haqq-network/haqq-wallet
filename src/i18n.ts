@@ -66,6 +66,8 @@ export enum I18N {
   ledgerAccountsAdded,
   ledgerAccountsWaiting,
   ledgerAccountsConfirm,
+  ledgerAccountsLoadMore,
+  ledgerAccountsLoadInfo,
   ledgerFinishCongratulations,
   ledgerScanTitle,
   ledgerScanDescription1,
@@ -513,6 +515,9 @@ const en: Record<I18N, string> = {
   [I18N.ledgerAccountsAdded]: 'Added',
   [I18N.ledgerAccountsWaiting]: 'Waiting for confirmation of pairing',
   [I18N.ledgerAccountsConfirm]: 'Confirm pairing on your Ledger',
+  [I18N.ledgerAccountsLoadMore]: 'Load more',
+  [I18N.ledgerAccountsLoadInfo]:
+    'At the first time, we show only 5 accounts from your Ledger. If you want to see the next 5 accounts then click the Load more button',
   [I18N.ledgerFinishCongratulations]:
     'Сongratulations!You have successfully added a new account',
   [I18N.ledgerScanTitle]: 'Looking for devices',
