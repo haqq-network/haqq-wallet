@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
@@ -13,19 +11,6 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
-
-export interface TransportWallet {
-  getSignedTx: (
-    transaction: TransactionRequest | UnsignedTransaction,
-  ) => Promise<string>;
-  getEthAddress: () => string;
-  getCosmosAddress: () => string;
-  getBase64PublicKey: () => Promise<string>;
-
-  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
-
-  abort: () => void;
-}
 
 export enum TransactionSource {
   unknown,
@@ -221,11 +206,15 @@ export type RootStackParamList = {
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
   ledgerStore: {
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
@@ -375,6 +364,7 @@ export enum WalletType {
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
+  rootMnemonic = 'root-mnemonic',
 }
 
 export enum WalletCardPattern {
@@ -508,3 +498,11 @@ export type ProposalsCroppedList = {
   status: string;
   title: string;
 }[];
+
+export type LedgerAccountItem = {
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  exists: boolean;
+  balance: number;
+};

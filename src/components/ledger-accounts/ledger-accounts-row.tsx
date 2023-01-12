@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {
   Button,
@@ -8,40 +8,28 @@ import {
   ButtonVariant,
   DataContent,
 } from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {EthNetwork} from '@app/services/eth-network';
+import {LedgerAccountItem} from '@app/types';
 import {cleanNumber, shortAddress} from '@app/utils';
 
 export type LedgerAccountsRowProps = {
-  item: string;
-  wallets: string[];
-  onPress: (item: string) => void;
+  item: LedgerAccountItem;
+  onPress: (item: LedgerAccountItem) => void;
 };
 
-export const LedgerAccountsRow = ({
-  item,
-  onPress,
-  wallets,
-}: LedgerAccountsRowProps) => {
-  const [balance, setBalance] = useState(0);
-
+export const LedgerAccountsRow = ({item, onPress}: LedgerAccountsRowProps) => {
   const onPressButton = () => {
     onPress(item);
   };
 
-  useEffect(() => {
-    EthNetwork.getBalance(item).then(result => {
-      setBalance(result);
-    });
-  }, [item]);
-
   return (
     <View style={styles.container}>
       <DataContent
-        title={`${cleanNumber(balance.toFixed(8))} ISML`}
-        subtitle={shortAddress(item)}
+        title={`${cleanNumber(item.balance)} ISML`}
+        subtitle={shortAddress(item.address)}
       />
-      {wallets.includes(item) ? (
+      {item.exists ? (
         <Button
           disabled
           variant={ButtonVariant.second}
@@ -61,12 +49,11 @@ export const LedgerAccountsRow = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
   },
 });

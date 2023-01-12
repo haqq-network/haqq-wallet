@@ -11,7 +11,7 @@ export async function onWalletCreate(wallet: Wallet) {
     if (subscription) {
       await pushNotifications.subscribeAddress(subscription, wallet.address);
 
-      wallet.subscription = subscription;
+      wallet.update({subscription});
     }
 
     EthNetwork.getBalance(wallet.address).then(balance => {

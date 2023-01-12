@@ -14,7 +14,7 @@ export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
     <Text
       t15
       i18n={I18N.networkFee}
-      i18params={{fee: cleanNumber(String(fee)), currency: currency}}
+      i18params={{fee: cleanNumber(fee), currency: currency}}
       center
       color={Color.textBase2}
     />

@@ -5,8 +5,8 @@ import {View} from 'react-native';
 import {captureException, showLoadingWithText, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {compressPublicKey} from '@app/services/transport-utils';
 import {sleep} from '@app/utils';
-import {ETH_HD_PATH} from '@app/variables/common';
 
 export const LedgerStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
@@ -24,11 +24,11 @@ export const LedgerStoreWalletScreen = () => {
       actions.push(
         wallets.addWalletFromLedger(
           {
-            path: ETH_HD_PATH,
+            path: route.params.hdPath,
             address: route.params.address,
             deviceId: route?.params?.deviceId,
             deviceName: route?.params?.deviceName,
-            publicKey: '',
+            publicKey: compressPublicKey(route.params.publicKey),
           },
           route?.params?.deviceName,
         ),

@@ -52,14 +52,14 @@ export class Transaction extends Realm.Object {
 
   get totalFormatted() {
     if (this.source === TransactionSource.send) {
-      return `- ${cleanNumber((this.value + this.fee).toFixed(8))}`;
+      return `- ${cleanNumber(this.value + this.fee)}`;
     }
 
-    return `+ ${cleanNumber(this.value.toFixed(8))}`;
+    return `+ ${cleanNumber(this.value)}`;
   }
 
   get valueFormatted() {
-    return cleanNumber(this.value.toFixed(8));
+    return cleanNumber(this.value);
   }
 
   get feeFormatted() {

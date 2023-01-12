@@ -39,14 +39,14 @@ export const SignUpStoreWalletScreen = () => {
             wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber,
           );
           if (wallet) {
-            wallet.isMain = true;
+            wallet.update({isMain: true});
           }
         } else {
           const password = await app.getPassword();
           const mnemonic = await main.getMnemonic(password);
 
           const last = wallets
-            .getForRootAddress(main.rootAddress)
+            .getForRootAddress(main.rootAddress ?? '')
             .reduce((memo, wallet) => {
               const segments = wallet.path?.split('/') ?? ['0'];
               return Math.max(
@@ -62,7 +62,7 @@ export const SignUpStoreWalletScreen = () => {
           );
 
           if (wallet) {
-            wallet.mnemonicSaved = main.mnemonicSaved;
+            wallet.update({mnemonicSaved: main.mnemonicSaved});
           }
         }
 

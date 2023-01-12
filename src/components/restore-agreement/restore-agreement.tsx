@@ -9,7 +9,6 @@ import {
   LottieWrap,
   PopupContainer,
   Spacer,
-  // Terms,
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';

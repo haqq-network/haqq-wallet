@@ -257,6 +257,8 @@ export enum I18N {
   StakingInfoUnDelegationDay,
   voteAbstain,
   voteVeto,
+  voteRegistered,
+  voteNotRegistered,
   stakingDelegateFormTitle,
   stakingDelegateFormStakeTo,
   stakingDelegateFormCommission,
@@ -314,6 +316,7 @@ export enum I18N {
   popupProposalVoteTitle,
   popupProposalVoteDescription,
   proposalVoteResults,
+  proposalVoteSendingVote,
   proposalYouVoted,
   proposalAccountTitle,
   proposalDepositFinishDone,
@@ -422,6 +425,8 @@ export enum I18N {
   errorCreateAccountPopupClose,
   networkFee,
   qrModalSendFunds,
+  ledgerAttentionTitle,
+  ledgerAttentionClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -750,6 +755,8 @@ const en: Record<I18N, string> = {
   [I18N.validatorInfoHide]: 'Hide',
   [I18N.voteAbstain]: 'Abstain',
   [I18N.voteVeto]: 'Veto',
+  [I18N.voteRegistered]: 'The vote was registered',
+  [I18N.voteNotRegistered]: 'Error. The vote was not sent',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
   [I18N.stakingDelegateFormCommission]: 'Commission',
@@ -801,6 +808,7 @@ const en: Record<I18N, string> = {
   [I18N.popupProposalVoteDescription]:
     'You can change your vote while the voting is in progress',
   [I18N.proposalVoteResults]: 'Vote results',
+  [I18N.proposalVoteSendingVote]: 'We are sending your vote...',
   [I18N.proposalYouVoted]: 'You voted',
   [I18N.proposalAccountTitle]: 'Vote from',
   [I18N.proposalDepositFinishDone]: 'Done',
@@ -914,4 +922,7 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.qrModalSendFunds]: 'Send funds from',
+  [I18N.ledgerAttentionTitle]:
+    'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
+  [I18N.ledgerAttentionClose]: 'Close',
 };

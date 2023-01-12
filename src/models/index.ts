@@ -6,7 +6,7 @@ import {Provider} from './provider';
 import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
-import {WalletRealm} from './wallet';
+import {Wallet} from './wallet';
 
 import {AppTheme, WalletType} from '../types';
 import {
@@ -17,7 +17,7 @@ import {
 
 export const realm = new Realm({
   schema: [
-    WalletRealm,
+    Wallet,
     UserSchema,
     Transaction,
     Contact,

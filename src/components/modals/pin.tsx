@@ -7,7 +7,7 @@ import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useApp} from '@app/hooks';
+import {useApp, useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
@@ -16,6 +16,7 @@ export type PinModalProps = {};
 export const PinModal = () => {
   const app = useApp();
   const pinRef = useRef<PinInterface>();
+  const theme = useTheme();
   const [showRestore, setShowRestore] = useState(false);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export const PinModal = () => {
   );
 
   return (
-    <View style={page.container}>
+    <View style={page.container} key={theme}>
       <Pin
         ref={pinRef}
         title={getText(I18N.modalPinTitle)}

@@ -104,7 +104,7 @@ export const StakingActive = forwardRef(
         <Spacer height={20} />
         <Text t8 center i18n={I18N.homeStakingRewards} />
         <Text t3 center color={Color.textGreen1}>
-          {cleanNumber(rewardSum.toFixed(4))} ISLM
+          {cleanNumber(rewardSum)} ISLM
         </Text>
         <Spacer height={28} />
         <InfoBlockAmount

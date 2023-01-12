@@ -1,20 +1,20 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
+import {
+  Provider as ProviderBase,
+  ProviderInterface,
+  compressPublicKey,
+} from '@haqq/provider-base';
 import {ledgerService} from '@ledgerhq/hw-app-eth';
 import {utils} from 'ethers';
 
 import {runUntil} from '@app/helpers';
-import {Wallet} from '@app/models/wallet';
-import {Transport} from '@app/services/transport';
-import {compressPublicKey} from '@app/services/transport-utils';
-import {TransportWallet} from '@app/types';
 
-export class TransportLedger extends Transport implements TransportWallet {
+export class TransportLedger
+  extends ProviderBase<{}>
+  implements ProviderInterface
+{
   public stop: boolean = false;
-
-  constructor(wallet: Wallet) {
-    super(wallet);
-  }
 
   async getBase64PublicKey() {
     if (!this._wallet.publicKey) {
@@ -79,30 +79,43 @@ export class TransportLedger extends Transport implements TransportWallet {
   }
 
   async signTypedData(domainHash: string, valuesHash: string) {
-    this.stop = false;
-    let signature = null;
-    const iter = runUntil(this._wallet.deviceId!, eth =>
-      eth.signEIP712HashedMessage(this._wallet.path, domainHash, valuesHash),
-    );
+    try {
+      this.stop = false;
+      let signature = null;
+      const iter = runUntil(this._wallet.deviceId, eth =>
+        eth.signEIP712HashedMessage(this._wallet.path, domainHash, valuesHash),
+      );
 
-    let done = false;
-    do {
-      const resp = await iter.next();
-      signature = resp.value;
-      done = resp.done;
-    } while (!done && !this.stop);
+      let done = false;
+      do {
+        const resp = await iter.next();
+        signature = resp.value;
+        done = resp.done;
+      } while (!done && !this.stop);
 
-    await iter.abort();
+      await iter.abort();
 
-    if (!signature) {
-      throw new Error('can_not_connected');
+      if (!signature) {
+        throw new Error('can_not_connected');
+      }
+
+      const v = (signature.v - 27).toString(16).padStart(2, '0');
+      const response = '0x' + signature.r + signature.s + v;
+
+      this.emit('signTypedData', true);
+
+      return response;
+    } catch (e) {
+      if (e instanceof Error) {
+        this.emit('signTypedData', false, e.message);
+        throw new Error(e.message);
+      }
+      return '';
     }
-
-    const v = (signature.v - 27).toString(16).padStart(2, '0');
-    return '0x' + signature.r + signature.s + v;
   }
 
   abort() {
+    console.log('abort call');
     this.stop = true;
   }
 }

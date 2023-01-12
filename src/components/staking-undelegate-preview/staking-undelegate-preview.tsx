@@ -57,7 +57,7 @@ export const StakingUnDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber(amount.toFixed(15))} ISLM
+        {cleanNumber(amount)} ISLM
       </Text>
       <Text
         t11

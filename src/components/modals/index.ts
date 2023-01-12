@@ -4,5 +4,5 @@ export * from './splash';
 export * from './no-internet';
 export * from './error-account-added';
 export * from './error-create-account';
+export * from './ledger-attention';
 export * from './hide';
-export * from './proposal-vote';
