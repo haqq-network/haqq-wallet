@@ -1,12 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
-import {
-  useApp,
-  useContacts,
-  useTypedNavigation,
-  useTypedRoute,
-} from '@app/hooks';
+import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
 import {generateUUID} from '@app/utils';
 
@@ -15,12 +11,11 @@ export const TransactionSumScreen = () => {
   const route = useTypedRoute<'transactionSum'>();
   const app = useApp();
   const event = useMemo(() => generateUUID(), []);
-  const contacts = useContacts();
   const [to, setTo] = useState(route.params.to);
 
   const [balance, setBalance] = useState(0);
   const [fee, setFee] = useState(0);
-  const contact = useMemo(() => contacts.getContact(to), [contacts, to]);
+  const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
     setTo(address);
