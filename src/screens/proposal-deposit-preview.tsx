@@ -1,7 +1,11 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {ProposalDepositPreview} from '@app/components/proposal-deposit-preview';
 import {app} from '@app/contexts';
+import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
 
@@ -22,7 +26,11 @@ export const ProposalDepositPreviewScreen = () => {
 
         const cosmos = new Cosmos(app.provider!);
 
-        const resp = await cosmos.deposit(wallet.transport, proposalId, amount);
+        const resp = await cosmos.deposit(
+          getProviderInstanceForWallet(wallet),
+          proposalId,
+          amount,
+        );
 
         if (resp) {
           navigation.navigate('proposalDepositFinish', {
@@ -41,6 +49,12 @@ export const ProposalDepositPreviewScreen = () => {
       }
     }
   }, [wallet, amount, fee, navigation, proposalId, title]);
+
+  useEffect(() => {
+    return () => {
+      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+    };
+  }, [wallet]);
 
   return (
     <ProposalDepositPreview

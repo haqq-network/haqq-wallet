@@ -6,7 +6,6 @@ import {
   ContactFlatListProps,
   ListContactProps,
 } from '@app/components/list-contact';
-import {useContacts} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -27,21 +26,24 @@ export const withActionsContactItem = (
 ) => {
   return ({filterText, ...props}: ComponentProps) => {
     const {navigate} = useTypedNavigation();
-    const contacts = useContacts();
 
-    const [contactsList, setContactsList] = useState(contacts.getContacts());
+    const [contactsList, setContactsList] = useState(
+      Contact.getAll().snapshot(),
+    );
 
     useEffect(() => {
       if (subscribeOnContacts) {
+        const contacts = Contact.getAll();
         const callback = () => {
-          setContactsList(contacts.getContacts());
+          setContactsList(contacts.snapshot());
         };
-        contacts.on('contacts', callback);
+
+        contacts.addListener(callback);
         return () => {
-          contacts.off('contacts', callback);
+          contacts.removeListener(callback);
         };
       }
-    }, [contacts]);
+    }, []);
 
     const contactsFilteredList = useMemo(() => {
       if (filterText) {
@@ -67,29 +69,26 @@ export const withActionsContactItem = (
       [navigate],
     );
 
-    const onPressRemove = useCallback(
-      (itemOrAddress: Contact | string) => {
-        const alertTitle = getText(I18N.settingsAddressBookAlertTitle);
-        const alertDesc = getText(I18N.settingsAddressBookAlertDesc);
-        const alertBtnFirst = getText(I18N.settingsAddressBookAlertBtnFirst);
-        const alertBtnSecond = getText(I18N.settingsAddressBookAlertBtnSecond);
-        Alert.alert(alertTitle, alertDesc, [
-          {text: alertBtnFirst, style: 'cancel'},
-          {
-            text: alertBtnSecond,
-            style: 'destructive',
-            onPress: () => {
-              const contactAddress =
-                typeof itemOrAddress === 'string'
-                  ? itemOrAddress
-                  : 'account' in itemOrAddress && itemOrAddress.account;
-              contactAddress && contacts.removeContact(contactAddress);
-            },
+    const onPressRemove = useCallback((itemOrAddress: Contact | string) => {
+      const alertTitle = getText(I18N.settingsAddressBookAlertTitle);
+      const alertDesc = getText(I18N.settingsAddressBookAlertDesc);
+      const alertBtnFirst = getText(I18N.settingsAddressBookAlertBtnFirst);
+      const alertBtnSecond = getText(I18N.settingsAddressBookAlertBtnSecond);
+      Alert.alert(alertTitle, alertDesc, [
+        {text: alertBtnFirst, style: 'cancel'},
+        {
+          text: alertBtnSecond,
+          style: 'destructive',
+          onPress: () => {
+            const contactAddress =
+              typeof itemOrAddress === 'string'
+                ? itemOrAddress
+                : 'account' in itemOrAddress && itemOrAddress.account;
+            contactAddress && Contact.remove(contactAddress);
           },
-        ]);
-      },
-      [contacts],
-    );
+        },
+      ]);
+    }, []);
     return (
       <Component
         data={contactsFilteredList}
