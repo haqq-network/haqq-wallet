@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
 import {View} from 'react-native';
 
@@ -40,7 +39,6 @@ export const TransactionAddress = ({
   const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
-  const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
   useEffect(() => {
@@ -70,23 +68,16 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
-    const subscriptionBack = () => {
-      goBack();
-      app.off('onCloseQr', subscriptionBack);
-    };
     const subscription = ({to}: any) => {
       if (utils.isAddress(to)) {
         setAddress(to);
         app.off('address', subscription);
-        app.off('onCloseQr', subscriptionBack);
         hideModal();
       }
     };
     app.on('address', subscription);
-
-    app.on('onCloseQr', subscriptionBack);
     showModal('qr');
-  }, [app, goBack]);
+  }, [app]);
 
   const onPressClear = useCallback(() => setAddress(''), []);
 

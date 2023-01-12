@@ -1,20 +1,15 @@
 import React, {useCallback, useRef, useState} from 'react';
 
 import {Pin, PinInterface} from '@app/components/pin';
-import {hideModal, showModal} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {sendNotification} from '@app/services';
 
 interface SettingsSecurityPinProps {
-  goBack?: () => void;
+  onPinRepeated: (pin: string, pin2: string) => Promise<boolean>;
 }
 
 export const SettingsSecurityPin = ({
-  goBack = () => {},
+  onPinRepeated,
 }: SettingsSecurityPinProps) => {
-  const app = useApp();
-  const wallets = useWallets();
   const pinRef = useRef<PinInterface>();
   const [pin, setPin] = useState('');
   const [isRepeatPin, setIsRepeatPin] = useState(false);
@@ -23,20 +18,19 @@ export const SettingsSecurityPin = ({
     setIsRepeatPin(true);
   }, []);
 
-  const onPinRepeated = useCallback(
+  const onPinRepeatedCb = useCallback(
     async (repeatedPin: string) => {
-      if (pin === repeatedPin) {
-        showModal('loading');
-        await wallets.updateWalletsData(pin);
-        await app.updatePin(pin);
-        hideModal();
-        sendNotification(I18N.notificationPinChanged);
-        goBack();
-      } else {
-        pinRef.current?.reset(getText(I18N.settingsSecurityPinNotMatched));
-      }
+      onPinRepeated(pin, repeatedPin)
+        .then(state => {
+          if (!state) {
+            pinRef.current?.reset(getText(I18N.settingsSecurityPinNotMatched));
+          }
+        })
+        .catch(() => {
+          pinRef.current?.reset(getText(I18N.settingsSecurityPinNotMatched));
+        });
     },
-    [app, goBack, pin, wallets],
+    [onPinRepeated, pin],
   );
 
   return (
@@ -46,7 +40,7 @@ export const SettingsSecurityPin = ({
           ? I18N.settingsSecurityPinRepeat
           : I18N.settingsSecurityPinSet
       }
-      onPin={isRepeatPin ? onPinRepeated : onPin}
+      onPin={isRepeatPin ? onPinRepeatedCb : onPin}
       ref={pinRef}
       key={
         isRepeatPin

@@ -99,8 +99,12 @@ export const Modals = ({initialModal = null}: ModalProps) => {
 
   const onClose = useCallback(() => {
     setModal(null);
-    app.emit('onCloseQr');
-    app.emit(Events.onCloseModal, modal?.type);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      app.emit(Events.onCloseModal, modal?.type);
+    };
   }, [modal?.type]);
 
   const entry = useMemo(() => {

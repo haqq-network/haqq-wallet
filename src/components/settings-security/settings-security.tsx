@@ -1,9 +1,8 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 
-import {Alert, StyleSheet, Switch, View} from 'react-native';
+import {StyleSheet, Switch, View} from 'react-native';
 
 import {DataContent, MenuNavigationButton, Spacer} from '@app/components/ui';
-import {useApp} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {BiometryType} from '@app/types';
 
@@ -15,34 +14,18 @@ const biometryName = {
 };
 
 interface SettingsSecurityProps {
-  onSubmit?: () => void;
+  biometry: boolean;
+  biometryType: BiometryType | null;
+  onSubmit: () => void;
+  onToggleBiometry: () => void;
 }
 
 export const SettingsSecurity = ({
-  onSubmit = () => {},
+  onSubmit,
+  biometryType,
+  biometry,
+  onToggleBiometry,
 }: SettingsSecurityProps) => {
-  const app = useApp();
-  const [biometry, setBiometry] = useState(app.biometry);
-
-  const onToggleBiometry = useCallback(async () => {
-    if (!biometry) {
-      try {
-        await app.biometryAuth();
-        app.biometry = true;
-        setBiometry(true);
-      } catch (e) {
-        if (e instanceof Error) {
-          Alert.alert(e.message);
-        }
-        app.biometry = false;
-        setBiometry(false);
-      }
-    } else {
-      app.biometry = false;
-      setBiometry(false);
-    }
-  }, [app, biometry]);
-
   return (
     <View style={page.container}>
       <MenuNavigationButton onPress={onSubmit}>
@@ -51,12 +34,12 @@ export const SettingsSecurity = ({
           subtitleI18n={I18N.settingsSecurityEnterPin}
         />
       </MenuNavigationButton>
-      {app.biometryType !== null && (
+      {biometryType !== null && (
         <MenuNavigationButton hideArrow onPress={() => {}}>
           <DataContent
-            title={biometryName[app.biometryType]}
+            title={biometryName[biometryType]}
             subtitleI18n={I18N.settingsSecurityBiometry}
-            subtitleI18nParams={{biometry: biometryName[app.biometryType]}}
+            subtitleI18nParams={{biometry: biometryName[biometryType]}}
           />
           <Spacer />
           <Switch value={biometry} onChange={onToggleBiometry} />
