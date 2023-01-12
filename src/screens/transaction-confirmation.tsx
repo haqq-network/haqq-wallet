@@ -6,12 +6,12 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {
-  useContacts,
   useTypedNavigation,
   useTypedRoute,
   useUser,
   useWallet,
 } from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
@@ -22,10 +22,9 @@ export const TransactionConfirmationScreen = () => {
 
   const user = useUser();
   const wallet = useWallet(route.params.from);
-  const contacts = useContacts();
   const contact = useMemo(
-    () => contacts.getContact(route.params.to),
-    [contacts, route.params.to],
+    () => Contact.getById(route.params.to),
+    [route.params.to],
   );
 
   const [error, setError] = useState('');

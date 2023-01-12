@@ -41,6 +41,10 @@ export class Contact extends Realm.Object {
     }
   }
 
+  static getAll() {
+    return realm.objects<Contact>(Contact.schema.name);
+  }
+
   static getById(address: string) {
     return realm.objectForPrimaryKey<Contact>(
       Contact.schema.name,
@@ -60,5 +64,15 @@ export class Contact extends Realm.Object {
         Realm.UpdateMode.Modified,
       );
     });
+  }
+
+  static removeAll() {
+    const contacts = realm.objects<Contact>(Contact.schema.name);
+
+    for (const contact of contacts) {
+      realm.write(() => {
+        realm.delete(contact);
+      });
+    }
   }
 }

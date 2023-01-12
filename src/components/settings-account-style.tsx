@@ -33,7 +33,7 @@ const cardStyleVariants = [
   },
   {
     value: WalletCardStyle.gradient,
-    name: I18N.settingsAccountStyleGenerate,
+    name: I18N.settingsAccountStyleGradient,
   },
 ];
 
