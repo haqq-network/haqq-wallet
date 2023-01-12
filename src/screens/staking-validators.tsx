@@ -23,7 +23,6 @@ export const StakingValidatorsScreen = () => {
   const [validators, setValidators] = useState<Validator[]>([]);
 
   const onCache = useThrottle(() => {
-    console.log(new Date(), 'onCache');
     const cache = StakingMetadata.getAll().reduce<Record<string, any>>(
       (memo, row) => {
         const value = memo[row.validator] || {
@@ -80,6 +79,8 @@ export const StakingValidatorsScreen = () => {
           localDelegations: info[StakingMetadataType.delegation],
           localRewards: info[StakingMetadataType.reward],
           localUnDelegations: info[StakingMetadataType.undelegation],
+          searchString:
+            `${validator.description.moniker} ${validator.description.details} ${validator.description.website}`.toLowerCase(),
         });
       } else {
         unStaked.push(validator);
@@ -114,6 +115,7 @@ export const StakingValidatorsScreen = () => {
 
   return (
     <StakingValidators
+      onGoBack={navigation.goBack}
       stakedValidators={stakedValidators}
       unStakedValidators={unStakedValidators}
       onPress={onPressValidator}

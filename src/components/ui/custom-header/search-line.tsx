@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Platform, TextInput, View} from 'react-native';
 import Animated, {
@@ -24,6 +24,11 @@ type SearchLineProps = {
 export function SearchLine({onChange, onCancel}: SearchLineProps) {
   const inputWidth = useSharedValue(0.9);
   const inputRef = useRef<TextInput>(null);
+
+  const onPressCancel = useCallback(() => {
+    onChange?.('');
+    onCancel?.();
+  }, [onCancel, onChange]);
 
   useEffect(() => {
     inputWidth.value = withTiming(1, {duration: 200}, () => {
@@ -52,7 +57,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
       </Animated.View>
       <Spacer width={14} />
       <HeaderButton
-        onPress={onCancel}
+        onPress={onPressCancel}
         color={Color.textGreen1}
         i18n={I18N.cancel}
       />
