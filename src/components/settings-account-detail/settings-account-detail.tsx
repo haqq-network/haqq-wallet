@@ -13,30 +13,27 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useWallet} from '@app/hooks';
-import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 
 type SettingsAccountDetailProps = {
+  wallet: Wallet;
   onPressRename: () => void;
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
+  onViewingRecoveryPhrase: () => void;
 };
 
 export const SettingsAccountDetail = ({
+  wallet,
   onPressRename,
   onPressStyle,
   onToggleIsHidden,
+  onViewingRecoveryPhrase,
 }: SettingsAccountDetailProps) => {
-  const route = useTypedRoute<'settingsAccountDetail'>();
-
-  const wallet = useWallet(route.params.address);
   const cardWidth = useWindowDimensions().width - 72;
   const cardMaskWidth = useWindowDimensions().width - 112;
   const cardMaskHeight = cardMaskWidth * 0.547528517;
-  if (!wallet) {
-    return null;
-  }
 
   return (
     <PopupContainer style={styles.container}>
@@ -71,6 +68,12 @@ export const SettingsAccountDetail = ({
         <DataContent
           titleI18n={I18N.settingsAccountDetailChangeStyleTitle}
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
+        />
+      </MenuNavigationButton>
+      <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
+        <DataContent
+          titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
+          subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
         />
       </MenuNavigationButton>
       <MenuNavigationButton onPress={onPressRename} hideArrow>

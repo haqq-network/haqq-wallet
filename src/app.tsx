@@ -78,6 +78,7 @@ import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
+import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
@@ -313,13 +314,6 @@ export const App = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="settingsSecurity"
-                    component={SettingsSecurityScreen}
-                    options={{
-                      title: 'Security',
-                    }}
-                  />
-                  <Stack.Screen
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={withoutHeader}
@@ -335,7 +329,7 @@ export const App = () => {
                     name="settingsFaq"
                     component={SettingsFAQScreen}
                     options={{
-                      title: 'Security',
+                      title: getText(I18N.settingsSecurity),
                     }}
                   />
                   <Stack.Screen
@@ -374,6 +368,20 @@ export const App = () => {
                     options={{
                       title: getText(I18N.settingsThemeScreen),
                     }}
+                  />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhraseTitle),
+                    }}
+                    component={SettingsViewRecoveryPhraseScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    component={SettingsSecurityScreen}
                   />
                 </Stack.Group>
                 <Stack.Group screenOptions={screenOptions}>
