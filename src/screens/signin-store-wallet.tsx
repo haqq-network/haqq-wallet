@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import {captureException, showLoadingWithText, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
@@ -41,7 +42,9 @@ export const SignInStoreWalletScreen = () => {
               `${ETH_HD_SHORT_PATH}/${index}`,
             );
 
-            if (!wallets.getWallet(node.address)) {
+            const existsWallet = Wallet.getById(node.address);
+
+            if (!existsWallet) {
               const balance = await EthNetwork.getBalance(node.address);
               canNext = balance > 0 || index === 0;
 

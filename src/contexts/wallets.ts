@@ -202,17 +202,6 @@ class Wallets extends EventEmitter {
     }
   }
 
-  async updateWalletsData(newPin: string) {
-    const oldPin = await app.getPassword();
-    for (const wallet of this._wallets.values()) {
-      await wallet.updateWalletData(oldPin, newPin);
-    }
-  }
-
-  getWallet(address: string): Wallet | undefined {
-    return this._wallets.get(address.toLowerCase());
-  }
-
   getWallets(): Wallet[] {
     return Array.from(this._wallets.values());
   }
