@@ -3,8 +3,9 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
 import {captureException} from '@app/helpers';
-import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
+import {useApp, useTransactions, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
@@ -21,7 +22,6 @@ type RestorePasswordProps = {
 export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const wallet = useWallets();
   const transactions = useTransactions();
-  const contacts = useContacts();
   const app = useApp();
   const pan = useRef(new Animated.Value(1)).current;
 
@@ -62,7 +62,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
             try {
               wallet.clean();
               transactions.clean();
-              contacts.clean();
+              Contact.removeAll();
               await app.clean();
               Animated.timing(pan, {
                 toValue: 1,
@@ -78,7 +78,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         },
       ],
     );
-  }, [app, contacts, pan, transactions, wallet]);
+  }, [app, pan, transactions, wallet]);
 
   return (
     <BottomSheet
