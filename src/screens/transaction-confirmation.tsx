@@ -2,6 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
+import {
   useTypedNavigation,
   useTypedRoute,
   useUser,
@@ -59,7 +63,7 @@ export const TransactionConfirmationScreen = () => {
         const ethNetworkProvider = new EthNetwork();
 
         const transaction = await ethNetworkProvider.sendTransaction(
-          wallet.transport,
+          getProviderInstanceForWallet(wallet),
           route.params.to,
           route.params.amount,
         );
@@ -91,7 +95,7 @@ export const TransactionConfirmationScreen = () => {
 
   useEffect(() => {
     return () => {
-      wallet?.transportExists && wallet.transport.abort();
+      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 

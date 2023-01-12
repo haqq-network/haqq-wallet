@@ -3,6 +3,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
+import {
   useCosmos,
   useTypedNavigation,
   useTypedRoute,
@@ -33,11 +37,11 @@ export const StakingDelegatePreviewScreen = () => {
   }, [cosmos]);
 
   const onDone = useCallback(async () => {
-    if (wallet) {
+    if (wallet && wallet.isValid()) {
       try {
         setDisabled(true);
 
-        const transport = wallet.transport;
+        const transport = getProviderInstanceForWallet(wallet);
 
         const query = cosmos.delegate(
           transport,
@@ -71,7 +75,7 @@ export const StakingDelegatePreviewScreen = () => {
 
   useEffect(() => {
     return () => {
-      wallet?.transportExists && wallet?.transport.abort();
+      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
