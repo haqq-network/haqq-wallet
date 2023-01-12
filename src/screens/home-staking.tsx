@@ -4,6 +4,10 @@ import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
+import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {
@@ -88,14 +92,16 @@ export const HomeStakingScreen = () => {
       }
     }
 
-    const exists = visible.filter(w => w.cosmosAddress in delegators);
+    const exists = visible.filter(
+      w => w.isValid() && w.cosmosAddress in delegators,
+    );
 
     const queue = exists
       .filter(w => w.type !== WalletType.ledgerBt)
       .map(w => {
         return cosmos
           .multipleWithdrawDelegatorReward(
-            w.transport,
+            getProviderInstanceForWallet(w),
             delegators[w.cosmosAddress],
           )
           .then(() => [w.cosmosAddress, delegators[w.cosmosAddress]]);
@@ -106,8 +112,8 @@ export const HomeStakingScreen = () => {
     while (ledger.length) {
       const current = ledger.shift();
 
-      if (current) {
-        const transport = current.transport;
+      if (current && current.isValid()) {
+        const transport = getProviderInstanceForWallet(current);
 
         queue.push(
           cosmos
@@ -172,7 +178,7 @@ export const HomeStakingScreen = () => {
 
   useEffect(() => {
     return () => {
-      visible.map(w => w.transportExists && w.transport.abort());
+      visible.map(w => abortProviderInstanceForWallet(w));
     };
   }, [visible]);
 
