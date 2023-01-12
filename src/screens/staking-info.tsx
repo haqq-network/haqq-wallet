@@ -7,24 +7,23 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallets,
-} from '@app/hooks';
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
   const {operator_address} = validator;
   const navigation = useTypedNavigation();
-
-  const {visible} = useWallets();
+  const [visible, setVisible] = useState(Wallet.getAllVisible().snapshot());
   const cosmos = useCosmos();
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
@@ -35,6 +34,19 @@ export const StakingInfoScreen = () => {
   const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
 
   const closeDistance = useWindowDimensions().height / 6;
+
+  useEffect(() => {
+    const wallets = Wallet.getAllVisible();
+    const sub = () => {
+      setVisible(wallets.snapshot());
+    };
+
+    wallets.addListener(sub);
+
+    return () => {
+      wallets.removeListener(sub);
+    };
+  }, []);
 
   useEffect(() => {
     const r = StakingMetadata.getAllByValidator(operator_address);
@@ -59,7 +71,7 @@ export const StakingInfoScreen = () => {
 
   useEffect(() => {
     return () => {
-      visible.map(w => w.transportExists && w.transport.abort());
+      visible.map(w => abortProviderInstanceForWallet(w));
     };
   }, [visible]);
 
@@ -69,13 +81,14 @@ export const StakingInfoScreen = () => {
       const delegators = new Set(rewards.map(r => r.delegator));
       const exists = visible.filter(w => delegators.has(w.cosmosAddress));
 
-      console.log(exists);
-
       const queue = exists
         .filter(w => w.type !== WalletType.ledgerBt)
         .map(w => {
           return cosmos
-            .withdrawDelegatorReward(w.transport, operator_address)
+            .withdrawDelegatorReward(
+              getProviderInstanceForWallet(w),
+              operator_address,
+            )
             .then(() => [w.cosmosAddress, operator_address]);
         });
 
@@ -85,7 +98,7 @@ export const StakingInfoScreen = () => {
         const current = ledger.shift();
 
         if (current) {
-          const transport = current.transport;
+          const transport = getProviderInstanceForWallet(current);
 
           queue.push(
             cosmos

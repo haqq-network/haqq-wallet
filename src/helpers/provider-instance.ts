@@ -10,6 +10,12 @@ export function hasProviderInstanceForWallet(wallet: Wallet) {
   return cache.has(wallet.address);
 }
 
+export function abortProviderInstanceForWallet(wallet: Wallet) {
+  if (hasProviderInstanceForWallet(wallet)) {
+    cache.get(wallet.address).abort();
+  }
+}
+
 export function getProviderInstanceForWallet(wallet: Wallet) {
   if (!hasProviderInstanceForWallet(wallet)) {
     switch (wallet.type) {

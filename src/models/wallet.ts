@@ -1,10 +1,7 @@
 import {decrypt, encrypt} from '@haqq/encryption-react-native';
-import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {app} from '@app/contexts';
 import {Cosmos} from '@app/services/cosmos';
-import {TransportHot} from '@app/services/transport-hot';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
@@ -70,10 +67,14 @@ export class Wallet extends Realm.Object {
   };
 
   _cosmosAddress: string = '';
-  _transport: ProviderInterface | null = null;
 
   static getAll() {
     return realm.objects<Wallet>(Wallet.schema.name);
+  }
+
+  static getAllVisible() {
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
+    return wallets.filtered('isHidden != true');
   }
 
   static getById(id: string) {
@@ -279,36 +280,6 @@ export class Wallet extends Realm.Object {
         wallet.data = encrypted;
       });
     }
-  }
-
-  get transportExists() {
-    return !!this._transport;
-  }
-
-  get transport(): ProviderInterface {
-    if (!this._transport) {
-      switch (this.type) {
-        case WalletType.mnemonic:
-        case WalletType.hot:
-          this._transport = new TransportHot(this.getAccountData(), {
-            cosmosPrefix: 'haqq',
-          });
-          break;
-        case WalletType.ledgerBt:
-          this._transport = new ProviderLedgerReactNative(
-            this.getAccountData(),
-            {
-              cosmosPrefix: 'haqq',
-              deviceId: this.deviceId!,
-              hdPath: this.path ?? '',
-            },
-          );
-          break;
-        default:
-          throw new Error('transport_not_implemented');
-      }
-    }
-    return this._transport;
   }
 
   get cosmosAddress() {
