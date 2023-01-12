@@ -19,6 +19,7 @@ export interface HomeGovernanceProps {
   refreshing?: boolean;
   loading?: boolean;
   onSelect?: (tag: ProposalsTagType) => () => void;
+  onSearchChange?: (text: string) => void;
 }
 
 export const HomeGovernance = ({
@@ -26,6 +27,7 @@ export const HomeGovernance = ({
   statusFilter,
   onPressCard,
   onRefresh,
+  onSearchChange,
   refreshing,
   loading,
   onSelect,
@@ -35,7 +37,11 @@ export const HomeGovernance = ({
 
   return (
     <>
-      <CustomHeader title={I18N.homeGovernance} iconRight="search" />
+      <CustomHeader
+        onSearchChange={onSearchChange}
+        title={I18N.homeGovernance}
+        iconRight="search"
+      />
       <Spacer height={12} />
       <View>
         <FlatList
