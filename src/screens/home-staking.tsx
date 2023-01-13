@@ -62,6 +62,7 @@ export const HomeStakingScreen = () => {
         (acc, w) => acc + app.getBalance(w.address),
         0,
       );
+
       setData({
         rewardsSum,
         stakingSum,

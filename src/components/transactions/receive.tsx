@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {TransactionListReceive} from '@app/types';
-import {shortAddress} from '@app/utils';
+import {cleanNumber, shortAddress} from '@app/utils';
 
 export type TransactionPreviewProps = {
   item: TransactionListReceive;
@@ -33,7 +33,7 @@ export const TransactionReceive = ({
           short
         />
         <Text t11 color={Color.textGreen1}>
-          {`+${item.value.toFixed(2)} ISLM`}
+          {`+${cleanNumber(item.value)} ISLM`}
         </Text>
       </View>
     </TouchableWithoutFeedback>
