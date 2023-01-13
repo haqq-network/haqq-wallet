@@ -39,7 +39,7 @@ export const LedgerAccountsRow = ({
         </Text>
       </View>
       <DataContent
-        title={`${cleanNumber(item.balance)} ISML`}
+        title={`${cleanNumber(item.balance)} ISLM`}
         subtitle={shortAddress(item.address)}
       />
       <Spacer />

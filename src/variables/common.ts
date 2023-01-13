@@ -185,7 +185,7 @@ export const PRIVACY_POLICY = 'https://boredgen.net/privacy_policy';
 export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
 
-export const NUM_PRECISION = 2;
+export const NUM_PRECISION = 3;
 
 export const MIN_AMOUNT = 1 / Math.pow(10, NUM_PRECISION);
 export const WINDOW_WIDTH = Dimensions.get('window').width;
