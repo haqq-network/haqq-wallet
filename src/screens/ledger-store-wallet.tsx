@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 
+import {compressPublicKey} from '@haqq/provider-base';
 import {View} from 'react-native';
 
 import {captureException, showLoadingWithText, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {compressPublicKey} from '@app/services/transport-utils';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
