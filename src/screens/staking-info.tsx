@@ -4,7 +4,7 @@ import {useWindowDimensions} from 'react-native';
 
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {awaitForPopupClosed, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -99,14 +99,18 @@ export const StakingInfoScreen = () => {
 
         if (current) {
           const transport = getProviderInstanceForWallet(current);
+          try {
+            queue.push(
+              cosmos
+                .withdrawDelegatorReward(transport, operator_address)
+                .then(() => [current.cosmosAddress, operator_address]),
+            );
 
-          queue.push(
-            cosmos
-              .withdrawDelegatorReward(transport, operator_address)
-              .then(() => [current.cosmosAddress, operator_address]),
-          );
-
-          await awaitForLedger(transport);
+            await awaitForLedger(transport);
+          } catch (e) {
+            await awaitForPopupClosed('ledger-locked');
+            transport.abort();
+          }
         }
       }
 

@@ -433,6 +433,9 @@ export enum I18N {
   qrModalSendFunds,
   ledgerAttentionTitle,
   ledgerAttentionClose,
+  ledgerLockedTitle,
+  ledgerLockedDescription,
+  ledgerLockedClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -939,4 +942,8 @@ const en: Record<I18N, string> = {
   [I18N.ledgerAttentionTitle]:
     'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
   [I18N.ledgerAttentionClose]: 'Close',
+  [I18N.ledgerLockedTitle]: 'Turn on and unlock the Ledger',
+  [I18N.ledgerLockedDescription]:
+    "We can't get information from your ledger. It may be turned off or blocked",
+  [I18N.ledgerLockedClose]: 'Close',
 };

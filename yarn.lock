@@ -1354,10 +1354,10 @@
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-ledger-react-native@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.4.tgz#00d353cf6b588698a7c6b88f37d19814f87ec913"
-  integrity sha512-poxKYDZJ1F4nIOzru7te80H3ZXWLg5kR6oP0TuxJzxVTNg5oPYyR1dbewzyQ4z6APFPIIfIxjSBCRhOiJvAa6A==
+"@haqq/provider-ledger-react-native@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.6.tgz#725b2f811523757213548a85ce3ea11dc8d95bd8"
+  integrity sha512-O0Kji+/sMC0leBaRq+XzVJSKgUXBA76YavMTwAGn5sfU6YvSbNtJ2k4ahrH8wY2Yt2lmMxHxKfPUKX0psYGdmQ==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"
