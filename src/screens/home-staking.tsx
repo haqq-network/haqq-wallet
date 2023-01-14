@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {awaitForPopupClosed} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -127,8 +128,12 @@ export const HomeStakingScreen = () => {
               delegators[current.cosmosAddress],
             ]),
         );
-
-        await awaitForLedger(transport);
+        try {
+          await awaitForLedger(transport);
+        } catch (e) {
+          await awaitForPopupClosed('ledger-locked');
+          transport.abort();
+        }
       }
     }
 

@@ -52,7 +52,7 @@ export const SettingsTestScreen = () => {
       />
       <Button
         title="Show Ledger attention"
-        onPress={() => showModal('ledger-attention')}
+        onPress={() => showModal('ledger-locked')}
         variant={ButtonVariant.contained}
       />
     </View>

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
+import {showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -65,7 +66,14 @@ export const StakingUnDelegatePreviewScreen = () => {
         }
       } catch (e) {
         if (e instanceof Error) {
-          setError(e.message);
+          switch (e.message) {
+            case 'can_not_connected':
+            case 'ledger_locked':
+              showModal('ledger-locked');
+              break;
+            default:
+              setError(e.message);
+          }
         }
       } finally {
         setDisabled(false);
