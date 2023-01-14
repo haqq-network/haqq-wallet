@@ -5,4 +5,5 @@ export * from './no-internet';
 export * from './error-account-added';
 export * from './error-create-account';
 export * from './ledger-attention';
+export * from './ledger-locked';
 export * from './hide';

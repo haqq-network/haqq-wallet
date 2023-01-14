@@ -39,27 +39,34 @@ export const LedgerAccountsScreen = () => {
   const loadAccounts = useCallback(() => {
     setLoading(true);
     requestAnimationFrame(async () => {
-      const addressList: LedgerAccountItem[] = [];
+      try {
+        const addressList: LedgerAccountItem[] = [];
 
-      for (let i = lastIndex; i < lastIndex + 5; i += 1) {
-        const data = await provider.getPublicKeyAndAddressForHDPath(
-          `${ETH_HD_SHORT_PATH}/${i}`,
-        );
+        for (let i = lastIndex; i < lastIndex + 5; i += 1) {
+          const data = await provider.getPublicKeyAndAddressForHDPath(
+            `${ETH_HD_SHORT_PATH}/${i}`,
+          );
 
-        const balance = await EthNetwork.getBalance(data.address);
+          const balance = await EthNetwork.getBalance(data.address);
 
-        addressList.push({
-          address: data.address.toLowerCase(),
-          hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
-          publicKey: data.publicKey,
-          exists: wallets.addressList.includes(data.address.toLowerCase()),
-          balance,
-        });
+          addressList.push({
+            address: data.address.toLowerCase(),
+            hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
+            publicKey: data.publicKey,
+            exists: wallets.addressList.includes(data.address.toLowerCase()),
+            balance,
+          });
+        }
+
+        setAddresses(list => list.concat(addressList));
+        setLastIndex(lastIndex + 5);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+      } finally {
+        setLoading(false);
       }
-
-      setAddresses(list => list.concat(addressList));
-      setLastIndex(lastIndex + 5);
-      setLoading(false);
     });
   }, [lastIndex, provider, wallets.addressList]);
 

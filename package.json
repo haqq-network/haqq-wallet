@@ -20,7 +20,7 @@
     "@evmos/transactions": "^0.2.12",
     "@haqq/encryption-react-native": "0.0.1",
     "@haqq/provider-base": "0.0.7",
-    "@haqq/provider-ledger-react-native": "0.0.5",
+    "@haqq/provider-ledger-react-native": "0.0.6",
     "@react-native-clipboard/clipboard": "1.11.1",
     "@react-native-community/async-storage": "1.12.1",
     "@react-native-community/blur": "^4.2.0",

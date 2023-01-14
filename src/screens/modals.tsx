@@ -6,6 +6,7 @@ import {
   ErrorAccountAdded,
   ErrorCreateAccount,
   LedgerAttention,
+  LedgerLocked,
   LoadingModal,
   LoadingModalProps,
   NoInternet,
@@ -136,6 +137,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <ErrorCreateAccount />;
       case 'ledger-attention':
         return <LedgerAttention onClose={onClose} />;
+      case 'ledger-locked':
+        return <LedgerLocked onClose={onClose} />;
       default:
         return null;
     }
