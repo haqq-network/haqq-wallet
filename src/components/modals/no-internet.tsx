@@ -2,11 +2,10 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {NoInternetIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {LIGHT_GRAPHIC_SECOND_4} from '@app/variables/common';
 
 import {BottomPopupContainer} from '../bottom-popups';
 
@@ -22,7 +21,10 @@ export const NoInternet = () => {
             style={page.descriptionText}
             i18n={I18N.noInternetPopupDescription}
           />
-          <NoInternetIcon color={LIGHT_GRAPHIC_SECOND_4} style={page.icon} />
+          <NoInternetIcon
+            color={getColor(Color.graphicSecond4)}
+            style={page.icon}
+          />
         </View>
       )}
     </BottomPopupContainer>

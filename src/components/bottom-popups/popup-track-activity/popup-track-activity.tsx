@@ -27,7 +27,7 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
       <View style={styles.imageWrapper}>
         <LottieWrap
           style={styles.lottie}
-          source={require('../../../../assets/animations/track-activity.json')}
+          source={require('@assets/animations/track-activity.json')}
           autoPlay
           loop={false}
         />

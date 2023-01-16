@@ -22,8 +22,6 @@ import {EthNetwork} from '@app/services/eth-network';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
-const icon = require('../../assets/animations/transaction-finish.json');
-
 type TransactionFinishProps = {
   transaction: Transaction | null;
   onSubmit: () => void;
@@ -47,7 +45,12 @@ export const TransactionFinish = ({
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
-        <LottieWrap source={icon} style={styles.image} autoPlay loop={false} />
+        <LottieWrap
+          source={require('@assets/animations/transaction-finish.json')}
+          style={styles.image}
+          autoPlay
+          loop={false}
+        />
       </View>
       <Text
         t4
@@ -57,7 +60,7 @@ export const TransactionFinish = ({
         color={Color.textGreen1}
       />
       <Image
-        source={require('../../assets/images/islm_icon.png')}
+        source={require('@assets/images/islm_icon.png')}
         style={styles.icon}
       />
       {transaction && (

@@ -30,7 +30,7 @@ export const Welcome = ({
       testID="welcome">
       <View style={styles.content}>
         <Image
-          source={require('../../assets/images/logo-empty.png')}
+          source={require('@assets/images/logo-empty.png')}
           style={styles.imageStyle}
         />
         <Text t4 style={styles.title} i18n={I18N.welcomeTitle} />

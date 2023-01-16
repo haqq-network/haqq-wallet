@@ -73,7 +73,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
         <View style={page.qrStyle}>
           <QRCode
             ecl={'H'}
-            logo={require('../../../assets/images/qr-logo.png')}
+            logo={require('@assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}

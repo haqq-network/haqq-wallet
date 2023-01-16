@@ -20,7 +20,7 @@ export const LedgerVerify = ({address}: LedgerVerifyProps) => {
       <Text t9 i18n={I18N.ledgerVerifyAddress} i18params={{address}} center />
       <LottieWrap
         style={styles.lottie}
-        source={require('../../../assets/animations/ledger-verify.json')}
+        source={require('@assets/animations/ledger-verify.json')}
         autoPlay
         loop={false}
       />
