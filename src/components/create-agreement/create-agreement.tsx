@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -13,6 +13,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 // import {Terms} from '@app/components/ui/terms';
 
 export type CreateAgreementProps = {
@@ -20,26 +21,18 @@ export type CreateAgreementProps = {
   testID?: string;
 };
 
-export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
-  const animation = require('@assets/animations/first-screen-animation.json');
-  const {height: windowHeight, width: windowWidth} = useWindowDimensions();
-  const calculatedHeight = Math.min(windowWidth, windowHeight * 0.355);
-  const animationHeight = {
-    height: calculatedHeight,
-  };
-  const imageHeight = {
-    height: calculatedHeight - 20,
-  };
+const calculatedHeight = Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355);
 
+export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
     <PopupContainer style={styles.container} testID={testID}>
-      <View pointerEvents="none" style={[styles.animation, animationHeight]}>
+      <View pointerEvents="none" style={styles.animation}>
         <LottieWrap
-          source={animation}
+          source={require('@assets/animations/first-screen-animation.json')}
           autoPlay
           loop={false}
           resizeMode="contain"
-          style={imageHeight}
+          style={styles.animationInner}
         />
       </View>
       <Text t4 center style={styles.title} i18n={I18N.createAgreementTitle} />
@@ -68,8 +61,12 @@ const styles = createTheme({
     justifyContent: 'flex-end',
   },
   animation: {
+    height: calculatedHeight,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  animationInner: {
+    height: calculatedHeight - 20,
   },
   title: {
     marginBottom: 4,
@@ -79,5 +76,8 @@ const styles = createTheme({
     marginHorizontal: 20,
     marginBottom: 20,
   },
-  submit: {marginBottom: 16, marginHorizontal: 20},
+  submit: {
+    marginBottom: 16,
+    marginHorizontal: 20,
+  },
 });
