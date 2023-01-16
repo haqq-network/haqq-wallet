@@ -36,7 +36,7 @@ export const StakingDelegateFinish = ({
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
         <LottieWrap
-          source={require('../../../assets/animations/transaction-finish.json')}
+          source={require('@assets/animations/transaction-finish.json')}
           style={styles.image}
           autoPlay
           loop={false}

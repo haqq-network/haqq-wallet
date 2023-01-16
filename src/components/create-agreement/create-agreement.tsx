@@ -21,7 +21,7 @@ export type CreateAgreementProps = {
 };
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
-  const animation = require('../../../assets/animations/first-screen-animation.json');
+  const animation = require('@assets/animations/first-screen-animation.json');
   const {height: windowHeight, width: windowWidth} = useWindowDimensions();
   const calculatedHeight = Math.min(windowWidth, windowHeight * 0.355);
   const animationHeight = {

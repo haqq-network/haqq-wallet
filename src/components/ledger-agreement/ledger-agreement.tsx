@@ -26,9 +26,9 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
 
   const lottieAnimation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/animations/body-ledger-dark.json');
+      return require('@assets/animations/body-ledger-dark.json');
     }
-    return require('../../../assets/animations/body-ledger-light.json');
+    return require('@assets/animations/body-ledger-light.json');
   }, [theme]);
 
   return (

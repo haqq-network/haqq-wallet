@@ -22,7 +22,7 @@ import {EthNetwork} from '@app/services/eth-network';
 import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
-const icon = require('../../assets/animations/transaction-finish.json');
+const icon = require('@assets/animations/transaction-finish.json');
 
 type TransactionFinishProps = {
   transaction: Transaction | null;
@@ -57,7 +57,7 @@ export const TransactionFinish = ({
         color={Color.textGreen1}
       />
       <Image
-        source={require('../../assets/images/islm_icon.png')}
+        source={require('@assets/images/islm_icon.png')}
         style={styles.icon}
       />
       {transaction && (
