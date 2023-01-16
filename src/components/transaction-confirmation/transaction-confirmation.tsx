@@ -1,13 +1,12 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   DataView,
-  ISLMIcon,
   PopupContainer,
   Spacer,
   Text,
@@ -41,7 +40,10 @@ export const TransactionConfirmation = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen2)} style={styles.icon} />
+      <Image
+        source={require('@assets/images/islm_icon.png')}
+        style={styles.icon}
+      />
       <Text
         t11
         color={Color.textBase2}
@@ -148,7 +150,12 @@ const styles = createTheme({
   subtitle: {
     marginBottom: 4,
   },
-  icon: {marginBottom: 16, alignSelf: 'center'},
+  icon: {
+    marginBottom: 16,
+    alignSelf: 'center',
+    width: 64,
+    height: 64,
+  },
   info: {
     borderRadius: 16,
     backgroundColor: Color.bg3,

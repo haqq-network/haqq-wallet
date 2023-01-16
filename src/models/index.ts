@@ -132,7 +132,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 27) {
-      const providersList = require('../../assets/migrations/providers.json');
+      const providersList = require('@assets/migrations/providers.json');
 
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
       const newObjects = newRealm.objects<{

@@ -29,9 +29,7 @@ export const LedgerLocked = ({onClose}: {onClose: () => void}) => {
           <Spacer height={8} />
           <Text t14 center i18n={I18N.ledgerLockedDescription} />
           <Spacer centered minHeight={142}>
-            <Image
-              source={require('../../../assets/images/ledger-locked.png')}
-            />
+            <Image source={require('@assets/images/ledger-locked.png')} />
           </Spacer>
           <Button
             i18n={I18N.ledgerLockedClose}

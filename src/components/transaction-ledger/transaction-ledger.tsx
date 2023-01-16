@@ -20,7 +20,7 @@ export const TransactionLedger = ({}: TransactionVerifyProps) => {
       <Text i18n={I18N.transactionLedgerBluetoothConfirmation} t9 center />
       <LottieWrap
         style={{width: screenWidth}}
-        source={require('../../../assets/animations/transaction-ledger.json')}
+        source={require('@assets/animations/transaction-ledger.json')}
         autoPlay
         loop={false}
       />

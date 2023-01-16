@@ -31,7 +31,7 @@ export const LedgerAttention = ({onClose}: {onClose: () => void}) => {
             <LottieWrap
               resizeMode="contain"
               style={page.animation}
-              source={require('../../../assets/animations/transaction-ledger.json')}
+              source={require('@assets/animations/transaction-ledger.json')}
               autoPlay
               loop={false}
             />

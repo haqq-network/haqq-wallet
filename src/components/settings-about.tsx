@@ -26,7 +26,7 @@ export const SettingsAbout = () => {
               height: windowWidth * 0.8,
             },
           ]}
-          source={require('../../assets/animations/first-screen-animation.json')}
+          source={require('@assets/animations/first-screen-animation.json')}
           autoPlay
           loop
         />

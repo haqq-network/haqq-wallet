@@ -44,27 +44,27 @@ export const StakingActive = forwardRef(
       switch (true) {
         case isReceiveAnimation:
           if (theme === AppTheme.dark) {
-            return require('../../../assets/animations/get-reward-dark.json');
+            return require('@assets/animations/get-reward-dark.json');
           }
-          return require('../../../assets/animations/get-reward-light.json');
+          return require('@assets/animations/get-reward-light.json');
         case stakedSum > 100:
           if (theme === AppTheme.dark) {
-            return require('../../../assets/animations/stake-dark-100.json');
+            return require('@assets/animations/stake-dark-100.json');
           }
 
-          return require('../../../assets/animations/stake-light-100.json');
+          return require('@assets/animations/stake-light-100.json');
         case stakedSum > 20:
           if (theme === AppTheme.dark) {
-            return require('../../../assets/animations/stake-dark-20-100.json');
+            return require('@assets/animations/stake-dark-20-100.json');
           }
 
-          return require('../../../assets/animations/stake-light-20-100.json');
+          return require('@assets/animations/stake-light-20-100.json');
         default:
           if (theme === AppTheme.dark) {
-            return require('../../../assets/animations/stake-dark-0-20.json');
+            return require('@assets/animations/stake-dark-0-20.json');
           }
 
-          return require('../../../assets/animations/stake-light-0-20.json');
+          return require('@assets/animations/stake-light-0-20.json');
       }
     }, [isReceiveAnimation, theme, stakedSum]);
 

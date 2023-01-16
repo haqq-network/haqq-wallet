@@ -27,10 +27,10 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
 
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/animations/backup-start-dark.json');
+      return require('@assets/animations/backup-start-dark.json');
     }
 
-    return require('../../../assets/animations/backup-start-light.json');
+    return require('@assets/animations/backup-start-light.json');
   }, [theme]);
 
   return (

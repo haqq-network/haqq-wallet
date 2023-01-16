@@ -12,7 +12,7 @@ export const Waiting = ({style}: WaitingProps) => {
   return (
     <LottieWrap
       style={[page.container, style]}
-      source={require('../../../assets/animations/waiting.json')}
+      source={require('@assets/animations/waiting.json')}
       autoPlay
       loop
     />
