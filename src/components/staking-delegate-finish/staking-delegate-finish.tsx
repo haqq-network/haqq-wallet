@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
-  ISLMIcon,
   LottieWrap,
   PopupContainer,
   Spacer,
@@ -49,7 +48,10 @@ export const StakingDelegateFinish = ({
         style={styles.title}
         color={Color.textGreen1}
       />
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <Image
+        source={require('@assets/images/islm_icon.png')}
+        style={styles.icon}
+      />
       <Text
         t11
         center
@@ -89,7 +91,12 @@ const styles = createTheme({
     marginTop: 32,
     marginBottom: 34,
   },
-  icon: {marginBottom: 16, alignSelf: 'center'},
+  icon: {
+    marginBottom: 16,
+    alignSelf: 'center',
+    width: 64,
+    height: 64,
+  },
   totalAmount: {
     marginBottom: 4,
   },
