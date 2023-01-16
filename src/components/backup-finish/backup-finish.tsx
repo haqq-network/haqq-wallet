@@ -29,10 +29,10 @@ export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
 
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/animations/backup-success-dark.json');
+      return require('@assets/animations/backup-success-dark.json');
     }
 
-    return require('../../../assets/animations/backup-success-light.json');
+    return require('@assets/animations/backup-success-light.json');
   }, [theme]);
 
   return (

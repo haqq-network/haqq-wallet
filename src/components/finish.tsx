@@ -25,10 +25,10 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
   const theme = useTheme();
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../assets/animations/success-animation-dark.json');
+      return require('@assets/animations/success-animation-dark.json');
     }
 
-    return require('../../assets/animations/success-animation-light.json');
+    return require('@assets/animations/success-animation-light.json');
   }, [theme]);
 
   return (

@@ -34,12 +34,12 @@ export const LedgerBluetooth = ({
         {disabled.includes(btState) ? (
           <Image
             style={page.imageStyle}
-            source={require('../../../assets/images/bluetooth-failed.png')}
+            source={require('@assets/images/bluetooth-failed.png')}
           />
         ) : (
           <LottieWrap
             style={page.imageStyle}
-            source={require('../../../assets/animations/ledger-bluetooth.json')}
+            source={require('@assets/animations/ledger-bluetooth.json')}
             autoPlay
             loop
           />
