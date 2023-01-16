@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {Platform, TextInput, View} from 'react-native';
+import {TextInput, View} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -77,7 +77,6 @@ const styles = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   iconContainer: {
     justifyContent: 'center',
@@ -92,18 +91,11 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   input: {
-    fontSize: 17,
-    lineHeight: 22,
+    padding: 0,
+    margin: 0,
+    color: Color.textBase1,
+    fontSize: 18,
     height: 22,
     flex: 1,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'SF Pro Display',
-        fontWeight: '400',
-      },
-      android: {
-        fontFamily: 'SF-Pro-Display-Regular',
-      },
-    }),
   },
 });
