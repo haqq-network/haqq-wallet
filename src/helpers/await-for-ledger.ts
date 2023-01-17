@@ -7,12 +7,10 @@ import {hideModal, showModal} from '@app/helpers/modal';
 export const awaitForLedger = (transport: ProviderInterface) => {
   return new Promise<void>((resolve, reject) => {
     const done = (status: boolean) => {
-      hideModal();
-      transport.abort();
-
-      transport.off('signTypedData', done);
       app.off(Events.onCloseModal, onCloseModal);
-
+      hideModal();
+      transport.off('signTypedData', done);
+      transport.abort();
       if (status) {
         resolve();
       } else {
@@ -20,8 +18,10 @@ export const awaitForLedger = (transport: ProviderInterface) => {
       }
     };
 
-    const onCloseModal = () => {
-      done(false);
+    const onCloseModal = (modal: string) => {
+      if (modal === 'ledger-attention') {
+        done(false);
+      }
     };
 
     transport.on('signTypedData', done);
