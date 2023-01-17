@@ -1,9 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {Device, scanDevices} from '@haqq/provider-ledger-react-native';
+import {
+  Device,
+  ProviderLedgerReactNative,
+  scanDevices,
+} from '@haqq/provider-ledger-react-native';
 
 import {LedgerScan} from '@app/components/ledger-scan';
+import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation} from '@app/hooks';
+import {LEDGER_APP} from '@app/variables/common';
 
 export const LedgerScanScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -13,7 +19,6 @@ export const LedgerScanScreen = () => {
   useEffect(() => {
     setRefreshing(true);
     const onDevice = (device: Device) => {
-      console.log('onDevice', device);
       setDevices(devicesList =>
         devicesList.some(d => d.id === device.id)
           ? devicesList
@@ -42,11 +47,27 @@ export const LedgerScanScreen = () => {
   const navigation = useTypedNavigation();
 
   const onPress = useCallback(
-    (item: Device) => {
-      navigation.navigate('ledgerAccounts', {
-        deviceId: item.id,
-        deviceName: `Ledger ${item.name}`,
-      });
+    async (item: Device) => {
+      try {
+        const provider = new ProviderLedgerReactNative(mockForWallet, {
+          cosmosPrefix: 'haqq',
+          deviceId: item.id,
+          hdPath: '',
+          appName: LEDGER_APP,
+        });
+
+        const transport = await provider.awaitForTransport(item.id);
+
+        if (!transport) {
+          throw new Error('can_not_connected');
+        }
+        await transport.send(0xe0, 0x01, 0x00, 0x00);
+
+        navigation.navigate('ledgerAccounts', {
+          deviceId: item.id,
+          deviceName: `Ledger ${item.name}`,
+        });
+      } catch (e) {}
     },
     [navigation],
   );

@@ -194,3 +194,5 @@ export const WINDOW_RATIO = WINDOW_WIDTH / 541;
 
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
+
+export const LEDGER_APP = 'Ethereum';

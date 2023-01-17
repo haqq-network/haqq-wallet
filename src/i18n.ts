@@ -1,4 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
+import {LEDGER_APP} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -488,8 +489,7 @@ const en: Record<I18N, string> = {
   [I18N.ledgerBluetoothDescriptionDisabled]:
     'The app does not have access to your Bluetooth. Please go to your phone settings and allow the app to use Bluetooth. Without this, we will not be able to find your Ledger Nano X',
   [I18N.transactionLedgerBluetoothDisabled]: 'No access to Bluetooth',
-  [I18N.transactionLedgerBluetoothConfirmation]:
-    'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
+  [I18N.transactionLedgerBluetoothConfirmation]: `Open ${LEDGER_APP} app on your Ledger and Confirm the transaction by pressing both buttons together`,
   [I18N.createAgreementTitle]: 'HAQQ - DeFi Wallet',
   [I18N.createAgreementText]:
     'HAQQ Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the HAQQ Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
@@ -528,7 +528,7 @@ const en: Record<I18N, string> = {
   [I18N.ledgerScanDescription2]: 'unlocked',
   [I18N.ledgerScanDescription3]: 'Bluetooth is enabled',
   [I18N.ledgerScanDescription4]: ' and ',
-  [I18N.ledgerScanDescription5]: 'Ethereum app on your Ledger is installed',
+  [I18N.ledgerScanDescription5]: `${LEDGER_APP} app on your Ledger is installed`,
   [I18N.ledgerScanDescription6]: ' and opened',
   [I18N.backupVerifyTitle]: 'Verify recovery phrase',
   [I18N.backupVerifyError]: 'Ooops, mistake in one of the words',
@@ -939,8 +939,7 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.qrModalSendFunds]: 'Send funds from',
-  [I18N.ledgerAttentionTitle]:
-    'Open Ethereum app on your Ledger and Confirm the transaction by pressing both buttons together',
+  [I18N.ledgerAttentionTitle]: `Open ${LEDGER_APP} app on your Ledger and Confirm the transaction by pressing both buttons together`,
   [I18N.ledgerAttentionClose]: 'Close',
   [I18N.ledgerLockedTitle]: 'Turn on and unlock the Ledger',
   [I18N.ledgerLockedDescription]:

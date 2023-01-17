@@ -3,6 +3,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {Wallet} from '@app/models/wallet';
 import {TransportHot} from '@app/services/transport-hot';
 import {WalletType} from '@app/types';
+import {LEDGER_APP} from '@app/variables/common';
 
 const cache = new Map();
 
@@ -35,6 +36,7 @@ export function getProviderInstanceForWallet(wallet: Wallet) {
             cosmosPrefix: 'haqq',
             deviceId: wallet.deviceId!,
             hdPath: wallet.path ?? '',
+            appName: LEDGER_APP,
           }),
         );
         break;
