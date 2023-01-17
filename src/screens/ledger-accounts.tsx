@@ -12,7 +12,7 @@ import {
 } from '@app/hooks';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
-import {ETH_HD_SHORT_PATH} from '@app/variables/common';
+import {ETH_HD_SHORT_PATH, LEDGER_APP} from '@app/variables/common';
 
 export const LedgerAccountsScreen = () => {
   const navigation = useTypedNavigation();
@@ -23,6 +23,7 @@ export const LedgerAccountsScreen = () => {
       cosmosPrefix: 'haqq',
       deviceId,
       hdPath: '',
+      appName: LEDGER_APP,
     }),
   ).current;
   const [lastIndex, setLastIndex] = useState(0);

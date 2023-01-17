@@ -5,6 +5,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {LedgerVerify} from '@app/components/ledger-verify';
 import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {LEDGER_APP} from '@app/variables/common';
 
 export const LedgerVerifyScreen = () => {
   const navigation = useTypedNavigation();
@@ -33,6 +34,7 @@ export const LedgerVerifyScreen = () => {
       cosmosPrefix: 'haqq',
       deviceId: route.params.deviceId,
       hdPath: '',
+      appName: LEDGER_APP,
     });
 
     requestAnimationFrame(async () => {
