@@ -1,8 +1,6 @@
 import {Dimensions, Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
-import {BiometryType} from '@app/types';
-
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
 
@@ -165,13 +163,6 @@ export const PIN_BANNED_ATTEMPTS = 5;
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
 
 export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
-
-export const BIOMETRY_TYPES_NAMES: Record<string, string> = {
-  [BiometryType.faceId]: 'Face ID',
-  [BiometryType.touchId]: 'Touch ID',
-  [BiometryType.fingerprint]: 'Fingerprint',
-  [BiometryType.unknown]: '',
-};
 
 export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
