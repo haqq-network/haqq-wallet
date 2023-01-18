@@ -21,6 +21,10 @@ import {
 } from '@app/components/modals/details-qr';
 import {QRModal, QRModalProps} from '@app/components/modals/qr';
 import {
+  TransactionError,
+  TransactionErrorProps,
+} from '@app/components/modals/transaction-error';
+import {
   WalletsBottomSheet,
   WalletsBottomSheetProps,
 } from '@app/components/modals/wallets-bottom-sheet';
@@ -55,6 +59,10 @@ type DetailsQr = {
   type: 'card-details-qr';
 } & DetailsQrModalProps;
 
+type TransactionErrorModal = {
+  type: 'transaction-error';
+} & TransactionErrorProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -63,6 +71,7 @@ type ModalState =
   | NoInternet
   | WalletsBottomSheetParams
   | DetailsQr
+  | TransactionErrorModal
   | null;
 
 export type ModalProps = {
@@ -139,6 +148,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <LedgerAttention onClose={onClose} />;
       case 'ledger-locked':
         return <LedgerLocked onClose={onClose} />;
+      case 'transaction-error':
+        return <TransactionError message={modal.message} />;
       default:
         return null;
     }
