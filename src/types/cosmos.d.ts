@@ -105,3 +105,31 @@ export interface CosmosTxV1beta1GetTxResponse {
   tx: CosmosTxV1beta1Tx;
   tx_response: CosmosTxV1beta1TxResponse;
 }
+
+export type Sender = {
+  accountAddress: string;
+  sequence: number;
+  accountNumber: number;
+  pubkey: string;
+};
+
+export interface CosmosTxV1betaSimulateResponse {
+  gas_info: {
+    gas_wanted: string;
+    gas_used: string;
+  };
+  result: {
+    data: string;
+    log: string;
+    events: Array<{
+      type: string;
+      attributes: [
+        {
+          key: string;
+          value: string;
+          index: boolean;
+        },
+      ];
+    }>;
+  };
+}
