@@ -7,6 +7,8 @@ import {
   ErrorCreateAccount,
   LedgerAttention,
   LedgerLocked,
+  LedgerNoApp,
+  LedgerNoAppProps,
   LoadingModal,
   LoadingModalProps,
   NoInternet,
@@ -59,6 +61,10 @@ type DetailsQr = {
   type: 'card-details-qr';
 } & DetailsQrModalProps;
 
+type LedgerNoAppModal = {
+  type: 'ledger-no-app';
+} & LedgerNoAppProps;
+
 type TransactionErrorModal = {
   type: 'transaction-error';
 } & TransactionErrorProps;
@@ -71,6 +77,7 @@ type ModalState =
   | NoInternet
   | WalletsBottomSheetParams
   | DetailsQr
+  | LedgerNoAppModal
   | TransactionErrorModal
   | null;
 
@@ -83,8 +90,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
 
   useEffect(() => {
     const showModal = (event: ModalState) => {
-      setModal(event);
-      console.log('modal', JSON.stringify(event));
+      if (event && modal?.type !== event.type) {
+        setModal(event);
+        console.log('modal', JSON.stringify(event));
+      }
     };
 
     const hideModal = (event: {type: string | null}) => {
@@ -105,7 +114,7 @@ export const Modals = ({initialModal = null}: ModalProps) => {
       app.off('showModal', showModal);
       app.off('hideModal', hideModal);
     };
-  }, []);
+  }, [modal]);
 
   const onClose = useCallback(() => {
     setModal(null);
@@ -148,6 +157,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <LedgerAttention onClose={onClose} />;
       case 'ledger-locked':
         return <LedgerLocked onClose={onClose} />;
+      case 'ledger-no-app':
+        return <LedgerNoApp onRetry={modal.onRetry} />;
       case 'transaction-error':
         return <TransactionError message={modal.message} />;
       default:
