@@ -39,6 +39,7 @@ export const StakingDelegatePreviewScreen = () => {
 
   const onDone = useCallback(async () => {
     if (wallet && wallet.isValid()) {
+      let errMessage = '';
       try {
         setDisabled(true);
 
@@ -56,20 +57,32 @@ export const StakingDelegatePreviewScreen = () => {
 
         const resp = await query;
 
-        if (resp) {
-          navigation.navigate('stakingDelegateFinish', {
-            txhash: resp.tx_response.txhash,
-            validator,
-            amount,
-            fee,
-          });
+        if (!resp) {
+          throw new Error('transaction_error');
         }
+
+        if (resp.tx_response.code !== 0 || !resp.tx_response.txhash) {
+          errMessage = resp.tx_response.raw_log ?? '';
+          throw new Error('transaction_error');
+        }
+
+        navigation.navigate('stakingDelegateFinish', {
+          txhash: resp.tx_response.txhash,
+          validator,
+          amount,
+          fee,
+        });
       } catch (e) {
         if (e instanceof Error) {
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
               showModal('ledger-locked');
+              break;
+            case 'transaction_error':
+              showModal('transaction-error', {
+                message: errMessage,
+              });
               break;
             default:
               setError(e.message);

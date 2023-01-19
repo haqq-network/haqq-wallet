@@ -437,6 +437,7 @@ export enum I18N {
   ledgerLockedTitle,
   ledgerLockedDescription,
   ledgerLockedClose,
+  transactionErrorTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -945,4 +946,5 @@ const en: Record<I18N, string> = {
   [I18N.ledgerLockedDescription]:
     "We can't get information from your ledger. It may be turned off or blocked",
   [I18N.ledgerLockedClose]: 'Close',
+  [I18N.transactionErrorTitle]: 'Transaction failed',
 };
