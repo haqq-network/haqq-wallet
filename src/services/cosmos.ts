@@ -1,4 +1,11 @@
 import {TypedDataField} from '@ethersproject/abstract-signer';
+import {
+  createMsgDelegate,
+  createMsgDeposit,
+  createMsgUndelegate,
+  createMsgVote,
+  createMsgWithdrawDelegatorReward,
+} from '@evmos/eip712';
 import {protoTxNamespace} from '@evmos/proto';
 import {
   BroadcastMode,
@@ -48,6 +55,7 @@ import {DepositResponse, StakingParamsResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
+  CosmosTxV1betaSimulateResponse,
 } from '@app/types/cosmos';
 import {WEI} from '@app/variables/common';
 
@@ -174,6 +182,16 @@ export class Cosmos {
     );
   }
 
+  async postSimulate(
+    message: object,
+    account: Sender,
+  ): Promise<CosmosTxV1betaSimulateResponse> {
+    return this.postQuery(
+      '/cosmos/tx/v1beta1/simulate',
+      this.generatePostSimulate(message, account),
+    );
+  }
+
   async getProposalDetails(id: string | number): Promise<{proposal: Proposal}> {
     return this.getQuery(generateEndpointProposals() + `/${id}`);
   }
@@ -192,7 +210,51 @@ export class Cosmos {
     }
   }
 
-  async getSender(transport: ProviderInterface) {
+  generatePostSimulate(message: object, account: Sender) {
+    const messages = Array.isArray(message) ? message : [message];
+
+    return JSON.stringify({
+      tx: {
+        body: {
+          messages,
+          memo: '',
+          timeout_height: '0',
+          extension_options: [],
+          non_critical_extension_options: [],
+        },
+        auth_info: {
+          signer_infos: [
+            {
+              public_key: {
+                '@type': '/cosmos.crypto.secp256k1.PubKey',
+                key: account.pubkey,
+              },
+              mode_info: {
+                single: {
+                  mode: 'SIGN_MODE_LEGACY_AMINO_JSON',
+                },
+              },
+              sequence: account.sequence,
+            },
+          ],
+          fee: {
+            amount: [
+              {
+                denom: Cosmos.fee.denom,
+                amount: Cosmos.fee.amount,
+              },
+            ],
+            gas_limit: Cosmos.fee.gas,
+            payer: '',
+            granter: '',
+          },
+        },
+        signatures: [new Buffer(0).toString('hex')],
+      },
+    });
+  }
+
+  async getSender(transport: ProviderInterface): Promise<Sender> {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
     const pubkey = await transport.getBase64PublicKey();
 
@@ -267,6 +329,20 @@ export class Cosmos {
     return await this.broadcastTransaction(rawTx);
   }
 
+  async getFee(data: object, account: Sender) {
+    const resp = await this.postSimulate(data, account);
+
+    return {
+      ...Cosmos.fee,
+      gas: String(
+        Math.max(
+          parseInt(Cosmos.fee.gas, 10),
+          parseInt(resp.gas_info.gas_used) * 1.2,
+        ),
+      ),
+    };
+  }
+
   async deposit(
     transport: ProviderInterface,
     proposalId: number,
@@ -283,13 +359,20 @@ export class Cosmos {
           denom: 'aISLM',
         },
       };
-      const msg = createTxMsgDeposit(
-        this.haqqChain,
+
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.gov.v1beta1.MsgDeposit',
+          ...createMsgDeposit(
+            params.proposalId,
+            sender.accountAddress,
+            params.deposit,
+          ).value,
+        },
         sender,
-        Cosmos.fee,
-        memo,
-        params,
       );
+
+      const msg = createTxMsgDeposit(this.haqqChain, sender, fee, memo, params);
 
       return await this.sendMsg(transport, sender, msg);
     } catch (error) {
@@ -306,15 +389,21 @@ export class Cosmos {
         option,
       };
 
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.gov.v1beta1.MsgVote',
+          ...createMsgVote(
+            params.proposalId,
+            params.option,
+            sender.accountAddress,
+          ).value,
+        },
+        sender,
+      );
+
       const memo = '';
 
-      const msg = createTxMsgVote(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+      const msg = createTxMsgVote(this.haqqChain, sender, fee, memo, params);
 
       return await this.sendMsg(transport, sender, msg);
     } catch (e) {
@@ -338,12 +427,25 @@ export class Cosmos {
         denom: 'aISLM',
       };
 
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.staking.v1beta1.MsgUndelegate',
+          ...createMsgUndelegate(
+            sender.accountAddress,
+            params.validatorAddress,
+            params.amount,
+            params.denom,
+          ).value,
+        },
+        sender,
+      );
+
       const memo = '';
 
       const msg = createTxMsgUndelegate(
         this.haqqChain,
         sender,
-        Cosmos.fee,
+        fee,
         memo,
         params,
       );
@@ -368,15 +470,30 @@ export class Cosmos {
         denom: 'aISLM',
       };
 
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.staking.v1beta1.MsgDelegate',
+          ...createMsgDelegate(
+            sender.accountAddress,
+            params.validatorAddress,
+            params.amount,
+            params.denom,
+          ).value,
+        },
+        sender,
+      );
+
       const memo = '';
 
       const msg = createTxMsgDelegate(
         this.haqqChain,
         sender,
-        Cosmos.fee,
+        fee,
         memo,
         params,
       );
+
+      // console.log('msg', JSON.stringify(msg));
 
       return await this.sendMsg(transport, sender, msg);
     } catch (e) {
@@ -397,10 +514,18 @@ export class Cosmos {
 
       const memo = '';
 
+      const fee = await this.getFee(
+        params.validatorAddresses.map(v => ({
+          '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          ...createMsgWithdrawDelegatorReward(sender.accountAddress, v).value,
+        })),
+        sender,
+      );
+
       const msg = createTxMsgMultipleWithdrawDelegatorReward(
         this.haqqChain,
         sender,
-        Cosmos.fee,
+        fee,
         memo,
         params,
       );
@@ -422,12 +547,23 @@ export class Cosmos {
         validatorAddress,
       };
 
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          ...createMsgWithdrawDelegatorReward(
+            sender.accountAddress,
+            params.validatorAddress,
+          ).value,
+        },
+        sender,
+      );
+
       const memo = '';
 
       const msg = createTxMsgWithdrawDelegatorReward(
         this.haqqChain,
         sender,
-        Cosmos.fee,
+        fee,
         memo,
         params,
       );

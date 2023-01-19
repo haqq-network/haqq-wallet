@@ -441,6 +441,7 @@ export enum I18N {
   ledgerNoAppDescription,
   ledgerNoAppClose,
   ledgerNoAppRetry,
+  transactionErrorTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -953,4 +954,5 @@ const en: Record<I18N, string> = {
   [I18N.ledgerNoAppDescription]: `Without this application, we will not be able to connect your Ledger. Go to the Ledger Live app and install the ${LEDGER_APP} app`,
   [I18N.ledgerNoAppRetry]: 'Check',
   [I18N.ledgerNoAppClose]: 'Close',
+  [I18N.transactionErrorTitle]: 'Transaction failed',
 };
