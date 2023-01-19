@@ -437,6 +437,10 @@ export enum I18N {
   ledgerLockedTitle,
   ledgerLockedDescription,
   ledgerLockedClose,
+  ledgerNoAppTitle,
+  ledgerNoAppDescription,
+  ledgerNoAppClose,
+  ledgerNoAppRetry,
   transactionErrorTitle,
 }
 
@@ -946,5 +950,9 @@ const en: Record<I18N, string> = {
   [I18N.ledgerLockedDescription]:
     "We can't get information from your ledger. It may be turned off or blocked",
   [I18N.ledgerLockedClose]: 'Close',
+  [I18N.ledgerNoAppTitle]: `Install the ${LEDGER_APP} app on Ledger`,
+  [I18N.ledgerNoAppDescription]: `Without this application, we will not be able to connect your Ledger. Go to the Ledger Live app and install the ${LEDGER_APP} app`,
+  [I18N.ledgerNoAppRetry]: 'Check',
+  [I18N.ledgerNoAppClose]: 'Close',
   [I18N.transactionErrorTitle]: 'Transaction failed',
 };
