@@ -6,6 +6,7 @@ import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
@@ -36,11 +37,9 @@ export const TransactionLedgerScreen = () => {
     const wallet = Wallet.getById(route.params.from);
     if (wallet && wallet.isValid()) {
       try {
-        transport.current = getProviderInstanceForWallet(wallet);
+        await awaitForBluetooth();
 
-        transport.current?.on('awaitForTransport', (...args) => {
-          console.log('awaitForTransport', ...args);
-        });
+        transport.current = getProviderInstanceForWallet(wallet);
 
         const ethNetworkProvider = new EthNetwork();
         const transaction = await ethNetworkProvider.sendTransaction(

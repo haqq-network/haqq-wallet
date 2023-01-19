@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {showModal} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -42,6 +43,10 @@ export const StakingUnDelegatePreviewScreen = () => {
       let errMessage = '';
       try {
         setDisabled(true);
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForBluetooth();
+        }
 
         const transport = getProviderInstanceForWallet(wallet);
 
