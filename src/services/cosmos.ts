@@ -8,7 +8,6 @@ import {
 } from '@evmos/eip712';
 import {protoTxNamespace} from '@evmos/proto';
 import {
-  BroadcastMode,
   generateEndpointAccount,
   generateEndpointBroadcast,
   generateEndpointDistributionRewardsByAddress,
@@ -202,7 +201,7 @@ export class Cosmos {
     try {
       return this.postQuery(
         generateEndpointBroadcast(),
-        generatePostBodyBroadcast(txToBroadcast, BroadcastMode.Block),
+        generatePostBodyBroadcast(txToBroadcast),
       );
     } catch (error) {
       console.error((error as any).message);
