@@ -4,6 +4,7 @@ import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForPopupClosed} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -129,6 +130,7 @@ export const HomeStakingScreen = () => {
             ]),
         );
         try {
+          await awaitForBluetooth();
           await awaitForLedger(transport);
         } catch (e) {
           await awaitForPopupClosed('ledger-locked');

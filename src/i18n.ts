@@ -442,6 +442,12 @@ export enum I18N {
   ledgerNoAppClose,
   ledgerNoAppRetry,
   transactionErrorTitle,
+  bluetoothPoweredOffTitle,
+  bluetoothPoweredOffDescription,
+  bluetoothPoweredOffClose,
+  bluetoothUnauthorizedTitle,
+  bluetoothUnauthorizedDescription,
+  bluetoothUnauthorizedClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -955,4 +961,12 @@ const en: Record<I18N, string> = {
   [I18N.ledgerNoAppRetry]: 'Check',
   [I18N.ledgerNoAppClose]: 'Close',
   [I18N.transactionErrorTitle]: 'Transaction failed',
+  [I18N.bluetoothPoweredOffTitle]: 'Turn on Bluetooth',
+  [I18N.bluetoothPoweredOffDescription]:
+    'To connect to ledger, you need to turn on Bluetooth on your phone',
+  [I18N.bluetoothPoweredOffClose]: 'Close',
+  [I18N.bluetoothUnauthorizedTitle]: 'No access to Bluetooth',
+  [I18N.bluetoothUnauthorizedDescription]:
+    'The app does not have access to your Bluetooth. Please go to your phone settings and allow the app to use Bluetooth. Without this, we will not be able to find your Ledger Nano X',
+  [I18N.bluetoothUnauthorizedClose]: 'Close',
 };
