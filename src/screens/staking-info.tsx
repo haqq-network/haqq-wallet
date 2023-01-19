@@ -151,10 +151,16 @@ export const StakingInfoScreen = () => {
 
   const onDelegate = useCallback(
     (address?: string) => {
-      if (address) {
+      let addr = address;
+
+      if (visible.length === 1) {
+        addr = visible[0].address;
+      }
+
+      if (addr) {
         navigation.push('stakingDelegate', {
           validator: operator_address,
-          selectedWalletAddress: address,
+          selectedWalletAddress: addr,
         });
       } else {
         showModal('wallets-bottom-sheet', {
@@ -178,10 +184,16 @@ export const StakingInfoScreen = () => {
       );
       const available = visible.filter(w => delegations.has(w.cosmosAddress));
 
-      if (address) {
+      let addr = address;
+
+      if (available.length === 1) {
+        addr = available[0].address;
+      }
+
+      if (addr) {
         navigation.push('stakingUnDelegate', {
           validator: operator_address,
-          selectedWalletAddress: address,
+          selectedWalletAddress: addr,
         });
       } else {
         showModal('wallets-bottom-sheet', {
