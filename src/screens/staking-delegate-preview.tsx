@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {showModal} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
@@ -42,6 +43,10 @@ export const StakingDelegatePreviewScreen = () => {
       let errMessage = '';
       try {
         setDisabled(true);
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForBluetooth();
+        }
 
         const transport = getProviderInstanceForWallet(wallet);
 

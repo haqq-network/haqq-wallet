@@ -18,6 +18,14 @@ import {
   SplashModalProps,
 } from '@app/components/modals';
 import {
+  BluetoothPoweredOff,
+  BluetoothPoweredOffProps,
+} from '@app/components/modals/bluetooth-powered-off';
+import {
+  BluetoothUnauthorized,
+  BluetoothUnauthorizedProps,
+} from '@app/components/modals/bluetooth-unauthorized';
+import {
   DetailsQrModal,
   DetailsQrModalProps,
 } from '@app/components/modals/details-qr';
@@ -69,6 +77,14 @@ type TransactionErrorModal = {
   type: 'transaction-error';
 } & TransactionErrorProps;
 
+type BluetoothPoweredOffModal = {
+  type: 'bluetooth-powered-off';
+} & BluetoothPoweredOffProps;
+
+type BluetoothUnauthorizedModal = {
+  type: 'bluetooth-unauthorized';
+} & BluetoothUnauthorizedProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -79,6 +95,8 @@ type ModalState =
   | DetailsQr
   | LedgerNoAppModal
   | TransactionErrorModal
+  | BluetoothPoweredOffModal
+  | BluetoothUnauthorizedModal
   | null;
 
 export type ModalProps = {
@@ -161,6 +179,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <LedgerNoApp onRetry={modal.onRetry} />;
       case 'transaction-error':
         return <TransactionError message={modal.message} />;
+      case 'bluetooth-powered-off':
+        return <BluetoothPoweredOff onClose={modal.onClose} />;
+      case 'bluetooth-unauthorized':
+        return <BluetoothUnauthorized onClose={modal.onClose} />;
       default:
         return null;
     }
