@@ -39,7 +39,7 @@ export const LedgerLocked = ({onClose}: {onClose: () => void}) => {
                 onClose();
               })
             }
-            variant={ButtonVariant.second}
+            variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />
         </View>
