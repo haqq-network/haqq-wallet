@@ -13,6 +13,7 @@ import {
   GestureDetector,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
+import {Easing} from 'react-native-reanimated';
 import Animated, {
   interpolate,
   runOnJS,
@@ -29,8 +30,8 @@ import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
-  ANIMATION_DURATION,
-  ANIMATION_TYPE,
+  // ANIMATION_DURATION,
+  // ANIMATION_TYPE,
   WINDOW_WIDTH,
 } from '@app/variables/common';
 
@@ -78,7 +79,7 @@ export const BottomSheet = ({
 
   const onHandlerEnd = ({velocityY}: PanGestureHandlerEventPayload) => {
     'worklet';
-    const dragToss = 0.05;
+    const dragToss = 0.25;
     const endOffsetY =
       bottomSheetTranslateY.value + translationY.value + velocityY * dragToss;
 
@@ -102,7 +103,7 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       destSnapPoint,
       {
-        duration: ANIMATION_DURATION,
+        duration: 500,
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
@@ -155,8 +156,8 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       closedSnapPoint,
       {
-        duration: ANIMATION_DURATION,
-        easing: ANIMATION_TYPE,
+        duration: 400,
+        easing: Easing.bezierFn(0.16, 1, 0.3, 1),
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -165,8 +166,8 @@ export const BottomSheet = ({
   const onOpenPopup = useCallback(() => {
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-      duration: ANIMATION_DURATION,
-      easing: ANIMATION_TYPE,
+      duration: 400,
+      easing: Easing.bezierFn(0.16, 1, 0.3, 1),
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
