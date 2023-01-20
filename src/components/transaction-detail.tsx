@@ -14,7 +14,7 @@ import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, WINDOW_HEIGHT} from '@app/variables/common';
 
 type TransactionDetailProps = {
   onCloseBottomSheet: () => void;
@@ -52,7 +52,10 @@ export const TransactionDetail = ({
   }
 
   return (
-    <BottomSheet onClose={onCloseBottomSheet} i18nTitle={title}>
+    <BottomSheet
+      onClose={onCloseBottomSheet}
+      i18nTitle={title}
+      closeDistance={WINDOW_HEIGHT / 4}>
       <Text
         i18n={I18N.transactionDetailTotalAmount}
         t14
