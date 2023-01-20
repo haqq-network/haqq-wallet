@@ -151,7 +151,7 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 export function cleanNumber(number: string | number, delimiter = ' ') {
   const raw =
     Math.floor(
-      parseFloat(String(number).trim().replace(/ /, '')) / MIN_AMOUNT,
+      parseFloat(String(number).trim().replace(/ /g, '')) / MIN_AMOUNT,
     ) * MIN_AMOUNT;
 
   const [a, f] = String(raw.toFixed(NUM_PRECISION)).split('.');
