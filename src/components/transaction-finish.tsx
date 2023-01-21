@@ -38,7 +38,7 @@ export const TransactionFinish = ({
   short,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
-    const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
+    const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
 

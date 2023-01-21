@@ -73,6 +73,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           style={page.intro}
         />
         <TextField
+          autoFocus
           placeholder={I18N.signinRestoreWalletTextFieldPlaceholder}
           style={page.input}
           label={I18N.signinRestoreWalletTextFieldLabel}
