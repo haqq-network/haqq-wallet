@@ -27,7 +27,7 @@ export const TransactionDetailScreen = () => {
 
   const onPressInfo = useCallback(async () => {
     try {
-      const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
+      const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
       await openURL(url);
     } catch (_e) {}
   }, [transaction?.hash]);
