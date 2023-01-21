@@ -82,6 +82,23 @@ export class Transaction extends Realm.Object {
     }
   }
 
+  static deleteAllByAccount(accountAddress: string) {
+    realm.write(() => {
+      const txs = realm
+        .objects<Transaction>(Transaction.schema.name)
+        .filter(tx => {
+          return (
+            tx.account.toLocaleLowerCase() ===
+            accountAddress.toLocaleLowerCase()
+          );
+        });
+
+      txs.forEach(tx => {
+        realm.delete(tx);
+      });
+    });
+  }
+
   static createTransaction(
     transaction: TransactionResponse,
     providerId: string,
