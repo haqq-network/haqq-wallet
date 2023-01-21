@@ -13,6 +13,8 @@ import {
   GRADIENT_PRESETS,
 } from '@app/variables/common';
 
+import {Transaction} from './transaction';
+
 import {
   AddWalletParams,
   WalletCardPattern,
@@ -202,6 +204,8 @@ export class Wallet extends Realm.Object {
     const obj = realm.objectForPrimaryKey<Wallet>(Wallet.schema.name, address);
 
     if (obj) {
+      Transaction.deleteAllByAccount(address);
+
       realm.write(() => {
         realm.delete(obj);
       });
