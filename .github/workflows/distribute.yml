@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     name: Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -23,7 +23,7 @@ jobs:
 
   build_android:
     name: Build and distribute Android app
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - test
     steps:
@@ -74,7 +74,7 @@ jobs:
 
   build_ios:
     name: Build and distribute iOS app
-    runs-on: haqq-ios-ci
+    runs-on: self-hosted
     needs:
       - test
     steps:
@@ -154,7 +154,7 @@ jobs:
 
   patch_build:
     name: Patch build versions
-    runs-on: haqq-ios-ci
+    runs-on: self-hosted
     needs:
       - slack_notify
     steps:
