@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     name: Tests
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -41,9 +41,10 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.2"
+      # - uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1'
+      #     bundler-cache: true
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -82,9 +83,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.2"
+      # - uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1'
+      #     bundler-cache: true
       - uses: actions/cache@v3
         with:
           path: ios/Pods
@@ -168,9 +170,10 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.2"
+      # - uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1'
+      #     bundler-cache: true
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
