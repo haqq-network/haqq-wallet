@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
-import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {generateMnemonic} from '@app/services/eth-utils';
@@ -20,7 +20,9 @@ export const SignUpStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.signupStoreWalletCreatingAccount);
+    showModal('loading', {
+      text: getText(I18N.signupStoreWalletCreatingAccount),
+    });
   }, []);
 
   useEffect(() => {

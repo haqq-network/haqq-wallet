@@ -17,13 +17,19 @@ export type WalletsProps = {
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressBackup: (address: string) => void;
+  onPressCreate: () => void;
+  onPressLedger: () => void;
+  onPressRestore: () => void;
 };
 export const Wallets = ({
   balance,
   wallets,
   onPressSend,
   onPressQR,
+  onPressCreate,
+  onPressLedger,
   onPressBackup,
+  onPressRestore,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
@@ -54,7 +60,11 @@ export const Wallets = ({
           </CarouselItem>
         ))}
         <CarouselItem index={wallets.length} pan={pan}>
-          <WalletCreate />
+          <WalletCreate
+            onPressCreate={onPressCreate}
+            onPressLedger={onPressLedger}
+            onPressRestore={onPressRestore}
+          />
         </CarouselItem>
       </ScrollView>
       <View style={styles.sub}>
