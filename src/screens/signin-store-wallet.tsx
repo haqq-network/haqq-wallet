@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -18,7 +18,7 @@ export const SignInStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.signinStoreWalletText);
+    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
@@ -26,16 +26,17 @@ export const SignInStoreWalletScreen = () => {
       navigation.getParent()?.goBack();
     };
     setTimeout(async () => {
-      const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
-        number: `${wallets.getSize() + 1}`,
-      });
       try {
         if (mnemonic) {
           let canNext = true;
           let index = 0;
           while (canNext) {
             const name =
-              wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+              wallets.getSize() === 0
+                ? MAIN_ACCOUNT_NAME
+                : getText(I18N.signinStoreWalletAccountNumber, {
+                    number: `${wallets.getSize() + 1}`,
+                  });
 
             const node = await restoreFromMnemonic(
               String(mnemonic),
@@ -79,7 +80,11 @@ export const SignInStoreWalletScreen = () => {
           }
         } else if (privateKey) {
           const name =
-            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+            wallets.getSize() === 0
+              ? MAIN_ACCOUNT_NAME
+              : getText(I18N.signinStoreWalletAccountNumber, {
+                  number: `${wallets.getSize() + 1}`,
+                });
 
           const wallet = await wallets.addWalletFromPrivateKey(
             privateKey,
@@ -100,6 +105,7 @@ export const SignInStoreWalletScreen = () => {
             break;
           default:
             if (error instanceof Error) {
+              console.log('error.message', error.message);
               showModal('error-create-account');
               captureException(error, 'restoreStore');
               goBack();
