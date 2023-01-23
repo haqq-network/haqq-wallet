@@ -13,9 +13,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {cleanNumber, shortAddress} from '@app/utils';
+import {shortAddress} from '@app/utils';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {

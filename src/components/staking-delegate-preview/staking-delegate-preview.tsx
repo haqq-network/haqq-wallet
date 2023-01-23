@@ -15,10 +15,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
