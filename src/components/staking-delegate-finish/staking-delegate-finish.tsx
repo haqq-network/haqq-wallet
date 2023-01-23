@@ -13,9 +13,9 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {cleanNumber} from '@app/utils';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;

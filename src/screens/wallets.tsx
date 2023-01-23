@@ -60,11 +60,26 @@ export const WalletsWrapper = () => {
     [navigation],
   );
 
+  const onPressCreate = useCallback(() => {
+    navigation.navigate('create');
+  }, [navigation]);
+
+  const onPressLedger = useCallback(() => {
+    navigation.navigate('ledger');
+  }, [navigation]);
+
+  const onPressRestore = useCallback(() => {
+    navigation.navigate('restore');
+  }, [navigation]);
+
   return (
     <Wallets
       balance={balance}
       wallets={visibleRows}
       onPressSend={onPressSend}
+      onPressLedger={onPressLedger}
+      onPressCreate={onPressCreate}
+      onPressRestore={onPressRestore}
       onPressQR={onPressQR}
       onPressBackup={onPressBackup}
     />
