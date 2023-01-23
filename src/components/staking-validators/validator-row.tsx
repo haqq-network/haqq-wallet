@@ -6,10 +6,10 @@ import {Color} from '@app/colors';
 import {Icon, Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {cleanNumber} from '@app/utils';
 import {MIN_AMOUNT, WEI} from '@app/variables/common';
 
 export type ValidatorRowProps = {

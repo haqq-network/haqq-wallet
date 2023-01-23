@@ -5,8 +5,9 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {TransactionListReceive} from '@app/types';
-import {cleanNumber, shortAddress} from '@app/utils';
+import {shortAddress} from '@app/utils';
 
 export type TransactionPreviewProps = {
   item: TransactionListReceive;

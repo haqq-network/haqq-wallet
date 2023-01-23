@@ -2,8 +2,8 @@ import React from 'react';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {cleanNumber} from '@app/utils';
 
 export type NetworkFeeProps = {
   fee: number | string;

@@ -19,12 +19,12 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {cleanNumber} from '@app/utils';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 
 export type StakingInfoProps = {
