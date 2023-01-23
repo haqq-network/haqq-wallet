@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: Build and distribute iOS app
-    runs-on: macos-latest
+    runs-on: haqq-mobile
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

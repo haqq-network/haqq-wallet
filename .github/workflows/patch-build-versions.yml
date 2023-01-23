@@ -5,7 +5,7 @@ on:
 
 jobs:
   patch_build:
-    runs-on: macos-latest
+    runs-on: haqq-ios-ci
     steps:
       - uses: actions/checkout@v3
         with:

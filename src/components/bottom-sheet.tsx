@@ -13,8 +13,8 @@ import {
   GestureDetector,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import {Easing} from 'react-native-reanimated';
 import Animated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -29,11 +29,7 @@ import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {
-  // ANIMATION_DURATION,
-  // ANIMATION_TYPE,
-  WINDOW_WIDTH,
-} from '@app/variables/common';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type BottomSheetProps = {
   children: React.ReactNode;

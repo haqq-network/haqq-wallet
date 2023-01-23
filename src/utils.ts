@@ -9,7 +9,6 @@ import {
   TransactionListSend,
   TransactionSource,
 } from '@app/types';
-import {MIN_AMOUNT, NUM_PRECISION} from '@app/variables/common';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -147,23 +146,6 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
     Math.round(255 * f(3)),
   )}${componentToHex(Math.round(255 * f(1)))}`;
 };
-
-export function cleanNumber(number: string | number, delimiter = ' ') {
-  const raw =
-    Math.floor(
-      parseFloat(String(number).trim().replace(/ /g, '')) / MIN_AMOUNT,
-    ) * MIN_AMOUNT;
-
-  const [a, f] = String(raw.toFixed(NUM_PRECISION)).split('.');
-
-  const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
-
-  const fFormatted = (f ?? '').replace(/0*$/g, '');
-
-  return `${aFormatted}.${fFormatted}`
-    .substring(0, Math.max(aFormatted.length, 12))
-    .replace(/^(.*)\.0?$/g, '$1');
-}
 
 export function getPatternName(pattern: string) {
   return `${PATTERNS_SOURCE}${pattern}@3x.png`;

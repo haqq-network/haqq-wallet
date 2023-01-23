@@ -74,7 +74,7 @@ jobs:
 
   build_ios:
     name: Build and distribute iOS app
-    runs-on: macos-latest
+    runs-on: haqq-ios-ci
     needs:
       - test
     steps:
@@ -154,7 +154,7 @@ jobs:
 
   patch_build:
     name: Patch build versions
-    runs-on: macos-latest
+    runs-on: haqq-ios-ci
     needs:
       - slack_notify
     steps:
