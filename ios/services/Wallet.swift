@@ -8,6 +8,14 @@
 import Foundation
 import CryptoSwift
 import secp256k1Swift
+import secp256k1Wrapper
+
+enum WalletError: Error {
+  case invalid_context;
+  case signature_failure;
+  case recid
+}
+
 
 public class Wallet {
   var publicKey: [UInt8] {
@@ -49,5 +57,15 @@ public class Wallet {
     
     self.privateKey = Array(key[0..<32])
   }
-
+  
+  public func sign(_ message: [UInt8]) throws -> [UInt8] {
+    let hash = Digest.sha3(message, variant: .keccak256)
+    
+    let privateKey = try! secp256k1.Signing.PrivateKey(rawRepresentation: self.privateKey)
+    let signature = try! privateKey.ecdsa.signature(for: hash)
+    
+    let sign = try! signature.compactRepresentation
+    
+    return sign.bytes
+  }
 }

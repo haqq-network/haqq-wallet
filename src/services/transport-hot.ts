@@ -1,13 +1,10 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {hexConcat, joinSignature} from '@ethersproject/bytes';
-import {keccak256} from '@ethersproject/keccak256';
+import {hexConcat} from '@ethersproject/bytes';
+import {serialize} from '@ethersproject/transactions';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {
-  Provider as ProviderBase,
-  ProviderInterface,
-  compressPublicKey,
-} from '@haqq/provider-base';
+import {Provider as ProviderBase, ProviderInterface} from '@haqq/provider-base';
+
+import {restoreFromPrivateKey, sign} from '@app/services/eth-utils';
 
 export class TransportHot
   extends ProviderBase<{}>
@@ -16,8 +13,13 @@ export class TransportHot
   async getBase64PublicKey() {
     if (!this._wallet.publicKey) {
       const privateKey = await this._wallet.getPrivateKey();
-      const ethWallet = new EthersWallet(privateKey);
-      this._wallet.publicKey = compressPublicKey(ethWallet.publicKey);
+
+      if (!privateKey) {
+        throw new Error('private_key_not_found');
+      }
+
+      const ethWallet = await restoreFromPrivateKey(privateKey);
+      this._wallet.publicKey = ethWallet.publicKey;
     }
 
     return Buffer.from(this._wallet.publicKey, 'hex').toString('base64');
@@ -30,18 +32,26 @@ export class TransportHot
       throw new Error('private_key_not_found');
     }
 
-    const wallet = new EthersWallet(privateKey);
+    const signature = await sign(
+      privateKey,
+      serialize(<UnsignedTransaction>transaction),
+    );
 
-    return wallet.signTransaction(transaction as TransactionRequest);
+    console.log('signature', signature);
+
+    return serialize(<UnsignedTransaction>transaction, signature);
   }
 
   async signTypedData(domainHash: string, valuesHash: string) {
     try {
       const privateKey = await this._wallet.getPrivateKey();
-      const ethWallet = new EthersWallet(privateKey);
+
+      if (!privateKey) {
+        throw new Error('private_key_not_found');
+      }
+
       const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
-      const hash = keccak256(concatHash);
-      const response = joinSignature(ethWallet._signingKey().signDigest(hash));
+      const response = await sign(privateKey, concatHash);
       this.emit('signTypedData', true);
 
       return response;

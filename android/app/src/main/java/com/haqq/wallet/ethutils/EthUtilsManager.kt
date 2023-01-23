@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.haqq.wallet.decodeHex
 import com.haqq.wallet.services.HDKey
 import com.haqq.wallet.services.Mnemonic
 import com.haqq.wallet.services.Wallet
@@ -83,6 +84,20 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
       )
 
       promise.resolve(result)
+    } catch (_: IOException) {
+
+    } catch (e: java.lang.IllegalArgumentException) {
+      promise.reject("0", e)
+    }
+  }
+
+  @ReactMethod
+  fun sign(privateKey: String, message: String, promise: Promise) {
+    try {
+      val wallet = Wallet(privateKey = privateKey)
+      val resp = wallet.sign(message.decodeHex())
+
+      promise.resolve(resp.toHex());
     } catch (_: IOException) {
 
     } catch (e: java.lang.IllegalArgumentException) {

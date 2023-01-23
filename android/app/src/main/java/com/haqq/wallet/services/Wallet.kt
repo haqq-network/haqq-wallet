@@ -50,4 +50,10 @@ class Wallet {
   fun publicKey(): ByteArray {
     return Secp256k1.pubkeyCreate(_privateKey)
   }
+
+  fun sign(message: ByteArray): ByteArray {
+    val hash = Keccak.digest(message, KeccakParameter.KECCAK_256)
+
+    return Secp256k1.sign(hash, privateKey())
+  }
 }

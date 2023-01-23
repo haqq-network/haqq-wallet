@@ -14,6 +14,7 @@ enum RNEthUtilsError: Error {
   case private_key_not_found;
   case mnemonic_not_found;
   case encode_json;
+  case message_not_found;
 }
 
 
@@ -40,6 +41,25 @@ struct RNEthUtilsResult: Codable {
   }
 }
 
+struct Signature: Codable {
+  var v: UInt;
+  var r: String;
+  var s: String;
+  
+  public func toJSON() throws -> String {
+    let jsonEncoder = JSONEncoder();
+    
+    guard let encode = try? jsonEncoder.encode(self) else {
+      throw RNEthUtilsError.encode_json;
+    }
+    
+    guard let resp = String(data: encode, encoding: .utf8) else {
+      throw RNEthUtilsError.encode_json;
+    }
+    
+    return resp
+  }
+}
 
 @objc(RNEthUtils)
 class RNEthUtils: NSObject {
@@ -134,6 +154,28 @@ class RNEthUtils: NSObject {
     } catch {
       logger("restoreFromMnemonic \(error)")
       reject("0", "restoreFromMnemonic \(error)", nil)
+    }
+  }
+  
+  @objc
+  public func sign(_ privateKey: Optional<String>, message: Optional<String>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock)-> Void {
+    do {
+      guard let privateKey = privateKey else {
+        throw RNEthUtilsError.private_key_not_found;
+      }
+      
+      guard let message = message else {
+        throw RNEthUtilsError.message_not_found;
+      }
+
+      let wallet = Wallet(privateKey: privateKey)
+      
+      let sig = try wallet.sign(Array(hex: message))
+      
+      resolve(sig)
+    } catch {
+      logger("sign \(error)")
+      reject("0", "sign \(error)", nil)
     }
   }
 }
