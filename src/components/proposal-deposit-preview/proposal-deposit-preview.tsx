@@ -12,8 +12,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
-import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export type ProposalDepositPreviewProps = {

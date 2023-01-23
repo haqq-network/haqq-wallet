@@ -15,11 +15,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services/eth-network';
-import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 type TransactionFinishProps = {
