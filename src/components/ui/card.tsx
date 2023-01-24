@@ -3,13 +3,13 @@ import React, {useMemo} from 'react';
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {getPatternName} from '../../utils';
+import {getPatternName} from '@app/utils';
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
   GRADIENT_START,
   MAGIC_CARD_HEIGHT,
-} from '../../variables/common';
+} from '@app/variables/common';
 
 export type CardProps = {
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ export const Card = ({
             {
               tintColor: colorPattern,
             },
-            StyleSheet.absoluteFillObject,
+            page.image,
           ]}
         />
         {children}
@@ -89,7 +89,7 @@ export const Card = ({
               tintColor: colorPattern,
               borderRadius,
             },
-            StyleSheet.absoluteFillObject,
+            page.image,
           ]}
         />
         {children}
@@ -103,5 +103,11 @@ const page = StyleSheet.create({
     flex: 1,
     padding: 16,
     position: 'relative',
+  },
+  image: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
 });
