@@ -19,6 +19,8 @@ export async function onWalletCreate(wallet: Wallet) {
         [wallet.address]: balance,
       });
     });
+
+    app.emit(Events.onTransactionsLoad, wallet.address);
   } catch (e) {
     captureException(e, Events.onWalletCreate, {
       address: wallet.address,
