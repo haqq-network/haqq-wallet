@@ -5,9 +5,9 @@ import {
 import {utils} from 'ethers';
 
 import {calcFee, captureException} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {realm} from '@app/models/index';
 import {TransactionSource} from '@app/types';
-import {cleanNumber} from '@app/utils';
 
 export class Transaction extends Realm.Object {
   hash!: string;
@@ -82,21 +82,32 @@ export class Transaction extends Realm.Object {
     }
   }
 
-  static deleteAllByAccount(accountAddress: string) {
-    realm.write(() => {
-      const txs = realm
-        .objects<Transaction>(Transaction.schema.name)
-        .filter(tx => {
-          return (
-            tx.account.toLocaleLowerCase() ===
-            accountAddress.toLocaleLowerCase()
-          );
-        });
+  static getAll() {
+    return realm.objects<Transaction>(Transaction.schema.name);
+  }
 
-      txs.forEach(tx => {
-        realm.delete(tx);
+  static remove(id: string) {
+    const obj = Transaction.getById(id);
+
+    if (obj) {
+      realm.write(() => {
+        realm.delete(obj);
       });
-    });
+    }
+  }
+
+  static getById(id: string) {
+    return realm.objectForPrimaryKey<Transaction>(Transaction.schema.name, id);
+  }
+
+  static removeAll() {
+    const transactions = realm.objects<Transaction>(Transaction.schema.name);
+
+    for (const transaction of transactions) {
+      realm.write(() => {
+        realm.delete(transaction);
+      });
+    }
   }
 
   static createTransaction(

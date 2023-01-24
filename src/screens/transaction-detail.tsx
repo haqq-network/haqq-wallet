@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {openURL} from '@app/helpers';
-import {useTransactions, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
@@ -11,9 +11,8 @@ export const TransactionDetailScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionDetail'>();
 
-  const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(
-    transactions.getTransaction(route.params.hash),
+    Transaction.getById(route.params.hash),
   );
 
   const provider = useMemo(
@@ -22,8 +21,8 @@ export const TransactionDetailScreen = () => {
   );
 
   useEffect(() => {
-    setTransaction(transactions.getTransaction(route.params.hash));
-  }, [route.params.hash, transactions]);
+    setTransaction(Transaction.getById(route.params.hash));
+  }, [route.params.hash]);
 
   const onPressInfo = useCallback(async () => {
     try {

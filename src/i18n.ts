@@ -54,6 +54,8 @@ export enum I18N {
   restorePasswordAttentionSubtitle,
   restorePasswordReset,
   restorePasswordForgot,
+  restorePasswordWarning,
+  restorePasswordResetWallet,
   ledgerAgreementText,
   ledgerAgreementTitle,
   ledgerAgreementAgree,
@@ -521,6 +523,9 @@ const en: Record<I18N, string> = {
     'Do not reset the application if you are not sure that you can restore your account. To restore, you will need a recovery phrase of 12 words that you have created for your account',
   [I18N.restorePasswordReset]: 'Reset',
   [I18N.restorePasswordForgot]: 'Forgot your password?',
+  [I18N.restorePasswordWarning]:
+    'Unfortunately, the password cannot be reset. Try to wait a bit and remember the password. If it does not work, then click the ‘Reset wallet‘ button and use the backup phrase to restore the wallet. If there is no backup phrase, then you will not be able to restore the wallet',
+  [I18N.restorePasswordResetWallet]: 'Reset wallet',
   [I18N.ledgerAgreementTitle]: 'Connect your Ledger',
   [I18N.ledgerAgreementText]:
     'If you have a Ledger Nano X, then you can connect it via Bluetooth to HAQQ Wallet. You will be able to manage funds from Ledger using Islm Wallet',

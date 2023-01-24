@@ -3,10 +3,13 @@ export enum Events {
   onWalletsBalanceCheck = 'onWalletsBalanceCheck',
   onWalletsBalance = 'onWalletsBalance',
   onWalletCreate = 'onWalletCreate',
+  onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
   onPushSubscriptionRemove = 'onPushSubscriptionRemove',
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',
+  onTransactionsLoad = 'onTransactionsLoad',
+  onAppStarted = 'onAppStarted',
 }
