@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -18,7 +18,7 @@ export const SignInStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.signinStoreWalletText);
+    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
@@ -105,6 +105,7 @@ export const SignInStoreWalletScreen = () => {
             break;
           default:
             if (error instanceof Error) {
+              console.log('error.message', error.message);
               showModal('error-create-account');
               captureException(error, 'restoreStore');
               goBack();
