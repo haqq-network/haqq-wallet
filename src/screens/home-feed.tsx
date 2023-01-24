@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {Results} from 'realm';
+
 import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -15,7 +17,7 @@ import {TransactionList} from '@app/types';
 import {prepareTransactions} from '@app/utils';
 
 const filterTransactions = (
-  transactions: Transaction[],
+  transactions: Results<Transaction>,
   providerId: string,
 ) => {
   return transactions.filter(
@@ -32,7 +34,7 @@ export const HomeFeedScreen = () => {
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
       wallets.addressList,
-      filterTransactions(transactions.transactions, user.providerId),
+      filterTransactions(Transaction.getAll().snapshot(), user.providerId),
     ),
   );
 
@@ -40,15 +42,19 @@ export const HomeFeedScreen = () => {
     setTransactionsList(
       prepareTransactions(
         wallets.addressList,
-        filterTransactions(transactions.transactions, user.providerId),
+        filterTransactions(Transaction.getAll().snapshot(), user.providerId),
       ),
     );
-  }, [wallets.addressList, transactions.transactions, user.providerId]);
+  }, [wallets.addressList, user.providerId]);
+
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
 
-    const actions = wallets.addressList.map(address =>
-      transactions.loadTransactionsFromExplorer(address),
+    const actions = wallets.addressList.map(
+      address =>
+        new Promise(resolve => {
+          app.emit(Events.onTransactionsLoad, address, resolve);
+        }),
     );
 
     actions.push(
@@ -60,7 +66,7 @@ export const HomeFeedScreen = () => {
     Promise.all(actions).then(() => {
       setRefreshing(false);
     });
-  }, [transactions, wallets]);
+  }, [wallets]);
 
   const onBackupMnemonic = useCallback(
     (wallet: Wallet) => {

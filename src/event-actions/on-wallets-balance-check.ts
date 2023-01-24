@@ -4,17 +4,15 @@ import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 
 export async function onWalletsBalanceCheck(callback?: () => void) {
-  Promise.all(
-    Wallet.getAll().map(w => {
-      return EthNetwork.getBalance(w.address).then(balance => {
-        return [w.address, balance];
-      });
-    }),
-  )
-    .then(responses => {
-      app.emit(Events.onWalletsBalance, Object.fromEntries(responses));
-    })
-    .finally(() => {
-      callback?.();
-    });
+  const responses = await Promise.all(
+    Wallet.getAll().map(w =>
+      EthNetwork.getBalance(w.address).then(balance => [w.address, balance]),
+    ),
+  );
+
+  app.emit(Events.onWalletsBalance, Object.fromEntries(responses));
+
+  if (callback) {
+    callback?.();
+  }
 }
