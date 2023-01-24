@@ -16,8 +16,8 @@ import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
-import {cleanNumber} from '@app/utils';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type SumBlockProps = {

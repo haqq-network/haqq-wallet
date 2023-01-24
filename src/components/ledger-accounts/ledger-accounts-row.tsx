@@ -12,9 +12,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {LedgerAccountItem} from '@app/types';
-import {cleanNumber, shortAddress} from '@app/utils';
+import {shortAddress} from '@app/utils';
 
 export type LedgerAccountsRowProps = {
   index: number;
