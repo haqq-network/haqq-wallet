@@ -199,11 +199,10 @@ export class User extends EventEmitter {
     if (this.pinBanned && isAfter(new Date(), this.pinBanned)) {
       realm.write(() => {
         this._raw.pinBanned = null;
-        this._raw.pinAttempts = 0;
       });
     }
 
-    return this.pinAttempts < PIN_BANNED_ATTEMPTS;
+    return !this.pinBanned;
   }
 
   successEnter() {
@@ -216,13 +215,15 @@ export class User extends EventEmitter {
   failureEnter() {
     realm.write(() => {
       this._raw.pinAttempts = this._raw.pinAttempts
-        ? this._raw.pinAttempts + 1
+        ? Math.min(this._raw.pinAttempts + 1, 8)
         : 1;
 
-      if (this._raw.pinAttempts === PIN_BANNED_ATTEMPTS) {
+      if (this._raw.pinAttempts >= PIN_BANNED_ATTEMPTS) {
         this._raw.pinBanned = addSeconds(
           new Date(),
-          PIN_BANNED_TIMEOUT_SECONDS,
+          5 *
+            Math.pow(2, this._raw.pinAttempts - 3) *
+            PIN_BANNED_TIMEOUT_SECONDS,
         );
       }
     });
