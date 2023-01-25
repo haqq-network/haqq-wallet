@@ -23,126 +23,22 @@ jobs:
 
   build_android:
     name: Build and distribute Android app
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/distribute-android.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: 0
     needs:
       - test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1.2'
-      - name: Decode secrets
-        run: |
-          echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
-          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
 
-          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
-          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
-          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
-          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
-          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
-          echo "ENVIRONMENT=distribution" >> .env
-
-      - name: Install Fastlane
-        run: |
-          bundle install
-      - name: Install packages
-        run: yarn install --frozen-lockfile
-      - name: Execute Fastlane command
-        run: bundle exec fastlane android distribute
-        env:
-          HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
-          HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
-          HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
-          HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
   build_ios:
     name: Build and distribute iOS app
-    runs-on: self-hosted
+    uses: ./.github/workflows/distribute-ios.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: 0
     needs:
       - test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.1'
-      #     bundler-cache: true
-      - uses: actions/cache@v3
-        with:
-          path: ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      - name: Install Fastlane
-        run: |
-          bundle install
-      - name: Install packages
-        run: yarn install
-      - name: Install pods
-        run: cd ios && pod install
-      - name: Git init
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "Github actions"
-      - name: Decode secrets
-        run: |
-          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
-          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
-          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
-          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
-          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
-          echo "ENVIRONMENT=distribution" >> .env
-
-      - name: Execute build
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          bundle exec fastlane ios distribute
-        env:
-          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
-          GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
-          APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
-          DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}
-          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
-          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
-          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
-          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
-          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
-          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
-          FASTLANE_PASSWORD: ${{ secrets.APPLE_FASTLANE_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
-          PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
   slack_notify:
     needs:
@@ -155,46 +51,7 @@ jobs:
 
   patch_build:
     name: Patch build versions
-    runs-on: self-hosted
+    uses: ./.github/workflows/patch-build-versions.yml
+    secrets: inherit
     needs:
       - slack_notify
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.1'
-      #     bundler-cache: true
-      - name: Decode secrets
-        run: |
-          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
-
-      - name: Install Fastlane
-        run: |
-          bundle install
-      - name: Execute Fastlane command
-        run: |
-          bundle exec fastlane ios patch_build
-          bundle exec fastlane android patch_build
-        env:
-          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
-          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
-          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
-          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
-
-      - name: Amend the last commit
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "Build"
-          git log -1 --pretty="%H" > .last-build
-          git commit -am "build"
-          git pull --rebase origin main
-          git push --force-with-lease
