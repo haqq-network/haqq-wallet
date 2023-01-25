@@ -2,6 +2,7 @@ name: Patch build versions
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   patch_build:
@@ -11,16 +12,6 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
 
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.1'
-      #     bundler-cache: true
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
