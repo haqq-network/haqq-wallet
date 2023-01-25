@@ -58,7 +58,9 @@ export const PinModal = () => {
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
             <Text
-              clean
+              t15
+              center
+              color={Color.textBase2}
               i18n={I18N.modalPinForgotCode}
               style={page.additionButtonText}
             />
@@ -82,11 +84,6 @@ const page = createTheme({
     alignItems: 'center',
   },
   additionButtonText: {
-    color: Color.textBase2,
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 16,
-    textAlign: 'center',
     padding: 2,
   },
 });

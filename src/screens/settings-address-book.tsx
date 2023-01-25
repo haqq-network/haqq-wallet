@@ -47,6 +47,7 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
       navigate('settingsContactEdit', {
         name: '',
         address: search.trim(),
