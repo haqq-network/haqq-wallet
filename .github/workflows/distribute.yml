@@ -43,7 +43,8 @@ jobs:
             ${{ runner.os }}-gems-
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.1.2"
+          ruby-version: '3.1'
+          bundler-cache: true
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -74,7 +75,7 @@ jobs:
 
   build_ios:
     name: Build and distribute iOS app
-    runs-on: haqq-ios-ci
+    runs-on: self-hosted
     needs:
       - test
     steps:
@@ -82,9 +83,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.2"
+      # - uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1'
+      #     bundler-cache: true
       - uses: actions/cache@v3
         with:
           path: ios/Pods
@@ -154,7 +156,7 @@ jobs:
 
   patch_build:
     name: Patch build versions
-    runs-on: haqq-ios-ci
+    runs-on: self-hosted
     needs:
       - slack_notify
     steps:
@@ -168,9 +170,10 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.2"
+      # - uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: '3.1'
+      #     bundler-cache: true
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
