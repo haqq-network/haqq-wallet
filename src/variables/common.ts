@@ -158,7 +158,7 @@ export const CARD_RHOMBUS_TOTAL = 17;
 export const CARD_DEFAULT_STYLE = 'card-circle-0';
 
 export const PIN_BANNED_TIMEOUT_SECONDS = 60;
-export const PIN_BANNED_ATTEMPTS = 5;
+export const PIN_BANNED_ATTEMPTS = 3;
 
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
 

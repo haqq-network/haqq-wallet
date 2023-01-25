@@ -18,6 +18,7 @@ import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type SumBlockProps = {
@@ -70,6 +71,11 @@ export const SumBlock = ({
     inputSumRef.current?.focus();
   };
 
+  const onPressMax = useCallback(() => {
+    vibrate(HapticEffects.impactLight);
+    onMax();
+  }, [onMax]);
+
   return (
     <View style={style}>
       <Text t8 center style={styles.subtitle} color={Color.textBase2}>
@@ -101,7 +107,7 @@ export const SumBlock = ({
           {balance > 0 && (
             <Button
               title={getText(I18N.sumBlockMax)}
-              onPress={onMax}
+              onPress={onPressMax}
               variant={ButtonVariant.second}
               size={ButtonSize.small}
             />
