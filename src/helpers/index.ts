@@ -8,3 +8,4 @@ export * from './await-for-popup-closed';
 export * from './await-for-ledger';
 export * from './clean-number';
 export * from './format-percents';
+export * from './prepare-transactions';

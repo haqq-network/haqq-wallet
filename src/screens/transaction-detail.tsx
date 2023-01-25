@@ -5,7 +5,9 @@ import {openURL} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {TransactionSource} from '@app/types';
 
 export const TransactionDetailScreen = () => {
   const navigation = useTypedNavigation();
@@ -14,6 +16,14 @@ export const TransactionDetailScreen = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(
     Transaction.getById(route.params.hash),
   );
+
+  const source = useMemo(() => {
+    const visible = Wallet.getAllVisible().map(w => w.address);
+
+    return visible.includes(transaction?.from ?? '')
+      ? TransactionSource.send
+      : TransactionSource.receive;
+  }, [transaction]);
 
   const provider = useMemo(
     () => (transaction ? Provider.getProvider(transaction.providerId) : null),
@@ -41,6 +51,7 @@ export const TransactionDetailScreen = () => {
 
   return (
     <TransactionDetail
+      source={source}
       provider={provider}
       transaction={transaction}
       onCloseBottomSheet={onCloseBottomSheet}

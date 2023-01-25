@@ -4,7 +4,7 @@ import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
 import {I18N, getText} from '@app/i18n';
-import {MIN_AMOUNT, WEI} from '@app/variables/common';
+import {MIN_AMOUNT, NUM_PRECISION, WEI} from '@app/variables/common';
 
 export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [{amount, amountText}, setAmount] = useState({
@@ -48,10 +48,14 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
     setMaxAmount(value = 0) {
       setMaxAmount(value);
     },
-    setMax(fixed = 4) {
+    setMax(fixed = NUM_PRECISION) {
+      const a =
+        Math.floor((maxAmount - 1 / WEI) * Math.pow(10, NUM_PRECISION)) /
+        Math.pow(10, NUM_PRECISION);
+
       setAmount({
-        amountText: (maxAmount - 10 / WEI).toFixed(fixed),
-        amount: maxAmount - 10 / WEI,
+        amountText: a.toFixed(fixed),
+        amount: a,
       });
     },
     setAmount(text: string) {
