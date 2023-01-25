@@ -5,6 +5,7 @@ import {Results} from 'realm';
 import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {prepareTransactions} from '@app/helpers';
 import {
   useTransactions,
   useTypedNavigation,
@@ -14,7 +15,6 @@ import {
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
-import {prepareTransactions} from '@app/utils';
 
 const filterTransactions = (
   transactions: Results<Transaction>,
