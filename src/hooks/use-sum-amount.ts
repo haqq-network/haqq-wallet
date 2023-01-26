@@ -48,10 +48,12 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
     setMaxAmount(value = 0) {
       setMaxAmount(value);
     },
-    setMax(fixed = 4) {
+    setMax() {
+      const a = Math.floor((maxAmount - 1 / WEI) / MIN_AMOUNT) * MIN_AMOUNT;
+
       setAmount({
-        amountText: (maxAmount - 10 / WEI).toFixed(fixed),
-        amount: maxAmount - 10 / WEI,
+        amountText: String(a),
+        amount: a,
       });
     },
     setAmount(text: string) {

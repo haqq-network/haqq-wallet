@@ -1,14 +1,5 @@
 import {PATTERNS_SOURCE} from '@env';
-import {formatISO} from 'date-fns';
 import {Animated} from 'react-native';
-
-import {Transaction} from '@app/models/transaction';
-import {
-  TransactionList,
-  TransactionListReceive,
-  TransactionListSend,
-  TransactionSource,
-} from '@app/types';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -24,35 +15,6 @@ const numbersRegExp = /^[0-9]*\.?[0-9]*$/;
 
 export function isNumber(value: string) {
   return value.match(numbersRegExp);
-}
-
-export function prepareTransactions(
-  source: string[],
-  transactions: Transaction[],
-): TransactionList[] {
-  const hash: Map<string, (TransactionListSend | TransactionListReceive)[]> =
-    new Map();
-
-  for (const row of transactions) {
-    const result = formatISO(row.createdAt, {representation: 'date'});
-
-    hash.set(result, (hash.get(result) ?? []).concat(row));
-  }
-
-  return Array.from(hash.keys())
-    .map(d => new Date(d))
-    .sort((a, b) => +b - +a)
-    .reduce((memo: TransactionList[], key) => {
-      const k = formatISO(key, {representation: 'date'});
-      const tmp = (hash.get(k) ?? []).sort(
-        (a, b) => +b.createdAt - +a.createdAt,
-      );
-
-      return memo.concat(
-        {date: key, source: TransactionSource.date, hash: k, providerId: ''},
-        ...tmp,
-      );
-    }, []);
 }
 
 export function shortAddress(address: string, delimiter: string = '.') {

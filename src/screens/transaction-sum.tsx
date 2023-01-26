@@ -4,6 +4,7 @@ import {TransactionSum} from '@app/components/transaction-sum';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {generateUUID} from '@app/utils';
 
 export const TransactionSumScreen = () => {
@@ -42,6 +43,7 @@ export const TransactionSumScreen = () => {
   );
 
   const onContact = useCallback(() => {
+    vibrate(HapticEffects.impactLight);
     navigation.navigate('transactionSumAddress', {
       to,
       event,

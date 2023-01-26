@@ -100,6 +100,7 @@ export const StakingInfoScreen = () => {
 
         if (current) {
           const transport = getProviderInstanceForWallet(current);
+
           try {
             await awaitForBluetooth();
 
@@ -110,7 +111,9 @@ export const StakingInfoScreen = () => {
             );
             await awaitForLedger(transport);
           } catch (e) {
-            await awaitForPopupClosed('ledger-locked');
+            if (e === '27010') {
+              await awaitForPopupClosed('ledger-locked');
+            }
             transport.abort();
           }
         }
@@ -130,6 +133,8 @@ export const StakingInfoScreen = () => {
             })),
         ),
       );
+
+      console.log('responses', JSON.stringify(responses));
 
       for (const resp of responses) {
         if (resp.status === 'fulfilled' && resp.value) {

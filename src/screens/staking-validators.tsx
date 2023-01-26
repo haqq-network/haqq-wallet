@@ -79,14 +79,12 @@ export const StakingValidatorsScreen = () => {
           localDelegations: info[StakingMetadataType.delegation],
           localRewards: info[StakingMetadataType.reward],
           localUnDelegations: info[StakingMetadataType.undelegation],
-          searchString:
-            `${validator.description.moniker} ${validator.description.details} ${validator.description.website}`.toLowerCase(),
+          searchString: `${validator.description.moniker}`.toLowerCase(),
         });
       } else {
         unStaked.push({
           ...validator,
-          searchString:
-            `${validator.description.moniker} ${validator.description.details} ${validator.description.website}`.toLowerCase(),
+          searchString: `${validator.description.moniker}`.toLowerCase(),
         });
       }
     }

@@ -31,12 +31,12 @@ export const SignInStoreWalletScreen = () => {
           let canNext = true;
           let index = 0;
           while (canNext) {
-            const name =
-              wallets.getSize() === 0
-                ? MAIN_ACCOUNT_NAME
-                : getText(I18N.signinStoreWalletAccountNumber, {
-                    number: `${wallets.getSize() + 1}`,
-                  });
+            const total = Wallet.getAll().length;
+            const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+              number: `${total + 1}`,
+            });
+
+            const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
             const node = await restoreFromMnemonic(
               String(mnemonic),
@@ -79,12 +79,12 @@ export const SignInStoreWalletScreen = () => {
             index += 1;
           }
         } else if (privateKey) {
-          const name =
-            wallets.getSize() === 0
-              ? MAIN_ACCOUNT_NAME
-              : getText(I18N.signinStoreWalletAccountNumber, {
-                  number: `${wallets.getSize() + 1}`,
-                });
+          const total = Wallet.getAll().length;
+          const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+            number: `${total + 1}`,
+          });
+
+          const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
           const wallet = await wallets.addWalletFromPrivateKey(
             privateKey,

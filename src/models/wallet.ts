@@ -1,6 +1,7 @@
 import {decrypt, encrypt} from '@haqq/encryption-react-native';
 
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {Cosmos} from '@app/services/cosmos';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
@@ -12,8 +13,6 @@ import {
   FLAT_PRESETS,
   GRADIENT_PRESETS,
 } from '@app/variables/common';
-
-import {Transaction} from './transaction';
 
 import {
   AddWalletParams,
@@ -93,10 +92,7 @@ export class Wallet extends Realm.Object {
     walletParams: AddWalletParams,
     name = '',
   ): Promise<Wallet | null> {
-    const exist = realm.objectForPrimaryKey<Wallet>(
-      'Wallet',
-      walletParams.address,
-    );
+    const exist = Wallet.getById(walletParams.address);
     if (exist) {
       throw new Error('wallet_already_exists');
     }
@@ -195,19 +191,23 @@ export class Wallet extends Realm.Object {
       throw new Error('wallet_error');
     }
 
-    app.emit('wallet:create', wallet);
+    app.emit(Events.onWalletCreate, wallet);
 
     return wallet;
   }
 
-  static remove(address: string) {
-    const obj = realm.objectForPrimaryKey<Wallet>(Wallet.schema.name, address);
+  static async remove(address: string) {
+    const obj = Wallet.getById(address);
 
     if (obj) {
-      Transaction.deleteAllByAccount(address);
+      const snapshot = obj.toJSON();
 
       realm.write(() => {
         realm.delete(obj);
+      });
+
+      await new Promise(resolve => {
+        app.emit(Events.onWalletRemove, address, snapshot, resolve);
       });
     }
   }
@@ -272,16 +272,12 @@ export class Wallet extends Realm.Object {
   }
 
   async updateWalletData(oldPin: string, newPin: string) {
-    const decrypted = await decrypt(oldPin, this.data);
-    const encrypted = await encrypt(newPin, decrypted);
+    if (this.data) {
+      const decrypted = await decrypt(oldPin, this.data);
+      const encrypted = await encrypt(newPin, decrypted);
 
-    const wallet = realm.objectForPrimaryKey<Wallet>(
-      Wallet.schema.name,
-      this.address,
-    );
-    if (wallet) {
       realm.write(() => {
-        wallet.data = encrypted;
+        this.data = encrypted;
       });
     }
   }
