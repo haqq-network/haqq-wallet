@@ -14,7 +14,9 @@ export async function onPushSubscriptionAdd() {
   await Promise.all(
     wallets.map(async w => {
       await pushNotifications.subscribeAddress(user.subscription!, w.address);
-      w.subscription = user.subscription;
+      w.update({
+        subscription: user.subscription,
+      });
     }),
   );
 }

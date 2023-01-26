@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {awaitForPopupClosed} from '@app/helpers';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
@@ -27,7 +28,6 @@ export const TransactionConfirmationScreen = () => {
     [route.params.to],
   );
 
-  const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState(route.params.fee ?? 0);
 
@@ -75,9 +75,10 @@ export const TransactionConfirmationScreen = () => {
           });
         }
       } catch (e) {
-        console.log('onDone', e);
         if (e instanceof Error) {
-          setError(e.message);
+          await awaitForPopupClosed('transaction-error', {
+            message: e.message,
+          });
         }
       } finally {
         setDisabled(false);
@@ -101,7 +102,6 @@ export const TransactionConfirmationScreen = () => {
 
   return (
     <TransactionConfirmation
-      error={error}
       disabled={disabled}
       contact={contact}
       to={route.params.to}

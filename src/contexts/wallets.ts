@@ -5,7 +5,6 @@ import {EventEmitter} from 'events';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
-import {app} from '@app/contexts';
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -150,44 +149,32 @@ class Wallets extends EventEmitter {
 
     if (wallet !== null) {
       this.attachWallet(wallet);
-
-      requestAnimationFrame(() => {
-        app.emit('addWallet', wallet.address);
-      });
     }
 
     return wallet;
   }
 
   async removeWallet(address: string) {
-    const wallet = this._wallets.get(address.toLowerCase());
+    const wallet = Wallet.getById(address);
 
-    if (wallet) {
-      if (wallet.isMain) {
-        const wallets = realm
-          .objects<Wallet>(Wallet.schema.name)
-          .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
-
-        if (wallets.length) {
-          const w = wallets[0];
-          w.update({isMain: true});
-        }
-      }
-
-      this.deAttachWallet(wallet);
-
-      Wallet.remove(address.toLowerCase());
+    if (!wallet) {
+      return;
     }
 
-    requestAnimationFrame(() => {
-      const realmWallet = realm.objectForPrimaryKey<Wallet>(
-        Wallet.schema.name,
-        address,
-      );
-      if (!realmWallet) {
-        app.emit('removeWallet', address);
+    if (wallet.isMain) {
+      const wallets = realm
+        .objects<Wallet>(Wallet.schema.name)
+        .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
+
+      if (wallets.length) {
+        const w = wallets[0];
+        w.update({isMain: true});
       }
-    });
+    }
+
+    this.deAttachWallet(wallet);
+
+    await Wallet.remove(address.toLowerCase());
   }
 
   clean() {

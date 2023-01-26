@@ -133,7 +133,9 @@ export const HomeStakingScreen = () => {
           await awaitForBluetooth();
           await awaitForLedger(transport);
         } catch (e) {
-          await awaitForPopupClosed('ledger-locked');
+          if (e === '27010') {
+            await awaitForPopupClosed('ledger-locked');
+          }
           transport.abort();
         }
       }

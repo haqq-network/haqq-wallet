@@ -14,7 +14,6 @@ import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
   NavigationContainer,
-  StackActions,
   Theme,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -163,15 +162,9 @@ export const App = () => {
 
         setInitialized(true);
         requestAnimationFrame(() => {
-          wallets.addressList.forEach(d => app.emit('addWallet', d));
+          app.emit(Events.onAppStarted);
         });
       });
-
-    app.on('resetWallet', () => {
-      navigator.dispatch(StackActions.replace('welcome'));
-      app.getUser().onboarded = false;
-      hideModal();
-    });
   }, []);
 
   const [initialized, setInitialized] = useState(false);

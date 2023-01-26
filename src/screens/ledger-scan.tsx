@@ -62,7 +62,6 @@ export const LedgerScanScreen = () => {
       if (!transport) {
         throw new Error('can_not_connected');
       }
-      await transport.send(0xe0, 0x01, 0x00, 0x00);
 
       try {
         await suggestApp(transport, LEDGER_APP);

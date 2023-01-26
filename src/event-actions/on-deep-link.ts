@@ -3,7 +3,6 @@ import base64 from 'react-native-base64';
 import {navigator} from '@app/navigator';
 
 export async function onDeepLink(link: string) {
-  console.log('onDeepLink');
   if (link && link.startsWith('haqq:')) {
     let params = link.split(':');
 

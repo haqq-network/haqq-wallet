@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {utils} from 'ethers';
-import {View} from 'react-native';
+import {Keyboard, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -68,6 +68,7 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
+    Keyboard.dismiss();
     const subscription = ({to}: any) => {
       if (utils.isAddress(to)) {
         setAddress(to);
@@ -79,7 +80,9 @@ export const TransactionAddress = ({
     showModal('qr');
   }, [app]);
 
-  const onPressClear = useCallback(() => setAddress(''), []);
+  const onPressClear = useCallback(() => {
+    setAddress('');
+  }, []);
 
   const onPressAddress = useCallback(
     (item: string) => {
@@ -144,7 +147,7 @@ export const TransactionAddress = ({
 
 const styles = createTheme({
   input: {
-    marginBottom: 12,
+    marginBottom: 20,
     marginHorizontal: 20,
   },
   inputButtonContainer: {

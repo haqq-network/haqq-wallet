@@ -110,7 +110,7 @@ export const TRANSPARENT = 'transparent';
 
 export const MAIN_ACCOUNT_NAME = 'Main account';
 
-export const MAGIC_CARD_HEIGHT = 0.632835821;
+export const MAGIC_CARD_HEIGHT = 0.33;
 
 export const IS_ANDROID = Platform.OS === 'android';
 
@@ -158,7 +158,7 @@ export const CARD_RHOMBUS_TOTAL = 17;
 export const CARD_DEFAULT_STYLE = 'card-circle-0';
 
 export const PIN_BANNED_TIMEOUT_SECONDS = 60;
-export const PIN_BANNED_ATTEMPTS = 5;
+export const PIN_BANNED_ATTEMPTS = 3;
 
 export const USER_LAST_ACTIVITY_TIMEOUT_SECONDS = 900;
 
@@ -176,9 +176,9 @@ export const PRIVACY_POLICY = 'https://boredgen.net/privacy_policy';
 export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
 
-export const NUM_PRECISION = 3;
+export const NUM_PRECISION = 2;
 
-export const MIN_AMOUNT = 1 / Math.pow(10, NUM_PRECISION);
+export const MIN_AMOUNT = 0.001;
 export const WINDOW_WIDTH = Dimensions.get('window').width;
 export const WINDOW_HEIGHT = Dimensions.get('window').height;
 export const WINDOW_RATIO = WINDOW_WIDTH / 541;

@@ -16,9 +16,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {cleanNumber} from '@app/utils';
 
 export type StakingDelegatePreviewProps = {
   unboundingTime: number;

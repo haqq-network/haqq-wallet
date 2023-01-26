@@ -22,13 +22,11 @@ interface TransactionConfirmationProps {
   amount: number;
   fee: number;
   contact: Contact | null;
-  error?: string;
   disabled?: boolean;
   onConfirmTransaction: () => void;
 }
 
 export const TransactionConfirmation = ({
-  error,
   disabled,
   contact,
   to,
@@ -119,7 +117,6 @@ export const TransactionConfirmation = ({
             />
           </DataView>
         </View>
-        {error && <Text clean>{error}</Text>}
       </Spacer>
       <Button
         disabled={fee === 0 && !disabled}

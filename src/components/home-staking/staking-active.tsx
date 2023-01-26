@@ -13,10 +13,10 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {cleanNumber} from '@app/utils';
 import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {

@@ -18,7 +18,7 @@ import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {captureException} from '../helpers';
+import {captureException, hideModal, showModal} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
@@ -228,7 +228,7 @@ class App extends EventEmitter {
   }
 
   async auth() {
-    this.emit('modal', {type: 'pin'});
+    showModal('pin');
     if (this.biometry) {
       try {
         await this.biometryAuth();
@@ -243,6 +243,8 @@ class App extends EventEmitter {
       await this.pinAuth();
       this.authenticated = true;
     }
+
+    showModal('splash');
   }
 
   biometryAuth() {
@@ -256,7 +258,6 @@ class App extends EventEmitter {
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
-          this.emit('modal', {type: 'splash'});
           resolve();
         } else {
           this.emit('errorPin', 'not match');
@@ -311,15 +312,16 @@ class App extends EventEmitter {
     if (this.appStatus !== appStatus) {
       switch (appStatus) {
         case AppStatus.active:
-          if (this.user?.isOutdatedLastActivity()) {
-            this.emit('modal', {type: 'splash'});
+          if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             await this.auth();
-            this.emit('modal', null);
+            hideModal('splash');
           }
           break;
         case AppStatus.inactive:
-          this.user?.touchLastActivity();
+          if (this.authenticated) {
+            this.user?.touchLastActivity();
+          }
           break;
       }
 

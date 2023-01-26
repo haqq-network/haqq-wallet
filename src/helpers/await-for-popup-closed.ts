@@ -2,7 +2,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers/modal';
 
-export const awaitForPopupClosed = (popup: string) => {
+export const awaitForPopupClosed = (popup: string, params = {}) => {
   return new Promise<void>(resolve => {
     const onCloseModal = (screen: string) => {
       if (screen === popup) {
@@ -12,6 +12,6 @@ export const awaitForPopupClosed = (popup: string) => {
 
     app.on(Events.onCloseModal, onCloseModal);
 
-    showModal(popup);
+    showModal(popup, params);
   });
 };
