@@ -278,15 +278,9 @@ export class Wallet extends Realm.Object {
     const decrypted = await decrypt(oldPin, this.data);
     const encrypted = await encrypt(newPin, decrypted);
 
-    const wallet = realm.objectForPrimaryKey<Wallet>(
-      Wallet.schema.name,
-      this.address,
-    );
-    if (wallet) {
-      realm.write(() => {
-        wallet.data = encrypted;
-      });
-    }
+    realm.write(() => {
+      this.data = encrypted;
+    });
   }
 
   get cosmosAddress() {
