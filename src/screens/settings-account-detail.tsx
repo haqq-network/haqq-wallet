@@ -4,6 +4,7 @@ import {Alert} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
+import {hideModal, showModal} from '@app/helpers';
 import {useWallet, useWallets} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
@@ -57,7 +58,9 @@ export const SettingsAccountDetailScreen = () => {
           style: 'destructive',
           text: getText(I18N.settingsAccountRemoveConfirm),
           onPress: async () => {
+            showModal('loading');
             await wallets.removeWallet(address);
+            hideModal('loading');
             navigation.goBack();
             sendNotification(I18N.notificationAccountDeleted);
           },
