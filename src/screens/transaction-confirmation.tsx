@@ -1,13 +1,18 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {awaitForPopupClosed} from '@app/helpers';
 import {
-  useContacts,
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
+import {
   useTypedNavigation,
   useTypedRoute,
   useUser,
   useWallet,
 } from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
@@ -18,13 +23,11 @@ export const TransactionConfirmationScreen = () => {
 
   const user = useUser();
   const wallet = useWallet(route.params.from);
-  const contacts = useContacts();
   const contact = useMemo(
-    () => contacts.getContact(route.params.to),
-    [contacts, route.params.to],
+    () => Contact.getById(route.params.to),
+    [route.params.to],
   );
 
-  const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState(route.params.fee ?? 0);
 
@@ -57,9 +60,10 @@ export const TransactionConfirmationScreen = () => {
       try {
         setDisabled(true);
 
-        const ethNetworkProvider = new EthNetwork(wallet);
+        const ethNetworkProvider = new EthNetwork();
 
         const transaction = await ethNetworkProvider.sendTransaction(
+          getProviderInstanceForWallet(wallet),
           route.params.to,
           route.params.amount,
         );
@@ -71,9 +75,10 @@ export const TransactionConfirmationScreen = () => {
           });
         }
       } catch (e) {
-        console.log('onDone', e);
         if (e instanceof Error) {
-          setError(e.message);
+          await awaitForPopupClosed('transaction-error', {
+            message: e.message,
+          });
         }
       } finally {
         setDisabled(false);
@@ -89,9 +94,14 @@ export const TransactionConfirmationScreen = () => {
     wallet,
   ]);
 
+  useEffect(() => {
+    return () => {
+      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+    };
+  }, [wallet]);
+
   return (
     <TransactionConfirmation
-      error={error}
       disabled={disabled}
       contact={contact}
       to={route.params.to}

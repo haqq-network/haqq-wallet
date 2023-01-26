@@ -5,7 +5,8 @@ import {utils} from 'ethers';
 
 import {SettingsAddressBook} from '@app/components/settings-address-book';
 import {hideModal, showModal} from '@app/helpers/modal';
-import {useApp, useContacts, useTypedNavigation} from '@app/hooks';
+import {useApp, useTypedNavigation} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
@@ -17,16 +18,15 @@ export const SettingsAddressBookScreen =
     const [search, setSearch] = useState('');
     const [canAdd, setCanAdd] = useState(false);
     const {navigate} = useTypedNavigation();
-    const contacts = useContacts();
 
     useEffect(() => {
       const add =
         search.length === 42 &&
         utils.isAddress(search.trim()) &&
-        contacts.getContact(search.trim()) === null;
+        Contact.getById(search.trim()) === null;
 
       setCanAdd(add);
-    }, [contacts, search]);
+    }, [search]);
 
     const onPressQR = useCallback(() => {
       const subscription = ({to}: any) => {
@@ -47,6 +47,7 @@ export const SettingsAddressBookScreen =
     }, []);
 
     const onPressAdd = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
       navigate('settingsContactEdit', {
         name: '',
         address: search.trim(),
@@ -59,11 +60,11 @@ export const SettingsAddressBookScreen =
       (address: string) => {
         vibrate(HapticEffects.impactLight);
         navigate('settingsContactEdit', {
-          name: contacts.getContact(address)?.name || '',
+          name: Contact.getById(address)?.name || '',
           address: address,
         });
       },
-      [navigate, contacts],
+      [navigate],
     );
 
     return (

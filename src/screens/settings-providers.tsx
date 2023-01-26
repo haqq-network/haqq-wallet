@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {Color} from '@app/colors';
-import {SettingsProviders} from '@app/components/settings-providers/settings-providers';
+import {SettingsProviders} from '@app/components/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -47,7 +47,7 @@ export const SettingsProvidersScreen = () => {
       <CustomHeader
         onPressLeft={navigation.goBack}
         iconLeft="arrow_back"
-        i18nTitle={I18N.settingsProvidersTitle}
+        title={I18N.settingsProvidersTitle}
         i18nTextRight={I18N.settingsProvidersTitleRight}
         colorRight={Color.textGreen1}
         onPressRight={onPressAdd}

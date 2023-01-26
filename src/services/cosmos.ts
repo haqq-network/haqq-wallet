@@ -1,4 +1,11 @@
 import {TypedDataField} from '@ethersproject/abstract-signer';
+import {
+  createMsgDelegate,
+  createMsgDeposit,
+  createMsgUndelegate,
+  createMsgVote,
+  createMsgWithdrawDelegatorReward,
+} from '@evmos/eip712';
 import {protoTxNamespace} from '@evmos/proto';
 import {
   generateEndpointAccount,
@@ -33,6 +40,7 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
+import {ProviderInterface} from '@haqq/provider-base';
 import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
@@ -42,10 +50,11 @@ import {realm} from '@app/models';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {DepositResponse, TransportWallet} from '@app/types';
+import {DepositResponse, StakingParamsResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
+  CosmosTxV1betaSimulateResponse,
 } from '@app/types/cosmos';
 import {WEI} from '@app/variables/common';
 
@@ -150,34 +159,8 @@ export class Cosmos {
     );
   }
 
-  async deposit(
-    transport: TransportWallet,
-    proposalId: number,
-    amount: number,
-  ) {
-    try {
-      const sender = await this.getSender(transport);
-      const memo = '';
-      const strAmount = new Decimal(amount).mul(WEI);
-      const params = {
-        proposalId,
-        deposit: {
-          amount: strAmount.toFixed(),
-          denom: 'aISLM',
-        },
-      };
-      const msg = createTxMsgDeposit(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
-
-      return await this.sendMsg(transport, sender, msg);
-    } catch (error) {
-      captureException(error, 'Cosmos.deposit');
-    }
+  async getStakingParams(): Promise<StakingParamsResponse> {
+    return this.getQuery('/cosmos/staking/v1beta1/params');
   }
 
   getProposalDepositor(proposal_id: number | string, depositor: string) {
@@ -198,27 +181,77 @@ export class Cosmos {
     );
   }
 
-  async getProposalDetails(id: string): Promise<{proposal: Proposal}> {
+  async postSimulate(
+    message: object,
+    account: Sender,
+  ): Promise<CosmosTxV1betaSimulateResponse> {
+    return this.postQuery(
+      '/cosmos/tx/v1beta1/simulate',
+      this.generatePostSimulate(message, account),
+    );
+  }
+
+  async getProposalDetails(id: string | number): Promise<{proposal: Proposal}> {
     return this.getQuery(generateEndpointProposals() + `/${id}`);
   }
 
   async broadcastTransaction(
     txToBroadcast: TxToSend,
   ): Promise<BroadcastTransactionResponse> {
-    try {
-      return this.postQuery(
-        generateEndpointBroadcast(),
-        generatePostBodyBroadcast(txToBroadcast),
-      );
-    } catch (error) {
-      console.error((error as any).message);
-      throw new Error((error as any).message);
-    }
+    return this.postQuery(
+      generateEndpointBroadcast(),
+      generatePostBodyBroadcast(txToBroadcast),
+    );
   }
 
-  async getSender(transport: TransportWallet) {
+  generatePostSimulate(message: object, account: Sender) {
+    const messages = Array.isArray(message) ? message : [message];
+
+    return JSON.stringify({
+      tx: {
+        body: {
+          messages,
+          memo: '',
+          timeout_height: '0',
+          extension_options: [],
+          non_critical_extension_options: [],
+        },
+        auth_info: {
+          signer_infos: [
+            {
+              public_key: {
+                '@type': '/cosmos.crypto.secp256k1.PubKey',
+                key: account.pubkey,
+              },
+              mode_info: {
+                single: {
+                  mode: 'SIGN_MODE_LEGACY_AMINO_JSON',
+                },
+              },
+              sequence: account.sequence,
+            },
+          ],
+          fee: {
+            amount: [
+              {
+                denom: Cosmos.fee.denom,
+                amount: Cosmos.fee.amount,
+              },
+            ],
+            gas_limit: Cosmos.fee.gas,
+            payer: '',
+            granter: '',
+          },
+        },
+        signatures: [new Buffer(0).toString('hex')],
+      },
+    });
+  }
+
+  async getSender(transport: ProviderInterface): Promise<Sender> {
     const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
-    const pubkey = await transport.getPublicKey();
+    const pubkey = await transport.getBase64PublicKey();
+
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
@@ -228,7 +261,7 @@ export class Cosmos {
   }
 
   async signTypedData(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
@@ -247,7 +280,7 @@ export class Cosmos {
   }
 
   async sendMsg(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     sender: Sender,
     msg: {
       legacyAmino: {
@@ -290,141 +323,217 @@ export class Cosmos {
     return await this.broadcastTransaction(rawTx);
   }
 
-  async vote(transport: TransportWallet, proposalId: number, option: number) {
-    try {
-      const sender = await this.getSender(transport);
+  async getFee(data: object, account: Sender) {
+    const resp = await this.postSimulate(data, account);
 
-      const params = {
-        proposalId,
-        option,
-      };
+    return {
+      ...Cosmos.fee,
+      gas: String(
+        Math.max(
+          parseInt(Cosmos.fee.gas, 10),
+          parseInt(resp.gas_info.gas_used, 10) * 1.2,
+        ),
+      ),
+    };
+  }
 
-      const memo = '';
+  async deposit(
+    transport: ProviderInterface,
+    proposalId: number,
+    amount: number,
+  ) {
+    const sender = await this.getSender(transport);
+    const memo = '';
+    const strAmount = new Decimal(amount).mul(WEI);
+    const params = {
+      proposalId,
+      deposit: {
+        amount: strAmount.toFixed(),
+        denom: 'aISLM',
+      },
+    };
 
-      const msg = createTxMsgVote(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+    const fee = await this.getFee(
+      {
+        '@type': '/cosmos.gov.v1beta1.MsgDeposit',
+        ...createMsgDeposit(
+          params.proposalId,
+          sender.accountAddress,
+          params.deposit,
+        ).value,
+      },
+      sender,
+    );
 
-      return await this.sendMsg(transport, sender, msg);
-    } catch (e) {
-      captureException(e, 'Cosmos.vote');
-    }
+    const msg = createTxMsgDeposit(this.haqqChain, sender, fee, memo, params);
+
+    return await this.sendMsg(transport, sender, msg);
+  }
+
+  async vote(transport: ProviderInterface, proposalId: number, option: number) {
+    const sender = await this.getSender(transport);
+
+    const params = {
+      proposalId,
+      option,
+    };
+
+    const fee = await this.getFee(
+      {
+        '@type': '/cosmos.gov.v1beta1.MsgVote',
+        ...createMsgVote(
+          params.proposalId,
+          params.option,
+          sender.accountAddress,
+        ).value,
+      },
+      sender,
+    );
+
+    const memo = '';
+
+    const msg = createTxMsgVote(this.haqqChain, sender, fee, memo, params);
+
+    return await this.sendMsg(transport, sender, msg);
   }
 
   async unDelegate(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     address: string,
     amount: number,
   ) {
-    try {
-      const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport);
 
-      const strAmount = new Decimal(amount).mul(WEI);
+    const strAmount = new Decimal(amount).mul(WEI);
 
-      const params = {
-        validatorAddress: address,
-        amount: strAmount.toFixed(),
-        denom: 'aISLM',
-      };
+    const params = {
+      validatorAddress: address,
+      amount: strAmount.toFixed(),
+      denom: 'aISLM',
+    };
 
-      const memo = '';
+    const fee = await this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgUndelegate',
+        ...createMsgUndelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
 
-      const msg = createTxMsgUndelegate(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+    const memo = '';
 
-      return await this.sendMsg(transport, sender, msg);
-    } catch (e) {
-      console.log('err', e);
-    }
+    const msg = createTxMsgUndelegate(
+      this.haqqChain,
+      sender,
+      fee,
+      memo,
+      params,
+    );
+
+    return await this.sendMsg(transport, sender, msg);
   }
 
-  async delegate(transport: TransportWallet, address: string, amount: number) {
-    try {
-      const sender = await this.getSender(transport);
-      const strAmount = new Decimal(amount).mul(WEI);
-      const params = {
-        validatorAddress: address,
-        amount: strAmount.toFixed(),
-        denom: 'aISLM',
-      };
+  async delegate(
+    transport: ProviderInterface,
+    address: string,
+    amount: number,
+  ) {
+    const sender = await this.getSender(transport);
+    const strAmount = new Decimal(amount).mul(WEI);
+    const params = {
+      validatorAddress: address,
+      amount: strAmount.toFixed(),
+      denom: 'aISLM',
+    };
 
-      const memo = '';
+    const fee = await this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgDelegate',
+        ...createMsgDelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
 
-      const msg = createTxMsgDelegate(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+    const memo = '';
 
-      return await this.sendMsg(transport, sender, msg);
-    } catch (e) {
-      captureException(e, 'Cosmos.delegate');
-    }
+    const msg = createTxMsgDelegate(this.haqqChain, sender, fee, memo, params);
+
+    return await this.sendMsg(transport, sender, msg);
   }
 
   async multipleWithdrawDelegatorReward(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     validatorAddresses: string[],
   ) {
-    try {
-      const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport);
 
-      const params = {
-        validatorAddresses,
-      };
+    const params = {
+      validatorAddresses,
+    };
 
-      const memo = '';
+    const memo = '';
 
-      const msg = createTxMsgMultipleWithdrawDelegatorReward(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+    const fee = await this.getFee(
+      params.validatorAddresses.map(v => ({
+        '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+        ...createMsgWithdrawDelegatorReward(sender.accountAddress, v).value,
+      })),
+      sender,
+    );
 
-      return await this.sendMsg(transport, sender, msg);
-    } catch (e) {
-      captureException(e, 'Cosmos.multipleWithdrawDelegatorReward');
-    }
+    const msg = createTxMsgMultipleWithdrawDelegatorReward(
+      this.haqqChain,
+      sender,
+      fee,
+      memo,
+      params,
+    );
+
+    return await this.sendMsg(transport, sender, msg);
   }
 
   async withdrawDelegatorReward(
-    transport: TransportWallet,
+    transport: ProviderInterface,
     validatorAddress: string,
   ) {
-    try {
-      const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport);
 
-      const params = {
-        validatorAddress,
-      };
+    const params = {
+      validatorAddress,
+    };
 
-      const memo = '';
+    const fee = await this.getFee(
+      {
+        '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+        ...createMsgWithdrawDelegatorReward(
+          sender.accountAddress,
+          params.validatorAddress,
+        ).value,
+      },
+      sender,
+    );
 
-      const msg = createTxMsgWithdrawDelegatorReward(
-        this.haqqChain,
-        sender,
-        Cosmos.fee,
-        memo,
-        params,
-      );
+    const memo = '';
 
-      return await this.sendMsg(transport, sender, msg);
-    } catch (e) {
-      captureException(e, 'Cosmos.withdrawDelegatorReward');
-    }
+    const msg = createTxMsgWithdrawDelegatorReward(
+      this.haqqChain,
+      sender,
+      fee,
+      memo,
+      params,
+    );
+
+    return await this.sendMsg(transport, sender, msg);
   }
 
   sync(addressList: string[]) {
@@ -510,53 +619,21 @@ export class Cosmos {
         cache.push(row.orderNumber);
       }
 
-      try {
-        const proposals = await this.getProposals();
-        const hashes = proposals.proposals
-          .map(
-            ({
-              status,
-              voting_end_time,
-              voting_start_time,
-              total_deposit,
-              deposit_end_time,
-              proposal_id,
-              final_tally_result,
-              content,
-              submit_time,
-            }) => {
-              const veto = final_tally_result.no_with_veto;
+      const proposals = await this.getProposals();
+      const hashes = proposals.proposals
+        .map(proposal => {
+          try {
+            return GovernanceVoting.create(proposal);
+          } catch (e) {
+            captureException(e, 'Cosmos.syncGovernanceVoting.getProposals');
+            return null;
+          }
+        })
+        .filter(Boolean);
 
-              const copy: any = {...final_tally_result};
-              delete copy.no_with_veto;
-              const votes: any = {};
-
-              Object.entries({...copy, veto}).map(([key, val]) => {
-                votes[key] = Math.round(Number(val));
-              });
-
-              return GovernanceVoting.createVoting({
-                status: GovernanceVoting.keyFromStatus(status.toLowerCase()),
-                endDate: voting_end_time,
-                startDate: voting_start_time,
-                depositNeeds: JSON.stringify(total_deposit),
-                depositEndTime: deposit_end_time,
-                createdAtTime: submit_time,
-                orderNumber: Number(proposal_id),
-                description: content.description,
-                title: content.title,
-                votes: JSON.stringify(votes),
-              });
-            },
-          )
-          .filter(Boolean);
-
-        cache
-          .filter(r => !hashes.includes(r))
-          .forEach(r => GovernanceVoting.remove(r));
-      } catch (e) {
-        captureException(e, 'Cosmos.syncGovernanceVoting.getProposals');
-      }
+      cache
+        .filter(r => !hashes.includes(r))
+        .forEach(r => GovernanceVoting.remove(r));
     } catch (e) {
       captureException(e, 'Cosmos.syncGovernanceVoting');
     }

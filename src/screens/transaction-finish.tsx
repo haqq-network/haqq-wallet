@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
-import {useTransactions, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
@@ -14,9 +14,8 @@ import {shortAddress} from '@app/utils';
 export const TransactionFinishScreen = () => {
   const {navigate, getParent} = useTypedNavigation();
   const {hash} = useTypedRoute<'transactionFinish'>().params;
-  const transactions = useTransactions();
   const [transaction, setTransaction] = useState<Transaction | null>(
-    transactions.getTransaction(hash),
+    Transaction.getById(hash),
   );
 
   const [contact, setContact] = useState(
@@ -47,7 +46,7 @@ export const TransactionFinishScreen = () => {
             : I18N.transactionFinishAddContact,
         ),
         getText(I18N.transactionFinishContactMessage, {
-          address: short,
+          address: transaction?.to,
         }),
         value => {
           if (contact) {
@@ -67,12 +66,12 @@ export const TransactionFinishScreen = () => {
         },
       );
     }
-  }, [transaction?.to, contact, short]);
+  }, [transaction?.to, contact]);
 
   useEffect(() => {
-    setTransaction(transactions.getTransaction(hash));
+    setTransaction(Transaction.getById(hash));
     vibrate(HapticEffects.success);
-  }, [hash, navigate, transactions]);
+  }, [hash, navigate]);
 
   useEffect(() => {
     const notificationsIsEnabled = false;

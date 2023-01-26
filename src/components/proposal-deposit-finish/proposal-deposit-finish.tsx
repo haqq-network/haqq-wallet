@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
-  ISLMIcon,
   Icon,
   IconButton,
   Inline,
@@ -17,8 +16,8 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme, openURL} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {cleanNumber} from '@app/utils';
 
 export type ProposalDepositFinishProps = {
   amount: number;
@@ -44,7 +43,7 @@ export const ProposalDepositFinish = ({
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
         <LottieWrap
-          source={require('../../../assets/animations/transaction-finish.json')}
+          source={require('@assets/animations/transaction-finish.json')}
           style={styles.image}
           autoPlay
           loop={false}
@@ -57,9 +56,12 @@ export const ProposalDepositFinish = ({
         style={styles.title}
         color={Color.textGreen1}
       />
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <Image
+        source={require('@assets/images/islm_icon.png')}
+        style={styles.icon}
+      />
       <Text t3 center style={styles.sum}>
-        {cleanNumber(amount.toFixed(2))} ISLM
+        {cleanNumber(amount)} ISLM
       </Text>
       <Text t13 center style={styles.address}>
         {title}
@@ -108,7 +110,12 @@ const styles = createTheme({
     marginTop: 32,
     marginBottom: 34,
   },
-  icon: {marginBottom: 16, alignSelf: 'center'},
+  icon: {
+    marginBottom: 16,
+    alignSelf: 'center',
+    width: 64,
+    height: 64,
+  },
   sum: {
     marginBottom: 8,
   },

@@ -38,3 +38,5 @@ export * from './sum-block';
 export * from './tag';
 export * from './progress-line';
 export * from './progress-circle';
+export * from './terms';
+export * from './mnemonic-table';

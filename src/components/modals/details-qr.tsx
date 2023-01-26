@@ -14,12 +14,11 @@ import {
   Card,
   Icon,
   InfoBlock,
-  InfoBlockType,
   Text,
 } from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
 import {useWallet} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -49,9 +48,9 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
   return (
     <BottomSheet
       onClose={onCloseBottomSheet}
-      title={getText(I18N.modalDetailsQRReceive)}>
+      i18nTitle={I18N.modalDetailsQRReceive}>
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         style={page.info}
         i18n={I18N.modalDetailsQRWarning}
         icon={<Icon name="warning" color={Color.textYellow1} />}
@@ -74,7 +73,7 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
         <View style={page.qrStyle}>
           <QRCode
             ecl={'H'}
-            logo={require('../../../assets/images/qr-logo.png')}
+            logo={require('@assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}

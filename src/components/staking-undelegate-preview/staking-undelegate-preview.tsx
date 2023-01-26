@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
+import {formatDistance} from 'date-fns';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -10,17 +11,17 @@ import {
   ErrorText,
   Icon,
   InfoBlock,
-  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {cleanNumber} from '@app/utils';
 
 export type StakingDelegatePreviewProps = {
+  unboundingTime: number;
   amount: number;
   fee: number;
   validator: ValidatorItem;
@@ -36,7 +37,13 @@ export const StakingUnDelegatePreview = ({
   error,
   disabled,
   onSend,
+  unboundingTime,
 }: StakingDelegatePreviewProps) => {
+  const time = useMemo(
+    () => formatDistance(new Date(unboundingTime), new Date(0)),
+    [unboundingTime],
+  );
+
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.icon}>
@@ -50,7 +57,7 @@ export const StakingUnDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber(amount.toFixed(15))} ISLM
+        {cleanNumber(amount)} ISLM
       </Text>
       <Text
         t11
@@ -74,8 +81,9 @@ export const StakingUnDelegatePreview = ({
       </View>
       <Spacer height={24} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegatePreviewAttention}
+        i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Spacer />

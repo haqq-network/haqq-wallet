@@ -2,13 +2,17 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
+import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
-import {useApp, useContacts, useTransactions, useWallets} from '@app/hooks';
+import {useApp, useWallets} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
+import {Transaction} from '@app/models/transaction';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
 import {BottomSheet} from './bottom-sheet';
-import {Button, ButtonVariant, Text} from './ui';
+import {Button, ButtonVariant, Spacer, Text} from './ui';
 
 const h = Dimensions.get('window').height;
 const closeDistance = h / 5;
@@ -19,8 +23,6 @@ type RestorePasswordProps = {
 
 export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const wallet = useWallets();
-  const transactions = useTransactions();
-  const contacts = useContacts();
   const app = useApp();
   const pan = useRef(new Animated.Value(1)).current;
 
@@ -47,28 +49,28 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const onClickReset = useCallback(() => {
     vibrate(HapticEffects.warning);
     Alert.alert(
-      'Attention. You may lose all your funds!',
-      'Do not reset the application if you are not sure that you can restore your account. To restore, you will need a backup phrase of 12 words that you made for your account',
+      getText(I18N.restorePasswordAttentionTitle),
+      getText(I18N.restorePasswordAttentionSubtitle),
       [
         {
-          text: 'Cancel',
+          text: getText(I18N.cancel),
           style: 'cancel',
         },
         {
           style: 'destructive',
-          text: 'Reset',
+          text: getText(I18N.restorePasswordReset),
           onPress: async () => {
             try {
               wallet.clean();
-              transactions.clean();
-              contacts.clean();
+              Transaction.removeAll();
+              Contact.removeAll();
               await app.clean();
               Animated.timing(pan, {
                 toValue: 1,
                 duration: 250,
                 useNativeDriver: true,
               }).start(() => {
-                app.emit('resetWallet');
+                app.emit(Events.onWalletReset);
               });
             } catch (e) {
               captureException(e);
@@ -77,22 +79,19 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         },
       ],
     );
-  }, [app, contacts, pan, transactions, wallet]);
+  }, [app, pan, wallet]);
 
   return (
     <BottomSheet
       onClose={onClosePopup}
-      title="Forgot the code?"
+      i18nTitle={I18N.restorePasswordForgot}
       closeDistance={closeDistance}>
-      <Text clean style={page.warning}>
-        Unfortunately, the password cannot be reset. Try to wait a bit and
-        remember the password. If it does not work, then click the ‘Reset wallet
-        button and use the backup phrase to restore the wallet. If there is no
-        backup phrase, then you will not be able to restore the wallet
-      </Text>
+      <Text t14 color={Color.textBase2} i18n={I18N.restorePasswordWarning} />
+      <Spacer height={24} />
       <Button
-        variant={ButtonVariant.error}
-        title="Reset wallet"
+        error
+        variant={ButtonVariant.second}
+        i18n={I18N.restorePasswordResetWallet}
         onPress={onClickReset}
         style={page.button}
       />
@@ -103,11 +102,5 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
 const page = StyleSheet.create({
   button: {
     marginBottom: 16,
-  },
-  warning: {
-    marginBottom: 24,
-    fontSize: 14,
-    lineHeight: 18,
-    color: LIGHT_TEXT_BASE_2,
   },
 });

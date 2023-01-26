@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   Checkbox,
-  Copy,
-  CopyButton,
   InfoBlock,
-  InfoBlockType,
+  MnemonicTable,
   PopupContainer,
   Spacer,
   Text,
@@ -19,8 +17,6 @@ import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-import {MnemonicWord} from './mnemonic-word';
 
 interface BackupCreateProps {
   onSubmit?: () => void;
@@ -46,33 +42,11 @@ export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
         i18n={I18N.backupCreateRecoverySaveWords}
       />
       <Spacer style={page.space}>
-        <View style={page.mnemonics}>
-          <View style={page.column}>
-            {mnemonic
-              .split(' ')
-              .slice(0, 6)
-              .map((t, i) => (
-                <MnemonicWord key={`${t}${i}`} word={t} index={i + 1} />
-              ))}
-          </View>
-          <View style={page.column}>
-            {mnemonic
-              .split(' ')
-              .slice(6, 12)
-              .map((t, i) => (
-                <MnemonicWord key={`${t}${i}`} word={t} index={i + 7} />
-              ))}
-          </View>
-        </View>
-        <CopyButton value={mnemonic ?? ''} style={page.copy}>
-          <Copy height={22} width={22} color={getColor(Color.textGreen1)} />
-          <Text t9 style={page.copyText} i18n={I18N.copy} />
-        </CopyButton>
+        <MnemonicTable mnemonic={mnemonic} />
       </Spacer>
       <InfoBlock
         i18n={I18N.backupCreateRecoveryWarningMessage}
-        t15
-        type={InfoBlockType.warning}
+        warning
         style={page.marginBottom}
       />
       <View style={page.agree}>
@@ -100,13 +74,6 @@ const page = createTheme({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  mnemonics: {
-    backgroundColor: Color.bg3,
-    flexDirection: 'row',
-    padding: 20,
-    borderRadius: 16,
-  },
-  column: {flex: 1},
   marginBottom: {marginBottom: 20},
   space: {justifyContent: 'center'},
   agree: {marginBottom: 4, flexDirection: 'row'},
@@ -117,16 +84,6 @@ const page = createTheme({
     marginBottom: 4,
   },
   submit: {marginVertical: 16},
-  copy: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    marginHorizontal: 4,
-    alignSelf: 'center',
-  },
-  copyText: {
-    color: Color.textGreen1,
-    marginHorizontal: 8,
-  },
   t4: {
     alignSelf: 'center',
     alignItems: 'center',

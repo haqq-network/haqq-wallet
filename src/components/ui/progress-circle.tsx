@@ -10,10 +10,11 @@ import Svg, {Circle} from 'react-native-svg';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {ColorType} from '@app/types';
 
 interface ProgressCircleProps {
   strokeWidth?: number;
-  color?: Color;
+  color?: ColorType;
   children?: React.ReactNode;
 }
 

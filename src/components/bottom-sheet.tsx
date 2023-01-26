@@ -14,6 +14,7 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -27,15 +28,12 @@ import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
-import {
-  ANIMATION_DURATION,
-  ANIMATION_TYPE,
-  WINDOW_WIDTH,
-} from '@app/variables/common';
+import {I18N} from '@app/i18n';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
-  title?: string;
+  i18nTitle: I18N;
   onClose?: () => void;
   closeDistance?: number;
   scrollable?: boolean;
@@ -48,7 +46,7 @@ type pointsT = [number, number];
 export const BottomSheet = ({
   children,
   onClose,
-  title,
+  i18nTitle,
   closeDistance,
 }: BottomSheetProps) => {
   const {height} = useWindowDimensions();
@@ -77,7 +75,7 @@ export const BottomSheet = ({
 
   const onHandlerEnd = ({velocityY}: PanGestureHandlerEventPayload) => {
     'worklet';
-    const dragToss = 0.05;
+    const dragToss = 0.25;
     const endOffsetY =
       bottomSheetTranslateY.value + translationY.value + velocityY * dragToss;
 
@@ -101,7 +99,7 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       destSnapPoint,
       {
-        duration: ANIMATION_DURATION,
+        duration: 500,
       },
       success => {
         if (destSnapPoint === closedSnapPoint && success) {
@@ -154,8 +152,8 @@ export const BottomSheet = ({
     bottomSheetTranslateY.value = withTiming(
       closedSnapPoint,
       {
-        duration: ANIMATION_DURATION,
-        easing: ANIMATION_TYPE,
+        duration: 400,
+        easing: Easing.bezierFn(0.16, 1, 0.3, 1),
       },
       () => onClose && runOnJS(onClose)(),
     );
@@ -164,8 +162,8 @@ export const BottomSheet = ({
   const onOpenPopup = useCallback(() => {
     toDark();
     bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-      duration: ANIMATION_DURATION,
-      easing: ANIMATION_TYPE,
+      duration: 400,
+      easing: Easing.bezierFn(0.16, 1, 0.3, 1),
     });
   }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
@@ -211,9 +209,7 @@ export const BottomSheet = ({
               <SwiperIcon color={getColor(Color.graphicSecond2)} />
             </View>
             <View style={page.header}>
-              <Text t6 color={Color.textBase1}>
-                {title}
-              </Text>
+              <Text t6 color={Color.textBase1} i18n={i18nTitle} />
               <Spacer />
               <IconButton onPress={onClosePopup}>
                 <Icon i24 name="close_circle" color={Color.graphicSecond2} />

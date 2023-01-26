@@ -5,6 +5,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {TransactionListSend} from '@app/types';
 import {shortAddress} from '@app/utils';
@@ -32,7 +33,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           short
         />
         <Text t11 color={Color.textRed1}>
-          {`- ${item.value.toFixed(2)} ISLM`}
+          {`- ${cleanNumber(item.value)} ISLM`}
         </Text>
       </View>
     </TouchableWithoutFeedback>

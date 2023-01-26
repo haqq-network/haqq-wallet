@@ -1,30 +1,45 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Modal} from 'react-native';
 
 import {
   ErrorAccountAdded,
   ErrorCreateAccount,
+  LedgerAttention,
+  LedgerLocked,
+  LedgerNoApp,
+  LedgerNoAppProps,
   LoadingModal,
   LoadingModalProps,
   NoInternet,
   PinModal,
   PinModalProps,
-  ProposalVote,
-  ProposalVoteProps,
   SplashModal,
   SplashModalProps,
 } from '@app/components/modals';
+import {
+  BluetoothPoweredOff,
+  BluetoothPoweredOffProps,
+} from '@app/components/modals/bluetooth-powered-off';
+import {
+  BluetoothUnauthorized,
+  BluetoothUnauthorizedProps,
+} from '@app/components/modals/bluetooth-unauthorized';
 import {
   DetailsQrModal,
   DetailsQrModalProps,
 } from '@app/components/modals/details-qr';
 import {QRModal, QRModalProps} from '@app/components/modals/qr';
 import {
+  TransactionError,
+  TransactionErrorProps,
+} from '@app/components/modals/transaction-error';
+import {
   WalletsBottomSheet,
   WalletsBottomSheetProps,
 } from '@app/components/modals/wallets-bottom-sheet';
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 
 type Loading = {
   type: 'loading';
@@ -54,9 +69,21 @@ type DetailsQr = {
   type: 'card-details-qr';
 } & DetailsQrModalProps;
 
-type ProposalVoteParams = {
-  type: 'proposal-vote';
-} & ProposalVoteProps;
+type LedgerNoAppModal = {
+  type: 'ledger-no-app';
+} & LedgerNoAppProps;
+
+type TransactionErrorModal = {
+  type: 'transaction-error';
+} & TransactionErrorProps;
+
+type BluetoothPoweredOffModal = {
+  type: 'bluetooth-powered-off';
+} & BluetoothPoweredOffProps;
+
+type BluetoothUnauthorizedModal = {
+  type: 'bluetooth-unauthorized';
+} & BluetoothUnauthorizedProps;
 
 type ModalState =
   | Loading
@@ -66,7 +93,10 @@ type ModalState =
   | NoInternet
   | WalletsBottomSheetParams
   | DetailsQr
-  | ProposalVoteParams
+  | LedgerNoAppModal
+  | TransactionErrorModal
+  | BluetoothPoweredOffModal
+  | BluetoothUnauthorizedModal
   | null;
 
 export type ModalProps = {
@@ -78,8 +108,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
 
   useEffect(() => {
     const showModal = (event: ModalState) => {
-      setModal(event);
-      console.log('modal', JSON.stringify(event));
+      if (event && modal?.type !== event.type) {
+        setModal(event);
+        console.log('modal', JSON.stringify(event));
+      }
     };
 
     const hideModal = (event: {type: string | null}) => {
@@ -100,12 +132,17 @@ export const Modals = ({initialModal = null}: ModalProps) => {
       app.off('showModal', showModal);
       app.off('hideModal', hideModal);
     };
+  }, [modal]);
+
+  const onClose = useCallback(() => {
+    setModal(null);
   }, []);
 
-  const onClose = () => {
-    setModal(null);
-    app.emit('onCloseQr');
-  };
+  useEffect(() => {
+    return () => {
+      app.emit(Events.onCloseModal, modal?.type);
+    };
+  }, [modal?.type]);
 
   const entry = useMemo(() => {
     if (!modal) {
@@ -128,18 +165,28 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <WalletsBottomSheet {...props} />;
       case 'card-details-qr':
         return <DetailsQrModal address={modal.address} />;
-      case 'proposal-vote':
-        return <ProposalVote eventSuffix={modal.eventSuffix} />;
       case 'no-internet':
         return <NoInternet />;
       case 'error-account-added':
         return <ErrorAccountAdded />;
       case 'error-create-account':
         return <ErrorCreateAccount />;
+      case 'ledger-attention':
+        return <LedgerAttention onClose={onClose} />;
+      case 'ledger-locked':
+        return <LedgerLocked onClose={onClose} />;
+      case 'ledger-no-app':
+        return <LedgerNoApp onRetry={modal.onRetry} />;
+      case 'transaction-error':
+        return <TransactionError message={modal.message} />;
+      case 'bluetooth-powered-off':
+        return <BluetoothPoweredOff onClose={modal.onClose} />;
+      case 'bluetooth-unauthorized':
+        return <BluetoothUnauthorized onClose={modal.onClose} />;
       default:
         return null;
     }
-  }, [modal]);
+  }, [modal, onClose]);
 
   return (
     <Modal animationType="none" visible={!!modal} transparent={true}>

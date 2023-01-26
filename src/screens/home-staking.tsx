@@ -3,12 +3,21 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {awaitForPopupClosed} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
+import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {WalletType} from '@app/types';
+import {MIN_AMOUNT} from '@app/variables/common';
 
 const initData = {
   stakingSum: 0,
@@ -22,7 +31,10 @@ export const HomeStakingScreen = () => {
 
   const [data, setData] = useState({
     ...initData,
-    availableSum: visible.reduce((acc, w) => acc + w.balance, 0),
+    availableSum: visible.reduce(
+      (acc, w) => acc + app.getBalance(w.address),
+      0,
+    ),
   });
   const navigation = useTypedNavigation();
   const cosmos = useCosmos();
@@ -48,7 +60,11 @@ export const HomeStakingScreen = () => {
       const rewardsSum = sumReduce(rewards);
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
-      const availableSum = visible.reduce((acc, w) => acc + w.balance, 0);
+      const availableSum = visible.reduce(
+        (acc, w) => acc + app.getBalance(w.address),
+        0,
+      );
+
       setData({
         rewardsSum,
         stakingSum,
@@ -72,25 +88,93 @@ export const HomeStakingScreen = () => {
     const delegators: any = {};
 
     for (const row of rewards) {
-      delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
-        row.validator,
-      );
+      if (row.amount > MIN_AMOUNT) {
+        delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
+          row.validator,
+        );
+      }
     }
-    await Promise.all(
-      visible
-        .filter(w => w.cosmosAddress in delegators)
-        .map(w => {
-          return cosmos.multipleWithdrawDelegatorReward(
-            w.transport,
-            delegators[w.cosmosAddress],
-          );
-        }),
+
+    const exists = visible.filter(
+      w => w.isValid() && w.cosmosAddress in delegators,
     );
+
+    const queue = exists
+      .filter(w => w.type !== WalletType.ledgerBt)
+      .map(w => {
+        return cosmos
+          .multipleWithdrawDelegatorReward(
+            getProviderInstanceForWallet(w),
+            delegators[w.cosmosAddress],
+          )
+          .then(() => [w.cosmosAddress, delegators[w.cosmosAddress]]);
+      });
+
+    const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
+
+    while (ledger.length) {
+      const current = ledger.shift();
+
+      if (current && current.isValid()) {
+        const transport = getProviderInstanceForWallet(current);
+
+        queue.push(
+          cosmos
+            .multipleWithdrawDelegatorReward(
+              transport,
+              delegators[current.cosmosAddress],
+            )
+            .then(() => [
+              current.cosmosAddress,
+              delegators[current.cosmosAddress],
+            ]),
+        );
+        try {
+          await awaitForBluetooth();
+          await awaitForLedger(transport);
+        } catch (e) {
+          if (e === '27010') {
+            await awaitForPopupClosed('ledger-locked');
+          }
+          transport.abort();
+        }
+      }
+    }
+
+    const responses = await Promise.all(
+      queue.map(p =>
+        p
+          .then(value => ({
+            status: 'fulfilled',
+            value,
+          }))
+          .catch(reason => ({
+            status: 'rejected',
+            reason,
+            value: null,
+          })),
+      ),
+    );
+
+    for (const resp of responses) {
+      if (resp.status === 'fulfilled' && resp.value) {
+        for (const reward of rewards) {
+          if (
+            reward &&
+            reward.delegator === resp.value[0] &&
+            reward.validator === resp.value[1]
+          ) {
+            StakingMetadata.remove(reward.hash);
+          }
+        }
+      }
+    }
+
     rewards.forEach(r => StakingMetadata.remove(r.hash));
   }, [cosmos, visible]);
 
   useEffect(() => {
-    const sync = async () => {
+    const sync = () => {
       app.emit(Events.onStakingSync);
     };
 
@@ -101,6 +185,12 @@ export const HomeStakingScreen = () => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      visible.map(w => abortProviderInstanceForWallet(w));
+    };
+  }, [visible]);
 
   return (
     <HomeStaking

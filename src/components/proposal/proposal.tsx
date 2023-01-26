@@ -1,53 +1,48 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo} from 'react';
 
 import {format} from 'date-fns';
-import {ScrollView, View, useWindowDimensions} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {
-  Badge,
-  // Button,
-  // ButtonVariant,
-  Icon,
-  InfoBlock,
-  InfoBlockType,
-  Spacer,
-  Text,
-} from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
-import {useApp, useCosmos, useWalletsList} from '@app/hooks';
+import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  GovernanceVoting,
-  ProposalRealmType,
-} from '@app/models/governance-voting';
-import {Wallet} from '@app/models/wallet';
+import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
 import {ProposalsTags} from '@app/variables/proposal';
-import {VOTES} from '@app/variables/votes';
 
+import {ProposalVote} from './proposal-vote';
 import {
   VotingCardDetail,
   VotingCardDetailRefInterface,
 } from './voting-card-detail';
 
 interface ProposalProps {
-  item: ProposalRealmType;
+  item?: ProposalRealmType;
   onDepositSubmit?: (address: string) => Promise<void>;
+  collectedDeposit: number;
+  vote?: VoteNamesType;
+  cardRef: React.RefObject<VotingCardDetailRefInterface | undefined>;
+  modalIsLoading: boolean;
+  modalIsVisible: boolean;
+  onTouchContent: () => void;
+  modalOnVote: (vote: VoteNamesType) => void;
+  modalOnChangeVote: (vote: VoteNamesType) => void;
 }
 
-export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
+export function Proposal({
+  item,
+  collectedDeposit /*, onDepositSubmit*/,
+  vote,
+  cardRef,
+  modalIsLoading,
+  onTouchContent,
+  modalOnVote,
+  modalOnChangeVote,
+  modalIsVisible,
+}: ProposalProps) {
   const {bottom} = useSafeAreaInsets();
-  const cardRef = useRef<VotingCardDetailRefInterface>();
-  const voteSelectedRef = useRef<VoteNamesType>();
-  const [vote, setVote] = useState<VoteNamesType>();
-  const [collectedDeposit, setCollectedDeposit] = useState(0);
-
-  const cosmos = useCosmos();
-  const app = useApp();
-  const {visible} = useWalletsList();
-  const closeDistance = useWindowDimensions().height / 6;
 
   // const onDeposit = () => {
   //   showModal('wallets-bottom-sheet', {
@@ -62,188 +57,139 @@ export function Proposal({item /*, onDepositSubmit*/}: ProposalProps) {
   // };
 
   useEffect(() => {
-    const onVotedSubmit = async (address: string) => {
-      const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
-      const wallet = Wallet.getById(address);
-      if (!(wallet && item)) {
-        return;
-      }
-      await cosmos.vote(wallet.transport, item.orderNumber, opinion);
-    };
-    app.addListener('wallet-selected-proposal', onVotedSubmit);
-    return () => {
-      app.removeListener('wallet-selected-proposal', onVotedSubmit);
-    };
-  }, [app, item, cosmos]);
-
-  useEffect(() => {
     item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
     cardRef.current?.updateDepositProgress(
       collectedDeposit / (item?.proposalDepositNeeds ?? 0),
     );
-  }, [collectedDeposit, item]);
+  }, [cardRef, collectedDeposit, item]);
 
-  useEffect(() => {
-    if (item?.status === 'voting') {
-      showModal('proposal-vote', {eventSuffix: '-proposal'});
-
-      const onVote = (decision: VoteNamesType) => {
-        voteSelectedRef.current = decision;
-        cardRef.current?.setSelected(decision);
-        showModal('wallets-bottom-sheet', {
-          wallets: visible,
-          closeDistance,
-          title: I18N.proposalAccountTitle,
-          eventSuffix: '-proposal',
-        });
-      };
-
-      const onVoteChange = (decision: VoteNamesType) => {
-        cardRef.current?.setSelected(decision);
-        setVote(decision);
-      };
-
-      app.on('proposal-vote-proposal', onVote);
-      app.on('proposal-vote-change-proposal', onVoteChange);
-      return () => {
-        app.off('proposal-vote-proposal', onVote);
-        app.off('proposal-vote-change-proposal', onVoteChange);
-      };
-    }
-  }, [app, item, closeDistance, visible]);
-
-  useEffect(() => {
-    cosmos.getProposalDeposits(item.orderNumber).then(voter => {
-      const sum = GovernanceVoting.depositSum(voter);
-      setCollectedDeposit(sum);
-    });
-    // if (item?.orderNumber) {
-    //   (async () => {
-    //     const details = await cosmos.getProposalDetails(id);
-    //     // setDetails({
-
-    //     // })
-    //     console.log('🚀 - details', JSON.stringify(response.proposal));
-    //   })();
-    // }
-  }, [item.orderNumber, cosmos]);
+  const badgeStatus = useMemo(
+    () => ProposalsTags.find(tag => tag[0] === item?.status),
+    [item?.status],
+  );
 
   if (!item) {
     return <></>;
   }
 
-  const {status, orderNumber, title, description, isDeposited} = item;
-
-  const badgePropsByStatus = () => {
-    const props = ProposalsTags.find(tag => tag[0] === status);
-    return {
-      i18n: props?.[1],
-      labelColor: props?.[2],
-      textColor: props?.[3],
-      iconLeftName: props?.[4],
-    };
-  };
+  const {orderNumber, title, description, isDeposited} = item;
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        <Spacer height={24} />
-        <Badge center {...badgePropsByStatus()} />
-        <Spacer height={16} />
-        <Text center color={Color.textBase1} t14>
-          #{orderNumber}
-        </Text>
-        <Spacer height={2} />
-        <Text center t5>
-          {title}
-        </Text>
-        <Spacer height={24} />
-        <VotingCardDetail
-          totalCollected={collectedDeposit}
-          yourVote={vote}
-          ref={cardRef}
-          item={item}
-        />
-        {isDeposited && (
-          <InfoBlock
-            style={styles.infoBlockMargin}
-            type={InfoBlockType.warning}
-            t14
-            icon={<Icon name="warning" color={Color.textYellow1} />}
-            i18n={I18N.proposalDepositAttention}
-          />
-        )}
-        <Spacer height={24} />
-        <Text t9 i18n={I18N.proposalInfo} />
-
-        <View style={styles.row}>
-          <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
-            <Spacer height={4} />
-            <Text t14>PASS</Text>
-          </View>
-          <Spacer width={16} />
-          <View style={styles.block}>
-            <Text
-              t14
-              color={Color.textBase2}
-              i18n={I18N.proposalTotalDeposit}
+        <Pressable onPress={onTouchContent}>
+          <Spacer height={24} />
+          {badgeStatus && (
+            <Badge
+              center
+              i18n={badgeStatus[1]}
+              labelColor={badgeStatus[2]}
+              textColor={badgeStatus[3]}
+              iconLeftName={badgeStatus[4]}
             />
-            <Spacer height={4} />
-            <Text t14>PASS</Text>
+          )}
+          <Spacer height={16} />
+          <Text center color={Color.textBase2} t14>
+            #{orderNumber}
+          </Text>
+          <Spacer height={2} />
+          <Text center t5>
+            {title}
+          </Text>
+          <Spacer height={24} />
+          <VotingCardDetail
+            totalCollected={collectedDeposit}
+            yourVote={vote}
+            ref={cardRef}
+            item={item}
+          />
+          {isDeposited && (
+            <InfoBlock
+              style={styles.infoBlockMargin}
+              warning
+              icon={<Icon name="warning" color={Color.textYellow1} />}
+              i18n={I18N.proposalDepositAttention}
+            />
+          )}
+          <Spacer height={24} />
+          <Text t9 i18n={I18N.proposalInfo} />
+          <View style={styles.row}>
+            <View style={styles.block}>
+              <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
+              <Spacer height={4} />
+              <Text t14>PASS</Text>
+            </View>
+            <Spacer width={16} />
+            <View style={styles.block}>
+              <Text
+                t14
+                color={Color.textBase2}
+                i18n={I18N.proposalTotalDeposit}
+              />
+              <Spacer height={4} />
+              <Text t14>PASS</Text>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.block}>
-          <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
-          <Spacer height={4} />
-          <Text t14>{description}</Text>
-        </View>
-
-        <Spacer height={24} />
-        <Text t9 i18n={I18N.proposalChanges} />
-        <Spacer height={12} />
-        <View style={styles.codeBlock}>
-          <Text t14 color={Color.textBase1}>
-            {`[
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
+            <Spacer height={4} />
+            <Text t14>{description}</Text>
+          </View>
+          <Spacer height={24} />
+          <Text t9 i18n={I18N.proposalChanges} />
+          <Spacer height={12} />
+          <View style={styles.codeBlock}>
+            <Text t14 color={Color.textBase1}>
+              {`[
   PASS
 ]`}
-          </Text>
-        </View>
-
-        <Spacer height={24} />
-        <Text t9 i18n={I18N.proposalDate} />
-        <View style={styles.row}>
-          <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
-            <Spacer height={4} />
-            <Text t14>
-              {item.createdAt && format(item.createdAt, 'dd MMM yyyy, H:mm')}
-            </Text>
-            <Spacer height={8} />
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
-            <Spacer height={4} />
-            <Text t14>
-              {item.dateStart && format(item.dateStart, 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
-          <Spacer width={16} />
-          <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalDepositEnd} />
-            <Spacer height={4} />
-            <Text t14>
-              {item.depositEnd && format(item.depositEnd, 'dd MMM yyyy, H:mm')}
-            </Text>
-            <Spacer height={8} />
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
-            <Spacer height={4} />
-            <Text t14>
-              {item.dateEnd && format(item.dateEnd, 'dd MMM yyyy, H:mm')}
-            </Text>
+          <Spacer height={24} />
+          <Text t9 i18n={I18N.proposalDate} />
+          <View style={styles.row}>
+            <View style={styles.block}>
+              <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
+              <Spacer height={4} />
+              <Text t14>
+                {item.createdAt && format(item.createdAt, 'dd MMM yyyy, H:mm')}
+              </Text>
+              <Spacer height={8} />
+              <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
+              <Spacer height={4} />
+              <Text t14>
+                {item.dateStart && format(item.dateStart, 'dd MMM yyyy, H:mm')}
+              </Text>
+            </View>
+            <Spacer width={16} />
+            <View style={styles.block}>
+              <Text
+                t14
+                color={Color.textBase2}
+                i18n={I18N.proposalDepositEnd}
+              />
+              <Spacer height={4} />
+              <Text t14>
+                {item.depositEnd &&
+                  format(item.depositEnd, 'dd MMM yyyy, H:mm')}
+              </Text>
+              <Spacer height={8} />
+              <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
+              <Spacer height={4} />
+              <Text t14>
+                {item.dateEnd && format(item.dateEnd, 'dd MMM yyyy, H:mm')}
+              </Text>
+            </View>
           </View>
-        </View>
-        <Spacer height={(isDeposited ? 0 : bottom) + 28} />
+          <Spacer height={(isDeposited ? 0 : bottom) + 28} />
+        </Pressable>
       </ScrollView>
+      <ProposalVote
+        isLoading={modalIsLoading}
+        modalIsVisible={modalIsVisible}
+        onChangeVote={modalOnChangeVote}
+        onVote={modalOnVote}
+      />
       {/* {isDeposited && (
         <View style={styles.depositButtonContainer}>
           <Button

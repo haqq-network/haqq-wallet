@@ -13,7 +13,7 @@ import {
   KeyboardSafeArea,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 
 interface SettingsAddressBookEditProps {
   initName?: string;
@@ -55,6 +55,7 @@ export const SettingsAddressBookEdit = memo(
         <Input
           onChangeText={onChange}
           i18nLabel={I18N.name}
+          placeholder={getText(I18N.settingsContactEditNamePlaceholder)}
           editable={isEdit}
           value={inputName}
           rightAction={
@@ -86,7 +87,8 @@ export const SettingsAddressBookEdit = memo(
           <View style={styles.buttonContainerRemove}>
             {isEdit && !isCreate && (
               <Button
-                variant={ButtonVariant.error}
+                error
+                variant={ButtonVariant.second}
                 size={ButtonSize.middle}
                 onPress={handleRemove}
                 i18n={I18N.settingsContactEditDeleteContact}

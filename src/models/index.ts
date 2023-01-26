@@ -6,14 +6,18 @@ import {Provider} from './provider';
 import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
-import {WalletRealm} from './wallet';
+import {Wallet} from './wallet';
 
 import {AppTheme, WalletType} from '../types';
-import {CARD_DEFAULT_STYLE, TEST_NETWORK} from '../variables/common';
+import {
+  CARD_DEFAULT_STYLE,
+  ETH_HD_PATH,
+  TEST_NETWORK,
+} from '../variables/common';
 
 export const realm = new Realm({
   schema: [
-    WalletRealm,
+    Wallet,
     UserSchema,
     Transaction,
     Contact,
@@ -21,7 +25,7 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
   ],
-  schemaVersion: 34,
+  schemaVersion: 36,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -128,7 +132,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 27) {
-      const providersList = require('../../assets/migrations/providers.json');
+      const providersList = require('@assets/migrations/providers.json');
 
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
       const newObjects = newRealm.objects<{
@@ -199,6 +203,45 @@ export const realm = new Realm({
         const newObject = newObjects[objectIndex];
         newObject.cardStyle =
           oldObjects[objectIndex].cardStyle === 'flat' ? 'flat' : 'gradient';
+      }
+    }
+
+    if (oldRealm.schemaVersion < 35) {
+      const oldObjects = oldRealm.objects<{
+        path: string;
+      }>('Wallet');
+      const newObjects = newRealm.objects<{
+        path: string;
+        type: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (newObject.type === WalletType.ledgerBt) {
+          newObject.path = ETH_HD_PATH;
+        }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 36) {
+      const oldObjects = oldRealm.objects<{
+        mnemonicSaved: boolean;
+      }>('Wallet');
+      const newObjects = newRealm.objects<{
+        mnemonicSaved: boolean;
+        type: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (
+          newObject.type === WalletType.ledgerBt ||
+          newObject.type === WalletType.hot
+        ) {
+          newObject.mnemonicSaved = true;
+        }
       }
     }
   },

@@ -1,28 +1,28 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {formatDistance} from 'date-fns';
+import {Image, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   DataView,
-  ISLMIcon,
   Icon,
   InfoBlock,
-  InfoBlockType,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
 import {ValidatorItem} from '@app/types';
-import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
+  unboundingTime: number;
   amount: number;
   fee: number;
   validator: ValidatorItem;
@@ -37,6 +37,7 @@ export const StakingDelegatePreview = ({
   validator,
   error,
   disabled,
+  unboundingTime,
   onSend,
 }: StakingDelegatePreviewProps) => {
   const feeValue = fee / WEI;
@@ -44,9 +45,17 @@ export const StakingDelegatePreview = ({
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
 
+  const time = useMemo(
+    () => formatDistance(new Date(unboundingTime), new Date(0)),
+    [unboundingTime],
+  );
+
   return (
     <PopupContainer style={styles.container}>
-      <ISLMIcon color={getColor(Color.graphicGreen1)} style={styles.icon} />
+      <Image
+        source={require('@assets/images/islm_icon.png')}
+        style={styles.icon}
+      />
       <Text
         t11
         center
@@ -55,7 +64,7 @@ export const StakingDelegatePreview = ({
         style={styles.subtitle}
       />
       <Text t3 center style={styles.sum}>
-        {cleanNumber(amount.toFixed(4))} ISLM
+        {cleanNumber(amount)} ISLM
       </Text>
       <Text
         t11
@@ -87,8 +96,9 @@ export const StakingDelegatePreview = ({
       <Spacer />
       <Spacer height={24} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegatePreviewAttention}
+        i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Button
@@ -117,9 +127,11 @@ const styles = createTheme({
   icon: {
     marginBottom: 16,
     alignSelf: 'center',
+    width: 64,
+    height: 64,
   },
   info: {
-    top: 40,
+    marginTop: 40,
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },

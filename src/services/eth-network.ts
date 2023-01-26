@@ -1,39 +1,32 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {Deferrable} from '@ethersproject/properties';
-import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
-import {ledgerService} from '@ledgerhq/hw-app-eth';
+import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
-import {app} from '@app/contexts';
-import {calcFeeWei, runUntil} from '@app/helpers';
-
-import {Provider} from '../models/provider';
-import {Wallet} from '../models/wallet';
-import {getDefaultChainId, getDefaultNetwork} from '../network';
-import {WalletType} from '../types';
-import {ETH_HD_PATH, WEI} from '../variables/common';
+import {calcFeeWei} from '@app/helpers';
+import {Provider} from '@app/models/provider';
+import {getDefaultChainId, getDefaultNetwork} from '@app/network';
+import {WEI} from '@app/variables/common';
 
 export class EthNetwork {
   static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
-  private wallet: Wallet;
   public stop = false;
 
-  constructor(wallet: Wallet) {
-    this.wallet = wallet;
-  }
-
-  async sendTransaction(to: string, amount: string | number) {
+  async sendTransaction(
+    transport: ProviderInterface,
+    to: string,
+    amount: string | number,
+  ) {
     const transaction = await EthNetwork.populateTransaction(
-      this.wallet.address,
+      transport.getEthAddress(),
       to,
       String(amount),
     );
 
-    const signedTx = await this.getSignedTx(transaction);
+    const signedTx = await transport.getSignedTx(transaction);
 
     if (!signedTx) {
       throw new Error('signedTx not found');
@@ -42,65 +35,6 @@ export class EthNetwork {
     const response = await EthNetwork.network.sendTransaction(signedTx);
 
     return response;
-  }
-
-  getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
-    switch (this.wallet.type) {
-      case WalletType.hot:
-      case WalletType.mnemonic:
-        return this.getSignedTxForHot(transaction as TransactionRequest);
-      case WalletType.ledgerBt:
-        return this.getSignedTxForLedger(transaction as UnsignedTransaction);
-      default:
-        throw new Error('wallet_type_not_found');
-    }
-  }
-
-  async getSignedTxForHot(transaction: TransactionRequest) {
-    const password = await app.getPassword();
-    const privateKey = await this.wallet.getPrivateKey(password);
-
-    if (!privateKey) {
-      throw new Error('private key not found');
-    }
-    const wallet = new EthersWallet(privateKey, EthNetwork.network);
-
-    return wallet.signTransaction(transaction);
-  }
-
-  async getSignedTxForLedger(transaction: UnsignedTransaction) {
-    const unsignedTx = utils.serializeTransaction(transaction).substring(2);
-    const resolution = await ledgerService.resolveTransaction(
-      unsignedTx,
-      {},
-      {},
-    );
-
-    let signature = null;
-
-    const iter = runUntil(this.wallet.deviceId!, eth =>
-      eth.signTransaction(ETH_HD_PATH, unsignedTx, resolution),
-    );
-
-    let done = false;
-    do {
-      const resp = await iter.next();
-      signature = resp.value;
-      done = resp.done;
-    } while (!done && !this.stop);
-
-    await iter.abort();
-
-    if (!signature) {
-      throw new Error('can_not_connected');
-    }
-
-    return utils.serializeTransaction(transaction, {
-      ...signature,
-      r: '0x' + signature.r,
-      s: '0x' + signature.s,
-      v: parseInt(signature.v, 10),
-    });
   }
 
   static async populateTransaction(from: string, to: string, amount: string) {

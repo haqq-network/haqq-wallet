@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useRef} from 'react';
 
 import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 
@@ -8,27 +8,32 @@ import {Icon, Text} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
-import {useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 
-export const Wallets = () => {
-  const wallets = useWallets();
-  const [visibleRows, setVisibleRows] = useState(wallets.visible);
+export type WalletsProps = {
+  wallets: Wallet[];
+  balance: Record<string, number>;
+  onPressSend: (address: string) => void;
+  onPressQR: (address: string) => void;
+  onPressBackup: (address: string) => void;
+  onPressCreate: () => void;
+  onPressLedger: () => void;
+  onPressRestore: () => void;
+};
+export const Wallets = ({
+  balance,
+  wallets,
+  onPressSend,
+  onPressQR,
+  onPressCreate,
+  onPressLedger,
+  onPressBackup,
+  onPressRestore,
+}: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
   const pan = useRef(new Animated.Value(0)).current;
-
-  const updateWallets = useCallback(() => {
-    setVisibleRows(wallets.visible);
-  }, [wallets]);
-
-  useEffect(() => {
-    wallets.on('wallets', updateWallets);
-
-    return () => {
-      wallets.off('wallets', updateWallets);
-    };
-  }, [updateWallets, wallets]);
 
   return (
     <View style={styles.container}>
@@ -43,17 +48,27 @@ export const Wallets = () => {
         }}
         style={styles.scroll}
         contentContainerStyle={styles.scrollInner}>
-        {visibleRows.map((w, i) => (
+        {wallets.map((w, i) => (
           <CarouselItem index={i} pan={pan} key={w.address}>
-            <WalletCard address={w.address} />
+            <WalletCard
+              wallet={w}
+              balance={balance[w.address] ?? 0}
+              onPressSend={onPressSend}
+              onPressQR={onPressQR}
+              onPressBackup={onPressBackup}
+            />
           </CarouselItem>
         ))}
-        <CarouselItem index={visibleRows.length} pan={pan}>
-          <WalletCreate />
+        <CarouselItem index={wallets.length} pan={pan}>
+          <WalletCreate
+            onPressCreate={onPressCreate}
+            onPressLedger={onPressLedger}
+            onPressRestore={onPressRestore}
+          />
         </CarouselItem>
       </ScrollView>
       <View style={styles.sub}>
-        {visibleRows.map((w, i) => (
+        {wallets.map((w, i) => (
           <Animated.View
             key={w.address}
             style={[
@@ -73,7 +88,7 @@ export const Wallets = () => {
             styles.animateView,
             {
               opacity: pan.interpolate({
-                inputRange: [wallets.getSize() - 1, wallets.getSize()],
+                inputRange: [wallets.length - 1, wallets.length],
                 outputRange: [0.5, 1],
                 extrapolate: 'clamp',
               }),

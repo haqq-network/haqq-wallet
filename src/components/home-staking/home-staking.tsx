@@ -2,10 +2,10 @@ import React, {useRef, useState} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
-import {Button, ButtonVariant, Loading} from '@app/components/ui';
+import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {IS_IOS} from '@app/variables/common';
+import {NUM_PRECISION} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';
@@ -32,7 +32,7 @@ export const HomeStaking = ({
   const [isAnimation, setIsAnimation] = useState(false);
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
-  const canGetRewards = rewardsSum > 0;
+  const canGetRewards = rewardsSum >= 1 / NUM_PRECISION;
 
   const handleGetRewards = () => {
     stakingActiveRef.current?.getReward();
@@ -41,7 +41,7 @@ export const HomeStaking = ({
     onPressGetRewards?.();
   };
 
-  const hasStaking = stakingSum > 0;
+  const hasStaking = stakingSum >= 1 / NUM_PRECISION;
 
   if (loading) {
     return <Loading />;
@@ -50,10 +50,7 @@ export const HomeStaking = ({
   return (
     <ScrollView
       bounces={false}
-      contentContainerStyle={[
-        styles.content,
-        !hasStaking && styles.contentEmpty,
-      ]}
+      contentContainerStyle={styles.content}
       style={styles.container}>
       {hasStaking ? (
         <StakingActive
@@ -82,6 +79,7 @@ export const HomeStaking = ({
           onPress={onPressValidators}
           style={styles.margin}
         />
+        <Spacer height={12} />
       </View>
     </ScrollView>
   );
@@ -93,13 +91,10 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   margin: {
-    marginBottom: 20,
+    marginVertical: 8,
   },
   content: {
-    height: IS_IOS ? '100%' : 'auto',
+    flexGrow: 1,
     justifyContent: 'space-between',
-  },
-  contentEmpty: {
-    height: '100%',
   },
 });

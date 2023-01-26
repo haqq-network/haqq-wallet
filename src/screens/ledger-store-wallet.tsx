@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 
+import {compressPublicKey} from '@haqq/provider-base';
 import {View} from 'react-native';
 
-import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
@@ -13,7 +14,7 @@ export const LedgerStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.LedgerStoreWalletSaving);
+    showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -23,10 +24,11 @@ export const LedgerStoreWalletScreen = () => {
       actions.push(
         wallets.addWalletFromLedger(
           {
+            path: route.params.hdPath,
             address: route.params.address,
             deviceId: route?.params?.deviceId,
             deviceName: route?.params?.deviceName,
-            publicKey: '',
+            publicKey: compressPublicKey(route.params.publicKey),
           },
           route?.params?.deviceName,
         ),

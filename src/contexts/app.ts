@@ -13,11 +13,12 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {Events} from '@app/events';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {captureException} from '../helpers';
+import {captureException, hideModal, showModal} from '../helpers';
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {User, UserType} from '../models/user';
@@ -58,6 +59,8 @@ class App extends EventEmitter {
   private _lastTheme: AppTheme = AppTheme.light;
   private _provider: Provider | null;
 
+  private _balance: Map<string, number> = new Map();
+
   constructor() {
     super();
 
@@ -88,8 +91,14 @@ class App extends EventEmitter {
       if (p) {
         this._provider = p;
         EthNetwork.init(p);
+        app.emit(Events.onProviderChanged);
       }
     });
+
+    this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
+    this.checkBalance = this.checkBalance.bind(this);
+    this.checkBalance();
+    setInterval(this.checkBalance, 6000);
   }
 
   async init(): Promise<void> {
@@ -100,6 +109,10 @@ class App extends EventEmitter {
       return Promise.reject('user_not_found');
     }
     await this.auth();
+
+    await new Promise(resolve => {
+      this.emit(Events.onWalletsBalanceCheck, resolve);
+    });
 
     this.authenticated = true;
 
@@ -215,6 +228,7 @@ class App extends EventEmitter {
   }
 
   async auth() {
+    showModal('pin');
     if (this.biometry) {
       try {
         await this.biometryAuth();
@@ -229,6 +243,8 @@ class App extends EventEmitter {
       await this.pinAuth();
       this.authenticated = true;
     }
+
+    showModal('splash');
   }
 
   biometryAuth() {
@@ -237,13 +253,11 @@ class App extends EventEmitter {
 
   pinAuth() {
     return new Promise<void>(async (resolve, _reject) => {
-      this.emit('modal', {type: 'pin'});
       const password = await this.getPassword();
 
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
-          this.emit('modal', {type: 'splash'});
           resolve();
         } else {
           this.emit('errorPin', 'not match');
@@ -298,13 +312,16 @@ class App extends EventEmitter {
     if (this.appStatus !== appStatus) {
       switch (appStatus) {
         case AppStatus.active:
-          if (this.user?.isOutdatedLastActivity()) {
+          if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             await this.auth();
+            hideModal('splash');
           }
           break;
         case AppStatus.inactive:
-          this.user?.touchLastActivity();
+          if (this.authenticated) {
+            this.user?.touchLastActivity();
+          }
           break;
       }
 
@@ -314,6 +331,28 @@ class App extends EventEmitter {
 
   setSnoozeBackup() {
     return this.user?.setSnoozeBackup();
+  }
+
+  checkBalance() {
+    this.emit(Events.onWalletsBalanceCheck);
+  }
+
+  onWalletsBalance(balance: Record<string, number>) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      if (this._balance.get(entry[0]) !== entry[1]) {
+        this._balance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit('balance');
+    }
+  }
+
+  getBalance(address: string) {
+    return this._balance.get(address) ?? 0;
   }
 }
 

@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 
 interface StakingEmptyProps {
@@ -24,7 +25,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
         <Spacer height={20} />
         <Text t8 center i18n={I18N.sumBlockAvailable} />
         <Text t3 center color={Color.textGreen1}>
-          {availableSum.toFixed(2)} ISLM
+          {cleanNumber(availableSum)} ISLM
         </Text>
       </View>
       <Spacer />

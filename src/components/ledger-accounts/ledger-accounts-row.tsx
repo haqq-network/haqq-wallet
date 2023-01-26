@@ -1,47 +1,50 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
   DataContent,
+  Spacer,
+  Text,
 } from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {EthNetwork} from '@app/services/eth-network';
-import {cleanNumber, shortAddress} from '@app/utils';
+import {LedgerAccountItem} from '@app/types';
+import {shortAddress} from '@app/utils';
 
 export type LedgerAccountsRowProps = {
-  item: string;
-  wallets: string[];
-  onPress: (item: string) => void;
+  index: number;
+  item: LedgerAccountItem;
+  onPress: (item: LedgerAccountItem) => void;
 };
 
 export const LedgerAccountsRow = ({
   item,
   onPress,
-  wallets,
+  index,
 }: LedgerAccountsRowProps) => {
-  const [balance, setBalance] = useState(0);
-
   const onPressButton = () => {
     onPress(item);
   };
 
-  useEffect(() => {
-    EthNetwork.getBalance(item).then(result => {
-      setBalance(result);
-    });
-  }, [item]);
-
   return (
     <View style={styles.container}>
+      <View style={styles.index}>
+        <Text t15 color={Color.textBase2}>
+          {index}
+        </Text>
+      </View>
       <DataContent
-        title={`${cleanNumber(balance.toFixed(8))} ISML`}
-        subtitle={shortAddress(item)}
+        title={`${cleanNumber(item.balance)} ISLM`}
+        subtitle={shortAddress(item.address)}
       />
-      {wallets.includes(item) ? (
+      <Spacer />
+      {item.exists ? (
         <Button
           disabled
           variant={ButtonVariant.second}
@@ -61,11 +64,18 @@ export const LedgerAccountsRow = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+  },
+  index: {
+    minWidth: 22,
+    marginRight: 12,
+    height: 22,
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    marginVertical: 16,
   },
 });

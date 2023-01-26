@@ -14,19 +14,18 @@ import {
   Icon,
   InfoBlock,
   InfoBlockAmount,
-  InfoBlockType,
   Inline,
   Spacer,
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {NUM_PRECISION, WEI} from '@app/variables/common';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
@@ -101,6 +100,7 @@ export const StakingInfo = ({
   return (
     <>
       <ScrollView contentContainerStyle={styles.contentContainer}>
+        <Spacer height={24} />
         <View style={styles.iconContainer}>
           <Icon color={Color.graphicBase1} name="servers" i24 />
         </View>
@@ -120,7 +120,7 @@ export const StakingInfo = ({
             <InfoBlock
               icon={<Icon color={Color.textYellow1} i24 name="warning" />}
               style={styles.withHorizontalPadding}
-              type={InfoBlockType.warning}
+              warning
               i18n={I18N.stakingInfoInactive}
             />
           </>
@@ -143,7 +143,7 @@ export const StakingInfo = ({
         <Spacer height={12} />
         <View style={styles.infoBlock}>
           <Block name={I18N.stakingInfoVotingPower}>
-            <Text t14>{cleanNumber(votingPower.toFixed(2))}</Text>
+            <Text t11>{cleanNumber(votingPower)}</Text>
           </Block>
           <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
@@ -175,7 +175,7 @@ export const StakingInfo = ({
           </Block>
           {website && (
             <Block name={I18N.stakingInfoWebsite}>
-              <Text t14 color={Color.textGreen1} onPress={onPressWebsite}>
+              <Text t11 color={Color.textGreen1} onPress={onPressWebsite}>
                 {website}
               </Text>
             </Block>
@@ -203,7 +203,7 @@ export const StakingInfo = ({
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        {(rewards?.length ?? 0) > 0 && (
+        {(rewards?.length ?? 0) >= 1 / NUM_PRECISION && (
           <>
             <Button
               loading={withdrawDelegatorRewardProgress}

@@ -2,15 +2,15 @@ import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {ArrowSend, Text} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Icon, Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {cleanNumber} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {MIN_AMOUNT, WEI} from '@app/variables/common';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
@@ -47,7 +47,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
       <View>
         <View style={styles.container}>
           <View style={styles.iconWrapper}>
-            <ArrowSend color={getColor(Color.graphicBase1)} />
+            <Icon name="servers" color={Color.graphicBase1} />
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
@@ -57,43 +57,40 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             <View style={styles.infoRow}>
               <Text
                 t14
-                color={getColor(Color.textBase2)}
+                color={Color.textBase2}
                 i18n={I18N.stakingValidatorsRowPower}
-                i18params={{power: cleanNumber(votingPower.toFixed(2))}}
+                i18params={{power: cleanNumber(votingPower)}}
               />
-              <Text
-                t14
-                color={getColor(textColor)}
-                i18n={item.localStatus as number}
-              />
+              <Text t14 color={textColor} i18n={item.localStatus as number} />
             </View>
           </View>
         </View>
         <View style={styles.badges}>
-          {!!item.localDelegations && item.localDelegations > 0 && (
+          {!!item.localDelegations && item.localDelegations > MIN_AMOUNT && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowStaked}
               i18params={{
-                staked: cleanNumber(item.localDelegations.toFixed(4)),
+                staked: cleanNumber(item.localDelegations),
               }}
             />
           )}
-          {!!item.localRewards && item.localRewards > 0 && (
+          {!!item.localRewards && item.localRewards > MIN_AMOUNT && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
               i18params={{
-                reward: cleanNumber(item.localRewards.toFixed(4)),
+                reward: cleanNumber(item.localRewards),
               }}
             />
           )}
-          {!!item.localUnDelegations && item.localUnDelegations > 0 && (
-            <InfoBox
-              style={styles.badge}
-              i18n={I18N.stakingValidatorsRowWithdrawal}
-            />
-          )}
+          {!!item.localUnDelegations &&
+            item.localUnDelegations > MIN_AMOUNT && (
+              <InfoBox
+                style={styles.badge}
+                i18n={I18N.stakingValidatorsRowWithdrawal}
+              />
+            )}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -124,6 +121,7 @@ const styles = createTheme({
   badges: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    flexWrap: 'wrap',
     marginHorizontal: 15,
     marginBottom: 6,
   },

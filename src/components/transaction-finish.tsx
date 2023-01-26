@@ -15,14 +15,12 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services/eth-network';
-import {cleanNumber} from '@app/utils';
 import {WEI} from '@app/variables/common';
-
-const icon = require('../../assets/animations/transaction-finish.json');
 
 type TransactionFinishProps = {
   transaction: Transaction | null;
@@ -40,14 +38,19 @@ export const TransactionFinish = ({
   short,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
-    const url = `${EthNetwork.explorer}tx/${transaction?.hash}/internal-transactions`;
+    const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
 
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
-        <LottieWrap source={icon} style={styles.image} autoPlay loop={false} />
+        <LottieWrap
+          source={require('@assets/animations/transaction-finish.json')}
+          style={styles.image}
+          autoPlay
+          loop={false}
+        />
       </View>
       <Text
         t4
@@ -57,19 +60,42 @@ export const TransactionFinish = ({
         color={Color.textGreen1}
       />
       <Image
-        source={require('../../assets/images/islm_icon.png')}
+        source={require('@assets/images/islm_icon.png')}
         style={styles.icon}
       />
       {transaction && (
         <Text t5 center style={styles.sum}>
-          - {cleanNumber((transaction?.value).toFixed(8))} ISLM
+          - {cleanNumber(transaction?.value)} ISLM
         </Text>
       )}
-      <Text t14 center style={styles.address}>
-        {short}
-      </Text>
+
+      <View style={styles.contactLine}>
+        {contact?.name && (
+          <Text t13 center style={styles.address}>
+            {contact.name + ' '}
+          </Text>
+        )}
+        <Text t14 center style={styles.address}>
+          {short}
+        </Text>
+      </View>
+
       <NetworkFee fee={(transaction?.fee ?? 0) * WEI} />
-      <Spacer />
+
+      <View style={styles.providerContainer}>
+        <Text
+          t14
+          color={Color.textBase2}
+          i18n={I18N.transactionConfirmationHAQQ}
+        />
+        <Text
+          t14
+          color={Color.textBase2}
+          i18n={I18N.transactionConfirmationHQ}
+        />
+      </View>
+
+      <Spacer minHeight={20} />
       <View style={styles.buttons}>
         <IconButton onPress={onPressContact} style={styles.button}>
           {contact ? (
@@ -166,4 +192,17 @@ const styles = createTheme({
     marginBottom: 4,
   },
   margin: {marginBottom: 16},
+  contactLine: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  providerContainer: {
+    backgroundColor: Color.bg8,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: 16,
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
 });

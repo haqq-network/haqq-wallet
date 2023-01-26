@@ -17,6 +17,7 @@ export type InfoBoxProps = {
 export const InfoBox = ({children, style, i18n, i18params}: InfoBoxProps) => {
   return (
     <View style={StyleSheet.compose(styles.container as ViewStyle, style)}>
+      {/* @ts-expect-error */}
       <Text t15 i18n={i18n} i18params={i18params}>
         {children}
       </Text>

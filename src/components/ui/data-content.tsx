@@ -41,6 +41,7 @@ export const DataContent = ({
         short && styles.short,
         style,
       ]}>
+      {/* @ts-expect-error */}
       <Text
         t11
         style={styles.title}
@@ -53,13 +54,16 @@ export const DataContent = ({
         {title}
       </Text>
       {(subtitleI18n || subtitle) && (
-        <Text
-          t14
-          i18n={subtitleI18n}
-          i18params={subtitleI18nParams}
-          color={Color.textBase2}>
-          {subtitle}
-        </Text>
+        <>
+          {/* @ts-expect-error */}
+          <Text
+            t14
+            i18n={subtitleI18n}
+            i18params={subtitleI18nParams}
+            color={Color.textBase2}>
+            {subtitle}
+          </Text>
+        </>
       )}
     </View>
   );

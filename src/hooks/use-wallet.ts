@@ -1,27 +1,36 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
-import {wallets} from '@app/contexts';
+import {ObjectChangeSet} from 'realm';
+
+import {Wallet} from '@app/models/wallet';
 
 export function useWallet(address: string) {
-  const [, setDate] = useState(new Date());
-  const [wallet, setWallet] = useState(wallets.getWallet(address));
+  const [wallet, setWallet] = useState(Wallet.getById(address));
 
-  useEffect(() => {
-    setDate(new Date());
-    setWallet(wallets.getWallet(address));
+  const updateWallet = useCallback(() => {
+    setWallet(Wallet.getById(address));
   }, [address]);
 
   useEffect(() => {
-    const subscription = () => {
-      setDate(new Date());
-    };
+    updateWallet();
+  }, [updateWallet]);
 
-    wallet?.on('change', subscription);
+  useEffect(() => {
+    if (wallet && wallet.isValid()) {
+      const sub = (_: unknown, params: ObjectChangeSet<Wallet>) => {
+        if (params.changedProperties.length || params.deleted) {
+          console.log('changed');
+          updateWallet();
+        }
+      };
 
-    return () => {
-      wallet?.off('change', subscription);
-    };
-  }, [wallet, address]);
+      wallet?.addListener(sub);
+
+      return () => {
+        wallet?.removeListener(sub);
+      };
+    }
+  }, [wallet, updateWallet]);
 
   return wallet;
 }

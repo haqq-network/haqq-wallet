@@ -13,44 +13,47 @@ export enum InfoBlockType {
 }
 
 export type InfoBlockProps = {
-  type: InfoBlockType;
   icon?: React.ReactNode;
   children?: React.ReactNode;
   i18n?: I18N;
+  i18params?: Record<string, string>;
   style?: StyleProp<ViewStyle>;
-  t14?: boolean;
-  t15?: boolean;
+  warning?: boolean;
 };
 
 export const InfoBlock = ({
+  warning,
   children,
   i18n,
+  i18params,
   icon,
-  type,
   style,
-  t14 = true,
-  t15 = false,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
-    () => [styles.container, styles[`${type}Container`], style],
-    [style, type],
+    () => [styles.container, warning && styles.warningContainer, style],
+    [style, warning],
   );
 
   const textStyle = useMemo(
-    () => [styles.text, styles[`${type}Text`], icon ? styles.iconText : null],
-    [icon, type],
+    () => [styles.text, icon ? styles.iconText : null],
+    [icon],
   );
 
   const textColor = useMemo(
-    () =>
-      type === InfoBlockType.warning ? Color.textYellow1 : Color.textBase1,
-    [type],
+    () => (warning ? Color.textYellow1 : Color.textBase1),
+    [warning],
   );
 
   return (
     <View style={containerStyle}>
       {icon}
-      <Text i18n={i18n} t14={t14} t15={t15} style={textStyle} color={textColor}>
+      {/* @ts-expect-error */}
+      <Text
+        i18n={i18n}
+        i18params={i18params}
+        t14
+        style={textStyle}
+        color={textColor}>
         {children}
       </Text>
     </View>
@@ -64,7 +67,6 @@ const styles = createTheme({
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   warningContainer: {
     backgroundColor: Color.bg6,
   },

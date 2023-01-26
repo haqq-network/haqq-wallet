@@ -4,21 +4,36 @@ import {View, ViewProps} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 
-export type SpacerProps = ViewProps & {height?: number; width?: number};
+export type SpacerProps = ViewProps & {
+  height?: number;
+  minHeight?: number;
+  width?: number;
+  centered?: boolean;
+};
 
 export const Spacer = ({
   children,
   style,
   height,
   width,
+  minHeight,
+  centered,
   ...props
 }: SpacerProps) => {
   const container = useMemo(() => {
-    const hasSizeProp = !!height || !!width;
-    return [hasSizeProp ? {height, width} : styles.flexOne, style].filter(
-      Boolean,
-    );
-  }, [style, height, width]);
+    const hasSizeProp = !!(height || minHeight || width);
+    return [
+      hasSizeProp
+        ? {
+            height,
+            width,
+            minHeight,
+          }
+        : styles.flexOne,
+      centered && styles.centered,
+      style,
+    ].filter(Boolean);
+  }, [height, minHeight, width, centered, style]);
 
   return (
     <View style={container} {...props}>
@@ -29,4 +44,5 @@ export const Spacer = ({
 
 const styles = createTheme({
   flexOne: {flex: 1},
+  centered: {justifyContent: 'center'},
 });

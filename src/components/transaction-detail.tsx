@@ -7,16 +7,17 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
+import {cleanNumber, createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, WINDOW_HEIGHT} from '@app/variables/common';
 
 type TransactionDetailProps = {
+  source: TransactionSource;
   onCloseBottomSheet: () => void;
   transaction: Transaction;
   provider: (Provider & Realm.Object<unknown, never>) | null;
@@ -24,18 +25,19 @@ type TransactionDetailProps = {
 };
 
 export const TransactionDetail = ({
+  source,
   onCloseBottomSheet,
   transaction,
   provider,
   onPressInfo,
 }: TransactionDetailProps) => {
-  const isSent = transaction?.source === TransactionSource.send;
+  const isSent = source === TransactionSource.send;
   const to = isSent ? transaction.to : ' ';
   const from = transaction?.from ? transaction.from : ' ';
 
   const title = isSent
-    ? getText(I18N.transactionDetailSent)
-    : getText(I18N.transactionDetailRecive);
+    ? I18N.transactionDetailSent
+    : I18N.transactionDetailRecive;
 
   const splitted = useMemo(
     () => splitAddress(isSent ? to : from),
@@ -47,12 +49,27 @@ export const TransactionDetail = ({
     sendNotification(I18N.notificationCopied);
   }, [to]);
 
+  const total = useMemo(() => {
+    if (!transaction) {
+      return '';
+    }
+
+    if (source === TransactionSource.send) {
+      return `- ${cleanNumber(transaction.value + transaction.fee)}`;
+    }
+
+    return `+ ${cleanNumber(transaction.value)}`;
+  }, [transaction, source]);
+
   if (!transaction) {
     return null;
   }
 
   return (
-    <BottomSheet onClose={onCloseBottomSheet} title={title}>
+    <BottomSheet
+      onClose={onCloseBottomSheet}
+      i18nTitle={title}
+      closeDistance={WINDOW_HEIGHT / 4}>
       <Text
         i18n={I18N.transactionDetailTotalAmount}
         t14
@@ -62,7 +79,7 @@ export const TransactionDetail = ({
         t6
         color={isSent ? Color.textRed1 : Color.textGreen1}
         style={styles.sum}>
-        {transaction.totalFormatted} ISLM
+        {total} ISLM
       </Text>
       <View style={styles.infoContainer}>
         <DataContent
@@ -119,7 +136,7 @@ export const TransactionDetail = ({
           />
         )}
         <DataContent
-          title={`${transaction.valueFormatted} ISLM`}
+          title={`${cleanNumber(transaction.value)} ISLM`}
           subtitleI18n={I18N.transactionDetailAmount}
           reversed
           short

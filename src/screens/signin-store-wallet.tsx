@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {captureException, showLoadingWithText, showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
@@ -17,7 +18,7 @@ export const SignInStoreWalletScreen = () => {
   const wallets = useWallets();
 
   useEffect(() => {
-    showLoadingWithText(I18N.signinStoreWalletText);
+    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
@@ -25,23 +26,26 @@ export const SignInStoreWalletScreen = () => {
       navigation.getParent()?.goBack();
     };
     setTimeout(async () => {
-      const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
-        number: `${wallets.getSize() + 1}`,
-      });
       try {
         if (mnemonic) {
           let canNext = true;
           let index = 0;
           while (canNext) {
-            const name =
-              wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+            const total = Wallet.getAll().length;
+            const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+              number: `${total + 1}`,
+            });
+
+            const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
             const node = await restoreFromMnemonic(
               String(mnemonic),
               `${ETH_HD_SHORT_PATH}/${index}`,
             );
 
-            if (!wallets.getWallet(node.address)) {
+            const existsWallet = Wallet.getById(node.address);
+
+            if (!existsWallet) {
               const balance = await EthNetwork.getBalance(node.address);
               canNext = balance > 0 || index === 0;
 
@@ -60,13 +64,12 @@ export const SignInStoreWalletScreen = () => {
                 );
 
                 if (wallet) {
-                  wallet.mnemonicSaved = true;
-
                   const main = wallets.getMain();
 
-                  if (!main) {
-                    wallet.isMain = true;
-                  }
+                  wallet.update({
+                    mnemonicSaved: true,
+                    isMain: !main,
+                  });
                 }
               } else {
                 canNext = false;
@@ -76,8 +79,12 @@ export const SignInStoreWalletScreen = () => {
             index += 1;
           }
         } else if (privateKey) {
-          const name =
-            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+          const total = Wallet.getAll().length;
+          const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
+            number: `${total + 1}`,
+          });
+
+          const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
           const wallet = await wallets.addWalletFromPrivateKey(
             privateKey,
@@ -85,7 +92,7 @@ export const SignInStoreWalletScreen = () => {
           );
 
           if (wallet) {
-            wallet.mnemonicSaved = true;
+            wallet.update({mnemonicSaved: true});
           }
         }
 
@@ -98,6 +105,7 @@ export const SignInStoreWalletScreen = () => {
             break;
           default:
             if (error instanceof Error) {
+              console.log('error.message', error.message);
               showModal('error-create-account');
               captureException(error, 'restoreStore');
               goBack();

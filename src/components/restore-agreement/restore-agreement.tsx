@@ -17,8 +17,6 @@ import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
-// import {Terms} from '../ui/terms';
-
 export type RestoreAgreementProps = {
   onDone: () => void;
   testID?: string;
@@ -29,10 +27,10 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
 
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
-      return require('../../../assets/animations/backup-start-dark.json');
+      return require('@assets/animations/backup-start-dark.json');
     }
 
-    return require('../../../assets/animations/backup-start-light.json');
+    return require('@assets/animations/backup-start-light.json');
   }, [theme]);
 
   return (
@@ -62,7 +60,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
         testID={`${testID}_agree`}
         onPress={onDone}
       />
-      {/*<Terms style={page.agreement} />*/}
+      {/* <Terms style={styles.agreement} /> */}
     </PopupContainer>
   );
 };
@@ -75,6 +73,7 @@ const styles = createTheme({
     height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: -45,
   },
   title: {
     marginBottom: 4,
@@ -85,7 +84,7 @@ const styles = createTheme({
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
   // agreement: {
-  //   marginHorizontal: 20,
+  //   marginHorizontal: 30,
   //   marginBottom: 16,
   // },
   image: {

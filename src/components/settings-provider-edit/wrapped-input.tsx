@@ -19,7 +19,7 @@ export type WrappedInputProps = {
     event: NativeSyntheticEvent<TextInputFocusEventData>,
   ) => void;
   label: I18N;
-  hint: I18N;
+  hint: I18N | null;
   placeholder: I18N;
   name: ProviderKeys;
 };
@@ -79,7 +79,7 @@ export const WrappedInput = ({
       editable={isEditable}
       error={Boolean(error)}
       errorText={error}
-      hint={hint}
+      hint={hint ?? undefined}
     />
   );
 };

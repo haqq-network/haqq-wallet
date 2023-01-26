@@ -16,7 +16,7 @@ import {
 } from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
-import {BIOMETRY_TYPES_NAMES} from '@app/variables/common';
+import {BIOMETRY_TYPES_NAMES} from '@app/variables/biometry';
 
 interface OnboardingBiometryProps {
   onClickSkip: () => void;

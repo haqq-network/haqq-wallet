@@ -3,7 +3,8 @@ import {useEffect, useState} from 'react';
 import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
-import {WEI} from '@app/variables/common';
+import {I18N, getText} from '@app/i18n';
+import {MIN_AMOUNT, WEI} from '@app/variables/common';
 
 export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [{amount, amountText}, setAmount] = useState({
@@ -13,7 +14,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
 
   useEffect(() => {
-    setMaxAmount(initialMaxSum - 0.0001);
+    setMaxAmount(initialMaxSum - MIN_AMOUNT);
   }, [initialMaxSum]);
 
   const [error, setError] = useState('');
@@ -24,10 +25,10 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
         validate.single(amount, {
           numericality: {
             notValid: 'Invalid number',
-            greaterThanOrEqualTo: 0.0001,
+            greaterThanOrEqualTo: MIN_AMOUNT,
             lessThanOrEqualTo: maxAmount,
-            notGreaterThan: 'Should be greater than 0.0001',
-            notLessThanOrEqualTo: "You don't have enough funds",
+            notGreaterThan: getText(I18N.sumAmountTooLow),
+            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
           },
         }),
       );
@@ -38,7 +39,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
 
   return {
     isValid:
-      decAmount.greaterThan(0.0001) &&
+      decAmount.greaterThanOrEqualTo(MIN_AMOUNT) &&
       decAmount.lessThan(new Decimal(maxAmount)) &&
       !error,
     maxAmount: maxAmount,
@@ -47,10 +48,12 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
     setMaxAmount(value = 0) {
       setMaxAmount(value);
     },
-    setMax(fixed = 4) {
+    setMax() {
+      const a = Math.floor((maxAmount - 1 / WEI) / MIN_AMOUNT) * MIN_AMOUNT;
+
       setAmount({
-        amountText: (maxAmount - 10 / WEI).toFixed(fixed),
-        amount: maxAmount - 10 / WEI,
+        amountText: String(a),
+        amount: a,
       });
     },
     setAmount(text: string) {

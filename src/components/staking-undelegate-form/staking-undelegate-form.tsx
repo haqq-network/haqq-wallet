@@ -1,4 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
+
+import {formatDistance} from 'date-fns';
 
 import {Color} from '@app/colors';
 import {
@@ -6,7 +8,6 @@ import {
   ButtonVariant,
   Icon,
   InfoBlock,
-  InfoBlockType,
   KeyboardSafeArea,
   NetworkFee,
   Spacer,
@@ -21,9 +22,11 @@ export type StakingDelegateFormProps = {
   balance: number;
   onAmount: (amount: number) => void;
   fee: number;
+  unboundingTime: number;
 };
 
 export const StakingUnDelegateForm = ({
+  unboundingTime,
   balance,
   onAmount,
   fee,
@@ -33,13 +36,18 @@ export const StakingUnDelegateForm = ({
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
 
+  const time = useMemo(
+    () => formatDistance(new Date(unboundingTime), new Date(0)),
+    [unboundingTime],
+  );
+
   const onPressMax = useCallback(() => {
     amounts.setMax();
   }, [amounts]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
-      <Spacer style={styles.space}>
+      <Spacer centered>
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
@@ -52,8 +60,9 @@ export const StakingUnDelegateForm = ({
       <NetworkFee fee={fee} />
       <Spacer height={16} />
       <InfoBlock
-        type={InfoBlockType.warning}
+        warning
         i18n={I18N.stakingUnDelegateSumWarning}
+        i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Spacer height={16} />
@@ -73,8 +82,5 @@ const styles = createTheme({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 16,
-  },
-  space: {
-    justifyContent: 'center',
   },
 });

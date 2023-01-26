@@ -12,13 +12,6 @@ import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
 
-export interface TransportWallet {
-  getCosmosAddress: () => string;
-  getPublicKey: () => Promise<string>;
-
-  signTypedData: (domainHash: string, valueHash: string) => Promise<string>;
-}
-
 export enum TransactionSource {
   unknown,
   date,
@@ -59,7 +52,8 @@ export type WalletInitialData =
       address: string;
       deviceId: string;
       deviceName: string;
-    };
+    }
+  | {};
 
 export type RootStackParamList = {
   home: undefined;
@@ -68,8 +62,8 @@ export type RootStackParamList = {
   homeSettings:
     | undefined
     | {
-        screen: keyof RootStackParamList;
-        params: any;
+        screen: 'settingsProviderForm';
+        params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
   welcome: undefined;
@@ -99,7 +93,6 @@ export type RootStackParamList = {
   settingsAccountStyle: {address: string};
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
-  settingsSecurity: undefined;
   settingsSecurityPin: undefined;
   settingsProviders: undefined;
   settingsSecurityPinRepeat: {
@@ -212,11 +205,15 @@ export type RootStackParamList = {
   ledgerVerify: {
     nextScreen: 'ledgerStoreWallet' | 'onboardingSetupPin';
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
   ledgerStore: {
     address: string;
+    hdPath: string;
+    publicKey: string;
     deviceId: string;
     deviceName: string;
   };
@@ -314,6 +311,10 @@ export type RootStackParamList = {
   proposal: {
     id: number;
   };
+  settingsViewRecoveryPhrase: {
+    address: string;
+  };
+  settingsSecurity: undefined;
 };
 
 export type StackPresentationTypes =
@@ -366,6 +367,7 @@ export enum WalletType {
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
+  rootMnemonic = 'root-mnemonic',
 }
 
 export enum WalletCardPattern {
@@ -385,11 +387,11 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export type ScreenOptionType = StackNavigationOptions & {
+export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-};
+}
 
 export type HeaderButtonProps = {
   tintColor?: string;
@@ -438,6 +440,7 @@ export type AddWalletParams = {address: string; publicKey: string} & (
     }
   | {
       type: WalletType.ledgerBt;
+      path: string;
       deviceId: string;
       deviceName: string;
     }
@@ -454,6 +457,7 @@ export type ValidatorItem = Validator & {
   localDelegations?: number;
   localRewards?: number;
   localUnDelegations?: number;
+  searchString?: string;
 };
 
 export type ColorType = Color | string;
@@ -483,7 +487,26 @@ export type DepositResponse = {
   pagination: {next_key: any; total: string};
 };
 
+export type StakingParamsResponse = {
+  params: {
+    unbonding_time: string;
+    max_validators: number;
+    max_entries: number;
+    historical_entries: number;
+    bond_denom: string;
+  };
+};
+
 export type ProposalsCroppedList = {
   id: number;
   status: string;
+  title: string;
 }[];
+
+export type LedgerAccountItem = {
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  exists: boolean;
+  balance: number;
+};

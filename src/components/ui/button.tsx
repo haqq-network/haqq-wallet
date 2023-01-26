@@ -1,11 +1,19 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {ActivityIndicator, TouchableOpacity, ViewProps} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {ColorType} from '@app/types';
 
 import {Icon, IconProps} from './icon';
 import {Text} from './text';
@@ -23,13 +31,14 @@ export type ButtonLeftIconProps =
   | {iconLeft?: undefined; iconLeftColor?: undefined};
 
 export type ButtonProps = Omit<ViewProps, 'children'> & {
-  disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress: () => void;
+  error?: boolean;
   loading?: boolean;
-  textColor?: Color | string;
-  color?: Color | string;
+  disabled?: boolean;
+  textColor?: ColorType;
+  color?: ColorType;
   circleBorders?: boolean;
 } & ButtonValue &
   ButtonRightIconProps &
@@ -37,10 +46,9 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
 
 export enum ButtonVariant {
   text = 'text',
-  error = 'error',
   contained = 'contained',
-  outlined = 'outlined',
   second = 'second',
+  third = 'third',
 }
 
 export enum ButtonSize {
@@ -56,7 +64,6 @@ export const Button = ({
   size = ButtonSize.large,
   style,
   circleBorders,
-  disabled,
   onPress,
   iconRight,
   iconRightColor,
@@ -64,7 +71,9 @@ export const Button = ({
   iconLeftColor,
   textColor,
   color,
-  loading = false,
+  error,
+  disabled,
+  loading,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -74,35 +83,51 @@ export const Button = ({
   }, [disabled, loading, onPress]);
 
   const containerStyle = useMemo(
-    () => [
-      styles.container,
-      styles[`${variant}Container`] ?? null,
-      styles[`${size}Container`] ?? null,
-      circleBorders && styles.circleBorders,
-      disabled && `${variant}DisabledContainer` in styles
-        ? styles[`${variant}DisabledContainer`]
-        : null,
-      color && {backgroundColor: getColor(color)},
-      style,
-    ],
-    [size, disabled, style, variant, color, circleBorders],
+    () =>
+      StyleSheet.flatten([
+        styles.container,
+        variant === ButtonVariant.second && styles.secondContainer,
+        variant === ButtonVariant.contained && styles.containedContainer,
+        size === ButtonSize.small && styles.smallContainer,
+        size === ButtonSize.middle && styles.middleContainer,
+        size === ButtonSize.large && styles.largeContainer,
+        circleBorders && styles.circleBorders,
+        error &&
+          variant === ButtonVariant.second &&
+          styles.secondErrorContainer,
+        disabled &&
+          variant === ButtonVariant.second &&
+          styles.secondDisabledContainer,
+        disabled &&
+          variant === ButtonVariant.contained &&
+          styles.containedDisabledContainer,
+        color && {backgroundColor: getColor(color)},
+        style,
+      ]),
+    [variant, size, circleBorders, error, disabled, color, style],
   );
 
   const textStyle = useMemo(
-    () => [
-      iconLeft && styles.textIconLeft,
-      iconRight && styles.textIconRight,
-      styles[`${variant}Text`] ?? null,
-      disabled && `${variant}DisabledText` in styles
-        ? styles[`${variant}DisabledText`]
-        : null,
-    ],
-    [disabled, iconLeft, iconRight, variant],
+    () =>
+      StyleSheet.flatten<TextStyle>([
+        iconLeft && styles.textIconLeft,
+        iconRight && styles.textIconRight,
+        variant === ButtonVariant.second && styles.secondText,
+        variant === ButtonVariant.contained && styles.containedText,
+        error && styles.errorText,
+        disabled &&
+          variant === ButtonVariant.second &&
+          styles.secondDisabledText,
+        disabled &&
+          variant === ButtonVariant.contained &&
+          styles.containedDisabledText,
+      ]),
+    [iconLeft, iconRight, variant, error, disabled],
   );
 
   return (
     <TouchableOpacity
-      style={containerStyle}
+      style={containerStyle as ViewStyle}
       onPress={onPressButton}
       activeOpacity={0.7}
       {...props}>
@@ -113,6 +138,7 @@ export const Button = ({
           {iconLeft && (
             <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
           )}
+          {/* @ts-expect-error */}
           <Text
             t9={size !== ButtonSize.small}
             t12={size === ButtonSize.small}
@@ -141,50 +167,37 @@ const styles = createTheme({
   circleBorders: {
     borderRadius: 100,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   smallContainer: {
     paddingVertical: 3, // originally 6 but for android 6 - 3
     paddingHorizontal: 12,
     height: 34,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   middleContainer: {
     paddingVertical: 9, // originally 12 but for android 12 - 3
     paddingHorizontal: 20,
     borderRadius: 12,
     height: 46,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   largeContainer: {
     paddingVertical: 16, // originally 6 but for android 6 - 3
     paddingHorizontal: 12,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   containedContainer: {
     backgroundColor: Color.graphicGreen1,
     borderRadius: 12,
     height: 54,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
-  outlinedContainer: {
-    borderColor: Color.graphicGreen1,
-    borderRadius: 12,
-  },
-  // eslint-disable-next-line react-native/no-unused-styles
   secondContainer: {
     backgroundColor: Color.bg2,
     borderRadius: 12,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
-  errorContainer: {
+  secondErrorContainer: {
     backgroundColor: Color.bg7,
   },
   textIconRight: {
@@ -193,23 +206,18 @@ const styles = createTheme({
   textIconLeft: {
     marginLeft: 8,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   containedText: {
     color: Color.textBase3,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   containedDisabledText: {
     color: Color.textSecond1,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   errorText: {
     color: Color.textRed1,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   secondText: {
     color: Color.textGreen1,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
   secondDisabledText: {
     color: Color.textSecond1,
   },

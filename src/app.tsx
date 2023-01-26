@@ -8,16 +8,16 @@
  * @format
  */
 
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
   NavigationContainer,
-  StackActions,
   Theme,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import * as Sentry from '@sentry/react-native';
 import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -77,6 +77,7 @@ import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
+import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
@@ -161,15 +162,9 @@ export const App = () => {
 
         setInitialized(true);
         requestAnimationFrame(() => {
-          wallets.addressList.forEach(d => app.emit('addWallet', d));
+          app.emit(Events.onAppStarted);
         });
       });
-
-    app.on('resetWallet', () => {
-      navigator.dispatch(StackActions.replace('welcome'));
-      app.getUser().onboarded = false;
-      hideModal();
-    });
   }, []);
 
   const [initialized, setInitialized] = useState(false);
@@ -207,6 +202,14 @@ export const App = () => {
     }
   }, [initialized]);
 
+  const onStateChange = useCallback(() => {
+    Sentry.addBreadcrumb({
+      category: 'navigation',
+      message: navigator.getCurrentRoute()?.name,
+      level: 'info',
+    });
+  }, []);
+
   // @ts-ignore
   return (
     <SafeAreaProvider>
@@ -217,8 +220,11 @@ export const App = () => {
         />
         <TransactionsContext.Provider value={transactions}>
           <WalletsContext.Provider value={wallets}>
-            <NavigationContainer ref={navigator} theme={navTheme}>
-              <Stack.Navigator screenOptions={basicScreenOptions}>
+            <NavigationContainer
+              ref={navigator}
+              theme={navTheme}
+              onStateChange={onStateChange}>
+              <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
 
@@ -301,13 +307,6 @@ export const App = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="settingsSecurity"
-                    component={SettingsSecurityScreen}
-                    options={{
-                      title: 'Security',
-                    }}
-                  />
-                  <Stack.Screen
                     name="settingsProviders"
                     component={SettingsProvidersScreen}
                     options={withoutHeader}
@@ -323,7 +322,7 @@ export const App = () => {
                     name="settingsFaq"
                     component={SettingsFAQScreen}
                     options={{
-                      title: 'Security',
+                      title: getText(I18N.settingsSecurity),
                     }}
                   />
                   <Stack.Screen
@@ -363,14 +362,26 @@ export const App = () => {
                       title: getText(I18N.settingsThemeScreen),
                     }}
                   />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhraseTitle),
+                    }}
+                    component={SettingsViewRecoveryPhraseScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    component={SettingsSecurityScreen}
+                  />
                 </Stack.Group>
                 <Stack.Group screenOptions={screenOptions}>
                   <Stack.Screen
                     name="stakingValidators"
                     component={StakingValidatorsScreen}
-                    options={{
-                      title: getText(I18N.stakingValidators),
-                    }}
+                    options={withoutHeader}
                   />
                   <Stack.Screen
                     name="stakingInfo"

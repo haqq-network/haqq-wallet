@@ -5,6 +5,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {TransactionListReceive} from '@app/types';
 import {shortAddress} from '@app/utils';
 
@@ -33,7 +34,7 @@ export const TransactionReceive = ({
           short
         />
         <Text t11 color={Color.textGreen1}>
-          {`+${item.value.toFixed(2)} ISLM`}
+          {`+${cleanNumber(item.value)} ISLM`}
         </Text>
       </View>
     </TouchableWithoutFeedback>

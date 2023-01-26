@@ -60,9 +60,7 @@ public class Mnemonic {
       let entropyBits = String(bits.prefix(dividerIndex))
       let checksumBits = String(bits.suffix(bits.count - dividerIndex))
 
-      let entropyBytes = bits.split(by: 8).filter{
-        $0.count == 8
-      }.map {
+      let entropyBytes = entropyBits.split(by: 8).map {
         UInt8($0 , radix: 2)!
       }
 

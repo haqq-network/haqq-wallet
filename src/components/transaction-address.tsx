@@ -1,9 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {useNavigation} from '@react-navigation/native';
 import {utils} from 'ethers';
-import {View} from 'react-native';
+import {Keyboard, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -40,7 +39,6 @@ export const TransactionAddress = ({
   const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
-  const {goBack} = useNavigation();
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
 
   useEffect(() => {
@@ -70,25 +68,21 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(() => {
-    const subscriptionBack = () => {
-      goBack();
-      app.off('onCloseQr', subscriptionBack);
-    };
+    Keyboard.dismiss();
     const subscription = ({to}: any) => {
       if (utils.isAddress(to)) {
         setAddress(to);
         app.off('address', subscription);
-        app.off('onCloseQr', subscriptionBack);
         hideModal();
       }
     };
     app.on('address', subscription);
-
-    app.on('onCloseQr', subscriptionBack);
     showModal('qr');
-  }, [app, goBack]);
+  }, [app]);
 
-  const onPressClear = useCallback(() => setAddress(''), []);
+  const onPressClear = useCallback(() => {
+    setAddress('');
+  }, []);
 
   const onPressAddress = useCallback(
     (item: string) => {
@@ -138,7 +132,7 @@ export const TransactionAddress = ({
       <Spacer>
         <ListOfContacts onPressAddress={onPressAddress} />
       </Spacer>
-
+      <Spacer height={16} />
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
@@ -146,13 +140,14 @@ export const TransactionAddress = ({
         onPress={onDone}
         style={styles.button}
       />
+      <Spacer height={32} />
     </KeyboardSafeArea>
   );
 };
 
 const styles = createTheme({
   input: {
-    marginBottom: 12,
+    marginBottom: 20,
     marginHorizontal: 20,
   },
   inputButtonContainer: {
@@ -160,6 +155,5 @@ const styles = createTheme({
   },
   button: {
     marginHorizontal: 20,
-    marginVertical: 16,
   },
 });

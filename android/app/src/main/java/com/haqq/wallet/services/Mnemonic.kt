@@ -66,15 +66,13 @@ class Mnemonic {
     val bytes = ArrayList<Int>().toMutableList()
 
     entropyBits.chunked(8).forEach {
-      if(it.length == 8) {
-        bytes.add(Integer.parseInt(it.trim(), 2))
-      }
+      bytes.add(Integer.parseInt(it.trim(), 2))
     }
 
-    return checksumBits == deriveChecksumBits( byteArrayOfInts(*bytes.toIntArray()))
+    return checksumBits == deriveChecksumBits(byteArrayOfInts(*bytes.toIntArray()))
   }
 
-  fun seed() : String {
+  fun seed(): String {
     val mnemonicBytes = mnemonic().toCharArray()
     val saltBytes = "mnemonic$_pass".toByteArray()
     val algorithm = "PBKDF2withHmacSHA512"

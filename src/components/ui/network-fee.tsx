@@ -2,8 +2,8 @@ import React from 'react';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {cleanNumber} from '@app/utils';
 
 export type NetworkFeeProps = {
   fee: number | string;
@@ -14,7 +14,7 @@ export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
     <Text
       t15
       i18n={I18N.networkFee}
-      i18params={{fee: cleanNumber(String(fee)), currency: currency}}
+      i18params={{fee: cleanNumber(fee), currency: currency}}
       center
       color={Color.textBase2}
     />

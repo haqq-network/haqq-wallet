@@ -5,9 +5,8 @@ import {EventEmitter} from 'events';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
-import {app} from '@app/contexts';
 import {realm} from '@app/models';
-import {Wallet, WalletRealm} from '@app/models/wallet';
+import {Wallet} from '@app/models/wallet';
 import {
   restoreFromMnemonic,
   restoreFromPrivateKey,
@@ -22,7 +21,7 @@ class Wallets extends EventEmitter {
   constructor() {
     super();
     this._wallets = new Map();
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
 
     wallets.addListener(() => {
       this.emit('wallets');
@@ -30,7 +29,7 @@ class Wallets extends EventEmitter {
 
     for (const rawWallet of wallets) {
       try {
-        this.attachWallet(new Wallet(rawWallet));
+        this.attachWallet(rawWallet);
       } catch (e) {
         if (e instanceof Error) {
           console.log(rawWallet, e.message);
@@ -84,11 +83,13 @@ class Wallets extends EventEmitter {
       publicKey,
       deviceId,
       deviceName,
+      path,
     }: {
       address: string;
       deviceId: string;
       deviceName: string;
       publicKey: string;
+      path: string;
     },
     name?: string,
   ): Promise<Wallet | null> {
@@ -99,6 +100,7 @@ class Wallets extends EventEmitter {
         deviceName,
         address,
         publicKey,
+        path,
       },
       name,
     );
@@ -145,75 +147,46 @@ class Wallets extends EventEmitter {
   async addWallet(walletParams: AddWalletParams, name = '') {
     const wallet = await Wallet.create(walletParams, name);
 
-    this.attachWallet(wallet);
-
-    requestAnimationFrame(() => {
-      app.emit('addWallet', wallet.address);
-    });
+    if (wallet !== null) {
+      this.attachWallet(wallet);
+    }
 
     return wallet;
   }
 
   async removeWallet(address: string) {
-    const wallet = this._wallets.get(address.toLowerCase());
+    const wallet = Wallet.getById(address);
 
-    if (wallet) {
-      if (wallet.isMain) {
-        const wallets = realm
-          .objects<WalletRealm>(WalletRealm.schema.name)
-          .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
+    if (!wallet) {
+      return;
+    }
 
-        if (wallets.length) {
-          const w = new Wallet(wallets[0]);
-          w.isMain = true;
-        }
-      }
+    if (wallet.isMain) {
+      const wallets = realm
+        .objects<Wallet>(Wallet.schema.name)
+        .filtered(`rootAddress = '${wallet.rootAddress}' AND isMain = false`);
 
-      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        WalletRealm.schema.name,
-        address.toLowerCase(),
-      );
-
-      this.deAttachWallet(wallet);
-      if (realmWallet) {
-        realm.write(() => {
-          realm.delete(realmWallet);
-        });
+      if (wallets.length) {
+        const w = wallets[0];
+        w.update({isMain: true});
       }
     }
 
-    requestAnimationFrame(() => {
-      const realmWallet = realm.objectForPrimaryKey<WalletRealm>(
-        WalletRealm.schema.name,
-        address,
-      );
-      if (!realmWallet) {
-        app.emit('removeWallet', address);
-      }
-    });
+    this.deAttachWallet(wallet);
+
+    await Wallet.remove(address.toLowerCase());
   }
 
   clean() {
     this._wallets = new Map();
     this.emit('wallets');
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
 
     for (const wallet of wallets) {
       realm.write(() => {
         realm.delete(wallet);
       });
     }
-  }
-
-  async updateWalletsData(newPin: string) {
-    const oldPin = await app.getPassword();
-    for (const wallet of this._wallets.values()) {
-      await wallet.updateWalletData(oldPin, newPin);
-    }
-  }
-
-  getWallet(address: string): Wallet | undefined {
-    return this._wallets.get(address.toLowerCase());
   }
 
   getWallets(): Wallet[] {
@@ -225,21 +198,19 @@ class Wallets extends EventEmitter {
   }
 
   getMain() {
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
     const main = wallets.filtered('isMain = true');
 
     if (!main.length) {
       return null;
     }
 
-    return new Wallet(main[0]);
+    return main[0];
   }
 
   getForRootAddress(rootAddress: string) {
-    const wallets = realm.objects<WalletRealm>(WalletRealm.schema.name);
-    return wallets
-      .filtered(`rootAddress = '${rootAddress.toLowerCase()}'`)
-      .map(w => new Wallet(w));
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
+    return wallets.filtered(`rootAddress = '${rootAddress.toLowerCase()}'`);
   }
 
   get visible() {
@@ -248,10 +219,6 @@ class Wallets extends EventEmitter {
 
   get addressList(): string[] {
     return Array.from(this._wallets.keys());
-  }
-
-  checkBalance() {
-    return Promise.all([...this._wallets.values()].map(w => w.checkBalance()));
   }
 }
 

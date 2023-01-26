@@ -5,6 +5,7 @@ import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {Color} from '@app/colors';
 import {Spacer, Text, TextSum} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 
 type valueType = {
@@ -17,7 +18,6 @@ export type InfoBlockAmountProps = {
   titleI18N: I18N;
   values?: number[] | valueType[];
   value?: number | valueType;
-  toFixed?: number;
   amountColor?: Color;
   isLarge?: boolean;
 };
@@ -28,7 +28,6 @@ export const InfoBlockAmount = ({
   value = 0,
   titleI18N,
   amountColor = Color.textBase1,
-  toFixed = 2,
   isLarge,
 }: InfoBlockAmountProps) => {
   const [isShow, setIsShow] = useState(false);
@@ -61,7 +60,7 @@ export const InfoBlockAmount = ({
             color={amountColor}
             center
             suffix={val.suffix}
-            sum={val.amount.toFixed(toFixed)}
+            sum={cleanNumber(val.amount)}
           />
         ))}
         {buttonExists && (

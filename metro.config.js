@@ -5,6 +5,8 @@
  * @format
  */
 const blacklist = require('metro-config/src/defaults/exclusionList');
+require('dotenv').config();
+
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
@@ -20,5 +22,15 @@ module.exports = {
     blacklistRE: blacklist([
       /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
     ]),
+    nodeModulesPaths: [
+      process.env.PROVIDER_BASE_PACKAGE,
+      process.env.ENCRYPTION_RN_PACKAGE,
+      // process.env.PROVIDER_LEDGER_RN_PACKAGE,
+    ].filter(Boolean),
   },
+  watchFolders: [
+    process.env.PROVIDER_BASE_PACKAGE,
+    process.env.ENCRYPTION_RN_PACKAGE,
+    // process.env.PROVIDER_LEDGER_RN_PACKAGE,
+  ].filter(Boolean),
 };

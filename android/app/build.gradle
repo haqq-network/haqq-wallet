@@ -144,8 +144,8 @@ android {
     applicationId "com.haqq.wallet"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 44
-    versionName "0.0.1"
+    versionCode 67
+    versionName "1.2"
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
 
