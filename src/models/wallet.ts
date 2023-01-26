@@ -206,12 +206,9 @@ export class Wallet extends Realm.Object {
         realm.delete(obj);
       });
 
-      const realmWallet = Wallet.getById(address);
-      if (!realmWallet) {
-        await new Promise(resolve => {
-          app.emit(Events.onWalletRemove, address, snapshot, resolve);
-        });
-      }
+      await new Promise(resolve => {
+        app.emit(Events.onWalletRemove, address, snapshot, resolve);
+      });
     }
   }
 
@@ -275,12 +272,14 @@ export class Wallet extends Realm.Object {
   }
 
   async updateWalletData(oldPin: string, newPin: string) {
-    const decrypted = await decrypt(oldPin, this.data);
-    const encrypted = await encrypt(newPin, decrypted);
+    if (this.data) {
+      const decrypted = await decrypt(oldPin, this.data);
+      const encrypted = await encrypt(newPin, decrypted);
 
-    realm.write(() => {
-      this.data = encrypted;
-    });
+      realm.write(() => {
+        this.data = encrypted;
+      });
+    }
   }
 
   get cosmosAddress() {

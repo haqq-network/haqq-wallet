@@ -57,12 +57,14 @@ export const SettingsAccountDetailScreen = () => {
         {
           style: 'destructive',
           text: getText(I18N.settingsAccountRemoveConfirm),
-          onPress: async () => {
+          onPress: () => {
             showModal('loading');
-            await wallets.removeWallet(address);
-            hideModal('loading');
-            navigation.goBack();
-            sendNotification(I18N.notificationAccountDeleted);
+            requestAnimationFrame(async () => {
+              await wallets.removeWallet(address);
+              hideModal('loading');
+              navigation.goBack();
+              sendNotification(I18N.notificationAccountDeleted);
+            });
           },
         },
       ],
