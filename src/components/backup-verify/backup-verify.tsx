@@ -59,6 +59,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
   );
 
   const onPressClear = useCallback((i: number) => {
+    vibrate(HapticEffects.impactLight);
     setSelected(sel => {
       const s = [...sel];
       s[i] = undefined;
