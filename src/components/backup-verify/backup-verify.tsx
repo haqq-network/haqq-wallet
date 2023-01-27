@@ -29,20 +29,42 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
     () => new Map(phrase.split(' ').map((value, pos) => [String(pos), value])),
     [phrase],
   );
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<(string | undefined)[]>([]);
   const buttons = useMemo(() => shuffleWords(words), [words]);
 
   const onPressDone = useCallback(() => {
-    onDone(selected.map(v => words.get(v)).join(' '));
+    onDone(selected.map(v => words.get(v ?? '') ?? '').join(' '));
   }, [onDone, selected, words]);
+
+  const index = useMemo(() => {
+    for (let i = 0; i < words.size; i += 1) {
+      if (selected[i] === undefined) {
+        return i;
+      }
+    }
+
+    return -1;
+  }, [selected, words.size]);
 
   const onPressWord = useCallback(
     (val: string) => () => {
       vibrate(HapticEffects.impactLight);
-      setSelected(sel => sel.concat(val));
+      setSelected(sel => {
+        const s = [...sel];
+        s[index] = val;
+        return s;
+      });
     },
-    [],
+    [index],
   );
+
+  const onPressClear = useCallback((i: number) => {
+    setSelected(sel => {
+      const s = [...sel];
+      s[i] = undefined;
+      return s;
+    });
+  }, []);
 
   return (
     <PopupContainer style={styles.container}>
@@ -69,14 +91,17 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
           {Array.from(words.keys())
             .slice(0, 6)
             .map((k, i) =>
-              selected.length > i ? (
+              selected[i] !== undefined ? (
                 <FilledCell
-                  word={words.get(selected[i]) ?? ''}
+                  word={words.get(selected[i] ?? '') ?? ''}
                   key={`${i}_filled`}
+                  onPress={() => {
+                    onPressClear(i);
+                  }}
                 />
               ) : (
                 <EmptyCell
-                  active={selected.length === i}
+                  active={index === i}
                   index={i + 1}
                   key={`${i}_empty`}
                 />
@@ -87,14 +112,17 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
           {Array.from(words.keys())
             .slice(6, 12)
             .map((k, i) =>
-              selected.length > i + 6 ? (
+              selected[i + 6] !== undefined ? (
                 <FilledCell
-                  word={words.get(selected[i + 6]) ?? ''}
+                  word={words.get(selected[i + 6] ?? '') ?? ''}
                   key={`${i}_filled`}
+                  onPress={() => {
+                    onPressClear(i + 6);
+                  }}
                 />
               ) : (
                 <EmptyCell
-                  active={selected.length === i + 6}
+                  active={index === i + 6}
                   index={i + 7}
                   key={`${i}_empty`}
                 />
