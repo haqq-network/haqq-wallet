@@ -4,9 +4,10 @@ import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
 import {I18N, getText} from '@app/i18n';
-import {MIN_AMOUNT, WEI} from '@app/variables/common';
+import {MIN_AMOUNT} from '@app/variables/common';
 
 export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
+  console.log('initialMaxSum', initialMaxSum);
   const [{amount, amountText}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum > 0 ? new Decimal(initialSum).toString() : '',
@@ -14,7 +15,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
 
   useEffect(() => {
-    setMaxAmount(initialMaxSum - MIN_AMOUNT);
+    setMaxAmount(initialMaxSum);
   }, [initialMaxSum]);
 
   const [error, setError] = useState('');
@@ -40,7 +41,7 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
   return {
     isValid:
       decAmount.greaterThanOrEqualTo(MIN_AMOUNT) &&
-      decAmount.lessThan(new Decimal(maxAmount)) &&
+      decAmount.lessThanOrEqualTo(new Decimal(maxAmount)) &&
       !error,
     maxAmount: maxAmount,
     amount: amountText,
@@ -49,11 +50,11 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
       setMaxAmount(value);
     },
     setMax() {
-      const a = Math.floor((maxAmount - 1 / WEI) / MIN_AMOUNT) * MIN_AMOUNT;
+      const a = Math.floor(maxAmount / MIN_AMOUNT) * MIN_AMOUNT;
 
       setAmount({
         amountText: String(a),
-        amount: a,
+        amount: maxAmount,
       });
     },
     setAmount(text: string) {
