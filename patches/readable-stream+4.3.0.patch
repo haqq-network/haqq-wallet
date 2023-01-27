@@ -1,13 +1,13 @@
 diff --git a/node_modules/readable-stream/lib/ours/errors.js b/node_modules/readable-stream/lib/ours/errors.js
-index 7fd9a97..d9d1e31 100644
+index 97866d1..a98b74a 100644
 --- a/node_modules/readable-stream/lib/ours/errors.js
 +++ b/node_modules/readable-stream/lib/ours/errors.js
-@@ -359,7 +359,7 @@ E(
+@@ -311,7 +311,7 @@ E(
+       received = addNumericalSeparator(String(input))
      } else if (typeof input === 'bigint') {
        received = String(input)
- 
 -      if (input > 2n ** 32n || input < -(2n ** 32n)) {
 +      if (input > BigInt(2) ** BigInt(32) || input < -(BigInt(2) ** BigInt(32))) {
          received = addNumericalSeparator(received)
        }
- 
+       received += 'n'
