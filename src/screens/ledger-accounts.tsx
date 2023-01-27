@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerAccounts} from '@app/components/ledger-accounts';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {mockForWallet} from '@app/helpers/mockForWallet';
 import {
   useTypedNavigation,
@@ -41,6 +42,8 @@ export const LedgerAccountsScreen = () => {
     setLoading(true);
     requestAnimationFrame(async () => {
       try {
+        await awaitForBluetooth();
+
         const addressList: LedgerAccountItem[] = [];
 
         for (let i = lastIndex; i < lastIndex + 5; i += 1) {
