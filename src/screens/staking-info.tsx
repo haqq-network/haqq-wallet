@@ -1,16 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {useWindowDimensions} from 'react-native';
-
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
-import {awaitForPopupClosed, showModal} from '@app/helpers';
-import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
+  awaitForBluetooth,
+  awaitForLedger,
+  awaitForPopupClosed,
+  awaitForWallet,
   getProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+} from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
@@ -19,6 +18,7 @@ import {
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
+import {MIN_AMOUNT} from '@app/variables/common';
 
 export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -33,8 +33,6 @@ export const StakingInfoScreen = () => {
   const [rewards, setRewards] = useState<StakingMetadata[]>([]);
   const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
   const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
-
-  const closeDistance = useWindowDimensions().height / 6;
 
   useEffect(() => {
     const wallets = Wallet.getAllVisible();
@@ -134,8 +132,6 @@ export const StakingInfoScreen = () => {
         ),
       );
 
-      console.log('responses', JSON.stringify(responses));
-
       for (const resp of responses) {
         if (resp.status === 'fulfilled' && resp.value) {
           for (const reward of rewards) {
@@ -154,73 +150,36 @@ export const StakingInfoScreen = () => {
     }
   }, [cosmos, rewards, operator_address, visible]);
 
-  const onDelegate = useCallback(
-    (address?: string) => {
-      let addr = address;
+  const onDelegate = useCallback(async () => {
+    const address = await awaitForWallet(
+      visible.filter(v => app.getBalance(v.address) >= MIN_AMOUNT),
+      I18N.stakingDelegateAccountTitle,
+    );
 
-      if (visible.length === 1) {
-        addr = visible[0].address;
-      }
+    navigation.push('stakingDelegate', {
+      validator: operator_address,
+      selectedWalletAddress: address,
+    });
+  }, [navigation, operator_address, visible]);
 
-      if (addr) {
-        navigation.push('stakingDelegate', {
-          validator: operator_address,
-          selectedWalletAddress: addr,
-        });
-      } else {
-        showModal('wallets-bottom-sheet', {
-          wallets: visible,
-          closeDistance,
-          title: I18N.stakingDelegateAccountTitle,
-          eventSuffix: '-delegate',
-        });
-      }
-    },
+  const onUnDelegate = useCallback(async () => {
+    const delegations = new Set(
+      StakingMetadata.getDelegationsForValidator(operator_address)
+        .filter(v => v.amount >= MIN_AMOUNT)
+        .map(v => v.delegator),
+    );
+    const available = visible.filter(w => delegations.has(w.cosmosAddress));
 
-    [navigation, operator_address, visible, closeDistance],
-  );
+    const address = await awaitForWallet(
+      available,
+      I18N.stakingDelegateAccountTitle,
+    );
 
-  const onUnDelegate = useCallback(
-    (address?: string) => {
-      const delegations = new Set(
-        StakingMetadata.getDelegationsForValidator(operator_address).map(
-          v => v.delegator,
-        ),
-      );
-      const available = visible.filter(w => delegations.has(w.cosmosAddress));
-
-      let addr = address;
-
-      if (available.length === 1) {
-        addr = available[0].address;
-      }
-
-      if (addr) {
-        navigation.push('stakingUnDelegate', {
-          validator: operator_address,
-          selectedWalletAddress: addr,
-        });
-      } else {
-        showModal('wallets-bottom-sheet', {
-          wallets: available,
-          closeDistance,
-          title: I18N.stakingDelegateAccountTitle,
-          eventSuffix: '-undelegate',
-        });
-      }
-    },
-
-    [navigation, operator_address, closeDistance, visible],
-  );
-
-  useEffect(() => {
-    app.addListener('wallet-selected-delegate', onDelegate);
-    app.addListener('wallet-selected-undelegate', onUnDelegate);
-    return () => {
-      app.removeListener('wallet-selected-delegate', onDelegate);
-      app.removeListener('wallet-selected-undelegate', onUnDelegate);
-    };
-  }, [onDelegate, onUnDelegate]);
+    navigation.push('stakingUnDelegate', {
+      validator: operator_address,
+      selectedWalletAddress: address,
+    });
+  }, [navigation, operator_address, visible]);
 
   return (
     <StakingInfo
