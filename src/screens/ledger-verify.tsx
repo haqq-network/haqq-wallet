@@ -3,6 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {LEDGER_APP} from '@app/variables/common';
@@ -39,6 +40,8 @@ export const LedgerVerifyScreen = () => {
 
     requestAnimationFrame(async () => {
       try {
+        await awaitForBluetooth();
+
         const address = await provider.confirmAddress(route.params.hdPath);
 
         if (address && address.toLowerCase() === route.params.address) {
