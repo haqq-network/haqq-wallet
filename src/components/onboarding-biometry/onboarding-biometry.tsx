@@ -79,13 +79,15 @@ export const OnboardingBiometry = ({
           </ErrorText>
         )}
       </Spacer>
-      <Button
-        style={style.margin}
-        variant={ButtonVariant.contained}
-        title={enableBiometry}
-        testID="onboarding_biometry_enable"
-        onPress={onClickEnable}
-      />
+      {!error && (
+        <Button
+          style={style.margin}
+          variant={ButtonVariant.contained}
+          title={enableBiometry}
+          testID="onboarding_biometry_enable"
+          onPress={onClickEnable}
+        />
+      )}
       <Button
         style={style.margin}
         i18n={I18N.onboardingBiometrySkip}
