@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View} from 'react-native';
+import {Pressable} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
@@ -9,15 +9,16 @@ import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type FilledCellProps = {
   word: string;
+  onPress: () => void;
 };
 
-export const FilledCell = ({word}: FilledCellProps) => {
+export const FilledCell = ({word, onPress}: FilledCellProps) => {
   return (
-    <View style={styles.cell}>
+    <Pressable style={styles.cell} onPress={onPress}>
       <Text t14 center color={Color.textBase3}>
         {word}
       </Text>
-    </View>
+    </Pressable>
   );
 };
 
