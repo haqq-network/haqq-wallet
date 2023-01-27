@@ -3081,6 +3081,11 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
+at-least-node@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
+  integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
+
 atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
@@ -5469,15 +5474,6 @@ fs-extra@^4.0.2, fs-extra@^4.0.3:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-extra@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
-  integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
-
 fs-extra@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
@@ -5486,6 +5482,16 @@ fs-extra@^8.1.0:
     graceful-fs "^4.2.0"
     jsonfile "^4.0.0"
     universalify "^0.1.0"
+
+fs-extra@^9.0.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.1.0.tgz#5954460c764a8da2094ba3554bf839e6b9a7c86d"
+  integrity sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==
+  dependencies:
+    at-least-node "^1.0.0"
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
 
 fs-minipass@^2.0.0:
   version "2.1.0"
@@ -6993,6 +6999,15 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+jsonfile@^6.0.1:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-6.1.0.tgz#bc55b2634793c679ec6403094eb13698a6ec0aae"
+  integrity sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==
+  dependencies:
+    universalify "^2.0.0"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
 jsprim@^1.2.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/jsprim/-/jsprim-1.4.2.tgz#712c65533a15c878ba59e9ed5f0e26d5b77c5feb"
@@ -8381,16 +8396,16 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==
 
-patch-package@^6.4.7:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.5.0.tgz#feb058db56f0005da59cfa316488321de585e88a"
-  integrity sha512-tC3EqJmo74yKqfsMzELaFwxOAu6FH6t+FzFOsnWAuARm7/n2xB5AOeOueE221eM9gtMuIKMKpF9tBy/X2mNP0Q==
+patch-package@^6.5.1:
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-6.5.1.tgz#3e5d00c16997e6160291fee06a521c42ac99b621"
+  integrity sha512-I/4Zsalfhc6bphmJTlrLoOcAF87jcxko4q0qsv4bGcurbr8IskEOtdnt9iCmsQVGL1B+iUhSQqweyTLJfCF9rA==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^4.1.2"
     cross-spawn "^6.0.5"
     find-yarn-workspace-root "^2.0.0"
-    fs-extra "^7.0.1"
+    fs-extra "^9.0.0"
     is-ci "^2.0.0"
     klaw-sync "^6.0.0"
     minimist "^1.2.6"
@@ -8904,10 +8919,10 @@ react-native-detector@^0.2.3:
   resolved "https://registry.yarnpkg.com/react-native-detector/-/react-native-detector-0.2.3.tgz#6c940daa35c8ab673eaf1253c569df2a26eeb344"
   integrity sha512-q0uMXKsK4hAYK5OKMJmMpPiHDyiXWV9Cvlrwbn51gdIoPApzWkK61pOW411gLn6KbeoUQnDqJoDIuIqi0m0TSg==
 
-react-native-dotenv@^3.3.1:
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.6.tgz#7860f9b4543789f661765a0e7c3f40914133fa4e"
-  integrity sha512-OS+XdceNZmfFTIobQg8J5ZT6979Dr3j5GTgsIzu1JDdKV2IjIfYBTryTT3hJ8VMwdj5WiaredmZEVWwrRIwdtg==
+react-native-dotenv@^3.4.7:
+  version "3.4.7"
+  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.7.tgz#131374dd5c22b1173f7025b2a3b4e124b0142e03"
+  integrity sha512-GqUDdmrtKw7qYS9jjQLipEPctMd0YuSBNVZBNlaHtaHMJ63iaB4FABO4uX0iSUJpgMwozZki4fRv4dDHmVUoLg==
   dependencies:
     dotenv "^16.0.3"
 
@@ -10682,6 +10697,11 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
+
+universalify@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
+  integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
 unpipe@~1.0.0:
   version "1.0.0"
