@@ -9,6 +9,7 @@ import {suggestApp} from '@haqq/provider-ledger-react-native/src/commands/sugges
 
 import {LedgerScan} from '@app/components/ledger-scan';
 import {hideModal, showModal} from '@app/helpers';
+import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation} from '@app/hooks';
 import {LEDGER_APP} from '@app/variables/common';
@@ -47,6 +48,12 @@ export const LedgerScanScreen = () => {
   }, [scan]);
 
   const navigation = useTypedNavigation();
+
+  useEffect(() => {
+    awaitForBluetooth().then(() => {
+      console.log('connected');
+    });
+  }, []);
 
   const tryToConnect = useCallback(
     async (item: Device) => {
