@@ -324,17 +324,22 @@ export class Cosmos {
   }
 
   async getFee(data: object, account: Sender) {
-    const resp = await this.postSimulate(data, account);
+    try {
+      const resp = await this.postSimulate(data, account);
 
-    return {
-      ...Cosmos.fee,
-      gas: String(
-        Math.max(
-          parseInt(Cosmos.fee.gas, 10),
-          parseInt(resp.gas_info.gas_used, 10) * 1.2,
+      return {
+        ...Cosmos.fee,
+        gas: String(
+          Math.max(
+            parseInt(Cosmos.fee.gas, 10),
+            parseInt(resp.gas_info.gas_used, 10) * 1.2,
+          ),
         ),
-      ),
-    };
+      };
+    } catch (e) {
+      captureException(e, 'getFee');
+      return {...Cosmos.fee};
+    }
   }
 
   async deposit(
