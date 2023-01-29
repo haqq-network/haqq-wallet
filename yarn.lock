@@ -9072,10 +9072,10 @@ react-native-svg@^12.5.0:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-react-native-system-navigation-bar@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.1.0.tgz#dc054e5107cda400935eb8d376afe6cc5d215089"
-  integrity sha512-n/0wKeryPDVnxopyjuF4ine9ZWAr1jJFv5KL+PhK09AvHdqVirNQV6RXZKbkJeXNpRsCQCI6sPV2SiqlfU4QBg==
+react-native-system-navigation-bar@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.2.0.tgz#70c924e5b40a34c6f78910ca7bf990082637ddab"
+  integrity sha512-iVrWFbEh5WSX5pFiCBxJ1+zte4zTbTjLFsK/OZjKpwpZgLgDingEHaqQPAU+PPTYxzkShoCiaVnCNIbDzNnBow==
 
 react-native-touch-id@^4.4.1:
   version "4.4.1"
