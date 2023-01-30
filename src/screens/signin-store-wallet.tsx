@@ -1,5 +1,10 @@
 import React, {useEffect} from 'react';
 
+import {
+  accountInfo,
+  derive,
+  seedFromMnemonic,
+} from '@haqq/provider-web3-utils/src';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
@@ -7,7 +12,6 @@ import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
-import {restoreFromMnemonic} from '@app/services/eth-utils';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -30,6 +34,11 @@ export const SignInStoreWalletScreen = () => {
         if (mnemonic) {
           let canNext = true;
           let index = 0;
+
+          const seed = await seedFromMnemonic(mnemonic);
+          const rootPrivateKey = await derive(seed, 'm');
+          const rootInfo = await accountInfo(rootPrivateKey);
+
           while (canNext) {
             const total = Wallet.getAll().length;
             const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
@@ -38,27 +47,26 @@ export const SignInStoreWalletScreen = () => {
 
             const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
-            const node = await restoreFromMnemonic(
-              String(mnemonic),
-              `${ETH_HD_SHORT_PATH}/${index}`,
-            );
+            const path = `${ETH_HD_SHORT_PATH}/${index}`;
+            const pk = await derive(seed, path);
+            const {address, publicKey} = await accountInfo(pk);
 
-            const existsWallet = Wallet.getById(node.address);
+            const existsWallet = Wallet.getById(address);
 
             if (!existsWallet) {
-              const balance = await EthNetwork.getBalance(node.address);
+              const balance = await EthNetwork.getBalance(address);
               canNext = balance > 0 || index === 0;
 
               if (canNext) {
                 const wallet = await wallets.addWallet(
                   {
-                    address: node.address,
+                    address: address,
                     type: WalletType.mnemonic,
-                    privateKey: node.privateKey,
-                    mnemonic: node.mnemonic,
-                    path: node.path,
-                    rootAddress: node.rootAddress,
-                    publicKey: '',
+                    privateKey: pk,
+                    mnemonic: mnemonic,
+                    path: path,
+                    rootAddress: rootInfo.address,
+                    publicKey: publicKey,
                   },
                   name,
                 );

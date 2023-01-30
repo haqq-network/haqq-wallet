@@ -21,19 +21,6 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
   override fun getName() = "RNEthUtils"
 
   @ReactMethod
-  fun generateMnemonic(strength: Int, promise: Promise) {
-    try {
-      val bytes =  Mnemonic.generateEntropy(strength = strength)
-      val mnemonic = Mnemonic(bytes = bytes)
-
-      promise.resolve(mnemonic.mnemonic())
-
-    } catch (e: IOException) {
-      promise.reject("0", "generateMnemonic")
-    }
-  }
-
-  @ReactMethod
   fun restoreFromPrivateKey(privateKey: String, promise: Promise) {
     try {
       val wallet = Wallet(privateKey = privateKey)
