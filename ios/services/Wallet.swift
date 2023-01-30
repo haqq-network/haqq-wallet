@@ -19,8 +19,7 @@ public class Wallet {
   
   var address: [UInt8] {
       get {
-          let privateKey = try! secp256k1.Signing.PrivateKey(rawRepresentation: privateKey, format: .uncompressed)
-          let pk = privateKey.publicKey.rawRepresentation
+          let pk = Data(publicKey)
           let hash = Digest.sha3(Array(pk.subdata(in: 1..<pk.count)), variant: .keccak256)
           return Array(hash[ 12..<hash.count])
       }
@@ -49,5 +48,4 @@ public class Wallet {
     
     self.privateKey = Array(key[0..<32])
   }
-
 }

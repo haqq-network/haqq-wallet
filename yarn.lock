@@ -1367,6 +1367,11 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
+"@haqq/provider-web3-utils@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.2.tgz#252901d8dcbb9b675ad182235859c4f4b6681638"
+  integrity sha512-vfmBTJuWQsl2oojBtD1QEddRnA8dFOTduOx98vzWyahh4B8f2uUIPF5C+avore04cvUCs2s8p4hXI0bprptZ8Q==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

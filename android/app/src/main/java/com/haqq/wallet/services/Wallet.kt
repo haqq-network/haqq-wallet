@@ -16,7 +16,7 @@ class Wallet {
   }
 
   constructor(privateKey: String) {
-    val pk = if(privateKey.startsWith("0x")) {
+    val pk = if (privateKey.startsWith("0x")) {
       privateKey.substring(2)
     } else {
       privateKey
@@ -48,6 +48,6 @@ class Wallet {
   }
 
   fun publicKey(): ByteArray {
-    return Secp256k1.pubkeyCreate(_privateKey)
+    return Secp256k1.pubKeyCompress(Secp256k1.pubkeyCreate(_privateKey))
   }
 }
