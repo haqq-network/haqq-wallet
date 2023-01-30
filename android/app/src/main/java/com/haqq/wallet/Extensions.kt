@@ -14,23 +14,6 @@ fun ByteArray.toBits(): String {
   }
 }
 
-fun ByteArray.isEqual(comparable: ByteArray): Boolean {
-  var isChanged = true
-
-  if (this.size == comparable.size) {
-    for (index in 0 until comparable.size) {
-      if (this[index] != comparable[index]) {
-        isChanged = false
-        break
-      }
-    }
-  } else {
-    isChanged = false
-  }
-
-  return isChanged
-}
-
 fun Long.toByte32Array(): ByteArray {
   val buffer = ByteBuffer.allocate(Long.SIZE_BYTES)
   buffer.putLong(this)

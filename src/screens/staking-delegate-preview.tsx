@@ -62,8 +62,6 @@ export const StakingDelegatePreviewScreen = () => {
 
         const resp = await query;
 
-        console.log('resp', JSON.stringify(resp));
-
         if (!resp) {
           throw new Error('transaction_error');
         }

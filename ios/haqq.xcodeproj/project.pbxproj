@@ -33,7 +33,6 @@
 		212B00FF294ADDB800E57091 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FE294ADDB800E57091 /* ToastView.swift */; };
 		212B0101294AE0AB00E57091 /* variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0100294AE0AB00E57091 /* variables.swift */; };
 		212B0103294AE1A600E57091 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0102294AE1A600E57091 /* Theme.swift */; };
-		21A049A5297E6AEA00269B32 /* Data+bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A049A4297E6AE900269B32 /* Data+bytes.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21E6B18929115B240055570A /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18829115B240055570A /* HDKey.swift */; };
@@ -123,7 +122,6 @@
 		212B00FE294ADDB800E57091 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		212B0100294AE0AB00E57091 /* variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = variables.swift; sourceTree = "<group>"; };
 		212B0102294AE1A600E57091 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		21A049A4297E6AE900269B32 /* Data+bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+bytes.swift"; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21E6B18829115B240055570A /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
@@ -275,7 +273,6 @@
 			children = (
 				210F818B29110E66002A27EB /* String+split.swift */,
 				210F818F29112548002A27EB /* Data+hexEncodedString.swift */,
-				21A049A4297E6AE900269B32 /* Data+bytes.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -761,7 +758,6 @@
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
 				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
 				212B00FB294AD39900E57091 /* Toast.m in Sources */,
-				21A049A5297E6AEA00269B32 /* Data+bytes.swift in Sources */,
 				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

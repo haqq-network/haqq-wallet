@@ -1,8 +1,6 @@
 package com.haqq.wallet.services
 
 import com.haqq.wallet.decodeHex
-import com.haqq.wallet.isEqual
-import com.haqq.wallet.toHex
 import fr.acinq.secp256k1.Secp256k1
 import org.komputing.khash.keccak.Keccak
 import org.komputing.khash.keccak.KeccakParameter

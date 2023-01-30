@@ -4,7 +4,6 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.haqq.wallet.decodeHex
 import com.haqq.wallet.services.HDKey
 import com.haqq.wallet.services.Mnemonic
 import com.haqq.wallet.services.Wallet

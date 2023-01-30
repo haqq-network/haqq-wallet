@@ -8,14 +8,6 @@
 import Foundation
 import CryptoSwift
 import secp256k1Swift
-import secp256k1Wrapper
-
-enum WalletError: Error {
-  case invalid_context;
-  case signature_failure;
-  case recid
-}
-
 
 public class Wallet {
   var publicKey: [UInt8] {
