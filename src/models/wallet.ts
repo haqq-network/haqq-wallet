@@ -212,22 +212,6 @@ export class Wallet extends Realm.Object {
     }
   }
 
-  async getPrivateKey() {
-    switch (this.type) {
-      case WalletType.hot:
-      case WalletType.mnemonic: {
-        const password = await app.getPassword();
-        const decrypted = await decrypt<{privateKey: string}>(
-          password,
-          this.data,
-        );
-        return decrypted.privateKey;
-      }
-      default:
-        throw new Error('wallet_no_pk');
-    }
-  }
-
   update(params: Partial<Wallet>) {
     realm.write(() => {
       realm.create(
@@ -288,36 +272,5 @@ export class Wallet extends Realm.Object {
     }
 
     return this._cosmosAddress;
-  }
-
-  setPublicKey(publicKey: string) {
-    realm.write(() => {
-      this.publicKey = publicKey;
-    });
-  }
-
-  getAccountData() {
-    // eslint-disable-next-line consistent-this
-    const self = this;
-    return {
-      get address(): string {
-        return self.address;
-      },
-      get deviceId(): string {
-        return self.deviceId ?? '';
-      },
-      get path(): string {
-        return self.path ?? '';
-      },
-      get publicKey() {
-        return self.publicKey ?? '';
-      },
-      set publicKey(value: string) {
-        self.setPublicKey(value);
-      },
-      getPrivateKey(): Promise<string> {
-        return self.getPrivateKey();
-      },
-    };
   }
 }
