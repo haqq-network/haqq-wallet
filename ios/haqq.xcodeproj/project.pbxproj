@@ -39,6 +39,8 @@
 		21E6B18B291224440055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18A291224440055570A /* Wallet.swift */; };
 		21E6B18D291227E20055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18C291227E20055570A /* Wallet.swift */; };
 		21E6B18F291247A60055570A /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18E291247A60055570A /* logger.swift */; };
+		21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */; };
+		21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		2E5D459518A44E1D95D06839 /* mnemonic-notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 093F7D3C80D54C028B10F9B3 /* mnemonic-notify.png */; };
 		3212A2BDB32F4BCC8C111B6D /* islm_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F6F6841FA9AE40C380CDD01F /* islm_icon@3x.png */; };
@@ -128,6 +130,8 @@
 		21E6B18A291224440055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18C291227E20055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18E291247A60055570A /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
+		21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
+		21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		249F18A2DEDB427998FD995D /* backup-notification-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; };
 		25EA6C2D4335471DAA7CBD12 /* qr-logo@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@2x.png"; path = "../assets/images/qr-logo@2x.png"; sourceTree = "<group>"; };
@@ -246,6 +250,8 @@
 				21E6B18E291247A60055570A /* logger.swift */,
 				212B0100294AE0AB00E57091 /* variables.swift */,
 				212B0102294AE1A600E57091 /* Theme.swift */,
+				21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */,
+				21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -751,6 +757,8 @@
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
+				21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */,
+				21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
