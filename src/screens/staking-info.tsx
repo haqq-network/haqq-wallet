@@ -86,6 +86,7 @@ export const StakingInfoScreen = () => {
           return cosmos
             .withdrawDelegatorReward(
               getProviderInstanceForWallet(w),
+              w.path!,
               operator_address,
             )
             .then(() => [w.cosmosAddress, operator_address]);
@@ -104,7 +105,11 @@ export const StakingInfoScreen = () => {
 
             queue.push(
               cosmos
-                .withdrawDelegatorReward(transport, operator_address)
+                .withdrawDelegatorReward(
+                  transport,
+                  current.path!,
+                  operator_address,
+                )
                 .then(() => [current.cosmosAddress, operator_address]),
             );
             await awaitForLedger(transport);

@@ -105,6 +105,7 @@ export const HomeStakingScreen = () => {
         return cosmos
           .multipleWithdrawDelegatorReward(
             getProviderInstanceForWallet(w),
+            w.path!,
             delegators[w.cosmosAddress],
           )
           .then(() => [w.cosmosAddress, delegators[w.cosmosAddress]]);
@@ -122,6 +123,7 @@ export const HomeStakingScreen = () => {
           cosmos
             .multipleWithdrawDelegatorReward(
               transport,
+              current.path!,
               delegators[current.cosmosAddress],
             )
             .then(() => [

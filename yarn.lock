@@ -1345,19 +1345,19 @@
   resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.1.tgz#4307eff76660aed018884f1f2895c286f610ed0a"
   integrity sha512-V3qvgGBrzOR75pxuNQ4Rgp/75enD6rbbLGlU6WGiyltYuKZErZL02e0PU1TpsYmTNXdo8LaHnoTWfprtxA3oWA==
 
-"@haqq/provider-base@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.7.tgz#884155e4e661f849f364df93c361009b6d0a59e5"
-  integrity sha512-mfH3peWrlBDcpj+eKHyRmkWDKjI878Ml2XdTKX+zhjKwwRH9LLetq4uXi+weAcJ5bW70qtxwR4XLY/rX49Qj8g==
+"@haqq/provider-base@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.10.tgz#5785c0fb46badee94844253fdb865ecbae07a2ec"
+  integrity sha512-rF555m98H1JIiSZt1OC9bVz6qBooYAnAQiATbB2SkHj0/Mrgnm+j8/dv8v71XPEVozG/YMjLBlRWagwtAPxnjA==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-ledger-react-native@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.11.tgz#6168b93248f8d8cf7c79b7d799a49db8f2a2af2b"
-  integrity sha512-dWSTHXlekr8APeGvKGaKbCBwFd2yfUW3BmCrxn5+m4AsKmt7lbbgKZLtSz0s4IRuSXIgJdaFwZCX97VhZlf85A==
+"@haqq/provider-ledger-react-native@0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.12.tgz#3a69da0325f9352c4508a07351bf0d6163cbd184"
+  integrity sha512-93q04TM+VH72ZvWlYtxLP+Gla3pxirR5hMFWzgsuKhpmAwTHIGulxlWgBz/fvuum0nH0un3fJzBhb7/W66086g==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"

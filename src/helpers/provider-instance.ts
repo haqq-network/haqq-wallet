@@ -1,5 +1,6 @@
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
+import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
 import {TransportHot} from '@app/services/transport-hot';
 import {WalletType} from '@app/types';
@@ -24,18 +25,19 @@ export function getProviderInstanceForWallet(wallet: Wallet) {
       case WalletType.hot:
         cache.set(
           wallet.address,
-          new TransportHot(wallet.getAccountData(), {
+          new TransportHot({
             cosmosPrefix: 'haqq',
+            encryptedData: wallet.data!,
+            getPassword: app.getPassword,
           }),
         );
         break;
       case WalletType.ledgerBt:
         cache.set(
           wallet.address,
-          new ProviderLedgerReactNative(wallet.getAccountData(), {
+          new ProviderLedgerReactNative({
             cosmosPrefix: 'haqq',
             deviceId: wallet.deviceId!,
-            hdPath: wallet.path ?? '',
             appName: LEDGER_APP,
           }),
         );

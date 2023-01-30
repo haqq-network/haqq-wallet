@@ -4,7 +4,6 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {mockForWallet} from '@app/helpers/mockForWallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -31,10 +30,9 @@ export const LedgerVerifyScreen = () => {
   ]);
 
   useEffect(() => {
-    const provider = new ProviderLedgerReactNative(mockForWallet, {
+    const provider = new ProviderLedgerReactNative({
       cosmosPrefix: 'haqq',
       deviceId: route.params.deviceId,
-      hdPath: '',
       appName: LEDGER_APP,
     });
 
