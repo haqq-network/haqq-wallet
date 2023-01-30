@@ -10,12 +10,6 @@
 
 @interface RCT_EXTERN_MODULE(RNEthUtils, NSObject)
   RCT_EXTERN_METHOD(
-                    generateMnemonic: (NSNumber *) strength
-                    resolve: (RCTPromiseResolveBlock) resolve
-                    rejecter: (RCTPromiseRejectBlock) reject
-                    )
-
-  RCT_EXTERN_METHOD(
                     restoreFromPrivateKey: (NSString *) privateKey
                     resolve: (RCTPromiseResolveBlock) resolve
                     rejecter: (RCTPromiseRejectBlock) reject
