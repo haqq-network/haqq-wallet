@@ -56,12 +56,4 @@ public class Wallet {
     
     self.privateKey = Array(key[0..<32])
   }
-  
-  public func sign(_ message: [UInt8]) throws -> [UInt8] {
-    let hash = Digest.sha3(message, variant: .keccak256)
-    
-    let signature = try! KeyUtil.sign(message: hash, privateKey: self.privateKey)
-        
-    return signature.bytes
-  }
 }

@@ -52,32 +52,4 @@ class Wallet {
   fun publicKey(): ByteArray {
     return Secp256k1.pubKeyCompress(Secp256k1.pubkeyCreate(_privateKey))
   }
-
-  fun sign(message: ByteArray): ByteArray {
-    val hash = Keccak.digest(message, KeccakParameter.KECCAK_256)
-
-    var signature = Secp256k1.sign(hash, privateKey())
-    val pk = publicKey()
-
-    var recId = -1
-
-    for (i in 0..3) {
-      val pk2 = Secp256k1.pubKeyCompress(Secp256k1.ecdsaRecover(signature, hash, i))
-
-      if (pk.isEqual(pk2)) {
-        recId = i;
-        break
-      }
-    }
-
-    if (recId == -1) {
-      throw RuntimeException(
-        "Could not construct a recoverable key. Are your credentials valid?"
-      )
-    }
-
-    signature += recId.toByte()
-
-    return signature
-  }
 }

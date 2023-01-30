@@ -7,8 +7,9 @@ import {
   ProviderInterface,
   compressPublicKey,
 } from '@haqq/provider-base';
+import {sign} from '@haqq/provider-web3-utils';
 
-import {restoreFromPrivateKey, sign} from '@app/services/eth-utils';
+import {restoreFromPrivateKey} from '@app/services/eth-utils';
 
 const hexStringToByteArray = (hexString: string | number[]) => {
   if (Array.isArray(hexString)) {

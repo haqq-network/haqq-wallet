@@ -68,24 +68,6 @@ class RNEthUtils: NSObject {
   static func requiresMainQueueSetup() -> Bool { return true }
   
   @objc
-  public func generateMnemonic(_ strength: Optional<NSNumber>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let strength =  Int(truncating: strength ?? 16)
-      
-      let mnemonic = Mnemonic(bytes: Mnemonic.generateEntropy(strength: strength))
-      
-      if !mnemonic.isValid {
-        throw RNEthUtilsError.mnemonic_invalid
-      }
-      
-      resolve(mnemonic.mnemonic.joined(separator: " "))
-    } catch {
-      logger("generateMnemonic \(error)")
-      reject("0", "generateMnemonic \(error)", nil)
-    }
-  }
-  
-  @objc
   public func restoreFromPrivateKey(_ privateKey: Optional<String>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock)-> Void {
     do {
       guard let privateKey = privateKey else {
@@ -106,7 +88,6 @@ class RNEthUtils: NSObject {
       let json = try! resp.toJSON()
       resolve(json)
     } catch {
-      logger("restoreFromPrivateKey \(error)")
       reject("0", "restoreFromPrivateKey \(error)", nil)
     }
   }
@@ -153,30 +134,7 @@ class RNEthUtils: NSObject {
 
       resolve(json)
     } catch {
-      logger("restoreFromMnemonic \(error)")
       reject("0", "restoreFromMnemonic \(error)", nil)
-    }
-  }
-  
-  @objc
-  public func sign(_ privateKey: Optional<String>, message: Optional<String>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock)-> Void {
-    do {
-      guard let privateKey = privateKey else {
-        throw RNEthUtilsError.private_key_not_found;
-      }
-      
-      guard let message = message else {
-        throw RNEthUtilsError.message_not_found;
-      }
-
-      let wallet = Wallet(privateKey: privateKey)
-      
-      let sig = try wallet.sign(Array(hex: message))
-      
-      resolve(Data(sig).toHexString())
-    } catch {
-      logger("sign \(error)")
-      reject("0", "sign \(error)", nil)
     }
   }
 }

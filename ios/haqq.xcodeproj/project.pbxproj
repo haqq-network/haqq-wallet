@@ -36,13 +36,10 @@
 		21A049A5297E6AEA00269B32 /* Data+bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A049A4297E6AE900269B32 /* Data+bytes.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
-		21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78D2910DC5800399978 /* Mnemonic.swift */; };
-		21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */; };
 		21E6B18929115B240055570A /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18829115B240055570A /* HDKey.swift */; };
 		21E6B18B291224440055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18A291224440055570A /* Wallet.swift */; };
 		21E6B18D291227E20055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18C291227E20055570A /* Wallet.swift */; };
 		21E6B18F291247A60055570A /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18E291247A60055570A /* logger.swift */; };
-		21F2B8B329876BBA0098FAF9 /* KeyUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8B229876BBA0098FAF9 /* KeyUtil.swift */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		2E5D459518A44E1D95D06839 /* mnemonic-notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 093F7D3C80D54C028B10F9B3 /* mnemonic-notify.png */; };
 		3212A2BDB32F4BCC8C111B6D /* islm_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F6F6841FA9AE40C380CDD01F /* islm_icon@3x.png */; };
@@ -129,13 +126,10 @@
 		21A049A4297E6AE900269B32 /* Data+bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+bytes.swift"; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
-		21D7A78D2910DC5800399978 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
-		21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
 		21E6B18829115B240055570A /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
 		21E6B18A291224440055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18C291227E20055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18E291247A60055570A /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
-		21F2B8B229876BBA0098FAF9 /* KeyUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyUtil.swift; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		249F18A2DEDB427998FD995D /* backup-notification-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; };
 		25EA6C2D4335471DAA7CBD12 /* qr-logo@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@2x.png"; path = "../assets/images/qr-logo@2x.png"; sourceTree = "<group>"; };
@@ -249,14 +243,11 @@
 				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
-				21D7A78D2910DC5800399978 /* Mnemonic.swift */,
-				21D7A78F2910DC9100399978 /* MnemonicWordlist.swift */,
 				210F81AE29113FFF002A27EB /* HDKey.swift */,
 				21E6B18A291224440055570A /* Wallet.swift */,
 				21E6B18E291247A60055570A /* logger.swift */,
 				212B0100294AE0AB00E57091 /* variables.swift */,
 				212B0102294AE1A600E57091 /* Theme.swift */,
-				21F2B8B229876BBA0098FAF9 /* KeyUtil.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -761,11 +752,9 @@
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
-				21D7A78E2910DC5800399978 /* Mnemonic.swift in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				21F2B8B329876BBA0098FAF9 /* KeyUtil.swift in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
@@ -774,7 +763,6 @@
 				212B00FB294AD39900E57091 /* Toast.m in Sources */,
 				21A049A5297E6AEA00269B32 /* Data+bytes.swift in Sources */,
 				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
-				21D7A7902910DC9100399978 /* MnemonicWordlist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

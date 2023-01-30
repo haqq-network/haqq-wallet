@@ -22,19 +22,6 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
   override fun getName() = "RNEthUtils"
 
   @ReactMethod
-  fun generateMnemonic(strength: Int, promise: Promise) {
-    try {
-      val bytes =  Mnemonic.generateEntropy(strength = strength)
-      val mnemonic = Mnemonic(bytes = bytes)
-
-      promise.resolve(mnemonic.mnemonic())
-
-    } catch (e: IOException) {
-      promise.reject("0", "generateMnemonic")
-    }
-  }
-
-  @ReactMethod
   fun restoreFromPrivateKey(privateKey: String, promise: Promise) {
     try {
       val wallet = Wallet(privateKey = privateKey)
@@ -84,27 +71,6 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
       )
 
       promise.resolve(result)
-    } catch (_: IOException) {
-
-    } catch (e: java.lang.IllegalArgumentException) {
-      promise.reject("0", e)
-    }
-  }
-
-  @ReactMethod
-  fun sign(privateKey: String, message: String, promise: Promise) {
-    try {
-      val wallet = Wallet(privateKey = privateKey)
-
-      val msg = if (message.startsWith("0x")) {
-        message.substring(2)
-      } else {
-        message
-      }
-
-      val resp = wallet.sign(msg.decodeHex())
-
-      promise.resolve(resp.toHex());
     } catch (_: IOException) {
 
     } catch (e: java.lang.IllegalArgumentException) {
