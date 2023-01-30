@@ -1,26 +1,41 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {hexConcat, joinSignature} from '@ethersproject/bytes';
-import {keccak256} from '@ethersproject/keccak256';
+import {hexConcat} from '@ethersproject/bytes';
+import {serialize} from '@ethersproject/transactions';
 import {UnsignedTransaction} from '@ethersproject/transactions/src.ts';
-import {Wallet as EthersWallet} from '@ethersproject/wallet';
 import {
   Provider as ProviderBase,
   ProviderInterface,
   compressPublicKey,
 } from '@haqq/provider-base';
+import {accountInfo, sign} from '@haqq/provider-web3-utils';
+
+const hexStringToByteArray = (hexString: string | number[]) => {
+  if (Array.isArray(hexString)) {
+    return hexString;
+  }
+  return Array.from({length: hexString.length / 2}).map((_, i) =>
+    parseInt(hexString.substring(i * 2, (i + 1) * 2), 16),
+  );
+};
 
 export class TransportHot
   extends ProviderBase<{}>
   implements ProviderInterface
 {
   async getBase64PublicKey() {
-    if (!this._wallet.publicKey) {
-      const privateKey = await this._wallet.getPrivateKey();
-      const ethWallet = new EthersWallet(privateKey);
-      this._wallet.publicKey = compressPublicKey(ethWallet.publicKey);
+    const privateKey = await this._wallet.getPrivateKey();
+
+    if (!privateKey) {
+      throw new Error('private_key_not_found');
     }
 
-    return Buffer.from(this._wallet.publicKey, 'hex').toString('base64');
+    const {publicKey} = await accountInfo(privateKey);
+
+    let pk = publicKey.startsWith('0x') ? publicKey.slice(2) : publicKey;
+
+    pk = pk.startsWith('04') ? compressPublicKey(pk) : pk;
+
+    return Buffer.from(pk, 'hex').toString('base64');
   }
 
   async getSignedTx(transaction: TransactionRequest | UnsignedTransaction) {
@@ -30,20 +45,27 @@ export class TransportHot
       throw new Error('private_key_not_found');
     }
 
-    const wallet = new EthersWallet(privateKey);
+    const signature = await sign(
+      privateKey,
+      serialize(<UnsignedTransaction>transaction),
+    );
 
-    return wallet.signTransaction(transaction as TransactionRequest);
+    const sig = hexStringToByteArray(signature);
+
+    return serialize(<UnsignedTransaction>transaction, sig);
   }
 
   async signTypedData(domainHash: string, valuesHash: string) {
     try {
       const privateKey = await this._wallet.getPrivateKey();
-      const ethWallet = new EthersWallet(privateKey);
-      const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
-      const hash = keccak256(concatHash);
-      const response = joinSignature(ethWallet._signingKey().signDigest(hash));
-      this.emit('signTypedData', true);
 
+      if (!privateKey) {
+        throw new Error('private_key_not_found');
+      }
+
+      const concatHash = hexConcat(['0x1901', domainHash, valuesHash]);
+      const response = await sign(privateKey, concatHash);
+      this.emit('signTypedData', true);
       return response;
     } catch (e) {
       if (e instanceof Error) {

@@ -14,6 +14,8 @@ enum RNEthUtilsError: Error {
   case private_key_not_found;
   case mnemonic_not_found;
   case encode_json;
+  case message_not_found;
+  case bytes_hex
 }
 
 
@@ -40,29 +42,30 @@ struct RNEthUtilsResult: Codable {
   }
 }
 
+struct Signature: Codable {
+  var v: UInt;
+  var r: String;
+  var s: String;
+  
+  public func toJSON() throws -> String {
+    let jsonEncoder = JSONEncoder();
+    
+    guard let encode = try? jsonEncoder.encode(self) else {
+      throw RNEthUtilsError.encode_json;
+    }
+    
+    guard let resp = String(data: encode, encoding: .utf8) else {
+      throw RNEthUtilsError.encode_json;
+    }
+    
+    return resp
+  }
+}
 
 @objc(RNEthUtils)
 class RNEthUtils: NSObject {
   @objc
   static func requiresMainQueueSetup() -> Bool { return true }
-  
-  @objc
-  public func generateMnemonic(_ strength: Optional<NSNumber>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let strength =  Int(truncating: strength ?? 16)
-      
-      let mnemonic = Mnemonic(bytes: Mnemonic.generateEntropy(strength: strength))
-      
-      if !mnemonic.isValid {
-        throw RNEthUtilsError.mnemonic_invalid
-      }
-      
-      resolve(mnemonic.mnemonic.joined(separator: " "))
-    } catch {
-      logger("generateMnemonic \(error)")
-      reject("0", "generateMnemonic \(error)", nil)
-    }
-  }
   
   @objc
   public func restoreFromPrivateKey(_ privateKey: Optional<String>, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock)-> Void {
@@ -85,7 +88,6 @@ class RNEthUtils: NSObject {
       let json = try! resp.toJSON()
       resolve(json)
     } catch {
-      logger("restoreFromPrivateKey \(error)")
       reject("0", "restoreFromPrivateKey \(error)", nil)
     }
   }
@@ -132,7 +134,6 @@ class RNEthUtils: NSObject {
 
       resolve(json)
     } catch {
-      logger("restoreFromMnemonic \(error)")
       reject("0", "restoreFromMnemonic \(error)", nil)
     }
   }

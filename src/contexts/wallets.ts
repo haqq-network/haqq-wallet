@@ -2,15 +2,12 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
+import {accountInfo, derive, seedFromMnemonic} from '@haqq/provider-web3-utils';
 import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
-import {
-  restoreFromMnemonic,
-  restoreFromPrivateKey,
-} from '@app/services/eth-utils';
 import {AddWalletParams, WalletType} from '@app/types';
 import {getPatternName, sleep} from '@app/utils';
 
@@ -111,17 +108,21 @@ class Wallets extends EventEmitter {
     path: string,
     name?: string,
   ): Promise<Wallet | null> {
-    const node = await restoreFromMnemonic(mnemonic, path);
+    const seed = await seedFromMnemonic(mnemonic);
+    const rootPrivateKey = await derive(seed, 'm');
+    const rootInfo = await accountInfo(rootPrivateKey);
+    const privateKey = await derive(seed, path);
+    const {address, publicKey} = await accountInfo(privateKey);
 
     return this.addWallet(
       {
-        address: node.address,
+        address: address,
         type: WalletType.mnemonic,
-        privateKey: node.privateKey,
-        mnemonic: node.mnemonic,
-        path: node.path,
-        rootAddress: node.rootAddress,
-        publicKey: node.publicKey,
+        privateKey: privateKey,
+        mnemonic: mnemonic,
+        path: path,
+        rootAddress: rootInfo.address,
+        publicKey: publicKey,
       },
       name,
     );
@@ -131,14 +132,13 @@ class Wallets extends EventEmitter {
     privateKey: string,
     name = '',
   ): Promise<Wallet | null> {
-    const node = await restoreFromPrivateKey(privateKey);
-
+    const {address, publicKey} = await accountInfo(privateKey);
     return this.addWallet(
       {
-        address: node.address,
+        address: address,
         type: WalletType.hot,
-        privateKey: node.privateKey,
-        publicKey: node.publicKey,
+        privateKey: privateKey,
+        publicKey: publicKey,
       },
       name,
     );

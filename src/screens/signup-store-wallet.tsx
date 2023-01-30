@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 
+import {generateMnemonic} from '@haqq/provider-web3-utils';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {generateMnemonic} from '@app/services/eth-utils';
 import {
   ETH_HD_PATH,
   ETH_HD_SHORT_PATH,
