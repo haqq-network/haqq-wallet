@@ -15,6 +15,7 @@ enum RNEthUtilsError: Error {
   case mnemonic_not_found;
   case encode_json;
   case message_not_found;
+  case bytes_hex
 }
 
 
@@ -172,7 +173,7 @@ class RNEthUtils: NSObject {
       
       let sig = try wallet.sign(Array(hex: message))
       
-      resolve(sig)
+      resolve(Data(sig).toHexString())
     } catch {
       logger("sign \(error)")
       reject("0", "sign \(error)", nil)

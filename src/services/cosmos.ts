@@ -308,17 +308,23 @@ export class Cosmos {
       msg.eipToSign.message,
     );
 
+    console.log('signature', signature, sender, this.haqqChain);
+
     const extension = signatureToWeb3Extension(
       this.haqqChain,
       sender,
       signature!,
     );
 
+    console.log('extension', extension);
+
     const rawTx = createTxRawEIP712(
       msg.legacyAmino.body,
       msg.legacyAmino.authInfo,
       extension,
     );
+
+    console.log('rawTx', rawTx);
 
     return await this.broadcastTransaction(rawTx);
   }

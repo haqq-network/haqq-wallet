@@ -33,4 +33,10 @@
                   resolve: (RCTPromiseResolveBlock) resolve
                   rejecter: (RCTPromiseRejectBlock) reject
                   )
+RCT_EXTERN_METHOD(
+                sign2: (NSString *) privateKey
+                message: (NSString *) message
+                resolve: (RCTPromiseResolveBlock) resolve
+                rejecter: (RCTPromiseRejectBlock) reject
+                )
 @end

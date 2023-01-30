@@ -95,7 +95,14 @@ class EthUtilsManager(reactContext: ReactApplicationContext) :
   fun sign(privateKey: String, message: String, promise: Promise) {
     try {
       val wallet = Wallet(privateKey = privateKey)
-      val resp = wallet.sign(message.decodeHex())
+
+      val msg = if (message.startsWith("0x")) {
+        message.substring(2)
+      } else {
+        message
+      }
+
+      val resp = wallet.sign(msg.decodeHex())
 
       promise.resolve(resp.toHex());
     } catch (_: IOException) {
