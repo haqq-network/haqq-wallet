@@ -7,9 +7,7 @@ import {
   ProviderInterface,
   compressPublicKey,
 } from '@haqq/provider-base';
-import {sign} from '@haqq/provider-web3-utils';
-
-import {restoreFromPrivateKey} from '@app/services/eth-utils';
+import {accountInfo, sign} from '@haqq/provider-web3-utils';
 
 const hexStringToByteArray = (hexString: string | number[]) => {
   if (Array.isArray(hexString)) {
@@ -31,7 +29,7 @@ export class TransportHot
       throw new Error('private_key_not_found');
     }
 
-    const {publicKey} = await restoreFromPrivateKey(privateKey);
+    const {publicKey} = await accountInfo(privateKey);
 
     let pk = publicKey.startsWith('0x') ? publicKey.slice(2) : publicKey;
 
