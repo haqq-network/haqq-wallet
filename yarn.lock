@@ -1345,19 +1345,19 @@
   resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.1.tgz#4307eff76660aed018884f1f2895c286f610ed0a"
   integrity sha512-V3qvgGBrzOR75pxuNQ4Rgp/75enD6rbbLGlU6WGiyltYuKZErZL02e0PU1TpsYmTNXdo8LaHnoTWfprtxA3oWA==
 
-"@haqq/provider-base@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.10.tgz#5785c0fb46badee94844253fdb865ecbae07a2ec"
-  integrity sha512-rF555m98H1JIiSZt1OC9bVz6qBooYAnAQiATbB2SkHj0/Mrgnm+j8/dv8v71XPEVozG/YMjLBlRWagwtAPxnjA==
+"@haqq/provider-base@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.11.tgz#cc5ed8b981c5b2a9e46898fbeb41b725cf25a6d0"
+  integrity sha512-rim+sWDcNIT5eC8Zm4/KpbFIzevzlVLoVWPCZS0JzX5rhRRZXj8SU2u+Fp1MTaJymmxh7vui1tASHWckdOITFg==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-ledger-react-native@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.12.tgz#3a69da0325f9352c4508a07351bf0d6163cbd184"
-  integrity sha512-93q04TM+VH72ZvWlYtxLP+Gla3pxirR5hMFWzgsuKhpmAwTHIGulxlWgBz/fvuum0nH0un3fJzBhb7/W66086g==
+"@haqq/provider-ledger-react-native@0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.13.tgz#c2ea916cc13e5072f2d12a2834ab368b90805613"
+  integrity sha512-wNAaSQXXdvUdZtzvAIBJSqRZKTAFvbDbkTuQvfBChetArgG2XzMsyE0i8aLeBLo5GwNZXyNyqMXzd6PEpSqAeQ==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"
@@ -1367,10 +1367,10 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
-"@haqq/provider-web3-utils@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.2.tgz#252901d8dcbb9b675ad182235859c4f4b6681638"
-  integrity sha512-vfmBTJuWQsl2oojBtD1QEddRnA8dFOTduOx98vzWyahh4B8f2uUIPF5C+avore04cvUCs2s8p4hXI0bprptZ8Q==
+"@haqq/provider-web3-utils@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.5.tgz#ae7a9224836f2e82b0a464b943c91d19df239acd"
+  integrity sha512-gAHFaHeA7Xff15T4PPg5dnHZMR3zfRzIFU2V8HzAs3H8t24HQwLNeFmZ2z55zJlsAY0N6vVUn0lRSLHkYbbMhg==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"

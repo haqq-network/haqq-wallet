@@ -28,7 +28,7 @@ export function getProviderInstanceForWallet(wallet: Wallet) {
           new TransportHot({
             cosmosPrefix: 'haqq',
             encryptedData: wallet.data!,
-            getPassword: app.getPassword,
+            getPassword: app.getPassword.bind(app),
           }),
         );
         break;
