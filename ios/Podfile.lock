@@ -186,7 +186,7 @@ PODS:
   - HaqqEncryptionRN (0.0.1):
     - CryptoSwift (= 1.6.0)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.1):
+  - HaqqWeb3UtilsRN (0.0.4):
     - CryptoSwift (= 1.6.0)
     - React-Core
     - secp256k1Swift (= 0.7.4)
@@ -898,7 +898,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   HaqqEncryptionRN: d2e151c9d1408da3dbdc9f1e99085963a2f64a3a
-  HaqqWeb3UtilsRN: 5f31ac07a7bc1fe4260f25ebac829040888d577e
+  HaqqWeb3UtilsRN: aabce14e8c7837a8242db876d349a953d5bde71d
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8

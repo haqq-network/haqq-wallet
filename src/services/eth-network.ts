@@ -17,16 +17,17 @@ export class EthNetwork {
 
   async sendTransaction(
     transport: ProviderInterface,
+    hdPath: string,
     to: string,
     amount: string | number,
   ) {
+    const address = await transport.getEthAddress(hdPath);
     const transaction = await EthNetwork.populateTransaction(
-      transport.getEthAddress(),
+      address,
       to,
       String(amount),
     );
-
-    const signedTx = await transport.getSignedTx(transaction);
+    const signedTx = await transport.getSignedTx(hdPath, transaction);
 
     if (!signedTx) {
       throw new Error('signedTx not found');

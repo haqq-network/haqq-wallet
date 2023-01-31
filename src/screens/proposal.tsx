@@ -58,7 +58,12 @@ export const ProposalScreen = () => {
       try {
         const transport = getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.vote(transport, item.orderNumber, opinion);
+        const query = cosmos.vote(
+          transport,
+          wallet.path!,
+          item.orderNumber,
+          opinion,
+        );
 
         if (wallet.type === WalletType.ledgerBt) {
           await awaitForLedger(transport);
