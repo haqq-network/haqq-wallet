@@ -248,9 +248,13 @@ export class Cosmos {
     });
   }
 
-  async getSender(transport: ProviderInterface): Promise<Sender> {
-    const accInfo = await this.getAccountInfo(transport.getCosmosAddress());
-    const pubkey = await transport.getBase64PublicKey();
+  async getSender(
+    transport: ProviderInterface,
+    hdPath: string,
+  ): Promise<Sender> {
+    const address = await transport.getCosmosAddress(hdPath);
+    const accInfo = await this.getAccountInfo(address);
+    const pubkey = await transport.getBase64PublicKey(hdPath);
 
     return {
       accountAddress: accInfo.account.base_account.address,
@@ -261,6 +265,7 @@ export class Cosmos {
   }
 
   async signTypedData(
+    hdPath: string,
     transport: ProviderInterface,
     domain: Record<string, any>,
     types: Record<string, Array<TypedDataField>>,
@@ -276,11 +281,12 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    return await transport.signTypedData(domainHash, valuesHash);
+    return await transport.signTypedData(hdPath, domainHash, valuesHash);
   }
 
   async sendMsg(
     transport: ProviderInterface,
+    hdPath: string,
     sender: Sender,
     msg: {
       legacyAmino: {
@@ -302,6 +308,7 @@ export class Cosmos {
     },
   ) {
     const signature = await this.signTypedData(
+      hdPath,
       transport,
       msg.eipToSign.domain,
       msg.eipToSign.types as Record<string, Array<TypedDataField>>,
@@ -344,10 +351,11 @@ export class Cosmos {
 
   async deposit(
     transport: ProviderInterface,
+    hdPath: string,
     proposalId: number,
     amount: number,
   ) {
-    const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport, hdPath);
     const memo = '';
     const strAmount = new Decimal(amount).mul(WEI);
     const params = {
@@ -372,11 +380,16 @@ export class Cosmos {
 
     const msg = createTxMsgDeposit(this.haqqChain, sender, fee, memo, params);
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
-  async vote(transport: ProviderInterface, proposalId: number, option: number) {
-    const sender = await this.getSender(transport);
+  async vote(
+    transport: ProviderInterface,
+    hdPath: string,
+    proposalId: number,
+    option: number,
+  ) {
+    const sender = await this.getSender(transport, hdPath);
 
     const params = {
       proposalId,
@@ -399,15 +412,16 @@ export class Cosmos {
 
     const msg = createTxMsgVote(this.haqqChain, sender, fee, memo, params);
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
   async unDelegate(
     transport: ProviderInterface,
+    hdPath: string,
     address: string,
     amount: number,
   ) {
-    const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport, hdPath);
 
     const strAmount = new Decimal(amount).mul(WEI);
 
@@ -440,15 +454,16 @@ export class Cosmos {
       params,
     );
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
   async delegate(
     transport: ProviderInterface,
+    hdPath: string,
     address: string,
     amount: number,
   ) {
-    const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport, hdPath);
     const strAmount = new Decimal(amount).mul(WEI);
     const params = {
       validatorAddress: address,
@@ -473,14 +488,15 @@ export class Cosmos {
 
     const msg = createTxMsgDelegate(this.haqqChain, sender, fee, memo, params);
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
   async multipleWithdrawDelegatorReward(
     transport: ProviderInterface,
+    hdPath: string,
     validatorAddresses: string[],
   ) {
-    const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport, hdPath);
 
     const params = {
       validatorAddresses,
@@ -504,14 +520,15 @@ export class Cosmos {
       params,
     );
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
   async withdrawDelegatorReward(
     transport: ProviderInterface,
+    hdPath: string,
     validatorAddress: string,
   ) {
-    const sender = await this.getSender(transport);
+    const sender = await this.getSender(transport, hdPath);
 
     const params = {
       validatorAddress,
@@ -538,7 +555,7 @@ export class Cosmos {
       params,
     );
 
-    return await this.sendMsg(transport, sender, msg);
+    return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
   sync(addressList: string[]) {

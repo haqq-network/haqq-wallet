@@ -4,7 +4,6 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {mockForWallet} from '@app/helpers/mockForWallet';
 import {
   useTypedNavigation,
   useTypedRoute,
@@ -20,10 +19,9 @@ export const LedgerAccountsScreen = () => {
   const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
   const user = useUser();
   const provider = useRef(
-    new ProviderLedgerReactNative(mockForWallet, {
+    new ProviderLedgerReactNative({
       cosmosPrefix: 'haqq',
       deviceId,
-      hdPath: '',
       appName: LEDGER_APP,
     }),
   ).current;
