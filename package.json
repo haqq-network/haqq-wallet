@@ -49,7 +49,7 @@
     "lottie-ios": "3.4.4",
     "lottie-react-native": "5.1.4",
     "markdown-it": "^13.0.1",
-    "metro-minify-terser": "^0.73.7",
+    "metro-minify-terser": "^0.74.0",
     "patch-package": "^6.5.1",
     "randombytes": "^2.1.0",
     "react": "18.2.0",
