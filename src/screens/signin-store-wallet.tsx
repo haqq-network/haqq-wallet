@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {
   accountInfo,
   derive,
@@ -7,6 +8,7 @@ import {
 } from '@haqq/provider-web3-utils/src';
 import {View} from 'react-native';
 
+import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -49,7 +51,7 @@ export const SignInStoreWalletScreen = () => {
 
             const path = `${ETH_HD_SHORT_PATH}/${index}`;
             const pk = await derive(seed, path);
-            const {address, publicKey} = await accountInfo(pk);
+            const {address} = await accountInfo(pk);
 
             const existsWallet = Wallet.getById(address);
 
@@ -66,7 +68,7 @@ export const SignInStoreWalletScreen = () => {
                     mnemonic: mnemonic,
                     path: path,
                     rootAddress: rootInfo.address,
-                    publicKey: publicKey,
+                    accountId: '',
                   },
                   name,
                 );
@@ -94,8 +96,22 @@ export const SignInStoreWalletScreen = () => {
 
           const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
 
-          const wallet = await wallets.addWalletFromPrivateKey(
+          const provider = await ProviderHotReactNative.initialize(
             privateKey,
+            app.getPassword.bind(app),
+            {},
+          );
+
+          const {address} = await provider.getAccountInfo('');
+          const accountId = provider.getIdentifier();
+
+          const wallet = await wallets.addWallet(
+            {
+              path: '',
+              address: address,
+              type: WalletType.hot,
+              accountId: accountId,
+            },
             name,
           );
 

@@ -77,15 +77,11 @@ class Wallets extends EventEmitter {
   addWalletFromLedger(
     {
       address,
-      publicKey,
       deviceId,
-      deviceName,
       path,
     }: {
       address: string;
       deviceId: string;
-      deviceName: string;
-      publicKey: string;
       path: string;
     },
     name?: string,
@@ -93,10 +89,8 @@ class Wallets extends EventEmitter {
     return this.addWallet(
       {
         type: WalletType.ledgerBt,
-        deviceId,
-        deviceName,
+        accountId: deviceId,
         address,
-        publicKey,
         path,
       },
       name,
@@ -112,7 +106,7 @@ class Wallets extends EventEmitter {
     const rootPrivateKey = await derive(seed, 'm');
     const rootInfo = await accountInfo(rootPrivateKey);
     const privateKey = await derive(seed, path);
-    const {address, publicKey} = await accountInfo(privateKey);
+    const {address} = await accountInfo(privateKey);
 
     return this.addWallet(
       {
@@ -122,23 +116,7 @@ class Wallets extends EventEmitter {
         mnemonic: mnemonic,
         path: path,
         rootAddress: rootInfo.address,
-        publicKey: publicKey,
-      },
-      name,
-    );
-  }
-
-  async addWalletFromPrivateKey(
-    privateKey: string,
-    name = '',
-  ): Promise<Wallet | null> {
-    const {address, publicKey} = await accountInfo(privateKey);
-    return this.addWallet(
-      {
-        address: address,
-        type: WalletType.hot,
-        privateKey: privateKey,
-        publicKey: publicKey,
+        accountId: '',
       },
       name,
     );
