@@ -1195,7 +1195,7 @@
     "@ethersproject/constants" "^5.7.0"
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/wallet@5.7.0":
+"@ethersproject/wallet@5.7.0", "@ethersproject/wallet@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.7.0.tgz#4e5d0790d96fe21d61d38fb40324e6c7ef350b2d"
   integrity sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==
@@ -1345,19 +1345,29 @@
   resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.1.tgz#4307eff76660aed018884f1f2895c286f610ed0a"
   integrity sha512-V3qvgGBrzOR75pxuNQ4Rgp/75enD6rbbLGlU6WGiyltYuKZErZL02e0PU1TpsYmTNXdo8LaHnoTWfprtxA3oWA==
 
-"@haqq/provider-base@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.11.tgz#cc5ed8b981c5b2a9e46898fbeb41b725cf25a6d0"
-  integrity sha512-rim+sWDcNIT5eC8Zm4/KpbFIzevzlVLoVWPCZS0JzX5rhRRZXj8SU2u+Fp1MTaJymmxh7vui1tASHWckdOITFg==
+"@haqq/provider-base@0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.13.tgz#c4f1a7c5879f17c629a4bfdc9b20032a20e1b852"
+  integrity sha512-Uyu8/ADS7BxsWzTPIoaiOWlp/Ptpm8Ww0R+L8lV6o3D6jWw+oz/D3oLcQ8igAPKpysm6D+OQwadoczKa4GfIRw==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-ledger-react-native@0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.13.tgz#c2ea916cc13e5072f2d12a2834ab368b90805613"
-  integrity sha512-wNAaSQXXdvUdZtzvAIBJSqRZKTAFvbDbkTuQvfBChetArgG2XzMsyE0i8aLeBLo5GwNZXyNyqMXzd6PEpSqAeQ==
+"@haqq/provider-hot-react-native@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-hot-react-native/-/provider-hot-react-native-0.0.2.tgz#5f2693640c470e2256220b744667e94549fe5774"
+  integrity sha512-msDbqkfesx6V98V8sToCROLINDZ0LvNXdBZ2Ny9MGp6AwCnpfRdVs0txY0j8XFKpF/Gs28QRd6PvWwHqtojCSQ==
+  dependencies:
+    "@ethersproject/abstract-provider" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/keccak256" "^5.7.0"
+    "@ethersproject/wallet" "^5.7.0"
+
+"@haqq/provider-ledger-react-native@0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.14.tgz#cf2acb76203c73a02e649ad5ea55cbeac03df74b"
+  integrity sha512-WdAFGHLBKLv4vaUp1euM/3RYf7sF1Z+ZqrxTt6Cjb7l3GrGJr8jJnUfO0hF/49dHsEi/q/t4Fjkfro69l2/Vtw==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"
@@ -8930,6 +8940,11 @@ react-native-dotenv@^3.4.7:
   integrity sha512-GqUDdmrtKw7qYS9jjQLipEPctMd0YuSBNVZBNlaHtaHMJ63iaB4FABO4uX0iSUJpgMwozZki4fRv4dDHmVUoLg==
   dependencies:
     dotenv "^16.0.3"
+
+react-native-encrypted-storage@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-encrypted-storage/-/react-native-encrypted-storage-4.0.3.tgz#2a4d65459870511e8f4ccd22f02433dab7fa5e91"
+  integrity sha512-0pJA4Aj2S1PIJEbU7pN/Qvf7JIJx3hFywx+i+bLHtgK0/6Zryf1V2xVsWcrD50dfiu3jY1eN2gesQ5osGxE7jA==
 
 react-native-fit-image@^1.5.5:
   version "1.5.5"

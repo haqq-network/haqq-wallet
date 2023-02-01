@@ -10,6 +10,19 @@ import {
 } from '@haqq/provider-base';
 import {accountInfo, sign} from '@haqq/provider-web3-utils';
 
+async function decryptPrivateKey(
+  encryptedData: string,
+  getPassword: () => Promise<string>,
+) {
+  const password = await getPassword();
+
+  const decrypted = await decrypt<{privateKey: string}>(
+    password,
+    encryptedData,
+  );
+  return decrypted.privateKey;
+}
+
 export class TransportHot
   extends ProviderBase<{
     encryptedData: string;
@@ -17,26 +30,17 @@ export class TransportHot
   }>
   implements ProviderInterface
 {
-  async getEthAddress(_hdPath: string): Promise<string> {
-    const privateKey = await this.decrypt();
+  async getAccountInfo(_hdPath: string) {
+    const privateKey = await decryptPrivateKey(
+      this._options.encryptedData,
+      this._options.getPassword,
+    );
 
     if (!privateKey) {
       throw new Error('private_key_not_found');
     }
 
-    const {address} = await accountInfo(privateKey);
-    return address;
-  }
-
-  async getPublicKey(_hdPath: string): Promise<string> {
-    const privateKey = await this.decrypt();
-
-    if (!privateKey) {
-      throw new Error('private_key_not_found');
-    }
-
-    const {publicKey} = await accountInfo(privateKey);
-    return publicKey;
+    return accountInfo(privateKey);
   }
 
   async getSignedTx(
@@ -45,7 +49,10 @@ export class TransportHot
   ) {
     let resp = '';
     try {
-      const privateKey = await this.decrypt();
+      const privateKey = await decryptPrivateKey(
+        this._options.encryptedData,
+        this._options.getPassword,
+      );
 
       if (!privateKey) {
         throw new Error('private_key_not_found');
@@ -71,7 +78,10 @@ export class TransportHot
   async signTypedData(_hdPath: string, domainHash: string, valuesHash: string) {
     let response = '';
     try {
-      const privateKey = await this.decrypt();
+      const privateKey = await decryptPrivateKey(
+        this._options.encryptedData,
+        this._options.getPassword,
+      );
 
       if (!privateKey) {
         throw new Error('private_key_not_found');
@@ -88,15 +98,5 @@ export class TransportHot
     }
 
     return response;
-  }
-
-  async decrypt() {
-    const password = await this._options.getPassword();
-
-    const decrypted = await decrypt<{privateKey: string}>(
-      password,
-      this._options.encryptedData,
-    );
-    return decrypted.privateKey;
   }
 }

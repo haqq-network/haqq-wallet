@@ -3,6 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
+import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {LEDGER_APP} from '@app/variables/common';
@@ -31,7 +32,7 @@ export const LedgerVerifyScreen = () => {
 
   useEffect(() => {
     const provider = new ProviderLedgerReactNative({
-      cosmosPrefix: 'haqq',
+      getPassword: app.getPassword.bind(app),
       deviceId: route.params.deviceId,
       appName: LEDGER_APP,
     });

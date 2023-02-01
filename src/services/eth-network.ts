@@ -21,7 +21,7 @@ export class EthNetwork {
     to: string,
     amount: string | number,
   ) {
-    const address = await transport.getEthAddress(hdPath);
+    const {address} = await transport.getAccountInfo(hdPath);
     const transaction = await EthNetwork.populateTransaction(
       address,
       to,

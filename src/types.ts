@@ -426,23 +426,19 @@ export enum AppTheme {
   system = 'system',
 }
 
-export type AddWalletParams = {address: string; publicKey: string} & (
+export type AddWalletParams = {
+  address: string;
+  accountId: string;
+  path: string;
+} & (
   | {
       type: WalletType.mnemonic;
       mnemonic: string;
-      path: string;
       privateKey: string;
       rootAddress: string;
     }
   | {
-      type: WalletType.hot;
-      privateKey: string;
-    }
-  | {
-      type: WalletType.ledgerBt;
-      path: string;
-      deviceId: string;
-      deviceName: string;
+      type: WalletType;
     }
 );
 
