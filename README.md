@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.postimg.cc/7LfNCmP3/app-logo.png" alt="HAQQ Wallet by Bored Gen" style="width: 170px; height: 170px; border-radius:50%; overflow: hidden; display: inline-block; vertical-align: middle;" width="200" height="200">
+  <img src="https://i.postimg.cc/7LfNCmP3/app-logo.png" width="120" height="120">
 	<h1>HAQQ Wallet</h1> 
 	<p>
 		<b>HAQQ Wallet is non-custodial wallet for the <a href="https://haqq.network">HAQQ Network</a> ecosystem</b>
