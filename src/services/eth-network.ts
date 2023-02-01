@@ -27,7 +27,7 @@ export class EthNetwork {
       to,
       String(amount),
     );
-    const signedTx = await transport.getSignedTx(hdPath, transaction);
+    const signedTx = await transport.signTransaction(hdPath, transaction);
 
     if (!signedTx) {
       throw new Error('signedTx not found');
