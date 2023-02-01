@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {LedgerAccounts} from '@app/components/ledger-accounts';
+import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {
   useTypedNavigation,
@@ -20,7 +21,7 @@ export const LedgerAccountsScreen = () => {
   const user = useUser();
   const provider = useRef(
     new ProviderLedgerReactNative({
-      cosmosPrefix: 'haqq',
+      getPassword: app.getPassword.bind(app),
       deviceId,
       appName: LEDGER_APP,
     }),
@@ -45,7 +46,7 @@ export const LedgerAccountsScreen = () => {
         const addressList: LedgerAccountItem[] = [];
 
         for (let i = lastIndex; i < lastIndex + 5; i += 1) {
-          const data = await provider.getPublicKeyAndAddressForHDPath(
+          const data = await provider.getAccountInfo(
             `${ETH_HD_SHORT_PATH}/${i}`,
           );
 

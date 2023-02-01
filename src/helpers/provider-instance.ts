@@ -1,3 +1,4 @@
+import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
 import {app} from '@app/contexts';
@@ -8,36 +9,54 @@ import {LEDGER_APP} from '@app/variables/common';
 
 const cache = new Map();
 
+function getId(wallet: Wallet) {
+  switch (wallet.type) {
+    case WalletType.mnemonic:
+      return wallet.address;
+    case WalletType.hot:
+    case WalletType.ledgerBt:
+      return wallet.accountId ?? '';
+  }
+}
+
 export function hasProviderInstanceForWallet(wallet: Wallet) {
-  return cache.has(wallet.address);
+  return cache.has(getId(wallet));
 }
 
 export function abortProviderInstanceForWallet(wallet: Wallet) {
   if (hasProviderInstanceForWallet(wallet)) {
-    cache.get(wallet.address).abort();
+    cache.get(getId(wallet)).abort();
   }
 }
 
 export function getProviderInstanceForWallet(wallet: Wallet) {
+  const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
     switch (wallet.type) {
       case WalletType.mnemonic:
-      case WalletType.hot:
         cache.set(
-          wallet.address,
+          id,
           new TransportHot({
-            cosmosPrefix: 'haqq',
             encryptedData: wallet.data!,
             getPassword: app.getPassword.bind(app),
           }),
         );
         break;
+      case WalletType.hot:
+        cache.set(
+          id,
+          new ProviderHotReactNative({
+            getPassword: app.getPassword.bind(app),
+            account: wallet.accountId!,
+          }),
+        );
+        break;
       case WalletType.ledgerBt:
         cache.set(
-          wallet.address,
+          id,
           new ProviderLedgerReactNative({
-            cosmosPrefix: 'haqq',
-            deviceId: wallet.deviceId!,
+            getPassword: app.getPassword.bind(app),
+            deviceId: wallet.accountId!,
             appName: LEDGER_APP,
           }),
         );

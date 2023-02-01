@@ -52,6 +52,7 @@ import {
 import {sleep} from '@app/utils';
 
 import {StatusBarColor} from './components/ui';
+import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
@@ -138,6 +139,7 @@ export const App = () => {
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => app.init())
+      .then(() => migrationWallets())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
       .catch(e => {

@@ -36,11 +36,11 @@ export class Wallet extends Realm.Object {
   isMain!: boolean;
   type!: WalletType;
   deviceId: string | undefined;
-  deviceName: string | undefined;
   path: string | undefined;
   rootAddress: string | undefined;
-  publicKey: string | undefined;
   subscription: string | null;
+  version: number;
+  accountId: string | null;
 
   static schema = {
     name: 'Wallet',
@@ -59,10 +59,10 @@ export class Wallet extends Realm.Object {
       type: {type: 'string', default: WalletType.hot},
       path: 'string?',
       deviceId: 'string?',
-      deviceName: 'string?',
       rootAddress: 'string?',
-      publicKey: 'string?',
       subscription: 'string?',
+      version: 'int',
+      accountId: 'string?',
     },
     primaryKey: 'address',
   };
@@ -99,31 +99,23 @@ export class Wallet extends Realm.Object {
 
     let data = '';
     let deviceId: string | undefined;
-    let deviceName: string | undefined;
-    let path: string | undefined;
     let rootAddress: string | undefined;
     let mnemonicSaved = false;
+    let version = 1;
 
     switch (walletParams.type) {
       case WalletType.mnemonic:
         {
           const password = await app.getPassword();
           data = await encrypt(password, walletParams);
-          path = walletParams.path;
-          rootAddress = walletParams.rootAddress;
+          if ('rootAddress' in walletParams) {
+            rootAddress = walletParams.rootAddress;
+          }
         }
         break;
       case WalletType.hot:
-        {
-          const password = await app.getPassword();
-          data = await encrypt(password, walletParams);
-          mnemonicSaved = true;
-        }
-        break;
       case WalletType.ledgerBt:
-        deviceId = walletParams.deviceId;
-        deviceName = walletParams.deviceName;
-        path = walletParams.path;
+        version = 2;
         mnemonicSaved = true;
         break;
     }
@@ -180,10 +172,10 @@ export class Wallet extends Realm.Object {
         colorPattern: colors[2],
         type: walletParams.type,
         deviceId,
-        deviceName,
-        path,
+        path: walletParams.path,
         rootAddress: rootAddress?.toLowerCase(),
-        publicKey: walletParams.publicKey,
+        accountId: walletParams.accountId,
+        version,
       });
     });
 

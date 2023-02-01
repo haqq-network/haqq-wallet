@@ -21,13 +21,13 @@ export class EthNetwork {
     to: string,
     amount: string | number,
   ) {
-    const address = await transport.getEthAddress(hdPath);
+    const {address} = await transport.getAccountInfo(hdPath);
     const transaction = await EthNetwork.populateTransaction(
       address,
       to,
       String(amount),
     );
-    const signedTx = await transport.getSignedTx(hdPath, transaction);
+    const signedTx = await transport.signTransaction(hdPath, transaction);
 
     if (!signedTx) {
       throw new Error('signedTx not found');
