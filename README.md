@@ -1,6 +1,30 @@
-# Installing and running the project
+<div align="center">
+  <img src="https://i.postimg.cc/7LfNCmP3/app-logo.png" alt="HAQQ Wallet by Bored Gen" style="width: 170px; height: 170px; border-radius:50%; overflow: hidden; display: inline-block; vertical-align: middle;" width="200" height="200">
+	<h1>HAQQ Wallet</h1> 
+	<p>
+		<b>HAQQ Wallet is non-custodial wallet for the <a href="https://haqq.network">HAQQ Network</a> ecosystem</b>
+	</p>
+	<br>
+	<br>
+	<br>
+</div>
 
-## First of all we need to clone the repository
+- Staking
+- Governance
+- Ledger integration
+- Flexible customization
+- QR scanner
+- Mnemonic-free private key security (is coming soon)
+
+## Download
+
+<a href="https://apps.apple.com/app/haqq-wallet-by-bored-gen/id6443843352" rel="nofollow"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1672185600" alt="" width="160"></a>
+
+<a href="https://play.google.com/store/apps/details?id=com.haqq.wallet" rel="nofollow"><img src="https://www.wordnote.app/assets/google-play-badge.png" alt="" width="160"></a>
+
+## Installing and running the project
+
+### First of all we need to clone the repository
 
 To do this, we need to write the following in the terminal:
 
@@ -8,7 +32,7 @@ To do this, we need to write the following in the terminal:
 git clone https://github.com/haqq-network/haqq-wallet.git
 ```
 
-## Installing the required libraries
+### Installing the required libraries
 
 To install the necessary libraries, you need to register the following in the same terminal:
 
@@ -22,7 +46,7 @@ All the necessary libraries will be downloaded for you, if you use mac os, after
 cd ios && pod install
 ```
 
-## Creation .env file
+### Creation .env file
 
 You must .env.example should be copied with
 
@@ -32,7 +56,7 @@ cp .env.example .env
 
 and then must be substitute own config values.
 
-## Application launch
+### Application launch
 
 To run the application, write the following in the terminal:
 
@@ -44,7 +68,7 @@ yarn android
 yarn ios
 ```
 
-## Assets, typography and design links
+### Assets, typography and design links
 
 - [Design system](https://www.figma.com/file/KoyH6PqWqfOwyIVDjnLlOk/%F0%9F%93%B1-Wallet?t=M7ZT91FhlYgJRSiI-6)
 - [Typography](https://www.figma.com/file/95cNViNal0YIu3HYTNH0TO/Typography?node-id=0%3A1)
