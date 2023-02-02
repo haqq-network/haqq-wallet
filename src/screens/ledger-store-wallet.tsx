@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 
-import {compressPublicKey} from '@haqq/provider-base';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
@@ -21,16 +21,17 @@ export const LedgerStoreWalletScreen = () => {
     setTimeout(() => {
       const actions = [sleep(1000)];
 
+      const lastIndex = route.params.hdPath.split('/').pop() ?? '0';
+
       actions.push(
-        wallets.addWalletFromLedger(
+        wallets.addWallet(
           {
+            type: WalletType.ledgerBt,
             path: route.params.hdPath,
             address: route.params.address,
-            deviceId: route?.params?.deviceId,
-            deviceName: route?.params?.deviceName,
-            publicKey: compressPublicKey(route.params.publicKey),
+            accountId: route?.params?.deviceId,
           },
-          route?.params?.deviceName,
+          `${route?.params?.deviceName} #${lastIndex}`,
         ),
       );
 

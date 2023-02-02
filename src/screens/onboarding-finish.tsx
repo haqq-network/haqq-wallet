@@ -1,13 +1,9 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {Finish} from '@app/components/finish';
+import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
-import {
-  useApp,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallets,
-} from '@app/hooks';
+import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -16,7 +12,6 @@ export const OnboardingFinishScreen = () => {
   const route = useTypedRoute<'createFinish'>();
 
   const app = useApp();
-  const wallets = useWallets();
   const title: I18N = useMemo(
     () =>
       route.params.action === 'create'
@@ -32,10 +27,10 @@ export const OnboardingFinishScreen = () => {
       app.getUser().onboarded = true;
       navigation.replace('home');
     }
-    requestAnimationFrame(async () => {
-      await wallets.checkForBackup(app.snoozeBackup);
+    requestAnimationFrame(() => {
+      app.emit(Events.onWalletMnemonicCheck, app.snoozeBackup);
     });
-  }, [app, navigation, wallets]);
+  }, [app, navigation]);
 
   useEffect(() => {
     hideModal();

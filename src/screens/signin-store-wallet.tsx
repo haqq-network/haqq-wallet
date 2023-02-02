@@ -1,12 +1,10 @@
 import React, {useEffect} from 'react';
 
-import {
-  accountInfo,
-  derive,
-  seedFromMnemonic,
-} from '@haqq/provider-web3-utils/src';
+import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {View} from 'react-native';
 
+import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -31,54 +29,46 @@ export const SignInStoreWalletScreen = () => {
     };
     setTimeout(async () => {
       try {
+        const getPassword = app.getPassword.bind(app);
+
         if (mnemonic) {
+          const provider = await ProviderMnemonicReactNative.initialize(
+            mnemonic,
+            getPassword,
+            {},
+          );
+
           let canNext = true;
           let index = 0;
 
-          const seed = await seedFromMnemonic(mnemonic);
-          const rootPrivateKey = await derive(seed, 'm');
-          const rootInfo = await accountInfo(rootPrivateKey);
-
           while (canNext) {
             const total = Wallet.getAll().length;
-            const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
-              number: `${total + 1}`,
-            });
 
-            const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+            const name =
+              total === 0
+                ? MAIN_ACCOUNT_NAME
+                : getText(I18N.signinStoreWalletAccountNumber, {
+                    number: `${total + 1}`,
+                  });
 
-            const path = `${ETH_HD_SHORT_PATH}/${index}`;
-            const pk = await derive(seed, path);
-            const {address, publicKey} = await accountInfo(pk);
+            const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;
 
-            const existsWallet = Wallet.getById(address);
+            const {address} = await provider.getAccountInfo(hdPath);
 
-            if (!existsWallet) {
+            if (!Wallet.getById(address)) {
               const balance = await EthNetwork.getBalance(address);
               canNext = balance > 0 || index === 0;
 
               if (canNext) {
-                const wallet = await wallets.addWallet(
+                await wallets.addWallet(
                   {
                     address: address,
                     type: WalletType.mnemonic,
-                    privateKey: pk,
-                    mnemonic: mnemonic,
-                    path: path,
-                    rootAddress: rootInfo.address,
-                    publicKey: publicKey,
+                    path: hdPath,
+                    accountId: provider.getIdentifier(),
                   },
                   name,
                 );
-
-                if (wallet) {
-                  const main = wallets.getMain();
-
-                  wallet.update({
-                    mnemonicSaved: true,
-                    isMain: !main,
-                  });
-                }
               } else {
                 canNext = false;
               }
@@ -88,20 +78,31 @@ export const SignInStoreWalletScreen = () => {
           }
         } else if (privateKey) {
           const total = Wallet.getAll().length;
-          const accountNumber = getText(I18N.signinStoreWalletAccountNumber, {
-            number: `${total + 1}`,
-          });
 
-          const name = total === 0 ? MAIN_ACCOUNT_NAME : accountNumber;
+          const name =
+            total === 0
+              ? MAIN_ACCOUNT_NAME
+              : getText(I18N.signinStoreWalletAccountNumber, {
+                  number: `${total + 1}`,
+                });
 
-          const wallet = await wallets.addWalletFromPrivateKey(
+          const provider = await ProviderHotReactNative.initialize(
             privateKey,
-            name,
+            app.getPassword.bind(app),
+            {},
           );
 
-          if (wallet) {
-            wallet.update({mnemonicSaved: true});
-          }
+          const {address} = await provider.getAccountInfo('');
+
+          await wallets.addWallet(
+            {
+              path: '',
+              address: address,
+              type: WalletType.hot,
+              accountId: provider.getIdentifier().toLowerCase(),
+            },
+            name,
+          );
         }
 
         navigation.navigate(nextScreen ?? 'onboardingFinish');

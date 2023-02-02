@@ -47,7 +47,9 @@ export const WalletCard = ({
   };
 
   const onBackup = () => {
-    onPressBackup(wallet.address);
+    if (wallet.accountId) {
+      onPressBackup(wallet.accountId);
+    }
   };
 
   const onSend = () => {

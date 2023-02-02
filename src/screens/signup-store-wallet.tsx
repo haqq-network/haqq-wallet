@@ -1,17 +1,16 @@
 import React, {useEffect} from 'react';
 
-import {generateMnemonic} from '@haqq/provider-web3-utils';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {
-  ETH_HD_PATH,
-  ETH_HD_SHORT_PATH,
-  MAIN_ACCOUNT_NAME,
-} from '@app/variables/common';
+import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
+
+import {Wallet} from '../models/wallet';
+import {WalletType} from '../types';
 
 export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
@@ -27,46 +26,48 @@ export const SignUpStoreWalletScreen = () => {
 
   useEffect(() => {
     setTimeout(async () => {
-      const accountNumber = getText(I18N.signupStoreWalletAccountNumber, {
-        number: `${wallets.getSize() + 1}`,
-      });
       try {
-        const main = wallets.getMain();
+        const keys = await ProviderMnemonicReactNative.getAccounts();
 
-        if (!main) {
-          const mnemonic = await generateMnemonic();
-          const wallet = await wallets.addWalletFromMnemonic(
-            mnemonic,
-            ETH_HD_PATH,
-            wallets.getSize() === 0 ? MAIN_ACCOUNT_NAME : accountNumber,
+        const getPassword = app.getPassword.bind(app);
+
+        const provider = keys.length
+          ? new ProviderMnemonicReactNative({
+              account: keys[0],
+              getPassword,
+            })
+          : await ProviderMnemonicReactNative.initialize(null, getPassword, {});
+
+        const accountWallets = Wallet.getForAccount(provider.getIdentifier());
+
+        const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
+          const segments = wallet.path?.split('/') ?? ['0'];
+          return Math.max(
+            memo,
+            parseInt(segments[segments.length - 1], 10) + 1,
           );
-          if (wallet) {
-            wallet.update({isMain: true});
-          }
-        } else {
-          const password = await app.getPassword();
-          const mnemonic = await main.getMnemonic(password);
+        }, 0);
 
-          const last = wallets
-            .getForRootAddress(main.rootAddress ?? '')
-            .reduce((memo, wallet) => {
-              const segments = wallet.path?.split('/') ?? ['0'];
-              return Math.max(
-                memo,
-                parseInt(segments[segments.length - 1], 10),
-              );
-            }, 0);
+        const hdPath = `${ETH_HD_SHORT_PATH}/${nextHdPathIndex}`;
 
-          const wallet = await wallets.addWalletFromMnemonic(
-            mnemonic,
-            `${ETH_HD_SHORT_PATH}/${last + 1}`,
-            accountNumber,
-          );
+        const name =
+          wallets.getSize() === 0
+            ? MAIN_ACCOUNT_NAME
+            : getText(I18N.signupStoreWalletAccountNumber, {
+                number: `${wallets.getSize() + 1}`,
+              });
 
-          if (wallet) {
-            wallet.update({mnemonicSaved: main.mnemonicSaved});
-          }
-        }
+        const {address} = await provider.getAccountInfo(hdPath);
+
+        await wallets.addWallet(
+          {
+            address,
+            accountId: provider.getIdentifier(),
+            path: hdPath,
+            type: WalletType.mnemonic,
+          },
+          name,
+        );
 
         navigation.navigate(nextScreen ?? 'onboardingFinish');
       } catch (error) {

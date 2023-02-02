@@ -8,18 +8,18 @@ import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const BackupNotificationScreen = () => {
   const {goBack, navigate} = useTypedNavigation();
-  const {address} = useTypedRoute<'backupNotification'>().params;
+  const {accountId} = useTypedRoute<'backupNotification'>().params;
 
   const app = useApp();
 
   const onClickBackup = useCallback(() => {
-    if (address) {
+    if (accountId) {
       goBack();
       navigate('backup', {
-        address,
+        accountId,
       });
     }
-  }, [goBack, navigate, address]);
+  }, [goBack, navigate, accountId]);
 
   const onClickSkip = useCallback(() => {
     app.setSnoozeBackup();

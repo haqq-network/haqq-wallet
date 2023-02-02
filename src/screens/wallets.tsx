@@ -54,8 +54,8 @@ export const WalletsWrapper = () => {
   }, []);
 
   const onPressBackup = useCallback(
-    (address: string) => {
-      navigation.navigate('backup', {address: address});
+    (accountId: string) => {
+      navigation.navigate('backup', {accountId: accountId});
     },
     [navigation],
   );

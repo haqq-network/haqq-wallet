@@ -5,6 +5,8 @@ export enum Events {
   onWalletCreate = 'onWalletCreate',
   onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
+  onWalletMnemonicCheck = 'onWalletMnemonicCheck',
+  onWalletMnemonicSaved = 'onWalletMnemonicSaved',
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
   onPushSubscriptionRemove = 'onPushSubscriptionRemove',
   onDeepLink = 'onDeepLink',
@@ -12,4 +14,5 @@ export enum Events {
   onCloseModal = 'onCloseModal',
   onTransactionsLoad = 'onTransactionsLoad',
   onAppStarted = 'onAppStarted',
+  onAppMnemonicBackup = 'onAppMnemonicBackup',
 }
