@@ -25,7 +25,7 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
   ],
-  schemaVersion: 36,
+  schemaVersion: 37,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -241,6 +241,30 @@ export const realm = new Realm({
           newObject.type === WalletType.hot
         ) {
           newObject.mnemonicSaved = true;
+        }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 37) {
+      const oldObjects = oldRealm.objects('Wallet');
+      const newObjects = newRealm.objects<{
+        deviceId: string;
+        accountId: string;
+        version: number;
+        type: string;
+      }>('Wallet');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        switch (newObject.type) {
+          case WalletType.ledgerBt:
+            newObject.accountId = newObject.deviceId;
+            newObject.version = 2;
+            break;
+          default:
+            newObject.version = 1;
+            break;
         }
       }
     }

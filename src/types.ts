@@ -83,7 +83,7 @@ export type RootStackParamList = {
   };
   register: undefined;
   backup: {
-    address: string;
+    accountId: string;
   };
   detailsQr: {address: string};
   settingsTheme: undefined;
@@ -101,19 +101,17 @@ export type RootStackParamList = {
   settingsFaq: undefined;
   settingsAbout: undefined;
   backupVerify: {
-    rootAddress: string;
-    mnemonic: string;
+    accountId: string;
   };
   backupFinish: undefined;
   backupCreate: {
-    rootAddress: string;
-    mnemonic: string;
+    accountId: string;
   };
   backupNotification: {
-    address: string;
+    accountId: string;
   };
   backupWarning: {
-    address: string;
+    accountId: string;
   };
   createFinish: {
     action: string;
@@ -312,7 +310,7 @@ export type RootStackParamList = {
     id: number;
   };
   settingsViewRecoveryPhrase: {
-    address: string;
+    accountId: string;
   };
   settingsSecurity: undefined;
 };
@@ -408,7 +406,7 @@ export type HeaderButtonProps = {
 export type RoutePropT = {
   route?: {
     params: {
-      address: string;
+      accountId: string;
     };
   };
 };
@@ -426,25 +424,12 @@ export enum AppTheme {
   system = 'system',
 }
 
-export type AddWalletParams = {address: string; publicKey: string} & (
-  | {
-      type: WalletType.mnemonic;
-      mnemonic: string;
-      path: string;
-      privateKey: string;
-      rootAddress: string;
-    }
-  | {
-      type: WalletType.hot;
-      privateKey: string;
-    }
-  | {
-      type: WalletType.ledgerBt;
-      path: string;
-      deviceId: string;
-      deviceName: string;
-    }
-);
+export type AddWalletParams = {
+  address: string;
+  accountId: string;
+  path: string;
+  type: WalletType;
+};
 
 export enum ValidatorStatus {
   active = I18N.validatorStatusActive,

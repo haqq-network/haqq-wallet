@@ -8,6 +8,9 @@ import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {pushNotifications} from '@app/services/push-notifications';
 
+import {getProviderInstanceForWallet} from '../helpers';
+import {Wallet} from '../models/wallet';
+
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
 });
@@ -38,6 +41,20 @@ export const SettingsTestScreen = () => {
     navigation.navigate('notificationPopup');
   };
 
+  const onSignPersonalMessage = async () => {
+    const wallet = Wallet.getById('0x6e03a60fdf8954b4c10695292baf5c4bdc34584b');
+    if (wallet) {
+      const provider = getProviderInstanceForWallet(wallet);
+
+      const signature = await provider.signPersonalMessage(
+        wallet.path,
+        'Example `personal_sign` message',
+      );
+
+      console.log('signature', signature);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Button
@@ -53,6 +70,11 @@ export const SettingsTestScreen = () => {
       <Button
         title="Show Ledger attention"
         onPress={() => showModal('ledger-locked')}
+        variant={ButtonVariant.contained}
+      />
+      <Button
+        title="Sign personal message"
+        onPress={onSignPersonalMessage}
         variant={ButtonVariant.contained}
       />
     </View>
