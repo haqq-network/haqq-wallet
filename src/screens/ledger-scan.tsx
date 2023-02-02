@@ -8,6 +8,7 @@ import {
 import {suggestApp} from '@haqq/provider-ledger-react-native/src/commands/suggest-app';
 
 import {LedgerScan} from '@app/components/ledger-scan';
+import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation} from '@app/hooks';
@@ -57,7 +58,7 @@ export const LedgerScanScreen = () => {
   const tryToConnect = useCallback(
     async (item: Device) => {
       const provider = new ProviderLedgerReactNative({
-        cosmosPrefix: 'haqq',
+        getPassword: app.getPassword.bind(app),
         deviceId: item.id,
         appName: LEDGER_APP,
       });

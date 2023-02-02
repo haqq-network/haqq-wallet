@@ -40,7 +40,11 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
-import {ProviderInterface} from '@haqq/provider-base';
+import {
+  ProviderInterface,
+  base64PublicKey,
+  cosmosAddress,
+} from '@haqq/provider-base';
 import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
@@ -56,7 +60,7 @@ import {
   CosmosTxV1beta1TxResponse,
   CosmosTxV1betaSimulateResponse,
 } from '@app/types/cosmos';
-import {WEI} from '@app/variables/common';
+import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -67,17 +71,13 @@ export type BroadcastTransactionResponse = {
 };
 
 export class Cosmos {
-  private _provider: Provider;
-  public stop = false;
   static fee: Fee = {
     amount: '5000',
     gas: '1400000',
     denom: 'aISLM',
   };
-
-  static address(address: string) {
-    return converter('haqq').toBech32(address);
-  }
+  public stop = false;
+  private _provider: Provider;
 
   constructor(provider: Provider) {
     this._provider = provider;
@@ -88,6 +88,10 @@ export class Cosmos {
       chainId: this._provider.ethChainId,
       cosmosChainId: this._provider.cosmosChainId,
     };
+  }
+
+  static address(address: string) {
+    return converter('haqq').toBech32(address);
   }
 
   getPath(subPath: string) {
@@ -252,15 +256,17 @@ export class Cosmos {
     transport: ProviderInterface,
     hdPath: string,
   ): Promise<Sender> {
-    const address = await transport.getCosmosAddress(hdPath);
-    const accInfo = await this.getAccountInfo(address);
-    const pubkey = await transport.getBase64PublicKey(hdPath);
+    const {address, publicKey} = await transport.getAccountInfo(hdPath);
+
+    const accInfo = await this.getAccountInfo(
+      cosmosAddress(address, COSMOS_PREFIX),
+    );
 
     return {
       accountAddress: accInfo.account.base_account.address,
       sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
       accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
-      pubkey,
+      pubkey: base64PublicKey(publicKey),
     };
   }
 

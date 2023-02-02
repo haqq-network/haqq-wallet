@@ -186,7 +186,7 @@ PODS:
   - HaqqEncryptionRN (0.0.1):
     - CryptoSwift (= 1.6.0)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.5):
+  - HaqqWeb3UtilsRN (0.0.6):
     - CryptoSwift (= 1.6.0)
     - React-Core
     - secp256k1Swift (= 0.7.4)
@@ -452,6 +452,8 @@ PODS:
     - React-Core
   - react-native-detector (0.2.3):
     - React
+  - react-native-encrypted-storage (4.0.3):
+    - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
   - react-native-image-picker (4.10.3):
@@ -664,6 +666,7 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
   - react-native-detector (from `../node_modules/react-native-detector`)
+  - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -803,6 +806,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/cameraroll"
   react-native-detector:
     :path: "../node_modules/react-native-detector"
+  react-native-encrypted-storage:
+    :path: "../node_modules/react-native-encrypted-storage"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   react-native-image-picker:
@@ -898,7 +903,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
   HaqqEncryptionRN: d2e151c9d1408da3dbdc9f1e99085963a2f64a3a
-  HaqqWeb3UtilsRN: 57700255130aae37878a74257b2a5e268213ebd4
+  HaqqWeb3UtilsRN: c24db798509da29fb33a35787ee4d52cf44c2944
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
@@ -929,6 +934,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
+  react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-netinfo: 2517ad504b3d303e90d7a431b0fcaef76d207983

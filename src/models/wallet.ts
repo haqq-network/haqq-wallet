@@ -1,4 +1,4 @@
-import {decrypt, encrypt} from '@haqq/encryption-react-native';
+import {decrypt} from '@haqq/encryption-react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -23,25 +23,6 @@ import {
 import {realm} from './index';
 
 export class Wallet extends Realm.Object {
-  address!: string;
-  name!: string;
-  data!: string;
-  mnemonicSaved!: boolean;
-  cardStyle!: WalletCardStyle;
-  colorFrom!: string;
-  colorTo!: string;
-  colorPattern!: string;
-  pattern!: string;
-  isHidden!: boolean;
-  isMain!: boolean;
-  type!: WalletType;
-  deviceId: string | undefined;
-  deviceName: string | undefined;
-  path: string | undefined;
-  rootAddress: string | undefined;
-  publicKey: string | undefined;
-  subscription: string | null;
-
   static schema = {
     name: 'Wallet',
     properties: {
@@ -59,23 +40,52 @@ export class Wallet extends Realm.Object {
       type: {type: 'string', default: WalletType.hot},
       path: 'string?',
       deviceId: 'string?',
-      deviceName: 'string?',
       rootAddress: 'string?',
-      publicKey: 'string?',
       subscription: 'string?',
+      version: 'int',
+      accountId: 'string?',
     },
     primaryKey: 'address',
   };
+  address!: string;
+  name!: string;
+  data!: string;
+  mnemonicSaved!: boolean;
+  cardStyle!: WalletCardStyle;
+  colorFrom!: string;
+  colorTo!: string;
+  colorPattern!: string;
+  pattern!: string;
+  isHidden!: boolean;
+  isMain!: boolean;
+  type!: WalletType;
+  deviceId: string | undefined;
+  path: string | undefined;
+  rootAddress: string | undefined;
+  subscription: string | null;
+  version: number;
+  accountId: string | null;
 
   _cosmosAddress: string = '';
+
+  get cosmosAddress() {
+    if (!this._cosmosAddress) {
+      this._cosmosAddress = Cosmos.address(this.address);
+    }
+
+    return this._cosmosAddress;
+  }
 
   static getAll() {
     return realm.objects<Wallet>(Wallet.schema.name);
   }
 
   static getAllVisible() {
-    const wallets = realm.objects<Wallet>(Wallet.schema.name);
-    return wallets.filtered('isHidden != true');
+    return Wallet.getAll().filtered('isHidden != true');
+  }
+
+  static getForAccount(accountId: string) {
+    return Wallet.getAll().filtered(`accountId = '${accountId.toLowerCase()}'`);
   }
 
   static getById(id: string) {
@@ -95,37 +105,6 @@ export class Wallet extends Realm.Object {
     const exist = Wallet.getById(walletParams.address);
     if (exist) {
       throw new Error('wallet_already_exists');
-    }
-
-    let data = '';
-    let deviceId: string | undefined;
-    let deviceName: string | undefined;
-    let path: string | undefined;
-    let rootAddress: string | undefined;
-    let mnemonicSaved = false;
-
-    switch (walletParams.type) {
-      case WalletType.mnemonic:
-        {
-          const password = await app.getPassword();
-          data = await encrypt(password, walletParams);
-          path = walletParams.path;
-          rootAddress = walletParams.rootAddress;
-        }
-        break;
-      case WalletType.hot:
-        {
-          const password = await app.getPassword();
-          data = await encrypt(password, walletParams);
-          mnemonicSaved = true;
-        }
-        break;
-      case WalletType.ledgerBt:
-        deviceId = walletParams.deviceId;
-        deviceName = walletParams.deviceName;
-        path = walletParams.path;
-        mnemonicSaved = true;
-        break;
     }
 
     const cards = Object.keys(WalletCardStyle);
@@ -169,9 +148,9 @@ export class Wallet extends Realm.Object {
     let wallet = null;
     realm.write(() => {
       wallet = realm.create<Wallet>(Wallet.schema.name, {
-        data,
+        data: '',
         address: walletParams.address.toLowerCase(),
-        mnemonicSaved,
+        mnemonicSaved: false,
         name: name,
         pattern,
         cardStyle,
@@ -179,11 +158,9 @@ export class Wallet extends Realm.Object {
         colorTo: colors[1],
         colorPattern: colors[2],
         type: walletParams.type,
-        deviceId,
-        deviceName,
-        path,
-        rootAddress: rootAddress?.toLowerCase(),
-        publicKey: walletParams.publicKey,
+        path: walletParams.path,
+        accountId: walletParams.accountId,
+        version: 2,
       });
     });
 
@@ -253,24 +230,5 @@ export class Wallet extends Realm.Object {
         ? decrypted.mnemonic
         : decrypted.mnemonic.phrase) ?? ''
     );
-  }
-
-  async updateWalletData(oldPin: string, newPin: string) {
-    if (this.data) {
-      const decrypted = await decrypt(oldPin, this.data);
-      const encrypted = await encrypt(newPin, decrypted);
-
-      realm.write(() => {
-        this.data = encrypted;
-      });
-    }
-  }
-
-  get cosmosAddress() {
-    if (!this._cosmosAddress) {
-      this._cosmosAddress = Cosmos.address(this.address);
-    }
-
-    return this._cosmosAddress;
   }
 }

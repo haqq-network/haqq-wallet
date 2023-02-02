@@ -7,16 +7,6 @@ import {realm} from './index';
 export type ProviderKeys = keyof Omit<Provider, 'id'>;
 
 export class Provider extends Realm.Object {
-  id!: string;
-  name!: string;
-  ethChainId!: number;
-  ethRpcEndpoint!: string;
-  cosmosChainId!: string;
-  cosmosRestEndpoint!: string;
-  tmRpcEndpoint!: string;
-  explorer: string | undefined;
-  isEditable!: boolean;
-
   static schema = {
     name: 'Provider',
     properties: {
@@ -32,19 +22,20 @@ export class Provider extends Realm.Object {
     },
     primaryKey: 'id',
   };
+  id!: string;
+  name!: string;
+  ethChainId!: number;
+  ethRpcEndpoint!: string;
+  cosmosChainId!: string;
+  cosmosRestEndpoint!: string;
+  tmRpcEndpoint!: string;
+  explorer: string | undefined;
+  isEditable!: boolean;
 
-  update(params: Partial<Provider>) {
-    realm.write(() => {
-      realm.create(
-        Provider.schema.name,
-        {
-          ...this.toJSON(),
-          ...params,
-          isEditable: this.isEditable,
-          id: this.id,
-        },
-        Realm.UpdateMode.Modified,
-      );
+  get rpcProvider() {
+    return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
+      chainId: this.ethChainId,
+      name: this.id,
     });
   }
 
@@ -80,10 +71,18 @@ export class Provider extends Realm.Object {
     return realm.objectForPrimaryKey<Provider>('Provider', providerId);
   }
 
-  get rpcProvider() {
-    return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
-      chainId: this.ethChainId,
-      name: this.id,
+  update(params: Partial<Provider>) {
+    realm.write(() => {
+      realm.create(
+        Provider.schema.name,
+        {
+          ...this.toJSON(),
+          ...params,
+          isEditable: this.isEditable,
+          id: this.id,
+        },
+        Realm.UpdateMode.Modified,
+      );
     });
   }
 }
