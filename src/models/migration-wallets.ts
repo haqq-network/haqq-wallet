@@ -46,6 +46,10 @@ export async function migrationWallets() {
         {},
       );
 
+      if (wallet.mnemonicSaved) {
+        await provider.setMnemonicSaved();
+      }
+
       const rootAddress = wallets.filtered(
         `rootAddress = '${wallet.rootAddress}' AND type = '${WalletType.mnemonic}'`,
       );
