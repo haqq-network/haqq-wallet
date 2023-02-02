@@ -1,5 +1,6 @@
 import {decrypt} from '@haqq/encryption-react-native';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
 import {Wallet} from './wallet';
 
@@ -25,9 +26,37 @@ export async function migrationWallets() {
       );
 
       wallet.update({
+        data: '',
         version: 2,
         accountId: provider.getIdentifier(),
       });
+    }
+
+    if (wallet.version === 1 && wallet.type === WalletType.mnemonic) {
+      const {mnemonic} = await decrypt<{mnemonic: {phrase: string} | string}>(
+        password,
+        wallet.data,
+      );
+
+      const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
+
+      const provider = await ProviderMnemonicReactNative.initialize(
+        m,
+        getPassword,
+        {},
+      );
+
+      const rootAddress = wallets.filtered(
+        `rootAddress = '${wallet.rootAddress}' AND type = '${WalletType.mnemonic}'`,
+      );
+
+      for (const w of rootAddress) {
+        w.update({
+          data: '',
+          version: 2,
+          accountId: provider.getIdentifier(),
+        });
+      }
     }
   }
 }

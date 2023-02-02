@@ -14,17 +14,15 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 interface BackupCreateProps {
-  onSubmit?: () => void;
+  onSubmit: () => void;
+  mnemonic: string;
 }
 
-export const BackupCreate = ({onSubmit = () => {}}: BackupCreateProps) => {
-  const {mnemonic} = useTypedRoute<'backupCreate'>().params;
-
+export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
   const [checked, setChecked] = useState(false);
 
   const onClickCheck = (val: boolean) => {

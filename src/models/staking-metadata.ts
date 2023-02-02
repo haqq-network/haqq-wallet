@@ -10,13 +10,6 @@ export enum StakingMetadataType {
 }
 
 export class StakingMetadata extends Realm.Object {
-  hash!: string;
-  type!: StakingMetadataType;
-  delegator!: string;
-  validator!: string;
-  amount!: number;
-  completion_time: string | undefined;
-
   static schema = {
     name: 'StakingMetadata',
     properties: {
@@ -29,6 +22,12 @@ export class StakingMetadata extends Realm.Object {
     },
     primaryKey: 'hash',
   };
+  hash!: string;
+  type!: StakingMetadataType;
+  delegator!: string;
+  validator!: string;
+  amount!: number;
+  completion_time: string | undefined;
 
   static createDelegation(
     delegator: string,

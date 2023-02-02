@@ -1,9 +1,9 @@
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
-import {TransportHot} from '@app/services/transport-hot';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -12,7 +12,6 @@ const cache = new Map();
 function getId(wallet: Wallet) {
   switch (wallet.type) {
     case WalletType.mnemonic:
-      return wallet.address;
     case WalletType.hot:
     case WalletType.ledgerBt:
       return wallet.accountId ?? '';
@@ -36,8 +35,8 @@ export function getProviderInstanceForWallet(wallet: Wallet) {
       case WalletType.mnemonic:
         cache.set(
           id,
-          new TransportHot({
-            encryptedData: wallet.data!,
+          new ProviderMnemonicReactNative({
+            account: wallet.accountId!,
             getPassword: app.getPassword.bind(app),
           }),
         );
@@ -66,5 +65,5 @@ export function getProviderInstanceForWallet(wallet: Wallet) {
     }
   }
 
-  return cache.get(wallet.address);
+  return cache.get(id);
 }

@@ -13,7 +13,6 @@ import {
   useWallets,
 } from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
-import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
 const filterTransactions = (
@@ -68,13 +67,6 @@ export const HomeFeedScreen = () => {
     });
   }, [wallets]);
 
-  const onBackupMnemonic = useCallback(
-    (wallet: Wallet) => {
-      navigation.navigate('backupNotification', {address: wallet.address});
-    },
-    [navigation],
-  );
-
   const onPressRow = useCallback(
     (hash: string) => {
       navigation.navigate('transactionDetail', {
@@ -86,14 +78,12 @@ export const HomeFeedScreen = () => {
 
   useEffect(() => {
     transactions.on('transactions', onTransactionList);
-    wallets.on('backupMnemonic', onBackupMnemonic);
     user.on('change', onTransactionList);
     return () => {
       transactions.off('transactions', onTransactionList);
-      wallets.off('backupMnemonic', onBackupMnemonic);
       user.off('change', onTransactionList);
     };
-  }, [onBackupMnemonic, onTransactionList, transactions, user, wallets]);
+  }, [onTransactionList, transactions, user, wallets]);
   return (
     <HomeFeed
       transactionsList={transactionsList}

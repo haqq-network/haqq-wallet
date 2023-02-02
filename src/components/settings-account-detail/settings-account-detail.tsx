@@ -71,7 +71,7 @@ export const SettingsAccountDetail = ({
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
         />
       </MenuNavigationButton>
-      {wallet.type === WalletType.mnemonic && (
+      {wallet.type === WalletType.mnemonic && wallet.accountId && (
         <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
           <DataContent
             titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}

@@ -1,9 +1,6 @@
 import {realm} from '@app/models';
 
 export class Contact extends Realm.Object {
-  account!: string;
-  name!: string;
-
   static schema = {
     name: 'Contact',
     properties: {
@@ -12,6 +9,8 @@ export class Contact extends Realm.Object {
     },
     primaryKey: 'account',
   };
+  account!: string;
+  name!: string;
 
   static create(address: string, params: Partial<Contact>) {
     realm.write(() => {
@@ -52,6 +51,16 @@ export class Contact extends Realm.Object {
     );
   }
 
+  static removeAll() {
+    const contacts = realm.objects<Contact>(Contact.schema.name);
+
+    for (const contact of contacts) {
+      realm.write(() => {
+        realm.delete(contact);
+      });
+    }
+  }
+
   update(params: Partial<Contact>) {
     realm.write(() => {
       realm.create(
@@ -64,15 +73,5 @@ export class Contact extends Realm.Object {
         Realm.UpdateMode.Modified,
       );
     });
-  }
-
-  static removeAll() {
-    const contacts = realm.objects<Contact>(Contact.schema.name);
-
-    for (const contact of contacts) {
-      realm.write(() => {
-        realm.delete(contact);
-      });
-    }
   }
 }

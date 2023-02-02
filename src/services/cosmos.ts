@@ -71,17 +71,13 @@ export type BroadcastTransactionResponse = {
 };
 
 export class Cosmos {
-  private _provider: Provider;
-  public stop = false;
   static fee: Fee = {
     amount: '5000',
     gas: '1400000',
     denom: 'aISLM',
   };
-
-  static address(address: string) {
-    return converter('haqq').toBech32(address);
-  }
+  public stop = false;
+  private _provider: Provider;
 
   constructor(provider: Provider) {
     this._provider = provider;
@@ -92,6 +88,10 @@ export class Cosmos {
       chainId: this._provider.ethChainId,
       cosmosChainId: this._provider.cosmosChainId,
     };
+  }
+
+  static address(address: string) {
+    return converter('haqq').toBech32(address);
   }
 
   getPath(subPath: string) {
