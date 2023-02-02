@@ -38,11 +38,13 @@ export const SettingsAccountDetailScreen = () => {
     }
   }, [wallet]);
 
-  const onViewingRecoveryPhrase = () => {
-    navigation.navigate('settingsViewRecoveryPhrase', {
-      address,
-    });
-  };
+  const onViewingRecoveryPhrase = useCallback(() => {
+    if (wallet?.accountId) {
+      navigation.navigate('settingsViewRecoveryPhrase', {
+        accountId: wallet.accountId,
+      });
+    }
+  }, [navigation, wallet?.accountId]);
 
   const onRemove = useCallback(() => {
     vibrate(HapticEffects.warning);

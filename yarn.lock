@@ -1376,10 +1376,18 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
-"@haqq/provider-web3-utils@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.5.tgz#ae7a9224836f2e82b0a464b943c91d19df239acd"
-  integrity sha512-gAHFaHeA7Xff15T4PPg5dnHZMR3zfRzIFU2V8HzAs3H8t24HQwLNeFmZ2z55zJlsAY0N6vVUn0lRSLHkYbbMhg==
+"@haqq/provider-mnemonic-react-native@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.4.tgz#1f140fd0fc7b6cdb53c7de3ae246fc76e2b6ac81"
+  integrity sha512-fn1fdinx6QZzd4CI/FSoe6psXv6CZpoHy7bB2eWhRXMK4lNLBqYzAO706QncC31O9OWGa+RRG9Pu0Jbuh5P7Lg==
+  dependencies:
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
+
+"@haqq/provider-web3-utils@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.6.tgz#7d5aace9478e1510ada33344a27eeacfbd8284b4"
+  integrity sha512-Wftp1JDyo3XesgOgzlIK1F7qcTuBgtNcEJRKoTrNvfFkywDPjlzSj357UXzDmbBOh/UAwf082e4Xz2WCSyaWRA==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"

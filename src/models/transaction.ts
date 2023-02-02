@@ -8,17 +8,6 @@ import {calcFee, captureException} from '@app/helpers';
 import {realm} from '@app/models/index';
 
 export class Transaction extends Realm.Object {
-  hash!: string;
-  account!: string;
-  raw!: string;
-  from!: string;
-  to!: string;
-  value!: number;
-  fee!: number;
-  createdAt!: Date;
-  confirmed!: boolean;
-  providerId!: string;
-
   static schema = {
     name: 'Transaction',
     properties: {
@@ -35,25 +24,19 @@ export class Transaction extends Realm.Object {
     },
     primaryKey: 'hash',
   };
+  hash!: string;
+  account!: string;
+  raw!: string;
+  from!: string;
+  to!: string;
+  value!: number;
+  fee!: number;
+  createdAt!: Date;
+  confirmed!: boolean;
+  providerId!: string;
 
   get feeFormatted() {
     return this.fee.toFixed(15);
-  }
-
-  setConfirmed(receipt: TransactionReceipt) {
-    try {
-      realm.write(() => {
-        this.confirmed = true;
-        this.fee = calcFee(
-          receipt.effectiveGasPrice ?? 7,
-          receipt.cumulativeGasUsed,
-        );
-      });
-    } catch (e) {
-      captureException(e, 'Transaction.setConfirmed', {
-        receipt: JSON.stringify(receipt),
-      });
-    }
   }
 
   static getAll() {
@@ -103,5 +86,21 @@ export class Transaction extends Realm.Object {
         providerId,
       });
     });
+  }
+
+  setConfirmed(receipt: TransactionReceipt) {
+    try {
+      realm.write(() => {
+        this.confirmed = true;
+        this.fee = calcFee(
+          receipt.effectiveGasPrice ?? 7,
+          receipt.cumulativeGasUsed,
+        );
+      });
+    } catch (e) {
+      captureException(e, 'Transaction.setConfirmed', {
+        receipt: JSON.stringify(receipt),
+      });
+    }
   }
 }

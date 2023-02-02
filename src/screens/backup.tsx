@@ -26,21 +26,15 @@ export const BackupScreen = ({route}: RoutePropT) => {
   return (
     <BackupStack.Navigator screenOptions={stackScreenOptions}>
       <BackupStack.Screen
-        name={'backupWarning'}
+        name="backupWarning"
         component={BackupWarningScreen}
-        initialParams={{address: route?.params.address}}
+        initialParams={{accountId: route?.params.accountId}}
         options={screenOptions}
       />
+      <BackupStack.Screen name="backupCreate" component={BackupCreateScreen} />
+      <BackupStack.Screen name="backupVerify" component={BackupVerifyScreen} />
       <BackupStack.Screen
-        name={'backupCreate'}
-        component={BackupCreateScreen}
-      />
-      <BackupStack.Screen
-        name={'backupVerify'}
-        component={BackupVerifyScreen}
-      />
-      <BackupStack.Screen
-        name={'backupFinish'}
+        name="backupFinish"
         component={BackupFinishScreen}
         options={screenOptions}
       />

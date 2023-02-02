@@ -15,29 +15,6 @@ export class EthNetwork {
   static explorer: string | undefined;
   public stop = false;
 
-  async sendTransaction(
-    transport: ProviderInterface,
-    hdPath: string,
-    to: string,
-    amount: string | number,
-  ) {
-    const {address} = await transport.getAccountInfo(hdPath);
-    const transaction = await EthNetwork.populateTransaction(
-      address,
-      to,
-      String(amount),
-    );
-    const signedTx = await transport.signTransaction(hdPath, transaction);
-
-    if (!signedTx) {
-      throw new Error('signedTx not found');
-    }
-
-    const response = await EthNetwork.network.sendTransaction(signedTx);
-
-    return response;
-  }
-
   static async populateTransaction(from: string, to: string, amount: string) {
     const value = utils.parseEther(amount.toString());
     const nonce = await EthNetwork.network.getTransactionCount(from, 'latest');
@@ -115,5 +92,28 @@ export class EthNetwork {
       feeData: result[0],
       estimateGas: result[1],
     };
+  }
+
+  async sendTransaction(
+    transport: ProviderInterface,
+    hdPath: string,
+    to: string,
+    amount: string | number,
+  ) {
+    const {address} = await transport.getAccountInfo(hdPath);
+    const transaction = await EthNetwork.populateTransaction(
+      address,
+      to,
+      String(amount),
+    );
+    const signedTx = await transport.signTransaction(hdPath, transaction);
+
+    if (!signedTx) {
+      throw new Error('signedTx not found');
+    }
+
+    const response = await EthNetwork.network.sendTransaction(signedTx);
+
+    return response;
   }
 }

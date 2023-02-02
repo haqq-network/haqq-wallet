@@ -55,10 +55,7 @@ class App extends EventEmitter {
   private user: User;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _biometryType: BiometryType | null = null;
   private _lastTheme: AppTheme = AppTheme.light;
-  private _provider: Provider | null;
-
   private _balance: Map<string, number> = new Map();
 
   constructor() {
@@ -99,6 +96,68 @@ class App extends EventEmitter {
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
     setInterval(this.checkBalance, 6000);
+  }
+
+  private _biometryType: BiometryType | null = null;
+
+  get biometryType() {
+    return this._biometryType;
+  }
+
+  private _provider: Provider | null;
+
+  get provider() {
+    return this._provider;
+  }
+
+  get biometry() {
+    return this.user?.biometry || false;
+  }
+
+  set biometry(value) {
+    if (this.user) {
+      this.user.biometry = value;
+    }
+  }
+
+  get language() {
+    return this.user?.language || AppLanguage.en;
+  }
+
+  set language(value) {
+    if (this.user) {
+      this.user.language = value;
+    }
+  }
+
+  get bluetooth() {
+    return this.user?.bluetooth || false;
+  }
+
+  set bluetooth(value) {
+    if (this.user) {
+      this.user.bluetooth = value;
+    }
+  }
+
+  get notifications() {
+    return this.user.notifications && this.user.subscription;
+  }
+
+  get snoozeBackup(): Date {
+    return this.user?.snoozeBackup || subMinutes(new Date(), 1);
+  }
+
+  get canEnter() {
+    return this.user?.canEnter;
+  }
+
+  get pinBanned() {
+    return this.user?.pinBanned;
+  }
+
+  get pinAttempts() {
+    return this.user?.pinAttempts ?? 0;
   }
 
   async init(): Promise<void> {
@@ -181,52 +240,6 @@ class App extends EventEmitter {
     return Promise.reject();
   }
 
-  get provider() {
-    return this._provider;
-  }
-
-  get biometryType() {
-    return this._biometryType;
-  }
-
-  get biometry() {
-    return this.user?.biometry || false;
-  }
-
-  set biometry(value) {
-    if (this.user) {
-      this.user.biometry = value;
-    }
-  }
-
-  get language() {
-    return this.user?.language || AppLanguage.en;
-  }
-
-  set language(value) {
-    if (this.user) {
-      this.user.language = value;
-    }
-  }
-
-  get bluetooth() {
-    return this.user?.bluetooth || false;
-  }
-
-  set bluetooth(value) {
-    if (this.user) {
-      this.user.bluetooth = value;
-    }
-  }
-
-  get notifications() {
-    return this.user.notifications && this.user.subscription;
-  }
-
-  get snoozeBackup(): Date {
-    return this.user?.snoozeBackup || subMinutes(new Date(), 1);
-  }
-
   async auth() {
     showModal('pin');
     if (this.biometry) {
@@ -266,18 +279,6 @@ class App extends EventEmitter {
 
       this.on('enterPin', callback);
     });
-  }
-
-  get canEnter() {
-    return this.user?.canEnter;
-  }
-
-  get pinBanned() {
-    return this.user?.pinBanned;
-  }
-
-  get pinAttempts() {
-    return this.user?.pinAttempts ?? 0;
   }
 
   successEnter() {

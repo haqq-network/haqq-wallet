@@ -2,14 +2,14 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {accountInfo, derive, seedFromMnemonic} from '@haqq/provider-web3-utils';
-import {isAfter} from 'date-fns';
 import {Image} from 'react-native';
 
+import {app} from '@app/contexts/app';
+import {Events} from '@app/events';
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
-import {AddWalletParams, WalletType} from '@app/types';
-import {getPatternName, sleep} from '@app/utils';
+import {AddWalletParams} from '@app/types';
+import {getPatternName} from '@app/utils';
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -35,6 +35,14 @@ class Wallets extends EventEmitter {
     }
   }
 
+  get visible() {
+    return Array.from(this._wallets.values()).filter(w => !w.isHidden);
+  }
+
+  get addressList(): string[] {
+    return Array.from(this._wallets.keys());
+  }
+
   async init(snoozeBackup: Date): Promise<void> {
     if (this._initialized) {
       return;
@@ -50,20 +58,7 @@ class Wallets extends EventEmitter {
       console.log('image prefetched');
     });
 
-    await this.checkForBackup(snoozeBackup);
-  }
-
-  async checkForBackup(snoozeBackup: Date) {
-    if (isAfter(new Date(), snoozeBackup)) {
-      const backupMnemonic = Array.from(this._wallets.values()).find(
-        w => !w.mnemonicSaved && !w.isHidden,
-      );
-
-      if (backupMnemonic) {
-        await sleep(1000);
-        this.emit('backupMnemonic', backupMnemonic);
-      }
-    }
+    app.emit(Events.onWalletMnemonicCheck, snoozeBackup);
   }
 
   attachWallet(wallet: Wallet) {
@@ -72,54 +67,6 @@ class Wallets extends EventEmitter {
 
   deAttachWallet(wallet: Wallet) {
     this._wallets.delete(wallet.address.toLowerCase());
-  }
-
-  addWalletFromLedger(
-    {
-      address,
-      deviceId,
-      path,
-    }: {
-      address: string;
-      deviceId: string;
-      path: string;
-    },
-    name?: string,
-  ): Promise<Wallet | null> {
-    return this.addWallet(
-      {
-        type: WalletType.ledgerBt,
-        accountId: deviceId,
-        address,
-        path,
-      },
-      name,
-    );
-  }
-
-  async addWalletFromMnemonic(
-    mnemonic: string,
-    path: string,
-    name?: string,
-  ): Promise<Wallet | null> {
-    const seed = await seedFromMnemonic(mnemonic);
-    const rootPrivateKey = await derive(seed, 'm');
-    const rootInfo = await accountInfo(rootPrivateKey);
-    const privateKey = await derive(seed, path);
-    const {address} = await accountInfo(privateKey);
-
-    return this.addWallet(
-      {
-        address: address,
-        type: WalletType.mnemonic,
-        privateKey: privateKey,
-        mnemonic: mnemonic,
-        path: path,
-        rootAddress: rootInfo.address,
-        accountId: '',
-      },
-      name,
-    );
   }
 
   async addWallet(walletParams: AddWalletParams, name = '') {
@@ -189,14 +136,6 @@ class Wallets extends EventEmitter {
   getForRootAddress(rootAddress: string) {
     const wallets = realm.objects<Wallet>(Wallet.schema.name);
     return wallets.filtered(`rootAddress = '${rootAddress.toLowerCase()}'`);
-  }
-
-  get visible() {
-    return Array.from(this._wallets.values()).filter(w => !w.isHidden);
-  }
-
-  get addressList(): string[] {
-    return Array.from(this._wallets.keys());
   }
 }
 
