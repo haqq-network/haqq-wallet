@@ -1,8 +1,8 @@
 diff --git a/node_modules/@react-navigation/core/src/types.tsx b/node_modules/@react-navigation/core/src/types.tsx
-index a6b0e61..64dfb79 100644
+index 20685bb..57374d7 100644
 --- a/node_modules/@react-navigation/core/src/types.tsx
 +++ b/node_modules/@react-navigation/core/src/types.tsx
-@@ -713,7 +713,7 @@ export type PathConfig<ParamList extends {}> = {
+@@ -702,7 +702,7 @@ export type PathConfig<ParamList extends {}> = {
  export type PathConfigMap<ParamList extends {}> = {
    [RouteName in keyof ParamList]?: NonNullable<
      ParamList[RouteName]
