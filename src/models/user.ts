@@ -6,6 +6,7 @@ import {AppState, Appearance} from 'react-native';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 
+import {realm} from './index';
 import {AppLanguage, AppTheme} from '../types';
 import {
   PIN_BANNED_ATTEMPTS,
@@ -13,7 +14,6 @@ import {
   SNOOZE_WALLET_BACKUP_MINUTES,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables/common';
-import {realm} from './index';
 
 export const UserSchema = {
   name: 'User',

@@ -8,6 +8,7 @@ module.exports = {
     'react-native',
     'import',
     'prettier',
+    'jest'
   ],
   overrides: [
     {

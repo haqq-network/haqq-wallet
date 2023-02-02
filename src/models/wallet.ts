@@ -14,13 +14,13 @@ import {
   GRADIENT_PRESETS,
 } from '@app/variables/common';
 
+import {realm} from './index';
 import {
   AddWalletParams,
   WalletCardPattern,
   WalletCardStyle,
   WalletType,
 } from '../types';
-import {realm} from './index';
 
 export class Wallet extends Realm.Object {
   static schema = {
