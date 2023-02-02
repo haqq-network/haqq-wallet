@@ -52,7 +52,6 @@ export type UserType = {
 export class User extends EventEmitter {
   private last_activity: Date;
   private _raw: UserType & Realm.Object<UserType>;
-  private _systemTheme: AppTheme;
 
   constructor(user: UserType & Realm.Object<UserType>) {
     super();
@@ -83,17 +82,11 @@ export class User extends EventEmitter {
     AppState.addEventListener('change', this.listenTheme);
   }
 
-  listenTheme = () => {
-    const theme = Appearance.getColorScheme() as AppTheme;
+  private _systemTheme: AppTheme;
 
-    if (theme !== this._systemTheme) {
-      this._systemTheme = theme;
-
-      if (this._raw.theme === AppTheme.system) {
-        app.emit('theme');
-      }
-    }
-  };
+  get systemTheme(): AppTheme {
+    return this._systemTheme;
+  }
 
   get uuid() {
     return this._raw.username;
@@ -135,14 +128,14 @@ export class User extends EventEmitter {
     });
   }
 
+  get subscription() {
+    return this._raw.subscription;
+  }
+
   set subscription(subscription) {
     realm.write(() => {
       this._raw.subscription = subscription;
     });
-  }
-
-  get subscription() {
-    return this._raw.subscription;
   }
 
   get notifications() {
@@ -151,10 +144,6 @@ export class User extends EventEmitter {
 
   get theme(): AppTheme {
     return this._raw.theme;
-  }
-
-  get systemTheme(): AppTheme {
-    return this._systemTheme;
   }
 
   set theme(value) {
@@ -204,6 +193,18 @@ export class User extends EventEmitter {
 
     return !this.pinBanned;
   }
+
+  listenTheme = () => {
+    const theme = Appearance.getColorScheme() as AppTheme;
+
+    if (theme !== this._systemTheme) {
+      this._systemTheme = theme;
+
+      if (this._raw.theme === AppTheme.system) {
+        app.emit('theme');
+      }
+    }
+  };
 
   successEnter() {
     realm.write(() => {

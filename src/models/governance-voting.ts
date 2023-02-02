@@ -31,17 +31,6 @@ export type GovernanceVotingType = {
 };
 
 export class GovernanceVoting extends Realm.Object {
-  status!: string;
-  orderNumber!: number;
-  title!: string;
-  description!: string;
-  private endDate!: string;
-  private startDate!: string;
-  private votes?: string;
-  private depositNeeds?: string;
-  private depositEndTime?: string;
-  private createdAtTime?: string;
-
   static schema = {
     name: 'GovernanceVoting',
     properties: {
@@ -58,6 +47,16 @@ export class GovernanceVoting extends Realm.Object {
     },
     primaryKey: 'orderNumber',
   };
+  status!: string;
+  orderNumber!: number;
+  title!: string;
+  description!: string;
+  private endDate!: string;
+  private startDate!: string;
+  private votes?: string;
+  private depositNeeds?: string;
+  private depositEndTime?: string;
+  private createdAtTime?: string;
 
   get timeLeftPercent() {
     const start =
