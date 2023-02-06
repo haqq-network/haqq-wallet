@@ -548,7 +548,7 @@ PODS:
     - FirebaseCoreExtension (= 10.3.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.8.0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNKeychain (8.1.1):
     - React-Core
@@ -955,7 +955,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNFBApp: 9295dac8a4e8857918bcff90328b197807ee0dc1
   RNFBMessaging: 1a84a46789e1ee9820d70839683faff890a22411
-  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
