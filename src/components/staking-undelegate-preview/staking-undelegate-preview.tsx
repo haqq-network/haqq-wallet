@@ -8,7 +8,6 @@ import {
   Button,
   ButtonVariant,
   DataView,
-  ErrorText,
   Icon,
   InfoBlock,
   PopupContainer,
@@ -25,7 +24,6 @@ export type StakingDelegatePreviewProps = {
   amount: number;
   fee: number;
   validator: ValidatorItem;
-  error?: string;
   disabled: boolean;
   onSend: () => void;
 };
@@ -34,7 +32,6 @@ export const StakingUnDelegatePreview = ({
   amount,
   fee,
   validator,
-  error,
   disabled,
   onSend,
   unboundingTime,
@@ -87,11 +84,6 @@ export const StakingUnDelegatePreview = ({
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
       <Spacer />
-      {error && (
-        <ErrorText center e0>
-          {error}
-        </ErrorText>
-      )}
       <Button
         variant={ButtonVariant.contained}
         i18n={I18N.stakingUnDelegatePreviewButton}

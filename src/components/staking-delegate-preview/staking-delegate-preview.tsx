@@ -26,7 +26,6 @@ export type StakingDelegatePreviewProps = {
   amount: number;
   fee: number;
   validator: ValidatorItem;
-  error?: string;
   disabled: boolean;
   onSend: () => void;
 };
@@ -35,7 +34,6 @@ export const StakingDelegatePreview = ({
   amount,
   fee,
   validator,
-  error,
   disabled,
   unboundingTime,
   onSend,
@@ -92,7 +90,6 @@ export const StakingDelegatePreview = ({
           </Text>
         </DataView>
       </View>
-      {error && <Text clean>{error}</Text>}
       <Spacer />
       <Spacer height={24} />
       <InfoBlock

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
-import {awaitForPopupClosed} from '@app/helpers';
+import {awaitForPopupClosed, captureException} from '@app/helpers';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
@@ -12,10 +12,12 @@ import {
   useUser,
   useWallet,
 } from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
+import {makeID} from '@app/utils';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
@@ -76,9 +78,20 @@ export const TransactionConfirmationScreen = () => {
           });
         }
       } catch (e) {
+        const errorId = makeID(4);
+
+        captureException(e, 'transaction-confirmation', {
+          from: route.params.from,
+          to: route.params.to,
+          amount: route.params.amount,
+          id: errorId,
+        });
+
         if (e instanceof Error) {
           await awaitForPopupClosed('transaction-error', {
-            message: e.message,
+            message: getText(I18N.transactionFailed, {
+              id: errorId,
+            }),
           });
         }
       } finally {
@@ -90,6 +103,7 @@ export const TransactionConfirmationScreen = () => {
     navigation,
     onDoneLedgerBt,
     route.params.amount,
+    route.params.from,
     route.params.to,
     user.providerId,
     wallet,
