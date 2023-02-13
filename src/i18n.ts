@@ -450,6 +450,7 @@ export enum I18N {
   bluetoothUnauthorizedTitle,
   bluetoothUnauthorizedDescription,
   bluetoothUnauthorizedClose,
+  transactionFailed,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -974,4 +975,5 @@ const en: Record<I18N, string> = {
   [I18N.bluetoothUnauthorizedDescription]:
     'The app does not have access to your Bluetooth. Please go to your phone settings and allow the app to use Bluetooth. Without this, we will not be able to find your Ledger Nano X',
   [I18N.bluetoothUnauthorizedClose]: 'Close',
+  [I18N.transactionFailed]: 'Something went wrong\n#{{id}}',
 };

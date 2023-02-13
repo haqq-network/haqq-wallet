@@ -8,6 +8,7 @@ import {
   Button,
   ButtonVariant,
   DataView,
+  ErrorText,
   Icon,
   InfoBlock,
   PopupContainer,
@@ -76,7 +77,6 @@ export const StakingDelegatePreview = ({
       <Text t10 center style={styles.contact}>
         {validator.description.moniker}
       </Text>
-
       <View style={styles.info}>
         <DataView label={getText(I18N.stakingDelegatePreviewCommission)}>
           <Text t11 color={getColor(Color.textBase1)}>
@@ -92,7 +92,11 @@ export const StakingDelegatePreview = ({
           </Text>
         </DataView>
       </View>
-      {error && <Text clean>{error}</Text>}
+      {error && (
+        <ErrorText center e0>
+          {error}
+        </ErrorText>
+      )}
       <Spacer />
       <Spacer height={24} />
       <InfoBlock
