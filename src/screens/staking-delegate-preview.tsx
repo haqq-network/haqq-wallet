@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
-import {showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
@@ -14,7 +14,9 @@ import {
   useTypedRoute,
   useWallet,
 } from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {WalletType} from '@app/types';
+import {makeID} from '@app/utils';
 
 export const StakingDelegatePreviewScreen = () => {
   const navigation = useTypedNavigation();
@@ -25,8 +27,8 @@ export const StakingDelegatePreviewScreen = () => {
   const cosmos = useCosmos();
 
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-  const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -80,18 +82,24 @@ export const StakingDelegatePreviewScreen = () => {
         });
       } catch (e) {
         if (e instanceof Error) {
+          const errorId = makeID(4);
+
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
               showModal('ledger-locked');
               break;
-            case 'transaction_error':
-              showModal('transaction-error', {
-                message: errMessage,
-              });
-              break;
             default:
-              setError(e.message);
+              captureException(e, 'staking-delegate', {
+                id: errorId,
+                message: errMessage || e.message,
+              });
+
+              setError(
+                getText(I18N.transactionFailed, {
+                  id: errorId,
+                }),
+              );
           }
         }
       } finally {

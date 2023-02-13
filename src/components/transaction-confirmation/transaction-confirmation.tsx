@@ -7,6 +7,7 @@ import {
   Button,
   ButtonVariant,
   DataView,
+  ErrorText,
   PopupContainer,
   Spacer,
   Text,
@@ -22,11 +23,14 @@ interface TransactionConfirmationProps {
   amount: number;
   fee: number;
   contact: Contact | null;
+  error?: string;
+
   disabled?: boolean;
   onConfirmTransaction: () => void;
 }
 
 export const TransactionConfirmation = ({
+  error,
   disabled,
   contact,
   to,
@@ -117,6 +121,11 @@ export const TransactionConfirmation = ({
             />
           </DataView>
         </View>
+        {error && (
+          <ErrorText center e0>
+            {error}
+          </ErrorText>
+        )}
       </Spacer>
       <Button
         disabled={fee === 0 && !disabled}
