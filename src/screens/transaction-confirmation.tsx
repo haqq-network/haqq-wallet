@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
-import {awaitForPopupClosed, captureException} from '@app/helpers';
+import {captureException} from '@app/helpers';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
@@ -29,7 +29,7 @@ export const TransactionConfirmationScreen = () => {
     () => Contact.getById(route.params.to),
     [route.params.to],
   );
-
+  const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState(route.params.fee ?? 0);
 
@@ -88,11 +88,11 @@ export const TransactionConfirmationScreen = () => {
         });
 
         if (e instanceof Error) {
-          await awaitForPopupClosed('transaction-error', {
-            message: getText(I18N.transactionFailed, {
+          setError(
+            getText(I18N.transactionFailed, {
               id: errorId,
             }),
-          });
+          );
         }
       } finally {
         setDisabled(false);
@@ -123,6 +123,7 @@ export const TransactionConfirmationScreen = () => {
       amount={route.params.amount}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
+      error={error}
     />
   );
 };

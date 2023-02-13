@@ -23,7 +23,7 @@ export const StakingUnDelegatePreviewScreen = () => {
   const {account, amount, validator, fee} =
     useTypedRoute<'stakingDelegatePreview'>().params;
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-
+  const [error, setError] = useState('');
   const cosmos = useCosmos();
   const wallet = useWallet(account);
 
@@ -94,11 +94,11 @@ export const StakingUnDelegatePreviewScreen = () => {
                 message: errMessage || e.message,
               });
 
-              showModal('transaction-error', {
-                message: getText(I18N.transactionFailed, {
+              setError(
+                getText(I18N.transactionFailed, {
                   id: errorId,
                 }),
-              });
+              );
           }
         }
       } finally {
@@ -121,6 +121,7 @@ export const StakingUnDelegatePreviewScreen = () => {
       validator={validator}
       disabled={disabled}
       onSend={onDone}
+      error={error}
     />
   );
 };

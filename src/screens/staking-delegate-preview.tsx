@@ -28,6 +28,7 @@ export const StakingDelegatePreviewScreen = () => {
 
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -94,11 +95,11 @@ export const StakingDelegatePreviewScreen = () => {
                 message: errMessage || e.message,
               });
 
-              showModal('transaction-error', {
-                message: getText(I18N.transactionFailed, {
+              setError(
+                getText(I18N.transactionFailed, {
                   id: errorId,
                 }),
-              });
+              );
           }
         }
       } finally {
@@ -121,6 +122,7 @@ export const StakingDelegatePreviewScreen = () => {
       validator={validator}
       disabled={disabled}
       onSend={onDone}
+      error={error}
     />
   );
 };
