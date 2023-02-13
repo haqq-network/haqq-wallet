@@ -38,6 +38,8 @@ export const SignInStoreWalletScreen = () => {
             {},
           );
 
+          await provider.setMnemonicSaved();
+
           let canNext = true;
           let index = 0;
 
