@@ -18,11 +18,10 @@ class PushNotifications extends EventEmitter {
   }
 
   async requestPermissions() {
-    console.log('requestPermissions', this.isAvailable, this.path);
     if (!this.isAvailable) {
       throw new Error('push messages unavailable');
     }
-    console.log('w');
+
     const authStatus = await messaging().requestPermission();
 
     const enabled =
@@ -30,13 +29,11 @@ class PushNotifications extends EventEmitter {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
-
       const token = await messaging().getToken();
-      console.log('token', token);
       const subscription = await this.createNotificationToken(token);
+
       if (subscription) {
-        app.getUser().subscription = subscription;
+        app.getUser().subscription = subscription.id;
       }
     }
   }
@@ -54,12 +51,12 @@ class PushNotifications extends EventEmitter {
     const resp = await fetch(this.getPath(path), {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Content-Type': 'application/json, text/plain, */*',
+        Accept: 'application/json;charset=UTF-8',
       },
       body: data,
     });
-    console.log('resp', resp);
+
     return await resp.json();
   }
 
@@ -99,18 +96,23 @@ class PushNotifications extends EventEmitter {
     }
   }
 
-  createNotificationToken(token: string): Promise<string | undefined> {
-    return this.jsonRpcRequest<string>('/', 'createNotificationToken', token);
+  createNotificationToken<T = {id: string}>(
+    token: string,
+  ): Promise<T | undefined> {
+    return this.jsonRpcRequest<T>('/', 'createNotificationToken', token);
   }
 
   async removeNotificationToken(token: string): Promise<void> {
     return this.jsonRpcRequest<void>('/', 'removeNotificationToken', token);
   }
 
-  async subscribeAddress(token_id: string, address: string): Promise<void> {
+  async createNotificationSubscription(
+    token_id: string,
+    address: string,
+  ): Promise<void> {
     return this.jsonRpcRequest<void>(
       '/',
-      'subscribeAddress',
+      'createNotificationSubscription',
       token_id,
       address,
     );
