@@ -1341,23 +1341,23 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@evmos/eip712@^0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@evmos/eip712/-/eip712-0.2.10.tgz#6147c496b06cdbce9440fc4a36cb7272a9d08f60"
-  integrity sha512-Jg2QC16aXwz1kSpAiz83wBIWpcmWniMYwCW7mBNtZMVgNcHf9+oGgV92VcmYv0TAzdP1Ki7WVhTBptHRM0kHOA==
+"@evmos/eip712@^0.2.11":
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/@evmos/eip712/-/eip712-0.2.11.tgz#ae4d7bae241df5d7a0d007a88ecd3d72d185915f"
+  integrity sha512-8iGZ03PqhxYXZycAvl/GJ6b78qVPkzP7A42a/d3zeZXtzRpRwOpxHmBJr5xmsZur+eqZlgAqkmZ8Q+vEh+ICgA==
   dependencies:
     "@cosmjs/proto-signing" "^0.28.13"
-    "@evmos/proto" "^0.1.26"
+    "@evmos/proto" "^0.1.27"
     "@metamask/eth-sig-util" "^4.0.1"
     cosmjs-types "^0.5.1"
     link-module-alias "^1.2.0"
     long "^5.2.0"
     shx "^0.3.4"
 
-"@evmos/proto@^0.1.26":
-  version "0.1.26"
-  resolved "https://registry.yarnpkg.com/@evmos/proto/-/proto-0.1.26.tgz#20dcfdff2da7fd8e48159d6d581d2ab7739464cd"
-  integrity sha512-AzlQTKHo6jRXl3s6aQp6QKrQPnwKhszrF50+ycnr13BDL57chV2BYDwBrEyh/1HtL/nuvIpgyMgSZTX7dyUt2g==
+"@evmos/proto@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@evmos/proto/-/proto-0.1.27.tgz#efc86ec959150aa595190f3d1244ac8ee19f7525"
+  integrity sha512-lBOZhQFsIUz3on/4H+Rj1aDj2OWaZnz7OJjUFklkPZQ3tEtAATBOQiVCjkPvIX3jh/H5DACahmi8BmhcNF+7UA==
   dependencies:
     google-protobuf "^3.19.4"
     link-module-alias "^1.2.0"
@@ -1372,13 +1372,13 @@
     link-module-alias "^1.2.0"
     shx "^0.3.4"
 
-"@evmos/transactions@^0.2.12":
-  version "0.2.12"
-  resolved "https://registry.yarnpkg.com/@evmos/transactions/-/transactions-0.2.12.tgz#4e59cc504b60a31f4a3aa99485f320717fcd7e5b"
-  integrity sha512-4vAJ/jeH5ocbhJqdjp4oAYXmWOYn8NSGqHWGILI2Gd5t5cWYoknO3aJsXjtaJRdpfyV8MIJNcDOKJqdFzS9MhQ==
+"@evmos/transactions@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@evmos/transactions/-/transactions-0.2.13.tgz#beadd070524924e64ee3964a31b3f2658cd064be"
+  integrity sha512-O+SoWUXkg3XoP80PB01BSKBh+HMGZuWbQ2M07yscGfSxgmSsKrTPliOmai3yM8CnDnzUmPSNZk/oWaKaCDl8kw==
   dependencies:
-    "@evmos/eip712" "^0.2.10"
-    "@evmos/proto" "^0.1.26"
+    "@evmos/eip712" "^0.2.11"
+    "@evmos/proto" "^0.1.27"
     link-module-alias "^1.2.0"
     shx "^0.3.4"
 
