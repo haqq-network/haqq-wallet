@@ -1,17 +1,21 @@
 import {EventEmitter} from 'events';
 
+import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance} from 'react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
 import {AppLanguage, AppTheme} from '../types';
 import {
+  MAIN_NETWORK,
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
   SNOOZE_WALLET_BACKUP_MINUTES,
+  TEST_NETWORK,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables/common';
 
@@ -83,6 +87,43 @@ export class User extends EventEmitter {
   }
 
   private _systemTheme: AppTheme;
+
+  static create() {
+    let id = generateUUID();
+
+    realm.write(() => {
+      realm.create(UserSchema.name, {
+        username: id,
+        biometry: false,
+        bluetooth: false,
+        language: AppLanguage.en,
+        theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
+        providerId:
+          ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
+            ? MAIN_NETWORK
+            : TEST_NETWORK,
+      });
+    });
+
+    return id;
+  }
+
+  static getOrCreate() {
+    const users = realm.objects<UserType>('User');
+
+    let id = users.length && users[0].username;
+
+    if (!id) {
+      id = User.create();
+    }
+
+    return User.getById(id);
+  }
+
+  static getById(id: string) {
+    const user = realm.objectForPrimaryKey(UserSchema.name, id);
+    return new User(user as UserType & Realm.Object<UserType>);
+  }
 
   get systemTheme(): AppTheme {
     return this._systemTheme;
