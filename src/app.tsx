@@ -33,7 +33,12 @@ import {
   wallets,
 } from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme, hideModal, showModal} from '@app/helpers';
+import {
+  captureException,
+  createTheme,
+  hideModal,
+  showModal,
+} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
@@ -148,24 +153,13 @@ export const App = () => {
             navigator.navigate('welcome');
             break;
           default:
-            if (e instanceof Error) {
-              console.log('Error', e.name, e.message);
-            }
+            captureException(e, 'app init');
         }
       })
       .finally(async () => {
-        const initialUrl = await Linking.getInitialURL();
-
-        if (initialUrl && initialUrl.startsWith('haqq:')) {
-          app.emit(Events.onDeepLink, initialUrl);
-        }
-
+        app.emit(Events.onAppStarted);
         hideModal();
-
         setInitialized(true);
-        requestAnimationFrame(() => {
-          app.emit(Events.onAppStarted);
-        });
       });
   }, []);
 
