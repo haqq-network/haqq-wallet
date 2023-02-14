@@ -12,7 +12,10 @@ export async function onWalletCreate(wallet: Wallet) {
   try {
     let subscription = app.notifications;
     if (subscription) {
-      await pushNotifications.subscribeAddress(subscription, wallet.address);
+      await pushNotifications.createNotificationSubscription(
+        subscription,
+        wallet.address,
+      );
 
       wallet.update({subscription});
     }
