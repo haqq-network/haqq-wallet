@@ -2,7 +2,6 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
 import Keychain, {
@@ -19,16 +18,10 @@ import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {captureException, hideModal, showModal} from '../helpers';
-import {realm} from '../models';
 import {Provider} from '../models/provider';
-import {User, UserType} from '../models/user';
+import {User} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType} from '../types';
-import {generateUUID} from '../utils';
-import {
-  LIGHT_GRAPHIC_GREEN_1,
-  MAIN_NETWORK,
-  TEST_NETWORK,
-} from '../variables/common';
+import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
@@ -75,7 +68,7 @@ class App extends EventEmitter {
         this._biometryType = null;
       });
 
-    this.user = this.loadUser();
+    this.user = User.getOrCreate();
 
     this._provider = Provider.getProvider(this.user.providerId);
 
@@ -161,12 +154,10 @@ class App extends EventEmitter {
   }
 
   async init(): Promise<void> {
-    try {
-      await this.getPassword();
-    } catch (e) {
-      console.log(e);
+    if (!this.user.onboarded) {
       return Promise.reject('user_not_found');
     }
+
     await this.auth();
 
     await new Promise(resolve => {
@@ -189,28 +180,6 @@ class App extends EventEmitter {
     }
 
     return creds.password;
-  }
-
-  loadUser(): User {
-    const users = realm.objects<UserType>('User');
-
-    if (!users.length) {
-      realm.write(() => {
-        realm.create('User', {
-          username: generateUUID(),
-          biometry: false,
-          bluetooth: false,
-          language: AppLanguage.en,
-          theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
-          providerId:
-            ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
-              ? MAIN_NETWORK
-              : TEST_NETWORK,
-        });
-      });
-    }
-
-    return new User(users[0] as UserType & Realm.Object<UserType>);
   }
 
   async clean() {
