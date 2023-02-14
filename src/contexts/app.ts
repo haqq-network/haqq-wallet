@@ -158,8 +158,6 @@ class App extends EventEmitter {
       return Promise.reject('user_not_found');
     }
 
-    await this.getPassword();
-
     await this.auth();
 
     await new Promise(resolve => {
