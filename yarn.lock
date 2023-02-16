@@ -1372,7 +1372,7 @@
     link-module-alias "^1.2.0"
     shx "^0.3.4"
 
-"@evmos/transactions@^0.2.13":
+"@evmos/transactions@0.2.13":
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/@evmos/transactions/-/transactions-0.2.13.tgz#beadd070524924e64ee3964a31b3f2658cd064be"
   integrity sha512-O+SoWUXkg3XoP80PB01BSKBh+HMGZuWbQ2M07yscGfSxgmSsKrTPliOmai3yM8CnDnzUmPSNZk/oWaKaCDl8kw==
