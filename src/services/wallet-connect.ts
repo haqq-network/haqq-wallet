@@ -82,6 +82,8 @@ export class WalletConnect {
       return;
     }
 
+    console.log(proposalId, params);
+
     const {requiredNamespaces, relays} = params;
 
     const namespaces: SessionTypes.Namespaces = {};
