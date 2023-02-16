@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {captureException, hideModal, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 interface PinGuardProps {
   onEnter?: () => Promise<void> | void;
@@ -21,6 +22,12 @@ export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
     setOptions({headerShown: loggedIn});
   }, [loggedIn, setOptions]);
 
+  useEffect(() => {
+    if (app.pinBanned) {
+      pinRef?.current?.locked(app.pinBanned);
+    }
+  }, [pinRef]);
+
   const onPin = async (pin: string) => {
     const start = Date.now();
     showModal('loading');
@@ -30,8 +37,18 @@ export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
       pinRef.current?.reset();
       setLoggedIn(true);
     } catch (error) {
-      pinRef.current?.reset(getText(I18N.settingsSecurityPinNotMatched));
-      captureException(error, 'settings-security-pin-mnemonic');
+      app.failureEnter();
+      if (app.canEnter) {
+        pinRef.current?.reset(
+          getText(I18N.pinCodeWrongPin, {
+            attempts: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
+          }),
+        );
+      } else {
+        pinRef.current?.locked(app.pinBanned);
+      }
+
+      captureException(error, 'pin-guard');
     }
     const end = Date.now();
     if (end - start < 500) {
