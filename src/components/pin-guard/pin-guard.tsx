@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 
 import {Pin, PinInterface} from '@app/components/pin';
 import {useTypedNavigation} from '@app/hooks';
@@ -11,8 +11,7 @@ interface PinGuardProps {
   pinRef: React.MutableRefObject<PinInterface | undefined>;
 }
 
-export const PinGuard = ({onPin}: PinGuardProps) => {
-  const pinRef = useRef<PinInterface>();
+export const PinGuard = ({onPin, pinRef}: PinGuardProps) => {
   const {goBack} = useTypedNavigation();
 
   return (
