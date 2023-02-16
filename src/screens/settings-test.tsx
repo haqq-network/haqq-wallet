@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import messaging from '@react-native-firebase/messaging';
 import {View} from 'react-native';
 
-import {Button, ButtonVariant} from '@app/components/ui';
+import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {pushNotifications} from '@app/services/push-notifications';
@@ -33,6 +35,7 @@ messaging()
 
 export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
+  const [wc, setWc] = useState('');
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
@@ -55,6 +58,10 @@ export const SettingsTestScreen = () => {
     }
   };
 
+  const onPressWc = () => {
+    app.emit(Events.onWalletConnectUri, wc);
+  };
+
   return (
     <View style={styles.container}>
       <Button
@@ -62,6 +69,24 @@ export const SettingsTestScreen = () => {
         onPress={onPressRequestPermissions}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={20} />
+
+      <Input
+        placeholder="wc:"
+        value={wc}
+        onChangeText={v => {
+          setWc(v);
+        }}
+      />
+      <Spacer height={5} />
+      <Button
+        title="wallet connect"
+        disabled={!wc}
+        onPress={onPressWc}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={20} />
+
       <Button
         title="Show popup"
         onPress={onPressPopup}
