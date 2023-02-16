@@ -26,26 +26,34 @@ export class WalletConnect {
   private _client: SignClient | null = null;
 
   async init() {
-    this._client = await SignClient.init({
-      logger: 'debug',
-      projectId: WALLET_CONNECT_PROJECT_ID,
-      relayUrl: WALLET_CONNECT_RELAY_URL,
-      metadata: {
-        name: 'React Native Wallet',
-        description: 'React Native Wallet for WalletConnect',
-        url: 'https://walletconnect.com/',
-        icons: ['https://avatars.githubusercontent.com/u/37784886'],
-      },
-    });
+    try {
+      this._client = await SignClient.init({
+        logger: 'debug',
+        projectId: WALLET_CONNECT_PROJECT_ID,
+        relayUrl: WALLET_CONNECT_RELAY_URL,
+        metadata: {
+          name: 'React Native Wallet',
+          description: 'React Native Wallet for WalletConnect',
+          url: 'https://walletconnect.com/',
+          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+        },
+      });
 
-    this._client.on('session_proposal', proposal => {
-      app.emit(Events.onWalletConnectApproveConnection, proposal);
-    });
+      this._client.on('session_proposal', proposal => {
+        console.log('proposal', proposal);
+        app.emit(Events.onWalletConnectApproveConnection, proposal);
+      });
+    } catch (e) {
+      console.log('err', e);
+    }
   }
 
   async pair(uri: string) {
+    console.log('this._client', !!this._client);
     if (this._client) {
-      await this._client.core.pairing.pair({uri});
+      const resp = await this._client.core.pairing.pair({uri});
+
+      console.log('resp', resp);
     }
   }
 }

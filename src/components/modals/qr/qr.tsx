@@ -11,6 +11,7 @@ import {Color, getColor} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
+import {Events} from '@app/events';
 import {createTheme, hideModal} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -85,8 +86,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           vibrate(HapticEffects.success);
           setIsOpen(true);
         }
-      } else if (address.startsWith('ws:')) {
-        console.log('ws', address);
+      } else if (address.startsWith('wc:')) {
+        hideModal();
+        app.emit(Events.onWalletConnectUri, address);
       } else {
         setError(true);
         vibrate(HapticEffects.error);
