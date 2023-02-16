@@ -109,5 +109,6 @@ const page = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
+    width: '100%',
   },
 });
