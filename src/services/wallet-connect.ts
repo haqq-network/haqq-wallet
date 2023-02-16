@@ -1,6 +1,7 @@
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
 import {Core} from '@walletconnect/core';
 import {ICore} from '@walletconnect/types';
+import {Struct} from '@walletconnect/types/dist/types/sign-client/proposal';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
@@ -75,7 +76,7 @@ export class WalletConnect {
   async approveSession(
     proposalId: number,
     currentETHAddress: string,
-    params: any,
+    params: Struct,
   ) {
     if (!this._client) {
       return;
@@ -86,7 +87,7 @@ export class WalletConnect {
     const namespaces: SessionTypes.Namespaces = {};
     Object.keys(requiredNamespaces).forEach(key => {
       const accounts: string[] = [];
-      requiredNamespaces[key].chains.map(chain => {
+      requiredNamespaces[key].chains.map((chain: any) => {
         [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
       });
 
@@ -97,10 +98,12 @@ export class WalletConnect {
       };
     });
 
-    await this._client.approveSession({
+    const session = await this._client.approveSession({
       id: proposalId,
       relayProtocol: relays[0].protocol,
       namespaces,
     });
+
+    return session;
   }
 }

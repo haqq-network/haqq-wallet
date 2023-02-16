@@ -3,6 +3,7 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
+import {Struct} from '@walletconnect/types/dist/types/sign-client/proposal';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -314,10 +315,12 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletConnect: {
-    id: string;
+    id: number;
+    params: Struct;
   };
   walletConnectApproval: {
-    id: string;
+    id: number;
+    params: Struct;
   };
 };
 
