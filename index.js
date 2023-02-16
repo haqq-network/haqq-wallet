@@ -3,6 +3,7 @@
  */
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
+import '@walletconnect/react-native-compat';
 import {AppRegistry} from 'react-native';
 
 import {App} from './src/app';
@@ -12,6 +13,8 @@ import * as Sentry from '@sentry/react-native';
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {Overview} from './src/overview';
 import './src/event-actions';
+
+console.log('123')
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;

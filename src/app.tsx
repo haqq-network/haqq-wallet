@@ -47,6 +47,7 @@ import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
+import {WalletConnect} from '@app/services/wallet-connect';
 import {
   ActionSheetType,
   AppTheme,
@@ -147,6 +148,7 @@ export const App = () => {
       .then(() => migrationWallets())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
+      .then(() => WalletConnect.instance.init())
       .catch(e => {
         switch (e) {
           case 'user_not_found':

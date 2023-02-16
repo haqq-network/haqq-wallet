@@ -5,6 +5,8 @@ import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onPushSubscriptionAdd} from '@app/event-actions/on-push-subscription-add';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
 import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
+import {onWalletConnectApproveConnection} from '@app/event-actions/on-wallet-connect-approve-connection';
+import {onWalletConnectUri} from '@app/event-actions/on-wallet-connect-uri';
 import {onWalletCreate} from '@app/event-actions/on-wallet-create';
 import {onWalletMnemonicCheck} from '@app/event-actions/on-wallet-mnemonic-check';
 import {onWalletMnemonicSaved} from '@app/event-actions/on-wallet-mnemonic-saved';
@@ -26,3 +28,8 @@ app.on(Events.onAppMnemonicBackup, onAppMnemonicBackup);
 app.on(Events.onWalletReset, onWalletReset);
 app.on(Events.onWalletMnemonicCheck, onWalletMnemonicCheck);
 app.on(Events.onWalletMnemonicSaved, onWalletMnemonicSaved);
+app.on(Events.onWalletConnectUri, onWalletConnectUri);
+app.on(
+  Events.onWalletConnectApproveConnection,
+  onWalletConnectApproveConnection,
+);

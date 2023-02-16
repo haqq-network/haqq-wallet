@@ -313,6 +313,9 @@ export type RootStackParamList = {
     accountId: string;
   };
   settingsSecurity: undefined;
+  walletConnect: {
+    id: string;
+  };
 };
 
 export type StackPresentationTypes =

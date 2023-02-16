@@ -85,6 +85,8 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           vibrate(HapticEffects.success);
           setIsOpen(true);
         }
+      } else if (address.startsWith('ws:')) {
+        console.log('ws', address);
       } else {
         setError(true);
         vibrate(HapticEffects.error);

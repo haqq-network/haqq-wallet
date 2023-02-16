@@ -9,4 +9,6 @@ declare module '@env' {
   export const IS_DEVELOPMENT: string;
   export const PUSH_NOTIFICATIONS: string;
   export const PROVIDER_BASE_PACKAGE: string;
+  export const WALLET_CONNECT_PROJECT_ID: string;
+  export const WALLET_CONNECT_RELAY_URL: string;
 }
