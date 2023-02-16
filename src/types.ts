@@ -316,6 +316,9 @@ export type RootStackParamList = {
   walletConnect: {
     id: string;
   };
+  walletConnectApproval: {
+    id: string;
+  };
 };
 
 export type StackPresentationTypes =

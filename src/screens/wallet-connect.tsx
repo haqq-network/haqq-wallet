@@ -4,8 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {DismissPopupButton} from '@app/components/dismiss-popup-button';
 import {popupScreenOptions} from '@app/helpers';
+import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {WalletConnectApproval} from '@app/screens/wallet-connect-approval';
+import {WalletConnectApprovalScreen} from '@app/screens/wallet-connect-approval';
 import {ScreenOptionType} from '@app/types';
 
 const WalletConnect = createStackNavigator();
@@ -17,13 +18,15 @@ const screenOptionsAddressRoute: ScreenOptionType = {
 
 const screenOptions = {...popupScreenOptions, keyboardHandlingEnabled: false};
 
-export const TransactionScreen = () => {
+export const WalletConnectScreen = () => {
+  const route = useTypedRoute<'walletConnect'>();
   return (
     <WalletConnect.Navigator screenOptions={screenOptions}>
       <WalletConnect.Screen
         name="walletConnectApproval"
-        component={WalletConnectApproval}
+        component={WalletConnectApprovalScreen}
         options={screenOptionsAddressRoute}
+        initialParams={route.params}
       />
     </WalletConnect.Navigator>
   );

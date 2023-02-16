@@ -1,5 +1,7 @@
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
-import SignClient from '@walletconnect/sign-client';
+import {Core} from '@walletconnect/core';
+import {ICore} from '@walletconnect/types';
+import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -23,21 +25,34 @@ import {Events} from '@app/events';
 
 export class WalletConnect {
   static instance = new WalletConnect();
-  private _client: SignClient | null = null;
+  private _client: IWeb3Wallet | null = null;
+  private _core: ICore | null = null;
 
   async init() {
     try {
-      this._client = await SignClient.init({
+      console.log(
+        'this._client',
+        WALLET_CONNECT_PROJECT_ID,
+        WALLET_CONNECT_RELAY_URL,
+      );
+
+      this._core = new Core({
         logger: 'debug',
         projectId: WALLET_CONNECT_PROJECT_ID,
         relayUrl: WALLET_CONNECT_RELAY_URL,
+      });
+
+      this._client = await Web3Wallet.init({
+        core: this._core,
         metadata: {
-          name: 'React Native Wallet',
-          description: 'React Native Wallet for WalletConnect',
+          name: 'HAQQ Wallet',
+          description: 'HAQQ Wallet for WalletConnect',
           url: 'https://walletconnect.com/',
-          icons: ['https://avatars.githubusercontent.com/u/37784886'],
+          icons: [],
         },
       });
+
+      console.log('connected');
 
       this._client.on('session_proposal', proposal => {
         console.log('proposal', proposal);
@@ -55,5 +70,37 @@ export class WalletConnect {
 
       console.log('resp', resp);
     }
+  }
+
+  async approveSession(
+    proposalId: number,
+    currentETHAddress: string,
+    params: any,
+  ) {
+    if (!this._client) {
+      return;
+    }
+
+    const {requiredNamespaces, relays} = params;
+
+    const namespaces: SessionTypes.Namespaces = {};
+    Object.keys(requiredNamespaces).forEach(key => {
+      const accounts: string[] = [];
+      requiredNamespaces[key].chains.map(chain => {
+        [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
+      });
+
+      namespaces[key] = {
+        accounts,
+        methods: requiredNamespaces[key].methods,
+        events: requiredNamespaces[key].events,
+      };
+    });
+
+    await this._client.approveSession({
+      id: proposalId,
+      relayProtocol: relays[0].protocol,
+      namespaces,
+    });
   }
 }

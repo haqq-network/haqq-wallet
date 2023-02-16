@@ -3,22 +3,26 @@
  */
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
-import '@walletconnect/react-native-compat';
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 
-import {App} from './src/app';
-import {name as appName} from './app.json';
-import {JsonRpcProvider} from '@ethersproject/providers';
+import { App } from './src/app';
+import { name as appName } from './app.json';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import {ENVIRONMENT, SENTRY_DSN} from '@env';
-import {Overview} from './src/overview';
+import { ENVIRONMENT, SENTRY_DSN } from '@env';
+import { Overview } from './src/overview';
 import './src/event-actions';
 
-console.log('123')
+const TextEncodingPolyfill = require('text-encoding');
+const BigInt = require('big-integer');
+const Buffer = require('buffer');
 
-if (typeof Buffer === 'undefined') {
-  global.Buffer = require('buffer').Buffer;
-}
+Object.assign(global, {
+  TextEncoder: TextEncodingPolyfill.TextEncoder,
+  TextDecoder: TextEncodingPolyfill.TextDecoder,
+  BigInt: BigInt,
+  Buffer: Buffer.Buffer
+});
 
 if (SENTRY_DSN) {
   try {
@@ -44,7 +48,7 @@ function getResult(payload) {
   return payload.result;
 }
 
-JsonRpcProvider.prototype.send = async function (method, params) {
+JsonRpcProvider.prototype.send = async function(method, params) {
   const request = {
     method: method,
     params: params,

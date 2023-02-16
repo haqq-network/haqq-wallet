@@ -90,6 +90,7 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WelcomeScreen} from './screens/welcome';
+import { WalletConnectScreen } from './screens/wallet-connect';
 
 const screenOptions: ScreenOptionType = {
   tab: true,
@@ -233,6 +234,10 @@ export const App = () => {
                   <Stack.Screen
                     name="transaction"
                     component={TransactionScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnect"
+                    component={WalletConnectScreen}
                   />
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
