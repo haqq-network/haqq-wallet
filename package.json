@@ -16,7 +16,7 @@
   "dependencies": {
     "@ethersproject/shims": "^5.6.0",
     "@evmos/provider": "^0.2.8",
-    "@evmos/transactions": "^0.2.12",
+    "@evmos/transactions": "0.2.13",
     "@haqq/encryption-react-native": "0.0.1",
     "@haqq/provider-base": "0.0.15",
     "@haqq/provider-hot-react-native": "0.0.4",
