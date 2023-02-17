@@ -1,11 +1,28 @@
+import queryString from 'query-string';
 import {Alert} from 'react-native';
 import base64 from 'react-native-base64';
 
 import {navigator} from '@app/navigator';
 
 export async function onDeepLink(link: string) {
-  if (link && link.startsWith('haqq:')) {
-    let params = link.split(':');
+  let deepLink: string | null = link;
+
+  if (!deepLink) {
+    return;
+  }
+
+  if (deepLink.startsWith('https://haqq.page.link')) {
+    const uri = queryString.parse(link);
+    deepLink = String(uri.link || uri['https://haqq.page.link/?link'] || '');
+  }
+
+  if (deepLink.startsWith('https://haqq.network')) {
+    const uri = queryString.parse(deepLink);
+    deepLink = String(uri.p || uri['https://haqq.network?p'] || '');
+  }
+
+  if (deepLink.startsWith('haqq:')) {
+    let params = deepLink.split(':');
 
     if (params.length === 2) {
       navigator.navigate('transaction', {

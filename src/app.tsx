@@ -8,9 +8,8 @@
  * @format
  */
 
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
-import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -18,7 +17,6 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -159,44 +157,8 @@ export const App = () => {
       .finally(async () => {
         app.emit(Events.onAppStarted);
         hideModal();
-        setInitialized(true);
       });
   }, []);
-
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    if (initialized) {
-      const subscription = ({isConnected}: NetInfoState) => {
-        isConnected ? hideModal('no-internet') : showModal('no-internet');
-      };
-
-      const linkingSubscription = ({url}: {url: string}) => {
-        if (url.startsWith('haqq:')) {
-          app.emit(Events.onDeepLink, url);
-        }
-      };
-
-      NetInfo.fetch().then(subscription);
-
-      const unsubscribeLinking = Linking.addListener(
-        'url',
-        linkingSubscription,
-      );
-      const unsubscribeNet = NetInfo.addEventListener(subscription);
-      const unsubscribeApp = AppState.addEventListener('change', () => {
-        if (AppState.currentState === 'active') {
-          NetInfo.fetch().then(subscription);
-        }
-      });
-
-      return () => {
-        unsubscribeNet();
-        unsubscribeApp.remove();
-        unsubscribeLinking.remove();
-      };
-    }
-  }, [initialized]);
 
   const onStateChange = useCallback(() => {
     Sentry.addBreadcrumb({
