@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import {Linking, View} from 'react-native';
 
@@ -34,10 +35,23 @@ messaging()
 
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
+  const [initialLink, setInitialLink] = useState<null | string>(null);
   const navigation = useTypedNavigation();
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
+
+  const handleDynamicLink = (link: any) => {
+    console.log('link', link);
+    setInitialLink(link);
+  };
+
+  useEffect(() => {
+    dynamicLinks().getInitialLink().then(handleDynamicLink);
+
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     Linking.getInitialURL().then(result => {
@@ -68,6 +82,11 @@ export const SettingsTestScreen = () => {
       {initialUrl && (
         <Text t11 onPress={() => Clipboard.setString(initialUrl)}>
           initialUrl: {initialUrl}
+        </Text>
+      )}
+      {initialLink && (
+        <Text t11 onPress={() => Clipboard.setString(initialLink)}>
+          initialLink: {initialLink}
         </Text>
       )}
 
