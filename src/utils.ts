@@ -1,4 +1,5 @@
 import {PATTERNS_SOURCE} from '@env';
+import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -167,4 +168,37 @@ export function throttle<T extends Array<any>>(
     shouldWait = true;
     setTimeout(timeoutFunc, delay);
   };
+}
+
+/**
+ * for extract message from params string array
+ * @example params array:
+ *   [
+ *     "0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b",
+ *     "0x4d7920656d61696c206973206a6f686e40646f652e636f6d202d2031363736363231313434323235"
+ *   ]
+ *
+ *  [
+ *     "0x4d7920656d61696c206973206a6f686e40646f652e636f6d202d2031363736363231313030303234",
+ *     "0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b"
+ *  ]
+ */
+export function getSignParamsMessage(params: string[]) {
+  const message = params.filter(p => !utils.isAddress(p))[0];
+  return Buffer.from(message.slice(2), 'hex').toString('utf8');
+}
+
+/**
+ * Gets data from various signTypedData request methods by filtering out
+ * a value that is not an address (thus is data).
+ * If data is a string convert it to object
+ */
+export function getSignTypedDataParamsData(params: string[]) {
+  const data = params.filter(p => !utils.isAddress(p))[0];
+
+  if (typeof data === 'string') {
+    return JSON.parse(data);
+  }
+
+  return data;
 }

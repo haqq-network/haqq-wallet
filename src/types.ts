@@ -3,7 +3,6 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
-import {Struct} from '@walletconnect/types/dist/types/sign-client/proposal';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -12,6 +11,10 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
+import {
+  WalletConnectApproveConnectionEvent,
+  WalletConnectSessionRequestEvent,
+} from './types/wallet-connect';
 
 export enum TransactionSource {
   unknown,
@@ -315,12 +318,16 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletConnect: {
-    id: number;
-    params: Struct;
+    screen: 'walletConnectApproval' | 'walletConnectSign';
+    params:
+      | RootStackParamList['walletConnectApproval']
+      | RootStackParamList['walletConnectSign'];
   };
   walletConnectApproval: {
-    id: number;
-    params: Struct;
+    event: WalletConnectApproveConnectionEvent;
+  };
+  walletConnectSign: {
+    event: WalletConnectSessionRequestEvent;
   };
 };
 

@@ -50,7 +50,7 @@ export const SettingsTestScreen = () => {
       const provider = getProviderInstanceForWallet(wallet);
 
       const signature = await provider.signPersonalMessage(
-        wallet.path,
+        wallet.path!,
         'Example `personal_sign` message',
       );
 

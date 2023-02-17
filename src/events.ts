@@ -17,4 +17,5 @@ export enum Events {
   onAppMnemonicBackup = 'onAppMnemonicBackup',
   onWalletConnectUri = 'onWalletConnectUri',
   onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
+  onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
 }

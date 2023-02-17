@@ -1,28 +1,16 @@
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
+import {TransactionRequest} from '@haqq/provider-base';
 import {Core} from '@walletconnect/core';
-import {ICore} from '@walletconnect/types';
-import {Struct} from '@walletconnect/types/dist/types/sign-client/proposal';
+import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-
-// export async function createSignClient() {
-//   console.log('[CONFIG] ENV_PROJECT_ID:', WALLET_CONNECT_PROJECT_ID);
-//   console.log('[CONFIG] ENV_RELAY_URL:', WALLET_CONNECT_RELAY_URL);
-//
-//   return await SignClient.init({
-//     logger: 'debug',
-//     projectId: WALLET_CONNECT_PROJECT_ID,
-//     relayUrl: WALLET_CONNECT_RELAY_URL,
-//     metadata: {
-//       name: 'React Native Wallet',
-//       description: 'React Native Wallet for WalletConnect',
-//       url: 'https://walletconnect.com/',
-//       icons: ['https://avatars.githubusercontent.com/u/37784886'],
-//     },
-//   });
-// }
+import {getProviderInstanceForWallet} from '@app/helpers';
+import {Wallet} from '@app/models/wallet';
+import {Cosmos} from '@app/services/cosmos';
+import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
+import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export class WalletConnect {
   static instance = new WalletConnect();
@@ -53,14 +41,37 @@ export class WalletConnect {
         },
       });
 
-      console.log('connected');
-
-      this._client.on('session_proposal', proposal => {
-        console.log('proposal', proposal);
-        app.emit(Events.onWalletConnectApproveConnection, proposal);
-      });
-    } catch (e) {
-      console.log('err', e);
+      this._client
+        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
+        .on(
+          'session_proposal',
+          (proposal: SignClientTypes.EventArguments['session_proposal']) => {
+            console.log(
+              '🟢 session_proposal',
+              JSON.stringify(proposal, null, 2),
+            );
+            app.emit(Events.onWalletConnectApproveConnection, proposal);
+          },
+        )
+        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
+        .on(
+          'session_request',
+          async (event: SignClientTypes.EventArguments['session_request']) => {
+            console.log('🟢 session_request', JSON.stringify(event, null, 2));
+            app.emit(Events.onWalletConnectSignTransaction, event);
+          },
+        )
+        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
+        .on(
+          'session_update',
+          async (event: SignClientTypes.EventArguments['session_update']) => {
+            console.log('🟢 session_update', JSON.stringify(event, null, 2));
+            const {topic} = event;
+            await this._client?.extendSession?.({topic});
+          },
+        );
+    } catch (err) {
+      console.error('[WalletConnect] init error', err);
     }
   }
 
@@ -68,15 +79,15 @@ export class WalletConnect {
     console.log('this._client', !!this._client);
     if (this._client) {
       const resp = await this._client.core.pairing.pair({uri});
-
       console.log('resp', resp);
+      return resp;
     }
   }
 
   async approveSession(
     proposalId: number,
     currentETHAddress: string,
-    params: Struct,
+    params: SignClientTypes.EventArguments['session_proposal']['params'],
   ) {
     if (!this._client) {
       return;
@@ -89,7 +100,7 @@ export class WalletConnect {
     const namespaces: SessionTypes.Namespaces = {};
     Object.keys(requiredNamespaces).forEach(key => {
       const accounts: string[] = [];
-      requiredNamespaces[key].chains.map((chain: any) => {
+      requiredNamespaces?.[key]?.chains?.map?.((chain: any) => {
         [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
       });
 
@@ -107,5 +118,80 @@ export class WalletConnect {
     });
 
     return session;
+  }
+
+  public getSessionByTopic(topic: string) {
+    return this._client?.engine?.signClient?.session?.get?.(topic);
+  }
+
+  public async approveEIP155Request(
+    wallet: Wallet,
+    event: SignClientTypes.EventArguments['session_request'],
+  ) {
+    const provider = getProviderInstanceForWallet(wallet);
+
+    if (!wallet?.path || !provider) {
+      throw new Error(
+        '[WalletConnect:approveEIP155Request]: wallet.path or provider is undefined',
+      );
+    }
+
+    const {params, id, topic} = event;
+    const {request} = params;
+    let result: string | undefined;
+
+    switch (request.method) {
+      case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+      case EIP155_SIGNING_METHODS.ETH_SIGN:
+        const message = getSignParamsMessage(request.params);
+        result = await provider.signPersonalMessage(wallet.path, message);
+        break;
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
+        const {
+          domain,
+          types,
+          message: typedMessage,
+        } = getSignTypedDataParamsData(request.params);
+
+        // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
+        // delete types.EIP712Domain;
+
+        const cosmos = new Cosmos(app.provider!);
+        // FIXME:
+        result = await cosmos.signTypedData(
+          wallet.path!,
+          provider,
+          domain,
+          types,
+          typedMessage,
+        );
+
+        break;
+      case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+      case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+        const signTransactionRequest: TransactionRequest = request.params[0];
+        delete signTransactionRequest.from;
+
+        result = await provider.signTransaction(
+          wallet.path,
+          signTransactionRequest,
+        );
+        break;
+      default:
+        throw new Error('[WalletConnect:approveEIP155Request]: INVALID_METHOD');
+    }
+
+    if (!result) {
+      throw new Error(
+        '[WalletConnect:approveEIP155Request]: result is undefined',
+      );
+    }
+
+    return await this._client?.respondSessionRequest({
+      topic,
+      response: {id, result, jsonrpc: '2.0'},
+    });
   }
 }

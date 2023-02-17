@@ -16,6 +16,8 @@ import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check
 import {Events} from '@app/events';
 import {throttle} from '@app/utils';
 
+import {onWalletConnectSignTransaction} from './on-wallet-connect-sign-transaction';
+
 app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 app.on(Events.onDeepLink, onDeepLink);
 app.on(Events.onWalletCreate, onWalletCreate);
@@ -33,3 +35,4 @@ app.on(
   Events.onWalletConnectApproveConnection,
   onWalletConnectApproveConnection,
 );
+app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
