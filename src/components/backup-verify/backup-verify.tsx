@@ -146,7 +146,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
       </View>
       <Spacer />
       <Button
-        disabled={selected.length < 12}
+        disabled={selected.filter(Boolean).length < 12}
         variant={ButtonVariant.contained}
         i18n={I18N.backupVerifyCheck}
         onPress={onPressDone}
