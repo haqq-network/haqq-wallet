@@ -19,7 +19,7 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
-import {ValidatorItem} from '@app/types';
+import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
@@ -105,6 +105,18 @@ export const StakingDelegatePreview = ({
         i18params={{time}}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />
+      {validator.localStatus === ValidatorStatus.inactive ||
+        (validator.localStatus === ValidatorStatus.jailed && (
+          <>
+            <Spacer height={16} />
+            <InfoBlock
+              warning
+              i18n={I18N.stakingDelegateFormJailedAttention}
+              icon={<Icon name="warning" color={Color.textYellow1} />}
+            />
+          </>
+        ))}
+      <Spacer minHeight={16} />
       <Button
         variant={ButtonVariant.contained}
         title={getText(I18N.stakingDelegatePreviewDelegate)}
