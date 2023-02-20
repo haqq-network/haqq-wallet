@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
-import {View} from 'react-native';
+import {Linking, View} from 'react-native';
 
-import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
+import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
@@ -34,11 +35,18 @@ messaging()
   });
 
 export const SettingsTestScreen = () => {
+  const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const navigation = useTypedNavigation();
   const [wc, setWc] = useState('');
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
+
+  useEffect(() => {
+    Linking.getInitialURL().then(result => {
+      setInitialUrl(result);
+    });
+  }, []);
 
   const onPressPopup = () => {
     navigation.navigate('notificationPopup');
@@ -64,6 +72,12 @@ export const SettingsTestScreen = () => {
 
   return (
     <View style={styles.container}>
+      {initialUrl && (
+        <Text t11 onPress={() => Clipboard.setString(initialUrl)}>
+          initialUrl: {initialUrl}
+        </Text>
+      )}
+
       <Button
         title="Request permissions"
         onPress={onPressRequestPermissions}
