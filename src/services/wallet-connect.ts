@@ -37,7 +37,7 @@ export class WalletConnect {
           name: 'HAQQ Wallet',
           description: 'HAQQ Wallet for WalletConnect',
           url: 'https://walletconnect.com/',
-          icons: [],
+          icons: ['https://islamiccoin.net/favicon.ico'],
         },
       });
 
@@ -159,8 +159,7 @@ export class WalletConnect {
         // delete types.EIP712Domain;
 
         const cosmos = new Cosmos(app.provider!);
-        // FIXME:
-        result = await cosmos.signTypedData(
+        const signedMessageHash = await cosmos.signTypedData(
           wallet.path!,
           provider,
           domain,
@@ -168,6 +167,7 @@ export class WalletConnect {
           typedMessage,
         );
 
+        result = `0x${signedMessageHash}`;
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
@@ -188,6 +188,8 @@ export class WalletConnect {
         '[WalletConnect:approveEIP155Request]: result is undefined',
       );
     }
+
+    console.log('✅ approveEIP155Request result:', result, result.length);
 
     return await this._client?.respondSessionRequest({
       topic,
