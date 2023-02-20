@@ -2,9 +2,12 @@ import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  Icon,
+  InfoBlock,
   KeyboardSafeArea,
   Spacer,
   Text,
@@ -15,7 +18,7 @@ import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {ValidatorItem} from '@app/types';
+import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
@@ -29,6 +32,7 @@ export type StakingDelegateFormProps = {
 export const StakingDelegateForm = ({
   validator: {
     commission: {commission_rates},
+    localStatus,
   },
   onAmount,
   fee,
@@ -65,6 +69,17 @@ export const StakingDelegateForm = ({
         />
       </Spacer>
       <NetworkFee fee={fee} />
+      {localStatus === ValidatorStatus.inactive ||
+        (localStatus === ValidatorStatus.jailed && (
+          <>
+            <Spacer height={8} />
+            <InfoBlock
+              warning
+              i18n={I18N.stakingUnDelegatePreviewJailedAttention}
+              icon={<Icon name="warning" color={Color.textYellow1} />}
+            />
+          </>
+        ))}
       <Spacer height={16} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}

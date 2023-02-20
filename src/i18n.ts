@@ -272,6 +272,7 @@ export enum I18N {
   stakingDelegateFormTitle,
   stakingDelegateFormStakeTo,
   stakingDelegateFormCommission,
+  stakingDelegateFormJailedAttention,
   stakingDelegateFormPreview,
   stakingDelegateAccountTitle,
   stakingDelegatePreviewTitle,
@@ -296,6 +297,7 @@ export enum I18N {
   stakingUnDelegatePreviewNetworkFee,
   stakingUnDelegatePreviewButton,
   stakingUnDelegatePreviewAttention,
+  stakingUnDelegatePreviewJailedAttention,
   stakingUnDelegateFinishTitle,
   stakingUnDelegateFinishTotalAmount,
   stakingUnDelegateFinishDone,
@@ -799,6 +801,8 @@ const en: Record<I18N, string> = {
   [I18N.voteNotRegistered]: 'Error. The vote was not sent',
   [I18N.stakingDelegateFormTitle]: 'Delegate',
   [I18N.stakingDelegateFormStakeTo]: 'Stake to',
+  [I18N.stakingDelegateFormJailedAttention]:
+    'While the validator is inactive, you will not be able to receive a reward.',
   [I18N.stakingDelegateFormCommission]: 'Commission',
   [I18N.stakingDelegateFormPreview]: 'Preview',
   [I18N.stakingDelegatePreviewTitle]: 'Preview',
@@ -825,6 +829,8 @@ const en: Record<I18N, string> = {
   [I18N.stakingUnDelegatePreviewButton]: 'Undelegate',
   [I18N.stakingUnDelegatePreviewAttention]:
     'Attention! If in the future you want to undelegate the staked funds, it will take {{time}}',
+  [I18N.stakingUnDelegatePreviewJailedAttention]:
+    'While the validator is inactive, you will not be able to receive a reward.',
   [I18N.stakingUnDelegateFinishTitle]: 'Undelegate started',
   [I18N.stakingUnDelegateFinishTotalAmount]: 'Total Amount',
   [I18N.stakingUnDelegateFinishDone]: 'Done',
