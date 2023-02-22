@@ -27,8 +27,6 @@ export function prepareTransactions(
 
     const k = +result;
 
-    console.log('k', k);
-
     hash.set(
       k,
       (hash.get(k) ?? []).concat({
