@@ -78,7 +78,7 @@
     "react-native-safe-area-context": "^4.5.0",
     "react-native-screens": "^3.19.0",
     "react-native-splash-screen": "^3.3.0",
-    "react-native-svg": "^12.5.1",
+    "react-native-svg": "12.5.1",
     "react-native-system-navigation-bar": "^2.2.0",
     "react-native-touch-id": "^4.4.1",
     "readable-stream": "^4.3.0",
