@@ -2,13 +2,14 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
+import {TransactionEvents} from '@app/events';
 import {captureException} from '@app/helpers';
 
 import {realm} from '../models';
 import {Provider} from '../models/provider';
 import {Transaction} from '../models/transaction';
 
-class Transactions extends EventEmitter {
+class Transactions extends EventEmitter<TransactionEvents> {
   private _transactions: Realm.Results<Transaction>;
 
   constructor() {

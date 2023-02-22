@@ -99,6 +99,20 @@ type ModalState =
   | BluetoothUnauthorizedModal
   | null;
 
+export type ModalStateTypes =
+  | Loading['type']
+  | Splash['type']
+  | Pin['type']
+  | QR['type']
+  | NoInternet['type']
+  | WalletsBottomSheetParams['type']
+  | DetailsQr['type']
+  | LedgerNoAppModal['type']
+  | TransactionErrorModal['type']
+  | BluetoothPoweredOffModal['type']
+  | BluetoothUnauthorizedModal['type']
+  | string;
+
 export type ModalProps = {
   initialModal?: ModalState;
 };

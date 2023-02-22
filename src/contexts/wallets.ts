@@ -5,13 +5,13 @@ import {EventEmitter} from 'events';
 import {Image} from 'react-native';
 
 import {app} from '@app/contexts/app';
-import {Events} from '@app/events';
+import {Events, WalletsEvents} from '@app/events';
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
 import {AddWalletParams} from '@app/types';
 import {getPatternName} from '@app/utils';
 
-class Wallets extends EventEmitter {
+class Wallets extends EventEmitter<WalletsEvents> {
   private _wallets: Map<string, Wallet>;
   private _initialized: boolean = false;
 

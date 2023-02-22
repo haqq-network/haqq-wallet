@@ -5,7 +5,7 @@ import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance} from 'react-native';
 
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
+import {Events, UserEvents} from '@app/events';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -53,7 +53,7 @@ export type UserType = {
   subscription: string | null;
 };
 
-export class User extends EventEmitter {
+export class User extends EventEmitter<UserEvents> {
   private last_activity: Date;
   private _raw: UserType & Realm.Object<UserType>;
 

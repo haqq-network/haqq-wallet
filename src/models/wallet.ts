@@ -145,7 +145,7 @@ export class Wallet extends Realm.Object {
           : generateGradientColors();
     }
 
-    let wallet = null;
+    let wallet: Wallet | null = null;
     realm.write(() => {
       wallet = realm.create<Wallet>(Wallet.schema.name, {
         data: '',

@@ -4,8 +4,9 @@ import {PUSH_NOTIFICATIONS} from '@env';
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
+import {PushNotificationsEvents} from '@app/events';
 
-class PushNotifications extends EventEmitter {
+class PushNotifications extends EventEmitter<PushNotificationsEvents> {
   path: string = PUSH_NOTIFICATIONS;
   last_id = 0;
 

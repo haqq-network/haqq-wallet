@@ -12,7 +12,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
-import {Events} from '@app/events';
+import {AppEvents, Events} from '@app/events';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -44,7 +44,7 @@ function getAppStatus() {
     : AppStatus.inactive;
 }
 
-class App extends EventEmitter {
+class App extends EventEmitter<AppEvents> {
   private user: User;
   private authenticated: boolean = false;
   private appStatus: AppStatus = AppStatus.inactive;
