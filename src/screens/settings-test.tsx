@@ -9,9 +9,6 @@ import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {pushNotifications} from '@app/services/push-notifications';
 
-import {getProviderInstanceForWallet} from '../helpers';
-import {Wallet} from '../models/wallet';
-
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
 });
@@ -34,7 +31,6 @@ messaging()
 
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
-  const navigation = useTypedNavigation();
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
@@ -45,24 +41,6 @@ export const SettingsTestScreen = () => {
     });
   }, []);
 
-  const onPressPopup = () => {
-    navigation.navigate('notificationPopup');
-  };
-
-  const onSignPersonalMessage = async () => {
-    const wallet = Wallet.getById('0x6e03a60fdf8954b4c10695292baf5c4bdc34584b');
-    if (wallet) {
-      const provider = getProviderInstanceForWallet(wallet);
-
-      const signature = await provider.signPersonalMessage(
-        wallet.path,
-        'Example `personal_sign` message',
-      );
-
-      console.log('signature', signature);
-    }
-  };
-
   return (
     <View style={styles.container}>
       {initialUrl && (
@@ -70,25 +48,15 @@ export const SettingsTestScreen = () => {
           initialUrl: {initialUrl}
         </Text>
       )}
-
       <Button
-        title="Request permissions"
+        title="Request permissions for push"
         onPress={onPressRequestPermissions}
         variant={ButtonVariant.contained}
       />
+
       <Button
-        title="Show popup"
-        onPress={onPressPopup}
-        variant={ButtonVariant.contained}
-      />
-      <Button
-        title="Show Ledger attention"
+        title="Show modal"
         onPress={() => showModal('ledger-locked')}
-        variant={ButtonVariant.contained}
-      />
-      <Button
-        title="Sign personal message"
-        onPress={onSignPersonalMessage}
         variant={ButtonVariant.contained}
       />
     </View>

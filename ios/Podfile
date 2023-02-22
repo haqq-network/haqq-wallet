@@ -23,13 +23,15 @@ target 'haqq' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'CryptoSwift', '~> 1.6.0'
+  pod 'CryptoSwift', '~> 1.5.1'
   pod 'secp256k1Swift', '~> 0.7.4'
   pod 'secp256k1Wrapper', :modular_headers => true
 
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
+#   pod 'CustomAuth', '~> 5.0.0', :modular_headers => false
+  pod 'secp256k1.swift', :modular_headers => true
 
   pod "ToastViewSwift"
 
