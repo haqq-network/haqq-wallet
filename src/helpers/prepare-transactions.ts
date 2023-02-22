@@ -15,11 +15,23 @@ export function prepareTransactions(
   const hash = new Map();
 
   for (const row of transactions) {
-    const result = formatISO(row.createdAt, {representation: 'date'});
+    const result = new Date(
+      row.createdAt.getUTCFullYear(),
+      row.createdAt.getUTCMonth(),
+      row.createdAt.getUTCDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+
+    const k = +result;
+
+    console.log('k', k);
 
     hash.set(
-      result,
-      (hash.get(result) ?? []).concat({
+      k,
+      (hash.get(k) ?? []).concat({
         ...row.toJSON(),
         source: source.includes(row.from.toLowerCase())
           ? TransactionSource.send
@@ -29,11 +41,10 @@ export function prepareTransactions(
   }
 
   return Array.from(hash.keys())
-    .map(d => new Date(d))
     .sort((a, b) => +b - +a)
     .reduce((memo: TransactionList[], key) => {
       const k = formatISO(key, {representation: 'date'});
-      const tmp = (hash.get(k) ?? []).sort(
+      const tmp = (hash.get(key) ?? []).sort(
         (
           a: TransactionListSend | TransactionListReceive,
           b: TransactionListSend | TransactionListReceive,
