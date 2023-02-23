@@ -21,7 +21,9 @@ const screenOptionsApplicationList: ScreenOptionType = {
   // headerRight: DismissPopupButton,
 };
 
-const screenOptions = {};
+const screenOptions = {
+  headerBackTitle: '',
+};
 
 export const WalletConnectManageScreen = () => {
   const route = useTypedRoute<'walletConnect'>();

@@ -3,7 +3,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
-import {WalletConnectParsedAccount} from './types';
+import {WalletConnectApplication, WalletConnectParsedAccount} from './types';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -246,4 +246,22 @@ export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
       accountsMap[account.address] = account;
     });
   });
+
+  return Object.values(accountsMap);
+};
+
+export const getConnectedAppsByAddress = (
+  sessions: SessionTypes.Struct[],
+  address: string,
+): WalletConnectApplication[] => {
+  const mathces = sessions?.filter?.(session => {
+    return !!Object.values(session.namespaces).find(namespace => {
+      return namespace.accounts?.find?.(account => account?.includes(address));
+    });
+  });
+
+  return mathces?.map(session => ({
+    topic: session.topic,
+    ...session?.peer?.metadata,
+  }));
 };

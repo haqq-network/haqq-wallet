@@ -21,7 +21,17 @@ export class WalletConnect extends EventEmitter {
   private _core: ICore | null = null;
 
   public getActiveSessions() {
-    return this._client.engine.signClient.session.getAll();
+    return this._client?.engine?.signClient?.session?.getAll?.() || [];
+  }
+
+  public disconnectSession(topic: string) {
+    this._client?.disconnectSession?.({
+      reason: {
+        code: 0,
+        message: 'diconected by user',
+      },
+      topic,
+    });
   }
 
   public async init() {
@@ -201,9 +211,7 @@ export class WalletConnect extends EventEmitter {
     });
   }
 
-  private _emitActiveSessions(...args) {
-    console.log('🟣 _emitActiveSessions', JSON.stringify(args, null, 2));
-
+  private _emitActiveSessions() {
     this.emit(WalletConnectEvents.onSessionsChange, this.getActiveSessions());
   }
 

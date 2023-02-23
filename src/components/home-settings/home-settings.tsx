@@ -5,6 +5,7 @@ import {ScrollView} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 import {useUser} from '@app/hooks';
+import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {capitalize} from '@app/utils';
 
@@ -13,6 +14,7 @@ import {SettingsButton} from './settings-button';
 export const HomeSettings = () => {
   const {theme} = useUser();
   const capitalizedTheme = capitalize(theme);
+  const {accounts} = useWalletConnectAccounts();
 
   return (
     <ScrollView contentContainerStyle={page.container}>
@@ -29,7 +31,7 @@ export const HomeSettings = () => {
       />
 
       <SettingsButton
-        rightTitle={'3'}
+        rightTitle={`${accounts.length || ''}`}
         icon="wallet_connect"
         title={I18N.homeSettingsWalletConnect}
         next="walletConnectManage"

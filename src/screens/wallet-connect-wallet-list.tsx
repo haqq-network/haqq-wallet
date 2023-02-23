@@ -1,32 +1,42 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, View} from 'react-native';
 
-import {Text} from '@app/components/ui';
-import {useWallets} from '@app/hooks';
-import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
-import {getWalletConnectAccountsFromSession} from '@app/utils';
+import {WalletRow} from '@app/components/wallet-row';
+import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
+import {Wallet} from '@app/models/wallet';
+import {navigator} from '@app/navigator';
+import {WalletType} from '@app/types';
 
 export const WalletConnectWalletList = () => {
-  const {activeSessions} = useWalletConnectSessions();
-  const wallets = useWallets();
+  const {accounts} = useWalletConnectAccounts();
+  const wallets = useMemo(
+    () =>
+      accounts
+        ?.map?.(item => Wallet.getById(item.address) as Wallet)
+        .filter(item => !!item && item?.type !== WalletType.ledgerBt),
+    [accounts],
+  );
 
-  useEffect(() => {
-    console.log('🟣', JSON.stringify(activeSessions, null, 2));
-  }, [activeSessions, wallets]);
+  const handleWalletPress = useCallback((address: string) => {
+    navigator.navigate('walletConnectApplicationList', {address});
+  }, []);
 
   return (
-    <>
-      {activeSessions?.map?.(item => {
-        const accounts = getWalletConnectAccountsFromSession(item);
-
+    <View style={styles.container}>
+      {wallets?.map?.(item => {
         return (
-          <TouchableOpacity key={item.topic} style={{borderBottomWidth: 1}}>
-            <Text>{item?.self.metadata.name}</Text>
-            <Text>{accounts[0].address}</Text>
-          </TouchableOpacity>
+          <WalletRow
+            key={item.address}
+            onPress={handleWalletPress}
+            item={item}
+          />
         );
       })}
-    </>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {width: '90%', alignSelf: 'center'},
+});

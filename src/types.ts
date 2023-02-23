@@ -326,7 +326,7 @@ export type RootStackParamList = {
   walletConnectManage: undefined;
   walletConnectWalletList: undefined;
   walletConnectApplicationList: {
-    account: unknown;
+    address: string;
   };
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;
@@ -524,4 +524,12 @@ export interface WalletConnectParsedAccount {
   namespace?: string;
   // eg '5'
   networkId?: string;
+}
+
+export interface WalletConnectApplication {
+  name: string;
+  description: string;
+  url: string;
+  icons: string[];
+  topic: string;
 }
