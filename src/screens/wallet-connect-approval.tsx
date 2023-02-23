@@ -17,7 +17,7 @@ export const WalletConnectApprovalScreen = () => {
 
     const session = await WalletConnect.instance.approveSession(
       event.id,
-      wallets[0].address,
+      wallets[1].address,
       event.params,
     );
     console.log('session', session);

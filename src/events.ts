@@ -19,3 +19,7 @@ export enum Events {
   onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
   onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
 }
+
+export enum WalletConnectEvents {
+  onSessionsChange = 'onSessionsChange',
+}

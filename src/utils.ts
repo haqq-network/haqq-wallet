@@ -1,6 +1,9 @@
 import {PATTERNS_SOURCE} from '@env';
+import {SessionTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
+
+import {WalletConnectParsedAccount} from './types';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -202,3 +205,45 @@ export function getSignTypedDataParamsData(params: string[]) {
 
   return data;
 }
+
+export const getWalletConnectAccountsFromSession = (
+  session: SessionTypes.Struct,
+): WalletConnectParsedAccount[] => {
+  const accounts = Object.values(session?.namespaces).map(namespace => {
+    // The namespace.accounts variable is a string array,
+    // with each item formatted as follows: 'eip155:5:0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b'.
+    return namespace?.accounts?.map(it => {
+      const splitedItem = it?.split?.(':');
+      let namespaceName: string | undefined,
+        networkId: string | undefined,
+        address: string | undefined;
+
+      if (splitedItem?.length === 2) {
+        namespaceName = splitedItem[0];
+        address = splitedItem[1];
+      } else if (splitedItem?.length === 3) {
+        namespaceName = splitedItem[0];
+        networkId = splitedItem[1];
+        address = splitedItem[2];
+      } else {
+        // Get the last element because it is the wallet address.
+        address = splitedItem?.[splitedItem?.length - 1];
+      }
+
+      return {namespace: namespaceName, networkId, address};
+    });
+  });
+
+  return accounts.flat().filter(it => utils.isAddress(it.address));
+};
+
+export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
+  const accountsMap: Record<string, WalletConnectParsedAccount> = {};
+
+  sessions.forEach(session => {
+    const accounts = getWalletConnectAccountsFromSession(session);
+    accounts.forEach(account => {
+      accountsMap[account.address] = account;
+    });
+  });
+};

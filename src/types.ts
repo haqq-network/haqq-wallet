@@ -323,6 +323,11 @@ export type RootStackParamList = {
       | RootStackParamList['walletConnectApproval']
       | RootStackParamList['walletConnectSign'];
   };
+  walletConnectManage: undefined;
+  walletConnectWalletList: undefined;
+  walletConnectApplicationList: {
+    account: unknown;
+  };
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;
   };
@@ -511,3 +516,12 @@ export type LedgerAccountItem = {
   exists: boolean;
   balance: number;
 };
+
+export interface WalletConnectParsedAccount {
+  // eg '0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b'
+  address: string;
+  // eg 'eip155'
+  namespace?: string;
+  // eg '5'
+  networkId?: string;
+}

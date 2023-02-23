@@ -125,6 +125,7 @@ export enum I18N {
   homeSettingsAccounts,
   homeSettingsAddressBook,
   homeSettingsAppearance,
+  homeSettingsWalletConnect,
   homeSettingsSecurity,
   homeSettingsProviders,
   homeSettingsFAQ,
@@ -453,6 +454,8 @@ export enum I18N {
   transactionFailed,
   walletConnectTitle,
   pinCodeWrongPin,
+  walletConnectApplicationListTitle,
+  walletConnectWalletListTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -615,6 +618,7 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsAccounts]: 'Manage accounts',
   [I18N.homeSettingsAddressBook]: 'Address book',
   [I18N.homeSettingsAppearance]: 'Appearance',
+  [I18N.homeSettingsWalletConnect]: 'Wallet Connect',
   [I18N.homeSettingsSecurity]: 'Security',
   [I18N.homeSettingsProviders]: 'Providers',
   [I18N.homeSettingsFAQ]: 'FAQ',
@@ -980,4 +984,6 @@ const en: Record<I18N, string> = {
   [I18N.transactionFailed]: 'Something went wrong\n#{{id}}',
   [I18N.walletConnectTitle]: 'WalletConnect',
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
+  [I18N.walletConnectApplicationListTitle]: 'Connected {{account}} account',
+  [I18N.walletConnectWalletListTitle]: 'WalletConnect',
 };

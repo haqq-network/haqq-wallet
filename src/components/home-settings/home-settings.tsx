@@ -28,6 +28,13 @@ export const HomeSettings = () => {
         next="settingsAddressBook"
       />
 
+      <SettingsButton
+        rightTitle={'3'}
+        icon="wallet_connect"
+        title={I18N.homeSettingsWalletConnect}
+        next="walletConnectManage"
+      />
+
       {/* <SettingsButton
         icon="language"
         rightTitle="EN"
