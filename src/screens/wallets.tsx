@@ -62,10 +62,7 @@ export const WalletsWrapper = () => {
 
   const onWalletConnectPress = useCallback(
     (address: string) => {
-      navigation.navigate('walletConnectManage', {
-        screen: 'walletConnectApplicationList',
-        params: {address},
-      });
+      navigation.navigate('walletConnectApplicationListPopup', {address});
     },
     [navigation],
   );

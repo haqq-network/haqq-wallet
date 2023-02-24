@@ -330,15 +330,11 @@ export type RootStackParamList = {
       | RootStackParamList['walletConnectApproval']
       | RootStackParamList['walletConnectSign'];
   };
-  walletConnectManage?: {
-    screen: 'walletConnectWalletList' | 'walletConnectApplicationList';
-    params:
-      | RootStackParamList['walletConnectWalletList']
-      | RootStackParamList['walletConnectApplicationList'];
-  };
   walletConnectWalletList: undefined;
+  walletConnectApplicationListPopup: RootStackParamList['walletConnectApplicationList'];
   walletConnectApplicationList: {
     address: string;
+    isPopup?: boolean;
   };
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;

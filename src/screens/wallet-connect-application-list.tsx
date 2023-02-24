@@ -6,6 +6,7 @@ import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletConnectApps} from '@app/hooks/use-wallet-connet-apps';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectApplication} from '@app/types';
@@ -16,10 +17,14 @@ export const WalletConnectApplicationList = () => {
   const apps = useWalletConnectApps(params.address);
 
   useEffect(() => {
+    const title = params?.isPopup
+      ? getText(I18N.walletConnectTitle)
+      : Wallet.getById(params.address)?.name || params.address;
+
     navivation.setOptions({
-      headerTitle: Wallet.getById(params.address)?.name || params.address,
+      title,
     });
-  }, [params.address, navivation]);
+  }, [params.address, navivation, params?.isPopup]);
 
   const handleDisconnectPress = useCallback((app: WalletConnectApplication) => {
     WalletConnect.instance.disconnectSession(app.topic);

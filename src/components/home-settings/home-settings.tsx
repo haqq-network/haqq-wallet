@@ -35,7 +35,7 @@ export const HomeSettings = () => {
           rightTitle={`${accounts.length}`}
           icon="wallet_connect"
           title={I18N.homeSettingsWalletConnect}
-          next="walletConnectManage"
+          next="walletConnectWalletList"
         />
       )}
 

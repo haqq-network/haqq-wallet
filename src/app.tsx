@@ -90,7 +90,9 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
-import {WalletConnectManageScreen} from './screens/wallet-connect-manage';
+import {WalletConnectApplicationList} from './screens/wallet-connect-application-list';
+import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
+import {WalletConnectWalletList} from './screens/wallet-connect-wallet-list';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
@@ -242,6 +244,10 @@ export const App = () => {
                     component={WalletConnectScreen}
                   />
                   <Stack.Screen
+                    name="walletConnectApplicationListPopup"
+                    component={WalletConnectApplicationListPopupScreen}
+                  />
+                  <Stack.Screen
                     name="walletSelector"
                     component={WalletSelectorScreen}
                   />
@@ -261,10 +267,6 @@ export const App = () => {
                     component={ProposalDepositScreen}
                   />
                 </Stack.Group>
-                <Stack.Screen
-                  name="walletConnectManage"
-                  component={WalletConnectManageScreen}
-                />
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
@@ -297,6 +299,17 @@ export const App = () => {
                     name="settingsAccountDetail"
                     component={SettingsAccountDetailScreen}
                     options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="walletConnectWalletList"
+                    component={WalletConnectWalletList}
+                    options={{
+                      title: getText(I18N.walletConnectWalletListTitle),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationList"
+                    component={WalletConnectApplicationList}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"
