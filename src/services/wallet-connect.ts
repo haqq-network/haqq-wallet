@@ -4,6 +4,7 @@ import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
 import {TransactionRequest} from '@haqq/provider-base';
 import {Core} from '@walletconnect/core';
 import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
+import {getSdkError} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
@@ -26,10 +27,7 @@ export class WalletConnect extends EventEmitter {
 
   public disconnectSession(topic: string) {
     this._client?.disconnectSession?.({
-      reason: {
-        code: 0,
-        message: 'diconected by user',
-      },
+      reason: getSdkError('USER_DISCONNECTED'),
       topic,
     });
   }
@@ -95,6 +93,13 @@ export class WalletConnect extends EventEmitter {
       console.log('resp', resp);
       return resp;
     }
+  }
+
+  public rejectSession(id: number) {
+    return this._client?.rejectSession?.({
+      id,
+      reason: getSdkError('USER_REJECTED'),
+    });
   }
 
   public async approveSession(

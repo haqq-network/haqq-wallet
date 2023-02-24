@@ -14,6 +14,7 @@ export const WalletConnectWalletList = () => {
     () =>
       accounts
         ?.map?.(item => Wallet.getById(item.address) as Wallet)
+        // TODO: add ledger support
         .filter(item => !!item && item?.type !== WalletType.ledgerBt),
     [accounts],
   );

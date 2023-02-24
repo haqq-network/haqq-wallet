@@ -16,6 +16,7 @@ export type MenuNavigationButtonProps = {
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   hideArrow?: boolean;
+  checked?: boolean;
 };
 
 export const MenuNavigationButton = ({
@@ -23,11 +24,13 @@ export const MenuNavigationButton = ({
   children,
   style,
   hideArrow = false,
+  checked = false,
 }: MenuNavigationButtonProps) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, style]}>
         <View style={styles.content}>{children}</View>
+        {!!checked && <Icon i24 name="check" color={Color.graphicGreen1} />}
         {!hideArrow && (
           <Icon i24 name="arrow_forward_small" color={Color.graphicSecond3} />
         )}

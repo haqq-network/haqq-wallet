@@ -4,6 +4,7 @@ import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
@@ -317,6 +318,12 @@ export type RootStackParamList = {
     accountId: string;
   };
   settingsSecurity: undefined;
+  walletSelector: {
+    wallets: Wallet[] | Results<Wallet>;
+    title: string;
+    initialAddress?: string;
+    eventSuffix?: string;
+  };
   walletConnect: {
     screen: 'walletConnectApproval' | 'walletConnectSign';
     params:

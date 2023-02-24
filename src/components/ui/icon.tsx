@@ -33,6 +33,7 @@ export enum IconsName {
   instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',
+  info = 'info',
   language = 'language',
   list = 'list',
   lock = 'lock',

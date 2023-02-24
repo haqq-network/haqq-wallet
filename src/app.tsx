@@ -91,6 +91,7 @@ import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
 import {WalletConnectManageScreen} from './screens/wallet-connect-manage';
+import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
@@ -239,6 +240,10 @@ export const App = () => {
                   <Stack.Screen
                     name="walletConnect"
                     component={WalletConnectScreen}
+                  />
+                  <Stack.Screen
+                    name="walletSelector"
+                    component={WalletSelectorScreen}
                   />
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
