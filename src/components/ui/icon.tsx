@@ -36,6 +36,7 @@ export enum IconsName {
   info = 'info',
   language = 'language',
   list = 'list',
+  link = 'link',
   lock = 'lock',
   market = 'market',
   no_proposal_voting = 'no_proposal_voting',

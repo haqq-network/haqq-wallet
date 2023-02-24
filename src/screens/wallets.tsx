@@ -60,6 +60,16 @@ export const WalletsWrapper = () => {
     [navigation],
   );
 
+  const onWalletConnectPress = useCallback(
+    (address: string) => {
+      navigation.navigate('walletConnectManage', {
+        screen: 'walletConnectApplicationList',
+        params: {address},
+      });
+    },
+    [navigation],
+  );
+
   const onPressCreate = useCallback(() => {
     navigation.navigate('create');
   }, [navigation]);
@@ -76,6 +86,7 @@ export const WalletsWrapper = () => {
     <Wallets
       balance={balance}
       wallets={visibleRows}
+      onWalletConnectPress={onWalletConnectPress}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}
       onPressCreate={onPressCreate}

@@ -30,12 +30,14 @@ export const HomeSettings = () => {
         next="settingsAddressBook"
       />
 
-      <SettingsButton
-        rightTitle={`${accounts.length || ''}`}
-        icon="wallet_connect"
-        title={I18N.homeSettingsWalletConnect}
-        next="walletConnectManage"
-      />
+      {!!accounts?.length && (
+        <SettingsButton
+          rightTitle={`${accounts.length}`}
+          icon="wallet_connect"
+          title={I18N.homeSettingsWalletConnect}
+          next="walletConnectManage"
+        />
+      )}
 
       {/* <SettingsButton
         icon="language"

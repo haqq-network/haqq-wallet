@@ -1,32 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {Image, StyleSheet, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
+import {useWalletConnectApps} from '@app/hooks/use-wallet-connet-apps';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectApplication} from '@app/types';
-import {getConnectedAppsByAddress} from '@app/utils';
 
 export const WalletConnectApplicationList = () => {
   const navivation = useTypedNavigation();
   const {params} = useTypedRoute<'walletConnectApplicationList'>();
-  const {activeSessions} = useWalletConnectSessions();
-  const [apps, setApps] = useState<WalletConnectApplication[]>([]);
+  const apps = useWalletConnectApps(params.address);
 
   useEffect(() => {
     navivation.setOptions({
       headerTitle: Wallet.getById(params.address)?.name || params.address,
     });
   }, [params.address, navivation]);
-
-  useEffect(() => {
-    const appsList = getConnectedAppsByAddress(activeSessions, params.address);
-    setApps(appsList);
-  }, [activeSessions, params.address, setApps]);
 
   const handleDisconnectPress = useCallback((app: WalletConnectApplication) => {
     WalletConnect.instance.disconnectSession(app.topic);

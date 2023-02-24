@@ -14,6 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
+import {useWalletConnectApps} from '@app/hooks/use-wallet-connet-apps';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {shortAddress} from '@app/utils';
@@ -25,6 +26,7 @@ export type BalanceProps = {
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressBackup: (address: string) => void;
+  onWalletConnectPress?: (address: string) => void;
 };
 
 export const WalletCard = ({
@@ -33,9 +35,13 @@ export const WalletCard = ({
   onPressSend,
   onPressQR,
   onPressBackup,
+  onWalletConnectPress,
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
+  const walletConnectApps = useWalletConnectApps(wallet.address);
+  const disableTopNavMarginBottom =
+    !wallet.mnemonicSaved || !!walletConnectApps.length;
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -56,6 +62,10 @@ export const WalletCard = ({
     onPressSend(wallet.address);
   };
 
+  const onWalletConnect = () => {
+    onWalletConnectPress?.(wallet?.address);
+  };
+
   if (!wallet) {
     return null;
   }
@@ -72,7 +82,10 @@ export const WalletCard = ({
         setCardState('laded');
       }}>
       <View
-        style={[styles.topNav, !wallet.mnemonicSaved && styles.marginBottom]}>
+        style={[
+          styles.topNav,
+          disableTopNavMarginBottom && styles.marginBottom,
+        ]}>
         <Text t12 style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
           {wallet.name || 'name'}
         </Text>
@@ -88,6 +101,18 @@ export const WalletCard = ({
           />
         </CopyButton>
       </View>
+      {!!walletConnectApps?.length && (
+        <IconButton onPress={onWalletConnect} style={styles.walletConnectApps}>
+          <Icon i16 name="link" color={Color.graphicBase3} />
+          <Spacer width={4} />
+          <Text
+            t15
+            i18n={I18N.walletCardConnectedApps}
+            i18params={{count: `${walletConnectApps.length}`}}
+            color={Color.textBase3}
+          />
+        </IconButton>
+      )}
       {!wallet.mnemonicSaved && (
         <IconButton onPress={onBackup} style={styles.cacheButton}>
           <Text
@@ -171,6 +196,15 @@ const styles = createTheme({
     alignSelf: 'flex-start',
     marginBottom: 8,
     backgroundColor: Color.bg5,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  walletConnectApps: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    marginBottom: 8,
+    backgroundColor: Color.bg9,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,

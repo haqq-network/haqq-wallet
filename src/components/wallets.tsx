@@ -16,6 +16,7 @@ export type WalletsProps = {
   balance: Record<string, number>;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
+  onWalletConnectPress: (address: string) => void;
   onPressBackup: (address: string) => void;
   onPressCreate: () => void;
   onPressLedger: () => void;
@@ -30,6 +31,7 @@ export const Wallets = ({
   onPressLedger,
   onPressBackup,
   onPressRestore,
+  onWalletConnectPress,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
@@ -56,6 +58,7 @@ export const Wallets = ({
               onPressSend={onPressSend}
               onPressQR={onPressQR}
               onPressBackup={onPressBackup}
+              onWalletConnectPress={onWalletConnectPress}
             />
           </CarouselItem>
         ))}

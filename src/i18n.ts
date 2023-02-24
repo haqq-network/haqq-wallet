@@ -464,6 +464,7 @@ export enum I18N {
   walletConnectApprovalInfoBlockTitle,
   walletConnectApprovalInfoBlockDescription,
   walletRowVariant2Title,
+  walletCardConnectedApps,
   pinCodeWrongPin,
 }
 
@@ -1007,5 +1008,6 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectApprovalInfoBlockTitle]: 'By connecting you allow to:\n',
   [I18N.walletConnectApprovalInfoBlockDescription]:
     '• View your balance and activity\n• Request approval for transactions',
+  [I18N.walletCardConnectedApps]: '{{count}} connect',
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
 };
