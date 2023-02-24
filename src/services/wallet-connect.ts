@@ -56,6 +56,8 @@ export class WalletConnect extends EventEmitter {
         },
       });
 
+      this._emitActiveSessions();
+
       this
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
@@ -95,10 +97,21 @@ export class WalletConnect extends EventEmitter {
     }
   }
 
-  public rejectSession(id: number) {
+  public rejectSession(eventId: number) {
     return this._client?.rejectSession?.({
-      id,
+      id: eventId,
       reason: getSdkError('USER_REJECTED'),
+    });
+  }
+
+  public rejectSessionRequest(eventId: number, topic: string) {
+    return this._client?.respondSessionRequest({
+      topic,
+      response: {
+        id: eventId,
+        jsonrpc: '2.0',
+        error: getSdkError('USER_REJECTED'),
+      },
     });
   }
 

@@ -1,9 +1,10 @@
 import {PATTERNS_SOURCE} from '@env';
-import {SessionTypes} from '@walletconnect/types';
+import {SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
 import {WalletConnectApplication, WalletConnectParsedAccount} from './types';
+import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -264,4 +265,27 @@ export const getConnectedAppsByAddress = (
     topic: session.topic,
     ...session?.peer?.metadata,
   }));
+};
+
+export const getUserAddressFromSessionRequest = (
+  event: SignClientTypes.EventArguments['session_request'],
+): string => {
+  const request = event?.params?.request;
+
+  switch (request?.method) {
+    case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+      return request.params?.[1];
+    case EIP155_SIGNING_METHODS.ETH_SIGN:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
+      return request.params?.[0];
+    case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+      return request?.params?.[0]?.from;
+    default:
+      throw new Error(
+        `[getUserAddressFromSessionRequest]: INVALID_METHOD ${request.method}`,
+      );
+  }
 };

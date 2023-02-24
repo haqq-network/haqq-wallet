@@ -30,13 +30,7 @@ const screenOptions: ScreenOptionType = {
 export const WalletConnectScreen = () => {
   const route = useTypedRoute<'walletConnect'>();
   return (
-    <WalletConnect.Navigator
-      screenListeners={{
-        beforeRemove({target, data}) {
-          console.log(target, data);
-        },
-      }}
-      screenOptions={screenOptions}>
+    <WalletConnect.Navigator screenOptions={screenOptions}>
       <WalletConnect.Screen
         name="walletConnectApproval"
         component={WalletConnectApprovalScreen}

@@ -324,13 +324,18 @@ export type RootStackParamList = {
     initialAddress?: string;
     eventSuffix?: string;
   };
-  walletConnect: {
+  walletConnect?: {
     screen: 'walletConnectApproval' | 'walletConnectSign';
     params:
       | RootStackParamList['walletConnectApproval']
       | RootStackParamList['walletConnectSign'];
   };
-  walletConnectManage: undefined;
+  walletConnectManage?: {
+    screen: 'walletConnectWalletList' | 'walletConnectApplicationList';
+    params:
+      | RootStackParamList['walletConnectWalletList']
+      | RootStackParamList['walletConnectApplicationList'];
+  };
   walletConnectWalletList: undefined;
   walletConnectApplicationList: {
     address: string;

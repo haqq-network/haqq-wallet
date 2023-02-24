@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import {
   ButtonVariant,
   Icon,
   InfoBlock,
+  Spacer,
   Text,
 } from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
@@ -30,15 +31,16 @@ export const WalletConnectApprovalScreen = () => {
   const wallets = useWalletsVisible();
   const [selectedWallet, setSelectedWallet] = useState<Wallet>(wallets?.[0]);
   const {bottom} = useSafeAreaInsets();
+  const isApproved = useRef(false);
 
   const rejectSession = useCallback(
-    () => WalletConnect.instance.rejectSession(event?.id),
+    () =>
+      !isApproved.current && WalletConnect.instance.rejectSession(event?.id),
     [event?.id],
   );
 
   useEffect(() => {
     const onBeforeRemove = () => {
-      console.log('beforeRemove');
       rejectSession();
     };
 
@@ -52,6 +54,7 @@ export const WalletConnectApprovalScreen = () => {
       selectedWallet?.address,
       event?.params,
     );
+    isApproved.current = true;
     navigation.goBack();
   }, [event?.id, event?.params, navigation, selectedWallet?.address]);
 
@@ -74,18 +77,23 @@ export const WalletConnectApprovalScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.selectAccount}>
+        <Spacer height={32} />
+
         <Text
           t5
-          style={styles.title}
           i18n={I18N.walletConnectApprovalTitle}
           i18params={{name: event?.params?.proposer?.metadata?.name}}
         />
+
+        <Spacer height={8} />
+
         <Text
           t13
-          style={styles.description}
           color={Color.textGreen1}
           children={event?.params?.proposer?.metadata?.url}
         />
+
+        <Spacer height={36} />
 
         <View style={styles.islmLogosContainer}>
           <ISLMLogo border />
@@ -93,17 +101,19 @@ export const WalletConnectApprovalScreen = () => {
           <ISLMLogo border inverted />
         </View>
 
+        <Spacer height={36} />
+
         <WalletRow
           hideArrow
           type={WalletRowTypes.variant2}
           item={selectedWallet}
           onPress={onSelectWalletPress}
-          style={styles.walletRow}
         />
+
+        <Spacer height={12} />
 
         <InfoBlock
           warning
-          style={styles.infoBlock}
           icon={<Icon name="info" color={Color.textYellow1} />}>
           <Text
             t13
@@ -121,6 +131,9 @@ export const WalletConnectApprovalScreen = () => {
           onPress={onPressApprove}
           title="Connect"
         />
+
+        <Spacer height={16} />
+
         <Button
           size={ButtonSize.middle}
           onPress={onPressReject}
@@ -139,29 +152,16 @@ const styles = createTheme({
   buttonContainer: {
     width: '100%',
   },
-  infoBlock: {
-    marginTop: 12,
-  },
-  walletRow: {
-    marginTop: 36,
-  },
   container: {
     alignItems: 'center',
     marginHorizontal: 20,
     justifyContent: 'space-between',
     flex: 1,
   },
-  title: {
-    marginTop: 32,
-  },
-  description: {
-    marginTop: 8,
-  },
   islmLogosContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 36,
   },
   dashedLine: {
     marginHorizontal: 6,
