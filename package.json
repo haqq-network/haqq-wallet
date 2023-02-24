@@ -90,6 +90,7 @@
     "rxjs": "^7.8.0",
     "sha.js": "^2.4.11",
     "stream-browserify": "^1.0.0",
+    "url": "^0.11.0",
     "validate.js": "^0.13.1",
     "vm-browserify": "0.0.4",
     "yarn": "^1.22.19"
