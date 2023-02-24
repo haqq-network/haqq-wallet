@@ -1,17 +1,17 @@
 /**
  * @format
  */
-import 'react-native-get-random-values';
 import '@ethersproject/shims';
-import { AppRegistry } from 'react-native';
+import {AppRegistry} from 'react-native';
+import 'react-native-get-random-values';
 
-import { App } from './src/app';
-import { name as appName } from './app.json';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import {ENVIRONMENT, SENTRY_DSN} from '@env';
+import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import { ENVIRONMENT, SENTRY_DSN } from '@env';
-import { Overview } from './src/overview';
+import {name as appName} from './app.json';
+import {App} from './src/app';
 import './src/event-actions';
+import {Overview} from './src/overview';
 
 const TextEncodingPolyfill = require('text-encoding');
 const BigInt = require('big-integer');
@@ -21,8 +21,28 @@ Object.assign(global, {
   TextEncoder: TextEncodingPolyfill.TextEncoder,
   TextDecoder: TextEncodingPolyfill.TextDecoder,
   BigInt: BigInt,
-  Buffer: Buffer.Buffer
+  Buffer: Buffer.Buffer,
 });
+
+import './src/event-actions';
+
+if (typeof Buffer === 'undefined') {
+  global.Buffer = require('buffer').Buffer;
+}
+
+if (SENTRY_DSN) {
+  try {
+    Sentry.init({
+      dsn: SENTRY_DSN,
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      tracesSampleRate: 1.0,
+      environment: ENVIRONMENT ?? 'development',
+    });
+  } catch (e) {
+    console.log('sentry init failed');
+  }
+}
 
 if (SENTRY_DSN) {
   try {
@@ -48,7 +68,7 @@ function getResult(payload) {
   return payload.result;
 }
 
-JsonRpcProvider.prototype.send = async function(method, params) {
+JsonRpcProvider.prototype.send = async function (method, params) {
   const request = {
     method: method,
     params: params,

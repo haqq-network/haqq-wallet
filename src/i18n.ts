@@ -455,9 +455,9 @@ export enum I18N {
   bluetoothUnauthorizedClose,
   transactionFailed,
   walletConnectTitle,
-  pinCodeWrongPin,
   walletConnectApplicationListTitle,
   walletConnectWalletListTitle,
+  pinCodeWrongPin,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -992,4 +992,5 @@ const en: Record<I18N, string> = {
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
   [I18N.walletConnectApplicationListTitle]: 'Connected {{account}} account',
   [I18N.walletConnectWalletListTitle]: 'WalletConnect',
+  [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
 };
