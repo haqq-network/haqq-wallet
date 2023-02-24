@@ -7574,10 +7574,10 @@ metro-inspector-proxy@0.72.3:
     ws "^7.5.1"
     yargs "^15.3.1"
 
-metro-minify-terser@^0.75.0:
-  version "0.75.1"
-  resolved "https://registry.yarnpkg.com/metro-minify-terser/-/metro-minify-terser-0.75.1.tgz#0a940cac616930b6449838040016d42b2136893b"
-  integrity sha512-SLJpthrK5cowVgxckb0f+aEvFQIwGoJxHq8BE+QCZgfRfkuu5Yvf+lt0koWPFXG6r8ztU2eZE4j/QE429BGq5A==
+metro-minify-terser@0.75.0:
+  version "0.75.0"
+  resolved "https://registry.yarnpkg.com/metro-minify-terser/-/metro-minify-terser-0.75.0.tgz#98c7e3d5f8d24d8501aad87bb76e72134d68ba06"
+  integrity sha512-mcIL0k32xlIswucI9wwlIApvozgF87aNFL+3WGsLMArhjXTfG+NBGiV3WluZcgOUjIM9I96b8yvu/gcZAy19Gw==
   dependencies:
     terser "^5.15.0"
 
