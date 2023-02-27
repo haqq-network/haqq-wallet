@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
-import {useWalletConnectApps} from '@app/hooks/use-wallet-connet-apps';
+import {useWalletConnectFilteredSessions} from '@app/hooks/use-wallet-connet-apps';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {shortAddress} from '@app/utils';
@@ -39,9 +39,9 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
-  const walletConnectApps = useWalletConnectApps(wallet.address);
+  const walletConnectApps = useWalletConnectFilteredSessions(wallet.address);
   const disableTopNavMarginBottom =
-    !wallet.mnemonicSaved || !!walletConnectApps.length;
+    !wallet.mnemonicSaved || !!walletConnectApps?.length;
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),

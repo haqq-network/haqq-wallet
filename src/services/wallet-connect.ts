@@ -26,7 +26,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   public disconnectSession(topic: string) {
-    this._client?.disconnectSession?.({
+    return this._client?.disconnectSession?.({
       reason: getSdkError('USER_DISCONNECTED'),
       topic,
     });

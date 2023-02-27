@@ -1,16 +1,20 @@
 import {useEffect, useState} from 'react';
 
-import {WalletConnectApplication} from '@app/types';
-import {getConnectedAppsByAddress} from '@app/utils';
+import {SessionTypes} from '@walletconnect/types';
+
+import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 import {useWalletConnectSessions} from './use-wallet-connect-sessions';
 
-export const useWalletConnectApps = (address: string) => {
+export const useWalletConnectFilteredSessions = (address: string) => {
   const {activeSessions} = useWalletConnectSessions();
-  const [apps, setApps] = useState<WalletConnectApplication[]>([]);
+  const [apps, setApps] = useState<SessionTypes.Struct[]>();
 
   useEffect(() => {
-    const appsList = getConnectedAppsByAddress(activeSessions, address);
+    const appsList = filterWalletConnectSessionsByAddress(
+      activeSessions,
+      address,
+    );
     setApps(appsList);
   }, [activeSessions, address, setApps]);
 

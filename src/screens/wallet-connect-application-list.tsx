@@ -1,20 +1,52 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {Image, StyleSheet, View} from 'react-native';
+import {SessionTypes} from '@walletconnect/types';
+import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {Icon, IconButton, Text} from '@app/components/ui';
+import {WalletConnectAppRow} from '@app/components/wallet-connect-app-row';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletConnectApps} from '@app/hooks/use-wallet-connet-apps';
+import {useWalletConnectFilteredSessions} from '@app/hooks/use-wallet-connet-apps';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {WalletConnect} from '@app/services/wallet-connect';
-import {WalletConnectApplication} from '@app/types';
 
 export const WalletConnectApplicationList = () => {
   const navivation = useTypedNavigation();
   const {params} = useTypedRoute<'walletConnectApplicationList'>();
-  const apps = useWalletConnectApps(params.address);
+  const sessions = useWalletConnectFilteredSessions(params.address);
+
+  const handleAppPress = useCallback(
+    (session: SessionTypes.Struct) => {
+      const nextScreen = params.isPopup
+        ? 'walletConnectApplicationDetailsPopup'
+        : 'walletConnectApplicationDetails';
+      navivation.navigate(nextScreen, {session, isPopup: params.isPopup});
+    },
+    [navivation, params.isPopup],
+  );
+
+  const renderItem: ListRenderItem<SessionTypes.Struct> = useCallback(
+    ({item}) => <WalletConnectAppRow item={item} onPress={handleAppPress} />,
+    [handleAppPress],
+  );
+
+  const keyExtractor = useCallback(
+    (item: SessionTypes.Struct) => item.topic,
+    [],
+  );
+
+  useEffect(() => {
+    const onFocus = () => {
+      if (sessions === undefined) {
+        return;
+      }
+
+      if (sessions.length === 0) {
+        return navivation.goBack();
+      }
+    };
+
+    return navivation.addListener('focus', onFocus);
+  }, [handleAppPress, navivation, sessions]);
 
   useEffect(() => {
     const title = params?.isPopup
@@ -26,38 +58,20 @@ export const WalletConnectApplicationList = () => {
     });
   }, [params.address, navivation, params?.isPopup]);
 
-  const handleDisconnectPress = useCallback((app: WalletConnectApplication) => {
-    WalletConnect.instance.disconnectSession(app.topic);
-  }, []);
-
   return (
     <View style={styles.container}>
-      {apps.map?.(app => (
-        <View key={app.topic} style={styles.appContainer}>
-          <Image style={styles.appIcon} source={{uri: app?.icons?.[0]}} />
-          <Text t7>{app.name}</Text>
-
-          <IconButton onPress={handleDisconnectPress.bind(null, app)}>
-            <Icon color={getColor(Color.graphicRed1)} name="close" />
-          </IconButton>
-        </View>
-      ))}
+      <FlatList
+        data={sessions}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {width: '90%', alignSelf: 'center'},
-  appIcon: {
-    width: 35,
-    height: 35,
-    borderRadius: 8,
-    marginRight: 5,
-    backgroundColor: getColor(Color.graphicGreen1),
-  },
-  appContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
+  container: {
+    flex: 1,
+    marginHorizontal: 20,
   },
 });

@@ -90,6 +90,8 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
+import {WalletConnectApplicationDetails} from './screens/wallet-connect-application-details';
+import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
 import {WalletConnectApplicationList} from './screens/wallet-connect-application-list';
 import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
 import {WalletConnectWalletList} from './screens/wallet-connect-wallet-list';
@@ -248,6 +250,10 @@ export const App = () => {
                     component={WalletConnectApplicationListPopupScreen}
                   />
                   <Stack.Screen
+                    name="walletConnectApplicationDetailsPopup"
+                    component={WalletConnectApplicationDetailsPopupScreen}
+                  />
+                  <Stack.Screen
                     name="walletSelector"
                     component={WalletSelectorScreen}
                   />
@@ -310,6 +316,10 @@ export const App = () => {
                   <Stack.Screen
                     name="walletConnectApplicationList"
                     component={WalletConnectApplicationList}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetails"
+                    component={WalletConnectApplicationDetails}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"

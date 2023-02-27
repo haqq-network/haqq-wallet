@@ -25,6 +25,10 @@ export const WalletRow = ({
   type = WalletRowTypes.variant1,
   ...props
 }: WalletRowProps) => {
+  if (!props?.item) {
+    return null;
+  }
+
   switch (type) {
     case WalletRowTypes.variant2:
       return <WalletRowVariant2 {...props} />;

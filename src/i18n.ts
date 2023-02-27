@@ -463,6 +463,7 @@ export enum I18N {
   walletConnectApprovalDescription,
   walletConnectApprovalInfoBlockTitle,
   walletConnectApprovalInfoBlockDescription,
+  walletConnectDisconnect,
   walletRowVariant2Title,
   walletCardConnectedApps,
   pinCodeWrongPin,
@@ -1006,6 +1007,7 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectApprovalDescription]: 'islamiccoin.net',
   [I18N.walletRowVariant2Title]: 'Account',
   [I18N.walletConnectApprovalInfoBlockTitle]: 'By connecting you allow to:\n',
+  [I18N.walletConnectDisconnect]: 'Disconnect',
   [I18N.walletConnectApprovalInfoBlockDescription]:
     '• View your balance and activity\n• Request approval for transactions',
   [I18N.walletCardConnectedApps]: '{{count}} connect',

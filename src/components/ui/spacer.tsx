@@ -9,6 +9,7 @@ export type SpacerProps = ViewProps & {
   minHeight?: number;
   width?: number;
   centered?: boolean;
+  flex?: number;
 };
 
 export const Spacer = ({
@@ -18,6 +19,7 @@ export const Spacer = ({
   width,
   minHeight,
   centered,
+  flex,
   ...props
 }: SpacerProps) => {
   const container = useMemo(() => {
@@ -28,12 +30,13 @@ export const Spacer = ({
             height,
             width,
             minHeight,
+            flex,
           }
         : styles.flexOne,
       centered && styles.centered,
       style,
     ].filter(Boolean);
-  }, [height, minHeight, width, centered, style]);
+  }, [height, minHeight, width, flex, centered, style]);
 
   return (
     <View style={container} {...props}>

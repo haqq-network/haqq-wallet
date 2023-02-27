@@ -4,11 +4,14 @@ import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
+import {WalletConnect} from '@app/services/wallet-connect';
+import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = () => {
   const navigation = useTypedNavigation();
   const wallets = useWallets();
   const [visibleRows, setVisibleRows] = useState(wallets.visible);
+
   const [balance, setBalance] = useState(
     Object.fromEntries(
       visibleRows.map(w => [w.address, app.getBalance(w.address)]),
@@ -62,7 +65,27 @@ export const WalletsWrapper = () => {
 
   const onWalletConnectPress = useCallback(
     (address: string) => {
-      navigation.navigate('walletConnectApplicationListPopup', {address});
+      const sessionsByAddress = filterWalletConnectSessionsByAddress(
+        WalletConnect.instance.getActiveSessions(),
+        address,
+      );
+
+      if (!sessionsByAddress?.length) {
+        return;
+      }
+
+      if (sessionsByAddress?.length === 1) {
+        return navigation.navigate('walletConnectApplicationDetailsPopup', {
+          session: sessionsByAddress[0],
+          isPopup: true,
+        });
+      }
+
+      if (sessionsByAddress?.length > 1) {
+        return navigation.navigate('walletConnectApplicationListPopup', {
+          address,
+        });
+      }
     },
     [navigation],
   );

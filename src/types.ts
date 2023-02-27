@@ -3,6 +3,7 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
+import {SessionTypes} from '@walletconnect/types';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
@@ -336,6 +337,11 @@ export type RootStackParamList = {
     address: string;
     isPopup?: boolean;
   };
+  walletConnectApplicationDetailsPopup: RootStackParamList['walletConnectApplicationDetails'];
+  walletConnectApplicationDetails: {
+    session: SessionTypes.Struct;
+    isPopup?: boolean;
+  };
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;
   };
@@ -532,12 +538,4 @@ export interface WalletConnectParsedAccount {
   namespace?: string;
   // eg '5'
   networkId?: string;
-}
-
-export interface WalletConnectApplication {
-  name: string;
-  description: string;
-  url: string;
-  icons: string[];
-  topic: string;
 }
