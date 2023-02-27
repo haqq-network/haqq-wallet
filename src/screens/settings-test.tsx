@@ -10,7 +10,7 @@ import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
-import {Alert, Linking, View} from 'react-native';
+import {Linking, View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
@@ -77,7 +77,7 @@ export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [torusPk, setTorusPk] = useState<null | BN>(null);
   const [pk, setPk] = useState('');
-  const [share1, setShare1] = useState('');
+  // const [share1, setShare1] = useState('');
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
@@ -134,7 +134,7 @@ export const SettingsTestScreen = () => {
 
     const res = await tKey.reconstructKey();
     console.log('onPressRestoreShare1', res.privKey);
-    Alert.alert('pk', res.privKey.toString('hex'));
+    setPk(res.privKey.toString('hex'));
   }, []);
 
   //
@@ -173,14 +173,14 @@ export const SettingsTestScreen = () => {
   //   }
   // }, [mnemonicShare2]);
 
-  const onRequestShare = useCallback(async () => {
-    const res = await shareTransferModule.requestNewShare(
-      'ReactNative',
-      tKey.getCurrentShareIndexes(),
-    );
-
-    console.log('res', res);
-  }, []);
+  // const onRequestShare = useCallback(async () => {
+  //   const res = await shareTransferModule.requestNewShare(
+  //     'ReactNative',
+  //     tKey.getCurrentShareIndexes(),
+  //   );
+  //
+  //   console.log('res', res);
+  // }, []);
 
   const onPressLogin = useCallback(async () => {
     try {
@@ -216,6 +216,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={8} />
       <Button
         title="Login"
+        disabled={!!torusPk}
         onPress={onPressLogin}
         variant={ButtonVariant.contained}
       />
@@ -233,27 +234,11 @@ export const SettingsTestScreen = () => {
         onPress={onPressCreateShare}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={8} />
-      <Input
-        placeholder="share1"
-        value={share1}
-        onChangeText={v => {
-          setShare1(v);
-        }}
-      />
       <Spacer height={4} />
       <Button
         title="Restore from first share"
         disabled={!torusPk}
         onPress={onPressRestoreShare1}
-        variant={ButtonVariant.contained}
-      />
-
-      <Spacer height={4} />
-      <Button
-        title="Request share"
-        disabled={!share1}
-        onPress={onRequestShare}
         variant={ButtonVariant.contained}
       />
 
