@@ -1310,7 +1310,7 @@
     "@ethersproject/constants" "^5.7.0"
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/wallet@5.7.0", "@ethersproject/wallet@^5.7.0":
+"@ethersproject/wallet@5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.7.0.tgz#4e5d0790d96fe21d61d38fb40324e6c7ef350b2d"
   integrity sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==
@@ -1468,15 +1468,13 @@
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-hot-react-native@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-hot-react-native/-/provider-hot-react-native-0.0.4.tgz#234feb3695f461f47229da081cbea41d72ac08a5"
-  integrity sha512-RI7PxE/FKBDHhls8lTkJwGoqkvyxNs1jO67UMH7/fRTpZOYSI+/6eDvzTBkpNKcpXbXffSDuCZ2VPLLfg9pfPA==
+"@haqq/provider-hot-react-native@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-hot-react-native/-/provider-hot-react-native-0.0.5.tgz#894764a552853c87b234feede030bf0bcd2948b7"
+  integrity sha512-46T1naub7pkcezRtC9Zcto0mWXRwiHupcheRE7zULOr4pQ5f0E+BHAGCt4gZ9uYU8QzlHYxMPZD3Rg4FTuGMDw==
   dependencies:
-    "@ethersproject/abstract-provider" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
-    "@ethersproject/keccak256" "^5.7.0"
-    "@ethersproject/wallet" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
 
 "@haqq/provider-ledger-react-native@0.0.16":
   version "0.0.16"
@@ -1491,10 +1489,10 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
-"@haqq/provider-mnemonic-react-native@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.4.tgz#1f140fd0fc7b6cdb53c7de3ae246fc76e2b6ac81"
-  integrity sha512-fn1fdinx6QZzd4CI/FSoe6psXv6CZpoHy7bB2eWhRXMK4lNLBqYzAO706QncC31O9OWGa+RRG9Pu0Jbuh5P7Lg==
+"@haqq/provider-mnemonic-react-native@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.5.tgz#3299d814bcd62a02b812ea136f500b1ed40cb92f"
+  integrity sha512-zAPCgGBoozGMTp6fnENCXLhh5A0WS/1z9o+Vvjg3d75Zs4poctzwPsvKqFdNaRjox3G7lwyp3EHPSZJf5tUafg==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
