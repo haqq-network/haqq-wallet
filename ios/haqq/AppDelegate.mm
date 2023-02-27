@@ -35,6 +35,28 @@ static void ClearKeychainIfNecessary() {
         // Set the appropriate value so we don't clear next time the app is launched
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HAS_RUN_BEFORE"];
 
+      NSArray *accounts = @[
+        @"mnemonic_accounts",
+        @"mnemonic_saved",
+        @"hot_accoutns",
+        @"hot_saved",
+        @"mpc_accounts",
+        @"mpc_saved",
+        @"ledger_accounts",
+        @"ledger_saved",
+      ];
+      
+      for (id account in accounts) {
+        NSDictionary* removeQuery = @{
+            (__bridge id)kSecClass : (__bridge id)kSecClassGenericPassword,
+            (__bridge id)kSecAttrAccount : account,
+            (__bridge id)kSecReturnData : (__bridge id)kCFBooleanTrue
+        };
+        
+        OSStatus removeStatus = SecItemDelete((__bridge CFDictionaryRef)removeQuery);
+      }
+
+      
 //        NSArray *secItemClasses = @[
 //            (__bridge id)kSecClassGenericPassword,
 //            (__bridge id)kSecClassInternetPassword,
