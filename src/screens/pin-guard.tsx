@@ -33,6 +33,7 @@ export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
     showModal('loading');
     try {
       await app.comparePin(pin);
+      app.successEnter();
       await onEnter?.();
       pinRef.current?.reset();
       setLoggedIn(true);
