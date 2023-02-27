@@ -46,7 +46,6 @@
     "events": "^3.3.0",
     "fbjs": "^3.0.4",
     "https-browserify": "~0.0.0",
-    "lottie-ios": "3.4.4",
     "lottie-react-native": "5.1.5",
     "markdown-it": "^13.0.1",
     "metro-minify-terser": "0.75.0",
