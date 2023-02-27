@@ -8,11 +8,12 @@ import TorusServiceProvider from '@tkey/service-provider-base';
 import {ShareSerializationModule} from '@tkey/share-serialization';
 import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
+import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
-import randombytes from 'randombytes';
-import {Linking, View} from 'react-native';
+import {Alert, Linking, View} from 'react-native';
 
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme, showModal} from '@app/helpers';
 import {pushNotifications} from '@app/services/push-notifications';
 
@@ -61,11 +62,22 @@ const tKey = new ThresholdKey({
   },
 });
 
+const GOOGLE = 'google';
+const verifierMap = {
+  [GOOGLE]: {
+    name: 'Google',
+    typeOfLogin: 'google',
+    clientId:
+      '759944447575-6rm643ia1i9ngmnme3eq5viiep5rp6s0.apps.googleusercontent.com',
+    verifier: 'sk-react-native-test',
+  },
+};
+
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
+  const [torusPk, setTorusPk] = useState<null | BN>(null);
   const [pk, setPk] = useState('');
   const [share1, setShare1] = useState('');
-  const [mnemonicShare2, setMnemonicShare2] = useState('');
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
@@ -74,102 +86,113 @@ export const SettingsTestScreen = () => {
     Linking.getInitialURL().then(result => {
       setInitialUrl(result);
     });
+
+    try {
+      CustomAuth.init({
+        browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
+        redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
+        network: 'celeste', // details for test net
+        enableLogging: true,
+        enableOneKey: false,
+        skipSw: true,
+      });
+    } catch (error) {
+      console.log(error, 'mounted caught');
+    }
   }, []);
 
   const onPressCreateShare = useCallback(async () => {
-    const key = randombytes(32);
+    const answerString = await app.getPassword();
+    try {
+      const keyDetails = await tKey._initializeNewKey({
+        initializeModules: true,
+        importedKey: new BN(pk, 16),
+      });
 
-    tKey.serviceProvider.postboxKey = new BN(key);
-    console.log('share1', key.toString('hex'));
-    let keyDetails = await tKey.initialize();
-    console.log('keyDetails', keyDetails);
+      console.log('keyDetails', JSON.stringify(keyDetails));
+      console.log('tKey.privKey', tKey.privKey);
 
-    const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
-
-    console.log('polyId', polyId);
-
-    console.log(JSON.stringify(tKey.shares));
-
-    const shares = tKey.shares[polyId];
-    let deviceShare = null;
-    for (const shareIndex in shares) {
-      if (shareIndex !== '1') {
-        deviceShare = shares[shareIndex].share;
-      }
-    }
-    if (deviceShare) {
-      console.log('deviceShare', deviceShare);
-
-      const serializedShare =
-        await tKey.modules.shareSerializationModule.serialize(
-          deviceShare.share,
-          'mnemonic',
+      const securityShare =
+        await securityQuestionsModule.generateNewShareWithSecurityQuestions(
+          answerString,
+          'whats your password?',
         );
 
-      console.log('serializedShare', serializedShare);
+      console.log('securityShare', JSON.stringify(securityShare));
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message);
+      }
     }
-
-    const securityShare =
-      await tKey.modules.securityQuestions.generateNewShareWithSecurityQuestions(
-        '123',
-        'whats your password?',
-      );
-
-    console.log('securityShare', JSON.stringify(securityShare));
-  }, []);
+  }, [pk]);
 
   const onPressRestoreShare1 = useCallback(async () => {
-    tKey.serviceProvider.postboxKey = new BN(share1, 'hex');
     const keyDetails = await tKey.initialize();
     console.log('keyDetails', keyDetails);
-
-    await tKey.modules.securityQuestions.inputShareFromSecurityQuestions('123');
+    const answerString = await app.getPassword();
+    await securityQuestionsModule.inputShareFromSecurityQuestions(answerString);
 
     const res = await tKey.reconstructKey();
     console.log('onPressRestoreShare1', res.privKey);
-  }, [share1]);
+    Alert.alert('pk', res.privKey.toString('hex'));
+  }, []);
 
-  const onPressRestoreShare2Mnemonic = useCallback(async () => {
-    const deviceShare = await tKey.modules.shareSerializationModule.deserialize(
-      mnemonicShare2,
-      'mnemonic',
-    );
-
-    console.log('deviceShare', deviceShare);
-
-    if (deviceShare) {
-      try {
-        await tKey.storageLayer.setMetadata({
-          privKey: new BN(deviceShare, 'hex'),
-          input: {message: 'KEY_NOT_FOUND'},
-        });
-
-        console.log('initialize start');
-        let keyDetails = await tKey.initialize(); // metadata is from the above step
-        console.log('initialize end', keyDetails);
-
-        console.log('securityQuestions start');
-        await tKey.modules.securityQuestions.inputShareFromSecurityQuestions(
-          '123',
-        );
-        console.log('securityQuestions end');
-
-        const reconstructKey = await tKey.reconstructKey();
-
-        console.log('reconstructKey', reconstructKey);
-      } catch (e) {
-        console.log('initApp error', e.message);
-      }
-    }
-  }, [mnemonicShare2]);
+  //
+  // const onPressRestoreShare2Mnemonic = useCallback(async () => {
+  //   const deviceShare = await tKey.modules.shareSerializationModule.deserialize(
+  //     mnemonicShare2,
+  //     'mnemonic',
+  //   );
+  //
+  //   console.log('deviceShare', deviceShare);
+  //
+  //   if (deviceShare) {
+  //     try {
+  //       await tKey.storageLayer.setMetadata({
+  //         privKey: new BN(deviceShare, 'hex'),
+  //         input: {message: 'KEY_NOT_FOUND'},
+  //       });
+  //
+  //       console.log('initialize start');
+  //       let keyDetails = await tKey.initialize(); // metadata is from the above step
+  //       console.log('initialize end', keyDetails);
+  //
+  //       console.log('securityQuestions start');
+  //       const answerString = await app.getPassword();
+  //       await securityQuestionsModule.inputShareFromSecurityQuestions(
+  //         answerString,
+  //       );
+  //       console.log('securityQuestions end');
+  //
+  //       const reconstructKey = await tKey.reconstructKey();
+  //
+  //       console.log('reconstructKey', reconstructKey);
+  //     } catch (e) {
+  //       console.log('initApp error', e.message);
+  //     }
+  //   }
+  // }, [mnemonicShare2]);
 
   const onRequestShare = useCallback(async () => {
-    const res = await tKey.modules.shareTransfer.requestNewShare(
+    const res = await shareTransferModule.requestNewShare(
       'ReactNative',
       tKey.getCurrentShareIndexes(),
     );
 
     console.log('res', res);
+  }, []);
+
+  const onPressLogin = useCallback(async () => {
+    try {
+      console.log(new Date());
+      const loginDetails = await CustomAuth.triggerLogin(verifierMap[GOOGLE]);
+      console.log(new Date(), loginDetails);
+      const key = new BN(loginDetails.privateKey, 16);
+      tKey.serviceProvider.postboxKey = key;
+      await tKey.initialize();
+      setTorusPk(key);
+      console.log(new Date(), JSON.stringify(loginDetails));
+    } catch (e) {}
   }, []);
 
   return (
@@ -191,6 +214,11 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
+      <Button
+        title="Login"
+        onPress={onPressLogin}
+        variant={ButtonVariant.contained}
+      />
       <Input
         placeholder="pk"
         value={pk}
@@ -201,7 +229,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={4} />
       <Button
         title="Create shares"
-        disabled={!pk}
+        disabled={!(pk && torusPk)}
         onPress={onPressCreateShare}
         variant={ButtonVariant.contained}
       />
@@ -216,7 +244,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={4} />
       <Button
         title="Restore from first share"
-        disabled={!share1}
+        disabled={!torusPk}
         onPress={onPressRestoreShare1}
         variant={ButtonVariant.contained}
       />
@@ -230,20 +258,6 @@ export const SettingsTestScreen = () => {
       />
 
       <Spacer height={8} />
-      <Input
-        placeholder="mnemonicShare2"
-        value={mnemonicShare2}
-        onChangeText={v => {
-          setMnemonicShare2(v);
-        }}
-      />
-      <Spacer height={4} />
-      <Button
-        title="Restore from mnemonic"
-        disabled={!mnemonicShare2}
-        onPress={onPressRestoreShare2Mnemonic}
-        variant={ButtonVariant.contained}
-      />
     </View>
   );
 };
