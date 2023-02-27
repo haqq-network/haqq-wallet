@@ -76,6 +76,7 @@ const verifierMap = {
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [torusPk, setTorusPk] = useState<null | BN>(null);
+  const [serializedShare, setSerializedShare] = useState('');
   const [pk, setPk] = useState('');
   // const [share1, setShare1] = useState('');
   const onPressRequestPermissions = async () => {
@@ -134,7 +135,8 @@ export const SettingsTestScreen = () => {
 
     const res = await tKey.reconstructKey();
     console.log('onPressRestoreShare1', res.privKey);
-    setPk(res.privKey.toString('hex'));
+    console.log('onPressRestoreShare1', res.seedPhrase);
+    setPk(tKey.privKey.toString('hex'));
   }, []);
 
   //
@@ -195,6 +197,23 @@ export const SettingsTestScreen = () => {
     } catch (e) {}
   }, []);
 
+  const onPressSerialize = useCallback(async () => {
+    const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
+    const shares = tKey.shares[polyId];
+    let deviceShare = null;
+    for (const shareIndex in shares) {
+      if (shareIndex !== '1') {
+        deviceShare = shares[shareIndex].share;
+      }
+    }
+
+    const share = await (
+      tKey.modules.shareSerializationModule as ShareSerializationModule
+    ).serialize(deviceShare?.share as BN, 'mnemonic');
+
+    setSerializedShare(share as string);
+  }, []);
+
   return (
     <View style={styles.container}>
       {initialUrl && (
@@ -241,7 +260,28 @@ export const SettingsTestScreen = () => {
         onPress={onPressRestoreShare1}
         variant={ButtonVariant.contained}
       />
-
+      <Spacer height={4} />
+      <Input
+        placeholder="share"
+        value={serializedShare}
+        onChangeText={v => {
+          setSerializedShare(v);
+        }}
+      />
+      <Spacer height={4} />
+      <Button
+        title="Serialize"
+        disabled={!(torusPk && !serializedShare)}
+        onPress={onPressSerialize}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={4} />
+      <Button
+        title="Deserialize"
+        disabled={!(torusPk && serializedShare)}
+        onPress={onPressSerialize}
+        variant={ButtonVariant.contained}
+      />
       <Spacer height={8} />
     </View>
   );
