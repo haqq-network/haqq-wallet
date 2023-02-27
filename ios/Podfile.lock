@@ -3,7 +3,7 @@ PODS:
   - BVLinearGradient (2.6.2):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
-  - CryptoSwift (1.6.0)
+  - CryptoSwift (1.5.1)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.70.6)
   - FBReactNativeSpec (0.70.6):
@@ -183,11 +183,11 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.11.0):
     - GoogleUtilities/Logger
-  - HaqqEncryptionRN (0.0.1):
-    - CryptoSwift (= 1.6.0)
+  - HaqqEncryptionRN (0.0.2):
+    - CryptoSwift (= 1.5.1)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.7):
-    - CryptoSwift (= 1.6.0)
+  - HaqqWeb3UtilsRN (0.0.8):
+    - CryptoSwift (= 1.5.1)
     - React-Core
     - secp256k1Swift (= 0.7.4)
     - secp256k1Wrapper
@@ -606,7 +606,6 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
-  - CryptoSwift (~> 1.6.0)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -695,7 +694,6 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
-  - secp256k1Swift (~> 0.7.4)
   - secp256k1Wrapper
   - ToastViewSwift
   - TouchID (from `../node_modules/react-native-touch-id`)
@@ -873,7 +871,7 @@ SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  CryptoSwift: 562f8eceb40e80796fffc668b0cad9313284cfa6
+  CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
@@ -898,8 +896,8 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
-  HaqqEncryptionRN: d2e151c9d1408da3dbdc9f1e99085963a2f64a3a
-  HaqqWeb3UtilsRN: f30450bc2f0a10b58ee407f1f06e68cb93d61a05
+  HaqqEncryptionRN: ee89cc23922410e37d1af81b699f944891dfa9b3
+  HaqqWeb3UtilsRN: a4839c7d78dfc94680f62a8251e82ba103fd1a7a
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
@@ -970,6 +968,6 @@ SPEC CHECKSUMS:
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6c00a783afd063d7a22e44bb9cac4bdb16a026f1
+PODFILE CHECKSUM: cd60ced3806eff8d5861952779cad5ff7c7e5947
 
 COCOAPODS: 1.11.3

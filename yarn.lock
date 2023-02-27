@@ -1455,15 +1455,15 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@haqq/encryption-react-native@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.1.tgz#4307eff76660aed018884f1f2895c286f610ed0a"
-  integrity sha512-V3qvgGBrzOR75pxuNQ4Rgp/75enD6rbbLGlU6WGiyltYuKZErZL02e0PU1TpsYmTNXdo8LaHnoTWfprtxA3oWA==
+"@haqq/encryption-react-native@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/encryption-react-native/-/encryption-react-native-0.0.2.tgz#42d2c51e2390e825ec14d32cc0bd30e8756fe4e4"
+  integrity sha512-7kC598rBMXCMFHt70coAbYYyJJE+lxbVVJDNgZim2WVcYW6hjMQLcGNVq3A55zKB+TDrhqAzzLQPdR6oPkoIiA==
 
-"@haqq/provider-base@0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.15.tgz#dbc17325c2955f1856b0304371cb0c98efac3ab6"
-  integrity sha512-R9PzBEroi2nnxIU0/s37gV6RJ9D9pqbwU+GZGkupxqQ/bqZX/mvtQgeqvL8k6A4wNjORktwFqVeysxqkOvdceg==
+"@haqq/provider-base@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-base/-/provider-base-0.0.18.tgz#aa5cc0ed43ef0d19a0fe7f667cde7f7d0b365619"
+  integrity sha512-JUFMkYZkz/QIujpVUDqpM+PYf0jj2Cazty1Zb4MgTY9HWoaWBbXnD2YKLRXA6LC2HaS1EPqcppX8RAoh5C/4jg==
   dependencies:
     bech32-converting "^1.0.9"
     events "^3.3.0"
@@ -1478,10 +1478,10 @@
     "@ethersproject/keccak256" "^5.7.0"
     "@ethersproject/wallet" "^5.7.0"
 
-"@haqq/provider-ledger-react-native@0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.15.tgz#f19bc80511e78e52729019944c5fc858b5a533bd"
-  integrity sha512-iS8w5aNRS9xQF+hxaiPSXJyuSdaYaAMtGma38I6rf2M7RP05xSKqGdjf6VHrIPzpXU60nrwcBzs4+8UWOqGQvQ==
+"@haqq/provider-ledger-react-native@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.16.tgz#d3c0f03f8cd05a49bdf5aa164b589a8c9fd24161"
+  integrity sha512-gySBxEt2P6Y8t8ATIa1sKLLOMZBbFyhsQSgfUx1arQeVTZQWTsx3envD+EXVphgfihVMmUJN8e3HnFmc0kTX1A==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"
@@ -1499,10 +1499,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-web3-utils@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.7.tgz#16eb22c1c149f6b367bc81bea862dcb2868ddcb9"
-  integrity sha512-i687ggm+HbNq1bkt1eWNudXb9noCJPDYPOvbNMt9Pxyg75bSI6VqrTmxfFWiKh2QY8+LfLPTC/zhbbOj1xsm9g==
+"@haqq/provider-web3-utils@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.8.tgz#47fe05d4ccb796be90364b7b20acb53211232e65"
+  integrity sha512-/2IXjDxqjDsMvsExfmb0r55g0Af7FUxsRFwp9ktV87UwkO/reHqzClEvs8ZjMnznCfmygQCbWesd9E3mXkzm3g==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
