@@ -64,9 +64,12 @@ const tKey = new ThresholdKey({
   },
 });
 
-const GOOGLE = 'google';
+enum Providers {
+  google,
+}
+
 const verifierMap = {
-  [GOOGLE]: {
+  [Providers.google]: {
     name: 'Google',
     typeOfLogin: 'google',
     clientId:
@@ -207,7 +210,9 @@ export const SettingsTestScreen = () => {
   const onPressLogin = useCallback(async () => {
     try {
       console.log(new Date());
-      const loginDetails = await CustomAuth.triggerLogin(verifierMap[GOOGLE]);
+      const loginDetails = await CustomAuth.triggerLogin(
+        verifierMap[Providers.google],
+      );
       console.log(new Date(), loginDetails);
       const key = new BN(loginDetails.privateKey, 16);
       tKey.serviceProvider.postboxKey = key;
