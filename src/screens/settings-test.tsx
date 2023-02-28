@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {Metadata} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
 import TorusServiceProvider from '@tkey/service-provider-base';
@@ -75,6 +77,7 @@ const verifierMap = {
 
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
+  const [metadata, setMetadata] = useState(false);
   const [torusPk, setTorusPk] = useState<null | BN>(null);
   const [serializedShare, setSerializedShare] = useState('');
   const [pk, setPk] = useState('');
@@ -97,6 +100,19 @@ export const SettingsTestScreen = () => {
         enableOneKey: false,
         skipSw: true,
       });
+
+      AsyncStorage.getItem('tkey_metadata')
+        .then(resp => {
+          console.log('metadata', resp);
+          if (resp) {
+            tKey.metadata = Metadata.fromJSON(JSON.parse(resp));
+            setMetadata(!!tKey.metadata);
+          }
+        })
+        .then(() => app.getPassword())
+        .then(answerString =>
+          securityQuestionsModule.inputShareFromSecurityQuestions(answerString),
+        );
     } catch (error) {
       console.log(error, 'mounted caught');
     }
@@ -120,6 +136,11 @@ export const SettingsTestScreen = () => {
         );
 
       console.log('securityShare', JSON.stringify(securityShare));
+
+      await AsyncStorage.setItem(
+        'tkey_metadata',
+        JSON.stringify(tKey.getMetadata().toJSON()),
+      );
     } catch (e) {
       if (e instanceof Error) {
         console.log(e.message);
@@ -135,7 +156,6 @@ export const SettingsTestScreen = () => {
 
     const res = await tKey.reconstructKey();
     console.log('onPressRestoreShare1', res.privKey);
-    console.log('onPressRestoreShare1', res.seedPhrase);
     setPk(tKey.privKey.toString('hex'));
   }, []);
 
@@ -192,27 +212,53 @@ export const SettingsTestScreen = () => {
       const key = new BN(loginDetails.privateKey, 16);
       tKey.serviceProvider.postboxKey = key;
       await tKey.initialize();
+      setMetadata(!!tKey.metadata);
       setTorusPk(key);
       console.log(new Date(), JSON.stringify(loginDetails));
     } catch (e) {}
   }, []);
 
   const onPressSerialize = useCallback(async () => {
+    const newShare = await tKey.generateNewShare();
+
     const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
-    const shares = tKey.shares[polyId];
-    let deviceShare = null;
-    for (const shareIndex in shares) {
-      if (shareIndex !== '1') {
-        deviceShare = shares[shareIndex].share;
-      }
-    }
+    console.log(
+      'tKey.shares[polyId]',
+      JSON.stringify(newShare),
+      JSON.stringify(tKey.shares[polyId]),
+    );
+    const deviceShare =
+      tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
+
+    console.log('deviceShare', JSON.stringify(deviceShare));
 
     const share = await (
       tKey.modules.shareSerializationModule as ShareSerializationModule
-    ).serialize(deviceShare?.share as BN, 'mnemonic');
+    ).serialize(deviceShare?.share.share as BN, 'mnemonic');
 
     setSerializedShare(share as string);
+
+    await AsyncStorage.setItem(
+      'tkey_metadata',
+      JSON.stringify(tKey.getMetadata().toJSON()),
+    );
   }, []);
+
+  const onPressDeserialize = useCallback(async () => {
+    if (serializedShare) {
+      const deviceShare = await (
+        tKey.modules.shareSerializationModule as ShareSerializationModule
+      ).deserialize(serializedShare, 'mnemonic');
+
+      console.log('deviceShare', deviceShare);
+
+      await tKey.inputShare(deviceShare);
+
+      const res = await tKey.reconstructKey();
+      console.log('onPressRestoreShare1', res.privKey);
+      setPk(tKey.privKey.toString('hex'));
+    }
+  }, [serializedShare]);
 
   return (
     <View style={styles.container}>
@@ -249,7 +295,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={4} />
       <Button
         title="Create shares"
-        disabled={!(pk && torusPk)}
+        disabled={!(pk && metadata)}
         onPress={onPressCreateShare}
         variant={ButtonVariant.contained}
       />
@@ -271,15 +317,15 @@ export const SettingsTestScreen = () => {
       <Spacer height={4} />
       <Button
         title="Serialize"
-        disabled={!(torusPk && !serializedShare)}
+        disabled={!(metadata && !serializedShare && pk)}
         onPress={onPressSerialize}
         variant={ButtonVariant.contained}
       />
       <Spacer height={4} />
       <Button
         title="Deserialize"
-        disabled={!(torusPk && serializedShare)}
-        onPress={onPressSerialize}
+        disabled={!(metadata && serializedShare)}
+        onPress={onPressDeserialize}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
