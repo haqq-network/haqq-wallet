@@ -39,17 +39,18 @@ messaging()
     }
   });
 
-const directParams = {
-  baseUrl: 'http://localhost:3000/serviceworker/',
-  enableLogging: true,
-  network: 'testnet',
-};
 const serviceProvider = new TorusServiceProvider({
-  customAuthArgs: directParams,
+  customAuthArgs: {
+    baseUrl: 'http://localhost:3000/serviceworker/',
+    enableLogging: true,
+    network: 'testnet',
+  },
 } as any);
+
 const storageLayer = new TorusStorageLayer({
   hostUrl: 'https://metadata.tor.us',
 });
+
 const shareTransferModule = new ShareTransferModule();
 const shareSerializationModule = new ShareSerializationModule();
 const securityQuestionsModule = new SecurityQuestionsModule();
@@ -78,10 +79,12 @@ const verifierMap = {
   },
 };
 
+const METADATA_STORE = 'tkey_metadata';
+
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [metadata, setMetadata] = useState(false);
-  const [torusPk, setTorusPk] = useState<null | BN>(null);
+  const [torusPk, setTorusPk] = useState(false);
   const [serializedShare, setSerializedShare] = useState('');
   const [pk, setPk] = useState('');
   // const [share1, setShare1] = useState('');
@@ -104,7 +107,7 @@ export const SettingsTestScreen = () => {
         skipSw: true,
       });
 
-      AsyncStorage.getItem('tkey_metadata')
+      AsyncStorage.getItem(METADATA_STORE)
         .then(resp => {
           console.log('metadata', resp);
           if (resp) {
@@ -124,13 +127,10 @@ export const SettingsTestScreen = () => {
   const onPressCreateShare = useCallback(async () => {
     const answerString = await app.getPassword();
     try {
-      const keyDetails = await tKey._initializeNewKey({
+      await tKey._initializeNewKey({
         initializeModules: true,
         importedKey: new BN(pk, 16),
       });
-
-      console.log('keyDetails', JSON.stringify(keyDetails));
-      console.log('tKey.privKey', tKey.privKey);
 
       const securityShare =
         await securityQuestionsModule.generateNewShareWithSecurityQuestions(
@@ -140,8 +140,24 @@ export const SettingsTestScreen = () => {
 
       console.log('securityShare', JSON.stringify(securityShare));
 
+      const newShare = await tKey.generateNewShare();
+      const polyId = tKey.metadata
+        .getLatestPublicPolynomial()
+        .getPolynomialID();
+
+      const deviceShare =
+        tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
+
+      const share = await (
+        tKey.modules.shareSerializationModule as ShareSerializationModule
+      ).serialize(deviceShare?.share.share as BN, 'mnemonic');
+
+      console.log('deviceShare', JSON.stringify(deviceShare), share);
+
+      setSerializedShare(share as string);
+
       await AsyncStorage.setItem(
-        'tkey_metadata',
+        METADATA_STORE,
         JSON.stringify(tKey.getMetadata().toJSON()),
       );
     } catch (e) {
@@ -152,102 +168,50 @@ export const SettingsTestScreen = () => {
   }, [pk]);
 
   const onPressRestoreShare1 = useCallback(async () => {
-    const keyDetails = await tKey.initialize();
-    console.log('keyDetails', keyDetails);
+    await tKey.initialize();
+
     const answerString = await app.getPassword();
     await securityQuestionsModule.inputShareFromSecurityQuestions(answerString);
 
-    const res = await tKey.reconstructKey();
-    console.log('onPressRestoreShare1', res.privKey);
+    await tKey.reconstructKey();
     setPk(tKey.privKey.toString('hex'));
   }, []);
 
-  //
-  // const onPressRestoreShare2Mnemonic = useCallback(async () => {
-  //   const deviceShare = await tKey.modules.shareSerializationModule.deserialize(
-  //     mnemonicShare2,
-  //     'mnemonic',
-  //   );
-  //
-  //   console.log('deviceShare', deviceShare);
-  //
-  //   if (deviceShare) {
-  //     try {
-  //       await tKey.storageLayer.setMetadata({
-  //         privKey: new BN(deviceShare, 'hex'),
-  //         input: {message: 'KEY_NOT_FOUND'},
-  //       });
-  //
-  //       console.log('initialize start');
-  //       let keyDetails = await tKey.initialize(); // metadata is from the above step
-  //       console.log('initialize end', keyDetails);
-  //
-  //       console.log('securityQuestions start');
-  //       const answerString = await app.getPassword();
-  //       await securityQuestionsModule.inputShareFromSecurityQuestions(
-  //         answerString,
-  //       );
-  //       console.log('securityQuestions end');
-  //
-  //       const reconstructKey = await tKey.reconstructKey();
-  //
-  //       console.log('reconstructKey', reconstructKey);
-  //     } catch (e) {
-  //       console.log('initApp error', e.message);
-  //     }
-  //   }
-  // }, [mnemonicShare2]);
-
-  // const onRequestShare = useCallback(async () => {
-  //   const res = await shareTransferModule.requestNewShare(
-  //     'ReactNative',
-  //     tKey.getCurrentShareIndexes(),
-  //   );
-  //
-  //   console.log('res', res);
-  // }, []);
-
   const onPressLogin = useCallback(async () => {
     try {
-      console.log(new Date());
+      const start = new Date();
+      console.log(start);
       const loginDetails = await CustomAuth.triggerLogin(
         verifierMap[Providers.google],
       );
-      console.log(new Date(), loginDetails);
-      const key = new BN(loginDetails.privateKey, 16);
-      tKey.serviceProvider.postboxKey = key;
+
+      tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);
       await tKey.initialize();
+      const end = new Date();
       setMetadata(!!tKey.metadata);
-      setTorusPk(key);
-      console.log(new Date(), JSON.stringify(loginDetails));
+      setTorusPk(true);
+      console.log(end, +end - +start, JSON.stringify(loginDetails));
     } catch (e) {}
   }, []);
 
-  const onPressSerialize = useCallback(async () => {
-    const newShare = await tKey.generateNewShare();
-
-    const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
-    console.log(
-      'tKey.shares[polyId]',
-      JSON.stringify(newShare),
-      JSON.stringify(tKey.shares[polyId]),
-    );
-    const deviceShare =
-      tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
-
-    console.log('deviceShare', JSON.stringify(deviceShare));
-
-    const share = await (
-      tKey.modules.shareSerializationModule as ShareSerializationModule
-    ).serialize(deviceShare?.share.share as BN, 'mnemonic');
-
-    setSerializedShare(share as string);
-
-    await AsyncStorage.setItem(
-      'tkey_metadata',
-      JSON.stringify(tKey.getMetadata().toJSON()),
-    );
-  }, []);
+  // const onPressSerialize = useCallback(async () => {
+  //   const newShare = await tKey.generateNewShare();
+  //
+  //   const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
+  //   const deviceShare =
+  //     tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
+  //
+  //   const share = await (
+  //     tKey.modules.shareSerializationModule as ShareSerializationModule
+  //   ).serialize(deviceShare?.share.share as BN, 'mnemonic');
+  //
+  //   setSerializedShare(share as string);
+  //
+  //   await AsyncStorage.setItem(
+  //     METADATA_STORE,
+  //     JSON.stringify(tKey.getMetadata().toJSON()),
+  //   );
+  // }, []);
 
   const onPressDeserialize = useCallback(async () => {
     if (serializedShare) {
@@ -255,12 +219,8 @@ export const SettingsTestScreen = () => {
         tKey.modules.shareSerializationModule as ShareSerializationModule
       ).deserialize(serializedShare, 'mnemonic');
 
-      console.log('deviceShare', deviceShare);
-
       await tKey.inputShare(deviceShare);
-
-      const res = await tKey.reconstructKey();
-      console.log('onPressRestoreShare1', res.privKey);
+      await tKey.reconstructKey();
       setPk(tKey.privKey.toString('hex'));
     }
   }, [serializedShare]);
@@ -286,7 +246,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={8} />
       <Button
         title="Login"
-        disabled={!!torusPk}
+        disabled={torusPk}
         onPress={onPressLogin}
         variant={ButtonVariant.contained}
       />
@@ -319,13 +279,13 @@ export const SettingsTestScreen = () => {
           setSerializedShare(v);
         }}
       />
-      <Spacer height={4} />
-      <Button
-        title="Serialize"
-        disabled={!(metadata && !serializedShare && pk)}
-        onPress={onPressSerialize}
-        variant={ButtonVariant.contained}
-      />
+      {/*<Spacer height={4} />*/}
+      {/*<Button*/}
+      {/*  title="Serialize"*/}
+      {/*  disabled={!(metadata && !serializedShare && pk)}*/}
+      {/*  onPress={onPressSerialize}*/}
+      {/*  variant={ButtonVariant.contained}*/}
+      {/*/>*/}
       <Spacer height={4} />
       <Button
         title="Deserialize"
