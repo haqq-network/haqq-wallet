@@ -12,12 +12,13 @@ import * as Sentry from '@sentry/react-native';
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {Overview} from './src/overview';
 import './src/event-actions';
+import { DEBUG_VARS } from '@app/debug-vars';
 
 if (typeof Buffer === 'undefined') {
   global.Buffer = require('buffer').Buffer;
 }
 
-if (SENTRY_DSN) {
+if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
   try {
     Sentry.init({
       dsn: SENTRY_DSN,
