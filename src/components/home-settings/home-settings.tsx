@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {IS_DEVELOPMENT} from '@env';
 import {ScrollView} from 'react-native';
 
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useUser} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -69,7 +69,7 @@ export const HomeSettings = () => {
         style={page.button}
       />
 
-      {IS_DEVELOPMENT === '1' && (
+      {app.isDeveloper && (
         <SettingsButton
           icon="settings"
           title={I18N.homeSettingsTest}
