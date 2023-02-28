@@ -12,16 +12,16 @@ import BN from 'bn.js';
 import randombytes from 'randombytes';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const GOOGLE = 'google';
-const verifierMap = {
-  [GOOGLE]: {
-    name: 'Google',
-    typeOfLogin: 'google',
-    clientId:
-      '221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com',
-    verifier: 'google-lrc',
-  },
-};
+// const GOOGLE = 'google';
+// const verifierMap = {
+//   [GOOGLE]: {
+//     name: 'Google',
+//     typeOfLogin: 'google',
+//     clientId:
+//       '221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com',
+//     verifier: 'google-lrc',
+//   },
+// };
 
 const directParams = {
   baseUrl: 'http://localhost:3000/serviceworker/',
