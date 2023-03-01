@@ -11,6 +11,7 @@ import {app} from '@app/contexts';
 import {Events, WalletConnectEvents} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {WalletConnectSession} from '@app/models/wallet-connect-session';
 import {Cosmos} from '@app/services/cosmos';
 import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -35,7 +36,7 @@ export class WalletConnect extends EventEmitter {
   public async init() {
     try {
       console.log(
-        'this._client',
+        'WalletConnect:init',
         WALLET_CONNECT_PROJECT_ID,
         WALLET_CONNECT_RELAY_URL,
       );
@@ -148,6 +149,7 @@ export class WalletConnect extends EventEmitter {
       namespaces,
     });
 
+    WalletConnectSession.create(session.topic);
     this._emitActiveSessions();
     return session;
   }

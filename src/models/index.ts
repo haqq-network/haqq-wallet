@@ -7,6 +7,7 @@ import {StakingMetadata} from './staking-metadata';
 import {Transaction} from './transaction';
 import {UserSchema} from './user';
 import {Wallet} from './wallet';
+import {WalletConnectSession} from './wallet-connect-session';
 
 import {AppTheme, WalletType} from '../types';
 import {
@@ -17,6 +18,7 @@ import {
 
 export const realm = new Realm({
   schema: [
+    WalletConnectSession,
     Wallet,
     UserSchema,
     Transaction,
@@ -25,7 +27,7 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
   ],
-  schemaVersion: 37,
+  schemaVersion: 38,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

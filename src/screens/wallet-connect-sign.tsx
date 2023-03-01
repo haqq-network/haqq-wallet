@@ -101,7 +101,6 @@ const styles = createTheme({
     flex: 1,
   },
   scrollContainer: {
-    // flex: 1,
     alignItems: 'center',
   },
   scroll: {

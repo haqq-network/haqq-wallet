@@ -475,6 +475,8 @@ export enum I18N {
   walletConnectSignRejectButton,
   walletConnectSignSignMessage,
   walletConnectSignMessage,
+  walletConnectApprovalConnected,
+  walletConnectApprovalExpired,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1019,8 +1021,10 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectSignTransactionForSignature]: 'Transaction for signature',
   [I18N.walletConnectSignForm]: 'from',
   [I18N.walletConnectSignSendTo]: 'Send to',
+  [I18N.walletConnectApprovalExpired]: 'Date of expiry',
   [I18N.walletConnectSignTotalAmount]: 'Total Amount',
   [I18N.walletConnectSignApproveButton]: 'Sign',
+  [I18N.walletConnectApprovalConnected]: 'Connected',
   [I18N.walletConnectSignRejectButton]: 'Reject',
   [I18N.walletConnectSignSignMessage]: 'Sign this message',
   [I18N.walletConnectSignMessage]: 'Message',

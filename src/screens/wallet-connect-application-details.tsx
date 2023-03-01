@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {format} from 'date-fns';
-import {Image, View} from 'react-native';
+import {Image, ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -17,8 +17,12 @@ import {createTheme} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WalletConnectSession} from '@app/models/wallet-connect-session';
 import {WalletConnect} from '@app/services/wallet-connect';
-import {getWalletConnectAccountsFromSession} from '@app/utils';
+import {
+  getHostnameFromUrl,
+  getWalletConnectAccountsFromSession,
+} from '@app/utils';
 
 export const WalletConnectApplicationDetails = () => {
   const navivation = useTypedNavigation();
@@ -45,6 +49,23 @@ export const WalletConnectApplicationDetails = () => {
     [account.address],
   );
 
+  const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
+
+  const sessionMetadata = useMemo(
+    () => WalletConnectSession.getById(session.topic),
+    [session.topic],
+  );
+
+  const expiredAt = useMemo(
+    () => format(session.expiry + sessionMetadata?.createdAt!, 'd MMM yyyy'),
+    [session.expiry, sessionMetadata?.createdAt],
+  );
+
+  const connectedAt = useMemo(
+    () => format(sessionMetadata?.createdAt!, 'd MMM yyyy'),
+    [sessionMetadata?.createdAt],
+  );
+
   useEffect(() => {
     const title = params?.isPopup
       ? getText(I18N.walletConnectTitle)
@@ -62,55 +83,54 @@ export const WalletConnectApplicationDetails = () => {
 
   return (
     <View style={styles.container}>
-      <Spacer height={42} />
-      <Image style={styles.image} source={imageSource} />
+      <ScrollView
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContainer}>
+        <Spacer height={42} />
+        <Image style={styles.image} source={imageSource} />
 
-      <Spacer height={16} />
-      <Text t5 children={metadata?.name} />
+        <Spacer height={16} />
+        <Text t5 children={metadata?.name} />
 
-      <Spacer height={4} />
+        <Spacer height={4} />
 
-      <Text t13 color={Color.textGreen1} children={metadata?.url} />
+        <Text t13 color={Color.textGreen1} children={url} />
 
-      <Spacer height={36} />
+        <Spacer height={36} />
 
-      <WalletRow
-        hideArrow
-        type={WalletRowTypes.variant2}
-        item={linkedWallet!}
-      />
+        <WalletRow
+          hideArrow
+          type={WalletRowTypes.variant2}
+          item={linkedWallet!}
+        />
 
-      <Spacer height={28} />
+        <Spacer height={28} />
 
-      <View style={styles.info}>
-        <DataView label="Connected">
-          <Text t11 color={Color.textBase1}>
-            <Text
-              // TODO: refactor
-              children={format(session.expiry + Date.now(), 'd MMM yyyy')}
-            />
-          </Text>
-        </DataView>
-        <DataView label="Date of expiry">
-          <Text t11 color={Color.textBase1}>
-            <Text
-              // TODO: refactor
-              children={format(session.expiry + Date.now(), 'd MMM yyyy')}
-            />
-          </Text>
-        </DataView>
+        <View style={styles.info}>
+          <DataView i18n={I18N.walletConnectApprovalConnected}>
+            <Text t11 color={Color.textBase1}>
+              <Text children={connectedAt} />
+            </Text>
+          </DataView>
+          <DataView i18n={I18N.walletConnectApprovalExpired}>
+            <Text t11 color={Color.textBase1}>
+              <Text children={expiredAt} />
+            </Text>
+          </DataView>
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          onPress={handleDisconnectPress}
+          i18n={I18N.walletConnectDisconnect}
+          variant={ButtonVariant.text}
+          textColor={Color.textRed1}
+        />
+        <Spacer height={insets.bottom} />
       </View>
-
-      <Spacer flex={1} />
-
-      <Button
-        onPress={handleDisconnectPress}
-        i18n={I18N.walletConnectDisconnect}
-        variant={ButtonVariant.text}
-        textColor={Color.textRed1}
-      />
-
-      <Spacer height={insets.bottom} />
     </View>
   );
 };
@@ -121,14 +141,24 @@ const styles = createTheme({
     height: 64,
     borderRadius: 16,
   },
-  container: {
-    flex: 1,
-    marginHorizontal: 20,
-    alignItems: 'center',
-  },
   info: {
     width: '100%',
     borderRadius: 16,
     backgroundColor: Color.bg8,
+  },
+  container: {
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  scrollContainer: {
+    alignItems: 'center',
+  },
+  scroll: {
+    width: '100%',
+  },
+  buttonContainer: {
+    width: '100%',
   },
 });

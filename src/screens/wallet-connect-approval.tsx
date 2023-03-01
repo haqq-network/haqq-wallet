@@ -44,17 +44,25 @@ export const WalletConnectApprovalScreen = () => {
   );
 
   const onPressApprove = useCallback(async () => {
-    await WalletConnect.instance.approveSession(
-      event?.id,
-      selectedWallet?.address,
-      event?.params,
-    );
-    isApproved.current = true;
+    try {
+      await WalletConnect.instance.approveSession(
+        event?.id,
+        selectedWallet?.address,
+        event?.params,
+      );
+      isApproved.current = true;
+    } catch (e) {
+      console.error('WalletConnectApprovalScreen:onPressApprove', e);
+    }
     navigation.goBack();
   }, [event?.id, event?.params, navigation, selectedWallet?.address]);
 
   const onPressReject = useCallback(async () => {
-    await rejectSession();
+    try {
+      await rejectSession();
+    } catch (e) {
+      console.error('WalletConnectApprovalScreen:onPressReject', e);
+    }
     navigation.goBack();
   }, [navigation, rejectSession]);
 
@@ -106,7 +114,6 @@ export const WalletConnectApprovalScreen = () => {
         <Spacer height={36} />
 
         <WalletRow
-          hideArrow
           type={WalletRowTypes.variant2}
           item={selectedWallet}
           onPress={onSelectWalletPress}
@@ -138,6 +145,7 @@ export const WalletConnectApprovalScreen = () => {
 
         <Button
           size={ButtonSize.middle}
+          textColor={Color.textRed1}
           onPress={onPressReject}
           title="Reject"
         />
