@@ -36,17 +36,17 @@ export const WalletConnectTransactionInfo = ({
   );
 
   const amount = useMemo(
-    () => cleanNumber(demicalAmount.toString(), ' ', 0),
+    () => cleanNumber(demicalAmount.toString(), ' ', 2),
     [demicalAmount],
   );
 
   const estimateFee = useMemo(
-    () => cleanNumber(demicalEstimateFee.toString(), ' ', 0),
+    () => cleanNumber(demicalEstimateFee.toString(), ' ', 2),
     [demicalEstimateFee],
   );
 
   const total = useMemo(
-    () => cleanNumber(demicalAmount.add(demicalEstimateFee).toString(), ' ', 0),
+    () => cleanNumber(demicalAmount.add(demicalEstimateFee).toString(), ' ', 2),
     [demicalAmount, demicalEstimateFee],
   );
 
