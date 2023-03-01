@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
 
+import {SessionTypes} from '@walletconnect/types';
 import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -14,6 +15,7 @@ import {Wallet} from '@app/models/wallet';
 export type WalletsProps = {
   wallets: Wallet[];
   balance: Record<string, number>;
+  walletConnectSessions: SessionTypes.Struct[][];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onWalletConnectPress: (address: string) => void;
@@ -25,6 +27,7 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
+  walletConnectSessions,
   onPressSend,
   onPressQR,
   onPressCreate,
@@ -55,6 +58,7 @@ export const Wallets = ({
             <WalletCard
               wallet={w}
               balance={balance[w.address] ?? 0}
+              walletConnectSessions={walletConnectSessions[i]}
               onPressSend={onPressSend}
               onPressQR={onPressQR}
               onPressBackup={onPressBackup}

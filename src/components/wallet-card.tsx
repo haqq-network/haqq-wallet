@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 
+import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -14,7 +15,6 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
-import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {shortAddress} from '@app/utils';
@@ -23,6 +23,7 @@ import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 export type BalanceProps = {
   wallet: Wallet;
   balance: number;
+  walletConnectSessions: SessionTypes.Struct[];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressBackup: (address: string) => void;
@@ -32,6 +33,7 @@ export type BalanceProps = {
 export const WalletCard = ({
   wallet,
   balance,
+  walletConnectSessions,
   onPressSend,
   onPressQR,
   onPressBackup,
@@ -39,11 +41,8 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
-  const walletConnectApps = useWalletConnectFilteredSessionsByAddress(
-    wallet.address,
-  );
   const disableTopNavMarginBottom =
-    !wallet.mnemonicSaved || !!walletConnectApps?.length;
+    !wallet.mnemonicSaved || !!walletConnectSessions?.length;
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -103,14 +102,14 @@ export const WalletCard = ({
           />
         </CopyButton>
       </View>
-      {!!walletConnectApps?.length && (
+      {!!walletConnectSessions?.length && (
         <IconButton onPress={onWalletConnect} style={styles.walletConnectApps}>
           <Icon i16 name="link" color={Color.graphicBase3} />
           <Spacer width={4} />
           <Text
             t15
             i18n={I18N.walletCardConnectedApps}
-            i18params={{count: `${walletConnectApps.length}`}}
+            i18params={{count: `${walletConnectSessions.length}`}}
             color={Color.textBase3}
           />
         </IconButton>
