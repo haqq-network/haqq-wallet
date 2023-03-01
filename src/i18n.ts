@@ -467,6 +467,14 @@ export enum I18N {
   walletRowVariant2Title,
   walletCardConnectedApps,
   pinCodeWrongPin,
+  walletConnectSignTransactionForSignature,
+  walletConnectSignForm,
+  walletConnectSignTotalAmount,
+  walletConnectSignSendTo,
+  walletConnectSignApproveButton,
+  walletConnectSignRejectButton,
+  walletConnectSignSignMessage,
+  walletConnectSignMessage,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1008,6 +1016,14 @@ const en: Record<I18N, string> = {
   [I18N.walletRowVariant2Title]: 'Account',
   [I18N.walletConnectApprovalInfoBlockTitle]: 'By connecting you allow to:\n',
   [I18N.walletConnectDisconnect]: 'Disconnect',
+  [I18N.walletConnectSignTransactionForSignature]: 'Transaction for signature',
+  [I18N.walletConnectSignForm]: 'from',
+  [I18N.walletConnectSignSendTo]: 'Send to',
+  [I18N.walletConnectSignTotalAmount]: 'Total Amount',
+  [I18N.walletConnectSignApproveButton]: 'Sign',
+  [I18N.walletConnectSignRejectButton]: 'Reject',
+  [I18N.walletConnectSignSignMessage]: 'Sign this message',
+  [I18N.walletConnectSignMessage]: 'Message',
   [I18N.walletConnectApprovalInfoBlockDescription]:
     '• View your balance and activity\n• Request approval for transactions',
   [I18N.walletCardConnectedApps]: '{{count}} connect',

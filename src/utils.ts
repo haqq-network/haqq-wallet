@@ -284,3 +284,13 @@ export const getUserAddressFromSessionRequest = (
       );
   }
 };
+
+export const getHostnameFromUrl = (url: string | undefined) => {
+  if (!url) {
+    return '';
+  }
+  // run against regex
+  const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  // extract hostname (will be null if no match is found)
+  return matches?.[1] || '';
+};

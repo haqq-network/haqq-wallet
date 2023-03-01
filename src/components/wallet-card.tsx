@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
-import {useWalletConnectFilteredSessions} from '@app/hooks/use-wallet-connet-apps';
+import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {shortAddress} from '@app/utils';
@@ -39,7 +39,9 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
-  const walletConnectApps = useWalletConnectFilteredSessions(wallet.address);
+  const walletConnectApps = useWalletConnectFilteredSessionsByAddress(
+    wallet.address,
+  );
   const disableTopNavMarginBottom =
     !wallet.mnemonicSaved || !!walletConnectApps?.length;
 

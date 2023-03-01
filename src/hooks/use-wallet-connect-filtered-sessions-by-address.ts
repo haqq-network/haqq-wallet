@@ -6,7 +6,7 @@ import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 import {useWalletConnectSessions} from './use-wallet-connect-sessions';
 
-export const useWalletConnectFilteredSessions = (address: string) => {
+export const useWalletConnectFilteredSessionsByAddress = (address: string) => {
   const {activeSessions} = useWalletConnectSessions();
   const [apps, setApps] = useState<SessionTypes.Struct[]>();
 

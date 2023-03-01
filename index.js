@@ -44,20 +44,6 @@ if (SENTRY_DSN) {
   }
 }
 
-if (SENTRY_DSN) {
-  try {
-    Sentry.init({
-      dsn: SENTRY_DSN,
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      tracesSampleRate: 1.0,
-      environment: ENVIRONMENT ?? 'development',
-    });
-  } catch (e) {
-    console.log('sentry init failed');
-  }
-}
-
 function getResult(payload) {
   if (payload.error) {
     const error = new Error(payload.error.message);

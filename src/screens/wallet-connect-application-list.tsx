@@ -5,14 +5,14 @@ import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
 
 import {WalletConnectAppRow} from '@app/components/wallet-connect-app-row';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletConnectFilteredSessions} from '@app/hooks/use-wallet-connet-apps';
+import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
 export const WalletConnectApplicationList = () => {
   const navivation = useTypedNavigation();
   const {params} = useTypedRoute<'walletConnectApplicationList'>();
-  const sessions = useWalletConnectFilteredSessions(params.address);
+  const sessions = useWalletConnectFilteredSessionsByAddress(params.address);
 
   const handleAppPress = useCallback(
     (session: SessionTypes.Struct) => {
