@@ -1,6 +1,7 @@
 import {Alert} from 'react-native';
 import base64 from 'react-native-base64';
 
+import {app} from '@app/contexts';
 import {navigator} from '@app/navigator';
 
 export async function onDeepLink(link: string) {
@@ -23,6 +24,11 @@ export async function onDeepLink(link: string) {
           break;
         case 'back9test':
           Alert.alert('Referral code', params[2]);
+          break;
+        case 'enableDeveloperMode':
+          const user = app.getUser();
+          user.isDeveloper = true;
+          break;
       }
     }
   }

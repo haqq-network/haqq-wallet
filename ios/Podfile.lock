@@ -1,9 +1,13 @@
 PODS:
+  - BigInt (5.0.0)
   - boost (1.76.0)
   - BVLinearGradient (2.6.2):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
-  - CryptoSwift (1.6.0)
+  - CryptoSwift (1.5.1)
+  - CustomAuth (5.0.0):
+    - JWTDecode (~> 2.6)
+    - Torus-utils (~> 4.0.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.70.6)
   - FBReactNativeSpec (0.70.6):
@@ -125,6 +129,7 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
+  - GenericJSON (2.0.2)
   - glog (0.3.5)
   - GoogleAppMeasurement (10.3.0):
     - GoogleAppMeasurement/AdIdSupport (= 10.3.0)
@@ -183,15 +188,16 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.11.0):
     - GoogleUtilities/Logger
-  - HaqqEncryptionRN (0.0.1):
-    - CryptoSwift (= 1.6.0)
+  - HaqqEncryptionRN (0.0.2):
+    - CryptoSwift (= 1.5.1)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.7):
-    - CryptoSwift (= 1.6.0)
+  - HaqqWeb3UtilsRN (0.0.8):
+    - CryptoSwift (= 1.5.1)
     - React-Core
     - secp256k1Swift (= 0.7.4)
     - secp256k1Wrapper
   - hermes-engine (0.70.6)
+  - JWTDecode (2.6.3)
   - libevent (2.1.12)
   - lottie-ios (3.4.4)
   - lottie-react-native (5.1.5):
@@ -538,8 +544,13 @@ PODS:
     - React-perflogger (= 0.70.6)
   - RealmJS (11.3.1):
     - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
+  - RNCustomAuthSdk (4.0.1):
+    - CustomAuth (~> 5.0.0)
+    - React
   - RNFBApp (16.7.0):
     - Firebase/CoreOnly (= 10.3.0)
     - React-Core
@@ -589,6 +600,7 @@ PODS:
     - Sentry/HybridSDK (= 8.0.0)
   - RNSVG (12.5.1):
     - React-Core
+  - secp256k1.swift (0.1.4)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
@@ -597,8 +609,18 @@ PODS:
   - SentryPrivate (8.0.0)
   - SocketRocket (0.6.0)
   - ToastViewSwift (1.3.1)
+  - Torus-fetchNodeDetails (4.0.1):
+    - web3.swift (~> 0.9.3)
+  - Torus-utils (4.0.0):
+    - CryptoSwift (~> 1.5.1)
+    - secp256k1.swift (~> 0.1.4)
+    - Torus-fetchNodeDetails (~> 4.0.0)
   - TouchID (4.4.1):
     - React
+  - web3.swift (0.9.3):
+    - BigInt (~> 5.0.0)
+    - GenericJSON (~> 2.0)
+    - secp256k1.swift (~> 0.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -606,7 +628,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
-  - CryptoSwift (~> 1.6.0)
+  - CustomAuth (~> 5.0.0)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -685,7 +707,9 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RealmJS (from `../node_modules/realm`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - "RNCustomAuthSdk (from `../node_modules/@toruslabs/customauth-react-native-sdk`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -695,7 +719,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
-  - secp256k1Swift (~> 0.7.4)
+  - secp256k1.swift
   - secp256k1Wrapper
   - ToastViewSwift
   - TouchID (from `../node_modules/react-native-touch-id`)
@@ -703,8 +727,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BigInt
     - CocoaAsyncSocket
     - CryptoSwift
+    - CustomAuth
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -722,21 +748,27 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - GenericJSON
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - JWTDecode
     - libevent
     - lottie-ios
     - MultiplatformBleAdapter
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
+    - secp256k1.swift
     - secp256k1Swift
     - secp256k1Wrapper
     - Sentry
     - SentryPrivate
     - SocketRocket
     - ToastViewSwift
+    - Torus-fetchNodeDetails
+    - Torus-utils
+    - web3.swift
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -844,8 +876,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RealmJS:
     :path: "../node_modules/realm"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNCustomAuthSdk:
+    :path: "../node_modules/@toruslabs/customauth-react-native-sdk"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -870,10 +906,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  BigInt: 74b4d88367b0e819d9f77393549226d36faeb0d8
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  CryptoSwift: 562f8eceb40e80796fffc668b0cad9313284cfa6
+  CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
+  CustomAuth: 2cbaef9c54da21080eef7ea1fa3d2ecb96517f18
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
@@ -894,13 +932,15 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
+  GenericJSON: 79a840eeb77030962e8cf02a62d36bd413b67626
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
-  HaqqEncryptionRN: d2e151c9d1408da3dbdc9f1e99085963a2f64a3a
-  HaqqWeb3UtilsRN: f30450bc2f0a10b58ee407f1f06e68cb93d61a05
+  HaqqEncryptionRN: ee89cc23922410e37d1af81b699f944891dfa9b3
+  HaqqWeb3UtilsRN: a4839c7d78dfc94680f62a8251e82ba103fd1a7a
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
+  JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
   lottie-react-native: 3e722c63015fdb9c27638b0a77969fc412067c18
@@ -950,7 +990,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RealmJS: 43fc7bfb83229c8a2755cb34f71f769c97b7b581
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
+  RNCustomAuthSdk: e1db0c850b41deaf38fdc8fe5433b3287db29c55
   RNFBApp: aecfcdc0964d9bc0c5f7ba05efb50be724d8e8b3
   RNFBMessaging: a647b2db61602e9981933b5fc90f1b058e61922c
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
@@ -960,16 +1002,20 @@ SPEC CHECKSUMS:
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNSentry: f99992a7652ffb69d82651c8e8de66acf52676bc
   RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
+  secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: 2158a4621096dcd0a3a4f7c80b84b04dde261035
   SentryPrivate: 1e3acf96ee818a8d0d95b8e922d39ab6be338ea0
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   ToastViewSwift: 10655357b87fbe1070a14ae89c146b2335e4628a
+  Torus-fetchNodeDetails: a92d02f1bfe91bd61c90f92d64df023babaa5bfa
+  Torus-utils: 2517d21b0bc84759fc2cd9617761ce9083e8ee2c
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
+  web3.swift: c6c3bf1f853743f8a7a58d263e5f7e46545e22c7
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6c00a783afd063d7a22e44bb9cac4bdb16a026f1
+PODFILE CHECKSUM: b45871a5e9084db777773759e5dd07b47c6fa604
 
 COCOAPODS: 1.11.3

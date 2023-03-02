@@ -8,6 +8,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import <React/RCTLinkingManager.h>
+#import <RNCustomAuthSdk/RNTorus.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -146,6 +147,15 @@ RCTRootView* overview = nil;
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+  NSString *myString = url.absoluteString;
+  
+  NSLog(@"String to handle : %@ ", myString);
+  if (@available(iOS 13.0, *)) {
+    [RNCustomAuthSdk handle:myString];
+  } else {
+    // Fallback on earlier versions
+  }
+  
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 

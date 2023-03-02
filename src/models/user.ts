@@ -34,6 +34,7 @@ export const UserSchema = {
     theme: 'string',
     notifications: 'bool?',
     subscription: 'string?',
+    isDeveloper: 'bool?',
   },
   primaryKey: 'username',
 };
@@ -51,6 +52,7 @@ export type UserType = {
   theme: AppTheme;
   notifications: boolean | null;
   subscription: string | null;
+  isDeveloper: boolean | null;
 };
 
 export class User extends EventEmitter {
@@ -98,6 +100,7 @@ export class User extends EventEmitter {
         bluetooth: false,
         language: AppLanguage.en,
         theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
+        isDeveloper: IS_DEVELOPMENT === '1',
         providerId:
           ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
             ? MAIN_NETWORK
@@ -147,6 +150,16 @@ export class User extends EventEmitter {
     });
 
     this.emit('providerId', value);
+  }
+
+  get isDeveloper() {
+    return this._raw.isDeveloper;
+  }
+
+  set isDeveloper(value) {
+    realm.write(() => {
+      this._raw.isDeveloper = value;
+    });
   }
 
   get biometry() {
