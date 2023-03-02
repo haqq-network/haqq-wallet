@@ -21,6 +21,7 @@ import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Linking, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -29,6 +30,7 @@ import {
   ButtonVariant,
   Icon,
   IconButton,
+  Inline,
   Input,
   Spacer,
   Text,
@@ -36,9 +38,10 @@ import {
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
+import {GoogleDrive} from '@app/services/google-drive';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
-import {HapticEffects, vibrate} from '@app/services/haptic';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -60,6 +63,19 @@ messaging()
       console.log('getInitialNotification', remoteMessage);
     }
   });
+
+const GOOGLE_API = 'https://content.googleapis.com/';
+
+type FilesResp = {
+  files: Array<{
+    id: string;
+    name: string;
+  }>;
+};
+
+type BackupResp = {
+  content: string;
+};
 
 const serviceProvider = new TorusServiceProvider({
   customAuthArgs: {
@@ -106,6 +122,12 @@ const METADATA_STORE = 'tkey_metadata';
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [wc, setWc] = useState('');
+  const [googleBackup, setGoogleBackup] = useState<null | string>(null);
+  const [googleBackupPhrase, setGoogleBackupPhrase] = useState('');
+  const [inProgress, setInProgress] = useState(false);
+  const [isGoogleSignedIn, setIsGoogleSignedIn] = useState(
+    app.isGoogleSignedIn,
+  );
   const [metadata, setMetadata] = useState(false);
   const [torusPk, setTorusPk] = useState(false);
   const [serializedShare, setSerializedShare] = useState('');
@@ -122,6 +144,35 @@ export const SettingsTestScreen = () => {
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
+
+  const onPressGoogleDriveLogin = useCallback(async () => {
+    let user = null;
+
+    try {
+      user = await GoogleSignin.signInSilently();
+    } catch (e) {
+      user = await GoogleSignin.signIn();
+    }
+
+    app.isGoogleSignedIn = !!user;
+    setIsGoogleSignedIn(!!user);
+
+    const tokens = await GoogleSignin.getTokens();
+    const filesResp = await fetch(
+      `${GOOGLE_API}drive/v3/files?q=name%3D'haqq_backup.json'&fields=files(id%2Cname)`,
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+        },
+      },
+    );
+
+    const files = (await filesResp.json()) as FilesResp;
+
+    if (files.files.length) {
+      setGoogleBackup(files.files[0].id);
+    }
+  }, []);
 
   useEffect(() => {
     Linking.getInitialURL().then(result => {
@@ -154,6 +205,77 @@ export const SettingsTestScreen = () => {
       console.log(error, 'mounted caught');
     }
   }, []);
+
+
+  useEffect(() => {
+    Linking.getInitialURL().then(result => {
+      setInitialUrl(result);
+    });
+
+    GoogleSignin.configure({
+      scopes: [
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/drive.appfolder',
+        'https://www.googleapis.com/auth/drive.appdata',
+      ],
+    });
+
+    if (app.isGoogleSignedIn) {
+      onPressGoogleDriveLogin().then(() => {
+        console.log('authorized');
+      });
+    }
+  }, [onPressGoogleDriveLogin]);
+
+  const onPressPasteGooglePhrase = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    const pasteString = await Clipboard.getString();
+    setGoogleBackupPhrase(pasteString.trim());
+  }, []);
+
+  const onPressGoogleCreateBackupPhrase = useCallback(() => {}, []);
+
+  const onPressGoogleUpdateBackupPhrase = useCallback(async () => {
+    try {
+      if (googleBackup) {
+        setInProgress(true);
+        const tokens = await GoogleSignin.getTokens();
+        const gDrive = new GoogleDrive(tokens.accessToken);
+
+        const data = await gDrive.uploadFile(
+          googleBackup,
+          'haqq_backup.json',
+          JSON.stringify({
+            content: googleBackupPhrase,
+          }),
+        );
+
+        console.log('data', data);
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message);
+      }
+    } finally {
+      setInProgress(false);
+    }
+  }, [googleBackup, googleBackupPhrase]);
+  const onPressGoogleGetBackupPhrase = useCallback(async () => {
+    const tokens = await GoogleSignin.getTokens();
+
+    const resp = await fetch(
+      `${GOOGLE_API}drive/v3/files/${googleBackup}?alt=media`,
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+        },
+      },
+    );
+
+    const content = (await resp.json()) as BackupResp;
+
+    setGoogleBackupPhrase(content.content ?? '');
+  }, [googleBackup]);
 
   const updatePk = useCallback(() => {
     let privKey = tKey.privKey.toString('hex');
@@ -432,6 +554,57 @@ export const SettingsTestScreen = () => {
         address: {address}
       </Text>
       <Spacer height={8} />
+      {!isGoogleSignedIn && (
+        <>
+          <Button
+            title="Signin to Google drive"
+            onPress={onPressGoogleDriveLogin}
+            variant={ButtonVariant.contained}
+          />
+          <Spacer height={4} />
+        </>
+      )}
+      {isGoogleSignedIn && (
+        <Input
+          placeholder="google drive backup phrase"
+          value={googleBackupPhrase}
+          onChangeText={v => {
+            setGoogleBackupPhrase(v);
+          }}
+          rightAction={
+            <IconButton onPress={onPressPasteGooglePhrase}>
+              <Icon i24 name="paste" color={Color.graphicGreen1} />
+            </IconButton>
+          }
+        />
+      )}
+      {isGoogleSignedIn && googleBackup && (
+        <>
+          <Inline gap={8}>
+            <Button
+              title="Get backup phrase"
+              onPress={onPressGoogleGetBackupPhrase}
+              variant={ButtonVariant.contained}
+            />
+            <Button
+              title="Update backup phrase"
+              loading={inProgress}
+              onPress={onPressGoogleUpdateBackupPhrase}
+              variant={ButtonVariant.contained}
+            />
+          </Inline>
+        </>
+      )}
+      {isGoogleSignedIn && !googleBackup && (
+        <>
+          <Button
+            title="Create backup phrase"
+            loading={inProgress}
+            onPress={onPressGoogleCreateBackupPhrase}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
     </View>
   );
 };

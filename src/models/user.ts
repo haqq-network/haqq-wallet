@@ -35,6 +35,7 @@ export const UserSchema = {
     notifications: 'bool?',
     subscription: 'string?',
     isDeveloper: 'bool?',
+    isGoogleSignedIn: 'bool?',
   },
   primaryKey: 'username',
 };
@@ -52,6 +53,7 @@ export type UserType = {
   theme: AppTheme;
   notifications: boolean | null;
   subscription: string | null;
+  isGoogleSignedIn: boolean | null;
   isDeveloper: boolean | null;
 };
 
@@ -213,6 +215,16 @@ export class User extends EventEmitter {
   set bluetooth(value) {
     realm.write(() => {
       this._raw.bluetooth = value;
+    });
+  }
+
+  get isGoogleSignedIn() {
+    return this._raw.isGoogleSignedIn ?? false;
+  }
+
+  set isGoogleSignedIn(value) {
+    realm.write(() => {
+      this._raw.isGoogleSignedIn = value;
     });
   }
 
