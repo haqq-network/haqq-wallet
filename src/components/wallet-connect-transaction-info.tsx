@@ -46,7 +46,12 @@ export const WalletConnectTransactionInfo = ({
   );
 
   const total = useMemo(
-    () => cleanNumber(demicalAmount.add(demicalEstimateFee).toString(), ' ', 2),
+    () =>
+      cleanNumber(
+        demicalAmount.add(demicalEstimateFee.div(WEI)).toString(),
+        ' ',
+        2,
+      ),
     [demicalAmount, demicalEstimateFee],
   );
 

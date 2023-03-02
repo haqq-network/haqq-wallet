@@ -5,7 +5,6 @@ import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
-import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletConnectWalletListScreen = () => {
@@ -15,8 +14,7 @@ export const WalletConnectWalletListScreen = () => {
     () =>
       accounts
         ?.map?.(item => Wallet.getById(item.address) as Wallet)
-        // TODO: add ledger support
-        .filter(item => !!item && item?.type !== WalletType.ledgerBt),
+        .filter(item => !!item),
     [accounts],
   );
 

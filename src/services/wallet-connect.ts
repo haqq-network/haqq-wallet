@@ -10,10 +10,16 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
-import {getProviderInstanceForWallet} from '@app/helpers';
+import {
+  awaitForBluetooth,
+  getProviderInstanceForWallet,
+  hideModal,
+  showModal,
+} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {Cosmos} from '@app/services/cosmos';
+import {WalletType} from '@app/types';
 import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
@@ -183,8 +189,13 @@ export class WalletConnect extends EventEmitter {
       );
     }
 
+    if (wallet.type === WalletType.ledgerBt) {
+      await awaitForBluetooth();
+      showModal('ledger-attention');
+    }
+
     const {params, id, topic} = event;
-    const {request} = params;
+    const {request, chainId} = params;
     let result: string | undefined;
 
     switch (request.method) {
@@ -214,12 +225,17 @@ export class WalletConnect extends EventEmitter {
           typedMessage,
         );
 
-        result = `0x${signedMessageHash}`;
+        if (wallet.type === WalletType.ledgerBt) {
+          result = signedMessageHash;
+        } else {
+          result = `0x${signedMessageHash}`;
+        }
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         const signTransactionRequest: TransactionRequest = request.params[0];
         delete signTransactionRequest.from;
+        signTransactionRequest.chainId = Number(chainId?.split?.(':')?.[1]);
 
         result = await provider.signTransaction(
           wallet.path,
@@ -228,6 +244,10 @@ export class WalletConnect extends EventEmitter {
         break;
       default:
         throw new Error('[WalletConnect:approveEIP155Request]: INVALID_METHOD');
+    }
+
+    if (wallet.type === WalletType.ledgerBt) {
+      hideModal('ledger-attention');
     }
 
     if (!result) {

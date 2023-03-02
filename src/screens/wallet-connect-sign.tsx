@@ -32,7 +32,7 @@ export const WalletConnectSignScreen = () => {
       await WalletConnect.instance.approveEIP155Request(wallet!, event);
       navigation.goBack();
     } catch (err) {
-      console.log('🔴 onPressApprove', err);
+      console.log('🔴 WalletConnectSignScreen:onPressApprove error', err);
     }
   }, [event, navigation, wallet]);
 
@@ -41,7 +41,7 @@ export const WalletConnectSignScreen = () => {
       await WalletConnect.instance.rejectSessionRequest(event.id, event.topic);
       navigation.goBack();
     } catch (err) {
-      console.log('🔴 onPressReject', err);
+      console.log('🔴 WalletConnectSignScreen:onPressReject error', err);
     }
   }, [event, navigation]);
 

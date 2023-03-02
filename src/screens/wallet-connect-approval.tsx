@@ -7,7 +7,6 @@ import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
-import {WalletType} from '@app/types';
 
 export const WalletConnectApprovalScreen = () => {
   const navigation = useTypedNavigation();
@@ -48,8 +47,7 @@ export const WalletConnectApprovalScreen = () => {
 
   const onSelectWalletPress = async () => {
     const address = await awaitForWallet(
-      // TODO: add ledger support
-      wallets.filtered(`type != '${WalletType.ledgerBt}'`),
+      wallets,
       I18N.selectAccount,
       WalletSelectType.screen,
       selectedWallet?.address,
