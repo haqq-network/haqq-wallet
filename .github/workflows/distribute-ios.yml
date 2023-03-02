@@ -57,6 +57,8 @@ jobs:
           git config --global user.name "Github actions"
       - name: Decode secrets
         run: |
+          echo ${{secrets.GOOGLE_SERVICE_IOS}} | base64 -d > ios/GoogleService-Info.plist
+
           echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
           echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
           echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
