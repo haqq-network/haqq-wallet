@@ -90,11 +90,11 @@ import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
-import {WalletConnectApplicationDetails} from './screens/wallet-connect-application-details';
+import {WalletConnectApplicationDetailsScreen} from './screens/wallet-connect-application-details';
 import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
-import {WalletConnectApplicationList} from './screens/wallet-connect-application-list';
+import {WalletConnectApplicationListScreen} from './screens/wallet-connect-application-list';
 import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
-import {WalletConnectWalletList} from './screens/wallet-connect-wallet-list';
+import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
@@ -308,18 +308,18 @@ export const App = () => {
                   />
                   <Stack.Screen
                     name="walletConnectWalletList"
-                    component={WalletConnectWalletList}
+                    component={WalletConnectWalletListScreen}
                     options={{
                       title: getText(I18N.walletConnectWalletListTitle),
                     }}
                   />
                   <Stack.Screen
                     name="walletConnectApplicationList"
-                    component={WalletConnectApplicationList}
+                    component={WalletConnectApplicationListScreen}
                   />
                   <Stack.Screen
                     name="walletConnectApplicationDetails"
-                    component={WalletConnectApplicationDetails}
+                    component={WalletConnectApplicationDetailsScreen}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"

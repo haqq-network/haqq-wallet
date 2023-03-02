@@ -15,7 +15,7 @@ import {Wallet} from '@app/models/wallet';
 import {Transaction} from './models/transaction';
 import {
   WalletConnectApproveConnectionEvent,
-  WalletConnectSessionRequestEvent,
+  WalletConnectSessionRequestType,
 } from './types/wallet-connect';
 
 export enum TransactionSource {
@@ -346,7 +346,7 @@ export type RootStackParamList = {
     event: WalletConnectApproveConnectionEvent;
   };
   walletConnectSign: {
-    event: WalletConnectSessionRequestEvent;
+    event: WalletConnectSessionRequestType;
   };
 };
 

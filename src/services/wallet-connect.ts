@@ -8,10 +8,11 @@ import {getSdkError} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
-import {WalletConnectSession} from '@app/models/wallet-connect-session';
+import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {Cosmos} from '@app/services/cosmos';
 import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -35,14 +36,16 @@ export class WalletConnect extends EventEmitter {
 
   public async init() {
     try {
-      console.log(
-        'WalletConnect:init',
-        WALLET_CONNECT_PROJECT_ID,
-        WALLET_CONNECT_RELAY_URL,
-      );
+      if (DEBUG_VARS.enableWalletConnectLogger) {
+        console.log(
+          'WalletConnect:init',
+          WALLET_CONNECT_PROJECT_ID,
+          WALLET_CONNECT_RELAY_URL,
+        );
+      }
 
       this._core = new Core({
-        logger: 'debug',
+        logger: DEBUG_VARS.enableWalletConnectLogger ? 'debug' : 'error',
         projectId: WALLET_CONNECT_PROJECT_ID,
         relayUrl: WALLET_CONNECT_RELAY_URL,
       });
@@ -62,17 +65,26 @@ export class WalletConnect extends EventEmitter {
       this
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
-          console.log('🟢 session_proposal', JSON.stringify(proposal, null, 2));
+          if (DEBUG_VARS.enableWalletConnectLogger) {
+            console.log(
+              '🟢 session_proposal',
+              JSON.stringify(proposal, null, 2),
+            );
+          }
           app.emit(Events.onWalletConnectApproveConnection, proposal);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         .on('session_request', async event => {
-          console.log('🟢 session_request', JSON.stringify(event, null, 2));
+          if (DEBUG_VARS.enableWalletConnectLogger) {
+            console.log('🟢 session_request', JSON.stringify(event, null, 2));
+          }
           app.emit(Events.onWalletConnectSignTransaction, event);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
         .on('session_update', async event => {
-          console.log('🟢 session_update', JSON.stringify(event, null, 2));
+          if (DEBUG_VARS.enableWalletConnectLogger) {
+            console.log('🟢 session_update', JSON.stringify(event, null, 2));
+          }
           await this._client?.extendSession?.({topic: event?.topic});
           this._emitActiveSessions();
         })
@@ -90,10 +102,11 @@ export class WalletConnect extends EventEmitter {
   }
 
   public async pair(uri: string) {
-    console.log('this._client', !!this._client);
     if (this._client) {
       const resp = await this._client.core.pairing.pair({uri});
-      console.log('resp', resp);
+      if (DEBUG_VARS.enableWalletConnectLogger) {
+        console.log('WalletConnect:pair ', resp);
+      }
       return resp;
     }
   }
@@ -149,7 +162,7 @@ export class WalletConnect extends EventEmitter {
       namespaces,
     });
 
-    WalletConnectSession.create(session.topic);
+    WalletConnectSessionMetadata.create(session.topic);
     this._emitActiveSessions();
     return session;
   }
@@ -223,7 +236,9 @@ export class WalletConnect extends EventEmitter {
       );
     }
 
-    console.log('✅ approveEIP155Request result:', result, result.length);
+    if (DEBUG_VARS.enableWalletConnectLogger) {
+      console.log('✅ approveEIP155Request result:', result, result.length);
+    }
 
     return await this._client?.respondSessionRequest({
       topic,

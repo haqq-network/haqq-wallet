@@ -1,8 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
-
-import {WalletRow} from '@app/components/wallet-row';
+import {WalletConnectWalletList} from '@app/components/wallet-connect-wallet-list';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {Wallet} from '@app/models/wallet';
@@ -10,7 +8,7 @@ import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
-export const WalletConnectWalletList = () => {
+export const WalletConnectWalletListScreen = () => {
   const {accounts} = useWalletConnectAccounts();
   const navigation = useTypedNavigation();
   const wallets = useMemo(
@@ -49,20 +47,9 @@ export const WalletConnectWalletList = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {wallets?.map?.(item => {
-        return (
-          <WalletRow
-            key={item.address}
-            onPress={handleWalletPress}
-            item={item}
-          />
-        );
-      })}
-    </View>
+    <WalletConnectWalletList
+      handleWalletPress={handleWalletPress}
+      wallets={wallets}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {width: '90%', alignSelf: 'center'},
-});

@@ -7,7 +7,7 @@ import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {ScreenOptionType} from '@app/types';
 
-import {WalletConnectApplicationDetails} from './wallet-connect-application-details';
+import {WalletConnectApplicationDetailsScreen} from './wallet-connect-application-details';
 
 const WalletConnect = createStackNavigator();
 
@@ -23,7 +23,7 @@ export const WalletConnectApplicationDetailsPopupScreen = () => {
     <WalletConnect.Navigator screenOptions={screenOptions}>
       <WalletConnect.Screen
         name="walletConnectApplicationDetailsPopupContent"
-        component={WalletConnectApplicationDetails}
+        component={WalletConnectApplicationDetailsScreen}
         initialParams={{...route.params, isPopup: true}}
       />
     </WalletConnect.Navigator>

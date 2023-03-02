@@ -1,6 +1,6 @@
 import {realm} from '@app/models';
 
-export class WalletConnectSession extends Realm.Object {
+export class WalletConnectSessionMetadata extends Realm.Object {
   static schema = {
     name: 'WalletConnectStorage',
     properties: {
@@ -12,10 +12,10 @@ export class WalletConnectSession extends Realm.Object {
   topic!: string;
   createdAt!: number;
 
-  static create(topic: string, params?: Partial<WalletConnectSession>) {
+  static create(topic: string, params?: Partial<WalletConnectSessionMetadata>) {
     realm.write(() => {
-      realm.create<WalletConnectSession>(
-        WalletConnectSession.schema.name,
+      realm.create<WalletConnectSessionMetadata>(
+        WalletConnectSessionMetadata.schema.name,
         {
           ...params,
           topic: topic.toLowerCase(),
@@ -29,8 +29,8 @@ export class WalletConnectSession extends Realm.Object {
   }
 
   static remove(topic: string) {
-    const obj = realm.objectForPrimaryKey<WalletConnectSession>(
-      WalletConnectSession.schema.name,
+    const obj = realm.objectForPrimaryKey<WalletConnectSessionMetadata>(
+      WalletConnectSessionMetadata.schema.name,
       topic.toLowerCase(),
     );
 
@@ -42,21 +42,21 @@ export class WalletConnectSession extends Realm.Object {
   }
 
   static getAll() {
-    return realm.objects<WalletConnectSession>(
-      WalletConnectSession.schema.name,
+    return realm.objects<WalletConnectSessionMetadata>(
+      WalletConnectSessionMetadata.schema.name,
     );
   }
 
   static getById(topic: string) {
-    return realm.objectForPrimaryKey<WalletConnectSession>(
-      WalletConnectSession.schema.name,
+    return realm.objectForPrimaryKey<WalletConnectSessionMetadata>(
+      WalletConnectSessionMetadata.schema.name,
       topic.toLowerCase(),
     );
   }
 
   static removeAll() {
-    const WalletConnectStorages = realm.objects<WalletConnectSession>(
-      WalletConnectSession.schema.name,
+    const WalletConnectStorages = realm.objects<WalletConnectSessionMetadata>(
+      WalletConnectSessionMetadata.schema.name,
     );
 
     for (const WalletConnectStorage of WalletConnectStorages) {
@@ -66,10 +66,10 @@ export class WalletConnectSession extends Realm.Object {
     }
   }
 
-  update(params: Partial<WalletConnectSession>) {
+  update(params: Partial<WalletConnectSessionMetadata>) {
     realm.write(() => {
       realm.create(
-        WalletConnectSession.schema.name,
+        WalletConnectSessionMetadata.schema.name,
         {
           ...this.toJSON(),
           ...params,

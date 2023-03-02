@@ -1,6 +1,8 @@
-import {SignClientTypes} from '@walletconnect/types';
+import {SessionTypes, SignClientTypes} from '@walletconnect/types';
 
-export type WalletConnectSessionRequestEvent =
+export type WalletConnectSessionType = SessionTypes.Struct;
+
+export type WalletConnectSessionRequestType =
   SignClientTypes.EventArguments['session_request'];
 
 export interface WalletConnectApproveConnectionEvent {

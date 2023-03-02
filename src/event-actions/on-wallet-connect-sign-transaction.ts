@@ -1,8 +1,8 @@
 import {navigator} from '@app/navigator';
-import {WalletConnectSessionRequestEvent} from '@app/types/wallet-connect';
+import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
 
 export function onWalletConnectSignTransaction(
-  params: WalletConnectSessionRequestEvent,
+  params: WalletConnectSessionRequestType,
 ) {
   navigator.navigate('walletConnect', {
     screen: 'walletConnectSign',

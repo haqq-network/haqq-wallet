@@ -1,15 +1,14 @@
 import React, {useCallback, useEffect} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
 
-import {WalletConnectAppRow} from '@app/components/wallet-connect-app-row';
+import {WalletConnectApplicationList} from '@app/components/wallet-connect-application-list';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 
-export const WalletConnectApplicationList = () => {
+export const WalletConnectApplicationListScreen = () => {
   const navivation = useTypedNavigation();
   const {params} = useTypedRoute<'walletConnectApplicationList'>();
   const sessions = useWalletConnectFilteredSessionsByAddress(params.address);
@@ -22,16 +21,6 @@ export const WalletConnectApplicationList = () => {
       navivation.navigate(nextScreen, {session, isPopup: params.isPopup});
     },
     [navivation, params.isPopup],
-  );
-
-  const renderItem: ListRenderItem<SessionTypes.Struct> = useCallback(
-    ({item}) => <WalletConnectAppRow item={item} onPress={handleAppPress} />,
-    [handleAppPress],
-  );
-
-  const keyExtractor = useCallback(
-    (item: SessionTypes.Struct) => item.topic,
-    [],
   );
 
   useEffect(() => {
@@ -59,19 +48,9 @@ export const WalletConnectApplicationList = () => {
   }, [params.address, navivation, params?.isPopup]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={sessions}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-      />
-    </View>
+    <WalletConnectApplicationList
+      handleAppPress={handleAppPress}
+      sessions={sessions!}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 20,
-  },
-});
