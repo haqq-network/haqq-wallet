@@ -13,17 +13,6 @@ import BN from 'bn.js';
 import randombytes from 'randombytes';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-// const GOOGLE = 'google';
-// const verifierMap = {
-//   [GOOGLE]: {
-//     name: 'Google',
-//     typeOfLogin: 'google',
-//     clientId:
-//       '221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com',
-//     verifier: 'google-lrc',
-//   },
-// };
-
 const directParams = {
   baseUrl: 'http://localhost:3000/serviceworker/',
   enableLogging: true,
@@ -41,43 +30,53 @@ const shareTransferModule = new ShareTransferModule();
 const shareSerializationModule = new ShareSerializationModule();
 const securityQuestionsModule = new SecurityQuestionsModule();
 
-const tKey = new ThresholdKey({
-  serviceProvider: serviceProvider,
-  storageLayer,
-  modules: {
-    shareTransfer: shareTransferModule,
-    shareSerializationModule: shareSerializationModule,
-    securityQuestions: securityQuestionsModule,
-  },
-});
-
-CustomAuth.init({
-  browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
-  redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
-  network: 'celeste', // details for test net
-  enableLogging: true,
-  enableOneKey: false,
-  skipSw: true,
-});
-
 type ProviderMpcOptions = {
   account: string;
 };
 
 const ITEM_SHARE = 'mpc_share';
+const ITEM_TMP = 'mpc_tmp';
 const ITEM_KEY = 'mpc';
+
+function customAuthInit() {
+  CustomAuth.init({
+    browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
+    redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
+    network: 'celeste', // details for test net
+    enableLogging: true,
+    enableOneKey: false,
+    skipSw: true,
+  });
+}
+
+async function getSeed(account: string) {
+  const metadata = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
+
+  if(!metadata) {
+
+  }
+}
 
 export class ProviderMpcReactNative
   extends ProviderBase<ProviderMpcOptions>
-  implements ProviderInterface
-{
+  implements ProviderInterface {
   static async initialize(
     provider: any,
     getPassword: () => Promise<string>,
     getSecurityQuestionAnswer: () => Promise<string>,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
   ): Promise<ProviderMpcReactNative> {
-    const password = await getPassword();
+    const tKey = new ThresholdKey({
+      serviceProvider: serviceProvider,
+      storageLayer,
+      modules: {
+        shareTransfer: shareTransferModule,
+        shareSerializationModule: shareSerializationModule,
+        securityQuestions: securityQuestionsModule,
+      },
+    });
+
+    customAuthInit();
 
     const loginDetails = await CustomAuth.triggerLogin(provider);
 
@@ -101,6 +100,28 @@ export class ProviderMpcReactNative
     const privateKey = key.toString('hex');
 
     const {address} = await accountInfo(privateKey);
+    const password = await getPassword();
+    const localQuestionShare =
+      await securityQuestionsModule.generateNewShareWithSecurityQuestions(
+        password,
+        'pin',
+      );
+
+    await EncryptedStorage.setItem(
+      `${ITEM_SHARE}_${address.toLowerCase()}`,
+      JSON.stringify(localQuestionShare),
+    );
+
+    const newShare = await tKey.generateNewShare();
+    const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
+
+    const deviceShare =
+      tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
+
+    await EncryptedStorage.setItem(
+      `${ITEM_TMP}_${address.toLowerCase()}`,
+      JSON.stringify(deviceShare),
+    );
 
     await EncryptedStorage.setItem(
       `${ITEM_KEY}_${address.toLowerCase()}`,
