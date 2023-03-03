@@ -153,6 +153,10 @@ class App extends EventEmitter {
     return this.user?.pinAttempts ?? 0;
   }
 
+  get isDeveloper() {
+    return this.user.isDeveloper ?? false;
+  }
+
   async init(): Promise<void> {
     if (!this.user.onboarded) {
       return Promise.reject('user_not_found');

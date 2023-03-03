@@ -477,6 +477,7 @@ export enum I18N {
   walletConnectSignMessage,
   walletConnectApprovalConnected,
   walletConnectApprovalExpired,
+  settingsTestShareCopied,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1032,4 +1033,5 @@ const en: Record<I18N, string> = {
     '• View your balance and activity\n• Request approval for transactions',
   [I18N.walletCardConnectedApps]: '{{count}} connect',
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
+  [I18N.settingsTestShareCopied]: 'Share copied',
 };
