@@ -348,6 +348,11 @@ export type RootStackParamList = {
   walletConnectSign: {
     event: WalletConnectSessionRequestType;
   };
+
+  mpcNetwork: {};
+  mpcQuestion: {
+    privateKey: string;
+  };
 };
 
 export type StackPresentationTypes =
