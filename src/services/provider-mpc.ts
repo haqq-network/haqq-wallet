@@ -1,10 +1,11 @@
-import {encrypt} from '@haqq/encryption-react-native';
 import {ProviderInterface} from '@haqq/provider-base';
 import {Provider as ProviderBase} from '@haqq/provider-base/dist/provider';
 import {ProviderBaseOptions} from '@haqq/provider-base/src/types';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import ThresholdKey from '@tkey/default';
+import SecurityQuestionsModule from '@tkey/security-questions';
 import TorusServiceProvider from '@tkey/service-provider-base';
+import {ShareSerializationModule} from '@tkey/share-serialization';
 import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
@@ -28,54 +29,83 @@ const directParams = {
   enableLogging: true,
   network: 'testnet',
 };
+
 const serviceProvider = new TorusServiceProvider({
   customAuthArgs: directParams,
 } as any);
 const storageLayer = new TorusStorageLayer({
   hostUrl: 'https://metadata.tor.us',
 });
+
 const shareTransferModule = new ShareTransferModule();
+const shareSerializationModule = new ShareSerializationModule();
+const securityQuestionsModule = new SecurityQuestionsModule();
 
 const tKey = new ThresholdKey({
   serviceProvider: serviceProvider,
   storageLayer,
-  modules: {shareTransfer: shareTransferModule},
+  modules: {
+    shareTransfer: shareTransferModule,
+    shareSerializationModule: shareSerializationModule,
+    securityQuestions: securityQuestionsModule,
+  },
 });
 
 CustomAuth.init({
   browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
-  redirectUri: 'torusapp://com.haqq.wallet/redirect',
-  network: 'testnet', // details for test net
+  redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
+  network: 'celeste', // details for test net
   enableLogging: true,
   enableOneKey: false,
+  skipSw: true,
 });
 
 type ProviderMpcOptions = {
   account: string;
 };
 
+const ITEM_SHARE = 'mpc_share';
+const ITEM_KEY = 'mpc';
+
 export class ProviderMpcReactNative
   extends ProviderBase<ProviderMpcOptions>
   implements ProviderInterface
 {
   static async initialize(
-    privateKey: string,
+    provider: any,
     getPassword: () => Promise<string>,
+    getSecurityQuestionAnswer: () => Promise<string>,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
   ): Promise<ProviderMpcReactNative> {
     const password = await getPassword();
 
-    const key = randombytes(32);
+    const loginDetails = await CustomAuth.triggerLogin(provider);
 
-    tKey.serviceProvider.postboxKey = new BN(key);
+    tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);
 
-    const privateData = await encrypt(password, {
-      privateKey: key.toString('hex'),
-    });
+    await tKey.initialize();
+
+    const answerString = await getSecurityQuestionAnswer();
+
+    await securityQuestionsModule.inputShareFromSecurityQuestions(answerString);
+
+    let key;
+
+    try {
+      const resp = await tKey.reconstructKey();
+      key = resp.privKey;
+    } catch (e) {
+      key = new BN(randombytes(32));
+    }
+
+    const privateKey = key.toString('hex');
 
     const {address} = await accountInfo(privateKey);
 
-    await EncryptedStorage.setItem(`mpc_${address.toLowerCase()}`, privateData);
+    await EncryptedStorage.setItem(
+      `${ITEM_KEY}_${address.toLowerCase()}`,
+      JSON.stringify(tKey.getMetadata().toJSON()),
+    );
 
     return new ProviderMpcReactNative({
       ...options,

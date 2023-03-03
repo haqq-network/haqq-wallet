@@ -180,15 +180,6 @@ export const SettingsTestScreen = () => {
     });
 
     try {
-      CustomAuth.init({
-        browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
-        redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
-        network: 'celeste', // details for test net
-        enableLogging: true,
-        enableOneKey: false,
-        skipSw: true,
-      });
-
       AsyncStorage.getItem(METADATA_STORE)
         .then(resp => {
           console.log('metadata', resp);
