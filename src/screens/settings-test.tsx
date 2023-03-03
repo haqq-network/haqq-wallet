@@ -23,8 +23,6 @@ import BN from 'bn.js';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {Linking, View} from 'react-native';
 
-import {Events} from '@app/events';
-
 import {Color} from '@app/colors';
 import {
   Button,
@@ -36,7 +34,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-
+import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
@@ -107,7 +105,6 @@ const METADATA_STORE = 'tkey_metadata';
 
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
-  const navigation = useTypedNavigation();
   const [wc, setWc] = useState('');
   const [metadata, setMetadata] = useState(false);
   const [torusPk, setTorusPk] = useState(false);
