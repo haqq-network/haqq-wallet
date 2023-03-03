@@ -1,10 +1,16 @@
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface, compressPublicKey} from '@haqq/provider-base';
 import {Provider as ProviderBase} from '@haqq/provider-base/dist/provider';
 import {ProviderBaseOptions} from '@haqq/provider-base/src/types';
-import {accountInfo} from '@haqq/provider-web3-utils';
+import {
+  accountInfo,
+  derive,
+  generateMnemonicFromEntropy,
+  seedFromMnemonic,
+} from '@haqq/provider-web3-utils';
+import {Metadata, lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
-import TorusServiceProvider from '@tkey/service-provider-base';
+import ServiceProvider from '@tkey/service-provider-base';
 import {ShareSerializationModule} from '@tkey/share-serialization';
 import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
@@ -19,9 +25,10 @@ const directParams = {
   network: 'testnet',
 };
 
-const serviceProvider = new TorusServiceProvider({
+const serviceProvider = new ServiceProvider({
   customAuthArgs: directParams,
 } as any);
+
 const storageLayer = new TorusStorageLayer({
   hostUrl: 'https://metadata.tor.us',
 });
@@ -32,6 +39,7 @@ const securityQuestionsModule = new SecurityQuestionsModule();
 
 type ProviderMpcOptions = {
   account: string;
+  getPassword: () => Promise<string>;
 };
 
 const ITEM_SHARE = 'mpc_share';
@@ -49,40 +57,63 @@ function customAuthInit() {
   });
 }
 
-async function getSeed(account: string) {
+async function getTKey(account: string, provider: any) {
+  const tKey = new ThresholdKey({
+    serviceProvider: serviceProvider,
+    storageLayer,
+    modules: {
+      shareTransfer: shareTransferModule,
+      shareSerializationModule: shareSerializationModule,
+      securityQuestions: securityQuestionsModule,
+    },
+  });
+
   const metadata = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
 
-  if(!metadata) {
-
+  if (!metadata) {
+    customAuthInit();
+    const loginDetails = await CustomAuth.triggerLogin(provider);
+    tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);
+  } else {
+    tKey.metadata = Metadata.fromJSON(JSON.parse(metadata));
   }
+
+  await tKey.initialize();
+
+  return tKey;
+}
+
+async function getSeed(account: string) {
+  const share1 = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
+  const share2 = await EncryptedStorage.getItem(`${ITEM_SHARE}_${account}`);
+
+  const shares = [share1, share2]
+    .filter(Boolean)
+    .map(r => JSON.parse(r as string));
+
+  const privKey = lagrangeInterpolation(
+    shares.map(s => new BN(s.share.share, 'hex')),
+    shares.map(s => new BN(s.share.shareIndex, 'hex')),
+  );
+
+  const mnemonic = await generateMnemonicFromEntropy(privKey.toBuffer());
+  console.log('mnemonic', mnemonic);
+  const seed = await seedFromMnemonic(mnemonic);
+
+  return {seed};
 }
 
 export class ProviderMpcReactNative
   extends ProviderBase<ProviderMpcOptions>
-  implements ProviderInterface {
+  implements ProviderInterface
+{
   static async initialize(
     provider: any,
     getPassword: () => Promise<string>,
     getSecurityQuestionAnswer: () => Promise<string>,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
   ): Promise<ProviderMpcReactNative> {
-    const tKey = new ThresholdKey({
-      serviceProvider: serviceProvider,
-      storageLayer,
-      modules: {
-        shareTransfer: shareTransferModule,
-        shareSerializationModule: shareSerializationModule,
-        securityQuestions: securityQuestionsModule,
-      },
-    });
-
-    customAuthInit();
-
-    const loginDetails = await CustomAuth.triggerLogin(provider);
-
-    tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);
-
-    await tKey.initialize();
+    const tKey = await getTKey('', provider);
 
     const answerString = await getSecurityQuestionAnswer();
 
@@ -100,17 +131,6 @@ export class ProviderMpcReactNative
     const privateKey = key.toString('hex');
 
     const {address} = await accountInfo(privateKey);
-    const password = await getPassword();
-    const localQuestionShare =
-      await securityQuestionsModule.generateNewShareWithSecurityQuestions(
-        password,
-        'pin',
-      );
-
-    await EncryptedStorage.setItem(
-      `${ITEM_SHARE}_${address.toLowerCase()}`,
-      JSON.stringify(localQuestionShare),
-    );
 
     const newShare = await tKey.generateNewShare();
     const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
@@ -123,9 +143,14 @@ export class ProviderMpcReactNative
       JSON.stringify(deviceShare),
     );
 
+    const newShare2 = await tKey.generateNewShare();
+
+    const deviceShare2 =
+      tKey.shares[polyId][newShare2.newShareIndex.toString('hex')];
+
     await EncryptedStorage.setItem(
       `${ITEM_KEY}_${address.toLowerCase()}`,
-      JSON.stringify(tKey.getMetadata().toJSON()),
+      JSON.stringify(deviceShare2),
     );
 
     return new ProviderMpcReactNative({
@@ -133,5 +158,35 @@ export class ProviderMpcReactNative
       getPassword,
       account: address.toLowerCase(),
     });
+  }
+
+  async getAccountInfo(hdPath: string) {
+    let resp = {publicKey: '', address: ''};
+    try {
+      const {seed} = await getSeed(this._options.account);
+
+      if (!seed) {
+        throw new Error('seed_not_found');
+      }
+
+      const privateKey = await derive(seed, hdPath);
+
+      if (!privateKey) {
+        throw new Error('private_key_not_found');
+      }
+
+      const account = await accountInfo(privateKey);
+
+      resp = {
+        publicKey: compressPublicKey(account.publicKey),
+        address: account.address,
+      };
+      this.emit('getPublicKeyForHDPath', true);
+    } catch (e) {
+      if (e instanceof Error) {
+        this.catchError(e, 'getPublicKeyForHDPath');
+      }
+    }
+    return resp;
   }
 }
