@@ -11,6 +11,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Metadata} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
@@ -21,7 +22,6 @@ import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Linking, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -38,10 +38,10 @@ import {
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
-import {GoogleDrive} from '@app/services/google-drive';
-import {HapticEffects, vibrate} from '@app/services/haptic';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
+import {GoogleDrive} from '@app/services/google-drive';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -205,7 +205,6 @@ export const SettingsTestScreen = () => {
       console.log(error, 'mounted caught');
     }
   }, []);
-
 
   useEffect(() => {
     Linking.getInitialURL().then(result => {
