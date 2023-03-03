@@ -57,9 +57,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreExtension (10.3.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.4.0):
+  - FirebaseCoreInternal (10.6.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.4.0):
+  - FirebaseInstallations (10.6.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -224,7 +224,7 @@ PODS:
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
   - OpenSSL-Universal (1.1.1100)
-  - PromisesObjC (2.1.1)
+  - PromisesObjC (2.2.0)
   - QrCode (1.0.0):
     - React
   - RCT-Folly (2021.07.22.00):
@@ -944,8 +944,8 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
   FirebaseCoreExtension: 93d252fabdc9696bf14a73b04d84877ab9b3a832
-  FirebaseCoreInternal: e301297f4c15a17489e48ed722d733b1578e0c02
-  FirebaseInstallations: 36b38c733fd37e50857e5e8d74138648f466f18c
+  FirebaseCoreInternal: c7cd505e2136811096b225ac388d6254a2622362
+  FirebaseInstallations: 13dde135fa0524e15bddb133ccc8465c53a1b3f3
   FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
@@ -975,7 +975,7 @@ SPEC CHECKSUMS:
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
+  PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   QrCode: 703276888a8e1e5a77606392f82ce758d895a450
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
   RCTRequired: e1866f61af7049eb3d8e08e8b133abd38bc1ca7a

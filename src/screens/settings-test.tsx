@@ -8,8 +8,8 @@ import {
   generateMnemonicFromEntropy,
   seedFromMnemonic,
 } from '@haqq/provider-web3-utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
-import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Metadata} from '@tkey/core';
