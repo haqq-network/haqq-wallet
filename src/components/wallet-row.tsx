@@ -1,49 +1,39 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {StyleProp, ViewStyle} from 'react-native';
 
-import {CardSmall, DataContent, MenuNavigationButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
-import {shortAddress} from '@app/utils';
+
+import {WalletRowVariant1} from './wallet-row-variant-1';
+import {WalletRowVariant2} from './wallet-row-variant-2';
+
+export enum WalletRowTypes {
+  variant1,
+  variant2,
+}
 
 export type WalletRowProps = {
   item: Wallet;
   style?: StyleProp<ViewStyle>;
-  onPress: (address: string) => void;
-};
-const CARD_WIDTH = 78;
-const CARD_RADIUS = 8;
-
-export const WalletRow = ({item, onPress}: WalletRowProps) => {
-  const style = useMemo(
-    () => (item.isHidden ? {opacity: 0.5} : {}),
-    [item.isHidden],
-  );
-
-  const pressCard = () => onPress(item.address);
-  return (
-    <MenuNavigationButton onPress={pressCard} style={style}>
-      <CardSmall
-        width={CARD_WIDTH}
-        borderRadius={CARD_RADIUS}
-        pattern={item.pattern}
-        colorFrom={item.colorFrom}
-        colorTo={item.colorTo}
-        colorPattern={item.colorPattern}
-      />
-      <DataContent
-        style={styles.info}
-        title={item.name}
-        subtitle={shortAddress(item.address)}
-      />
-    </MenuNavigationButton>
-  );
+  onPress?: (address: string) => void;
+  hideArrow?: boolean;
+  checked?: boolean;
+  type?: WalletRowTypes;
 };
 
-const styles = createTheme({
-  info: {
-    marginLeft: 12,
-    flex: 1,
-  },
-});
+export const WalletRow = ({
+  type = WalletRowTypes.variant1,
+  ...props
+}: WalletRowProps) => {
+  if (!props?.item) {
+    return null;
+  }
+
+  switch (type) {
+    case WalletRowTypes.variant2:
+      return <WalletRowVariant2 {...props} />;
+    case WalletRowTypes.variant1:
+    default:
+      return <WalletRowVariant1 {...props} />;
+  }
+};

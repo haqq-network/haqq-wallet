@@ -544,7 +544,7 @@ PODS:
     - React-perflogger (= 0.70.6)
   - RealmJS (11.3.1):
     - React
-  - RNCAsyncStorage (1.12.1):
+  - RNCAsyncStorage (1.17.11):
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
@@ -592,7 +592,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.19.0):
+  - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
   - RNSentry (5.0.0-rc.1):
@@ -707,7 +707,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RealmJS (from `../node_modules/realm`)
-  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCustomAuthSdk (from `../node_modules/@toruslabs/customauth-react-native-sdk`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -877,7 +877,7 @@ EXTERNAL SOURCES:
   RealmJS:
     :path: "../node_modules/realm"
   RNCAsyncStorage:
-    :path: "../node_modules/@react-native-community/async-storage"
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCustomAuthSdk:
@@ -990,7 +990,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
   RealmJS: 43fc7bfb83229c8a2755cb34f71f769c97b7b581
-  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNCustomAuthSdk: e1db0c850b41deaf38fdc8fe5433b3287db29c55
   RNFBApp: aecfcdc0964d9bc0c5f7ba05efb50be724d8e8b3
@@ -999,7 +999,7 @@ SPEC CHECKSUMS:
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
-  RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSentry: f99992a7652ffb69d82651c8e8de66acf52676bc
   RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634

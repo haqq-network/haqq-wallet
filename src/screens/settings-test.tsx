@@ -34,6 +34,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
@@ -104,6 +105,7 @@ const METADATA_STORE = 'tkey_metadata';
 
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
+  const [wc, setWc] = useState('');
   const [metadata, setMetadata] = useState(false);
   const [torusPk, setTorusPk] = useState(false);
   const [serializedShare, setSerializedShare] = useState('');
@@ -308,6 +310,10 @@ export const SettingsTestScreen = () => {
     setSerializedShare(pasteString.trim());
   }, []);
 
+  const onPressWc = () => {
+    app.emit(Events.onWalletConnectUri, wc);
+  };
+
   return (
     <View style={styles.container}>
       {initialUrl && (
@@ -318,6 +324,22 @@ export const SettingsTestScreen = () => {
       <Button
         title="Request permissions for push"
         onPress={onPressRequestPermissions}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={20} />
+
+      <Input
+        placeholder="wc:"
+        value={wc}
+        onChangeText={v => {
+          setWc(v);
+        }}
+      />
+      <Spacer height={5} />
+      <Button
+        title="wallet connect"
+        disabled={!wc}
+        onPress={onPressWc}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

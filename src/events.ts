@@ -15,4 +15,11 @@ export enum Events {
   onTransactionsLoad = 'onTransactionsLoad',
   onAppStarted = 'onAppStarted',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
+  onWalletConnectUri = 'onWalletConnectUri',
+  onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
+  onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
+}
+
+export enum WalletConnectEvents {
+  onSessionsChange = 'onSessionsChange',
 }

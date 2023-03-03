@@ -47,6 +47,7 @@ import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
+import {WalletConnect} from '@app/services/wallet-connect';
 import {
   ActionSheetType,
   AppTheme,
@@ -88,6 +89,13 @@ import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
+import {WalletConnectScreen} from './screens/wallet-connect';
+import {WalletConnectApplicationDetailsScreen} from './screens/wallet-connect-application-details';
+import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
+import {WalletConnectApplicationListScreen} from './screens/wallet-connect-application-list';
+import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
+import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
+import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
@@ -147,6 +155,7 @@ export const App = () => {
       .then(() => migrationWallets())
       .then(() => wallets.init(app.snoozeBackup))
       .then(() => transactions.init())
+      .then(() => WalletConnect.instance.init())
       .catch(e => {
         switch (e) {
           case 'user_not_found':
@@ -232,6 +241,22 @@ export const App = () => {
                     name="transaction"
                     component={TransactionScreen}
                   />
+                  <Stack.Screen
+                    name="walletConnect"
+                    component={WalletConnectScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationListPopup"
+                    component={WalletConnectApplicationListPopupScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetailsPopup"
+                    component={WalletConnectApplicationDetailsPopupScreen}
+                  />
+                  <Stack.Screen
+                    name="walletSelector"
+                    component={WalletSelectorScreen}
+                  />
                   <Stack.Screen name="restore" component={RestoreScreen} />
                   <Stack.Screen name="create" component={CreateScreen} />
                   <Stack.Screen name="ledger" component={LedgerScreen} />
@@ -280,6 +305,21 @@ export const App = () => {
                     name="settingsAccountDetail"
                     component={SettingsAccountDetailScreen}
                     options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="walletConnectWalletList"
+                    component={WalletConnectWalletListScreen}
+                    options={{
+                      title: getText(I18N.walletConnectWalletListTitle),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationList"
+                    component={WalletConnectApplicationListScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetails"
+                    component={WalletConnectApplicationDetailsScreen}
                   />
                   <Stack.Screen
                     name="settingsAccountStyle"

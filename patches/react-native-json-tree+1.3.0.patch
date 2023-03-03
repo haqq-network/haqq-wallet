@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native-json-tree/src/createStylingFromTheme.js b/node_modules/react-native-json-tree/src/createStylingFromTheme.js
+index aea79a5..6e4fbed 100644
+--- a/node_modules/react-native-json-tree/src/createStylingFromTheme.js
++++ b/node_modules/react-native-json-tree/src/createStylingFromTheme.js
+@@ -34,7 +34,7 @@ const getStylingFromBase16 = (base16Theme) => {
+ 
+   return {
+     tree: {
+-      backgroundColor: colors.BACKGROUND_COLOR,
++      // backgroundColor: colors.BACKGROUND_COLOR,
+       padding: 5,
+     },
+ 
+diff --git a/node_modules/react-native-json-tree/src/types/index.d.ts b/node_modules/react-native-json-tree/src/types/index.d.ts
+index 1780dc4..a865d9f 100644
+--- a/node_modules/react-native-json-tree/src/types/index.d.ts
++++ b/node_modules/react-native-json-tree/src/types/index.d.ts
+@@ -3,7 +3,7 @@ import { Theme } from 'react-base16-styling';
+ 
+ declare module 'react-native-json-tree' {
+ 
+-  type Renderable = any[] | string | number | undefined | null | Map<any, any> | Set<any> | boolean | Date | Function | symbol | Record<string | number, unknown>
++  export type Renderable = any[] | string | number | undefined | null | Map<any, any> | Set<any> | boolean | Date | Function | symbol | Record<string | number, unknown>
+   export type ObjectType = 'Object' | 'Error' | 'Array' | 'Iterable' | 'String' | 'Number' | 'Boolean' | 'Date' | 'Null' | 'Undefined' | 'Function' | 'Symbol' | 'Custom';
+   export interface JSONTreeProps {
+     collectionLimit?: number;

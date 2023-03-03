@@ -1,16 +1,29 @@
 /**
  * @format
  */
-import 'react-native-get-random-values';
 import '@ethersproject/shims';
 import {AppRegistry} from 'react-native';
+import 'react-native-get-random-values';
 
-import {App} from './src/app';
-import {name as appName} from './app.json';
+import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import {ENVIRONMENT, SENTRY_DSN} from '@env';
+import {name as appName} from './app.json';
+import {App} from './src/app';
+import './src/event-actions';
 import {Overview} from './src/overview';
+
+const TextEncodingPolyfill = require('text-encoding');
+const BigInt = require('big-integer');
+const Buffer = require('buffer');
+
+Object.assign(global, {
+  TextEncoder: TextEncodingPolyfill.TextEncoder,
+  TextDecoder: TextEncodingPolyfill.TextDecoder,
+  BigInt: BigInt,
+  Buffer: Buffer.Buffer,
+});
+
 import './src/event-actions';
 import { DEBUG_VARS } from '@app/debug-vars';
 

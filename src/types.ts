@@ -3,7 +3,9 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
+import {SessionTypes} from '@walletconnect/types';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
@@ -11,6 +13,10 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
+import {
+  WalletConnectApproveConnectionEvent,
+  WalletConnectSessionRequestType,
+} from './types/wallet-connect';
 
 export enum TransactionSource {
   unknown,
@@ -313,6 +319,35 @@ export type RootStackParamList = {
     accountId: string;
   };
   settingsSecurity: undefined;
+  walletSelector: {
+    wallets: Wallet[] | Results<Wallet>;
+    title: string;
+    initialAddress?: string;
+    eventSuffix?: string;
+  };
+  walletConnect?: {
+    screen: 'walletConnectApproval' | 'walletConnectSign';
+    params:
+      | RootStackParamList['walletConnectApproval']
+      | RootStackParamList['walletConnectSign'];
+  };
+  walletConnectWalletList: undefined;
+  walletConnectApplicationListPopup: RootStackParamList['walletConnectApplicationList'];
+  walletConnectApplicationList: {
+    address: string;
+    isPopup?: boolean;
+  };
+  walletConnectApplicationDetailsPopup: RootStackParamList['walletConnectApplicationDetails'];
+  walletConnectApplicationDetails: {
+    session: SessionTypes.Struct;
+    isPopup?: boolean;
+  };
+  walletConnectApproval: {
+    event: WalletConnectApproveConnectionEvent;
+  };
+  walletConnectSign: {
+    event: WalletConnectSessionRequestType;
+  };
 };
 
 export type StackPresentationTypes =
@@ -495,3 +530,12 @@ export type LedgerAccountItem = {
   exists: boolean;
   balance: number;
 };
+
+export interface WalletConnectParsedAccount {
+  // eg '0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b'
+  address: string;
+  // eg 'eip155'
+  namespace?: string;
+  // eg '5'
+  networkId?: string;
+}

@@ -33,8 +33,10 @@ export enum IconsName {
   instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',
+  info = 'info',
   language = 'language',
   list = 'list',
+  link = 'link',
   lock = 'lock',
   market = 'market',
   no_proposal_voting = 'no_proposal_voting',
@@ -65,6 +67,7 @@ export enum IconsName {
   wallet = 'wallet',
   warning = 'warning',
   discord = 'discord',
+  wallet_connect = 'wallet_connect',
 }
 
 export type IconSize =

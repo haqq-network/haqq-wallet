@@ -1,5 +1,10 @@
 import {PATTERNS_SOURCE} from '@env';
+import {SessionTypes, SignClientTypes} from '@walletconnect/types';
+import {utils} from 'ethers';
 import {Animated} from 'react-native';
+
+import {WalletConnectParsedAccount} from './types';
+import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
   if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
@@ -168,3 +173,124 @@ export function throttle<T extends Array<any>>(
     setTimeout(timeoutFunc, delay);
   };
 }
+
+/**
+ * for extract message from params string array
+ * @example params array:
+ *   [
+ *     "0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b",
+ *     "0x4d7920656d61696c206973206a6f686e40646f652e636f6d202d2031363736363231313434323235"
+ *   ]
+ *
+ *  [
+ *     "0x4d7920656d61696c206973206a6f686e40646f652e636f6d202d2031363736363231313030303234",
+ *     "0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b"
+ *  ]
+ */
+export function getSignParamsMessage(params: string[]) {
+  const message = params.filter(p => !utils.isAddress(p))[0];
+  return Buffer.from(message.slice(2), 'hex').toString('utf8');
+}
+
+/**
+ * Gets data from various signTypedData request methods by filtering out
+ * a value that is not an address (thus is data).
+ * If data is a string convert it to object
+ */
+export function getSignTypedDataParamsData(params: string[]) {
+  const data = params.filter(p => !utils.isAddress(p))[0];
+
+  if (typeof data === 'string') {
+    return JSON.parse(data);
+  }
+
+  return data;
+}
+
+export const getWalletConnectAccountsFromSession = (
+  session: SessionTypes.Struct,
+): WalletConnectParsedAccount[] => {
+  const accounts = Object.values(session?.namespaces).map(namespace => {
+    // The namespace.accounts variable is a string array,
+    // with each item formatted as follows: 'eip155:5:0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b'.
+    return namespace?.accounts?.map(it => {
+      const splitedItem = it?.split?.(':');
+      let namespaceName: string | undefined,
+        networkId: string | undefined,
+        address: string | undefined;
+
+      if (splitedItem?.length === 2) {
+        namespaceName = splitedItem[0];
+        address = splitedItem[1];
+      } else if (splitedItem?.length === 3) {
+        namespaceName = splitedItem[0];
+        networkId = splitedItem[1];
+        address = splitedItem[2];
+      } else {
+        // Get the last element because it is the wallet address.
+        address = splitedItem?.[splitedItem?.length - 1];
+      }
+
+      return {namespace: namespaceName, networkId, address};
+    });
+  });
+
+  return accounts.flat().filter(it => utils.isAddress(it.address));
+};
+
+export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
+  const accountsMap: Record<string, WalletConnectParsedAccount> = {};
+
+  sessions.forEach(session => {
+    const accounts = getWalletConnectAccountsFromSession(session);
+    accounts.forEach(account => {
+      accountsMap[account.address] = account;
+    });
+  });
+
+  return Object.values(accountsMap);
+};
+
+export const filterWalletConnectSessionsByAddress = (
+  sessions: SessionTypes.Struct[],
+  address: string,
+): SessionTypes.Struct[] => {
+  return sessions?.filter?.(session => {
+    return !!Object.values(session.namespaces).find(namespace => {
+      return namespace.accounts?.find?.(account => account?.includes(address));
+    });
+  });
+};
+
+export const getUserAddressFromSessionRequest = (
+  event: SignClientTypes.EventArguments['session_request'],
+): string => {
+  const request = event?.params?.request;
+
+  switch (request?.method) {
+    case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+      return request.params?.[1];
+    case EIP155_SIGNING_METHODS.ETH_SIGN:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
+      return request.params?.[0];
+    case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+    case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+      return request?.params?.[0]?.from;
+    default:
+      throw new Error(
+        `[getUserAddressFromSessionRequest]: INVALID_METHOD ${request.method}`,
+      );
+  }
+};
+
+export const getHostnameFromUrl = (url: string | undefined) => {
+  if (!url) {
+    return '';
+  }
+  // run against regex
+  const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  // extract hostname (will be null if no match is found)
+  return matches?.[1] || '';
+};

@@ -1,3 +1,4 @@
+import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
@@ -28,7 +29,9 @@ export function abortProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
-export function getProviderInstanceForWallet(wallet: Wallet) {
+export function getProviderInstanceForWallet(
+  wallet: Wallet,
+): ProviderInterface {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
     switch (wallet.type) {
