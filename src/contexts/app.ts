@@ -133,6 +133,16 @@ class App extends EventEmitter {
     }
   }
 
+  get isGoogleSignedIn() {
+    return this.user?.isGoogleSignedIn || false;
+  }
+
+  set isGoogleSignedIn(value) {
+    if (this.user) {
+      this.user.isGoogleSignedIn = value;
+    }
+  }
+
   get notifications() {
     return this.user.notifications && this.user.subscription;
   }
