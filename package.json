@@ -32,7 +32,7 @@
     "@react-native-firebase/messaging": "16.7.0",
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/bottom-tabs": "6.5.3",
-    "@react-navigation/native": "6.1.2",
+    "@react-navigation/native": "6.1.3",
     "@react-navigation/stack": "6.3.11",
     "@sentry/react-native": "5.0.0-rc.1",
     "@tkey/default": "^7.2.0",
