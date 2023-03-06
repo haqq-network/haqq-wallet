@@ -8,6 +8,7 @@ import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
+import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -27,6 +28,7 @@ export const MpcStoreWalletScreen = () => {
           route.params.privateKey,
           route.params.questionAnswer,
           app.getPassword.bind(app),
+          new StorageMock(),
           {},
         );
 

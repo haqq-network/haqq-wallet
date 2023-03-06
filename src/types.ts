@@ -116,6 +116,10 @@ export type RootStackParamList = {
   backupNotification: {
     accountId: string;
   };
+
+  backupMpcNotification: {
+    accountId: string;
+  };
   backupWarning: {
     accountId: string;
   };

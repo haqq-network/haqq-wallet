@@ -42,6 +42,7 @@ import {
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -278,6 +279,11 @@ export const App = () => {
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="backupMpcNotification"
+                  component={BackupMpcNotificationScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen

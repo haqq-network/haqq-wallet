@@ -8,6 +8,7 @@ import {
   generateMnemonicFromEntropy,
   seedFromMnemonic,
 } from '@haqq/provider-web3-utils';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
@@ -40,6 +41,7 @@ const securityQuestionsModule = new SecurityQuestionsModule();
 type ProviderMpcOptions = {
   account: string;
   getPassword: () => Promise<string>;
+  storage: StorageInterface;
 };
 
 const ITEM_TMP = 'mpc_tmp';
@@ -48,6 +50,14 @@ const ITEM_KEY = 'mpc';
 export enum MpcProviders {
   google = 'google',
   github = 'github',
+}
+
+export interface StorageInterface {
+  getItem(key: string): Promise<string>;
+
+  hasItem(key: string): Promise<boolean>;
+
+  setItem(key: string, value: string): Promise<boolean>;
 }
 
 export const verifierMap = {
@@ -74,18 +84,6 @@ export const verifierMap = {
       domain: 'dev-fo21axxzwy36n42g.eu.auth0.com',
     },
   },
-  // [Providers.github]: {
-  //   name: 'Github',
-  //   verifier: 'haqq-dev',
-  //   verifierSubIdentifier: 'haqq-dev-auth0-github',
-  //   typeOfLogin: 'jwt',
-  //   clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
-  //   jwtParams: {
-  //     domain: 'https://dev-fo21axxzwy36n42g.eu.auth0.com',
-  //     verifierIdField: 'email',
-  //     isVerifierIdCaseSensitive: 'false',
-  //   },
-  // },
 };
 
 export function customAuthInit() {
@@ -101,11 +99,30 @@ export function customAuthInit() {
   });
 }
 
-async function getSeed(account: string) {
-  const share1 = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
-  const share2 = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
+export async function getGoogleTokens() {
+  try {
+    await GoogleSignin.signInSilently();
+  } catch (e) {
+    await GoogleSignin.signIn();
+  }
 
-  const shares = [share1, share2]
+  return await GoogleSignin.getTokens();
+}
+
+async function getSeed(account: string, storage: StorageInterface) {
+  const share1 = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
+
+  let shareTmp = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
+
+  if (!shareTmp) {
+    const content = await storage.getItem(`haqq_${account}`);
+
+    if (content) {
+      shareTmp = content;
+    }
+  }
+
+  const shares = [share1, shareTmp]
     .filter(Boolean)
     .map(r => JSON.parse(r as string));
 
@@ -131,6 +148,7 @@ export class ProviderMpcReactNative
     privateKey: string,
     questionAnswer: string | null,
     getPassword: () => Promise<string>,
+    storage: StorageInterface,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
   ): Promise<ProviderMpcReactNative> {
     let password = questionAnswer;
@@ -147,7 +165,7 @@ export class ProviderMpcReactNative
 
     tKey.serviceProvider.postboxKey = new BN(privateKey, 16);
     await tKey.initialize();
-    console.log('initialized');
+
     let key;
 
     try {
@@ -182,25 +200,17 @@ export class ProviderMpcReactNative
       key = new BN(bytes);
     }
 
-    console.log('key', key);
+    const {address} = await accountInfo(key.toString('hex').padStart(64, '0'));
 
-    let key2 = key.toString('hex').padStart(64, '0');
-
-    console.log('key2', key2);
-
-    const {address, publicKey} = await accountInfo(key2);
-
-    console.log('address', address, publicKey);
-
-    console.log('shares', JSON.stringify(tKey.shares));
     console.log(
       'shares all',
+      address,
       JSON.stringify(
         tKey.getAllShareStoresForLatestPolynomial().map(s => s.toJSON()),
       ),
     );
 
-    while (tKey.getAllShareStoresForLatestPolynomial().length < 3) {
+    while (tKey.getAllShareStoresForLatestPolynomial().length < 5) {
       await tKey.generateNewShare();
     }
 
@@ -218,33 +228,35 @@ export class ProviderMpcReactNative
 
     const [deviceShare, deviceShare2] = applicants;
 
-    console.log('deviceShare', JSON.stringify(deviceShare.share));
-
     await EncryptedStorage.setItem(
       `${ITEM_TMP}_${address.toLowerCase()}`,
       JSON.stringify(deviceShare.share),
     );
-
-    console.log('deviceShare2', JSON.stringify(deviceShare2.share));
 
     await EncryptedStorage.setItem(
       `${ITEM_KEY}_${address.toLowerCase()}`,
       JSON.stringify(deviceShare2.share),
     );
 
-    console.log('tKey.shares', JSON.stringify(tKey.shares));
-
     return new ProviderMpcReactNative({
       ...options,
       getPassword,
+      storage,
       account: address.toLowerCase(),
     });
+  }
+
+  getIdentifier() {
+    return this._options.account;
   }
 
   async getAccountInfo(hdPath: string) {
     let resp = {publicKey: '', address: ''};
     try {
-      const {seed} = await getSeed(this._options.account);
+      const {seed} = await getSeed(
+        this._options.account,
+        this._options.storage,
+      );
 
       if (!seed) {
         throw new Error('seed_not_found');
@@ -269,5 +281,36 @@ export class ProviderMpcReactNative
       }
     }
     return resp;
+  }
+
+  async isShareSaved(): Promise<boolean> {
+    return this._options.storage.hasItem(`haqq_${this._options.account}`);
+  }
+
+  async tryToSaveShare() {
+    let shareTmp = await EncryptedStorage.getItem(
+      `${ITEM_TMP}_${this._options.account}`,
+    );
+
+    console.log('shareTmp', shareTmp);
+
+    if (shareTmp) {
+      await this._options.storage.setItem(
+        `haqq_${this._options.account}`,
+        shareTmp,
+      );
+
+      const file = await this._options.storage.getItem(
+        `haqq_${this._options.account}`,
+      );
+
+      console.log('file', file);
+
+      if (file === shareTmp) {
+        await EncryptedStorage.removeItem(
+          `${ITEM_TMP}_${this._options.account}`,
+        );
+      }
+    }
   }
 }

@@ -42,7 +42,11 @@ import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {GoogleDrive} from '@app/services/google-drive';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {MpcProviders, verifierMap} from '@app/services/provider-mpc';
+import {
+  MpcProviders,
+  getGoogleTokens,
+  verifierMap,
+} from '@app/services/provider-mpc';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -133,18 +137,11 @@ export const SettingsTestScreen = () => {
   };
 
   const onPressGoogleDriveLogin = useCallback(async () => {
-    let user = null;
+    const tokens = await getGoogleTokens();
 
-    try {
-      user = await GoogleSignin.signInSilently();
-    } catch (e) {
-      user = await GoogleSignin.signIn();
-    }
+    app.isGoogleSignedIn = !!tokens;
+    setIsGoogleSignedIn(!!tokens);
 
-    app.isGoogleSignedIn = !!user;
-    setIsGoogleSignedIn(!!user);
-
-    const tokens = await GoogleSignin.getTokens();
     const filesResp = await fetch(
       `${GOOGLE_API}drive/v3/files?q=name%3D'haqq_backup.json'&fields=files(id%2Cname)`,
       {

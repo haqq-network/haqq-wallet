@@ -59,6 +59,7 @@ class Wallets extends EventEmitter {
     });
 
     app.emit(Events.onWalletMnemonicCheck, snoozeBackup);
+    app.emit(Events.onWalletMpcCheck, snoozeBackup);
   }
 
   attachWallet(wallet: Wallet) {
