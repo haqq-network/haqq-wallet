@@ -1390,10 +1390,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-web3-utils@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.8.tgz#47fe05d4ccb796be90364b7b20acb53211232e65"
-  integrity sha512-/2IXjDxqjDsMvsExfmb0r55g0Af7FUxsRFwp9ktV87UwkO/reHqzClEvs8ZjMnznCfmygQCbWesd9E3mXkzm3g==
+"@haqq/provider-web3-utils@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.9.tgz#c9d24d6d3641326d0a9b2dabfb69645cfc52e8ce"
+  integrity sha512-+ggnlrTpvHU3Y8rLICzgHbRzjdBaAk7bhviSjy6FYolfxQhVKpW7JGO6l048L0NzXh0GLz8CjKRr0lpfnk/MvA==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"

@@ -32,7 +32,6 @@ export class GoogleDrive implements StorageInterface {
     }
 
     const tokens = await GoogleSignin.getTokens();
-    console.log('tokens', JSON.stringify(tokens));
     return new GoogleDrive(tokens.accessToken);
   }
 
@@ -103,8 +102,6 @@ export class GoogleDrive implements StorageInterface {
 
     const files = (await filesResp.json()) as FilesResp;
 
-    console.log('files', files);
-
     if (!files.files.length) {
       throw new Error('share_not_found');
     }
@@ -129,10 +126,7 @@ export class GoogleDrive implements StorageInterface {
 
   async hasItem(key: string): Promise<boolean> {
     try {
-      console.log('hasItem', key);
       const fileId = await this.getSavedFileId(key);
-
-      console.log('hasItem', fileId);
       return Boolean(fileId);
     } catch (e) {
       return false;

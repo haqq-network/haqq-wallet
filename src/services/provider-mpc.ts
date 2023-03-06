@@ -15,14 +15,17 @@ import {
   derive,
   generateEntropy,
   generateMnemonicFromEntropy,
+  hashMessage,
   seedFromMnemonic,
   sign,
 } from '@haqq/provider-web3-utils';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {ShareStore} from '@tkey/common-types';
+import {Share, ShareStore, ecCurve} from '@tkey/common-types';
 import {lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
+import SecurityQuestionsError from '@tkey/security-questions/src/errors';
+import SecurityQuestionStore from '@tkey/security-questions/src/SecurityQuestionStore';
 import ServiceProvider from '@tkey/service-provider-base';
 import {ShareSerializationModule} from '@tkey/share-serialization';
 import {ShareTransferModule} from '@tkey/share-transfer';
@@ -121,23 +124,87 @@ export async function getGoogleTokens() {
   return await GoogleSignin.getTokens();
 }
 
-async function getSeed(account: string, storage: StorageInterface) {
+async function answerToUserInputHashBN(message: string) {
+  const hashed = await hashMessage(message);
+  return new BN(hashed, 'hex');
+}
+
+async function encryptShare(
+  shareStore: ShareStore,
+  password: string,
+): Promise<SecurityQuestionStore> {
+  const hash = await answerToUserInputHashBN(password);
+  let nonce = shareStore.share.share.sub(hash);
+  nonce = nonce.umod(ecCurve.curve.n);
+
+  return new SecurityQuestionStore({
+    nonce,
+    questions: '',
+    sqPublicShare: shareStore.share.getPublicShare(),
+    shareIndex: shareStore.share.shareIndex,
+    polynomialID: shareStore.polynomialID,
+  });
+}
+
+async function decryptShare(
+  sqStore: SecurityQuestionStore,
+  password: string,
+): Promise<ShareStore> {
+  const userInputHash = await answerToUserInputHashBN(password);
+  let share = sqStore.nonce.add(userInputHash);
+  share = share.umod(ecCurve.curve.n);
+
+  const shareStore = new ShareStore(
+    new Share(sqStore.shareIndex, share),
+    sqStore.polynomialID,
+  );
+
+  const derivedPublicShare = shareStore.share.getPublicShare();
+  if (
+    derivedPublicShare.shareCommitment.x.cmp(
+      sqStore.sqPublicShare.shareCommitment.x,
+    ) !== 0
+  ) {
+    throw SecurityQuestionsError.incorrectAnswer();
+  }
+
+  return shareStore;
+}
+
+async function getSeed(
+  account: string,
+  storage: StorageInterface,
+  getPassword: () => Promise<string>,
+) {
+  let shares = [];
+
   const share1 = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
 
+  if (share1) {
+    const password = await getPassword();
+    const shareStore = await decryptShare(
+      SecurityQuestionStore.fromJSON(JSON.parse(share1)),
+      password,
+    );
+
+    shares.push(shareStore);
+  }
+
   let shareTmp = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
-  console.log('shareTmp', shareTmp);
+
   if (!shareTmp) {
     const content = await storage.getItem(`haqq_${account}`);
-    console.log('content', content);
 
     if (content) {
       shareTmp = content;
     }
   }
 
-  const shares = [share1, shareTmp]
-    .filter(Boolean)
-    .map(r => JSON.parse(r as string));
+  if (shareTmp) {
+    shares.push(ShareStore.fromJSON(JSON.parse(shareTmp)));
+  }
+
+  shares = shares.filter(Boolean);
 
   const privKey = lagrangeInterpolation(
     shares.map(s => new BN(s.share.share, 'hex')),
@@ -192,16 +259,15 @@ export class ProviderMpcReactNative
           'whats your password?',
         );
       }
-      console.log('questionAnswer', questionAnswer);
+
       if (questionAnswer) {
         await securityQuestionsModule.inputShareFromSecurityQuestions(
           password as string,
         );
       }
-      console.log('cloudShare', cloudShare);
+
       if (cloudShare) {
         const share = ShareStore.fromJSON(JSON.parse(cloudShare));
-        console.log('share', share);
         tKey.inputShareStore(share);
       }
 
@@ -238,16 +304,23 @@ export class ProviderMpcReactNative
 
     applicants.sort((a, b) => a.key - b.key);
 
-    const [deviceShare, deviceShare2] = applicants;
+    const [cShare, deviceShare] = applicants;
 
     await EncryptedStorage.setItem(
       `${ITEM_TMP}_${address.toLowerCase()}`,
-      JSON.stringify(deviceShare.share),
+      JSON.stringify(cShare.share),
+    );
+
+    const pass = await getPassword();
+
+    const sqStore = await encryptShare(
+      ShareStore.fromJSON(deviceShare.share),
+      pass,
     );
 
     await EncryptedStorage.setItem(
       `${ITEM_KEY}_${address.toLowerCase()}`,
-      JSON.stringify(deviceShare2.share),
+      JSON.stringify(sqStore.toJSON()),
     );
 
     return new ProviderMpcReactNative({
@@ -268,6 +341,7 @@ export class ProviderMpcReactNative
       const {seed} = await getSeed(
         this._options.account,
         this._options.storage,
+        this._options.getPassword,
       );
 
       if (!seed) {
@@ -304,6 +378,7 @@ export class ProviderMpcReactNative
       const {seed} = await getSeed(
         this._options.account,
         this._options.storage,
+        this._options.getPassword,
       );
 
       if (!seed) {
@@ -344,6 +419,7 @@ export class ProviderMpcReactNative
       const {seed} = await getSeed(
         this._options.account,
         this._options.storage,
+        this._options.getPassword,
       );
       if (!seed) {
         throw new Error('seed_not_found');
@@ -387,6 +463,7 @@ export class ProviderMpcReactNative
       const {seed} = await getSeed(
         this._options.account,
         this._options.storage,
+        this._options.getPassword,
       );
 
       if (!seed) {
@@ -411,6 +488,32 @@ export class ProviderMpcReactNative
     return response;
   }
 
+  async updatePin(pin: string) {
+    try {
+      const share1 = await EncryptedStorage.getItem(
+        `${ITEM_KEY}_${this._options.account.toLowerCase()}`,
+      );
+
+      if (share1) {
+        const password = await this._options.getPassword();
+
+        const sqStore = SecurityQuestionStore.fromJSON(JSON.parse(share1));
+
+        const share = await decryptShare(sqStore, password);
+        const share2 = await encryptShare(share, pin);
+
+        await EncryptedStorage.setItem(
+          `${ITEM_KEY}_${this.getIdentifier().toLowerCase()}`,
+          JSON.stringify(share2.toJSON()),
+        );
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        this.catchError(e, 'updatePin');
+      }
+    }
+  }
+
   async isShareSaved(): Promise<boolean> {
     return this._options.storage.hasItem(`haqq_${this._options.account}`);
   }
@@ -419,8 +522,6 @@ export class ProviderMpcReactNative
     let shareTmp = await EncryptedStorage.getItem(
       `${ITEM_TMP}_${this._options.account}`,
     );
-
-    console.log('shareTmp', shareTmp);
 
     if (shareTmp) {
       await this._options.storage.setItem(
@@ -432,15 +533,11 @@ export class ProviderMpcReactNative
         `haqq_${this._options.account}`,
       );
 
-      console.log('file', file);
-
       if (file === shareTmp) {
         await EncryptedStorage.removeItem(
           `${ITEM_TMP}_${this._options.account}`,
         );
       }
     }
-
-    console.log('backup done');
   }
 }
