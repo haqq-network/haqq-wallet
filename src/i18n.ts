@@ -428,6 +428,7 @@ export enum I18N {
   welcomeCreateWallet,
   welcomeLedgerWallet,
   welcomeRestoreWallet,
+  welcomeSocialWallet,
   restoreWalletScreenTitle,
   noInternetPopupTitle,
   noInternetPopupDescription,
@@ -478,6 +479,9 @@ export enum I18N {
   walletConnectApprovalConnected,
   walletConnectApprovalExpired,
   settingsTestShareCopied,
+  mpcConnect,
+  mpcFinishCongratulations,
+  mpcStoreWalletSaving,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -899,6 +903,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsAboutTwitter]: 'Twitter',
   [I18N.settingsAboutRights]: `Version ${getAppVersion()} (${getBuildNumber()})`,
   [I18N.welcomeRestoreWallet]: 'I already have an account',
+  [I18N.welcomeSocialWallet]: 'Social login',
   [I18N.backupFinishCongratulation]: 'Congratulations!',
   [I18N.settingsAccountStyleChoseColor]: 'Choose color style',
   [I18N.settingsAccountStyleGenerate]: 'Generate',
@@ -1034,4 +1039,8 @@ const en: Record<I18N, string> = {
   [I18N.walletCardConnectedApps]: '{{count}} connect',
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',
   [I18N.settingsTestShareCopied]: 'Share copied',
+  [I18N.mpcFinishCongratulations]:
+    'Сongratulations!You have successfully added a new account',
+  [I18N.mpcConnect]: 'Social login',
+  [I18N.mpcStoreWalletSaving]: 'Account saving in progress',
 };

@@ -4,10 +4,11 @@ import {ProviderBaseOptions} from '@haqq/provider-base/src/types';
 import {
   accountInfo,
   derive,
+  generateEntropy,
   generateMnemonicFromEntropy,
   seedFromMnemonic,
 } from '@haqq/provider-web3-utils';
-import {Metadata, lagrangeInterpolation} from '@tkey/core';
+import {lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
 import ServiceProvider from '@tkey/service-provider-base';
@@ -16,7 +17,6 @@ import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
-import randombytes from 'randombytes';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 const directParams = {
@@ -42,64 +42,84 @@ type ProviderMpcOptions = {
   getPassword: () => Promise<string>;
 };
 
-const ITEM_SHARE = 'mpc_share';
 const ITEM_TMP = 'mpc_tmp';
 const ITEM_KEY = 'mpc';
 
-function customAuthInit() {
+export enum MpcProviders {
+  google = 'google',
+  github = 'github',
+}
+
+export const verifierMap = {
+  [MpcProviders.google]: {
+    name: 'Google',
+    // verifier: 'haqq-dev',
+    verifier: 'haqq-test-google',
+    typeOfLogin: 'google',
+    clientId:
+      '915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com',
+    // clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
+    // jwtParams: {
+    //   domain: 'https://dev-fo21axxzwy36n42g.eu.auth0.com/',
+    //   verifierIdField: 'email',
+    //   isVerifierIdCaseSensitive: 'false',
+    // },
+  },
+  [MpcProviders.github]: {
+    name: 'Github',
+    typeOfLogin: 'jwt',
+    clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
+    verifier: 'haqq-test-auth0-github',
+    jwtParams: {
+      domain: 'dev-fo21axxzwy36n42g.eu.auth0.com',
+    },
+  },
+  // [Providers.github]: {
+  //   name: 'Github',
+  //   verifier: 'haqq-dev',
+  //   verifierSubIdentifier: 'haqq-dev-auth0-github',
+  //   typeOfLogin: 'jwt',
+  //   clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
+  //   jwtParams: {
+  //     domain: 'https://dev-fo21axxzwy36n42g.eu.auth0.com',
+  //     verifierIdField: 'email',
+  //     isVerifierIdCaseSensitive: 'false',
+  //   },
+  // },
+};
+
+export function customAuthInit() {
   CustomAuth.init({
-    browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
-    redirectUri: 'torusapp://org.torusresearch.customauthexample/redirect',
-    network: 'celeste', // details for test net
+    clientId:
+      'BGMlNKbZTkgecZ3g_eGgwxUS4dLy2CAWuHIJsyAVuP7GR841maSzWqepnlZBRZpau8W8pNvbfMd93AIJRIZsxE4',
+    // browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
+    redirectUri: 'haqq://web3auth/redirect',
+    network: 'testnet',
     enableLogging: true,
     enableOneKey: false,
     skipSw: true,
   });
 }
 
-async function getTKey(account: string, provider: any) {
-  const tKey = new ThresholdKey({
-    serviceProvider: serviceProvider,
-    storageLayer,
-    modules: {
-      shareTransfer: shareTransferModule,
-      shareSerializationModule: shareSerializationModule,
-      securityQuestions: securityQuestionsModule,
-    },
-  });
-
-  const metadata = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
-
-  if (!metadata) {
-    customAuthInit();
-    const loginDetails = await CustomAuth.triggerLogin(provider);
-    tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);
-  } else {
-    tKey.metadata = Metadata.fromJSON(JSON.parse(metadata));
-  }
-
-  await tKey.initialize();
-
-  return tKey;
-}
-
 async function getSeed(account: string) {
   const share1 = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
-  const share2 = await EncryptedStorage.getItem(`${ITEM_SHARE}_${account}`);
+  const share2 = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
 
   const shares = [share1, share2]
     .filter(Boolean)
     .map(r => JSON.parse(r as string));
+
+  console.log('seed shares', account, JSON.stringify(shares));
 
   const privKey = lagrangeInterpolation(
     shares.map(s => new BN(s.share.share, 'hex')),
     shares.map(s => new BN(s.share.shareIndex, 'hex')),
   );
 
-  const mnemonic = await generateMnemonicFromEntropy(privKey.toBuffer());
-  console.log('mnemonic', mnemonic);
-  const seed = await seedFromMnemonic(mnemonic);
+  console.log('privKey', privKey);
 
+  const mnemonic = await generateMnemonicFromEntropy(privKey.toBuffer());
+  const seed = await seedFromMnemonic(mnemonic);
   return {seed};
 }
 
@@ -108,50 +128,111 @@ export class ProviderMpcReactNative
   implements ProviderInterface
 {
   static async initialize(
-    provider: any,
+    privateKey: string,
+    questionAnswer: string | null,
     getPassword: () => Promise<string>,
-    getSecurityQuestionAnswer: () => Promise<string>,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
   ): Promise<ProviderMpcReactNative> {
-    const tKey = await getTKey('', provider);
+    let password = questionAnswer;
 
-    const answerString = await getSecurityQuestionAnswer();
+    const tKey = new ThresholdKey({
+      serviceProvider: serviceProvider,
+      storageLayer,
+      modules: {
+        shareTransfer: shareTransferModule,
+        shareSerializationModule: shareSerializationModule,
+        securityQuestions: securityQuestionsModule,
+      },
+    });
 
-    await securityQuestionsModule.inputShareFromSecurityQuestions(answerString);
-
+    tKey.serviceProvider.postboxKey = new BN(privateKey, 16);
+    await tKey.initialize();
+    console.log('initialized');
     let key;
 
     try {
+      if (!questionAnswer) {
+        const bytes = await generateEntropy(32);
+
+        await tKey._initializeNewKey({
+          initializeModules: true,
+          importedKey: new BN(bytes),
+        });
+
+        password = await getPassword();
+
+        await securityQuestionsModule.generateNewShareWithSecurityQuestions(
+          password,
+          'whats your password?',
+        );
+      }
+
+      await securityQuestionsModule.inputShareFromSecurityQuestions(
+        password as string,
+      );
+
       const resp = await tKey.reconstructKey();
       key = resp.privKey;
     } catch (e) {
-      key = new BN(randombytes(32));
+      if (e instanceof Error) {
+        console.log('pk error', e, e.message);
+      }
+      const bytes = await generateEntropy(32);
+
+      key = new BN(bytes);
     }
 
-    const privateKey = key.toString('hex');
+    console.log('key', key);
 
-    const {address} = await accountInfo(privateKey);
+    let key2 = key.toString('hex').padStart(64, '0');
 
-    const newShare = await tKey.generateNewShare();
-    const polyId = tKey.metadata.getLatestPublicPolynomial().getPolynomialID();
+    console.log('key2', key2);
 
-    const deviceShare =
-      tKey.shares[polyId][newShare.newShareIndex.toString('hex')];
+    const {address, publicKey} = await accountInfo(key2);
+
+    console.log('address', address, publicKey);
+
+    console.log('shares', JSON.stringify(tKey.shares));
+    console.log(
+      'shares all',
+      JSON.stringify(
+        tKey.getAllShareStoresForLatestPolynomial().map(s => s.toJSON()),
+      ),
+    );
+
+    while (tKey.getAllShareStoresForLatestPolynomial().length < 3) {
+      await tKey.generateNewShare();
+    }
+
+    const rootShareIndex = new BN(1);
+
+    const applicants = tKey
+      .getAllShareStoresForLatestPolynomial()
+      .filter(s => s.share.shareIndex !== rootShareIndex)
+      .map(s => ({
+        key: Math.random(),
+        share: s,
+      }));
+
+    applicants.sort((a, b) => a.key - b.key);
+
+    const [deviceShare, deviceShare2] = applicants;
+
+    console.log('deviceShare', JSON.stringify(deviceShare.share));
 
     await EncryptedStorage.setItem(
       `${ITEM_TMP}_${address.toLowerCase()}`,
-      JSON.stringify(deviceShare),
+      JSON.stringify(deviceShare.share),
     );
 
-    const newShare2 = await tKey.generateNewShare();
-
-    const deviceShare2 =
-      tKey.shares[polyId][newShare2.newShareIndex.toString('hex')];
+    console.log('deviceShare2', JSON.stringify(deviceShare2.share));
 
     await EncryptedStorage.setItem(
       `${ITEM_KEY}_${address.toLowerCase()}`,
-      JSON.stringify(deviceShare2),
+      JSON.stringify(deviceShare2.share),
     );
+
+    console.log('tKey.shares', JSON.stringify(tKey.shares));
 
     return new ProviderMpcReactNative({
       ...options,

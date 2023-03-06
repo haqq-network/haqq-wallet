@@ -42,6 +42,7 @@ import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {GoogleDrive} from '@app/services/google-drive';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {MpcProviders, verifierMap} from '@app/services/provider-mpc';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -102,20 +103,6 @@ const tKey = new ThresholdKey({
     securityQuestions: securityQuestionsModule,
   },
 });
-
-enum Providers {
-  google,
-}
-
-const verifierMap = {
-  [Providers.google]: {
-    name: 'Google',
-    typeOfLogin: 'google',
-    clientId:
-      '759944447575-6rm643ia1i9ngmnme3eq5viiep5rp6s0.apps.googleusercontent.com',
-    verifier: 'sk-react-native-test',
-  },
-};
 
 const METADATA_STORE = 'tkey_metadata';
 
@@ -367,7 +354,7 @@ export const SettingsTestScreen = () => {
       const start = new Date();
       console.log(start);
       const loginDetails = await CustomAuth.triggerLogin(
-        verifierMap[Providers.google],
+        verifierMap[MpcProviders.google],
       );
 
       tKey.serviceProvider.postboxKey = new BN(loginDetails.privateKey, 16);

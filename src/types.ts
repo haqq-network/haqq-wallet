@@ -348,11 +348,16 @@ export type RootStackParamList = {
   walletConnectSign: {
     event: WalletConnectSessionRequestType;
   };
-
-  mpcNetwork: {};
+  mpc: undefined;
+  mpcNetwork: undefined;
   mpcQuestion: {
     privateKey: string;
   };
+  mpcStoreWallet: {
+    privateKey: string;
+    questionAnswer: string | null;
+  };
+  mpcFinish: undefined;
 };
 
 export type StackPresentationTypes =
@@ -405,7 +410,7 @@ export enum WalletType {
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
-  rootMnemonic = 'root-mnemonic',
+  mpc = 'mpc',
 }
 
 export enum WalletCardPattern {
