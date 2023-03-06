@@ -22,7 +22,7 @@ import TorusStorageLayer from '@tkey/storage-layer-torus';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import BN from 'bn.js';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
-import {Linking, View} from 'react-native';
+import {Linking, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -411,7 +411,7 @@ export const SettingsTestScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {initialUrl && (
         <Text t11 onPress={() => Clipboard.setString(initialUrl)}>
           initialUrl: {initialUrl}
@@ -579,7 +579,7 @@ export const SettingsTestScreen = () => {
           />
         </>
       )}
-    </View>
+    </ScrollView>
   );
 };
 

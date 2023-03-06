@@ -482,6 +482,7 @@ export enum I18N {
   mpcConnect,
   mpcFinishCongratulations,
   mpcStoreWalletSaving,
+  mpcQuestionWrongPassword,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1043,4 +1044,5 @@ const en: Record<I18N, string> = {
     'Сongratulations!You have successfully added a new account',
   [I18N.mpcConnect]: 'Social login',
   [I18N.mpcStoreWalletSaving]: 'Account saving in progress',
+  [I18N.mpcQuestionWrongPassword]: 'Wrong password',
 };

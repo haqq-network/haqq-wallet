@@ -19,6 +19,7 @@ import {
   sign,
 } from '@haqq/provider-web3-utils';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {ShareStore} from '@tkey/common-types';
 import {lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
@@ -124,9 +125,10 @@ async function getSeed(account: string, storage: StorageInterface) {
   const share1 = await EncryptedStorage.getItem(`${ITEM_KEY}_${account}`);
 
   let shareTmp = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
-
+  console.log('shareTmp', shareTmp);
   if (!shareTmp) {
     const content = await storage.getItem(`haqq_${account}`);
+    console.log('content', content);
 
     if (content) {
       shareTmp = content;
@@ -154,6 +156,7 @@ export class ProviderMpcReactNative
   static async initialize(
     privateKey: string,
     questionAnswer: string | null,
+    cloudShare: string | null,
     getPassword: () => Promise<string>,
     storage: StorageInterface,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
@@ -173,10 +176,8 @@ export class ProviderMpcReactNative
     tKey.serviceProvider.postboxKey = new BN(privateKey, 16);
     await tKey.initialize();
 
-    let key;
-
     try {
-      if (!questionAnswer) {
+      if (!questionAnswer && !cloudShare) {
         const bytes = await generateEntropy(32);
 
         await tKey._initializeNewKey({
@@ -191,23 +192,27 @@ export class ProviderMpcReactNative
           'whats your password?',
         );
       }
+      console.log('questionAnswer', questionAnswer);
+      if (questionAnswer) {
+        await securityQuestionsModule.inputShareFromSecurityQuestions(
+          password as string,
+        );
+      }
+      console.log('cloudShare', cloudShare);
+      if (cloudShare) {
+        const share = ShareStore.fromJSON(JSON.parse(cloudShare));
+        console.log('share', share);
+        tKey.inputShareStore(share);
+      }
 
-      await securityQuestionsModule.inputShareFromSecurityQuestions(
-        password as string,
-      );
-
-      const resp = await tKey.reconstructKey();
-      key = resp.privKey;
+      await tKey.reconstructKey();
     } catch (e) {
       if (e instanceof Error) {
         console.log('pk error', e, e.message);
       }
-      const bytes = await generateEntropy(32);
-
-      key = new BN(bytes);
     }
 
-    const {address} = await accountInfo(key.toString('hex').padStart(64, '0'));
+    const {address} = await accountInfo(privateKey.padStart(64, '0'));
 
     console.log(
       'shares all',
@@ -415,6 +420,8 @@ export class ProviderMpcReactNative
       `${ITEM_TMP}_${this._options.account}`,
     );
 
+    console.log('shareTmp', shareTmp);
+
     if (shareTmp) {
       await this._options.storage.setItem(
         `haqq_${this._options.account}`,
@@ -425,11 +432,15 @@ export class ProviderMpcReactNative
         `haqq_${this._options.account}`,
       );
 
+      console.log('file', file);
+
       if (file === shareTmp) {
         await EncryptedStorage.removeItem(
           `${ITEM_TMP}_${this._options.account}`,
         );
       }
     }
+
+    console.log('backup done');
   }
 }

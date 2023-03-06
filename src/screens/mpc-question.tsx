@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {accountInfo} from '@haqq/provider-web3-utils';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
@@ -13,6 +14,7 @@ import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  ErrorText,
   Icon,
   IconButton,
   Input,
@@ -21,6 +23,8 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N} from '@app/i18n';
+import {GoogleDrive} from '@app/services/google-drive';
 
 const serviceProvider = new TorusServiceProvider({
   customAuthArgs: {
@@ -58,6 +62,7 @@ export const MpcQuestionScreen = () => {
   const [isPasswordExists, setIsPasswordExists] = useState(
     PasswordExists.checking,
   );
+  const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');
   const route = useTypedRoute<'mpcQuestion'>();
   const navigation = useTypedNavigation();
@@ -89,9 +94,7 @@ export const MpcQuestionScreen = () => {
 
   const onPressCheckPinCode = useCallback(async () => {
     try {
-      const resp =
-        await securityQuestionsModule.inputShareFromSecurityQuestions(password);
-      console.log('onPressCheckPinCode', resp);
+      await securityQuestionsModule.inputShareFromSecurityQuestions(password);
 
       navigation.navigate('onboardingSetupPin', {
         privateKey: route.params.privateKey,
@@ -99,10 +102,38 @@ export const MpcQuestionScreen = () => {
       });
     } catch (e) {
       if (e instanceof Error) {
-        console.log('err', e.message);
+        if ('code' in e && e.code === 2103) {
+          setIncorrectPassword(true);
+          setPassword('');
+        } else {
+          console.log('err', e.message);
+        }
       }
     }
   }, [navigation, password, route.params.privateKey]);
+
+  const onPressCheckGoogleDrive = useCallback(async () => {
+    try {
+      const {address} = await accountInfo(
+        route.params.privateKey.padStart(64, '0'),
+      );
+
+      const storage = await GoogleDrive.initialize();
+
+      const share = await storage.getItem(`haqq_${address}`);
+
+      if (share) {
+        navigation.navigate('onboardingSetupPin', {
+          privateKey: route.params.privateKey,
+          cloudShare: share,
+        });
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log('err', e.message);
+      }
+    }
+  }, [navigation, route.params.privateKey]);
 
   if (isPasswordExists === PasswordExists.checking) {
     return (
@@ -117,8 +148,10 @@ export const MpcQuestionScreen = () => {
       <Input
         placeholder="password"
         value={password}
+        error={incorrectPassword}
         onChangeText={v => {
           setPassword(v);
+          setIncorrectPassword(false);
         }}
         rightAction={
           <IconButton onPress={onPressPaste}>
@@ -126,10 +159,22 @@ export const MpcQuestionScreen = () => {
           </IconButton>
         }
       />
+      {incorrectPassword && (
+        <>
+          <Spacer height={4} />
+          <ErrorText i18n={I18N.mpcQuestionWrongPassword} />
+        </>
+      )}
       <Spacer height={4} />
       <Button
         title="Check password"
         onPress={onPressCheckPinCode}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={4} />
+      <Button
+        title="Check google drive "
+        onPress={onPressCheckGoogleDrive}
         variant={ButtonVariant.contained}
       />
     </PopupContainer>

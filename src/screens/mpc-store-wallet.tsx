@@ -27,6 +27,7 @@ export const MpcStoreWalletScreen = () => {
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,
           route.params.questionAnswer,
+          route.params.cloudShare,
           app.getPassword.bind(app),
           new StorageMock(),
           {},
@@ -89,6 +90,7 @@ export const MpcStoreWalletScreen = () => {
     }, 350);
   }, [
     navigation,
+    route.params.cloudShare,
     route.params.privateKey,
     route.params.questionAnswer,
     wallets,

@@ -32,7 +32,7 @@ export class GoogleDrive implements StorageInterface {
     }
 
     const tokens = await GoogleSignin.getTokens();
-
+    console.log('tokens', JSON.stringify(tokens));
     return new GoogleDrive(tokens.accessToken);
   }
 
@@ -102,6 +102,8 @@ export class GoogleDrive implements StorageInterface {
     );
 
     const files = (await filesResp.json()) as FilesResp;
+
+    console.log('files', files);
 
     if (!files.files.length) {
       throw new Error('share_not_found');

@@ -359,6 +359,7 @@ export type RootStackParamList = {
   };
   mpcStoreWallet: {
     privateKey: string;
+    cloudShare: string | null;
     questionAnswer: string | null;
   };
   mpcFinish: undefined;
