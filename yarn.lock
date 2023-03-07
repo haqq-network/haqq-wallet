@@ -1710,10 +1710,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-ledger-react-native@0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.16.tgz#d3c0f03f8cd05a49bdf5aa164b589a8c9fd24161"
-  integrity sha512-gySBxEt2P6Y8t8ATIa1sKLLOMZBbFyhsQSgfUx1arQeVTZQWTsx3envD+EXVphgfihVMmUJN8e3HnFmc0kTX1A==
+"@haqq/provider-ledger-react-native@0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-ledger-react-native/-/provider-ledger-react-native-0.0.17.tgz#9f2a53ed7f8111239155b2609e4a32a7d6d82576"
+  integrity sha512-LDdRIux31upBN14w/NvKeHFZtrUCh4bQNYEkOELHDmEYs7ZYO8ecKlYgeu61Mi1X9st6ppvI5PYjPPJJOdcUHQ==
   dependencies:
     "@ethersproject/abstract-provider" "^5.7.0"
     "@ledgerhq/hw-app-eth" "6.30.0"
