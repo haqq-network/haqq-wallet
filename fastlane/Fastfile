@@ -188,7 +188,7 @@ platform :ios do
     )
 
     update_project_team(
-      path: "Pods.xcodeproj",
+      path: "Torus-fetchNodeDetails-FNDBundle.xcodeproj",
       teamid: ENV["DEVELOPER_PORTAL_TEAM_ID"]
     )
 
