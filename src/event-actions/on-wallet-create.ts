@@ -5,6 +5,7 @@ import {Events} from '@app/events';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {pushNotifications} from '@app/services/push-notifications';
 import {WalletType} from '@app/types';
 
@@ -30,13 +31,22 @@ export async function onWalletCreate(wallet: Wallet) {
 
     if (!wallet.mnemonicSaved) {
       let mnemonicSaved: boolean;
-      if (wallet.type === WalletType.mnemonic) {
-        const provider = getProviderInstanceForWallet(
-          wallet,
-        ) as ProviderMnemonicReactNative;
-        mnemonicSaved = await provider.isMnemonicSaved();
-      } else {
-        mnemonicSaved = true;
+
+      switch (wallet.type) {
+        case WalletType.mpc:
+          const providerMpc = (await getProviderInstanceForWallet(
+            wallet,
+          )) as ProviderMpcReactNative;
+          mnemonicSaved = await providerMpc.isShareSaved();
+          break;
+        case WalletType.mnemonic:
+          const providerMnemonic = (await getProviderInstanceForWallet(
+            wallet,
+          )) as ProviderMnemonicReactNative;
+          mnemonicSaved = await providerMnemonic.isMnemonicSaved();
+          break;
+        default:
+          mnemonicSaved = true;
       }
 
       wallet.update({

@@ -149,8 +149,8 @@ android {
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
-      'torusRedirectScheme': 'torusapp',
-      'torusRedirectHost': 'org.torusresearch.customauthexample',
+      'torusRedirectScheme': 'haqq',
+      'torusRedirectHost': 'web3auth',
       'torusRedirectPathPrefix': '/redirect'
     ]
 

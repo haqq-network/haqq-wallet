@@ -24,6 +24,7 @@ import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
+
 export class WalletConnect extends EventEmitter {
   static instance = new WalletConnect();
   private _client: IWeb3Wallet | null = null;
@@ -181,7 +182,7 @@ export class WalletConnect extends EventEmitter {
     wallet: Wallet,
     event: SignClientTypes.EventArguments['session_request'],
   ) {
-    const provider = getProviderInstanceForWallet(wallet);
+    const provider = await getProviderInstanceForWallet(wallet);
 
     if (!wallet?.path || !provider) {
       throw new Error(

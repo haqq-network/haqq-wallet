@@ -20,7 +20,9 @@ export interface WalletConnectSignProps {
   event: WalletConnectSessionRequestType;
   session: WalletConnectSessionType;
   wallet: Wallet;
+
   onPressSign(): void;
+
   onPressReject(): void;
 }
 

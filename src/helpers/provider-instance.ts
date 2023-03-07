@@ -4,7 +4,9 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
+import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -15,6 +17,7 @@ function getId(wallet: Wallet) {
     case WalletType.mnemonic:
     case WalletType.hot:
     case WalletType.ledgerBt:
+    case WalletType.mpc:
       return wallet.accountId ?? '';
   }
 }
@@ -29,9 +32,9 @@ export function abortProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
-export function getProviderInstanceForWallet(
+export async function getProviderInstanceForWallet(
   wallet: Wallet,
-): ProviderInterface {
+): Promise<ProviderInterface> {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
     switch (wallet.type) {
@@ -60,6 +63,17 @@ export function getProviderInstanceForWallet(
             getPassword: app.getPassword.bind(app),
             deviceId: wallet.accountId!,
             appName: LEDGER_APP,
+          }),
+        );
+        break;
+      case WalletType.mpc:
+        const storage = await getProviderStorage(wallet.accountId as string);
+        cache.set(
+          id,
+          new ProviderMpcReactNative({
+            storage,
+            getPassword: app.getPassword.bind(app),
+            account: wallet.accountId!,
           }),
         );
         break;

@@ -11,4 +11,8 @@ declare module '@env' {
   export const PROVIDER_BASE_PACKAGE: string;
   export const WALLET_CONNECT_PROJECT_ID: string;
   export const WALLET_CONNECT_RELAY_URL: string;
+  export const WEB3AUTH_CLIENT_ID: string;
+  export const WEB3AUTH_AUTH0_CLIENT_ID: string;
+  export const WEB3AUTH_AUTH0_VERIFIER: string;
+  export const WEB3AUTH_AUTH0_DOMAIN: string;
 }

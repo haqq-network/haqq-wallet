@@ -25,9 +25,9 @@ export const ProposalDepositPreviewScreen = () => {
         setDisabled(true);
 
         const cosmos = new Cosmos(app.provider!);
-
+        const provider = await getProviderInstanceForWallet(wallet);
         const resp = await cosmos.deposit(
-          getProviderInstanceForWallet(wallet),
+          provider,
           wallet.path!,
           proposalId,
           amount,

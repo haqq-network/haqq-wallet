@@ -116,6 +116,12 @@ export type RootStackParamList = {
   backupNotification: {
     accountId: string;
   };
+  backupMpcNotification: {
+    accountId: string;
+  };
+  backupMpcSuggestion: {
+    accountId: string;
+  };
   backupWarning: {
     accountId: string;
   };
@@ -348,6 +354,17 @@ export type RootStackParamList = {
   walletConnectSign: {
     event: WalletConnectSessionRequestType;
   };
+  mpc: undefined;
+  mpcNetwork: undefined;
+  mpcBackup: {
+    privateKey: string;
+  };
+  mpcStoreWallet: {
+    privateKey: string;
+    cloudShare: string | null;
+    questionAnswer: string | null;
+  };
+  mpcFinish: undefined;
 };
 
 export type StackPresentationTypes =
@@ -400,7 +417,7 @@ export enum WalletType {
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
-  rootMnemonic = 'root-mnemonic',
+  mpc = 'mpc',
 }
 
 export enum WalletCardPattern {

@@ -39,7 +39,7 @@ export const TransactionLedgerScreen = () => {
       try {
         await awaitForBluetooth();
 
-        transport.current = getProviderInstanceForWallet(wallet);
+        transport.current = await getProviderInstanceForWallet(wallet);
 
         const ethNetworkProvider = new EthNetwork();
         const transaction = await ethNetworkProvider.sendTransaction(
