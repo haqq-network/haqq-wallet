@@ -4,9 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {MpcBackupScreen} from '@app/screens/mpc-backup';
 import {MpcFinishScreen} from '@app/screens/mpc-finish';
 import {MpcNetworksScreen} from '@app/screens/mpc-networks';
-import {MpcQuestionScreen} from '@app/screens/mpc-question';
 import {MpcStoreWalletScreen} from '@app/screens/mpc-store-wallet';
 import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
 import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
@@ -28,8 +28,8 @@ export const MpcScreen = () => {
         options={hideBack}
       />
       <MpcStack.Screen
-        name="mpcQuestion"
-        component={MpcQuestionScreen}
+        name="mpcBackup"
+        component={MpcBackupScreen}
         options={hideBack}
       />
       <MpcStack.Screen

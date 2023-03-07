@@ -19,7 +19,6 @@ import {
   seedFromMnemonic,
   sign,
 } from '@haqq/provider-web3-utils';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Share, ShareStore, ecCurve} from '@tkey/common-types';
 import {lagrangeInterpolation} from '@tkey/core';
 import ThresholdKey from '@tkey/default';
@@ -105,23 +104,12 @@ export function customAuthInit() {
   CustomAuth.init({
     clientId:
       'BGMlNKbZTkgecZ3g_eGgwxUS4dLy2CAWuHIJsyAVuP7GR841maSzWqepnlZBRZpau8W8pNvbfMd93AIJRIZsxE4',
-    // browserRedirectUri: 'https://scripts.toruswallet.io/redirect.html',
     redirectUri: 'haqq://web3auth/redirect',
     network: 'testnet',
     enableLogging: true,
     enableOneKey: false,
     skipSw: true,
   });
-}
-
-export async function getGoogleTokens() {
-  try {
-    await GoogleSignin.signInSilently();
-  } catch (e) {
-    await GoogleSignin.signIn();
-  }
-
-  return await GoogleSignin.getTokens();
 }
 
 async function answerToUserInputHashBN(message: string) {
@@ -272,6 +260,8 @@ export class ProviderMpcReactNative
       }
 
       await tKey.reconstructKey();
+
+      console.log('tKey pk', tKey.privKey);
     } catch (e) {
       if (e instanceof Error) {
         console.log('pk error', e, e.message);
@@ -279,14 +269,6 @@ export class ProviderMpcReactNative
     }
 
     const {address} = await accountInfo(privateKey.padStart(64, '0'));
-
-    console.log(
-      'shares all',
-      address,
-      JSON.stringify(
-        tKey.getAllShareStoresForLatestPolynomial().map(s => s.toJSON()),
-      ),
-    );
 
     while (tKey.getAllShareStoresForLatestPolynomial().length < 5) {
       await tKey.generateNewShare();
@@ -323,12 +305,25 @@ export class ProviderMpcReactNative
       JSON.stringify(sqStore.toJSON()),
     );
 
+    const accounts = await ProviderMpcReactNative.getAccounts();
+
+    await EncryptedStorage.setItem(
+      `${ITEM_KEY}_accounts`,
+      JSON.stringify(accounts.concat(address.toLowerCase())),
+    );
+
     return new ProviderMpcReactNative({
       ...options,
       getPassword,
       storage,
       account: address.toLowerCase(),
     });
+  }
+
+  static async getAccounts() {
+    const storedKeys = await EncryptedStorage.getItem(`${ITEM_KEY}_accounts`);
+
+    return JSON.parse(storedKeys ?? '[]') as string[];
   }
 
   getIdentifier() {

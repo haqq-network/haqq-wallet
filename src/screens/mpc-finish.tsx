@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 
 import {Finish} from '@app/components/finish';
+import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useApp, useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -16,6 +17,10 @@ export const MpcFinishScreen = () => {
       app.getUser().onboarded = true;
       navigation.replace('home');
     }
+
+    requestAnimationFrame(() => {
+      app.emit(Events.onWalletMpcCheck, app.snoozeBackup);
+    });
   }, [app, navigation]);
 
   useEffect(() => {

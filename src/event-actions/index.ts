@@ -12,6 +12,7 @@ import {onWalletCreate} from '@app/event-actions/on-wallet-create';
 import {onWalletMnemonicCheck} from '@app/event-actions/on-wallet-mnemonic-check';
 import {onWalletMnemonicSaved} from '@app/event-actions/on-wallet-mnemonic-saved';
 import {onWalletMpcCheck} from '@app/event-actions/on-wallet-mpc-check';
+import {onWalletMpcSaved} from '@app/event-actions/on-wallet-mpc-saved';
 import {onWalletRemove} from '@app/event-actions/on-wallet-remove';
 import {onWalletReset} from '@app/event-actions/on-wallet-reset';
 import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
@@ -31,8 +32,9 @@ app.on(Events.onAppStarted, onAppStarted);
 app.on(Events.onAppMnemonicBackup, onAppMnemonicBackup);
 app.on(Events.onWalletReset, onWalletReset);
 app.on(Events.onWalletMnemonicCheck, onWalletMnemonicCheck);
-app.on(Events.onWalletMpcCheck, onWalletMpcCheck);
 app.on(Events.onWalletMnemonicSaved, onWalletMnemonicSaved);
+app.on(Events.onWalletMpcCheck, onWalletMpcCheck);
+app.on(Events.onWalletMpcSaved, onWalletMpcSaved);
 app.on(Events.onWalletConnectUri, onWalletConnectUri);
 app.on(
   Events.onWalletConnectApproveConnection,

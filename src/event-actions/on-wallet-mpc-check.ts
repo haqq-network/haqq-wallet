@@ -21,8 +21,6 @@ export async function onWalletMpcCheck(snoozeBackup: Date) {
         .map(w => w.accountId) as string[],
     );
 
-    console.log('accounts', accounts, app.getUser().isGoogleSignedIn);
-
     for (const accountId of accounts) {
       if (!app.getUser().isGoogleSignedIn) {
         await sleep(1000);

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {
   abortProviderInstanceForWallet,
@@ -69,7 +70,7 @@ export const TransactionConfirmationScreen = () => {
           storage: undefined,
         };
 
-        if (wallet.type === WalletType.mpc) {
+        if (wallet.type === WalletType.mpc && app.isGoogleSignedIn) {
           extraData.storage = await GoogleDrive.initialize();
         }
 

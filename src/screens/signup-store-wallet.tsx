@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {View} from 'react-native';
 
-import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
+import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
+import {ProviderMpcReactNative} from '@app/services/provider-mpc';
+import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
-
-import {Wallet} from '../models/wallet';
-import {WalletType} from '../types';
 
 export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
@@ -27,16 +26,7 @@ export const SignUpStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const keys = await ProviderMnemonicReactNative.getAccounts();
-
-        const getPassword = app.getPassword.bind(app);
-
-        const provider = keys.length
-          ? new ProviderMnemonicReactNative({
-              account: keys[0],
-              getPassword,
-            })
-          : await ProviderMnemonicReactNative.initialize(null, getPassword, {});
+        const provider = await getProviderForNewWallet();
 
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
 
@@ -59,12 +49,17 @@ export const SignUpStoreWalletScreen = () => {
 
         const {address} = await provider.getAccountInfo(hdPath);
 
+        const type =
+          provider instanceof ProviderMpcReactNative
+            ? WalletType.mpc
+            : WalletType.mnemonic;
+
         await wallets.addWallet(
           {
             address,
             accountId: provider.getIdentifier(),
             path: hdPath,
-            type: WalletType.mnemonic,
+            type,
           },
           name,
         );

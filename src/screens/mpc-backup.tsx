@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
-import Clipboard from '@react-native-clipboard/clipboard';
 import ThresholdKey from '@tkey/default';
 import SecurityQuestionsModule from '@tkey/security-questions';
 import TorusServiceProvider from '@tkey/service-provider-base';
@@ -10,20 +9,10 @@ import {ShareTransferModule} from '@tkey/share-transfer';
 import TorusStorageLayer from '@tkey/storage-layer-torus';
 import BN from 'bn.js';
 
-import {Color} from '@app/colors';
-import {
-  Button,
-  ButtonVariant,
-  ErrorText,
-  Icon,
-  IconButton,
-  Input,
-  Loading,
-  PopupContainer,
-  Spacer,
-} from '@app/components/ui';
+import {MpcBackup} from '@app/components/mpc-backup';
+import {app} from '@app/contexts';
+import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {I18N} from '@app/i18n';
 import {GoogleDrive} from '@app/services/google-drive';
 
 const serviceProvider = new TorusServiceProvider({
@@ -58,13 +47,12 @@ enum PasswordExists {
   not_exists,
 }
 
-export const MpcQuestionScreen = () => {
+export const MpcBackupScreen = () => {
   const [isPasswordExists, setIsPasswordExists] = useState(
     PasswordExists.checking,
   );
-  const [incorrectPassword, setIncorrectPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const route = useTypedRoute<'mpcQuestion'>();
+
+  const route = useTypedRoute<'mpcBackup'>();
   const navigation = useTypedNavigation();
 
   useEffect(() => {
@@ -86,31 +74,27 @@ export const MpcQuestionScreen = () => {
     run();
   }, [navigation, route.params.privateKey]);
 
-  const onPressPaste = useCallback(async () => {
-    const pasteString = await Clipboard.getString();
+  const onPressCheckPinCode = useCallback(
+    async (password: string) => {
+      try {
+        await securityQuestionsModule.inputShareFromSecurityQuestions(password);
 
-    setPassword(pasteString);
-  }, []);
-
-  const onPressCheckPinCode = useCallback(async () => {
-    try {
-      await securityQuestionsModule.inputShareFromSecurityQuestions(password);
-
-      navigation.navigate('onboardingSetupPin', {
-        privateKey: route.params.privateKey,
-        questionAnswer: password,
-      });
-    } catch (e) {
-      if (e instanceof Error) {
-        if ('code' in e && e.code === 2103) {
-          setIncorrectPassword(true);
-          setPassword('');
-        } else {
-          console.log('err', e.message);
+        navigation.navigate('onboardingSetupPin', {
+          privateKey: route.params.privateKey,
+          questionAnswer: password,
+        });
+      } catch (e) {
+        if (e instanceof Error) {
+          if ('code' in e && e.code === 2103) {
+            throw new Error('wrong_password');
+          } else {
+            captureException(e, 'mpc backup check password');
+          }
         }
       }
-    }
-  }, [navigation, password, route.params.privateKey]);
+    },
+    [navigation, route.params.privateKey],
+  );
 
   const onPressCheckGoogleDrive = useCallback(async () => {
     try {
@@ -119,7 +103,7 @@ export const MpcQuestionScreen = () => {
       );
 
       const storage = await GoogleDrive.initialize();
-
+      app.isGoogleSignedIn = true;
       const share = await storage.getItem(`haqq_${address}`);
 
       if (share) {
@@ -135,48 +119,18 @@ export const MpcQuestionScreen = () => {
     }
   }, [navigation, route.params.privateKey]);
 
-  if (isPasswordExists === PasswordExists.checking) {
-    return (
-      <PopupContainer>
-        <Loading />
-      </PopupContainer>
-    );
-  }
+  const onPressContinue = useCallback(() => {
+    navigation.navigate('onboardingSetupPin', {
+      privateKey: route.params.privateKey,
+    });
+  }, [navigation, route.params.privateKey]);
 
   return (
-    <PopupContainer>
-      <Input
-        placeholder="password"
-        value={password}
-        error={incorrectPassword}
-        onChangeText={v => {
-          setPassword(v);
-          setIncorrectPassword(false);
-        }}
-        rightAction={
-          <IconButton onPress={onPressPaste}>
-            <Icon i24 name="paste" color={Color.graphicGreen1} />
-          </IconButton>
-        }
-      />
-      {incorrectPassword && (
-        <>
-          <Spacer height={4} />
-          <ErrorText i18n={I18N.mpcQuestionWrongPassword} />
-        </>
-      )}
-      <Spacer height={4} />
-      <Button
-        title="Check password"
-        onPress={onPressCheckPinCode}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={4} />
-      <Button
-        title="Check google drive "
-        onPress={onPressCheckGoogleDrive}
-        variant={ButtonVariant.contained}
-      />
-    </PopupContainer>
+    <MpcBackup
+      isPasswordExists={isPasswordExists}
+      onCheckPassword={onPressCheckPinCode}
+      onCheckGoogleDrive={onPressCheckGoogleDrive}
+      onSkip={onPressContinue}
+    />
   );
 };

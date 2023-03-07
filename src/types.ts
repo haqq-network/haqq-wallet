@@ -354,7 +354,7 @@ export type RootStackParamList = {
   };
   mpc: undefined;
   mpcNetwork: undefined;
-  mpcQuestion: {
+  mpcBackup: {
     privateKey: string;
   };
   mpcStoreWallet: {
