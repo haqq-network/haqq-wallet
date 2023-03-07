@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {Device} from '@haqq/provider-ledger-react-native';
-import {TouchableOpacity} from 'react-native';
+import {ActivityIndicator, TouchableOpacity} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
@@ -9,21 +9,37 @@ import {createTheme} from '@app/helpers';
 
 export type LedgerScanRowProps = {
   item: Device;
+  loading?: boolean;
+  error?: boolean;
   onPress: (item: Device) => void;
 };
 
-export const LedgerScanRow = ({item, onPress}: LedgerScanRowProps) => {
+export const LedgerScanRow = ({
+  item,
+  onPress,
+  loading,
+  error,
+}: LedgerScanRowProps) => {
+  const handlePress = useCallback(() => {
+    onPress?.(item);
+  }, [item, onPress]);
+
   return (
-    <TouchableOpacity onPress={() => onPress(item)}>
-      <Text style={style.textName} t11>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
+      <Text style={styles.textName} t11>
         {item.name}
       </Text>
+
+      {!!loading && !error && <ActivityIndicator />}
     </TouchableOpacity>
   );
 };
 
-const style = createTheme({
-  textName: {
+const styles = createTheme({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -31,5 +47,8 @@ const style = createTheme({
     marginVertical: 6,
     overflow: 'hidden',
     backgroundColor: Color.bg3,
+  },
+  textName: {
+    overflow: 'hidden',
   },
 });
