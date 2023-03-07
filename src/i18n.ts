@@ -486,6 +486,8 @@ export enum I18N {
 
   backupMpcNotificationBackup,
   backupMpcNotificationCheck,
+  backupMpcSuggestionConnect,
+  backupMpcSuggestionCancel,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1050,4 +1052,6 @@ const en: Record<I18N, string> = {
   [I18N.mpcQuestionWrongPassword]: 'Wrong password',
   [I18N.backupMpcNotificationBackup]: 'Create backup on google drive',
   [I18N.backupMpcNotificationCheck]: 'Check backup on google drive',
+  [I18N.backupMpcSuggestionConnect]: 'Connect',
+  [I18N.backupMpcSuggestionCancel]: 'Connect later',
 };

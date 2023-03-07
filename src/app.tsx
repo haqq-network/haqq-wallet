@@ -43,6 +43,7 @@ import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
+import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -155,7 +156,7 @@ export const App = () => {
       .then(() => SplashScreen.hide())
       .then(() => app.init())
       .then(() => migrationWallets())
-      .then(() => wallets.init(app.snoozeBackup))
+      .then(() => wallets.init())
       .then(() => transactions.init())
       .then(() => WalletConnect.instance.init())
       .catch(e => {
@@ -284,6 +285,11 @@ export const App = () => {
                 <Stack.Screen
                   name="backupMpcNotification"
                   component={BackupMpcNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="backupMpcSuggestion"
+                  component={BackupMpcSuggestionScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen

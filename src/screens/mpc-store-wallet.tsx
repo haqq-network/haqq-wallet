@@ -28,6 +28,7 @@ export const MpcStoreWalletScreen = () => {
           route.params.privateKey,
           route.params.questionAnswer,
           route.params.cloudShare,
+          null,
           app.getPassword.bind(app),
           new StorageMock(),
           {},

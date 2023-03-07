@@ -207,9 +207,10 @@ export class ProviderMpcReactNative
   implements ProviderInterface
 {
   static async initialize(
-    privateKey: string,
+    web3privateKey: string,
     questionAnswer: string | null,
     cloudShare: string | null,
+    privateKey: string | null,
     getPassword: () => Promise<string>,
     storage: StorageInterface,
     options: Omit<ProviderBaseOptions, 'getPassword'>,
@@ -226,17 +227,25 @@ export class ProviderMpcReactNative
       },
     });
 
-    tKey.serviceProvider.postboxKey = new BN(privateKey, 16);
+    tKey.serviceProvider.postboxKey = new BN(web3privateKey, 16);
     await tKey.initialize();
 
     try {
       if (!questionAnswer && !cloudShare) {
-        const bytes = await generateEntropy(32);
+        console.log('privateKey', privateKey);
+
+        const bytes = privateKey
+          ? Buffer.from(privateKey, 'hex')
+          : await generateEntropy(32);
+
+        console.log('bytes', bytes);
 
         await tKey._initializeNewKey({
           initializeModules: true,
           importedKey: new BN(bytes),
         });
+
+        console.log('done', tKey.privKey);
 
         password = await getPassword();
 
@@ -244,6 +253,8 @@ export class ProviderMpcReactNative
           password,
           'whats your password?',
         );
+
+        console.log('save question share', tKey.privKey);
       }
 
       if (questionAnswer) {
@@ -257,7 +268,10 @@ export class ProviderMpcReactNative
         tKey.inputShareStore(share);
       }
 
-      await tKey.reconstructKey();
+      if (questionAnswer || cloudShare) {
+        console.log('reconstruct', !!questionAnswer, !!cloudShare);
+        await tKey.reconstructKey();
+      }
 
       console.log('tKey pk', tKey.privKey);
     } catch (e) {
@@ -266,7 +280,14 @@ export class ProviderMpcReactNative
       }
     }
 
-    const {address} = await accountInfo(privateKey.padStart(64, '0'));
+    const {address} = await accountInfo(web3privateKey.padStart(64, '0'));
+
+    console.log(
+      'all shares',
+      JSON.stringify(
+        tKey.getAllShareStoresForLatestPolynomial().map(s => s.toJSON()),
+      ),
+    );
 
     while (tKey.getAllShareStoresForLatestPolynomial().length < 5) {
       await tKey.generateNewShare();

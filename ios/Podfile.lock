@@ -23,18 +23,20 @@ PODS:
     - React-Core (= 0.70.6)
     - React-jsi (= 0.70.6)
     - ReactCommon/turbomodule/core (= 0.70.6)
-  - Firebase (10.3.0):
-    - Firebase/Core (= 10.3.0)
-  - Firebase/Core (10.3.0):
+  - Firebase (10.6.0):
+    - Firebase/Core (= 10.6.0)
+  - Firebase/Analytics (10.6.0):
+    - Firebase/Core
+  - Firebase/Core (10.6.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 10.3.0)
-  - Firebase/CoreOnly (10.3.0):
-    - FirebaseCore (= 10.3.0)
-  - Firebase/Messaging (10.3.0):
+    - FirebaseAnalytics (~> 10.6.0)
+  - Firebase/CoreOnly (10.6.0):
+    - FirebaseCore (= 10.6.0)
+  - Firebase/Messaging (10.6.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.3.0)
-  - FirebaseAnalytics (10.3.0):
-    - FirebaseAnalytics/AdIdSupport (= 10.3.0)
+    - FirebaseMessaging (~> 10.6.0)
+  - FirebaseAnalytics (10.6.0):
+    - FirebaseAnalytics/AdIdSupport (= 10.6.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
@@ -42,20 +44,20 @@ PODS:
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (10.3.0):
+  - FirebaseAnalytics/AdIdSupport (10.6.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleAppMeasurement (= 10.3.0)
+    - GoogleAppMeasurement (= 10.6.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseCore (10.3.0):
+  - FirebaseCore (10.6.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreExtension (10.3.0):
+  - FirebaseCoreExtension (10.6.0):
     - FirebaseCore (~> 10.0)
   - FirebaseCoreInternal (10.6.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
@@ -64,7 +66,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.3.0):
+  - FirebaseMessaging (10.6.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.2)
@@ -137,21 +139,21 @@ PODS:
   - fmt (6.2.1)
   - GenericJSON (2.0.2)
   - glog (0.3.5)
-  - GoogleAppMeasurement (10.3.0):
-    - GoogleAppMeasurement/AdIdSupport (= 10.3.0)
+  - GoogleAppMeasurement (10.6.0):
+    - GoogleAppMeasurement/AdIdSupport (= 10.6.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (10.3.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.3.0)
+  - GoogleAppMeasurement/AdIdSupport (10.6.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.6.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (10.3.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (10.6.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/MethodSwizzler (~> 7.8)
     - GoogleUtilities/Network (~> 7.8)
@@ -565,12 +567,16 @@ PODS:
   - RNCustomAuthSdk (4.0.1):
     - CustomAuth (~> 5.0.0)
     - React
-  - RNFBApp (16.7.0):
-    - Firebase/CoreOnly (= 10.3.0)
+  - RNFBAnalytics (17.3.2):
+    - Firebase/Analytics (= 10.6.0)
     - React-Core
-  - RNFBMessaging (16.7.0):
-    - Firebase/Messaging (= 10.3.0)
-    - FirebaseCoreExtension (= 10.3.0)
+    - RNFBApp
+  - RNFBApp (17.3.2):
+    - Firebase/CoreOnly (= 10.6.0)
+    - React-Core
+  - RNFBMessaging (17.3.2):
+    - Firebase/Messaging (= 10.6.0)
+    - FirebaseCoreExtension (= 10.6.0)
     - React-Core
     - RNFBApp
   - RNGestureHandler (2.9.0):
@@ -727,6 +733,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCustomAuthSdk (from `../node_modules/@toruslabs/customauth-react-native-sdk`)"
+  - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -904,6 +911,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCustomAuthSdk:
     :path: "../node_modules/@toruslabs/customauth-react-native-sdk"
+  RNFBAnalytics:
+    :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -940,13 +949,13 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 48289402952f4f7a4e235de70a9a590aa0b79ef4
   FBReactNativeSpec: dd1186fd05255e3457baa2f4ca65e94c2cd1e3ac
-  Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
-  FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
-  FirebaseCoreExtension: 93d252fabdc9696bf14a73b04d84877ab9b3a832
+  Firebase: f13680471b021937f2230ea8503c7809d8c29806
+  FirebaseAnalytics: 9f382605c5ee412b039212f054bf7a403d9850c1
+  FirebaseCore: fa80ad16a62d52f67274b5b88304c3a318bbf9a4
+  FirebaseCoreExtension: 318e5ee9ad4092b00423c2bddd51c3f5c3585973
   FirebaseCoreInternal: c7cd505e2136811096b225ac388d6254a2622362
   FirebaseInstallations: 13dde135fa0524e15bddb133ccc8465c53a1b3f3
-  FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
+  FirebaseMessaging: fd93783258c53ae5cdb9b41bf0c51606a677f2d5
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 2dc99b02f658daf147069aad9dbd29d8feb06d30
@@ -959,7 +968,7 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   GenericJSON: 79a840eeb77030962e8cf02a62d36bd413b67626
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
+  GoogleAppMeasurement: 686b48c3c895f3c55c70719041913d5d150b74f6
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
   GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
@@ -1021,8 +1030,9 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
   RNCustomAuthSdk: e1db0c850b41deaf38fdc8fe5433b3287db29c55
-  RNFBApp: aecfcdc0964d9bc0c5f7ba05efb50be724d8e8b3
-  RNFBMessaging: a647b2db61602e9981933b5fc90f1b058e61922c
+  RNFBAnalytics: 966d8734174a27dee0e84193f676aa3ffb8661bd
+  RNFBApp: 3bf62629c41ef65d82e763c25aeb77cdfa63bfae
+  RNFBMessaging: c2bf85653cdb745f60d3cc43c9ec51d4edca0c52
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333

@@ -4,8 +4,6 @@ import {EventEmitter} from 'events';
 
 import {Image} from 'react-native';
 
-import {app} from '@app/contexts/app';
-import {Events} from '@app/events';
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
 import {AddWalletParams} from '@app/types';
@@ -43,7 +41,7 @@ class Wallets extends EventEmitter {
     return Array.from(this._wallets.keys());
   }
 
-  async init(snoozeBackup: Date): Promise<void> {
+  async init(): Promise<void> {
     if (this._initialized) {
       return;
     }
@@ -57,9 +55,6 @@ class Wallets extends EventEmitter {
     ).then(() => {
       console.log('image prefetched');
     });
-
-    app.emit(Events.onWalletMnemonicCheck, snoozeBackup);
-    app.emit(Events.onWalletMpcCheck, snoozeBackup);
   }
 
   attachWallet(wallet: Wallet) {
