@@ -67,10 +67,10 @@ jobs:
           echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribution" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
-          echo "WEB3AUTH_CLIENT_ID=${{github.event.inputs.WEB3AUTH_CLIENT_ID}}" >> .env
-          echo "WEB3AUTH_AUTH0_CLIENT_ID=${{github.event.inputs.WEB3AUTH_AUTH0_CLIENT_ID}}" >> .env
-          echo "WEB3AUTH_AUTH0_VERIFIER=${{github.event.inputs.WEB3AUTH_AUTH0_VERIFIER}}" >> .env
-          echo "WEB3AUTH_AUTH0_DOMAIN=${{github.event.inputs.WEB3AUTH_AUTH0_DOMAIN}}" >> .env
+          echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
+          echo "WEB3AUTH_AUTH0_CLIENT_ID=${{secrets.WEB3AUTH_AUTH0_CLIENT_ID}}" >> .env
+          echo "WEB3AUTH_AUTH0_VERIFIER=${{secrets.WEB3AUTH_AUTH0_VERIFIER}}" >> .env
+          echo "WEB3AUTH_AUTH0_DOMAIN=${{secrets.WEB3AUTH_AUTH0_DOMAIN}}" >> .env
 
       - name: Execute build
         run: |
