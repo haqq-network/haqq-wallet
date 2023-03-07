@@ -42,6 +42,8 @@ import {
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
+import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -64,6 +66,7 @@ import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
+import {MpcScreen} from './screens/mpc';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
@@ -153,7 +156,7 @@ export const App = () => {
       .then(() => SplashScreen.hide())
       .then(() => app.init())
       .then(() => migrationWallets())
-      .then(() => wallets.init(app.snoozeBackup))
+      .then(() => wallets.init())
       .then(() => transactions.init())
       .then(() => WalletConnect.instance.init())
       .catch(e => {
@@ -234,6 +237,7 @@ export const App = () => {
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
 
                 <Stack.Group screenOptions={stackScreenOptions}>
+                  <Stack.Screen name="mpc" component={MpcScreen} />
                   <Stack.Screen name="backup" component={BackupScreen} />
                   <Stack.Screen name="signin" component={SignInScreen} />
                   <Stack.Screen name="signup" component={SignUpScreen} />
@@ -276,6 +280,16 @@ export const App = () => {
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="backupMpcNotification"
+                  component={BackupMpcNotificationScreen}
+                  options={actionsSheet}
+                />
+                <Stack.Screen
+                  name="backupMpcSuggestion"
+                  component={BackupMpcSuggestionScreen}
                   options={actionsSheet}
                 />
                 <Stack.Screen

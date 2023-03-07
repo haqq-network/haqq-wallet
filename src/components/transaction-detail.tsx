@@ -45,9 +45,9 @@ export const TransactionDetail = ({
   );
 
   const onPressAddress = useCallback(() => {
-    Clipboard.setString(to);
+    Clipboard.setString(isSent ? to : from);
     sendNotification(I18N.notificationCopied);
-  }, [to]);
+  }, [from, isSent, to]);
 
   const total = useMemo(() => {
     if (!transaction) {

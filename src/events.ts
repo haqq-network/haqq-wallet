@@ -5,6 +5,7 @@ export enum Events {
   onWalletCreate = 'onWalletCreate',
   onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
+  onWalletMpcCheck = 'onWalletMpcCheck',
   onWalletMnemonicCheck = 'onWalletMnemonicCheck',
   onWalletMnemonicSaved = 'onWalletMnemonicSaved',
   onPushSubscriptionAdd = 'onPushSubscriptionAdd',
@@ -15,9 +16,11 @@ export enum Events {
   onTransactionsLoad = 'onTransactionsLoad',
   onAppStarted = 'onAppStarted',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
+  onAppProviderMpcBackup = 'onAppProviderMpcBackup',
   onWalletConnectUri = 'onWalletConnectUri',
   onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
   onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
+  onWalletMpcSaved = 'onWalletMpcSaved',
 }
 
 export enum WalletConnectEvents {
