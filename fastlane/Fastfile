@@ -187,6 +187,11 @@ platform :ios do
       bundle_identifier: app_identifier,
     )
 
+    update_project_team(
+      path: "Pods.xcodeproj",
+      teamid: ENV["DEVELOPER_PORTAL_TEAM_ID"]
+    )
+
     gym(
       configuration: "Release",
       workspace: "ios/haqq.xcworkspace",
