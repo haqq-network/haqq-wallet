@@ -20,17 +20,21 @@ export const LedgerScanRow = ({
   loading,
   error,
 }: LedgerScanRowProps) => {
+  const disabled = !!loading && !error;
   const handlePress = useCallback(() => {
     onPress?.(item);
   }, [item, onPress]);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={styles.container}
+      onPress={handlePress}>
       <Text style={styles.textName} t11>
         {item.name}
       </Text>
 
-      {!!loading && !error && <ActivityIndicator />}
+      {disabled && <ActivityIndicator />}
     </TouchableOpacity>
   );
 };
