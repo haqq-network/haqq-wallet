@@ -7,6 +7,7 @@ import {Wallet} from '@app/models/wallet';
 
 interface WalletConnectWalletListProps {
   wallets: Wallet[];
+
   handleWalletPress(address: string): void;
 }
 

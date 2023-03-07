@@ -1,19 +1,19 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
 import {app} from '@app/contexts';
+import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 
 export async function getProviderForNewWallet() {
   const getPassword = app.getPassword.bind(app);
 
   const keysMpc = await ProviderMpcReactNative.getAccounts();
-  console.log('keysMpc', keysMpc);
+
   if (keysMpc.length) {
     const storage = app.isGoogleSignedIn
       ? await GoogleDrive.initialize()
-      : new StorageMock();
+      : new AsyncLocalStorage();
 
     return new ProviderMpcReactNative({
       storage,
@@ -23,7 +23,7 @@ export async function getProviderForNewWallet() {
   }
 
   const keysMnemonic = await ProviderMnemonicReactNative.getAccounts();
-  console.log('keysMnemonic', keysMnemonic);
+
   if (keysMnemonic.length) {
     return new ProviderMnemonicReactNative({
       account: keysMnemonic[0],

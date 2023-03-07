@@ -25,8 +25,11 @@ import {getHostnameFromUrl} from '@app/utils';
 interface WalletConnectApprovalProps {
   event: WalletConnectApproveConnectionEvent;
   selectedWallet: Wallet;
+
   onSelectWalletPress(): void;
+
   onPressReject(): void;
+
   onPressApprove(): void;
 }
 

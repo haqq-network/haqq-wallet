@@ -50,7 +50,7 @@ export const StakingDelegatePreviewScreen = () => {
           await awaitForBluetooth();
         }
 
-        const transport = getProviderInstanceForWallet(wallet);
+        const transport = await getProviderInstanceForWallet(wallet);
 
         const query = cosmos.delegate(
           transport,

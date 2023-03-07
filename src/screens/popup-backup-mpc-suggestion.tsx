@@ -9,6 +9,7 @@ import {BackupMpcSuggestion} from '@app/components/bottom-popups/popup-backup-mp
 import {captureException, showModal} from '@app/helpers';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
+import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {GoogleDrive} from '@app/services/google-drive';
 import {
   MpcProviders,
@@ -16,7 +17,6 @@ import {
   customAuthInit,
   verifierMap,
 } from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 
 export const BackupMpcSuggestionScreen = () => {
@@ -55,7 +55,7 @@ export const BackupMpcSuggestionScreen = () => {
 
           const storage = app.isGoogleSignedIn
             ? await GoogleDrive.initialize()
-            : new StorageMock();
+            : new AsyncLocalStorage();
 
           const provider = await ProviderMpcReactNative.initialize(
             loginDetails.privateKey,

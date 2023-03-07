@@ -7,8 +7,8 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
+import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -30,7 +30,7 @@ export const MpcStoreWalletScreen = () => {
           route.params.cloudShare,
           null,
           app.getPassword.bind(app),
-          new StorageMock(),
+          new AsyncLocalStorage(),
           {},
         );
 

@@ -101,14 +101,14 @@ export const HomeStakingScreen = () => {
 
     const queue = exists
       .filter(w => w.type !== WalletType.ledgerBt)
-      .map(w => {
-        return cosmos
-          .multipleWithdrawDelegatorReward(
-            getProviderInstanceForWallet(w),
-            w.path!,
-            delegators[w.cosmosAddress],
-          )
-          .then(() => [w.cosmosAddress, delegators[w.cosmosAddress]]);
+      .map(async w => {
+        const provider = await getProviderInstanceForWallet(w);
+        await cosmos.multipleWithdrawDelegatorReward(
+          provider,
+          w.path!,
+          delegators[w.cosmosAddress],
+        );
+        return [w.cosmosAddress, delegators[w.cosmosAddress]];
       });
 
     const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
@@ -117,7 +117,7 @@ export const HomeStakingScreen = () => {
       const current = ledger.shift();
 
       if (current && current.isValid()) {
-        const transport = getProviderInstanceForWallet(current);
+        const transport = await getProviderInstanceForWallet(current);
 
         queue.push(
           cosmos

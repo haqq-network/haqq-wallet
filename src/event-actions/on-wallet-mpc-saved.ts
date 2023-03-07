@@ -1,8 +1,8 @@
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
+import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 
 export async function onWalletMpcSaved(accountId: string) {
@@ -10,7 +10,7 @@ export async function onWalletMpcSaved(accountId: string) {
 
   const storage = app.isGoogleSignedIn
     ? await GoogleDrive.initialize()
-    : new StorageMock();
+    : new AsyncLocalStorage();
 
   const provider = new ProviderMpcReactNative({
     account: accountId,

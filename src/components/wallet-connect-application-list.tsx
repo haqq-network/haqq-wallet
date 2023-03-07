@@ -8,6 +8,7 @@ import {WalletConnectSessionType} from '@app/types/wallet-connect';
 
 interface WalletConnectApplicationListProps {
   sessions: WalletConnectSessionType[];
+
   handleAppPress(item: WalletConnectSessionType): void;
 }
 
