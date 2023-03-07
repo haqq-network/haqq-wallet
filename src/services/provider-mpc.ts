@@ -1,3 +1,9 @@
+import {
+  WEB3AUTH_AUTH0_CLIENT_ID,
+  WEB3AUTH_AUTH0_DOMAIN,
+  WEB3AUTH_AUTH0_VERIFIER,
+  WEB3AUTH_CLIENT_ID,
+} from '@env';
 import {UnsignedTransaction, serialize} from '@ethersproject/transactions';
 import {
   BytesLike,
@@ -63,7 +69,7 @@ const ITEM_KEY = 'mpc';
 
 export enum MpcProviders {
   google = 'google',
-  github = 'github',
+  auth0 = 'auth0',
 }
 
 export interface StorageInterface {
@@ -77,33 +83,25 @@ export interface StorageInterface {
 export const verifierMap = {
   [MpcProviders.google]: {
     name: 'Google',
-    // verifier: 'haqq-dev',
     verifier: 'haqq-test-google',
     typeOfLogin: 'google',
     clientId:
       '915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com',
-    // clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
-    // jwtParams: {
-    //   domain: 'https://dev-fo21axxzwy36n42g.eu.auth0.com/',
-    //   verifierIdField: 'email',
-    //   isVerifierIdCaseSensitive: 'false',
-    // },
   },
-  [MpcProviders.github]: {
-    name: 'Github',
+  [MpcProviders.auth0]: {
+    name: 'Auth0',
     typeOfLogin: 'jwt',
-    clientId: 'WHNzKg3jJMNbeG60SIKTq9ibHuPVry2E',
-    verifier: 'haqq-test-auth0-github',
+    clientId: WEB3AUTH_AUTH0_CLIENT_ID,
+    verifier: WEB3AUTH_AUTH0_VERIFIER,
     jwtParams: {
-      domain: 'dev-fo21axxzwy36n42g.eu.auth0.com',
+      domain: WEB3AUTH_AUTH0_DOMAIN,
     },
   },
 };
 
 export function customAuthInit() {
   CustomAuth.init({
-    clientId:
-      'BGMlNKbZTkgecZ3g_eGgwxUS4dLy2CAWuHIJsyAVuP7GR841maSzWqepnlZBRZpau8W8pNvbfMd93AIJRIZsxE4',
+    clientId: WEB3AUTH_CLIENT_ID,
     redirectUri: 'haqq://web3auth/redirect',
     network: 'testnet',
     enableLogging: true,

@@ -37,7 +37,7 @@ export const MpcNetworksScreen = () => {
   );
 
   const onPressLoginGithub = useCallback(async () => {
-    await onLogin(MpcProviders.github);
+    await onLogin(MpcProviders.auth0);
   }, [onLogin]);
 
   return <MpcNetworks onLoginAuth0={onPressLoginGithub} />;
