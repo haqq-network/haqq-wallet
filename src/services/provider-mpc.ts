@@ -40,6 +40,8 @@ import BN from 'bn.js';
 import {hexConcat} from 'ethers/lib/utils';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
+import {captureException} from '@app/helpers';
+
 const directParams = {
   baseUrl: 'http://localhost:3000/serviceworker/',
   enableLogging: true,
@@ -73,7 +75,7 @@ export enum MpcProviders {
 }
 
 export interface StorageInterface {
-  getItem(key: string): Promise<string>;
+  getItem(key: string): Promise<string | null>;
 
   hasItem(key: string): Promise<boolean>;
 
@@ -192,6 +194,12 @@ async function getSeed(
 
   shares = shares.filter(Boolean);
 
+  const polynomialIDs = new Set(shares.map(s => s.polynomialID));
+
+  if (polynomialIDs.size > 1) {
+    throw new Error('polynomialID not equals');
+  }
+
   const privKey = lagrangeInterpolation(
     shares.map(s => new BN(s.share.share, 'hex')),
     shares.map(s => new BN(s.share.shareIndex, 'hex')),
@@ -232,20 +240,14 @@ export class ProviderMpcReactNative
 
     try {
       if (!questionAnswer && !cloudShare) {
-        console.log('privateKey', privateKey);
-
         const bytes = privateKey
           ? Buffer.from(privateKey, 'hex')
           : await generateEntropy(32);
-
-        console.log('bytes', bytes);
 
         await tKey._initializeNewKey({
           initializeModules: true,
           importedKey: new BN(bytes),
         });
-
-        console.log('done', tKey.privKey);
 
         password = await getPassword();
 
@@ -253,8 +255,6 @@ export class ProviderMpcReactNative
           password,
           'whats your password?',
         );
-
-        console.log('save question share', tKey.privKey);
       }
 
       if (questionAnswer) {
@@ -269,25 +269,15 @@ export class ProviderMpcReactNative
       }
 
       if (questionAnswer || cloudShare) {
-        console.log('reconstruct', !!questionAnswer, !!cloudShare);
         await tKey.reconstructKey();
       }
-
-      console.log('tKey pk', tKey.privKey);
     } catch (e) {
       if (e instanceof Error) {
-        console.log('pk error', e, e.message);
+        captureException(e, 'provider mpc initialize');
       }
     }
 
     const {address} = await accountInfo(web3privateKey.padStart(64, '0'));
-
-    console.log(
-      'all shares',
-      JSON.stringify(
-        tKey.getAllShareStoresForLatestPolynomial().map(s => s.toJSON()),
-      ),
-    );
 
     while (tKey.getAllShareStoresForLatestPolynomial().length < 5) {
       await tKey.generateNewShare();
@@ -529,7 +519,27 @@ export class ProviderMpcReactNative
   }
 
   async isShareSaved(): Promise<boolean> {
-    return this._options.storage.hasItem(`haqq_${this._options.account}`);
+    const item = await this._options.storage.getItem(
+      `haqq_${this._options.account}`,
+    );
+
+    if (!item) {
+      return false;
+    }
+    let shareLocal = await EncryptedStorage.getItem(
+      `${ITEM_KEY}_${this._options.account}`,
+    );
+    if (!shareLocal) {
+      return false;
+    }
+
+    const password = await this._options.getPassword();
+
+    const localShare = await decryptShare(JSON.parse(shareLocal), password);
+
+    const share = JSON.parse(item);
+
+    return share.polynomialID && share.polynomialID === localShare.polynomialID;
   }
 
   async tryToSaveShare() {

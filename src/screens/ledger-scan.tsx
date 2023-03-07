@@ -18,6 +18,26 @@ export const LedgerScanScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
   const scan = useRef(scanDevices()).current;
+  const [devicesLoadingMap, setDevicesLoadingMap] = useState<
+    Record<string, boolean>
+  >({});
+  const [devicesErrorMap, setDevicesErrorMap] = useState<
+    Record<string, string | undefined>
+  >({});
+
+  const setDeviceError = useCallback((device: Device, error?: Error | null) => {
+    setDevicesErrorMap(prev => ({
+      ...prev,
+      [device.id]: error?.message,
+    }));
+  }, []);
+
+  const setDeviceLoading = useCallback((device: Device, loading: boolean) => {
+    setDevicesLoadingMap(prev => ({
+      ...prev,
+      [device.id]: loading,
+    }));
+  }, []);
 
   useEffect(() => {
     setRefreshing(true);
@@ -57,6 +77,8 @@ export const LedgerScanScreen = () => {
 
   const tryToConnect = useCallback(
     async (item: Device) => {
+      setDeviceError(item, null);
+      setDeviceLoading(item, true);
       const provider = new ProviderLedgerReactNative({
         getPassword: app.getPassword.bind(app),
         deviceId: item.id,
@@ -72,27 +94,34 @@ export const LedgerScanScreen = () => {
       try {
         await suggestApp(transport, LEDGER_APP);
         hideModal('ledger-no-app');
-      } catch (e) {
-        // @ts-ignore
-        if (e instanceof Error && e.statusCode === 26631) {
-          throw new Error('app_not_found');
+        navigation.navigate('ledgerAccounts', {
+          deviceId: item.id,
+          deviceName: `Ledger ${item.name}`,
+        });
+      } catch (err) {
+        if (err instanceof Error) {
+          setDeviceLoading(item, false);
+          setDeviceError(item, err);
+          // @ts-ignore
+          switch (err.statusCode) {
+            case 26631:
+              throw new Error('app_not_found');
+            case 21761:
+              throw new Error('user_refused_on_device');
+          }
         }
       }
-      navigation.navigate('ledgerAccounts', {
-        deviceId: item.id,
-        deviceName: `Ledger ${item.name}`,
-      });
     },
-    [navigation],
+    [navigation, setDeviceError, setDeviceLoading],
   );
 
   const onRetry = useCallback(
     async (item: Device) => {
       try {
         await tryToConnect(item);
-      } catch (e) {
-        if (e instanceof Error) {
-          switch (e.message) {
+      } catch (err) {
+        if (err instanceof Error) {
+          switch (err.message) {
             case 'can_not_connected':
               break;
             case 'app_not_found':
@@ -108,9 +137,10 @@ export const LedgerScanScreen = () => {
     async (item: Device) => {
       try {
         await tryToConnect(item);
-      } catch (e) {
-        if (e instanceof Error) {
-          switch (e.message) {
+      } catch (err) {
+        if (err instanceof Error) {
+          switch (err.message) {
+            case 'user_refused_on_device':
             case 'can_not_connected':
               break;
             case 'app_not_found':
@@ -128,6 +158,12 @@ export const LedgerScanScreen = () => {
   );
 
   return (
-    <LedgerScan devices={devices} onSelect={onPress} refreshing={refreshing} />
+    <LedgerScan
+      devicesLoadingMap={devicesLoadingMap}
+      devicesErrorMap={devicesErrorMap}
+      devices={devices}
+      onSelect={onPress}
+      refreshing={refreshing}
+    />
   );
 };

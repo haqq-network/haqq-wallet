@@ -24,6 +24,7 @@ interface WalletConnectApplicationDetailsProps {
   linkedWallet: Wallet;
   session: WalletConnectSessionType;
   sessionMetadata: WalletConnectSessionMetadata;
+
   handleDisconnectPress(): void;
 }
 

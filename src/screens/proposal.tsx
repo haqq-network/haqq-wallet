@@ -56,7 +56,7 @@ export const ProposalScreen = () => {
         return;
       }
       try {
-        const transport = getProviderInstanceForWallet(wallet);
+        const transport = await getProviderInstanceForWallet(wallet);
 
         const query = cosmos.vote(
           transport,

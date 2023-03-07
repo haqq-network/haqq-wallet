@@ -2,13 +2,13 @@ import React, {useEffect} from 'react';
 
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -24,13 +24,15 @@ export const MpcStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
+        const storage = await getProviderStorage('');
+
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,
           route.params.questionAnswer,
           route.params.cloudShare,
           null,
           app.getPassword.bind(app),
-          new StorageMock(),
+          storage,
           {},
         );
 

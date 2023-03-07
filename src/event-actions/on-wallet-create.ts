@@ -5,10 +5,8 @@ import {Events} from '@app/events';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
-import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {pushNotifications} from '@app/services/push-notifications';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 
 export async function onWalletCreate(wallet: Wallet) {
@@ -36,19 +34,15 @@ export async function onWalletCreate(wallet: Wallet) {
 
       switch (wallet.type) {
         case WalletType.mpc:
-          const storage = app.isGoogleSignedIn
-            ? await GoogleDrive.initialize()
-            : new StorageMock();
-
-          const providerMpc = getProviderInstanceForWallet(wallet, {
-            storage,
-          }) as ProviderMpcReactNative;
+          const providerMpc = (await getProviderInstanceForWallet(
+            wallet,
+          )) as ProviderMpcReactNative;
           mnemonicSaved = await providerMpc.isShareSaved();
           break;
         case WalletType.mnemonic:
-          const providerMnemonic = getProviderInstanceForWallet(
+          const providerMnemonic = (await getProviderInstanceForWallet(
             wallet,
-          ) as ProviderMnemonicReactNative;
+          )) as ProviderMnemonicReactNative;
           mnemonicSaved = await providerMnemonic.isMnemonicSaved();
           break;
         default:
