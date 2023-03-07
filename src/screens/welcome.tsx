@@ -9,11 +9,14 @@ export const WelcomeScreen = () => {
   const onPressSignup = () => navigation.navigate('signup', {next: 'create'});
   const onPressLedger = () => navigation.navigate('ledger');
   const onPressSignIn = () => navigation.navigate('signin', {next: 'restore'});
+  const onPressMpc = () => navigation.navigate('mpc');
+
   return (
     <Welcome
       onPressSignup={onPressSignup}
       onPressLedger={onPressLedger}
       onPressSignIn={onPressSignIn}
+      onPressMpc={onPressMpc}
     />
   );
 };

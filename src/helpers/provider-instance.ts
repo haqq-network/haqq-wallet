@@ -5,6 +5,8 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
+import {ProviderMpcReactNative} from '@app/services/provider-mpc';
+import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -15,6 +17,7 @@ function getId(wallet: Wallet) {
     case WalletType.mnemonic:
     case WalletType.hot:
     case WalletType.ledgerBt:
+    case WalletType.mpc:
       return wallet.accountId ?? '';
   }
 }
@@ -31,6 +34,7 @@ export function abortProviderInstanceForWallet(wallet: Wallet) {
 
 export function getProviderInstanceForWallet(
   wallet: Wallet,
+  extraData: Record<string, any> = {},
 ): ProviderInterface {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
@@ -60,6 +64,17 @@ export function getProviderInstanceForWallet(
             getPassword: app.getPassword.bind(app),
             deviceId: wallet.accountId!,
             appName: LEDGER_APP,
+          }),
+        );
+        break;
+      case WalletType.mpc:
+        cache.set(
+          id,
+          new ProviderMpcReactNative({
+            storage: new StorageMock(),
+            ...extraData,
+            getPassword: app.getPassword.bind(app),
+            account: wallet.accountId!,
           }),
         );
         break;
