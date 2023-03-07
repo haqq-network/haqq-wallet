@@ -82,14 +82,14 @@ export const StakingInfoScreen = () => {
 
       const queue = exists
         .filter(w => w.type !== WalletType.ledgerBt)
-        .map(w => {
-          return cosmos
-            .withdrawDelegatorReward(
-              getProviderInstanceForWallet(w),
-              w.path!,
-              operator_address,
-            )
-            .then(() => [w.cosmosAddress, operator_address]);
+        .map(async w => {
+          const provider = await getProviderInstanceForWallet(w);
+          await cosmos.withdrawDelegatorReward(
+            provider,
+            w.path!,
+            operator_address,
+          );
+          return [w.cosmosAddress, operator_address];
         });
 
       const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
@@ -98,7 +98,7 @@ export const StakingInfoScreen = () => {
         const current = ledger.shift();
 
         if (current) {
-          const transport = getProviderInstanceForWallet(current);
+          const transport = await getProviderInstanceForWallet(current);
 
           try {
             await awaitForBluetooth();

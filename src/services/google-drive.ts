@@ -15,6 +15,10 @@ type FilesResp = {
 export class GoogleDrive implements StorageInterface {
   private _token = '';
 
+  constructor(token: string) {
+    this._token = token;
+  }
+
   static async initialize() {
     GoogleSignin.configure({
       scopes: [
@@ -33,10 +37,6 @@ export class GoogleDrive implements StorageInterface {
 
     const tokens = await GoogleSignin.getTokens();
     return new GoogleDrive(tokens.accessToken);
-  }
-
-  constructor(token: string) {
-    this._token = token;
   }
 
   async uploadFile(id: string, filename: string, content: string) {

@@ -4,9 +4,9 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -32,10 +32,9 @@ export function abortProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
-export function getProviderInstanceForWallet(
+export async function getProviderInstanceForWallet(
   wallet: Wallet,
-  extraData: Record<string, any> = {},
-): ProviderInterface {
+): Promise<ProviderInterface> {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
     switch (wallet.type) {
@@ -68,11 +67,11 @@ export function getProviderInstanceForWallet(
         );
         break;
       case WalletType.mpc:
+        const storage = await getProviderStorage(wallet.accountId as string);
         cache.set(
           id,
           new ProviderMpcReactNative({
-            storage: new StorageMock(),
-            ...extraData,
+            storage,
             getPassword: app.getPassword.bind(app),
             account: wallet.accountId!,
           }),

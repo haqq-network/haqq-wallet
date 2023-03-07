@@ -7,16 +7,15 @@ import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {BackupMpcSuggestion} from '@app/components/bottom-popups/popup-backup-mpc-suggestion';
 import {captureException, showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
-import {GoogleDrive} from '@app/services/google-drive';
 import {
   MpcProviders,
   ProviderMpcReactNative,
   customAuthInit,
   verifierMap,
 } from '@app/services/provider-mpc';
-import {StorageMock} from '@app/services/storage-mock';
 import {WalletType} from '@app/types';
 
 export const BackupMpcSuggestionScreen = () => {
@@ -53,9 +52,7 @@ export const BackupMpcSuggestionScreen = () => {
             verifierMap[MpcProviders.auth0],
           );
 
-          const storage = app.isGoogleSignedIn
-            ? await GoogleDrive.initialize()
-            : new StorageMock();
+          const storage = await getProviderStorage('');
 
           const provider = await ProviderMpcReactNative.initialize(
             loginDetails.privateKey,

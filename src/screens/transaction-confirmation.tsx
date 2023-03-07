@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
-import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {
   abortProviderInstanceForWallet,
@@ -17,7 +16,6 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
-import {GoogleDrive} from '@app/services/google-drive';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
@@ -66,15 +64,7 @@ export const TransactionConfirmationScreen = () => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const extraData: Record<string, any> = {
-          storage: undefined,
-        };
-
-        if (wallet.type === WalletType.mpc && app.isGoogleSignedIn) {
-          extraData.storage = await GoogleDrive.initialize();
-        }
-
-        const provider = getProviderInstanceForWallet(wallet, extraData);
+        const provider = await getProviderInstanceForWallet(wallet);
 
         const transaction = await ethNetworkProvider.sendTransaction(
           provider,

@@ -11,8 +11,9 @@ import {Wallet} from '@app/models/wallet';
 interface Props {
   initialAddress?: string;
   wallets: Wallet[] | Results<Wallet>;
-  onWalletSelected?(address: string): void;
   style?: StyleProp<ViewStyle>;
+
+  onWalletSelected?(address: string): void;
 }
 
 export const WalletSelector = ({

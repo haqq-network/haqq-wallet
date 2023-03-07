@@ -10,6 +10,7 @@ import {createTheme} from '@app/helpers';
 export interface WalletConnectAppRowProps {
   item: SessionTypes.Struct;
   style?: StyleProp<ViewStyle>;
+
   onPress?(item: SessionTypes.Struct): void;
 }
 
