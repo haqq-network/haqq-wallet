@@ -34,7 +34,7 @@
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/bottom-tabs": "6.5.4",
     "@react-navigation/native": "6.1.2",
-    "@react-navigation/stack": "6.3.11",
+    "@react-navigation/stack": "6.3.12",
     "@sentry/react-native": "5.0.0-rc.1",
     "@tkey/default": "^7.2.0",
     "@tkey/service-provider-base": "^7.2.0",
