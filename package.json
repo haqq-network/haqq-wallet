@@ -42,7 +42,7 @@
     "@tkey/storage-layer-torus": "7.2.0",
     "@toruslabs/customauth-react-native-sdk": "4.0.1",
     "@tradle/react-native-http": "2.0.0",
-    "@walletconnect/react-native-compat": "2.2.1",
+    "@walletconnect/react-native-compat": "2.4.3",
     "@walletconnect/sign-client": "2.2.1",
     "@walletconnect/web3wallet": "1.1.1",
     "assert": "2.0.0",
