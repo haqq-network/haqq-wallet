@@ -163,17 +163,7 @@ platform :ios do
     match(
       type: 'development',
       app_identifier: app_identifier,
-      readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      api_key: api_key
-    )
-
-    sync_code_signing(
-      type: "development",
-      app_identifier: [app_identifier],
-      force_for_new_devices: true,
-      readonly: true,
+#       readonly: true,
       keychain_name: keychain_name,
       keychain_password: keychain_password,
       api_key: api_key
@@ -182,16 +172,7 @@ platform :ios do
     match(
       type: 'appstore',
       app_identifier: app_identifier,
-      readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      api_key: api_key
-    )
-
-    sync_code_signing(
-      type: "appstore",
-      app_identifier: app_identifier,
-      readonly: true,
+#       readonly: true,
       keychain_name: keychain_name,
       keychain_password: keychain_password,
       api_key: api_key
