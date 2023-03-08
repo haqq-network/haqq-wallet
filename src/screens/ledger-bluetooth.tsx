@@ -3,6 +3,8 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
 import {Subscription} from 'rxjs';
 
+import {showModal} from '@app/helpers';
+import {requestLocationPermission} from '@app/helpers/request-location-permission';
 import {useTypedNavigation, useUser} from '@app/hooks';
 
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
@@ -24,7 +26,13 @@ export const LedgerBluetoothScreen = () => {
   }, []);
 
   const onDone = useCallback(async () => {
-    navigation.navigate('ledgerScan');
+    requestLocationPermission().then(({granted}) => {
+      if (granted) {
+        navigation.navigate('ledgerScan');
+      } else {
+        showModal('location-unauthorized');
+      }
+    });
 
     requestAnimationFrame(() => {
       user.bluetooth = true;

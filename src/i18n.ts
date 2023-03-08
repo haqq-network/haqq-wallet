@@ -483,11 +483,12 @@ export enum I18N {
   mpcFinishCongratulations,
   mpcStoreWalletSaving,
   mpcQuestionWrongPassword,
-
   backupMpcNotificationBackup,
   backupMpcNotificationCheck,
   backupMpcSuggestionConnect,
   backupMpcSuggestionCancel,
+  locationUnauthorizedDescription,
+  locationUnauthorizedTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1054,4 +1055,7 @@ const en: Record<I18N, string> = {
   [I18N.backupMpcNotificationCheck]: 'Check backup on google drive',
   [I18N.backupMpcSuggestionConnect]: 'Connect',
   [I18N.backupMpcSuggestionCancel]: 'Connect later',
+  [I18N.locationUnauthorizedTitle]: 'No access to precise location',
+  [I18N.locationUnauthorizedDescription]:
+    'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
 };
