@@ -22,6 +22,7 @@ export class GoogleDrive implements StorageInterface {
   static async initialize() {
     GoogleSignin.configure({
       scopes: [
+        'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/drive',
         'https://www.googleapis.com/auth/drive.appfolder',
         'https://www.googleapis.com/auth/drive.appdata',

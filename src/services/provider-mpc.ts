@@ -3,6 +3,8 @@ import {
   WEB3AUTH_AUTH0_DOMAIN,
   WEB3AUTH_AUTH0_VERIFIER,
   WEB3AUTH_CLIENT_ID,
+  WEB3AUTH_DISCORD_CLIENT_ID,
+  WEB3AUTH_DISCORD_VERIFIER,
 } from '@env';
 import {UnsignedTransaction, serialize} from '@ethersproject/transactions';
 import {
@@ -72,6 +74,8 @@ const ITEM_KEY = 'mpc';
 export enum MpcProviders {
   google = 'google',
   auth0 = 'auth0',
+  discord = 'discord',
+  coinbase = 'coinase',
 }
 
 export interface StorageInterface {
@@ -98,6 +102,12 @@ export const verifierMap = {
     jwtParams: {
       domain: WEB3AUTH_AUTH0_DOMAIN,
     },
+  },
+  [MpcProviders.discord]: {
+    name: 'Discord',
+    typeOfLogin: 'discord',
+    verifier: WEB3AUTH_DISCORD_VERIFIER,
+    clientId: WEB3AUTH_DISCORD_CLIENT_ID,
   },
 };
 

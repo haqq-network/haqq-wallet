@@ -7,31 +7,71 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {MpcProviders} from '@app/services/provider-mpc';
 
 export type MpcNetworksProps = {
-  onLoginAuth0: () => Promise<void>;
+  onLogin: (provider: MpcProviders) => Promise<void>;
 };
 
-export const MpcNetworks = ({onLoginAuth0}: MpcNetworksProps) => {
+export const MpcNetworks = ({onLogin}: MpcNetworksProps) => {
   const [isAuth0, setIsAuth0] = useState(false);
+  const [isDiscord, setIsDiscord] = useState(false);
+  const [isGoogle, setIsGoogle] = useState(false);
 
-  const onPressLoginGithub = useCallback(async () => {
+  const onPressLoginAuth0 = useCallback(async () => {
     try {
       setIsAuth0(true);
 
-      await onLoginAuth0();
+      await onLogin(MpcProviders.coinbase);
     } finally {
       setIsAuth0(false);
     }
-  }, [onLoginAuth0]);
+  }, [onLogin]);
+
+  const onPressLoginDiscord = useCallback(async () => {
+    try {
+      setIsDiscord(true);
+
+      await onLogin(MpcProviders.discord);
+    } finally {
+      setIsDiscord(false);
+    }
+  }, [onLogin]);
+
+  const onPressLoginGoogle = useCallback(async () => {
+    try {
+      setIsGoogle(true);
+
+      await onLogin(MpcProviders.google);
+    } finally {
+      setIsGoogle(false);
+    }
+  }, [onLogin]);
 
   return (
     <PopupContainer style={styles.container}>
       <Spacer />
       <Button
-        title="Login with Auth0"
+        title="Login with Google"
+        loading={isGoogle}
+        disabled={isAuth0 || isDiscord}
+        onPress={onPressLoginGoogle}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Login with Discord"
+        loading={isDiscord}
+        disabled={isAuth0 || isGoogle}
+        onPress={onPressLoginDiscord}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Login with Coinbase"
         loading={isAuth0}
-        onPress={onPressLoginGithub}
+        disabled={isDiscord || isGoogle}
+        onPress={onPressLoginAuth0}
         variant={ButtonVariant.contained}
       />
     </PopupContainer>

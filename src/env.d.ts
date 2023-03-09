@@ -15,4 +15,6 @@ declare module '@env' {
   export const WEB3AUTH_AUTH0_CLIENT_ID: string;
   export const WEB3AUTH_AUTH0_VERIFIER: string;
   export const WEB3AUTH_AUTH0_DOMAIN: string;
+  export const WEB3AUTH_DISCORD_VERIFIER: string;
+  export const WEB3AUTH_DISCORD_CLIENT_ID: string;
 }
