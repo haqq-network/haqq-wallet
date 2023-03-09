@@ -1,4 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 import {
   Button,
@@ -14,29 +16,10 @@ export type MpcNetworksProps = {
 };
 
 export const MpcNetworks = ({onLogin}: MpcNetworksProps) => {
-  const [isAuth0, setIsAuth0] = useState(false);
-  const [isDiscord, setIsDiscord] = useState(false);
+  const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
 
-  const onPressLoginAuth0 = useCallback(async () => {
-    try {
-      setIsAuth0(true);
-
-      await onLogin(MpcProviders.coinbase);
-    } finally {
-      setIsAuth0(false);
-    }
-  }, [onLogin]);
-
-  const onPressLoginDiscord = useCallback(async () => {
-    try {
-      setIsDiscord(true);
-
-      await onLogin(MpcProviders.discord);
-    } finally {
-      setIsDiscord(false);
-    }
-  }, [onLogin]);
+  const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
   const onPressLoginGoogle = useCallback(async () => {
     try {
@@ -48,32 +31,38 @@ export const MpcNetworks = ({onLogin}: MpcNetworksProps) => {
     }
   }, [onLogin]);
 
+  const onPressLoginApple = useCallback(async () => {
+    try {
+      setIsApple(true);
+
+      await onLogin(MpcProviders.apple);
+    } finally {
+      setIsApple(false);
+    }
+  }, [onLogin]);
+
   return (
     <PopupContainer style={styles.container}>
       <Spacer />
       <Button
         title="Login with Google"
         loading={isGoogle}
-        disabled={isAuth0 || isDiscord}
+        disabled={isLoading && !isGoogle}
         onPress={onPressLoginGoogle}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={8} />
-      <Button
-        title="Login with Discord"
-        loading={isDiscord}
-        disabled={isAuth0 || isGoogle}
-        onPress={onPressLoginDiscord}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="Login with Coinbase"
-        loading={isAuth0}
-        disabled={isDiscord || isGoogle}
-        onPress={onPressLoginAuth0}
-        variant={ButtonVariant.contained}
-      />
+      {appleAuth.isSupported && (
+        <>
+          <Spacer height={8} />
+          <Button
+            title="Login with Apple"
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
     </PopupContainer>
   );
 };

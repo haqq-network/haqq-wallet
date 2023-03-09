@@ -3,8 +3,6 @@ import {
   WEB3AUTH_AUTH0_DOMAIN,
   WEB3AUTH_AUTH0_VERIFIER,
   WEB3AUTH_CLIENT_ID,
-  WEB3AUTH_DISCORD_CLIENT_ID,
-  WEB3AUTH_DISCORD_VERIFIER,
 } from '@env';
 import {UnsignedTransaction, serialize} from '@ethersproject/transactions';
 import {
@@ -76,6 +74,8 @@ export enum MpcProviders {
   auth0 = 'auth0',
   discord = 'discord',
   coinbase = 'coinase',
+  apple = 'apple',
+  github = 'github',
 }
 
 export interface StorageInterface {
@@ -103,19 +103,13 @@ export const verifierMap = {
       domain: WEB3AUTH_AUTH0_DOMAIN,
     },
   },
-  [MpcProviders.discord]: {
-    name: 'Discord',
-    typeOfLogin: 'discord',
-    verifier: WEB3AUTH_DISCORD_VERIFIER,
-    clientId: WEB3AUTH_DISCORD_CLIENT_ID,
-  },
 };
 
 export function customAuthInit() {
   CustomAuth.init({
     clientId: WEB3AUTH_CLIENT_ID,
     redirectUri: 'haqq://web3auth/redirect',
-    network: 'testnet',
+    network: 'celeste',
     enableLogging: true,
     enableOneKey: false,
     skipSw: true,
