@@ -539,7 +539,10 @@ export class ProviderMpcReactNative
 
     const password = await this._options.getPassword();
 
-    const localShare = await decryptShare(JSON.parse(shareLocal), password);
+    const localShare = await decryptShare(
+      SecurityQuestionStore.fromJSON(JSON.parse(shareLocal)),
+      password,
+    );
 
     const share = JSON.parse(item);
 
