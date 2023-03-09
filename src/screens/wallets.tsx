@@ -8,6 +8,7 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletConnect} from '@app/services/wallet-connect';
+import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = () => {
@@ -72,8 +73,14 @@ export const WalletsWrapper = () => {
   }, []);
 
   const onPressBackup = useCallback(
-    (accountId: string) => {
-      navigation.navigate('backup', {accountId: accountId});
+    (accountId: string, walletType: WalletType) => {
+      switch (walletType) {
+        case WalletType.mnemonic:
+          navigation.navigate('backup', {accountId});
+          break;
+        case WalletType.mpc:
+          navigation.navigate('backupMpcNotification', {accountId});
+      }
     },
     [navigation],
   );

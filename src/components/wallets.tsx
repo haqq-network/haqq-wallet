@@ -11,6 +11,7 @@ import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 
 export type WalletsProps = {
   wallets: Wallet[];
@@ -19,7 +20,7 @@ export type WalletsProps = {
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onWalletConnectPress: (address: string) => void;
-  onPressBackup: (address: string) => void;
+  onPressBackup: (address: string, walletType: WalletType) => void;
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;

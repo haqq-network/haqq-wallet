@@ -1,5 +1,6 @@
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+// import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
+import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {StorageInterface} from '@app/services/provider-mpc';
 import {makeID} from '@app/utils';
 
@@ -20,23 +21,8 @@ export class GoogleDrive implements StorageInterface {
   }
 
   static async initialize() {
-    GoogleSignin.configure({
-      scopes: [
-        'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/drive.appfolder',
-        'https://www.googleapis.com/auth/drive.appdata',
-        'https://www.googleapis.com/auth/drive.file',
-      ],
-    });
-
-    try {
-      await GoogleSignin.signInSilently();
-    } catch (e) {
-      await GoogleSignin.signIn();
-    }
-
-    const tokens = await GoogleSignin.getTokens();
-    return new GoogleDrive(tokens.accessToken);
+    const authState = await getGoogleTokens();
+    return new GoogleDrive(authState.accessToken);
   }
 
   async uploadFile(id: string, filename: string, content: string) {
