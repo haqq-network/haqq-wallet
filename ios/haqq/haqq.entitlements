@@ -10,7 +10,7 @@
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
-		<string></string>
+		<string>iCloud.com.haqq.wallet.keys</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
