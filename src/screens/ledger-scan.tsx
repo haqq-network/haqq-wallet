@@ -12,12 +12,16 @@ import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation} from '@app/hooks';
+import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';
 
 export const LedgerScanScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
   const scan = useRef(scanDevices()).current;
+  const ledgerProvidersMap = useRef<
+    Record<string, {taskId: string; provider: ProviderLedgerReactNative}>
+  >({}).current;
   const [devicesLoadingMap, setDevicesLoadingMap] = useState<
     Record<string, boolean>
   >({});
@@ -64,8 +68,11 @@ export const LedgerScanScreen = () => {
       scan.off('device', onDevice);
       scan.off('complete', onComplete);
       scan.off('error', onComplete);
+      Object.values(ledgerProvidersMap).forEach(({provider, taskId}) => {
+        provider?.emit?.(`stop-task-${taskId}`);
+      });
     };
-  }, [scan]);
+  }, [ledgerProvidersMap, scan]);
 
   const navigation = useTypedNavigation();
 
@@ -84,8 +91,12 @@ export const LedgerScanScreen = () => {
         deviceId: item.id,
         appName: LEDGER_APP,
       });
+      const taskId = generateUUID();
 
-      const transport = await provider.awaitForTransport(item.id);
+      ledgerProvidersMap[item.id] = {taskId, provider};
+
+      // @ts-ignore
+      const transport = await provider.awaitForTransport(item.id, taskId);
 
       if (!transport) {
         throw new Error('can_not_connected');
@@ -98,9 +109,9 @@ export const LedgerScanScreen = () => {
           deviceId: item.id,
           deviceName: `Ledger ${item.name}`,
         });
+        setDeviceError(item, null);
       } catch (err) {
         if (err instanceof Error) {
-          setDeviceLoading(item, false);
           setDeviceError(item, err);
           // @ts-ignore
           switch (err.statusCode) {
@@ -110,9 +121,11 @@ export const LedgerScanScreen = () => {
               throw new Error('user_refused_on_device');
           }
         }
+      } finally {
+        setDeviceLoading(item, false);
       }
     },
-    [navigation, setDeviceError, setDeviceLoading],
+    [ledgerProvidersMap, navigation, setDeviceError, setDeviceLoading],
   );
 
   const onRetry = useCallback(
@@ -120,6 +133,8 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
+        console.error('ledgerScan:onRetry', item.name, err);
+
         if (err instanceof Error) {
           switch (err.message) {
             case 'can_not_connected':
@@ -138,6 +153,8 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
+        console.error('ledgerScan:onPress', item.name, err);
+
         if (err instanceof Error) {
           switch (err.message) {
             case 'user_refused_on_device':

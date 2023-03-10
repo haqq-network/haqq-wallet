@@ -33,6 +33,10 @@ import {
   DetailsQrModal,
   DetailsQrModalProps,
 } from '@app/components/modals/details-qr';
+import {
+  LocationUnauthorized,
+  LocationUnauthorizedProps,
+} from '@app/components/modals/location-unauthorized';
 import {QRModal, QRModalProps} from '@app/components/modals/qr';
 import {
   TransactionError,
@@ -92,6 +96,9 @@ type BluetoothUnauthorizedModal = {
 type CaptchaModal = {
   type: 'captcha';
 } & CaptchaModalProps;
+type LocationUnauthorizedModal = {
+  type: 'location-unauthorized';
+} & LocationUnauthorizedProps;
 
 type ModalState =
   | Loading
@@ -106,6 +113,7 @@ type ModalState =
   | BluetoothPoweredOffModal
   | BluetoothUnauthorizedModal
   | CaptchaModal
+  | LocationUnauthorizedModal
   | null;
 
 export type ModalProps = {
@@ -194,6 +202,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <BluetoothUnauthorized onClose={modal.onClose} />;
       case 'captcha':
         return <CaptchaModal onClose={modal.onClose} />;
+      case 'location-unauthorized':
+        return <LocationUnauthorized onClose={modal.onClose} />;
       default:
         return null;
     }
