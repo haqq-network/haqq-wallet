@@ -15,4 +15,5 @@ declare module '@env' {
   export const WEB3AUTH_AUTH0_CLIENT_ID: string;
   export const WEB3AUTH_AUTH0_VERIFIER: string;
   export const WEB3AUTH_AUTH0_DOMAIN: string;
+  export const HCAPTCHA_SITE_KEY: string;
 }

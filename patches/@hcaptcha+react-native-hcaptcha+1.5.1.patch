@@ -1,0 +1,21 @@
+diff --git a/node_modules/@hcaptcha/react-native-hcaptcha/Hcaptcha.js b/node_modules/@hcaptcha/react-native-hcaptcha/Hcaptcha.js
+index 9b82b69..3b87b92 100644
+--- a/node_modules/@hcaptcha/react-native-hcaptcha/Hcaptcha.js
++++ b/node_modules/@hcaptcha/react-native-hcaptcha/Hcaptcha.js
+@@ -182,7 +182,7 @@ const Hcaptcha = ({
+         </script>
+       </head>
+       <body style="background-color: ${backgroundColor};">
+-        <div id="submit"></div>
++        <div id="submit" style="align-self: center; display: flex; align-items: center; justify-content: center;flex: 1; height: 100vh; overflow: hidden;"></div>
+       </body>
+       </html>`,
+     [siteKey, backgroundColor, theme, debugInfo]
+@@ -200,6 +200,7 @@ const Hcaptcha = ({
+ 
+   return (
+     <WebView
++      scrollEnabled={false}
+       originWhitelist={['*']}
+       onShouldStartLoadWithRequest={(event) => {
+         if (event.url.slice(0, 24) === 'https://www.hcaptcha.com') {

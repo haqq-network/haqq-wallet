@@ -26,6 +26,10 @@ import {
   BluetoothUnauthorizedProps,
 } from '@app/components/modals/bluetooth-unauthorized';
 import {
+  CaptchaModal,
+  CaptchaModalProps,
+} from '@app/components/modals/capthca-modal';
+import {
   DetailsQrModal,
   DetailsQrModalProps,
 } from '@app/components/modals/details-qr';
@@ -85,6 +89,10 @@ type BluetoothUnauthorizedModal = {
   type: 'bluetooth-unauthorized';
 } & BluetoothUnauthorizedProps;
 
+type CaptchaModal = {
+  type: 'captcha';
+} & CaptchaModalProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -97,6 +105,7 @@ type ModalState =
   | TransactionErrorModal
   | BluetoothPoweredOffModal
   | BluetoothUnauthorizedModal
+  | CaptchaModal
   | null;
 
 export type ModalProps = {
@@ -183,6 +192,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <BluetoothPoweredOff onClose={modal.onClose} />;
       case 'bluetooth-unauthorized':
         return <BluetoothUnauthorized onClose={modal.onClose} />;
+      case 'captcha':
+        return <CaptchaModal onClose={modal.onClose} />;
       default:
         return null;
     }

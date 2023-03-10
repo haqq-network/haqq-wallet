@@ -34,8 +34,9 @@ const timingInAnimationConfig: WithTimingConfig = {
 
 const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
+export type PopupBottomContainerHandleCloseType = (onEnd?: () => void) => void;
 interface BottomPopupContainerProps {
-  children: (handleClose: (onEnd?: () => void) => void) => JSX.Element;
+  children: (handleClose: PopupBottomContainerHandleCloseType) => JSX.Element;
   transparent?: boolean;
   onPressOutContent?: () => void;
   closeOnPressOut?: boolean;
