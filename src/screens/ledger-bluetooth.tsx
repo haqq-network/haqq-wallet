@@ -26,13 +26,13 @@ export const LedgerBluetoothScreen = () => {
   }, []);
 
   const onDone = useCallback(async () => {
-    requestLocationPermission().then(({granted}) => {
-      if (granted) {
-        navigation.navigate('ledgerScan');
-      } else {
-        showModal('location-unauthorized');
-      }
-    });
+    const {granted} = await requestLocationPermission();
+
+    if (granted) {
+      navigation.navigate('ledgerScan');
+    } else {
+      showModal('location-unauthorized');
+    }
 
     requestAnimationFrame(() => {
       user.bluetooth = true;

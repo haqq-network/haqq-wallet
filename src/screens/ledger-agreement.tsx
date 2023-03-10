@@ -9,14 +9,14 @@ import {LedgerAgreement} from '../components/ledger-agreement';
 export const LedgerAgreementScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
-  const onDone = useCallback(() => {
-    requestLocationPermission().then(({granted}) => {
-      if (granted || !user.bluetooth) {
-        navigation.navigate(user.bluetooth ? 'ledgerScan' : 'ledgerBluetooth');
-      } else {
-        showModal('location-unauthorized');
-      }
-    });
+  const onDone = useCallback(async () => {
+    const {granted} = await requestLocationPermission();
+
+    if (granted || !user.bluetooth) {
+      navigation.navigate(user.bluetooth ? 'ledgerScan' : 'ledgerBluetooth');
+    } else {
+      showModal('location-unauthorized');
+    }
   }, [navigation, user.bluetooth]);
 
   return <LedgerAgreement onDone={onDone} />;

@@ -133,6 +133,8 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
+        console.error('ledgerScan:onRetry', item.name, err);
+
         if (err instanceof Error) {
           switch (err.message) {
             case 'can_not_connected':
@@ -151,6 +153,8 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
+        console.error('ledgerScan:onPress', item.name, err);
+
         if (err instanceof Error) {
           switch (err.message) {
             case 'user_refused_on_device':
