@@ -52,7 +52,7 @@
     "big-integer": "1.6.51",
     "bn.js": "5.2.1",
     "buffer": "6.0.3",
-    "date-fns": "2.29.1",
+    "date-fns": "2.29.3",
     "decimal.js": "10.4.3",
     "deprecated-react-native-prop-types": "2.3.0",
     "ethers": "5.7.2",
