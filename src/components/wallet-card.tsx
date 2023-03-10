@@ -17,6 +17,7 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 import {shortAddress} from '@app/utils';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
@@ -26,7 +27,7 @@ export type BalanceProps = {
   walletConnectSessions: SessionTypes.Struct[];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
-  onPressBackup: (address: string) => void;
+  onPressBackup: (address: string, type: WalletType) => void;
   onWalletConnectPress?: (address: string) => void;
 };
 
@@ -55,7 +56,7 @@ export const WalletCard = ({
 
   const onBackup = () => {
     if (wallet.accountId) {
-      onPressBackup(wallet.accountId);
+      onPressBackup(wallet.accountId, wallet.type);
     }
   };
 

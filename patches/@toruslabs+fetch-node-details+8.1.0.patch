@@ -1,0 +1,20 @@
+diff --git a/node_modules/@toruslabs/fetch-node-details/dist/fetchNodeDetails.cjs.js b/node_modules/@toruslabs/fetch-node-details/dist/fetchNodeDetails.cjs.js
+index 3ab00b2..b659f2b 100644
+--- a/node_modules/@toruslabs/fetch-node-details/dist/fetchNodeDetails.cjs.js
++++ b/node_modules/@toruslabs/fetch-node-details/dist/fetchNodeDetails.cjs.js
+@@ -148,13 +148,8 @@ var NodeDetailManager = /*#__PURE__*/function () {
+     defineProperty_default()(this, "updated", void 0);
+     defineProperty_default()(this, "nodeListContract", void 0);
+     var url;
+-    try {
+-      var localUrl = new URL(network);
+-      url = localUrl.href;
+-    } catch (_) {
+-      var projectId = "b8cdb0e4cff24599a286bf8e87ff1c96";
+-      url = "https://".concat(NETWORK_MAP[network], ".infura.io/v3/").concat(projectId);
+-    }
++    var projectId = "b8cdb0e4cff24599a286bf8e87ff1c96";
++    url = "https://".concat(NETWORK_MAP[network], ".infura.io/v3/").concat(projectId);
+     external_web3_eth_contract_default().setProvider(url);
+     this.nodeListContract = new (external_web3_eth_contract_default())(abi, proxyAddress);
+     this.nodeListAddress = proxyAddress;

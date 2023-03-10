@@ -9,11 +9,8 @@ import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
 export async function onWalletMpcCheck(snoozeBackup: Date) {
-  console.log('onWalletMpcCheck');
   if (isAfter(new Date(), snoozeBackup)) {
     const wallets = Wallet.getAll();
-
-    console.log('wallets', wallets.toJSON());
 
     const accounts = new Set(
       wallets
