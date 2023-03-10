@@ -18,6 +18,11 @@ const config = {
   ],
 };
 
+export async function hasGoogleToken() {
+  const exists = await EncryptedStorage.getItem('google_refresh_token');
+  return !!exists;
+}
+
 export async function getGoogleTokens() {
   let resp;
   try {

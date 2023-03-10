@@ -1,6 +1,6 @@
 // import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-import {getGoogleTokens} from '@app/helpers/get-google-tokens';
+import {getGoogleTokens, hasGoogleToken} from '@app/helpers/get-google-tokens';
 import {StorageInterface} from '@app/services/provider-mpc';
 import {makeID} from '@app/utils';
 
@@ -16,13 +16,28 @@ type FilesResp = {
 export class GoogleDrive implements StorageInterface {
   private _token = '';
 
-  constructor(token: string) {
-    this._token = token;
+  static isEnabled() {
+    return hasGoogleToken();
   }
 
-  static async initialize() {
-    const authState = await getGoogleTokens();
-    return new GoogleDrive(authState.accessToken);
+  async getToken() {
+    if (!this._token) {
+      const authState = await getGoogleTokens();
+      this._token = authState.accessToken;
+    }
+  }
+
+  getName() {
+    return 'googleDrive';
+  }
+
+  async getHeaders(data: Record<string, any> = {}) {
+    const token = await this.getToken();
+
+    return {
+      ...data,
+      Authorization: `Bearer ${token}`,
+    };
   }
 
   async uploadFile(id: string, filename: string, content: string) {
@@ -44,15 +59,14 @@ export class GoogleDrive implements StorageInterface {
     const boundary = makeID(10);
 
     let body = this.contentDisposition(boundary, form);
-
+    const headers = await this.getHeaders({
+      'Content-Type': 'multipart/related; boundary=' + boundary,
+    });
     const res = await fetch(
       `https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=multipart`,
       {
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${this._token}`,
-          'Content-Type': 'multipart/related; boundary=' + boundary,
-        },
+        headers,
         body,
       },
     );
@@ -77,12 +91,11 @@ export class GoogleDrive implements StorageInterface {
   }
 
   async getSavedFileId(file: string) {
+    const headers = await this.getHeaders();
     const filesResp = await fetch(
       `${GOOGLE_API}drive/v3/files?q=name%3D'${file}'&fields=files(id%2Cname)`,
       {
-        headers: {
-          Authorization: `Bearer ${this._token}`,
-        },
+        headers,
       },
     );
 
@@ -97,13 +110,11 @@ export class GoogleDrive implements StorageInterface {
 
   async getItem(key: string): Promise<string> {
     const fileId = await this.getSavedFileId(key);
-
+    const headers = await this.getHeaders();
     const resp = await fetch(
       `${GOOGLE_API}drive/v3/files/${fileId}?alt=media`,
       {
-        headers: {
-          Authorization: `Bearer ${this._token}`,
-        },
+        headers,
       },
     );
 
@@ -125,11 +136,10 @@ export class GoogleDrive implements StorageInterface {
     try {
       fileId = await this.getSavedFileId(key);
     } catch (e) {
+      const headers = await this.getHeaders();
       const res = await fetch(`${GOOGLE_API}drive/v3/files/`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${this._token}`,
-        },
+        headers,
         body: JSON.stringify({
           name: key,
           mimeType: 'plain/text',
@@ -143,5 +153,18 @@ export class GoogleDrive implements StorageInterface {
     const resp = await this.uploadFile(fileId, key, value);
 
     return resp.id === fileId;
+  }
+
+  async removeItem(key: string): Promise<boolean> {
+    const fileId = await this.getSavedFileId(key);
+    const headers = await this.getHeaders();
+    await fetch(`${GOOGLE_API}drive/v3/files/${fileId}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    const exists = await this.getSavedFileId(key);
+
+    return !exists;
   }
 }

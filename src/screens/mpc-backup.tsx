@@ -102,7 +102,7 @@ export const MpcBackupScreen = () => {
         route.params.privateKey.padStart(64, '0'),
       );
 
-      const storage = await GoogleDrive.initialize();
+      const storage = new GoogleDrive();
       app.isGoogleSignedIn = true;
       const share = await storage.getItem(`haqq_${address}`);
 

@@ -3,6 +3,14 @@ import RNAsyncStorage from '@react-native-async-storage/async-storage';
 import {StorageInterface} from '@app/services/provider-mpc';
 
 export class AsyncLocalStorage implements StorageInterface {
+  static isEnabled() {
+    return Promise.resolve(true);
+  }
+
+  getName() {
+    return 'local';
+  }
+
   getItem(key: string) {
     return RNAsyncStorage.getItem(key);
   }
@@ -15,5 +23,11 @@ export class AsyncLocalStorage implements StorageInterface {
 
   hasItem(key: string) {
     return RNAsyncStorage.getAllKeys().then(keys => keys.includes(key));
+  }
+
+  removeItem(key: string): Promise<boolean> {
+    return RNAsyncStorage.removeItem(key)
+      .then(() => true)
+      .catch(() => false);
   }
 }

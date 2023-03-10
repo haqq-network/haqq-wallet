@@ -33,6 +33,8 @@
 		212B00FF294ADDB800E57091 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FE294ADDB800E57091 /* ToastView.swift */; };
 		212B0101294AE0AB00E57091 /* variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0100294AE0AB00E57091 /* variables.swift */; };
 		212B0103294AE1A600E57091 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0102294AE1A600E57091 /* Theme.swift */; };
+		2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142F4A829BAE9A600CD8EE6 /* Cloud.m */; };
+		2142F4AB29BAE9B300CD8EE6 /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21E6B18929115B240055570A /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18829115B240055570A /* HDKey.swift */; };
@@ -123,6 +125,8 @@
 		212B00FE294ADDB800E57091 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		212B0100294AE0AB00E57091 /* variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = variables.swift; sourceTree = "<group>"; };
 		212B0102294AE1A600E57091 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		2142F4A829BAE9A600CD8EE6 /* Cloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cloud.m; sourceTree = "<group>"; };
+		2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21E6B18829115B240055570A /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
@@ -241,6 +245,7 @@
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				2142F4A729BAE97900CD8EE6 /* Cloud */,
 				212B00F9294AD37800E57091 /* Toast */,
 				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
@@ -291,6 +296,15 @@
 				212B00FE294ADDB800E57091 /* ToastView.swift */,
 			);
 			path = Toast;
+			sourceTree = "<group>";
+		};
+		2142F4A729BAE97900CD8EE6 /* Cloud */ = {
+			isa = PBXGroup;
+			children = (
+				2142F4A829BAE9A600CD8EE6 /* Cloud.m */,
+				2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */,
+			);
+			path = Cloud;
 			sourceTree = "<group>";
 		};
 		21D7A7882910DA8B00399978 /* EthUtils */ = {
@@ -754,6 +768,7 @@
 				212B00FF294ADDB800E57091 /* ToastView.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				2142F4AB29BAE9B300CD8EE6 /* Cloud.swift in Sources */,
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
@@ -763,6 +778,7 @@
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
+				2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */,
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
 				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
 				212B00FB294AD39900E57091 /* Toast.m in Sources */,
