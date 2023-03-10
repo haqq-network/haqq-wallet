@@ -11,6 +11,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -18,19 +19,19 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking} from 'react-native';
+import {Alert, AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {
-  AppContext,
-  TransactionsContext,
-  WalletsContext,
   app,
+  AppContext,
   transactions,
+  TransactionsContext,
   wallets,
+  WalletsContext,
 } from '@app/contexts';
 import {Events} from '@app/events';
 import {
@@ -40,10 +41,14 @@ import {
   showModal,
 } from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {getText, I18N} from '@app/i18n';
 import {navigator} from '@app/navigator';
-import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
-import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
+import {
+  BackupMpcNotificationScreen
+} from '@app/screens/popup-backup-mpc-notification';
+import {
+  BackupMpcSuggestionScreen
+} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -87,17 +92,29 @@ import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
-import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
+import {
+  SettingsViewRecoveryPhraseScreen
+} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
-import {WalletConnectApplicationDetailsScreen} from './screens/wallet-connect-application-details';
-import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
-import {WalletConnectApplicationListScreen} from './screens/wallet-connect-application-list';
-import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
-import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
+import {
+  WalletConnectApplicationDetailsScreen
+} from './screens/wallet-connect-application-details';
+import {
+  WalletConnectApplicationDetailsPopupScreen
+} from './screens/wallet-connect-application-details-popup';
+import {
+  WalletConnectApplicationListScreen
+} from './screens/wallet-connect-application-list';
+import {
+  WalletConnectApplicationListPopupScreen
+} from './screens/wallet-connect-application-list-popup';
+import {
+  WalletConnectWalletListScreen
+} from './screens/wallet-connect-wallet-list';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
@@ -149,6 +166,23 @@ export const App = () => {
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
     [theme],
   );
+
+  const handleDynamicLink = (link: object) => {
+    console.log(link);
+    if (link && 'url' in link) {
+      Alert.alert(link.url as string);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        return handleDynamicLink(link);
+      });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     showModal('splash');

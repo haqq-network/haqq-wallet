@@ -2146,6 +2146,13 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/dynamic-links@17.3.2":
+  version "17.3.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/dynamic-links/-/dynamic-links-17.3.2.tgz#a965b71e84c1e0d99a6dc3f9eb6ef8dc870f15cc"
+  integrity sha512-iBANo9TFdVStxXjRw+EtwF3bCxEiLJzms1yyuYuqrSQb8bVOeD+ViJXbF4XAlzti04ut+L1kY3avEUV9IoCM5g==
+  dependencies:
+    "@expo/config-plugins" "^5.0.4"
+
 "@react-native-firebase/messaging@17.3.2":
   version "17.3.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.3.2.tgz#1d37fdf8cc3027542fdbab871f5df3ea2fb687c8"
