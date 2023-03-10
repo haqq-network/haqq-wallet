@@ -1,13 +1,39 @@
-import {app} from '@app/contexts';
 import {AsyncLocalStorage} from '@app/services/async-local-storage';
+import {Cloud} from '@app/services/cloud';
 import {GoogleDrive} from '@app/services/google-drive';
-import {StorageInterface} from '@app/services/provider-mpc';
+import {
+  ProviderMpcReactNative,
+  StorageInterface,
+} from '@app/services/provider-mpc';
 
 export async function getProviderStorage(
-  _accountId: string,
+  accountId?: string,
 ): Promise<StorageInterface> {
-  if (app.isGoogleSignedIn) {
-    return await GoogleDrive.initialize();
+  const storages = await ProviderMpcReactNative.getStoragesForAccount(
+    accountId,
+  );
+
+  const cloudEnabled = await Cloud.isEnabled();
+  const googleEnabled = await GoogleDrive.isEnabled();
+
+  if (storages.includes('cloud') && cloudEnabled) {
+    return new Cloud();
+  }
+
+  if (storages.includes('google') && googleEnabled) {
+    return new GoogleDrive();
+  }
+
+  if (storages.includes('local')) {
+    return new AsyncLocalStorage();
+  }
+
+  if (cloudEnabled) {
+    return new Cloud();
+  }
+
+  if (googleEnabled) {
+    return new GoogleDrive();
   }
 
   return new AsyncLocalStorage();

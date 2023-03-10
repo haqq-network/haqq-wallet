@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
@@ -8,6 +8,7 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
+import {Cloud} from '@app/services/cloud';
 import {pushNotifications} from '@app/services/push-notifications';
 
 messaging().onMessage(async remoteMessage => {
@@ -34,6 +35,8 @@ export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [wc, setWc] = useState('');
 
+  const iCloud = useRef(new Cloud()).current;
+
   const onPressRequestPermissions = async () => {
     await pushNotifications.requestPermissions();
   };
@@ -48,6 +51,26 @@ export const SettingsTestScreen = () => {
     app.emit(Events.onWalletConnectUri, wc);
   };
 
+  const checkICloudFile = useCallback(async () => {
+    const exists = await iCloud.hasItem('haqq_backup');
+    console.log('exists', exists);
+  }, [iCloud]);
+
+  const createICloudFile = useCallback(async () => {
+    const exists = await iCloud.setItem('haqq_backup', '{"abc":"def"}');
+    console.log('create', exists);
+  }, [iCloud]);
+
+  const readICloudFile = useCallback(async () => {
+    const content = await iCloud.getItem('haqq_backup');
+    console.log('read', content);
+  }, [iCloud]);
+
+  const removeICloudFile = useCallback(async () => {
+    const content = await iCloud.removeItem('haqq_backup');
+    console.log('remove', content);
+  }, [iCloud]);
+
   return (
     <ScrollView style={styles.container}>
       {initialUrl && (
@@ -61,7 +84,6 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={20} />
-
       <Input
         placeholder="wc:"
         value={wc}
@@ -83,6 +105,29 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
+      <Button
+        title="check cloud"
+        onPress={() => checkICloudFile()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="create cloud"
+        onPress={() => createICloudFile()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="read cloud"
+        onPress={() => readICloudFile()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="remove cloud"
+        onPress={() => removeICloudFile()}
+        variant={ButtonVariant.contained}
+      />
     </ScrollView>
   );
 };

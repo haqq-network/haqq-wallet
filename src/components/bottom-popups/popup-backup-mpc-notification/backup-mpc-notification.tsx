@@ -47,7 +47,7 @@ export const BackupMpcNotification = ({
     }
   }, [onClickCheck]);
 
-  const onPressBackup = useCallback(async () => {
+  const onPressBackupGoogle = useCallback(async () => {
     setIsSaving(true);
     try {
       await onClickBackup();
@@ -69,7 +69,7 @@ export const BackupMpcNotification = ({
       <Button
         i18n={I18N.backupMpcNotificationBackup}
         variant={ButtonVariant.contained}
-        onPress={onPressBackup}
+        onPress={onPressBackupGoogle}
         loading={isSaving}
         style={styles.margin}
         size={ButtonSize.middle}
