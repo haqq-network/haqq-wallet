@@ -2,8 +2,8 @@ import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
@@ -19,13 +19,13 @@ export async function onWalletMpcCheck(snoozeBackup: Date) {
     );
 
     for (const accountId of accounts) {
-      if (!app.getUser().isGoogleSignedIn) {
+      const storage = await getProviderStorage(accountId);
+
+      if (storage.getName() === 'local') {
         await sleep(1000);
         app.emit(Events.onAppProviderMpcBackup, accountId);
         return;
       }
-
-      const storage = await GoogleDrive.initialize();
 
       const provider = new ProviderMpcReactNative({
         storage,

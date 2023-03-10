@@ -6,6 +6,7 @@ import {
 } from '@app/components/bottom-popups';
 import {Events} from '@app/events';
 import {captureException, showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
@@ -16,11 +17,11 @@ export const BackupMpcNotificationScreen = () => {
 
   const app = useApp();
 
-  const onClickBackup = useCallback(
+  const onPressBackupGoogle = useCallback(
     async (onDone: () => void) => {
       try {
         if (accountId) {
-          const storage = await GoogleDrive.initialize();
+          const storage = await getProviderStorage(accountId);
 
           const provider = new ProviderMpcReactNative({
             storage,
@@ -28,7 +29,9 @@ export const BackupMpcNotificationScreen = () => {
             getPassword: app.getPassword.bind(app),
           });
 
-          await provider.tryToSaveShare();
+          const newStorage = new GoogleDrive();
+
+          await provider.tryToSaveShareToStore(newStorage);
           app.isGoogleSignedIn = true;
           app.emit(Events.onWalletMpcSaved, provider.getIdentifier());
           goBack();
@@ -44,10 +47,10 @@ export const BackupMpcNotificationScreen = () => {
     [accountId, app, goBack],
   );
 
-  const onClickCheck = useCallback(
+  const onClickCheckGoogle = useCallback(
     async (onDone: () => void) => {
       try {
-        const storage = await GoogleDrive.initialize();
+        const storage = new GoogleDrive();
         app.isGoogleSignedIn = true;
         const provider = new ProviderMpcReactNative({
           storage,
@@ -87,9 +90,9 @@ export const BackupMpcNotificationScreen = () => {
     <BottomPopupContainer>
       {onClose => (
         <BackupMpcNotification
-          onClickBackup={() => onClickBackup(onClose)}
+          onClickBackup={() => onPressBackupGoogle(onClose)}
           onClickSkip={() => onClickSkip(onClose)}
-          onClickCheck={() => onClickCheck(onClose)}
+          onClickCheck={() => onClickCheckGoogle(onClose)}
         />
       )}
     </BottomPopupContainer>

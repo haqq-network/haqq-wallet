@@ -24,7 +24,7 @@ export const MpcStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const storage = await getProviderStorage('');
+        const storage = await getProviderStorage();
 
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,

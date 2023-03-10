@@ -66,7 +66,6 @@ type ProviderMpcOptions = {
   storage: StorageInterface;
 };
 
-const ITEM_TMP = 'mpc_tmp';
 const ITEM_KEY = 'mpc';
 
 export enum MpcProviders {
@@ -79,21 +78,18 @@ export enum MpcProviders {
 }
 
 export interface StorageInterface {
+  getName(): string;
+
   getItem(key: string): Promise<string | null>;
 
   hasItem(key: string): Promise<boolean>;
 
   setItem(key: string, value: string): Promise<boolean>;
+
+  removeItem(key: string): Promise<boolean>;
 }
 
 export const verifierMap = {
-  [MpcProviders.google]: {
-    name: 'Google',
-    verifier: 'haqq-test-google',
-    typeOfLogin: 'google',
-    clientId:
-      '915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com',
-  },
   [MpcProviders.auth0]: {
     name: 'Auth0',
     typeOfLogin: 'jwt',
@@ -182,21 +178,17 @@ async function getSeed(
     shares.push(shareStore);
   }
 
-  let shareTmp = await EncryptedStorage.getItem(`${ITEM_TMP}_${account}`);
+  const content = await storage.getItem(`haqq_${account}`);
 
-  if (!shareTmp) {
-    const content = await storage.getItem(`haqq_${account}`);
-
-    if (content) {
-      shareTmp = content;
-    }
-  }
-
-  if (shareTmp) {
-    shares.push(ShareStore.fromJSON(JSON.parse(shareTmp)));
+  if (content) {
+    shares.push(ShareStore.fromJSON(JSON.parse(content)));
   }
 
   shares = shares.filter(Boolean);
+
+  if (shares.length < 2) {
+    throw new Error('not enough shares');
+  }
 
   const polynomialIDs = new Set(shares.map(s => s.polynomialID));
 
@@ -301,10 +293,21 @@ export class ProviderMpcReactNative
 
     const [cShare, deviceShare] = applicants;
 
-    await EncryptedStorage.setItem(
-      `${ITEM_TMP}_${address.toLowerCase()}`,
+    const stored = await storage.setItem(
+      `haqq_${address.toLowerCase()}`,
       JSON.stringify(cShare.share),
     );
+
+    if (stored) {
+      const storages = await ProviderMpcReactNative.getStoragesForAccount(
+        address.toLowerCase(),
+      );
+
+      await EncryptedStorage.setItem(
+        `${ITEM_KEY}_storages_${address.toLowerCase()}`,
+        JSON.stringify(storages.concat(storage.getName())),
+      );
+    }
 
     const pass = await getPassword();
 
@@ -337,6 +340,16 @@ export class ProviderMpcReactNative
     const storedKeys = await EncryptedStorage.getItem(`${ITEM_KEY}_accounts`);
 
     return JSON.parse(storedKeys ?? '[]') as string[];
+  }
+
+  static async getStoragesForAccount(accountId?: string): Promise<string[]> {
+    if (!accountId) {
+      return [];
+    }
+    const storageKeys = await EncryptedStorage.getItem(
+      `${ITEM_KEY}_storages_${accountId}`,
+    );
+    return JSON.parse(storageKeys ?? '[]');
   }
 
   getIdentifier() {
@@ -522,10 +535,9 @@ export class ProviderMpcReactNative
     }
   }
 
-  async isShareSaved(): Promise<boolean> {
-    const item = await this._options.storage.getItem(
-      `haqq_${this._options.account}`,
-    );
+  async isShareSaved(storage?: StorageInterface): Promise<boolean> {
+    const store = storage ?? this._options.storage;
+    const item = await store.getItem(`haqq_${this._options.account}`);
 
     if (!item) {
       return false;
@@ -549,25 +561,20 @@ export class ProviderMpcReactNative
     return share.polynomialID && share.polynomialID === localShare.polynomialID;
   }
 
-  async tryToSaveShare() {
-    let shareTmp = await EncryptedStorage.getItem(
-      `${ITEM_TMP}_${this._options.account}`,
+  async tryToSaveShareToStore(storage: StorageInterface) {
+    let shareTmp = await this._options.storage.getItem(
+      `haqq_${this._options.account}`,
     );
 
     if (shareTmp) {
-      await this._options.storage.setItem(
-        `haqq_${this._options.account}`,
-        shareTmp,
-      );
+      await storage.setItem(`haqq_${this._options.account}`, shareTmp);
 
       const file = await this._options.storage.getItem(
         `haqq_${this._options.account}`,
       );
 
-      if (file === shareTmp) {
-        await EncryptedStorage.removeItem(
-          `${ITEM_TMP}_${this._options.account}`,
-        );
+      if (file === shareTmp && this._options.storage.getName() === 'local') {
+        await this._options.storage.removeItem(`haqq_${this._options.account}`);
       }
     }
   }
