@@ -16,13 +16,11 @@ import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export type BluetoothUnauthorizedProps = {
+export type LocationUnauthorizedProps = {
   onClose: () => void;
 };
 
-export const BluetoothUnauthorized = ({
-  onClose,
-}: BluetoothUnauthorizedProps) => {
+export const LocationUnauthorized = ({onClose}: LocationUnauthorizedProps) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -31,9 +29,9 @@ export const BluetoothUnauthorized = ({
     <BottomPopupContainer>
       {onCloseModal => (
         <View style={page.modalView}>
-          <Text t5 center i18n={I18N.bluetoothUnauthorizedTitle} />
+          <Text t5 center i18n={I18N.locationUnauthorizedTitle} />
           <Spacer height={8} />
-          <Text t14 center i18n={I18N.bluetoothUnauthorizedDescription} />
+          <Text t14 center i18n={I18N.locationUnauthorizedDescription} />
           <Spacer centered minHeight={200}>
             <Image
               source={require('@assets/images/bluetooth-unauthorized.png')}
