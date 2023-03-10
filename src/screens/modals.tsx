@@ -96,6 +96,7 @@ type BluetoothUnauthorizedModal = {
 type CaptchaModal = {
   type: 'captcha';
 } & CaptchaModalProps;
+
 type LocationUnauthorizedModal = {
   type: 'location-unauthorized';
 } & LocationUnauthorizedProps;
@@ -112,8 +113,8 @@ type ModalState =
   | TransactionErrorModal
   | BluetoothPoweredOffModal
   | BluetoothUnauthorizedModal
-  | CaptchaModal
   | LocationUnauthorizedModal
+  | CaptchaModal
   | null;
 
 export type ModalProps = {
@@ -200,10 +201,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <BluetoothPoweredOff onClose={modal.onClose} />;
       case 'bluetooth-unauthorized':
         return <BluetoothUnauthorized onClose={modal.onClose} />;
-      case 'captcha':
-        return <CaptchaModal onClose={modal.onClose} />;
       case 'location-unauthorized':
         return <LocationUnauthorized onClose={modal.onClose} />;
+      case 'captcha':
+        return <CaptchaModal onClose={modal.onClose} />;
       default:
         return null;
     }
