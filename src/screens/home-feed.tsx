@@ -1,13 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
 import {Results} from 'realm';
 
 import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
-import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {
   useTransactions,
   useTypedNavigation,
@@ -47,17 +45,6 @@ export const HomeFeedScreen = () => {
       ),
     );
   }, [wallets.addressList, user.providerId]);
-
-  useFocusEffect(() => {
-    console.log('🔵 focus effect');
-
-    const main = async () => {
-      const data = await awaitForCaptcha();
-      console.log('awaitForCaptcha', data);
-    };
-
-    main();
-  });
 
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
