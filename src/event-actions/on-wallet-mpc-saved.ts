@@ -1,16 +1,13 @@
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {AsyncLocalStorage} from '@app/services/async-local-storage';
-import {GoogleDrive} from '@app/services/google-drive';
 import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 
 export async function onWalletMpcSaved(accountId: string) {
   const wallets = Wallet.getAll();
 
-  const storage = app.isGoogleSignedIn
-    ? await GoogleDrive.initialize()
-    : new AsyncLocalStorage();
+  const storage = await getProviderStorage(accountId);
 
   const provider = new ProviderMpcReactNative({
     account: accountId,

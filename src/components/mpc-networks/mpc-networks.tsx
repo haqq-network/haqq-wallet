@@ -1,4 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
+
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 import {
   Button,
@@ -7,33 +9,60 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {MpcProviders} from '@app/services/provider-mpc';
 
 export type MpcNetworksProps = {
-  onLoginAuth0: () => Promise<void>;
+  onLogin: (provider: MpcProviders) => Promise<void>;
 };
 
-export const MpcNetworks = ({onLoginAuth0}: MpcNetworksProps) => {
-  const [isAuth0, setIsAuth0] = useState(false);
+export const MpcNetworks = ({onLogin}: MpcNetworksProps) => {
+  const [isApple, setIsApple] = useState(false);
+  const [isGoogle, setIsGoogle] = useState(false);
 
-  const onPressLoginGithub = useCallback(async () => {
+  const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
+
+  const onPressLoginGoogle = useCallback(async () => {
     try {
-      setIsAuth0(true);
+      setIsGoogle(true);
 
-      await onLoginAuth0();
+      await onLogin(MpcProviders.google);
     } finally {
-      setIsAuth0(false);
+      setIsGoogle(false);
     }
-  }, [onLoginAuth0]);
+  }, [onLogin]);
+
+  const onPressLoginApple = useCallback(async () => {
+    try {
+      setIsApple(true);
+
+      await onLogin(MpcProviders.apple);
+    } finally {
+      setIsApple(false);
+    }
+  }, [onLogin]);
 
   return (
     <PopupContainer style={styles.container}>
       <Spacer />
       <Button
-        title="Login with Auth0"
-        loading={isAuth0}
-        onPress={onPressLoginGithub}
+        title="Login with Google"
+        loading={isGoogle}
+        disabled={isLoading && !isGoogle}
+        onPress={onPressLoginGoogle}
         variant={ButtonVariant.contained}
       />
+      {appleAuth.isSupported && (
+        <>
+          <Spacer height={8} />
+          <Button
+            title="Login with Apple"
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
     </PopupContainer>
   );
 };

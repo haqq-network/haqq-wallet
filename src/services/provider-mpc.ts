@@ -72,6 +72,10 @@ const ITEM_KEY = 'mpc';
 export enum MpcProviders {
   google = 'google',
   auth0 = 'auth0',
+  discord = 'discord',
+  coinbase = 'coinase',
+  apple = 'apple',
+  github = 'github',
 }
 
 export interface StorageInterface {
@@ -105,7 +109,7 @@ export function customAuthInit() {
   CustomAuth.init({
     clientId: WEB3AUTH_CLIENT_ID,
     redirectUri: 'haqq://web3auth/redirect',
-    network: 'testnet',
+    network: 'celeste',
     enableLogging: true,
     enableOneKey: false,
     skipSw: true,
@@ -535,7 +539,10 @@ export class ProviderMpcReactNative
 
     const password = await this._options.getPassword();
 
-    const localShare = await decryptShare(JSON.parse(shareLocal), password);
+    const localShare = await decryptShare(
+      SecurityQuestionStore.fromJSON(JSON.parse(shareLocal)),
+      password,
+    );
 
     const share = JSON.parse(item);
 
