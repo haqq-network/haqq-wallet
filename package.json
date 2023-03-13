@@ -32,6 +32,7 @@
     "@react-native-community/netinfo": "9.3.7",
     "@react-native-firebase/analytics": "17.3.2",
     "@react-native-firebase/app": "17.3.2",
+    "@react-native-firebase/dynamic-links": "17.3.2",
     "@react-native-firebase/messaging": "17.3.2",
     "@react-navigation/bottom-tabs": "6.5.5",
     "@react-navigation/native": "6.1.3",
