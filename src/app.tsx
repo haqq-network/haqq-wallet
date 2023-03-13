@@ -26,12 +26,12 @@ import SplashScreen from 'react-native-splash-screen';
 import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {
-  app,
   AppContext,
-  transactions,
   TransactionsContext,
-  wallets,
   WalletsContext,
+  app,
+  transactions,
+  wallets,
 } from '@app/contexts';
 import {Events} from '@app/events';
 import {
@@ -41,14 +41,10 @@ import {
   showModal,
 } from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {getText, I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
-import {
-  BackupMpcNotificationScreen
-} from '@app/screens/popup-backup-mpc-notification';
-import {
-  BackupMpcSuggestionScreen
-} from '@app/screens/popup-backup-mpc-suggestion';
+import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
+import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -92,29 +88,17 @@ import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
-import {
-  SettingsViewRecoveryPhraseScreen
-} from './screens/settings-view-recovery-phrase';
+import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
-import {
-  WalletConnectApplicationDetailsScreen
-} from './screens/wallet-connect-application-details';
-import {
-  WalletConnectApplicationDetailsPopupScreen
-} from './screens/wallet-connect-application-details-popup';
-import {
-  WalletConnectApplicationListScreen
-} from './screens/wallet-connect-application-list';
-import {
-  WalletConnectApplicationListPopupScreen
-} from './screens/wallet-connect-application-list-popup';
-import {
-  WalletConnectWalletListScreen
-} from './screens/wallet-connect-wallet-list';
+import {WalletConnectApplicationDetailsScreen} from './screens/wallet-connect-application-details';
+import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
+import {WalletConnectApplicationListScreen} from './screens/wallet-connect-application-list';
+import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
+import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
@@ -179,7 +163,9 @@ export const App = () => {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        return handleDynamicLink(link);
+        if (link) {
+          return handleDynamicLink(link);
+        }
       });
     return () => unsubscribe();
   }, []);
