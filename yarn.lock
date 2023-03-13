@@ -1390,10 +1390,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-mpc-react-native@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.2.tgz#4ff5baddc54a06da83941860c0d5208cab02bcf0"
-  integrity sha512-5LUATXITyVBPe3iM6nYhbemKo+fvdmo1foxs0tp6ndHcngme4Wap+fIAzuxmT4KBmZ3audHDQh/ALj1ad7mL1w==
+"@haqq/provider-mpc-react-native@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.3.tgz#0a6dbc5261e0fd071e48b3a8684a6e8a2ed16400"
+  integrity sha512-74/Oc26tmmtFq2lR1NrZ3DwijWTdStH0j0kd+gyftC17wbwTaE4AyU69ROaKGuTm56YPH0tELZuQwlOzEsrLrQ==
   dependencies:
     "@ethersproject/bytes" "5.7.0"
     "@ethersproject/transactions" "5.7.0"
