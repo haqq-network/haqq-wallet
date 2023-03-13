@@ -1,8 +1,8 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 
 export async function getProviderForNewWallet() {
   const getPassword = app.getPassword.bind(app);

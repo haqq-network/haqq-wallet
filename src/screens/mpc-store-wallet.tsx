@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -8,7 +10,10 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
+import {
+  serviceProviderOptions,
+  storageLayerOptions,
+} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -33,6 +38,8 @@ export const MpcStoreWalletScreen = () => {
           null,
           app.getPassword.bind(app),
           storage,
+          serviceProviderOptions as any,
+          storageLayerOptions,
           {},
         );
 

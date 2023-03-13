@@ -1,7 +1,6 @@
-// import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {StorageInterface} from '@haqq/provider-mpc-react-native';
 
 import {getGoogleTokens, hasGoogleToken} from '@app/helpers/get-google-tokens';
-import {StorageInterface} from '@app/services/provider-mpc';
 import {makeID} from '@app/utils';
 
 const GOOGLE_API = 'https://content.googleapis.com/';
