@@ -1,7 +1,8 @@
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 
 export async function onWalletMpcSaved(accountId: string) {

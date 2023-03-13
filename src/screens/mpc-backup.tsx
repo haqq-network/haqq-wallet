@@ -1,45 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {initializeTKey} from '@haqq/provider-mpc-react-native';
 import {accountInfo} from '@haqq/provider-web3-utils';
-import ThresholdKey from '@tkey/default';
-import SecurityQuestionsModule from '@tkey/security-questions';
-import TorusServiceProvider from '@tkey/service-provider-base';
-import {ShareSerializationModule} from '@tkey/share-serialization';
-import {ShareTransferModule} from '@tkey/share-transfer';
-import TorusStorageLayer from '@tkey/storage-layer-torus';
-import BN from 'bn.js';
 
 import {MpcBackup} from '@app/components/mpc-backup';
 import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {GoogleDrive} from '@app/services/google-drive';
-
-const serviceProvider = new TorusServiceProvider({
-  customAuthArgs: {
-    baseUrl: 'http://localhost:3000/serviceworker/',
-    enableLogging: true,
-    network: 'testnet',
-  },
-} as any);
-
-const storageLayer = new TorusStorageLayer({
-  hostUrl: 'https://metadata.tor.us',
-});
-
-const shareTransferModule = new ShareTransferModule();
-const shareSerializationModule = new ShareSerializationModule();
-const securityQuestionsModule = new SecurityQuestionsModule();
-
-const tKey = new ThresholdKey({
-  serviceProvider: serviceProvider,
-  storageLayer,
-  modules: {
-    shareTransfer: shareTransferModule,
-    shareSerializationModule: shareSerializationModule,
-    securityQuestions: securityQuestionsModule,
-  },
-});
+import {
+  serviceProviderOptions,
+  storageLayerOptions,
+} from '@app/services/provider-mpc';
 
 enum PasswordExists {
   checking,
@@ -58,8 +30,11 @@ export const MpcBackupScreen = () => {
   useEffect(() => {
     const run = async () => {
       try {
-        tKey.serviceProvider.postboxKey = new BN(route.params.privateKey, 16);
-        await tKey.initialize();
+        const {securityQuestionsModule} = await initializeTKey(
+          route.params.privateKey,
+          serviceProviderOptions as any,
+          storageLayerOptions,
+        );
 
         securityQuestionsModule.getSecurityQuestions();
         setIsPasswordExists(PasswordExists.exists);
@@ -77,6 +52,12 @@ export const MpcBackupScreen = () => {
   const onPressCheckPinCode = useCallback(
     async (password: string) => {
       try {
+        const {securityQuestionsModule} = await initializeTKey(
+          route.params.privateKey,
+          serviceProviderOptions as any,
+          storageLayerOptions,
+        );
+
         await securityQuestionsModule.inputShareFromSecurityQuestions(password);
 
         navigation.navigate('onboardingSetupPin', {

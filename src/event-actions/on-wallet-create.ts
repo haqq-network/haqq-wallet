@@ -1,11 +1,11 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {pushNotifications} from '@app/services/push-notifications';
 import {WalletType} from '@app/types';
 
