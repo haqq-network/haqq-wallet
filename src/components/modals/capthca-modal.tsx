@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 
 import {BottomPopupContainer} from '@app/components/bottom-popups';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -18,10 +19,22 @@ export const CaptchaModal = ({onClose}: CaptchaModalProps) => {
   }, []);
 
   return (
-    <BottomPopupContainer>
+    <BottomPopupContainer closeOnPressOut>
       {onCloseModal => (
         <View style={page.modalView}>
-          <Captcha onCloseModal={onCloseModal} onClose={onClose} />
+          <Captcha
+            onData={data => {
+              if (data === 'chalcancel') {
+                return;
+              }
+
+              app.emit('captcha-data', data);
+
+              onCloseModal(() => {
+                onClose?.();
+              });
+            }}
+          />
         </View>
       )}
     </BottomPopupContainer>
