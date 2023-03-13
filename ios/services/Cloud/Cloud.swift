@@ -87,7 +87,7 @@ class RNCloud: NSObject {
 
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
     do {
-        try value.write(to: fileUrl, atomically: true, encoding: .utf8)
+        try value.write(to: fileUrl, atomically: false, encoding: .utf8)
         resolve(true)
     }
     catch {
