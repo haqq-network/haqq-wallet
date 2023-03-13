@@ -35,6 +35,7 @@
 		212B0103294AE1A600E57091 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B0102294AE1A600E57091 /* Theme.swift */; };
 		2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 2142F4A829BAE9A600CD8EE6 /* Cloud.m */; };
 		2142F4AB29BAE9B300CD8EE6 /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */; };
+		215B546329BF17D200A049A8 /* Overiew.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 215B546229BF17D200A049A8 /* Overiew.storyboard */; };
 		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
 		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21E6B18929115B240055570A /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18829115B240055570A /* HDKey.swift */; };
@@ -127,6 +128,7 @@
 		212B0102294AE1A600E57091 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		2142F4A829BAE9A600CD8EE6 /* Cloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cloud.m; sourceTree = "<group>"; };
 		2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
+		215B546229BF17D200A049A8 /* Overiew.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Overiew.storyboard; sourceTree = "<group>"; };
 		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
 		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21E6B18829115B240055570A /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				210AE02228DC693F008D739C /* haqq-Bridging-Header.h */,
+				215B546229BF17D200A049A8 /* Overiew.storyboard */,
 			);
 			name = haqq;
 			sourceTree = "<group>";
@@ -560,6 +563,7 @@
 				5BE71B5F1BD4484DA64C807B /* bluetooth-failed.png in Resources */,
 				54E5DA1DB73A48BDA8D02993 /* bluetooth-failed@2x.png in Resources */,
 				17BF1336E4F14B4ABB08F9EE /* bluetooth-failed@3x.png in Resources */,
+				215B546329BF17D200A049A8 /* Overiew.storyboard in Resources */,
 				3564E4C215584C07A7EB60F2 /* islm_icon.png in Resources */,
 				E3A060C556E44C19A84E62FC /* islm_icon@2x.png in Resources */,
 				3212A2BDB32F4BCC8C111B6D /* islm_icon@3x.png in Resources */,
