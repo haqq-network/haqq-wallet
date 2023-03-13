@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
-import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -12,11 +11,10 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {
-  MpcProviders,
   customAuthInit,
+  onLoginApple,
   serviceProviderOptions,
   storageLayerOptions,
-  verifierMap,
 } from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 
@@ -50,14 +48,11 @@ export const BackupMpcSuggestionScreen = () => {
 
           entropy = entropy.padStart(64, '0');
 
-          const loginDetails = await CustomAuth.triggerLogin(
-            verifierMap[MpcProviders.auth0],
-          );
-
           const storage = await getProviderStorage('');
+          const privateKey = await onLoginApple();
 
           const provider = await ProviderMpcReactNative.initialize(
-            loginDetails.privateKey,
+            privateKey,
             null,
             null,
             entropy,
