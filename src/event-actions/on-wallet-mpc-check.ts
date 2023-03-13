@@ -33,9 +33,18 @@ export async function onWalletMpcCheck(snoozeBackup: Date) {
         getPassword: app.getPassword.bind(app),
       });
 
-      const isShareSaved = await provider.isShareSaved();
+      const storages = await ProviderMpcReactNative.getStoragesForAccount(
+        accountId,
+      );
 
-      if (!isShareSaved) {
+      const isShareSaved = await Promise.all(
+        storages.map(async s => {
+          const se = await getProviderStorage(accountId, s);
+          return await provider.isShareSaved(se);
+        }),
+      );
+
+      if (!isShareSaved.some(t => t)) {
         await sleep(1000);
         app.emit(Events.onAppProviderMpcBackup, accountId);
         return;

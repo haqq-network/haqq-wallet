@@ -9,10 +9,11 @@ import {GoogleDrive} from '@app/services/google-drive';
 
 export async function getProviderStorage(
   accountId?: string,
+  storage?: string,
 ): Promise<StorageInterface> {
-  const storages = await ProviderMpcReactNative.getStoragesForAccount(
-    accountId,
-  );
+  const storages = storage
+    ? [storage]
+    : await ProviderMpcReactNative.getStoragesForAccount(accountId);
 
   const cloudEnabled = await Cloud.isEnabled();
   const googleEnabled = await GoogleDrive.isEnabled();
@@ -21,7 +22,7 @@ export async function getProviderStorage(
     return new Cloud();
   }
 
-  if (storages.includes('google') && googleEnabled) {
+  if (storages.includes('googleDrive') && googleEnabled) {
     return new GoogleDrive();
   }
 
