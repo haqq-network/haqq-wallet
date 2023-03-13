@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
 
 import {HCAPTCHA_SITE_KEY} from '@env';
-import Hcaptcha from '@hcaptcha/react-native-hcaptcha/Hcaptcha';
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
@@ -9,6 +8,8 @@ import {Color, getColor} from '@app/colors';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
+
+import Hcaptcha from './hcaptcha';
 
 export type CaptchaDataTypes = (
   | 'error'

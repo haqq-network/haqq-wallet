@@ -24,7 +24,6 @@
     "@haqq/provider-mnemonic-react-native": "0.0.5",
     "@haqq/provider-mpc-react-native": "0.0.2",
     "@haqq/provider-web3-utils": "0.0.9",
-    "@hcaptcha/react-native-hcaptcha": "^1.5.1",
     "@invertase/react-native-apple-authentication": "^2.2.2",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-clipboard/clipboard": "1.11.1",
