@@ -2,11 +2,11 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 

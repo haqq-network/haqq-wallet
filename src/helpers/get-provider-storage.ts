@@ -1,10 +1,11 @@
-import {AsyncLocalStorage} from '@app/services/async-local-storage';
-import {Cloud} from '@app/services/cloud';
-import {GoogleDrive} from '@app/services/google-drive';
 import {
   ProviderMpcReactNative,
   StorageInterface,
-} from '@app/services/provider-mpc';
+} from '@haqq/provider-mpc-react-native';
+
+import {AsyncLocalStorage} from '@app/services/async-local-storage';
+import {Cloud} from '@app/services/cloud';
+import {GoogleDrive} from '@app/services/google-drive';
 
 export async function getProviderStorage(
   accountId?: string,

@@ -1,4 +1,5 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {isAfter} from 'date-fns';
 import {Linking} from 'react-native';
 
@@ -6,7 +7,6 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 
 export async function onAppStarted() {
   const initialUrl = await Linking.getInitialURL();

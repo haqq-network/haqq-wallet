@@ -1,6 +1,5 @@
+import {StorageInterface} from '@haqq/provider-mpc-react-native';
 import {NativeModules} from 'react-native';
-
-import {StorageInterface} from '@app/services/provider-mpc';
 
 const {RNCloud} = NativeModules;
 

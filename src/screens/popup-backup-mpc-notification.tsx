@@ -1,5 +1,7 @@
 import React, {useCallback} from 'react';
 
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+
 import {
   BackupMpcNotification,
   BottomPopupContainer,
@@ -9,7 +11,6 @@ import {captureException, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {GoogleDrive} from '@app/services/google-drive';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 
 export const BackupMpcNotificationScreen = () => {
   const {goBack} = useTypedNavigation();

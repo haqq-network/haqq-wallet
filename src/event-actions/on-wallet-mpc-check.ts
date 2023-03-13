@@ -1,10 +1,10 @@
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 

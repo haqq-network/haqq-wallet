@@ -11,6 +11,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -18,7 +19,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking} from 'react-native';
+import {Alert, AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -149,6 +150,25 @@ export const App = () => {
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
     [theme],
   );
+
+  const handleDynamicLink = (link: object) => {
+    console.log(link);
+    if (link && 'url' in link) {
+      Alert.alert(link.url as string);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        if (link) {
+          return handleDynamicLink(link);
+        }
+      });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     showModal('splash');

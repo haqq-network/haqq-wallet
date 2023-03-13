@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
@@ -7,7 +8,6 @@ import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet'
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {ProviderMpcReactNative} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 

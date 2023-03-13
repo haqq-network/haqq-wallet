@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 
@@ -12,8 +13,9 @@ import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {
   MpcProviders,
-  ProviderMpcReactNative,
   customAuthInit,
+  serviceProviderOptions,
+  storageLayerOptions,
   verifierMap,
 } from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
@@ -61,6 +63,8 @@ export const BackupMpcSuggestionScreen = () => {
             entropy,
             getPassword,
             storage,
+            serviceProviderOptions as any,
+            storageLayerOptions,
             {},
           );
 
