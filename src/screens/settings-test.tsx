@@ -2,12 +2,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
-import {Linking, ScrollView} from 'react-native';
+import {Alert, Linking, ScrollView} from 'react-native';
 
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
+import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {Cloud} from '@app/services/cloud';
 import {pushNotifications} from '@app/services/push-notifications';
 
@@ -126,6 +127,20 @@ export const SettingsTestScreen = () => {
       <Button
         title="remove cloud"
         onPress={() => removeICloudFile()}
+        variant={ButtonVariant.contained}
+      />
+
+      <Button
+        title="Show captcha"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha();
+            Alert.alert('result', result);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', err?.message);
+          }
+        }}
         variant={ButtonVariant.contained}
       />
     </ScrollView>
