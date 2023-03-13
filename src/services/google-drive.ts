@@ -24,6 +24,8 @@ export class GoogleDrive implements StorageInterface {
       const authState = await getGoogleTokens();
       this._token = authState.accessToken;
     }
+
+    return this._token;
   }
 
   getName() {

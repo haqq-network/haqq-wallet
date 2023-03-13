@@ -16,7 +16,18 @@ export async function onWalletMpcSaved(accountId: string) {
     getPassword: app.getPassword.bind(app),
   });
 
-  const mnemonicSaved = await provider.isShareSaved();
+  const storages = await ProviderMpcReactNative.getStoragesForAccount(
+    accountId,
+  );
+
+  const isShareSaved = await Promise.all(
+    storages.map(async s => {
+      const se = await getProviderStorage(accountId, s);
+      return await provider.isShareSaved(se);
+    }),
+  );
+
+  const mnemonicSaved = isShareSaved.some(t => t);
 
   for (const wallet of wallets) {
     if (wallet.accountId === accountId && wallet.type === WalletType.mpc) {
