@@ -489,6 +489,7 @@ export enum I18N {
   backupMpcSuggestionCancel,
   locationUnauthorizedDescription,
   locationUnauthorizedTitle,
+  socialButtonContinueWith,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1056,6 +1057,7 @@ const en: Record<I18N, string> = {
   [I18N.backupMpcSuggestionConnect]: 'Connect',
   [I18N.backupMpcSuggestionCancel]: 'Connect later',
   [I18N.locationUnauthorizedTitle]: 'No access to precise location',
+  [I18N.socialButtonContinueWith]: 'Continue with {{provider}}',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
 };

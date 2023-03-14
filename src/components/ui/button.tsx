@@ -3,6 +3,7 @@ import {useCallback, useMemo} from 'react';
 
 import {
   ActivityIndicator,
+  StyleProp,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
@@ -38,6 +39,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   loading?: boolean;
   disabled?: boolean;
   textColor?: ColorType;
+  textStyle?: StyleProp<TextStyle>;
   color?: ColorType;
   circleBorders?: boolean;
 } & ButtonValue &
@@ -63,6 +65,7 @@ export const Button = ({
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
+  textStyle,
   circleBorders,
   onPress,
   iconRight,
@@ -107,7 +110,7 @@ export const Button = ({
     [variant, size, circleBorders, error, disabled, color, style],
   );
 
-  const textStyle = useMemo(
+  const _textStyle = useMemo(
     () =>
       StyleSheet.flatten<TextStyle>([
         iconLeft && styles.textIconLeft,
@@ -121,8 +124,9 @@ export const Button = ({
         disabled &&
           variant === ButtonVariant.contained &&
           styles.containedDisabledText,
+        textStyle,
       ]),
-    [iconLeft, iconRight, variant, error, disabled],
+    [iconLeft, iconRight, variant, error, disabled, textStyle],
   );
 
   return (
@@ -142,7 +146,7 @@ export const Button = ({
           <Text
             t9={size !== ButtonSize.small}
             t12={size === ButtonSize.small}
-            style={textStyle}
+            style={_textStyle}
             color={textColor}
             i18n={i18n}>
             {title}
