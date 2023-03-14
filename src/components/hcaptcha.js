@@ -1,3 +1,4 @@
+import {DEBUG_VARS} from '@app/debug-vars';
 import React, {useCallback, useMemo} from 'react';
 
 import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native';
@@ -56,6 +57,31 @@ const buildHcaptchaApiUrl = (
 
   return url;
 };
+
+const loggers = {
+  log: console.log,
+  warn: console.warn,
+  error: console.error,
+};
+
+const WEB_VIEW_LOGGER = DEBUG_VARS.enableCaptchaLogger
+  ? `
+<script type="text/javascript">
+  if(!window._patched){
+    console.log = (...args) => {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "log" }));
+    }
+    console.error = (...args) => {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "error" }));
+    }
+    console.warn = (...args) => {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "warn" }));
+    }
+    window._patched = true;
+  }
+</script> 
+`
+  : '';
 
 /**
  *
@@ -128,6 +154,7 @@ const Hcaptcha = ({
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        ${WEB_VIEW_LOGGER}
         <script src="${apiUrl}" async defer></script>
         <script type="text/javascript">
           var onloadCallback = function() {
@@ -234,7 +261,19 @@ const Hcaptcha = ({
         return true;
       }}
       mixedContentMode={'always'}
-      onMessage={onMessage}
+      onMessage={event => {
+        if (DEBUG_VARS.enableCaptchaLogger) {
+          try {
+            const data = JSON.parse(event?.nativeEvent?.data);
+            if (data.msg) {
+              // @ts-ignore
+              const logger = loggers[data.type];
+              return logger('🟢 [HCapthca]: ', ...data.msg);
+            }
+          } catch (e) {}
+        }
+        onMessage?.(event);
+      }}
       javaScriptEnabled
       injectedJavaScript={patchPostMessageJsCode}
       automaticallyAdjustContentInsets
