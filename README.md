@@ -80,4 +80,4 @@ yarn ios
 
 ## Contribution
 
-Please check the general guidelines for contributing: [docs/contribution.md](https://github.com/haqq-network/haqq-mobile/blob/main/docs/contribution.md)
+Please check the general guidelines for contributing: [docs/contribution.md](https://github.com/haqq-network/haqq-wallet/blob/main/docs/contribution.md)
