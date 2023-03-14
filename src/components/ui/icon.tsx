@@ -67,6 +67,9 @@ export enum IconsName {
   wallet = 'wallet',
   warning = 'warning',
   discord = 'discord',
+  google = 'google',
+  apple = 'apple',
+  facebook = 'facebook',
   wallet_connect = 'wallet_connect',
 }
 
