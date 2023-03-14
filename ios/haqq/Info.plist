@@ -32,7 +32,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleIdentifier</key>
-			<string></string>
+			<string/>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
