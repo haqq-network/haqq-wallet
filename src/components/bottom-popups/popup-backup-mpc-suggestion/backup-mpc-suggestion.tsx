@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {Alert, View} from 'react-native';
 
@@ -16,7 +16,6 @@ export const BackupMpcSuggestion = ({
   onClickBackup,
   onClickSkip,
 }: BackupMpcNotificationProps) => {
-  const [isSaving, setIsSaving] = useState(false);
   const onSkip = useCallback(() => {
     return Alert.alert(
       getText(I18N.backupNotificationAlertTitle),
@@ -35,22 +34,12 @@ export const BackupMpcSuggestion = ({
     );
   }, [onClickSkip]);
 
-  const onPressBackup = useCallback(async () => {
-    setIsSaving(true);
-    try {
-      await onClickBackup();
-    } finally {
-      setIsSaving(false);
-    }
-  }, [onClickBackup]);
-
   return (
     <View style={styles.sub}>
       <Button
         i18n={I18N.backupMpcSuggestionConnect}
         variant={ButtonVariant.contained}
-        onPress={onPressBackup}
-        loading={isSaving}
+        onPress={onClickBackup}
         style={styles.margin}
         size={ButtonSize.middle}
       />

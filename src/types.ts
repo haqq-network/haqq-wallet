@@ -91,6 +91,26 @@ export type RootStackParamList = {
   backup: {
     accountId: string;
   };
+
+  mpcMigrate: {
+    accountId: string;
+  };
+  mpcMigrateAgreement: {
+    accountId: string;
+  };
+  mpcMigrateNetworks: {
+    accountId: string;
+  };
+  mpcMigrateFinish: undefined;
+  mpcMigrateStore: {
+    accountId: string;
+    privateKey: string;
+  };
+
+  mpcMigrateRewrite: {
+    accountId: string;
+    privateKey: string;
+  };
   detailsQr: {address: string};
   settingsTheme: undefined;
   settingsTest: undefined;
