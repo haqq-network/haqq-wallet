@@ -489,7 +489,6 @@ export enum I18N {
   backupMpcSuggestionCancel,
   locationUnauthorizedDescription,
   locationUnauthorizedTitle,
-  socialButtonContinueWith,
   mpcNetworkWeb3AuthDescription,
   mpcLoginLater,
   mpcLoginLaterTitle,
@@ -497,6 +496,7 @@ export enum I18N {
   mpcMigrateAgreementAgree,
   mpcMigrateRewriteRewrite,
   mpcMigrateRewriteCancel,
+  socialButtonContinueWith,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
