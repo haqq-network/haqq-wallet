@@ -2,6 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {Color} from '@app/colors';
 import {I18N, getText} from '@app/i18n';
 
 import {Button, ButtonProps} from './ui';
@@ -25,36 +26,40 @@ const SOCIAL_BUTTONS_DATA_MAP: Record<
   [SocialButtonVariant.apple]: {
     title: getText(I18N.socialButtonContinueWith, {provider: 'Apple'}),
     iconLeft: 'apple',
-    color: '#000000',
-    textColor: '#ffffff',
-    iconLeftColor: '#ffffff',
+    color: Color.socialAppleBg,
+    textColor: Color.socialAppleText,
+    iconLeftColor: Color.socialAppleText,
   },
   [SocialButtonVariant.discord]: {
     title: getText(I18N.socialButtonContinueWith, {provider: 'Discord'}),
     iconLeft: 'discord',
-    color: '#603ACB',
-    textColor: '#ffffff',
-    iconLeftColor: '#ffffff',
+    color: Color.socialDiscordBg,
+    textColor: Color.socialDiscordText,
+    iconLeftColor: Color.socialDiscordText,
   },
   [SocialButtonVariant.facebook]: {
     title: getText(I18N.socialButtonContinueWith, {provider: 'Facebook'}),
     iconLeft: 'facebook',
-    color: '#1877F2',
-    textColor: '#ffffff',
-    iconLeftColor: '#ffffff',
+    color: Color.socialFacebookBg,
+    textColor: Color.socialFacebookText,
+    iconLeftColor: Color.socialFacebookText,
   },
   [SocialButtonVariant.google]: {
     title: getText(I18N.socialButtonContinueWith, {provider: 'Google'}),
     iconLeft: 'google',
-    color: '#346EF1',
-    textColor: '#ffffff',
+    color: Color.socialGoogleBg,
+    textColor: Color.socialGoogleText,
+    iconLeftStyle: {
+      backgroundColor: '#ffffff',
+      borderRadius: 100,
+    },
   },
   [SocialButtonVariant.twitter]: {
     title: getText(I18N.socialButtonContinueWith, {provider: 'Twitter'}),
     iconLeft: 'twitter',
-    color: '#55B4E5',
-    textColor: '#ffffff',
-    iconLeftColor: '#ffffff',
+    color: Color.socialTwitterBg,
+    textColor: Color.socialTwitterText,
+    iconLeftColor: Color.socialTwitterText,
   },
 };
 
@@ -72,5 +77,6 @@ export const SocialButton = ({variant, style, ...props}: SocialButtonProps) => {
 const styles = StyleSheet.create({
   button: {
     borderRadius: 4,
+    width: '100%',
   },
 });

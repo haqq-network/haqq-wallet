@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewProps,
   ViewStyle,
 } from 'react-native';
@@ -34,12 +35,14 @@ export type ButtonLeftIconProps =
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  onPress: () => void;
+  onPress?: () => void;
   error?: boolean;
   loading?: boolean;
   disabled?: boolean;
   textColor?: ColorType;
   textStyle?: StyleProp<TextStyle>;
+  iconLeftStyle?: StyleProp<TextStyle>;
+  iconRightStyle?: StyleProp<TextStyle>;
   color?: ColorType;
   circleBorders?: boolean;
 } & ButtonValue &
@@ -77,11 +80,13 @@ export const Button = ({
   error,
   disabled,
   loading,
+  iconLeftStyle,
+  iconRightStyle,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
     if (!(disabled || loading)) {
-      onPress();
+      onPress?.();
     }
   }, [disabled, loading, onPress]);
 
@@ -140,7 +145,9 @@ export const Button = ({
       ) : (
         <>
           {iconLeft && (
-            <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+            <View style={iconLeftStyle}>
+              <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+            </View>
           )}
           {/* @ts-expect-error */}
           <Text
@@ -152,7 +159,13 @@ export const Button = ({
             {title}
           </Text>
           {iconRight && (
-            <Icon name={iconRight} color={iconRightColor} style={styles.icon} />
+            <View style={iconRightStyle}>
+              <Icon
+                name={iconRight}
+                color={iconRightColor}
+                style={styles.icon}
+              />
+            </View>
           )}
         </>
       )}

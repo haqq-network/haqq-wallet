@@ -196,3 +196,33 @@ export const STRINGS = {
   /** line break  */
   N: '\n',
 };
+
+export const LIGHT_GOOGLE_BG = '#4285F4';
+export const DARK_GOOGLE_BG = '#FFFFFF';
+
+export const LIGHT_GOOGLE_TEXT = '#FFFFFF';
+export const DARK_GOOGLE_TEXT = '#000000';
+
+export const LIGHT_TWITTER_BG = '#55B4E5';
+export const DARK_TWITTER_BG = '#FFFFFF';
+
+export const LIGHT_TWITTER_TEXT = '#FFFFFF';
+export const DARK_TWITTER_TEXT = '#55B4E5';
+
+export const LIGHT_APPLE_BG = '#000000';
+export const DARK_APPLE_BG = '#FFFFFF';
+
+export const LIGHT_APPLE_TEXT = '#FFFFFF';
+export const DARK_APPLE_TEXT = '#000000';
+
+export const LIGHT_FACEBOOK_BG = '#1877F2';
+export const DARK_FACEBOOK_BG = '#FFFFFF';
+
+export const LIGHT_FACEBOOK_TEXT = '#FFFFFF';
+export const DARK_FACEBOOK_TEXT = '#1877F2';
+
+export const DARK_DISCORD_TEXT = '#603ACB';
+export const LIGHT_DISCORD_TEXT = '#FFFFFF';
+
+export const DARK_DISCORD_BG = '#FFFFFF';
+export const LIGHT_DISCORD_BG = '#603ACB';

@@ -1,7 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
 
+import {Alert} from 'react-native';
+
 import {MpcNetworks} from '@app/components/mpc-networks/mpc-networks';
 import {useTypedNavigation} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {
   MpcProviders,
   customAuthInit,
@@ -36,5 +39,26 @@ export const MpcNetworksScreen = () => {
     [navigation],
   );
 
-  return <MpcNetworks onLogin={onLogin} />;
+  const onLoginLaterPress = useCallback(() => {
+    Alert.alert(
+      getText(I18N.mpcLoginLaterTitle),
+      getText(I18N.mpcLoginLaterDescription),
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Accept',
+          style: 'destructive',
+          onPress() {
+            navigation.navigate('onboardingSetupPin', {});
+          },
+        },
+      ],
+    );
+  }, [navigation]);
+
+  return (
+    <MpcNetworks onLogin={onLogin} onLoginLaterPress={onLoginLaterPress} />
+  );
 };
