@@ -66,7 +66,7 @@ export const SettingsAbout = () => {
           url="https://discord.com/invite/aZMm8pekhZ"
         />
         <SettingsAboutButton
-          name="twitter"
+          name="twitter_outline"
           color={Color.graphicBase1}
           i18n={I18N.settingsAboutTwitter}
           url="https://twitter.com/Islamic_coin"

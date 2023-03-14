@@ -62,6 +62,7 @@ export enum IconsName {
   timer = 'timer',
   trash = 'trash',
   twitter = 'twitter',
+  twitter_outline = 'twitter_outline',
   up = 'up',
   user = 'user',
   wallet = 'wallet',
