@@ -90,6 +90,30 @@
       "sha1": "5a8044b8498e646a623306f2ce2d07bf1312ec5b"
     },
     {
+      "path": "assets/images/bluetooth-powered-off.png",
+      "sha1": "3ed4b60b24982e0ec9793c651063bccad5513afc"
+    },
+    {
+      "path": "assets/images/bluetooth-powered-off@2x.png",
+      "sha1": "30f79540a9caf928e7eb8cffe93c0086ea35f666"
+    },
+    {
+      "path": "assets/images/bluetooth-powered-off@3x.png",
+      "sha1": "dd652a75e89fc73eff1ec344ee7b4a08b7774b08"
+    },
+    {
+      "path": "assets/images/bluetooth-unauthorized.png",
+      "sha1": "985b1ef828aace18e28f40aecc6079d3fe835386"
+    },
+    {
+      "path": "assets/images/bluetooth-unauthorized@2x.png",
+      "sha1": "28f19d31391cbd879cfcaa7c485dd44559b9b251"
+    },
+    {
+      "path": "assets/images/bluetooth-unauthorized@3x.png",
+      "sha1": "05d5d207563b519ca497fa2a09a848deb1dde9d0"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
@@ -136,6 +160,30 @@
     {
       "path": "assets/images/islm_icon@3x.png",
       "sha1": "72ca926eadbb16697b80c117d9c789fd5fb25cd7"
+    },
+    {
+      "path": "assets/images/ledger-locked.png",
+      "sha1": "9429c250650ac2ce6512881610b2e66916a83e37"
+    },
+    {
+      "path": "assets/images/ledger-locked@2x.png",
+      "sha1": "829f8808d8da1a4f8542d0d5ff487bbdd87c766f"
+    },
+    {
+      "path": "assets/images/ledger-locked@3x.png",
+      "sha1": "467b86aeba1e9b2fba9afe4dee828e91f4b316ba"
+    },
+    {
+      "path": "assets/images/ledger-no-app.png",
+      "sha1": "f1fb303c47bba88c66c528149a9918e85273b2e9"
+    },
+    {
+      "path": "assets/images/ledger-no-app@2x.png",
+      "sha1": "b0d73b2e1b4aa8f252b3ca1cc61f0aba31a7f215"
+    },
+    {
+      "path": "assets/images/ledger-no-app@3x.png",
+      "sha1": "4c259cdfffb34e6cb242953f4273d2aa49689cc0"
     },
     {
       "path": "assets/images/logo-empty.png",

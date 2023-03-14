@@ -1,22 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
-import {mnemonicToEntropy} from 'ethers/lib/utils';
-
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {BackupMpcSuggestion} from '@app/components/bottom-popups/popup-backup-mpc-suggestion';
-import {captureException, showModal} from '@app/helpers';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {Wallet} from '@app/models/wallet';
-import {
-  customAuthInit,
-  onLoginApple,
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
-import {WalletType} from '@app/types';
+import {navigator} from '@app/navigator';
+import {customAuthInit} from '@app/services/provider-mpc';
 
 export const BackupMpcSuggestionScreen = () => {
   const {goBack} = useTypedNavigation();
@@ -30,64 +18,15 @@ export const BackupMpcSuggestionScreen = () => {
 
   const onClickBackup = useCallback(
     async (onDone: () => void) => {
-      try {
-        if (accountId) {
-          const getPassword = app.getPassword.bind(app);
-
-          const mnemonicProvider = new ProviderMnemonicReactNative({
-            account: accountId,
-            getPassword,
-          });
-
-          const mnemonic = await mnemonicProvider.getMnemonicPhrase();
-          let entropy = mnemonicToEntropy(mnemonic);
-
-          if (entropy.startsWith('0x')) {
-            entropy = entropy.slice(2);
-          }
-
-          entropy = entropy.padStart(64, '0');
-
-          const storage = await getProviderStorage('');
-          const privateKey = await onLoginApple();
-
-          const provider = await ProviderMpcReactNative.initialize(
-            privateKey,
-            null,
-            null,
-            entropy,
-            getPassword,
-            storage,
-            serviceProviderOptions as any,
-            storageLayerOptions,
-            {},
-          );
-
-          const wallets = Wallet.getAll();
-
-          for (const wallet of wallets) {
-            if (
-              wallet.accountId === accountId &&
-              wallet.type === WalletType.mnemonic
-            ) {
-              wallet.update({
-                type: WalletType.mpc,
-                accountId: provider.getIdentifier(),
-              });
-            }
-          }
-
-          goBack();
-          onDone();
-        }
-      } catch (e) {
-        captureException(e, 'save mpc backup');
-        showModal('transaction-error', {
-          message: 'backup save error',
+      if (accountId) {
+        goBack();
+        navigator.navigate('mpcMigrate', {
+          accountId,
         });
+        onDone();
       }
     },
-    [accountId, app, goBack],
+    [accountId, goBack],
   );
 
   const onClickSkip = useCallback(
