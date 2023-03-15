@@ -67,7 +67,6 @@ import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
-import {MpcScreen} from './screens/mpc';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {NotificationPopupScreen} from './screens/popup-notification';
@@ -258,7 +257,6 @@ export const App = () => {
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
 
                 <Stack.Group screenOptions={stackScreenOptions}>
-                  <Stack.Screen name="mpc" component={MpcScreen} />
                   <Stack.Screen
                     name="mpcMigrate"
                     component={MpcMigrateScreen}

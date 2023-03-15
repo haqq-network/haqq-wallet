@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {RestoreAgreement} from '@app/components/restore-agreement/restore-agreement';
 import {useTypedNavigation} from '@app/hooks';
 
-export const SignInAgreementScreen = () => {
+export const SignInPinScreen = () => {
   const navigation = useTypedNavigation();
 
   const onDone = useCallback(() => {

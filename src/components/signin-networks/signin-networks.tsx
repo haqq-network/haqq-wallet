@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import {Image, View} from 'react-native';
+import {Image} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -19,10 +19,10 @@ import {SocialButton, SocialButtonVariant} from '../social-button';
 
 export type MpcNetworksProps = {
   onLogin: (provider: MpcProviders) => Promise<void>;
-  onLoginLaterPress(): void;
+  onSkip: () => void;
 };
 
-export const MpcNetworks = ({onLogin, onLoginLaterPress}: MpcNetworksProps) => {
+export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
 
@@ -51,49 +51,45 @@ export const MpcNetworks = ({onLogin, onLoginLaterPress}: MpcNetworksProps) => {
   return (
     <PopupContainer style={styles.container}>
       <Image source={{uri: 'islm-logo-circles'}} style={styles.logo} />
-
-      <View style={styles.content}>
-        {/* <SocialButton variant={SocialButtonVariant.discord} />
+      <Spacer />
+      {/* <SocialButton variant={SocialButtonVariant.discord} />
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.twitter} />
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.facebook} /> */}
 
-        {appleAuth.isSupported && (
-          <>
-            <Spacer height={10} />
-            <SocialButton
-              loading={isApple}
-              disabled={isLoading && !isApple}
-              onPress={onPressLoginApple}
-              variant={SocialButtonVariant.apple}
-            />
-          </>
-        )}
+      {appleAuth.isSupported && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={SocialButtonVariant.apple}
+          />
+        </>
+      )}
 
-        <Spacer height={10} />
-        <SocialButton
-          loading={isGoogle}
-          disabled={isLoading && !isGoogle}
-          onPress={onPressLoginGoogle}
-          variant={SocialButtonVariant.google}
-        />
+      <Spacer height={10} />
+      <SocialButton
+        loading={isGoogle}
+        disabled={isLoading && !isGoogle}
+        onPress={onPressLoginGoogle}
+        variant={SocialButtonVariant.google}
+      />
 
-        <Spacer height={10} />
-        <Text
-          t15
-          i18n={I18N.mpcNetworkWeb3AuthDescription}
-          color={Color.textBase2}
-        />
-
-        <Spacer height={24} />
-      </View>
-
+      <Spacer height={10} />
+      <Text
+        t15
+        center
+        i18n={I18N.mpcNetworkWeb3AuthDescription}
+        color={Color.textBase2}
+      />
+      <Spacer height={28} />
       <Button
-        onPress={onLoginLaterPress}
-        i18n={I18N.mpcLoginLater}
-        variant={ButtonVariant.text}
-        textColor={Color.textRed1}
+        onPress={onSkip}
+        i18n={I18N.signinNetworksSkip}
+        variant={ButtonVariant.contained}
       />
     </PopupContainer>
   );
@@ -107,11 +103,5 @@ const styles = createTheme({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  content: {
-    alignItems: 'center',
-    width: '100%',
   },
 });

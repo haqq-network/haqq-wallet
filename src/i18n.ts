@@ -497,6 +497,10 @@ export enum I18N {
   mpcLoginLater,
   mpcLoginLaterTitle,
   mpcLoginLaterDescription,
+  signupNetworkExistsRestore,
+  signupNetworkExistsRewrite,
+  signinNetworksSkip,
+  signinNetworkDisclaimer,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1072,9 +1076,15 @@ const en: Record<I18N, string> = {
     "Are you sure you don't want to enable social login?",
   [I18N.mpcNetworkWeb3AuthDescription]:
     'Web3Auth does not store any data related to your social logins.',
+  [I18N.signinNetworkDisclaimer]:
+    'Web3Auth does not store any data related to your social logins.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.mpcMigrateAgreementAgree]: 'Understood',
   [I18N.mpcMigrateRewriteRewrite]: 'Replace',
   [I18N.mpcMigrateRewriteCancel]: 'Cancel',
+
+  [I18N.signupNetworkExistsRestore]: 'Restore Account',
+  [I18N.signupNetworkExistsRewrite]: 'Replace',
+  [I18N.signinNetworksSkip]: 'Phrase or private key',
 };

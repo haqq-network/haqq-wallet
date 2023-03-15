@@ -13,7 +13,9 @@ export const LedgerVerifyScreen = () => {
   const route = useTypedRoute<'ledgerVerify'>();
 
   const onDone = useCallback(() => {
-    navigation.navigate(route.params.nextScreen ?? 'ledgerStore', {
+    // @ts-ignore
+    return navigation.navigate(route.params.nextScreen ?? 'ledgerStore', {
+      type: 'ledger',
       address: route.params.address,
       hdPath: route.params.hdPath,
       publicKey: route.params.publicKey,
