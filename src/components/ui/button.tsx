@@ -115,7 +115,7 @@ export const Button = ({
     [variant, size, circleBorders, error, disabled, color, style],
   );
 
-  const _textStyle = useMemo(
+  const textStyleFlatten = useMemo(
     () =>
       StyleSheet.flatten<TextStyle>([
         iconLeft && styles.textIconLeft,
@@ -153,7 +153,7 @@ export const Button = ({
           <Text
             t9={size !== ButtonSize.small}
             t12={size === ButtonSize.small}
-            style={_textStyle}
+            style={textStyleFlatten}
             color={textColor}
             i18n={i18n}>
             {title}
