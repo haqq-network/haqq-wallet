@@ -70,10 +70,8 @@ jobs:
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
           echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
-          echo "WEB3AUTH_AUTH0_CLIENT_ID=${{secrets.WEB3AUTH_AUTH0_CLIENT_ID}}" >> .env
-          echo "WEB3AUTH_AUTH0_VERIFIER=${{secrets.WEB3AUTH_AUTH0_VERIFIER}}" >> .env
-          echo "WEB3AUTH_AUTH0_DOMAIN=${{secrets.WEB3AUTH_AUTH0_DOMAIN}}" >> .env
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
+          echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
 
       - name: Execute build
         run: |
