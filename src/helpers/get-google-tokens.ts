@@ -1,3 +1,4 @@
+import {GOOGLE_SIGNIN_WEB_CLIENT_ID} from '@env';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
@@ -8,8 +9,7 @@ export async function hasGoogleToken() {
 
 export async function getGoogleTokens() {
   GoogleSignin.configure({
-    webClientId:
-      '674298748322-bf0domj26qmh2tslunjhkgsha41tkbpp.apps.googleusercontent.com',
+    webClientId: `${GOOGLE_SIGNIN_WEB_CLIENT_ID}.apps.googleusercontent.com`,
     scopes: [
       'openid',
       'profile',
@@ -25,7 +25,7 @@ export async function getGoogleTokens() {
   }
 
   const tokens = await GoogleSignin.getTokens();
-  console.log('tokens', tokens);
+
   return {
     accessToken: tokens.accessToken,
     idToken: tokens.idToken,

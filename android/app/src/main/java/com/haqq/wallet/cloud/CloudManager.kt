@@ -18,6 +18,7 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.haqq.wallet.R
+import java.io.ByteArrayOutputStream
 
 class CloudManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -31,10 +32,8 @@ class CloudManager(reactContext: ReactApplicationContext) :
 
   override fun getConstants(): MutableMap<String, Any> {
     val constants = mutableMapOf<String, Any>()
-//    constants["isSupported"] = this.isGooglePlayServicesAvailable()
-//    constants["isEnabled"] = this.isGooglePlayServicesAvailable() && this.isUserSignedIn()
-    constants["isSupported"] = false
-    constants["isEnabled"] = false
+    constants["isSupported"] = this.isGooglePlayServicesAvailable()
+    constants["isEnabled"] = this.isGooglePlayServicesAvailable() && this.isUserSignedIn()
     return constants
   }
 
@@ -51,12 +50,32 @@ class CloudManager(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun getItem(key: String, promise: Promise) {
-    promise.reject("0", "getItem not_implemented")
+    try {
+      val googleDriveService = getDriveService()
+        ?: return promise.reject("0", "googleDriveService unavailable")
+
+      val fileId = getFileId(key)
+
+      val outputStream = ByteArrayOutputStream()
+      googleDriveService.files().get(fileId).executeMediaAndDownloadTo(outputStream)
+
+      promise.resolve(outputStream.toString())
+    } catch (e: Exception) {
+      promise.reject("0", "getItem")
+    }
   }
 
   @ReactMethod
   fun removeItem(key: String, promise: Promise) {
-    promise.reject("0", "removeItem not_implemented")
+    try {
+      val googleDriveService = getDriveService()
+        ?: return promise.reject("0", "googleDriveService unavailable")
+      val fileId = getFileId(key)
+      googleDriveService.Files().delete(fileId).execute()
+      promise.resolve(true)
+    } catch (e: Exception) {
+      promise.reject("0", "removeItem")
+    }
   }
 
   @ReactMethod
@@ -81,16 +100,17 @@ class CloudManager(reactContext: ReactApplicationContext) :
   }
 
   private fun getFileId(key: String): String? {
-    getDriveService()?.let { googleDriveService ->
-      val result = googleDriveService.files().list().apply {
-        spaces = "drive"
-        fields = "files(id, name)"
-        q = "name='${key}'"
-      }.execute()
+    val googleDriveService = getDriveService()
+      ?: return null
 
-      if (result.files.size > 1) {
-        return result.files[0].id
-      }
+    val result = googleDriveService.files().list().apply {
+      spaces = "drive"
+      fields = "files(id, name)"
+      q = "name='${key}'"
+    }.execute()
+
+    if (result.files.size > 1) {
+      return result.files[0].id
     }
 
     return null
