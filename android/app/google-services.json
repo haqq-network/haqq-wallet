@@ -1,43 +1,41 @@
 {
   "project_info": {
-    "project_number": "915453653093",
-    "project_id": "haqq-test",
-    "storage_bucket": "haqq-test.appspot.com"
+    "project_number": "674298748322",
+    "project_id": "haqq-wallet",
+    "storage_bucket": "haqq-wallet.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:915453653093:android:d69f18643b8b3f2954568c",
+        "mobilesdk_app_id": "1:674298748322:android:57cf3a01e06d20110be6fb",
         "android_client_info": {
           "package_name": "com.haqq.wallet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "915453653093-gm7jk9ielb7k06880h5eg75qe828fduc.apps.googleusercontent.com",
-          "project_id": "haqq-test",
-          "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-          "token_uri": "https://oauth2.googleapis.com/token",
-          "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs"
+          "client_id": "674298748322-bf0domj26qmh2tslunjhkgsha41tkbpp.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDQ2-xZ3BLlKIJU-z3GBxC2MamwhSWcZdo"
+          "current_key": "AIzaSyD7Ezj-ErUdBUQq_ZsOY17wWDGBqTvjIMM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "915453653093-fdhklkpj2di7a4hebts3r9k6s8fm0f46.apps.googleusercontent.com",
+              "client_id": "674298748322-bf0domj26qmh2tslunjhkgsha41tkbpp.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com",
+              "client_id": "674298748322-h050dolk1vra5a1hmfhrpt608mlc8430.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.haqq.wallet"
+                "bundle_id": "com.haqq.wallet",
+                "app_store_id": "6443843352"
               }
             }
           ]

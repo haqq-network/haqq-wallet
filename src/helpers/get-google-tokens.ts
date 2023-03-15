@@ -4,9 +4,9 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 const config = {
   issuer: 'https://accounts.google.com',
   clientId:
-    '915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com',
+    '674298748322-h050dolk1vra5a1hmfhrpt608mlc8430.apps.googleusercontent.com',
   redirectUrl:
-    'com.googleusercontent.apps.915453653093-22njaj5n8vs0o332485b85iamk0vlt2f:/oauth2redirect/google',
+    'com.googleusercontent.apps.674298748322-h050dolk1vra5a1hmfhrpt608mlc8430',
   scopes: [
     'openid',
     'profile',
