@@ -150,6 +150,18 @@
       "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
     },
     {
+      "path": "assets/images/islm-logo-circles.png",
+      "sha1": "d792225844a53800775798ce022b26187dcc4e26"
+    },
+    {
+      "path": "assets/images/islm-logo-circles@2x.png",
+      "sha1": "60df23a5ef47222fad4784781ca5edffb579a7b4"
+    },
+    {
+      "path": "assets/images/islm-logo-circles@3x.png",
+      "sha1": "0d13b9af4ae613728b81f2ef5fedde6b8aba899d"
+    },
+    {
       "path": "assets/images/islm_icon.png",
       "sha1": "f86efa71452726b2e0c02634de0e3a6493b81e6d"
     },

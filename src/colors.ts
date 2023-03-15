@@ -1,6 +1,8 @@
 import {app} from '@app/contexts';
 import {AppTheme} from '@app/types';
 import {
+  DARK_APPLE_BG,
+  DARK_APPLE_TEXT,
   DARK_BG_1,
   DARK_BG_10,
   DARK_BG_2,
@@ -11,6 +13,12 @@ import {
   DARK_BG_7,
   DARK_BG_8,
   DARK_BG_9,
+  DARK_DISCORD_BG,
+  DARK_DISCORD_TEXT,
+  DARK_FACEBOOK_BG,
+  DARK_FACEBOOK_TEXT,
+  DARK_GOOGLE_BG,
+  DARK_GOOGLE_TEXT,
   DARK_GRAPHIC_BASE_1,
   DARK_GRAPHIC_BASE_2,
   DARK_GRAPHIC_BASE_3,
@@ -31,6 +39,10 @@ import {
   DARK_TEXT_SECOND_1,
   DARK_TEXT_SECOND_2,
   DARK_TEXT_YELLOW_1,
+  DARK_TWITTER_BG,
+  DARK_TWITTER_TEXT,
+  LIGHT_APPLE_BG,
+  LIGHT_APPLE_TEXT,
   LIGHT_BG_1,
   LIGHT_BG_10,
   LIGHT_BG_2,
@@ -41,6 +53,12 @@ import {
   LIGHT_BG_7,
   LIGHT_BG_8,
   LIGHT_BG_9,
+  LIGHT_DISCORD_BG,
+  LIGHT_DISCORD_TEXT,
+  LIGHT_FACEBOOK_BG,
+  LIGHT_FACEBOOK_TEXT,
+  LIGHT_GOOGLE_BG,
+  LIGHT_GOOGLE_TEXT,
   LIGHT_GRAPHIC_BASE_1,
   LIGHT_GRAPHIC_BASE_2,
   LIGHT_GRAPHIC_BASE_3,
@@ -61,6 +79,8 @@ import {
   LIGHT_TEXT_SECOND_1,
   LIGHT_TEXT_SECOND_2,
   LIGHT_TEXT_YELLOW_1,
+  LIGHT_TWITTER_BG,
+  LIGHT_TWITTER_TEXT,
   TRANSPARENT,
 } from '@app/variables/common';
 
@@ -96,6 +116,16 @@ export enum Color {
   graphicSecond2 = 'graphicSecond2',
   graphicSecond3 = 'graphicSecond3',
   graphicSecond4 = 'graphicSecond4',
+  socialGoogleBg = 'socialGoogleBg',
+  socialGoogleText = 'socialGoogleText',
+  socialTwitterBg = 'socialTwitterBg',
+  socialTwitterText = 'socialTwitterText',
+  socialFacebookBg = 'socialFacebookBg',
+  socialFacebookText = 'socialFacebookText',
+  socialDiscordBg = 'socialDiscordBg',
+  socialDiscordText = 'socialDiscordText',
+  socialAppleBg = 'socialAppleBg',
+  socialAppleText = 'socialAppleText',
 }
 
 const styled = new Set(Object.keys(Color));
@@ -144,6 +174,16 @@ const light: Record<Color, string> = {
   [Color.graphicSecond3]: LIGHT_GRAPHIC_SECOND_3,
   [Color.graphicSecond4]: LIGHT_GRAPHIC_SECOND_4,
   [Color.graphicBlue1]: LIGHT_GRAPHIC_BLUE_1,
+  [Color.socialGoogleBg]: LIGHT_GOOGLE_BG,
+  [Color.socialGoogleText]: LIGHT_GOOGLE_TEXT,
+  [Color.socialTwitterBg]: LIGHT_TWITTER_BG,
+  [Color.socialTwitterText]: LIGHT_TWITTER_TEXT,
+  [Color.socialFacebookBg]: LIGHT_FACEBOOK_BG,
+  [Color.socialFacebookText]: LIGHT_FACEBOOK_TEXT,
+  [Color.socialDiscordBg]: LIGHT_DISCORD_BG,
+  [Color.socialDiscordText]: LIGHT_DISCORD_TEXT,
+  [Color.socialAppleBg]: LIGHT_APPLE_BG,
+  [Color.socialAppleText]: LIGHT_APPLE_TEXT,
 };
 
 const dark: Record<Color, string> = {
@@ -178,4 +218,14 @@ const dark: Record<Color, string> = {
   [Color.graphicSecond3]: DARK_GRAPHIC_SECOND_3,
   [Color.graphicSecond4]: DARK_GRAPHIC_SECOND_4,
   [Color.graphicBlue1]: DARK_GRAPHIC_BLUE_1,
+  [Color.socialGoogleBg]: DARK_GOOGLE_BG,
+  [Color.socialGoogleText]: DARK_GOOGLE_TEXT,
+  [Color.socialTwitterBg]: DARK_TWITTER_BG,
+  [Color.socialTwitterText]: DARK_TWITTER_TEXT,
+  [Color.socialFacebookBg]: DARK_FACEBOOK_BG,
+  [Color.socialFacebookText]: DARK_FACEBOOK_TEXT,
+  [Color.socialDiscordBg]: DARK_DISCORD_BG,
+  [Color.socialDiscordText]: DARK_DISCORD_TEXT,
+  [Color.socialAppleBg]: DARK_APPLE_BG,
+  [Color.socialAppleText]: DARK_APPLE_TEXT,
 };

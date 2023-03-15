@@ -3,9 +3,11 @@ import {useCallback, useMemo} from 'react';
 
 import {
   ActivityIndicator,
+  StyleProp,
   StyleSheet,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewProps,
   ViewStyle,
 } from 'react-native';
@@ -33,11 +35,14 @@ export type ButtonLeftIconProps =
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  onPress: () => void;
+  onPress?: () => void;
   error?: boolean;
   loading?: boolean;
   disabled?: boolean;
   textColor?: ColorType;
+  textStyle?: StyleProp<TextStyle>;
+  iconLeftStyle?: StyleProp<TextStyle>;
+  iconRightStyle?: StyleProp<TextStyle>;
   color?: ColorType;
   circleBorders?: boolean;
 } & ButtonValue &
@@ -63,6 +68,7 @@ export const Button = ({
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
+  textStyle,
   circleBorders,
   onPress,
   iconRight,
@@ -74,11 +80,13 @@ export const Button = ({
   error,
   disabled,
   loading,
+  iconLeftStyle,
+  iconRightStyle,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
     if (!(disabled || loading)) {
-      onPress();
+      onPress?.();
     }
   }, [disabled, loading, onPress]);
 
@@ -107,7 +115,7 @@ export const Button = ({
     [variant, size, circleBorders, error, disabled, color, style],
   );
 
-  const textStyle = useMemo(
+  const textStyleFlatten = useMemo(
     () =>
       StyleSheet.flatten<TextStyle>([
         iconLeft && styles.textIconLeft,
@@ -121,8 +129,9 @@ export const Button = ({
         disabled &&
           variant === ButtonVariant.contained &&
           styles.containedDisabledText,
+        textStyle,
       ]),
-    [iconLeft, iconRight, variant, error, disabled],
+    [iconLeft, iconRight, variant, error, disabled, textStyle],
   );
 
   return (
@@ -136,19 +145,27 @@ export const Button = ({
       ) : (
         <>
           {iconLeft && (
-            <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+            <View style={iconLeftStyle}>
+              <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+            </View>
           )}
           {/* @ts-expect-error */}
           <Text
             t9={size !== ButtonSize.small}
             t12={size === ButtonSize.small}
-            style={textStyle}
+            style={textStyleFlatten}
             color={textColor}
             i18n={i18n}>
             {title}
           </Text>
           {iconRight && (
-            <Icon name={iconRight} color={iconRightColor} style={styles.icon} />
+            <View style={iconRightStyle}>
+              <Icon
+                name={iconRight}
+                color={iconRightColor}
+                style={styles.icon}
+              />
+            </View>
           )}
         </>
       )}
