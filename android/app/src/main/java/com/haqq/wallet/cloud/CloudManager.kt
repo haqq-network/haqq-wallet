@@ -31,8 +31,10 @@ class CloudManager(reactContext: ReactApplicationContext) :
 
   override fun getConstants(): MutableMap<String, Any> {
     val constants = mutableMapOf<String, Any>()
-    constants["isSupported"] = this.isGooglePlayServicesAvailable()
-    constants["isEnabled"] = this.isGooglePlayServicesAvailable() && this.isUserSignedIn()
+//    constants["isSupported"] = this.isGooglePlayServicesAvailable()
+//    constants["isEnabled"] = this.isGooglePlayServicesAvailable() && this.isUserSignedIn()
+    constants["isSupported"] = false
+    constants["isEnabled"] = false
     return constants
   }
 
