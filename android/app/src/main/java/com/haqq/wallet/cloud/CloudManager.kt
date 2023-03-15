@@ -10,9 +10,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.Scope
-import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
@@ -142,7 +142,7 @@ class CloudManager(reactContext: ReactApplicationContext) :
     }
 
     return Drive.Builder(
-      AndroidHttp.newCompatibleTransport(),
+      NetHttpTransport(),
       JacksonFactory.getDefaultInstance(),
       credential
     )
