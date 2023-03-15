@@ -7,6 +7,8 @@ import com.facebook.react.bridge.ReactMethod
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -29,8 +31,8 @@ class CloudManager(reactContext: ReactApplicationContext) :
 
   override fun getConstants(): MutableMap<String, Any> {
     val constants = mutableMapOf<String, Any>()
-    constants["isSupported"] = true
-    constants["isEnabled"] = this.isUserSignedIn()
+    constants["isSupported"] = this.isGooglePlayServicesAvailable()
+    constants["isEnabled"] = this.isGooglePlayServicesAvailable() && this.isUserSignedIn()
     return constants
   }
 
@@ -126,5 +128,10 @@ class CloudManager(reactContext: ReactApplicationContext) :
       .build()
   }
 
+  private fun isGooglePlayServicesAvailable(): Boolean {
+    val googleApiAvailability: GoogleApiAvailability = GoogleApiAvailability.getInstance()
+    val resultCode: Int = googleApiAvailability.isGooglePlayServicesAvailable(this.reactContext)
+    return resultCode == ConnectionResult.SUCCESS
+  }
 
 }
