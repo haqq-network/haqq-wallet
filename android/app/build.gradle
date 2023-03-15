@@ -149,10 +149,10 @@ android {
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
-      'torusRedirectScheme': 'haqq',
-      'torusRedirectHost': 'web3auth',
+      'torusRedirectScheme'    : 'haqq',
+      'torusRedirectHost'      : 'web3auth',
       'torusRedirectPathPrefix': '/redirect',
-      appAuthRedirectScheme: 'haqq'
+      appAuthRedirectScheme    : 'haqq'
     ]
 
     if (isNewArchitectureEnabled()) {
@@ -298,7 +298,6 @@ dependencies {
 
   implementation "com.github.komputing.khash:keccak:1.1.1"
 
-  implementation 'commons-codec:commons-codec@1.13'
   implementation 'com.google.oauth-client:google-oauth-client:1.33.3'
   implementation 'com.google.api-client:google-api-client-android:1.35.2'
   implementation 'com.google.android.gms:play-services-auth:20.4.1'
