@@ -8,7 +8,10 @@ export const SignUpAgreementScreen = () => {
   const {nextScreen} = useTypedRoute<'createAgreement'>().params;
 
   const onPressAgree = useCallback(() => {
-    navigation.navigate(nextScreen ?? 'onboardingSetupPin');
+    // @ts-ignore
+    return navigation.navigate(nextScreen ?? 'onboardingSetupPin', {
+      type: 'empty',
+    });
   }, [navigation, nextScreen]);
 
   return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;

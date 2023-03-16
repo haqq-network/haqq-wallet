@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  LottieWrap,
   PopupContainer,
   Spacer,
   Text,
@@ -22,9 +22,13 @@ export type MpcNetworksProps = {
   onLoginLaterPress(): void;
 };
 
-export const MpcNetworks = ({onLogin, onLoginLaterPress}: MpcNetworksProps) => {
+export const SignupNetworks = ({
+  onLogin,
+  onLoginLaterPress,
+}: MpcNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -48,47 +52,64 @@ export const MpcNetworks = ({onLogin, onLoginLaterPress}: MpcNetworksProps) => {
     }
   }, [onLogin]);
 
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(MpcProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
   return (
     <PopupContainer style={styles.container}>
-      <Image source={{uri: 'islm-logo-circles'}} style={styles.logo} />
-
-      <View style={styles.content}>
-        {/* <SocialButton variant={SocialButtonVariant.discord} />
+      <Spacer centered>
+        <LottieWrap
+          source={require('../../../assets/animations/soc-login.json')}
+          style={styles.logo}
+          autoPlay
+          loop
+        />
+      </Spacer>
+      {/* <SocialButton variant={SocialButtonVariant.discord} />
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.twitter} />
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.facebook} /> */}
 
-        {appleAuth.isSupported && (
-          <>
-            <Spacer height={10} />
-            <SocialButton
-              loading={isApple}
-              disabled={isLoading && !isApple}
-              onPress={onPressLoginApple}
-              variant={SocialButtonVariant.apple}
-            />
-          </>
-        )}
+      {appleAuth.isSupported && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={SocialButtonVariant.apple}
+          />
+        </>
+      )}
 
-        <Spacer height={10} />
-        <SocialButton
-          loading={isGoogle}
-          disabled={isLoading && !isGoogle}
-          onPress={onPressLoginGoogle}
-          variant={SocialButtonVariant.google}
-        />
-
-        <Spacer height={10} />
-        <Text
-          t15
-          i18n={I18N.mpcNetworkWeb3AuthDescription}
-          color={Color.textBase2}
-        />
-
-        <Spacer height={24} />
-      </View>
-
+      <Spacer height={10} />
+      <SocialButton
+        loading={isGoogle}
+        disabled={isLoading && !isGoogle}
+        onPress={onPressLoginGoogle}
+        variant={SocialButtonVariant.google}
+      />
+      <Spacer height={10} />
+      <Button
+        onPress={onPressLoginCustom}
+        loading={isCustom}
+        i18n={I18N.customNetwork}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={10} />
+      <Text
+        t15
+        i18n={I18N.mpcNetworkWeb3AuthDescription}
+        color={Color.textBase2}
+      />
+      <Spacer height={8} />
       <Button
         onPress={onLoginLaterPress}
         i18n={I18N.mpcLoginLater}
@@ -107,11 +128,5 @@ const styles = createTheme({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  content: {
-    alignItems: 'center',
-    width: '100%',
   },
 });
