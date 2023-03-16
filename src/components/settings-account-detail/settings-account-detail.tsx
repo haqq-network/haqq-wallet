@@ -101,8 +101,7 @@ export const SettingsAccountDetail = ({
         {!wallet.socialLinkEnabled && (
           <InfoBlock
             border
-            warning
-            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            icon={<Icon name={'warning'} color={Color.graphicBase1} />}
             i18n={I18N.settingsAccountDetailRecoverySocialWarning}
             bottomContainerStyle={styles.row}
             bottom={
@@ -121,8 +120,7 @@ export const SettingsAccountDetail = ({
         {!wallet.mnemonicSaved && (
           <InfoBlock
             border
-            warning
-            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            icon={<Icon name={'warning'} color={Color.graphicBase1} />}
             i18n={I18N.settingsAccountDetailRecoveryPharseWarning}
             bottomContainerStyle={styles.row}
             bottom={
