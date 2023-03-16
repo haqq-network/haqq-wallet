@@ -159,7 +159,7 @@ export type RootStackParamList = {
   };
   createStoreWallet: {
     nextScreen: NextScreenWithoutParamsT;
-  };
+  } & WalletInitialData;
   onboardingBiometry: {
     biometryType: BiometryType;
     nextScreen?:

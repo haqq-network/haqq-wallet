@@ -13,7 +13,7 @@ import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
-  const {nextScreen} = useTypedRoute<'createStoreWallet'>().params;
+  const route = useTypedRoute<'createStoreWallet'>();
 
   const wallets = useWallets();
 
@@ -26,7 +26,7 @@ export const SignUpStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const provider = await getProviderForNewWallet();
+        const provider = await getProviderForNewWallet(route.params);
 
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
 
@@ -64,7 +64,7 @@ export const SignUpStoreWalletScreen = () => {
           name,
         );
 
-        navigation.navigate(nextScreen ?? 'onboardingFinish');
+        navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
@@ -80,7 +80,7 @@ export const SignUpStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [navigation, nextScreen, wallets]);
+  }, [navigation, route.params, wallets]);
 
   return <View />;
 };
