@@ -44,7 +44,7 @@
     "@toruslabs/torus.js": "6.3.2",
     "@tradle/react-native-http": "2.0.1",
     "@walletconnect/react-native-compat": "2.4.4",
-    "@walletconnect/sign-client": "2.4.3",
+    "@walletconnect/sign-client": "2.4.4",
     "@walletconnect/web3wallet": "1.1.1",
     "assert": "2.0.0",
     "bech32-converting": "1.0.9",

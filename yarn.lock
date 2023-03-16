@@ -3382,20 +3382,20 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/sign-client@2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.4.3.tgz#f18aa998928b2b7ae57231e29791d6b44e46c389"
-  integrity sha512-ztAqFxCbj/kPVDJfFE47hBlOkLn/4xDHejAm+mYOOQjZ7qzGKSOciPz25k4uDIy60Z5sSR84gmmkjTIES18hzw==
+"@walletconnect/sign-client@2.4.4":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.4.4.tgz#8c1109de277452356094961c45e819c8575b51aa"
+  integrity sha512-ByF1Qi+r7EAZ8HX++aiHekSxiruIlUg3KWfXvki5n4PQNv9Ldad/RaMswk7CB7ESCZuHc7ylKcT3SwOJjHOopg==
   dependencies:
-    "@walletconnect/core" "2.4.3"
+    "@walletconnect/core" "2.4.4"
     "@walletconnect/events" "^1.0.1"
     "@walletconnect/heartbeat" "1.2.0"
     "@walletconnect/jsonrpc-provider" "^1.0.6"
     "@walletconnect/jsonrpc-utils" "^1.0.4"
     "@walletconnect/logger" "^2.0.1"
     "@walletconnect/time" "^1.0.2"
-    "@walletconnect/types" "2.4.3"
-    "@walletconnect/utils" "2.4.3"
+    "@walletconnect/types" "2.4.4"
+    "@walletconnect/utils" "2.4.4"
     events "^3.3.0"
     pino "7.11.0"
 
