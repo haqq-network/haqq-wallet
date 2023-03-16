@@ -17,7 +17,6 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {WalletType} from '@app/types';
 import {shortAddress} from '@app/utils';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
@@ -27,7 +26,7 @@ export type BalanceProps = {
   walletConnectSessions: SessionTypes.Struct[];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
-  onPressBackup: (address: string, type: WalletType) => void;
+  onPressProtection: (address: string) => void;
   onWalletConnectPress?: (address: string) => void;
 };
 
@@ -37,13 +36,15 @@ export const WalletCard = ({
   walletConnectSessions,
   onPressSend,
   onPressQR,
-  onPressBackup,
   onWalletConnectPress,
+  onPressProtection,
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
+  const enableProtectionWarning =
+    !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
   const disableTopNavMarginBottom =
-    !wallet.mnemonicSaved || !!walletConnectSessions?.length;
+    enableProtectionWarning || !!walletConnectSessions?.length;
 
   const formattedAddress = useMemo(
     () => shortAddress(wallet?.address ?? '', '•'),
@@ -54,9 +55,9 @@ export const WalletCard = ({
     onPressQR(wallet.address);
   };
 
-  const onBackup = () => {
+  const onProtection = () => {
     if (wallet.accountId) {
-      onPressBackup(wallet.accountId, wallet.type);
+      onPressProtection(wallet.accountId);
     }
   };
 
@@ -115,11 +116,11 @@ export const WalletCard = ({
           />
         </IconButton>
       )}
-      {!wallet.mnemonicSaved && (
-        <IconButton onPress={onBackup} style={styles.cacheButton}>
+      {enableProtectionWarning && (
+        <IconButton onPress={onProtection} style={styles.cacheButton}>
           <Text
             t15
-            i18n={I18N.walletCardWithoutBackup}
+            i18n={I18N.walletCardWithoutProtection}
             color={Color.textBase3}
           />
         </IconButton>

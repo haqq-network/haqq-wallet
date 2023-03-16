@@ -11,7 +11,6 @@ import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {WalletType} from '@app/types';
 
 export type WalletsProps = {
   wallets: Wallet[];
@@ -20,7 +19,7 @@ export type WalletsProps = {
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onWalletConnectPress: (address: string) => void;
-  onPressBackup: (address: string, walletType: WalletType) => void;
+  onPressProtection: (address: string) => void;
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
@@ -33,7 +32,7 @@ export const Wallets = ({
   onPressQR,
   onPressCreate,
   onPressLedger,
-  onPressBackup,
+  onPressProtection,
   onPressRestore,
   onWalletConnectPress,
 }: WalletsProps) => {
@@ -62,7 +61,7 @@ export const Wallets = ({
               walletConnectSessions={walletConnectSessions[i]}
               onPressSend={onPressSend}
               onPressQR={onPressQR}
-              onPressBackup={onPressBackup}
+              onPressProtection={onPressProtection}
               onWalletConnectPress={onWalletConnectPress}
             />
           </CarouselItem>

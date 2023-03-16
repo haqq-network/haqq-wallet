@@ -30,6 +30,7 @@ export class Wallet extends Realm.Object {
       name: {type: 'string', default: ''},
       data: {type: 'string', default: ''},
       mnemonicSaved: {type: 'bool', default: false},
+      socialLinkEnabled: {type: 'bool', default: false},
       cardStyle: {type: 'string', default: WalletCardStyle.flat},
       isHidden: {type: 'bool', default: false},
       isMain: {type: 'bool', default: false},
@@ -51,6 +52,7 @@ export class Wallet extends Realm.Object {
   name!: string;
   data!: string;
   mnemonicSaved!: boolean;
+  socialLinkEnabled!: boolean;
   cardStyle!: WalletCardStyle;
   colorFrom!: string;
   colorTo!: string;
@@ -151,6 +153,7 @@ export class Wallet extends Realm.Object {
         data: '',
         address: walletParams.address.toLowerCase(),
         mnemonicSaved: false,
+        socialLinkEnabled: false,
         name: name,
         pattern,
         cardStyle,

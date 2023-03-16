@@ -8,7 +8,6 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletConnect} from '@app/services/wallet-connect';
-import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = () => {
@@ -72,15 +71,9 @@ export const WalletsWrapper = () => {
     showModal('card-details-qr', {address: address});
   }, []);
 
-  const onPressBackup = useCallback(
-    (accountId: string, walletType: WalletType) => {
-      switch (walletType) {
-        case WalletType.mnemonic:
-          navigation.navigate('backup', {accountId});
-          break;
-        case WalletType.mpc:
-          navigation.navigate('backupMpcNotification', {accountId});
-      }
+  const onPressProtection = useCallback(
+    (accountId: string) => {
+      navigation.navigate('walletProtectionPopup', {accountId});
     },
     [navigation],
   );
@@ -135,7 +128,7 @@ export const WalletsWrapper = () => {
       onPressCreate={onPressCreate}
       onPressRestore={onPressRestore}
       onPressQR={onPressQR}
-      onPressBackup={onPressBackup}
+      onPressProtection={onPressProtection}
     />
   );
 };

@@ -232,6 +232,18 @@
     {
       "path": "assets/images/qr-logo@3x.png",
       "sha1": "6dbe55e9e26e8c568afdd03e100e41212416a194"
+    },
+    {
+      "path": "assets/images/shield-img.png",
+      "sha1": "425612b2ca33bdf94ecafe032360663181040829"
+    },
+    {
+      "path": "assets/images/shield-img@2x.png",
+      "sha1": "212ac1cb613d7f895de44eb9144f430777a8d947"
+    },
+    {
+      "path": "assets/images/shield-img@3x.png",
+      "sha1": "c88d8fd2e7fc79eded499dd702ae7af5a9c4cc4d"
     }
   ]
 }
