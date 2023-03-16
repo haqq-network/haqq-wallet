@@ -1,15 +1,11 @@
-import {
-  WEB3AUTH_AUTH0_CLIENT_ID,
-  WEB3AUTH_AUTH0_DOMAIN,
-  WEB3AUTH_AUTH0_VERIFIER,
-  WEB3AUTH_CLIENT_ID,
-} from '@env';
+import {CUSTOM_JWT_TOKEN, WEB3AUTH_CLIENT_ID} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
-import FetchNodeDetails, {TORUS_NETWORK} from '@toruslabs/fetch-node-details';
-import NodeDetailManager from '@toruslabs/fetch-node-details';
+import FetchNodeDetails from '@toruslabs/fetch-node-details';
+import NodeDetailManager, {TORUS_NETWORK} from '@toruslabs/fetch-node-details';
 import TorusUtils from '@toruslabs/torus.js';
 import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
+import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
@@ -28,23 +24,11 @@ export const storageLayerOptions = {
 
 export enum MpcProviders {
   google = 'google',
-  auth0 = 'auth0',
   discord = 'discord',
   apple = 'apple',
   github = 'github',
+  custom = 'custom',
 }
-
-export const verifierMap = {
-  [MpcProviders.auth0]: {
-    name: 'Auth0',
-    typeOfLogin: 'jwt',
-    clientId: WEB3AUTH_AUTH0_CLIENT_ID,
-    verifier: WEB3AUTH_AUTH0_VERIFIER,
-    jwtParams: {
-      domain: WEB3AUTH_AUTH0_DOMAIN,
-    },
-  },
-};
 
 export function customAuthInit() {
   CustomAuth.init({
@@ -55,6 +39,44 @@ export function customAuthInit() {
     enableOneKey: false,
     skipSw: true,
   });
+}
+
+export async function onLoginCustom() {
+  const email = await new Promise((resolve, reject) => {
+    prompt(
+      'Enter email',
+      'some name@haqq',
+      [
+        {text: 'Cancel', onPress: () => reject(), style: 'cancel'},
+        {text: 'OK', onPress: e => resolve(e)},
+      ],
+      {
+        type: 'plain-text',
+        cancelable: false,
+      },
+    );
+  });
+
+  console.log('email', email, CUSTOM_JWT_TOKEN);
+
+  const token = await fetch(CUSTOM_JWT_TOKEN, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json, text/plain, */*',
+      'content-type': 'application/json;charset=UTF-8',
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  });
+
+  const authState = await token.json();
+  console.log('authState', authState);
+
+  const authInfo = parseJwt(authState.idToken);
+  console.log('authInfo', authInfo);
+
+  return await onAuthorized('haqq-test', authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {

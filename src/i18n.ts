@@ -492,6 +492,17 @@ export enum I18N {
   mpcMigrateAgreementAgree,
   mpcMigrateRewriteRewrite,
   mpcMigrateRewriteCancel,
+  socialButtonContinueWith,
+  mpcNetworkWeb3AuthDescription,
+  mpcLoginLater,
+  mpcLoginLaterTitle,
+  mpcLoginLaterDescription,
+  signupNetworkExistsRestore,
+  signupNetworkExistsRewrite,
+  signinNetworksSkip,
+  signinNetworkDisclaimer,
+  signinPinTitle,
+  customNetwork,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1059,9 +1070,25 @@ const en: Record<I18N, string> = {
   [I18N.backupMpcSuggestionConnect]: 'Connect',
   [I18N.backupMpcSuggestionCancel]: 'Connect later',
   [I18N.locationUnauthorizedTitle]: 'No access to precise location',
+  [I18N.socialButtonContinueWith]: 'Continue with {{provider}}',
+  [I18N.mpcLoginLater]: 'Make a social login later',
+  [I18N.mpcLoginLaterDescription]:
+    'This will help to keep access to the account in case it is lost. You can always enable this feature in your account settings',
+  [I18N.mpcLoginLaterTitle]:
+    "Are you sure you don't want to enable social login?",
+  [I18N.mpcNetworkWeb3AuthDescription]:
+    'Web3Auth does not store any data related to your social logins.',
+  [I18N.signinNetworkDisclaimer]:
+    'Web3Auth does not store any data related to your social logins.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.mpcMigrateAgreementAgree]: 'Understood',
   [I18N.mpcMigrateRewriteRewrite]: 'Replace',
   [I18N.mpcMigrateRewriteCancel]: 'Cancel',
+
+  [I18N.signupNetworkExistsRestore]: 'Restore Account',
+  [I18N.signupNetworkExistsRewrite]: 'Replace',
+  [I18N.signinNetworksSkip]: 'Phrase or private key',
+  [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
+  [I18N.customNetwork]: 'Custom network',
 };

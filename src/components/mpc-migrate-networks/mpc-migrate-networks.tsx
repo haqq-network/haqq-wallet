@@ -9,6 +9,7 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {MpcProviders} from '@app/services/provider-mpc';
 
 export type MpcMigrateNetworksProps = {
@@ -18,6 +19,7 @@ export type MpcMigrateNetworksProps = {
 export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -41,6 +43,16 @@ export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
     }
   }, [onLogin]);
 
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(MpcProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
+
   return (
     <PopupContainer style={styles.container}>
       <Spacer />
@@ -49,6 +61,13 @@ export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
         loading={isGoogle}
         disabled={isLoading && !isGoogle}
         onPress={onPressLoginGoogle}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={10} />
+      <Button
+        onPress={onPressLoginCustom}
+        loading={isCustom}
+        i18n={I18N.customNetwork}
         variant={ButtonVariant.contained}
       />
       {appleAuth.isSupported && (

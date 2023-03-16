@@ -45,7 +45,15 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.915453653093-22njaj5n8vs0o332485b85iamk0vlt2f</string>
+				<string>com.googleusercontent.apps.674298748322-h050dolk1vra5a1hmfhrpt608mlc8430</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com</string>
 			</array>
 		</dict>
 	</array>
@@ -109,5 +117,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSUbiquitousContainers</key>
+      <dict>
+          <key>iCloud.com.haqq.wallet.keys</key>
+          <dict>
+              <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+              <true/>
+              <key>NSUbiquitousContainerName</key>
+              <string>HAQQ Backup</string>
+              <key>NSUbiquitousContainerSupportedFolderLevels</key>
+              <string>None</string>
+          </dict>
+      </dict>
 </dict>
 </plist>

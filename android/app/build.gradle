@@ -149,10 +149,10 @@ android {
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
-      'torusRedirectScheme': 'haqq',
-      'torusRedirectHost': 'web3auth',
+      'torusRedirectScheme'    : 'haqq',
+      'torusRedirectHost'      : 'web3auth',
       'torusRedirectPathPrefix': '/redirect',
-      appAuthRedirectScheme: 'haqq'
+      appAuthRedirectScheme    : 'haqq'
     ]
 
     if (isNewArchitectureEnabled()) {
@@ -180,6 +180,10 @@ android {
         }
       }
     }
+  }
+
+  packagingOptions {
+    exclude 'META-INF/DEPENDENCIES'
   }
 
   if (isNewArchitectureEnabled()) {
@@ -293,6 +297,12 @@ dependencies {
   implementation platform('com.google.firebase:firebase-bom:30.3.2')
 
   implementation "com.github.komputing.khash:keccak:1.1.1"
+
+  implementation 'commons-codec:commons-codec:1.13'
+  implementation 'com.google.oauth-client:google-oauth-client:1.34.1'
+  implementation 'com.google.api-client:google-api-client-android:1.35.2'
+  implementation 'com.google.android.gms:play-services-auth:20.4.1'
+  implementation 'com.google.apis:google-api-services-drive:v3-rev197-1.25.0'
 
   testImplementation platform("org.junit:junit-bom:5.9.1")
   testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"

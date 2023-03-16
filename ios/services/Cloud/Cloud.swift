@@ -52,7 +52,7 @@ class RNCloud: NSObject {
   @objc
   public func hasItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!.appendingPathComponent("backups")
+      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
       let fileUrl = nestedFolderURL.appendingPathComponent(key)
       let exists = fileManager.fileExists(atPath: fileUrl.path)
       resolve(exists)
@@ -65,8 +65,10 @@ class RNCloud: NSObject {
   @objc
   public func getItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!.appendingPathComponent("backups")
+      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
 
+      print(nestedFolderURL)
+      
       let fileUrl = nestedFolderURL.appendingPathComponent(key)
 
       let text2 = try String(contentsOf: fileUrl, encoding: .utf8)
@@ -83,7 +85,7 @@ class RNCloud: NSObject {
       return
     }
 
-    let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!.appendingPathComponent("backups")
+    let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
 
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
     do {
@@ -98,7 +100,7 @@ class RNCloud: NSObject {
   @objc
   public func removeItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!.appendingPathComponent("backups")
+      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
       let fileUrl = nestedFolderURL.appendingPathComponent(key)
       if fileManager.fileExists(atPath: fileUrl.path) {
         try fileManager.removeItem(at: fileUrl)

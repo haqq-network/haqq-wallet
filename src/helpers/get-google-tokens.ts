@@ -1,22 +1,6 @@
-import {authorize, refresh} from 'react-native-app-auth';
+import {GOOGLE_SIGNIN_WEB_CLIENT_ID} from '@env';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
-const config = {
-  issuer: 'https://accounts.google.com',
-  clientId:
-    '915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com',
-  redirectUrl:
-    'com.googleusercontent.apps.915453653093-22njaj5n8vs0o332485b85iamk0vlt2f:/oauth2redirect/google',
-  scopes: [
-    'openid',
-    'profile',
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/drive.appfolder',
-    'https://www.googleapis.com/auth/drive.appdata',
-    'https://www.googleapis.com/auth/drive.file',
-  ],
-};
 
 export async function hasGoogleToken() {
   const exists = await EncryptedStorage.getItem('google_refresh_token');
@@ -24,26 +8,26 @@ export async function hasGoogleToken() {
 }
 
 export async function getGoogleTokens() {
-  let resp;
+  GoogleSignin.configure({
+    webClientId: `${GOOGLE_SIGNIN_WEB_CLIENT_ID}.apps.googleusercontent.com`,
+    scopes: [
+      'openid',
+      'profile',
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/userinfo.email',
+    ],
+  });
+
   try {
-    const exists = await EncryptedStorage.getItem('google_refresh_token');
-    if (!exists) {
-      throw new Error('not_exists');
-    }
-
-    resp = await refresh(config, {
-      refreshToken: exists,
-    });
+    await GoogleSignin.signInSilently();
   } catch (e) {
-    resp = await authorize(config);
+    await GoogleSignin.signIn();
   }
 
-  if (resp.refreshToken) {
-    await EncryptedStorage.setItem('google_refresh_token', resp.refreshToken);
-  }
+  const tokens = await GoogleSignin.getTokens();
 
   return {
-    accessToken: resp.accessToken,
-    idToken: resp.idToken,
+    accessToken: tokens.accessToken,
+    idToken: tokens.idToken,
   };
 }

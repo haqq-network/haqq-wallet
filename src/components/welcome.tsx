@@ -12,14 +12,12 @@ type WelcomeProps = {
   onPressSignup: () => void;
   onPressLedger: () => void;
   onPressSignIn: () => void;
-  onPressMpc: () => void;
 };
 
 export const Welcome = ({
   onPressSignup,
   onPressLedger,
   onPressSignIn,
-  onPressMpc,
 }: WelcomeProps) => {
   const insets = useSafeAreaInsets();
 
@@ -67,14 +65,6 @@ export const Welcome = ({
         i18n={I18N.welcomeRestoreWallet}
         style={styles.button}
         onPress={onPressSignIn}
-        size={ButtonSize.large}
-      />
-
-      <Button
-        testID="welcome_mpc"
-        i18n={I18N.welcomeSocialWallet}
-        style={styles.button}
-        onPress={onPressMpc}
         size={ButtonSize.large}
       />
     </View>

@@ -7,6 +7,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   MpcProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
   serviceProviderOptions,
   storageLayerOptions,
@@ -25,6 +26,9 @@ export const MpcMigrateNetworksScreen = () => {
           break;
         case MpcProviders.google:
           privateKey = await onLoginGoogle();
+          break;
+        case MpcProviders.custom:
+          privateKey = await onLoginCustom();
           break;
       }
       if (privateKey) {

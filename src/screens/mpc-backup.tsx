@@ -40,8 +40,10 @@ export const MpcBackupScreen = () => {
         setIsPasswordExists(PasswordExists.exists);
       } catch (e) {
         navigation.navigate('onboardingSetupPin', {
-          privateKey: route.params.privateKey,
-          questionAnswer: null,
+          type: 'mpc',
+          mpcPrivateKey: route.params.privateKey,
+          mpcSecurityQuestion: null,
+          mpcCloudShare: null,
         });
       }
     };
@@ -61,8 +63,10 @@ export const MpcBackupScreen = () => {
         await securityQuestionsModule.inputShareFromSecurityQuestions(password);
 
         navigation.navigate('onboardingSetupPin', {
-          privateKey: route.params.privateKey,
-          questionAnswer: password,
+          type: 'mpc',
+          mpcPrivateKey: route.params.privateKey,
+          mpcSecurityQuestion: password,
+          mpcCloudShare: null,
         });
       } catch (e) {
         if (e instanceof Error) {
@@ -89,8 +93,10 @@ export const MpcBackupScreen = () => {
 
       if (share) {
         navigation.navigate('onboardingSetupPin', {
-          privateKey: route.params.privateKey,
-          cloudShare: share,
+          type: 'mpc',
+          mpcPrivateKey: route.params.privateKey,
+          mpcSecurityQuestion: null,
+          mpcCloudShare: share,
         });
       }
     } catch (e) {
@@ -102,7 +108,10 @@ export const MpcBackupScreen = () => {
 
   const onPressContinue = useCallback(() => {
     navigation.navigate('onboardingSetupPin', {
-      privateKey: route.params.privateKey,
+      type: 'mpc',
+      mpcPrivateKey: route.params.privateKey,
+      mpcSecurityQuestion: null,
+      mpcCloudShare: null,
     });
   }, [navigation, route.params.privateKey]);
 
