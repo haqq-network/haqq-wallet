@@ -519,6 +519,14 @@ export enum I18N {
   signinNetworkDisclaimer,
   signinPinTitle,
   customNetwork,
+  signNotExitsTitle,
+  signNotExitsDescription,
+  signNotExitsCreateAccount,
+  signNotExitsChoiceAnother,
+  signNotRecoveryTitle,
+  signNotRecoveryDescription,
+  signNotRecoveryOldPin,
+  signNotRecoveryChangeSocial,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1128,4 +1136,16 @@ const en: Record<I18N, string> = {
   [I18N.signinNetworksSkip]: 'Phrase or private key',
   [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
   [I18N.customNetwork]: 'Custom network',
+  [I18N.signNotExitsCreateAccount]: 'Create Account',
+  [I18N.signNotExitsChoiceAnother]: 'Choice another',
+  [I18N.signNotRecoveryTitle]:
+    "Unfortunately we didn't find the saved recovery file",
+  [I18N.signNotRecoveryDescription]:
+    'To restore, you can enter the old PIN code or choose a different social login',
+  [I18N.signNotRecoveryOldPin]: 'Enter the old PIN code',
+  [I18N.signNotRecoveryChangeSocial]: 'Change social login',
+  [I18N.signNotExitsDescription]:
+    'There are no linked accounts in our network for the social login you have chosen. Create a new account based on this social login or choose another social login',
+  [I18N.signNotExitsTitle]:
+    'We didn’t find the account connect to {{provider}} login\n{{email}}',
 };

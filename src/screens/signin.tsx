@@ -15,6 +15,9 @@ import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
 import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {ScreenOptionType} from '@app/types';
 
+import {SigninNotExistsScreen} from './signin-not-exists';
+import {SigninNotRecoveryScreen} from './signin-not-recovery';
+
 const SignInStack = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {
@@ -34,6 +37,16 @@ export const SignInScreen = () => {
       <SignInStack.Screen
         name="signinAgreement"
         component={SignInAgreementScreen}
+        options={{...hideBack, ...screenOptions}}
+      />
+      <SignInStack.Screen
+        name="signinNotExists"
+        component={SigninNotExistsScreen}
+        options={{...hideBack, ...screenOptions}}
+      />
+      <SignInStack.Screen
+        name="signinNotRecovery"
+        component={SigninNotRecoveryScreen}
         options={{...hideBack, ...screenOptions}}
       />
       <SignInStack.Screen

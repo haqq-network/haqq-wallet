@@ -258,6 +258,30 @@
       "sha1": "6dbe55e9e26e8c568afdd03e100e41212416a194"
     },
     {
+      "path": "assets/images/question-circle.png",
+      "sha1": "f667463ca819a0273822d8134d8037f0ceb588df"
+    },
+    {
+      "path": "assets/images/question-circle@2x.png",
+      "sha1": "25583918605adda404d0d8d3fc9c9e0bad6fee7c"
+    },
+    {
+      "path": "assets/images/question-circle@3x.png",
+      "sha1": "9f91a38828dcc6abc77624b2f5fb6ed701a62d17"
+    },
+    {
+      "path": "assets/images/question-square.png",
+      "sha1": "8bd53680bff750585c8090344230b83884fad4ae"
+    },
+    {
+      "path": "assets/images/question-square@2x.png",
+      "sha1": "ac24543a9879defffdd3382d264126ea2219de4a"
+    },
+    {
+      "path": "assets/images/question-square@3x.png",
+      "sha1": "8e744245ff0d162400caf1dcaa75bc3f4868f642"
+    },
+    {
       "path": "assets/images/shield-img.png",
       "sha1": "425612b2ca33bdf94ecafe032360663181040829"
     },

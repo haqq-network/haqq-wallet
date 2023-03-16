@@ -1,14 +1,26 @@
 import React, {useCallback} from 'react';
 
-import {RestoreAgreement} from '@app/components/restore-agreement/restore-agreement';
-import {useTypedNavigation} from '@app/hooks';
+import {SigninNotExists} from '@app/components/signin-not-exists';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
-export const SignInPinScreen = () => {
+export const SigninNotExistsScreen = () => {
   const navigation = useTypedNavigation();
+  const {provider, email} = useTypedRoute<'signinNotExists'>().params;
 
-  const onDone = useCallback(() => {
-    navigation.navigate('signinRestoreWallet');
+  const onPressCreate = useCallback(() => {
+    navigation.replace('signup', {next: ''});
   }, [navigation]);
 
-  return <RestoreAgreement onDone={onDone} testID="signin_agreement" />;
+  const onPressChoice = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
+  return (
+    <SigninNotExists
+      onPressCreate={onPressCreate}
+      onPressChoice={onPressChoice}
+      provider={provider}
+      email={email}
+    />
+  );
 };

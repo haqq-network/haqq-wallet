@@ -13,6 +13,7 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
+import {MpcProviders} from './services/provider-mpc';
 import {
   WalletConnectApproveConnectionEvent,
   WalletConnectSessionRequestType,
@@ -180,7 +181,8 @@ export type RootStackParamList = {
   signinStoreWallet: WalletInitialData;
   signupNetworks: undefined;
   signinPin: WalletInitialData;
-  signinNotExists: WalletInitialData;
+  signinNotExists: {provider: MpcProviders; email?: string};
+  signinNotRecovery: undefined;
   signupNetworkExists: WalletInitialData;
   signinNetworks: undefined;
   signinAgreement: undefined;
