@@ -117,5 +117,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSUbiquitousContainers</key>
+      <dict>
+          <key>iCloud.com.haqq.wallet.keys</key>
+          <dict>
+              <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+              <true/>
+              <key>NSUbiquitousContainerName</key>
+              <string>HAQQ Backup</string>
+              <key>NSUbiquitousContainerSupportedFolderLevels</key>
+              <string>None</string>
+          </dict>
+      </dict>
 </dict>
 </plist>

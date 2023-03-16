@@ -2,21 +2,27 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  LottieWrap,
   PopupContainer,
   Spacer,
+  Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {MpcProviders} from '@app/services/provider-mpc';
 
-export type MpcMigrateNetworksProps = {
+import {SocialButton, SocialButtonVariant} from '../social-button';
+
+export type MpcNetworksProps = {
   onLogin: (provider: MpcProviders) => Promise<void>;
+  onSkip: () => void;
 };
 
-export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
+export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
@@ -55,13 +61,38 @@ export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
 
   return (
     <PopupContainer style={styles.container}>
-      <Spacer />
-      <Button
-        title="Login with Google"
+      <Spacer centered>
+        <LottieWrap
+          source={require('../../../assets/animations/soc-login.json')}
+          style={styles.logo}
+          autoPlay
+          loop
+        />
+      </Spacer>
+      {/* <SocialButton variant={SocialButtonVariant.discord} />
+        <Spacer height={10} />
+        <SocialButton variant={SocialButtonVariant.twitter} />
+        <Spacer height={10} />
+        <SocialButton variant={SocialButtonVariant.facebook} /> */}
+
+      {appleAuth.isSupported && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={SocialButtonVariant.apple}
+          />
+        </>
+      )}
+
+      <Spacer height={10} />
+      <SocialButton
         loading={isGoogle}
         disabled={isLoading && !isGoogle}
         onPress={onPressLoginGoogle}
-        variant={ButtonVariant.contained}
+        variant={SocialButtonVariant.google}
       />
       <Spacer height={10} />
       <Button
@@ -70,24 +101,30 @@ export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
         i18n={I18N.customNetwork}
         variant={ButtonVariant.contained}
       />
-      {appleAuth.isSupported && (
-        <>
-          <Spacer height={8} />
-          <Button
-            title="Login with Apple"
-            loading={isApple}
-            disabled={isLoading && !isApple}
-            onPress={onPressLoginApple}
-            variant={ButtonVariant.contained}
-          />
-        </>
-      )}
+      <Spacer height={10} />
+      <Text
+        t15
+        center
+        i18n={I18N.mpcNetworkWeb3AuthDescription}
+        color={Color.textBase2}
+      />
+      <Spacer height={28} />
+      <Button
+        onPress={onSkip}
+        i18n={I18N.signinNetworksSkip}
+        variant={ButtonVariant.contained}
+      />
     </PopupContainer>
   );
 };
 
 const styles = createTheme({
+  logo: {
+    width: 148,
+    height: 148,
+  },
   container: {
+    flex: 1,
     paddingHorizontal: 20,
   },
 });

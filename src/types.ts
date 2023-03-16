@@ -47,19 +47,26 @@ export type TransactionList =
 
 export type WalletInitialData =
   | {
+      type: 'mnemonic';
       mnemonic: string;
-      privateKey: false;
     }
   | {
-      mnemonic: false;
+      type: 'privateKey';
       privateKey: string;
     }
   | {
+      type: 'ledger';
       address: string;
       deviceId: string;
       deviceName: string;
     }
-  | {};
+  | {
+      type: 'mpc';
+      mpcPrivateKey: string;
+      mpcSecurityQuestion: string | null;
+      mpcCloudShare: string | null;
+    }
+  | {type: 'empty'};
 
 export type RootStackParamList = {
   home: undefined;
@@ -84,9 +91,7 @@ export type RootStackParamList = {
   };
   restoreStore: {
     nextScreen: NextScreenWithoutParamsT;
-    mnemonic: string | false;
-    privateKey: string | false;
-  };
+  } & WalletInitialData;
   register: undefined;
   backup: {
     accountId: string;
@@ -173,15 +178,13 @@ export type RootStackParamList = {
   onboardingFinish: undefined;
   signupStoreWallet: WalletInitialData;
   signinStoreWallet: WalletInitialData;
-  signinAgreement: {
-    nextScreen: {
-      key: string;
-      params?: {currentPin: string; biometryType: BiometryType};
-    };
-  };
-  signinRestoreWallet: {
-    nextScreen?: string;
-  };
+  signupNetworks: undefined;
+  signinPin: WalletInitialData;
+  signinNotExists: WalletInitialData;
+  signupNetworksExists: WalletInitialData;
+  signinNetworks: undefined;
+  signinAgreement: undefined;
+  signinRestoreWallet: undefined;
   transaction: {
     from?: string | boolean;
     to?: string;
@@ -374,7 +377,6 @@ export type RootStackParamList = {
   walletConnectSign: {
     event: WalletConnectSessionRequestType;
   };
-  mpc: undefined;
   mpcNetwork: undefined;
   mpcBackup: {
     privateKey: string;

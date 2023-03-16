@@ -4,15 +4,16 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
+import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
+import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
+import {SignInAgreementScreen} from '@app/screens/signin-agreement';
+import {SignInNetworksScreen} from '@app/screens/signin-networks';
+import {SignInPinScreen} from '@app/screens/signin-pin';
+import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
+import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {ScreenOptionType} from '@app/types';
-
-import {OnboardingBiometryScreen} from './onboarding-biometry';
-import {OnboardingFinishScreen} from './onboarding-finish';
-import {OnboardingRepeatPinScreen} from './onboarding-repeat-pin';
-import {OnboardingSetupPinScreen} from './onboarding-setup-pin';
-import {SignInAgreementScreen} from './signin-agreement';
-import {SignInRestoreScreen} from './signin-restore-wallet';
-import {SignInStoreWalletScreen} from './signin-store-wallet';
 
 const SignInStack = createStackNavigator();
 
@@ -26,20 +27,24 @@ export const SignInScreen = () => {
   return (
     <SignInStack.Navigator screenOptions={popupScreenOptions}>
       <SignInStack.Screen
+        name="signinNetworks"
+        component={SignInNetworksScreen}
+        options={{...hideBack, ...screenOptions}}
+      />
+      <SignInStack.Screen
         name="signinAgreement"
         component={SignInAgreementScreen}
         options={{...hideBack, ...screenOptions}}
-        initialParams={{
-          nextScreen: 'signinRestoreWallet',
-        }}
       />
       <SignInStack.Screen
         name="signinRestoreWallet"
         component={SignInRestoreScreen}
         options={{title}}
-        initialParams={{
-          nextScreen: 'onboardingSetupPin',
-        }}
+      />
+      <SignInStack.Screen
+        name="signinPin"
+        component={SignInPinScreen}
+        options={{title}}
       />
       <SignInStack.Screen
         name="onboardingSetupPin"

@@ -10,6 +10,8 @@ import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
 import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
 import {SignUpAgreementScreen} from '@app/screens/signup-agreement';
+import {SignupNetworksScreen} from '@app/screens/signup-networks';
+import {SignupNetworkExistsScreen} from '@app/screens/signup-networks-exists';
 import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
 import {ScreenOptionType} from '@app/types';
 
@@ -35,7 +37,17 @@ export const SignUpScreen = () => {
         name="signupAgreement"
         component={SignUpAgreementScreen}
         options={hideBack}
-        initialParams={{next: route.params.next}}
+        initialParams={{next: route.params.next, nextScreen: 'signupNetworks'}}
+      />
+      <SignUpStack.Screen
+        name="signupNetworks"
+        component={SignupNetworksScreen}
+        options={hideBack}
+      />
+      <SignUpStack.Screen
+        name="signupNetworkExists"
+        component={SignupNetworkExistsScreen}
+        options={hideBack}
       />
       <SignUpStack.Screen
         name="onboardingSetupPin"
