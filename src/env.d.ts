@@ -16,4 +16,5 @@ declare module '@env' {
   export const WEB3AUTH_DISCORD_CLIENT_ID: string;
   export const HCAPTCHA_SITE_KEY: string;
   export const GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
+  export const CUSTOM_JWT_TOKEN: string;
 }

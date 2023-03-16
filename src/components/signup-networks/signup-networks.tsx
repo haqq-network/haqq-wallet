@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import {Image} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  LottieWrap,
   PopupContainer,
   Spacer,
   Text,
@@ -24,10 +24,11 @@ export type MpcNetworksProps = {
 
 export const SignupNetworks = ({
   onLogin,
-  onLoginLaterPress
+  onLoginLaterPress,
 }: MpcNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -51,10 +52,25 @@ export const SignupNetworks = ({
     }
   }, [onLogin]);
 
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(MpcProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
   return (
     <PopupContainer style={styles.container}>
-      <Image source={{uri: 'islm-logo-circles'}} style={styles.logo} />
-      <Spacer />
+      <Spacer centered>
+        <LottieWrap
+          source={require('../../../assets/animations/soc-login.json')}
+          style={styles.logo}
+          autoPlay
+          loop
+        />
+      </Spacer>
       {/* <SocialButton variant={SocialButtonVariant.discord} />
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.twitter} />
@@ -80,7 +96,13 @@ export const SignupNetworks = ({
         onPress={onPressLoginGoogle}
         variant={SocialButtonVariant.google}
       />
-
+      <Spacer height={10} />
+      <Button
+        onPress={onPressLoginCustom}
+        loading={isCustom}
+        i18n={I18N.customNetwork}
+        variant={ButtonVariant.contained}
+      />
       <Spacer height={10} />
       <Text
         t15
@@ -106,7 +128,5 @@ const styles = createTheme({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    justifyContent: 'space-around',
-    alignItems: 'center',
   },
 });

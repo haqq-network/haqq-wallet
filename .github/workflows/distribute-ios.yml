@@ -72,6 +72,7 @@ jobs:
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
+          echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
 
       - name: Execute build
         run: |

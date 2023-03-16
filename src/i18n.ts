@@ -502,6 +502,7 @@ export enum I18N {
   signinNetworksSkip,
   signinNetworkDisclaimer,
   signinPinTitle,
+  customNetwork,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1089,4 +1090,5 @@ const en: Record<I18N, string> = {
   [I18N.signupNetworkExistsRewrite]: 'Replace',
   [I18N.signinNetworksSkip]: 'Phrase or private key',
   [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
+  [I18N.customNetwork]: 'Custom network',
 };

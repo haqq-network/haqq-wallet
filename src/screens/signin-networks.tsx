@@ -9,6 +9,7 @@ import {Cloud} from '@app/services/cloud';
 import {
   MpcProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
   serviceProviderOptions,
   storageLayerOptions,
@@ -28,6 +29,9 @@ export const SignInNetworksScreen = () => {
           break;
         case MpcProviders.google:
           privateKey = await onLoginGoogle();
+          break;
+        case MpcProviders.custom:
+          privateKey = await onLoginCustom();
           break;
       }
       if (privateKey) {

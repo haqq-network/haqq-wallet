@@ -9,6 +9,7 @@ import {I18N, getText} from '@app/i18n';
 import {
   MpcProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
   serviceProviderOptions,
   storageLayerOptions,
@@ -27,6 +28,9 @@ export const SignupNetworksScreen = () => {
           break;
         case MpcProviders.google:
           privateKey = await onLoginGoogle();
+          break;
+        case MpcProviders.custom:
+          privateKey = await onLoginCustom();
           break;
       }
       if (privateKey) {
