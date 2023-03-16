@@ -75,7 +75,10 @@ export const SignInStoreWalletScreen = () => {
 
             await mnemonicProvider.setMnemonicSaved();
 
-            await createWalletsForProvider(mnemonicProvider);
+            await createWalletsForProvider(
+              mnemonicProvider,
+              WalletType.mnemonic,
+            );
             break;
           case 'mpc':
             const storage = await getProviderStorage();
@@ -92,7 +95,7 @@ export const SignInStoreWalletScreen = () => {
               {},
             );
 
-            await createWalletsForProvider(mpcProvider);
+            await createWalletsForProvider(mpcProvider, WalletType.mpc);
             break;
         }
 

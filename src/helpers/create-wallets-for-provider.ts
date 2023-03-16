@@ -7,7 +7,10 @@ import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export async function createWalletsForProvider(provider: ProviderInterface) {
+export async function createWalletsForProvider(
+  provider: ProviderInterface,
+  walletType: WalletType,
+) {
   let canNext = true;
   let index = 0;
 
@@ -33,7 +36,7 @@ export async function createWalletsForProvider(provider: ProviderInterface) {
         await wallets.addWallet(
           {
             address: address,
-            type: WalletType.mnemonic,
+            type: walletType,
             path: hdPath,
             accountId: provider.getIdentifier(),
           },

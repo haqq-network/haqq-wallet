@@ -501,6 +501,7 @@ export enum I18N {
   signupNetworkExistsRewrite,
   signinNetworksSkip,
   signinNetworkDisclaimer,
+  signinPinTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1087,4 +1088,5 @@ const en: Record<I18N, string> = {
   [I18N.signupNetworkExistsRestore]: 'Restore Account',
   [I18N.signupNetworkExistsRewrite]: 'Replace',
   [I18N.signinNetworksSkip]: 'Phrase or private key',
+  [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
 };

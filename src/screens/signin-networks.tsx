@@ -62,6 +62,8 @@ export const SignInNetworksScreen = () => {
             `haqq_${account.address.toLowerCase()}`,
           );
 
+          console.log('share', share);
+
           if (!share) {
             nextScreen = 'signinPin';
           } else {
