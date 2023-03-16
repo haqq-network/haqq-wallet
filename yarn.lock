@@ -2753,10 +2753,10 @@
     loglevel "^1.8.1"
     web3-utils "^1.8.1"
 
-"@tradle/react-native-http@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tradle/react-native-http/-/react-native-http-2.0.0.tgz#50a5c7f29f7689a99296eaf7c73d85752937e9cd"
-  integrity sha512-xUHBYXh4yKXUgLzCaiD6kWGNq99S03PwurbEt3jzbkqt8dLYHJ/iMlqD8p8sriy4QTJQNdPIc2Yazzi6OzES1g==
+"@tradle/react-native-http@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tradle/react-native-http/-/react-native-http-2.0.1.tgz#af19e240e1e580bfa249563924d1be472686f48b"
+  integrity sha512-pBLa/mlkD5HE4e8ndF6l8gj4ZUVYlrpRbrODeuxL0+ZFJ0TmBvQ9+bUNy8gNdWTS6kik2fW+u7eiYMeGaISkrA==
   dependencies:
     Base64 "~0.2.0"
     inherits "~2.0.1"
