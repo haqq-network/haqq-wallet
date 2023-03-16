@@ -12,6 +12,7 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
@@ -46,7 +47,7 @@ function getAppStatus() {
 
 class App extends EventEmitter {
   private user: User;
-  private authenticated: boolean = false;
+  private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _lastTheme: AppTheme = AppTheme.light;
   private _balance: Map<string, number> = new Map();

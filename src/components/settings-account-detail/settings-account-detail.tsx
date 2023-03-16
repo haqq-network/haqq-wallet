@@ -4,9 +4,15 @@ import {Switch, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
   Card,
   CardMask,
   DataContent,
+  First,
+  Icon,
+  InfoBlock,
   MenuNavigationButton,
   PopupContainer,
   Spacer,
@@ -23,6 +29,8 @@ type SettingsAccountDetailProps = {
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
   onViewingRecoveryPhrase: () => void;
+  onPressPharse(): void;
+  onPressSocial(): void;
 };
 
 export const SettingsAccountDetail = ({
@@ -31,6 +39,8 @@ export const SettingsAccountDetail = ({
   onPressStyle,
   onToggleIsHidden,
   onViewingRecoveryPhrase,
+  onPressPharse,
+  onPressSocial,
 }: SettingsAccountDetailProps) => {
   const cardWidth = useWindowDimensions().width - 72;
   const cardMaskWidth = useWindowDimensions().width - 112;
@@ -59,6 +69,76 @@ export const SettingsAccountDetail = ({
         </Text>
         <Text t14>{wallet?.address}</Text>
       </View>
+      <First>
+        {!wallet.mnemonicSaved && !wallet.socialLinkEnabled && (
+          <InfoBlock
+            border
+            warning
+            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            i18n={I18N.settingsAccountDetailRecoveryWarning}
+            bottomContainerStyle={styles.row}
+            bottom={
+              <>
+                <Button
+                  style={styles.button}
+                  size={ButtonSize.small}
+                  i18n={I18N.settingsAccountDetailPharse}
+                  variant={ButtonVariant.second}
+                  onPress={onPressPharse}
+                />
+                <Spacer width={10} />
+                <Button
+                  style={styles.button}
+                  size={ButtonSize.small}
+                  i18n={I18N.settingsAccountDetailSocial}
+                  variant={ButtonVariant.second}
+                  onPress={onPressSocial}
+                />
+              </>
+            }
+          />
+        )}
+        {!wallet.socialLinkEnabled && (
+          <InfoBlock
+            border
+            warning
+            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            i18n={I18N.settingsAccountDetailRecoverySocialWarning}
+            bottomContainerStyle={styles.row}
+            bottom={
+              <>
+                <Button
+                  style={styles.button}
+                  size={ButtonSize.small}
+                  i18n={I18N.settingsAccountDetailConnectSocialLogin}
+                  variant={ButtonVariant.second}
+                  onPress={onPressSocial}
+                />
+              </>
+            }
+          />
+        )}
+        {!wallet.mnemonicSaved && (
+          <InfoBlock
+            border
+            warning
+            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            i18n={I18N.settingsAccountDetailRecoveryPharseWarning}
+            bottomContainerStyle={styles.row}
+            bottom={
+              <>
+                <Button
+                  style={styles.button}
+                  size={ButtonSize.small}
+                  i18n={I18N.settingsAccountDetailCreateBackupPhrase}
+                  variant={ButtonVariant.second}
+                  onPress={onPressPharse}
+                />
+              </>
+            }
+          />
+        )}
+      </First>
       <MenuNavigationButton onPress={onPressRename}>
         <DataContent
           titleI18n={I18N.settingsAccountDetailRenameTitle}
@@ -92,6 +172,12 @@ export const SettingsAccountDetail = ({
 };
 
 const styles = createTheme({
+  row: {
+    flexDirection: 'row',
+  },
+  button: {
+    flex: 1,
+  },
   card: {
     marginBottom: 12,
   },

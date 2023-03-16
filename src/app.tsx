@@ -100,6 +100,7 @@ import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-conne
 import {WalletConnectApplicationListScreen} from './screens/wallet-connect-application-list';
 import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-application-list-popup';
 import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
+import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
@@ -257,6 +258,7 @@ export const App = () => {
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
 
+                {/* Modals group */}
                 <Stack.Group screenOptions={stackScreenOptions}>
                   <Stack.Screen name="mpc" component={MpcScreen} />
                   <Stack.Screen
@@ -277,6 +279,10 @@ export const App = () => {
                   <Stack.Screen
                     name="walletConnectApplicationListPopup"
                     component={WalletConnectApplicationListPopupScreen}
+                  />
+                  <Stack.Screen
+                    name="walletProtectionPopup"
+                    component={WalletProtectionPopup}
                   />
                   <Stack.Screen
                     name="walletConnectApplicationDetailsPopup"

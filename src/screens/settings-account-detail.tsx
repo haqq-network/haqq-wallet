@@ -73,6 +73,16 @@ export const SettingsAccountDetailScreen = () => {
     );
   }, [navigation, address, wallets]);
 
+  const onPressPharse = useCallback(() => {
+    navigation.navigate('backup', {accountId: wallet?.accountId!});
+  }, [navigation, wallet?.accountId]);
+
+  const onPressSocial = useCallback(() => {
+    navigation.navigate('backupMpcNotification', {
+      accountId: wallet?.accountId!,
+    });
+  }, [navigation, wallet?.accountId]);
+
   if (!(wallet && wallet.isValid())) {
     return null;
   }
@@ -92,6 +102,8 @@ export const SettingsAccountDetailScreen = () => {
         onPressStyle={onPressStyle}
         onToggleIsHidden={onToggleIsHidden}
         onViewingRecoveryPhrase={onViewingRecoveryPhrase}
+        onPressPharse={onPressPharse}
+        onPressSocial={onPressSocial}
       />
     </>
   );

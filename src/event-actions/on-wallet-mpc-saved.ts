@@ -32,6 +32,8 @@ export async function onWalletMpcSaved(accountId: string) {
   for (const wallet of wallets) {
     if (wallet.accountId === accountId && wallet.type === WalletType.mpc) {
       wallet.update({mnemonicSaved});
+      // TODO: socialLinkEnabled
+      // wallet.update({socialLinkEnabled: true});
     }
   }
 }

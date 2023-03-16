@@ -385,6 +385,9 @@ export type RootStackParamList = {
     questionAnswer: string | null;
   };
   mpcFinish: undefined;
+  walletProtectionPopup: {
+    accountId: string;
+  };
 };
 
 export type StackPresentationTypes =
