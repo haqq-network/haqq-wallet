@@ -32,7 +32,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleIdentifier</key>
-			<string/>
+			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -53,7 +53,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>915453653093-22njaj5n8vs0o332485b85iamk0vlt2f.apps.googleusercontent.com</string>
+				<string>com.googleusercontent.apps.915453653093-22njaj5n8vs0o332485b85iamk0vlt2f</string>
 			</array>
 		</dict>
 	</array>
@@ -84,6 +84,18 @@
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use the photo library.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.haqq.wallet.keys</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>HAQQ Backup</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>None</string>
+		</dict>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ElMessiri-Bold.ttf</string>
@@ -117,17 +129,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>NSUbiquitousContainers</key>
-      <dict>
-          <key>iCloud.com.haqq.wallet.keys</key>
-          <dict>
-              <key>NSUbiquitousContainerIsDocumentScopePublic</key>
-              <true/>
-              <key>NSUbiquitousContainerName</key>
-              <string>HAQQ Backup</string>
-              <key>NSUbiquitousContainerSupportedFolderLevels</key>
-              <string>None</string>
-          </dict>
-      </dict>
 </dict>
 </plist>
