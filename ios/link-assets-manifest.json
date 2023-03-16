@@ -54,6 +54,30 @@
       "sha1": "9560ae412d73c7c9af72333db50464b4e597b0f9"
     },
     {
+      "path": "assets/images/backup-mpc-suggestion-dark.png",
+      "sha1": "9297904dc589db30ff3b6219dba2bdf15811435f"
+    },
+    {
+      "path": "assets/images/backup-mpc-suggestion-dark@2x.png",
+      "sha1": "a4a55fb1cc0cf6cd064c8fa04e70459781becb7c"
+    },
+    {
+      "path": "assets/images/backup-mpc-suggestion-dark@3x.png",
+      "sha1": "efc8672d93a34a2f341b47a29e9e45f583ef3755"
+    },
+    {
+      "path": "assets/images/backup-mpc-suggestion-light.png",
+      "sha1": "1d360b53a27002ef49d55d876d759836d37437ba"
+    },
+    {
+      "path": "assets/images/backup-mpc-suggestion-light@2x.png",
+      "sha1": "d25d098f58a32d31568b46d36275f6759d5ae6f6"
+    },
+    {
+      "path": "assets/images/backup-mpc-suggestion-light@3x.png",
+      "sha1": "f716f116f74ed3e593a2989bfd7303d7e25867af"
+    },
+    {
       "path": "assets/images/backup-notification-dark.png",
       "sha1": "a7a5201381eb87b7c3422505962aa5f38fccc51f"
     },
