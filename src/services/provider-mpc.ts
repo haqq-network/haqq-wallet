@@ -5,6 +5,7 @@ import FetchNodeDetails from '@toruslabs/fetch-node-details';
 import NodeDetailManager, {TORUS_NETWORK} from '@toruslabs/fetch-node-details';
 import TorusUtils from '@toruslabs/torus.js';
 import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
+import {Platform} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
@@ -83,7 +84,14 @@ export async function onLoginGoogle() {
   const authState = await getGoogleTokens();
   const authInfo = parseJwt(authState.idToken);
 
-  return await onAuthorized('haqq-google-dev', authInfo.sub, authState.idToken);
+  return await onAuthorized(
+    Platform.select({
+      ios: 'haqq-google-ios',
+      android: 'haqq-google-android',
+    }) as string,
+    authInfo.email,
+    authState.idToken,
+  );
 }
 
 export async function onAuthorized(
