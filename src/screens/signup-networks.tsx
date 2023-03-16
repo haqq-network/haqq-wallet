@@ -42,7 +42,7 @@ export const SignupNetworksScreen = () => {
           );
 
           securityQuestionsModule.getSecurityQuestions();
-          navigation.navigate('signupNetworksExists', {
+          navigation.navigate('signupNetworkExists', {
             type: 'mpc',
             mpcPrivateKey: privateKey,
             mpcSecurityQuestion: null,

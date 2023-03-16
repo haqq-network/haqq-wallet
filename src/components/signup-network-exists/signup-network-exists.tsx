@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -32,6 +33,7 @@ export const SignupNetworkExists = ({
         i18n={I18N.signupNetworkExistsRewrite}
         onPress={onRewrite}
         variant={ButtonVariant.text}
+        textColor={Color.textRed1}
       />
     </PopupContainer>
   );
@@ -41,7 +43,5 @@ const styles = createTheme({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    justifyContent: 'space-around',
-    alignItems: 'center',
   },
 });
