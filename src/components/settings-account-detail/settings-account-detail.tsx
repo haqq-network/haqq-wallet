@@ -70,7 +70,7 @@ export const SettingsAccountDetail = ({
         <Text t14>{wallet?.address}</Text>
       </View>
       <First>
-        {!wallet.mnemonicSaved && !wallet.socialLinkEnabled && (
+        {!wallet.mnemonicSaved && wallet.type !== WalletType.mpc && (
           <InfoBlock
             border
             warning
@@ -98,7 +98,7 @@ export const SettingsAccountDetail = ({
             }
           />
         )}
-        {!wallet.socialLinkEnabled && (
+        {wallet.type !== WalletType.mpc && (
           <InfoBlock
             border
             icon={<Icon name={'warning'} color={Color.graphicBase1} />}
