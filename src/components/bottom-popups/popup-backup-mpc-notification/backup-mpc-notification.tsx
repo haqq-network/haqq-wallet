@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {Alert, View} from 'react-native';
+import {Alert, Platform, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui';
@@ -47,7 +47,12 @@ export const BackupMpcNotification = ({
   return (
     <View style={styles.sub}>
       <Button
-        i18n={I18N.backupMpcNotificationBackup}
+        i18n={
+          Platform.select({
+            ios: I18N.backupMpcNotificationBackupICloud,
+            android: I18N.backupMpcNotificationBackupGoogleDrive,
+          }) as I18N
+        }
         variant={ButtonVariant.contained}
         onPress={onPressBackupGoogle}
         loading={isSaving}
