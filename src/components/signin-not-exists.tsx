@@ -12,7 +12,9 @@ import {Button, ButtonVariant, Spacer, Text} from './ui';
 interface SignNotExistsProps {
   provider: MpcProviders;
   email?: string;
+
   onPressCreate(): void;
+
   onPressChoice(): void;
 }
 

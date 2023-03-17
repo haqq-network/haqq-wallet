@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {Alert, View} from 'react-native';
-import {Image} from 'react-native';
+import {Alert, Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {

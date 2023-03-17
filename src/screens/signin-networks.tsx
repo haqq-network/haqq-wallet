@@ -78,13 +78,9 @@ export const SignInNetworksScreen = () => {
             nextParams.mpcCloudShare = share;
           }
         } catch (e) {
-          // TODO: check reason and select screen
-          // nextScreen = 'signinNotRecovery';
           nextScreen = 'signinNotExists';
-          nextParams = {
-            // @ts-ignore
-            provider,
-          };
+          // @ts-ignore
+          nextParams.provider = provider;
         } finally {
           navigation.navigate(
             // @ts-ignore
