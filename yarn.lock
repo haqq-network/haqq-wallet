@@ -2661,11 +2661,6 @@
     socket.io-client "^4.5.3"
     unload "^2.3.1"
 
-"@toruslabs/customauth-react-native-sdk@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@toruslabs/customauth-react-native-sdk/-/customauth-react-native-sdk-4.0.1.tgz#1ee1783856d9ce82ad6451cac54d5123ca12d64f"
-  integrity sha512-Bk10NdcLeyhzeqf6DdnNlgp6BKTq+Ahmy42yzsqeaa1PtfxFEHd4OE8JuGqzgfSb1tPUmnnDbIWDNq3dW8G/rg==
-
 "@toruslabs/customauth@^11.4.0":
   version "11.4.3"
   resolved "https://registry.yarnpkg.com/@toruslabs/customauth/-/customauth-11.4.3.tgz#d6a678e0e799acbb5cb35c5f4cdaca77321b5bab"
@@ -10017,19 +10012,6 @@ react-native-aes-crypto@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.1.0.tgz#9482fe914cae411f10ec43a53b2439a41b78cbbd"
   integrity sha512-2zvvQXMW2Qeg9B/VDetoB2w/cyVncPuEsoW1iUhZP12jAx+zbxsdf+A7inSf2XKMcRURfpsfUshQTb2beYUVhA==
-
-react-native-app-auth@7.0.0-rc2:
-  version "7.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/react-native-app-auth/-/react-native-app-auth-7.0.0-rc2.tgz#8d02fc9c3ade3cf6efe64c56da1cfe0ed662c8f6"
-  integrity sha512-fuowyI5UfFJJ3BoV8xv6wrUvcbAwEizIWher/G6JusK252gTlO+WyD7zM7pBgtlC6g1h4wCqD84SGbAZOPwOLQ==
-  dependencies:
-    invariant "2.2.4"
-    react-native-base64 "0.0.2"
-
-react-native-base64@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-base64/-/react-native-base64-0.0.2.tgz#c28463c2c6779ac3ec5fdd12979ebc8c5f9b410a"
-  integrity sha512-Fu/J1a2y0X22EJDWqJR2oEa1fpP4gTFjYxk8ElJdt1Yak3HOXmFJ7EohLVHU2DaQkgmKfw8qb7u/48gpzveRbg==
 
 react-native-base64@0.2.1:
   version "0.2.1"

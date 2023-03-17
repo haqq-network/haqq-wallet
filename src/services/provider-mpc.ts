@@ -1,11 +1,5 @@
-import {
-  CUSTOM_JWT_TOKEN,
-  MPC_NETWORK,
-  MPC_STORE_URL,
-  WEB3AUTH_CLIENT_ID,
-} from '@env';
+import {CUSTOM_JWT_TOKEN, MPC_NETWORK, MPC_STORE_URL} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import FetchNodeDetails from '@toruslabs/fetch-node-details';
 import NodeDetailManager from '@toruslabs/fetch-node-details';
 import TorusUtils from '@toruslabs/torus.js';
@@ -34,17 +28,6 @@ export enum MpcProviders {
   custom = 'custom',
 }
 
-export function customAuthInit() {
-  CustomAuth.init({
-    clientId: WEB3AUTH_CLIENT_ID,
-    redirectUri: 'haqq://web3auth/redirect',
-    network: MPC_NETWORK,
-    enableLogging: true,
-    enableOneKey: false,
-    skipSw: true,
-  });
-}
-
 export async function onLoginCustom() {
   const email = await new Promise((resolve, reject) => {
     prompt(
@@ -61,8 +44,6 @@ export async function onLoginCustom() {
     );
   });
 
-  console.log('email', email, CUSTOM_JWT_TOKEN);
-
   const token = await fetch(CUSTOM_JWT_TOKEN, {
     method: 'POST',
     headers: {
@@ -75,10 +56,8 @@ export async function onLoginCustom() {
   });
 
   const authState = await token.json();
-  console.log('authState', authState);
 
   const authInfo = parseJwt(authState.idToken);
-  console.log('authInfo', authInfo);
 
   return await onAuthorized('haqq-test', authInfo.sub, authState.idToken);
 }

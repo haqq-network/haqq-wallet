@@ -8,7 +8,6 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import <React/RCTLinkingManager.h>
-#import <RNCustomAuthSdk/RNTorus.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -56,21 +55,6 @@ static void ClearKeychainIfNecessary() {
         
         OSStatus removeStatus = SecItemDelete((__bridge CFDictionaryRef)removeQuery);
       }
-
-      
-//        NSArray *secItemClasses = @[
-//            (__bridge id)kSecClassGenericPassword,
-//            (__bridge id)kSecClassInternetPassword,
-//            (__bridge id)kSecClassCertificate,
-//            (__bridge id)kSecClassKey,
-//            (__bridge id)kSecClassIdentity
-//        ];
-//
-//        // Maps through all Keychain classes and deletes all items that match
-//        for (id secItemClass in secItemClasses) {
-//            NSDictionary *spec = @{(__bridge id)kSecClass: secItemClass};
-//            SecItemDelete((__bridge CFDictionaryRef)spec);
-//        }
     }
 }
 
@@ -147,35 +131,13 @@ RCTRootView* overview = nil;
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  if ([self.authorizationFlowManagerDelegate resumeExternalUserAgentFlowWithURL:url]) {
-    return YES;
-  }
-  
-  NSString *myString = url.absoluteString;
-  
-  NSLog(@"String to handle : %@ ", myString);
-  if (@available(iOS 13.0, *)) {
-    [RNCustomAuthSdk handle:myString];
-  } else {
-    // Fallback on earlier versions
-  }
-  
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-   if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-     if (self.authorizationFlowManagerDelegate) {
-       BOOL resumableAuth = [self.authorizationFlowManagerDelegate resumeExternalUserAgentFlowWithURL:userActivity.webpageURL];
-       if (resumableAuth) {
-         return YES;
-       }
-     }
-   }
-  
- return [RCTLinkingManager application:application
+  return [RCTLinkingManager application:application
                   continueUserActivity:userActivity
                     restorationHandler:restorationHandler];
 }
