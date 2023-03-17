@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {Alert, Dimensions, Image, View} from 'react-native';
 
@@ -11,9 +11,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BackupNotificationProps = {
@@ -25,14 +24,10 @@ export const BackupNotification = ({
   onClickBackup,
   onClickSkip,
 }: BackupNotificationProps) => {
-  const theme = useTheme();
-  const warningImage = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('@assets/images/backup-notification-dark.png');
-    }
-
-    return require('@assets/images/backup-notification-light.png');
-  }, [theme]);
+  const warningImage = useThemeSelector({
+    dark: require('@assets/images/backup-notification-dark.png'),
+    light: require('@assets/images/backup-notification-light.png'),
+  });
 
   const onSkip = useCallback(() => {
     return Alert.alert(

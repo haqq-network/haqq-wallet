@@ -1,13 +1,19 @@
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  Icon,
+  InfoBlock,
+  LottieWrap,
   PopupContainer,
   Spacer,
+  Text,
 } from '@app/components/ui';
+import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 export type MpcMigrateAgreementProps = {
@@ -15,8 +21,33 @@ export type MpcMigrateAgreementProps = {
 };
 
 export const MpcMigrateAgreement = ({onDone}: MpcMigrateAgreementProps) => {
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/social-list-dark.json'),
+    light: require('@assets/animations/social-list-light.json'),
+  });
+
   return (
     <PopupContainer style={page.container}>
+      <Spacer centered>
+        <LottieWrap style={page.animation} source={animation} autoPlay loop />
+      </Spacer>
+      <View>
+        <Text center t4 i18n={I18N.mpcMigrateAgrementTitle} />
+        <Spacer height={4} />
+        <Text center t11 i18n={I18N.mpcMigrateAgrementDescription} />
+        <Spacer height={20} />
+        <InfoBlock
+          icon={<Icon name="warning" color={Color.textYellow1} />}
+          warning
+          i18n={I18N.mpcMigrateAgrementWarning1}
+        />
+        <Spacer height={20} />
+        <InfoBlock
+          icon={<Icon name="warning" color={Color.textYellow1} />}
+          warning
+          i18n={I18N.mpcMigrateAgrementWarning2}
+        />
+      </View>
       <Spacer />
       <Button
         style={page.submit}
@@ -29,8 +60,13 @@ export const MpcMigrateAgreement = ({onDone}: MpcMigrateAgreementProps) => {
 };
 
 const page = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-end',
+  animation: {
+    height: 224,
+    width: '100%',
   },
-  submit: {marginBottom: 16, marginHorizontal: 20},
+  container: {
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
+  submit: {marginBottom: 16, width: '100%'},
 });
