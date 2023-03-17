@@ -57,6 +57,8 @@ jobs:
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
           echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
+          echo "MPC_STORE_URL=${{secrets.MPC_STORE_URL}}" >> .env
+          echo "MPC_NETWORK=${{secrets.MPC_NETWORK}}" >> .env
 
       - name: Install Fastlane
         run: |

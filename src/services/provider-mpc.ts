@@ -1,8 +1,13 @@
-import {CUSTOM_JWT_TOKEN, WEB3AUTH_CLIENT_ID} from '@env';
+import {
+  CUSTOM_JWT_TOKEN,
+  MPC_NETWORK,
+  MPC_STORE_URL,
+  WEB3AUTH_CLIENT_ID,
+} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import CustomAuth from '@toruslabs/customauth-react-native-sdk';
 import FetchNodeDetails from '@toruslabs/fetch-node-details';
-import NodeDetailManager, {TORUS_NETWORK} from '@toruslabs/fetch-node-details';
+import NodeDetailManager from '@toruslabs/fetch-node-details';
 import TorusUtils from '@toruslabs/torus.js';
 import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
 import prompt from 'react-native-prompt-android';
@@ -14,19 +19,17 @@ export const serviceProviderOptions = {
   customAuthArgs: {
     baseUrl: 'http://localhost:3000/serviceworker/',
     enableLogging: true,
-    network: 'testnet',
+    network: MPC_NETWORK,
   },
 };
 
 export const storageLayerOptions = {
-  hostUrl: 'https://metadata.tor.us',
+  hostUrl: MPC_STORE_URL,
 };
 
 export enum MpcProviders {
   google = 'google',
-  discord = 'discord',
   apple = 'apple',
-  github = 'github',
   custom = 'custom',
 }
 
@@ -34,7 +37,7 @@ export function customAuthInit() {
   CustomAuth.init({
     clientId: WEB3AUTH_CLIENT_ID,
     redirectUri: 'haqq://web3auth/redirect',
-    network: 'celeste',
+    network: MPC_NETWORK,
     enableLogging: true,
     enableOneKey: false,
     skipSw: true,
@@ -86,18 +89,33 @@ export async function onLoginGoogle() {
   return await onAuthorized('haqq-google-dev', authInfo.sub, authState.idToken);
 }
 
+const proxyAddress = (() => {
+  switch (MPC_NETWORK) {
+    case 'testnet':
+      return NodeDetailManager.PROXY_ADDRESS_TESTNET;
+    case 'mainnet':
+      return NodeDetailManager.PROXY_ADDRESS_MAINNET;
+    case 'cyan':
+      return NodeDetailManager.PROXY_ADDRESS_CYAN;
+    case 'aqua':
+      return NodeDetailManager.PROXY_ADDRESS_AQUA;
+    case 'celeste':
+      return NodeDetailManager.PROXY_ADDRESS_CELESTE;
+  }
+})();
+
 export async function onAuthorized(
   verifier: string,
   verifierId: string,
   token: string,
 ) {
   const fetchNodeDetails = new FetchNodeDetails({
-    network: TORUS_NETWORK.TESTNET,
-    proxyAddress: NodeDetailManager.PROXY_ADDRESS_TESTNET,
+    network: MPC_NETWORK,
+    proxyAddress,
   });
 
   const torus = new TorusUtils({
-    network: TORUS_NETWORK.TESTNET,
+    network: MPC_NETWORK,
   });
 
   const nodeDetails = await fetchNodeDetails.getNodeDetails({
