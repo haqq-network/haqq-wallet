@@ -3,13 +3,15 @@ import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
+import {Cloud} from '@app/services/cloud';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
 export async function onWalletMpcCheck(snoozeBackup: Date) {
-  if (isAfter(new Date(), snoozeBackup)) {
+  const cloudAvailable = await Cloud.isEnabled();
+
+  if (cloudAvailable && isAfter(new Date(), snoozeBackup)) {
     const wallets = Wallet.getAll();
 
     const accounts = new Set(
@@ -18,36 +20,22 @@ export async function onWalletMpcCheck(snoozeBackup: Date) {
         .map(w => w.accountId) as string[],
     );
 
+    const storage = new Cloud();
     for (const accountId of accounts) {
-      const storage = await getProviderStorage(accountId);
+      if (cloudAvailable) {
+        const provider = new ProviderMpcReactNative({
+          storage,
+          account: accountId,
+          getPassword: app.getPassword.bind(app),
+        });
 
-      if (storage.getName() === 'local') {
-        await sleep(1000);
-        app.emit(Events.onAppProviderMpcBackup, accountId);
-        return;
-      }
+        const isShareSaved = provider.isShareSaved();
 
-      const provider = new ProviderMpcReactNative({
-        storage,
-        account: accountId,
-        getPassword: app.getPassword.bind(app),
-      });
-
-      const storages = await ProviderMpcReactNative.getStoragesForAccount(
-        accountId,
-      );
-
-      const isShareSaved = await Promise.all(
-        storages.map(async s => {
-          const se = await getProviderStorage(accountId, s);
-          return await provider.isShareSaved(se);
-        }),
-      );
-
-      if (!isShareSaved.some(t => t)) {
-        await sleep(1000);
-        app.emit(Events.onAppProviderMpcBackup, accountId);
-        return;
+        if (!isShareSaved) {
+          await sleep(1000);
+          app.emit(Events.onAppProviderMpcBackup, accountId);
+          return;
+        }
       }
     }
   }
