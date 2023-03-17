@@ -79,7 +79,7 @@ const WEB_VIEW_LOGGER = DEBUG_VARS.enableCaptchaLogger
     }
     window._patched = true;
   }
-</script> 
+</script>
 `
   : '';
 

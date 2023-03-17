@@ -23,6 +23,7 @@ export type CaptchaDataTypes = (
 export interface CaptchaProps {
   languageCode?: string;
   enableAutoOpenChallenge?: boolean;
+
   onData(token: CaptchaDataTypes): void;
 }
 

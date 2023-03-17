@@ -10,6 +10,7 @@ import {I18N} from '@app/i18n';
 
 export interface WalletProtectionProps {
   onPressPharse(): void;
+
   onPressSocial(): void;
 }
 
