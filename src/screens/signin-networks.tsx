@@ -67,7 +67,7 @@ export const SignInNetworksScreen = () => {
           );
 
           if (!share) {
-            nextScreen = 'signinPin';
+            nextScreen = 'signinNotRecovery';
           } else {
             nextScreen = user.onboarded
               ? 'signinStoreWallet'
