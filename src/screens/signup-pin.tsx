@@ -11,10 +11,10 @@ import {
   storageLayerOptions,
 } from '@app/services/provider-mpc';
 
-export const SignInPinScreen = () => {
+export const SignupPinScreen = () => {
   const pinRef = useRef<PinInterface>();
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'signinPin'>();
+  const route = useTypedRoute<'signupPin'>();
   const user = useUser();
 
   const onPin = useCallback(
@@ -32,14 +32,12 @@ export const SignInPinScreen = () => {
           );
 
           const nextScreen = user.onboarded
-            ? 'signinStoreWallet'
+            ? 'signupStoreWallet'
             : 'onboardingSetupPin';
 
           navigation.navigate(nextScreen, {
-            type: 'mpc',
-            mpcPrivateKey: route.params.mpcPrivateKey,
+            ...route.params,
             mpcSecurityQuestion: password,
-            mpcCloudShare: null,
           });
         } catch (e) {
           if (e instanceof Error) {
@@ -52,7 +50,7 @@ export const SignInPinScreen = () => {
         }
       } else {
         const nextScreen = user.onboarded
-          ? 'signinStoreWallet'
+          ? 'signupStoreWallet'
           : 'onboardingSetupPin';
 
         navigation.navigate(nextScreen, route.params);

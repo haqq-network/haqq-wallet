@@ -10,7 +10,7 @@ export type RestoreAgreementProps = {
   pinRef: React.MutableRefObject<PinInterface | undefined>;
 };
 
-export const SignInPin = ({onPin, pinRef}: RestoreAgreementProps) => {
+export const MpcPin = ({onPin, pinRef}: RestoreAgreementProps) => {
   return (
     <PopupContainer style={styles.container}>
       <Pin title={I18N.signinPinTitle} onPin={onPin} ref={pinRef} />

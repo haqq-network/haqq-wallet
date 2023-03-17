@@ -12,6 +12,7 @@ import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
 import {SignUpAgreementScreen} from '@app/screens/signup-agreement';
 import {SignupNetworkExistsScreen} from '@app/screens/signup-network-exists';
 import {SignupNetworksScreen} from '@app/screens/signup-networks';
+import {SignupPinScreen} from '@app/screens/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
 import {ScreenOptionType} from '@app/types';
 
@@ -48,6 +49,11 @@ export const SignUpScreen = () => {
         name="signupNetworkExists"
         component={SignupNetworkExistsScreen}
         options={hideBack}
+      />
+      <SignUpStack.Screen
+        name="signupPin"
+        component={SignupPinScreen}
+        options={{title}}
       />
       <SignUpStack.Screen
         name="onboardingSetupPin"
