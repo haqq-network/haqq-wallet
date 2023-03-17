@@ -114,7 +114,7 @@ export const WalletsWrapper = () => {
   }, [navigation]);
 
   const onPressRestore = useCallback(() => {
-    navigation.navigate('restore');
+    navigation.navigate('signin', {next: ''});
   }, [navigation]);
 
   return (
