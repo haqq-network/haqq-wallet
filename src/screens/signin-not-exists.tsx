@@ -1,15 +1,21 @@
 import React, {useCallback} from 'react';
 
 import {SigninNotExists} from '@app/components/signin-not-exists';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 
 export const SigninNotExistsScreen = () => {
+  const user = useUser();
   const navigation = useTypedNavigation();
-  const {provider, email} = useTypedRoute<'signinNotExists'>().params;
+  const {provider, email, ...params} =
+    useTypedRoute<'signinNotExists'>().params;
 
   const onPressCreate = useCallback(() => {
-    navigation.replace('signup', {next: ''});
-  }, [navigation]);
+    const nextScreen = user.onboarded
+      ? 'signupStoreWallet'
+      : 'onboardingSetupPin';
+
+    navigation.replace(nextScreen, params);
+  }, [navigation, params, user.onboarded]);
 
   const onPressChoice = useCallback(() => {
     navigation.goBack();

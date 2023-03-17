@@ -46,8 +46,6 @@ export async function onLoginCustom() {
     );
   });
 
-  console.log('email', email, CUSTOM_JWT_TOKEN);
-
   const token = await fetch(CUSTOM_JWT_TOKEN, {
     method: 'POST',
     headers: {
@@ -60,10 +58,8 @@ export async function onLoginCustom() {
   });
 
   const authState = await token.json();
-  console.log('authState', authState);
 
   const authInfo = parseJwt(authState.idToken);
-  console.log('authInfo', authInfo);
 
   return await onAuthorized('haqq-test', authInfo.sub, authState.idToken);
 }

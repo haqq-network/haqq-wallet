@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {Alert, View} from 'react-native';
+import {Alert, Platform, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui';
@@ -10,15 +10,12 @@ import {I18N, getText} from '@app/i18n';
 export type BackupMpcNotificationProps = {
   onClickBackup: () => Promise<void>;
   onClickSkip: () => Promise<void>;
-  onClickCheck: () => Promise<void>;
 };
 
 export const BackupMpcNotification = ({
   onClickBackup,
   onClickSkip,
-  onClickCheck,
 }: BackupMpcNotificationProps) => {
-  const [isChecking, setIsChecking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const onSkip = useCallback(() => {
     return Alert.alert(
@@ -38,15 +35,6 @@ export const BackupMpcNotification = ({
     );
   }, [onClickSkip]);
 
-  const onPressCheck = useCallback(async () => {
-    setIsChecking(true);
-    try {
-      await onClickCheck();
-    } finally {
-      setIsChecking(false);
-    }
-  }, [onClickCheck]);
-
   const onPressBackupGoogle = useCallback(async () => {
     setIsSaving(true);
     try {
@@ -59,15 +47,12 @@ export const BackupMpcNotification = ({
   return (
     <View style={styles.sub}>
       <Button
-        i18n={I18N.backupMpcNotificationCheck}
-        variant={ButtonVariant.contained}
-        loading={isChecking}
-        onPress={onPressCheck}
-        style={styles.margin}
-        size={ButtonSize.middle}
-      />
-      <Button
-        i18n={I18N.backupMpcNotificationBackup}
+        i18n={
+          Platform.select({
+            ios: I18N.backupMpcNotificationBackupICloud,
+            android: I18N.backupMpcNotificationBackupGoogleDrive,
+          }) as I18N
+        }
         variant={ButtonVariant.contained}
         onPress={onPressBackupGoogle}
         loading={isSaving}

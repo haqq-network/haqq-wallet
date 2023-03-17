@@ -462,9 +462,6 @@ PODS:
     - glog
   - react-native-aes (2.0.0):
     - React-Core
-  - react-native-app-auth (7.0.0-rc2):
-    - AppAuth (~> 1.6)
-    - React-Core
   - react-native-ble-plx (2.0.3):
     - MultiplatformBleAdapter (= 0.1.9)
     - React-Core
@@ -576,9 +573,6 @@ PODS:
     - React-Core
   - RNCClipboard (1.11.1):
     - React-Core
-  - RNCustomAuthSdk (4.0.1):
-    - CustomAuth (~> 5.0.0)
-    - React
   - RNFBAnalytics (17.3.2):
     - Firebase/Analytics (= 10.6.0)
     - React-Core
@@ -722,7 +716,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
-  - react-native-app-auth (from `../node_modules/react-native-app-auth`)
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
@@ -752,7 +745,6 @@ DEPENDENCIES:
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
-  - "RNCustomAuthSdk (from `../node_modules/@toruslabs/customauth-react-native-sdk`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
@@ -877,8 +869,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-aes:
     :path: "../node_modules/react-native-aes-crypto"
-  react-native-app-auth:
-    :path: "../node_modules/react-native-app-auth"
   react-native-ble-plx:
     :path: "../node_modules/react-native-ble-plx"
   react-native-blur:
@@ -937,8 +927,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
-  RNCustomAuthSdk:
-    :path: "../node_modules/@toruslabs/customauth-react-native-sdk"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -1033,7 +1021,6 @@ SPEC CHECKSUMS:
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
   react-native-aes: c75c46aa744bef7c2415fdf7f5b2dcb75ca4364d
-  react-native-app-auth: 05c3b875b27bb65fe321bd5dc38cc1c04c5158be
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
@@ -1063,7 +1050,6 @@ SPEC CHECKSUMS:
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
-  RNCustomAuthSdk: e1db0c850b41deaf38fdc8fe5433b3287db29c55
   RNFBAnalytics: 966d8734174a27dee0e84193f676aa3ffb8661bd
   RNFBApp: 3bf62629c41ef65d82e763c25aeb77cdfa63bfae
   RNFBDynamicLinks: 28d9b8895917e9885cf434dd2c39fd767c381e8a
@@ -1092,4 +1078,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 472595b4d5cbd2f1043f361f5d77c4534e3b54b8
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

@@ -10,6 +10,7 @@ import {Button, ButtonVariant, Spacer, Text} from './ui';
 
 interface SignNotExistsProps {
   onPressOldPin(): void;
+
   onPressChange(): void;
 }
 

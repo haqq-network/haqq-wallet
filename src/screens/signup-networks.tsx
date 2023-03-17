@@ -47,6 +47,7 @@ export const SignupNetworksScreen = () => {
             mpcPrivateKey: privateKey,
             mpcSecurityQuestion: null,
             mpcCloudShare: null,
+            provider: provider,
           });
         } catch (e) {
           const nextScreen = user.onboarded
