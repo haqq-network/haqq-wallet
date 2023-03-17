@@ -43,6 +43,8 @@ export const MpcMigrateNetworksScreen = () => {
           navigation.navigate('mpcMigrateRewrite', {
             accountId: route.params.accountId,
             privateKey,
+            provider,
+            email: '',
           });
         } catch (e) {
           navigation.navigate('mpcMigrateStore', {

@@ -1,7 +1,9 @@
 import {CUSTOM_JWT_TOKEN, MPC_NETWORK, MPC_STORE_URL} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import FetchNodeDetails from '@toruslabs/fetch-node-details';
-import NodeDetailManager from '@toruslabs/fetch-node-details';
+import {
+  default as FetchNodeDetails,
+  default as NodeDetailManager,
+} from '@toruslabs/fetch-node-details';
 import TorusUtils from '@toruslabs/torus.js';
 import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
 import {Platform} from 'react-native';

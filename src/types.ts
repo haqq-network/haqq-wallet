@@ -116,6 +116,8 @@ export type RootStackParamList = {
   mpcMigrateRewrite: {
     accountId: string;
     privateKey: string;
+    provider: MpcProviders;
+    email?: string;
   };
   detailsQr: {address: string};
   settingsTheme: undefined;

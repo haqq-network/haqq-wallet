@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {Alert, Image, View} from 'react-native';
 
@@ -11,9 +11,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {AppTheme} from '@app/types';
 
 export type BackupMpcNotificationProps = {
   onClickBackup: () => Promise<void>;
@@ -42,27 +41,23 @@ export const BackupMpcSuggestion = ({
     );
   }, [onClickSkip]);
 
-  const theme = useTheme();
-  const suggestionImage = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('@assets/images/backup-mpc-suggestion-dark.png');
-    }
-
-    return require('@assets/images/backup-mpc-suggestion-light.png');
-  }, [theme]);
+  const suggestionImage = useThemeSelector({
+    dark: require('@assets/images/backup-mpc-suggestion-dark.png'),
+    light: require('@assets/images/backup-mpc-suggestion-light.png'),
+  });
 
   return (
     <View style={styles.sub}>
       <Image source={suggestionImage} style={styles.suggestionImage} />
       <Spacer height={20} />
-      <Text t7 center>
-        Make your account safer - connect it to the social network
-      </Text>
+      <Text t7 center i18n={I18N.backupMpcSuggestionTitle} />
       <Spacer height={5} />
-      <Text t14 color={Color.textBase2} center>
-        If you lose access to your account, you can always restore it using your
-        social network
-      </Text>
+      <Text
+        t14
+        color={Color.textBase2}
+        center
+        i18n={I18N.backupMpcSuggestionDescription}
+      />
       <Spacer height={20} />
       <Button
         i18n={I18N.backupMpcSuggestionConnect}

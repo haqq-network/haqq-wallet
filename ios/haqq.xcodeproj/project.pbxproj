@@ -108,6 +108,9 @@
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
 		F48CA310D9814CF5A574ACB6 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B69DDC52A44B5F929EDD17 /* logo-empty.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
+		B2233BEF03E04F1F96BB8501 /* exclamation-mark-error.png in Resources */ = {isa = PBXBuildFile; fileRef = C1DBD2EDAAC84AFB9071CE05 /* exclamation-mark-error.png */; };
+		31ADFC8071F44772A4F9A941 /* exclamation-mark-error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6DC0B22244B24283BD2030E6 /* exclamation-mark-error@2x.png */; };
+		82995B1C09594E7AA7E367E1 /* exclamation-mark-error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3EE649312ED4FBBAA6E6192 /* exclamation-mark-error@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -234,6 +237,9 @@
 		F6F6841FA9AE40C380CDD01F /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
 		F9BF90B80AC14765A3CCFFDC /* islm_icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = islm_icon.png; path = ../assets/images/islm_icon.png; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
+		C1DBD2EDAAC84AFB9071CE05 /* exclamation-mark-error.png */ = {isa = PBXFileReference; name = "exclamation-mark-error.png"; path = "../assets/images/exclamation-mark-error.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6DC0B22244B24283BD2030E6 /* exclamation-mark-error@2x.png */ = {isa = PBXFileReference; name = "exclamation-mark-error@2x.png"; path = "../assets/images/exclamation-mark-error@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F3EE649312ED4FBBAA6E6192 /* exclamation-mark-error@3x.png */ = {isa = PBXFileReference; name = "exclamation-mark-error@3x.png"; path = "../assets/images/exclamation-mark-error@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +497,9 @@
 				13F1A82F570B4CAAAE14E90D /* question-square.png */,
 				E15EFA7D0E9B4372B48903F6 /* question-square@2x.png */,
 				618129203283441A846CC518 /* question-square@3x.png */,
+				C1DBD2EDAAC84AFB9071CE05 /* exclamation-mark-error.png */,
+				6DC0B22244B24283BD2030E6 /* exclamation-mark-error@2x.png */,
+				F3EE649312ED4FBBAA6E6192 /* exclamation-mark-error@3x.png */,
 				3E01441F055C40B68A7C6912 /* signup-network-exists-warning.png */,
 				9F555838C964492E81998152 /* signup-network-exists-warning@2x.png */,
 				BD76C6749FA64A2DBD52DB6D /* signup-network-exists-warning@3x.png */,
@@ -666,6 +675,9 @@
 				9F9941DBDFF14CE0874DDE68 /* question-square.png in Resources */,
 				2003775218DC4A2C89B3BE94 /* question-square@2x.png in Resources */,
 				40770FD005194B2E802F6252 /* question-square@3x.png in Resources */,
+				B2233BEF03E04F1F96BB8501 /* exclamation-mark-error.png in Resources */,
+				31ADFC8071F44772A4F9A941 /* exclamation-mark-error@2x.png in Resources */,
+				82995B1C09594E7AA7E367E1 /* exclamation-mark-error@3x.png in Resources */,
 				C35A5B6F04C1479DB1FF85B8 /* signup-network-exists-warning.png in Resources */,
 				452B7B0D633A47B993F62113 /* signup-network-exists-warning@2x.png in Resources */,
 				4F2C191D7B534933AED06FD3 /* signup-network-exists-warning@3x.png in Resources */,

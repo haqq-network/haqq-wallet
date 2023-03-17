@@ -174,6 +174,18 @@
       "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
     },
     {
+      "path": "assets/images/exclamation-mark-error.png",
+      "sha1": "ef1fd4f4a06e21c979a24a898ea3a24d6fbff540"
+    },
+    {
+      "path": "assets/images/exclamation-mark-error@2x.png",
+      "sha1": "4aa21a6ecd775d6e8785730f5f5cf468bc975f75"
+    },
+    {
+      "path": "assets/images/exclamation-mark-error@3x.png",
+      "sha1": "3f0081fabc3e48d7d9bdba3d2b8d3bb7058c57be"
+    },
+    {
       "path": "assets/images/islm-logo-circles.png",
       "sha1": "d792225844a53800775798ce022b26187dcc4e26"
     },

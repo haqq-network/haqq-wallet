@@ -528,7 +528,18 @@ export enum I18N {
   signNotRecoveryDescription,
   signNotRecoveryOldPin,
   signNotRecoveryChangeSocial,
-
+  backupMpcSuggestionTitle,
+  backupMpcSuggestionDescription,
+  mpcMigrateAgrementTitle,
+  mpcMigrateAgrementDescription,
+  mpcMigrateAgrementWarning2,
+  mpcMigrateAgrementWarning1,
+  mpcMigrateFinishText,
+  mpcMigrateRewriteTitle,
+  mpcMigrateRewriteDescription,
+  mpcMigrateRewriteWarning,
+  mpcMigrateRewriteAlertTitle,
+  mpcMigrateRewriteAlertDescription,
   signupNetworkExitsTitle,
   signupNetworkExitsTitleWithoutEmail,
   signupNetworkExitsDescription1,
@@ -1119,7 +1130,13 @@ const en: Record<I18N, string> = {
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.mpcMigrateAgreementAgree]: 'Understood',
   [I18N.mpcMigrateRewriteRewrite]: 'Replace',
-  [I18N.mpcMigrateRewriteCancel]: 'Cancel',
+  [I18N.mpcMigrateRewriteCancel]: 'Change social login',
+  [I18N.mpcMigrateRewriteTitle]:
+    'You already have an account on {{provider}} login {{email}}',
+  [I18N.mpcMigrateRewriteDescription]:
+    'You can choose another social login your account or replace it.',
+  [I18N.mpcMigrateRewriteWarning]:
+    'In case of replacement, all account data will be lost',
   [I18N.settingsAccountDetailPharse]: 'Pharse',
   [I18N.settingsAccountDetailSocial]: 'Social',
   [I18N.settingsAccountDetailCreateBackupPhrase]: 'Create Backup Phrase',
@@ -1154,6 +1171,23 @@ const en: Record<I18N, string> = {
     'To restore, you can enter the old PIN code or choose a different social login',
   [I18N.signNotRecoveryOldPin]: 'Enter the old PIN code',
   [I18N.signNotRecoveryChangeSocial]: 'Change social login',
+  [I18N.mpcMigrateRewriteAlertTitle]:
+    'Are you sure you want to replace your account?',
+  [I18N.mpcMigrateRewriteAlertDescription]:
+    'All data on the account will be lost and will not be recoverable',
+  [I18N.mpcMigrateFinishText]:
+    "Сongratulations! You've successfully connected your social network.",
+  [I18N.mpcMigrateAgrementTitle]: 'Important Social login Info',
+  [I18N.mpcMigrateAgrementDescription]:
+    'We use Web3Auth technology. Web3Auth does not store any data related to your social logins.',
+  [I18N.mpcMigrateAgrementWarning1]:
+    'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
+  [I18N.mpcMigrateAgrementWarning2]:
+    'Account recovery using a social network account will work only in our application',
+  [I18N.backupMpcSuggestionTitle]:
+    'Make your account safer - connect it to the social network',
+  [I18N.backupMpcSuggestionDescription]:
+    'If you lose access to your account, you can always restore it using your social network',
   [I18N.signNotExitsDescription]:
     'There are no linked accounts in our network for the social login you have chosen. Create a new account based on this social login or choose another social login',
   [I18N.signNotExitsTitle]:
