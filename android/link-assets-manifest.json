@@ -292,6 +292,18 @@
     {
       "path": "assets/images/shield-img@3x.png",
       "sha1": "c88d8fd2e7fc79eded499dd702ae7af5a9c4cc4d"
+    },
+    {
+      "path": "assets/images/signup-network-exists-warning.png",
+      "sha1": "ef1fd4f4a06e21c979a24a898ea3a24d6fbff540"
+    },
+    {
+      "path": "assets/images/signup-network-exists-warning@2x.png",
+      "sha1": "cddd1a90990cfcbd4025168ee8b74fd971e6a17f"
+    },
+    {
+      "path": "assets/images/signup-network-exists-warning@3x.png",
+      "sha1": "3f0081fabc3e48d7d9bdba3d2b8d3bb7058c57be"
     }
   ]
 }

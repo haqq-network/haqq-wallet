@@ -528,6 +528,13 @@ export enum I18N {
   signNotRecoveryDescription,
   signNotRecoveryOldPin,
   signNotRecoveryChangeSocial,
+
+  signupNetworkExitsTitle,
+  signupNetworkExitsTitleWithoutEmail,
+  signupNetworkExitsDescription1,
+  signupNetworkExitsDescription2,
+  signupNetworkExitsAlertTitle,
+  signupNetworkExitsAlertDescription,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1151,4 +1158,16 @@ const en: Record<I18N, string> = {
     'There are no linked accounts in our network for the social login you have chosen. Create a new account based on this social login or choose another social login',
   [I18N.signNotExitsTitle]:
     'We didn’t find the account connect to {{provider}} login\n{{email}}',
+  [I18N.signupNetworkExitsTitle]:
+    'You already have an account on {{provider}} login\n{{email}}',
+  [I18N.signupNetworkExitsTitleWithoutEmail]:
+    'You already have an account on {{provider}} login',
+  [I18N.signupNetworkExitsDescription1]:
+    'You can restore your account or replace it.',
+  [I18N.signupNetworkExitsDescription2]:
+    'In case of replacement, all account data will be lost',
+  [I18N.signupNetworkExitsAlertTitle]:
+    'Are you sure you want to replace your account?',
+  [I18N.signupNetworkExitsAlertDescription]:
+    'All data on the account will be lost and will not be recoverable',
 };
