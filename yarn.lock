@@ -1281,10 +1281,10 @@
     sha3 "^2.1.4"
     shx "^0.3.4"
 
-"@evmos/provider@0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@evmos/provider/-/provider-0.2.8.tgz#164be0c7a57f6a20a6816cfe35d027b1fad2aacc"
-  integrity sha512-LOml6RtabQafhNn38IaREXB2oClHTUBYF0VttQRB3qxaOEqBy9WbH0Dz7fvqqGFbcanMdQKhBQ4NfNMeslWQgQ==
+"@evmos/provider@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@evmos/provider/-/provider-0.3.1.tgz#ea706e678c78f8c4119d2f2541251fe7d0e51b1f"
+  integrity sha512-Km2BYQvD1PWZHUMwyqjBiM3loSTzr/t+03FAZqrTF4ffqhJSIOCW6SW9X4bvuAICMLbbeM4l1C6cNeLfa1KTlQ==
   dependencies:
     link-module-alias "^1.2.0"
     shx "^0.3.4"
