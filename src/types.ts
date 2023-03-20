@@ -183,7 +183,6 @@ export type RootStackParamList = {
   signinStoreWallet: WalletInitialData;
   signupNetworks: undefined;
   signinPin: WalletInitialData;
-  signinOldPin: WalletInitialData;
   signupPin: WalletInitialData;
   signinNotExists: {provider: MpcProviders; email?: string} & WalletInitialData;
   signinNotRecovery: WalletInitialData;

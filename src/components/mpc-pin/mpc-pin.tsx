@@ -13,7 +13,7 @@ export type RestoreAgreementProps = {
 export const MpcPin = ({onPin, pinRef}: RestoreAgreementProps) => {
   return (
     <PopupContainer style={styles.container}>
-      <Pin title={I18N.signinPinTitle} onPin={onPin} ref={pinRef} />
+      <Pin title={I18N.signinOldPinTitle} onPin={onPin} ref={pinRef} />
     </PopupContainer>
   );
 };
