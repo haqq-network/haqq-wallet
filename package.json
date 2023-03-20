@@ -36,7 +36,7 @@
     "@react-native-firebase/messaging": "17.3.2",
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/bottom-tabs": "6.5.6",
-    "@react-navigation/native": "6.1.4",
+    "@react-navigation/native": "6.1.6",
     "@react-navigation/stack": "6.3.14",
     "@sentry/react-native": "5.1.0",
     "@toruslabs/fetch-node-details": "8.1.0",
