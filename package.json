@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",
-    "@evmos/provider": "0.2.8",
+    "@evmos/provider": "0.3.1",
     "@evmos/transactions": "0.2.13",
     "@haqq/encryption-react-native": "0.0.2",
     "@haqq/provider-base": "0.0.18",
