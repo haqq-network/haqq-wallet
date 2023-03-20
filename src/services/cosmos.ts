@@ -333,7 +333,7 @@ export class Cosmos {
       extension,
     );
 
-    return await this.broadcastTransaction(rawTx);
+    return await this.broadcastTransaction(rawTx as unknown as TxToSend);
   }
 
   async getFee(data: object, account: Sender) {
