@@ -59,6 +59,7 @@ export const SignInScreen = () => {
         component={SignInPinScreen}
         options={{title}}
       />
+
       <SignInStack.Screen
         name="onboardingSetupPin"
         component={OnboardingSetupPinScreen}

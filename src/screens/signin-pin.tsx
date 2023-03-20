@@ -6,6 +6,7 @@ import {MpcPin} from '@app/components/mpc-pin';
 import {PinInterface} from '@app/components/pin';
 import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   serviceProviderOptions,
   storageLayerOptions,
@@ -42,6 +43,9 @@ export const SignInPinScreen = () => {
             mpcCloudShare: null,
           });
         } catch (e) {
+          vibrate(HapticEffects.error);
+          pinRef.current?.reset?.();
+
           if (e instanceof Error) {
             if ('code' in e && e.code === 2103) {
               throw new Error('wrong_password');

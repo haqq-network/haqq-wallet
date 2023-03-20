@@ -546,6 +546,7 @@ export enum I18N {
   signupNetworkExitsDescription2,
   signupNetworkExitsAlertTitle,
   signupNetworkExitsAlertDescription,
+  signinOldPinTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1162,6 +1163,7 @@ const en: Record<I18N, string> = {
   [I18N.signupNetworkExistsRewrite]: 'Replace',
   [I18N.signinNetworksSkip]: 'Phrase or private key',
   [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
+  [I18N.signinOldPinTitle]: 'Enter your old ISLM Wallet PIN',
   [I18N.customNetwork]: 'Custom network',
   [I18N.signNotExitsCreateAccount]: 'Create Account',
   [I18N.signNotExitsChoiceAnother]: 'Choice another',
