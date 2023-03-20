@@ -9,7 +9,7 @@ import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
-import Hcaptcha from './hcaptcha';
+import {Hcaptcha} from './hcaptcha';
 
 export type CaptchaDataTypes = (
   | 'error'
