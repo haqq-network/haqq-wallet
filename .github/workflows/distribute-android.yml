@@ -59,6 +59,9 @@ jobs:
           echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
           echo "MPC_STORE_URL=${{secrets.MPC_STORE_URL}}" >> .env
           echo "MPC_NETWORK=${{secrets.MPC_NETWORK}}" >> .env
+          echo "MPC_GOOGLE_IOS=${{secrets.MPC_GOOGLE_IOS}}" >> .env
+          echo "MPC_GOOGLE_ANDROID=${{secrets.MPC_GOOGLE_ANDROID}}" >> .env
+          echo "MPC_APPLE=${{secrets.MPC_APPLE}}" >> .env
 
       - name: Install Fastlane
         run: |

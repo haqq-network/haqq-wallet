@@ -1,4 +1,11 @@
-import {CUSTOM_JWT_TOKEN, MPC_NETWORK, MPC_STORE_URL} from '@env';
+import {
+  CUSTOM_JWT_TOKEN,
+  MPC_APPLE,
+  MPC_GOOGLE_ANDROID,
+  MPC_GOOGLE_IOS,
+  MPC_NETWORK,
+  MPC_STORE_URL,
+} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {
   default as FetchNodeDetails,
@@ -70,8 +77,8 @@ export async function onLoginGoogle() {
 
   return await onAuthorized(
     Platform.select({
-      ios: 'haqq-google-ios',
-      android: 'haqq-google-android',
+      ios: MPC_GOOGLE_IOS,
+      android: MPC_GOOGLE_ANDROID,
     }) as string,
     authInfo.email,
     authState.idToken,
@@ -151,5 +158,5 @@ export async function onLoginApple() {
 
   const authInfo = parseJwt(identityToken);
 
-  return await onAuthorized('haqq-apple-dev-1', authInfo.email, identityToken);
+  return await onAuthorized(MPC_APPLE, authInfo.email, identityToken);
 }
