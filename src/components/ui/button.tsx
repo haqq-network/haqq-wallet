@@ -40,6 +40,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   loading?: boolean;
   disabled?: boolean;
   textColor?: ColorType;
+  loadingColor?: ColorType;
   textStyle?: StyleProp<TextStyle>;
   iconLeftStyle?: StyleProp<TextStyle>;
   iconRightStyle?: StyleProp<TextStyle>;
@@ -70,6 +71,7 @@ export const Button = ({
   style,
   textStyle,
   circleBorders,
+  loadingColor,
   onPress,
   iconRight,
   iconRightColor,
@@ -141,7 +143,10 @@ export const Button = ({
       activeOpacity={0.7}
       {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={getColor(Color.textBase3)} />
+        <ActivityIndicator
+          size="small"
+          color={getColor(loadingColor || Color.textBase3)}
+        />
       ) : (
         <>
           {iconLeft && (

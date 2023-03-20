@@ -17,6 +17,7 @@ import {ScreenOptionType} from '@app/types';
 
 import {SigninNotExistsScreen} from './signin-not-exists';
 import {SigninNotRecoveryScreen} from './signin-not-recovery';
+import {SignInOldPinScreen} from './signin-old-pin';
 
 const SignInStack = createStackNavigator();
 
@@ -57,6 +58,11 @@ export const SignInScreen = () => {
       <SignInStack.Screen
         name="signinPin"
         component={SignInPinScreen}
+        options={{title}}
+      />
+      <SignInStack.Screen
+        name="signinOldPin"
+        component={SignInOldPinScreen}
         options={{title}}
       />
       <SignInStack.Screen

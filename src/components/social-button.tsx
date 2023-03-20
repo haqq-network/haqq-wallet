@@ -28,6 +28,7 @@ const SOCIAL_BUTTONS_DATA_MAP: Record<
     iconLeft: 'apple',
     color: Color.socialAppleBg,
     textColor: Color.socialAppleText,
+    loadingColor: Color.socialAppleText,
     iconLeftColor: Color.socialAppleText,
   },
   [SocialButtonVariant.discord]: {
@@ -42,6 +43,7 @@ const SOCIAL_BUTTONS_DATA_MAP: Record<
     iconLeft: 'facebook',
     color: Color.socialFacebookBg,
     textColor: Color.socialFacebookText,
+    loadingColor: Color.socialFacebookText,
     iconLeftColor: Color.socialFacebookText,
   },
   [SocialButtonVariant.google]: {
@@ -49,6 +51,7 @@ const SOCIAL_BUTTONS_DATA_MAP: Record<
     iconLeft: 'google',
     color: Color.socialGoogleBg,
     textColor: Color.socialGoogleText,
+    loadingColor: Color.socialGoogleText,
     iconLeftStyle: {
       backgroundColor: '#ffffff',
       borderRadius: 100,
@@ -59,6 +62,7 @@ const SOCIAL_BUTTONS_DATA_MAP: Record<
     iconLeft: 'twitter',
     color: Color.socialTwitterBg,
     textColor: Color.socialTwitterText,
+    loadingColor: Color.socialTwitterText,
     iconLeftColor: Color.socialTwitterText,
   },
 };

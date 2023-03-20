@@ -8,7 +8,7 @@ export const SigninNotRecoveryScreen = () => {
   const route = useTypedRoute<'signinNotRecovery'>();
 
   const onPressOldPin = useCallback(() => {
-    navigation.navigate('signinPin', route.params);
+    navigation.navigate('signinOldPin', route.params);
   }, [navigation, route.params]);
 
   const onPressChange = useCallback(() => {

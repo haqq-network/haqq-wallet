@@ -80,6 +80,7 @@ export const SignInNetworksScreen = () => {
           // @ts-ignore
           nextParams.provider = provider;
         } finally {
+          // nextScreen = 'signinNotRecovery';
           navigation.navigate(
             // @ts-ignore
             nextScreen as keyof RootStackParamList,
