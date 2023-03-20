@@ -37,7 +37,7 @@
     "@react-native-google-signin/google-signin": "^9.0.2",
     "@react-navigation/bottom-tabs": "6.5.6",
     "@react-navigation/native": "6.1.4",
-    "@react-navigation/stack": "6.3.14",
+    "@react-navigation/stack": "6.3.16",
     "@sentry/react-native": "5.1.0",
     "@toruslabs/fetch-node-details": "8.1.0",
     "@toruslabs/torus.js": "6.3.2",
