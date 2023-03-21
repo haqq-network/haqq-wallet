@@ -66,6 +66,7 @@ export type WalletInitialData =
       mpcPrivateKey: string;
       mpcSecurityQuestion: string | null;
       mpcCloudShare: string | null;
+      provider: MpcProviders | null;
     }
   | {type: 'empty'};
 
@@ -396,6 +397,9 @@ export type RootStackParamList = {
   };
   mpcFinish: undefined;
   walletProtectionPopup: {
+    accountId: string;
+  };
+  settingsSocialLogins: {
     accountId: string;
   };
 };

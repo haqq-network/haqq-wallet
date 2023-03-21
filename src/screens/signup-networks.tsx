@@ -59,6 +59,7 @@ export const SignupNetworksScreen = () => {
             mpcPrivateKey: privateKey,
             mpcSecurityQuestion: null,
             mpcCloudShare: null,
+            provider,
           });
         }
       }

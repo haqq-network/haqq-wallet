@@ -547,6 +547,9 @@ export enum I18N {
   signupNetworkExitsAlertTitle,
   signupNetworkExitsAlertDescription,
   signinOldPinTitle,
+  settingsAccountDetailSocialLoginsTitle,
+  settingsAccountDetailSocialLoginsSubtitle,
+  settingsSocialLoginsTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1206,4 +1209,8 @@ const en: Record<I18N, string> = {
     'Are you sure you want to replace your account?',
   [I18N.signupNetworkExitsAlertDescription]:
     'All data on the account will be lost and will not be recoverable',
+  [I18N.settingsAccountDetailSocialLoginsTitle]: 'Socials logins',
+  [I18N.settingsAccountDetailSocialLoginsSubtitle]:
+    'Linking data to social login',
+  [I18N.settingsSocialLoginsTitle]: 'Socials logins',
 };

@@ -83,6 +83,12 @@ export const SettingsAccountDetailScreen = () => {
     });
   }, [navigation, wallet?.accountId]);
 
+  const onPressSocialLogins = useCallback(() => {
+    navigation.navigate('settingsSocialLogins', {
+      accountId: wallet?.accountId!,
+    });
+  }, [navigation, wallet?.accountId]);
+
   if (!(wallet && wallet.isValid())) {
     return null;
   }
@@ -104,6 +110,7 @@ export const SettingsAccountDetailScreen = () => {
         onViewingRecoveryPhrase={onViewingRecoveryPhrase}
         onPressPharse={onPressPharse}
         onPressSocial={onPressSocial}
+        onPressSocialLogins={onPressSocialLogins}
       />
     </>
   );

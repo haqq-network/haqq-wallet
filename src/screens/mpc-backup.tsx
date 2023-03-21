@@ -9,6 +9,7 @@ import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {GoogleDrive} from '@app/services/google-drive';
 import {
+  MpcProviders,
   serviceProviderOptions,
   storageLayerOptions,
 } from '@app/services/provider-mpc';
@@ -44,6 +45,7 @@ export const MpcBackupScreen = () => {
           mpcPrivateKey: route.params.privateKey,
           mpcSecurityQuestion: null,
           mpcCloudShare: null,
+          provider: null,
         });
       }
     };
@@ -67,6 +69,7 @@ export const MpcBackupScreen = () => {
           mpcPrivateKey: route.params.privateKey,
           mpcSecurityQuestion: password,
           mpcCloudShare: null,
+          provider: null,
         });
       } catch (e) {
         if (e instanceof Error) {
@@ -97,6 +100,7 @@ export const MpcBackupScreen = () => {
           mpcPrivateKey: route.params.privateKey,
           mpcSecurityQuestion: null,
           mpcCloudShare: share,
+          provider: MpcProviders.google,
         });
       }
     } catch (e) {
@@ -112,6 +116,7 @@ export const MpcBackupScreen = () => {
       mpcPrivateKey: route.params.privateKey,
       mpcSecurityQuestion: null,
       mpcCloudShare: null,
+      provider: MpcProviders.google,
     });
   }, [navigation, route.params.privateKey]);
 

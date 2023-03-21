@@ -6,8 +6,7 @@ import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 export const SigninNotExistsScreen = () => {
   const user = useUser();
   const navigation = useTypedNavigation();
-  const {provider, email, ...params} =
-    useTypedRoute<'signinNotExists'>().params;
+  const {email, ...params} = useTypedRoute<'signinNotExists'>().params;
 
   const onPressCreate = useCallback(() => {
     const nextScreen = user.onboarded
@@ -25,7 +24,7 @@ export const SigninNotExistsScreen = () => {
     <SigninNotExists
       onPressCreate={onPressCreate}
       onPressChoice={onPressChoice}
-      provider={provider}
+      provider={params.provider}
       email={email}
     />
   );

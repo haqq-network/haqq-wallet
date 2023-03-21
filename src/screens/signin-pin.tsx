@@ -39,6 +39,7 @@ export const SignInPinScreen = () => {
           navigation.navigate(nextScreen, {
             type: 'mpc',
             mpcPrivateKey: route.params.mpcPrivateKey,
+            provider: route.params.provider,
             mpcSecurityQuestion: password,
             mpcCloudShare: null,
           });

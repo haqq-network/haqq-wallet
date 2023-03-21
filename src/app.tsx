@@ -86,6 +86,7 @@ import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
 import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
+import {SettingsSocialLoginsScreen} from './screens/settings-social-logins';
 import {SettingsTestScreen} from './screens/settings-test';
 import {SettingsThemeScreen} from './screens/settings-theme';
 import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
@@ -439,6 +440,13 @@ export const App = () => {
                     component={SettingsThemeScreen}
                     options={{
                       title: getText(I18N.settingsThemeScreen),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsSocialLogins"
+                    component={SettingsSocialLoginsScreen}
+                    options={{
+                      title: getText(I18N.settingsSocialLoginsTitle),
                     }}
                   />
                   <Stack.Screen

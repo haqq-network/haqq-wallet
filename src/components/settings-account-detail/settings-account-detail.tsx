@@ -31,6 +31,7 @@ type SettingsAccountDetailProps = {
   onViewingRecoveryPhrase: () => void;
   onPressPharse(): void;
   onPressSocial(): void;
+  onPressSocialLogins(): void;
 };
 
 export const SettingsAccountDetail = ({
@@ -41,6 +42,7 @@ export const SettingsAccountDetail = ({
   onViewingRecoveryPhrase,
   onPressPharse,
   onPressSocial,
+  onPressSocialLogins,
 }: SettingsAccountDetailProps) => {
   const cardWidth = useWindowDimensions().width - 72;
   const cardMaskWidth = useWindowDimensions().width - 112;
@@ -149,6 +151,14 @@ export const SettingsAccountDetail = ({
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
         />
       </MenuNavigationButton>
+      {wallet.type !== WalletType.mpc && (
+        <MenuNavigationButton onPress={onPressSocialLogins}>
+          <DataContent
+            titleI18n={I18N.settingsAccountDetailSocialLoginsTitle}
+            subtitleI18n={I18N.settingsAccountDetailSocialLoginsSubtitle}
+          />
+        </MenuNavigationButton>
+      )}
       {wallet.type === WalletType.mnemonic && wallet.accountId && (
         <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
           <DataContent

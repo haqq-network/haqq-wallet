@@ -41,6 +41,7 @@ export const SignInNetworksScreen = () => {
           mpcPrivateKey: privateKey,
           mpcSecurityQuestion: null,
           mpcCloudShare: null,
+          provider,
         };
 
         try {
