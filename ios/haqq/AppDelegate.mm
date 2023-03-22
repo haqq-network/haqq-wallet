@@ -45,13 +45,8 @@ RCTRootView* overview = nil;
   self.initialProps = @{};
   ClearKeychainIfNecessary();
   [FIRApp configure];
-//  [RNSplashScreen show];
-
   
-//   overview = [[[NSBundle mainBundle] loadNibNamed:@"overview" owner:self options:nil] objectAtIndex:0];
-  
-    bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
-   
+   bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
    [RNSplashScreen show];  // here
    return didFinish;
 }
@@ -92,6 +87,7 @@ RCTRootView* overview = nil;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application{
+  overview = [[[NSBundle mainBundle] loadNibNamed:@"overview" owner:self options:nil] objectAtIndex:0];
   overview.frame = self.window.bounds;
   overview.tag = 181099;
   [self.window addSubview:overview];

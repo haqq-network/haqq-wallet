@@ -30,7 +30,7 @@ export const SignupNetworkExists = ({
   return (
     <PopupContainer style={styles.container}>
       <Image
-        source={{uri: 'signup-network-exists-warning'}}
+        source={require('@assets/images/signup-network-exists-warning.png')}
         style={styles.img}
       />
       <Spacer height={44} />

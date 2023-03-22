@@ -28,7 +28,10 @@ export const SigninNotExists = ({
   return (
     <View style={styles.container}>
       <View>
-        <Image source={{uri: 'question-circle'}} style={styles.img} />
+        <Image
+          source={require('@assets/images/question-circle.png')}
+          style={styles.img}
+        />
         <Spacer height={44} />
         <Text
           t4
