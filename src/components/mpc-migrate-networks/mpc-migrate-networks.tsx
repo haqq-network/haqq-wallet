@@ -102,7 +102,6 @@ export const MpcMigrateNetworks = ({onLogin}: MpcMigrateNetworksProps) => {
         i18n={I18N.mpcNetworkWeb3AuthDescription}
         color={Color.textBase2}
       />
-      <Spacer />
     </PopupContainer>
   );
 };
