@@ -87,10 +87,14 @@ RCTRootView* overview = nil;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application{
-  overview = [[[NSBundle mainBundle] loadNibNamed:@"overview" owner:self options:nil] objectAtIndex:0];
-  overview.frame = self.window.bounds;
-  overview.tag = 181099;
-  [self.window addSubview:overview];
+  UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+  UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+  //always fill the view
+  blurEffectView.frame = self.window.bounds;
+  blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  blurEffectView.tag = 181099;
+  
+  [self.window addSubview:blurEffectView];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application{
