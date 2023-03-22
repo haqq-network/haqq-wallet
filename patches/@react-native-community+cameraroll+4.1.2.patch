@@ -1,5 +1,5 @@
 diff --git a/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java b/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
-index 5761fec..fad73d2 100644
+index 5761fec..b9fa919 100644
 --- a/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
 +++ b/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
 @@ -452,7 +452,11 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
@@ -15,3 +15,30 @@ index 5761fec..fad73d2 100644
                if (albumName != null) {
                  Integer albumCount = albums.get(albumName);
                  if (albumCount == null) {
+@@ -647,8 +651,11 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+                 + photoUri.toString(),
+             e);
+       }
+-      retriever.release();
+-    }
++      try {
++        retriever.release();
++      } catch (IOException e) {
++        // Do nothing. Required catch for gradle 7.2.2 and above
++      }    }
+
+     if (photoDescriptor != null) {
+       try {
+@@ -710,7 +717,11 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+                     + photoUri.toString(),
+                 e);
+           }
+-          retriever.release();
++          try {
++            retriever.release();
++          } catch (IOException e) {
++            // Do nothing. Required catch for gradle 7.2.2 and above
++          }
+         } else {
+           BitmapFactory.Options options = new BitmapFactory.Options();
+           // Set inJustDecodeBounds to true so we don't actually load the Bitmap in memory,

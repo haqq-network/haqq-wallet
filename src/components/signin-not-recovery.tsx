@@ -24,7 +24,10 @@ export const SigninNotRecovery = ({
 }: SignNotExistsProps) => {
   return (
     <PopupContainer style={styles.container}>
-      <Image source={{uri: 'question-square'}} style={styles.img} />
+      <Image
+        source={require('@assets/images/question-square.png')}
+        style={styles.img}
+      />
       <Spacer height={44} />
       <Text t4 center i18n={I18N.signNotRecoveryTitle} />
       <Spacer height={5} />

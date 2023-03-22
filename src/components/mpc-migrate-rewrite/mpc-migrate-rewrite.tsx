@@ -29,7 +29,10 @@ export const MpcMigrateRewrite = ({
   return (
     <PopupContainer style={styles.container}>
       <View>
-        <Image source={{uri: 'exclamation-mark-error'}} style={styles.img} />
+        <Image
+          source={require('@assets/images/exclamation-mark-error.png')}
+          style={styles.img}
+        />
         <Spacer height={44} />
         <Text
           t4
