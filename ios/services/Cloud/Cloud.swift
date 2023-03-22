@@ -66,8 +66,6 @@ class RNCloud: NSObject {
   public func getItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     do {
       let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-
-      print(nestedFolderURL)
       
       let fileUrl = nestedFolderURL.appendingPathComponent(key)
 
@@ -89,6 +87,10 @@ class RNCloud: NSObject {
 
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
     do {
+        if fileManager.fileExists(atPath: fileUrl.path) {
+          try fileManager.removeItem(at: fileUrl)
+        }
+      
         try value.write(to: fileUrl, atomically: false, encoding: .utf8)
         resolve(true)
     }
