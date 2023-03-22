@@ -20,14 +20,15 @@ export const MpcMigrateRewriteScreen = () => {
           text: 'Accept',
           style: 'destructive',
           onPress() {
-            navigation.navigate('mpcMigrateNetworks', {
+            navigation.navigate('mpcMigrateStore', {
               accountId: route.params.accountId,
+              privateKey: route.params.privateKey,
             });
           },
         },
       ],
     );
-  }, [navigation, route.params.accountId]);
+  }, [navigation, route.params.accountId, route.params.privateKey]);
 
   const onCancel = useCallback(() => {
     navigation.goBack();
