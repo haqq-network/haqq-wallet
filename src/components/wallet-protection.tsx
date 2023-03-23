@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ISLMLogo} from '@app/components/islm-logo';
@@ -21,8 +21,12 @@ export const WalletProtection = ({
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <View style={styles.headerConteiner}>
-          <Image source={{uri: 'shield-img'}} style={styles.shield} />
+        <View style={styles.headerContainer}>
+          <Icon
+            name="shield"
+            color={Color.graphicSecond1}
+            style={styles.shield}
+          />
           <ISLMLogo style={styles.logo} />
         </View>
 
@@ -110,13 +114,12 @@ const styles = createTheme({
   shield: {
     width: 118,
     height: 143,
-    tintColor: Color.graphicSecond1,
   },
   logo: {
     position: 'absolute',
     paddingBottom: 10,
   },
-  headerConteiner: {
+  headerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },

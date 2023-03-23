@@ -14,7 +14,7 @@ export type BlockProps = {
 };
 export const Block = ({children, style, short, name}: BlockProps) => {
   return (
-    <View style={StyleSheet.compose<ViewStyle>(styles.container, style)}>
+    <View style={StyleSheet.compose(styles.container, style)}>
       <Text
         t9
         i18n={name}

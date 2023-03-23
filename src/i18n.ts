@@ -1196,9 +1196,9 @@ const en: Record<I18N, string> = {
   [I18N.signNotExitsDescription]:
     'There are no linked accounts in our network for the social login you have chosen. Create a new account based on this social login or choose another social login',
   [I18N.signNotExitsTitle]:
-    'We didn’t find the account connect to {{provider}} login\n{{email}}',
+    'We didn’t find the account connect to {{provider}} login {{email}}',
   [I18N.signupNetworkExitsTitle]:
-    'You already have an account on {{provider}} login\n{{email}}',
+    'You already have an account on {{provider}} login {{email}}',
   [I18N.signupNetworkExitsTitleWithoutEmail]:
     'You already have an account on {{provider}} login',
   [I18N.signupNetworkExitsDescription1]:
