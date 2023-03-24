@@ -2240,7 +2240,7 @@
     react-is "^16.13.0"
     use-latest-callback "^0.1.5"
 
-"@react-navigation/elements@^1.3.16", "@react-navigation/elements@^1.3.17":
+"@react-navigation/elements@^1.3.17":
   version "1.3.17"
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.3.17.tgz#9cb95765940f2841916fc71686598c22a3e4067e"
   integrity sha512-sui8AzHm6TxeEvWT/NEXlz3egYvCUog4tlXA4Xlb2Vxvy3purVXDq/XsM56lJl344U5Aj/jDzkVanOTMWyk4UA==
@@ -10314,10 +10314,10 @@ react-native-svg@12.5.1:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-react-native-system-navigation-bar@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.2.0.tgz#70c924e5b40a34c6f78910ca7bf990082637ddab"
-  integrity sha512-iVrWFbEh5WSX5pFiCBxJ1+zte4zTbTjLFsK/OZjKpwpZgLgDingEHaqQPAU+PPTYxzkShoCiaVnCNIbDzNnBow==
+react-native-system-navigation-bar@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.2.1.tgz#1940149dd7d2106ebaf283f8746a7e341a21dc3b"
+  integrity sha512-uNWzOYOJnPbp6tVXebj72+5lCKMh4Mp+DhaptBNd8EYGXYs0oR9drzv8ZZ4YNHsbDBLJBbJtE/QG5xu6cBsNeg==
 
 react-native-touch-id@4.4.1:
   version "4.4.1"
