@@ -13,7 +13,10 @@ export const WalletConnectSignScreen = () => {
   const route = useTypedRoute<'walletConnectSign'>();
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
   const request = useMemo(() => event.params.request, [event]);
-  const session = useWalletConnectSession(event?.topic);
+  const onSessionDisconnect = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+  const session = useWalletConnectSession(event?.topic, onSessionDisconnect);
 
   const isTransaction = useMemo(
     () =>
@@ -30,9 +33,10 @@ export const WalletConnectSignScreen = () => {
   const onPressSign = useCallback(async () => {
     try {
       await WalletConnect.instance.approveEIP155Request(wallet!, event);
-      navigation.goBack();
     } catch (err) {
       console.log('🔴 WalletConnectSignScreen:onPressApprove error', err);
+    } finally {
+      navigation.goBack();
     }
   }, [event, navigation, wallet]);
 
@@ -42,6 +46,8 @@ export const WalletConnectSignScreen = () => {
       navigation.goBack();
     } catch (err) {
       console.log('🔴 WalletConnectSignScreen:onPressReject error', err);
+    } finally {
+      navigation.goBack();
     }
   }, [event, navigation]);
 
