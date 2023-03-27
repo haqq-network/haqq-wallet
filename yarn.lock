@@ -10794,10 +10794,17 @@ react-native-svg@12.5.1:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
+<<<<<<< HEAD
 react-native-system-navigation-bar@2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.5.0.tgz#7140f42e4465f4ed96d388f13af68dc63d4dd218"
   integrity sha512-2ogNiPwSd4lvv/tASmLbgdXVHuoH0jwvOEM2G+k1ufgI+BHTUNbwS6Hh0stxI5bsfYxYj52KVdKzPwQke+pAug==
+=======
+react-native-system-navigation-bar@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-system-navigation-bar/-/react-native-system-navigation-bar-2.2.1.tgz#1940149dd7d2106ebaf283f8746a7e341a21dc3b"
+  integrity sha512-uNWzOYOJnPbp6tVXebj72+5lCKMh4Mp+DhaptBNd8EYGXYs0oR9drzv8ZZ4YNHsbDBLJBbJtE/QG5xu6cBsNeg==
+>>>>>>> c6c6298 (fix: upgrade react-native-system-navigation-bar from 2.2.0 to 2.2.1 (#974))
 
 react-native-touch-id@4.4.1:
   version "4.4.1"
