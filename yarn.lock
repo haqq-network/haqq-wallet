@@ -3409,10 +3409,10 @@
     pino "7.11.0"
     tslib "1.14.1"
 
-"@walletconnect/react-native-compat@2.4.6":
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/react-native-compat/-/react-native-compat-2.4.6.tgz#1d4197480bb190bbf7d1fbef416c577f06a8315c"
-  integrity sha512-akH9Hi+84nvfZwqArmuVZ+KFrOY6yDo5DwxqdkvdDuVks0cabqCMCytpa1Od6/HGI3MVDdHaUcKyRAAElQLAbA==
+"@walletconnect/react-native-compat@2.4.7":
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/react-native-compat/-/react-native-compat-2.4.7.tgz#76a74659c01dab9e73f3124de66161b026e3679f"
+  integrity sha512-gEKW7MzdMP51lVHzdTL0hniBSrbRy6s/jN4IrhCkbdi6uNgIp0GMR7Ui3cWHUZE5th58z5ZojIQjwFILorewVg==
   dependencies:
     events "3.3.0"
     fast-text-encoding "^1.0.6"
