@@ -10619,10 +10619,10 @@ react-native-detector@0.2.3:
   resolved "https://registry.yarnpkg.com/react-native-detector/-/react-native-detector-0.2.3.tgz#6c940daa35c8ab673eaf1253c569df2a26eeb344"
   integrity sha512-q0uMXKsK4hAYK5OKMJmMpPiHDyiXWV9Cvlrwbn51gdIoPApzWkK61pOW411gLn6KbeoUQnDqJoDIuIqi0m0TSg==
 
-react-native-dotenv@3.4.7:
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.7.tgz#131374dd5c22b1173f7025b2a3b4e124b0142e03"
-  integrity sha512-GqUDdmrtKw7qYS9jjQLipEPctMd0YuSBNVZBNlaHtaHMJ63iaB4FABO4uX0iSUJpgMwozZki4fRv4dDHmVUoLg==
+react-native-dotenv@3.4.8:
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.8.tgz#42284070a9994076cd700805c2dd28051c9e1432"
+  integrity sha512-fg9F8X/cG1kDTwRLgLz3t+AMbsULoFHbUVltdQarmrJ3kNllD1Zq7ZgY85bp8BnPwk0DnYQzKbooiLsUoKd10w==
   dependencies:
     dotenv "^16.0.3"
 
