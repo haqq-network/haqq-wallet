@@ -81,6 +81,7 @@ export const WalletConnectApproval = ({
         <Spacer height={12} />
 
         <InfoBlock
+          style={styles.infoBlock}
           warning
           icon={<Icon name="info" color={Color.textYellow1} />}>
           <Text
@@ -149,5 +150,8 @@ const styles = createTheme({
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  infoBlock: {
+    width: '100%',
   },
 });
