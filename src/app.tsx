@@ -254,7 +254,10 @@ export const App = () => {
               ref={navigator}
               theme={navTheme}
               onStateChange={onStateChange}>
-              <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
+              <Stack.Navigator
+                screenOptions={basicScreenOptions}
+                initialRouteName={'web3Browser'}
+                key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
                 <Stack.Screen
