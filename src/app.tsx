@@ -260,6 +260,10 @@ export const App = () => {
                 key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
+                <Stack.Screen
+                  name="web3Browser"
+                  component={Web3BrowserScreen}
+                />
 
                 {/* Modals group */}
                 <Stack.Group screenOptions={stackScreenOptions}>
