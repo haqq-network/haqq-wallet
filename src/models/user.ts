@@ -231,7 +231,7 @@ export class User extends EventEmitter {
         biometry: false,
         bluetooth: false,
         language: AppLanguage.en,
-        theme: IS_DEVELOPMENT === '1' ? AppTheme.system : AppTheme.light,
+        theme: AppTheme.system,
         isDeveloper: IS_DEVELOPMENT === '1',
         providerId:
           ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
