@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
+import {createStackNavigator} from '@react-navigation/stack';
+
+import {DismissPopupButton} from '@app/components/dismiss-popup-button';
 import {Web3Browser} from '@app/components/web3-browser';
 import {useTypedRoute} from '@app/hooks';
 

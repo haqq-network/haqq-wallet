@@ -256,7 +256,7 @@ export const App = () => {
               onStateChange={onStateChange}>
               <Stack.Navigator
                 screenOptions={basicScreenOptions}
-                initialRouteName={'web3Browser'}
+                // initialRouteName={'web3browser'}
                 key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
@@ -267,6 +267,10 @@ export const App = () => {
 
                 {/* Modals group */}
                 <Stack.Group screenOptions={stackScreenOptions}>
+                  <Stack.Screen
+                    name="web3browser"
+                    component={Web3BrowserScreen}
+                  />
                   <Stack.Screen
                     name="mpcMigrate"
                     component={MpcMigrateScreen}
