@@ -72,6 +72,64 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
     return null;
   }
 
+  const onMessage = useCallback(
+    async (event: WebViewMessageEvent) => {
+      event.persist();
+      const isLogHandled = WebViewLogger.handleEvent(event, 'Web3Browser');
+      if (isLogHandled) {
+        return;
+      }
+
+      const isMessageHandled = await responseToEthJRPC({
+        event,
+        webviewRef,
+        getResult: async ({method}) => {
+          switch (method) {
+            case 'metamask_getProviderState': {
+              const provider = Provider.getProvider(user.providerId);
+              const networkVersion = provider?.cosmosChainId?.split('-')[1];
+              const accounts = Wallet.getAllVisible().map(
+                wallet => wallet.accountId,
+              );
+              return {
+                isMetaMask: true,
+                isConnected: true,
+                isUnlocked: true,
+                accounts,
+                chainId: '0x' + provider?.ethChainId!.toString(16),
+                networkVersion: networkVersion,
+              };
+            }
+            case 'eth_requestAccounts': {
+              const wallets = Wallet.getAllVisible();
+              const account = await awaitForWallet(wallets, I18N.selectAccount);
+              return [account];
+            }
+            case 'eth_chainId': {
+              const provider = Provider.getProvider(user.providerId);
+              return provider?.ethChainId;
+            }
+            case 'eth_accounts': {
+              const accounts = Wallet.getAllVisible().map(
+                wallet => wallet.accountId,
+              );
+              return accounts;
+            }
+          }
+        },
+      });
+
+      if (!isMessageHandled) {
+        console.log('⚪️ onMessage', event?.nativeEvent?.data);
+      }
+    },
+    [user.providerId],
+  );
+
+  if (!inpageBridgeWeb3) {
+    return null;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.urls}>

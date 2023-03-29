@@ -268,6 +268,10 @@ export const App = () => {
                 {/* Modals group */}
                 <Stack.Group screenOptions={stackScreenOptions}>
                   <Stack.Screen
+                    name="web3browser"
+                    component={Web3BrowserScreen}
+                  />
+                  <Stack.Screen
                     name="mpcMigrate"
                     component={MpcMigrateScreen}
                   />
