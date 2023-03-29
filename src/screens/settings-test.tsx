@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
@@ -9,8 +9,10 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {useTypedNavigation} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {pushNotifications} from '@app/services/push-notifications';
+import {isValidUrl} from '@app/utils';
 
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
@@ -35,7 +37,9 @@ messaging()
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [wc, setWc] = useState('');
-
+  const [browserUrl, setBrobserUrl] = useState('');
+  const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
+  const navigation = useTypedNavigation();
   const iCloud = useRef(new Cloud()).current;
 
   const onPressRequestPermissions = async () => {
@@ -50,6 +54,10 @@ export const SettingsTestScreen = () => {
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
+  };
+
+  const onPressOpenBrowser = () => {
+    navigation.navigate('web3browser', {url: browserUrl});
   };
 
   const checkICloudFile = useCallback(async () => {
@@ -100,6 +108,19 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
+      <Input
+        placeholder="https://app.haqq.network"
+        value={browserUrl}
+        onChangeText={setBrobserUrl}
+      />
+      <Spacer height={5} />
+      <Button
+        title="Open web3 browser"
+        disabled={!isValidBrowserUrl}
+        onPress={onPressOpenBrowser}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={5} />
       <Button
         title="Show modal"
         onPress={() => showModal('ledger-locked')}
@@ -129,7 +150,7 @@ export const SettingsTestScreen = () => {
         onPress={() => removeICloudFile()}
         variant={ButtonVariant.contained}
       />
-
+      <Spacer height={8} />
       <Button
         title="Show captcha"
         onPress={async () => {

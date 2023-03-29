@@ -14,6 +14,7 @@ import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
+import com.rnfs.RNFSPackage; 
 
 class MainApplication : Application(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost = object : ReactNativeHost(this) {
@@ -29,7 +30,8 @@ class MainApplication : Application(), ReactApplication {
       packages.add(VersionPackage())
       packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
-      packages.add(CloudPackage())
+      packages.add(RNFSPackage())
+      
       return packages
     }
 

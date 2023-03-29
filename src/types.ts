@@ -73,6 +73,9 @@ export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
+  web3browser: {
+    url: string;
+  };
   homeSettings:
     | undefined
     | {
