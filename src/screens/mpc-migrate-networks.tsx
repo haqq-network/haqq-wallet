@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {initializeTKey} from '@haqq/provider-mpc-react-native';
+import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {MpcMigrateNetworks} from '@app/components/mpc-migrate-networks';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -9,8 +9,6 @@ import {
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
-  serviceProviderOptions,
-  storageLayerOptions,
 } from '@app/services/provider-mpc';
 
 export const MpcMigrateNetworksScreen = () => {
@@ -19,39 +17,38 @@ export const MpcMigrateNetworksScreen = () => {
 
   const onLogin = useCallback(
     async (provider: MpcProviders) => {
-      let privateKey: string | null = null;
+      let creds;
       switch (provider) {
         case MpcProviders.apple:
-          privateKey = await onLoginApple();
+          creds = await onLoginApple();
           break;
         case MpcProviders.google:
-          privateKey = await onLoginGoogle();
+          creds = await onLoginGoogle();
           break;
         case MpcProviders.custom:
-          privateKey = await onLoginCustom();
+          creds = await onLoginCustom();
           break;
       }
-      if (privateKey) {
-        try {
-          const {securityQuestionsModule} = await initializeTKey(
-            privateKey,
-            serviceProviderOptions as any,
-            storageLayerOptions,
-          );
+      if (creds.privateKey) {
+        const walletInfo = await getMetadataValue(
+          'https://localhost:8069',
+          creds.privateKey,
+          'walletInfo',
+        );
 
-          securityQuestionsModule.getSecurityQuestions();
-          navigation.navigate('mpcMigrateRewrite', {
-            accountId: route.params.accountId,
-            privateKey,
-            provider,
-            email: '',
-          });
-        } catch (e) {
-          navigation.navigate('mpcMigrateStore', {
-            accountId: route.params.accountId,
-            privateKey,
-          });
-        }
+        console.log('walletInfo', JSON.stringify(walletInfo));
+
+        const nextScreen = walletInfo ? 'mpcMigrateRewrite' : 'mpcMigrateStore';
+
+        // @ts-ignore
+        navigation.navigate(nextScreen, {
+          accountId: route.params.accountId,
+          privateKey: creds.privateKey,
+          token: creds.token,
+          verifier: creds.verifier,
+          provider,
+          email: '',
+        });
       }
     },
     [navigation, route.params.accountId],

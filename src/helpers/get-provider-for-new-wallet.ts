@@ -3,11 +3,9 @@ import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
+import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {WalletInitialData} from '@app/types';
+import {GENERATE_SHARES_URL, METADATA_URL} from '@app/variables/common';
 
 export async function getProviderForNewWallet(params: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
@@ -16,16 +14,18 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
     if (params.type === 'mpc') {
       const storage = await getProviderStorage('', 'cloud');
 
-      return await ProviderMpcReactNative.initialize(
+      return await providerMpcInitialize(
         params.mpcPrivateKey,
-        params.mpcSecurityQuestion || null,
         params.mpcCloudShare || null,
         null,
+        params.verifier,
+        params.token,
         app.getPassword.bind(app),
         storage,
-        serviceProviderOptions as any,
-        storageLayerOptions,
-        {},
+        {
+          metadataUrl: METADATA_URL,
+          generateSharesUrl: GENERATE_SHARES_URL,
+        },
       );
     }
   }

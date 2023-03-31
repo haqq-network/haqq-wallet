@@ -64,8 +64,9 @@ export type WalletInitialData =
   | {
       type: 'mpc';
       mpcPrivateKey: string;
-      mpcSecurityQuestion: string | null;
       mpcCloudShare: string | null;
+      verifier: string;
+      token: string;
     }
   | {type: 'empty'};
 
@@ -111,6 +112,8 @@ export type RootStackParamList = {
   mpcMigrateStore: {
     accountId: string;
     privateKey: string;
+    verifier: string;
+    token: string;
   };
 
   mpcMigrateRewrite: {
@@ -118,6 +121,8 @@ export type RootStackParamList = {
     privateKey: string;
     provider: MpcProviders;
     email?: string;
+    verifier: string;
+    token: string;
   };
   detailsQr: {address: string};
   settingsTheme: undefined;

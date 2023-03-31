@@ -6,13 +6,16 @@ import {
   MPC_NETWORK,
   MPC_STORE_URL,
 } from '@env';
-import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {
-  default as FetchNodeDetails,
-  default as NodeDetailManager,
-} from '@toruslabs/fetch-node-details';
-import TorusUtils from '@toruslabs/torus.js';
-import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
+  Share,
+  ShareEncrypted,
+  lagrangeInterpolation,
+} from '@haqq/provider-mpc-react-native';
+import {hashPasswordToBN} from '@haqq/provider-mpc-react-native/dist/hash-password-to-bn';
+import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
+import {jsonrpcRequest} from '@haqq/shared-react-native';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
+import BN from 'bn.js';
 import {Platform} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
@@ -35,6 +38,29 @@ export enum MpcProviders {
   google = 'google',
   apple = 'apple',
   custom = 'custom',
+}
+
+const curveN = new BN(
+  'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141',
+  'hex',
+);
+
+export async function encryptShare(
+  share: Share,
+  password: string,
+): Promise<ShareEncrypted> {
+  const hash = await hashPasswordToBN(password);
+  let nonce = new BN(share.share, 'hex').sub(hash);
+  nonce = nonce.umod(curveN);
+
+  const publicShare = await accountInfo(share.share);
+
+  return {
+    nonce: nonce.toString('hex'),
+    publicShare: publicShare.publicKey,
+    shareIndex: share.shareIndex,
+    polynomialID: share.polynomialID,
+  };
 }
 
 export async function onLoginCustom() {
@@ -67,8 +93,7 @@ export async function onLoginCustom() {
   const authState = await token.json();
 
   const authInfo = parseJwt(authState.idToken);
-
-  return await onAuthorized('haqq-test', authInfo.sub, authState.idToken);
+  return await onAuthorized('custom', authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {
@@ -83,65 +108,6 @@ export async function onLoginGoogle() {
     authInfo.email,
     authState.idToken,
   );
-}
-
-const proxyAddress = (() => {
-  switch (MPC_NETWORK) {
-    case 'testnet':
-      return NodeDetailManager.PROXY_ADDRESS_TESTNET;
-    case 'mainnet':
-      return NodeDetailManager.PROXY_ADDRESS_MAINNET;
-    case 'cyan':
-      return NodeDetailManager.PROXY_ADDRESS_CYAN;
-    case 'aqua':
-      return NodeDetailManager.PROXY_ADDRESS_AQUA;
-    case 'celeste':
-      return NodeDetailManager.PROXY_ADDRESS_CELESTE;
-  }
-})();
-
-export async function onAuthorized(
-  verifier: string,
-  verifierId: string,
-  token: string,
-) {
-  const fetchNodeDetails = new FetchNodeDetails({
-    network: MPC_NETWORK,
-    proxyAddress,
-  });
-
-  const torus = new TorusUtils({
-    network: MPC_NETWORK,
-  });
-
-  const nodeDetails = await fetchNodeDetails.getNodeDetails({
-    verifier: verifier,
-    verifierId: verifierId,
-  });
-
-  const torusPubKey = (await torus.getPublicAddress(
-    nodeDetails.torusNodeEndpoints,
-    nodeDetails.torusNodePub,
-    {
-      verifier,
-      verifierId,
-    },
-    true,
-  )) as TorusPublicKey;
-
-  if (torusPubKey.typeOfUser === 'v1') {
-    await torus.getOrSetNonce(torusPubKey.X, torusPubKey.Y);
-  }
-
-  const keyData = await torus.retrieveShares(
-    nodeDetails.torusNodeEndpoints,
-    nodeDetails.torusIndexes,
-    verifier,
-    {verifier_id: verifierId},
-    token,
-  );
-
-  return keyData.privKey;
 }
 
 export async function onLoginApple() {
@@ -159,4 +125,57 @@ export async function onLoginApple() {
   const authInfo = parseJwt(identityToken);
 
   return await onAuthorized(MPC_APPLE, authInfo.email, identityToken);
+}
+
+export type Creds = {
+  token: string;
+  verifier: string;
+  privateKey: string | null;
+};
+
+/**
+ * Fetch private key from shares
+ * @param verifier
+ * @param verifierId
+ * @param token
+ */
+export async function onAuthorized(
+  verifier: string,
+  verifierId: string,
+  token: string,
+): Promise<Creds> {
+  const creds: Creds = {
+    token: token,
+    verifier: verifier,
+    privateKey: null,
+  };
+
+  const nodeDetailsRequest = await jsonrpcRequest<{
+    isNew: boolean;
+    shares: [string, string][];
+  }>('http://localhost:8069', 'shares', [verifier, token, false]);
+
+  const tmpPk = await generateEntropy(32);
+  const shares = await Promise.all(
+    nodeDetailsRequest.shares.map(s =>
+      jsonrpcRequest<{key: string; hex_share: string}>(s[0], 'shareRequest', [
+        verifier,
+        token,
+        tmpPk.toString('hex'),
+      ])
+        .then(r => [r.hex_share, s[1]])
+        .catch(() => [null, s[1]]),
+    ),
+  );
+
+  const shares2 = shares.filter(s => s[0] !== null) as [string, string][];
+
+  if (shares2.length) {
+    creds.privateKey = lagrangeInterpolation(
+      shares2.map(s => new BN(s[0], 'hex')),
+      shares2.map(s => new BN(s[1], 'hex')),
+    ).toString('hex');
+  }
+
+  return creds;
 }

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {initializeTKey} from '@haqq/provider-mpc-react-native';
+import {getMetadataValue} from '@haqq/shared-react-native';
 import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
@@ -11,8 +11,6 @@ import {
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
-  serviceProviderOptions,
-  storageLayerOptions,
 } from '@app/services/provider-mpc';
 
 export const SignupNetworksScreen = () => {
@@ -21,47 +19,47 @@ export const SignupNetworksScreen = () => {
 
   const onLogin = useCallback(
     async (provider: MpcProviders) => {
-      let privateKey: string | null = null;
+      let creds;
       switch (provider) {
         case MpcProviders.apple:
-          privateKey = await onLoginApple();
+          creds = await onLoginApple();
           break;
         case MpcProviders.google:
-          privateKey = await onLoginGoogle();
+          creds = await onLoginGoogle();
           break;
         case MpcProviders.custom:
-          privateKey = await onLoginCustom();
+          creds = await onLoginCustom();
           break;
       }
-      if (privateKey) {
-        try {
-          const {securityQuestionsModule} = await initializeTKey(
-            privateKey,
-            serviceProviderOptions as any,
-            storageLayerOptions,
-          );
 
-          securityQuestionsModule.getSecurityQuestions();
-          navigation.navigate('signupNetworkExists', {
-            type: 'mpc',
-            mpcPrivateKey: privateKey,
-            mpcSecurityQuestion: null,
-            mpcCloudShare: null,
-            provider: provider,
-          });
-        } catch (e) {
-          const nextScreen = user.onboarded
-            ? 'signupStoreWallet'
-            : 'onboardingSetupPin';
+      console.log('creds', creds);
 
-          navigation.navigate(nextScreen, {
-            type: 'mpc',
-            mpcPrivateKey: privateKey,
-            mpcSecurityQuestion: null,
-            mpcCloudShare: null,
-          });
+      let nextScreen = user.onboarded
+        ? 'signupStoreWallet'
+        : 'onboardingSetupPin';
+
+      if (creds.privateKey) {
+        const walletInfo = await getMetadataValue(
+          'http://localhost:8069/',
+          creds.privateKey,
+          'walletInfo',
+        );
+
+        console.log('walletInfo', JSON.stringify(walletInfo));
+
+        if (walletInfo) {
+          nextScreen = 'signupNetworkExists';
         }
       }
+      // @ts-ignore
+      navigation.navigate(nextScreen, {
+        type: 'mpc',
+        mpcPrivateKey: creds.privateKey,
+        token: creds.token,
+        verifier: creds.verifier,
+        mpcCloudShare: null,
+        provider: provider,
+      });
     },
     [navigation, user.onboarded],
   );

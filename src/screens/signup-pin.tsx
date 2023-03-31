@@ -37,7 +37,6 @@ export const SignupPinScreen = () => {
 
           navigation.navigate(nextScreen, {
             ...route.params,
-            mpcSecurityQuestion: password,
           });
         } catch (e) {
           if (e instanceof Error) {

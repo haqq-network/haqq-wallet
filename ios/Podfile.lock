@@ -212,7 +212,7 @@ PODS:
   - HaqqEncryptionRN (0.0.2):
     - CryptoSwift (= 1.5.1)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.9):
+  - HaqqWeb3UtilsRN (0.0.10):
     - CryptoSwift (= 1.5.1)
     - React-Core
     - secp256k1Swift (= 0.7.4)
@@ -1039,7 +1039,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   HaqqEncryptionRN: ee89cc23922410e37d1af81b699f944891dfa9b3
-  HaqqWeb3UtilsRN: c21e06d46ea96fb562fa57fc0a98f7ef8b925ebe
+  HaqqWeb3UtilsRN: 8daa45cc21555035b496b8530c41d0d307a87908
   hermes-engine: a1f157c49ea579c28b0296bda8530e980c45bdb3
   JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913

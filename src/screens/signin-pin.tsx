@@ -32,16 +32,21 @@ export const SignInPinScreen = () => {
             password,
           );
 
-          const nextScreen = user.onboarded
-            ? 'signinStoreWallet'
-            : 'onboardingSetupPin';
-
-          navigation.navigate(nextScreen, {
-            type: 'mpc',
-            mpcPrivateKey: route.params.mpcPrivateKey,
-            mpcSecurityQuestion: password,
-            mpcCloudShare: null,
-          });
+          if (user.onboarded) {
+            navigation.navigate('signinStoreWallet', {
+              ...route.params,
+              type: 'mpc',
+              mpcPrivateKey: route.params.mpcPrivateKey,
+              mpcCloudShare: null,
+            });
+          } else {
+            navigation.navigate('onboardingSetupPin', {
+              ...route.params,
+              type: 'mpc',
+              mpcPrivateKey: route.params.mpcPrivateKey,
+              mpcCloudShare: null,
+            });
+          }
         } catch (e) {
           vibrate(HapticEffects.error);
           pinRef.current?.reset?.();

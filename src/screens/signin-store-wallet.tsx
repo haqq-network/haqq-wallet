@@ -85,7 +85,6 @@ export const SignInStoreWalletScreen = () => {
 
             const mpcProvider = await ProviderMpcReactNative.initialize(
               params.mpcPrivateKey,
-              params.mpcSecurityQuestion || null,
               params.mpcCloudShare || null,
               null,
               app.getPassword.bind(app),

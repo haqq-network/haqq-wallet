@@ -1,5 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
+import {CUSTOM_JWT_TOKEN} from '@env';
+import {accountInfo} from '@haqq/provider-web3-utils';
+import {getMetadataValue} from '@haqq/shared-react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {Alert, Linking, ScrollView} from 'react-native';
@@ -9,8 +12,13 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {parseJwt} from '@app/helpers/parse-jwt';
 import {Cloud} from '@app/services/cloud';
+import {onAuthorized} from '@app/services/provider-mpc';
+import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {pushNotifications} from '@app/services/push-notifications';
+import {ETH_HD_PATH, METADATA_URL} from '@app/variables/common';
 
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
@@ -72,6 +80,72 @@ export const SettingsTestScreen = () => {
     console.log('remove', content);
   }, [iCloud]);
 
+  const onPressMPC = useCallback(async () => {
+    const token = await fetch(CUSTOM_JWT_TOKEN, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        email: 'andrey@haqq',
+      }),
+    });
+
+    const authState = await token.json();
+
+    const authInfo = parseJwt(authState.idToken);
+    const creds = await onAuthorized('custom', authInfo.sub, authState.idToken);
+
+    let cloudShare = null;
+
+    if (creds.privateKey) {
+      console.log('creds.privateKey', creds.privateKey);
+      const walletInfo = await getMetadataValue(
+        METADATA_URL,
+        creds.privateKey,
+        'socialShareIndex',
+      );
+
+      if (walletInfo) {
+        console.log('walletInfo', walletInfo);
+
+        const supported = await Cloud.isEnabled();
+
+        if (supported) {
+          const cloud = new Cloud();
+
+          const account = await accountInfo(creds.privateKey);
+          console.log(
+            'account.address',
+            `haqq_${account.address.toLowerCase()}`,
+          );
+          cloudShare = await cloud.getItem(
+            `haqq_${account.address.toLowerCase()}`,
+          );
+        }
+      }
+    }
+
+    const storage = await getProviderStorage();
+    const provider = await providerMpcInitialize(
+      creds.privateKey,
+      cloudShare,
+      null,
+      creds.verifier,
+      creds.token,
+      app.getPassword.bind(app),
+      storage,
+      {},
+    );
+
+    console.log('provider', provider);
+
+    const message = await provider.signPersonalMessage(ETH_HD_PATH, 'test');
+
+    console.log('message', message);
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       {initialUrl && (
@@ -107,6 +181,12 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
+        title="MPC"
+        onPress={() => onPressMPC()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
         title="check cloud"
         onPress={() => checkICloudFile()}
         variant={ButtonVariant.contained}
@@ -129,7 +209,6 @@ export const SettingsTestScreen = () => {
         onPress={() => removeICloudFile()}
         variant={ButtonVariant.contained}
       />
-
       <Button
         title="Show captcha"
         onPress={async () => {
