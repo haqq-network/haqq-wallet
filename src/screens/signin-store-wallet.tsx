@@ -12,12 +12,12 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
-import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {
+  GENERATE_SHARES_URL,
+  MAIN_ACCOUNT_NAME,
+  METADATA_URL,
+} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
@@ -85,13 +85,16 @@ export const SignInStoreWalletScreen = () => {
 
             const mpcProvider = await ProviderMpcReactNative.initialize(
               params.mpcPrivateKey,
-              params.mpcCloudShare || null,
+              params.mpcCloudShare,
               null,
+              params.verifier,
+              params.token,
               app.getPassword.bind(app),
               storage,
-              serviceProviderOptions as any,
-              storageLayerOptions,
-              {},
+              {
+                metadataUrl: METADATA_URL,
+                generateSharesUrl: GENERATE_SHARES_URL,
+              },
             );
 
             await createWalletsForProvider(mpcProvider, WalletType.mpc);

@@ -63,7 +63,7 @@ export type WalletInitialData =
     }
   | {
       type: 'mpc';
-      mpcPrivateKey: string;
+      mpcPrivateKey: string | null;
       mpcCloudShare: string | null;
       verifier: string;
       token: string;

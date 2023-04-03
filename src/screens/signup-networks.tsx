@@ -12,6 +12,7 @@ import {
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-mpc';
+import {METADATA_URL} from '@app/variables/common';
 
 export const SignupNetworksScreen = () => {
   const navigation = useTypedNavigation();
@@ -32,20 +33,16 @@ export const SignupNetworksScreen = () => {
           break;
       }
 
-      console.log('creds', creds);
-
       let nextScreen = user.onboarded
         ? 'signupStoreWallet'
         : 'onboardingSetupPin';
 
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
-          'http://localhost:8069/',
+          METADATA_URL,
           creds.privateKey,
-          'walletInfo',
+          'socialShareIndex',
         );
-
-        console.log('walletInfo', JSON.stringify(walletInfo));
 
         if (walletInfo) {
           nextScreen = 'signupNetworkExists';

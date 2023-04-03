@@ -22,7 +22,7 @@
     "@haqq/provider-hot-react-native": "0.0.5",
     "@haqq/provider-ledger-react-native": "0.0.18",
     "@haqq/provider-mnemonic-react-native": "0.0.5",
-    "@haqq/provider-mpc-react-native": "0.0.6-beta.2",
+    "@haqq/provider-mpc-react-native": "0.0.6-beta.3",
     "@haqq/provider-web3-utils": "0.0.11",
     "@haqq/shared-react-native": "0.0.2-beta.2",
     "@invertase/react-native-apple-authentication": "^2.2.2",

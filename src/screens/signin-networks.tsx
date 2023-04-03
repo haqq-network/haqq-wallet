@@ -4,6 +4,7 @@ import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {SigninNetworks} from '@app/components/signin-networks';
+import {MpcError} from '@app/helpers/mpc-error';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {
@@ -12,7 +13,7 @@ import {
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-mpc';
-import {RootStackParamList, WalletInitialData} from '@app/types';
+import {METADATA_URL} from '@app/variables/common';
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
@@ -32,56 +33,62 @@ export const SignInNetworksScreen = () => {
           creds = await onLoginCustom();
           break;
       }
-      console.log('creds', creds);
 
-      if (creds) {
-        let nextScreen: string = '';
-        let nextParams: WalletInitialData = {
+      try {
+        if (!creds.privateKey) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const walletInfo = await getMetadataValue(
+          METADATA_URL,
+          creds.privateKey,
+          'socialShareIndex',
+        );
+
+        if (!walletInfo) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const supported = await Cloud.isEnabled();
+        if (!supported) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const cloud = new Cloud();
+
+        const account = await accountInfo(creds.privateKey as string);
+
+        const share = await cloud.getItem(
+          `haqq_${account.address.toLowerCase()}`,
+        );
+
+        if (!share) {
+          throw new MpcError('signinNotRecovery');
+        }
+
+        const nextScreen = user.onboarded
+          ? 'signinStoreWallet'
+          : 'onboardingSetupPin';
+
+        navigation.navigate(nextScreen, {
           type: 'mpc',
           mpcPrivateKey: creds.privateKey,
           token: creds.token,
           verifier: creds.verifier,
-          mpcCloudShare: null,
-        };
-
-        const walletInfo = await getMetadataValue(
-          'http://localhost:8069',
-          creds.privateKey,
-          'walletInfo',
-        );
-
-        if (!walletInfo) {
-          throw new Error('Wallet info not found');
-        }
-
-        const supported = await Cloud.isEnabled();
-
-        if (!supported) {
-          nextScreen = 'signinNotExists';
-        } else {
-          const cloud = new Cloud();
-
-          const account = await accountInfo(creds.privateKey);
-
-          const share = await cloud.getItem(
-            `haqq_${account.address.toLowerCase()}`,
-          );
-
-          if (!share) {
-            nextScreen = 'signinNotRecovery';
-          } else {
-            nextScreen = user.onboarded
-              ? 'signinStoreWallet'
-              : 'onboardingSetupPin';
-
-            nextParams.mpcCloudShare = share;
-          }
-        }
-        navigation.navigate(
+          mpcCloudShare: share,
+        });
+      } catch (e) {
+        console.log('error', e, e instanceof MpcError);
+        if (e instanceof MpcError) {
           // @ts-ignore
-          nextScreen as keyof RootStackParamList,
-          nextParams,
-        );
+          navigation.navigate(e.message, {
+            type: 'mpc',
+            mpcPrivateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            mpcCloudShare: null,
+          });
+        }
       }
     },
     [navigation, user.onboarded],
