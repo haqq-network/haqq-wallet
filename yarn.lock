@@ -3022,6 +3022,11 @@
   resolved "https://registry.yarnpkg.com/@types/punycode/-/punycode-2.1.0.tgz#89e4f3d09b3f92e87a80505af19be7e0c31d4e83"
   integrity sha512-PG5aLpW6PJOeV2fHRslP4IOMWn+G+Uq8CfnyJ+PDS8ndCbU+soO+fB3NKCKo0p/Jh2Y4aPaiQZsrOXFdzpcA6g==
 
+"@types/punycode@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/punycode/-/punycode-2.1.0.tgz#89e4f3d09b3f92e87a80505af19be7e0c31d4e83"
+  integrity sha512-PG5aLpW6PJOeV2fHRslP4IOMWn+G+Uq8CfnyJ+PDS8ndCbU+soO+fB3NKCKo0p/Jh2Y4aPaiQZsrOXFdzpcA6g==
+
 "@types/randombytes@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/randombytes/-/randombytes-2.0.0.tgz#0087ff5e60ae68023b9bc4398b406fea7ad18304"
