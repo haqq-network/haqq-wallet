@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
@@ -10,10 +11,6 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -33,14 +30,13 @@ export const MpcStoreWalletScreen = () => {
 
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,
-          route.params.questionAnswer,
           route.params.cloudShare,
           null,
+          route.params.verifier,
+          route.params.token,
           app.getPassword.bind(app),
           storage,
-          serviceProviderOptions as any,
-          storageLayerOptions,
-          {},
+          {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
         );
 
         let canNext = true;
@@ -98,13 +94,7 @@ export const MpcStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [
-    navigation,
-    route.params.cloudShare,
-    route.params.privateKey,
-    route.params.questionAnswer,
-    wallets,
-  ]);
+  }, [navigation, route, wallets]);
 
   return <></>;
 };

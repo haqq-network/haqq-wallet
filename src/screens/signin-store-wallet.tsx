@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
@@ -13,11 +14,7 @@ import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
-import {
-  GENERATE_SHARES_URL,
-  MAIN_ACCOUNT_NAME,
-  METADATA_URL,
-} from '@app/variables/common';
+import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = () => {
   const navigation = useTypedNavigation();

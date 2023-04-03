@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 
+import {METADATA_URL} from '@env';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {MpcMigrateNetworks} from '@app/components/mpc-migrate-networks';
@@ -31,12 +32,10 @@ export const MpcMigrateNetworksScreen = () => {
       }
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
-          'https://localhost:8069',
+          METADATA_URL,
           creds.privateKey,
-          'walletInfo',
+          'socialShareIndex',
         );
-
-        console.log('walletInfo', JSON.stringify(walletInfo));
 
         const nextScreen = walletInfo ? 'mpcMigrateRewrite' : 'mpcMigrateStore';
 

@@ -398,6 +398,8 @@ export type RootStackParamList = {
     privateKey: string;
     cloudShare: string | null;
     questionAnswer: string | null;
+    token: string;
+    verifier: string;
   };
   mpcFinish: undefined;
   walletProtectionPopup: {

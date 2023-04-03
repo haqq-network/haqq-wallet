@@ -1,3 +1,4 @@
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
@@ -5,7 +6,6 @@ import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {WalletInitialData} from '@app/types';
-import {GENERATE_SHARES_URL, METADATA_URL} from '@app/variables/common';
 
 export async function getProviderForNewWallet(params: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);

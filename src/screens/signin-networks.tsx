@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 
+import {METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
@@ -13,7 +14,6 @@ import {
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-mpc';
-import {METADATA_URL} from '@app/variables/common';
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();

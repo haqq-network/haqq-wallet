@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {CUSTOM_JWT_TOKEN} from '@env';
+import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -18,7 +18,7 @@ import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {pushNotifications} from '@app/services/push-notifications';
-import {ETH_HD_PATH, METADATA_URL} from '@app/variables/common';
+import {ETH_HD_PATH} from '@app/variables/common';
 
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
@@ -136,7 +136,7 @@ export const SettingsTestScreen = () => {
       creds.token,
       app.getPassword.bind(app),
       storage,
-      {},
+      {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
     );
 
     console.log('provider', provider);

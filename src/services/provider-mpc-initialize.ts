@@ -3,6 +3,7 @@ import {
   Polynomial,
   ProviderMpcReactNative,
   StorageInterface,
+  encryptShare,
   lagrangeInterpolation,
 } from '@haqq/provider-mpc-react-native';
 import {ITEM_KEY} from '@haqq/provider-mpc-react-native/dist/constants';
@@ -14,8 +15,6 @@ import {
 } from '@haqq/shared-react-native';
 import BN from 'bn.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
-import {encryptShare} from '@app/services/provider-mpc';
 
 export type SharesResponse = {
   isNew: boolean;

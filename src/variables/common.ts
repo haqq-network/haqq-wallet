@@ -173,8 +173,6 @@ export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';
 
 export const PRIVACY_POLICY = 'https://boredgen.net/privacy_policy';
 
-export const METADATA_URL = 'http://localhost:8068';
-export const GENERATE_SHARES_URL = 'http://localhost:8069';
 export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
 

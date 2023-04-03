@@ -1,18 +1,12 @@
 import {
   CUSTOM_JWT_TOKEN,
+  GENERATE_SHARES_URL,
   MPC_APPLE,
   MPC_GOOGLE_ANDROID,
   MPC_GOOGLE_IOS,
-  MPC_NETWORK,
-  MPC_STORE_URL,
 } from '@env';
-import {
-  Share,
-  ShareEncrypted,
-  lagrangeInterpolation,
-} from '@haqq/provider-mpc-react-native';
-import {hashPasswordToBN} from '@haqq/provider-mpc-react-native/dist/hash-password-to-bn';
-import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
+import {lagrangeInterpolation} from '@haqq/provider-mpc-react-native';
+import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
@@ -22,45 +16,10 @@ import prompt from 'react-native-prompt-android';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
 
-export const serviceProviderOptions = {
-  customAuthArgs: {
-    baseUrl: 'http://localhost:3000/serviceworker/',
-    enableLogging: true,
-    network: MPC_NETWORK,
-  },
-};
-
-export const storageLayerOptions = {
-  hostUrl: MPC_STORE_URL,
-};
-
 export enum MpcProviders {
   google = 'google',
   apple = 'apple',
   custom = 'custom',
-}
-
-const curveN = new BN(
-  'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141',
-  'hex',
-);
-
-export async function encryptShare(
-  share: Share,
-  password: string,
-): Promise<ShareEncrypted> {
-  const hash = await hashPasswordToBN(password);
-  let nonce = new BN(share.share, 'hex').sub(hash);
-  nonce = nonce.umod(curveN);
-
-  const publicShare = await accountInfo(share.share);
-
-  return {
-    nonce: nonce.toString('hex'),
-    publicShare: publicShare.publicKey,
-    shareIndex: share.shareIndex,
-    polynomialID: share.polynomialID,
-  };
 }
 
 export async function onLoginCustom() {
@@ -153,7 +112,7 @@ export async function onAuthorized(
   const nodeDetailsRequest = await jsonrpcRequest<{
     isNew: boolean;
     shares: [string, string][];
-  }>('http://localhost:8069', 'shares', [verifier, token, false]);
+  }>(GENERATE_SHARES_URL, 'shares', [verifier, token, false]);
 
   const tmpPk = await generateEntropy(32);
   const shares = await Promise.all(
