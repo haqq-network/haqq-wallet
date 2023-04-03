@@ -31,7 +31,7 @@ export function WalletsBottomSheet({
     [app, eventSuffix],
   );
   const onClose = () => {
-    app.emit(`wallet-bottom-sheet-close${eventSuffix}`);
+    app.emit(`wallet-selected-reject${eventSuffix}`);
     hideModal();
   };
 
@@ -40,7 +40,11 @@ export function WalletsBottomSheet({
       onPressWallet(wallets[0].address);
       hideModal();
     }
-  }, [wallets, onPressWallet]);
+
+    return () => {
+      app.emit(`wallet-selected-reject${eventSuffix}`);
+    };
+  }, [wallets, onPressWallet, app, eventSuffix]);
 
   return (
     <BottomSheet

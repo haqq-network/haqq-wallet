@@ -84,6 +84,7 @@ export const HomeFeedScreen = () => {
       user.off('change', onTransactionList);
     };
   }, [onTransactionList, transactions, user, wallets]);
+
   return (
     <HomeFeed
       transactionsList={transactionsList}

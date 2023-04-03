@@ -1,3 +1,2 @@
-export * from './EntryScriptWeb3';
-export * from './get-window-information';
-export * from './SPA-url-change-listener';
+export * from './inpage-bridge-web3';
+export * from './webview-events-js';

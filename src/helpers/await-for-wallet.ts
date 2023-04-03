@@ -12,6 +12,13 @@ export enum WalletSelectType {
   screen = 'screen',
 }
 
+export class AwaitForWalletError {
+  message?: string;
+  constructor(message?: string) {
+    this.message = message;
+  }
+}
+
 export async function awaitForWallet(
   wallets: Wallet[] | Results<Wallet>,
   title: I18N,
@@ -22,13 +29,24 @@ export async function awaitForWallet(
     return Promise.resolve(wallets[0].address);
   }
 
-  return new Promise(resolve => {
-    const onAction = (address: string) => {
+  return new Promise((resolve, reject) => {
+    const removeAllListeners = () => {
       app.removeListener('wallet-selected', onAction);
+      app.removeListener('wallet-selected-reject', onReject);
+    };
+
+    const onAction = (address: string) => {
+      removeAllListeners();
       resolve(address);
     };
 
+    const onReject = () => {
+      removeAllListeners();
+      reject(new AwaitForWalletError('rejected by user'));
+    };
+
     app.addListener('wallet-selected', onAction);
+    app.addListener('wallet-selected-reject', onReject);
 
     switch (type) {
       case WalletSelectType.screen: {

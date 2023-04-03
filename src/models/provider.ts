@@ -32,6 +32,14 @@ export class Provider extends Realm.Object {
   explorer: string | undefined;
   isEditable!: boolean;
 
+  get ethChainIdHex() {
+    return '0x' + this.ethChainId.toString(16);
+  }
+
+  get networkVersion() {
+    return this.cosmosChainId.split('-')[1];
+  }
+
   get rpcProvider() {
     return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
       chainId: this.ethChainId,
@@ -69,6 +77,18 @@ export class Provider extends Realm.Object {
 
   static getProvider(providerId: string) {
     return realm.objectForPrimaryKey<Provider>('Provider', providerId);
+  }
+
+  static getByChainId(
+    ethChainId: number,
+  ): (Provider & Realm.Object<unknown, never>) | null {
+    return Provider.getProviders()?.filtered?.(
+      `ethChainId = '${ethChainId}'`,
+    )?.[0];
+  }
+
+  static getByChainIdHex(ethChainIdHex: string) {
+    return Provider.getByChainId(parseInt(ethChainIdHex, 16));
   }
 
   update(params: Partial<Provider>) {

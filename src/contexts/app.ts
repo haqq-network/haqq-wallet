@@ -124,6 +124,10 @@ class App extends EventEmitter {
     }
   }
 
+  get isUnlocked() {
+    return this.authenticated || false;
+  }
+
   get bluetooth() {
     return this.user?.bluetooth || false;
   }

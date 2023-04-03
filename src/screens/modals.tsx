@@ -128,7 +128,6 @@ export const Modals = ({initialModal = null}: ModalProps) => {
     const showModal = (event: ModalState) => {
       if (event && modal?.type !== event.type) {
         setModal(event);
-        console.log('modal', JSON.stringify(event));
       }
     };
 
