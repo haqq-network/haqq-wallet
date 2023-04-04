@@ -20,4 +20,7 @@ declare module '@env' {
   export const MPC_GOOGLE_IOS: string;
   export const MPC_GOOGLE_ANDROID: string;
   export const MPC_APPLE: string;
+  export const MPC_CUSTOM: string;
+  export const METADATA_URL: string;
+  export const GENERATE_SHARES_URL: string;
 }

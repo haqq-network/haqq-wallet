@@ -17,7 +17,7 @@ export const SignupNetworkExistsScreen = () => {
     let nextScreen: string = '';
     let nextParams: WalletInitialData = route.params;
 
-    if (nextParams.type !== 'mpc') {
+    if (nextParams.type !== 'mpc' || !nextParams.mpcPrivateKey) {
       return;
     }
 

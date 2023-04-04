@@ -1,35 +1,21 @@
 import {
   CUSTOM_JWT_TOKEN,
+  GENERATE_SHARES_URL,
   MPC_APPLE,
+  MPC_CUSTOM,
   MPC_GOOGLE_ANDROID,
   MPC_GOOGLE_IOS,
-  MPC_NETWORK,
-  MPC_STORE_URL,
 } from '@env';
+import {lagrangeInterpolation} from '@haqq/provider-mpc-react-native';
+import {generateEntropy} from '@haqq/provider-web3-utils';
+import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import {
-  default as FetchNodeDetails,
-  default as NodeDetailManager,
-} from '@toruslabs/fetch-node-details';
-import TorusUtils from '@toruslabs/torus.js';
-import {TorusPublicKey} from '@toruslabs/torus.js/src/interfaces';
+import BN from 'bn.js';
 import {Platform} from 'react-native';
 import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
-
-export const serviceProviderOptions = {
-  customAuthArgs: {
-    baseUrl: 'http://localhost:3000/serviceworker/',
-    enableLogging: true,
-    network: MPC_NETWORK,
-  },
-};
-
-export const storageLayerOptions = {
-  hostUrl: MPC_STORE_URL,
-};
 
 export enum MpcProviders {
   google = 'google',
@@ -67,8 +53,7 @@ export async function onLoginCustom() {
   const authState = await token.json();
 
   const authInfo = parseJwt(authState.idToken);
-
-  return await onAuthorized('haqq-test', authInfo.sub, authState.idToken);
+  return await onAuthorized(MPC_CUSTOM, authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {
@@ -83,65 +68,6 @@ export async function onLoginGoogle() {
     authInfo.email,
     authState.idToken,
   );
-}
-
-const proxyAddress = (() => {
-  switch (MPC_NETWORK) {
-    case 'testnet':
-      return NodeDetailManager.PROXY_ADDRESS_TESTNET;
-    case 'mainnet':
-      return NodeDetailManager.PROXY_ADDRESS_MAINNET;
-    case 'cyan':
-      return NodeDetailManager.PROXY_ADDRESS_CYAN;
-    case 'aqua':
-      return NodeDetailManager.PROXY_ADDRESS_AQUA;
-    case 'celeste':
-      return NodeDetailManager.PROXY_ADDRESS_CELESTE;
-  }
-})();
-
-export async function onAuthorized(
-  verifier: string,
-  verifierId: string,
-  token: string,
-) {
-  const fetchNodeDetails = new FetchNodeDetails({
-    network: MPC_NETWORK,
-    proxyAddress,
-  });
-
-  const torus = new TorusUtils({
-    network: MPC_NETWORK,
-  });
-
-  const nodeDetails = await fetchNodeDetails.getNodeDetails({
-    verifier: verifier,
-    verifierId: verifierId,
-  });
-
-  const torusPubKey = (await torus.getPublicAddress(
-    nodeDetails.torusNodeEndpoints,
-    nodeDetails.torusNodePub,
-    {
-      verifier,
-      verifierId,
-    },
-    true,
-  )) as TorusPublicKey;
-
-  if (torusPubKey.typeOfUser === 'v1') {
-    await torus.getOrSetNonce(torusPubKey.X, torusPubKey.Y);
-  }
-
-  const keyData = await torus.retrieveShares(
-    nodeDetails.torusNodeEndpoints,
-    nodeDetails.torusIndexes,
-    verifier,
-    {verifier_id: verifierId},
-    token,
-  );
-
-  return keyData.privKey;
 }
 
 export async function onLoginApple() {
@@ -159,4 +85,57 @@ export async function onLoginApple() {
   const authInfo = parseJwt(identityToken);
 
   return await onAuthorized(MPC_APPLE, authInfo.email, identityToken);
+}
+
+export type Creds = {
+  token: string;
+  verifier: string;
+  privateKey: string | null;
+};
+
+/**
+ * Fetch private key from shares
+ * @param verifier
+ * @param verifierId
+ * @param token
+ */
+export async function onAuthorized(
+  verifier: string,
+  verifierId: string,
+  token: string,
+): Promise<Creds> {
+  const creds: Creds = {
+    token: token,
+    verifier: verifier,
+    privateKey: null,
+  };
+
+  const nodeDetailsRequest = await jsonrpcRequest<{
+    isNew: boolean;
+    shares: [string, string][];
+  }>(GENERATE_SHARES_URL, 'shares', [verifier, token, false]);
+
+  const tmpPk = await generateEntropy(32);
+  const shares = await Promise.all(
+    nodeDetailsRequest.shares.map(s =>
+      jsonrpcRequest<{key: string; hex_share: string}>(s[0], 'shareRequest', [
+        verifier,
+        token,
+        tmpPk.toString('hex'),
+      ])
+        .then(r => [r.hex_share, s[1]])
+        .catch(() => [null, s[1]]),
+    ),
+  );
+
+  const shares2 = shares.filter(s => s[0] !== null) as [string, string][];
+
+  if (shares2.length) {
+    creds.privateKey = lagrangeInterpolation(
+      shares2.map(s => new BN(s[0], 'hex')),
+      shares2.map(s => new BN(s[1], 'hex')),
+    ).toString('hex');
+  }
+
+  return creds;
 }

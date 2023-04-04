@@ -23,12 +23,20 @@ export const MpcMigrateRewriteScreen = () => {
             navigation.navigate('mpcMigrateStore', {
               accountId: route.params.accountId,
               privateKey: route.params.privateKey,
+              token: route.params.token,
+              verifier: route.params.verifier,
             });
           },
         },
       ],
     );
-  }, [navigation, route.params.accountId, route.params.privateKey]);
+  }, [
+    navigation,
+    route.params.accountId,
+    route.params.privateKey,
+    route.params.verifier,
+    route.params.token,
+  ]);
 
   const onCancel = useCallback(() => {
     navigation.goBack();

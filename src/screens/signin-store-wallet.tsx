@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
@@ -12,10 +13,6 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -85,14 +82,16 @@ export const SignInStoreWalletScreen = () => {
 
             const mpcProvider = await ProviderMpcReactNative.initialize(
               params.mpcPrivateKey,
-              params.mpcSecurityQuestion || null,
-              params.mpcCloudShare || null,
+              params.mpcCloudShare,
               null,
+              params.verifier,
+              params.token,
               app.getPassword.bind(app),
               storage,
-              serviceProviderOptions as any,
-              storageLayerOptions,
-              {},
+              {
+                metadataUrl: METADATA_URL,
+                generateSharesUrl: GENERATE_SHARES_URL,
+              },
             );
 
             await createWalletsForProvider(mpcProvider, WalletType.mpc);
