@@ -156,10 +156,10 @@ export const StakingInfoScreen = () => {
   }, [cosmos, rewards, operator_address, visible]);
 
   const onDelegate = useCallback(async () => {
-    const address = await awaitForWallet(
-      visible.filter(v => app.getBalance(v.address) >= MIN_AMOUNT),
-      I18N.stakingDelegateAccountTitle,
-    );
+    const address = await awaitForWallet({
+      wallets: visible.filter(v => app.getBalance(v.address) >= MIN_AMOUNT),
+      title: I18N.stakingDelegateAccountTitle,
+    });
 
     navigation.push('stakingDelegate', {
       validator: operator_address,
@@ -175,10 +175,10 @@ export const StakingInfoScreen = () => {
     );
     const available = visible.filter(w => delegations.has(w.cosmosAddress));
 
-    const address = await awaitForWallet(
-      available,
-      I18N.stakingDelegateAccountTitle,
-    );
+    const address = await awaitForWallet({
+      wallets: available,
+      title: I18N.stakingDelegateAccountTitle,
+    });
 
     navigation.push('stakingUnDelegate', {
       validator: operator_address,

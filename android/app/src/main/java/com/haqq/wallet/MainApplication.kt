@@ -14,6 +14,8 @@ import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
+import com.rnfs.RNFSPackage; 
+import android.webkit.WebView;
 
 class MainApplication : Application(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost = object : ReactNativeHost(this) {
@@ -29,7 +31,7 @@ class MainApplication : Application(), ReactApplication {
       packages.add(VersionPackage())
       packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
-      packages.add(CloudPackage())
+      
       return packages
     }
 
@@ -50,6 +52,11 @@ class MainApplication : Application(), ReactApplication {
     super.onCreate()
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
+
+    if (BuildConfig.DEBUG) {
+			WebView.setWebContentsDebuggingEnabled(true);
+		}
+
     SoLoader.init(this,  /* native exopackage */false)
     initializeFlipper(this, reactNativeHost.reactInstanceManager)
   }

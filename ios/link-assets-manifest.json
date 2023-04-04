@@ -304,6 +304,10 @@
     {
       "path": "assets/images/signup-network-exists-warning@3x.png",
       "sha1": "3f0081fabc3e48d7d9bdba3d2b8d3bb7058c57be"
+    },
+    {
+      "path": "assets/custom/InpageBridgeWeb3.js",
+      "sha1": "6bfaf0dc9b19e9db0ea9e9f5bf5d5f394e6922d7"
     }
   ]
 }

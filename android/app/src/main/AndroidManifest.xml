@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.haqq.wallet">
-
+    xmlns:tools="http://schemas.android.com/tools" package="com.haqq.wallet">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -59,5 +58,8 @@
         <category android:name="android.intent.category.BROWSABLE" />
       </intent-filter>
     </activity>
+
+    <!-- Explicitly opt-in to safe browsing -->
+		<meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="true" />
   </application>
 </manifest>

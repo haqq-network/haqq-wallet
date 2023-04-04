@@ -10,6 +10,7 @@ import {
 import {Color} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
+import {WebViewLogger} from '@app/helpers/webview-logger';
 
 import {generateWebViewContent, patchPostMessageJsCode} from './hcaptcha-utils';
 
@@ -65,14 +66,10 @@ export const Hcaptcha = (props: HcaptchaProps) => {
   const onMessage = useCallback(
     (event: WebViewMessageEvent) => {
       if (DEBUG_VARS.enableCaptchaLogger) {
-        try {
-          const data = JSON.parse(event?.nativeEvent?.data);
-          if (data.msg) {
-            // @ts-ignore
-            const logger = console[data.type];
-            return logger('🟢 [HCapthca]: ', ...data.msg);
-          }
-        } catch (e) {}
+        const handled = WebViewLogger.handleEvent(event, 'HCapthca');
+        if (handled) {
+          return;
+        }
       }
       props.onMessage?.(event);
     },

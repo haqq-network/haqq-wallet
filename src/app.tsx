@@ -101,6 +101,7 @@ import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-
 import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
 import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
+import {Web3BrowserScreen} from './screens/web3-browser';
 import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
@@ -253,9 +254,16 @@ export const App = () => {
               ref={navigator}
               theme={navTheme}
               onStateChange={onStateChange}>
-              <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
+              <Stack.Navigator
+                screenOptions={basicScreenOptions}
+                // initialRouteName={'web3browser'}
+                key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
+                <Stack.Screen
+                  name="web3browser"
+                  component={Web3BrowserScreen}
+                />
 
                 {/* Modals group */}
                 <Stack.Group screenOptions={stackScreenOptions}>

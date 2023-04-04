@@ -212,7 +212,7 @@ PODS:
   - HaqqEncryptionRN (0.0.2):
     - CryptoSwift (= 1.5.1)
     - React-Core
-  - HaqqWeb3UtilsRN (0.0.9):
+  - HaqqWeb3UtilsRN (0.0.10):
     - CryptoSwift (= 1.5.1)
     - React-Core
     - secp256k1Swift (= 0.7.4)
@@ -524,7 +524,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-splash-screen (3.3.0):
     - React-Core
-  - react-native-webview (11.26.1):
+  - react-native-webview (11.13.0):
     - React-Core
   - React-perflogger (0.71.4)
   - React-RCTActionSheet (0.71.4):
@@ -635,6 +635,8 @@ PODS:
     - FirebaseCoreExtension (= 10.6.0)
     - React-Core
     - RNFBApp
+  - RNFS (2.20.0):
+    - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
   - RNGoogleSignin (9.0.2):
@@ -794,6 +796,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
@@ -980,6 +983,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -1039,7 +1044,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   HaqqEncryptionRN: ee89cc23922410e37d1af81b699f944891dfa9b3
-  HaqqWeb3UtilsRN: c21e06d46ea96fb562fa57fc0a98f7ef8b925ebe
+  HaqqWeb3UtilsRN: 8daa45cc21555035b496b8530c41d0d307a87908
   hermes-engine: a1f157c49ea579c28b0296bda8530e980c45bdb3
   JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
@@ -1077,7 +1082,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
-  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-webview: 133a6a5149f963259646e710b4545c67ef35d7c9
   React-perflogger: 0bb0522a12e058f6eb69d888bc16f40c16c4b907
   React-RCTActionSheet: bfd675a10f06a18728ea15d82082d48f228a213a
   React-RCTAnimation: 2fa220b2052ec75b733112aca39143d34546a941
@@ -1099,6 +1104,7 @@ SPEC CHECKSUMS:
   RNFBApp: 3bf62629c41ef65d82e763c25aeb77cdfa63bfae
   RNFBDynamicLinks: 28d9b8895917e9885cf434dd2c39fd767c381e8a
   RNFBMessaging: c2bf85653cdb745f60d3cc43c9ec51d4edca0c52
+  RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
@@ -1123,4 +1129,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 295c752d84961765d4a47f4769767ad6fc0d3730
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.11.3

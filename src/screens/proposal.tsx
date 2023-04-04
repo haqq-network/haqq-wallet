@@ -87,10 +87,10 @@ export const ProposalScreen = () => {
     const onCloseWallets = () => setModalIsLoading(false);
 
     app.on('wallet-selected-proposal', onVotedSubmit);
-    app.on('wallet-bottom-sheet-close-proposal', onCloseWallets);
+    app.on('wallet-selected-reject-proposal', onCloseWallets);
     return () => {
       app.off('wallet-selected-proposal', onVotedSubmit);
-      app.off('wallet-bottom-sheet-close-proposal', onCloseWallets);
+      app.off('wallet-selected-reject-proposal', onCloseWallets);
     };
   }, [item, cosmos]);
 

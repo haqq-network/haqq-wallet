@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
@@ -10,10 +11,6 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 import {WalletType} from '@app/types';
 
 export const MpcMigrateStoreScreen = () => {
@@ -48,13 +45,12 @@ export const MpcMigrateStoreScreen = () => {
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,
           null,
-          null,
           entropy,
+          route.params.verifier,
+          route.params.token,
           app.getPassword.bind(app),
           storage,
-          serviceProviderOptions as any,
-          storageLayerOptions,
-          {},
+          {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
         );
 
         const wallets = Wallet.getAll();
@@ -80,7 +76,7 @@ export const MpcMigrateStoreScreen = () => {
         }
       }
     }, 350);
-  }, [navigation, route.params.accountId, route.params.privateKey]);
+  }, [navigation, route]);
 
   return <></>;
 };

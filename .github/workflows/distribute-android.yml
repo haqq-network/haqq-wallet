@@ -62,6 +62,9 @@ jobs:
           echo "MPC_GOOGLE_IOS=${{secrets.MPC_GOOGLE_IOS}}" >> .env
           echo "MPC_GOOGLE_ANDROID=${{secrets.MPC_GOOGLE_ANDROID}}" >> .env
           echo "MPC_APPLE=${{secrets.MPC_APPLE}}" >> .env
+          echo "MPC_CUSTOM=${{secrets.MPC_CUSTOM}}" >> .env
+          echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
+          echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
 
       - name: Install Fastlane
         run: |
