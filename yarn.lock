@@ -1414,10 +1414,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-mpc-react-native@0.0.6-beta.4":
-  version "0.0.6-beta.4"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.6-beta.4.tgz#76b5e674601bd6a03f7fd25dfac3665893b29b3d"
-  integrity sha512-vhey9ZxQEPI+bF7Cleml7cITLZGmnsJo+ONNS0+Ghm/eH+5LFF4OMQrreeVK+Nd0W6wNbzMF0+Exs74GdxXlOQ==
+"@haqq/provider-mpc-react-native@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.6.tgz#09e0ed75978b0337c72cdc9f7f9e1fa0d54a3ed0"
+  integrity sha512-iM+LxpGW4bnCtOs2ExUKjMC/VRL4n1NrWF9YoHRPNugrxn0zH/MY6sc+MwCyGiy9/eH0ccAuiITGb8zgvkleHA==
   dependencies:
     "@ethersproject/bytes" "5.7.0"
     "@ethersproject/transactions" "5.7.0"
@@ -1429,10 +1429,10 @@
   resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.11.tgz#b1e54632c2b7ca90f1d99b2a9867944886fe8a1e"
   integrity sha512-VtSoPYTWqS2cHaKRDnn7MG3pNI/OBI8qs+nzVml1qVRDcKrhBf0YZLrWZxPJp3QiG9Vnpi9FQfif+5++gignvA==
 
-"@haqq/shared-react-native@0.0.2-beta.2":
-  version "0.0.2-beta.2"
-  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.2-beta.2.tgz#f2d54402dfedaef58c84e21508d102b9e430db49"
-  integrity sha512-k06VxH7vD3sBr7MviqjepPCVx3BhZDdn66Y0ntpq+DQcpZljvQJR3IrOy6LfGRIVcZQphIRD5+vyya0RSY2H+g==
+"@haqq/shared-react-native@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.2.tgz#fa61041fe23c8b20f547f6af742b5528392c9e44"
+  integrity sha512-KQ4Ezi+rn3KT1Sk1gD03ckzFzKzGC/DZUkKNsJx5TF+NJ7QVRk7oz8C2Cr+U9HqHdo7y4koX2Y7PcB/prITngw==
   dependencies:
     bn.js "5.2.1"
     json-stable-stringify "1.0.2"

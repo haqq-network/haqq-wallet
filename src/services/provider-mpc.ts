@@ -2,6 +2,7 @@ import {
   CUSTOM_JWT_TOKEN,
   GENERATE_SHARES_URL,
   MPC_APPLE,
+  MPC_CUSTOM,
   MPC_GOOGLE_ANDROID,
   MPC_GOOGLE_IOS,
 } from '@env';
@@ -52,7 +53,7 @@ export async function onLoginCustom() {
   const authState = await token.json();
 
   const authInfo = parseJwt(authState.idToken);
-  return await onAuthorized('custom', authInfo.sub, authState.idToken);
+  return await onAuthorized(MPC_CUSTOM, authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {
