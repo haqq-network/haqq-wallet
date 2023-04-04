@@ -1,15 +1,14 @@
 import React, {useCallback, useRef} from 'react';
 
-import {initializeTKey} from '@haqq/provider-mpc-react-native';
+import {METADATA_URL} from '@env';
+import {decryptShare} from '@haqq/provider-mpc-react-native';
+import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {MpcPin} from '@app/components/mpc-pin';
 import {PinInterface} from '@app/components/pin';
 import {captureException} from '@app/helpers';
+import {MpcError} from '@app/helpers/mpc-error';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 
 export const SignupPinScreen = () => {
   const pinRef = useRef<PinInterface>();
@@ -21,15 +20,21 @@ export const SignupPinScreen = () => {
     async (password: string) => {
       if (route.params.type === 'mpc') {
         try {
-          const {securityQuestionsModule} = await initializeTKey(
+          if (!route.params.mpcPrivateKey) {
+            throw new MpcError('signinNotExists');
+          }
+
+          const securityQuestion = await getMetadataValue(
+            METADATA_URL,
             route.params.mpcPrivateKey,
-            serviceProviderOptions as any,
-            storageLayerOptions,
+            'securityQuestion',
           );
 
-          await securityQuestionsModule.inputShareFromSecurityQuestions(
-            password,
-          );
+          if (!securityQuestion) {
+            throw new MpcError('signinNotExists');
+          }
+
+          await decryptShare(JSON.parse(securityQuestion), password);
 
           const nextScreen = user.onboarded
             ? 'signupStoreWallet'
@@ -37,7 +42,6 @@ export const SignupPinScreen = () => {
 
           navigation.navigate(nextScreen, {
             ...route.params,
-            mpcSecurityQuestion: password,
           });
         } catch (e) {
           if (e instanceof Error) {
