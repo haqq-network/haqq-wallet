@@ -12,6 +12,14 @@ export enum WalletSelectType {
   screen = 'screen',
 }
 
+export interface AwaitForWalletParams {
+  wallets: Wallet[] | Results<Wallet>;
+  title: I18N;
+  type?: WalletSelectType;
+  initialAddress?: string;
+  autoSelectWallet?: boolean;
+}
+
 export class AwaitForWalletError {
   message?: string;
   constructor(message?: string) {
@@ -19,13 +27,14 @@ export class AwaitForWalletError {
   }
 }
 
-export async function awaitForWallet(
-  wallets: Wallet[] | Results<Wallet>,
-  title: I18N,
-  type?: WalletSelectType,
-  initialAddress?: string,
-): Promise<string> {
-  if (wallets.length === 1) {
+export async function awaitForWallet({
+  title,
+  wallets,
+  initialAddress,
+  type,
+  autoSelectWallet = true,
+}: AwaitForWalletParams): Promise<string> {
+  if (autoSelectWallet && wallets.length === 1) {
     return Promise.resolve(wallets[0].address);
   }
 
@@ -62,6 +71,7 @@ export async function awaitForWallet(
           wallets,
           closeDistance: WINDOW_HEIGHT / 6,
           title,
+          autoSelectWallet,
         });
     }
   });

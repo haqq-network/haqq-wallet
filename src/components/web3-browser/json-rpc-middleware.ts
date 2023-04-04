@@ -39,7 +39,10 @@ const rejectJsonRpcRequest = (message: string) => {
 
 const requestAccount = async () => {
   const wallets = Wallet.getAllVisible();
-  const selectedAccount = await awaitForWallet(wallets, I18N.selectAccount);
+  const selectedAccount = await awaitForWallet({
+    wallets,
+    title: I18N.selectAccount,
+  });
   return selectedAccount;
 };
 

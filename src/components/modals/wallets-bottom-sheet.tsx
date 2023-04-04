@@ -13,12 +13,14 @@ export interface WalletsBottomSheetProps {
   closeDistance?: number;
   title: I18N;
   eventSuffix?: string;
+  autoSelectWallet?: boolean;
 }
 
 export function WalletsBottomSheet({
   closeDistance,
   wallets,
   title,
+  autoSelectWallet = true,
   eventSuffix = '',
 }: WalletsBottomSheetProps) {
   const app = useApp();
@@ -36,7 +38,7 @@ export function WalletsBottomSheet({
   };
 
   useEffect(() => {
-    if (wallets.length === 1) {
+    if (autoSelectWallet && wallets.length === 1) {
       onPressWallet(wallets[0].address);
       hideModal();
     }
@@ -44,7 +46,7 @@ export function WalletsBottomSheet({
     return () => {
       app.emit(`wallet-selected-reject${eventSuffix}`);
     };
-  }, [wallets, onPressWallet, app, eventSuffix]);
+  }, [wallets, onPressWallet, app, eventSuffix, autoSelectWallet]);
 
   return (
     <BottomSheet

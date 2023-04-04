@@ -46,12 +46,12 @@ export const WalletConnectApprovalScreen = () => {
   }, [navigation, rejectSession]);
 
   const onSelectWalletPress = async () => {
-    const address = await awaitForWallet(
-      wallets,
-      I18N.selectAccount,
-      WalletSelectType.screen,
-      selectedWallet?.address,
-    );
+    const address = await awaitForWallet({
+      wallets: wallets,
+      title: I18N.selectAccount,
+      type: WalletSelectType.screen,
+      initialAddress: selectedWallet?.address,
+    });
     setSelectedWallet(Wallet.getById(address)!);
   };
 
