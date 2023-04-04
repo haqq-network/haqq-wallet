@@ -6,11 +6,14 @@ import {
 
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
+import {
+  AwaitProviderError,
+  awaitForProvider,
+} from '@app/helpers/await-for-provider';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {navigator} from '@app/navigator';
 import {EthNetwork} from '@app/services';
 import {getAppVersion} from '@app/services/version';
 
@@ -42,6 +45,7 @@ const requestAccount = async () => {
   const selectedAccount = await awaitForWallet({
     wallets,
     title: I18N.selectAccount,
+    autoSelectWallet: false,
   });
   return selectedAccount;
 };
@@ -69,10 +73,8 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       const user = app.getUser();
       const provider = Provider.getProvider(user.providerId);
       const session = Web3BrowserSession.getByOrigin(helper.origin);
-      console.log(
-        'SESSION eth_requestAccounts',
-        JSON.stringify(session?.toJSON(), null, 2),
-      );
+      const selectedChainIdHex =
+        session?.selectedChainIdHex || provider?.ethChainIdHex;
 
       // first connection
       if (!session) {
@@ -80,7 +82,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
         Web3BrowserSession.create(helper.origin, {
           selectedAccount,
-          selectedChainIdHex: provider?.ethChainIdHex,
+          selectedChainIdHex,
         });
         return [selectedAccount];
       }
@@ -99,7 +101,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         session.update({
           onlineAt: new Date(),
           selectedAccount,
-          selectedChainIdHex: provider?.ethChainIdHex,
+          selectedChainIdHex,
           disconected: false,
         });
         return [selectedAccount];
@@ -110,7 +112,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         helper.disconnectAccount();
         session.update({
           selectedAccount: '',
-          selectedChainIdHex: '',
           disconected: false,
         });
         return [];
@@ -141,9 +142,31 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_accounts: getEthAccounts,
   eth_coinbase: getEthAccounts,
-  wallet_switchEthereumChain: () => {
-    //TODO:
-    navigator.navigate('settingsProviders');
+  wallet_switchEthereumChain: async ({helper}) => {
+    try {
+      const providers = Provider.getProviders();
+      const session = Web3BrowserSession.getByOrigin(helper.origin);
+
+      const initialProviderId = Provider.getByChainIdHex(
+        session?.selectedChainIdHex!,
+      )?.id;
+
+      const providerId = await awaitForProvider({
+        providers,
+        initialProviderId: initialProviderId!,
+        title: I18N.networks,
+      });
+
+      const selectedProvider = Provider.getProvider(providerId!);
+      session?.update({
+        selectedChainIdHex: selectedProvider?.ethChainIdHex,
+      });
+      helper.changeChainId(selectedProvider?.ethChainIdHex!);
+    } catch (err) {
+      if (err instanceof AwaitProviderError) {
+        return rejectJsonRpcRequest(err.message!);
+      }
+    }
     return null;
   },
   eth_hashrate: () => {

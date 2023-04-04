@@ -5,12 +5,13 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 
 import {WebViewLogger} from '@app/helpers/webview-logger';
+import {navigator} from '@app/navigator';
 
 import {InpageBridgeWeb3, WebViewEventsEnum, WindowInfoEvent} from './scripts';
 import {Web3BrowserHelper} from './web3-browser-helper';
 import {WebViewUserAgent} from './web3-browser-utils';
 
-import {Button, ButtonVariant} from '../ui';
+import {Button, ButtonSize, ButtonVariant} from '../ui';
 
 export interface Web3BrowserProps {
   initialUrl: string;
@@ -55,9 +56,18 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
     <SafeAreaView style={styles.container}>
       <Button
         variant={ButtonVariant.contained}
+        size={ButtonSize.small}
         title="disconnect"
         onPress={() => {
           helper.disconnectAccount();
+        }}
+      />
+      <Button
+        variant={ButtonVariant.contained}
+        size={ButtonSize.small}
+        title="providers"
+        onPress={() => {
+          navigator.navigate('settingsProviders');
         }}
       />
       <WebView

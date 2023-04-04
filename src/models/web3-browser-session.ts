@@ -78,6 +78,13 @@ export class Web3BrowserSession extends Realm.Object {
     }
   }
 
+  disconnect() {
+    this.update({
+      selectedAccount: '',
+      disconected: true,
+    });
+  }
+
   update(params: Partial<Web3BrowserSession>) {
     realm.write(() => {
       realm.create(

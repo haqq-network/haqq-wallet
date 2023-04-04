@@ -37,6 +37,10 @@ import {
   LocationUnauthorized,
   LocationUnauthorizedProps,
 } from '@app/components/modals/location-unauthorized';
+import {
+  ProvidersBottomSheet,
+  ProvidersBottomSheetProps,
+} from '@app/components/modals/providers-bottom-sheet';
 import {QRModal, QRModalProps} from '@app/components/modals/qr';
 import {
   TransactionError,
@@ -101,6 +105,10 @@ type LocationUnauthorizedModal = {
   type: 'location-unauthorized';
 } & LocationUnauthorizedProps;
 
+type ProvidersBottomSheetModal = {
+  type: 'providers-bottom-sheet';
+} & ProvidersBottomSheetProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -115,6 +123,7 @@ type ModalState =
   | BluetoothUnauthorizedModal
   | LocationUnauthorizedModal
   | CaptchaModal
+  | ProvidersBottomSheetModal
   | null;
 
 export type ModalProps = {
@@ -180,6 +189,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         const props = {...modal};
         delete props.type;
         return <WalletsBottomSheet {...props} />;
+      case 'providers-bottom-sheet':
+        return <ProvidersBottomSheet {...modal} />;
       case 'card-details-qr':
         return <DetailsQrModal address={modal.address} />;
       case 'no-internet':

@@ -139,11 +139,7 @@ export class Web3BrowserHelper extends EventEmitter {
   public disconnectAccount = () => {
     const session = Web3BrowserSession.getByOrigin(this.origin);
     if (session) {
-      session.update({
-        selectedAccount: '',
-        selectedChainIdHex: '',
-        disconected: true,
-      });
+      session.disconnect();
     }
     this.emitToEthereum(EthereumEventsEnum.DISCONNECT);
   };

@@ -82,12 +82,19 @@ export class Provider extends Realm.Object {
   static getByChainId(
     ethChainId: number,
   ): (Provider & Realm.Object<unknown, never>) | null {
+    if (!ethChainId && Number.isNaN(ethChainId)) {
+      return null;
+    }
+
     return Provider.getProviders()?.filtered?.(
       `ethChainId = '${ethChainId}'`,
     )?.[0];
   }
 
   static getByChainIdHex(ethChainIdHex: string) {
+    if (!ethChainIdHex) {
+      return null;
+    }
     return Provider.getByChainId(parseInt(ethChainIdHex, 16));
   }
 
