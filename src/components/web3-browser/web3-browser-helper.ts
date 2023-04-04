@@ -117,6 +117,10 @@ export class Web3BrowserHelper extends EventEmitter {
       return;
     }
 
+    if (getOriginFromUrl(this.nextUrl) !== this.origin) {
+      this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
+    }
+
     this.nextUrl = url;
     const js = changeWebViewHrefJS(url);
     this.webviewRef?.current?.injectJavaScript(js);
@@ -142,6 +146,7 @@ export class Web3BrowserHelper extends EventEmitter {
       session.disconnect();
     }
     this.emitToEthereum(EthereumEventsEnum.DISCONNECT);
+    this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
   };
 
   public changeAccount = (accountId: string) => {
@@ -153,6 +158,7 @@ export class Web3BrowserHelper extends EventEmitter {
       });
     }
     this.emitToEthereum(EthereumEventsEnum.ACCOUNTS_CHANGED, [accountId]);
+    this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, [accountId]);
   };
 
   public changeChainId = (chainIdHex: string) => {

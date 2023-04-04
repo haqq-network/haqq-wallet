@@ -17,6 +17,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {EthNetwork} from '@app/services';
 import {getAppVersion} from '@app/services/version';
 
+import {WebViewEventsEnum} from './scripts';
 import {Web3BrowserHelper} from './web3-browser-helper';
 
 type TJsonRpcRequest = JsonRpcRequest<any>;
@@ -50,11 +51,17 @@ const requestAccount = async () => {
   return selectedAccount;
 };
 
-const getEthAccounts = () =>
-  Wallet.getAllVisible().map(wallet => wallet.accountId);
+const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
+  const session = Web3BrowserSession.getByOrigin(helper.origin);
+  if (session?.isActive) {
+    return [session.selectedAccount];
+  }
+
+  return [];
+};
 
 export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
-  metamask_getProviderState: ({helper}) => {
+  metamask_getProviderState: ({helper, req}) => {
     const user = app.getUser();
     const provider = Provider.getProvider(user.providerId);
     const session = Web3BrowserSession.getByOrigin(helper.origin);
@@ -64,7 +71,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       chainId,
       networkVersion,
       walletName: 'HAQQ Wallet',
-      accounts: getEthAccounts(),
+      accounts: getEthAccounts({helper, req}),
       isUnlocked: app.isUnlocked,
     };
   },
@@ -110,10 +117,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       // handle user disconect
       if (session?.selectedAccount && session.disconected) {
         helper.disconnectAccount();
-        session.update({
-          selectedAccount: '',
-          disconected: false,
-        });
         return [];
       }
 
@@ -185,6 +188,14 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_blockNumber: () => {
     return EthNetwork.network.blockNumber;
   },
+  net_version: ({helper}) => {
+    const user = app.getUser();
+    const provider = Provider.getProvider(user.providerId);
+    const session = Web3BrowserSession.getByOrigin(helper.origin);
+    const chainId = session?.selectedChainIdHex || provider?.ethChainIdHex;
+    const networkVersion = Provider.getByChainIdHex(chainId!)?.networkVersion;
+    return networkVersion;
+  },
 };
 
 export const createJsonRpcMiddleware = ({
@@ -200,11 +211,18 @@ export const createJsonRpcMiddleware = ({
           code: -32601,
           message: 'Method not implemented',
         };
-        console.log(`🔴 JRPC ${req.method} not implemented, ${req.params}`);
+        console.log(
+          `🔴 JRPC ${req.method} not implemented, params:`,
+          JSON.stringify(req.params),
+        );
         return;
       }
 
       res.result = await handler({req, helper});
+
+      if (req.method === 'eth_requestAccounts' && Array.isArray(res.result)) {
+        helper.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, [...res.result]);
+      }
     } catch (err) {
       // @ts-ignore
       if (typeof err.code === 'number' && typeof err.message === 'string') {

@@ -107,6 +107,11 @@ export const showPhishingAlert = () => {
 
 export const getOriginFromUrl = (url: string) => {
   let origin = '*';
+
+  if (!url) {
+    return origin;
+  }
+
   const matches = url.match(/^(\w+:)\/\/([^/]+)(\/.*)?$/);
   if (matches) {
     origin = `${matches[1]}//${matches[2]}`;
