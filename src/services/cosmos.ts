@@ -15,10 +15,9 @@ import {
   generateEndpointGetUndelegations,
   generateEndpointGetValidators,
   generateEndpointProposals,
-  generatePostBodyBroadcast,
 } from '@evmos/provider';
 import {AccountResponse} from '@evmos/provider/dist/rest/account';
-import {TxToSend} from '@evmos/provider/dist/rest/broadcast';
+import {BroadcastMode} from '@evmos/provider/dist/rest/broadcast';
 import {Proposal, ProposalsResponse} from '@evmos/provider/dist/rest/gov';
 import {
   DistributionRewardsResponse,
@@ -199,13 +198,22 @@ export class Cosmos {
     return this.getQuery(generateEndpointProposals() + `/${id}`);
   }
 
-  async broadcastTransaction(
-    txToBroadcast: TxToSend,
-  ): Promise<BroadcastTransactionResponse> {
+  async broadcastTransaction(txToBroadcast: {
+    message: protoTxNamespace.txn.TxRaw;
+  }): Promise<BroadcastTransactionResponse> {
     return this.postQuery(
       generateEndpointBroadcast(),
-      generatePostBodyBroadcast(txToBroadcast),
+      this.generatePostBodyBroadcast(txToBroadcast),
     );
+  }
+
+  generatePostBodyBroadcast(
+    txRaw: {message: protoTxNamespace.txn.TxRaw},
+    broadcastMode: BroadcastMode = BroadcastMode.Sync,
+  ) {
+    return `{ "tx_bytes": [${txRaw.message
+      .serializeBinary()
+      .toString()}], "mode": "${broadcastMode}" }`;
   }
 
   generatePostSimulate(message: object, account: Sender) {
@@ -333,7 +341,7 @@ export class Cosmos {
       extension,
     );
 
-    return await this.broadcastTransaction(rawTx as unknown as TxToSend);
+    return await this.broadcastTransaction(rawTx);
   }
 
   async getFee(data: object, account: Sender) {

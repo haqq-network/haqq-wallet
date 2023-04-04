@@ -15,6 +15,12 @@ export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
   return (
     <PopupContainer style={styles.container}>
       <ThemedButton
+        value={AppTheme.system}
+        name={I18N.settingsThemeSystem}
+        active={theme === AppTheme.system}
+        onChange={onChangeTheme}
+      />
+      <ThemedButton
         value={AppTheme.light}
         name={I18N.settingsThemeLight}
         active={theme === AppTheme.light}
@@ -24,12 +30,6 @@ export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
         value={AppTheme.dark}
         name={I18N.settingsThemeDark}
         active={theme === AppTheme.dark}
-        onChange={onChangeTheme}
-      />
-      <ThemedButton
-        value={AppTheme.system}
-        name={I18N.settingsThemeSystem}
-        active={theme === AppTheme.system}
         onChange={onChangeTheme}
       />
     </PopupContainer>
