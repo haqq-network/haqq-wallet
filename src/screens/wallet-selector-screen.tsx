@@ -24,7 +24,11 @@ export const WalletSelectorScreen = () => {
 
   useEffect(() => {
     const onBlur = () => {
-      app.emit(`wallet-selected${eventSuffix}`, selectedAddress.current);
+      if (selectedAddress.current) {
+        app.emit(`wallet-selected${eventSuffix}`, selectedAddress.current);
+      } else {
+        app.emit(`wallet-selected-reject${eventSuffix}`);
+      }
     };
 
     navigation.addListener('blur', onBlur);

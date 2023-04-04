@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
@@ -14,10 +14,12 @@ import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
+import {useTypedNavigation} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {pushNotifications} from '@app/services/push-notifications';
+import {isValidUrl} from '@app/utils';
 import {ETH_HD_PATH} from '@app/variables/common';
 
 messaging().onMessage(async remoteMessage => {
@@ -43,7 +45,9 @@ messaging()
 export const SettingsTestScreen = () => {
   const [initialUrl, setInitialUrl] = useState<null | string>(null);
   const [wc, setWc] = useState('');
-
+  const [browserUrl, setBrobserUrl] = useState('');
+  const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
+  const navigation = useTypedNavigation();
   const iCloud = useRef(new Cloud()).current;
 
   const onPressRequestPermissions = async () => {
@@ -58,6 +62,10 @@ export const SettingsTestScreen = () => {
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
+  };
+
+  const onPressOpenBrowser = () => {
+    navigation.navigate('web3browser', {url: browserUrl});
   };
 
   const checkICloudFile = useCallback(async () => {
@@ -174,6 +182,19 @@ export const SettingsTestScreen = () => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
+      <Input
+        placeholder="https://app.haqq.network"
+        value={browserUrl}
+        onChangeText={setBrobserUrl}
+      />
+      <Spacer height={5} />
+      <Button
+        title="Open web3 browser"
+        disabled={!isValidBrowserUrl}
+        onPress={onPressOpenBrowser}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={5} />
       <Button
         title="Show modal"
         onPress={() => showModal('ledger-locked')}
@@ -209,6 +230,7 @@ export const SettingsTestScreen = () => {
         onPress={() => removeICloudFile()}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={8} />
       <Button
         title="Show captcha"
         onPress={async () => {

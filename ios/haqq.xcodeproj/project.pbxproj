@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* haqqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* haqqTests.m */; };
 		01C44930F5CD459D85916B70 /* bluetooth-failed.png in Resources */ = {isa = PBXBuildFile; fileRef = D35FE9082706444AB8F75888 /* bluetooth-failed.png */; };
 		01C80C029C264E059AFF702C /* card-rhombus-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 7FB8A02FCF3F4824B4718B5B /* card-rhombus-0.png */; };
+		077EE512221D45AB00D380D2 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2852704E1279C1D33676AE /* libPods-haqq.a */; };
 		0DC659CFE3ED45AFAAD09C69 /* card-maks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C5C66B0F44412FBB1D39B5 /* card-maks@2x.png */; };
 		1176B7B4E3964C078F779B59 /* exclamation-mark-error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631E69B702043598086BDCC /* exclamation-mark-error@3x.png */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -61,7 +62,6 @@
 		5EC78F2DCE2648FE9AEC3C47 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 16464E6CF9A24E1590282D07 /* SF-Pro-Display-Semibold.ttf */; };
 		60D4E8D50A864590B8A8D854 /* SF-Pro-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */; };
 		67C27A04DC024090AA593E3B /* signup-network-exists-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */; };
-		680E07DBE651ABD1F854B3D9 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 542F1B160D244828A5FA0C4F /* libPods-haqq.a */; };
 		69201C9A86064BF191BEB50E /* SF-ProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */; };
 		6C967F106C014632BA368E29 /* SF-Pro-Display-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4889AA51BE54118AE456FE2 /* SF-Pro-Display-Thin.ttf */; };
 		729CB2E2864246EC88C6803E /* backup-mpc-suggestion-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FEE6FCD1C344881A4C638E5 /* backup-mpc-suggestion-light@3x.png */; };
@@ -69,6 +69,7 @@
 		7B6DED187C874F1BAC4FB224 /* signup-network-exists-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4D86AC6E5411FA25294A4 /* signup-network-exists-warning.png */; };
 		7CE3C371577D43A6BAA1DF94 /* backup-notification-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB6A71C6D0B4611BD0020F4 /* backup-notification-dark.png */; };
 		8054FEBAC11543999C467218 /* islm_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AB78E07FF446AE8E5724C1 /* islm_icon@2x.png */; };
+		809667133D061DEE1EEA711D /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDFDA959285D9D62A7E31C5B /* libPods-haqq-haqqTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		848BA91E31A7480AB27FF413 /* question-circle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 189C4904319D4B4B92D30F92 /* question-circle@3x.png */; };
 		8799854AD253405E84309D53 /* card-rhombus-0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4184D848D8434D3AAA82ACBF /* card-rhombus-0@2x.png */; };
@@ -88,7 +89,6 @@
 		AE8CAEDCC9DF49298C9BA8D7 /* backup-mpc-suggestion-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A177E706C7A74376B487D87A /* backup-mpc-suggestion-dark@2x.png */; };
 		B1C848DFEC054C57A6924022 /* islm-logo-circles.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A298563846B40C29A7545AA /* islm-logo-circles.png */; };
 		B1D59AD9C87F48609E8EAA73 /* islm-logo-circles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F67EF005450E4252B041D849 /* islm-logo-circles@2x.png */; };
-		B3C3501BBE1F6213AC197E6E /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0636630DA06D09F1BA315B4F /* libPods-haqq-haqqTests.a */; };
 		B897A995EF76499DA9A3081A /* backup-mpc-suggestion-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F7365E24AFF4A56952E90C3 /* backup-mpc-suggestion-light@2x.png */; };
 		BC311FA5A11F46569DE2508C /* backup-notification-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7F48BB6BB64A7887914F2C /* backup-notification-light@2x.png */; };
 		BCE8D61DA932477781C76A80 /* ElMessiri-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */; };
@@ -103,6 +103,7 @@
 		C8699751E49F4C379DDFACB2 /* islm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2004C55FA76B4DF68EEFF2C3 /* islm_icon.png */; };
 		C9CE27811447434A801CBB77 /* ledger-locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4044E8C1BB4C39AA9FF56A /* ledger-locked@2x.png */; };
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
+		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
 		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
@@ -133,7 +134,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* haqqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = haqqTests.m; sourceTree = "<group>"; };
 		01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Bold.ttf"; path = "../assets/fonts/SF-ProText-Bold.ttf"; sourceTree = "<group>"; };
-		0636630DA06D09F1BA315B4F /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05C88ABD1CE513B54CBC1521 /* Pods-haqq-haqqTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.release.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.release.xcconfig"; sourceTree = "<group>"; };
 		07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; };
 		0A939DA77EF542A2827CE749 /* mnemonic-notify.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify.png"; path = "../assets/images/mnemonic-notify.png"; sourceTree = "<group>"; };
 		0C454ACD843E4BE8B4BAF182 /* qr-logo@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@3x.png"; path = "../assets/images/qr-logo@3x.png"; sourceTree = "<group>"; };
@@ -193,13 +194,11 @@
 		45BB855BE6C744119DB53DC5 /* logo-empty.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty.png"; path = "../assets/images/logo-empty.png"; sourceTree = "<group>"; };
 		4AE4D86AC6E5411FA25294A4 /* signup-network-exists-warning.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning.png"; path = "../assets/images/signup-network-exists-warning.png"; sourceTree = "<group>"; };
 		4C4044E8C1BB4C39AA9FF56A /* ledger-locked@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-locked@2x.png"; path = "../assets/images/ledger-locked@2x.png"; sourceTree = "<group>"; };
-		4DB0D3242F16BBABD4B91F51 /* Pods-haqq-haqqTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.release.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.release.xcconfig"; sourceTree = "<group>"; };
 		4EC478ED7CF6446EB76CB24B /* question-circle@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@2x.png"; path = "../assets/images/question-circle@2x.png"; sourceTree = "<group>"; };
 		4F7365E24AFF4A56952E90C3 /* backup-mpc-suggestion-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-light@2x.png"; path = "../assets/images/backup-mpc-suggestion-light@2x.png"; sourceTree = "<group>"; };
-		542F1B160D244828A5FA0C4F /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C4F1C71A6CA629FA46671A3 /* Pods-haqq-haqqTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.debug.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5C57942F9C9B4973B42F735D /* ledger-no-app.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app.png"; path = "../assets/images/ledger-no-app.png"; sourceTree = "<group>"; };
 		5CC5CC6680A74F829967534E /* question-circle.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle.png"; path = "../assets/images/question-circle.png"; sourceTree = "<group>"; };
-		5EAC025A16D411C484A1DBA6 /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
 		5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-unauthorized@3x.png"; path = "../assets/images/bluetooth-unauthorized@3x.png"; sourceTree = "<group>"; };
 		5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Regular.ttf"; path = "../assets/fonts/SF-ProText-Regular.ttf"; sourceTree = "<group>"; };
 		603F922A9E334928B48CCD7C /* backup-mpc-suggestion-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-dark.png"; path = "../assets/images/backup-mpc-suggestion-dark.png"; sourceTree = "<group>"; };
@@ -222,7 +221,6 @@
 		8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty@2x.png"; path = "../assets/images/logo-empty@2x.png"; sourceTree = "<group>"; };
 		8EB050BA08FE4CD4B4A767AD /* SF-Pro-Display-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Regular.ttf"; path = "../assets/fonts/SF-Pro-Display-Regular.ttf"; sourceTree = "<group>"; };
 		987D8832384445AF9BE931EA /* backup-notification-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark@2x.png"; path = "../assets/images/backup-notification-dark@2x.png"; sourceTree = "<group>"; };
-		9A9E9DBCBABC41B58ACC10EE /* Pods-haqq-haqqTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.debug.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9E0A5095C2B34207A41D2E1A /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
 		9F6B60F8C6B54ED1821FA48E /* backup-mpc-suggestion-dark@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-dark@3x.png"; path = "../assets/images/backup-mpc-suggestion-dark@3x.png"; sourceTree = "<group>"; };
 		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; };
@@ -236,20 +234,24 @@
 		B9AB78E07FF446AE8E5724C1 /* islm_icon@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@2x.png"; path = "../assets/images/islm_icon@2x.png"; sourceTree = "<group>"; };
 		BC1BF4D5F5414DB89C675767 /* card-circles-0@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@2x.png"; path = "../assets/images/card-circles-0@2x.png"; sourceTree = "<group>"; };
 		CCB6A71C6D0B4611BD0020F4 /* backup-notification-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; };
+		CDFDA959285D9D62A7E31C5B /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D35FE9082706444AB8F75888 /* bluetooth-failed.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; };
 		D69B77F39E664C21827D2371 /* signup-network-exists-warning@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning@3x.png"; path = "../assets/images/signup-network-exists-warning@3x.png"; sourceTree = "<group>"; };
+		DC2852704E1279C1D33676AE /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4BF65C3D8F4812A58B909F /* SF-Pro-Display-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Medium.ttf"; path = "../assets/fonts/SF-Pro-Display-Medium.ttf"; sourceTree = "<group>"; };
 		E4889AA51BE54118AE456FE2 /* SF-Pro-Display-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Thin.ttf"; path = "../assets/fonts/SF-Pro-Display-Thin.ttf"; sourceTree = "<group>"; };
 		E796C0D2F7154FA79827B16B /* ledger-no-app@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app@3x.png"; path = "../assets/images/ledger-no-app@3x.png"; sourceTree = "<group>"; };
-		E9E67B0AB0000F2153E6C98F /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
 		EA46F5D0F4564B1F9BD30D72 /* ledger-no-app@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app@2x.png"; path = "../assets/images/ledger-no-app@2x.png"; sourceTree = "<group>"; };
+		EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = InpageBridgeWeb3.js; path = ../assets/custom/InpageBridgeWeb3.js; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EF5B6244A6FD49CB98807F7A /* bluetooth-unauthorized.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-unauthorized.png"; path = "../assets/images/bluetooth-unauthorized.png"; sourceTree = "<group>"; };
 		EF6C4476E7AA459492719A96 /* backup-mpc-suggestion-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-light.png"; path = "../assets/images/backup-mpc-suggestion-light.png"; sourceTree = "<group>"; };
 		F37033694B1E479BBD2FAFFD /* islm-logo-circles@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles@3x.png"; path = "../assets/images/islm-logo-circles@3x.png"; sourceTree = "<group>"; };
 		F51105DFF5B844F18D246710 /* ledger-locked.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-locked.png"; path = "../assets/images/ledger-locked.png"; sourceTree = "<group>"; };
 		F67EF005450E4252B041D849 /* islm-logo-circles@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles@2x.png"; path = "../assets/images/islm-logo-circles@2x.png"; sourceTree = "<group>"; };
+		F84CA7D4A2CB8652188A40CA /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
+		FA7D7E71DEFCBA9CB04078B7 /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,7 +259,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3C3501BBE1F6213AC197E6E /* libPods-haqq-haqqTests.a in Frameworks */,
+				809667133D061DEE1EEA711D /* libPods-haqq-haqqTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +267,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				680E07DBE651ABD1F854B3D9 /* libPods-haqq.a in Frameworks */,
+				077EE512221D45AB00D380D2 /* libPods-haqq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,8 +392,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				542F1B160D244828A5FA0C4F /* libPods-haqq.a */,
-				0636630DA06D09F1BA315B4F /* libPods-haqq-haqqTests.a */,
+				DC2852704E1279C1D33676AE /* libPods-haqq.a */,
+				CDFDA959285D9D62A7E31C5B /* libPods-haqq-haqqTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -431,10 +433,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5EAC025A16D411C484A1DBA6 /* Pods-haqq.debug.xcconfig */,
-				E9E67B0AB0000F2153E6C98F /* Pods-haqq.release.xcconfig */,
-				9A9E9DBCBABC41B58ACC10EE /* Pods-haqq-haqqTests.debug.xcconfig */,
-				4DB0D3242F16BBABD4B91F51 /* Pods-haqq-haqqTests.release.xcconfig */,
+				FA7D7E71DEFCBA9CB04078B7 /* Pods-haqq.debug.xcconfig */,
+				F84CA7D4A2CB8652188A40CA /* Pods-haqq.release.xcconfig */,
+				5C4F1C71A6CA629FA46671A3 /* Pods-haqq-haqqTests.debug.xcconfig */,
+				05C88ABD1CE513B54CBC1521 /* Pods-haqq-haqqTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -518,6 +520,7 @@
 				4AE4D86AC6E5411FA25294A4 /* signup-network-exists-warning.png */,
 				166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */,
 				D69B77F39E664C21827D2371 /* signup-network-exists-warning@3x.png */,
+				EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -529,12 +532,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "haqqTests" */;
 			buildPhases = (
-				C7F0ACFD8303A4CEF108560A /* [CP] Check Pods Manifest.lock */,
+				5CC75D21AEDB4D44A01B0F28 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				6DB35B0F5A5CE8AB57BE5522 /* [CP] Embed Pods Frameworks */,
-				0688AE80E531D878BDAAB6F7 /* [CP] Copy Pods Resources */,
+				D2BB10FFE82664A504D71B71 /* [CP] Embed Pods Frameworks */,
+				3979B462FA1E4D0054C0EC51 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -550,16 +553,16 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "haqq" */;
 			buildPhases = (
-				38FDF93154991D410A268F58 /* [CP] Check Pods Manifest.lock */,
+				843316C446D1200D552AB3C9 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				B119D1EE4AC64CE3AB76314E /* Upload Debug Symbols to Sentry */,
-				BDADA4AB7995522C81164BFE /* [CP] Embed Pods Frameworks */,
-				37A2EF542F9248C56EB5C709 /* [CP] Copy Pods Resources */,
-				EB69FF5EFF3F85E26E36BF63 /* [CP-User] [RNFB] Core Configuration */,
+				5EA785EAA0A22D4DF924BF8F /* [CP] Embed Pods Frameworks */,
+				0D2F4ED603AFB199F1679E99 /* [CP] Copy Pods Resources */,
+				E9824E1C32EBEC64F2C8A716 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -701,6 +704,7 @@
 				7B6DED187C874F1BAC4FB224 /* signup-network-exists-warning.png in Resources */,
 				67C27A04DC024090AA593E3B /* signup-network-exists-warning@2x.png in Resources */,
 				C6B0804012AB478DB46458DE /* signup-network-exists-warning@3x.png in Resources */,
+				CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,24 +727,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nset -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT \\\"../node_modules/@sentry/cli/bin/sentry-cli react-native xcode $REACT_NATIVE_XCODE\\\"\"\n";
 		};
-		0688AE80E531D878BDAAB6F7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		37A2EF542F9248C56EB5C709 /* [CP] Copy Pods Resources */ = {
+		0D2F4ED603AFB199F1679E99 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -757,77 +744,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		38FDF93154991D410A268F58 /* [CP] Check Pods Manifest.lock */ = {
+		3979B462FA1E4D0054C0EC51 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-haqq-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6DB35B0F5A5CE8AB57BE5522 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B119D1EE4AC64CE3AB76314E /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Upload Debug Symbols to Sentry";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# export SENTRY_PROPERTIES=sentry.properties\n# ../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
-		};
-		BDADA4AB7995522C81164BFE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C7F0ACFD8303A4CEF108560A /* [CP] Check Pods Manifest.lock */ = {
+		5CC75D21AEDB4D44A01B0F28 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -849,7 +783,77 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EB69FF5EFF3F85E26E36BF63 /* [CP-User] [RNFB] Core Configuration */ = {
+		5EA785EAA0A22D4DF924BF8F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		843316C446D1200D552AB3C9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-haqq-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B119D1EE4AC64CE3AB76314E /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# export SENTRY_PROPERTIES=sentry.properties\n# ../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
+		};
+		D2BB10FFE82664A504D71B71 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E9824E1C32EBEC64F2C8A716 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -937,7 +941,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A9E9DBCBABC41B58ACC10EE /* Pods-haqq-haqqTests.debug.xcconfig */;
+			baseConfigurationReference = 5C4F1C71A6CA629FA46671A3 /* Pods-haqq-haqqTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -973,7 +977,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4DB0D3242F16BBABD4B91F51 /* Pods-haqq-haqqTests.release.xcconfig */;
+			baseConfigurationReference = 05C88ABD1CE513B54CBC1521 /* Pods-haqq-haqqTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1005,7 +1009,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EAC025A16D411C484A1DBA6 /* Pods-haqq.debug.xcconfig */;
+			baseConfigurationReference = FA7D7E71DEFCBA9CB04078B7 /* Pods-haqq.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1043,7 +1047,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E9E67B0AB0000F2153E6C98F /* Pods-haqq.release.xcconfig */;
+			baseConfigurationReference = F84CA7D4A2CB8652188A40CA /* Pods-haqq.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

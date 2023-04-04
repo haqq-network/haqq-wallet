@@ -1,4 +1,5 @@
 import {DEBUG_VARS} from '@app/debug-vars';
+import {WebViewLogger} from '@app/helpers/webview-logger';
 
 import {HcaptchaProps} from './hcaptcha';
 
@@ -62,18 +63,7 @@ const buildHcaptchaApiUrl = (props: HcaptchaProps) => {
 const WEB_VIEW_LOGGER = DEBUG_VARS.enableCaptchaLogger
   ? `
 <script type="text/javascript">
-  if(!window._patched){
-    console.log = (...args) => {
-        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "log" }));
-    }
-    console.error = (...args) => {
-        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "error" }));
-    }
-    console.warn = (...args) => {
-        window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "warn" }));
-    }
-    window._patched = true;
-  }
+  ${WebViewLogger.script}
 </script>
 `
   : '';
