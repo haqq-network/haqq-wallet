@@ -44,7 +44,7 @@
     "@tradle/react-native-http": "2.0.1",
     "@walletconnect/sign-client": "2.4.10",
     "@walletconnect/react-native-compat": "2.4.9",
-    "@walletconnect/web3wallet": "1.4.0",
+    "@walletconnect/web3wallet": "1.5.0",
     "assert": "2.0.0",
     "bech32-converting": "1.0.9",
     "big-integer": "1.6.51",
