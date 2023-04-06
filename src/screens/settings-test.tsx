@@ -69,23 +69,15 @@ export const SettingsTestScreen = () => {
   };
 
   const checkICloudFile = useCallback(async () => {
-    const exists = await iCloud.hasItem('haqq_0x212270762928678386fac44bb8248e970b50ec62');
+    const exists = await iCloud.hasItem(
+      'haqq_0x82edd867f789c53b95dca44d5589697c747aaaa7',
+    );
     console.log('exists', exists);
-  }, [iCloud]);
-
-  const createICloudFile = useCallback(async () => {
-    const exists = await iCloud.setItem('haqq_backup', '{"abc":"def"}');
-    console.log('create', exists);
   }, [iCloud]);
 
   const readICloudFile = useCallback(async () => {
     const content = await iCloud.getItem('haqq_backup');
     console.log('read', content);
-  }, [iCloud]);
-
-  const removeICloudFile = useCallback(async () => {
-    const content = await iCloud.removeItem('haqq_backup');
-    console.log('remove', content);
   }, [iCloud]);
 
   const onPressMPC = useCallback(async () => {
