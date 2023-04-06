@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/isFeatureEnabled';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
@@ -32,13 +33,20 @@ const screenOptionsBiometry: ScreenOptionType = {
 
 export const SignUpScreen = () => {
   const route = useTypedRoute<'signup'>();
+
+  const nextScreen = useMemo(() => {
+    return isFeatureEnabled(Feature.mpc)
+      ? 'signupNetworks'
+      : 'onboardingSetupPin';
+  }, []);
+
   return (
     <SignUpStack.Navigator screenOptions={popupScreenOptions}>
       <SignUpStack.Screen
         name="signupAgreement"
         component={SignUpAgreementScreen}
         options={hideBack}
-        initialParams={{next: route.params.next, nextScreen: 'signupNetworks'}}
+        initialParams={{next: route.params.next, nextScreen: nextScreen}}
       />
       <SignUpStack.Screen
         name="signupNetworks"

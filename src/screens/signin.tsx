@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/isFeatureEnabled';
 import {I18N, getText} from '@app/i18n';
 import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
 import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
@@ -27,8 +28,15 @@ const screenOptions: ScreenOptionType = {
 
 export const SignInScreen = () => {
   const title = getText(I18N.signInTitle);
+
+  const inittialRouteName = useMemo(() => {
+    return isFeatureEnabled(Feature.mpc) ? 'signinNetworks' : 'signinAgreement';
+  }, []);
+
   return (
-    <SignInStack.Navigator screenOptions={popupScreenOptions}>
+    <SignInStack.Navigator
+      screenOptions={popupScreenOptions}
+      initialRouteName={inittialRouteName}>
       <SignInStack.Screen
         name="signinNetworks"
         component={SignInNetworksScreen}
