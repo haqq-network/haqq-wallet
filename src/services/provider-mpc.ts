@@ -84,8 +84,6 @@ export async function onLoginApple() {
 
   const authInfo = parseJwt(identityToken);
 
-  console.log('authInfo', authInfo);
-
   return await onAuthorized(MPC_APPLE, authInfo.email, identityToken);
 }
 
