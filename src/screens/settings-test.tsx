@@ -69,7 +69,7 @@ export const SettingsTestScreen = () => {
   };
 
   const checkICloudFile = useCallback(async () => {
-    const exists = await iCloud.hasItem('haqq_backup');
+    const exists = await iCloud.hasItem('haqq_0x212270762928678386fac44bb8248e970b50ec62');
     console.log('exists', exists);
   }, [iCloud]);
 
@@ -214,20 +214,8 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="create cloud"
-        onPress={() => createICloudFile()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
         title="read cloud"
         onPress={() => readICloudFile()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="remove cloud"
-        onPress={() => removeICloudFile()}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

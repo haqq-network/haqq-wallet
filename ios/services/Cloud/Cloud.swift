@@ -51,29 +51,40 @@ class RNCloud: NSObject {
 
   @objc
   public func hasItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-      let fileUrl = nestedFolderURL.appendingPathComponent(key)
-      let exists = fileManager.fileExists(atPath: fileUrl.path)
-      resolve(exists)
-    }
-    catch {
-      reject("0", "hasItem \(error)", nil)
+      ensureFileLoaded(key, resolver: resolve, rejecter: reject) { (resolver, rejecter) in
+        do {
+          let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
+          
+          let fileNames = try! self.fileManager.contentsOfDirectory(atPath: nestedFolderURL.path)
+          
+          for fileName in fileNames {
+            print(fileName)
+          }
+          
+          let fileUrl = nestedFolderURL.appendingPathComponent(key)
+          let exists = self.fileManager.fileExists(atPath: fileUrl.path)
+          resolve(exists)
+        }
+        catch {
+          reject("0", "hasItem \(error)", nil)
+        }
     }
   }
 
   @objc
   public func getItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-      
-      let fileUrl = nestedFolderURL.appendingPathComponent(key)
-
-      let text2 = try String(contentsOf: fileUrl, encoding: .utf8)
-      resolve(text2)
-    }
-    catch {
-      reject("0", "getItem \(error)", nil)
+      ensureFileLoaded(key, resolver: resolve, rejecter: reject) { (resolver, rejecter) in
+        do {
+          let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
+          
+          let fileUrl = nestedFolderURL.appendingPathComponent(key)
+          
+          let text2 = try String(contentsOf: fileUrl, encoding: .utf8)
+          resolver(text2)
+        }
+        catch {
+          rejecter("0", "getItem \(error)", nil)
+        }
     }
   }
 
@@ -82,35 +93,75 @@ class RNCloud: NSObject {
     guard isCloudEnabled else {
       return
     }
-
-    let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-
-    let fileUrl = nestedFolderURL.appendingPathComponent(key)
-    do {
-        if fileManager.fileExists(atPath: fileUrl.path) {
-          try fileManager.removeItem(at: fileUrl)
-        }
+    
+    ensureFileLoaded(key, resolver: resolve, rejecter: reject) { (resolver, rejecter) in
+      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
       
+      let fileUrl = nestedFolderURL.appendingPathComponent(key)
+      do {
+        if self.fileManager.fileExists(atPath: fileUrl.path) {
+          try self.fileManager.removeItem(at: fileUrl)
+        }
+        
         try value.write(to: fileUrl, atomically: false, encoding: .utf8)
-        resolve(true)
-    }
-    catch {
-      reject("0", "setItem \(error)", nil)
+        resolver(true)
+      }
+      catch {
+        rejecter("0", "setItem \(error)", nil)
+      }
     }
   }
 
   @objc
   public func removeItem(_ key: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-      let fileUrl = nestedFolderURL.appendingPathComponent(key)
-      if fileManager.fileExists(atPath: fileUrl.path) {
-        try fileManager.removeItem(at: fileUrl)
+    ensureFileLoaded(key, resolver: resolve, rejecter: reject) { (resolver, rejecter) in
+      do {
+        let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
+        let fileUrl = nestedFolderURL.appendingPathComponent(key)
+        if self.fileManager.fileExists(atPath: fileUrl.path) {
+          try self.fileManager.removeItem(at: fileUrl)
+        }
+        resolver(true)
       }
-      resolve(true)
+      catch {
+        rejecter("0", "removeItem \(error)", nil)
+      }
     }
-    catch {
-      reject("0", "removeItem \(error)", nil)
+  }
+  
+  func ensureFileLoaded(_ key: String, resolver: RCTPromiseResolveBlock, rejecter :RCTPromiseRejectBlock, completion: @escaping ((_ resolver: RCTPromiseResolveBlock, _ rejecter :RCTPromiseRejectBlock) -> Void)) {
+    let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
+    let fileUrl = nestedFolderURL.appendingPathComponent(key)
+    
+    if fileManager.fileExists(atPath: fileUrl.path) == true {
+        completion(resolver, rejecter)
+        return
+    }
+    
+    let cloudFileUrl = nestedFolderURL.appendingPathComponent(".\(key).icloud")
+
+    if fileManager.fileExists(atPath: cloudFileUrl.path) == false {
+      completion(resolver, rejecter)
+      return
+    }
+    
+    do {
+      try fileManager.startDownloadingUbiquitousItem(at: cloudFileUrl)
+    } catch {
+      logger("cant load file \(key)")
+    }
+    
+    DispatchQueue.main.async {
+        var runCount = 0
+      
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { (timer) in
+          if self.fileManager.fileExists(atPath: fileUrl.path) == true || runCount == 50  {
+            timer.invalidate()
+            completion(resolver, rejecter)
+          }
+          
+          runCount += 1
+        })
     }
   }
 }
