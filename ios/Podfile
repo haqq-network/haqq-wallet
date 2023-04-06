@@ -49,7 +49,6 @@ target 'haqq' do
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
-  pod 'CustomAuth', '~> 5.0.0', :modular_headers => false
   pod 'secp256k1.swift', :modular_headers => true
 
   pod "ToastViewSwift"
