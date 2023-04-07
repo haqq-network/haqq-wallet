@@ -15,10 +15,12 @@ export class Refferal extends Realm.Object {
   snoozedUntil: Date;
 
   static create(params: Partial<Refferal> & {code: string}) {
-    realm.write(() => {
-      realm.create(Refferal.schema.name, params);
-    });
-
+    const exists = Refferal.getById(params.code);
+    if (!exists) {
+      realm.write(() => {
+        realm.create(Refferal.schema.name, params);
+      });
+    }
     return params.code;
   }
 
