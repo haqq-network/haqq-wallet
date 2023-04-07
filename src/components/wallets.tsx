@@ -10,11 +10,15 @@ import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
+
+import {RewardBanner} from './reward-banner';
 
 export type WalletsProps = {
   wallets: Wallet[];
   balance: Record<string, number>;
+  refferal?: Refferal;
   walletConnectSessions: SessionTypes.Struct[][];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -23,10 +27,12 @@ export type WalletsProps = {
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
+  onPressClaimReward: (refferal: Refferal) => void;
 };
 export const Wallets = ({
   balance,
   wallets,
+  refferal,
   walletConnectSessions,
   onPressSend,
   onPressQR,
@@ -35,6 +41,7 @@ export const Wallets = ({
   onPressProtection,
   onPressRestore,
   onWalletConnectPress,
+  onPressClaimReward,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
@@ -104,12 +111,23 @@ export const Wallets = ({
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
+      {!!refferal && !refferal?.isUsed && (
+        <RewardBanner
+          title={I18N.rewardCreatingFirstAccount}
+          onClaimPress={() => onPressClaimReward(refferal)}
+          style={styles.rewardBanner}
+        />
+      )}
       <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );
 };
 
 const styles = createTheme({
+  rewardBanner: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
   container: {
     paddingTop: 24,
   },
