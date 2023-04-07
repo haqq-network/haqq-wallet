@@ -7,6 +7,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {Alert, Linking, ScrollView} from 'react-native';
 
+import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -15,6 +16,7 @@ import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
@@ -189,7 +191,15 @@ export const SettingsTestScreen = () => {
       <Spacer height={5} />
       <Button
         title="Show modal"
-        onPress={() => showModal('reward-error')}
+        onPress={() =>
+          showModal('error', {
+            title: getText(I18N.modalRewardErrorTitle),
+            description: getText(I18N.modalRewardErrorDescription),
+            close: getText(I18N.modalRewardErrorClose),
+            icon: 'reward_error',
+            color: Color.graphicSecond4,
+          })
+        }
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

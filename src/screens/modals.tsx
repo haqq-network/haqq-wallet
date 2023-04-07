@@ -5,6 +5,8 @@ import {Modal} from 'react-native';
 import {
   ErrorAccountAdded,
   ErrorCreateAccount,
+  ErrorModal,
+  ErrorModalProps,
   LedgerAttention,
   LedgerLocked,
   LedgerNoApp,
@@ -14,7 +16,6 @@ import {
   NoInternet,
   PinModal,
   PinModalProps,
-  RewardError,
   SplashModal,
   SplashModalProps,
 } from '@app/components/modals';
@@ -110,6 +111,10 @@ type ProvidersBottomSheetModal = {
   type: 'providers-bottom-sheet';
 } & ProvidersBottomSheetProps;
 
+type ErrorModal = {
+  type: 'error';
+} & ErrorModalProps;
+
 type ModalState =
   | Loading
   | Splash
@@ -125,6 +130,7 @@ type ModalState =
   | LocationUnauthorizedModal
   | CaptchaModal
   | ProvidersBottomSheetModal
+  | ErrorModal
   | null;
 
 export type ModalProps = {
@@ -216,8 +222,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <LocationUnauthorized onClose={modal.onClose} />;
       case 'captcha':
         return <CaptchaModal onClose={modal.onClose} />;
-      case 'reward-error':
-        return <RewardError />;
+      case 'error':
+        return <ErrorModal {...modal} />;
       default:
         return null;
     }

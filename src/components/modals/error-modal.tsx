@@ -9,17 +9,35 @@ import {
   ButtonSize,
   ButtonVariant,
   Icon,
+  IconProps,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
-import {I18N} from '@app/i18n';
+import {createTheme, hideModal} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export type RewardErrorProps = {};
+export type ErrorModalImage =
+  | {
+      icon: IconProps['name'];
+      color: IconProps['color'];
+    }
+  | {
+      image: string;
+    }
+  | {};
 
-export const RewardError = ({}: RewardErrorProps) => {
+export type ErrorModalProps = {
+  title: string;
+  description?: string;
+  close: string;
+} & ErrorModalImage;
+
+export const ErrorModal = ({
+  title,
+  description,
+  close,
+  ...props
+}: ErrorModalProps) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -28,18 +46,31 @@ export const RewardError = ({}: RewardErrorProps) => {
     <BottomPopupContainer>
       {onClose => (
         <View style={page.modalView}>
-          <Text t5 center i18n={I18N.modalRewardErrorTitle} />
-          <Spacer height={8} />
-          <Text t14 center i18n={I18N.modalRewardErrorDescription} />
-          <Spacer height={200} centered>
-            <Icon name="reward_error" color={Color.graphicSecond4} i120 />
-          </Spacer>
+          <Text t5 center>
+            {title}
+          </Text>
+          {description && (
+            <>
+              <Spacer height={8} />
+              <Text t14 center>
+                {description}
+              </Text>
+            </>
+          )}
+          <Spacer height={20} />
+          {'icon' in props && (
+            <Spacer height={160} centered>
+              <Icon name={props.icon} color={props.color} i120 />
+            </Spacer>
+          )}
+          <Spacer height={20} />
+
           <Button
-            i18n={I18N.modalRewardErrorClose}
             onPress={() => onClose(hideModal)}
             variant={ButtonVariant.second}
             size={ButtonSize.middle}
             style={page.button}
+            title={close}
           />
         </View>
       )}
