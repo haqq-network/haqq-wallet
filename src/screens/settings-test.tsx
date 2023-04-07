@@ -189,7 +189,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={5} />
       <Button
         title="Show modal"
-        onPress={() => showModal('ledger-locked')}
+        onPress={() => showModal('reward-error')}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

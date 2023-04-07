@@ -8,3 +8,4 @@ export * from './ledger-attention';
 export * from './ledger-locked';
 export * from './ledger-no-app';
 export * from './hide';
+export * from './reward-error';

@@ -14,6 +14,7 @@ import {
   NoInternet,
   PinModal,
   PinModalProps,
+  RewardError,
   SplashModal,
   SplashModalProps,
 } from '@app/components/modals';
@@ -215,6 +216,8 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <LocationUnauthorized onClose={modal.onClose} />;
       case 'captcha':
         return <CaptchaModal onClose={modal.onClose} />;
+      case 'reward-error':
+        return <RewardError />;
       default:
         return null;
     }
