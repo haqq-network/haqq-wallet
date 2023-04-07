@@ -21,6 +21,7 @@ export enum Events {
   onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
   onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
   onWalletMpcSaved = 'onWalletMpcSaved',
+  onDynamicLink = 'onDynamicLink',
 }
 
 export enum WalletConnectEvents {

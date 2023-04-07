@@ -599,3 +599,9 @@ export interface WalletConnectParsedAccount {
   // eg '5'
   networkId?: string;
 }
+
+export interface DynamicLink {
+  url: string;
+  minimumAppVersion: number | string | null;
+  utmParameters: Record<string, string>;
+}

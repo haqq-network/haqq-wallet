@@ -2,6 +2,7 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
 import Keychain, {
@@ -21,7 +22,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {captureException, hideModal, showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
-import {AppLanguage, AppTheme, BiometryType} from '../types';
+import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
 import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
 
 const optionalConfigObject = {
@@ -90,6 +91,11 @@ class App extends EventEmitter {
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
     setInterval(this.checkBalance, 6000);
+
+    this.handleDynamicLink = this.handleDynamicLink.bind(this);
+
+    dynamicLinks().onLink(this.handleDynamicLink);
+    dynamicLinks().getInitialLink().then(this.handleDynamicLink);
   }
 
   private _biometryType: BiometryType | null = null;
@@ -342,6 +348,10 @@ class App extends EventEmitter {
 
   getBalance(address: string) {
     return this._balance.get(address) ?? 0;
+  }
+
+  handleDynamicLink(link: DynamicLink | null) {
+    this.emit(Events.onDynamicLink, link);
   }
 }
 
