@@ -55,6 +55,7 @@
     "deprecated-react-native-prop-types": "2.3.0",
     "events": "3.3.0",
     "https-browserify": "~0.0.0",
+    "js-sha3": "^0.8.0",
     "json-rpc-engine": "^6.1.0",
     "json-stable-stringify": "^1.0.2",
     "lottie-react-native": "5.1.5",
