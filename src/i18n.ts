@@ -548,6 +548,12 @@ export enum I18N {
   signupNetworkExitsAlertDescription,
   signinOldPinTitle,
   networks,
+  homeBrowserTitle,
+  homeBrowser,
+  errorLoadingPage,
+  errorReason,
+  browserEnterSiteNameOrURL,
+  browserSearch,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -742,6 +748,12 @@ const en: Record<I18N, string> = {
   [I18N.homeWalletTitle]: 'Your accounts',
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
+  [I18N.homeBrowserTitle]: 'Browser',
+  [I18N.homeBrowser]: 'Browser',
+  [I18N.errorLoadingPage]: 'Error loading page',
+  [I18N.errorReason]: 'Reason: {{reason}}',
+  [I18N.browserSearch]: 'Search',
+  [I18N.browserEnterSiteNameOrURL]: 'Enter site name or URL',
   [I18N.homeStaking]: 'Staking',
   [I18N.ledgerConnect]: 'Connect ledger',
   [I18N.ledgerChooseAccount]: 'Choose account',

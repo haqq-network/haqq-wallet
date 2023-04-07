@@ -138,6 +138,30 @@
       "sha1": "05d5d207563b519ca497fa2a09a848deb1dde9d0"
     },
     {
+      "path": "assets/images/browser-error-dark.png",
+      "sha1": "a93e224aa01470ddebf3ff82b0d57474f3e129a5"
+    },
+    {
+      "path": "assets/images/browser-error-dark@2x.png",
+      "sha1": "f964e3537fe3b88cc05725dd9adee41c9ca1c59c"
+    },
+    {
+      "path": "assets/images/browser-error-dark@3x.png",
+      "sha1": "274351e9598e8ba85a9ed60e0b0e85c332b4aa0d"
+    },
+    {
+      "path": "assets/images/browser-error-light.png",
+      "sha1": "60e67b8e4cf186e834094b60184b29124674d996"
+    },
+    {
+      "path": "assets/images/browser-error-light@2x.png",
+      "sha1": "34920153913cbeabb7299b4f5267208b37b73ad2"
+    },
+    {
+      "path": "assets/images/browser-error-light@3x.png",
+      "sha1": "3c093d16558271de3eb420cf3c5d018ce3e697ea"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },
@@ -196,6 +220,30 @@
     {
       "path": "assets/images/islm-logo-circles@3x.png",
       "sha1": "0d13b9af4ae613728b81f2ef5fedde6b8aba899d"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-dark.png",
+      "sha1": "0da3297b94a808754c907f6bb98b1fc331208055"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-dark@2x.png",
+      "sha1": "9287b7c3c82f6d93fa26a122fc31a02ee2b20bc4"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-dark@3x.png",
+      "sha1": "479d95087a7bb262bc4a67b0500e8e8041c478b0"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-light.png",
+      "sha1": "b1579dbbb1f69bc7707f92442b6a2d37be17a8e0"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-light@2x.png",
+      "sha1": "79162fcb4b9190184a97a9f0612a2b98d7bb7727"
+    },
+    {
+      "path": "assets/images/islm-logo-dotted-circle-light@3x.png",
+      "sha1": "34df623c86b870b9431ed0f6148d5bbcf9f78f5d"
     },
     {
       "path": "assets/images/islm_icon.png",

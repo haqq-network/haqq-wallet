@@ -17,6 +17,7 @@ export type LabeledBlockProps = ViewProps & {
   label?: string;
   variant?: LabelBlockVariant;
   rightAction?: React.ReactNode;
+  leftAction?: React.ReactNode;
   i18nLabel?: I18N;
 };
 
@@ -26,6 +27,7 @@ export const LabeledBlock = ({
   label,
   i18nLabel,
   rightAction,
+  leftAction,
   variant = LabelBlockVariant.default,
   ...props
 }: LabeledBlockProps) => {
@@ -50,6 +52,7 @@ export const LabeledBlock = ({
 
   return (
     <View style={containerStyle} {...props}>
+      {!!leftAction && <View style={styles.leftAction}>{leftAction}</View>}
       <View style={styles.flex}>
         {(label || i18nLabel) && (
           <>
@@ -61,7 +64,7 @@ export const LabeledBlock = ({
         )}
         <View style={styles.inner}>{children}</View>
       </View>
-      {rightAction && <View style={styles.sub}>{rightAction}</View>}
+      {!!rightAction && <View style={styles.rightAction}>{rightAction}</View>}
     </View>
   );
 };
@@ -74,9 +77,13 @@ const styles = createTheme({
     borderRadius: 16,
     flexDirection: 'row',
   },
-  sub: {
+  rightAction: {
     justifyContent: 'center',
     marginLeft: 12,
+  },
+  leftAction: {
+    justifyContent: 'center',
+    marginRight: 12,
   },
   flex: {
     flex: 1,

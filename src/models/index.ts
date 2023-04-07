@@ -8,6 +8,8 @@ import {Transaction} from './transaction';
 import {UserSchema} from './user';
 import {Wallet} from './wallet';
 import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
+import {Web3BrowserBookmark} from './web3-browser-bookmark';
+import {Web3BrowserSearchHistory} from './web3-browser-search-history';
 import {Web3BrowserSession} from './web3-browser-session';
 
 import {AppTheme, WalletType} from '../types';
@@ -20,6 +22,8 @@ import {
 export const realm = new Realm({
   schema: [
     Web3BrowserSession,
+    Web3BrowserBookmark,
+    Web3BrowserSearchHistory,
     WalletConnectSessionMetadata,
     Wallet,
     UserSchema,

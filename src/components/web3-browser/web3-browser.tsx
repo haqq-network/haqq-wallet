@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import WebView from 'react-native-webview';
+import WebView, {WebViewProps} from 'react-native-webview';
 
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {Wallet} from '@app/models/wallet';
@@ -17,6 +17,7 @@ import {
 import {Web3BrowserHelper} from './web3-browser-helper';
 import {WebViewUserAgent} from './web3-browser-utils';
 
+import {BrowserError} from '../browser-error';
 import {Button, ButtonSize, ButtonVariant, Spacer, Text} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
@@ -43,6 +44,13 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
       console.log('ethereum loaded:', !!window.ethereum);
       true;`,
     [inpageBridgeWeb3],
+  );
+
+  const renderError = useCallback(
+    (...args: Parameters<NonNullable<WebViewProps['renderError']>>) => (
+      <BrowserError reason={args[2]} />
+    ),
+    [],
   );
 
   useEffect(() => {
@@ -72,68 +80,57 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
     return null;
   }
 
-    helper?.on(WebViewEventsEnum.WINDOW_INFO, (event: WindowInfoEvent) => {
-      console.log('WINDOW_INFO', event);
-    });
-
-    return () => {
-      helper.dispose();
-    };
-  }, [helper]);
-
-  if (!inpageBridgeWeb3) {
-    return null;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.urls}>
-        {!!windowInfo?.title && <Text t18>{windowInfo?.title}</Text>}
-        {!!windowInfo?.url && <Text t17>{windowInfo?.url}</Text>}
-      </View>
-      <View style={styles.header}>
-        <Spacer width={10} />
-        <Button
-          title="<"
-          size={ButtonSize.small}
-          variant={ButtonVariant.contained}
-          onPress={() => {
-            webviewRef.current?.goBack?.();
-          }}
-        />
-        <Spacer width={10} />
-        <Button
-          title=">"
-          size={ButtonSize.small}
-          variant={ButtonVariant.contained}
-          onPress={() => {
-            webviewRef.current?.goForward?.();
-          }}
-        />
-        <Spacer width={10} />
-        <Button
-          variant={ButtonVariant.contained}
-          size={ButtonSize.small}
-          title="disconnect"
-          style={styles.disconnect}
-          onPress={() => {
-            helper.disconnectAccount();
-          }}
-        />
-        <Spacer width={10} />
-        {!!selectedWallet && (
-          <>
-            <WalletRow type={WalletRowTypes.variant3} item={selectedWallet} />
-            <Spacer width={10} />
-          </>
-        )}
-        <Button
-          title="X"
-          variant={ButtonVariant.contained}
-          size={ButtonSize.small}
-          onPress={navigation.goBack}
-        />
-        <Spacer width={10} />
+      <View>
+        <View style={styles.urls}>
+          {!!windowInfo?.title && <Text t18>{windowInfo?.title}</Text>}
+          {!!windowInfo?.url && <Text t17>{windowInfo?.url}</Text>}
+        </View>
+        <View style={styles.header}>
+          <Spacer width={10} />
+          <Button
+            title="<"
+            size={ButtonSize.small}
+            variant={ButtonVariant.contained}
+            onPress={() => {
+              webviewRef.current?.goBack?.();
+            }}
+          />
+          <Spacer width={10} />
+          <Button
+            title=">"
+            size={ButtonSize.small}
+            variant={ButtonVariant.contained}
+            onPress={() => {
+              webviewRef.current?.goForward?.();
+            }}
+          />
+          <Spacer width={10} />
+          <Button
+            variant={ButtonVariant.contained}
+            size={ButtonSize.small}
+            title="disconnect"
+            style={styles.disconnect}
+            onPress={() => {
+              helper.disconnectAccount();
+            }}
+          />
+          <Spacer width={10} />
+          {!!selectedWallet && (
+            <>
+              <WalletRow type={WalletRowTypes.variant3} item={selectedWallet} />
+              <Spacer width={10} />
+            </>
+          )}
+          <Button
+            title="X"
+            variant={ButtonVariant.contained}
+            size={ButtonSize.small}
+            onPress={navigation.goBack}
+          />
+          <Spacer width={10} />
+        </View>
       </View>
       <WebView
         // @ts-ignore
@@ -148,6 +145,7 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
         onMessage={helper.handleMessage}
         onLoad={helper.onLoad}
         onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
+        renderError={renderError}
         source={{uri: initialUrl}}
         decelerationRate={'normal'}
         testID={'web3-browser-webview'}

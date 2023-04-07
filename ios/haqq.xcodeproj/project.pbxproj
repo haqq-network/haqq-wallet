@@ -117,6 +117,18 @@
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
 		F8B96DA771D249F4AE2F840B /* question-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CC5CC6680A74F829967534E /* question-circle.png */; };
 		F91F29D716C8453CB76B957E /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */; };
+		BD945F44FBB346A3888088FE /* browser-error-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 68925590CE0E4E9582CD6E9D /* browser-error-dark.png */; };
+		3D5A7FF8E07E41D0BF4D5B11 /* browser-error-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B1283B44F2284BA484D1D979 /* browser-error-dark@2x.png */; };
+		56B21D2D740C4EFC87E22B7B /* browser-error-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DBDD5FFECAD54C12A02056F3 /* browser-error-dark@3x.png */; };
+		8C2041B134A2414AB1A2C059 /* browser-error-light.png in Resources */ = {isa = PBXBuildFile; fileRef = 2FB0F0A6B52E40B0AD9B9AC7 /* browser-error-light.png */; };
+		5C0A04B04B4B43BCB927AE96 /* browser-error-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 351AF865381043718EEE3555 /* browser-error-light@2x.png */; };
+		F41A63864BCF47DD814BEF2E /* browser-error-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */; };
+		803B0191356F4C208972FCA8 /* islm-logo-dotted-circle-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B4ECDC1FBA264B6E98C65021 /* islm-logo-dotted-circle-dark.png */; };
+		0756247747C8487FAE9CD2F3 /* islm-logo-dotted-circle-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00897B1F386241F1B2B9D635 /* islm-logo-dotted-circle-dark@2x.png */; };
+		8C064C385836472EBD5539DD /* islm-logo-dotted-circle-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 99DDF9BD954B484ABE979A99 /* islm-logo-dotted-circle-dark@3x.png */; };
+		B1A2A40CA0D04032A53CDBE8 /* islm-logo-dotted-circle-light.png in Resources */ = {isa = PBXBuildFile; fileRef = CDEF8701F52046B9B73B7C64 /* islm-logo-dotted-circle-light.png */; };
+		C18BF02B70A340B1924D5812 /* islm-logo-dotted-circle-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5202138B6178440CA1ECC753 /* islm-logo-dotted-circle-light@2x.png */; };
+		E2D8C08DC5994E1D8DF3FFFD /* islm-logo-dotted-circle-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E1C4EFFAD2C54D5B98CDAFBB /* islm-logo-dotted-circle-light@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,6 +264,18 @@
 		F84CA7D4A2CB8652188A40CA /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
 		FA7D7E71DEFCBA9CB04078B7 /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
+		68925590CE0E4E9582CD6E9D /* browser-error-dark.png */ = {isa = PBXFileReference; name = "browser-error-dark.png"; path = "../assets/images/browser-error-dark.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B1283B44F2284BA484D1D979 /* browser-error-dark@2x.png */ = {isa = PBXFileReference; name = "browser-error-dark@2x.png"; path = "../assets/images/browser-error-dark@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DBDD5FFECAD54C12A02056F3 /* browser-error-dark@3x.png */ = {isa = PBXFileReference; name = "browser-error-dark@3x.png"; path = "../assets/images/browser-error-dark@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2FB0F0A6B52E40B0AD9B9AC7 /* browser-error-light.png */ = {isa = PBXFileReference; name = "browser-error-light.png"; path = "../assets/images/browser-error-light.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		351AF865381043718EEE3555 /* browser-error-light@2x.png */ = {isa = PBXFileReference; name = "browser-error-light@2x.png"; path = "../assets/images/browser-error-light@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */ = {isa = PBXFileReference; name = "browser-error-light@3x.png"; path = "../assets/images/browser-error-light@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B4ECDC1FBA264B6E98C65021 /* islm-logo-dotted-circle-dark.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-dark.png"; path = "../assets/images/islm-logo-dotted-circle-dark.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		00897B1F386241F1B2B9D635 /* islm-logo-dotted-circle-dark@2x.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-dark@2x.png"; path = "../assets/images/islm-logo-dotted-circle-dark@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		99DDF9BD954B484ABE979A99 /* islm-logo-dotted-circle-dark@3x.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-dark@3x.png"; path = "../assets/images/islm-logo-dotted-circle-dark@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CDEF8701F52046B9B73B7C64 /* islm-logo-dotted-circle-light.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-light.png"; path = "../assets/images/islm-logo-dotted-circle-light.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5202138B6178440CA1ECC753 /* islm-logo-dotted-circle-light@2x.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-light@2x.png"; path = "../assets/images/islm-logo-dotted-circle-light@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E1C4EFFAD2C54D5B98CDAFBB /* islm-logo-dotted-circle-light@3x.png */ = {isa = PBXFileReference; name = "islm-logo-dotted-circle-light@3x.png"; path = "../assets/images/islm-logo-dotted-circle-light@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,6 +545,18 @@
 				166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */,
 				D69B77F39E664C21827D2371 /* signup-network-exists-warning@3x.png */,
 				EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */,
+				68925590CE0E4E9582CD6E9D /* browser-error-dark.png */,
+				B1283B44F2284BA484D1D979 /* browser-error-dark@2x.png */,
+				DBDD5FFECAD54C12A02056F3 /* browser-error-dark@3x.png */,
+				2FB0F0A6B52E40B0AD9B9AC7 /* browser-error-light.png */,
+				351AF865381043718EEE3555 /* browser-error-light@2x.png */,
+				FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */,
+				B4ECDC1FBA264B6E98C65021 /* islm-logo-dotted-circle-dark.png */,
+				00897B1F386241F1B2B9D635 /* islm-logo-dotted-circle-dark@2x.png */,
+				99DDF9BD954B484ABE979A99 /* islm-logo-dotted-circle-dark@3x.png */,
+				CDEF8701F52046B9B73B7C64 /* islm-logo-dotted-circle-light.png */,
+				5202138B6178440CA1ECC753 /* islm-logo-dotted-circle-light@2x.png */,
+				E1C4EFFAD2C54D5B98CDAFBB /* islm-logo-dotted-circle-light@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -705,6 +741,18 @@
 				67C27A04DC024090AA593E3B /* signup-network-exists-warning@2x.png in Resources */,
 				C6B0804012AB478DB46458DE /* signup-network-exists-warning@3x.png in Resources */,
 				CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */,
+				BD945F44FBB346A3888088FE /* browser-error-dark.png in Resources */,
+				3D5A7FF8E07E41D0BF4D5B11 /* browser-error-dark@2x.png in Resources */,
+				56B21D2D740C4EFC87E22B7B /* browser-error-dark@3x.png in Resources */,
+				8C2041B134A2414AB1A2C059 /* browser-error-light.png in Resources */,
+				5C0A04B04B4B43BCB927AE96 /* browser-error-light@2x.png in Resources */,
+				F41A63864BCF47DD814BEF2E /* browser-error-light@3x.png in Resources */,
+				803B0191356F4C208972FCA8 /* islm-logo-dotted-circle-dark.png in Resources */,
+				0756247747C8487FAE9CD2F3 /* islm-logo-dotted-circle-dark@2x.png in Resources */,
+				8C064C385836472EBD5539DD /* islm-logo-dotted-circle-dark@3x.png in Resources */,
+				B1A2A40CA0D04032A53CDBE8 /* islm-logo-dotted-circle-light.png in Resources */,
+				C18BF02B70A340B1924D5812 /* islm-logo-dotted-circle-light@2x.png in Resources */,
+				E2D8C08DC5994E1D8DF3FFFD /* islm-logo-dotted-circle-light@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

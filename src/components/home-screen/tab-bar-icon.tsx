@@ -18,6 +18,8 @@ export const HomeScreenTabBarIcon = ({
         return IconsName.wallet;
       case 'homeStaking':
         return IconsName.staking;
+      case 'homeBrowser':
+        return IconsName.browser;
       case 'homeSettings':
         return IconsName.settings;
       case 'homeGovernance':

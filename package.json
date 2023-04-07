@@ -11,7 +11,8 @@
     "typescript:check": "tsc",
     "prettier:check": "prettier --check ./src",
     "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto,url --yarn --hack && hooks/install",
-    "ts-coverage": "typescript-coverage-report"
+    "ts-coverage": "typescript-coverage-report",
+    "link-assets": "npx react-native-asset"
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",
@@ -59,10 +60,6 @@
     "events": "3.3.0",
     "https-browserify": "~0.0.0",
     "json-rpc-engine": "^6.1.0",
-<<<<<<< HEAD
-=======
-    "json-rpc-middleware-stream": "3.0.0",
->>>>>>> 5618257 (feat(Web3Browser): implementet basic version of web3 browser)
     "lottie-react-native": "5.1.5",
     "markdown-it": "13.0.1",
     "obj-multiplex": "1.0.0",

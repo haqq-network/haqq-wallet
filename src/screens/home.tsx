@@ -16,6 +16,7 @@ import {HomeGovernanceScreen} from '@app/screens/home-governance';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
 
+import {HomeBrowserScreen} from './home-browser';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
@@ -58,6 +59,11 @@ const stakingOptions = {
   tabBarIcon: tabBarIcon('homeStaking'),
 };
 
+const browserOptions = {
+  headerShown: false,
+  tabBarIcon: tabBarIcon('homeBrowser'),
+};
+
 const governanceOptions = {
   headerShown: false,
   tabBarIcon: tabBarIcon('homeGovernance'),
@@ -85,6 +91,11 @@ export const HomeScreen = () => {
           options={stakingOptions}
         />
       )}
+      <Tab.Screen
+        name="homeBrowser"
+        component={HomeBrowserScreen}
+        options={browserOptions}
+      />
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeGovernance"

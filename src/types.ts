@@ -76,6 +76,9 @@ export type RootStackParamList = {
   web3browser: {
     url: string;
   };
+  browserHomePage: undefined;
+  browserSearchPage: undefined;
+  homeBrowser: undefined;
   homeSettings:
     | undefined
     | {

@@ -2,6 +2,8 @@ import {JsonRpcRequest} from 'json-rpc-engine';
 import {Alert, Linking, Platform} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
+import {isValidUrl} from '@app/utils';
+
 import {WebViewEventsEnum, WindowInfoEvent} from './scripts';
 
 export enum EthereumEventsEnum {
@@ -117,4 +119,84 @@ export const getOriginFromUrl = (url: string) => {
     origin = `${matches[1]}//${matches[2]}`;
   }
   return origin;
+};
+
+/**
+ * Returns URL prefixed with protocol
+ *
+ * @param url - String corresponding to url
+ * @param defaultProtocol - Protocol string to append to URLs that have none
+ * @returns - String corresponding to sanitized input depending if it's a search or url
+ */
+export const prefixUrlWithProtocol = (
+  url: string,
+  defaultProtocol = 'https://',
+) => {
+  const hasProtocol = /^[a-z]*:\/\//.test(url);
+  const sanitizedURL = hasProtocol ? url : `${defaultProtocol}${url}`;
+  return sanitizedURL;
+};
+
+/**
+ * Returns URL prefixed with protocol, which could be a search engine url if
+ * a keyword is detected instead of a url
+ *
+ * @param input - String corresponding to url input
+ * @param searchEngine - Protocol string to append to URLs that have none
+ * @param defaultProtocol - Protocol string to append to URLs that have none
+ * @returns - String corresponding to sanitized input depending if it's a search or url
+ */
+export const onUrlSubmit = (
+  input: string,
+  searchEngine = 'Google',
+  defaultProtocol = 'https://',
+) => {
+  //Check if it's a url or a keyword
+  const regEx = new RegExp(
+    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',;=.+]+$/g,
+  );
+  if (!isValidUrl(input) && !regEx.test(input)) {
+    // Add exception for localhost
+    if (
+      !input.startsWith('http://localhost') &&
+      !input.startsWith('localhost')
+    ) {
+      // In case of keywords we default to google search
+      let searchUrl =
+        'https://www.google.com/search?q=' + encodeURIComponent(input);
+      if (searchEngine === 'DuckDuckGo') {
+        searchUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
+      }
+      return searchUrl;
+    }
+  }
+  return prefixUrlWithProtocol(input, defaultProtocol);
+};
+
+/**
+ * Return host from url string
+ *
+ * @param url - String containing url
+ * @param defaultProtocol
+ * @returns - String corresponding to host
+ */
+export function getHost(url: string, defaultProtocol = 'https://') {
+  const valid = isValidUrl(url);
+  if (!valid) {
+    return url;
+  }
+
+  const sanitizedUrl = prefixUrlWithProtocol(url, defaultProtocol);
+  const startIndex = sanitizedUrl.indexOf('//') + 2;
+  const endIndex = sanitizedUrl.indexOf('/', startIndex);
+  const hostname =
+    endIndex === -1
+      ? url.substring(startIndex)
+      : url.substring(startIndex, endIndex);
+  const result = hostname === '' ? url : hostname;
+  return result;
+}
+
+export const getFavIconUrl = (url: string) => {
+  return `https://api.faviconkit.com/${getHost(url)}/50`;
 };
