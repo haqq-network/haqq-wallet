@@ -1,13 +1,13 @@
 import {EventEmitter} from 'events';
 
-import {PUSH_NOTIFICATIONS} from '@env';
+import {PUSH_NOTIFICATIONS_URL} from '@env';
+import {jsonrpcRequest} from '@haqq/shared-react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
 
 class PushNotifications extends EventEmitter {
-  path: string = PUSH_NOTIFICATIONS;
-  last_id = 0;
+  path: string = PUSH_NOTIFICATIONS_URL;
 
   constructor() {
     super();
@@ -30,7 +30,9 @@ class PushNotifications extends EventEmitter {
 
     if (enabled) {
       const token = await messaging().getToken();
-      const subscription = await this.createNotificationToken(token);
+      const subscription = await this.createNotificationToken<{id: string}>(
+        token,
+      );
 
       if (subscription) {
         app.getUser().subscription = subscription.id;
@@ -46,85 +48,29 @@ class PushNotifications extends EventEmitter {
     return `${this.path}/${subPath}`;
   }
 
-  async postQuery<T>(path: string, data: string): Promise<T> {
-    console.log('postQuery', this.getPath(path), data);
-    const resp = await fetch(this.getPath(path), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json, text/plain, */*',
-        Accept: 'application/json;charset=UTF-8',
-      },
-      body: data,
-    });
-
-    return await resp.json();
+  createNotificationToken<T extends object>(token: string) {
+    return jsonrpcRequest<T>('/', 'createNotificationToken', [token]);
   }
 
-  async jsonRpcRequest<T>(
-    path: string,
-    method: string,
-    ...params: string[]
-  ): Promise<T | undefined> {
-    this.last_id += 1;
-
-    const response = await this.postQuery<{
-      id: string;
-      result: T;
-      error: null | {code: number; message: string; data: any};
-    }>(
-      '/',
-      JSON.stringify({
-        jsonrpc: '2.0',
-        id: String(this.last_id),
-        method,
-        params,
-      }),
-    );
-
-    console.log('response', response);
-
-    if (response.id !== String(this.last_id)) {
-      throw new Error('wrong response');
-    }
-
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
-
-    if (response) {
-      return response.result;
-    }
+  async removeNotificationToken<T extends object>(token: string) {
+    return jsonrpcRequest<T>('/', 'removeNotificationToken', [token]);
   }
 
-  createNotificationToken<T = {id: string}>(
-    token: string,
-  ): Promise<T | undefined> {
-    return this.jsonRpcRequest<T>('/', 'createNotificationToken', token);
-  }
-
-  async removeNotificationToken(token: string): Promise<void> {
-    return this.jsonRpcRequest<void>('/', 'removeNotificationToken', token);
-  }
-
-  async createNotificationSubscription(
+  async createNotificationSubscription<T extends object>(
     token_id: string,
     address: string,
-  ): Promise<void> {
-    return this.jsonRpcRequest<void>(
-      '/',
-      'createNotificationSubscription',
+  ) {
+    return jsonrpcRequest<T>('/', 'createNotificationSubscription', [
       token_id,
       address,
-    );
+    ]);
   }
 
-  async unsubscribeAddress(token_id: string, address: string): Promise<void> {
-    return this.jsonRpcRequest<void>(
-      '/',
-      'unsubscribeAddress',
-      token_id,
-      address,
-    );
+  async unsubscribeAddress<T extends object>(
+    token_id: string,
+    address: string,
+  ) {
+    return jsonrpcRequest<T>('/', 'unsubscribeAddress', [token_id, address]);
   }
 }
 

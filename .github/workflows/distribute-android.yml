@@ -65,6 +65,7 @@ jobs:
           echo "MPC_CUSTOM=${{secrets.MPC_CUSTOM}}" >> .env
           echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
           echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
+          echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
 
       - name: Install Fastlane
         run: |
