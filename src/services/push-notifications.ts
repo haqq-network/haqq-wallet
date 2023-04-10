@@ -6,12 +6,9 @@ import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
 
-class PushNotifications extends EventEmitter {
+export class PushNotifications extends EventEmitter {
+  static instance = new PushNotifications();
   path: string = PUSH_NOTIFICATIONS_URL;
-
-  constructor() {
-    super();
-  }
 
   get isAvailable() {
     return this.path !== '';
@@ -30,6 +27,7 @@ class PushNotifications extends EventEmitter {
 
     if (enabled) {
       const token = await messaging().getToken();
+
       const subscription = await this.createNotificationToken<{id: string}>(
         token,
       );
@@ -49,18 +47,18 @@ class PushNotifications extends EventEmitter {
   }
 
   createNotificationToken<T extends object>(token: string) {
-    return jsonrpcRequest<T>('/', 'createNotificationToken', [token]);
+    return jsonrpcRequest<T>(this.path, 'createNotificationToken', [token]);
   }
 
   async removeNotificationToken<T extends object>(token: string) {
-    return jsonrpcRequest<T>('/', 'removeNotificationToken', [token]);
+    return jsonrpcRequest<T>(this.path, 'removeNotificationToken', [token]);
   }
 
   async createNotificationSubscription<T extends object>(
     token_id: string,
     address: string,
   ) {
-    return jsonrpcRequest<T>('/', 'createNotificationSubscription', [
+    return jsonrpcRequest<T>(this.path, 'createNotificationSubscription', [
       token_id,
       address,
     ]);
@@ -70,8 +68,9 @@ class PushNotifications extends EventEmitter {
     token_id: string,
     address: string,
   ) {
-    return jsonrpcRequest<T>('/', 'unsubscribeAddress', [token_id, address]);
+    return jsonrpcRequest<T>(this.path, 'unsubscribeAddress', [
+      token_id,
+      address,
+    ]);
   }
 }
-
-export const pushNotifications = new PushNotifications();

@@ -1429,10 +1429,10 @@
   resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.11.tgz#b1e54632c2b7ca90f1d99b2a9867944886fe8a1e"
   integrity sha512-VtSoPYTWqS2cHaKRDnn7MG3pNI/OBI8qs+nzVml1qVRDcKrhBf0YZLrWZxPJp3QiG9Vnpi9FQfif+5++gignvA==
 
-"@haqq/shared-react-native@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.2.tgz#fa61041fe23c8b20f547f6af742b5528392c9e44"
-  integrity sha512-KQ4Ezi+rn3KT1Sk1gD03ckzFzKzGC/DZUkKNsJx5TF+NJ7QVRk7oz8C2Cr+U9HqHdo7y4koX2Y7PcB/prITngw==
+"@haqq/shared-react-native@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.3.tgz#c8dbbd5bc15efc19cd81f4859b1ea14aa2b773cb"
+  integrity sha512-9a3Lw1pMfgIYUKt9yJ+LmGkMhYwNdSLtQaHGCqL7dnmeaZfM9CyK2IwI7UCeVgUCzDojWk90pjg6/vYp44jx8w==
   dependencies:
     bn.js "5.2.1"
     json-stable-stringify "1.0.2"
