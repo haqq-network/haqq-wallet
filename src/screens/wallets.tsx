@@ -1,12 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
+import {Alert} from 'react-native';
 
+import {Color} from '@app/colors';
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
+import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useActiveRefferal} from '@app/hooks/use-active-refferal';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
+import {I18N, getText} from '@app/i18n';
+import {Refferal} from '@app/models/refferal';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
@@ -15,6 +21,7 @@ export const WalletsWrapper = () => {
   const wallets = useWallets();
   const [visibleRows, setVisibleRows] = useState(wallets.visible);
   const {activeSessions} = useWalletConnectSessions();
+  const activeRefferal = useActiveRefferal();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
@@ -117,10 +124,34 @@ export const WalletsWrapper = () => {
     navigation.navigate('signin', {next: ''});
   }, [navigation]);
 
+  const onPressClaimReward = useCallback(async (refferal: Refferal) => {
+    try {
+      const captchaKey = await awaitForCaptcha();
+      refferal.update({
+        isUsed: true,
+      });
+      const data = {
+        ...refferal.toJSON(),
+        captchaKey,
+      };
+      // TODO: request to backend
+      Alert.alert('Result', JSON.stringify(data, null, 2));
+    } catch (err) {
+      showModal('error', {
+        title: getText(I18N.modalRewardErrorTitle),
+        description: getText(I18N.modalRewardErrorDescription),
+        close: getText(I18N.modalRewardErrorClose),
+        icon: 'reward_error',
+        color: Color.graphicSecond4,
+      });
+    }
+  }, []);
+
   return (
     <Wallets
       balance={balance}
       wallets={visibleRows}
+      refferal={activeRefferal}
       walletConnectSessions={walletConnectSessions}
       onWalletConnectPress={onWalletConnectPress}
       onPressSend={onPressSend}
@@ -129,6 +160,7 @@ export const WalletsWrapper = () => {
       onPressRestore={onPressRestore}
       onPressQR={onPressQR}
       onPressProtection={onPressProtection}
+      onPressClaimReward={onPressClaimReward}
     />
   );
 };
