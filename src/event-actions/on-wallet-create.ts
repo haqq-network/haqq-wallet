@@ -6,14 +6,14 @@ import {Events} from '@app/events';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
-import {pushNotifications} from '@app/services/push-notifications';
+import {PushNotifications} from '@app/services/push-notifications';
 import {WalletType} from '@app/types';
 
 export async function onWalletCreate(wallet: Wallet) {
   try {
     let subscription = app.notifications;
     if (subscription) {
-      await pushNotifications.createNotificationSubscription(
+      await PushNotifications.instance.createNotificationSubscription(
         subscription,
         wallet.address,
       );

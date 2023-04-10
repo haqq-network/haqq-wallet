@@ -20,7 +20,7 @@ import {I18N, getText} from '@app/i18n';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
-import {pushNotifications} from '@app/services/push-notifications';
+import {PushNotifications} from '@app/services/push-notifications';
 import {isValidUrl} from '@app/utils';
 import {ETH_HD_PATH} from '@app/variables/common';
 
@@ -53,7 +53,7 @@ export const SettingsTestScreen = () => {
   const iCloud = useRef(new Cloud()).current;
 
   const onPressRequestPermissions = async () => {
-    await pushNotifications.requestPermissions();
+    await PushNotifications.instance.requestPermissions();
   };
 
   useEffect(() => {
