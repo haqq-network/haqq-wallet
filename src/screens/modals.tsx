@@ -115,6 +115,15 @@ type ErrorModal = {
   type: 'error';
 } & ErrorModalProps;
 
+type EmptyType = {
+  type:
+    | 'no-internet'
+    | 'error-account-added'
+    | 'error-create-account'
+    | 'ledger-attention'
+    | 'ledger-locked';
+};
+
 type ModalState =
   | Loading
   | Splash
@@ -131,6 +140,7 @@ type ModalState =
   | CaptchaModal
   | ProvidersBottomSheetModal
   | ErrorModal
+  | EmptyType
   | null;
 
 export type ModalProps = {
