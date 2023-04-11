@@ -8,7 +8,7 @@ export async function onDynamicLink(link: DynamicLink | null) {
     const parsedUrl = url.parse(link.url, true);
 
     if (parsedUrl.query.ref) {
-      Refferal.create({code: parsedUrl.query.ref});
+      Refferal.create({code: parsedUrl.query.claim_code});
     }
   }
 }
