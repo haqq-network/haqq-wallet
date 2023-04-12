@@ -135,14 +135,16 @@ export const WalletsWrapper = () => {
             await onBannerSnoozeUntil(id);
             break;
         }
-      } catch (err) {
-        showModal('error', {
-          title: getText(I18N.modalRewardErrorTitle),
-          description: getText(I18N.modalRewardErrorDescription),
-          close: getText(I18N.modalRewardErrorClose),
-          icon: 'reward_error',
-          color: Color.graphicSecond4,
-        });
+      } catch (e) {
+        if (e instanceof Error) {
+          showModal('error', {
+            title: getText(I18N.modalRewardErrorTitle),
+            description: e.message,
+            close: getText(I18N.modalRewardErrorClose),
+            icon: 'reward_error',
+            color: Color.graphicSecond4,
+          });
+        }
       }
     },
     [],

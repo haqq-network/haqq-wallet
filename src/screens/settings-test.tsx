@@ -5,7 +5,6 @@ import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 import messaging from '@react-native-firebase/messaging';
 import {Alert, ScrollView} from 'react-native';
-import {BSON} from 'realm';
 
 import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
@@ -71,23 +70,24 @@ export const SettingsTestScreen = () => {
   const onCreateBanner = useCallback(() => {
     Banner.create({
       id: 'qwerty',
-      title: 'Islamic Airdrop',
+      title: 'Reward for creating the first account',
       description:
         'Join us in the spirit of Ramadan and claim your free ISLM coins.',
+      type: 'claimCode',
       buttons: [
         {
-          id: new BSON.ObjectId(),
-          title: 'Claim ISLM',
+          id: new Realm.BSON.UUID(),
+          title: 'Claim reward',
           event: 'claimCode',
           params: {
             claim_code: 'qwerty',
           },
-          color: '#FFFFFF',
-          backgroundColor: '#04D484',
+          color: '#01B26E',
+          backgroundColor: '#EEF9F5',
         },
       ],
-      backgroundColorFrom: '#0C9FA5',
-      backgroundColorTo: '#1D69A4',
+      backgroundColorFrom: '#1D69A4',
+      backgroundColorTo: '#0C9FA5',
     });
   }, []);
 

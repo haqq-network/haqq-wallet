@@ -1,12 +1,12 @@
-import {BSON} from 'realm';
-
 import {realm} from '@app/models/index';
+
+import UUID = Realm.BSON.UUID;
 
 export class BannerButton extends Realm.Object {
   static schema = {
     name: 'BannerButton',
     properties: {
-      id: 'objectId',
+      id: 'uuid',
       title: 'string',
       event: 'string',
       params: 'string{}',
@@ -14,7 +14,7 @@ export class BannerButton extends Realm.Object {
       backgroundColor: 'string',
     },
   };
-  id!: BSON.ObjectId;
+  id!: UUID;
   title!: string;
   event!: 'claimCode' | 'close';
   params!: object;

@@ -14,11 +14,16 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
   const visible = Wallet.getAllVisible();
 
-  const wallet = await awaitForWallet({
-    wallets: visible.snapshot(),
-    title: I18N.stakingDelegateAccountTitle,
-  });
+  let wallet;
 
+  try {
+    wallet = await awaitForWallet({
+      wallets: visible.snapshot(),
+      title: I18N.stakingDelegateAccountTitle,
+    });
+  } catch (e) {
+    return;
+  }
   const captchaKey = await awaitForCaptcha();
 
   await Airdrop.instance.claim(wallet, claimCode, captchaKey);

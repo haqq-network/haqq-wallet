@@ -2,7 +2,6 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {isAfter} from 'date-fns';
 import {Linking} from 'react-native';
-import {BSON} from 'realm';
 
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
@@ -64,13 +63,12 @@ export async function onAppStarted() {
         Banner.remove(ref.code);
       } else {
         Banner.create({
-          snoozedUntil: undefined,
           id: ref.code,
           title: info.airdrop_title,
           description: info.airdrop_text,
           buttons: [
             {
-              id: new BSON.ObjectId(),
+              id: new Realm.BSON.UUID(),
               title: info.airdrop_button_text,
               event: 'claimCode',
               params: {

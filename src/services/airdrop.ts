@@ -13,9 +13,8 @@ export type ClaimResponse =
     };
 
 export class Airdrop {
-  private _remoteUrl: string;
-
   static instance = new Airdrop('https://airdrop.com');
+  private _remoteUrl: string;
 
   constructor(remoteUrl: string) {
     this._remoteUrl = remoteUrl;

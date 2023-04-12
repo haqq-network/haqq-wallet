@@ -23,9 +23,14 @@ export const HomeBanner = ({banner, style, onPress}: RewardBannerProps) => {
         start={GRADIENT_START}
         end={GRADIENT_END}
         style={styles.inner}>
-        <Text color={Color.textBase3} t10>
+        <Text color={banner.titleColor ?? Color.textBase3} t10>
           {banner.title}
         </Text>
+        {banner.description && (
+          <Text color={banner.descriptionColor ?? Color.textBase3} t14>
+            {banner.description}
+          </Text>
+        )}
         <Spacer height={12} />
         <Inline gap={20}>
           {banner.buttons.map(button => (
@@ -36,7 +41,6 @@ export const HomeBanner = ({banner, style, onPress}: RewardBannerProps) => {
               textColor={button.color}
               variant={ButtonVariant.contained}
               size={ButtonSize.small}
-              style={styles.claimButton}
               title={button.title}
             />
           ))}
@@ -47,12 +51,8 @@ export const HomeBanner = ({banner, style, onPress}: RewardBannerProps) => {
 };
 
 const styles = StyleSheet.create({
-  claimButton: {
-    width: '100%',
-  },
   container: {
     borderRadius: 16,
-    maxHeight: 100,
   },
   inner: {
     padding: 16,
