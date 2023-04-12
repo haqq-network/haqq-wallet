@@ -1,10 +1,11 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 import messaging from '@react-native-firebase/messaging';
 import {Alert, ScrollView} from 'react-native';
+import {BSON} from 'realm';
 
 import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
@@ -16,6 +17,7 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Banner} from '@app/models/banner';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
@@ -49,7 +51,6 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrobserUrl] = useState('');
   const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
   const navigation = useTypedNavigation();
-  const iCloud = useRef(new Cloud()).current;
 
   const user = useUser();
 
@@ -67,17 +68,28 @@ export const SettingsTestScreen = () => {
     navigation.navigate('web3browser', {url: browserUrl});
   };
 
-  const checkICloudFile = useCallback(async () => {
-    const exists = await iCloud.hasItem(
-      'haqq_0x82edd867f789c53b95dca44d5589697c747aaaa7',
-    );
-    console.log('exists', exists);
-  }, [iCloud]);
-
-  const readICloudFile = useCallback(async () => {
-    const content = await iCloud.getItem('haqq_backup');
-    console.log('read', content);
-  }, [iCloud]);
+  const onCreateBanner = useCallback(() => {
+    Banner.create({
+      id: 'qwerty',
+      title: 'Islamic Airdrop',
+      description:
+        'Join us in the spirit of Ramadan and claim your free ISLM coins.',
+      buttons: [
+        {
+          id: new BSON.ObjectId(),
+          title: 'Claim ISLM',
+          event: 'claimCode',
+          params: {
+            claim_code: 'qwerty',
+          },
+          color: '#FFFFFF',
+          backgroundColor: '#04D484',
+        },
+      ],
+      backgroundColorFrom: '#0C9FA5',
+      backgroundColorTo: '#1D69A4',
+    });
+  }, []);
 
   const onPressMPC = useCallback(async () => {
     const token = await fetch(CUSTOM_JWT_TOKEN, {
@@ -204,14 +216,8 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="check cloud"
-        onPress={() => checkICloudFile()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="read cloud"
-        onPress={() => readICloudFile()}
+        title="create banner"
+        onPress={onCreateBanner}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

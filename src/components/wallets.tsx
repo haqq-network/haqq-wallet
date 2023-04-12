@@ -5,20 +5,19 @@ import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CarouselItem} from '@app/components/carousel-item';
+import {HomeBanner} from '@app/components/home-banner';
 import {Icon, Text} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Refferal} from '@app/models/refferal';
+import {Banner, BannerButton} from '@app/models/banner';
 import {Wallet} from '@app/models/wallet';
-
-import {RewardBanner} from './reward-banner';
 
 export type WalletsProps = {
   wallets: Wallet[];
   balance: Record<string, number>;
-  refferal?: Refferal;
+  banner: Banner | null;
   walletConnectSessions: SessionTypes.Struct[][];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -27,13 +26,13 @@ export type WalletsProps = {
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
-  onPressClaimReward: (refferal: Refferal) => void;
+  onPressBanner: (id: string, button: BannerButton) => Promise<void>;
   onPressAccountInfo: (address: string) => void;
 };
 export const Wallets = ({
   balance,
   wallets,
-  refferal,
+  banner,
   walletConnectSessions,
   onPressSend,
   onPressQR,
@@ -42,7 +41,7 @@ export const Wallets = ({
   onPressProtection,
   onPressRestore,
   onWalletConnectPress,
-  onPressClaimReward,
+  onPressBanner,
   onPressAccountInfo,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
@@ -114,10 +113,10 @@ export const Wallets = ({
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
-      {!!refferal && !refferal?.isUsed && (
-        <RewardBanner
-          title={I18N.rewardCreatingFirstAccount}
-          onClaimPress={() => onPressClaimReward(refferal)}
+      {!!banner && !banner?.isUsed && (
+        <HomeBanner
+          banner={banner}
+          onPress={onPressBanner}
           style={styles.rewardBanner}
         />
       )}
