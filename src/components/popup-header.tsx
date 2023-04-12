@@ -28,7 +28,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       preventDefault: () => void;
       data: {action: NavigationAction};
     }) => {
-      if (!canGoBack && !e.data.action.source && !options.headerBackForce) {
+      if (!canGoBack && !e.data.action.source) {
         e.preventDefault();
       }
     };
@@ -38,7 +38,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
     return () => {
       navigation.removeListener('beforeRemove', subscription);
     };
-  }, [canGoBack, navigation, options.headerBackForce]);
+  }, [canGoBack, navigation]);
 
   return (
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>

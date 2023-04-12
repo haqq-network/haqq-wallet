@@ -487,7 +487,6 @@ export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
-  headerBackForce?: boolean | string;
 }
 
 export type HeaderButtonProps = {
