@@ -127,15 +127,15 @@ export const WalletsWrapper = () => {
   const onPressClaimReward = useCallback(async (refferal: Refferal) => {
     try {
       const captchaKey = await awaitForCaptcha();
-      refferal.update({
-        isUsed: true,
-      });
       const data = {
         ...refferal.toJSON(),
         captchaKey,
       };
       // TODO: request to backend
       Alert.alert('Result', JSON.stringify(data, null, 2));
+      refferal.update({
+        isUsed: true,
+      });
     } catch (err) {
       showModal('error', {
         title: getText(I18N.modalRewardErrorTitle),

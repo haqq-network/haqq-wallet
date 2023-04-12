@@ -1,21 +1,20 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
-import {Alert, Linking, ScrollView} from 'react-native';
+import {Alert, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
+import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
@@ -45,22 +44,20 @@ messaging()
   });
 
 export const SettingsTestScreen = () => {
-  const [initialUrl, setInitialUrl] = useState<null | string>(null);
+  const [isRequestPermission, setIsRequestPermission] = useState(false);
   const [wc, setWc] = useState('');
   const [browserUrl, setBrobserUrl] = useState('');
   const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
   const navigation = useTypedNavigation();
   const iCloud = useRef(new Cloud()).current;
 
-  const onPressRequestPermissions = async () => {
-    await PushNotifications.instance.requestPermissions();
-  };
+  const user = useUser();
 
-  useEffect(() => {
-    Linking.getInitialURL().then(result => {
-      setInitialUrl(result);
-    });
-  }, []);
+  const onPressRequestPermissions = async () => {
+    setIsRequestPermission(true);
+    await PushNotifications.instance.requestPermissions();
+    setIsRequestPermission(false);
+  };
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
@@ -150,13 +147,10 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {initialUrl && (
-        <Text t11 onPress={() => Clipboard.setString(initialUrl)}>
-          initialUrl: {initialUrl}
-        </Text>
-      )}
       <Button
         title="Request permissions for push"
+        loading={isRequestPermission}
+        disabled={!!user.subscription}
         onPress={onPressRequestPermissions}
         variant={ButtonVariant.contained}
       />
