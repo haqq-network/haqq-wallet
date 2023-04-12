@@ -1,4 +1,4 @@
-import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {PopupHeader} from '@app/components/popup-header';
 
 import {ActionSheetType} from '../types';

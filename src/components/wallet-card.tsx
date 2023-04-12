@@ -24,6 +24,7 @@ export type BalanceProps = {
   wallet: Wallet;
   balance: number;
   walletConnectSessions: SessionTypes.Struct[];
+  onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressProtection: (address: string) => void;
@@ -38,6 +39,7 @@ export const WalletCard = ({
   onPressQR,
   onWalletConnectPress,
   onPressProtection,
+  onPressAccountInfo,
 }: BalanceProps) => {
   const [cardState, setCardState] = useState('loading');
   const screenWidth = useWindowDimensions().width;
@@ -69,6 +71,10 @@ export const WalletCard = ({
     onWalletConnectPress?.(wallet?.address);
   };
 
+  const onAccountInfo = () => {
+    onPressAccountInfo(wallet?.address);
+  };
+
   if (!wallet) {
     return null;
   }
@@ -89,10 +95,15 @@ export const WalletCard = ({
           styles.topNav,
           disableTopNavMarginBottom && styles.marginBottom,
         ]}>
-        <Text t12 style={styles.name} ellipsizeMode="tail" numberOfLines={1}>
+        <Text
+          t12
+          style={styles.name}
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          onPress={onAccountInfo}>
           {wallet.name || 'name'}
         </Text>
-        <CopyButton style={styles.copyButton} value={wallet.address}>
+        <CopyButton style={styles.copyIcon} value={wallet.address}>
           <Text t14 color={Color.textBase3}>
             {formattedAddress}
           </Text>
@@ -190,7 +201,7 @@ const styles = createTheme({
     padding: 6,
     overflow: 'hidden',
   },
-  copyButton: {
+  copyIcon: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 12,

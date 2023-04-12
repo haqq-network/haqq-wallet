@@ -57,6 +57,16 @@ export class Transaction extends Realm.Object {
     return realm.objectForPrimaryKey<Transaction>(Transaction.schema.name, id);
   }
 
+  static getAllByAccountIdAndProviderId(accountId: string, providerId: string) {
+    return realm
+      .objects<Transaction>(Transaction.schema.name)
+      .filtered(
+        'providerId == $0 && ( from == $1 || to == $1 )',
+        providerId,
+        accountId.toLowerCase(),
+      );
+  }
+
   static removeAll() {
     const transactions = realm.objects<Transaction>(Transaction.schema.name);
 
@@ -74,12 +84,12 @@ export class Transaction extends Realm.Object {
   ) {
     realm.write(() => {
       realm.create('Transaction', {
-        hash: transaction.hash,
-        account: transaction.from,
+        hash: transaction.hash.toLowerCase(),
+        account: transaction.from.toLowerCase(),
         raw: JSON.stringify(transaction),
         createdAt: new Date(),
-        from: transaction.from,
-        to: transaction.to,
+        from: transaction.from.toLowerCase(),
+        to: transaction.to ? transaction.to.toLowerCase() : null,
         value: parseFloat(utils.formatEther(transaction.value)),
         fee: fee,
         confirmed: false,

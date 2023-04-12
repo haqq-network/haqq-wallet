@@ -84,6 +84,9 @@ export type RootStackParamList = {
         params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
+  accountInfo: {
+    accountId: string;
+  };
   welcome: undefined;
   create: undefined;
   scanQr: undefined;

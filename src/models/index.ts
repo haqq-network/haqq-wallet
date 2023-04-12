@@ -30,7 +30,7 @@ export const realm = new Realm({
     GovernanceVoting,
     Refferal,
   ],
-  schemaVersion: 42,
+  schemaVersion: 43,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -270,6 +270,34 @@ export const realm = new Realm({
           default:
             newObject.version = 1;
             break;
+        }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 43) {
+      const oldObjects = oldRealm.objects<{
+        hash: string;
+        account: string;
+        from: string;
+        to: string | null;
+      }>('Transaction');
+      const newObjects = newRealm.objects<{
+        hash: string;
+        account: string;
+        from: string;
+        to: string | null;
+      }>('Transaction');
+
+      for (const objectIndex in oldObjects) {
+        const oldObject = oldObjects[objectIndex];
+        const newObject = newObjects[objectIndex];
+
+        newObject.hash = oldObject.hash.toLowerCase();
+        newObject.account = oldObject.account.toLowerCase();
+        newObject.from = oldObject.from.toLowerCase();
+
+        if (oldObject.to !== null) {
+          newObject.to = oldObject.to.toLowerCase();
         }
       }
     }

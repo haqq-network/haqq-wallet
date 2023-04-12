@@ -39,9 +39,11 @@ import {
   hideModal,
   showModal,
 } from '@app/helpers';
+import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {AccountInfoScreen} from '@app/screens/account-info';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
@@ -54,6 +56,7 @@ import {
   ActionSheetType,
   AppTheme,
   PresentationNavigation,
+  RootStackParamList,
   ScreenOptionType,
   StackPresentationTypes,
 } from '@app/types';
@@ -114,7 +117,7 @@ const screenOptions: ScreenOptionType = {
   },
 };
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const appTheme = createTheme({
   colors: {
@@ -294,6 +297,11 @@ export const App = () => {
                     component={ProposalDepositScreen}
                   />
                 </Stack.Group>
+                <Stack.Screen
+                  name="accountInfo"
+                  component={AccountInfoScreen}
+                  options={getWalletTitle}
+                />
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}

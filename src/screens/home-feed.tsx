@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {Results} from 'realm';
-
 import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
+import {filterTransactions} from '@app/helpers/filter-transactions';
 import {
   useTransactions,
   useTypedNavigation,
@@ -14,15 +13,6 @@ import {
 } from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
-
-const filterTransactions = (
-  transactions: Results<Transaction>,
-  providerId: string,
-) => {
-  return transactions.filter(
-    t => t.providerId === providerId || t.providerId === '',
-  );
-};
 
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();

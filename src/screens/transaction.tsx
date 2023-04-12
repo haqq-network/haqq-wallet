@@ -2,7 +2,7 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useWallets} from '@app/hooks';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
