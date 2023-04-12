@@ -5,15 +5,14 @@ import {Linking} from 'react-native';
 
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
+import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/isFeatureEnabled';
 import {I18N, getText} from '@app/i18n';
-import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {Airdrop} from '@app/services/airdrop';
 
 export async function onAppStarted() {
   const initialUrl = await Linking.getInitialURL();
@@ -57,31 +56,7 @@ export async function onAppStarted() {
     try {
       const ref = refferal[0];
 
-      const info = await Airdrop.instance.info(ref.code);
-
-      if (!info.available) {
-        Banner.remove(ref.code);
-      } else {
-        Banner.create({
-          id: ref.code,
-          title: info.airdrop_title,
-          description: info.airdrop_text,
-          buttons: [
-            {
-              id: new Realm.BSON.UUID(),
-              title: info.airdrop_button_text,
-              event: 'claimCode',
-              params: {
-                claim_code: ref.code,
-              },
-              color: info.airdrop_button_text_color,
-              backgroundColor: info.airdrop_button_background_color,
-            },
-          ],
-          backgroundColorFrom: info.airdrop_button_background_color,
-          backgroundColorTo: info.airdrop_button_background_color,
-        });
-      }
+      await onBannerAddClaimCode(ref.code);
     } catch (e) {
       if (e instanceof Error) {
         showModal('error', {

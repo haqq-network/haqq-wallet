@@ -17,6 +17,7 @@ import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {Refferal} from '@app/models/refferal';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
@@ -89,6 +90,15 @@ export const SettingsTestScreen = () => {
       backgroundColorFrom: '#1D69A4',
       backgroundColorTo: '#0C9FA5',
     });
+  }, []);
+
+  const onClearBanners = useCallback(() => {
+    const banners = Banner.getAll();
+
+    for (const banner of banners) {
+      Banner.remove(banner.id);
+      Refferal.remove(banner.id);
+    }
   }, []);
 
   const onPressMPC = useCallback(async () => {
@@ -218,6 +228,12 @@ export const SettingsTestScreen = () => {
       <Button
         title="create banner"
         onPress={onCreateBanner}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="clear banners"
+        onPress={onClearBanners}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
