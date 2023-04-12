@@ -2,6 +2,7 @@ import {awaitForWallet} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {Airdrop} from '@app/services/airdrop';
 
@@ -31,4 +32,12 @@ export async function onBannerClaimAirdrop(claimCode: string) {
   banner.update({
     isUsed: true,
   });
+
+  const refferal = Refferal.getById(claimCode);
+
+  if (refferal) {
+    refferal.update({
+      isUsed: true,
+    });
+  }
 }

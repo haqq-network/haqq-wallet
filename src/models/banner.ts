@@ -62,11 +62,12 @@ export class Banner extends Realm.Object {
     },
   ) {
     const exists = Banner.getById(params.id);
-    if (!exists) {
-      realm.write(() => {
-        realm.create(Banner.schema.name, params);
+    realm.write(() => {
+      realm.create(Banner.schema.name, {
+        ...exists?.toJSON(),
+        ...params,
       });
-    }
+    });
     return params.id;
   }
 
