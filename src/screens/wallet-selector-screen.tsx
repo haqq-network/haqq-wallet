@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {WalletSelector} from '@app/components/wallet-selector';
 import {app} from '@app/contexts';
 import {createTheme, popupScreenOptions} from '@app/helpers';

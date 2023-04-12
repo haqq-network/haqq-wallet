@@ -147,6 +147,13 @@ export const WalletsWrapper = () => {
     }
   }, []);
 
+  const onPressAccountInfo = useCallback(
+    (accountId: string) => {
+      navigation.navigate('accountInfo', {accountId});
+    },
+    [navigation],
+  );
+
   return (
     <Wallets
       balance={balance}
@@ -161,6 +168,7 @@ export const WalletsWrapper = () => {
       onPressQR={onPressQR}
       onPressProtection={onPressProtection}
       onPressClaimReward={onPressClaimReward}
+      onPressAccountInfo={onPressAccountInfo}
     />
   );
 };

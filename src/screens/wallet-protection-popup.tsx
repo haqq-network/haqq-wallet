@@ -2,7 +2,8 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {DismissPopupButton} from '@app/components/dismiss-popup-button';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
+import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {ScreenOptionType} from '@app/types';
@@ -13,6 +14,7 @@ const WalletProtection = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {
   ...popupScreenOptions,
+  headerLeft: SpacerPopupButton,
   headerRight: DismissPopupButton,
   keyboardHandlingEnabled: false,
   headerBackHidden: true,

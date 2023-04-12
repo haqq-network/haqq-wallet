@@ -28,6 +28,7 @@ export type WalletsProps = {
   onPressLedger: () => void;
   onPressRestore: () => void;
   onPressClaimReward: (refferal: Refferal) => void;
+  onPressAccountInfo: (address: string) => void;
 };
 export const Wallets = ({
   balance,
@@ -42,6 +43,7 @@ export const Wallets = ({
   onPressRestore,
   onWalletConnectPress,
   onPressClaimReward,
+  onPressAccountInfo,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
@@ -70,6 +72,7 @@ export const Wallets = ({
               onPressQR={onPressQR}
               onPressProtection={onPressProtection}
               onWalletConnectPress={onWalletConnectPress}
+              onPressAccountInfo={onPressAccountInfo}
             />
           </CarouselItem>
         ))}

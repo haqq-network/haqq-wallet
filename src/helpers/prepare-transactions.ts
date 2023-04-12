@@ -1,4 +1,5 @@
 import {formatISO} from 'date-fns';
+import {Results} from 'realm';
 
 import {Transaction} from '@app/models/transaction';
 import {
@@ -10,7 +11,7 @@ import {
 
 export function prepareTransactions(
   source: string[],
-  transactions: Transaction[],
+  transactions: Transaction[] | Results<Transaction>,
 ): TransactionList[] {
   const hash = new Map();
 

@@ -553,6 +553,7 @@ export enum I18N {
   modalRewardErrorClose,
   rewardCreatingFirstAccount,
   rewardBannerClaim,
+  amountISLM,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1220,4 +1221,5 @@ const en: Record<I18N, string> = {
   [I18N.modalRewardErrorClose]: 'Close',
   [I18N.rewardCreatingFirstAccount]: 'Reward for creating the first account',
   [I18N.rewardBannerClaim]: 'Claim reward',
+  [I18N.amountISLM]: '{{amount}} ISLM',
 };

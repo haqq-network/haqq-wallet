@@ -84,6 +84,9 @@ export type RootStackParamList = {
         params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
+  accountInfo: {
+    accountId: string;
+  };
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
@@ -484,6 +487,7 @@ export interface ScreenOptionType extends StackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;
+  headerBackForce?: boolean | string;
 }
 
 export type HeaderButtonProps = {
