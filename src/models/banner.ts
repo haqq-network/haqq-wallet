@@ -27,6 +27,7 @@ export class Banner extends Realm.Object {
     name: 'Banner',
     properties: {
       id: 'string',
+      type: 'string',
       title: 'string',
       description: 'string?',
       buttons: {
@@ -43,6 +44,7 @@ export class Banner extends Realm.Object {
     primaryKey: 'id',
   };
   id!: string;
+  type!: 'claimCode';
   title!: string;
   description: string;
   buttons: BannerButton[];
