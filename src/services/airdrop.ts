@@ -1,10 +1,12 @@
+import {AIRDROP_URL} from '@env';
+
 export type ClaimResponse =
   | {
       available: true;
       title: string;
-      text: string;
-      button_text: string;
-      button_text_color: string;
+      description: string;
+      button_title: string;
+      button_color: string;
       button_background_color: string;
       background_color_from: string;
       background_color_to: string;
@@ -15,7 +17,7 @@ export type ClaimResponse =
     };
 
 export class Airdrop {
-  static instance = new Airdrop('https://mimir.cipher.land');
+  static instance = new Airdrop(AIRDROP_URL);
   private _remoteUrl: string;
 
   constructor(remoteUrl: string) {

@@ -10,16 +10,17 @@ export async function onBannerAddClaimCode(claimCode: string) {
     Banner.create({
       id: claimCode,
       title: info.title,
-      description: info.text,
+      description: info.description,
+      type: 'claimCode',
       buttons: [
         {
           id: new Realm.BSON.UUID(),
-          title: info.button_text,
+          title: info.button_title,
           event: 'claimCode',
           params: {
             claim_code: claimCode,
           },
-          color: info.button_text_color,
+          color: info.button_color,
           backgroundColor: info.button_background_color,
         },
       ],

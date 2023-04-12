@@ -66,6 +66,7 @@ jobs:
           echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
           echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
           echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
+          echo "AIRDROP_URL=${{secrets.AIRDROP_URL}}" >> .env
 
       - name: Install Fastlane
         run: |
