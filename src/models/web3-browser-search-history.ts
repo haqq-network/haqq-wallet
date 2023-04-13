@@ -1,13 +1,15 @@
 import {realm} from '@app/models';
+import {Link} from '@app/types';
 import {generateUUID} from '@app/utils';
 
-export class Web3BrowserSearchHistory extends Realm.Object {
+export class Web3BrowserSearchHistory extends Realm.Object implements Link {
   static schema = {
     name: 'Web3BrowserSearchHistory',
     properties: {
       id: 'string',
       url: 'string',
       title: 'string',
+      icon: 'string?',
       createdAt: 'date',
     },
     primaryKey: 'id',
@@ -15,6 +17,7 @@ export class Web3BrowserSearchHistory extends Realm.Object {
   id!: string;
   url!: string;
   title!: string;
+  icon!: string | undefined;
   createdAt!: Date;
 
   static create(params: Partial<Web3BrowserSearchHistory>) {
@@ -51,6 +54,10 @@ export class Web3BrowserSearchHistory extends Realm.Object {
     return realm.objects<Web3BrowserSearchHistory>(
       Web3BrowserSearchHistory.schema.name,
     );
+  }
+
+  static getByUrl(url: string) {
+    return Web3BrowserSearchHistory.getAll().filtered?.(`url = '${url}'`)?.[0];
   }
 
   static removeAll() {

@@ -74,6 +74,12 @@ export enum IconsName {
   wallet_connect = 'wallet_connect',
   pharse = 'pharse',
   browser = 'browser',
+  square = 'square',
+  share = 'share',
+  refresh = 'refresh',
+  disconnect = 'disconnect',
+  more = 'more',
+  circle_minus = 'circle_minus',
 }
 
 export type IconSize =

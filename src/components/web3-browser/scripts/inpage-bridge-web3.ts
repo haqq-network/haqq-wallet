@@ -6,7 +6,7 @@ export const InpageBridgeWeb3 = {
   script: '',
   async loadScript() {
     if (IS_ANDROID) {
-      // When use the `await` operator, Android cannot find the file InpageBridgeWeb3.
+      // When use the `await` operator, Android cannot find the file InpageBridgeWeb3.js
       // Error: ENOENT: /InpageBridgeWeb3.js: open failed: ENOENT (No such file or directory), open 'undefined/InpageBridgeWeb3.js'
       return new Promise<string>((resolve, reject) => {
         RNFS.readFileAssets('custom/InpageBridgeWeb3.js', 'utf8')

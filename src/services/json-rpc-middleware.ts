@@ -4,6 +4,8 @@ import {
   createAsyncMiddleware,
 } from 'json-rpc-engine';
 
+import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
+import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
 import {
@@ -16,9 +18,6 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {EthNetwork} from '@app/services';
 import {getAppVersion} from '@app/services/version';
-
-import {WebViewEventsEnum} from './scripts';
-import {Web3BrowserHelper} from './web3-browser-helper';
 
 type TJsonRpcRequest = JsonRpcRequest<any>;
 type JsonRpcMethodHandlerParams = {
@@ -70,7 +69,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     return {
       chainId,
       networkVersion,
-      walletName: 'HAQQ Wallet',
       accounts: getEthAccounts({helper, req}),
       isUnlocked: app.isUnlocked,
     };

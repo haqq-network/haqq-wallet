@@ -64,7 +64,7 @@ export const emitToEthereumJS = <EventName extends EthereumEventsEnum>(
     `;
 };
 
-export const changeWebViewHrefJS = (href: string) => {
+export const changeWebViewUrlJS = (href: string) => {
   return `(function(){window.location.href = '${href}' })()`;
 };
 
@@ -121,6 +121,9 @@ export const getOriginFromUrl = (url: string) => {
   return origin;
 };
 
+export const clearUrl = (url: string) => {
+  return getOriginFromUrl(url).replace(/^[a-zA-Z]*:\/\//, '');
+};
 /**
  * Returns URL prefixed with protocol
  *
@@ -132,7 +135,7 @@ export const prefixUrlWithProtocol = (
   url: string,
   defaultProtocol = 'https://',
 ) => {
-  const hasProtocol = /^[a-z]*:\/\//.test(url);
+  const hasProtocol = /^[a-zA-Z]*:\/\//.test(url);
   const sanitizedURL = hasProtocol ? url : `${defaultProtocol}${url}`;
   return sanitizedURL;
 };
@@ -197,6 +200,6 @@ export function getHost(url: string, defaultProtocol = 'https://') {
   return result;
 }
 
-export const getFavIconUrl = (url: string) => {
-  return `https://api.faviconkit.com/${getHost(url)}/50`;
+export const getFavIconUrl = (url: string, size = 200) => {
+  return `https://api.faviconkit.com/${getHost(url)}/${size}`;
 };

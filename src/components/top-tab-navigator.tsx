@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
+import {I18N, getText} from '@app/i18n';
+import {isI18N} from '@app/utils';
 
 import {Spacer, Text} from './ui';
 
@@ -20,7 +22,8 @@ type TopTabNavigatorComponent = {
 } & React.FC<TopTabNavigatorProps>;
 
 interface TabProps {
-  title: string;
+  name: string;
+  title: string | I18N;
   component: React.ComponentType<{}> | JSX.Element;
   rigntActon?: React.ComponentType<{}> | JSX.Element;
 }
@@ -59,42 +62,48 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     }
   }, [children]);
 
+  const [activeTabIndex, setActiveTabIndex] = useState(initialTabIndex);
   const [activeTab, setActiveTab] = useState(
-    filteredChildren?.[initialTabIndex],
+    filteredChildren?.[activeTabIndex],
   );
   const RigntActon = activeTab?.props?.rigntActon;
 
-  const onTabPress = useCallback((tab: TabType) => {
+  const onTabPress = useCallback((tab: TabType, index: number) => {
+    setActiveTabIndex(index);
     setActiveTab(tab);
   }, []);
 
   useEffect(() => {
-    if (!activeTab && filteredChildren[initialTabIndex]) {
-      setActiveTab(filteredChildren[initialTabIndex]);
+    if (filteredChildren[activeTabIndex]) {
+      setActiveTab(filteredChildren[activeTabIndex]);
     }
-  }, [activeTab, filteredChildren, initialTabIndex]);
+  }, [activeTab, filteredChildren, activeTabIndex]);
 
   return (
-    <SafeAreaView style={styles.tabsContainer}>
+    <View style={styles.container}>
       <ScrollView
         horizontal
         scrollEnabled={scrollHeaderEnabled}
         showsHorizontalScrollIndicator={false}
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.tabsHeader}>
           {filteredChildren.map((tab, index) => {
-            const isActive = tab === activeTab;
+            const isActive = tab?.props?.name === activeTab?.props?.name;
             const textColor = isActive ? Color.textBase1 : Color.textBase2;
             const notFirstTab = index > 0;
+            const title = isI18N(tab.props.title)
+              ? getText(tab.props.title)
+              : tab.props.title;
             return (
               <TouchableOpacity
                 key={`${tab.props.title}_${index}`}
-                onPress={() => onTabPress(tab)}>
+                onPress={() => onTabPress(tab, index)}>
                 <Text
                   color={textColor}
                   style={notFirstTab && styles.tabTitleInsents}
                   t10>
-                  {tab.props.title}
+                  {title}
                 </Text>
               </TouchableOpacity>
             );
@@ -108,8 +117,8 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           )}
         </View>
       </ScrollView>
-      <View>{activeTab}</View>
-    </SafeAreaView>
+      <View style={styles.tabContent}>{activeTab}</View>
+    </View>
   );
 };
 
@@ -124,18 +133,25 @@ TopTabNavigator.Tab = Tab;
 export {TopTabNavigator};
 
 const styles = StyleSheet.create({
+  scrollView: {
+    width: '100%',
+    minHeight: 22,
+  },
   scrollViewContent: {
     minWidth: '100%',
+    minHeight: 22,
   },
-  tabsContainer: {
+  container: {
     width: '100%',
   },
   tabsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
+    minHeight: 22,
   },
   tabTitleInsents: {
     marginLeft: 12,
   },
+  tabContent: {},
 });

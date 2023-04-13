@@ -23,7 +23,7 @@ export const BrowserError = ({reason}: BrowserErrorProps) => {
       <Spacer height={20} />
       <Text t7 i18n={I18N.errorLoadingPage} />
       <Spacer height={4} />
-      <Text t14 i18n={I18N.errorReason} i18params={{reason}} />
+      {!!reason && <Text t14 i18n={I18N.errorReason} i18params={{reason}} />}
     </View>
   );
 };

@@ -554,6 +554,12 @@ export enum I18N {
   errorReason,
   browserEnterSiteNameOrURL,
   browserSearch,
+  Favourite,
+  Recent,
+  Clear,
+  ThereNoBookmarks,
+  ThereNoRecentSites,
+  browserSearchHistory,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -704,6 +710,12 @@ const en: Record<I18N, string> = {
   [I18N.save]: 'Save',
   [I18N.share]: 'Share',
   [I18N.edit]: 'Edit',
+  [I18N.Favourite]: 'Favourite',
+  [I18N.Recent]: 'Recent',
+  [I18N.Clear]: 'Clear',
+  [I18N.ThereNoBookmarks]: 'There are no bookmarks',
+  [I18N.ThereNoRecentSites]: 'There are no recent sites',
+  [I18N.browserSearchHistory]: 'Search history',
   [I18N.continue]: 'Continue',
   [I18N.actionSheetDiscard]: 'Discard Changes',
   [I18N.actionSheetKeepEditing]: 'Keep Editing',

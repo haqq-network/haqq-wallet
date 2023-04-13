@@ -1,21 +1,26 @@
 import {realm} from '@app/models';
+import {Link} from '@app/types';
 import {generateUUID} from '@app/utils';
 
-export class Web3BrowserBookmark extends Realm.Object {
+export class Web3BrowserBookmark extends Realm.Object implements Link {
   static schema = {
     name: 'Web3BrowserBookmark',
     properties: {
       id: 'string',
       url: 'string',
       title: 'string',
+      icon: 'string?',
+      createdAt: 'int',
     },
     primaryKey: 'id',
   };
   id!: string;
   url!: string;
   title!: string;
+  icon!: string | undefined;
+  createdAt!: number;
 
-  static create(params: Web3BrowserBookmark) {
+  static create(params: Partial<Web3BrowserBookmark>) {
     const id = generateUUID();
     realm.write(() => {
       realm.create<Web3BrowserBookmark>(
@@ -23,6 +28,7 @@ export class Web3BrowserBookmark extends Realm.Object {
         {
           ...params,
           id: id.toLowerCase(),
+          createdAt: Date.now(),
         },
         Realm.UpdateMode.Modified,
       );
@@ -46,6 +52,10 @@ export class Web3BrowserBookmark extends Realm.Object {
 
   static getAll() {
     return realm.objects<Web3BrowserBookmark>(Web3BrowserBookmark.schema.name);
+  }
+
+  static getByUrl(url: string) {
+    return Web3BrowserBookmark.getAll().filtered?.(`url = '${url}'`)?.[0];
   }
 
   static removeAll() {

@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {IS_IOS} from '@app/variables/common';
 
+import {BrowserEditBookmarksScreen} from './browser-edit-bookmarks-screen';
 import {BrowserHomePageScreen} from './browser-home-page-screen';
 import {BrowserSearchPageScreen} from './browser-search-page-screen';
 import {Web3BrowserScreen} from './web3-browser';
@@ -18,6 +19,7 @@ const screenOptions = {
 };
 
 const browserHomePageScreenOptions = {
+  ...TransitionPresets.ModalSlideFromBottomIOS,
   headerShown: true,
   headerShadowVisible: false,
   headerStyle: {
@@ -25,6 +27,7 @@ const browserHomePageScreenOptions = {
   },
   headerStatusBarHeight: IS_IOS ? undefined : 0,
   headerTitle: () => <Text t8 i18n={I18N.homeBrowserTitle} />,
+  headerLeft: () => <></>,
 };
 
 export const HomeBrowserScreen = () => {
@@ -40,10 +43,17 @@ export const HomeBrowserScreen = () => {
       <BrowserNavigator.Screen
         name="web3browser"
         component={Web3BrowserScreen}
+        options={TransitionPresets.ModalSlideFromBottomIOS}
       />
       <BrowserNavigator.Screen
         name="browserSearchPage"
         component={BrowserSearchPageScreen}
+        options={TransitionPresets.ModalSlideFromBottomIOS}
+      />
+      <BrowserNavigator.Screen
+        name="browserEditBookmarksScreen"
+        component={BrowserEditBookmarksScreen}
+        options={TransitionPresets.ModalSlideFromBottomIOS}
       />
     </BrowserNavigator.Navigator>
   );

@@ -1,30 +1,68 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName, Input, LottieWrap} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconsName,
+  Input,
+  LottieWrap,
+} from '@app/components/ui';
 import {useThemeSelector} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Link} from '@app/types';
 
-// const TEST_URLS = [
-//   'https://app.haqq.network',
-//   'https://vesting.haqq.network',
-//   'https://app.uniswap.org',
-//   'https://testedge2.haqq.network',
-//   'https://safe.testedge2.haqq.network',
-//   'https://metamask.github.io/test-dapp/',
-// ];
+import {BrowserHomePageLinkList} from './browser-home-page-link-list';
+import {TopTabNavigator} from './top-tab-navigator';
 
 export interface BrowserHomePageProps {
+  favouriteLinks: Link[];
+  recentLinks: Link[];
   onSearchPress(): void;
+  onFavouritePress(link: Link): void;
+  onRecentPress(link: Link): void;
+  onEditFavouritePress(): void;
+  onClearRecentPress(): void;
 }
 
-export const BrowserHomePage = ({onSearchPress}: BrowserHomePageProps) => {
+export const BrowserHomePage = ({
+  favouriteLinks,
+  recentLinks,
+  onSearchPress,
+  onFavouritePress,
+  onRecentPress,
+  onClearRecentPress,
+  onEditFavouritePress,
+}: BrowserHomePageProps) => {
   const animation = useThemeSelector({
     light: require('@assets/animations/islm-logo-dotted-circle-light.json'),
     dark: require('@assets/animations/islm-logo-dotted-circle-dark.json'),
   });
+
+  const renderFavouriteTab = useCallback(
+    () => (
+      <BrowserHomePageLinkList
+        emptyText={I18N.ThereNoBookmarks}
+        onLinkPress={onFavouritePress}
+        links={favouriteLinks}
+      />
+    ),
+    [favouriteLinks, onFavouritePress],
+  );
+
+  const renderRecentTab = useCallback(
+    () => (
+      <BrowserHomePageLinkList
+        emptyText={I18N.ThereNoRecentSites}
+        onLinkPress={onRecentPress}
+        links={recentLinks}
+      />
+    ),
+    [onRecentPress, recentLinks],
+  );
 
   return (
     <View style={styles.container}>
@@ -44,11 +82,49 @@ export const BrowserHomePage = ({onSearchPress}: BrowserHomePageProps) => {
           />
         </TouchableOpacity>
       </View>
+
+      <View>
+        <TopTabNavigator>
+          <TopTabNavigator.Tab
+            name={'favourite'}
+            title={I18N.Favourite}
+            component={renderFavouriteTab}
+            rigntActon={
+              <Button
+                textStyle={styles.tabActionButton}
+                style={styles.tabActionButton}
+                i18n={I18N.edit}
+                onPress={onEditFavouritePress}
+                variant={ButtonVariant.text}
+                textColor={Color.textGreen1}
+              />
+            }
+          />
+          <TopTabNavigator.Tab
+            name={'recent'}
+            title={I18N.Recent}
+            component={renderRecentTab}
+            rigntActon={
+              <Button
+                textStyle={styles.tabActionButton}
+                style={styles.tabActionButton}
+                i18n={I18N.Clear}
+                onPress={onClearRecentPress}
+                variant={ButtonVariant.text}
+                textColor={Color.textGreen1}
+              />
+            }
+          />
+        </TopTabNavigator>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  tabActionButton: {
+    height: 22,
+  },
   animationContainer: {
     flex: 1,
     width: '100%',
@@ -56,8 +132,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchContainer: {
-    flex: 0.7,
     width: '100%',
+    marginBottom: 20,
   },
   container: {
     flex: 1,

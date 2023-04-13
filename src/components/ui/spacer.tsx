@@ -25,7 +25,13 @@ export const Spacer = ({
   ...props
 }: SpacerProps) => {
   const container = useMemo(() => {
-    const hasSizeProp = !!(height || minHeight || width);
+    const hasSizeProp = !!(
+      typeof height !== 'undefined' ||
+      typeof minHeight !== 'undefined' ||
+      typeof width !== 'undefined' ||
+      typeof flex !== 'undefined' ||
+      typeof minWidth !== 'undefined'
+    );
     return [
       hasSizeProp
         ? {
@@ -49,6 +55,6 @@ export const Spacer = ({
 };
 
 const styles = createTheme({
-  flexOne: {flex: 1},
+  flexOne: {flex: undefined},
   centered: {justifyContent: 'center'},
 });

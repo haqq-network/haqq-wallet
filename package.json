@@ -75,6 +75,7 @@
     "react-native-crypto": "2.2.0",
     "react-native-detector": "0.2.3",
     "react-native-dotenv": "3.4.8",
+    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-encrypted-storage": "4.0.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "2.9.0",

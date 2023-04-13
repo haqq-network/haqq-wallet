@@ -78,7 +78,21 @@ export type RootStackParamList = {
   };
   browserHomePage: undefined;
   browserSearchPage: undefined;
-  homeBrowser: undefined;
+  browserEditBookmarksScreen: undefined;
+  homeBrowser:
+    | undefined
+    | {
+        screen: 'web3browser';
+        params: {
+          url: string;
+        };
+      }
+    | {
+        screen:
+          | 'browserSearchPage'
+          | 'browserEditBookmarksScreen'
+          | 'browserHomePage';
+      };
   homeSettings:
     | undefined
     | {
@@ -594,4 +608,11 @@ export interface WalletConnectParsedAccount {
   namespace?: string;
   // eg '5'
   networkId?: string;
+}
+
+export interface Link {
+  id: string;
+  url: string;
+  title: string;
+  icon?: string;
 }

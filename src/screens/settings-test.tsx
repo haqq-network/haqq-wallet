@@ -57,7 +57,10 @@ export const SettingsTestScreen = () => {
   };
 
   const onPressOpenBrowser = () => {
-    navigation.navigate('web3browser', {url: browserUrl});
+    navigation.navigate('homeBrowser', {
+      screen: 'web3browser',
+      params: {url: browserUrl},
+    });
   };
 
   const checkICloudFile = useCallback(async () => {
