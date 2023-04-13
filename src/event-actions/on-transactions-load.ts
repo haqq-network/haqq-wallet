@@ -1,7 +1,4 @@
-import {utils} from 'ethers';
-
 import {calcFee, captureException} from '@app/helpers';
-import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 
@@ -41,23 +38,13 @@ async function loadTransactionsFromExplorerWithProvider(
       const rows = await txList.json();
 
       for (const row of rows.result) {
-        const exists = Transaction.getById(row.hash);
-        if (!exists) {
-          realm.write(() => {
-            realm.create(Transaction.schema.name, {
-              hash: row.hash,
-              account: address,
-              raw: JSON.stringify(row),
-              createdAt: new Date(parseInt(row.timeStamp, 10) * 1000),
-              from: row.from,
-              to: row.to,
-              value: Number(utils.formatEther(row.value)),
-              fee: calcFee(row.gasPrice, row.gasUsed),
-              confirmed: parseInt(row.confirmations, 10) > 10,
-              providerId,
-            });
-          });
-        }
+        console.log(
+          'loadTransactionsFromExplorer',
+          providerId,
+          address,
+          JSON.stringify(row),
+        );
+        Transaction.create(row, providerId, calcFee(row.gasPrice, row.gasUsed));
       }
     }
   } catch (e) {

@@ -50,7 +50,7 @@ export const TransactionLedgerScreen = () => {
         );
 
         if (transaction) {
-          await Transaction.createTransaction(
+          await Transaction.create(
             transaction,
             user.providerId,
             route.params.fee,

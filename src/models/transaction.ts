@@ -1,9 +1,9 @@
-import {
-  TransactionReceipt,
-  TransactionResponse,
-} from '@ethersproject/abstract-provider';
+import {TransactionReceipt} from '@ethersproject/abstract-provider';
+import {BigNumber} from '@ethersproject/bignumber';
 import {utils} from 'ethers';
 
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {calcFee, captureException} from '@app/helpers';
 import {realm} from '@app/models/index';
 
@@ -12,23 +12,27 @@ export class Transaction extends Realm.Object {
     name: 'Transaction',
     properties: {
       hash: 'string',
+      block: 'string?',
       account: 'string',
       raw: 'string',
       from: 'string',
-      to: 'string',
+      to: 'string?',
+      contractAddress: 'string?',
       value: 'double',
       fee: 'double',
-      createdAt: 'date',
-      confirmed: 'bool',
+      createdAt: {type: 'date', default: () => new Date()},
+      confirmed: {type: 'bool', default: false},
       providerId: 'string',
     },
     primaryKey: 'hash',
   };
   hash!: string;
+  block: string;
   account!: string;
   raw!: string;
   from!: string;
-  to!: string;
+  to: string;
+  contractAddress: string;
   value!: number;
   fee!: number;
   createdAt!: Date;
@@ -57,6 +61,12 @@ export class Transaction extends Realm.Object {
     return realm.objectForPrimaryKey<Transaction>(Transaction.schema.name, id);
   }
 
+  static getAllByProviderId(providerId: string) {
+    return realm
+      .objects<Transaction>(Transaction.schema.name)
+      .filtered('providerId == $0', providerId);
+  }
+
   static getAllByAccountIdAndProviderId(accountId: string, providerId: string) {
     return realm
       .objects<Transaction>(Transaction.schema.name)
@@ -77,24 +87,53 @@ export class Transaction extends Realm.Object {
     }
   }
 
-  static createTransaction(
-    transaction: TransactionResponse,
+  static create(
+    transaction: {
+      hash: string;
+      block?: string;
+      from: string;
+      to?: string;
+      value: BigNumber;
+      timeStamp?: number | string;
+      confirmations?: number | string;
+      contractAddress?: string;
+    },
     providerId: string,
     fee: number = 0,
   ) {
+    const exists = Transaction.getById(transaction.hash.toLowerCase());
+
     realm.write(() => {
-      realm.create('Transaction', {
-        hash: transaction.hash.toLowerCase(),
-        account: transaction.from.toLowerCase(),
-        raw: JSON.stringify(transaction),
-        createdAt: new Date(),
-        from: transaction.from.toLowerCase(),
-        to: transaction.to ? transaction.to.toLowerCase() : null,
-        value: parseFloat(utils.formatEther(transaction.value)),
-        fee: fee,
-        confirmed: false,
-        providerId,
-      });
+      realm.create(
+        Transaction.schema.name,
+        {
+          ...exists?.toJSON(),
+          hash: transaction.hash.toLowerCase(),
+          block: transaction.block,
+          account: transaction.from.toLowerCase(),
+          raw: JSON.stringify(transaction),
+          from: transaction.from.toLowerCase(),
+          to: transaction.to ? transaction.to.toLowerCase() : null,
+          contractAddress: transaction.contractAddress
+            ? transaction.contractAddress.toLowerCase()
+            : null,
+          value: parseFloat(utils.formatEther(transaction.value)),
+          fee: fee,
+          providerId,
+          createdAt: exists
+            ? exists.createdAt
+            : transaction.timeStamp &&
+              new Date(parseInt(String(transaction.timeStamp), 10) * 1000),
+          confirmed: transaction.confirmations
+            ? parseInt(String(transaction.confirmations), 10) > 10
+            : false,
+        },
+        Realm.UpdateMode.Modified,
+      );
+    });
+
+    requestAnimationFrame(() => {
+      app.emit(Events.onTransactionCheck, transaction.hash.toLowerCase());
     });
   }
 

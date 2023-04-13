@@ -28,7 +28,9 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         <DataContent
           style={styles.infoContainer}
           titleI18n={I18N.transactionSendTitle}
-          subtitleI18nParams={{address: shortAddress(item.to, '•')}}
+          subtitleI18nParams={{
+            address: shortAddress(item.to || item.contractAddress || '', '•'),
+          }}
           subtitleI18n={I18N.transactionSendTo}
           short
         />
