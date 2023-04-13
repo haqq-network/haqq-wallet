@@ -1,4 +1,7 @@
-import {AIRDROP_URL} from '@env';
+import {AIRDROP_MAINNET_URL, AIRDROP_TESTEDGE2_URL} from '@env';
+
+import {app} from '@app/contexts';
+import {Provider} from '@app/models/provider';
 
 export type ClaimResponse =
   | {
@@ -17,11 +20,18 @@ export type ClaimResponse =
     };
 
 export class Airdrop {
-  static instance = new Airdrop(AIRDROP_URL);
-  private _remoteUrl: string;
+  static instance = new Airdrop();
 
-  constructor(remoteUrl: string) {
-    this._remoteUrl = remoteUrl;
+  static networks = {
+    54211: AIRDROP_TESTEDGE2_URL,
+    11235: AIRDROP_MAINNET_URL,
+  };
+
+  getRemoteUrl() {
+    const provider = Provider.getProvider(app.getUser().providerId);
+
+    // @ts-ignore
+    return Airdrop.networks[provider?.ethChainId ?? 11235] ?? '';
   }
 
   async claim(
@@ -29,7 +39,7 @@ export class Airdrop {
     claim_code: string,
     hcaptcha_token: string,
   ): Promise<{}> {
-    const request = await fetch(`${this._remoteUrl}/mobile/claim`, {
+    const request = await fetch(`${this.getRemoteUrl()}/mobile/claim`, {
       method: 'POST',
       headers: {
         accept: 'application/json, text/plain, */*',
@@ -54,7 +64,7 @@ export class Airdrop {
   }
 
   async info(claim_code: string): Promise<ClaimResponse> {
-    const request = await fetch(`${this._remoteUrl}/mobile/info`, {
+    const request = await fetch(`${this.getRemoteUrl()}/mobile/info`, {
       method: 'POST',
       headers: {
         accept: 'application/json, text/plain, */*',

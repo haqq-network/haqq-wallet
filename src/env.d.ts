@@ -24,5 +24,6 @@ declare module '@env' {
   export const METADATA_URL: string;
   export const GENERATE_SHARES_URL: string;
   export const IS_MPC_ENABLED: string;
-  export const AIRDROP_URL: string;
+  export const AIRDROP_TESTEDGE2_URL: string;
+  export const AIRDROP_MAINNET_URL: string;
 }
