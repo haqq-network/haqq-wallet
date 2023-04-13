@@ -14,6 +14,7 @@ export enum Events {
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',
   onTransactionsLoad = 'onTransactionsLoad',
+  onTransactionCheck = 'onTransactionCheck',
   onAppStarted = 'onAppStarted',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
   onAppProviderMpcBackup = 'onAppProviderMpcBackup',

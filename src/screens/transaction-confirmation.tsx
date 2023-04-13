@@ -74,7 +74,7 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
-          Transaction.createTransaction(transaction, user.providerId, fee);
+          Transaction.create(transaction, user.providerId, fee);
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,
           });
