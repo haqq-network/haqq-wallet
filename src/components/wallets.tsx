@@ -5,16 +5,19 @@ import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CarouselItem} from '@app/components/carousel-item';
+import {HomeBanner} from '@app/components/home-banner';
 import {Icon, Text} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Banner, BannerButton} from '@app/models/banner';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
   wallets: Wallet[];
   balance: Record<string, number>;
+  banner: Banner | null;
   walletConnectSessions: SessionTypes.Struct[][];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -23,10 +26,13 @@ export type WalletsProps = {
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
+  onPressBanner: (id: string, button: BannerButton) => Promise<void>;
+  onPressAccountInfo: (address: string) => void;
 };
 export const Wallets = ({
   balance,
   wallets,
+  banner,
   walletConnectSessions,
   onPressSend,
   onPressQR,
@@ -35,6 +41,8 @@ export const Wallets = ({
   onPressProtection,
   onPressRestore,
   onWalletConnectPress,
+  onPressBanner,
+  onPressAccountInfo,
 }: WalletsProps) => {
   const screenWidth = useWindowDimensions().width;
 
@@ -63,6 +71,7 @@ export const Wallets = ({
               onPressQR={onPressQR}
               onPressProtection={onPressProtection}
               onWalletConnectPress={onWalletConnectPress}
+              onPressAccountInfo={onPressAccountInfo}
             />
           </CarouselItem>
         ))}
@@ -104,12 +113,23 @@ export const Wallets = ({
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
+      {!!banner && !banner?.isUsed && (
+        <HomeBanner
+          banner={banner}
+          onPress={onPressBanner}
+          style={styles.rewardBanner}
+        />
+      )}
       <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );
 };
 
 const styles = createTheme({
+  rewardBanner: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
   container: {
     paddingTop: 24,
   },

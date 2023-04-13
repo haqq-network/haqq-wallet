@@ -63,9 +63,10 @@ export type WalletInitialData =
     }
   | {
       type: 'mpc';
-      mpcPrivateKey: string;
-      mpcSecurityQuestion: string | null;
+      mpcPrivateKey: string | null;
       mpcCloudShare: string | null;
+      verifier: string;
+      token: string;
     }
   | {type: 'empty'};
 
@@ -100,6 +101,9 @@ export type RootStackParamList = {
         params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
+  accountInfo: {
+    accountId: string;
+  };
   welcome: undefined;
   create: undefined;
   scanQr: undefined;
@@ -131,6 +135,8 @@ export type RootStackParamList = {
   mpcMigrateStore: {
     accountId: string;
     privateKey: string;
+    verifier: string;
+    token: string;
   };
 
   mpcMigrateRewrite: {
@@ -138,6 +144,8 @@ export type RootStackParamList = {
     privateKey: string;
     provider: MpcProviders;
     email?: string;
+    verifier: string;
+    token: string;
   };
   detailsQr: {address: string};
   settingsTheme: undefined;
@@ -413,6 +421,8 @@ export type RootStackParamList = {
     privateKey: string;
     cloudShare: string | null;
     questionAnswer: string | null;
+    token: string;
+    verifier: string;
   };
   mpcFinish: undefined;
   walletProtectionPopup: {
@@ -615,4 +625,10 @@ export interface Link {
   url: string;
   title: string;
   icon?: string;
+}
+
+export interface DynamicLink {
+  url: string;
+  minimumAppVersion: number | string | null;
+  utmParameters: Record<string, string>;
 }

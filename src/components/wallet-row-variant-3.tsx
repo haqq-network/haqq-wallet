@@ -47,7 +47,7 @@ export const WalletRowVariant3 = ({
         colorPattern={item.colorPattern}
       />
       <View style={styles.textContainer}>
-        <Text t18 color={Color.textBase3}>
+        <Text t18 color={Color.textBase1}>
           {addressString}
         </Text>
       </View>

@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 
-import {Icon, IconButton} from './ui';
+import {Icon, IconButton} from '../ui';
 
 export const DismissPopupButton = () => {
   const navigation = useNavigation();

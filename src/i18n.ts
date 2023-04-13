@@ -560,6 +560,12 @@ export enum I18N {
   ThereNoBookmarks,
   ThereNoRecentSites,
   browserSearchHistory,
+  modalRewardErrorTitle,
+  modalRewardErrorDescription,
+  modalRewardErrorClose,
+  rewardCreatingFirstAccount,
+  rewardBannerClaim,
+  amountISLM,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1232,4 +1238,12 @@ const en: Record<I18N, string> = {
   [I18N.signupNetworkExitsAlertDescription]:
     'All data on the account will be lost and will not be recoverable',
   [I18N.networks]: 'Networks',
+  [I18N.modalRewardErrorTitle]:
+    'Sorry, the reward limit has been reached for today',
+  [I18N.modalRewardErrorDescription]:
+    'We are giving ISLM for creating the first account. The daily pool for rewards is 100 ISLM. Unfortunately all the rewards for today have been claimed, but try again tomorrow!',
+  [I18N.modalRewardErrorClose]: 'Close',
+  [I18N.rewardCreatingFirstAccount]: 'Reward for creating the first account',
+  [I18N.rewardBannerClaim]: 'Claim reward',
+  [I18N.amountISLM]: '{{amount}} ISLM',
 };

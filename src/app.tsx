@@ -11,7 +11,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -19,7 +18,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {Alert, AppState, Linking} from 'react-native';
+import {AppState, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -40,9 +39,11 @@ import {
   hideModal,
   showModal,
 } from '@app/helpers';
+import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {AccountInfoScreen} from '@app/screens/account-info';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
@@ -55,6 +56,7 @@ import {
   ActionSheetType,
   AppTheme,
   PresentationNavigation,
+  RootStackParamList,
   ScreenOptionType,
   StackPresentationTypes,
 } from '@app/types';
@@ -101,6 +103,7 @@ import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-
 import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
 import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
+import {Web3BrowserScreen} from './screens/web3-browser';
 import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
@@ -114,7 +117,7 @@ const screenOptions: ScreenOptionType = {
   },
 };
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const appTheme = createTheme({
   colors: {
@@ -151,25 +154,6 @@ export const App = () => {
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
     [theme],
   );
-
-  const handleDynamicLink = (link: object) => {
-    console.log(link);
-    if (link && 'url' in link) {
-      Alert.alert(link.url as string);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
-    dynamicLinks()
-      .getInitialLink()
-      .then(link => {
-        if (link) {
-          return handleDynamicLink(link);
-        }
-      });
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     showModal('splash');
@@ -253,7 +237,10 @@ export const App = () => {
               ref={navigator}
               theme={navTheme}
               onStateChange={onStateChange}>
-              <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
+              <Stack.Navigator
+                screenOptions={basicScreenOptions}
+                // initialRouteName={'web3browser'}
+                key={theme}>
                 <Stack.Screen name="home" component={HomeScreen} />
                 <Stack.Screen name="welcome" component={WelcomeScreen} />
                 {/* Modals group */}
@@ -305,6 +292,11 @@ export const App = () => {
                     component={ProposalDepositScreen}
                   />
                 </Stack.Group>
+                <Stack.Screen
+                  name="accountInfo"
+                  component={AccountInfoScreen}
+                  options={getWalletTitle}
+                />
                 <Stack.Screen
                   name="backupNotification"
                   component={BackupNotificationScreen}

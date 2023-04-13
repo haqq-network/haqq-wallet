@@ -1,9 +1,11 @@
 import React, {useCallback} from 'react';
 
-import {initializeTKey} from '@haqq/provider-mpc-react-native';
+import {METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
+import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {SigninNetworks} from '@app/components/signin-networks';
+import {MpcError} from '@app/helpers/mpc-error';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {
@@ -11,10 +13,7 @@ import {
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
-  serviceProviderOptions,
-  storageLayerOptions,
 } from '@app/services/provider-mpc';
-import {RootStackParamList, WalletInitialData} from '@app/types';
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
@@ -22,70 +21,73 @@ export const SignInNetworksScreen = () => {
 
   const onLogin = useCallback(
     async (provider: MpcProviders) => {
-      let privateKey: string | null = null;
+      let creds;
       switch (provider) {
         case MpcProviders.apple:
-          privateKey = await onLoginApple();
+          creds = await onLoginApple();
           break;
         case MpcProviders.google:
-          privateKey = await onLoginGoogle();
+          creds = await onLoginGoogle();
           break;
         case MpcProviders.custom:
-          privateKey = await onLoginCustom();
+          creds = await onLoginCustom();
           break;
       }
-      if (privateKey) {
-        let nextScreen: string = '';
-        let nextParams: WalletInitialData = {
+
+      try {
+        if (!creds.privateKey) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const walletInfo = await getMetadataValue(
+          METADATA_URL,
+          creds.privateKey,
+          'socialShareIndex',
+        );
+
+        if (!walletInfo) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const supported = await Cloud.isEnabled();
+        if (!supported) {
+          throw new MpcError('signinNotExists');
+        }
+
+        const cloud = new Cloud();
+
+        const account = await accountInfo(creds.privateKey as string);
+
+        const share = await cloud.getItem(
+          `haqq_${account.address.toLowerCase()}`,
+        );
+
+        if (!share) {
+          throw new MpcError('signinNotRecovery');
+        }
+
+        const nextScreen = user.onboarded
+          ? 'signinStoreWallet'
+          : 'onboardingSetupPin';
+
+        navigation.navigate(nextScreen, {
           type: 'mpc',
-          mpcPrivateKey: privateKey,
-          mpcSecurityQuestion: null,
-          mpcCloudShare: null,
-        };
-
-        try {
-          const {securityQuestionsModule} = await initializeTKey(
-            privateKey,
-            serviceProviderOptions as any,
-            storageLayerOptions,
-          );
-
-          securityQuestionsModule.getSecurityQuestions();
-
-          const supported = await Cloud.isEnabled();
-
-          if (!supported) {
-            nextScreen = 'signinPin';
-          }
-
-          const cloud = new Cloud();
-
-          const account = await accountInfo(privateKey);
-
-          const share = await cloud.getItem(
-            `haqq_${account.address.toLowerCase()}`,
-          );
-
-          if (!share) {
-            nextScreen = 'signinNotRecovery';
-          } else {
-            nextScreen = user.onboarded
-              ? 'signinStoreWallet'
-              : 'onboardingSetupPin';
-
-            nextParams.mpcCloudShare = share;
-          }
-        } catch (e) {
-          nextScreen = 'signinNotExists';
+          mpcPrivateKey: creds.privateKey,
+          token: creds.token,
+          verifier: creds.verifier,
+          mpcCloudShare: share,
+        });
+      } catch (e) {
+        console.log('error', e, e instanceof MpcError);
+        if (e instanceof MpcError) {
           // @ts-ignore
-          nextParams.provider = provider;
-        } finally {
-          // nextScreen = 'signinNotRecovery';
-          navigation.navigate(
-            // @ts-ignore
-            nextScreen as keyof RootStackParamList,
-            nextParams,
-          );
+          navigation.navigate(e.message, {
+            type: 'mpc',
+            mpcPrivateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            mpcCloudShare: null,
+          });
         }
       }
     },

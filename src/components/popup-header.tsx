@@ -6,9 +6,10 @@ import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, Text} from '@app/components/ui';
+import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
+import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
+import {Text} from '@app/components/ui';
 import {ScreenOptionType} from '@app/types';
-import {DEFAULT_HITSLOP} from '@app/variables/common';
 
 type PopupHeaderProps = StackHeaderProps & {
   options: ScreenOptionType;
@@ -41,21 +42,17 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
 
   return (
     <View style={[page.container, options.tab && {marginTop: insets.top}]}>
-      {canGoBack ? (
-        <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
-          <Icon i24 name="arrow_back" color={Color.graphicBase1} />
-        </IconButton>
+      {options.headerLeft ? (
+        options.headerLeft({})
+      ) : canGoBack ? (
+        <GoBackPopupButton />
       ) : (
-        <View style={page.spacer} />
+        <SpacerPopupButton />
       )}
       <Text t8 center color={Color.textBase1}>
         {options.title}
       </Text>
-      {options.headerRight ? (
-        options.headerRight({})
-      ) : (
-        <View style={page.spacer} />
-      )}
+      {options.headerRight ? options.headerRight({}) : <SpacerPopupButton />}
     </View>
   );
 };
@@ -68,9 +65,5 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
-  },
-  spacer: {
-    width: 24,
-    height: 24,
   },
 });

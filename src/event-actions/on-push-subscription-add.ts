@@ -2,7 +2,7 @@ import {cosmosAddress} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
-import {pushNotifications} from '@app/services/push-notifications';
+import {PushNotifications} from '@app/services/push-notifications';
 import {COSMOS_PREFIX} from '@app/variables/common';
 
 export async function onPushSubscriptionAdd() {
@@ -16,7 +16,7 @@ export async function onPushSubscriptionAdd() {
 
   await Promise.all(
     wallets.map(async w => {
-      await pushNotifications.createNotificationSubscription(
+      await PushNotifications.instance.createNotificationSubscription(
         user.subscription!,
         cosmosAddress(w.address, COSMOS_PREFIX),
       );

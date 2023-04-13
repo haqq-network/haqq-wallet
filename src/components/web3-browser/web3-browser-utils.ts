@@ -203,3 +203,4 @@ export function getHost(url: string, defaultProtocol = 'https://') {
 export const getFavIconUrl = (url: string, size = 200) => {
   return `https://api.faviconkit.com/${getHost(url)}/${size}`;
 };
+

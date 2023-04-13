@@ -3,8 +3,10 @@ import {onAppMnemonicBackup} from '@app/event-actions/on-app-mnemonic-backup';
 import {onAppProviderMpcBackup} from '@app/event-actions/on-app-provider-mpc-backup';
 import {onAppStarted} from '@app/event-actions/on-app-started';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
 import {onPushSubscriptionAdd} from '@app/event-actions/on-push-subscription-add';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
+import {onTransactionCheck} from '@app/event-actions/on-transaction-check';
 import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
 import {onWalletConnectApproveConnection} from '@app/event-actions/on-wallet-connect-approve-connection';
 import {onWalletConnectUri} from '@app/event-actions/on-wallet-connect-uri';
@@ -42,3 +44,5 @@ app.on(
 );
 app.on(Events.onAppProviderMpcBackup, onAppProviderMpcBackup);
 app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
+app.on(Events.onDynamicLink, onDynamicLink);
+app.on(Events.onTransactionCheck, onTransactionCheck);

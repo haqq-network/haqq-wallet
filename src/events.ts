@@ -14,6 +14,7 @@ export enum Events {
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',
   onTransactionsLoad = 'onTransactionsLoad',
+  onTransactionCheck = 'onTransactionCheck',
   onAppStarted = 'onAppStarted',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
   onAppProviderMpcBackup = 'onAppProviderMpcBackup',
@@ -21,6 +22,7 @@ export enum Events {
   onWalletConnectApproveConnection = 'onWalletConnectApproveConnection',
   onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
   onWalletMpcSaved = 'onWalletMpcSaved',
+  onDynamicLink = 'onDynamicLink',
 }
 
 export enum WalletConnectEvents {

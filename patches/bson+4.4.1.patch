@@ -1,0 +1,63 @@
+diff --git a/node_modules/bson/dist/bson.browser.umd.js b/node_modules/bson/dist/bson.browser.umd.js
+index eafb947..802976a 100644
+--- a/node_modules/bson/dist/bson.browser.umd.js
++++ b/node_modules/bson/dist/bson.browser.umd.js
+@@ -2622,34 +2622,36 @@
+ 	    ? 'BSON: For React Native please polyfill crypto.getRandomValues, e.g. using: https://www.npmjs.com/package/react-native-get-random-values.'
+ 	    : 'BSON: No cryptographic implementation for random bytes present, falling back to a less secure implementation.';
+ 	var insecureRandomBytes = function insecureRandomBytes(size) {
+-	    console.warn(insecureWarning);
++	    // console.warn(insecureWarning);
+ 	    var result = buffer.Buffer.alloc(size);
+ 	    for (var i = 0; i < size; ++i)
+ 	        result[i] = Math.floor(Math.random() * 256);
+ 	    return result;
+ 	};
+ 	var detectRandomBytes = function () {
+-	    if (typeof window !== 'undefined') {
+-	        // browser crypto implementation(s)
+-	        var target_1 = window.crypto || window.msCrypto; // allow for IE11
+-	        if (target_1 && target_1.getRandomValues) {
+-	            return function (size) { return target_1.getRandomValues(buffer.Buffer.alloc(size)); };
+-	        }
+-	    }
+-	    if (typeof commonjsGlobal !== 'undefined' && commonjsGlobal.crypto && commonjsGlobal.crypto.getRandomValues) {
+-	        // allow for RN packages such as https://www.npmjs.com/package/react-native-get-random-values to populate global
+-	        return function (size) { return commonjsGlobal.crypto.getRandomValues(buffer.Buffer.alloc(size)); };
+-	    }
+-	    var requiredRandomBytes;
+-	    try {
+-	        // eslint-disable-next-line @typescript-eslint/no-var-requires
+-	        requiredRandomBytes = require$$0.randomBytes;
+-	    }
+-	    catch (e) {
+-	        // keep the fallback
+-	    }
+-	    // NOTE: in transpiled cases the above require might return null/undefined
+-	    return requiredRandomBytes || insecureRandomBytes;
++	    // if (typeof window !== 'undefined') {
++	    //     // browser crypto implementation(s)
++	    //     var target_1 = window.crypto || window.msCrypto; // allow for IE11
++	    //     if (target_1 && target_1.getRandomValues) {
++	    //         return function (size) { return target_1.getRandomValues(buffer.Buffer.alloc(size)); };
++	    //     }
++	    // }
++	    // if (typeof commonjsGlobal !== 'undefined' && commonjsGlobal.crypto && commonjsGlobal.crypto.getRandomValues) {
++	    //     // allow for RN packages such as https://www.npmjs.com/package/react-native-get-random-values to populate global
++	    //     return function (size) { return commonjsGlobal.crypto.getRandomValues(buffer.Buffer.alloc(size)); };
++	    // }
++	    // var requiredRandomBytes;
++	    // try {
++	    //     // eslint-disable-next-line @typescript-eslint/no-var-requires
++	    //     requiredRandomBytes = require$$0.randomBytes;
++	    // }
++	    // catch (e) {
++	    //     // keep the fallback
++	    // }
++	    // // NOTE: in transpiled cases the above require might return null/undefined
++	    // return requiredRandomBytes || insecureRandomBytes;
++
++    return insecureRandomBytes
+ 	};
+ 	exports.randomBytes = detectRandomBytes();
+ 	function isAnyArrayBuffer(value) {

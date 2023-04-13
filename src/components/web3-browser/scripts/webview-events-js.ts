@@ -18,7 +18,7 @@ const getWindowInformation = `
     const icon = shortcutIcon || Array.from(window.document.querySelectorAll('head > link[rel="icon"]')).find((icon) => Boolean(icon.href));
     const siteName = document.querySelector('head > meta[property="og:site_name"]');
     const title = siteName || document.querySelector('head > meta[name="title"]');
-   
+
     window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
       {
         type: '${WebViewEventsEnum.WINDOW_INFO}',

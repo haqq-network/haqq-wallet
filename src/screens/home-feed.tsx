@@ -1,50 +1,27 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {Results} from 'realm';
+import {Collection, CollectionChangeSet} from 'realm';
 
 import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
-import {
-  useTransactions,
-  useTypedNavigation,
-  useUser,
-  useWallets,
-} from '@app/hooks';
+import {useTypedNavigation, useUser, useWallets} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 
-const filterTransactions = (
-  transactions: Results<Transaction>,
-  providerId: string,
-) => {
-  return transactions.filter(
-    t => t.providerId === providerId || t.providerId === '',
-  );
-};
-
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();
-  const transactions = useTransactions();
-  const wallets = useWallets();
   const user = useUser();
+  const transactions = useMemo(
+    () => Transaction.getAllByProviderId(user.providerId),
+    [user.providerId],
+  );
+  const wallets = useWallets();
   const [refreshing, setRefreshing] = useState(false);
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(
-      wallets.addressList,
-      filterTransactions(Transaction.getAll().snapshot(), user.providerId),
-    ),
+    prepareTransactions(wallets.addressList, transactions.snapshot()),
   );
-
-  const onTransactionList = useCallback(() => {
-    setTransactionsList(
-      prepareTransactions(
-        wallets.addressList,
-        filterTransactions(Transaction.getAll().snapshot(), user.providerId),
-      ),
-    );
-  }, [wallets.addressList, user.providerId]);
 
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
@@ -76,14 +53,27 @@ export const HomeFeedScreen = () => {
     [navigation],
   );
 
+  const onTransactionsList = useCallback(
+    (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
+      if (
+        changes.insertions.length ||
+        changes.newModifications.length ||
+        changes.deletions.length
+      ) {
+        setTransactionsList(
+          prepareTransactions(wallets.addressList, transactions.snapshot()),
+        );
+      }
+    },
+    [wallets.addressList, transactions],
+  );
+
   useEffect(() => {
-    transactions.on('transactions', onTransactionList);
-    user.on('change', onTransactionList);
+    transactions.addListener(onTransactionsList);
     return () => {
-      transactions.off('transactions', onTransactionList);
-      user.off('change', onTransactionList);
+      transactions.removeListener(onTransactionsList);
     };
-  }, [onTransactionList, transactions, user, wallets]);
+  }, [onTransactionsList, transactions, user]);
 
   return (
     <HomeFeed

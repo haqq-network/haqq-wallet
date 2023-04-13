@@ -22,6 +22,7 @@ export interface AwaitForWalletParams {
 
 export class AwaitForWalletError {
   message?: string;
+
   constructor(message?: string) {
     this.message = message;
   }

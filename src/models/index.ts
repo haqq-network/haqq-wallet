@@ -1,23 +1,25 @@
 import Realm from 'realm';
 
-import {Contact} from './contact';
-import {GovernanceVoting} from './governance-voting';
-import {Provider} from './provider';
-import {StakingMetadata} from './staking-metadata';
-import {Transaction} from './transaction';
-import {UserSchema} from './user';
-import {Wallet} from './wallet';
+import {Banner, BannerButton} from '@app/models/banner';
+import {Contact} from '@app/models/contact';
+import {GovernanceVoting} from '@app/models/governance-voting';
+import {Provider} from '@app/models/provider';
+import {Refferal} from '@app/models/refferal';
+import {StakingMetadata} from '@app/models/staking-metadata';
+import {Transaction} from '@app/models/transaction';
+import {UserSchema} from '@app/models/user';
+import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
 import {Web3BrowserBookmark} from './web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from './web3-browser-search-history';
 import {Web3BrowserSession} from './web3-browser-session';
+import {AppTheme, WalletType} from '@app/types';
 
-import {AppTheme, WalletType} from '../types';
 import {
   CARD_DEFAULT_STYLE,
   ETH_HD_PATH,
   TEST_NETWORK,
-} from '../variables/common';
+} from '@app/variables/common';
 
 export const realm = new Realm({
   schema: [
@@ -32,8 +34,11 @@ export const realm = new Realm({
     Provider,
     StakingMetadata,
     GovernanceVoting,
+    Refferal,
+    Banner,
+    BannerButton,
   ],
-  schemaVersion: 43,
+  schemaVersion: 45,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -273,6 +278,34 @@ export const realm = new Realm({
           default:
             newObject.version = 1;
             break;
+        }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 43) {
+      const oldObjects = oldRealm.objects<{
+        hash: string;
+        account: string;
+        from: string;
+        to: string | null;
+      }>('Transaction');
+      const newObjects = newRealm.objects<{
+        hash: string;
+        account: string;
+        from: string;
+        to: string | null;
+      }>('Transaction');
+
+      for (const objectIndex in oldObjects) {
+        const oldObject = oldObjects[objectIndex];
+        const newObject = newObjects[objectIndex];
+
+        newObject.hash = oldObject.hash.toLowerCase();
+        newObject.account = oldObject.account.toLowerCase();
+        newObject.from = oldObject.from.toLowerCase();
+
+        if (oldObject.to !== null) {
+          newObject.to = oldObject.to.toLowerCase();
         }
       }
     }

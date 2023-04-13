@@ -3,7 +3,7 @@ import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {pushNotifications} from '@app/services/push-notifications';
+import {PushNotifications} from '@app/services/push-notifications';
 
 export async function onWalletRemove(
   address: string,
@@ -34,7 +34,7 @@ export async function onWalletRemove(
     }
 
     if (snapshot.subscription) {
-      await pushNotifications.unsubscribeAddress(
+      await PushNotifications.instance.unsubscribeAddress(
         snapshot.subscription,
         snapshot.address,
       );

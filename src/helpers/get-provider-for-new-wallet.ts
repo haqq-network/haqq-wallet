@@ -1,15 +1,13 @@
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {
-  serviceProviderOptions,
-  storageLayerOptions,
-} from '@app/services/provider-mpc';
 import {WalletInitialData} from '@app/types';
 
 export async function getProviderForNewWallet(params: WalletInitialData) {
+  console.log('params', JSON.stringify(params));
   const getPassword = app.getPassword.bind(app);
 
   if (params) {
@@ -18,14 +16,16 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
 
       return await ProviderMpcReactNative.initialize(
         params.mpcPrivateKey,
-        params.mpcSecurityQuestion || null,
         params.mpcCloudShare || null,
         null,
+        params.verifier,
+        params.token,
         app.getPassword.bind(app),
         storage,
-        serviceProviderOptions as any,
-        storageLayerOptions,
-        {},
+        {
+          metadataUrl: METADATA_URL,
+          generateSharesUrl: GENERATE_SHARES_URL,
+        },
       );
     }
   }

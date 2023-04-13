@@ -7,7 +7,7 @@ declare module '@env' {
   export const PATTERNS_SOURCE: string;
   export const ENVIRONMENT: string;
   export const IS_DEVELOPMENT: string;
-  export const PUSH_NOTIFICATIONS: string;
+  export const PUSH_NOTIFICATIONS_URL: string;
   export const PROVIDER_BASE_PACKAGE: string;
   export const WALLET_CONNECT_PROJECT_ID: string;
   export const WALLET_CONNECT_RELAY_URL: string;
@@ -20,4 +20,10 @@ declare module '@env' {
   export const MPC_GOOGLE_IOS: string;
   export const MPC_GOOGLE_ANDROID: string;
   export const MPC_APPLE: string;
+  export const MPC_CUSTOM: string;
+  export const METADATA_URL: string;
+  export const GENERATE_SHARES_URL: string;
+  export const IS_MPC_ENABLED: string;
+  export const AIRDROP_TESTEDGE2_URL: string;
+  export const AIRDROP_MAINNET_URL: string;
 }

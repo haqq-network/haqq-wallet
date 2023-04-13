@@ -48,6 +48,7 @@ export class Web3BrowserHelper extends EventEmitter {
   constructor({webviewRef, initialUrl}: Web3BrowserHelperConstructor) {
     super();
     this.phishingController.maybeUpdateState();
+
     this.webviewRef = webviewRef;
     this.currentUrl = initialUrl;
     this.jrpcEngine.push(
@@ -82,6 +83,7 @@ export class Web3BrowserHelper extends EventEmitter {
     nativeEvent,
   }: WebViewNavigationEvent | WebViewErrorEvent) => {
     if (this.currentUrl !== nativeEvent.url) {
+
       this.requestWindowInfo();
     }
   };
@@ -101,8 +103,6 @@ export class Web3BrowserHelper extends EventEmitter {
         const result = await this.jrpcEngine.handle(jsonrpcData);
         return this.postMessage(result, parsedEvent?.origin, parsedEvent?.name);
       }
-
-      console.log('isWindowInfoEvent', parsedEvent?.payload);
 
       if (isWindowInfoEvent(parsedEvent)) {
         return this.emit(WebViewEventsEnum.WINDOW_INFO, parsedEvent);

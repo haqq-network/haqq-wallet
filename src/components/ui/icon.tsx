@@ -80,6 +80,7 @@ export enum IconsName {
   disconnect = 'disconnect',
   more = 'more',
   circle_minus = 'circle_minus',
+  reward_error = 'reward_error',
 }
 
 export type IconSize =

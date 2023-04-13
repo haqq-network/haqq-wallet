@@ -108,6 +108,7 @@ export const Web3Browser = ({
     () => Provider.getByChainIdHex(chainId!),
     [chainId],
   );
+
   const injectedJSBeforeContentLoaded = useMemo(
     () =>
       `
