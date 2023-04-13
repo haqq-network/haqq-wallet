@@ -12,6 +12,7 @@ import {Icon, IconsName, Spacer, Text} from './ui';
 interface BrowserHomePageLinkListProps {
   links: Link[];
   emptyText: I18N;
+
   onLinkPress?(link: Link): void;
 }
 

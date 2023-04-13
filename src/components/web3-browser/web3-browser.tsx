@@ -40,17 +40,29 @@ export interface Web3BrowserProps {
   sessions: Realm.Results<Web3BrowserSession>;
   showActionMenu: boolean;
   userProvider: Provider;
+
   toggleActionMenu(): void;
+
   onPressGoBack(): void;
+
   onPressGoForward(): void;
+
   onPressMore(): void;
+
   onPressProviders(): void;
+
   onPressHome(): void;
+
   onPressRefresh(): void;
+
   onPressCopyLink(): void;
+
   onPressDisconnect(): void;
+
   onPressShare(): void;
+
   onPressAddBookmark(windowInfo: WindowInfoEvent['payload']): void;
+
   addSitiToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 

@@ -9,17 +9,17 @@ import {StakingMetadata} from '@app/models/staking-metadata';
 import {Transaction} from '@app/models/transaction';
 import {UserSchema} from '@app/models/user';
 import {Wallet} from '@app/models/wallet';
-import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
-import {Web3BrowserBookmark} from './web3-browser-bookmark';
-import {Web3BrowserSearchHistory} from './web3-browser-search-history';
-import {Web3BrowserSession} from './web3-browser-session';
 import {AppTheme, WalletType} from '@app/types';
-
 import {
   CARD_DEFAULT_STYLE,
   ETH_HD_PATH,
   TEST_NETWORK,
 } from '@app/variables/common';
+
+import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
+import {Web3BrowserBookmark} from './web3-browser-bookmark';
+import {Web3BrowserSearchHistory} from './web3-browser-search-history';
+import {Web3BrowserSession} from './web3-browser-session';
 
 export const realm = new Realm({
   schema: [

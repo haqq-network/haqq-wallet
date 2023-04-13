@@ -21,13 +21,21 @@ interface Web3BrowserActionMenuProps {
   currentProvider: Provider;
   currentSession: Web3BrowserSession;
   moreIconLayout: Partial<LayoutRectangle>;
+
   toggleActionMenu(): void;
+
   onPressProviders(): void;
+
   onPressHome(): void;
+
   onPressRefresh(): void;
+
   onPressCopyLink(): void;
+
   onPressDisconnect(): void;
+
   onPressShare(): void;
+
   onPressAddBookmark(): void;
 }
 

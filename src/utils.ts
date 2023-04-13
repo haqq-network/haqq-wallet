@@ -312,4 +312,3 @@ export const isValidUrl = (string: string) => {
 export const isI18N = (obj: any): obj is I18N => {
   return obj in I18N;
 };
-

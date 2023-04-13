@@ -29,9 +29,13 @@ import {
 
 export interface BrowserSearchPageProps {
   searchHistory: Realm.Results<Web3BrowserSearchHistory>;
+
   onPressCancel(): void;
+
   onPressClearHistory(): void;
+
   onLinkPress?(link: Link): void;
+
   onSubmitSearch(text: string): void;
 }
 

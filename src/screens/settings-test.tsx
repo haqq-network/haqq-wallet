@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
@@ -12,10 +12,6 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {useTypedNavigation} from '@app/hooks';
-import {Cloud} from '@app/services/cloud';
-import {pushNotifications} from '@app/services/push-notifications';
-import {isValidUrl} from '@app/utils';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation, useUser} from '@app/hooks';
@@ -55,7 +51,6 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrobserUrl] = useState('');
   const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
   const navigation = useTypedNavigation();
-  const iCloud = useRef(new Cloud()).current;
   const user = useUser();
 
   const onPressRequestPermissions = async () => {
@@ -73,13 +68,6 @@ export const SettingsTestScreen = () => {
       screen: 'web3browser',
       params: {url: browserUrl},
     });
-  };
-
-  const checkICloudFile = useCallback(async () => {
-    const exists = await iCloud.hasItem('haqq_backup');
-    console.log('exists', exists);
-  }, [iCloud]);
-    navigation.navigate('web3browser', {url: browserUrl});
   };
 
   const onCreateBanner = useCallback(() => {

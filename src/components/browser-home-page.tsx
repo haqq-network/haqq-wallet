@@ -21,10 +21,15 @@ import {TopTabNavigator} from './top-tab-navigator';
 export interface BrowserHomePageProps {
   favouriteLinks: Link[];
   recentLinks: Link[];
+
   onSearchPress(): void;
+
   onFavouritePress(link: Link): void;
+
   onRecentPress(link: Link): void;
+
   onEditFavouritePress(): void;
+
   onClearRecentPress(): void;
 }
 

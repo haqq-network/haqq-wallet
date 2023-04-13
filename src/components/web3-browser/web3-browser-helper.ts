@@ -83,7 +83,6 @@ export class Web3BrowserHelper extends EventEmitter {
     nativeEvent,
   }: WebViewNavigationEvent | WebViewErrorEvent) => {
     if (this.currentUrl !== nativeEvent.url) {
-
       this.requestWindowInfo();
     }
   };

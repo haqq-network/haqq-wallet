@@ -15,6 +15,7 @@ export interface LinkPreviewProps {
   hideArrow?: boolean;
   disabled?: boolean;
   variant?: LinkPreviewVariant;
+
   onPress?(link: Link): void;
 }
 

@@ -16,7 +16,9 @@ import {Icon, IconButton, IconsName, Spacer} from './ui';
 
 interface BrowserEditBookmarksProps {
   links: Link[];
+
   onDragEnd(links: Link[]): void;
+
   onPressRemove(link: Link): void;
 }
 

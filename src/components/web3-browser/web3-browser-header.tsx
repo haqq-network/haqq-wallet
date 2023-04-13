@@ -15,9 +15,13 @@ interface Web3BrowserHeaderProps {
   wallet: Wallet;
   webviewNavigationData: WebViewNavigation;
   siteClearUrl: string;
+
   onPressMore(): void;
+
   onMoreIconLayout(event: LayoutChangeEvent): void;
+
   onPressGoBack(): void;
+
   onPressGoForward(): void;
 }
 
