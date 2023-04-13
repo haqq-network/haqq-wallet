@@ -61,8 +61,6 @@ export const Captcha = ({
   );
 };
 
-console.log('HCAPTCHA_SITE_KEY', HCAPTCHA_SITE_KEY);
-
 const styles = StyleSheet.create({
   container: {
     width: '100%',
