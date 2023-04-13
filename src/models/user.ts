@@ -2,8 +2,9 @@ import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
-import {AppState, Appearance} from 'react-native';
+import {AppState, Appearance, StatusBar} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {generateUUID} from '@app/utils';
@@ -73,6 +74,10 @@ export class User extends EventEmitter {
 
         if (changes.changedProperties.includes('theme')) {
           app.emit('theme', obj.theme);
+          StatusBar.setBackgroundColor(getColor(Color.bg1));
+          StatusBar.setBarStyle(
+            obj.theme === AppTheme.dark ? 'light-content' : 'dark-content',
+          );
         }
 
         if (changes.changedProperties.includes('subscription')) {

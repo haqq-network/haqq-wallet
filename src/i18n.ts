@@ -554,6 +554,7 @@ export enum I18N {
   rewardCreatingFirstAccount,
   rewardBannerClaim,
   amountISLM,
+  stakingInfoRewardIsReceived,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -579,6 +580,7 @@ const en: Record<I18N, string> = {
   [I18N.numericKeyboard7]: '7',
   [I18N.numericKeyboard8]: '8',
   [I18N.numericKeyboard9]: '9',
+  [I18N.stakingInfoRewardIsReceived]: 'The reward is received',
   [I18N.backupCreateRecoveryPhrase]: 'Your recovery phrase',
   [I18N.backupCreateRecoverySaveWords]:
     'Write down or copy these words in the right order and save them somewhere safe.',
@@ -669,7 +671,7 @@ const en: Record<I18N, string> = {
   [I18N.onboardingRepeatPinInvalidCode]: 'Invalid code. Try again',
   [I18N.onboardingRepeatPinRepeat]: 'Please repeat pin code',
   [I18N.onboardingRepeatPinSecurity]:
-    "For security, we don't have a “Restore pin” button.",
+    "For security, we don't have a “Restore pin” button.\n\n",
   [I18N.modalDetailsQRReceive]: 'Receive',
   [I18N.transactionContactEditHeaderTitle]: 'Edit Contact',
   [I18N.transactionSumSendTitle]: 'Send',
