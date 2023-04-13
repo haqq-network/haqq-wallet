@@ -1,5 +1,6 @@
 import Realm from 'realm';
 
+import {Banner, BannerButton} from '@app/models/banner';
 import {Contact} from '@app/models/contact';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
@@ -29,8 +30,10 @@ export const realm = new Realm({
     StakingMetadata,
     GovernanceVoting,
     Refferal,
+    Banner,
+    BannerButton,
   ],
-  schemaVersion: 43,
+  schemaVersion: 45,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

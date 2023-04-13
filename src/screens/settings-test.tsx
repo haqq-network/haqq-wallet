@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
@@ -16,6 +16,8 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Banner} from '@app/models/banner';
+import {Refferal} from '@app/models/refferal';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
@@ -49,7 +51,6 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrobserUrl] = useState('');
   const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
   const navigation = useTypedNavigation();
-  const iCloud = useRef(new Cloud()).current;
 
   const user = useUser();
 
@@ -67,17 +68,38 @@ export const SettingsTestScreen = () => {
     navigation.navigate('web3browser', {url: browserUrl});
   };
 
-  const checkICloudFile = useCallback(async () => {
-    const exists = await iCloud.hasItem(
-      'haqq_0x82edd867f789c53b95dca44d5589697c747aaaa7',
-    );
-    console.log('exists', exists);
-  }, [iCloud]);
+  const onCreateBanner = useCallback(() => {
+    Banner.create({
+      id: 'qwerty',
+      title: 'Reward for creating the first account',
+      description:
+        'Join us in the spirit of Ramadan and claim your free ISLM coins.',
+      type: 'claimCode',
+      buttons: [
+        {
+          id: new Realm.BSON.UUID(),
+          title: 'Claim reward',
+          event: 'claimCode',
+          params: {
+            claim_code: 'qwerty',
+          },
+          color: '#01B26E',
+          backgroundColor: '#EEF9F5',
+        },
+      ],
+      backgroundColorFrom: '#1D69A4',
+      backgroundColorTo: '#0C9FA5',
+    });
+  }, []);
 
-  const readICloudFile = useCallback(async () => {
-    const content = await iCloud.getItem('haqq_backup');
-    console.log('read', content);
-  }, [iCloud]);
+  const onClearBanners = useCallback(() => {
+    const banners = Banner.getAll();
+
+    for (const banner of banners) {
+      Banner.remove(banner.id);
+      Refferal.remove(banner.id);
+    }
+  }, []);
 
   const onPressMPC = useCallback(async () => {
     const token = await fetch(CUSTOM_JWT_TOKEN, {
@@ -204,14 +226,14 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="check cloud"
-        onPress={() => checkICloudFile()}
+        title="create banner"
+        onPress={onCreateBanner}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
       <Button
-        title="read cloud"
-        onPress={() => readICloudFile()}
+        title="clear banners"
+        onPress={onClearBanners}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

@@ -14,6 +14,7 @@ export interface AwaitProviderParams {
 
 export class AwaitProviderError {
   message?: string;
+
   constructor(message?: string) {
     this.message = message;
   }
