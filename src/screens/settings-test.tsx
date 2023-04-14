@@ -67,6 +67,11 @@ export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
 
+  const onTurnOffDeveloper = useCallback(() => {
+    user.isDeveloper = false;
+    navigation.goBack();
+  }, [user, navigation]);
+
   const onPressRequestPermissions = async () => {
     setIsRequestPermission(true);
     await PushNotifications.instance.requestPermissions();
@@ -278,6 +283,15 @@ export const SettingsTestScreen = () => {
         }}
         variant={ButtonVariant.contained}
       />
+
+      <Spacer minHeight={100} />
+      <Button
+        title="Turn off developer"
+        error
+        onPress={onTurnOffDeveloper}
+        variant={ButtonVariant.third}
+      />
+      <Spacer height={20} />
     </ScrollView>
   );
 };
