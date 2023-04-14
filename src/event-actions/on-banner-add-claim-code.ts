@@ -1,12 +1,21 @@
 import {Image} from 'react-native';
 
 import {Banner} from '@app/models/banner';
+import {Refferal} from '@app/models/refferal';
 import {Airdrop} from '@app/services/airdrop';
 
 export async function onBannerAddClaimCode(claimCode: string) {
   const info = await Airdrop.instance.info(claimCode);
 
   if (!info.available) {
+    const ref = Refferal.getById(claimCode);
+
+    if (ref) {
+      ref.update({
+        isUsed: true,
+      });
+    }
+
     Banner.remove(claimCode);
   } else {
     if (info.background_image_url) {
