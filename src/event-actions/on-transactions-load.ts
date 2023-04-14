@@ -38,13 +38,14 @@ async function loadTransactionsFromExplorerWithProvider(
       const rows = await txList.json();
 
       for (const row of rows.result) {
-        console.log(
-          'loadTransactionsFromExplorer',
-          providerId,
-          address,
-          JSON.stringify(row),
-        );
-        Transaction.create(row, providerId, calcFee(row.gasPrice, row.gasUsed));
+        const exists = Transaction.getById(row.hash);
+        if (!exists) {
+          Transaction.create(
+            row,
+            providerId,
+            calcFee(row.gasPrice, row.gasUsed),
+          );
+        }
       }
     }
   } catch (e) {
