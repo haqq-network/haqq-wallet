@@ -50,7 +50,7 @@ export const BrowserHomePage = ({
   const renderFavouriteTab = useCallback(
     () => (
       <BrowserHomePageLinkList
-        emptyText={I18N.ThereNoBookmarks}
+        emptyText={I18N.thereNoBookmarks}
         onLinkPress={onFavouritePress}
         links={favouriteLinks}
       />
@@ -61,7 +61,7 @@ export const BrowserHomePage = ({
   const renderRecentTab = useCallback(
     () => (
       <BrowserHomePageLinkList
-        emptyText={I18N.ThereNoRecentSites}
+        emptyText={I18N.thereNoRecentSites}
         onLinkPress={onRecentPress}
         links={recentLinks}
       />
@@ -92,7 +92,7 @@ export const BrowserHomePage = ({
         <TopTabNavigator>
           <TopTabNavigator.Tab
             name={'favourite'}
-            title={I18N.Favourite}
+            title={I18N.favourite}
             component={renderFavouriteTab}
             rigntActon={
               <Button
@@ -107,13 +107,13 @@ export const BrowserHomePage = ({
           />
           <TopTabNavigator.Tab
             name={'recent'}
-            title={I18N.Recent}
+            title={I18N.recent}
             component={renderRecentTab}
             rigntActon={
               <Button
                 textStyle={styles.tabActionButton}
                 style={styles.tabActionButton}
-                i18n={I18N.Clear}
+                i18n={I18N.clear}
                 onPress={onClearRecentPress}
                 variant={ButtonVariant.text}
                 textColor={Color.textGreen1}

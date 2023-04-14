@@ -29,6 +29,7 @@ import {
 
 export interface BrowserSearchPageProps {
   searchHistory: Realm.Results<Web3BrowserSearchHistory>;
+  initialSearchText?: string;
 
   onPressCancel(): void;
 
@@ -39,27 +40,15 @@ export interface BrowserSearchPageProps {
   onSubmitSearch(text: string): void;
 }
 
-// const TEST_URLS: Link[] = [
-//   {id: 'app.haqq', title: 'app ap papapap pa', url: 'https://app.haqq.network'},
-//   {id: 'vesting', title: 'vesting', url: 'https://vesting.haqq.network'},
-//   {id: 'app.uniswap', title: 'app', url: 'https://app.uniswap.org'},
-//   {id: 'testedge2', title: 'testedge2', url: 'https://testedge2.haqq.network'},
-//   {id: 'safe', title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-//   {
-//     id: 'metamask',
-//     title: 'metamask',
-//     url: 'https://metamask.github.io/test-dapp/',
-//   },
-// ];
-
 export const BrowserSearchPage = ({
   searchHistory,
+  initialSearchText,
   onLinkPress,
   onPressCancel,
   onSubmitSearch,
   onPressClearHistory,
 }: BrowserSearchPageProps) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(initialSearchText || '');
   const phishingController = useRef(new PhishingController()).current;
   const recentLinks = useMemo(
     () =>
@@ -119,7 +108,11 @@ export const BrowserSearchPage = ({
             <Spacer height={16} />
             <MenuNavigationButton onPress={handleSubmitSearch}>
               <View style={styles.searchIconContainer}>
-                <Icon name={'search'} color={Color.graphicSecond2} i24 />
+                <Icon
+                  name={IconsName.search}
+                  color={Color.graphicSecond2}
+                  i24
+                />
               </View>
               <Spacer width={12} />
               <Text t11 numberOfLines={1} style={styles.searchText}>
@@ -133,7 +126,7 @@ export const BrowserSearchPage = ({
             <Text t10 i18n={I18N.browserSearchHistory} />
             <Spacer flex={1} />
             <Button
-              i18n={I18N.Clear}
+              i18n={I18N.clear}
               onPress={onPressClearHistory}
               textColor={Color.textGreen1}
               variant={ButtonVariant.text}
@@ -156,7 +149,7 @@ export const BrowserSearchPage = ({
           value={text}
           onChangeText={onChangeText}
           placeholder={getText(I18N.browserSearch)}
-          keyboardType={'web-search'}
+          keyboardType="web-search"
           autoFocus
           onSubmitEditing={handleSubmitSearch}
           style={styles.input}
@@ -164,7 +157,7 @@ export const BrowserSearchPage = ({
         <Button
           onPress={onPressCancel}
           textColor={Color.textGreen1}
-          title="Cancel"
+          i18n={I18N.cancel}
         />
       </View>
 
@@ -174,8 +167,8 @@ export const BrowserSearchPage = ({
         renderItem={renderHistoryItem}
         keyExtractor={historyKeyExtractor}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps={'always'}
-        keyboardDismissMode={'none'}
+        keyboardShouldPersistTaps="always"
+        keyboardDismissMode="none"
       />
     </SafeAreaView>
   );

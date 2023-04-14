@@ -78,7 +78,7 @@ export type RootStackParamList = {
     url: string;
   };
   browserHomePage: undefined;
-  browserSearchPage: undefined;
+  browserSearchPage: undefined | {initialSearchText?: string};
   browserEditBookmarksScreen: undefined;
   homeBrowser:
     | undefined
@@ -87,6 +87,10 @@ export type RootStackParamList = {
         params: {
           url: string;
         };
+      }
+    | {
+        screen: 'browserSearchPage';
+        params: undefined | {initialSearchText?: string};
       }
     | {
         screen:

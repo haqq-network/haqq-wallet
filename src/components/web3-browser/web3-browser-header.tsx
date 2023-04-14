@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {LayoutChangeEvent, View} from 'react-native';
+import {LayoutChangeEvent, TouchableOpacity, View} from 'react-native';
 import Animated, {SlideInRight, SlideOutRight} from 'react-native-reanimated';
 import {WebViewNavigation} from 'react-native-webview';
 
@@ -8,32 +8,57 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
+import {clearUrl} from './web3-browser-utils';
+
 import {Icon, IconButton, IconsName, Spacer, Text} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
+export interface Web3BrowserPressHeaderEvent {
+  siteUrl: string;
+  clearSiteUrl: string;
+}
 interface Web3BrowserHeaderProps {
   wallet: Wallet;
   webviewNavigationData: WebViewNavigation;
-  siteClearUrl: string;
+  siteUrl: string;
 
   onPressMore(): void;
+
+  onPressHeaderWallet(accountId: string): void;
 
   onMoreIconLayout(event: LayoutChangeEvent): void;
 
   onPressGoBack(): void;
 
   onPressGoForward(): void;
+
+  onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
 }
 
 export const Web3BrowserHeader = ({
   wallet,
   webviewNavigationData,
-  siteClearUrl,
+  siteUrl,
   onPressMore,
+  onPressHeaderUrl,
   onMoreIconLayout,
   onPressGoBack,
   onPressGoForward,
+  onPressHeaderWallet,
 }: Web3BrowserHeaderProps) => {
+  const clearSiteUrl = useMemo(() => clearUrl(siteUrl), [siteUrl]);
+
+  const handleUrlPress = useCallback(() => {
+    onPressHeaderUrl?.({
+      siteUrl,
+      clearSiteUrl,
+    });
+  }, [clearSiteUrl, onPressHeaderUrl, siteUrl]);
+
+  const handlePressHeaderWallet = () => {
+    onPressHeaderWallet?.(wallet?.accountId!);
+  };
+
   return (
     <View style={styles.header}>
       <IconButton
@@ -61,12 +86,12 @@ export const Web3BrowserHeader = ({
         />
       </IconButton>
       <Spacer width={12} />
-      <View style={styles.urlContainer}>
+      <TouchableOpacity onPress={handleUrlPress} style={styles.urlContainer}>
         <Icon color={Color.graphicBase2} name={IconsName.lock} i22 />
         <Text numberOfLines={1} clean style={styles.urlText}>
-          {siteClearUrl}
+          {clearSiteUrl}
         </Text>
-      </View>
+      </TouchableOpacity>
       <Spacer width={15} />
       <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
         <Icon color={Color.graphicBase1} name={IconsName.more} />
@@ -75,7 +100,11 @@ export const Web3BrowserHeader = ({
         <>
           <Spacer width={15} />
           <Animated.View entering={SlideInRight} exiting={SlideOutRight}>
-            <WalletRow type={WalletRowTypes.variant3} item={wallet} />
+            <WalletRow
+              type={WalletRowTypes.variant3}
+              item={wallet}
+              onPress={handlePressHeaderWallet}
+            />
           </Animated.View>
         </>
       )}

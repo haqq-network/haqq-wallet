@@ -20,6 +20,10 @@ export interface LinkPreviewProps {
 }
 
 export const LinkPreview = (props: LinkPreviewProps) => {
+  if (!props?.link?.id) {
+    return null;
+  }
+
   switch (props?.variant) {
     case LinkPreviewVariant.line: {
       return <LinkPreviewLine {...props} />;

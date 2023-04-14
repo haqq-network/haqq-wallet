@@ -5,6 +5,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
@@ -18,6 +19,7 @@ const ACTION_MENU_PADDING_HORIZONTAL = 16;
 interface Web3BrowserActionMenuProps {
   wallet: Wallet;
   showActionMenu: boolean;
+  isSiteInBookmarks: boolean;
   currentProvider: Provider;
   currentSession: Web3BrowserSession;
   moreIconLayout: Partial<LayoutRectangle>;
@@ -37,6 +39,8 @@ interface Web3BrowserActionMenuProps {
   onPressShare(): void;
 
   onPressAddBookmark(): void;
+
+  onPressRemoveBookmark(): void;
 }
 
 export const Web3BrowserActionMenu = ({
@@ -44,11 +48,13 @@ export const Web3BrowserActionMenu = ({
   showActionMenu,
   currentProvider,
   moreIconLayout,
+  isSiteInBookmarks,
   currentSession,
   toggleActionMenu,
   onPressProviders,
   onPressHome,
   onPressAddBookmark,
+  onPressRemoveBookmark,
   onPressRefresh,
   onPressCopyLink,
   onPressDisconnect,
@@ -76,46 +82,70 @@ export const Web3BrowserActionMenu = ({
             entering={FadeIn}
             exiting={FadeOut}>
             {!!currentSession && (
-              <IconButton
-                style={styles.actionMenuButton}
-                onPress={onPressProviders}>
-                <DataContent
-                  short
-                  title={'Providers'}
-                  subtitle={currentProvider?.name}
-                />
-                <Icon name={IconsName.providers} color={Color.graphicBase1} />
-              </IconButton>
+              <>
+                <IconButton
+                  style={styles.actionMenuButton}
+                  onPress={onPressProviders}>
+                  <DataContent
+                    short
+                    titleI18n={I18N.browserActionMenuProviders}
+                    subtitle={currentProvider?.name}
+                  />
+                  <Icon name={IconsName.providers} color={Color.graphicBase1} />
+                </IconButton>
+                <View style={styles.moreButtonSeparator} />
+              </>
             )}
-            <View style={styles.moreButtonSeparator} />
             <IconButton style={styles.actionMenuButton} onPress={onPressHome}>
-              <DataContent short title={'Home'} />
+              <DataContent short titleI18n={I18N.browserActionMenuHome} />
               <Icon name={IconsName.global} color={Color.graphicBase1} />
             </IconButton>
             <View style={styles.moreButtonSeparator} />
-            <IconButton
-              style={styles.actionMenuButton}
-              onPress={onPressAddBookmark}>
-              <DataContent short title={'Add to Bookmarks'} />
-              <Icon name={IconsName.star} color={Color.graphicBase1} />
-            </IconButton>
-            <View style={styles.moreButtonSeparator} />
+            {!isSiteInBookmarks && (
+              <>
+                <IconButton
+                  style={styles.actionMenuButton}
+                  onPress={onPressAddBookmark}>
+                  <DataContent
+                    short
+                    titleI18n={I18N.browserActionMenuAddToBookmarks}
+                  />
+                  <Icon name={IconsName.star} color={Color.graphicBase1} />
+                </IconButton>
+                <View style={styles.moreButtonSeparator} />
+              </>
+            )}
+            {isSiteInBookmarks && (
+              <>
+                <IconButton
+                  style={styles.actionMenuButton}
+                  onPress={onPressRemoveBookmark}>
+                  <DataContent
+                    short
+                    titleI18n={I18N.browserActionMenuRemoveFromBookmarks}
+                    numberOfLines={2}
+                  />
+                  <Icon name={IconsName.star_fill} color={Color.graphicBase1} />
+                </IconButton>
+                <View style={styles.moreButtonSeparator} />
+              </>
+            )}
             <IconButton
               style={styles.actionMenuButton}
               onPress={onPressRefresh}>
-              <DataContent short title={'Refresh'} />
+              <DataContent short titleI18n={I18N.browserActionMenuRefresh} />
               <Icon name={IconsName.refresh} color={Color.graphicBase1} />
             </IconButton>
             <View style={styles.moreButtonSeparator} />
             <IconButton
               style={styles.actionMenuButton}
               onPress={onPressCopyLink}>
-              <DataContent short title={'Copy link'} />
+              <DataContent short titleI18n={I18N.browserActionMenuCopyLink} />
               <Icon name={IconsName.copy} color={Color.graphicBase1} />
             </IconButton>
             <View style={styles.moreButtonSeparator} />
             <IconButton style={styles.actionMenuButton} onPress={onPressShare}>
-              <DataContent short title={'Share'} />
+              <DataContent short titleI18n={I18N.browserActionMenuShare} />
               <Icon name={IconsName.share} color={Color.graphicBase1} />
             </IconButton>
             {!!wallet && (
@@ -124,7 +154,10 @@ export const Web3BrowserActionMenu = ({
                 <IconButton
                   style={styles.actionMenuButton}
                   onPress={onPressDisconnect}>
-                  <DataContent short title={'Disconnect'} />
+                  <DataContent
+                    short
+                    titleI18n={I18N.browserActionMenuDisconnect}
+                  />
                   <Icon
                     name={IconsName.disconnect}
                     color={Color.graphicBase1}

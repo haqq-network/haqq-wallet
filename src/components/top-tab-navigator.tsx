@@ -37,11 +37,13 @@ type TabType = Omit<JSX.Element, 'props'> & {
  *   <TopTabNavigator scrollHeaderEnabled initialTabIndex={1}>
  *     <TopTabNavigator.Tab
  *       component={Component}
+ *       name={'tab_1'}
  *       title={'Test component 1'}
  *       rigntActon={RigntActonComponent}
  *     />
  *     <TopTabNavigator.Tab
  *       component={Component2}
+ *       name={'tab_2'}
  *       title={'Test component 2'}
  *       rigntActon={<Button title={'Edit'}/>}
  *     />
@@ -125,7 +127,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
 const Tab: React.FC<TabProps> = ({component}) => {
   const Component = component;
   //@ts-ignore
-  return React.isValidElement(Component) ? <>{Component}</> : <Component />;
+  return React.isValidElement(Component) ? Component : <Component />;
 };
 
 TopTabNavigator.Tab = Tab;

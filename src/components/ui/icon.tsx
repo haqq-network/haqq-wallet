@@ -81,6 +81,7 @@ export enum IconsName {
   more = 'more',
   circle_minus = 'circle_minus',
   reward_error = 'reward_error',
+  star_fill = 'star_fill',
 }
 
 export type IconSize =

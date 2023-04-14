@@ -13,6 +13,7 @@ import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useLayout} from '@app/hooks/use-layout';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 
@@ -23,7 +24,10 @@ import {
   WindowInfoEvent,
 } from './scripts';
 import {Web3BrowserActionMenu} from './web3-browser-action-menu';
-import {Web3BrowserHeader} from './web3-browser-header';
+import {
+  Web3BrowserHeader,
+  Web3BrowserPressHeaderEvent,
+} from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
 import {
   WebViewUserAgent,
@@ -38,10 +42,15 @@ export interface Web3BrowserProps {
   webviewRef: React.RefObject<WebView<{}>>;
   helper: Web3BrowserHelper;
   sessions: Realm.Results<Web3BrowserSession>;
+  bookmarks: Realm.Results<Web3BrowserBookmark>;
   showActionMenu: boolean;
   userProvider: Provider;
 
+  onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
+
   toggleActionMenu(): void;
+
+  onPressHeaderWallet(accountId: string): void;
 
   onPressGoBack(): void;
 
@@ -63,6 +72,8 @@ export interface Web3BrowserProps {
 
   onPressAddBookmark(windowInfo: WindowInfoEvent['payload']): void;
 
+  onPressRemoveBookmark(url: string): void;
+
   addSitiToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 
@@ -71,9 +82,12 @@ export const Web3Browser = ({
   helper,
   webviewRef,
   sessions,
+  bookmarks,
   showActionMenu,
   userProvider,
   toggleActionMenu,
+  onPressHeaderWallet,
+  onPressHeaderUrl,
   onPressGoBack,
   onPressGoForward,
   onPressMore,
@@ -84,6 +98,7 @@ export const Web3Browser = ({
   onPressDisconnect,
   onPressShare,
   onPressAddBookmark,
+  onPressRemoveBookmark,
   addSitiToSearchHistory,
 }: Web3BrowserProps) => {
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
@@ -108,14 +123,29 @@ export const Web3Browser = ({
     [currentSession],
   );
   const wallet = selectedWallet || walletFromSession;
-  const siteClearUrl = useMemo(
-    () => clearUrl(webviewNavigationData?.url || initialUrl),
-    [initialUrl, webviewNavigationData?.url],
+  const siteUrl = useMemo(
+    () =>
+      webviewNavigationData?.url ||
+      windowInfo?.url ||
+      helper.currentUrl ||
+      initialUrl,
+    [
+      helper.currentUrl,
+      initialUrl,
+      webviewNavigationData?.url,
+      windowInfo?.url,
+    ],
   );
+  const isSiteInBookmarks = useMemo(
+    () => !!bookmarks?.filtered(`url = '${siteUrl}'`)?.[0]?.id,
+    [siteUrl, bookmarks],
+  );
+
   const chainId = useMemo(
     () => currentSession?.selectedChainIdHex || userProvider?.ethChainIdHex,
     [currentSession?.selectedChainIdHex, userProvider?.ethChainIdHex],
   );
+
   const currentProvider = useMemo(
     () => Provider.getByChainIdHex(chainId!),
     [chainId],
@@ -133,15 +163,28 @@ export const Web3Browser = ({
   );
 
   const handlePressAddBookmark = useCallback(() => {
+    const url =
+      webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
     onPressAddBookmark?.({
-      url: webviewNavigationData?.url || helper.currentUrl,
-      title: webviewNavigationData?.title,
       ...windowInfo,
+      url,
+      title: webviewNavigationData?.title || windowInfo?.title || clearUrl(url),
     });
   }, [
     helper.currentUrl,
     onPressAddBookmark,
     webviewNavigationData?.title,
+    webviewNavigationData?.url,
+    windowInfo,
+  ]);
+
+  const handlePressRemoveBookmark = useCallback(() => {
+    const url =
+      webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
+    onPressRemoveBookmark?.(url);
+  }, [
+    helper.currentUrl,
+    onPressRemoveBookmark,
     webviewNavigationData?.url,
     windowInfo,
   ]);
@@ -204,11 +247,13 @@ export const Web3Browser = ({
       <Web3BrowserHeader
         wallet={wallet!}
         webviewNavigationData={webviewNavigationData!}
-        siteClearUrl={siteClearUrl}
+        siteUrl={siteUrl}
         onPressMore={onPressMore}
         onMoreIconLayout={onMoreIconLayout}
         onPressGoBack={onPressGoBack}
         onPressGoForward={onPressGoForward}
+        onPressHeaderUrl={onPressHeaderUrl}
+        onPressHeaderWallet={onPressHeaderWallet}
       />
       <View style={styles.webviewContainer}>
         <WebView
@@ -240,6 +285,7 @@ export const Web3Browser = ({
         currentProvider={currentProvider!}
         currentSession={currentSession}
         moreIconLayout={moreIconLayout}
+        isSiteInBookmarks={isSiteInBookmarks}
         toggleActionMenu={toggleActionMenu}
         onPressProviders={onPressProviders}
         onPressHome={onPressHome}
@@ -248,6 +294,7 @@ export const Web3Browser = ({
         onPressDisconnect={onPressDisconnect}
         onPressShare={onPressShare}
         onPressAddBookmark={handlePressAddBookmark}
+        onPressRemoveBookmark={handlePressRemoveBookmark}
       />
     </View>
   );

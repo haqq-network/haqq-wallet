@@ -38,7 +38,7 @@ export const realm = new Realm({
     Banner,
     BannerButton,
   ],
-  schemaVersion: 45,
+  schemaVersion: 46,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

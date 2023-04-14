@@ -91,6 +91,10 @@ export class Wallet extends Realm.Object {
   }
 
   static getById(id: string) {
+    if (!id) {
+      return null;
+    }
+
     const item = realm.objectForPrimaryKey<Wallet>(Wallet.schema.name, id);
 
     if (!item) {

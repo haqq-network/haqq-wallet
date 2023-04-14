@@ -10,6 +10,7 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
       url: 'string',
       title: 'string',
       icon: 'string?',
+      order: 'int',
       createdAt: 'int',
     },
     primaryKey: 'id',
@@ -17,6 +18,7 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
   id!: string;
   url!: string;
   title!: string;
+  order!: number;
   icon!: string | undefined;
   createdAt!: number;
 
@@ -28,6 +30,7 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
         {
           ...params,
           id: id.toLowerCase(),
+          order: 0,
           createdAt: Date.now(),
         },
         Realm.UpdateMode.Modified,
@@ -51,11 +54,20 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
   }
 
   static getAll() {
-    return realm.objects<Web3BrowserBookmark>(Web3BrowserBookmark.schema.name);
+    return realm
+      .objects<Web3BrowserBookmark>(Web3BrowserBookmark.schema.name)
+      ?.sorted?.('order');
   }
 
   static getByUrl(url: string) {
-    return Web3BrowserBookmark.getAll().filtered?.(`url = '${url}'`)?.[0];
+    return Web3BrowserBookmark.getAll()?.filtered?.(`url = '${url}'`)?.[0];
+  }
+
+  static getById(id: string) {
+    return realm.objectForPrimaryKey<Web3BrowserBookmark>(
+      Web3BrowserBookmark.schema.name,
+      id,
+    );
   }
 
   static removeAll() {

@@ -6,13 +6,13 @@ import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
+import {I18N} from '@app/i18n';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';
-import {Icon, IconButton, IconsName, Spacer} from './ui';
+import {CustomHeader, Icon, IconButton, IconsName, Spacer, Text} from './ui';
 
 interface BrowserEditBookmarksProps {
   links: Link[];
@@ -20,17 +20,22 @@ interface BrowserEditBookmarksProps {
   onDragEnd(links: Link[]): void;
 
   onPressRemove(link: Link): void;
+
+  onPressBack(): void;
+
+  onPressSubmit(): void;
 }
 
 export const BrowserEditBookmarks = ({
   links,
   onDragEnd,
   onPressRemove,
+  onPressBack,
+  onPressSubmit,
 }: BrowserEditBookmarksProps) => {
-  const insets = useSafeAreaInsets();
   const renderItem = useCallback(
     ({item, drag, isActive}: RenderItemParams<Link>) => {
-      if (!item) {
+      if (!item?.id) {
         return null;
       }
 
@@ -58,6 +63,7 @@ export const BrowserEditBookmarks = ({
                   variant={LinkPreviewVariant.line}
                 />
               </View>
+              <Spacer width={25} />
               <Icon name={IconsName.list} color={Color.graphicSecond3} />
             </TouchableOpacity>
           </View>
@@ -76,16 +82,49 @@ export const BrowserEditBookmarks = ({
     [onDragEnd],
   );
 
+  if (!links?.length) {
+    return (
+      <>
+        <CustomHeader
+          title={I18N.editBookmarksTitle}
+          iconLeft="arrow_back"
+          onPressLeft={onPressBack}
+        />
+        <View style={styles.emptyContainer}>
+          <View style={styles.squareContainer}>
+            <Icon name={IconsName.square} color={Color.graphicSecond3} />
+            <Spacer width={6} />
+            <Icon name={IconsName.square} color={Color.graphicSecond3} />
+            <Spacer width={6} />
+            <Icon name={IconsName.square} color={Color.graphicSecond3} />
+          </View>
+          <Spacer height={4} />
+          <Text t14 i18n={I18N.thereNoBookmarks} color={Color.textBase2} />
+        </View>
+      </>
+    );
+  }
+
   return (
-    <View style={[styles.container, {marginTop: insets.top}]}>
-      <DraggableFlatList<Link>
-        data={links}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        containerStyle={styles.flatList}
-        onDragEnd={handleDragEnd}
+    <>
+      <CustomHeader
+        title={I18N.editBookmarksTitle}
+        iconLeft="arrow_back"
+        onPressLeft={onPressBack}
+        iconRight="check"
+        colorRight={Color.graphicGreen1}
+        onPressRight={onPressSubmit}
       />
-    </View>
+      <View style={styles.container}>
+        <DraggableFlatList<Link>
+          data={links}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          containerStyle={styles.flatList}
+          onDragEnd={handleDragEnd}
+        />
+      </View>
+    </>
   );
 };
 
@@ -107,6 +146,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flatList: {
+    flex: 1,
+  },
+  squareContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
 });

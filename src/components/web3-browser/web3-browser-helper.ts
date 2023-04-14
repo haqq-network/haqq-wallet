@@ -167,6 +167,7 @@ export class Web3BrowserHelper extends EventEmitter {
     if (session) {
       session.disconnect();
     }
+    this.emitToEthereum(EthereumEventsEnum.ACCOUNTS_CHANGED, []);
     this.emitToEthereum(EthereumEventsEnum.DISCONNECT);
     this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
   };
