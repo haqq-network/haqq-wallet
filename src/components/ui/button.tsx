@@ -21,8 +21,8 @@ import {Icon, IconProps} from './icon';
 import {Text} from './text';
 
 export type ButtonValue =
-  | {title: string; i18n?: undefined}
-  | {i18n: I18N; title?: undefined};
+  | {title: string; i18n?: undefined; i18params?: undefined}
+  | {i18n: I18N; i18params?: Record<string, string>; title?: undefined};
 
 export type ButtonRightIconProps =
   | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
@@ -66,6 +66,7 @@ export enum ButtonSize {
 export const Button = ({
   title,
   i18n,
+  i18params,
   variant = ButtonVariant.text,
   size = ButtonSize.large,
   style,
@@ -160,7 +161,8 @@ export const Button = ({
             t12={size === ButtonSize.small}
             style={textStyleFlatten}
             color={textColor}
-            i18n={i18n}>
+            i18n={i18n}
+            i18params={i18params}>
             {title}
           </Text>
           {iconRight && (

@@ -1,8 +1,5 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
-import {accountInfo} from '@haqq/provider-web3-utils';
-import {getMetadataValue} from '@haqq/shared-react-native';
 import messaging from '@react-native-firebase/messaging';
 import {Alert, ScrollView} from 'react-native';
 
@@ -13,20 +10,15 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {parseJwt} from '@app/helpers/parse-jwt';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
-import {Cloud} from '@app/services/cloud';
-import {onAuthorized} from '@app/services/provider-mpc';
-import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {PushNotifications} from '@app/services/push-notifications';
 import {message as toastMessage} from '@app/services/toast';
 import {Link} from '@app/types';
-import {ETH_HD_PATH} from '@app/variables/common';
 
 messaging().onMessage(async remoteMessage => {
   console.log('onMessage', remoteMessage);
@@ -66,7 +58,10 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrobserUrl] = useState('');
   const navigation = useTypedNavigation();
   const user = useUser();
-
+  const provider = useMemo(
+    () => Provider.getProvider(user.providerId),
+    [user.providerId],
+  );
   const onTurnOffDeveloper = useCallback(() => {
     user.isDeveloper = false;
     navigation.goBack();
@@ -120,72 +115,6 @@ export const SettingsTestScreen = () => {
       Banner.remove(banner.id);
       Refferal.remove(banner.id);
     }
-  }, []);
-
-  const onPressMPC = useCallback(async () => {
-    const token = await fetch(CUSTOM_JWT_TOKEN, {
-      method: 'POST',
-      headers: {
-        accept: 'application/json, text/plain, */*',
-        'content-type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify({
-        email: 'andrey@haqq',
-      }),
-    });
-
-    const authState = await token.json();
-
-    const authInfo = parseJwt(authState.idToken);
-    const creds = await onAuthorized('custom', authInfo.sub, authState.idToken);
-
-    let cloudShare = null;
-
-    if (creds.privateKey) {
-      console.log('creds.privateKey', creds.privateKey);
-      const walletInfo = await getMetadataValue(
-        METADATA_URL,
-        creds.privateKey,
-        'socialShareIndex',
-      );
-
-      if (walletInfo) {
-        console.log('walletInfo', walletInfo);
-
-        const supported = await Cloud.isEnabled();
-
-        if (supported) {
-          const cloud = new Cloud();
-
-          const account = await accountInfo(creds.privateKey);
-          console.log(
-            'account.address',
-            `haqq_${account.address.toLowerCase()}`,
-          );
-          cloudShare = await cloud.getItem(
-            `haqq_${account.address.toLowerCase()}`,
-          );
-        }
-      }
-    }
-
-    const storage = await getProviderStorage();
-    const provider = await providerMpcInitialize(
-      creds.privateKey,
-      cloudShare,
-      null,
-      creds.verifier,
-      creds.token,
-      app.getPassword.bind(app),
-      storage,
-      {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
-    );
-
-    console.log('provider', provider);
-
-    const message = await provider.signPersonalMessage(ETH_HD_PATH, 'test');
-
-    console.log('message', message);
   }, []);
 
   return (
@@ -253,8 +182,15 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="MPC"
-        onPress={() => onPressMPC()}
+        title="Show modal change on mainnet"
+        onPress={() => {
+          showModal('claimOnMainnet', {
+            network: provider?.name,
+            onChange: () => {
+              app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
+            },
+          });
+        }}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

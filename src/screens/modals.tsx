@@ -3,6 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Modal} from 'react-native';
 
 import {
+  ClaimOnMainNet,
+  ClaimOnMainNetProps,
   ErrorAccountAdded,
   ErrorCreateAccount,
   ErrorModal,
@@ -115,6 +117,10 @@ type ErrorModal = {
   type: 'error';
 } & ErrorModalProps;
 
+type ClaimOnMainnetModal = {
+  type: 'claimOnMainnet';
+} & ClaimOnMainNetProps;
+
 type EmptyType = {
   type:
     | 'no-internet'
@@ -141,6 +147,7 @@ type ModalState =
   | ProvidersBottomSheetModal
   | ErrorModal
   | EmptyType
+  | ClaimOnMainnetModal
   | null;
 
 export type ModalProps = {
@@ -234,6 +241,10 @@ export const Modals = ({initialModal = null}: ModalProps) => {
         return <CaptchaModal onClose={modal.onClose} />;
       case 'error':
         return <ErrorModal {...modal} />;
+      case 'claimOnMainnet':
+        return (
+          <ClaimOnMainNet onChange={modal.onChange} network={modal.network} />
+        );
       default:
         return null;
     }

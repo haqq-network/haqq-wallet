@@ -582,6 +582,10 @@ export enum I18N {
   browserToastRemoveFromBookmarks,
   browserToastLinkCopied,
   stakingInfoRewardIsReceived,
+  claimOnMainnetTitle,
+  claimOnMainnetDescription,
+  claimOnMainnetChange,
+  claimOnMainnetStay,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1279,4 +1283,10 @@ const en: Record<I18N, string> = {
   [I18N.browserToastAddedToBookmarks]: 'Added to bookmarks',
   [I18N.browserToastRemoveFromBookmarks]: 'Remove from bookmarks',
   [I18N.browserToastLinkCopied]: 'Link copied',
+  [I18N.claimOnMainnetTitle]:
+    'Funds have been successfully received on your account in Mainnet',
+  [I18N.claimOnMainnetDescription]:
+    'You will be able to see the received funds by going to mainnet',
+  [I18N.claimOnMainnetChange]: 'Go to MainNet',
+  [I18N.claimOnMainnetStay]: 'Stay on {{network}}',
 };

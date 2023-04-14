@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -13,14 +13,14 @@ import {TransactionList} from '@app/types';
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
-  const transactions = useMemo(
-    () => Transaction.getAllByProviderId(user.providerId),
-    [user.providerId],
-  );
   const wallets = useWallets();
   const [refreshing, setRefreshing] = useState(false);
+
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(wallets.addressList, transactions.snapshot()),
+    prepareTransactions(
+      wallets.addressList,
+      Transaction.getAllByProviderId(user.providerId).snapshot(),
+    ),
   );
 
   const onWalletsRefresh = useCallback(() => {
@@ -61,19 +61,24 @@ export const HomeFeedScreen = () => {
         changes.deletions.length
       ) {
         setTransactionsList(
-          prepareTransactions(wallets.addressList, transactions.snapshot()),
+          prepareTransactions(wallets.addressList, collection.snapshot()),
         );
       }
     },
-    [wallets.addressList, transactions],
+    [wallets],
   );
 
   useEffect(() => {
+    const transactions = Transaction.getAllByProviderId(user.providerId);
+    setTransactionsList(
+      prepareTransactions(wallets.addressList, transactions.snapshot()),
+    );
+
     transactions.addListener(onTransactionsList);
     return () => {
       transactions.removeListener(onTransactionsList);
     };
-  }, [onTransactionsList, transactions, user]);
+  }, [onTransactionsList, user.providerId, wallets]);
 
   return (
     <HomeFeed
