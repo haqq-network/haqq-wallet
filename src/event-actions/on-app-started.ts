@@ -53,9 +53,8 @@ export async function onAppStarted() {
   const refferal = Refferal.getAll().filtered('isUsed = false');
 
   if (refferal.length) {
+    const ref = refferal[0];
     try {
-      const ref = refferal[0];
-
       await onBannerAddClaimCode(ref.code);
     } catch (e) {
       if (e instanceof Error) {
@@ -65,6 +64,10 @@ export async function onAppStarted() {
           close: getText(I18N.modalRewardErrorClose),
           icon: 'reward_error',
           color: Color.graphicSecond4,
+        });
+
+        ref.update({
+          isUsed: true,
         });
       }
     }
