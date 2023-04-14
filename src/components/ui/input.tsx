@@ -12,6 +12,7 @@ export type InputProps = TextInputProps & {
   label?: string;
   error?: boolean;
   rightAction?: React.ReactNode;
+  leftAction?: React.ReactNode;
   i18nLabel?: I18N;
 };
 
@@ -20,6 +21,7 @@ export const Input = ({
   label,
   i18nLabel,
   rightAction,
+  leftAction,
   error,
   ...props
 }: InputProps) => {
@@ -29,7 +31,8 @@ export const Input = ({
       i18nLabel={i18nLabel}
       style={[page.wrapper, style]}
       variant={error ? LabelBlockVariant.error : LabelBlockVariant.default}
-      rightAction={rightAction}>
+      rightAction={rightAction}
+      leftAction={leftAction}>
       <TextInput
         style={[page.input, props.editable === false && page.inputDisabled]}
         {...props}

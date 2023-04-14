@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {CUSTOM_JWT_TOKEN, GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
@@ -8,6 +8,7 @@ import {Alert, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
+import {onUrlSubmit} from '@app/components/web3-browser/web3-browser-utils';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
@@ -18,11 +19,13 @@ import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
+import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Cloud} from '@app/services/cloud';
 import {onAuthorized} from '@app/services/provider-mpc';
 import {providerMpcInitialize} from '@app/services/provider-mpc-initialize';
 import {PushNotifications} from '@app/services/push-notifications';
-import {isValidUrl} from '@app/utils';
+import {message as toastMessage} from '@app/services/toast';
+import {Link} from '@app/types';
 import {ETH_HD_PATH} from '@app/variables/common';
 
 messaging().onMessage(async remoteMessage => {
@@ -45,13 +48,23 @@ messaging()
     }
   });
 
+const TEST_URLS: Partial<Link>[] = [
+  {title: 'app haqq network', url: 'https://app.haqq.network'},
+  {title: 'vesting', url: 'https://vesting.haqq.network'},
+  {title: 'app uniswap', url: 'https://app.uniswap.org'},
+  {title: 'TestEdge2', url: 'https://testedge2.haqq.network'},
+  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
+  {
+    title: 'metamask test dapp',
+    url: 'https://metamask.github.io/test-dapp/',
+  },
+];
+
 export const SettingsTestScreen = () => {
   const [isRequestPermission, setIsRequestPermission] = useState(false);
   const [wc, setWc] = useState('');
   const [browserUrl, setBrobserUrl] = useState('');
-  const isValidBrowserUrl = useMemo(() => isValidUrl(browserUrl), [browserUrl]);
   const navigation = useTypedNavigation();
-
   const user = useUser();
 
   const onPressRequestPermissions = async () => {
@@ -65,7 +78,10 @@ export const SettingsTestScreen = () => {
   };
 
   const onPressOpenBrowser = () => {
-    navigation.navigate('web3browser', {url: browserUrl});
+    navigation.navigate('homeBrowser', {
+      screen: 'web3browser',
+      params: {url: onUrlSubmit(browserUrl)},
+    });
   };
 
   const onCreateBanner = useCallback(() => {
@@ -200,8 +216,20 @@ export const SettingsTestScreen = () => {
       <Spacer height={5} />
       <Button
         title="Open web3 browser"
-        disabled={!isValidBrowserUrl}
         onPress={onPressOpenBrowser}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={5} />
+      <Button
+        title="load test bookmarks for browser"
+        onPress={() => {
+          TEST_URLS.forEach(link => {
+            if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
+              Web3BrowserBookmark.create(link);
+            }
+          });
+          toastMessage('bookmarks loaded');
+        }}
         variant={ButtonVariant.contained}
       />
       <Spacer height={5} />

@@ -4,6 +4,7 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {TransitionPresets} from '@react-navigation/stack';
 
 import {Color} from '@app/colors';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
@@ -16,6 +17,7 @@ import {HomeGovernanceScreen} from '@app/screens/home-governance';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
 
+import {HomeBrowserScreen} from './home-browser';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
@@ -58,6 +60,12 @@ const stakingOptions = {
   tabBarIcon: tabBarIcon('homeStaking'),
 };
 
+const browserOptions = {
+  ...TransitionPresets.ModalSlideFromBottomIOS,
+  headerShown: false,
+  tabBarIcon: tabBarIcon('homeBrowser'),
+};
+
 const governanceOptions = {
   headerShown: false,
   tabBarIcon: tabBarIcon('homeGovernance'),
@@ -83,6 +91,13 @@ export const HomeScreen = () => {
           name="homeStaking"
           component={HomeStakingScreen}
           options={stakingOptions}
+        />
+      )}
+      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
+        <Tab.Screen
+          name="homeBrowser"
+          component={HomeBrowserScreen}
+          options={browserOptions}
         />
       )}
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (

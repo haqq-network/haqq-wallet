@@ -1,12 +1,21 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import WebView from 'react-native-webview';
+import {View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import WebView, {WebViewProps} from 'react-native-webview';
+import {
+  WebViewNavigation,
+  WebViewNavigationEvent,
+} from 'react-native-webview/lib/WebViewTypes';
 
+import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
+import {useLayout} from '@app/hooks/use-layout';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
+import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
+import {Web3BrowserSession} from '@app/models/web3-browser-session';
 
 import {
   InpageBridgeWeb3,
@@ -14,25 +23,133 @@ import {
   WebViewEventsJS,
   WindowInfoEvent,
 } from './scripts';
+import {Web3BrowserActionMenu} from './web3-browser-action-menu';
+import {
+  Web3BrowserHeader,
+  Web3BrowserPressHeaderEvent,
+} from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
-import {WebViewUserAgent} from './web3-browser-utils';
+import {
+  WebViewUserAgent,
+  clearUrl,
+  getOriginFromUrl,
+} from './web3-browser-utils';
 
-import {Button, ButtonSize, ButtonVariant, Spacer, Text} from '../ui';
-import {WalletRow, WalletRowTypes} from '../wallet-row';
+import {BrowserError} from '../browser-error';
 
 export interface Web3BrowserProps {
   initialUrl: string;
+  webviewRef: React.RefObject<WebView<{}>>;
+  helper: Web3BrowserHelper;
+  sessions: Realm.Results<Web3BrowserSession>;
+  bookmarks: Realm.Results<Web3BrowserBookmark>;
+  showActionMenu: boolean;
+  userProvider: Provider;
+
+  onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
+
+  toggleActionMenu(): void;
+
+  onPressHeaderWallet(accountId: string): void;
+
+  onPressGoBack(): void;
+
+  onPressGoForward(): void;
+
+  onPressMore(): void;
+
+  onPressProviders(): void;
+
+  onPressHome(): void;
+
+  onPressRefresh(): void;
+
+  onPressCopyLink(): void;
+
+  onPressDisconnect(): void;
+
+  onPressShare(): void;
+
+  onPressAddBookmark(windowInfo: WindowInfoEvent['payload']): void;
+
+  onPressRemoveBookmark(url: string): void;
+
+  addSitiToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 
-export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
-  const navigation = useNavigation();
+export const Web3Browser = ({
+  initialUrl,
+  helper,
+  webviewRef,
+  sessions,
+  bookmarks,
+  showActionMenu,
+  userProvider,
+  toggleActionMenu,
+  onPressHeaderWallet,
+  onPressHeaderUrl,
+  onPressGoBack,
+  onPressGoForward,
+  onPressMore,
+  onPressProviders,
+  onPressHome,
+  onPressRefresh,
+  onPressCopyLink,
+  onPressDisconnect,
+  onPressShare,
+  onPressAddBookmark,
+  onPressRemoveBookmark,
+  addSitiToSearchHistory,
+}: Web3BrowserProps) => {
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
-  const webviewRef = useRef<WebView>(null);
-  const helper = useRef<Web3BrowserHelper>(
-    new Web3BrowserHelper({webviewRef, initialUrl}),
-  ).current;
-  const [windowInfo, setWindowInfo] = useState<WindowInfoEvent['payload']>();
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>();
+  const [windowInfo, setWindowInfo] = useState<WindowInfoEvent['payload']>();
+  const [webviewNavigationData, setWebviewNavigationData] =
+    useState<WebViewNavigation>();
+  const addedToSearchHistory = useRef(false);
+  const [moreIconLayout, onMoreIconLayout] = useLayout();
+  const insets = useSafeAreaInsets();
+  const currentSession = useMemo(
+    () =>
+      sessions.filtered(
+        `origin = '${getOriginFromUrl(
+          webviewNavigationData?.url || initialUrl,
+        )}'`,
+      )[0],
+    [initialUrl, sessions, webviewNavigationData?.url],
+  );
+  const walletFromSession = useMemo(
+    () => Wallet.getById(currentSession?.selectedAccount),
+    [currentSession],
+  );
+  const wallet = selectedWallet || walletFromSession;
+  const siteUrl = useMemo(
+    () =>
+      webviewNavigationData?.url ||
+      windowInfo?.url ||
+      helper.currentUrl ||
+      initialUrl,
+    [
+      helper.currentUrl,
+      initialUrl,
+      webviewNavigationData?.url,
+      windowInfo?.url,
+    ],
+  );
+  const isSiteInBookmarks = useMemo(
+    () => !!bookmarks?.filtered(`url = '${siteUrl}'`)?.[0]?.id,
+    [siteUrl, bookmarks],
+  );
+
+  const chainId = useMemo(
+    () => currentSession?.selectedChainIdHex || userProvider?.ethChainIdHex,
+    [currentSession?.selectedChainIdHex, userProvider?.ethChainIdHex],
+  );
+
+  const currentProvider = useMemo(
+    () => Provider.getByChainIdHex(chainId!),
+    [chainId],
+  );
 
   const injectedJSBeforeContentLoaded = useMemo(
     () =>
@@ -45,6 +162,52 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
     [inpageBridgeWeb3],
   );
 
+  const handlePressAddBookmark = useCallback(() => {
+    const url =
+      webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
+    onPressAddBookmark?.({
+      ...windowInfo,
+      url,
+      title: webviewNavigationData?.title || windowInfo?.title || clearUrl(url),
+    });
+  }, [
+    helper.currentUrl,
+    onPressAddBookmark,
+    webviewNavigationData?.title,
+    webviewNavigationData?.url,
+    windowInfo,
+  ]);
+
+  const handlePressRemoveBookmark = useCallback(() => {
+    const url =
+      webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
+    onPressRemoveBookmark?.(url);
+  }, [
+    helper.currentUrl,
+    onPressRemoveBookmark,
+    webviewNavigationData?.url,
+    windowInfo,
+  ]);
+
+  const onLoad = useCallback(
+    (event: WebViewNavigationEvent) => {
+      helper.onLoad(event);
+      setWebviewNavigationData(event.nativeEvent);
+
+      if (event?.nativeEvent?.navigationType === 'backforward') {
+        webviewRef?.current?.reload();
+      }
+    },
+    [helper, webviewRef],
+  );
+
+  const renderError = useCallback(
+    (...args: Parameters<NonNullable<WebViewProps['renderError']>>) => (
+      <BrowserError reason={args[2]} />
+    ),
+    [],
+  );
+
   useEffect(() => {
     InpageBridgeWeb3.loadScript().then(script => {
       setInpageBridgeWeb3(script);
@@ -52,12 +215,19 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
 
     helper?.on(WebViewEventsEnum.WINDOW_INFO, (event: WindowInfoEvent) => {
       setWindowInfo(event.payload);
+      if (
+        !addedToSearchHistory.current &&
+        !Web3BrowserSearchHistory.getByUrl(event.payload.url)
+      ) {
+        addSitiToSearchHistory(event.payload);
+        addedToSearchHistory.current = true;
+      }
     });
 
     helper?.on(WebViewEventsEnum.ACCOUNTS_CHANGED, ([accountId]: string[]) => {
       if (accountId) {
-        const wallet = Wallet.getById(accountId);
-        setSelectedWallet(wallet);
+        const foundWallet = Wallet.getById(accountId);
+        setSelectedWallet(foundWallet);
       } else {
         setSelectedWallet(null);
       }
@@ -66,97 +236,73 @@ export const Web3Browser = ({initialUrl}: Web3BrowserProps) => {
     return () => {
       helper.dispose();
     };
-  }, [helper, setWindowInfo]);
+  }, [addSitiToSearchHistory, helper]);
 
   if (!inpageBridgeWeb3) {
     return null;
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.urls}>
-        {!!windowInfo?.title && <Text t18>{windowInfo?.title}</Text>}
-        {!!windowInfo?.url && <Text t17>{windowInfo?.url}</Text>}
-      </View>
-      <View style={styles.header}>
-        <Spacer width={10} />
-        <Button
-          title="<"
-          size={ButtonSize.small}
-          variant={ButtonVariant.contained}
-          onPress={() => {
-            webviewRef.current?.goBack?.();
-          }}
-        />
-        <Spacer width={10} />
-        <Button
-          title=">"
-          size={ButtonSize.small}
-          variant={ButtonVariant.contained}
-          onPress={() => {
-            webviewRef.current?.goForward?.();
-          }}
-        />
-        <Spacer width={10} />
-        <Button
-          variant={ButtonVariant.contained}
-          size={ButtonSize.small}
-          title="disconnect"
-          style={styles.disconnect}
-          onPress={() => {
-            helper.disconnectAccount();
-          }}
-        />
-        <Spacer width={10} />
-        {!!selectedWallet && (
-          <>
-            <WalletRow type={WalletRowTypes.variant3} item={selectedWallet} />
-            <Spacer width={10} />
-          </>
-        )}
-        <Button
-          title="X"
-          variant={ButtonVariant.contained}
-          size={ButtonSize.small}
-          onPress={navigation.goBack}
-        />
-        <Spacer width={10} />
-      </View>
-      <WebView
-        // @ts-ignore
-        sendCookies
-        useWebkit
-        javascriptEnabled
-        allowsInlineMediaPlayback
-        dataDetectorTypes={'all'}
-        originWhitelist={['*']}
-        ref={webviewRef}
-        userAgent={WebViewUserAgent}
-        onMessage={helper.handleMessage}
-        onLoad={helper.onLoad}
-        onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
-        source={{uri: initialUrl}}
-        decelerationRate={'normal'}
-        testID={'web3-browser-webview'}
-        applicationNameForUserAgent={'HAQQ Wallet'}
-        injectedJavaScriptBeforeContentLoaded={injectedJSBeforeContentLoaded}
+    <View style={[styles.container, {top: insets.top}]}>
+      <Web3BrowserHeader
+        wallet={wallet!}
+        webviewNavigationData={webviewNavigationData!}
+        siteUrl={siteUrl}
+        onPressMore={onPressMore}
+        onMoreIconLayout={onMoreIconLayout}
+        onPressGoBack={onPressGoBack}
+        onPressGoForward={onPressGoForward}
+        onPressHeaderUrl={onPressHeaderUrl}
+        onPressHeaderWallet={onPressHeaderWallet}
       />
-    </SafeAreaView>
+      <View style={styles.webviewContainer}>
+        <WebView
+          // @ts-ignore
+          sendCookies
+          useWebkit
+          javascriptEnabled
+          allowsInlineMediaPlayback
+          dataDetectorTypes={'all'}
+          originWhitelist={['*']}
+          containerStyle={{paddingBottom: insets.top}}
+          ref={webviewRef}
+          userAgent={WebViewUserAgent}
+          onMessage={helper.handleMessage}
+          onLoad={onLoad}
+          onLoadEnd={helper.onLoadEnd}
+          onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
+          renderError={renderError}
+          source={{uri: initialUrl}}
+          decelerationRate={'normal'}
+          testID={'web3-browser-webview'}
+          applicationNameForUserAgent={'HAQQ Wallet'}
+          injectedJavaScriptBeforeContentLoaded={injectedJSBeforeContentLoaded}
+        />
+      </View>
+      <Web3BrowserActionMenu
+        wallet={wallet!}
+        showActionMenu={showActionMenu}
+        currentProvider={currentProvider!}
+        currentSession={currentSession}
+        moreIconLayout={moreIconLayout}
+        isSiteInBookmarks={isSiteInBookmarks}
+        toggleActionMenu={toggleActionMenu}
+        onPressProviders={onPressProviders}
+        onPressHome={onPressHome}
+        onPressRefresh={onPressRefresh}
+        onPressCopyLink={onPressCopyLink}
+        onPressDisconnect={onPressDisconnect}
+        onPressShare={onPressShare}
+        onPressAddBookmark={handlePressAddBookmark}
+        onPressRemoveBookmark={handlePressRemoveBookmark}
+      />
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  disconnect: {
+const styles = createTheme({
+  webviewContainer: {
     flex: 1,
-  },
-  urls: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  header: {
-    flexDirection: 'row',
-    marginBottom: 5,
   },
   container: {
     flex: 1,

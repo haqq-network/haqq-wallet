@@ -16,6 +16,8 @@ export const HomeScreenLabel = ({route, focused}: HomeScreenLabelProps) => {
         return I18N.homeWallet;
       case 'homeStaking':
         return I18N.homeStaking;
+      case 'homeBrowser':
+        return I18N.homeBrowser;
       case 'homeGovernance':
         return I18N.homeGovernance;
       case 'homeSettings':

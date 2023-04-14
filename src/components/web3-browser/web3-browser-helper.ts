@@ -7,22 +7,23 @@ import {JsonRpcEngine, JsonRpcRequest, JsonRpcResponse} from 'json-rpc-engine';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
+  WebViewErrorEvent,
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-
 import {
   createJsonRpcLoggerMiddleWare,
   createJsonRpcMiddleware,
-} from './json-rpc-middleware';
+} from '@app/services/json-rpc-middleware';
+
 import {WebViewEventsEnum, WebViewEventsJS} from './scripts';
 import {
   EthereumEventsEnum,
   EthereumEventsParams,
-  changeWebViewHrefJS,
+  changeWebViewUrlJS,
   detectDeeplinkAndNavigate,
   emitToEthereumJS,
   getOriginFromUrl,
@@ -39,14 +40,15 @@ export interface Web3BrowserHelperConstructor {
 }
 
 export class Web3BrowserHelper extends EventEmitter {
+  public currentUrl: string;
   private webviewRef: RefObject<WebView>;
   private jrpcEngine = new JsonRpcEngine();
   private phishingController = new PhishingController();
-  private currentUrl: string;
-  private nextUrl: string;
 
   constructor({webviewRef, initialUrl}: Web3BrowserHelperConstructor) {
     super();
+    this.phishingController.maybeUpdateState();
+
     this.webviewRef = webviewRef;
     this.currentUrl = initialUrl;
     this.jrpcEngine.push(
@@ -74,6 +76,13 @@ export class Web3BrowserHelper extends EventEmitter {
   public onLoad = ({nativeEvent}: WebViewNavigationEvent) => {
     if (this.currentUrl !== nativeEvent.url) {
       this.currentUrl = nativeEvent.url;
+    }
+  };
+
+  public onLoadEnd = ({
+    nativeEvent,
+  }: WebViewNavigationEvent | WebViewErrorEvent) => {
+    if (this.currentUrl !== nativeEvent.url) {
       this.requestWindowInfo();
     }
   };
@@ -117,22 +126,35 @@ export class Web3BrowserHelper extends EventEmitter {
       return;
     }
 
-    if (getOriginFromUrl(this.nextUrl) !== this.origin) {
+    if (getOriginFromUrl(url) !== this.origin) {
       this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
     }
 
-    this.nextUrl = url;
-    const js = changeWebViewHrefJS(url);
+    const js = changeWebViewUrlJS(url);
     this.webviewRef?.current?.injectJavaScript(js);
   };
 
   public onShouldStartLoadWithRequest = ({url}: ShouldStartLoadRequest) => {
-    if (this.nextUrl === url) {
+    if (url === 'about:blank') {
       return true;
-    } else {
-      this.go(url);
+    }
+
+    const {result} = this.phishingController.test(url);
+
+    if (result) {
+      showPhishingAlert().then(allowNavigateToPhishing => {
+        if (allowNavigateToPhishing) {
+          this.go(url);
+        }
+      });
       return false;
     }
+
+    if (getOriginFromUrl(url) !== this.origin) {
+      this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
+    }
+
+    return true;
   };
 
   public dispose = () => {
@@ -145,6 +167,7 @@ export class Web3BrowserHelper extends EventEmitter {
     if (session) {
       session.disconnect();
     }
+    this.emitToEthereum(EthereumEventsEnum.ACCOUNTS_CHANGED, []);
     this.emitToEthereum(EthereumEventsEnum.DISCONNECT);
     this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
   };
@@ -169,6 +192,7 @@ export class Web3BrowserHelper extends EventEmitter {
       });
     }
     this.emitToEthereum(EthereumEventsEnum.CHAIN_CHANGED, chainIdHex);
+    this.webviewRef.current?.reload?.();
   };
 
   private postMessage = (

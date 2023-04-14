@@ -73,7 +73,15 @@ export enum IconsName {
   facebook = 'facebook',
   wallet_connect = 'wallet_connect',
   pharse = 'pharse',
+  browser = 'browser',
+  square = 'square',
+  share = 'share',
+  refresh = 'refresh',
+  disconnect = 'disconnect',
+  more = 'more',
+  circle_minus = 'circle_minus',
   reward_error = 'reward_error',
+  star_fill = 'star_fill',
 }
 
 export type IconSize =

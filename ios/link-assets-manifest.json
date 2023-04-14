@@ -138,6 +138,30 @@
       "sha1": "05d5d207563b519ca497fa2a09a848deb1dde9d0"
     },
     {
+      "path": "assets/images/browser-error-dark.png",
+      "sha1": "a93e224aa01470ddebf3ff82b0d57474f3e129a5"
+    },
+    {
+      "path": "assets/images/browser-error-dark@2x.png",
+      "sha1": "f964e3537fe3b88cc05725dd9adee41c9ca1c59c"
+    },
+    {
+      "path": "assets/images/browser-error-dark@3x.png",
+      "sha1": "274351e9598e8ba85a9ed60e0b0e85c332b4aa0d"
+    },
+    {
+      "path": "assets/images/browser-error-light.png",
+      "sha1": "60e67b8e4cf186e834094b60184b29124674d996"
+    },
+    {
+      "path": "assets/images/browser-error-light@2x.png",
+      "sha1": "34920153913cbeabb7299b4f5267208b37b73ad2"
+    },
+    {
+      "path": "assets/images/browser-error-light@3x.png",
+      "sha1": "3c093d16558271de3eb420cf3c5d018ce3e697ea"
+    },
+    {
       "path": "assets/images/card-circles-0.png",
       "sha1": "dccecda7054767a9df23650817a53aa7d5071dbb"
     },

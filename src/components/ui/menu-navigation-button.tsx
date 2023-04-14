@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {
   StyleProp,
@@ -17,6 +17,7 @@ export type MenuNavigationButtonProps = {
   children: React.ReactNode;
   hideArrow?: boolean;
   checked?: boolean;
+  disabled?: boolean;
 };
 
 export const MenuNavigationButton = ({
@@ -25,9 +26,15 @@ export const MenuNavigationButton = ({
   style,
   hideArrow = false,
   checked = false,
+  disabled = false,
 }: MenuNavigationButtonProps) => {
+  const WrapperComponent = useMemo(
+    () => (disabled ? View : TouchableWithoutFeedback),
+    [disabled],
+  );
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    // @ts-ignore
+    <WrapperComponent disabled={!onPress} onPress={onPress}>
       <View style={[styles.container, style]}>
         <View style={styles.content}>{children}</View>
         {!!checked && <Icon i24 name="check" color={Color.graphicGreen1} />}
@@ -35,7 +42,7 @@ export const MenuNavigationButton = ({
           <Icon i24 name="arrow_forward_small" color={Color.graphicSecond3} />
         )}
       </View>
-    </TouchableWithoutFeedback>
+    </WrapperComponent>
   );
 };
 

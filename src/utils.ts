@@ -3,6 +3,7 @@ import {SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
+import {I18N} from './i18n';
 import {WalletConnectParsedAccount} from './types';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -306,4 +307,8 @@ export const isValidUrl = (string: string) => {
     'i',
   );
   return pattern.test(string);
+};
+
+export const isI18N = (obj: any): obj is I18N => {
+  return obj in I18N;
 };

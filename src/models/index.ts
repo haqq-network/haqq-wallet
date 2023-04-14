@@ -9,8 +9,6 @@ import {StakingMetadata} from '@app/models/staking-metadata';
 import {Transaction} from '@app/models/transaction';
 import {UserSchema} from '@app/models/user';
 import {Wallet} from '@app/models/wallet';
-import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
-import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {AppTheme, WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
@@ -18,9 +16,16 @@ import {
   TEST_NETWORK,
 } from '@app/variables/common';
 
+import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
+import {Web3BrowserBookmark} from './web3-browser-bookmark';
+import {Web3BrowserSearchHistory} from './web3-browser-search-history';
+import {Web3BrowserSession} from './web3-browser-session';
+
 export const realm = new Realm({
   schema: [
     Web3BrowserSession,
+    Web3BrowserBookmark,
+    Web3BrowserSearchHistory,
     WalletConnectSessionMetadata,
     Wallet,
     UserSchema,
@@ -33,7 +38,7 @@ export const realm = new Realm({
     Banner,
     BannerButton,
   ],
-  schemaVersion: 45,
+  schemaVersion: 46,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
