@@ -32,7 +32,7 @@ export function ProposalVote({
       transform: [
         {
           translateY: withTiming(
-            modalIsVisible ? 0 : Math.min(height / 5, 200),
+            modalIsVisible ? 0 : height / 3,
             timingInAnimationConfig,
           ),
         },

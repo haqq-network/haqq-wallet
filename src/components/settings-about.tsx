@@ -7,6 +7,7 @@ import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
 
@@ -48,15 +49,21 @@ export const SettingsAbout = () => {
           url="https://islamiccoin.net"
         />
       </View>
-      {/*<Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />*/}
-      {/*<View style={styles.buttons}>*/}
-      {/*  <SettingsAboutButton*/}
-      {/*    name="doc"*/}
-      {/*    color={Color.graphicBase1}*/}
-      {/*    i18n={I18N.settingsAboutTerms}*/}
-      {/*    url="https://islamiccoin.net"*/}
-      {/*  />*/}
-      {/*</View>*/}
+      <Text t14 i18n={I18N.settingsAboutDocuments} style={styles.title} />
+      <View style={styles.buttons}>
+        <SettingsAboutButton
+          name="doc"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutTerms}
+          url={TERMS_OF_CONDITIONS}
+        />
+        <SettingsAboutButton
+          name="doc"
+          color={Color.graphicBase1}
+          i18n={I18N.settingsAboutPrivacyPolicy}
+          url={PRIVACY_POLICY}
+        />
+      </View>
       <Text t14 i18n={I18N.settingsAboutSocials} style={styles.title} />
       <View style={styles.buttons}>
         <SettingsAboutButton

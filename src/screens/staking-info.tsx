@@ -17,6 +17,7 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
+import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 import {MIN_AMOUNT} from '@app/variables/common';
 
@@ -151,6 +152,7 @@ export const StakingInfoScreen = () => {
         }
       }
 
+      sendNotification(I18N.stakingInfoRewardIsReceived);
       setWithdrawDelegatorRewardProgress(false);
     }
   }, [cosmos, rewards, operator_address, visible]);

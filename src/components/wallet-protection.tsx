@@ -3,9 +3,16 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {ISLMLogo} from '@app/components/islm-logo';
-import {Button, ButtonVariant, Icon, Spacer, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  LottieWrap,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 export interface WalletProtectionProps {
@@ -18,16 +25,20 @@ export const WalletProtection = ({
   onPressPharse,
   onPressSocial,
 }: WalletProtectionProps) => {
+  const animation = useThemeSelector({
+    light: require('@assets/animations/protect-account-shield-light.json'),
+    dark: require('@assets/animations/protect-account-shield-dark.json'),
+  });
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.headerContainer}>
-          <Icon
-            name="shield"
-            color={Color.graphicSecond1}
+          <LottieWrap
             style={styles.shield}
+            source={animation}
+            autoPlay
+            loop={false}
           />
-          <ISLMLogo style={styles.logo} />
         </View>
 
         <Spacer height={57} />
@@ -112,16 +123,12 @@ const styles = createTheme({
     justifyContent: 'space-around',
   },
   shield: {
-    width: 118,
-    height: 143,
-  },
-  logo: {
-    position: 'absolute',
-    paddingBottom: 10,
+    height: 143 + 60,
   },
   headerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: 143,
   },
   contentContainer: {
     alignItems: 'center',

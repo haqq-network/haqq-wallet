@@ -1,9 +1,9 @@
 PODS:
-  - AppAuth (1.6.0):
-    - AppAuth/Core (= 1.6.0)
-    - AppAuth/ExternalUserAgent (= 1.6.0)
-  - AppAuth/Core (1.6.0)
-  - AppAuth/ExternalUserAgent (1.6.0):
+  - AppAuth (1.6.1):
+    - AppAuth/Core (= 1.6.1)
+    - AppAuth/ExternalUserAgent (= 1.6.1)
+  - AppAuth/Core (1.6.1)
+  - AppAuth/ExternalUserAgent (1.6.1):
     - AppAuth/Core
   - boost (1.76.0)
   - BVLinearGradient (2.6.2):
@@ -58,11 +58,11 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreExtension (10.6.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.7.0):
+  - FirebaseCoreInternal (10.8.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseDynamicLinks (10.6.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseInstallations (10.7.0):
+  - FirebaseInstallations (10.8.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -983,7 +983,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
+  AppAuth: e48b432bb4ba88b10cb2bcc50d7f3af21e78b9c2
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -995,9 +995,9 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 9f382605c5ee412b039212f054bf7a403d9850c1
   FirebaseCore: fa80ad16a62d52f67274b5b88304c3a318bbf9a4
   FirebaseCoreExtension: 318e5ee9ad4092b00423c2bddd51c3f5c3585973
-  FirebaseCoreInternal: 8845798510aae74703467480f71ac613788d0696
+  FirebaseCoreInternal: fa2899eb1f340054858d289e5a0fb935a0a74e52
   FirebaseDynamicLinks: 99c501143953e925681a37aade96bb2db34b30ca
-  FirebaseInstallations: 59c0e4c7a816a0f76710d83f77e5369b3e45eb96
+  FirebaseInstallations: b2a05a3fe707df764345d68685534d07d0664af3
   FirebaseMessaging: fd93783258c53ae5cdb9b41bf0c51606a677f2d5
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c

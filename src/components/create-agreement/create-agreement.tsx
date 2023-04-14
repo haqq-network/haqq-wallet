@@ -11,10 +11,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {Terms} from '@app/components/ui/terms';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
-// import {Terms} from '@app/components/ui/terms';
 
 export type CreateAgreementProps = {
   onDone: () => void;
@@ -51,7 +51,7 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
         i18n={I18N.createAgreementAgree}
         onPress={onDone}
       />
-      {/*<Terms style={styles.agreement} />*/}
+      <Terms style={styles.agreement} />
     </PopupContainer>
   );
 };
@@ -79,5 +79,9 @@ const styles = createTheme({
   submit: {
     marginBottom: 16,
     marginHorizontal: 20,
+  },
+  agreement: {
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
 });

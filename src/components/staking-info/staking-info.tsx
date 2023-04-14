@@ -115,15 +115,15 @@ export const StakingInfo = ({
           textColor={textColor}
         />
         {!isActive && (
-          <>
+          <View style={styles.blockContainer}>
             <Spacer height={12} />
             <InfoBlock
               icon={<Icon color={Color.textYellow1} i24 name="warning" />}
-              style={styles.withHorizontalPadding}
+              style={styles.fullWidth}
               warning
               i18n={I18N.stakingInfoInactive}
             />
-          </>
+          </View>
         )}
         <Spacer height={isActive ? 20 : 12} />
         <Inline gap={12} style={styles.withHorizontalPadding}>
@@ -181,17 +181,17 @@ export const StakingInfo = ({
             </Block>
           )}
         </View>
-        <Block
-          style={styles.withHorizontalPadding}
-          name={I18N.stakingInfoAddress}>
-          <CopyButton value={operator_address} activeOpacity={0.7}>
-            <Text t14 color={Color.textBase2}>
-              {operator_address}
-              <Spacer width={3} />
-              <Icon name="copy" i16 color={Color.graphicGreen1} />
-            </Text>
-          </CopyButton>
-        </Block>
+        <View style={styles.blockContainer}>
+          <Block name={I18N.stakingInfoAddress}>
+            <CopyButton value={operator_address} activeOpacity={0.7}>
+              <Text t14 color={Color.textBase2}>
+                {operator_address}
+                <Spacer width={3} />
+                <Icon name="copy" i16 color={Color.graphicGreen1} />
+              </Text>
+            </CopyButton>
+          </Block>
+        </View>
         {details && (
           <Block name={I18N.stakingInfoDetail}>
             <Markdown>{details}</Markdown>
@@ -234,6 +234,14 @@ export const StakingInfo = ({
 };
 
 const styles = createTheme({
+  blockContainer: {
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  fullWidth: {
+    width: '100%',
+  },
   contentContainer: {
     alignItems: 'center',
   },
