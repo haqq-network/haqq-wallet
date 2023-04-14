@@ -44,7 +44,7 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
 
   return (
     <PopupContainer style={styles.container}>
-      <Text t4 i18n={I18N.onboardingRepeatPinRepeat} />
+      <Text t4 i18n={I18N.onboardingRepeatPinRepeat} style={styles.title} />
       <Text
         t11
         i18n={I18N.onboardingRepeatPinSecurity}
@@ -71,6 +71,7 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
 };
 
 const styles = createTheme({
+  title: {marginBottom: 12},
   container: {
     alignItems: 'center',
     marginTop: verticalScale(40),

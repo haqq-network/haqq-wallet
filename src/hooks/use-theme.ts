@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react';
 
+import {Appearance} from 'react-native';
+
 import {app} from '../contexts/app';
 
 export function useTheme() {
@@ -14,9 +16,11 @@ export function useTheme() {
       }
     };
 
+    const {remove} = Appearance.addChangeListener(subscription);
     app.on('theme', subscription);
 
     return () => {
+      remove?.();
       app.off('theme', subscription);
     };
   }, [theme]);

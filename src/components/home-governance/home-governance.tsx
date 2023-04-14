@@ -87,10 +87,10 @@ export const HomeGovernance = ({
           data={proposals}
           showsVerticalScrollIndicator={false}
           style={styles.scrollContainer}
+          contentContainerStyle={styles.scrollContent}
           keyExtractor={item => String(item.id)}
         />
       )}
-      <Spacer height={12} />
     </>
   );
 };
@@ -102,5 +102,8 @@ const styles = createTheme({
   scrollContainer: {
     paddingHorizontal: 20,
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 12,
   },
 });

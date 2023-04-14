@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
+import {createTheme, verticalScale} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 interface OnboardingSetupPinProps {
@@ -40,30 +41,31 @@ export const OnboardingSetupPin = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
+  title: {marginBottom: 12},
   container: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: verticalScale(40),
     paddingBottom: 16,
     marginHorizontal: 20,
   },
-  title: {marginBottom: 12},
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: 16,
   },
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: getColor(Color.graphicSecond2),
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: getColor(Color.textGreen1),
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
 });
