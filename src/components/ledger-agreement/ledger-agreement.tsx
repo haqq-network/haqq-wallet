@@ -11,11 +11,11 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {Terms} from '@app/components/ui/terms';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
 import {WINDOW_WIDTH} from '@app/variables/common';
-// import {Terms} from '../ui/terms';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
@@ -51,7 +51,7 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
         i18n={I18N.ledgerAgreementAgree}
         onPress={onDone}
       />
-      {/*<Terms style={page.agreement} />*/}
+      <Terms style={page.agreement} />
     </PopupContainer>
   );
 };
@@ -74,10 +74,10 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  // agreement: {
-  //   marginHorizontal: 20,
-  //   marginBottom: 16,
-  // },
+  agreement: {
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
   image: {
     height: Math.min(WINDOW_WIDTH, 330) - 20,
   },

@@ -9,6 +9,7 @@ import {
   LottieWrap,
   PopupContainer,
   Spacer,
+  Terms,
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
@@ -60,7 +61,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
         testID={`${testID}_agree`}
         onPress={onDone}
       />
-      {/* <Terms style={styles.agreement} /> */}
+      <Terms style={styles.agreement} />
     </PopupContainer>
   );
 };
@@ -83,10 +84,10 @@ const styles = createTheme({
     marginHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
-  // agreement: {
-  //   marginHorizontal: 30,
-  //   marginBottom: 16,
-  // },
+  agreement: {
+    marginHorizontal: 30,
+    marginBottom: 16,
+  },
   image: {
     height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355) - 20,
     top: -10,

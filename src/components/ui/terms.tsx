@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {PRIVACY_POLICY} from '@app/variables/common';
+import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 interface TermsProps {
   style?: StyleProp<ViewStyle>;
@@ -18,7 +18,7 @@ export const Terms = ({style}: TermsProps) => {
   };
 
   const onPressTOS = () => {
-    openURL('https://www.google.com');
+    openURL(TERMS_OF_CONDITIONS);
   };
 
   return (
