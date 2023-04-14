@@ -9,9 +9,12 @@ export async function onDynamicLink(link: DynamicLink | null) {
     const parsedUrl = url.parse(link.url, true);
 
     if (parsedUrl.query.claim_code) {
-      Refferal.create({code: parsedUrl.query.claim_code as string});
+      const exists = Refferal.getById(parsedUrl.query.claim_code as string);
 
-      await onBannerAddClaimCode(parsedUrl.query.claim_code as string);
+      if (!exists) {
+        Refferal.create({code: parsedUrl.query.claim_code as string});
+        await onBannerAddClaimCode(parsedUrl.query.claim_code as string);
+      }
     }
   }
 }
