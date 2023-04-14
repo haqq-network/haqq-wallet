@@ -12,6 +12,7 @@ import {generateUUID} from '@app/utils';
 import {realm} from './index';
 import {AppLanguage, AppTheme} from '../types';
 import {
+  IS_ANDROID,
   MAIN_NETWORK,
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
@@ -74,10 +75,12 @@ export class User extends EventEmitter {
 
         if (changes.changedProperties.includes('theme')) {
           app.emit('theme', obj.theme);
-          StatusBar.setBackgroundColor(getColor(Color.bg1));
-          StatusBar.setBarStyle(
-            obj.theme === AppTheme.dark ? 'light-content' : 'dark-content',
-          );
+          if (IS_ANDROID) {
+            StatusBar.setBackgroundColor(getColor(Color.bg1));
+            StatusBar.setBarStyle(
+              obj.theme === AppTheme.dark ? 'light-content' : 'dark-content',
+            );
+          }
         }
 
         if (changes.changedProperties.includes('subscription')) {
