@@ -105,6 +105,8 @@ export const SettingsTestScreen = () => {
       ],
       backgroundColorFrom: '#1D69A4',
       backgroundColorTo: '#0C9FA5',
+      backgroundImage:
+        'https://storage.googleapis.com/mobile-static/reward-banner-1.png',
     });
   }, []);
 
@@ -112,8 +114,8 @@ export const SettingsTestScreen = () => {
     const banners = Banner.getAll();
 
     for (const banner of banners) {
-      Banner.remove(banner.id);
       Refferal.remove(banner.id);
+      Banner.remove(banner.id);
     }
   }, []);
 

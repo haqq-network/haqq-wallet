@@ -40,6 +40,7 @@ export class Banner extends Realm.Object {
       descriptionColor: 'string?',
       backgroundColorFrom: 'string?',
       backgroundColorTo: 'string?',
+      backgroundImage: 'string?',
     },
     primaryKey: 'id',
   };
@@ -52,6 +53,7 @@ export class Banner extends Realm.Object {
   descriptionColor: string;
   backgroundColorFrom: string;
   backgroundColorTo: string;
+  backgroundImage: string;
   isUsed: boolean;
   snoozedUntil: Date;
 

@@ -1,8 +1,5 @@
 import {AIRDROP_MAINNET_URL, AIRDROP_TESTEDGE2_URL} from '@env';
 
-import {app} from '@app/contexts';
-import {Provider} from '@app/models/provider';
-
 export type ClaimResponse =
   | {
       available: true;
@@ -13,6 +10,7 @@ export type ClaimResponse =
       button_background_color: string;
       background_color_from: string;
       background_color_to: string;
+      background_image_url: string;
     }
   | {
       available: false;
@@ -28,10 +26,7 @@ export class Airdrop {
   };
 
   getRemoteUrl() {
-    const provider = Provider.getProvider(app.getUser().providerId);
-
-    // @ts-ignore
-    return Airdrop.networks[provider?.ethChainId ?? 11235] ?? '';
+    return AIRDROP_MAINNET_URL;
   }
 
   async claim(

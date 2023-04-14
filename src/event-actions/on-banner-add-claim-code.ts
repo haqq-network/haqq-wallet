@@ -1,3 +1,5 @@
+import {Image} from 'react-native';
+
 import {Banner} from '@app/models/banner';
 import {Airdrop} from '@app/services/airdrop';
 
@@ -7,6 +9,10 @@ export async function onBannerAddClaimCode(claimCode: string) {
   if (!info.available) {
     Banner.remove(claimCode);
   } else {
+    if (info.background_image_url) {
+      await Image.prefetch(info.background_image_url);
+    }
+
     Banner.create({
       id: claimCode,
       title: info.title,
@@ -26,6 +32,7 @@ export async function onBannerAddClaimCode(claimCode: string) {
       ],
       backgroundColorFrom: info.background_color_from,
       backgroundColorTo: info.background_color_to,
+      backgroundImage: info.background_image_url,
     });
   }
 }
