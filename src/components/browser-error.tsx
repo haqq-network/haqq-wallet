@@ -1,7 +1,9 @@
 import React from 'react';
 
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, View} from 'react-native';
 
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
@@ -28,14 +30,16 @@ export const BrowserError = ({reason}: BrowserErrorProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flex: 1,
+    backgroundColor: Color.bg1,
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     height: '100%',
-    width: '95%',
+    width: '100%',
+    paddingHorizontal: 15,
   },
 });
