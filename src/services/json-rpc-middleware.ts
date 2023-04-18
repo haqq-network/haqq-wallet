@@ -8,6 +8,7 @@ import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
 import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
+import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {
   AwaitProviderError,
   awaitForProvider,
@@ -38,6 +39,26 @@ const rejectJsonRpcRequest = (message: string) => {
     message,
     code: -32000,
   };
+};
+
+const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
+  try {
+    const session = Web3BrowserSession.getByOrigin(helper.origin);
+    // @ts-ignore
+    const chainId = JsonRpcMethodsHandlers.eth_chainId({helper, req});
+    const result = await awaitForJsonRpcSign({
+      chainId,
+      request: req,
+      selectedAccount: session?.selectedAccount,
+      metadata: {
+        url: helper.origin,
+      },
+    });
+    return result;
+  } catch (err) {
+    // @ts-ignore
+    rejectJsonRpcRequest(err.message);
+  }
 };
 
 const requestAccount = async () => {
@@ -194,6 +215,12 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     const networkVersion = Provider.getByChainIdHex(chainId!)?.networkVersion;
     return networkVersion;
   },
+  eth_sendTransaction: signTransaction,
+  eth_sign: signTransaction,
+  personal_sign: signTransaction,
+  eth_signTypedData_v3: signTransaction,
+  // eth_signTypedData: signTransaction, // crash app
+  // eth_signTypedData_v4: signTransaction, // crash app
 };
 
 export const createJsonRpcMiddleware = ({
@@ -211,7 +238,7 @@ export const createJsonRpcMiddleware = ({
         };
         console.log(
           `🔴 JRPC ${req.method} not implemented, params:`,
-          JSON.stringify(req.params),
+          JSON.stringify(req.params, null, 2),
         );
         return;
       }

@@ -14,10 +14,7 @@ import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
 import {MpcProviders} from './services/provider-mpc';
-import {
-  WalletConnectApproveConnectionEvent,
-  WalletConnectSessionRequestType,
-} from './types/wallet-connect';
+import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
 export enum TransactionSource {
   unknown,
@@ -396,9 +393,7 @@ export type RootStackParamList = {
   };
   walletConnect?: {
     screen: 'walletConnectApproval' | 'walletConnectSign';
-    params:
-      | RootStackParamList['walletConnectApproval']
-      | RootStackParamList['walletConnectSign'];
+    params: RootStackParamList['walletConnectApproval'];
   };
   walletConnectWalletList: undefined;
   walletConnectApplicationListPopup: RootStackParamList['walletConnectApplicationList'];
@@ -414,8 +409,11 @@ export type RootStackParamList = {
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;
   };
-  walletConnectSign: {
-    event: WalletConnectSessionRequestType;
+  jsonRpcSign: {
+    request: PartialJsonRpcRequest;
+    metadata: JsonRpcMetadata;
+    chainId?: number;
+    selectedAccount?: string;
   };
   mpcNetwork: undefined;
   mpcBackup: {
@@ -636,3 +634,13 @@ export interface DynamicLink {
   minimumAppVersion: number | string | null;
   utmParameters: Record<string, string>;
 }
+
+export type PartialJsonRpcRequest = {
+  method: string;
+  params?: any;
+};
+
+export type JsonRpcMetadata = {
+  url: string;
+  iconUrl?: string;
+};

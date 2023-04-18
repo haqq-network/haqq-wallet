@@ -1,10 +1,10 @@
 import {PATTERNS_SOURCE} from '@env';
-import {SessionTypes, SignClientTypes} from '@walletconnect/types';
+import {SessionTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
 import {I18N} from './i18n';
-import {WalletConnectParsedAccount} from './types';
+import {PartialJsonRpcRequest, WalletConnectParsedAccount} from './types';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -263,11 +263,9 @@ export const filterWalletConnectSessionsByAddress = (
   });
 };
 
-export const getUserAddressFromSessionRequest = (
-  event: SignClientTypes.EventArguments['session_request'],
+export const getUserAddressFromJRPCRequest = (
+  request: PartialJsonRpcRequest,
 ): string => {
-  const request = event?.params?.request;
-
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       return request.params?.[1];
