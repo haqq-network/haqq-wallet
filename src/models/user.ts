@@ -36,7 +36,7 @@ export const UserSchema = {
     theme: 'string',
     notifications: 'bool?',
     subscription: 'string?',
-    isDeveloper: 'bool?',
+    isDeveloper: {type: 'bool', default: false},
     isGoogleSignedIn: 'bool?',
   },
   primaryKey: 'username',
@@ -125,7 +125,7 @@ export class User extends EventEmitter {
   }
 
   get isDeveloper() {
-    return this._raw.isDeveloper;
+    return this._raw?.isDeveloper ?? false;
   }
 
   set isDeveloper(value) {

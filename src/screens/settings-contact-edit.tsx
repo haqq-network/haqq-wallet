@@ -5,7 +5,7 @@ import {Alert} from 'react-native';
 import {SettingsContactEdit} from '@app/components/settings-contact-edit';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {Contact} from '@app/models/contact';
+import {Contact, ContactType} from '@app/models/contact';
 
 export const SettingsContactEditScreen = () => {
   const {name, address, isCreate} =
@@ -15,11 +15,11 @@ export const SettingsContactEditScreen = () => {
   const [inputName, setInputName] = useState(name);
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
   const onRemove = () => {
-    const delateContact = getText(I18N.settingsContactEditDeleteContact);
+    const deleteContact = getText(I18N.settingsContactEditDeleteContact);
     const sure = getText(I18N.settingsContactEditSure);
     const deleteWord = getText(I18N.settingsContactEditDelete);
     const cancel = getText(I18N.cancel);
-    Alert.alert(delateContact, sure, [
+    Alert.alert(deleteContact, sure, [
       {text: cancel, style: 'cancel'},
       {
         text: deleteWord,
@@ -36,6 +36,8 @@ export const SettingsContactEditScreen = () => {
     if (!contact) {
       Contact.create(address, {
         name: newName || inputName,
+        type: ContactType.address,
+        visible: true,
       });
     } else {
       contact.update({

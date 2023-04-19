@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import Decimal from 'decimal.js';
+
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {captureException} from '@app/helpers';
 import {
@@ -18,6 +20,7 @@ import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
+import {WEI} from '@app/variables/common';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
@@ -70,7 +73,7 @@ export const TransactionConfirmationScreen = () => {
           provider,
           wallet.path!,
           route.params.to,
-          route.params.amount,
+          new Decimal(route.params.amount).mul(WEI).toFixed(),
         );
 
         if (transaction) {

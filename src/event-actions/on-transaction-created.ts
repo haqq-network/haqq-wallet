@@ -1,45 +1,17 @@
-import React, {useCallback, useMemo, useState} from 'react';
-
-import messaging from '@react-native-firebase/messaging';
-import BN from 'bn.js';
-import {utils} from 'ethers';
-import {Alert, ScrollView} from 'react-native';
-
-import {Color} from '@app/colors';
-import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
-import {
-  awaitForWallet,
-  createTheme,
-  getProviderInstanceForWallet,
-  showModal,
-} from '@app/helpers';
-import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
-import {useTypedNavigation, useUser} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
-import {Banner} from '@app/models/banner';
+import {captureException} from '@app/helpers';
+import {AddressBook, AddressBookType} from '@app/models/address-book';
 import {Provider} from '@app/models/provider';
-import {Refferal} from '@app/models/refferal';
-import {Wallet} from '@app/models/wallet';
-import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
+import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
-import {PushNotifications} from '@app/services/push-notifications';
-import {message as toastMessage} from '@app/services/toast';
-import {Link} from '@app/types';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('setBackgroundMessageHandler', remoteMessage);
-});
-
-messaging()
-  .getInitialNotification()
-  .then(remoteMessage => {
-    if (remoteMessage) {
-      console.log('getInitialNotification', remoteMessage);
-    }
-  });
+const types = {
+  isERC165: 0x01ffc9a7,
+  isERC721: 0x80ac58cd,
+  isERC721Metadata: 0x5b5e139f,
+  isERC721TokenReceiver: 0x150b7a02,
+  isERC721Enumerable: 0x780e9d63,
+  isAccessControl: 0x7965db0b,
+};
 
 const abi = [
   {
@@ -638,343 +610,91 @@ const abi = [
     type: 'function',
   },
 ];
-const TEST_URLS: Partial<Link>[] = [
-  {title: 'app haqq network', url: 'https://app.haqq.network'},
-  {title: 'vesting', url: 'https://vesting.haqq.network'},
-  {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'TestEdge2', url: 'https://testedge2.haqq.network'},
-  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-  {
-    title: 'metamask test dapp',
-    url: 'https://metamask.github.io/test-dapp/',
-  },
-  {
-    title: 'ChainList app',
-    url: 'https://chainlist.org/',
-  },
-];
 
-async function callContract(to: string, func: string, ...params: any[]) {
-  const iface = new utils.Interface(abi);
-  console.log('params', params);
-  const data = iface.encodeFunctionData(func, params);
+export async function onTransactionCreated(hash: string) {
+  const transaction = Transaction.getById(hash);
+  if (!transaction) {
+    return;
+  }
 
-  const rawTx = {
-    to,
-    data,
-  };
+  const provider = Provider.getProvider(transaction.providerId);
+  if (!provider) {
+    return;
+  }
 
-  const resp = await EthNetwork.network.call(rawTx);
-  return iface.decodeFunctionResult(func, resp);
-}
-
-export const SettingsTestScreen = () => {
-  const [isRequestPermission, setIsRequestPermission] = useState(false);
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [wc, setWc] = useState('');
-  const [browserUrl, setBrowserUrl] = useState('');
-  const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
-  const navigation = useTypedNavigation();
-  const user = useUser();
-  const provider = useMemo(
-    () => Provider.getProvider(user.providerId),
-    [user.providerId],
-  );
-  const onTurnOffDeveloper = useCallback(() => {
-    user.isDeveloper = false;
-    navigation.goBack();
-  }, [user, navigation]);
-
-  const onPressRequestPermissions = async () => {
-    setIsRequestPermission(true);
-    await PushNotifications.instance.requestPermissions();
-    setIsRequestPermission(false);
-  };
-
-  const onPressSubscribeToNews = async () => {
-    setIsSubscribing(true);
-    await PushNotifications.instance.subscribeToTopic('news');
-    setIsSubscribing(false);
-  };
-
-  const onPressWc = () => {
-    app.emit(Events.onWalletConnectUri, wc);
-  };
-
-  const onPressOpenBrowser = () => {
-    navigation.navigate('homeBrowser', {
-      screen: 'web3browser',
-      params: {url: onUrlSubmit(browserUrl)},
-    });
-  };
-
-  const onCallContract = async () => {
-    const iface = new utils.Interface(abi);
-    const data = iface.encodeFunctionData('tokensOfOwner', [
-      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
-    ]);
-
-    console.log('data', data);
-
-    const rawTx = {
-      to: contract,
-      data: data,
-    };
-
-    const resp = await EthNetwork.network.call(rawTx);
-    console.log('resp', resp);
-    const r = iface.decodeFunctionResult('tokensOfOwner', resp);
-
-    console.log(JSON.stringify(r));
-  };
-
-  const onMintContract = async () => {
-    const iface = new utils.Interface(abi);
-    const data = iface.encodeFunctionData('mintNFTs', [1]);
-
-    console.log('data', data);
-
-    const walletId = await awaitForWallet({
-      wallets: Wallet.getAll().snapshot(),
-      title: I18N.stakingDelegateAccountTitle,
-    });
-
-    const wallet = Wallet.getById(walletId);
-
-    if (!wallet) {
-      return;
+  if (transaction && !transaction.confirmed) {
+    try {
+      const receipt = await provider.rpcProvider.getTransactionReceipt(
+        transaction.hash,
+      );
+      if (receipt && receipt.confirmations > 0) {
+        transaction.setConfirmed(receipt);
+      }
+    } catch (e) {
+      captureException(e, 'checkTransaction');
     }
+  }
 
-    const transport = await getProviderInstanceForWallet(wallet);
-
-    const unsignedTx = await EthNetwork.populateTransaction(
-      wallet.address,
-      contract,
-      new BN(100000000000000),
-      data,
-      250000,
+  if (transaction.to) {
+    const checked = AddressBook.getByAddressAndChainId(
+      transaction.to.toLowerCase(),
+      String(provider.ethChainId),
     );
 
-    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
+    if (!checked) {
+      const id = AddressBook.create(
+        transaction.to.toLowerCase(),
+        String(provider.ethChainId),
+        {},
+      );
 
-    console.log('signedTx', signedTx);
+      const hasCode = await EthNetwork.network.getCode(transaction.to);
+      const upd = {
+        type:
+          hasCode && hasCode !== '0x'
+            ? AddressBookType.contract
+            : AddressBookType.address,
+        isERC165: false,
+        isERC721: false,
+        isERC721Metadata: false,
+        isERC721TokenReceiver: false,
+        isERC721Enumerable: false,
+        isAccessControl: false,
+        name: '',
+        symbol: '',
+      };
 
-    const resp = await EthNetwork.network.sendTransaction(signedTx);
+      if (hasCode && hasCode !== '0x') {
+        const isERC721 = await EthNetwork.callContract(
+          abi,
+          transaction.to,
+          'supportsInterface',
+          types.isERC721,
+        );
 
-    console.log('resp', resp);
-    const r = iface.decodeFunctionData('mintNFTs', resp.data);
+        upd.isERC721 = isERC721[0];
 
-    console.log(JSON.stringify(r));
-  };
+        if (upd.isERC721) {
+          const name = await EthNetwork.callContract(
+            abi,
+            transaction.to,
+            'name',
+          );
 
-  const onCheckContract = useCallback(async () => {
-    const code = await EthNetwork.network.getCode(contract);
-    console.log('code', code);
+          upd.name = name[0];
 
-    const interfaces = await callContract(
-      contract,
-      'supportsInterface',
-      0x80ac58cd,
-    );
+          const symbol = await EthNetwork.callContract(
+            abi,
+            transaction.to,
+            'symbol',
+          );
 
-    console.log('interfaces', ...interfaces);
-
-    const name = await callContract(contract, 'name');
-    console.log('name', ...name);
-
-    const symbol = await callContract(contract, 'symbol');
-    console.log('symbol', ...symbol);
-  }, [contract]);
-
-  const onCreateBanner = useCallback(() => {
-    Banner.create({
-      id: 'qwerty',
-      title: 'Reward for creating the first account',
-      description:
-        'Join us in the spirit of Ramadan and claim your free ISLM coins.',
-      type: 'claimCode',
-      buttons: [
-        {
-          id: new Realm.BSON.UUID(),
-          title: 'Claim reward',
-          event: 'claimCode',
-          params: {
-            claim_code: 'qwerty',
-          },
-          color: '#01B26E',
-          backgroundColor: '#EEF9F5',
-        },
-      ],
-      backgroundColorFrom: '#1D69A4',
-      backgroundColorTo: '#0C9FA5',
-      backgroundImage:
-        'https://storage.googleapis.com/mobile-static/reward-banner-1.png',
-    });
-  }, []);
-
-  const onClearBanners = useCallback(() => {
-    const banners = Banner.getAll();
-
-    for (const banner of banners) {
-      Refferal.remove(banner.id);
-      Banner.remove(banner.id);
-    }
-  }, []);
-
-  return (
-    <ScrollView style={styles.container}>
-      <Button
-        title="Request permissions for push"
-        loading={isRequestPermission}
-        disabled={!!user.subscription}
-        onPress={onPressRequestPermissions}
-        variant={ButtonVariant.contained}
-      />
-      {user.subscription && (
-        <>
-          <Spacer height={8} />
-          <Button
-            loading={isSubscribing}
-            title="Subsctibe to news"
-            onPress={onPressSubscribeToNews}
-            variant={ButtonVariant.contained}
-          />
-        </>
-      )}
-      <Spacer height={20} />
-      <Input
-        placeholder="wc:"
-        value={wc}
-        onChangeText={v => {
-          setWc(v);
-        }}
-      />
-      <Spacer height={5} />
-      <Button
-        title="wallet connect"
-        disabled={!wc}
-        onPress={onPressWc}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Input
-        placeholder="https://app.haqq.network"
-        value={browserUrl}
-        onChangeText={setBrowserUrl}
-      />
-      <Spacer height={5} />
-      <Button
-        title="Open web3 browser"
-        onPress={onPressOpenBrowser}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={5} />
-      <Button
-        title="load test bookmarks for browser"
-        onPress={() => {
-          TEST_URLS.forEach(link => {
-            if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
-              Web3BrowserBookmark.create(link);
-            }
-          });
-          toastMessage('bookmarks loaded');
-        }}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={5} />
-      <Button
-        title="Show modal"
-        onPress={() =>
-          showModal('error', {
-            title: getText(I18N.modalRewardErrorTitle),
-            description: getText(I18N.modalRewardErrorDescription),
-            close: getText(I18N.modalRewardErrorClose),
-            icon: 'reward_error',
-            color: Color.graphicSecond4,
-          })
+          upd.symbol = symbol[0];
         }
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="Show markdown page"
-        onPress={() => {
-          navigation.navigate('newsDetail', {id: '123'});
-        }}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="Show modal change on mainnet"
-        onPress={() => {
-          showModal('claimOnMainnet', {
-            network: provider?.name,
-            onChange: () => {
-              app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
-            },
-          });
-        }}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="call contract"
-        onPress={() => onCallContract()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="mint contract"
-        onPress={() => onMintContract()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="check contract"
-        onPress={() => onCheckContract()}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="create banner"
-        onPress={onCreateBanner}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="clear banners"
-        onPress={onClearBanners}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="Show captcha"
-        onPress={async () => {
-          try {
-            const result = await awaitForCaptcha();
-            Alert.alert('result', result);
-          } catch (err) {
-            // @ts-ignore
-            Alert.alert('Error', err?.message);
-          }
-        }}
-        variant={ButtonVariant.contained}
-      />
+      }
 
-      <Spacer minHeight={100} />
-      <Button
-        title="Turn off developer"
-        error
-        onPress={onTurnOffDeveloper}
-        variant={ButtonVariant.third}
-      />
-      <Spacer height={20} />
-    </ScrollView>
-  );
-};
-
-const styles = createTheme({
-  container: {
-    paddingHorizontal: 20,
-  },
-});
+      const addressBook = AddressBook.getById(id);
+      addressBook?.update(upd);
+    }
+  }
+}

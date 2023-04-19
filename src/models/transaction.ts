@@ -133,7 +133,7 @@ export class Transaction extends Realm.Object {
     });
 
     requestAnimationFrame(() => {
-      app.emit(Events.onTransactionCheck, transaction.hash.toLowerCase());
+      app.emit(Events.onTransactionCreated, transaction.hash.toLowerCase());
     });
   }
 
