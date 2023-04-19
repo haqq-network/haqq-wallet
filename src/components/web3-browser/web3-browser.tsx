@@ -162,6 +162,10 @@ export const Web3Browser = ({
     [inpageBridgeWeb3],
   );
 
+  const onContentProcessDidTerminate = useCallback(() => {
+    webviewRef?.current?.reload?.();
+  }, [webviewRef]);
+
   const handlePressAddBookmark = useCallback(() => {
     const url =
       webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
@@ -272,6 +276,7 @@ export const Web3Browser = ({
           onLoadEnd={helper.onLoadEnd}
           onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
           renderError={renderError}
+          onContentProcessDidTerminate={onContentProcessDidTerminate}
           source={{uri: initialUrl}}
           decelerationRate={'normal'}
           testID={'web3-browser-webview'}

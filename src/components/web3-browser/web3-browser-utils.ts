@@ -200,6 +200,10 @@ export function getHost(url: string, defaultProtocol = 'https://') {
   return result;
 }
 
-export const getFavIconUrl = (url: string, size = 200) => {
+export const getFavIconUrl = (url?: string | undefined, size = 200) => {
+  if (!url) {
+    return '';
+  }
+
   return `https://api.faviconkit.com/${getHost(url)}/${size}`;
 };

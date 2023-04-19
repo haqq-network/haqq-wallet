@@ -1,30 +1,27 @@
 import React, {useMemo} from 'react';
 
-import {SessionTypes, SignClientTypes} from '@walletconnect/types';
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {getHostnameFromUrl} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {JsonViewer} from './json-viewer';
+import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 import {WalletRow, WalletRowTypes} from './wallet-row';
 
 interface WalletConnectSignInfoProps {
-  session: SessionTypes.Struct;
-  event: SignClientTypes.EventArguments['session_request'];
+  request: PartialJsonRpcRequest;
+  metadata: JsonRpcMetadata;
   wallet: Wallet;
 }
 
-const getMessageByEvent = (
-  event: SignClientTypes.EventArguments['session_request'],
-) => {
-  const request = event?.params?.request;
-
+const getMessageByRequest = (request: PartialJsonRpcRequest) => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       return {
@@ -55,15 +52,13 @@ const getMessageByEvent = (
   }
 };
 
-export const WalletConnectSignInfo = ({
-  session,
-  event,
+export const JsonRpcSignInfo = ({
   wallet,
+  metadata,
+  request,
 }: WalletConnectSignInfoProps) => {
-  const metadata = useMemo(() => session?.peer?.metadata, [session]);
-  const message = useMemo(() => getMessageByEvent(event), [event]);
+  const message = useMemo(() => getMessageByRequest(request), [request]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
-  const imageSource = useMemo(() => ({uri: metadata?.icons?.[0]}), [metadata]);
 
   return (
     <>
@@ -73,7 +68,12 @@ export const WalletConnectSignInfo = ({
 
       <View style={styles.fromContainer}>
         <Text t13 color={Color.textBase2} i18n={I18N.walletConnectSignForm} />
-        <Image style={styles.fromImage} source={imageSource} />
+        <SiteIconPreview
+          url={metadata.url}
+          directIconUrl={metadata.iconUrl}
+          style={styles.fromImage}
+          size={SiteIconPreviewSize.s18}
+        />
         <Text t13 color={Color.textGreen1}>
           {url}
         </Text>

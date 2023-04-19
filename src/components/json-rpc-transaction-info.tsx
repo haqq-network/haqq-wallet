@@ -1,37 +1,39 @@
 import React, {useMemo} from 'react';
 
-import {SessionTypes, SignClientTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DataView, Spacer, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {getHostnameFromUrl} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
+import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
+
 interface WalletConnectTransactionInfoProps {
-  session: SessionTypes.Struct;
-  event: SignClientTypes.EventArguments['session_request'];
+  request: PartialJsonRpcRequest;
+  metadata: JsonRpcMetadata;
 }
 
-export const WalletConnectTransactionInfo = ({
-  session,
-  event,
+export const JsonRpcTransactionInfo = ({
+  request,
+  metadata,
 }: WalletConnectTransactionInfoProps) => {
-  const metadata = useMemo(() => session?.peer?.metadata, [session]);
-  const params = useMemo(() => event?.params?.request?.params?.[0], [event]);
+  const params = request.params;
+
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
-  const imageSource = useMemo(() => ({uri: metadata?.icons?.[0]}), [metadata]);
 
   const demicalAmount = useMemo(
-    () => new Decimal(params?.value).div(WEI),
+    () =>
+      params?.value ? new Decimal(params?.value).div(WEI) : new Decimal(0),
     [params],
   );
 
   const demicalEstimateFee = useMemo(
-    () => new Decimal(params?.gasPrice),
+    () => (params?.gasPrice ? new Decimal(params?.gasPrice) : new Decimal(0)),
     [params],
   );
 
@@ -63,7 +65,12 @@ export const WalletConnectTransactionInfo = ({
 
       <View style={styles.fromContainer}>
         <Text t13 color={Color.textBase2} i18n={I18N.walletConnectSignForm} />
-        <Image style={styles.fromImage} source={imageSource} />
+        <SiteIconPreview
+          url={metadata.url}
+          directIconUrl={metadata.iconUrl}
+          size={SiteIconPreviewSize.s18}
+          style={styles.fromImage}
+        />
         <Text t13 color={Color.textGreen1}>
           {url}
         </Text>
@@ -150,9 +157,6 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   fromImage: {
-    width: 18,
-    height: 18,
-    borderRadius: 5,
     marginHorizontal: 4,
   },
 });

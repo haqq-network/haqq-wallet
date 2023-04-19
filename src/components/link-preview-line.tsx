@@ -1,15 +1,13 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback} from 'react';
 
-import {Image, View} from 'react-native';
-import Animated, {FadeIn} from 'react-native-reanimated';
-import {SvgUri} from 'react-native-svg';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
 import {LinkPreviewProps} from './link-preview';
-import {First, MenuNavigationButton, Spacer, Text} from './ui';
-import {getFavIconUrl} from './web3-browser/web3-browser-utils';
+import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
+import {MenuNavigationButton, Spacer, Text} from './ui';
 
 export const LinkPreviewLine = ({
   link,
@@ -17,27 +15,9 @@ export const LinkPreviewLine = ({
   hideArrow,
   disabled,
 }: LinkPreviewProps) => {
-  const [isImageFailed, setImageFailed] = useState(false);
-  const [isSvgFailed, setSvgFailed] = useState(false);
-
-  const imageSource = useMemo(
-    () => ({
-      uri: link.icon ? link.icon : getFavIconUrl(link.url),
-    }),
-    [link],
-  );
-
   const handleLinkPress = useCallback(() => {
     onPress?.(link);
   }, [link, onPress]);
-
-  const onImageError = useCallback(() => {
-    setImageFailed(true);
-  }, []);
-
-  const onSvgError = useCallback(() => {
-    setSvgFailed(true);
-  }, []);
 
   return (
     <MenuNavigationButton
@@ -46,34 +26,13 @@ export const LinkPreviewLine = ({
       style={styles.container}
       onPress={handleLinkPress}>
       <View style={styles.content}>
-        <View style={[styles.iconContainer, styles.sizeBox]}>
-          <First>
-            {!isImageFailed && (
-              <Animated.View entering={FadeIn} style={styles.sizeBox}>
-                <Image
-                  resizeMode={'center'}
-                  style={styles.sizeBox}
-                  source={imageSource}
-                  onError={onImageError}
-                />
-              </Animated.View>
-            )}
-            {!isSvgFailed && (
-              <Animated.View entering={FadeIn} style={styles.sizeBox}>
-                <SvgUri
-                  width="80%"
-                  height="80%"
-                  uri={imageSource.uri}
-                  onError={onSvgError}
-                />
-              </Animated.View>
-            )}
-            <Animated.View entering={FadeIn}>
-              <Text center t6>
-                {link?.title?.[0]?.toUpperCase?.()}
-              </Text>
-            </Animated.View>
-          </First>
+        <View>
+          <SiteIconPreview
+            size={SiteIconPreviewSize.s42}
+            url={link.url}
+            directIconUrl={link.icon}
+            title={link.title}
+          />
         </View>
         <Spacer width={12} />
         <View style={styles.textContainer}>
@@ -111,19 +70,6 @@ const styles = createTheme({
   container: {
     width: '100%',
     alignContent: 'center',
-    justifyContent: 'center',
-  },
-  iconContainer: {
-    backgroundColor: Color.bg3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sizeBox: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-    alignSelf: 'center',
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

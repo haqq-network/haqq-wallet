@@ -7,7 +7,6 @@ import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {WalletConnectApprovalScreen} from '@app/screens/wallet-connect-approval';
-import {WalletConnectSignScreen} from '@app/screens/wallet-connect-sign';
 import {ScreenOptionType} from '@app/types';
 
 const WalletConnect = createStackNavigator();
@@ -15,10 +14,6 @@ const WalletConnect = createStackNavigator();
 const screenOptionsApprovalScreen: ScreenOptionType = {
   title: getText(I18N.walletConnectTitle),
   headerRight: DismissPopupButton,
-};
-
-const screenOptionsSignScreen: ScreenOptionType = {
-  title: getText(I18N.walletConnectSignTitle),
 };
 
 const screenOptions: ScreenOptionType = {
@@ -35,12 +30,6 @@ export const WalletConnectScreen = () => {
         name="walletConnectApproval"
         component={WalletConnectApprovalScreen}
         options={screenOptionsApprovalScreen}
-        initialParams={route.params}
-      />
-      <WalletConnect.Screen
-        name="walletConnectSign"
-        component={WalletConnectSignScreen}
-        options={screenOptionsSignScreen}
         initialParams={route.params}
       />
     </WalletConnect.Navigator>

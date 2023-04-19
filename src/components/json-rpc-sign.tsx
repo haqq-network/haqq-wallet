@@ -4,21 +4,18 @@ import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
+import {JsonRpcSignInfo} from '@app/components/json-rpc-sign-info';
+import {JsonRpcTransactionInfo} from '@app/components/json-rpc-transaction-info';
 import {Button, ButtonVariant, Spacer} from '@app/components/ui';
-import {WalletConnectSignInfo} from '@app/components/wallet-connect-sign-info';
-import {WalletConnectTransactionInfo} from '@app/components/wallet-connect-transaction-info';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  WalletConnectSessionRequestType,
-  WalletConnectSessionType,
-} from '@app/types/wallet-connect';
+import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 
 export interface WalletConnectSignProps {
   isTransaction: boolean;
-  event: WalletConnectSessionRequestType;
-  session: WalletConnectSessionType;
+  request: PartialJsonRpcRequest;
+  metadata: JsonRpcMetadata;
   wallet: Wallet;
 
   onPressSign(): void;
@@ -26,13 +23,13 @@ export interface WalletConnectSignProps {
   onPressReject(): void;
 }
 
-export const WalletConnectSign = ({
+export const JsonRpcSign = ({
   isTransaction,
-  event,
-  session,
   onPressSign,
   onPressReject,
   wallet,
+  metadata,
+  request,
 }: WalletConnectSignProps) => {
   const insets = useSafeAreaInsets();
 
@@ -46,13 +43,13 @@ export const WalletConnectSign = ({
         <Spacer height={32} />
 
         {isTransaction && (
-          <WalletConnectTransactionInfo event={event} session={session!} />
+          <JsonRpcTransactionInfo metadata={metadata} request={request} />
         )}
 
         {!isTransaction && (
-          <WalletConnectSignInfo
-            event={event}
-            session={session!}
+          <JsonRpcSignInfo
+            metadata={metadata}
+            request={request}
             wallet={wallet!}
           />
         )}

@@ -1,7 +1,6 @@
 import {EventEmitter} from 'events';
 
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
-import {TransactionRequest} from '@haqq/provider-base';
 import {Core} from '@walletconnect/core';
 import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {getSdkError} from '@walletconnect/utils';
@@ -10,18 +9,7 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
-import {
-  awaitForBluetooth,
-  getProviderInstanceForWallet,
-  hideModal,
-  showModal,
-} from '@app/helpers';
-import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
-import {Cosmos} from '@app/services/cosmos';
-import {WalletType} from '@app/types';
-import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
-import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
 
@@ -178,79 +166,10 @@ export class WalletConnect extends EventEmitter {
     return this._client?.engine?.signClient?.session?.get?.(topic);
   }
 
-  public async approveEIP155Request(
-    wallet: Wallet,
+  public async approveSessionRequest(
+    result: any,
     event: SignClientTypes.EventArguments['session_request'],
   ) {
-    const provider = await getProviderInstanceForWallet(wallet);
-
-    if (!wallet?.path || !provider) {
-      throw new Error(
-        '[WalletConnect:approveEIP155Request]: wallet.path or provider is undefined',
-      );
-    }
-
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForBluetooth();
-      showModal('ledger-attention');
-    }
-
-    const {params, id, topic} = event;
-    const {request, chainId} = params;
-    let result: string | undefined;
-
-    switch (request.method) {
-      case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-      case EIP155_SIGNING_METHODS.ETH_SIGN:
-        const message = getSignParamsMessage(request.params);
-        result = await provider.signPersonalMessage(wallet.path, message);
-        break;
-      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
-      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
-      case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
-        const {
-          domain,
-          types,
-          message: typedMessage,
-        } = getSignTypedDataParamsData(request.params);
-
-        // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
-        // delete types.EIP712Domain;
-
-        const cosmos = new Cosmos(app.provider!);
-        const signedMessageHash = await cosmos.signTypedData(
-          wallet.path!,
-          provider,
-          domain,
-          types,
-          typedMessage,
-        );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          result = signedMessageHash;
-        } else {
-          result = `0x${signedMessageHash}`;
-        }
-        break;
-      case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-      case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        const signTransactionRequest: TransactionRequest = request.params[0];
-        delete signTransactionRequest.from;
-        signTransactionRequest.chainId = Number(chainId?.split?.(':')?.[1]);
-
-        result = await provider.signTransaction(
-          wallet.path,
-          signTransactionRequest,
-        );
-        break;
-      default:
-        throw new Error('[WalletConnect:approveEIP155Request]: INVALID_METHOD');
-    }
-
-    if (wallet.type === WalletType.ledgerBt) {
-      hideModal('ledger-attention');
-    }
-
     if (!result) {
       throw new Error(
         '[WalletConnect:approveEIP155Request]: result is undefined',
@@ -258,12 +177,18 @@ export class WalletConnect extends EventEmitter {
     }
 
     if (DEBUG_VARS.enableWalletConnectLogger) {
-      console.log('✅ approveEIP155Request result:', result, result.length);
+      console.log('✅ approveSessionRequest result:', result);
+    }
+
+    const isDisconected = !!this.getSessionByTopic(event?.topic);
+
+    if (isDisconected) {
+      return this.rejectSessionRequest(event?.id, event?.topic);
     }
 
     return await this._client?.respondSessionRequest({
-      topic,
-      response: {id, result, jsonrpc: '2.0'},
+      topic: event.topic,
+      response: {id: event.id, result, jsonrpc: '2.0'},
     });
   }
 
