@@ -9,7 +9,8 @@ import {createTheme} from '@app/helpers';
 import {getHostnameFromUrl} from '@app/utils';
 
 import {First, Text} from './ui';
-import {getFavIconUrl} from './web3-browser/web3-browser-utils';
+
+import {getFavIconUrl} from '../helpers/web3-browser-utils';
 
 type DefaultProps = {
   title?: string;

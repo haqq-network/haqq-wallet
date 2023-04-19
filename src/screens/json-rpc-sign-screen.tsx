@@ -44,7 +44,10 @@ export const JsonRpcSignScreen = () => {
       );
       app.emit('json-rpc-sign-success', result);
     } catch (err) {
-      console.log('🔴 JsonRpcSignScreen:onPressSign error', err);
+      if (err instanceof Error) {
+        app.emit('json-rpc-sign-reject', err.message);
+        console.log('🔴 JsonRpcSignScreen:onPressSign error', err);
+      }
     } finally {
       navigation.goBack();
     }

@@ -20,6 +20,7 @@ import {
 } from '@app/services/json-rpc-middleware';
 
 import {WebViewEventsEnum, WebViewEventsJS} from './scripts';
+
 import {
   EthereumEventsEnum,
   EthereumEventsParams,
@@ -32,7 +33,7 @@ import {
   parseWebViewEventData,
   postMessageWebViewJS,
   showPhishingAlert,
-} from './web3-browser-utils';
+} from '../../helpers/web3-browser-utils';
 
 export interface Web3BrowserHelperConstructor {
   webviewRef: RefObject<WebView>;

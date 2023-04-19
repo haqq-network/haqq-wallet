@@ -644,3 +644,20 @@ export type JsonRpcMetadata = {
   url: string;
   iconUrl?: string;
 };
+
+export interface EthType {
+  [key: string]: string | EthType[];
+}
+
+export interface EthTypedData {
+  domain: {
+    [key: string]: string;
+  };
+  message: {
+    [key: string]: any;
+  };
+  primaryType: string;
+  types: {
+    [key: string]: EthType;
+  };
+}

@@ -8,7 +8,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
-import {getHostnameFromUrl} from '@app/utils';
+import {getHostnameFromUrl, getSignTypedDataParamsData} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {JsonViewer} from './json-viewer';
@@ -39,7 +39,7 @@ const getMessageByRequest = (request: PartialJsonRpcRequest) => {
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
       return {
-        text: JSON.parse(request.params?.[1]),
+        text: getSignTypedDataParamsData(request.params),
         json: true,
       };
     case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:

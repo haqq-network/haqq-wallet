@@ -11,7 +11,11 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
-import {getSignParamsMessage, getSignTypedDataParamsData} from '@app/utils';
+import {
+  getSignParamsMessage,
+  getSignTypedDataParamsData,
+  isEthTypedData,
+} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export class SignJsonRpcRequest {
@@ -105,28 +109,25 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
-        const {
-          domain,
-          types,
-          message: typedMessage,
-        } = getSignTypedDataParamsData(request.params);
+        const typedData = getSignTypedDataParamsData(request.params);
+        if (isEthTypedData(typedData)) {
+          const cosmos = new Cosmos(app.provider!);
+          const signedMessageHash = await cosmos.signTypedData(
+            wallet.path!,
+            provider,
+            typedData.domain,
+            // @ts-ignore
+            typedData.types,
+            typedData.message,
+          );
 
-        // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
-        // delete types.EIP712Domain;
-
-        const cosmos = new Cosmos(app.provider!);
-        const signedMessageHash = await cosmos.signTypedData(
-          wallet.path!,
-          provider,
-          domain,
-          types,
-          typedMessage,
-        );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          result = signedMessageHash;
+          if (wallet.type === WalletType.ledgerBt) {
+            result = signedMessageHash;
+          } else {
+            result = `0x${signedMessageHash}`;
+          }
         } else {
-          result = `0x${signedMessageHash}`;
+          throw new Error('unsupported typed data params');
         }
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:

@@ -5,11 +5,11 @@ import {Alert, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
-import {onUrlSubmit} from '@app/components/web3-browser/web3-browser-utils';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -49,6 +49,10 @@ const TEST_URLS: Partial<Link>[] = [
   {
     title: 'metamask test dapp',
     url: 'https://metamask.github.io/test-dapp/',
+  },
+  {
+    title: 'ChainList app',
+    url: 'https://chainlist.org/',
   },
 ];
 

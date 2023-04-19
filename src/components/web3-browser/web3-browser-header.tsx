@@ -8,8 +8,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
-import {clearUrl} from './web3-browser-utils';
-
+import {clearUrl} from '../../helpers/web3-browser-utils';
 import {Icon, IconButton, IconsName, Spacer, Text} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
