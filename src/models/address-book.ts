@@ -7,6 +7,15 @@ export enum AddressBookType {
 }
 
 export class AddressBook extends Realm.Object {
+  static types = {
+    isERC165: 0x01ffc9a7,
+    isERC721: 0x80ac58cd,
+    isERC721Metadata: 0x5b5e139f,
+    isERC721TokenReceiver: 0x150b7a02,
+    isERC721Enumerable: 0x780e9d63,
+    isAccessControl: 0x7965db0b,
+  };
+
   static schema = {
     name: 'AddressBook',
     properties: {
@@ -23,6 +32,7 @@ export class AddressBook extends Realm.Object {
       isWhiteList: {type: 'bool', default: false},
       name: 'string?',
       symbol: 'string?',
+      tokens: 'string[]',
     },
     primaryKey: 'id',
   };
@@ -37,6 +47,7 @@ export class AddressBook extends Realm.Object {
   isERC721Enumerable: boolean;
   isAccessControl: boolean;
   isWhiteList: boolean;
+  tokens: string[];
 
   static create(
     address: string,

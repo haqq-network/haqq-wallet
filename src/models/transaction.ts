@@ -2,8 +2,6 @@ import {TransactionReceipt} from '@ethersproject/abstract-provider';
 import {BigNumber} from '@ethersproject/bignumber';
 import {utils} from 'ethers';
 
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {calcFee, captureException} from '@app/helpers';
 import {realm} from '@app/models/index';
 
@@ -132,9 +130,7 @@ export class Transaction extends Realm.Object {
       );
     });
 
-    requestAnimationFrame(() => {
-      app.emit(Events.onTransactionCreated, transaction.hash.toLowerCase());
-    });
+    return transaction.hash;
   }
 
   setConfirmed(receipt: TransactionReceipt) {

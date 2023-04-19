@@ -180,6 +180,24 @@ export function throttle<T extends Array<any>>(
   };
 }
 
+export function callbackWrapper<T extends Array<any>>(
+  func: (...param: T) => Promise<void>,
+) {
+  return (...args: T) => {
+    const callback =
+      typeof args[args.length - 1] === 'function' ? args.pop() : () => {};
+
+    const tx = makeID(5);
+
+    console.log('event started', tx, func.name, ...args);
+
+    func(...args).then(() => {
+      callback();
+      console.log('event finished', tx, func.name);
+    });
+  };
+}
+
 /**
  * for extract message from params string array
  * @example params array:

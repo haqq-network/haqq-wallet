@@ -3,7 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Decimal from 'decimal.js';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
@@ -16,7 +18,6 @@ import {
 } from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
@@ -77,7 +78,13 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
-          Transaction.create(transaction, user.providerId, fee);
+          await awaitForEventDone(
+            Events.onAddressBookCreate,
+            transaction,
+            user.providerId,
+            fee,
+          );
+
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,
           });
