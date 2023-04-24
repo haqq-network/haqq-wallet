@@ -43,6 +43,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {AddressBook} from '@app/models/address-book';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
 import {NewsDetailScreen} from '@app/screens/news-detail';
@@ -164,6 +165,15 @@ export const App = () => {
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
     [theme],
   );
+
+  useEffect(() => {
+    console.log(
+      '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
+      AddressBook.getById(
+        '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
+      )?.toJSON(),
+    );
+  }, []);
 
   useEffect(() => {
     showModal('splash');

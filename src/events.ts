@@ -27,6 +27,7 @@ export enum Events {
   onDynamicLink = 'onDynamicLink',
   onPushNotification = 'onPushNotification',
   onAddressBookCreate = 'onAddressBookCreate',
+  onAddressBookSync = 'onAddressBookSync',
 }
 
 export enum WalletConnectEvents {

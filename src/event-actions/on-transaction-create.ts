@@ -3,6 +3,7 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {AddressBook, AddressBookType} from '@app/models/address-book';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 
@@ -49,5 +50,14 @@ export async function onTransactionCreate(
       tx.to.toLowerCase(),
       String(provider.ethChainId),
     );
+
+    const addressBook = AddressBook.getByAddressAndChainId(
+      tx.to,
+      String(provider.ethChainId),
+    );
+
+    if (addressBook && addressBook.type === AddressBookType.contract) {
+      await awaitForEventDone(Events.onAddressBookSync, addressBook.id);
+    }
   }
 }

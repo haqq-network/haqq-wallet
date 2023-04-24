@@ -1,9 +1,13 @@
 import {captureException} from '@app/helpers';
 import {AddressBook, AddressBookType} from '@app/models/address-book';
+import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services';
 
-export async function onAddressBookCreate(address: string, ethChainId: string) {
-  const addressBook = AddressBook.getByAddressAndChainId(address, ethChainId);
+export async function onAddressBookCreate(address: string, ethChainId: number) {
+  const addressBook = AddressBook.getByAddressAndChainId(
+    address,
+    String(ethChainId),
+  );
 
   if (addressBook) {
     return;
@@ -25,10 +29,16 @@ export async function onAddressBookCreate(address: string, ethChainId: string) {
     symbol: '',
   };
   try {
+    const provider = Provider.getByChainId(ethChainId);
+
+    if (!provider) {
+      throw new Error('Provider not found');
+    }
+
     if (hasCode && hasCode !== '0x') {
       const supportsInterface = require('@assets/abi/support-interface.json');
-
-      const isERC721 = await EthNetwork.callContract(
+      const network = new EthNetwork(provider.rpcProvider);
+      const isERC721 = await network.callContract(
         supportsInterface,
         address,
         'supportsInterface',
@@ -40,11 +50,11 @@ export async function onAddressBookCreate(address: string, ethChainId: string) {
       if (upd.isERC721) {
         const erc721 = require('@assets/abi/erc721.json');
 
-        const name = await EthNetwork.callContract(erc721, address, 'name');
+        const name = await network.callContract(erc721, address, 'name');
 
         upd.name = name[0];
 
-        const symbol = await EthNetwork.callContract(erc721, address, 'symbol');
+        const symbol = await network.callContract(erc721, address, 'symbol');
 
         upd.symbol = symbol[0];
       }

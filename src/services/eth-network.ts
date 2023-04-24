@@ -15,6 +15,11 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
   public stop = false;
+  private _provider;
+
+  constructor(provider = EthNetwork.network) {
+    this._provider = provider;
+  }
 
   static async populateTransaction(
     from: string,
@@ -128,15 +133,10 @@ export class EthNetwork {
       throw new Error('signedTx not found');
     }
 
-    return await EthNetwork.network.sendTransaction(signedTx);
+    return await this._provider.sendTransaction(signedTx);
   }
 
-  static async callContract(
-    abi: any[],
-    to: string,
-    method: string,
-    ...params: any[]
-  ) {
+  async callContract(abi: any[], to: string, method: string, ...params: any[]) {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData(method, params);
 
@@ -145,7 +145,7 @@ export class EthNetwork {
       data,
     };
 
-    const resp = await EthNetwork.network.call(rawTx);
+    const resp = await this._provider.call(rawTx);
     return iface.decodeFunctionResult(method, resp);
   }
 }

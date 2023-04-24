@@ -5,6 +5,7 @@ export class NftCollection extends Realm.Object {
     name: 'NftCollection',
     properties: {
       address: 'string',
+      addressBookId: 'string',
       name: 'string',
       preview: 'string?',
       description: 'string?',
