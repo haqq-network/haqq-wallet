@@ -135,7 +135,7 @@ export type RootStackParamList = {
   mpcMigrateFinish: undefined;
   mpcMigrateStore: {
     accountId: string;
-    privateKey: string;
+    privateKey: string | null;
     verifier: string;
     token: string;
   };

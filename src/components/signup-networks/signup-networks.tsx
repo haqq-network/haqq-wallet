@@ -1,7 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {appleAuth} from '@invertase/react-native-apple-authentication';
-
 import {Color} from '@app/colors';
 import {
   Button,
@@ -18,11 +16,17 @@ import {MpcProviders} from '@app/services/provider-mpc';
 import {SocialButton, SocialButtonVariant} from '../social-button';
 
 export type MpcNetworksProps = {
+  isGoogleSupported: boolean;
+  isAppleSupported: boolean;
+  isDeveloper: boolean;
   onLogin: (provider: MpcProviders) => Promise<void>;
   onLoginLaterPress(): void;
 };
 
 export const SignupNetworks = ({
+  isGoogleSupported,
+  isAppleSupported,
+  isDeveloper,
   onLogin,
   onLoginLaterPress,
 }: MpcNetworksProps) => {
@@ -77,7 +81,7 @@ export const SignupNetworks = ({
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.facebook} /> */}
 
-      {appleAuth.isSupported && (
+      {isAppleSupported && (
         <>
           <Spacer height={10} />
           <SocialButton
@@ -88,21 +92,28 @@ export const SignupNetworks = ({
           />
         </>
       )}
-
-      <Spacer height={10} />
-      <SocialButton
-        loading={isGoogle}
-        disabled={isLoading && !isGoogle}
-        onPress={onPressLoginGoogle}
-        variant={SocialButtonVariant.google}
-      />
-      <Spacer height={10} />
-      <Button
-        onPress={onPressLoginCustom}
-        loading={isCustom}
-        i18n={I18N.customNetwork}
-        variant={ButtonVariant.contained}
-      />
+      {isGoogleSupported && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isGoogle}
+            disabled={isLoading && !isGoogle}
+            onPress={onPressLoginGoogle}
+            variant={SocialButtonVariant.google}
+          />
+        </>
+      )}
+      {isDeveloper && (
+        <>
+          <Spacer height={10} />
+          <Button
+            onPress={onPressLoginCustom}
+            loading={isCustom}
+            i18n={I18N.customNetwork}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
       <Spacer height={10} />
       <Text
         t15

@@ -11,12 +11,9 @@ declare module '@env' {
   export const PROVIDER_BASE_PACKAGE: string;
   export const WALLET_CONNECT_PROJECT_ID: string;
   export const WALLET_CONNECT_RELAY_URL: string;
-  export const WEB3AUTH_CLIENT_ID: string;
   export const HCAPTCHA_SITE_KEY: string;
   export const GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
   export const CUSTOM_JWT_TOKEN: string;
-  export const MPC_STORE_URL: string;
-  export const MPC_NETWORK: string;
   export const MPC_GOOGLE_IOS: string;
   export const MPC_GOOGLE_ANDROID: string;
   export const MPC_APPLE: string;

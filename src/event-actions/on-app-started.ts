@@ -8,7 +8,7 @@ import {app} from '@app/contexts';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/isFeatureEnabled';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
