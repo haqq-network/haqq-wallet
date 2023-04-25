@@ -599,11 +599,13 @@ export type StakingParamsResponse = {
   };
 };
 
-export type ProposalsCroppedList = {
+export type ProposalsCroppedItem = {
   id: number;
   status: string;
   title: string;
-}[];
+};
+
+export type ProposalsCroppedList = ProposalsCroppedItem[];
 
 export type LedgerAccountItem = {
   address: string;
