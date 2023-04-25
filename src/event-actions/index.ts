@@ -4,6 +4,7 @@ import {onAppProviderMpcBackup} from '@app/event-actions/on-app-provider-mpc-bac
 import {onAppStarted} from '@app/event-actions/on-app-started';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
+import {onPushNotification} from '@app/event-actions/on-push-notification';
 import {onPushSubscriptionAdd} from '@app/event-actions/on-push-subscription-add';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
 import {onTransactionCheck} from '@app/event-actions/on-transaction-check';
@@ -46,3 +47,4 @@ app.on(Events.onAppProviderMpcBackup, onAppProviderMpcBackup);
 app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
 app.on(Events.onDynamicLink, onDynamicLink);
 app.on(Events.onTransactionCheck, onTransactionCheck);
+app.on(Events.onPushNotification, onPushNotification);
