@@ -24,6 +24,8 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
+import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {
   AppContext,
   TransactionsContext,
@@ -44,6 +46,7 @@ import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
+import {NewsDetailScreen} from '@app/screens/news-detail';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {ProposalScreen} from '@app/screens/proposal';
@@ -145,6 +148,14 @@ const stackScreenOptions = {
 
 const withoutHeader = {
   headerShown: false,
+};
+
+const newsDetails = {
+  headerShown: true,
+  header: PopupHeader,
+  headerLeft: SpacerPopupButton,
+  headerRight: DismissPopupButton,
+  presentation: 'modal' as StackPresentationTypes,
 };
 
 export const App = () => {
@@ -297,6 +308,11 @@ export const App = () => {
                   name="accountInfo"
                   component={AccountInfoScreen}
                   options={getWalletTitle}
+                />
+                <Stack.Screen
+                  name="newsDetail"
+                  component={NewsDetailScreen}
+                  options={newsDetails}
                 />
                 <Stack.Screen
                   name="backupNotification"

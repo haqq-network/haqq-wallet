@@ -86,6 +86,7 @@
     "react-native-keychain": "8.1.1",
     "react-native-linear-gradient": "2.6.2",
     "react-native-markdown-display": "7.0.0-alpha.2",
+    "react-native-markdown-package": "^1.8.2",
     "react-native-os": "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17",
     "react-native-prompt-android": "1.1.0",
     "react-native-qr-decode-image-camera": "1.1.3",
