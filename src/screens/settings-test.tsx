@@ -20,14 +20,6 @@ import {PushNotifications} from '@app/services/push-notifications';
 import {message as toastMessage} from '@app/services/toast';
 import {Link} from '@app/types';
 
-messaging().onMessage(async remoteMessage => {
-  console.log('onMessage', remoteMessage);
-});
-
-messaging().onNotificationOpenedApp(remoteMessage => {
-  console.log('onNotificationOpenedApp', remoteMessage);
-});
-
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('setBackgroundMessageHandler', remoteMessage);
 });
@@ -58,6 +50,7 @@ const TEST_URLS: Partial<Link>[] = [
 
 export const SettingsTestScreen = () => {
   const [isRequestPermission, setIsRequestPermission] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const [wc, setWc] = useState('');
   const [browserUrl, setBrobserUrl] = useState('');
   const navigation = useTypedNavigation();
@@ -75,6 +68,12 @@ export const SettingsTestScreen = () => {
     setIsRequestPermission(true);
     await PushNotifications.instance.requestPermissions();
     setIsRequestPermission(false);
+  };
+
+  const onPressSubscribeToNews = async () => {
+    setIsSubscribing(true);
+    await PushNotifications.instance.subscribeToTopic('news');
+    setIsSubscribing(false);
   };
 
   const onPressWc = () => {
@@ -132,6 +131,17 @@ export const SettingsTestScreen = () => {
         onPress={onPressRequestPermissions}
         variant={ButtonVariant.contained}
       />
+      {user.subscription && (
+        <>
+          <Spacer height={8} />
+          <Button
+            loading={isSubscribing}
+            title="Subsctibe to news"
+            onPress={onPressSubscribeToNews}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
       <Spacer height={20} />
       <Input
         placeholder="wc:"

@@ -663,3 +663,10 @@ export interface EthTypedData {
     [key: string]: EthType;
   };
 }
+
+export interface RemoteMessage {
+  data: Record<string, any>;
+  from: string;
+  messageId: string;
+  notification: {body: string; title: string};
+}

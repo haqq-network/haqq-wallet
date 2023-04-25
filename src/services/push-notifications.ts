@@ -5,10 +5,23 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 
 export class PushNotifications extends EventEmitter {
   static instance = new PushNotifications();
   path: string = PUSH_NOTIFICATIONS_URL;
+
+  constructor() {
+    super();
+
+    messaging().onMessage(remoteMessage => {
+      app.emit(Events.onPushNotification, remoteMessage);
+    });
+
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      app.emit(Events.onPushNotification, remoteMessage);
+    });
+  }
 
   get isAvailable() {
     return this.path !== '';
@@ -36,6 +49,14 @@ export class PushNotifications extends EventEmitter {
         app.getUser().subscription = subscription.id;
       }
     }
+  }
+
+  async subscribeToTopic(topic: string) {
+    if (!this.isAvailable) {
+      throw new Error('push messages unavailable');
+    }
+
+    await messaging().subscribeToTopic(topic);
   }
 
   getPath(subPath: string) {

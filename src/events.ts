@@ -23,6 +23,7 @@ export enum Events {
   onWalletConnectSignTransaction = 'onWalletConnectSignTransaction',
   onWalletMpcSaved = 'onWalletMpcSaved',
   onDynamicLink = 'onDynamicLink',
+  onPushNotification = 'onPushNotification',
 }
 
 export enum WalletConnectEvents {
