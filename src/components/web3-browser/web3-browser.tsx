@@ -9,6 +9,7 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
+import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useLayout} from '@app/hooks/use-layout';
@@ -262,6 +263,7 @@ export const Web3Browser = ({
       />
       <View style={styles.webviewContainer}>
         <WebView
+          incognito={DEBUG_VARS.enableWeb3BrowserIncognito}
           // @ts-ignore
           sendCookies
           useWebkit

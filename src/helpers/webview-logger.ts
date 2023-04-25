@@ -11,6 +11,7 @@ const script = `
     console.warn = (...args) => {
         window.ReactNativeWebView.postMessage(JSON.stringify({ msg: args, type: "warn" }));
     }
+    window.addEventListener("error", console.error);
     window._webViewLoggerInjected = true;
   }
 `;

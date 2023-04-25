@@ -36,6 +36,12 @@ const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
   try {
     const session = Web3BrowserSession.getByOrigin(helper.origin);
     const provider = getNetworkProvier(helper);
+
+    if (req.params?.[0]?.gas) {
+      req.params[0].gasPrice = req.params[0].gas;
+      delete req.params[0].gas;
+    }
+
     const result = await awaitForJsonRpcSign({
       chainId: provider?.ethChainId,
       request: req,
@@ -76,6 +82,12 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
   //   ethChainId: 5,
   //   networkVersion: 5,
   // };
+  // ethereum
+  // return {
+  //   ethChainIdHex: '0x1',
+  //   ethChainId: 1,
+  //   networkVersion: 1,
+  // };
 
   const user = app.getUser();
   const session = Web3BrowserSession.getByOrigin(helper.origin);
@@ -93,7 +105,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     const provider = getNetworkProvier(helper);
     return {
       chainId: provider?.ethChainIdHex,
-      networkVersion: provider?.networkVersion,
+      networkVersion: `${provider?.ethChainId}`,
       accounts: getEthAccounts({helper, req}),
       isUnlocked: app.isUnlocked,
     };
@@ -190,9 +202,32 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_hashrate: () => '0x00',
   eth_getBlockByNumber: () => 0,
-  eth_call: () => 1,
+  eth_call: async ({req}) => {
+    try {
+      return await EthNetwork.network.call(req.params[0], req.params[1]);
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
+  eth_getTransactionCount: ({req}) => {
+    try {
+      return EthNetwork.network.getTransactionCount(
+        req.params[0],
+        req.params[1],
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
   eth_mining: () => false,
   net_listening: () => true,
+  eth_estimateGas: ({req}) => {
+    return EthNetwork.network.estimateGas(req.params[0]);
+  },
   web3_clientVersion: async () => {
     const appVersion = getAppVersion();
     return `HAQQ/${appVersion}/Wallet`;
@@ -208,6 +243,12 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_blockNumber: () => {
     return EthNetwork.network.blockNumber;
+  },
+  eth_getTransactionByHash: async ({req}) => {
+    return await EthNetwork.network.getTransaction(req.params?.[0]);
+  },
+  eth_getTransactionReceipt: async ({req}) => {
+    return await EthNetwork.network.getTransactionReceipt(req.params?.[0]);
   },
   eth_sendTransaction: signTransaction,
   eth_sign: signTransaction,

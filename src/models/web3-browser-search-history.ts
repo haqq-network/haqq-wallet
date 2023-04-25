@@ -51,9 +51,9 @@ export class Web3BrowserSearchHistory extends Realm.Object implements Link {
   }
 
   static getAll() {
-    return realm.objects<Web3BrowserSearchHistory>(
-      Web3BrowserSearchHistory.schema.name,
-    );
+    return realm
+      .objects<Web3BrowserSearchHistory>(Web3BrowserSearchHistory.schema.name)
+      ?.sorted?.('createdAt', true);
   }
 
   static getByUrl(url: string) {

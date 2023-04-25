@@ -18,6 +18,8 @@ import {
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
+import {EthNetwork} from './eth-network';
+
 export class SignJsonRpcRequest {
   /**
    * @example of request.params
@@ -100,6 +102,13 @@ export class SignJsonRpcRequest {
 
     let result: string | undefined;
 
+    try {
+      if (request.params?.[0]?.gas) {
+        request.params[0].gasPrice = request.params[0].gas;
+        delete request.params[0].gas;
+      }
+    } catch (e) {}
+
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
@@ -131,10 +140,43 @@ export class SignJsonRpcRequest {
         }
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+        let sendTransactionRequest: TransactionRequest = request.params[0];
+
+        const {address} = await provider.getAccountInfo(wallet.path);
+        const nonce = await EthNetwork.network.getTransactionCount(
+          address,
+          'latest',
+        );
+        const {_hex: estimateGas} = await EthNetwork.network.estimateGas({
+          ...sendTransactionRequest,
+          from: address,
+        });
+        sendTransactionRequest = {
+          ...sendTransactionRequest,
+          maxFeePerGas: sendTransactionRequest.gasPrice,
+          gasLimit: estimateGas,
+          nonce,
+          type: 2,
+        };
+
+        if (chainId) {
+          sendTransactionRequest.chainId = chainId;
+        }
+
+        const signedTransaction = await provider.signTransaction(
+          wallet.path,
+          sendTransactionRequest,
+        );
+
+        const tx = await EthNetwork.network.sendTransaction(signedTransaction);
+        result = tx.hash;
+        break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        const signTransactionRequest: TransactionRequest = request.params[0];
+        let signTransactionRequest: TransactionRequest = request.params[0];
+
         delete signTransactionRequest.from;
         delete signTransactionRequest.type;
+
         if (chainId) {
           signTransactionRequest.chainId = chainId;
         }
