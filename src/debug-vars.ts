@@ -1,6 +1,7 @@
 interface DebugVars {
   enableSentry: boolean;
   enableWalletConnectLogger: boolean;
+  enableWeb3BrowserIncognito: boolean;
   enableCaptchaLogger: boolean;
   enableSkipPinOnLogin: boolean;
   enableWeb3BrowserLogger: boolean;
@@ -8,6 +9,7 @@ interface DebugVars {
 
 const production: DebugVars = {
   enableSentry: true,
+  enableWeb3BrowserIncognito: false,
   enableWalletConnectLogger: false,
   enableCaptchaLogger: false,
   enableSkipPinOnLogin: false,
@@ -16,6 +18,7 @@ const production: DebugVars = {
 
 const debug: DebugVars = {
   enableSentry: !__DEV__,
+  enableWeb3BrowserIncognito: false,
   enableWalletConnectLogger: false,
   enableCaptchaLogger: __DEV__,
   enableSkipPinOnLogin: __DEV__,

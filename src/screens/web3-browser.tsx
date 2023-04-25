@@ -45,9 +45,9 @@ export const Web3BrowserScreen = () => {
   );
 
   const onPressHeaderUrl = useCallback(
-    ({clearSiteUrl}: Web3BrowserPressHeaderEvent) => {
+    ({siteUrl, clearSiteUrl}: Web3BrowserPressHeaderEvent) => {
       navigation.navigate('browserSearchPage', {
-        initialSearchText: clearSiteUrl,
+        initialSearchText: siteUrl || clearSiteUrl,
       });
     },
     [navigation],

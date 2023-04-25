@@ -22,7 +22,10 @@ export const JsonRpcTransactionInfo = ({
   request,
   metadata,
 }: WalletConnectTransactionInfoProps) => {
-  const params = request.params;
+  const params = useMemo(
+    () => (Array.isArray(request.params) ? request.params[0] : request.params),
+    [request],
+  );
 
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
 
