@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
 
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -16,6 +16,7 @@ import {Text} from '../index';
  * @param onPressRight by default open search input
  */
 interface CustomHeaderProps {
+  marginTop?: number;
   title?: I18N;
   iconLeft?: HeaderButtonProps['icon'];
   textLeft?: HeaderButtonProps['text'];
@@ -59,10 +60,11 @@ export const CustomHeader = forwardRef<
       i18nTextRight,
       i18nTextLeft,
       onSearchChange,
+      marginTop,
     },
     ref,
   ) => {
-    const {top} = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     const [isSearching, setIsSearching] = useState(false);
 
     const stopSearch = () => setIsSearching(false);
@@ -72,6 +74,11 @@ export const CustomHeader = forwardRef<
       startSearch,
       stopSearch,
     }));
+
+    const top = useMemo(
+      () => (typeof marginTop === 'number' ? marginTop : insets.top),
+      [insets, marginTop],
+    );
 
     return (
       <View style={[styles.container, {marginTop: top}]}>

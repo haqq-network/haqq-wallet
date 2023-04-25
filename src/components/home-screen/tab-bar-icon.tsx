@@ -19,7 +19,7 @@ export const HomeScreenTabBarIcon = ({
       case 'homeStaking':
         return IconsName.staking;
       case 'homeBrowser':
-        return IconsName.browser;
+        return IconsName.global;
       case 'homeSettings':
         return IconsName.settings;
       case 'homeGovernance':

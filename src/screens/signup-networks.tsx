@@ -5,6 +5,7 @@ import {getMetadataValue} from '@haqq/shared-react-native';
 import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
+import {app} from '@app/contexts';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -83,6 +84,12 @@ export const SignupNetworksScreen = () => {
   }, [navigation]);
 
   return (
-    <SignupNetworks onLogin={onLogin} onLoginLaterPress={onLoginLaterPress} />
+    <SignupNetworks
+      onLogin={onLogin}
+      onLoginLaterPress={onLoginLaterPress}
+      isDeveloper={user.isDeveloper || false}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+    />
   );
 };

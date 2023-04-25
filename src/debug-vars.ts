@@ -19,7 +19,7 @@ const debug: DebugVars = {
   enableWalletConnectLogger: false,
   enableCaptchaLogger: __DEV__,
   enableSkipPinOnLogin: __DEV__,
-  enableWeb3BrowserLogger: __DEV__,
+  enableWeb3BrowserLogger: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

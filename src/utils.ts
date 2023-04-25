@@ -1,10 +1,15 @@
 import {PATTERNS_SOURCE} from '@env';
-import {SessionTypes, SignClientTypes} from '@walletconnect/types';
+import {SessionTypes} from '@walletconnect/types';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
 import {I18N} from './i18n';
-import {WalletConnectParsedAccount} from './types';
+import {
+  EthType,
+  EthTypedData,
+  PartialJsonRpcRequest,
+  WalletConnectParsedAccount,
+} from './types';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -193,19 +198,88 @@ export function getSignParamsMessage(params: string[]) {
   return Buffer.from(message.slice(2), 'hex').toString('utf8');
 }
 
+function removeUnusedTypes(typedData: EthTypedData): EthTypedData {
+  const types = typedData.types;
+  const primaryTypes = [typedData.primaryType, 'EIP712Domain'];
+
+  // Find all the primary types used in the message
+  findPrimaryTypes(typedData.message, types, primaryTypes);
+
+  // Remove unused types and ambiguous primary types
+  const newTypes: {[key: string]: EthType} = {};
+  primaryTypes.forEach(primaryType => {
+    if (types[primaryType]) {
+      newTypes[primaryType] = types[primaryType];
+      findReferencedTypes(types[primaryType], types, newTypes);
+    }
+  });
+
+  // Create a new typed data object with the updated types
+  return {
+    domain: typedData.domain,
+    message: typedData.message,
+    primaryType: typedData.primaryType,
+    types: newTypes,
+  };
+}
+
+function findPrimaryTypes(
+  message: {[key: string]: any},
+  types: {[key: string]: EthType},
+  primaryTypes: string[],
+) {
+  // Find all the primary types used in the message
+  const typeNames = Object.keys(types);
+  typeNames.forEach(typeName => {
+    if (message[typeName]) {
+      primaryTypes.push(typeName);
+      findPrimaryTypes(message[typeName], types, primaryTypes);
+    }
+  });
+}
+
+function findReferencedTypes(
+  type: EthType,
+  types: {[key: string]: EthType},
+  newTypes: {[key: string]: EthType},
+) {
+  // Find all the types referenced by a given type
+  const fieldTypes = Object.values(type);
+  fieldTypes.forEach(fieldType => {
+    if (typeof fieldType === 'object') {
+      // @ts-ignore
+      const typeName = fieldType.type;
+      if (types[typeName] && !newTypes[typeName]) {
+        newTypes[typeName] = types[typeName];
+        findReferencedTypes(types[typeName], types, newTypes);
+      }
+    }
+  });
+}
+
 /**
  * Gets data from various signTypedData request methods by filtering out
  * a value that is not an address (thus is data).
  * If data is a string convert it to object
  */
-export function getSignTypedDataParamsData(params: string[]) {
-  const data = params.filter(p => !utils.isAddress(p))[0];
+export function getSignTypedDataParamsData(
+  params: string[],
+): EthTypedData | null {
+  try {
+    const data = params.filter(p => !utils.isAddress(p))[0];
+    if (typeof data === 'string') {
+      return removeUnusedTypes(JSON.parse(data));
+    } else {
+      removeUnusedTypes(data);
+    }
+  } catch (e) {}
+  return null;
+}
 
-  if (typeof data === 'string') {
-    return JSON.parse(data);
-  }
-
-  return data;
+export function isEthTypedData(data: any): data is EthTypedData {
+  return (
+    data && data.domain && data.message && data.types && data.types.EIP712Domain
+  );
 }
 
 export const getWalletConnectAccountsFromSession = (
@@ -263,11 +337,9 @@ export const filterWalletConnectSessionsByAddress = (
   });
 };
 
-export const getUserAddressFromSessionRequest = (
-  event: SignClientTypes.EventArguments['session_request'],
+export const getUserAddressFromJRPCRequest = (
+  request: PartialJsonRpcRequest,
 ): string => {
-  const request = event?.params?.request;
-
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       return request.params?.[1];

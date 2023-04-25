@@ -2,7 +2,9 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
 import Keychain, {
@@ -52,6 +54,12 @@ class App extends EventEmitter {
   private appStatus: AppStatus = AppStatus.inactive;
   private _lastTheme: AppTheme = AppTheme.light;
   private _balance: Map<string, number> = new Map();
+  private _googleSigninSupported: boolean = false;
+  private _appleSigninSupported: boolean =
+    Platform.select({
+      android: false,
+      ios: appleAuth.isSupported,
+    }) || false;
 
   constructor() {
     super();
@@ -69,6 +77,12 @@ class App extends EventEmitter {
       .catch(() => {
         this._biometryType = null;
       });
+
+    GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
+      (result: boolean) => {
+        this._googleSigninSupported = result;
+      },
+    );
 
     this.user = User.getOrCreate();
 
@@ -99,6 +113,22 @@ class App extends EventEmitter {
   }
 
   private _biometryType: BiometryType | null = null;
+
+  get isGoogleSigninSupported() {
+    return this._googleSigninSupported;
+  }
+
+  get isAppleSigninSupported() {
+    return this._appleSigninSupported;
+  }
+
+  get isOathSigninSupported() {
+    return (
+      this._googleSigninSupported ||
+      this._appleSigninSupported ||
+      this.isDeveloper
+    );
+  }
 
   get biometryType() {
     return this._biometryType;
@@ -354,6 +384,8 @@ class App extends EventEmitter {
     this.emit(Events.onDynamicLink, link);
   }
 }
+
+export type AppType = typeof App;
 
 export const app = new App();
 

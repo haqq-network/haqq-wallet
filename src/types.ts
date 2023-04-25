@@ -14,10 +14,7 @@ import {Wallet} from '@app/models/wallet';
 
 import {Transaction} from './models/transaction';
 import {MpcProviders} from './services/provider-mpc';
-import {
-  WalletConnectApproveConnectionEvent,
-  WalletConnectSessionRequestType,
-} from './types/wallet-connect';
+import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
 export enum TransactionSource {
   unknown,
@@ -138,7 +135,7 @@ export type RootStackParamList = {
   mpcMigrateFinish: undefined;
   mpcMigrateStore: {
     accountId: string;
-    privateKey: string;
+    privateKey: string | null;
     verifier: string;
     token: string;
   };
@@ -396,9 +393,7 @@ export type RootStackParamList = {
   };
   walletConnect?: {
     screen: 'walletConnectApproval' | 'walletConnectSign';
-    params:
-      | RootStackParamList['walletConnectApproval']
-      | RootStackParamList['walletConnectSign'];
+    params: RootStackParamList['walletConnectApproval'];
   };
   walletConnectWalletList: undefined;
   walletConnectApplicationListPopup: RootStackParamList['walletConnectApplicationList'];
@@ -414,8 +409,11 @@ export type RootStackParamList = {
   walletConnectApproval: {
     event: WalletConnectApproveConnectionEvent;
   };
-  walletConnectSign: {
-    event: WalletConnectSessionRequestType;
+  jsonRpcSign: {
+    request: PartialJsonRpcRequest;
+    metadata: JsonRpcMetadata;
+    chainId?: number;
+    selectedAccount?: string;
   };
   mpcNetwork: undefined;
   mpcBackup: {
@@ -601,11 +599,13 @@ export type StakingParamsResponse = {
   };
 };
 
-export type ProposalsCroppedList = {
+export type ProposalsCroppedItem = {
   id: number;
   status: string;
   title: string;
-}[];
+};
+
+export type ProposalsCroppedList = ProposalsCroppedItem[];
 
 export type LedgerAccountItem = {
   address: string;
@@ -635,4 +635,31 @@ export interface DynamicLink {
   url: string;
   minimumAppVersion: number | string | null;
   utmParameters: Record<string, string>;
+}
+
+export type PartialJsonRpcRequest = {
+  method: string;
+  params?: any;
+};
+
+export type JsonRpcMetadata = {
+  url: string;
+  iconUrl?: string;
+};
+
+export interface EthType {
+  [key: string]: string | EthType[];
+}
+
+export interface EthTypedData {
+  domain: {
+    [key: string]: string;
+  };
+  message: {
+    [key: string]: any;
+  };
+  primaryType: string;
+  types: {
+    [key: string]: EthType;
+  };
 }

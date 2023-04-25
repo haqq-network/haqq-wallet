@@ -10,9 +10,9 @@ import {
   WindowInfoEvent,
 } from '@app/components/web3-browser';
 import {Web3BrowserPressHeaderEvent} from '@app/components/web3-browser/web3-browser-header';
-import {getOriginFromUrl} from '@app/components/web3-browser/web3-browser-utils';
 import {awaitForWallet} from '@app/helpers';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
+import {getOriginFromUrl} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSessions} from '@app/hooks/use-web3-browser-sessions';

@@ -22,10 +22,8 @@ import {
   Spacer,
   Text,
 } from './ui';
-import {
-  onUrlSubmit,
-  showPhishingAlert,
-} from './web3-browser/web3-browser-utils';
+
+import {onUrlSubmit, showPhishingAlert} from '../helpers/web3-browser-utils';
 
 export interface BrowserSearchPageProps {
   searchHistory: Realm.Results<Web3BrowserSearchHistory>;

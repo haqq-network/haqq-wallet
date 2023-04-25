@@ -4,7 +4,10 @@ import {WebViewMessageEvent} from 'react-native-webview';
 
 import {isValidUrl} from '@app/utils';
 
-import {WebViewEventsEnum, WindowInfoEvent} from './scripts';
+import {
+  WebViewEventsEnum,
+  WindowInfoEvent,
+} from '../components/web3-browser/scripts';
 
 export enum EthereumEventsEnum {
   ACCOUNTS_CHANGED = 'accountsChanged',
@@ -16,6 +19,24 @@ export interface EthereumEventsParams {
   [EthereumEventsEnum.ACCOUNTS_CHANGED]: string[];
   [EthereumEventsEnum.CHAIN_CHANGED]: string;
   [EthereumEventsEnum.DISCONNECT]: undefined;
+}
+
+export interface EthereumChainParams {
+  chainId: string;
+  chainName: string;
+  nativeCurrency: NativeCurrency;
+  rpcUrls: string[];
+  blockExplorerUrls: string[];
+}
+
+interface NativeCurrency {
+  name: string;
+  symbol: string;
+  decimals: number;
+}
+
+export function isEthereumChainParams(obj: any): obj is EthereumChainParams {
+  return !!obj?.chainId && !!obj?.chainName && Array.isArray(obj?.rpcUrls);
 }
 
 export function isJsonRpcRequest(obj: any): obj is JsonRpcRequest<any> {
@@ -122,7 +143,12 @@ export const getOriginFromUrl = (url: string) => {
 };
 
 export const clearUrl = (url: string) => {
-  return getOriginFromUrl(url).replace(/^[a-zA-Z]*:\/\//, '');
+  const result = getOriginFromUrl(url).replace(/^[a-zA-Z]*:\/\//, '');
+  if (result === '*') {
+    return url;
+  }
+
+  return result;
 };
 /**
  * Returns URL prefixed with protocol
@@ -200,6 +226,10 @@ export function getHost(url: string, defaultProtocol = 'https://') {
   return result;
 }
 
-export const getFavIconUrl = (url: string, size = 200) => {
+export const getFavIconUrl = (url?: string | undefined, size = 200) => {
+  if (!url) {
+    return '';
+  }
+
   return `https://api.faviconkit.com/${getHost(url)}/${size}`;
 };

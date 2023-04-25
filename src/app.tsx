@@ -67,6 +67,7 @@ import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
+import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
@@ -244,6 +245,10 @@ export const App = () => {
                   <Stack.Screen
                     name="mpcMigrate"
                     component={MpcMigrateScreen}
+                  />
+                  <Stack.Screen
+                    name="jsonRpcSign"
+                    component={JsonRpcSignPopup}
                   />
                   <Stack.Screen name="backup" component={BackupScreen} />
                   <Stack.Screen name="signin" component={SignInScreen} />

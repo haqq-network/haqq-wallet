@@ -1,3 +1,4 @@
+// @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {View} from 'react-native';
@@ -29,12 +30,12 @@ import {
   Web3BrowserPressHeaderEvent,
 } from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
+
 import {
   WebViewUserAgent,
   clearUrl,
   getOriginFromUrl,
-} from './web3-browser-utils';
-
+} from '../../helpers/web3-browser-utils';
 import {BrowserError} from '../browser-error';
 
 export interface Web3BrowserProps {
@@ -162,6 +163,10 @@ export const Web3Browser = ({
     [inpageBridgeWeb3],
   );
 
+  const onContentProcessDidTerminate = useCallback(() => {
+    webviewRef?.current?.reload?.();
+  }, [webviewRef]);
+
   const handlePressAddBookmark = useCallback(() => {
     const url =
       webviewNavigationData?.url || windowInfo?.url || helper.currentUrl;
@@ -272,6 +277,7 @@ export const Web3Browser = ({
           onLoadEnd={helper.onLoadEnd}
           onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
           renderError={renderError}
+          onContentProcessDidTerminate={onContentProcessDidTerminate}
           source={{uri: initialUrl}}
           decelerationRate={'normal'}
           testID={'web3-browser-webview'}
