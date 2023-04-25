@@ -48,6 +48,13 @@ export const MpcMigrateNetworksScreen = () => {
           provider,
           email: '',
         });
+      } else {
+        navigation.navigate('mpcMigrateStore', {
+          accountId: route.params.accountId,
+          privateKey: null,
+          token: creds.token,
+          verifier: creds.verifier,
+        });
       }
     },
     [navigation, route.params.accountId],

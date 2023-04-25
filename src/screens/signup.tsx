@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/isFeatureEnabled';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
