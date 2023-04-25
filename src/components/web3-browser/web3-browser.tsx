@@ -1,3 +1,4 @@
+// @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {View} from 'react-native';
@@ -29,12 +30,12 @@ import {
   Web3BrowserPressHeaderEvent,
 } from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
+
 import {
   WebViewUserAgent,
   clearUrl,
   getOriginFromUrl,
-} from './web3-browser-utils';
-
+} from '../../helpers/web3-browser-utils';
 import {BrowserError} from '../browser-error';
 
 export interface Web3BrowserProps {

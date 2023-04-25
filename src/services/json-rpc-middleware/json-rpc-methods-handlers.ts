@@ -1,10 +1,5 @@
-import {
-  JsonRpcError,
-  JsonRpcRequest,
-  createAsyncMiddleware,
-} from 'json-rpc-engine';
+import {JsonRpcRequest} from 'json-rpc-engine';
 
-import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
 import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
@@ -13,6 +8,7 @@ import {
   AwaitProviderError,
   awaitForProvider,
 } from '@app/helpers/await-for-provider';
+import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -28,11 +24,6 @@ type JsonRpcMethodHandlerParams = {
 type JsonRpcMethodHandler =
   | undefined
   | ((params: JsonRpcMethodHandlerParams) => any);
-type CreateJsonRpcMiddlewareParams = {
-  helper: Web3BrowserHelper;
-  // if in the engine has less than one middleware `next` method is crash app
-  useNext?: boolean;
-};
 
 const rejectJsonRpcRequest = (message: string) => {
   throw {
@@ -44,10 +35,9 @@ const rejectJsonRpcRequest = (message: string) => {
 const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
   try {
     const session = Web3BrowserSession.getByOrigin(helper.origin);
-    // @ts-ignore
-    const chainId = JsonRpcMethodsHandlers.eth_chainId({helper, req});
+    const provider = getNetworkProvier(helper);
     const result = await awaitForJsonRpcSign({
-      chainId,
+      chainId: provider?.ethChainId,
       request: req,
       selectedAccount: session?.selectedAccount,
       metadata: {
@@ -76,31 +66,43 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
   if (session?.isActive) {
     return [session.selectedAccount];
   }
-
   return [];
+};
+
+const getNetworkProvier = (helper: Web3BrowserHelper) => {
+  // goerli
+  // return {
+  //   ethChainIdHex: '0x5',
+  //   ethChainId: 5,
+  //   networkVersion: 5,
+  // };
+
+  const user = app.getUser();
+  const session = Web3BrowserSession.getByOrigin(helper.origin);
+  let provider: Provider | null;
+  if (session?.isActive) {
+    provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
+  } else {
+    provider = Provider.getProvider(user.providerId);
+  }
+  return provider;
 };
 
 export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   metamask_getProviderState: ({helper, req}) => {
-    const user = app.getUser();
-    const provider = Provider.getProvider(user.providerId);
-    const session = Web3BrowserSession.getByOrigin(helper.origin);
-    const chainId = session?.selectedChainIdHex || provider?.ethChainIdHex;
-    const networkVersion = Provider.getByChainIdHex(chainId!)?.networkVersion;
+    const provider = getNetworkProvier(helper);
     return {
-      chainId,
-      networkVersion,
+      chainId: provider?.ethChainIdHex,
+      networkVersion: provider?.networkVersion,
       accounts: getEthAccounts({helper, req}),
       isUnlocked: app.isUnlocked,
     };
   },
   eth_requestAccounts: async ({helper}) => {
     try {
-      const user = app.getUser();
-      const provider = Provider.getProvider(user.providerId);
+      const provider = getNetworkProvier(helper);
       const session = Web3BrowserSession.getByOrigin(helper.origin);
-      const selectedChainIdHex =
-        session?.selectedChainIdHex || provider?.ethChainIdHex;
+      const selectedChainIdHex = provider?.ethChainIdHex;
 
       // first connection
       if (!session) {
@@ -150,17 +152,12 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_chainId: ({helper}) => {
-    const session = Web3BrowserSession.getByOrigin(helper.origin);
-    const user = app.getUser();
-    let provider: Provider | null;
-
-    if (session?.isActive) {
-      provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
-    } else {
-      provider = Provider.getProvider(user.providerId);
-    }
-
+    const provider = getNetworkProvier(helper);
     return provider?.ethChainId;
+  },
+  net_version: ({helper}) => {
+    const provider = getNetworkProvier(helper);
+    return provider?.networkVersion;
   },
   eth_accounts: getEthAccounts,
   eth_coinbase: getEthAccounts,
@@ -191,88 +188,37 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
     return null;
   },
-  eth_hashrate: () => {
-    return '0x00';
-  },
-  eth_mining: () => {
-    return false;
-  },
-  net_listening: () => {
-    return true;
-  },
+  eth_hashrate: () => '0x00',
+  eth_getBlockByNumber: () => 0,
+  eth_call: () => 1,
+  eth_mining: () => false,
+  net_listening: () => true,
   web3_clientVersion: async () => {
     const appVersion = getAppVersion();
     return `HAQQ/${appVersion}/Wallet`;
   },
+  eth_getCode: async ({req}) => {
+    try {
+      return await EthNetwork.network.getCode(req.params[0], req.params[1]);
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
   eth_blockNumber: () => {
     return EthNetwork.network.blockNumber;
-  },
-  net_version: ({helper}) => {
-    const user = app.getUser();
-    const provider = Provider.getProvider(user.providerId);
-    const session = Web3BrowserSession.getByOrigin(helper.origin);
-    const chainId = session?.selectedChainIdHex || provider?.ethChainIdHex;
-    const networkVersion = Provider.getByChainIdHex(chainId!)?.networkVersion;
-    return networkVersion;
   },
   eth_sendTransaction: signTransaction,
   eth_sign: signTransaction,
   personal_sign: signTransaction,
   eth_signTypedData_v3: signTransaction,
-  // eth_signTypedData: signTransaction, // crash app
-  // eth_signTypedData_v4: signTransaction, // crash app
-};
-
-export const createJsonRpcMiddleware = ({
-  helper,
-  useNext,
-}: CreateJsonRpcMiddlewareParams) => {
-  return createAsyncMiddleware(async (req, res, next) => {
-    try {
-      const handler = JsonRpcMethodsHandlers[req.method];
-
-      if (!handler) {
-        res.error = {
-          code: -32601,
-          message: 'Method not implemented',
-        };
-        console.log(
-          `🔴 JRPC ${req.method} not implemented, params:`,
-          JSON.stringify(req.params, null, 2),
-        );
-        return;
-      }
-
-      res.result = await handler({req, helper});
-
-      if (req.method === 'eth_requestAccounts' && Array.isArray(res.result)) {
-        helper.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, [...res.result]);
-      }
-    } catch (err) {
-      // @ts-ignore
-      if (typeof err.code === 'number' && typeof err.message === 'string') {
-        res.error = err as JsonRpcError;
-      } else {
-        console.error('🔴 json rpc middleware error', req, err);
-      }
+  eth_signTypedData: signTransaction,
+  eth_signTypedData_v4: signTransaction,
+  wallet_addEthereumChain: ({req}) => {
+    const chainInfo = req.params?.[0];
+    if (isEthereumChainParams(chainInfo)) {
+      console.log('wallet_addEthereumChain', chainInfo?.chainName);
     }
-
-    // if in the engine has less than one middleware then this is crash app
-    if (useNext) {
-      await next();
-    }
-  });
-};
-
-export const createJsonRpcLoggerMiddleWare = () => {
-  return createAsyncMiddleware(async (req, res) => {
-    console.log(
-      `🟣 JRPC ${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
-        req.params || '{}',
-        null,
-        2,
-      )}\nRESULT: ${JSON.stringify(res.result || res.error || '{}', null, 2)}
-        `,
-    );
-  });
+  },
 };

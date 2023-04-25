@@ -28,9 +28,9 @@ export async function awaitForJsonRpcSign({
       resolve(address);
     };
 
-    const onReject = () => {
+    const onReject = (message: string) => {
       removeAllListeners();
-      reject(new AwaitJsonRpcSignError('rejected by user'));
+      reject(new AwaitJsonRpcSignError(message || 'rejected by user'));
     };
 
     app.addListener('json-rpc-sign-success', onAction);
