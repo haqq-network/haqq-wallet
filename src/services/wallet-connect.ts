@@ -106,20 +106,24 @@ export class WalletConnect extends EventEmitter {
     }
   }
 
-  public rejectSession(eventId: number) {
+  public rejectSession(eventId: number, message?: string) {
     return this._client?.rejectSession?.({
       id: eventId,
-      reason: getSdkError('USER_REJECTED'),
+      reason: getSdkError('USER_REJECTED', message),
     });
   }
 
-  public rejectSessionRequest(eventId: number, topic: string) {
+  public rejectSessionRequest(
+    eventId: number,
+    topic: string,
+    message?: string,
+  ) {
     return this._client?.respondSessionRequest({
       topic,
       response: {
         id: eventId,
         jsonrpc: '2.0',
-        error: getSdkError('USER_REJECTED'),
+        error: getSdkError('USER_REJECTED', message),
       },
     });
   }

@@ -14,6 +14,8 @@ import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 
 export interface WalletConnectSignProps {
   isTransaction: boolean;
+  rejectLoading: boolean;
+  signLoading: boolean;
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   wallet: Wallet;
@@ -30,6 +32,8 @@ export const JsonRpcSign = ({
   wallet,
   metadata,
   request,
+  rejectLoading,
+  signLoading,
 }: WalletConnectSignProps) => {
   const insets = useSafeAreaInsets();
 
@@ -58,11 +62,15 @@ export const JsonRpcSign = ({
       <View style={[styles.buttonContainer, {marginBottom: insets.bottom}]}>
         <Spacer height={4} />
         <Button
+          loading={signLoading}
+          disabled={rejectLoading}
           variant={ButtonVariant.contained}
           onPress={onPressSign}
           i18n={I18N.walletConnectSignApproveButton}
         />
         <Button
+          loading={rejectLoading}
+          disabled={signLoading}
           textColor={Color.textRed1}
           onPress={onPressReject}
           i18n={I18N.walletConnectSignRejectButton}

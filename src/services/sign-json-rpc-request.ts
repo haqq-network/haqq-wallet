@@ -8,7 +8,9 @@ import {
   hideModal,
   showModal,
 } from '@app/helpers';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {getDefaultNetwork} from '@app/network';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
 import {
@@ -17,8 +19,6 @@ import {
   isEthTypedData,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
-
-import {EthNetwork} from './eth-network';
 
 export class SignJsonRpcRequest {
   /**
@@ -88,6 +88,9 @@ export class SignJsonRpcRequest {
     }
 
     const provider = await getProviderInstanceForWallet(wallet);
+    const rpcProvider = chainId
+      ? Provider.getByChainId(chainId)?.rpcProvider || getDefaultNetwork()
+      : getDefaultNetwork();
 
     if (!wallet?.path || !provider) {
       throw new Error(
@@ -143,11 +146,8 @@ export class SignJsonRpcRequest {
         let sendTransactionRequest: TransactionRequest = request.params[0];
 
         const {address} = await provider.getAccountInfo(wallet.path);
-        const nonce = await EthNetwork.network.getTransactionCount(
-          address,
-          'latest',
-        );
-        const {_hex: estimateGas} = await EthNetwork.network.estimateGas({
+        const nonce = await rpcProvider.getTransactionCount(address, 'latest');
+        const {_hex: estimateGas} = await rpcProvider.estimateGas({
           ...sendTransactionRequest,
           from: address,
         });
@@ -168,7 +168,7 @@ export class SignJsonRpcRequest {
           sendTransactionRequest,
         );
 
-        const tx = await EthNetwork.network.sendTransaction(signedTransaction);
+        const tx = await rpcProvider.sendTransaction(signedTransaction);
         result = tx.hash;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
