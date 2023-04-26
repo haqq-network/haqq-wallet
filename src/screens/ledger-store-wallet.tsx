@@ -48,8 +48,8 @@ export const LedgerStoreWalletScreen = () => {
             default:
               if (error instanceof Error) {
                 showModal('error-create-account');
-                captureException(error, 'ledgerStore');
                 navigation.getParent()?.goBack();
+                captureException(error, 'ledgerStore');
               }
           }
         });

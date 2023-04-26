@@ -31,6 +31,7 @@ class MainApplication : Application(), ReactApplication {
       packages.add(VersionPackage())
       packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
+      packages.add(CloudPackage())
       
       return packages
     }

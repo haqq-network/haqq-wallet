@@ -109,8 +109,8 @@ export const SignInStoreWalletScreen = () => {
             if (error instanceof Error) {
               console.log('error.message', error.message);
               showModal('error-create-account');
-              captureException(error, 'restoreStore');
               goBack();
+              captureException(error, 'restoreStore');
             }
         }
       }

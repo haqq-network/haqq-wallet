@@ -31,7 +31,7 @@ export const MpcMigrateAgreement = ({onDone}: MpcMigrateAgreementProps) => {
       <Spacer centered>
         <LottieWrap style={page.animation} source={animation} autoPlay loop />
       </Spacer>
-      <View>
+      <View style={page.content}>
         <Text center t4 i18n={I18N.mpcMigrateAgrementTitle} />
         <Spacer height={4} />
         <Text center t11 i18n={I18N.mpcMigrateAgrementDescription} />
@@ -47,6 +47,7 @@ export const MpcMigrateAgreement = ({onDone}: MpcMigrateAgreementProps) => {
           warning
           i18n={I18N.mpcMigrateAgrementWarning2}
         />
+        <Spacer height={20} />
       </View>
       <Spacer />
       <Button
@@ -67,6 +68,9 @@ const page = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginHorizontal: 20,
+  },
+  content: {
+    width: '100%',
   },
   submit: {marginBottom: 16, width: '100%'},
 });
