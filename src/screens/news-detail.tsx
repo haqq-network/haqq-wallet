@@ -187,10 +187,6 @@ const styles = createTheme({
 
 const markdownStyle = {
   singleLineMd: {
-    text: {
-      color: 'blue',
-      textAlign: 'right',
-    },
     view: {
       alignSelf: 'stretch',
     },
