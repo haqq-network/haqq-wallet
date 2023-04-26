@@ -430,6 +430,9 @@ export type RootStackParamList = {
   walletProtectionPopup: {
     accountId: string;
   };
+  newsDetail: {
+    id: string;
+  };
 };
 
 export type StackPresentationTypes =

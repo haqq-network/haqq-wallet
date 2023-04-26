@@ -114,6 +114,10 @@ class App extends EventEmitter {
 
   private _biometryType: BiometryType | null = null;
 
+  get biometryType() {
+    return this._biometryType;
+  }
+
   get isGoogleSigninSupported() {
     return this._googleSigninSupported;
   }
@@ -128,10 +132,6 @@ class App extends EventEmitter {
       this._appleSigninSupported ||
       this.isDeveloper
     );
-  }
-
-  get biometryType() {
-    return this._biometryType;
   }
 
   private _provider: Provider | null;

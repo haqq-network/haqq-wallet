@@ -6,6 +6,7 @@ export type AwaitJsonRpcSignParams = RootStackParamList['jsonRpcSign'];
 
 export class AwaitJsonRpcSignError {
   message?: string;
+
   constructor(message?: string) {
     this.message = message;
   }

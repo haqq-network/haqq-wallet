@@ -198,6 +198,14 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
+        title="Show markdown page"
+        onPress={() => {
+          navigation.navigate('newsDetail', {id: '123'});
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
         title="Show modal change on mainnet"
         onPress={() => {
           showModal('claimOnMainnet', {

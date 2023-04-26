@@ -1,5 +1,6 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import messaging from '@react-native-firebase/messaging';
 import {isAfter} from 'date-fns';
 import {Linking} from 'react-native';
 
@@ -15,6 +16,14 @@ import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 
 export async function onAppStarted() {
+  messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      if (remoteMessage) {
+        app.emit(Events.onPushNotification, remoteMessage);
+      }
+    });
+
   const initialUrl = await Linking.getInitialURL();
 
   if (initialUrl && initialUrl.startsWith('haqq:')) {
