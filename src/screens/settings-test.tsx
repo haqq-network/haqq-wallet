@@ -1,13 +1,20 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import messaging from '@react-native-firebase/messaging';
+import BN from 'bn.js';
+import {utils} from 'ethers';
 import {Alert, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme, showModal} from '@app/helpers';
+import {
+  awaitForWallet,
+  createTheme,
+  getProviderInstanceForWallet,
+  showModal,
+} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
@@ -15,7 +22,9 @@ import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
+import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
+import {EthNetwork} from '@app/services';
 import {PushNotifications} from '@app/services/push-notifications';
 import {message as toastMessage} from '@app/services/toast';
 import {Link} from '@app/types';
@@ -32,6 +41,603 @@ messaging()
     }
   });
 
+const abi = [
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'baseURI',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'Approval',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'approved',
+        type: 'bool',
+      },
+    ],
+    name: 'ApprovalForAll',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'Transfer',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'MAX_PER_MINT',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'MAX_SUPPLY',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'PRICE',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'baseTokenURI',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getApproved',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
+    ],
+    name: 'isApprovedForAll',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'ownerOf',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: '_data',
+        type: 'bytes',
+      },
+    ],
+    name: 'safeTransferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'approved',
+        type: 'bool',
+      },
+    ],
+    name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes4',
+        name: 'interfaceId',
+        type: 'bytes4',
+      },
+    ],
+    name: 'supportsInterface',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'symbol',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'tokenByIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'tokenOfOwnerByIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'tokenURI',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'transferFrom',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_baseTokenURI',
+        type: 'string',
+      },
+    ],
+    name: 'setBaseURI',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_count',
+        type: 'uint256',
+      },
+    ],
+    name: 'mintNFTs',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address',
+      },
+    ],
+    name: 'tokensOfOwner',
+    outputs: [
+      {
+        internalType: 'uint256[]',
+        name: '',
+        type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_count',
+        type: 'uint256',
+      },
+    ],
+    name: 'reserveNFTs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+];
 const TEST_URLS: Partial<Link>[] = [
   {title: 'app haqq network', url: 'https://app.haqq.network'},
   {title: 'vesting', url: 'https://vesting.haqq.network'},
@@ -48,11 +654,26 @@ const TEST_URLS: Partial<Link>[] = [
   },
 ];
 
+async function callContract(to: string, func: string, ...params: any[]) {
+  const iface = new utils.Interface(abi);
+  console.log('params', params);
+  const data = iface.encodeFunctionData(func, params);
+
+  const rawTx = {
+    to,
+    data,
+  };
+
+  const resp = await EthNetwork.network.call(rawTx);
+  return iface.decodeFunctionResult(func, resp);
+}
+
 export const SettingsTestScreen = () => {
   const [isRequestPermission, setIsRequestPermission] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [wc, setWc] = useState('');
-  const [browserUrl, setBrobserUrl] = useState('');
+  const [browserUrl, setBrowserUrl] = useState('');
+  const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
   const user = useUser();
   const provider = useMemo(
@@ -86,6 +707,84 @@ export const SettingsTestScreen = () => {
       params: {url: onUrlSubmit(browserUrl)},
     });
   };
+
+  const onCallContract = async () => {
+    const iface = new utils.Interface(abi);
+    const data = iface.encodeFunctionData('tokensOfOwner', [
+      '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
+    ]);
+
+    console.log('data', data);
+
+    const rawTx = {
+      to: contract,
+      data: data,
+    };
+
+    const resp = await EthNetwork.network.call(rawTx);
+    console.log('resp', resp);
+    const r = iface.decodeFunctionResult('tokensOfOwner', resp);
+
+    console.log(JSON.stringify(r));
+  };
+
+  const onMintContract = async () => {
+    const iface = new utils.Interface(abi);
+    const data = iface.encodeFunctionData('mintNFTs', [1]);
+
+    console.log('data', data);
+
+    const walletId = await awaitForWallet({
+      wallets: Wallet.getAll().snapshot(),
+      title: I18N.stakingDelegateAccountTitle,
+    });
+
+    const wallet = Wallet.getById(walletId);
+
+    if (!wallet) {
+      return;
+    }
+
+    const transport = await getProviderInstanceForWallet(wallet);
+
+    const unsignedTx = await EthNetwork.populateTransaction(
+      wallet.address,
+      contract,
+      new BN(100000000000000),
+      data,
+      250000,
+    );
+
+    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
+
+    console.log('signedTx', signedTx);
+
+    const resp = await EthNetwork.network.sendTransaction(signedTx);
+
+    console.log('resp', resp);
+    const r = iface.decodeFunctionData('mintNFTs', resp.data);
+
+    console.log(JSON.stringify(r));
+  };
+
+  const onCheckContract = useCallback(async () => {
+    const code = await EthNetwork.network.getCode(contract);
+    console.log('code', code);
+
+    const interfaces = await callContract(
+      contract,
+      'supportsInterface',
+      0x80ac58cd,
+    );
+
+    console.log('interfaces', ...interfaces);
+
+    const name = await callContract(contract, 'name');
+    console.log('name', ...name);
+
+    const symbol = await callContract(contract, 'symbol');
+    console.log('symbol', ...symbol);
+  }, [contract]);
 
   const onCreateBanner = useCallback(() => {
     Banner.create({
@@ -161,7 +860,7 @@ export const SettingsTestScreen = () => {
       <Input
         placeholder="https://app.haqq.network"
         value={browserUrl}
-        onChangeText={setBrobserUrl}
+        onChangeText={setBrowserUrl}
       />
       <Spacer height={5} />
       <Button
@@ -215,6 +914,24 @@ export const SettingsTestScreen = () => {
             },
           });
         }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="call contract"
+        onPress={() => onCallContract()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="mint contract"
+        onPress={() => onMintContract()}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="check contract"
+        onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

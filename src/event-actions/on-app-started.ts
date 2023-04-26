@@ -12,7 +12,6 @@ import {showModal} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
 import {Refferal} from '@app/models/refferal';
-import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 
 export async function onAppStarted() {
@@ -28,35 +27,6 @@ export async function onAppStarted() {
 
   if (initialUrl && initialUrl.startsWith('haqq:')) {
     app.emit(Events.onDeepLink, initialUrl);
-  }
-
-  const wallets = Wallet.getAllVisible();
-
-  await Promise.all(
-    wallets.map(wallet => {
-      return new Promise(resolve => {
-        app.emit(Events.onTransactionsLoad, wallet.address, resolve);
-      });
-    }),
-  );
-
-  if (isAfter(new Date(), app.snoozeBackup)) {
-    const mnemonics = await ProviderMnemonicReactNative.getAccounts();
-
-    if (isFeatureEnabled(Feature.mpc)) {
-      const mpc = await ProviderMpcReactNative.getAccounts();
-      if (mnemonics.length && !mpc.length) {
-        navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});
-        return;
-      }
-
-      if (mpc.length) {
-        app.emit(Events.onWalletMpcCheck, app.snoozeBackup);
-      }
-    }
-    if (mnemonics.length) {
-      app.emit(Events.onWalletMnemonicCheck, app.snoozeBackup);
-    }
   }
 
   const refferal = Refferal.getAll().filtered('isUsed = false');
@@ -79,6 +49,25 @@ export async function onAppStarted() {
           isUsed: true,
         });
       }
+    }
+  }
+
+  if (isAfter(new Date(), app.snoozeBackup)) {
+    const mnemonics = await ProviderMnemonicReactNative.getAccounts();
+
+    if (isFeatureEnabled(Feature.mpc)) {
+      const mpc = await ProviderMpcReactNative.getAccounts();
+      if (mnemonics.length && !mpc.length) {
+        navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});
+        return;
+      }
+
+      if (mpc.length) {
+        app.emit(Events.onWalletMpcCheck, app.snoozeBackup);
+      }
+    }
+    if (mnemonics.length) {
+      app.emit(Events.onWalletMnemonicCheck, app.snoozeBackup);
     }
   }
 }

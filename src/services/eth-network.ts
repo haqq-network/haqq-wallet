@@ -2,6 +2,7 @@ import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {Deferrable} from '@ethersproject/properties';
 import {ProviderInterface} from '@haqq/provider-base';
+import BN from 'bn.js';
 import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
 
 import {calcFeeWei} from '@app/helpers';
@@ -14,28 +15,48 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
   public stop = false;
+  private _provider;
 
-  static async populateTransaction(from: string, to: string, amount: string) {
-    const value = utils.parseEther(amount.toString());
+  constructor(provider = EthNetwork.network) {
+    this._provider = provider;
+  }
+
+  static async populateTransaction(
+    from: string,
+    to: string,
+    value: BN,
+    data: string = '0x',
+    minGas = 21000,
+  ) {
     const nonce = await EthNetwork.network.getTransactionCount(from, 'latest');
+    const gasPrice = await EthNetwork.network.getGasPrice();
 
-    const estimateGas = await EthNetwork.network.estimateGas({
-      from,
-      to,
-      amount,
-    } as Deferrable<TransactionRequest>);
+    let estimateGas;
+    try {
+      const resp = await EthNetwork.network.estimateGas({
+        from,
+        to,
+        value: '0x' + value.toString('hex'),
+        maxFeePerGas: gasPrice.toHexString(),
+        maxPriorityFeePerGas: gasPrice.toHexString(),
+      } as Deferrable<TransactionRequest>);
 
-    let gasPrice = await EthNetwork.network.getGasPrice();
+      estimateGas = new BN(resp._hex, 16);
+    } catch (e) {
+      estimateGas = new BN(minGas);
+    }
+
+    estimateGas = BN.max(estimateGas, new BN(minGas));
 
     const transaction = {
       to: to,
-      value: value._hex,
+      value: '0x' + value.toString('hex'),
       nonce,
       type: 2,
       maxFeePerGas: gasPrice._hex,
       maxPriorityFeePerGas: gasPrice._hex,
-      gasLimit: estimateGas._hex,
-      data: '0x',
+      gasLimit: '0x' + estimateGas.toString('hex'),
+      data,
       chainId: EthNetwork.chainId,
     };
 
@@ -104,7 +125,7 @@ export class EthNetwork {
     const transaction = await EthNetwork.populateTransaction(
       address,
       to,
-      String(amount),
+      new BN(amount),
     );
     const signedTx = await transport.signTransaction(hdPath, transaction);
 
@@ -112,8 +133,19 @@ export class EthNetwork {
       throw new Error('signedTx not found');
     }
 
-    const response = await EthNetwork.network.sendTransaction(signedTx);
+    return await this._provider.sendTransaction(signedTx);
+  }
 
-    return response;
+  async callContract(abi: any[], to: string, method: string, ...params: any[]) {
+    const iface = new utils.Interface(abi);
+    const data = iface.encodeFunctionData(method, params);
+
+    const rawTx = {
+      to,
+      data,
+    };
+
+    const resp = await this._provider.call(rawTx);
+    return iface.decodeFunctionResult(method, resp);
   }
 }

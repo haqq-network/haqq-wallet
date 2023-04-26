@@ -80,7 +80,7 @@ export class Provider extends Realm.Object {
   }
 
   static getByChainId(
-    ethChainId: number,
+    ethChainId: number | string,
   ): (Provider & Realm.Object<unknown, never>) | null {
     if (!ethChainId && Number.isNaN(ethChainId)) {
       return null;

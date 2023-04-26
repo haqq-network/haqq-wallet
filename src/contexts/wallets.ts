@@ -2,12 +2,9 @@ import {createContext} from 'react';
 
 import {EventEmitter} from 'events';
 
-import {Image} from 'react-native';
-
 import {realm} from '@app/models';
 import {Wallet} from '@app/models/wallet';
 import {AddWalletParams} from '@app/types';
-import {getPatternName} from '@app/utils';
 
 class Wallets extends EventEmitter {
   private _wallets: Map<string, Wallet>;
@@ -39,22 +36,6 @@ class Wallets extends EventEmitter {
 
   get addressList(): string[] {
     return Array.from(this._wallets.keys());
-  }
-
-  async init(): Promise<void> {
-    if (this._initialized) {
-      return;
-    }
-
-    this._initialized = true;
-
-    Promise.all(
-      Array.from(this._wallets.values()).map(w =>
-        Image.prefetch(getPatternName(w.pattern)),
-      ),
-    ).then(() => {
-      console.log('image prefetched');
-    });
   }
 
   attachWallet(wallet: Wallet) {

@@ -5,7 +5,7 @@ import prompt from 'react-native-prompt-android';
 import {TransactionFinish} from '@app/components/transaction-finish';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {Contact} from '@app/models/contact';
+import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -55,7 +55,11 @@ export const TransactionFinishScreen = () => {
             });
             sendNotification(I18N.transactionFinishContactUpdated);
           } else {
-            Contact.create(transaction.to, {name: value});
+            Contact.create(transaction.to, {
+              name: value,
+              type: ContactType.address,
+              visible: true,
+            });
             sendNotification(I18N.transactionFinishContactAdded);
             setContact(Contact.getById(transaction?.to ?? ''));
           }

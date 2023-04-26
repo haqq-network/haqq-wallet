@@ -1,22 +1,33 @@
 import {realm} from '@app/models';
 
+export enum ContactType {
+  address = 'address',
+  contract = 'contract',
+}
+
 export class Contact extends Realm.Object {
   static schema = {
     name: 'Contact',
     properties: {
       account: 'string',
       name: 'string',
+      type: 'string',
+      visible: 'bool',
     },
     primaryKey: 'account',
   };
   account!: string;
   name!: string;
+  type: ContactType;
+  visible: boolean;
 
-  static create(address: string, params: Partial<Contact>) {
+  static create(address: string, params: Omit<Partial<Contact>, 'address'>) {
+    const exists = Contact.getById(address);
     realm.write(() => {
       realm.create<Contact>(
         Contact.schema.name,
         {
+          ...(exists ?? {}),
           ...params,
           account: address.toLowerCase(),
         },

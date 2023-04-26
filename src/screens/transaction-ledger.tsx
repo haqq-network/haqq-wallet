@@ -1,17 +1,19 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
+import Decimal from 'decimal.js';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {WEI} from '@app/variables/common';
 
 export const TransactionLedgerScreen = () => {
   const transport = useRef<ProviderInterface | null>(null);
@@ -46,11 +48,12 @@ export const TransactionLedgerScreen = () => {
           transport.current!,
           wallet.path!,
           route.params.to,
-          route.params.amount,
+          new Decimal(route.params.amount).mul(WEI).toFixed(),
         );
 
         if (transaction) {
-          await Transaction.create(
+          await awaitForEventDone(
+            Events.onAddressBookCreate,
             transaction,
             user.providerId,
             route.params.fee,
