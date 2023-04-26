@@ -608,7 +608,7 @@ PODS:
     - React
   - RNAppleAuthentication (2.2.2):
     - React-Core
-  - RNCAsyncStorage (1.17.12):
+  - RNCAsyncStorage (1.18.1):
     - React-Core
   - RNCClipboard (1.11.2):
     - React-Core
@@ -1070,7 +1070,7 @@ SPEC CHECKSUMS:
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   RealmJS: 10958b8a9d1f3a981c1b50bdc1da8396002e75a4
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
-  RNCAsyncStorage: 09fc8595e6d6f6d5abf16b23a56b257d9c6b7c5b
+  RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNFBAnalytics: 37f524d72996cd658b188ce750d9a45ed5dcf5de
   RNFBApp: 0f6bd7ee155a50f5e68cd68aab2709a4d24bfdff
