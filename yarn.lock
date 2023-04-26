@@ -10540,10 +10540,10 @@ real-require@^0.1.0:
   resolved "https://registry.yarnpkg.com/real-require/-/real-require-0.1.0.tgz#736ac214caa20632847b7ca8c1056a0767df9381"
   integrity sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==
 
-realm@11.5.2:
-  version "11.5.2"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-11.5.2.tgz#c59231406cc49baf6c7689ee74c03deeca598c9b"
-  integrity sha512-E5Ia4B2zsLge1o0jJ3NmlBKN8vtgQTt7CRvYHNNvWRoIEraZhOJtuyNMm/Yg8b9MvaLZPeDmVo8KO05lSoni6Q==
+realm@11.7.0:
+  version "11.7.0"
+  resolved "https://registry.yarnpkg.com/realm/-/realm-11.7.0.tgz#0d597f83b97f584da73337009e944d0d9f3d6099"
+  integrity sha512-A/nAuwDSZwjb7fkK48kdWqR+mFi2nWHXorrP4EkXYsOuIUxzgMjsxA3DUzlXU8PoFsIF+mbjTgIhifF6mTrAPg==
   dependencies:
     "@realm/common" "^0.1.4"
     "@realm/network-transport" "^0.7.2"
