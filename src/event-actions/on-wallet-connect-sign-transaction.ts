@@ -5,11 +5,8 @@ import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
 export async function onWalletConnectSignTransaction(
   event: WalletConnectSessionRequestType,
 ) {
-  console.log('here', event);
   try {
     const session = WalletConnect.instance.getSessionByTopic(event.topic);
-    console.log(event.id, session?.peer);
-
     if (session) {
       const chainId = Number(event?.params?.chainId?.split?.(':')?.[1]);
       const result = await awaitForJsonRpcSign({
@@ -25,7 +22,13 @@ export async function onWalletConnectSignTransaction(
       await WalletConnect.instance.rejectSessionRequest(event.id, event.topic);
     }
   } catch (err) {
-    await WalletConnect.instance.rejectSessionRequest(event.id, event.topic);
-    console.error('onWalletConnectSignTransaction error', err);
+    if (err instanceof Error) {
+      await WalletConnect.instance.rejectSessionRequest(
+        event.id,
+        event.topic,
+        err.message,
+      );
+      console.error('onWalletConnectSignTransaction error', err);
+    }
   }
 }

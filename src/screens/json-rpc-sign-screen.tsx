@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
@@ -9,6 +9,8 @@ import {getUserAddressFromJRPCRequest} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export const JsonRpcSignScreen = () => {
+  const [rejectLoading, setRejectLoading] = useState(false);
+  const [signLoading, setSignLoading] = useState(false);
   const navigation = useTypedNavigation();
   const {metadata, request, chainId, selectedAccount} =
     useTypedRoute<'jsonRpcSign'>().params || {};
@@ -37,6 +39,7 @@ export const JsonRpcSignScreen = () => {
 
   const onPressSign = useCallback(async () => {
     try {
+      setSignLoading(true);
       const result = await SignJsonRpcRequest.signEIP155Request(
         wallet!,
         request,
@@ -54,12 +57,15 @@ export const JsonRpcSignScreen = () => {
   }, [chainId, navigation, request, wallet]);
 
   const onPressReject = useCallback(async () => {
+    setRejectLoading(true);
     app.emit('json-rpc-sign-reject');
     navigation.goBack();
   }, [navigation]);
 
   return (
     <JsonRpcSign
+      rejectLoading={rejectLoading}
+      signLoading={signLoading}
       isTransaction={isTransaction}
       wallet={wallet!}
       metadata={metadata}

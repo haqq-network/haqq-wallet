@@ -13,7 +13,7 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {EthNetwork} from '@app/services';
+import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
 
 type TJsonRpcRequest = JsonRpcRequest<any>;
@@ -98,6 +98,10 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
     provider = Provider.getProvider(user.providerId);
   }
   return provider;
+};
+
+const getRpcProvider = (helper: Web3BrowserHelper) => {
+  return getNetworkProvier(helper)?.rpcProvider || getDefaultNetwork();
 };
 
 export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
@@ -202,21 +206,20 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_hashrate: () => '0x00',
   eth_getBlockByNumber: () => 0,
-  eth_call: async ({req}) => {
+  eth_call: async ({req, helper}) => {
     try {
-      return await EthNetwork.network.call(req.params[0], req.params[1]);
+      const rpcProvider = getRpcProvider(helper);
+      return await rpcProvider.call(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
         rejectJsonRpcRequest(err.message);
       }
     }
   },
-  eth_getTransactionCount: ({req}) => {
+  eth_getTransactionCount: ({req, helper}) => {
     try {
-      return EthNetwork.network.getTransactionCount(
-        req.params[0],
-        req.params[1],
-      );
+      const rpcProvider = getRpcProvider(helper);
+      return rpcProvider.getTransactionCount(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
         rejectJsonRpcRequest(err.message);
@@ -225,30 +228,59 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_mining: () => false,
   net_listening: () => true,
-  eth_estimateGas: ({req}) => {
-    return EthNetwork.network.estimateGas(req.params[0]);
-  },
-  web3_clientVersion: async () => {
-    const appVersion = getAppVersion();
-    return `HAQQ/${appVersion}/Wallet`;
-  },
-  eth_getCode: async ({req}) => {
+  eth_estimateGas: ({req, helper}) => {
     try {
-      return await EthNetwork.network.getCode(req.params[0], req.params[1]);
+      const rpcProvider = getRpcProvider(helper);
+      return rpcProvider.estimateGas(req.params[0]);
     } catch (err) {
       if (err instanceof Error) {
         rejectJsonRpcRequest(err.message);
       }
     }
   },
-  eth_blockNumber: () => {
-    return EthNetwork.network.blockNumber;
+  web3_clientVersion: async () => {
+    const appVersion = getAppVersion();
+    return `HAQQ/${appVersion}/Wallet`;
   },
-  eth_getTransactionByHash: async ({req}) => {
-    return await EthNetwork.network.getTransaction(req.params?.[0]);
+  eth_getCode: async ({req, helper}) => {
+    try {
+      const rpcProvider = getRpcProvider(helper);
+      return await rpcProvider.getCode(req.params[0], req.params[1]);
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
   },
-  eth_getTransactionReceipt: async ({req}) => {
-    return await EthNetwork.network.getTransactionReceipt(req.params?.[0]);
+  eth_blockNumber: ({helper}) => {
+    try {
+      const rpcProvider = getRpcProvider(helper);
+      return rpcProvider.blockNumber;
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
+  eth_getTransactionByHash: async ({req, helper}) => {
+    try {
+      const rpcProvider = getRpcProvider(helper);
+      return await rpcProvider.getTransaction(req.params?.[0]);
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
+  eth_getTransactionReceipt: async ({req, helper}) => {
+    try {
+      const rpcProvider = getRpcProvider(helper);
+      return await rpcProvider.getTransactionReceipt(req.params?.[0]);
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
   },
   eth_sendTransaction: signTransaction,
   eth_sign: signTransaction,
