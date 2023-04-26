@@ -100,7 +100,7 @@
     "react-native-touch-id": "4.4.1",
     "react-native-webview": "11.13.0",
     "readable-stream": "4.3.0",
-    "realm": "11.5.2",
+    "realm": "11.7.0",
     "rxjs": "7.8.0",
     "sha.js": "2.4.11",
     "stream-browserify": "1.0.0",
