@@ -15,10 +15,21 @@ export const captureException = (
     return;
   }
   console.error('captureException', source, error, context);
-  Sentry.captureException(error, {
-    tags: {source},
-    extra: context,
-  });
+  try {
+    Sentry.captureException(error, {
+      tags: {source},
+      extra: context,
+    });
+  } catch (e) {
+    console.error(
+      'captureException send error',
+      source,
+      error,
+      context,
+      // @ts-ignore
+      e.message,
+    );
+  }
 };
 
 export const openURL = async (url: string) => {

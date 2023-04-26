@@ -24,23 +24,35 @@ export const MpcMigrateStoreScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
+        console.log('MpcMigrateStoreScreen 1');
         const storage = await getProviderStorage();
-
+        console.log('MpcMigrateStoreScreen 2');
         const getPassword = app.getPassword.bind(app);
+        console.log('MpcMigrateStoreScreen 3');
 
         const mnemonicProvider = new ProviderMnemonicReactNative({
           account: route.params.accountId,
           getPassword,
         });
 
+        console.log('MpcMigrateStoreScreen 4');
+
         const mnemonic = await mnemonicProvider.getMnemonicPhrase();
+
+        console.log('MpcMigrateStoreScreen 5');
+
         let entropy = mnemonicToEntropy(mnemonic);
+
+        console.log('MpcMigrateStoreScreen 6');
 
         if (entropy.startsWith('0x')) {
           entropy = entropy.slice(2);
         }
 
+        console.log('MpcMigrateStoreScreen 7');
+
         entropy = entropy.padStart(64, '0');
+        console.log('MpcMigrateStoreScreen 8');
 
         const provider = await ProviderMpcReactNative.initialize(
           route.params.privateKey,
@@ -53,7 +65,11 @@ export const MpcMigrateStoreScreen = () => {
           {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
         );
 
+        console.log('MpcMigrateStoreScreen 9');
+
         const wallets = Wallet.getAll();
+
+        console.log('MpcMigrateStoreScreen 10');
 
         for (const wallet of wallets) {
           if (

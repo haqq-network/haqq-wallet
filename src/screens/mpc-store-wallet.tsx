@@ -86,7 +86,6 @@ export const MpcStoreWalletScreen = () => {
             break;
           default:
             if (e instanceof Error) {
-              console.log('error.message', e.message);
               showModal('error-create-account');
               navigator.goBack();
               captureException(e, 'mpcStore');
