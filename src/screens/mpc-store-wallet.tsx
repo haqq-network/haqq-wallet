@@ -88,8 +88,8 @@ export const MpcStoreWalletScreen = () => {
             if (e instanceof Error) {
               console.log('error.message', e.message);
               showModal('error-create-account');
-              captureException(e, 'mpcStore');
               navigator.goBack();
+              captureException(e, 'mpcStore');
             }
         }
       }

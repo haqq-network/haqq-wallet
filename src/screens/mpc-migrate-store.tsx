@@ -71,8 +71,8 @@ export const MpcMigrateStoreScreen = () => {
       } catch (e) {
         if (e instanceof Error) {
           showModal('error-create-account');
-          captureException(e, 'mpcStore');
           navigation.getParent()?.goBack();
+          captureException(e, 'mpcStore');
         }
       }
     }, 350);

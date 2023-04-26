@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import {View} from 'react-native';
@@ -16,6 +16,11 @@ export const SignUpStoreWalletScreen = () => {
   const route = useTypedRoute<'createStoreWallet'>();
 
   const wallets = useWallets();
+  const goBack = useCallback(() => {
+    navigation.reset({
+      routes: [{name: 'welcome'}, {name: 'signup', params: {next: 'restore'}}],
+    });
+  }, [navigation]);
 
   useEffect(() => {
     showModal('loading', {
@@ -69,18 +74,19 @@ export const SignUpStoreWalletScreen = () => {
         switch (error) {
           case 'wallet_already_exists':
             showModal('error-account-added');
-            navigation.getParent()?.goBack();
+            goBack();
             break;
           default:
             if (error instanceof Error) {
+              console.error('SignUpStoreWalletScreen error', error);
               showModal('error-create-account');
+              goBack();
               captureException(error, 'createStoreWallet');
-              navigation.getParent()?.goBack();
             }
         }
       }
     }, 350);
-  }, [navigation, route.params, wallets]);
+  }, [goBack, navigation, route.params, wallets]);
 
   return <View />;
 };
