@@ -16,6 +16,7 @@ export interface Web3BrowserPressHeaderEvent {
   siteUrl: string;
   clearSiteUrl: string;
 }
+
 interface Web3BrowserHeaderProps {
   wallet: Wallet;
   webviewNavigationData: WebViewNavigation;

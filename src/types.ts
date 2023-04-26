@@ -432,7 +432,7 @@ export type RootStackParamList = {
   };
   newsDetail: {
     id: string;
-  }
+  };
 };
 
 export type StackPresentationTypes =
