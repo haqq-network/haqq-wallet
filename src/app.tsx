@@ -26,12 +26,7 @@ import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
-import {
-  AppContext,
-  WalletsContext,
-  app,
-  wallets,
-} from '@app/contexts';
+import {AppContext, WalletsContext, app, wallets} from '@app/contexts';
 import {Events} from '@app/events';
 import {
   captureException,
@@ -261,10 +256,7 @@ export const App = () => {
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
                 <Stack.Screen name="mpcMigrate" component={MpcMigrateScreen} />
-                <Stack.Screen
-                  name="jsonRpcSign"
-                  component={JsonRpcSignPopup}
-                />
+                <Stack.Screen name="jsonRpcSign" component={JsonRpcSignPopup} />
                 <Stack.Screen name="backup" component={BackupScreen} />
                 <Stack.Screen name="signin" component={SignInScreen} />
                 <Stack.Screen name="signup" component={SignUpScreen} />

@@ -32,6 +32,6 @@ export async function onAddressBookSync(id: string) {
       tokens: tokens.map((t: any) => BigNumber.from(t).toString()),
     });
   } catch (e) {
-    console.log('onAddressBookSync', e)
+    console.log('onAddressBookSync', e);
   }
 }
