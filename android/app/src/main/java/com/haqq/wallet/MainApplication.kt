@@ -14,7 +14,7 @@ import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
-import com.rnfs.RNFSPackage; 
+import com.rnfs.RNFSPackage;
 import android.webkit.WebView;
 
 class MainApplication : Application(), ReactApplication {
@@ -32,7 +32,7 @@ class MainApplication : Application(), ReactApplication {
       packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
       packages.add(CloudPackage())
-      
+
       return packages
     }
 

@@ -6,6 +6,8 @@ export async function awaitForEventDone(
   ...params: any[]
 ): Promise<void> {
   return new Promise(resolve => {
-    app.emit(event, ...params, resolve);
+    setTimeout(() => {
+      app.emit(event, ...params, resolve);
+    }, 250);
   });
 }
