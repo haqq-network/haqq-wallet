@@ -44,6 +44,8 @@ export async function onAppLoggedIn() {
           updatedAt: new Date(row.updated_at),
           publishedAt: new Date(row.published_at),
         });
+
+        app.getUser().maybeIsNewNews(true);
       } else {
         exist.update({
           title: row.title,

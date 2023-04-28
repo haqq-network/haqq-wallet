@@ -39,6 +39,7 @@ export const UserSchema = {
     isDeveloper: {type: 'bool', default: false},
     isGoogleSignedIn: 'bool?',
     lastSyncNews: 'date?',
+    isNewNews: {type: 'bool', default: false},
   },
   primaryKey: 'username',
 };
@@ -58,6 +59,7 @@ export type UserType = {
   subscription: string | null;
   isGoogleSignedIn: boolean | null;
   isDeveloper: boolean | null;
+  isNewNews: boolean | null;
   lastSyncNews: Date | null;
 };
 
@@ -333,6 +335,22 @@ export class User extends EventEmitter {
   touchLastSyncNews() {
     realm.write(() => {
       this._raw.lastSyncNews = new Date();
+    });
+  }
+
+  get isNewNews() {
+    return this._raw.isNewNews || false;
+  }
+
+  set isNewNews(value) {
+    realm.write(() => {
+      this._raw.isNewNews = value;
+    });
+  }
+
+  maybeIsNewNews(value: boolean) {
+    realm.write(() => {
+      this._raw.isNewNews = this.isNewNews || value;
     });
   }
 }
