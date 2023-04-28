@@ -48,7 +48,7 @@ module.exports = {
         'no-shadow': 'off',
         'no-undef': 'off',
         'import/no-default-export': 'error',
-        'react/react-in-jsx-scope': 2,
+        'react/react-in-jsx-scope': 0,
         'react-native/no-unused-styles': 2,
         'react-native/split-platform-components': 'off',
         'react-native/no-inline-styles': 2,
