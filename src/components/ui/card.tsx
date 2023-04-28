@@ -58,7 +58,7 @@ export const Card = ({
             {
               tintColor: colorPattern,
             },
-            page.image,
+            page.imageWrapper,
           ]}
         />
         {children}
@@ -89,7 +89,7 @@ export const Card = ({
               tintColor: colorPattern,
               borderRadius,
             },
-            page.image,
+            page.imageWrapper,
           ]}
         />
         {children}
@@ -104,7 +104,7 @@ const page = StyleSheet.create({
     padding: 16,
     position: 'relative',
   },
-  image: {
+  imageWrapper: {
     position: 'absolute',
     right: 0,
     top: 0,

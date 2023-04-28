@@ -38,6 +38,7 @@ export const UserSchema = {
     subscription: 'string?',
     isDeveloper: {type: 'bool', default: false},
     isGoogleSignedIn: 'bool?',
+    lastSyncNews: 'date?',
   },
   primaryKey: 'username',
 };
@@ -57,6 +58,7 @@ export type UserType = {
   subscription: string | null;
   isGoogleSignedIn: boolean | null;
   isDeveloper: boolean | null;
+  lastSyncNews: Date | null;
 };
 
 export class User extends EventEmitter {
@@ -230,6 +232,10 @@ export class User extends EventEmitter {
     return !this.pinBanned;
   }
 
+  get lastSyncNews() {
+    return this._raw.lastSyncNews;
+  }
+
   static create() {
     let id = generateUUID();
 
@@ -321,6 +327,12 @@ export class User extends EventEmitter {
         new Date(),
         SNOOZE_WALLET_BACKUP_MINUTES,
       );
+    });
+  }
+
+  setLastSyncNews() {
+    realm.write(() => {
+      this._raw.lastSyncNews = new Date();
     });
   }
 }

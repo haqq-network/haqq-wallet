@@ -189,11 +189,11 @@ export function callbackWrapper<T extends Array<any>>(
 
     const tx = makeID(5);
 
-    console.log('event started', tx, func.name, ...args);
+    console.log(new Date(), 'event started', tx, func.name, ...args);
 
     func(...args).then(() => {
       callback();
-      console.log('event finished', tx, func.name);
+      console.log(new Date(), 'event finished', tx, func.name);
     });
   };
 }

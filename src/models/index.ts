@@ -4,6 +4,7 @@ import {AddressBook} from '@app/models/address-book';
 import {Banner, BannerButton} from '@app/models/banner';
 import {Contact} from '@app/models/contact';
 import {GovernanceVoting} from '@app/models/governance-voting';
+import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
@@ -41,6 +42,7 @@ export const realm = new Realm({
     BannerButton,
     NftCollection,
     AddressBook,
+    News,
   ],
   schemaVersion: 50,
   onMigration: (oldRealm, newRealm) => {

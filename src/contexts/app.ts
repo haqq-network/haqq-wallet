@@ -359,7 +359,9 @@ class App extends EventEmitter {
   }
 
   checkBalance() {
-    this.emit(Events.onWalletsBalanceCheck);
+    if (AppState.currentState === 'active') {
+      this.emit(Events.onWalletsBalanceCheck);
+    }
   }
 
   onWalletsBalance(balance: Record<string, number>) {

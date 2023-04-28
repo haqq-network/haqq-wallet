@@ -45,7 +45,7 @@ export const StakingUnDelegateFinish = ({
       <View style={styles.sub}>
         <LottieWrap
           source={require('@assets/animations/transaction-finish.json')}
-          style={styles.image}
+          style={styles.imageWrapper}
           autoPlay
           loop={false}
         />
@@ -112,7 +112,7 @@ const styles = createTheme({
     alignItems: 'center',
     marginVertical: 12,
   },
-  image: {width: 140, height: 140},
+  imageWrapper: {width: 140, height: 140},
   title: {
     marginTop: 32,
     marginBottom: 34,

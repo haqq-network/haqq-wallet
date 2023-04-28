@@ -34,7 +34,12 @@ export function BackupWarning({onPressBackup}: BackupWarningProps) {
   return (
     <PopupContainer style={styles.container}>
       <Spacer style={styles.imageContainer}>
-        <LottieWrap source={animation} style={styles.image} autoPlay loop />
+        <LottieWrap
+          source={animation}
+          style={styles.imageWrapper}
+          autoPlay
+          loop
+        />
       </Spacer>
       <Text t4 style={styles.title} i18n={I18N.backupWarningTitle} center />
       <Text
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   imageContainer: {justifyContent: 'center', alignItems: 'center'},
-  image: {width: 200, height: 200},
+  imageWrapper: {width: 200, height: 200},
   title: {marginBottom: 4},
   paragraph: {marginBottom: 20},
   infoBlock1: {marginBottom: 20},

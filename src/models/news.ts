@@ -6,17 +6,23 @@ export class News extends Realm.Object {
     properties: {
       id: 'string',
       title: 'string',
+      preview: 'string',
+      description: 'string',
       content: 'string',
+      publishedAt: 'date?',
       createdAt: {type: 'date', default: () => new Date()},
       updatedAt: {type: 'date', default: () => new Date()},
     },
-    primaryKey: 'account',
+    primaryKey: 'id',
   };
   id!: string;
   title!: string;
+  preview!: string;
+  description!: string;
   content!: string;
-  createdAt: Date;
-  updatedAt: Date;
+  publishedAt: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   static create(id: string, params: Omit<Partial<News>, 'id'>) {
     const exists = News.getById(id);
