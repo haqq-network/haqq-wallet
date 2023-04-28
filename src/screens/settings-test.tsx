@@ -25,7 +25,6 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
-import {PushNotifications} from '@app/services/push-notifications';
 import {message as toastMessage} from '@app/services/toast';
 import {Link} from '@app/types';
 
@@ -156,8 +155,6 @@ async function callContract(to: string, func: string, ...params: any[]) {
 }
 
 export const SettingsTestScreen = () => {
-  const [isRequestPermission, setIsRequestPermission] = useState(false);
-  const [isSubscribing, setIsSubscribing] = useState(false);
   const [wc, setWc] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
@@ -171,18 +168,6 @@ export const SettingsTestScreen = () => {
     user.isDeveloper = false;
     navigation.goBack();
   }, [user, navigation]);
-
-  const onPressRequestPermissions = async () => {
-    setIsRequestPermission(true);
-    await PushNotifications.instance.requestPermissions();
-    setIsRequestPermission(false);
-  };
-
-  const onPressSubscribeToNews = async () => {
-    setIsSubscribing(true);
-    await PushNotifications.instance.subscribeToTopic('news');
-    setIsSubscribing(false);
-  };
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
@@ -310,24 +295,6 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Button
-        title="Request permissions for push"
-        loading={isRequestPermission}
-        disabled={!!user.subscription}
-        onPress={onPressRequestPermissions}
-        variant={ButtonVariant.contained}
-      />
-      {user.subscription && (
-        <>
-          <Spacer height={8} />
-          <Button
-            loading={isSubscribing}
-            title="Subsctibe to news"
-            onPress={onPressSubscribeToNews}
-            variant={ButtonVariant.contained}
-          />
-        </>
-      )}
       <Spacer height={20} />
       <Input
         placeholder="wc:"

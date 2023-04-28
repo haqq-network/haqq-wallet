@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
+import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {CarouselItem} from '@app/components/carousel-item';
@@ -17,7 +18,7 @@ import {Wallet} from '@app/models/wallet';
 export type WalletsProps = {
   wallets: Wallet[];
   balance: Record<string, number>;
-  banner: Banner | null;
+  banners: Results<Banner>;
   walletConnectSessions: SessionTypes.Struct[][];
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -32,7 +33,7 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
-  banner,
+  banners,
   walletConnectSessions,
   onPressSend,
   onPressQR,
@@ -113,13 +114,14 @@ export const Wallets = ({
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
-      {!!banner && !banner?.isUsed && (
+      {banners.map(banner => (
         <HomeBanner
+          key={banner.id}
           banner={banner}
           onPress={onPressBanner}
           style={styles.rewardBanner}
         />
-      )}
+      ))}
       <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );

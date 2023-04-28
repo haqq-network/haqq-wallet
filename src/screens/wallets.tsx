@@ -6,10 +6,12 @@ import {Color} from '@app/colors';
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
+import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
+import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
-import {useBanner} from '@app/hooks/use-banner';
+import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {I18N, getText} from '@app/i18n';
 import {BannerButton} from '@app/models/banner';
@@ -21,7 +23,7 @@ export const WalletsWrapper = () => {
   const wallets = useWallets();
   const [visibleRows, setVisibleRows] = useState(wallets.visible);
   const {activeSessions} = useWalletConnectSessions();
-  const banner = useBanner();
+  const banners = useBanners();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
@@ -134,6 +136,15 @@ export const WalletsWrapper = () => {
           case 'close':
             await onBannerSnoozeUntil(id);
             break;
+          case 'notificationsTurnOn':
+            await onBannerNotificationsTurnOn(id);
+            break;
+          case 'notificationsTopicSubscribe':
+            await onBannerNotificationsTopicSubscribe(
+              id,
+              button.params as {topic: string},
+            );
+            break;
         }
       } catch (e) {
         if (e instanceof Error) {
@@ -161,7 +172,7 @@ export const WalletsWrapper = () => {
     <Wallets
       balance={balance}
       wallets={visibleRows}
-      banner={banner}
+      banners={banners}
       walletConnectSessions={walletConnectSessions}
       onWalletConnectPress={onWalletConnectPress}
       onPressSend={onPressSend}

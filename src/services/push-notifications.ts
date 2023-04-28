@@ -6,6 +6,8 @@ import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesString} from '@app/models/variables-string';
 
 export class PushNotifications extends EventEmitter {
   static instance = new PushNotifications();
@@ -46,7 +48,8 @@ export class PushNotifications extends EventEmitter {
       );
 
       if (subscription) {
-        app.getUser().subscription = subscription.id;
+        VariablesString.set('notificationToken', subscription.id);
+        VariablesBool.set('notifications', true);
       }
     }
   }

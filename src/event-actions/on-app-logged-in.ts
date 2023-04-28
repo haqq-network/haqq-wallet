@@ -1,11 +1,12 @@
 import {HAQQ_BACKEND} from '@env';
 import {Image} from 'react-native';
 
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {News} from '@app/models/news';
+import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {NewsRow} from '@app/types';
@@ -25,7 +26,7 @@ export async function onAppLoggedIn() {
   );
 
   try {
-    const lastSyncNews = app.getUser().lastSyncNews;
+    const lastSyncNews = VariablesDate.get('lastSyncNews');
     const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
 
     const newsResp = await fetch(`${HAQQ_BACKEND}news${sync}`);
@@ -45,7 +46,7 @@ export async function onAppLoggedIn() {
           publishedAt: new Date(row.published_at),
         });
 
-        app.getUser().maybeIsNewNews(true);
+        VariablesBool.set('isNewNews', true);
       } else {
         exist.update({
           title: row.title,
@@ -59,7 +60,7 @@ export async function onAppLoggedIn() {
       }
     }
 
-    app.getUser().touchLastSyncNews();
+    VariablesDate.set('lastSyncNews', new Date());
   } catch (e) {
     captureException(e, 'sync news');
   }

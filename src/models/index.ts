@@ -11,6 +11,9 @@ import {Refferal} from '@app/models/refferal';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Transaction} from '@app/models/transaction';
 import {UserSchema} from '@app/models/user';
+import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesDate} from '@app/models/variables-date';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {AppTheme, WalletType} from '@app/types';
 import {
@@ -43,8 +46,11 @@ export const realm = new Realm({
     NftCollection,
     AddressBook,
     News,
+    VariablesDate,
+    VariablesBool,
+    VariablesString,
   ],
-  schemaVersion: 51,
+  schemaVersion: 53,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

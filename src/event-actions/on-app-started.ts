@@ -1,18 +1,17 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
 import messaging from '@react-native-firebase/messaging';
-import {isAfter} from 'date-fns';
 import {Linking} from 'react-native';
 
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
+import {onAppBackup} from '@app/event-actions/on-app-backup';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
+import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
+import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
+import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
-import {navigator} from '@app/navigator';
 
 export async function onAppStarted() {
   messaging()
@@ -28,6 +27,12 @@ export async function onAppStarted() {
   if (initialUrl && initialUrl.startsWith('haqq:')) {
     app.emit(Events.onDeepLink, initialUrl);
   }
+
+  Banner.removeAll();
+
+  await onBannerNotificationCreate();
+
+  await onBannerNotificationTopicCreate('news');
 
   const refferal = Refferal.getAll().filtered('isUsed = false');
 
@@ -52,22 +57,5 @@ export async function onAppStarted() {
     }
   }
 
-  if (isAfter(new Date(), app.snoozeBackup)) {
-    const mnemonics = await ProviderMnemonicReactNative.getAccounts();
-
-    if (isFeatureEnabled(Feature.mpc)) {
-      const mpc = await ProviderMpcReactNative.getAccounts();
-      if (mnemonics.length && !mpc.length) {
-        navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});
-        return;
-      }
-
-      if (mpc.length) {
-        app.emit(Events.onWalletMpcCheck, app.snoozeBackup);
-      }
-    }
-    if (mnemonics.length) {
-      app.emit(Events.onWalletMnemonicCheck, app.snoozeBackup);
-    }
-  }
+  await onAppBackup();
 }

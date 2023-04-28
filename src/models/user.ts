@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
-import {addMinutes, addSeconds, isAfter, subSeconds} from 'date-fns';
+import {addSeconds, isAfter, subSeconds} from 'date-fns';
 import {AppState, Appearance, StatusBar} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -16,7 +16,6 @@ import {
   MAIN_NETWORK,
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
-  SNOOZE_WALLET_BACKUP_MINUTES,
   TEST_NETWORK,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables/common';
@@ -37,9 +36,6 @@ export const UserSchema = {
     notifications: 'bool?',
     subscription: 'string?',
     isDeveloper: {type: 'bool', default: false},
-    isGoogleSignedIn: 'bool?',
-    lastSyncNews: 'date?',
-    isNewNews: {type: 'bool', default: false},
   },
   primaryKey: 'username',
 };
@@ -57,10 +53,7 @@ export type UserType = {
   theme: AppTheme;
   notifications: boolean | null;
   subscription: string | null;
-  isGoogleSignedIn: boolean | null;
   isDeveloper: boolean | null;
-  isNewNews: boolean | null;
-  lastSyncNews: Date | null;
 };
 
 export class User extends EventEmitter {
@@ -192,16 +185,6 @@ export class User extends EventEmitter {
     });
   }
 
-  get isGoogleSignedIn() {
-    return this._raw.isGoogleSignedIn ?? false;
-  }
-
-  set isGoogleSignedIn(value) {
-    realm.write(() => {
-      this._raw.isGoogleSignedIn = value;
-    });
-  }
-
   get onboarded() {
     return this._raw.onboarded ?? false;
   }
@@ -232,10 +215,6 @@ export class User extends EventEmitter {
     }
 
     return !this.pinBanned;
-  }
-
-  get lastSyncNews() {
-    return this._raw.lastSyncNews;
   }
 
   static create() {
@@ -321,36 +300,5 @@ export class User extends EventEmitter {
       this.last_activity <
       subSeconds(new Date(), USER_LAST_ACTIVITY_TIMEOUT_SECONDS)
     );
-  }
-
-  setSnoozeBackup() {
-    realm.write(() => {
-      this._raw.snoozeBackup = addMinutes(
-        new Date(),
-        SNOOZE_WALLET_BACKUP_MINUTES,
-      );
-    });
-  }
-
-  touchLastSyncNews() {
-    realm.write(() => {
-      this._raw.lastSyncNews = new Date();
-    });
-  }
-
-  get isNewNews() {
-    return this._raw.isNewNews || false;
-  }
-
-  set isNewNews(value) {
-    realm.write(() => {
-      this._raw.isNewNews = value;
-    });
-  }
-
-  maybeIsNewNews(value: boolean) {
-    realm.write(() => {
-      this._raw.isNewNews = this.isNewNews || value;
-    });
   }
 }
