@@ -13,6 +13,7 @@ export async function onTransactionCreate(
     block?: string;
     from: string;
     to?: string;
+    chainId: string | number;
     value: BigNumber;
     timeStamp?: number | string;
     confirmations?: number | string;
@@ -44,17 +45,14 @@ export async function onTransactionCreate(
     }
   }
 
-  if (tx.to) {
+  if (tx.to && tx.chainId) {
     await awaitForEventDone(
       Events.onAddressBookCreate,
       tx.to.toLowerCase(),
-      String(provider.ethChainId),
+      tx.chainId,
     );
 
-    const addressBook = AddressBook.getByAddressAndChainId(
-      tx.to,
-      String(provider.ethChainId),
-    );
+    const addressBook = AddressBook.getByAddressAndChainId(tx.to, tx.chainId);
 
     if (addressBook && addressBook.type === AddressBookType.contract) {
       await awaitForEventDone(Events.onAddressBookSync, addressBook.id);

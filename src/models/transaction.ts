@@ -21,6 +21,7 @@ export class Transaction extends Realm.Object {
       createdAt: {type: 'date', default: () => new Date()},
       confirmed: {type: 'bool', default: false},
       providerId: 'string',
+      chainId: 'string',
     },
     primaryKey: 'hash',
   };
@@ -36,6 +37,7 @@ export class Transaction extends Realm.Object {
   createdAt!: Date;
   confirmed!: boolean;
   providerId!: string;
+  chainId!: string;
 
   get feeFormatted() {
     return this.fee.toFixed(15);
@@ -92,6 +94,7 @@ export class Transaction extends Realm.Object {
       from: string;
       to?: string;
       value: BigNumber;
+      chainId: string | number;
       timeStamp?: number | string;
       confirmations?: number | string;
       contractAddress?: string;
@@ -118,6 +121,7 @@ export class Transaction extends Realm.Object {
           value: parseFloat(utils.formatEther(transaction.value)),
           fee: fee,
           providerId,
+          chainId: String(transaction.chainId),
           createdAt: exists
             ? exists.createdAt
             : transaction.timeStamp &&

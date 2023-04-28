@@ -50,7 +50,7 @@ async function loadTransactionsFromExplorerWithProvider(
     return rows.result
       .filter((row: any) => !Transaction.getById(row.hash))
       .map((row: any) => ({
-        row,
+        row: {...row, chainId: String(p?.ethChainId)},
         providerId,
         fee: calcFee(row.gasPrice, row.gasUsed),
       }));
