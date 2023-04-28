@@ -330,7 +330,7 @@ export class User extends EventEmitter {
     });
   }
 
-  setLastSyncNews() {
+  touchLastSyncNews() {
     realm.write(() => {
       this._raw.lastSyncNews = new Date();
     });
