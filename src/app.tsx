@@ -24,7 +24,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
-import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
+import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {AppContext, WalletsContext, app, wallets} from '@app/contexts';
 import {Events} from '@app/events';
@@ -35,12 +35,13 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {AddressBook} from '@app/models/address-book';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
+import {NewsScreen} from '@app/screens/news';
 import {NewsDetailScreen} from '@app/screens/news-detail';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
@@ -49,7 +50,6 @@ import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
-import {WalletConnect} from '@app/services/wallet-connect';
 import {
   ActionSheetType,
   AppTheme,
@@ -145,12 +145,12 @@ const withoutHeader = {
   headerShown: false,
 };
 
-const newsDetails = {
+const newsOptions = {
+  title: getText(I18N.newsTitle),
   headerShown: true,
   header: PopupHeader,
-  headerLeft: SpacerPopupButton,
-  headerRight: DismissPopupButton,
-  presentation: 'modal' as StackPresentationTypes,
+  headerLeft: GoBackPopupButton,
+  headerRight: SpacerPopupButton,
 };
 
 export const App = () => {
@@ -162,22 +162,12 @@ export const App = () => {
   );
 
   useEffect(() => {
-    console.log(
-      '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
-      AddressBook.getById(
-        '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
-      )?.toJSON(),
-    );
-  }, []);
-
-  useEffect(() => {
     showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => app.init())
       .then(() => migrationWallets())
       .then(() => awaitForEventDone(Events.onAppLoggedId))
-      .then(() => WalletConnect.instance.init())
       .catch(e => {
         switch (e) {
           case 'user_not_found':
@@ -309,11 +299,6 @@ export const App = () => {
                 name="backupNotification"
                 component={BackupNotificationScreen}
                 options={actionsSheet}
-              />
-              <Stack.Screen
-                name="newsDetail"
-                component={NewsDetailScreen}
-                options={newsDetails}
               />
               <Stack.Screen
                 name="backupMpcNotification"
@@ -459,7 +444,17 @@ export const App = () => {
                   }}
                   component={SettingsSecurityScreen}
                 />
+                <Stack.Screen
+                  name="news"
+                  component={NewsScreen}
+                  options={newsOptions}
+                />
               </Stack.Group>
+              <Stack.Screen
+                name="newsDetail"
+                component={NewsDetailScreen}
+                options={getNewsDetailTitle}
+              />
               <Stack.Group screenOptions={screenOptions}>
                 <Stack.Screen
                   name="stakingValidators"

@@ -433,6 +433,7 @@ export type RootStackParamList = {
   newsDetail: {
     id: string;
   };
+  news: undefined;
 };
 
 export type StackPresentationTypes =
@@ -673,3 +674,15 @@ export interface RemoteMessage {
   messageId: string;
   notification: {body: string; title: string};
 }
+
+export type NewsRow = {
+  id: string;
+  title: string;
+  preview: string;
+  description: string;
+  content: string;
+  status: string;
+  published_at: string;
+  updated_at: string;
+  created_at: string;
+};

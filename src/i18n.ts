@@ -586,6 +586,7 @@ export enum I18N {
   claimOnMainnetDescription,
   claimOnMainnetChange,
   claimOnMainnetStay,
+  newsTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1289,4 +1290,5 @@ const en: Record<I18N, string> = {
     'You will be able to see the received funds by going to mainnet',
   [I18N.claimOnMainnetChange]: 'Go to MainNet',
   [I18N.claimOnMainnetStay]: 'Stay on {{network}}',
+  [I18N.newsTitle]: 'News',
 };

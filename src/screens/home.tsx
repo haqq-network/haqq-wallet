@@ -10,6 +10,7 @@ import {Color} from '@app/colors';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
+import {NewsButton} from '@app/components/news-button';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {useUser} from '@app/hooks';
 import {Provider} from '@app/models/provider';
@@ -52,6 +53,7 @@ const tabBarIcon = (route: string) => (props: {focused: boolean}) =>
 
 const feedOptions = {
   headerRight: QrScannerButton,
+  headerLeft: NewsButton,
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 

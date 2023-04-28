@@ -49,7 +49,13 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       ) : (
         <SpacerPopupButton />
       )}
-      <Text t8 center color={Color.textBase1}>
+      <Text
+        t8
+        center
+        color={Color.textBase1}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={page.text}>
         {options.title}
       </Text>
       {options.headerRight ? options.headerRight({}) : <SpacerPopupButton />}
@@ -65,5 +71,9 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
+  },
+  text: {
+    flex: 1,
+    marginHorizontal: 8,
   },
 });
