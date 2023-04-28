@@ -39,7 +39,6 @@ import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {AddressBook} from '@app/models/address-book';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
 import {NewsScreen} from '@app/screens/news';
@@ -163,15 +162,6 @@ export const App = () => {
   );
 
   useEffect(() => {
-    console.log(
-      '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
-      AddressBook.getById(
-        '0xb641ecddde1c0a9cc83b70b15ec9789c1365b3d2-54211',
-      )?.toJSON(),
-    );
-  }, []);
-
-  useEffect(() => {
     showModal('splash');
     sleep(150)
       .then(() => SplashScreen.hide())
@@ -188,7 +178,6 @@ export const App = () => {
         }
       })
       .finally(async () => {
-        console.log('app started');
         await awaitForEventDone(Events.onAppStarted);
         hideModal();
         setInitialized(true);

@@ -44,7 +44,7 @@ export const ProposalDepositFinish = ({
       <View style={styles.sub}>
         <LottieWrap
           source={require('@assets/animations/transaction-finish.json')}
-          style={styles.imageWrapper}
+          style={styles.image}
           autoPlay
           loop={false}
         />
@@ -105,7 +105,7 @@ const styles = createTheme({
     marginVertical: 12,
     marginTop: 56,
   },
-  imageWrapper: {width: 140, height: 140},
+  image: {width: 140, height: 140},
   title: {
     marginTop: 32,
     marginBottom: 34,

@@ -39,7 +39,7 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
       <View style={styles.animation}>
         <LottieWrap
           source={animation}
-          style={styles.imageWrapper}
+          style={styles.image}
           autoPlay
           resizeMode="center"
           loop
@@ -88,7 +88,7 @@ const styles = createTheme({
     marginHorizontal: 30,
     marginBottom: 16,
   },
-  imageWrapper: {
+  image: {
     height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355) - 20,
     top: -10,
   },

@@ -31,7 +31,7 @@ export const LedgerLocked = ({onClose}: {onClose: () => void}) => {
           <Spacer centered minHeight={142}>
             <Image
               source={require('@assets/images/ledger-locked.png')}
-              style={page.imageWrapper}
+              style={page.image}
             />
           </Spacer>
           <Button
@@ -59,7 +59,7 @@ const page = createTheme({
     marginBottom: 40,
     padding: 24,
   },
-  imageWrapper: {
+  image: {
     maxWidth: '100%',
   },
 });

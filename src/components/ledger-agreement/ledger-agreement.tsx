@@ -34,12 +34,7 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
   return (
     <PopupContainer style={page.container}>
       <View style={page.animation}>
-        <LottieWrap
-          source={lottieAnimation}
-          style={page.imageWrapper}
-          autoPlay
-          loop
-        />
+        <LottieWrap source={lottieAnimation} style={page.image} autoPlay loop />
       </View>
       <Text t4 center style={page.title} i18n={I18N.ledgerAgreementTitle} />
       <Text
@@ -83,7 +78,7 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 16,
   },
-  imageWrapper: {
+  image: {
     height: Math.min(WINDOW_WIDTH, 330) - 20,
   },
 });

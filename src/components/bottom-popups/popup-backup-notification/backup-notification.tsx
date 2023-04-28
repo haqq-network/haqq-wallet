@@ -53,7 +53,7 @@ export const BackupNotification = ({
         <Image
           resizeMode="contain"
           source={warningImage}
-          style={styles.imageWrapper}
+          style={styles.image}
         />
       </View>
       <Text
@@ -102,8 +102,10 @@ const styles = createTheme({
     marginBottom: 8,
   },
   margin: {marginVertical: 8},
-  imageWrapper: {
+  image: {
     width: Dimensions.get('window').width - 80,
+  },
+  imageWrapper: {
     backgroundColor: Color.bg1,
 
     marginBottom: 20,

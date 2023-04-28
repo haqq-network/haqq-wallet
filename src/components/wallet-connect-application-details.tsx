@@ -64,7 +64,7 @@ export const WalletConnectApplicationDetails = ({
         style={styles.scroll}
         contentContainerStyle={styles.scrollContainer}>
         <Spacer height={42} />
-        <Image style={styles.imageWrapper} source={imageSource} />
+        <Image style={styles.image} source={imageSource} />
 
         <Spacer height={16} />
         <Text t5 children={metadata?.name} />
@@ -111,7 +111,7 @@ export const WalletConnectApplicationDetails = ({
 };
 
 const styles = createTheme({
-  imageWrapper: {
+  image: {
     width: 64,
     height: 64,
     borderRadius: 16,
