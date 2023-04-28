@@ -31,10 +31,11 @@ export const SignUpStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
+        console.log('createStoreWallet 1');
         const provider = await getProviderForNewWallet(route.params);
-
+        console.log('createStoreWallet 2', provider.getIdentifier());
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
-
+        console.log('createStoreWallet 3', accountWallets.length);
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
           const segments = wallet.path?.split('/') ?? ['0'];
           return Math.max(
@@ -42,23 +43,23 @@ export const SignUpStoreWalletScreen = () => {
             parseInt(segments[segments.length - 1], 10) + 1,
           );
         }, 0);
-
+        console.log('createStoreWallet 4', nextHdPathIndex);
         const hdPath = `${ETH_HD_SHORT_PATH}/${nextHdPathIndex}`;
-
+        console.log('createStoreWallet 5', hdPath);
         const name =
           wallets.getSize() === 0
             ? MAIN_ACCOUNT_NAME
             : getText(I18N.signupStoreWalletAccountNumber, {
                 number: `${wallets.getSize() + 1}`,
               });
-
+        console.log('createStoreWallet 6', name);
         const {address} = await provider.getAccountInfo(hdPath);
-
+        console.log('createStoreWallet 7', address);
         const type =
           provider instanceof ProviderMpcReactNative
             ? WalletType.mpc
             : WalletType.mnemonic;
-
+        console.log('createStoreWallet 8', type);
         await wallets.addWallet(
           {
             address,
@@ -68,7 +69,7 @@ export const SignUpStoreWalletScreen = () => {
           },
           name,
         );
-
+        console.log('createStoreWallet 9');
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {

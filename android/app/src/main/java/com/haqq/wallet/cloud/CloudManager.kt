@@ -109,7 +109,7 @@ class CloudManager(reactContext: ReactApplicationContext) :
       q = "name='${key}'"
     }.execute()
 
-    if (result.files.size > 1) {
+    if (result.files.size >= 1) {
       return result.files[0].id
     }
 
