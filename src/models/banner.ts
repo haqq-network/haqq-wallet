@@ -16,7 +16,11 @@ export class BannerButton extends Realm.Object {
   };
   id!: UUID;
   title!: string;
-  event!: 'claimCode' | 'close';
+  event!:
+    | 'claimCode'
+    | 'close'
+    | 'notificationsTurnOn'
+    | 'notificationsTopicSubscribe';
   params!: object;
   color!: string;
   backgroundColor!: string;
@@ -45,7 +49,7 @@ export class Banner extends Realm.Object {
     primaryKey: 'id',
   };
   id!: string;
-  type!: 'claimCode';
+  type!: 'claimCode' | 'notifications' | 'notificationsTopic';
   title!: string;
   description: string;
   buttons: BannerButton[];
@@ -83,6 +87,16 @@ export class Banner extends Realm.Object {
     if (obj) {
       realm.write(() => {
         realm.delete(obj);
+      });
+    }
+  }
+
+  static removeAll() {
+    const items = Banner.getAll();
+
+    for (const item of items) {
+      realm.write(() => {
+        realm.delete(item);
       });
     }
   }

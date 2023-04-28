@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 
 import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {addMinutes} from 'date-fns';
 
 import {
   BackupMpcNotification,
@@ -9,8 +10,10 @@ import {
 import {Events} from '@app/events';
 import {captureException, showModal} from '@app/helpers';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {VariablesDate} from '@app/models/variables-date';
 import {Cloud} from '@app/services/cloud';
 import {GoogleDrive} from '@app/services/google-drive';
+import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
 export const BackupMpcNotificationScreen = () => {
   const {goBack} = useTypedNavigation();
@@ -49,13 +52,17 @@ export const BackupMpcNotificationScreen = () => {
 
   const onClickSkip = useCallback(
     (onDone: () => void) => {
-      app.setSnoozeBackup();
+      VariablesDate.set(
+        'appBackupSnooze',
+        addMinutes(new Date(), SNOOZE_WALLET_BACKUP_MINUTES),
+      );
+
       goBack();
       onDone();
 
       return Promise.resolve();
     },
-    [app, goBack],
+    [goBack],
   );
 
   return (

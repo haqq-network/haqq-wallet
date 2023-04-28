@@ -3,15 +3,15 @@ import {useCallback, useEffect, useState} from 'react';
 import {Collection, CollectionChangeSet} from 'realm';
 
 import {News as NewsComponent} from '@app/components/news';
-import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
+import {VariablesBool} from '@app/models/variables-bool';
 
 export const NewsScreen = () => {
   const navigation = useTypedNavigation();
   const [rows, setRows] = useState(News.getAll().snapshot());
   useEffect(() => {
-    app.getUser().isNewNews = false;
+    VariablesBool.set('isNewNews', false);
 
     const onChange = (
       collection: Collection<News>,

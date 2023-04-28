@@ -6,6 +6,8 @@ import {Color} from '@app/colors';
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
+import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
+import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
@@ -133,6 +135,15 @@ export const WalletsWrapper = () => {
             break;
           case 'close':
             await onBannerSnoozeUntil(id);
+            break;
+          case 'notificationsTurnOn':
+            await onBannerNotificationsTurnOn(id);
+            break;
+          case 'notificationsTopicSubscribe':
+            await onBannerNotificationsTopicSubscribe(
+              id,
+              button.params as {topic: string},
+            );
             break;
         }
       } catch (e) {
