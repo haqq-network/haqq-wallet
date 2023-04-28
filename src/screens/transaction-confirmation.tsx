@@ -79,7 +79,7 @@ export const TransactionConfirmationScreen = () => {
 
         if (transaction) {
           await awaitForEventDone(
-            Events.onAddressBookCreate,
+            Events.onTransactionCreate,
             transaction,
             user.providerId,
             fee,

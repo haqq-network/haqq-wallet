@@ -42,7 +42,7 @@ export const realm = new Realm({
     NftCollection,
     AddressBook,
   ],
-  schemaVersion: 49,
+  schemaVersion: 50,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -311,6 +311,32 @@ export const realm = new Realm({
         if (oldObject.to !== null) {
           newObject.to = oldObject.to.toLowerCase();
         }
+      }
+    }
+
+    if (oldRealm.schemaVersion < 50) {
+      const oldObjects = oldRealm.objects<{
+        providerId: string;
+      }>('Transaction');
+
+      const newObjects = newRealm.objects<{
+        chainId: string;
+      }>('Transaction');
+
+      const chainIds = new Map();
+
+      const providers = oldRealm.objects<{
+        id: string;
+        ethChainId: number;
+      }>('Provider');
+
+      for (const provider of providers) {
+        chainIds.set(provider.id, String(provider.ethChainId));
+      }
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.chainId = chainIds.get(oldObjects[objectIndex].providerId);
       }
     }
   },

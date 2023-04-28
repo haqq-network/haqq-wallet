@@ -23,4 +23,5 @@ declare module '@env' {
   export const IS_MPC_ENABLED: string;
   export const AIRDROP_TESTEDGE2_URL: string;
   export const AIRDROP_MAINNET_URL: string;
+  export const ENABLE_SKIP_PIN_ON_LOGIN: string;
 }
