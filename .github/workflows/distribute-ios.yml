@@ -84,6 +84,7 @@ jobs:
           echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
           echo "AIRDROP_TESTEDGE2_URL=${{secrets.AIRDROP_TESTEDGE2_URL}}" >> .env
           echo "AIRDROP_MAINNET_URL=${{secrets.AIRDROP_MAINNET_URL}}" >> .env
+          echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
 
       - name: Execute build
         run: |
