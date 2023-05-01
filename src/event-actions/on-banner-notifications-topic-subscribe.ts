@@ -4,9 +4,7 @@ import {PushNotifications} from '@app/services/push-notifications';
 
 export async function onBannerNotificationsTopicSubscribe(
   id: string,
-  params: {
-    topic: string;
-  },
+  topic: string,
 ) {
   const banner = Banner.getById(id);
 
@@ -14,9 +12,9 @@ export async function onBannerNotificationsTopicSubscribe(
     throw new Error('Banner not found');
   }
 
-  await PushNotifications.instance.subscribeToTopic(params.topic);
+  await PushNotifications.instance.subscribeToTopic(topic);
 
-  VariablesBool.set(`notificationsTopic:${params.topic}`, true);
+  VariablesBool.set(`notificationsTopic:${topic}`, true);
 
   Banner.remove(id);
 }

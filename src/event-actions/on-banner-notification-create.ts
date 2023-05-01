@@ -19,18 +19,12 @@ export async function onBannerNotificationCreate() {
   Banner.create({
     id: 'notifications',
     title: 'Wallet Notifications',
+    description: 'You will be notified of sent and received transactions',
+    descriptionColor: getColor(Color.textBase3),
     type: 'notifications',
-    buttons: [
-      {
-        id: new Realm.BSON.UUID(),
-        title: 'Turn on',
-        event: 'notificationsTurnOn',
-        params: {},
-        color: getColor(Color.textGreen1),
-        backgroundColor: getColor(Color.bg2),
-      },
-    ],
     backgroundColorFrom: '#1B6EE5',
     backgroundColorTo: '#2C8EEB',
+    defaultEvent: 'notificationsTurnOn',
+    closeEvent: 'notificationsSnooze',
   });
 }

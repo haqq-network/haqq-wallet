@@ -5,14 +5,15 @@ import {Animated, ScrollView, View, useWindowDimensions} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
+import {Banners} from '@app/components/banners/banners';
 import {CarouselItem} from '@app/components/carousel-item';
-import {HomeBanner} from '@app/components/home-banner';
+import {HomeBannerProps} from '@app/components/home-banner';
 import {Icon, Text} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Banner, BannerButton} from '@app/models/banner';
+import {Banner} from '@app/models/banner';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
@@ -27,7 +28,7 @@ export type WalletsProps = {
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
-  onPressBanner: (id: string, button: BannerButton) => Promise<void>;
+  onPressBanner: HomeBannerProps['onPress'];
   onPressAccountInfo: (address: string) => void;
 };
 export const Wallets = ({
@@ -114,24 +115,13 @@ export const Wallets = ({
           <Icon i12 name="plus_mid" color={Color.graphicBase1} />
         </Animated.View>
       </View>
-      {banners.map(banner => (
-        <HomeBanner
-          key={banner.id}
-          banner={banner}
-          onPress={onPressBanner}
-          style={styles.rewardBanner}
-        />
-      ))}
+      <Banners banners={banners} onPressBanner={onPressBanner} />
       <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );
 };
 
 const styles = createTheme({
-  rewardBanner: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-  },
   container: {
     paddingTop: 24,
   },
