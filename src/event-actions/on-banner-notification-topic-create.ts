@@ -1,28 +1,29 @@
 import {isAfter} from 'date-fns';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {Banner} from '@app/models/banner';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 
 const topics: Record<string, any> = {
   news: {
-    title: 'IslamicCoin News',
+    title: 'Subscribe to the news',
+    description: 'Get the latest news on IslamicCoin and our crypto wallet',
     type: 'notificationsTopic',
-    buttons: [
-      {
-        id: new Realm.BSON.UUID(),
-        title: 'Subscribe',
-        event: 'notificationsTopicSubscribe',
-        params: {
-          topic: 'news',
-        },
-        color: getColor(Color.textGreen1),
-        backgroundColor: getColor(Color.bg2),
-      },
-    ],
-    backgroundColorFrom: '#1B6EE5',
-    backgroundColorTo: '#2C8EEB',
+    backgroundColorFrom: 'transparent',
+    backgroundColorTo: 'transparent',
+    backgroundBorder: Color.graphicSecond1,
+    titleColor: Color.textBase1,
+    descriptionColor: Color.textBase1,
+    closeButtonColor: Color.graphicBase2,
+    defaultEvent: 'notificationsTopicSubscribe',
+    defaultParams: {
+      topic: 'news',
+    },
+    closeEvent: 'notificationsTopicSnooze',
+    closeParams: {
+      topic: 'news',
+    },
   },
 };
 
@@ -33,9 +34,9 @@ export async function onBannerNotificationTopicCreate(topic: Keys) {
     return;
   }
 
-  if (VariablesBool.get(`notificationsTopic:${topic}`)) {
-    return;
-  }
+  // if (VariablesBool.get(`notificationsTopic:${topic}`)) {
+  //   return;
+  // }
 
   const snoozed = VariablesDate.get(`snoozeNotificationsTopic:${topic}`);
 

@@ -6,6 +6,8 @@ import {Color} from '@app/colors';
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
+import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
+import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
@@ -14,7 +16,6 @@ import {useTypedNavigation, useWallets} from '@app/hooks';
 import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {I18N, getText} from '@app/i18n';
-import {BannerButton} from '@app/models/banner';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
@@ -127,9 +128,9 @@ export const WalletsWrapper = () => {
   }, [navigation]);
 
   const onPressClaimReward = useCallback(
-    async (id: string, button: BannerButton) => {
+    async (id: string, event: string, params: Record<string, any> = {}) => {
       try {
-        switch (button.event) {
+        switch (event) {
           case 'claimCode':
             await onBannerClaimAirdrop(id);
             break;
@@ -139,11 +140,14 @@ export const WalletsWrapper = () => {
           case 'notificationsTurnOn':
             await onBannerNotificationsTurnOn(id);
             break;
+          case 'notificationsSnooze':
+            await onBannerNotificationsSnooze(id);
+            break;
           case 'notificationsTopicSubscribe':
-            await onBannerNotificationsTopicSubscribe(
-              id,
-              button.params as {topic: string},
-            );
+            await onBannerNotificationsTopicSubscribe(id, params.topic ?? '');
+            break;
+          case 'notificationsTopicSnooze':
+            await onBannerNotificationsTopicSnooze(id, params.topic ?? '');
             break;
         }
       } catch (e) {

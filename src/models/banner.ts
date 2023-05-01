@@ -1,3 +1,4 @@
+import {Color} from '@app/colors';
 import {realm} from '@app/models/index';
 
 import UUID = Realm.BSON.UUID;
@@ -42,9 +43,15 @@ export class Banner extends Realm.Object {
       snoozedUntil: 'date?',
       titleColor: 'string?',
       descriptionColor: 'string?',
+      closeButtonColor: 'string?',
       backgroundColorFrom: 'string?',
       backgroundColorTo: 'string?',
+      backgroundBorder: 'string?',
       backgroundImage: 'string?',
+      defaultEvent: 'string?',
+      defaultParams: 'string{}',
+      closeEvent: 'string?',
+      closeParams: 'string{}',
     },
     primaryKey: 'id',
   };
@@ -53,27 +60,37 @@ export class Banner extends Realm.Object {
   title!: string;
   description: string;
   buttons: BannerButton[];
-  titleColor: string;
-  descriptionColor: string;
+  titleColor: string | Color;
+  descriptionColor: string | Color;
   backgroundColorFrom: string;
   backgroundColorTo: string;
   backgroundImage: string;
+  backgroundBorder: string | Color;
+  closeButtonColor: string | Color;
   isUsed: boolean;
   snoozedUntil: Date;
+  defaultEvent: string;
+  defaultParams: object;
+  closeEvent: string;
+  closeParams: object;
 
   static create(
     params: Omit<Partial<Banner>, 'buttons'> & {
       id: string;
-      buttons: Array<Partial<BannerButton>>;
+      buttons?: Array<Partial<BannerButton>>;
     },
   ) {
     const exists = Banner.getById(params.id);
+
+    const buttons = exists ? exists.buttons : [];
+
     realm.write(() => {
       realm.create(
         Banner.schema.name,
         {
           ...exists?.toJSON(),
           ...params,
+          buttons: params.buttons || buttons,
         },
         Realm.UpdateMode.Modified,
       );
