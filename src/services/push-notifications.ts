@@ -1,7 +1,6 @@
 import {EventEmitter} from 'events';
 
-import {PUSH_NOTIFICATIONS_URL} from '@env';
-import {jsonrpcRequest} from '@haqq/shared-react-native';
+import {HAQQ_BACKEND} from '@env';
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
@@ -11,16 +10,18 @@ import {VariablesString} from '@app/models/variables-string';
 
 export class PushNotifications extends EventEmitter {
   static instance = new PushNotifications();
-  path: string = PUSH_NOTIFICATIONS_URL;
+  path: string = HAQQ_BACKEND;
 
   constructor() {
     super();
 
     messaging().onMessage(remoteMessage => {
+      console.log('onMessage', remoteMessage);
       app.emit(Events.onPushNotification, remoteMessage);
     });
 
     messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log('onNotificationOpenedApp', remoteMessage);
       app.emit(Events.onPushNotification, remoteMessage);
     });
   }
@@ -70,31 +71,75 @@ export class PushNotifications extends EventEmitter {
     return `${this.path}/${subPath}`;
   }
 
-  createNotificationToken<T extends object>(token: string) {
-    return jsonrpcRequest<T>(this.path, 'createNotificationToken', [token]);
+  async createNotificationToken<T extends object>(token: string) {
+    const req = await fetch(`${this.path}notification_token`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        token,
+      }),
+    });
+
+    return (await req.json()) as T;
   }
 
-  async removeNotificationToken<T extends object>(token: string) {
-    return jsonrpcRequest<T>(this.path, 'removeNotificationToken', [token]);
+  async removeNotificationToken<T extends object>(token_id: string) {
+    const req = await fetch(`${this.path}notification_token/${token_id}`, {
+      method: 'DELETE',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+    });
+
+    return (await req.json()) as T;
   }
 
   async createNotificationSubscription<T extends object>(
     token_id: string,
     address: string,
   ) {
-    return jsonrpcRequest<T>(this.path, 'createNotificationSubscription', [
-      token_id,
-      address,
-    ]);
+    const req = await fetch(`${this.path}notification_subscription`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        token_id,
+        address,
+      }),
+    });
+
+    return (await req.json()) as T;
   }
 
   async unsubscribeAddress<T extends object>(
     token_id: string,
     address: string,
   ) {
-    return jsonrpcRequest<T>(this.path, 'unsubscribeAddress', [
-      token_id,
-      address,
-    ]);
+    const req = await fetch(
+      `${this.path}notification_subscription/${token_id}/${address}`,
+      {
+        method: 'DELETE',
+        headers: {
+          accept: 'application/json, text/plain, */*',
+          'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+          connection: 'keep-alive',
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      },
+    );
+
+    return (await req.json()) as T;
   }
 }

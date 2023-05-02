@@ -16,10 +16,7 @@ const topics: Record<string, any> = {
     titleColor: Color.textBase1,
     descriptionColor: Color.textBase1,
     closeButtonColor: Color.graphicBase2,
-    defaultEvent: 'notificationsTopicSubscribe',
-    defaultParams: {
-      topic: 'news',
-    },
+    defaultEvent: 'notificationNews',
     closeEvent: 'notificationsTopicSnooze',
     closeParams: {
       topic: 'news',
@@ -34,9 +31,9 @@ export async function onBannerNotificationTopicCreate(topic: Keys) {
     return;
   }
 
-  // if (VariablesBool.get(`notificationsTopic:${topic}`)) {
-  //   return;
-  // }
+  if (VariablesBool.get(`notificationsTopic:${topic}`)) {
+    return;
+  }
 
   const snoozed = VariablesDate.get(`snoozeNotificationsTopic:${topic}`);
 

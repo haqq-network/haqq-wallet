@@ -17,6 +17,7 @@ import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -332,6 +333,7 @@ class App extends EventEmitter {
             await this.auth();
             hideModal('splash');
           }
+          await awaitForEventDone(Events.onAppActive);
           break;
         case AppStatus.inactive:
           if (this.authenticated) {

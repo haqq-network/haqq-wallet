@@ -376,7 +376,12 @@ export type RootStackParamList = {
     amount: number;
     fee: number;
   };
-  notificationPopup: undefined;
+  notificationPopup: {
+    bannerId: string;
+  };
+  popupNotificationNews: {
+    bannerId: string;
+  };
   trackActivity: undefined;
   proposal: {
     id: number;

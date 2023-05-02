@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
 
@@ -11,9 +11,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {
@@ -25,14 +24,10 @@ export const NotificationPopup = ({
   onClickTurnOn,
   onClickNotNow,
 }: NotificationPopupProps) => {
-  const theme = useTheme();
-
-  const lottieAnimation = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('@assets/animations/notification-popup-dark.json');
-    }
-    return require('@assets/animations/notification-popup-light.json');
-  }, [theme]);
+  const lottieAnimation = useThemeSelector({
+    dark: require('@assets/animations/notification-popup-dark.json'),
+    light: require('@assets/animations/notification-popup-light.json'),
+  });
 
   return (
     <View style={styles.sub}>

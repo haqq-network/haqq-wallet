@@ -327,6 +327,10 @@ export enum I18N {
   popupNotificationDescription,
   popupNotificationTurnOn,
   popupNotificationNotNow,
+  popupNotificationNewsTitle,
+  popupNotificationNewsDescription,
+  popupNotificationNewsSubscribe,
+  popupNotificationNewsNotNow,
   popupProposalVoteTitle,
   popupProposalVoteDescription,
   proposalVoteResults,
@@ -1291,4 +1295,9 @@ const en: Record<I18N, string> = {
   [I18N.claimOnMainnetChange]: 'Go to MainNet',
   [I18N.claimOnMainnetStay]: 'Stay on {{network}}',
   [I18N.newsTitle]: 'News',
+  [I18N.popupNotificationNewsTitle]: 'Subscribe to IslamicCoin News',
+  [I18N.popupNotificationNewsDescription]:
+    'Get the latest news and updates about Islamic Coin and the ISLM Wallet',
+  [I18N.popupNotificationNewsSubscribe]: 'Turn on news notifications',
+  [I18N.popupNotificationNewsNotNow]: 'Not now',
 };
