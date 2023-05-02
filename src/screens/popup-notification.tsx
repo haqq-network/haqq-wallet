@@ -10,6 +10,8 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const PopupNotificationScreen = () => {
   const route = useTypedRoute<'popupNotification'>();
+  console.log('PopupNotificationScreen', route);
+
   const {goBack} = useTypedNavigation();
 
   const onClickTurnOn = useCallback(
