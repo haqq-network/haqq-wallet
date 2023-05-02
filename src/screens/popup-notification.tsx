@@ -4,11 +4,9 @@ import {
   BottomPopupContainer,
   NotificationPopup,
 } from '@app/components/bottom-popups';
-import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
 import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
+import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {Banner} from '@app/models/banner';
-import {PushNotifications} from '@app/services/push-notifications';
 
 export const PopupNotificationScreen = () => {
   const route = useTypedRoute<'popupNotification'>();
@@ -16,11 +14,7 @@ export const PopupNotificationScreen = () => {
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
-      await PushNotifications.instance.requestPermissions();
-
-      Banner.remove(route.params.bannerId);
-
-      await onBannerNotificationTopicCreate('news');
+      await onBannerNotificationsTurnOn(route.params.bannerId);
       close();
       goBack();
     },
