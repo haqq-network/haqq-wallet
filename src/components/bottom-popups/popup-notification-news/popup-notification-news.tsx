@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Alert, Dimensions, View} from 'react-native';
+import {Alert, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -14,7 +14,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_COLOR_1, WINDOW_WIDTH} from '@app/variables/common';
 
 export type PopupNotificationTopicProps = {
   onClickSubscribe: () => void;
@@ -100,7 +100,7 @@ const styles = createTheme({
   },
   margin: {marginVertical: 8},
   image: {
-    width: Dimensions.get('window').width - 80,
+    width: WINDOW_WIDTH - 80,
   },
   imageWrapper: {
     backgroundColor: Color.bg1,
