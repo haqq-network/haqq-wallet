@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {format} from 'date-fns';
 import {Image, TouchableWithoutFeedback, View} from 'react-native';
@@ -13,11 +13,24 @@ export type NewsRowProps = {
   onPress: (id: string) => void;
 };
 export const NewsRow = ({item, onPress}: NewsRowProps) => {
+  const preview = useMemo(() => {
+    if (!item.preview) {
+      return require('@assets/images/news-placeholder.png');
+    }
+
+    return {uri: item.preview};
+  }, [item.preview]);
+
+  const containerStyle = useMemo(
+    () => [styles.container, item.viewed && styles.viewed].filter(Boolean),
+    [item.viewed],
+  );
+
   return (
     <TouchableWithoutFeedback onPress={() => onPress(item.id)}>
-      <View style={styles.container}>
+      <View style={containerStyle}>
         <View style={styles.imageWrapper}>
-          <Image source={{uri: item.preview}} style={styles.image} />
+          <Image source={preview} style={styles.image} />
         </View>
         <View style={styles.description}>
           <Text t10 numberOfLines={2} ellipsizeMode="tail">
@@ -31,7 +44,7 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
             ellipsizeMode="tail">
             {item.description}
           </Text>
-          <Spacer height={2} />
+          <Spacer />
           <Text t17 color={Color.textBase2}>
             {format(item.publishedAt, 'ccc dd, yyyy')}
           </Text>
@@ -42,6 +55,9 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
 };
 
 const styles = createTheme({
+  viewed: {
+    opacity: 0.5,
+  },
   container: {
     paddingHorizontal: 14,
     paddingVertical: 16,

@@ -11,6 +11,13 @@ export const NewsDetailScreen = () => {
   const item = useMemo(() => News.getById(route.params.id), [route.params.id]);
 
   useEffect(() => {
+    const row = News.getById(route.params.id);
+    if (row) {
+      row.update({
+        viewed: true,
+      });
+    }
+
     const startTimestamp = Math.floor(new Date().getTime() / 1000);
 
     return () => {

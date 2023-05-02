@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {format} from 'date-fns';
 import {some} from 'lodash';
 import {Image, Linking, Platform} from 'react-native';
 import Markdown from 'react-native-markdown-package';
@@ -86,8 +87,6 @@ const rules = {
   },
   paragraph: {
     react: (node: NodeParagraph, output: Output, {...state}) => {
-      console.log('node', JSON.stringify(node, null, 2));
-
       if (some(node.content, {type: 'image'})) {
         return (
           <>
@@ -115,6 +114,10 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
     <PopupContainer style={styles.container}>
       <Text t3>{item.title}</Text>
       <Spacer height={12} />
+      <Text t17 color={Color.textBase2}>
+        {format(item.publishedAt, 'ccc dd, yyyy')}
+      </Text>
+      <Spacer height={20} />
       <Markdown
         rules={rules}
         styles={markdownStyle.collectiveMd}
