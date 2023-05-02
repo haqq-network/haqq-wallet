@@ -376,7 +376,7 @@ export type RootStackParamList = {
     amount: number;
     fee: number;
   };
-  notificationPopup: {
+  popupNotification: {
     bannerId: string;
   };
   popupNotificationNews: {

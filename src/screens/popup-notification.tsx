@@ -11,7 +11,7 @@ import {Banner} from '@app/models/banner';
 import {PushNotifications} from '@app/services/push-notifications';
 
 export const PopupNotificationScreen = () => {
-  const route = useTypedRoute<'notificationPopup'>();
+  const route = useTypedRoute<'popupNotification'>();
   const {goBack} = useTypedNavigation();
 
   const onClickTurnOn = useCallback(

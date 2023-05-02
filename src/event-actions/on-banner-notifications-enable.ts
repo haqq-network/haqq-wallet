@@ -8,7 +8,7 @@ export async function onBannerNotificationsEnable(id: string) {
     throw new Error('Banner not found');
   }
 
-  navigator.navigate('notificationPopup', {
+  navigator.navigate('popupNotification', {
     bannerId: id,
   });
 }

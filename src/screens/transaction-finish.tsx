@@ -80,7 +80,7 @@ export const TransactionFinishScreen = () => {
   useEffect(() => {
     const notificationsIsEnabled = false;
     if (!notificationsIsEnabled) {
-      getParent()?.navigate('notificationPopup');
+      getParent()?.navigate('popupNotification');
     }
   }, [getParent]);
 

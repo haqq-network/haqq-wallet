@@ -302,7 +302,7 @@ export const App = () => {
                 options={actionsSheet}
               />
               <Stack.Screen
-                name="notificationPopup"
+                name="popupNotification"
                 component={PopupNotificationScreen}
                 options={actionsSheet}
               />
