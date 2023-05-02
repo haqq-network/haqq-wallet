@@ -1,6 +1,5 @@
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
-import {Events} from '@app/events';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {onPushSubscriptionAdd} from '@app/event-actions/on-push-subscription-add';
 import {Banner} from '@app/models/banner';
 import {PushNotifications} from '@app/services/push-notifications';
 
@@ -15,6 +14,6 @@ export async function onBannerNotificationsTurnOn(id: string) {
 
   Banner.remove(id);
 
-  await awaitForEventDone(Events.onPushSubscriptionAdd);
+  await onPushSubscriptionAdd();
   await onBannerNotificationTopicCreate('news');
 }

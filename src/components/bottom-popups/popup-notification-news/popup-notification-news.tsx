@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {Alert, View} from 'react-native';
 
@@ -17,18 +17,26 @@ import {I18N, getText} from '@app/i18n';
 import {SHADOW_COLOR_1, WINDOW_WIDTH} from '@app/variables/common';
 
 export type PopupNotificationTopicProps = {
-  onClickSubscribe: () => void;
-  onClickNotNow: () => void;
+  onClickSubscribe: () => Promise<void>;
+  onClickNotNow: () => Promise<void>;
 };
 
 export const PopupNotificationNews = ({
   onClickSubscribe,
   onClickNotNow,
 }: PopupNotificationTopicProps) => {
+  const [inProgress, setInProgress] = useState(false);
+
   const animation = useThemeSelector({
     dark: require('@assets/animations/notification-news-popup-dark.json'),
     light: require('@assets/animations/notification-news-popup-light.json'),
   });
+
+  const onPressSubscribe = useCallback(async () => {
+    setInProgress(true);
+    await onClickSubscribe();
+    setInProgress(false);
+  }, [onClickSubscribe]);
 
   const onSkip = useCallback(() => {
     return Alert.alert(
@@ -69,9 +77,10 @@ export const PopupNotificationNews = ({
       <Button
         i18n={I18N.popupNotificationNewsSubscribe}
         variant={ButtonVariant.contained}
-        onPress={onClickSubscribe}
+        onPress={onPressSubscribe}
         style={styles.margin}
         size={ButtonSize.middle}
+        loading={inProgress}
       />
       <Button
         i18n={I18N.popupNotificationNewsNotNow}
