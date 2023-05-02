@@ -2,19 +2,19 @@ import React, {useCallback} from 'react';
 
 import {
   BottomPopupContainer,
-  NotificationPopup,
+  PopupNotificationNews,
 } from '@app/components/bottom-popups';
-import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
-import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
+import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
+import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
-export const PopupNotificationScreen = () => {
-  const route = useTypedRoute<'popupNotification'>();
+export const PopupNotificationNewsScreen = () => {
+  const route = useTypedRoute<'popupNotificationNews'>();
   const {goBack} = useTypedNavigation();
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTurnOn(route.params.bannerId);
+      await onBannerNotificationsTopicSubscribe(route.params.bannerId, 'news');
       close();
       goBack();
     },
@@ -23,7 +23,7 @@ export const PopupNotificationScreen = () => {
 
   const onClickNotNow = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsSnooze(route.params.bannerId);
+      await onBannerNotificationsTopicSnooze(route.params.bannerId, 'news');
       close();
       goBack();
     },
@@ -33,8 +33,8 @@ export const PopupNotificationScreen = () => {
   return (
     <BottomPopupContainer>
       {onClose => (
-        <NotificationPopup
-          onClickTurnOn={() => onClickTurnOn(onClose)}
+        <PopupNotificationNews
+          onClickSubscribe={() => onClickTurnOn(onClose)}
           onClickNotNow={() => onClickNotNow(onClose)}
         />
       )}

@@ -1,6 +1,7 @@
 import {app} from '@app/contexts';
 import {onAddressBookCreate} from '@app/event-actions/on-address-book-create';
 import {onAddressBookSync} from '@app/event-actions/on-address-book-sync';
+import {onAppActive} from '@app/event-actions/on-app-active';
 import {onAppLoggedIn} from '@app/event-actions/on-app-logged-in';
 import {onAppMnemonicBackup} from '@app/event-actions/on-app-mnemonic-backup';
 import {onAppProviderMpcBackup} from '@app/event-actions/on-app-provider-mpc-backup';
@@ -34,6 +35,7 @@ app.on(Events.onWalletRemove, onWalletRemove);
 app.on(Events.onPushSubscriptionAdd, onPushSubscriptionAdd);
 app.on(Events.onStakingSync, throttle(onStakingSync, 1000));
 app.on(Events.onTransactionsLoad, callbackWrapper(onTransactionsLoad));
+app.on(Events.onAppActive, callbackWrapper(onAppActive));
 app.on(Events.onAppStarted, callbackWrapper(onAppStarted));
 app.on(Events.onAppLoggedId, callbackWrapper(onAppLoggedIn));
 app.on(Events.onAppMnemonicBackup, onAppMnemonicBackup);

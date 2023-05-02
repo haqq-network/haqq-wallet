@@ -13,7 +13,10 @@ export async function onTransactionsLoad(address: string) {
         loadTransactionsFromExplorerWithProvider(address, provider.id),
       ),
     )
-  ).flat();
+  )
+    .flat()
+    .sort((a, b) => b.timeStamp - a.timeStamp)
+    .slice(0, 30);
 
   for (const row of rows) {
     await awaitForEventDone(
@@ -53,6 +56,7 @@ async function loadTransactionsFromExplorerWithProvider(
         row: {...row, chainId: String(p?.ethChainId)},
         providerId,
         fee: calcFee(row.gasPrice, row.gasUsed),
+        timeStamp: Number(row.timeStamp),
       }));
   } catch (e) {
     captureException(e, 'loadTransactionsFromExplorer');

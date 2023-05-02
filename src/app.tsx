@@ -24,8 +24,6 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color, getColor} from '@app/colors';
 import {PopupHeader} from '@app/components';
-import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
-import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {AppContext, WalletsContext, app, wallets} from '@app/contexts';
 import {Events} from '@app/events';
 import {
@@ -35,7 +33,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
+import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -45,6 +43,7 @@ import {NewsScreen} from '@app/screens/news';
 import {NewsDetailScreen} from '@app/screens/news-detail';
 import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
+import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
 import {ProposalScreen} from '@app/screens/proposal';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
@@ -70,7 +69,7 @@ import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
-import {NotificationPopupScreen} from './screens/popup-notification';
+import {PopupNotificationScreen} from './screens/popup-notification';
 import {TrackActivityScreen} from './screens/popup-track-activity';
 import {ProposalDepositScreen} from './screens/proposal-deposit';
 import {RestoreScreen} from './screens/restore';
@@ -143,14 +142,6 @@ const stackScreenOptions = {
 
 const withoutHeader = {
   headerShown: false,
-};
-
-const newsOptions = {
-  title: getText(I18N.newsTitle),
-  headerShown: true,
-  header: PopupHeader,
-  headerLeft: GoBackPopupButton,
-  headerRight: SpacerPopupButton,
 };
 
 export const App = () => {
@@ -311,8 +302,13 @@ export const App = () => {
                 options={actionsSheet}
               />
               <Stack.Screen
-                name="notificationPopup"
-                component={NotificationPopupScreen}
+                name="popupNotification"
+                component={PopupNotificationScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="popupNotificationNews"
+                component={PopupNotificationNewsScreen}
                 options={actionsSheet}
               />
               <Stack.Screen
@@ -324,6 +320,12 @@ export const App = () => {
                 name="transactionDetail"
                 component={TransactionDetailScreen}
                 options={actionsSheet}
+              />
+              <Stack.Screen name="news" component={NewsScreen} />
+              <Stack.Screen
+                name="newsDetail"
+                component={NewsDetailScreen}
+                options={getNewsDetailAppTitle}
               />
               <Stack.Group screenOptions={screenOptions}>
                 <Stack.Screen
@@ -444,17 +446,7 @@ export const App = () => {
                   }}
                   component={SettingsSecurityScreen}
                 />
-                <Stack.Screen
-                  name="news"
-                  component={NewsScreen}
-                  options={newsOptions}
-                />
               </Stack.Group>
-              <Stack.Screen
-                name="newsDetail"
-                component={NewsDetailScreen}
-                options={getNewsDetailTitle}
-              />
               <Stack.Group screenOptions={screenOptions}>
                 <Stack.Screen
                   name="stakingValidators"

@@ -6,7 +6,6 @@ import {AppState, Appearance, StatusBar} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -77,12 +76,6 @@ export class User extends EventEmitter {
             StatusBar.setBarStyle(
               obj.theme === AppTheme.dark ? 'light-content' : 'dark-content',
             );
-          }
-        }
-
-        if (changes.changedProperties.includes('subscription')) {
-          if (obj.subscription) {
-            app.emit(Events.onPushSubscriptionAdd);
           }
         }
       }

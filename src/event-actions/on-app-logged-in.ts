@@ -27,6 +27,7 @@ export async function onAppLoggedIn() {
 
   try {
     const lastSyncNews = VariablesDate.get('lastSyncNews');
+    console.log('lastSyncNews', lastSyncNews);
     const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
 
     const newsResp = await fetch(`${HAQQ_BACKEND}news${sync}`);
