@@ -699,7 +699,7 @@ const en: Record<I18N, string> = {
     'The app does not have access to your camera. Please go to your phone settings and allow the app to use camera. Without this, we will not be able to scan QR Code',
   [I18N.modalQRSendFunds]: 'Send funds from',
   [I18N.modalDetailsQRWarning]:
-    'Only ISLM related assets on HAQQ network are supported.',
+    'Only ISLM related assets on HAQQ Network are supported.',
   [I18N.onboardingFinishCreate]:
     'Congratulations!\nYou have successfully added a new account',
   [I18N.onboardingFinishRecover]:
