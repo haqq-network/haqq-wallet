@@ -506,7 +506,7 @@ PODS:
     - React-Core
   - react-native-image-picker (4.10.3):
     - React-Core
-  - react-native-netinfo (9.3.7):
+  - react-native-netinfo (9.3.8):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
@@ -1050,7 +1050,7 @@ SPEC CHECKSUMS:
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
-  react-native-netinfo: 2517ad504b3d303e90d7a431b0fcaef76d207983
+  react-native-netinfo: fbc23bc2fe217155d85f2f7e0644b1654df8029b
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
