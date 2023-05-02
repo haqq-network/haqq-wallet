@@ -39,7 +39,7 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
             ellipsizeMode="tail">
             {item.description}
           </Text>
-          <Spacer height={2} />
+          <Spacer />
           <Text t17 color={Color.textBase2}>
             {format(item.publishedAt, 'ccc dd, yyyy')}
           </Text>
