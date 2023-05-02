@@ -2,14 +2,13 @@ import React from 'react';
 
 import {format} from 'date-fns';
 import {some} from 'lodash';
-import {Image, Linking, Platform} from 'react-native';
+import {Image, Linking} from 'react-native';
 import Markdown from 'react-native-markdown-package';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {News} from '@app/models/news';
-import {FontT} from '@app/types';
 
 type NodeImage = {
   alt: string;
@@ -28,31 +27,16 @@ type NodeParagraph = {
   content: Node[];
 };
 
-type Node = NodeImage | NodeHeading | NodeParagraph;
+type NodeText = {
+  type: 'text';
+  content: string;
+};
+
+type Node = NodeImage | NodeHeading | NodeParagraph | NodeText;
 
 export type NewsDetailProps = {
   item: News;
 };
-
-const sfProTextBold700: FontT = Platform.select({
-  ios: {
-    fontFamily: 'SF Pro Text',
-    fontWeight: '700',
-  },
-  android: {
-    fontFamily: 'SF-ProText-Bold',
-  },
-});
-
-const sfProTextRegular400: FontT = Platform.select({
-  ios: {
-    fontFamily: 'SF Pro Display',
-    fontWeight: '400',
-  },
-  android: {
-    fontFamily: 'SF-Pro-Display-Regular',
-  },
-});
 
 type Output = (
   content: Node | Node[],
@@ -63,7 +47,7 @@ const rules = {
   heading: {
     react: (node: NodeHeading, output: Output, {...state}) => {
       return (
-        <Text t7 style={styles.heading}>
+        <Text t7 style={styles.heading} color={Color.textBase1}>
           {output(node.content, {
             ...state,
             withinText: true,
@@ -98,11 +82,24 @@ const rules = {
       }
 
       return (
-        <Text t11 style={styles.text}>
+        <Text t11 style={styles.paragraph} color={Color.textBase1}>
           {output(node.content, {
             ...state,
             withinParagraphWithImage: false,
           })}
+        </Text>
+      );
+    },
+  },
+  text: {
+    react: (node: NodeText, output: Output, {...state}) => {
+      let textStyle = {
+        ...(state.style || {}),
+      };
+
+      return (
+        <Text clean key={state.key} style={textStyle}>
+          {node.content}
         </Text>
       );
     },
@@ -120,7 +117,7 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
       <Spacer height={20} />
       <Markdown
         rules={rules}
-        styles={markdownStyle.collectiveMd}
+        styles={markdownStyle}
         onLink={(url: string) => Linking.openURL(url)}>
         {item.content}
       </Markdown>
@@ -140,49 +137,21 @@ const styles = createTheme({
     borderColor: Color.graphicSecond1,
   },
   heading: {marginBottom: 8, marginTop: 28},
-  text: {marginVertical: 8},
+  paragraph: {marginVertical: 8},
 });
 
-const markdownStyle = {
-  singleLineMd: {
-    view: {
-      alignSelf: 'stretch',
-    },
-
-    heading2: {
-      ...sfProTextBold700,
-      fontSize: 18,
-      lineHeight: 24,
-      color: Color.textBase1,
-    },
+const markdownStyle = createTheme({
+  // eslint-disable-next-line react-native/no-unused-styles
+  strong: {
+    textAlign: 'left',
   },
-  collectiveMd: createTheme({
-    // eslint-disable-next-line react-native/no-unused-styles
-    strong: {
-      textAlign: 'left',
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    blockQuoteSection: {
-      flexDirection: 'row',
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    blockQuoteSectionBar: {
-      width: 3,
-      marginRight: 15,
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    heading2: {
-      ...sfProTextBold700,
-      fontSize: 18,
-      lineHeight: 24,
-      color: Color.textBase1,
-    },
-    // eslint-disable-next-line react-native/no-unused-styles
-    text: {
-      ...sfProTextRegular400,
-      fontSize: 16,
-      lineHeight: 22,
-      color: Color.textBase1,
-    },
-  }),
-};
+  // eslint-disable-next-line react-native/no-unused-styles
+  blockQuoteSection: {
+    flexDirection: 'row',
+  },
+  // eslint-disable-next-line react-native/no-unused-styles
+  blockQuoteSectionBar: {
+    width: 3,
+    marginRight: 15,
+  },
+});
