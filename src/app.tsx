@@ -35,6 +35,7 @@ import {
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
+import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
@@ -210,11 +211,15 @@ export const App = () => {
     }
   }, [initialized]);
 
-  const onStateChange = useCallback(() => {
+  const onStateChange = useCallback(async () => {
     Sentry.addBreadcrumb({
       category: 'navigation',
       message: navigator.getCurrentRoute()?.name,
       level: 'info',
+    });
+
+    await trackEvent('navigation', {
+      path: navigator.getCurrentRoute()?.name,
     });
   }, []);
 
