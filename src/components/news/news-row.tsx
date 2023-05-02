@@ -15,7 +15,7 @@ export type NewsRowProps = {
 export const NewsRow = ({item, onPress}: NewsRowProps) => {
   const preview = useMemo(() => {
     if (!item.preview) {
-      return require('@assets/images/news-placeholder.png');
+      return require('@assets/images/news_placeholder.png');
     }
 
     return {uri: item.preview};
