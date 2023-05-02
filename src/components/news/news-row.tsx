@@ -21,9 +21,14 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
     return {uri: item.preview};
   }, [item.preview]);
 
+  const containerStyle = useMemo(
+    () => [styles.container, item.viewed && styles.viewed].filter(Boolean),
+    [item.viewed],
+  );
+
   return (
     <TouchableWithoutFeedback onPress={() => onPress(item.id)}>
-      <View style={styles.container}>
+      <View style={containerStyle}>
         <View style={styles.imageWrapper}>
           <Image source={preview} style={styles.image} />
         </View>
@@ -50,6 +55,9 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
 };
 
 const styles = createTheme({
+  viewed: {
+    opacity: 0.5,
+  },
   container: {
     paddingHorizontal: 14,
     paddingVertical: 16,
