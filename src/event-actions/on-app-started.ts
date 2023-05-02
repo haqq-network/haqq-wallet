@@ -7,6 +7,7 @@ import {onAppBackup} from '@app/event-actions/on-app-backup';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
+import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
@@ -57,5 +58,6 @@ export async function onAppStarted() {
     }
   }
 
+  await onNewsSync();
   await onAppBackup();
 }
