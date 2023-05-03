@@ -83,7 +83,6 @@ class CloudManager(reactContext: ReactApplicationContext) :
     try {
       val googleDriveService = getDriveService()
         ?: return promise.reject("0", "googleDriveService unavailable")
-
       val exists = getFileId(key)
       val contentStream = ByteArrayContent.fromString("text/plain", value)
       if (exists != null) {
@@ -94,8 +93,10 @@ class CloudManager(reactContext: ReactApplicationContext) :
         gfile.name = key
         googleDriveService.Files().create(gfile, contentStream).execute()
       }
+      promise.resolve(true)
     } catch (e: Exception) {
       e.printStackTrace()
+      promise.reject("Cloud.setItem", e)
     }
   }
 
