@@ -10,7 +10,10 @@ import {VariablesBool} from '@app/models/variables-bool';
 export const NewsListScreen = () => {
   const navigation = useTypedNavigation();
   const [rows, setRows] = useState(
-    News.getAll().sorted('publishedAt', true).snapshot(),
+    News.getAll()
+      .filtered('status = "published"')
+      .sorted('publishedAt', true)
+      .snapshot(),
   );
   useEffect(() => {
     VariablesBool.set('isNewNews', false);
@@ -24,7 +27,12 @@ export const NewsListScreen = () => {
         changes.newModifications.length ||
         changes.deletions.length
       ) {
-        setRows(News.getAll().sorted('publishedAt', true).snapshot());
+        setRows(
+          News.getAll()
+            .filtered('status = "published"')
+            .sorted('publishedAt', true)
+            .snapshot(),
+        );
       }
     };
 

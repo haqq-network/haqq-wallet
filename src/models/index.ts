@@ -50,7 +50,7 @@ export const realm = new Realm({
     VariablesBool,
     VariablesString,
   ],
-  schemaVersion: 55,
+  schemaVersion: 56,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -345,6 +345,19 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.chainId = chainIds.get(oldObjects[objectIndex].providerId);
+      }
+    }
+
+    if (oldRealm.schemaVersion < 56) {
+      const oldObjects = oldRealm.objects<{}>('News');
+
+      const newObjects = newRealm.objects<{
+        status: string;
+      }>('News');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.status = 'published';
       }
     }
   },
