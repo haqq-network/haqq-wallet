@@ -1,46 +1,39 @@
-import {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 
-import {Collection, CollectionChangeSet} from 'realm';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import {News as NewsComponent} from '@app/components/news';
-import {useTypedNavigation} from '@app/hooks';
-import {News} from '@app/models/news';
-import {VariablesBool} from '@app/models/variables-bool';
+import {popupScreenOptions} from '@app/helpers';
+import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
+import {I18N, getText} from '@app/i18n';
+import {NewsDetailScreen} from '@app/screens/news-detail';
+import {NewsListScreen} from '@app/screens/news-list';
+
+const NewsStack = createStackNavigator();
+
+const newsOptions = {
+  title: getText(I18N.newsTitle),
+  tab: true,
+};
+
+const screenOptions = {
+  ...popupScreenOptions,
+  keyboardHandlingEnabled: false,
+};
 
 export const NewsScreen = () => {
-  const navigation = useTypedNavigation();
-  const [rows, setRows] = useState(News.getAll().snapshot());
-  useEffect(() => {
-    VariablesBool.set('isNewNews', false);
-
-    const onChange = (
-      collection: Collection<News>,
-      changes: CollectionChangeSet,
-    ) => {
-      if (
-        changes.insertions.length ||
-        changes.newModifications.length ||
-        changes.deletions.length
-      ) {
-        setRows(News.getAll().snapshot());
-      }
-    };
-
-    News.getAll().addListener(onChange);
-
-    return () => {
-      News.getAll().removeListener(onChange);
-    };
-  }, []);
-
-  const onPressRow = useCallback(
-    (id: string) => {
-      navigation.navigate('newsDetail', {
-        id,
-      });
-    },
-    [navigation],
+  return (
+    <NewsStack.Navigator screenOptions={screenOptions}>
+      <NewsStack.Screen
+        name="newsList"
+        component={NewsListScreen}
+        options={newsOptions}
+      />
+      <NewsStack.Screen
+        name="newsDetail"
+        component={NewsDetailScreen}
+        // @ts-ignore
+        options={getNewsDetailTitle}
+      />
+    </NewsStack.Navigator>
   );
-
-  return <NewsComponent rows={rows} onPress={onPressRow} />;
 };

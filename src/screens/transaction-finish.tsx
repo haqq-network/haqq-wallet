@@ -77,13 +77,6 @@ export const TransactionFinishScreen = () => {
     vibrate(HapticEffects.success);
   }, [hash, navigate]);
 
-  useEffect(() => {
-    const notificationsIsEnabled = false;
-    if (!notificationsIsEnabled) {
-      getParent()?.navigate('notificationPopup');
-    }
-  }, [getParent]);
-
   return (
     <TransactionFinish
       onPressContact={onPressContact}

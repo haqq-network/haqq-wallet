@@ -282,6 +282,18 @@
       "sha1": "f66f0e1965b85795f8e472d37d3413450566d02a"
     },
     {
+      "path": "assets/images/news_placeholder.png",
+      "sha1": "1f707a12ffc979301b8e33d95420894af84305d2"
+    },
+    {
+      "path": "assets/images/news_placeholder@2x.png",
+      "sha1": "00a27e2eb7fd46448bee36557fc9c15e93d3b335"
+    },
+    {
+      "path": "assets/images/news_placeholder@3x.png",
+      "sha1": "cb50cda1701776daeba2a7572c42dc45101b8113"
+    },
+    {
       "path": "assets/images/qr-logo.png",
       "sha1": "537a7c398b827e0a9923e9ade920e94503c27073"
     },

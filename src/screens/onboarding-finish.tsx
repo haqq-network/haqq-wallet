@@ -28,7 +28,7 @@ export const OnboardingFinishScreen = () => {
       navigation.replace('home');
     }
     requestAnimationFrame(() => {
-      app.emit(Events.onWalletMnemonicCheck, app.snoozeBackup);
+      app.emit(Events.onAppStarted);
     });
   }, [app, navigation]);
 

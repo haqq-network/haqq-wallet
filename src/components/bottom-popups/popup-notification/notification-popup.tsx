@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {View} from 'react-native';
 
@@ -11,28 +11,30 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {
-  onClickTurnOn: () => void;
-  onClickNotNow: () => void;
+  onClickTurnOn: () => Promise<void>;
+  onClickNotNow: () => Promise<void>;
 };
 
 export const NotificationPopup = ({
   onClickTurnOn,
   onClickNotNow,
 }: NotificationPopupProps) => {
-  const theme = useTheme();
+  const [inProgress, setInProgress] = useState(false);
+  const lottieAnimation = useThemeSelector({
+    dark: require('@assets/animations/notification-popup-dark.json'),
+    light: require('@assets/animations/notification-popup-light.json'),
+  });
 
-  const lottieAnimation = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('@assets/animations/notification-popup-dark.json');
-    }
-    return require('@assets/animations/notification-popup-light.json');
-  }, [theme]);
+  const onPressTurnOn = useCallback(async () => {
+    setInProgress(true);
+    await onClickTurnOn();
+    setInProgress(false);
+  }, [onClickTurnOn]);
 
   return (
     <View style={styles.sub}>
@@ -56,8 +58,9 @@ export const NotificationPopup = ({
         i18n={I18N.popupNotificationTurnOn}
         variant={ButtonVariant.contained}
         size={ButtonSize.middle}
-        onPress={onClickTurnOn}
+        onPress={onPressTurnOn}
         style={styles.margin}
+        loading={inProgress}
       />
       <Button
         i18n={I18N.popupNotificationNotNow}

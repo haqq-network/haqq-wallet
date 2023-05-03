@@ -1,12 +1,13 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {Alert, Image, View} from 'react-native';
+import {Alert, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
+  LottieWrap,
   Spacer,
   Text,
 } from '@app/components/ui';
@@ -15,19 +16,27 @@ import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
 import {SHADOW_COLOR_1, WINDOW_WIDTH} from '@app/variables/common';
 
-export type BackupNotificationProps = {
-  onClickBackup: () => void;
-  onClickSkip: () => void;
+export type PopupNotificationTopicProps = {
+  onClickSubscribe: () => Promise<void>;
+  onClickNotNow: () => Promise<void>;
 };
 
-export const BackupNotification = ({
-  onClickBackup,
-  onClickSkip,
-}: BackupNotificationProps) => {
-  const warningImage = useThemeSelector({
-    dark: require('@assets/images/backup-notification-dark.png'),
-    light: require('@assets/images/backup-notification-light.png'),
+export const PopupNotificationNews = ({
+  onClickSubscribe,
+  onClickNotNow,
+}: PopupNotificationTopicProps) => {
+  const [inProgress, setInProgress] = useState(false);
+
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/notification-news-popup-dark.json'),
+    light: require('@assets/animations/notification-news-popup-light.json'),
   });
+
+  const onPressSubscribe = useCallback(async () => {
+    setInProgress(true);
+    await onClickSubscribe();
+    setInProgress(false);
+  }, [onClickSubscribe]);
 
   const onSkip = useCallback(() => {
     return Alert.alert(
@@ -41,43 +50,40 @@ export const BackupNotification = ({
         {
           text: getText(I18N.accept),
           style: 'destructive',
-          onPress: onClickSkip,
+          onPress: onClickNotNow,
         },
       ],
     );
-  }, [onClickSkip]);
+  }, [onClickNotNow]);
 
   return (
     <View style={styles.sub}>
       <View style={styles.imageWrapper}>
-        <Image
-          resizeMode="contain"
-          source={warningImage}
-          style={styles.image}
-        />
+        <LottieWrap style={styles.image} autoPlay loop source={animation} />
       </View>
       <Text
         t7
         style={styles.title}
-        i18n={I18N.backupNotificationTitle}
+        i18n={I18N.popupNotificationNewsTitle}
         center
       />
       <Text
         t14
-        i18n={I18N.backupNotificationDescription}
+        i18n={I18N.popupNotificationNewsDescription}
         center
         color={Color.textBase2}
       />
       <Spacer height={20} />
       <Button
-        i18n={I18N.backupNotificationBackup}
+        i18n={I18N.popupNotificationNewsSubscribe}
         variant={ButtonVariant.contained}
-        onPress={onClickBackup}
+        onPress={onPressSubscribe}
         style={styles.margin}
         size={ButtonSize.middle}
+        loading={inProgress}
       />
       <Button
-        i18n={I18N.backupNotificationSkip}
+        i18n={I18N.popupNotificationNewsNotNow}
         variant={ButtonVariant.third}
         error
         onPress={onSkip}

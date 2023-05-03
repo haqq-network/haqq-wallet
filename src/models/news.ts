@@ -10,6 +10,7 @@ export class News extends Realm.Object {
       description: 'string',
       content: 'string',
       publishedAt: 'date?',
+      viewed: 'bool?',
       createdAt: {type: 'date', default: () => new Date()},
       updatedAt: {type: 'date', default: () => new Date()},
     },
@@ -23,6 +24,7 @@ export class News extends Realm.Object {
   publishedAt: Date;
   createdAt!: Date;
   updatedAt!: Date;
+  viewed: boolean;
 
   static create(id: string, params: Omit<Partial<News>, 'id'>) {
     const exists = News.getById(id);

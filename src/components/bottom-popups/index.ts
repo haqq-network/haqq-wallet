@@ -1,4 +1,5 @@
 export * from './popup-backup-notification';
+export * from './popup-notification-news';
 export * from './popup-backup-mpc-notification';
 export * from './popup-notification';
 export * from './popup-track-activity';

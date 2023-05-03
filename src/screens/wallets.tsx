@@ -2,20 +2,13 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 
-import {Color} from '@app/colors';
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
-import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
-import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
-import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
-import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
-import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
-import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
+import {onBannerAction} from '@app/event-actions/on-banner-action';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useWallets} from '@app/hooks';
 import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
-import {I18N, getText} from '@app/i18n';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
@@ -127,40 +120,9 @@ export const WalletsWrapper = () => {
     navigation.navigate('signin', {next: ''});
   }, [navigation]);
 
-  const onPressClaimReward = useCallback(
+  const onPressBannerAction = useCallback(
     async (id: string, event: string, params: Record<string, any> = {}) => {
-      try {
-        switch (event) {
-          case 'claimCode':
-            await onBannerClaimAirdrop(id);
-            break;
-          case 'close':
-            await onBannerSnoozeUntil(id);
-            break;
-          case 'notificationsTurnOn':
-            await onBannerNotificationsTurnOn(id);
-            break;
-          case 'notificationsSnooze':
-            await onBannerNotificationsSnooze(id);
-            break;
-          case 'notificationsTopicSubscribe':
-            await onBannerNotificationsTopicSubscribe(id, params.topic ?? '');
-            break;
-          case 'notificationsTopicSnooze':
-            await onBannerNotificationsTopicSnooze(id, params.topic ?? '');
-            break;
-        }
-      } catch (e) {
-        if (e instanceof Error) {
-          showModal('error', {
-            title: getText(I18N.modalRewardErrorTitle),
-            description: e.message,
-            close: getText(I18N.modalRewardErrorClose),
-            icon: 'reward_error',
-            color: Color.graphicSecond4,
-          });
-        }
-      }
+      await onBannerAction(id, event, params);
     },
     [],
   );
@@ -185,7 +147,7 @@ export const WalletsWrapper = () => {
       onPressRestore={onPressRestore}
       onPressQR={onPressQR}
       onPressProtection={onPressProtection}
-      onPressBanner={onPressClaimReward}
+      onPressBanner={onPressBannerAction}
       onPressAccountInfo={onPressAccountInfo}
     />
   );

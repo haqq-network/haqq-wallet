@@ -16,6 +16,7 @@ export enum Events {
   onTransactionsLoad = 'onTransactionsLoad',
   onTransactionCheck = 'onTransactionCheck',
   onTransactionCreate = 'onTransactionCreate',
+  onAppActive = 'onAppActive',
   onAppStarted = 'onAppStarted',
   onAppLoggedId = 'onAppLoggedId',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
