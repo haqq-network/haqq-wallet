@@ -10135,6 +10135,11 @@ react-native-aes-crypto@2.1.0:
   resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.1.0.tgz#9482fe914cae411f10ec43a53b2439a41b78cbbd"
   integrity sha512-2zvvQXMW2Qeg9B/VDetoB2w/cyVncPuEsoW1iUhZP12jAx+zbxsdf+A7inSf2XKMcRURfpsfUshQTb2beYUVhA==
 
+react-native-aes-crypto@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-aes-crypto/-/react-native-aes-crypto-2.1.1.tgz#371100ad322195f2792e2b365923620599d8abc2"
+  integrity sha512-huAt7k43myFiY0bPnvoaCP0oBjTMw4VsL2mjkmCPzzDA56Sm3ps5xXIejPo5Z9qfnei9iijHzATV8eRNMEPtbQ==
+
 react-native-base64@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-base64/-/react-native-base64-0.2.1.tgz#3d0e73a649c4c0129f7b7695d3912456aebae847"
@@ -10397,10 +10402,10 @@ react-native-webview@11.13.0:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@0.71.6:
-  version "0.71.6"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.71.6.tgz#e8f07baf55abd1015eaa7040ceaa4aa632c2c04f"
-  integrity sha512-gHrDj7qaAaiE41JwaFCh3AtvOqOLuRgZtHKzNiwxakG/wvPAYmG73ECfWHGxjxIx/QT17Hp37Da3ipCei/CayQ==
+react-native@0.71.7:
+  version "0.71.7"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.71.7.tgz#d0ae409f6ee4fc7e7a876b4ca9d8d28934133228"
+  integrity sha512-Id6iRLS581fJMFGbBl1jP5uSmjExtGOvw5Gvh7694zISXjsRAsFMmU+izs0pyCLqDBoHK7y4BT7WGPGw693nYw==
   dependencies:
     "@jest/create-cache-key-function" "^29.2.1"
     "@react-native-community/cli" "10.2.2"
@@ -10552,10 +10557,10 @@ real-require@^0.1.0:
   resolved "https://registry.yarnpkg.com/real-require/-/real-require-0.1.0.tgz#736ac214caa20632847b7ca8c1056a0767df9381"
   integrity sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==
 
-realm@11.7.0:
-  version "11.7.0"
-  resolved "https://registry.yarnpkg.com/realm/-/realm-11.7.0.tgz#0d597f83b97f584da73337009e944d0d9f3d6099"
-  integrity sha512-A/nAuwDSZwjb7fkK48kdWqR+mFi2nWHXorrP4EkXYsOuIUxzgMjsxA3DUzlXU8PoFsIF+mbjTgIhifF6mTrAPg==
+realm@11.8.0:
+  version "11.8.0"
+  resolved "https://registry.yarnpkg.com/realm/-/realm-11.8.0.tgz#203dc02b74b313d68ba3831f42b2cb05a8b05882"
+  integrity sha512-c4NLKJs85CLY7wo4csIGcQRIjcAYI4FlVnxGkuzQR+uwwkGE1nPWKFBh+wPFPsPJXtZ1BBG4e3tt275ja/7SoA==
   dependencies:
     "@realm/common" "^0.1.4"
     "@realm/network-transport" "^0.7.2"
