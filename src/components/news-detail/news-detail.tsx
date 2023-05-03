@@ -47,7 +47,7 @@ const rules = {
   heading: {
     react: (node: NodeHeading, output: Output, {...state}) => {
       return (
-        <Text t7 style={styles.heading} color={Color.textBase1}>
+        <Text t7 style={styles.heading} color={Color.textBase1} key={state.key}>
           {output(node.content, {
             ...state,
             withinText: true,
@@ -82,7 +82,11 @@ const rules = {
       }
 
       return (
-        <Text t11 style={styles.paragraph} color={Color.textBase1}>
+        <Text
+          t11
+          style={styles.paragraph}
+          color={Color.textBase1}
+          key={state.key}>
           {output(node.content, {
             ...state,
             withinParagraphWithImage: false,
