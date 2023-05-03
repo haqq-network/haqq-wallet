@@ -18,7 +18,7 @@ export function getNewsDetailTitle(props: {
     title: news?.title || '',
     headerShown: true,
     header: PopupHeader,
-    headerLeft: GoBackPopupButton,
+    headerLeft: () => <GoBackPopupButton />,
     headerRight: SpacerPopupButton,
     presentation: 'modal' as StackPresentationTypes,
   };
