@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
+import {Platform} from 'react-native';
 
 import {popupScreenOptions} from '@app/helpers';
 import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
@@ -12,7 +13,10 @@ const NewsStack = createStackNavigator();
 
 const newsOptions = {
   title: getText(I18N.newsTitle),
-  tab: true,
+  tab: Platform.select({
+    ios: true,
+    android: false,
+  }),
 };
 
 const screenOptions = {

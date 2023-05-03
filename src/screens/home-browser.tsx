@@ -25,8 +25,9 @@ const browserHomePageScreenOptions = {
   headerStyle: {
     backgroundColor: Color.transparent,
   },
+  headerTitleAlign: 'center',
   headerStatusBarHeight: IS_IOS ? undefined : 0,
-  headerTitle: () => <Text t8 i18n={I18N.homeBrowserTitle} />,
+  headerTitle: () => <Text t8 center i18n={I18N.homeBrowserTitle} />,
   headerLeft: () => <></>,
 };
 
@@ -38,6 +39,7 @@ export const HomeBrowserScreen = () => {
       <BrowserNavigator.Screen
         name={'browserHomePage'}
         component={BrowserHomePageScreen}
+        // @ts-ignore
         options={browserHomePageScreenOptions}
       />
       <BrowserNavigator.Screen

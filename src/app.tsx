@@ -18,7 +18,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking} from 'react-native';
+import {AppState, Linking, Platform} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -105,7 +105,7 @@ import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
 
 const screenOptions: ScreenOptionType = {
-  tab: true,
+  tab: Platform.select({ios: true, android: false}),
   gestureEnabled: false,
   headerBackVisible: true,
   headerShown: true,

@@ -27,5 +27,5 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
     return null;
   }
 
-  return <Text t8 i18n={name} />;
+  return <Text t8 center i18n={name} />;
 };

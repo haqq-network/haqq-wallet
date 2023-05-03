@@ -1,6 +1,6 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
-import {FlatList, ListRenderItem, Platform, View} from 'react-native';
+import {FlatList, ListRenderItem, View} from 'react-native';
 
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
@@ -73,21 +73,12 @@ export const HomeGovernance = ({
     [],
   );
 
-  const headerMarginTop = useMemo(
-    () =>
-      Platform.select({
-        android: 0,
-      }),
-    [],
-  );
-
   return (
     <>
       <CustomHeader
         onSearchChange={onSearchChange}
         title={I18N.homeGovernance}
         iconRight="search"
-        marginTop={headerMarginTop}
       />
       <Spacer height={12} />
       <View>

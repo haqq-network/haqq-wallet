@@ -349,7 +349,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 56) {
-      const oldObjects = oldRealm.objects<{}>('News');
+      const oldObjects = oldRealm.objects('News');
 
       const newObjects = newRealm.objects<{
         status: string;

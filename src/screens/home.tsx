@@ -29,6 +29,7 @@ const screenOptions: BottomTabNavigationOptions = {
   headerStyle: {
     backgroundColor: Color.transparent,
   },
+  headerTitleAlign: 'center',
   headerStatusBarHeight: IS_IOS ? undefined : 0,
   tabBarStyle: {
     backgroundColor: Color.transparent,
