@@ -51,7 +51,10 @@ export const BrowserEditBookmarks = ({
           <Spacer height={16} />
           <View style={styles.item}>
             <IconButton disabled={isStrictUrl} onPress={handlePressRemove}>
-              <Icon name={IconsName.circle_minus} color={Color.graphicRed1} />
+              <Icon
+                name={IconsName.circle_minus}
+                color={isStrictUrl ? Color.transparent : Color.graphicRed1}
+              />
             </IconButton>
             <Spacer width={18} />
             <TouchableOpacity
