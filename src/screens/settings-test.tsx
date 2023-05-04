@@ -125,11 +125,20 @@ const abi = [
   },
 ];
 const TEST_URLS: Partial<Link>[] = [
-  {title: 'app haqq network', url: 'https://app.haqq.network'},
-  {title: 'vesting', url: 'https://vesting.haqq.network'},
+  {
+    title: 'HAQQ Dashboard',
+    url: 'https://app.haqq.network',
+    icon: 'https://app.haqq.network/assets/favicon.svg',
+  },
+  {
+    title: 'HAQQ Vesting',
+    url: 'https://vesting.haqq.network',
+    icon: 'https://vesting.haqq.network/assets/favicon.svg',
+  },
+  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
   {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'TestEdge2', url: 'https://testedge2.haqq.network'},
   {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
+  {title: 'new safe', url: 'https://new.safe.testedge2.haqq.network'},
   {
     title: 'metamask test dapp',
     url: 'https://metamask.github.io/test-dapp/',
