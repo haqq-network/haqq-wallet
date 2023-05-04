@@ -96,15 +96,13 @@ export const HomeScreen = () => {
           options={stakingOptions}
         />
       )}
-      {provider?.ethChainId &&
-        provider?.ethChainId !== 11235 &&
-        user.isDeveloper && (
-          <Tab.Screen
-            name="homeBrowser"
-            component={HomeBrowserScreen}
-            options={browserOptions}
-          />
-        )}
+      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
+        <Tab.Screen
+          name="homeBrowser"
+          component={HomeBrowserScreen}
+          options={browserOptions}
+        />
+      )}
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeGovernance"
