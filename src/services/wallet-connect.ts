@@ -184,9 +184,8 @@ export class WalletConnect extends EventEmitter {
       console.log('✅ approveSessionRequest result:', result);
     }
 
-    const isDisconected = !!this.getSessionByTopic(event?.topic);
-
-    if (isDisconected) {
+    const isDisconnected = !this.getSessionByTopic(event?.topic);
+    if (isDisconnected) {
       return this.rejectSessionRequest(event?.id, event?.topic);
     }
 
