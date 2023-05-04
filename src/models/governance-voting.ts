@@ -5,6 +5,7 @@ import {
   differenceInSeconds,
   getSeconds,
 } from 'date-fns';
+import Decimal from 'decimal.js';
 
 import {I18N} from '@app/i18n';
 import {realm} from '@app/models/index';
@@ -45,6 +46,9 @@ export class GovernanceVoting extends Realm.Object {
       depositEndTime: 'string?',
       createdAtTime: 'string?',
       changes: 'string?',
+      type: 'string?',
+      plan: 'string?',
+      deposit: {type: 'string', default: '0'},
     },
     primaryKey: 'orderNumber',
   };
@@ -53,6 +57,9 @@ export class GovernanceVoting extends Realm.Object {
   title!: string;
   description!: string;
   changes!: string;
+  plan!: string;
+  type!: string;
+  deposit!: string;
   private endDate!: string;
   private startDate!: string;
   private votes?: string;
@@ -246,12 +253,20 @@ export class GovernanceVoting extends Realm.Object {
           orderNumber: Number(proposal.proposal_id),
           description: proposal.content.description,
           title: proposal.content.title,
-          changes: JSON.stringify(
-            'changes' in proposal.content ? proposal.content.changes : ['PASS'],
-            null,
-            4,
-          ),
+          type: proposal.content['@type'],
+          changes:
+            'changes' in proposal.content
+              ? JSON.stringify(proposal.content.changes, null, 4)
+              : null,
+          plan:
+            'plan' in proposal.content
+              ? JSON.stringify(proposal.content.plan, null, 4)
+              : null,
+
           votes: JSON.stringify(votes),
+          deposit: proposal.total_deposit
+            .reduce((memo, curr) => memo.plus(curr.amount), new Decimal(0))
+            .toString(),
         },
         Realm.UpdateMode.Modified,
       );

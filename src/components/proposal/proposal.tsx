@@ -1,15 +1,17 @@
 import React, {useEffect, useMemo} from 'react';
 
 import {format} from 'date-fns';
+import Decimal from 'decimal.js';
 import {Pressable, ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {cleanNumber, createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
+import {NUM_PRECISION, WEI} from '@app/variables/common';
 import {ProposalsTags} from '@app/variables/proposal';
 
 import {ProposalVote} from './proposal-vote';
@@ -68,6 +70,27 @@ export function Proposal({
     [item?.status],
   );
 
+  const type = useMemo(() => {
+    switch (item?.type) {
+      case '/cosmos.params.v1beta1.ParameterChangeProposal':
+        return I18N.proposalTypeParameterChangeProposal;
+      case '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal':
+        return I18N.proposalTypeParameterChangeProposal;
+      case '/ibc.core.client.v1.ClientUpdateProposal':
+        return I18N.proposalTypeClientUpdateProposal;
+      default:
+        return I18N.proposalTypeUnknown;
+    }
+  }, [item?.type]);
+
+  const deposit = useMemo(
+    () =>
+      cleanNumber(
+        new Decimal(item?.deposit || '0').div(WEI).toFixed(NUM_PRECISION + 1),
+      ),
+    [item?.deposit],
+  );
+
   if (!item) {
     return <></>;
   }
@@ -117,7 +140,7 @@ export function Proposal({
             <View style={styles.block}>
               <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
               <Spacer height={4} />
-              <Text t14>PASS</Text>
+              <Text t14 i18n={type} />
             </View>
             <Spacer width={16} />
             <View style={styles.block}>
@@ -127,7 +150,7 @@ export function Proposal({
                 i18n={I18N.proposalTotalDeposit}
               />
               <Spacer height={4} />
-              <Text t14>PASS</Text>
+              <Text t14 i18n={I18N.amountISLM} i18params={{amount: deposit}} />
             </View>
           </View>
           <View style={styles.block}>
@@ -135,14 +158,30 @@ export function Proposal({
             <Spacer height={4} />
             <Text t14>{description}</Text>
           </View>
-          <Spacer height={24} />
-          <Text t9 i18n={I18N.proposalChanges} />
-          <Spacer height={12} />
-          <View style={styles.codeBlock}>
-            <Text t14 color={Color.textBase1}>
-              {item.changes}
-            </Text>
-          </View>
+          {item.changes && (
+            <>
+              <Spacer height={24} />
+              <Text t9 i18n={I18N.proposalChanges} />
+              <Spacer height={12} />
+              <View style={styles.codeBlock}>
+                <Text t14 color={Color.textBase1}>
+                  {item.changes}
+                </Text>
+              </View>
+            </>
+          )}
+          {item.plan && (
+            <>
+              <Spacer height={24} />
+              <Text t9 i18n={I18N.proposalPlan} />
+              <Spacer height={12} />
+              <View style={styles.codeBlock}>
+                <Text t14 color={Color.textBase1}>
+                  {item.plan}
+                </Text>
+              </View>
+            </>
+          )}
           <Spacer height={24} />
           <Text t9 i18n={I18N.proposalDate} />
           <View style={styles.row}>
