@@ -46,6 +46,7 @@ import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notific
 import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
 import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
 import {ProposalScreen} from '@app/screens/proposal';
+import {SettingsNotificationScreen} from '@app/screens/settings-notification-screen';
 import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
@@ -391,6 +392,13 @@ export const App = () => {
                   component={SettingsSecurityPinScreen}
                   options={{
                     title: 'Change PIN',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsNotification"
+                  component={SettingsNotificationScreen}
+                  options={{
+                    title: getText(I18N.settingsNotification),
                   }}
                 />
                 <Stack.Screen

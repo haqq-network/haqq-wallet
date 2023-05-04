@@ -34,6 +34,13 @@ export class VariablesBool extends Realm.Object {
     );
   }
 
+  static exists(id: string): boolean {
+    return !!realm.objectForPrimaryKey<VariablesBool>(
+      VariablesBool.schema.name,
+      id,
+    );
+  }
+
   static remove(id: string) {
     const obj = realm.objectForPrimaryKey<VariablesBool>(
       VariablesBool.schema.name,

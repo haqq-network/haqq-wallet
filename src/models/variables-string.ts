@@ -27,6 +27,12 @@ export class VariablesString extends Realm.Object {
     return id;
   }
 
+  static exists(id: string): boolean {
+    return !!realm.objectForPrimaryKey<VariablesString>(
+      VariablesString.schema.name,
+      id,
+    );
+  }
   static get(id: string) {
     return realm.objectForPrimaryKey<VariablesString>(
       VariablesString.schema.name,

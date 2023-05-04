@@ -8,6 +8,11 @@ import {Events} from '@app/events';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 
+export enum PushNotificationTopicsEnum {
+  news = 'news',
+  transactions = 'transactions',
+}
+
 export class PushNotifications extends EventEmitter {
   static instance = new PushNotifications();
   path: string = HAQQ_BACKEND;
@@ -55,12 +60,33 @@ export class PushNotifications extends EventEmitter {
     }
   }
 
+  async hasPermission() {
+    if (!this.isAvailable) {
+      throw new Error('push messages unavailable');
+    }
+
+    const authStatus = await messaging().hasPermission();
+
+    return (
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+    );
+  }
+
   async subscribeToTopic(topic: string) {
     if (!this.isAvailable) {
       throw new Error('push messages unavailable');
     }
 
     await messaging().subscribeToTopic(topic);
+  }
+
+  async unsubscribeFromTopic(topic: string) {
+    if (!this.isAvailable) {
+      throw new Error('push messages unavailable');
+    }
+
+    await messaging().unsubscribeFromTopic(topic);
   }
 
   getPath(subPath: string) {

@@ -27,6 +27,12 @@ export class VariablesDate extends Realm.Object {
     return id;
   }
 
+  static exists(id: string): boolean {
+    return !!realm.objectForPrimaryKey<VariablesDate>(
+      VariablesDate.schema.name,
+      id,
+    );
+  }
   static get(id: string) {
     return realm.objectForPrimaryKey<VariablesDate>(
       VariablesDate.schema.name,

@@ -19,7 +19,7 @@ export type SettingsButtonProps = {
     | 'settingsTheme'
     | 'settingsTest'
     | 'walletConnectWalletList'
-    | 'settingsTest';
+    | 'settingsNotification';
   icon: IconsName | keyof typeof IconsName;
   title: I18N;
   rightTitle?: string;

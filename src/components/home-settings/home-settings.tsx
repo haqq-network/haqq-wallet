@@ -60,6 +60,12 @@ export const HomeSettings = () => {
       />
 
       <SettingsButton
+        icon="bell"
+        title={I18N.homeSettingsNotification}
+        next="settingsNotification"
+      />
+
+      <SettingsButton
         icon="providers"
         title={I18N.homeSettingsProviders}
         next="settingsProviders"

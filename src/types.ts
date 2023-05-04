@@ -23,6 +23,12 @@ export enum TransactionSource {
   receive,
 }
 
+export enum PopupNotificationBannerTypes {
+  notification = 'notification',
+}
+
+export type PopupNotificationBannerId = string | PopupNotificationBannerTypes;
+
 export type TransactionListSend = Transaction & {
   source: TransactionSource.send;
 };
@@ -157,6 +163,7 @@ export type RootStackParamList = {
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
   settingsSecurityPin: undefined;
+  settingsNotification: undefined;
   settingsProviders: undefined;
   settingsSecurityPinRepeat: {
     pin: string;
@@ -377,10 +384,10 @@ export type RootStackParamList = {
     fee: number;
   };
   popupNotification: {
-    bannerId: string;
+    bannerId: PopupNotificationBannerId;
   };
   popupNotificationNews: {
-    bannerId: string;
+    bannerId: PopupNotificationBannerId;
   };
   trackActivity: undefined;
   proposal: {
