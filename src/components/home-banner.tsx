@@ -61,7 +61,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
       <View style={[styles.container, borderStyle, style]}>
         {banner.backgroundImage ? (
           <Image
-            resizeMode="stretch"
+            resizeMode="cover"
             style={styles.inner}
             source={{uri: banner.backgroundImage}}
           />
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     minHeight: 100,
     position: 'relative',
+    flex: 1,
   },
   inner: {
     borderRadius: 16,

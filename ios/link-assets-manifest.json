@@ -102,6 +102,14 @@
       "sha1": "12bb8524ca6f9b624f755e2423d09e49f4a7268a"
     },
     {
+      "path": "assets/images/banner_news.png",
+      "sha1": "6f02763e9312c302d870f73663576b6e502fff31"
+    },
+    {
+      "path": "assets/images/banner_notifications.png",
+      "sha1": "d6e02efd3076dd47cc4d4e543e9bb2344d94ef52"
+    },
+    {
       "path": "assets/images/bluetooth-failed.png",
       "sha1": "b9d8c4cc635ea070af925b6f1f3c3408808c934e"
     },

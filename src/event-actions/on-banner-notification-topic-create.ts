@@ -16,6 +16,7 @@ const topics: Record<string, any> = {
     titleColor: Color.textBase1,
     descriptionColor: Color.textBase1,
     closeButtonColor: Color.graphicBase2,
+    backgroundImage: 'banner_news',
     defaultEvent: 'notificationNews',
     closeEvent: 'notificationsTopicSnooze',
     closeParams: {

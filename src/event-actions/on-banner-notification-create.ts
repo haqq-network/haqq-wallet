@@ -26,5 +26,6 @@ export async function onBannerNotificationCreate() {
     backgroundColorTo: '#2C8EEB',
     defaultEvent: 'notificationsEnable',
     closeEvent: 'notificationsSnooze',
+    backgroundImage: 'banner_notifications',
   });
 }
