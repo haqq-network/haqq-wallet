@@ -591,6 +591,15 @@ export enum I18N {
   claimOnMainnetChange,
   claimOnMainnetStay,
   newsTitle,
+  homeSettingsNotification,
+  settingsNotification,
+  transactionPushNotificationsDescription,
+  transactionPushNotification,
+  newsPushNotification,
+  newsPushNotificationsDescription,
+  weDontHaveNotificationPermission,
+  weDontHaveNotificationPermissionDescription,
+  goToPhoneSettings,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1300,4 +1309,18 @@ const en: Record<I18N, string> = {
     'Get the latest news and updates about Islamic Coin and the ISLM Wallet',
   [I18N.popupNotificationNewsSubscribe]: 'Turn on news notifications',
   [I18N.popupNotificationNewsNotNow]: 'Not now',
+  [I18N.homeSettingsNotification]: 'Notification',
+  [I18N.settingsNotification]: 'Notification',
+  [I18N.newsPushNotification]: 'Newsletter notifications',
+  [I18N.newsPushNotificationsDescription]:
+    'Get the latest news and updates about Islamic Coin and the ISLM Wallet',
+  [I18N.transactionPushNotification]: 'Transaction Push-Notifications',
+  [I18N.transactionPushNotificationsDescription]:
+    'Get notified about deposits, withdrawals and successful transactions',
+  [I18N.weDontHaveNotificationPermission]:
+    "We don't have permission to send you notifications\n",
+  [I18N.weDontHaveNotificationPermissionDescription]:
+    'To allow ISLM Wallet to send notifications, please go to Phone Settings\n' +
+    'and grant permission',
+  [I18N.goToPhoneSettings]: 'Go to Phone settings',
 };

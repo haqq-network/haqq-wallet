@@ -31,7 +31,7 @@ export async function onBannerNotificationTopicCreate(topic: Keys) {
     return;
   }
 
-  if (VariablesBool.get(`notificationsTopic:${topic}`)) {
+  if (VariablesBool.exists(`notificationsTopic:${topic}`)) {
     return;
   }
 
