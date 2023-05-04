@@ -6,7 +6,6 @@ import {navigator} from '@app/navigator';
 import {NewsRow, RemoteMessage} from '@app/types';
 
 export async function onPushNotification(message: RemoteMessage) {
-  console.log('onPushNotification', message);
   if (message.data.type === 'news' && message.data.id) {
     const exists = News.getById(message.data.id);
 
@@ -21,6 +20,7 @@ export async function onPushNotification(message: RemoteMessage) {
         preview: row.preview,
         description: row.description,
         content: row.content,
+        status: row.status,
         createdAt: new Date(row.created_at),
         updatedAt: new Date(row.updated_at),
         publishedAt: new Date(row.published_at),

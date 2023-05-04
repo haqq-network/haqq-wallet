@@ -51,7 +51,7 @@ app.on(Events.onAppProviderMpcBackup, onAppProviderMpcBackup);
 app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
 app.on(Events.onDynamicLink, onDynamicLink);
 app.on(Events.onTransactionCheck, onTransactionCheck);
-app.on(Events.onPushNotification, onPushNotification);
+app.on(Events.onPushNotification, callbackWrapper(onPushNotification));
 app.on(Events.onAddressBookCreate, callbackWrapper(onAddressBookCreate));
 app.on(Events.onTransactionCreate, callbackWrapper(onTransactionCreate));
 app.on(Events.onAddressBookSync, callbackWrapper(onAddressBookSync));
