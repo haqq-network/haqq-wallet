@@ -140,9 +140,7 @@ export function Proposal({
           <Spacer height={12} />
           <View style={styles.codeBlock}>
             <Text t14 color={Color.textBase1}>
-              {`[
-  PASS
-]`}
+              {item.changes}
             </Text>
           </View>
           <Spacer height={24} />

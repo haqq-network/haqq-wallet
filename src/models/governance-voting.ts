@@ -44,6 +44,7 @@ export class GovernanceVoting extends Realm.Object {
       depositNeeds: 'string?',
       depositEndTime: 'string?',
       createdAtTime: 'string?',
+      changes: 'string?',
     },
     primaryKey: 'orderNumber',
   };
@@ -51,6 +52,7 @@ export class GovernanceVoting extends Realm.Object {
   orderNumber!: number;
   title!: string;
   description!: string;
+  changes!: string;
   private endDate!: string;
   private startDate!: string;
   private votes?: string;
@@ -244,6 +246,11 @@ export class GovernanceVoting extends Realm.Object {
           orderNumber: Number(proposal.proposal_id),
           description: proposal.content.description,
           title: proposal.content.title,
+          changes: JSON.stringify(
+            'changes' in proposal.content ? proposal.content.changes : ['PASS'],
+            null,
+            4,
+          ),
           votes: JSON.stringify(votes),
         },
         Realm.UpdateMode.Modified,
