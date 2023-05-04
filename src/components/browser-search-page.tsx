@@ -141,6 +141,7 @@ export const BrowserSearchPage = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Input
+          editable={false}
           leftAction={
             <Icon i16 color={Color.graphicBase2} name={IconsName.search} />
           }

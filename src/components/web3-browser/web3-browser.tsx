@@ -76,7 +76,7 @@ export interface Web3BrowserProps {
 
   onPressRemoveBookmark(url: string): void;
 
-  addSitiToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
+  addSiteToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 
 export const Web3Browser = ({
@@ -101,7 +101,7 @@ export const Web3Browser = ({
   onPressShare,
   onPressAddBookmark,
   onPressRemoveBookmark,
-  addSitiToSearchHistory,
+  addSiteToSearchHistory,
 }: Web3BrowserProps) => {
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>();
@@ -225,7 +225,7 @@ export const Web3Browser = ({
         !addedToSearchHistory.current &&
         !Web3BrowserSearchHistory.getByUrl(event.payload.url)
       ) {
-        addSitiToSearchHistory(event.payload);
+        addSiteToSearchHistory(event.payload);
         addedToSearchHistory.current = true;
       }
     });
@@ -242,7 +242,7 @@ export const Web3Browser = ({
     return () => {
       helper.dispose();
     };
-  }, [addSitiToSearchHistory, helper]);
+  }, [addSiteToSearchHistory, helper]);
 
   if (!inpageBridgeWeb3) {
     return null;

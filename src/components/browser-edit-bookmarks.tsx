@@ -9,6 +9,7 @@ import DraggableFlatList, {
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {STRICT_URLS} from '@app/screens/browser-home-page-screen';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';
@@ -39,15 +40,17 @@ export const BrowserEditBookmarks = ({
         return null;
       }
 
-      const handlePressremove = () => {
+      const handlePressRemove = () => {
         onPressRemove?.(item);
       };
+
+      const isStrictUrl = !!STRICT_URLS.find(link => item.url === link.url);
 
       return (
         <ScaleDecorator activeScale={1.05}>
           <Spacer height={16} />
           <View style={styles.item}>
-            <IconButton onPress={handlePressremove}>
+            <IconButton disabled={isStrictUrl} onPress={handlePressRemove}>
               <Icon name={IconsName.circle_minus} color={Color.graphicRed1} />
             </IconButton>
             <Spacer width={18} />

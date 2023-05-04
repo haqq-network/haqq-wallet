@@ -152,7 +152,7 @@ export const Web3BrowserScreen = () => {
     Share.share({url: helper.currentUrl});
   }, [helper]);
 
-  const addSitiToSearchHistory = useCallback(
+  const addSiteToSearchHistory = useCallback(
     (windowInfo: WindowInfoEvent['payload']) => {
       Web3BrowserSearchHistory.create({
         ...windowInfo,
@@ -187,7 +187,7 @@ export const Web3BrowserScreen = () => {
       onPressShare={onPressShare}
       onPressAddBookmark={onPressAddBookmark}
       onPressRemoveBookmark={onPressRemoveBookmark}
-      addSitiToSearchHistory={addSitiToSearchHistory}
+      addSiteToSearchHistory={addSiteToSearchHistory}
     />
   );
 };
