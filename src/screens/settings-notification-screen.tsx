@@ -4,6 +4,8 @@ import {Linking, SwitchChangeEvent} from 'react-native';
 
 import {SettingsNotification} from '@app/components/settings-notification';
 import {app} from '@app/contexts';
+import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
+import {onBannerNotificationsTopicUnsubscribe} from '@app/event-actions/on-banner-notifications-topic-unsubscribe';
 import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -46,16 +48,17 @@ export const SettingsNotificationScreen = () => {
 
   const onToggleNewsPushNotification = useCallback(
     async ({nativeEvent: {value}}: SwitchChangeEvent) => {
-      VariablesBool.set(NEWS_TOPIC_VARIABLE_NAME, value);
       setNewsPushNotificationEnabled(value);
 
       if (value) {
-        await PushNotifications.instance.subscribeToTopic(
-          PushNotificationTopicsEnum.news,
+        await onBannerNotificationsTopicSubscribe(
+          'notificationTopic:news',
+          'news',
         );
       } else {
-        await PushNotifications.instance.unsubscribeFromTopic(
-          PushNotificationTopicsEnum.news,
+        await onBannerNotificationsTopicUnsubscribe(
+          'notificationTopic:news',
+          'news',
         );
       }
     },
