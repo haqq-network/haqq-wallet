@@ -1,7 +1,8 @@
+import {I18N} from '@app/i18n';
+import {sendNotification} from '@app/services';
 import {WalletConnect} from '@app/services/wallet-connect';
 
 export async function onWalletConnectUri(uri: string) {
-  const resp = await WalletConnect.instance.pair(uri);
-
-  console.log('resp', resp);
+  sendNotification(I18N.walletConnectPairPending);
+  await WalletConnect.instance.pair(uri);
 }

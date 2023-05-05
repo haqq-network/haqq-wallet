@@ -605,6 +605,9 @@ export enum I18N {
   weDontHaveNotificationPermission,
   weDontHaveNotificationPermissionDescription,
   goToPhoneSettings,
+  walletConnectPairError,
+  walletConnectPairPending,
+  walletConnectPairInitError,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1333,4 +1336,7 @@ const en: Record<I18N, string> = {
     'To allow ISLM Wallet to send notifications, please go to Phone Settings\n' +
     'and grant permission',
   [I18N.goToPhoneSettings]: 'Go to Phone settings',
+  [I18N.walletConnectPairError]: 'Relay protocol is not supported',
+  [I18N.walletConnectPairPending]: 'Connection may take some time',
+  [I18N.walletConnectPairInitError]: 'WalletConnect is not initialized',
 };

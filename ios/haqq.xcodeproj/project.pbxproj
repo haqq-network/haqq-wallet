@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* haqqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* haqqTests.m */; };
 		01C44930F5CD459D85916B70 /* bluetooth-failed.png in Resources */ = {isa = PBXBuildFile; fileRef = D35FE9082706444AB8F75888 /* bluetooth-failed.png */; };
 		01C80C029C264E059AFF702C /* card-rhombus-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 7FB8A02FCF3F4824B4718B5B /* card-rhombus-0.png */; };
+		049F6D95AD144BCBB6E77E96 /* banner_notifications.png in Resources */ = {isa = PBXBuildFile; fileRef = C582F54C0C5540078838006B /* banner_notifications.png */; };
 		0DC659CFE3ED45AFAAD09C69 /* card-maks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C5C66B0F44412FBB1D39B5 /* card-maks@2x.png */; };
 		1176B7B4E3964C078F779B59 /* exclamation-mark-error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631E69B702043598086BDCC /* exclamation-mark-error@3x.png */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -65,6 +66,7 @@
 		5C0A04B04B4B43BCB927AE96 /* browser-error-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 351AF865381043718EEE3555 /* browser-error-light@2x.png */; };
 		5EC78F2DCE2648FE9AEC3C47 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 16464E6CF9A24E1590282D07 /* SF-Pro-Display-Semibold.ttf */; };
 		60D4E8D50A864590B8A8D854 /* SF-Pro-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */; };
+		67A1B8CCABE24C63BF331E52 /* banner_news.png in Resources */ = {isa = PBXBuildFile; fileRef = A007B4F4798B4E7483EFD10E /* banner_news.png */; };
 		67C27A04DC024090AA593E3B /* signup-network-exists-warning@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */; };
 		69201C9A86064BF191BEB50E /* SF-ProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */; };
 		6C967F106C014632BA368E29 /* SF-Pro-Display-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4889AA51BE54118AE456FE2 /* SF-Pro-Display-Thin.ttf */; };
@@ -126,8 +128,6 @@
 		F6333C839A41368162796864 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AB42A44B568DB1BF41536E /* libPods-haqq-haqqTests.a */; };
 		F8B96DA771D249F4AE2F840B /* question-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CC5CC6680A74F829967534E /* question-circle.png */; };
 		F91F29D716C8453CB76B957E /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */; };
-		67A1B8CCABE24C63BF331E52 /* banner_news.png in Resources */ = {isa = PBXBuildFile; fileRef = A007B4F4798B4E7483EFD10E /* banner_news.png */; };
-		049F6D95AD144BCBB6E77E96 /* banner_notifications.png in Resources */ = {isa = PBXBuildFile; fileRef = C582F54C0C5540078838006B /* banner_notifications.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -241,6 +241,7 @@
 		987D8832384445AF9BE931EA /* backup-notification-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark@2x.png"; path = "../assets/images/backup-notification-dark@2x.png"; sourceTree = "<group>"; };
 		9E0A5095C2B34207A41D2E1A /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
 		9F6B60F8C6B54ED1821FA48E /* backup-mpc-suggestion-dark@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-dark@3x.png"; path = "../assets/images/backup-mpc-suggestion-dark@3x.png"; sourceTree = "<group>"; };
+		A007B4F4798B4E7483EFD10E /* banner_news.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = banner_news.png; path = ../assets/images/banner_news.png; sourceTree = "<group>"; };
 		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; };
 		A177E706C7A74376B487D87A /* backup-mpc-suggestion-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-dark@2x.png"; path = "../assets/images/backup-mpc-suggestion-dark@2x.png"; sourceTree = "<group>"; };
 		A43FD58137A7479AA8C921C8 /* bluetooth-failed@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@3x.png"; path = "../assets/images/bluetooth-failed@3x.png"; sourceTree = "<group>"; };
@@ -255,6 +256,7 @@
 		BC1BF4D5F5414DB89C675767 /* card-circles-0@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@2x.png"; path = "../assets/images/card-circles-0@2x.png"; sourceTree = "<group>"; };
 		BEF7A8588211C7750BA341AD /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C497F8BD3A10E140EB1BEE3B /* Pods-haqq-haqqTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.debug.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C582F54C0C5540078838006B /* banner_notifications.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = banner_notifications.png; path = ../assets/images/banner_notifications.png; sourceTree = "<group>"; };
 		CCB6A71C6D0B4611BD0020F4 /* backup-notification-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; };
 		D35FE9082706444AB8F75888 /* bluetooth-failed.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; };
 		D69B77F39E664C21827D2371 /* signup-network-exists-warning@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning@3x.png"; path = "../assets/images/signup-network-exists-warning@3x.png"; sourceTree = "<group>"; };
@@ -272,8 +274,6 @@
 		F67EF005450E4252B041D849 /* islm-logo-circles@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles@2x.png"; path = "../assets/images/islm-logo-circles@2x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
 		FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light@3x.png"; path = "../assets/images/browser-error-light@3x.png"; sourceTree = "<group>"; };
-		A007B4F4798B4E7483EFD10E /* banner_news.png */ = {isa = PBXFileReference; name = "banner_news.png"; path = "../assets/images/banner_news.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C582F54C0C5540078838006B /* banner_notifications.png */ = {isa = PBXFileReference; name = "banner_notifications.png"; path = "../assets/images/banner_notifications.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

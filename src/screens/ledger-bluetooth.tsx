@@ -46,6 +46,7 @@ export const LedgerBluetoothScreen = () => {
     setLoading(true);
     const sub = await tryToInitBt();
     console.log('sub');
+    // @ts-ignore
     subscription.current = sub.subscribe({
       next: (state: State) => {
         console.log('state', state);
