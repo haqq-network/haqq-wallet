@@ -347,18 +347,5 @@ export const realm = new Realm({
         newObject.chainId = chainIds.get(oldObjects[objectIndex].providerId);
       }
     }
-
-    if (oldRealm.schemaVersion < 56) {
-      const oldObjects = oldRealm.objects('News');
-
-      const newObjects = newRealm.objects<{
-        status: string;
-      }>('News');
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        newObject.status = 'published';
-      }
-    }
   },
 });
