@@ -40,16 +40,16 @@ export const PopupNotificationNews = ({
 
   const onSkip = useCallback(() => {
     return Alert.alert(
-      getText(I18N.backupNotificationAlertTitle),
-      getText(I18N.backupNotificationAlertDescription),
+      getText(I18N.backupNotificationNewsAlertTitle),
+      getText(I18N.backupNotificationNewsAlertDescription),
       [
         {
           text: getText(I18N.cancel),
           style: 'cancel',
         },
         {
-          text: getText(I18N.accept),
-          style: 'destructive',
+          text: getText(I18N.later),
+          style: 'default',
           onPress: onClickNotNow,
         },
       ],

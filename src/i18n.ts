@@ -109,6 +109,7 @@ export enum I18N {
   no,
   name,
   address,
+  later,
   accept,
   cancel,
   save,
@@ -608,6 +609,8 @@ export enum I18N {
   walletConnectPairError,
   walletConnectPairPending,
   walletConnectPairInitError,
+  backupNotificationNewsAlertTitle,
+  backupNotificationNewsAlertDescription,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1339,4 +1342,8 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectPairError]: 'Relay protocol is not supported',
   [I18N.walletConnectPairPending]: 'Connection may take some time',
   [I18N.walletConnectPairInitError]: 'WalletConnect is not initialized',
+  [I18N.backupNotificationNewsAlertTitle]: 'Proceed without subscription?',
+  [I18N.backupNotificationNewsAlertDescription]:
+    'If you would like to subscribe to news at a later time, you can do so in the notification settings section.',
+  [I18N.later]: 'Later',
 };
