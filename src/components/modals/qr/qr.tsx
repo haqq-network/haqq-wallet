@@ -88,7 +88,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }
       } else if (address.startsWith('wc:')) {
         hideModal();
-        app.emit(Events.onWalletConnectUri, address);
+        setTimeout(() => {
+          app.emit(Events.onWalletConnectUri, 'address');
+        }, 1000);
       } else {
         setError(true);
         vibrate(HapticEffects.error);
@@ -97,7 +99,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [rows, prepareAddress, app],
+    [rows, app, prepareAddress],
   );
 
   const onGetAddress = useCallback(
