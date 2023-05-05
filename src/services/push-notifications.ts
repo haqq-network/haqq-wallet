@@ -149,12 +149,29 @@ export class PushNotifications extends EventEmitter {
     return (await req.json()) as T;
   }
 
-  async unsubscribeAddress<T extends object>(
+  async unsubscribeByTokenAndAddress<T extends object>(
     token_id: string,
     address: string,
   ) {
     const req = await fetch(
       `${this.path}notification_subscription/${token_id}/${address}`,
+      {
+        method: 'DELETE',
+        headers: {
+          accept: 'application/json, text/plain, */*',
+          'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+          connection: 'keep-alive',
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      },
+    );
+
+    return (await req.json()) as T;
+  }
+
+  async unsubscribeByToken<T extends object>(token_id: string) {
+    const req = await fetch(
+      `${this.path}notification_subscription/${token_id}`,
       {
         method: 'DELETE',
         headers: {

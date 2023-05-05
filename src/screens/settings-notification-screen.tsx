@@ -6,6 +6,8 @@ import {SettingsNotification} from '@app/components/settings-notification';
 import {app} from '@app/contexts';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerNotificationsTopicUnsubscribe} from '@app/event-actions/on-banner-notifications-topic-unsubscribe';
+import {onPushSubscriptionTransactionsSubscribe} from '@app/event-actions/on-push-subscription-transactions-subscribe';
+import {onPushSubscriptionTransactionsUnsubscribe} from '@app/event-actions/on-push-subscription-transactions-unsubscribe';
 import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -30,17 +32,12 @@ export const SettingsNotificationScreen = () => {
 
   const onToggleTransactionPushNotification = useCallback(
     async ({nativeEvent: {value}}: SwitchChangeEvent) => {
-      VariablesBool.set(TRANSACTION_TOPIC_VARIABLE_NAME, value);
       setTransactionPushNotificationEnabled(value);
 
       if (value) {
-        await PushNotifications.instance.subscribeToTopic(
-          PushNotificationTopicsEnum.transactions,
-        );
+        await onPushSubscriptionTransactionsSubscribe();
       } else {
-        await PushNotifications.instance.unsubscribeFromTopic(
-          PushNotificationTopicsEnum.transactions,
-        );
+        await onPushSubscriptionTransactionsUnsubscribe();
       }
     },
     [],

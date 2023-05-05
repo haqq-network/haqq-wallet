@@ -2,6 +2,7 @@ import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
 import {realm} from '@app/models';
 import {Transaction} from '@app/models/transaction';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {PushNotifications} from '@app/services/push-notifications';
 
@@ -33,10 +34,12 @@ export async function onWalletRemove(
       }
     }
 
-    if (snapshot.subscription) {
-      await PushNotifications.instance.unsubscribeAddress(
-        snapshot.subscription,
-        snapshot.address,
+    const subscription = VariablesString.get('notificationToken');
+
+    if (subscription) {
+      await PushNotifications.instance.unsubscribeByTokenAndAddress(
+        subscription,
+        address,
       );
     }
 
