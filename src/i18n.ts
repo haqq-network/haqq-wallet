@@ -1078,7 +1078,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionFinishSendingComplete]: 'Transaction Completed!',
   [I18N.transactionFinishEditContact]: 'Edit Contact',
   [I18N.transactionFinishAddContact]: 'Add Contact',
-  [I18N.transactionFinishHash]: 'Hash',
+  [I18N.transactionFinishHash]: 'Explorer',
   [I18N.transactionFinishDone]: 'Done',
   [I18N.transactionFinishContactAdded]: 'Contact added',
   [I18N.transactionFinishContactUpdated]: 'Contact updated',
