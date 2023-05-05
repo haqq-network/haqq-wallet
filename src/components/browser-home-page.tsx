@@ -89,12 +89,13 @@ export const BrowserHomePage = ({
             component={renderFavouriteTab}
             rigntActon={
               <Button
+                disabled={true}
                 textStyle={styles.tabActionButton}
                 style={styles.tabActionButton}
                 i18n={I18N.edit}
                 onPress={onEditFavouritePress}
                 variant={ButtonVariant.text}
-                textColor={Color.textGreen1}
+                textColor={Color.transparent}
               />
             }
           />
