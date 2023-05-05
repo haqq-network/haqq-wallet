@@ -44,14 +44,11 @@ export const Web3BrowserScreen = () => {
     [user.providerId],
   );
 
-  const onPressHeaderUrl = useCallback(
-    ({siteUrl, clearSiteUrl}: Web3BrowserPressHeaderEvent) => {
-      navigation.navigate('browserSearchPage', {
-        initialSearchText: siteUrl || clearSiteUrl,
-      });
-    },
-    [navigation],
-  );
+  const onPressHeaderUrl = useCallback(({}: Web3BrowserPressHeaderEvent) => {
+    // navigation.navigate('browserSearchPage', {
+    //   initialSearchText: siteUrl || clearSiteUrl,
+    // });
+  }, []);
 
   const onPressHeaderWallet = useCallback(
     async (accountId: string) => {

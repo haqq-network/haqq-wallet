@@ -1,18 +1,11 @@
 import React, {useCallback} from 'react';
 
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {
-  Button,
-  ButtonVariant,
-  Icon,
-  IconsName,
-  Input,
-  LottieWrap,
-} from '@app/components/ui';
+import {Button, ButtonVariant, LottieWrap} from '@app/components/ui';
 import {useThemeSelector} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Link} from '@app/types';
 
 import {BrowserHomePageLinkList} from './browser-home-page-link-list';
@@ -36,7 +29,7 @@ export interface BrowserHomePageProps {
 export const BrowserHomePage = ({
   favouriteLinks,
   recentLinks,
-  onSearchPress,
+  // onSearchPress,
   onFavouritePress,
   onRecentPress,
   onClearRecentPress,
@@ -75,17 +68,17 @@ export const BrowserHomePage = ({
         <LottieWrap style={styles.animation} autoPlay loop source={animation} />
       </View>
       <View style={styles.searchContainer}>
-        <TouchableOpacity onPress={onSearchPress}>
-          <Input
-            leftAction={
-              <Icon color={Color.graphicBase2} name={IconsName.search} />
-            }
-            placeholder={getText(I18N.browserEnterSiteNameOrURL)}
-            keyboardType={'web-search'}
-            editable={false}
-            onPressIn={onSearchPress}
-          />
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={onSearchPress}>*/}
+        {/*  <Input*/}
+        {/*    leftAction={*/}
+        {/*      <Icon color={Color.graphicBase2} name={IconsName.search} />*/}
+        {/*    }*/}
+        {/*    placeholder={getText(I18N.browserEnterSiteNameOrURL)}*/}
+        {/*    keyboardType={'web-search'}*/}
+        {/*    editable={false}*/}
+        {/*    onPressIn={onSearchPress}*/}
+        {/*  />*/}
+        {/*</TouchableOpacity>*/}
       </View>
 
       <View>
