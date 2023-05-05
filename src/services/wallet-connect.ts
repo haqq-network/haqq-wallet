@@ -9,7 +9,10 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
+import {captureException} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
+import {sendNotification} from '@app/services/toast';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
 
@@ -37,6 +40,10 @@ export class WalletConnect extends EventEmitter {
           WALLET_CONNECT_PROJECT_ID,
           WALLET_CONNECT_RELAY_URL,
         );
+      }
+
+      if (this._client) {
+        return console.warn('WalletConnect:init already initialized');
       }
 
       this._core = new Core({
@@ -92,17 +99,32 @@ export class WalletConnect extends EventEmitter {
         this._emitActiveSessions.bind(this),
       );
     } catch (err) {
-      console.error('[WalletConnect] init error', err);
+      if (err instanceof Error) {
+        console.error('[WalletConnect] init error', err);
+        captureException(err, 'WalletConnect:init');
+      }
     }
   }
 
   public async pair(uri: string) {
-    if (this._client) {
-      const resp = await this._client.core.pairing.pair({uri});
+    if (!this._client || !this._core) {
+      return sendNotification(I18N.walletConnectPairInitError);
+    }
+
+    try {
+      const resp = await this._core.pairing.pair({uri, activatePairing: true});
+
+      if (!resp) {
+        sendNotification(I18N.walletConnectPairError);
+      }
+
       if (DEBUG_VARS.enableWalletConnectLogger) {
         console.log('WalletConnect:pair ', resp);
       }
-      return resp;
+    } catch (err) {
+      console.error('[WalletConnect] pair', err);
+      sendNotification(I18N.walletConnectPairError);
+      await this._reInit();
     }
   }
 
@@ -189,7 +211,7 @@ export class WalletConnect extends EventEmitter {
       return this.rejectSessionRequest(event?.id, event?.topic);
     }
 
-    return await this._client?.respondSessionRequest({
+    return this._client?.respondSessionRequest({
       topic: event.topic,
       response: {id: event.id, result, jsonrpc: '2.0'},
     });
@@ -197,6 +219,13 @@ export class WalletConnect extends EventEmitter {
 
   private _emitActiveSessions() {
     this.emit(WalletConnectEvents.onSessionsChange, this.getActiveSessions());
+  }
+
+  private async _reInit() {
+    await this._core?.relayer?.transportClose?.();
+    this._core = null;
+    this._client = null;
+    await this.init();
   }
 
   // typed fix for `Web3Wallet.on`

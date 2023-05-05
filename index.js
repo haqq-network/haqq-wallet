@@ -2,8 +2,8 @@
  * @format
  */
 import '@ethersproject/shims';
+import '@walletconnect/react-native-compat'
 import {AppRegistry} from 'react-native';
-import 'react-native-get-random-values';
 
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
@@ -13,23 +13,8 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Overview} from './src/overview';
 
-const TextEncodingPolyfill = require('text-encoding');
-const BigInt = require('big-integer');
-const Buffer = require('buffer');
-
-Object.assign(global, {
-  TextEncoder: TextEncodingPolyfill.TextEncoder,
-  TextDecoder: TextEncodingPolyfill.TextDecoder,
-  BigInt: BigInt,
-  Buffer: Buffer.Buffer,
-});
-
 import './src/event-actions';
 import {DEBUG_VARS} from '@app/debug-vars';
-
-if (typeof Buffer === 'undefined') {
-  global.Buffer = require('buffer').Buffer;
-}
 
 if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
   try {

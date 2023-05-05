@@ -6,6 +6,7 @@ import {hideModal} from '@app/helpers';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {WalletConnect} from '@app/services/wallet-connect';
 
 export const OnboardingFinishScreen = () => {
   const navigation = useTypedNavigation();
@@ -25,6 +26,7 @@ export const OnboardingFinishScreen = () => {
       navigation.getParent()?.goBack();
     } else {
       app.getUser().onboarded = true;
+      WalletConnect.instance.init();
       navigation.replace('home');
     }
     requestAnimationFrame(() => {
