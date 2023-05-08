@@ -10,6 +10,7 @@
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {ADJUST_ENVIRONMENT, ADJUST_TOKEN} from '@env';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
@@ -19,6 +20,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
 import {AppState, Linking, Platform} from 'react-native';
+import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -211,6 +213,15 @@ export const App = () => {
       };
     }
   }, [initialized]);
+
+  useEffect(() => {
+    const adjustConfig = new AdjustConfig(ADJUST_TOKEN, ADJUST_ENVIRONMENT);
+    Adjust.create(adjustConfig);
+
+    return () => {
+      Adjust.componentWillUnmount();
+    };
+  }, []);
 
   const onStateChange = useCallback(async () => {
     Sentry.addBreadcrumb({

@@ -25,4 +25,7 @@ declare module '@env' {
   export const AIRDROP_MAINNET_URL: string;
   export const ENABLE_SKIP_PIN_ON_LOGIN: string;
   export const HAQQ_BACKEND: string;
+
+  export const ADJUST_TOKEN: string;
+  export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';
 }
