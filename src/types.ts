@@ -393,7 +393,9 @@ export type RootStackParamList = {
   popupNotificationNews: {
     bannerId: PopupNotificationBannerId;
   };
-  trackActivity: undefined;
+  popupTrackActivity: {
+    bannerId: string;
+  };
   proposal: {
     id: number;
   };

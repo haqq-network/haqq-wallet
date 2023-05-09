@@ -1,4 +1,6 @@
 import {Color} from '@app/colors';
+import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-click';
+import {onBannerAnalyticsSnooze} from '@app/event-actions/on-banner-analytics-snooze';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
 import {onBannerNotificationsEnable} from '@app/event-actions/on-banner-notifications-enable';
 import {onBannerNotificationsNews} from '@app/event-actions/on-banner-notifications-news';
@@ -47,6 +49,12 @@ export async function onBannerAction(
       break;
     case 'notificationsTopicSnooze':
       await onBannerNotificationsTopicSnooze(id, params.topic ?? '');
+      break;
+    case 'trackActivityClick':
+      await onBannerAnalyticsCreate(id);
+      break;
+    case 'trackActivityClose':
+      await onBannerAnalyticsSnooze(id);
       break;
   }
 }

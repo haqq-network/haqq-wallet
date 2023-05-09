@@ -132,6 +132,10 @@
 		F6333C839A41368162796864 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AB42A44B568DB1BF41536E /* libPods-haqq-haqqTests.a */; };
 		F8B96DA771D249F4AE2F840B /* question-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CC5CC6680A74F829967534E /* question-circle.png */; };
 		F91F29D716C8453CB76B957E /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */; };
+		ED7425B771ED45E9A51014FB /* banner_analytics.png in Resources */ = {isa = PBXBuildFile; fileRef = 164BC3E0578D429BB60C3882 /* banner_analytics.png */; };
+		F4B642A1C31E4DD89E09315D /* notification_bell.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D2B28F21D2040AAB9338C37 /* notification_bell.png */; };
+		FB792B1CD4364722B66FA860 /* notification_bell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */; };
+		A58FF1D829BF4ABABB4EB990 /* notification_bell@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -282,6 +286,10 @@
 		F67EF005450E4252B041D849 /* islm-logo-circles@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles@2x.png"; path = "../assets/images/islm-logo-circles@2x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
 		FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light@3x.png"; path = "../assets/images/browser-error-light@3x.png"; sourceTree = "<group>"; };
+		164BC3E0578D429BB60C3882 /* banner_analytics.png */ = {isa = PBXFileReference; name = "banner_analytics.png"; path = "../assets/images/banner_analytics.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4D2B28F21D2040AAB9338C37 /* notification_bell.png */ = {isa = PBXFileReference; name = "notification_bell.png"; path = "../assets/images/notification_bell.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */ = {isa = PBXFileReference; name = "notification_bell@2x.png"; path = "../assets/images/notification_bell@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */ = {isa = PBXFileReference; name = "notification_bell@3x.png"; path = "../assets/images/notification_bell@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -570,6 +578,10 @@
 				49ED56AEFDC34FD99E124A10 /* news_placeholder@3x.png */,
 				A007B4F4798B4E7483EFD10E /* banner_news.png */,
 				C582F54C0C5540078838006B /* banner_notifications.png */,
+				164BC3E0578D429BB60C3882 /* banner_analytics.png */,
+				4D2B28F21D2040AAB9338C37 /* notification_bell.png */,
+				EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */,
+				2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -764,6 +776,10 @@
 				7A830A052D52472294831925 /* news_placeholder@3x.png in Resources */,
 				67A1B8CCABE24C63BF331E52 /* banner_news.png in Resources */,
 				049F6D95AD144BCBB6E77E96 /* banner_notifications.png in Resources */,
+				ED7425B771ED45E9A51014FB /* banner_analytics.png in Resources */,
+				F4B642A1C31E4DD89E09315D /* notification_bell.png in Resources */,
+				FB792B1CD4364722B66FA860 /* notification_bell@2x.png in Resources */,
+				A58FF1D829BF4ABABB4EB990 /* notification_bell@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

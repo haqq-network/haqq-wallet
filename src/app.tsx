@@ -74,7 +74,7 @@ import {Modals} from './screens/modals';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
-import {TrackActivityScreen} from './screens/popup-track-activity';
+import {PopupTrackActivityScreen} from './screens/popup-track-activity';
 import {ProposalDepositScreen} from './screens/proposal-deposit';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
@@ -218,6 +218,14 @@ export const App = () => {
     const adjustConfig = new AdjustConfig(ADJUST_TOKEN, ADJUST_ENVIRONMENT);
     Adjust.create(adjustConfig);
 
+    Adjust.getAppTrackingAuthorizationStatus(function (status) {
+      console.log('Authorization status = ' + status);
+    });
+
+    Adjust.getAdid(adid => {
+      console.log('Adid = ' + adid);
+    });
+
     return () => {
       Adjust.componentWillUnmount();
     };
@@ -329,8 +337,8 @@ export const App = () => {
                 options={actionsSheet}
               />
               <Stack.Screen
-                name="trackActivity"
-                component={TrackActivityScreen}
+                name="popupTrackActivity"
+                component={PopupTrackActivityScreen}
                 options={actionsSheet}
               />
               <Stack.Screen
