@@ -18,6 +18,9 @@ import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
 export enum AdjustEvents {
   sendFund = '44vsd8',
+  pushNotifications = '2x889j',
+  pushChannelSubscribe = '5juk3x',
+  pushChannelUnsubscribe = 'za2nkc',
 }
 
 export enum TransactionSource {
