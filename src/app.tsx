@@ -10,6 +10,7 @@
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {ADJUST_ENVIRONMENT, ADJUST_TOKEN} from '@env';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
@@ -19,6 +20,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
 import {AppState, Linking, Platform} from 'react-native';
+import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -72,7 +74,7 @@ import {Modals} from './screens/modals';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
-import {TrackActivityScreen} from './screens/popup-track-activity';
+import {PopupTrackActivityScreen} from './screens/popup-track-activity';
 import {ProposalDepositScreen} from './screens/proposal-deposit';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
@@ -212,6 +214,23 @@ export const App = () => {
     }
   }, [initialized]);
 
+  useEffect(() => {
+    const adjustConfig = new AdjustConfig(ADJUST_TOKEN, ADJUST_ENVIRONMENT);
+    Adjust.create(adjustConfig);
+
+    Adjust.getAppTrackingAuthorizationStatus(function (status) {
+      console.log('Authorization status = ' + status);
+    });
+
+    Adjust.getAdid(adid => {
+      console.log('Adid = ' + adid);
+    });
+
+    return () => {
+      Adjust.componentWillUnmount();
+    };
+  }, []);
+
   const onStateChange = useCallback(async () => {
     Sentry.addBreadcrumb({
       category: 'navigation',
@@ -318,8 +337,8 @@ export const App = () => {
                 options={actionsSheet}
               />
               <Stack.Screen
-                name="trackActivity"
-                component={TrackActivityScreen}
+                name="popupTrackActivity"
+                component={PopupTrackActivityScreen}
                 options={actionsSheet}
               />
               <Stack.Screen

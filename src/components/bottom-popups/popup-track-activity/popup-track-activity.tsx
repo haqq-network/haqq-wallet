@@ -17,10 +17,14 @@ import {I18N} from '@app/i18n';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type TrackActivityProps = {
-  onClick: () => void;
+  onClickContinue: () => void;
+  onClickNotNow: () => void;
 };
 
-export const TrackActivity = ({onClick}: TrackActivityProps) => {
+export const TrackActivity = ({
+  onClickContinue,
+  onClickNotNow,
+}: TrackActivityProps) => {
   return (
     <View style={styles.sub}>
       <Spacer height={4} />
@@ -71,11 +75,17 @@ export const TrackActivity = ({onClick}: TrackActivityProps) => {
       </View>
       <Spacer height={28} />
       <Button
-        i18n={I18N.continue}
+        i18n={I18N.trackActivityContinue}
         variant={ButtonVariant.contained}
         size={ButtonSize.middle}
-        onPress={onClick}
-        style={styles.margin}
+        onPress={onClickContinue}
+      />
+      <Spacer height={16} />
+      <Button
+        i18n={I18N.trackActivityNotNow}
+        variant={ButtonVariant.third}
+        size={ButtonSize.middle}
+        onPress={onClickNotNow}
       />
       <Spacer height={8} />
     </View>
@@ -109,7 +119,6 @@ const styles = createTheme({
   subtitle: {
     marginBottom: 4,
   },
-  margin: {marginBottom: 8},
   imageWrapper: {
     backgroundColor: Color.bg1,
     marginBottom: 20,

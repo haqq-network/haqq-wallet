@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Decimal from 'decimal.js';
+import {Adjust, AdjustEvent} from 'react-native-adjust';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {Events} from '@app/events';
@@ -19,7 +20,7 @@ import {
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
-import {WalletType} from '@app/types';
+import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
@@ -78,6 +79,8 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
+          Adjust.trackEvent(new AdjustEvent(AdjustEvents.sendFund));
+
           await awaitForEventDone(
             Events.onTransactionCreate,
             transaction,

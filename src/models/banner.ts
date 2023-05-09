@@ -56,7 +56,7 @@ export class Banner extends Realm.Object {
     primaryKey: 'id',
   };
   id!: string;
-  type!: 'claimCode' | 'notifications' | 'notificationsTopic';
+  type!: 'claimCode' | 'notifications' | 'notificationsTopic' | 'trackActivity';
   title!: string;
   description: string;
   buttons: BannerButton[];

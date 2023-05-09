@@ -16,6 +16,10 @@ import {Transaction} from './models/transaction';
 import {MpcProviders} from './services/provider-mpc';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
+export enum AdjustEvents {
+  sendFund = '44vsd8',
+}
+
 export enum TransactionSource {
   unknown,
   date,
@@ -389,7 +393,9 @@ export type RootStackParamList = {
   popupNotificationNews: {
     bannerId: PopupNotificationBannerId;
   };
-  trackActivity: undefined;
+  popupTrackActivity: {
+    bannerId: string;
+  };
   proposal: {
     id: number;
   };

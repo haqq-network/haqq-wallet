@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
 import Decimal from 'decimal.js';
+import {Adjust, AdjustEvent} from 'react-native-adjust';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
@@ -13,6 +14,7 @@ import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {AdjustEvents} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export const TransactionLedgerScreen = () => {
@@ -52,6 +54,8 @@ export const TransactionLedgerScreen = () => {
         );
 
         if (transaction) {
+          Adjust.trackEvent(new AdjustEvent(AdjustEvents.sendFund));
+
           await awaitForEventDone(
             Events.onAddressBookCreate,
             transaction,

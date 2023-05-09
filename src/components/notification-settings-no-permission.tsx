@@ -10,6 +10,7 @@ import {I18N} from '@app/i18n';
 export interface SettingsNotificationNoPermissionProps {
   onPressGoToPhoneSettings: () => void;
 }
+
 export const SettingsNotificationNoPermission = ({
   onPressGoToPhoneSettings,
 }: SettingsNotificationNoPermissionProps) => {
@@ -17,7 +18,7 @@ export const SettingsNotificationNoPermission = ({
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require('@assets/images/notification-bell.png')}
+        source={require('@assets/images/notification_bell.png')}
       />
       <Spacer height={32} />
       <Text center t7 i18n={I18N.weDontHaveNotificationPermission} />

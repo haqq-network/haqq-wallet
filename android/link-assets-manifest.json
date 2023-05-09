@@ -102,6 +102,10 @@
       "sha1": "12bb8524ca6f9b624f755e2423d09e49f4a7268a"
     },
     {
+      "path": "assets/images/banner_analytics.png",
+      "sha1": "ac1100105d9d38d707da66258995bf9be7b89f53"
+    },
+    {
       "path": "assets/images/banner_news.png",
       "sha1": "6f02763e9312c302d870f73663576b6e502fff31"
     },
@@ -300,6 +304,18 @@
     {
       "path": "assets/images/news_placeholder@3x.png",
       "sha1": "cb50cda1701776daeba2a7572c42dc45101b8113"
+    },
+    {
+      "path": "assets/images/notification_bell.png",
+      "sha1": "3169190b3ebfeb64eed89284c9ecdc8b677e0c15"
+    },
+    {
+      "path": "assets/images/notification_bell@2x.png",
+      "sha1": "e980efcbf94073e2d67fa84dd5046c30da6b894b"
+    },
+    {
+      "path": "assets/images/notification_bell@3x.png",
+      "sha1": "d5ee2ee8459962fc73376fd2d98eb958bacc8951"
     },
     {
       "path": "assets/images/qr-logo.png",
