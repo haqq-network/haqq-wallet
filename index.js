@@ -13,11 +13,11 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Overview} from './src/overview';
 
-const BigInt = require('big-integer');
-
-Object.assign(global, {
-  BigInt: BigInt,
-});
+// const BigInt = require('big-integer');
+//
+// Object.assign(global, {
+//   BigInt: BigInt,
+// });
 
 import './src/event-actions';
 import {DEBUG_VARS} from '@app/debug-vars';

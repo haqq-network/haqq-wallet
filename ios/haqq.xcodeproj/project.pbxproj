@@ -95,6 +95,7 @@
 		9DE809D9B28540F7A50DA67C /* mnemonic-notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A939DA77EF542A2827CE749 /* mnemonic-notify.png */; };
 		9E5AE1B8944744B3A9388E0F /* card-circles-0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC1BF4D5F5414DB89C675767 /* card-circles-0@2x.png */; };
 		A26765D34B9E43E5AFB1CA99 /* bluetooth-unauthorized.png in Resources */ = {isa = PBXBuildFile; fileRef = EF5B6244A6FD49CB98807F7A /* bluetooth-unauthorized.png */; };
+		A58FF1D829BF4ABABB4EB990 /* notification_bell@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */; };
 		A6EEADB3837E4253914048A2 /* backup-notification-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4105EFA9B0BB4D07BDC112C1 /* backup-notification-light@3x.png */; };
 		A83E71BC0B21466298748DA1 /* qr-logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C454ACD843E4BE8B4BAF182 /* qr-logo@3x.png */; };
 		A945ED9A615A4B26BD37506A /* bluetooth-powered-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 237ACC1D53D140F093CE4102 /* bluetooth-powered-off.png */; };
@@ -117,7 +118,7 @@
 		C9CE27811447434A801CBB77 /* ledger-locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4044E8C1BB4C39AA9FF56A /* ledger-locked@2x.png */; };
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
 		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
-		CF0D49E2FABD41D9A34AB04C /* (null) in Resources */ = {isa = PBXBuildFile; };
+		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
 		D2EF8B9028754ED2AA9994E5 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */; };
@@ -127,15 +128,14 @@
 		E173578A6FFA4632A2C1E840 /* card-rhombus-0@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4581AD6E6AD34707BA8B8BB7 /* card-rhombus-0@3x.png */; };
 		E4562F04DB2C48EEBBE27262 /* card-circles-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 1BBEC351BC0E4923BD204391 /* card-circles-0.png */; };
 		E5221D7A336E4FAFB42E4C8B /* ElMessiri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */; };
+		ED7425B771ED45E9A51014FB /* banner_analytics.png in Resources */ = {isa = PBXBuildFile; fileRef = 164BC3E0578D429BB60C3882 /* banner_analytics.png */; };
 		F41A63864BCF47DD814BEF2E /* browser-error-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */; };
+		F4B642A1C31E4DD89E09315D /* notification_bell.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D2B28F21D2040AAB9338C37 /* notification_bell.png */; };
 		F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */; };
 		F6333C839A41368162796864 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AB42A44B568DB1BF41536E /* libPods-haqq-haqqTests.a */; };
 		F8B96DA771D249F4AE2F840B /* question-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CC5CC6680A74F829967534E /* question-circle.png */; };
 		F91F29D716C8453CB76B957E /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */; };
-		ED7425B771ED45E9A51014FB /* banner_analytics.png in Resources */ = {isa = PBXBuildFile; fileRef = 164BC3E0578D429BB60C3882 /* banner_analytics.png */; };
-		F4B642A1C31E4DD89E09315D /* notification_bell.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D2B28F21D2040AAB9338C37 /* notification_bell.png */; };
 		FB792B1CD4364722B66FA860 /* notification_bell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */; };
-		A58FF1D829BF4ABABB4EB990 /* notification_bell@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -164,6 +164,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = haqq/main.m; sourceTree = "<group>"; };
 		1631E69B702043598086BDCC /* exclamation-mark-error@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "exclamation-mark-error@3x.png"; path = "../assets/images/exclamation-mark-error@3x.png"; sourceTree = "<group>"; };
 		16464E6CF9A24E1590282D07 /* SF-Pro-Display-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Semibold.ttf"; path = "../assets/fonts/SF-Pro-Display-Semibold.ttf"; sourceTree = "<group>"; };
+		164BC3E0578D429BB60C3882 /* banner_analytics.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = banner_analytics.png; path = ../assets/images/banner_analytics.png; sourceTree = "<group>"; };
 		166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning@2x.png"; path = "../assets/images/signup-network-exists-warning@2x.png"; sourceTree = "<group>"; };
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
 		1BBEC351BC0E4923BD204391 /* card-circles-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0.png"; path = "../assets/images/card-circles-0.png"; sourceTree = "<group>"; };
@@ -205,6 +206,7 @@
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		237ACC1D53D140F093CE4102 /* bluetooth-powered-off.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off.png"; path = "../assets/images/bluetooth-powered-off.png"; sourceTree = "<group>"; };
 		2AB210133DCA404DA5F3E8E2 /* question-square@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-square@3x.png"; path = "../assets/images/question-square@3x.png"; sourceTree = "<group>"; };
+		2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "notification_bell@3x.png"; path = "../assets/images/notification_bell@3x.png"; sourceTree = "<group>"; };
 		2FB0F0A6B52E40B0AD9B9AC7 /* browser-error-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light.png"; path = "../assets/images/browser-error-light.png"; sourceTree = "<group>"; };
 		3348BC6A64CB46A7B4E5BCCA /* bluetooth-powered-off@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off@2x.png"; path = "../assets/images/bluetooth-powered-off@2x.png"; sourceTree = "<group>"; };
 		351AF865381043718EEE3555 /* browser-error-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light@2x.png"; path = "../assets/images/browser-error-light@2x.png"; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 		49ED56AEFDC34FD99E124A10 /* news_placeholder@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "news_placeholder@3x.png"; path = "../assets/images/news_placeholder@3x.png"; sourceTree = "<group>"; };
 		4AE4D86AC6E5411FA25294A4 /* signup-network-exists-warning.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning.png"; path = "../assets/images/signup-network-exists-warning.png"; sourceTree = "<group>"; };
 		4C4044E8C1BB4C39AA9FF56A /* ledger-locked@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-locked@2x.png"; path = "../assets/images/ledger-locked@2x.png"; sourceTree = "<group>"; };
+		4D2B28F21D2040AAB9338C37 /* notification_bell.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = notification_bell.png; path = ../assets/images/notification_bell.png; sourceTree = "<group>"; };
 		4EC478ED7CF6446EB76CB24B /* question-circle@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@2x.png"; path = "../assets/images/question-circle@2x.png"; sourceTree = "<group>"; };
 		4F7365E24AFF4A56952E90C3 /* backup-mpc-suggestion-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-mpc-suggestion-light@2x.png"; path = "../assets/images/backup-mpc-suggestion-light@2x.png"; sourceTree = "<group>"; };
 		507F49E8E14D423A95B1CE9A /* news_placeholder@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "news_placeholder@2x.png"; path = "../assets/images/news_placeholder@2x.png"; sourceTree = "<group>"; };
@@ -277,6 +280,7 @@
 		E4889AA51BE54118AE456FE2 /* SF-Pro-Display-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Thin.ttf"; path = "../assets/fonts/SF-Pro-Display-Thin.ttf"; sourceTree = "<group>"; };
 		E796C0D2F7154FA79827B16B /* ledger-no-app@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app@3x.png"; path = "../assets/images/ledger-no-app@3x.png"; sourceTree = "<group>"; };
 		EA46F5D0F4564B1F9BD30D72 /* ledger-no-app@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app@2x.png"; path = "../assets/images/ledger-no-app@2x.png"; sourceTree = "<group>"; };
+		EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "notification_bell@2x.png"; path = "../assets/images/notification_bell@2x.png"; sourceTree = "<group>"; };
 		EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = InpageBridgeWeb3.js; path = ../assets/custom/InpageBridgeWeb3.js; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EF5B6244A6FD49CB98807F7A /* bluetooth-unauthorized.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-unauthorized.png"; path = "../assets/images/bluetooth-unauthorized.png"; sourceTree = "<group>"; };
@@ -286,10 +290,6 @@
 		F67EF005450E4252B041D849 /* islm-logo-circles@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles@2x.png"; path = "../assets/images/islm-logo-circles@2x.png"; sourceTree = "<group>"; };
 		FA5B2155656A4AB2B7EC267F /* ElMessiri-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Bold.ttf"; path = "../assets/fonts/ElMessiri-Bold.ttf"; sourceTree = "<group>"; };
 		FC8CC85A55CE43F39713CA64 /* browser-error-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light@3x.png"; path = "../assets/images/browser-error-light@3x.png"; sourceTree = "<group>"; };
-		164BC3E0578D429BB60C3882 /* banner_analytics.png */ = {isa = PBXFileReference; name = "banner_analytics.png"; path = "../assets/images/banner_analytics.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4D2B28F21D2040AAB9338C37 /* notification_bell.png */ = {isa = PBXFileReference; name = "notification_bell.png"; path = "../assets/images/notification_bell.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */ = {isa = PBXFileReference; name = "notification_bell@2x.png"; path = "../assets/images/notification_bell@2x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		2B60B8662F784BFEBF43B5EA /* notification_bell@3x.png */ = {isa = PBXFileReference; name = "notification_bell@3x.png"; path = "../assets/images/notification_bell@3x.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -700,7 +700,7 @@
 				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
 				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 				2129B78329CACF69005C0CCA /* overview.storyboard in Resources */,
-				CF0D49E2FABD41D9A34AB04C /* (null) in Resources */,
+				CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */,
 				C4BEF73A66C347A99358D5B8 /* backup-mpc-suggestion-dark.png in Resources */,
 				AE8CAEDCC9DF49298C9BA8D7 /* backup-mpc-suggestion-dark@2x.png in Resources */,
 				1501654943764C75BB3E7A4D /* backup-mpc-suggestion-dark@3x.png in Resources */,
