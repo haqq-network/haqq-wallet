@@ -128,7 +128,10 @@ export async function onAuthorized(
     ),
   );
 
-  const shares2 = shares.filter(s => s[0] !== null) as [string, string][];
+  const shares2 = shares.filter(s => s[0] !== null && s[0] !== '') as [
+    string,
+    string,
+  ][];
 
   if (shares2.length) {
     creds.privateKey = lagrangeInterpolation(
