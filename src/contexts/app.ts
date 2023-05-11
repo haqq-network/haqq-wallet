@@ -201,14 +201,12 @@ class App extends EventEmitter {
 
   async init(): Promise<void> {
     if (!this.user.onboarded) {
-      return Promise.reject('user_not_found');
+      return Promise.resolve();
     }
 
     await this.auth();
 
-    await new Promise(resolve => {
-      this.emit(Events.onWalletsBalanceCheck, resolve);
-    });
+    await awaitForEventDone(Events.onWalletsBalanceCheck);
 
     this.authenticated = true;
 
