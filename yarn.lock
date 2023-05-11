@@ -1743,10 +1743,10 @@
     bech32-converting "^1.0.9"
     events "^3.3.0"
 
-"@haqq/provider-hot-react-native@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-hot-react-native/-/provider-hot-react-native-0.0.5.tgz#894764a552853c87b234feede030bf0bcd2948b7"
-  integrity sha512-46T1naub7pkcezRtC9Zcto0mWXRwiHupcheRE7zULOr4pQ5f0E+BHAGCt4gZ9uYU8QzlHYxMPZD3Rg4FTuGMDw==
+"@haqq/provider-hot-react-native@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-hot-react-native/-/provider-hot-react-native-0.0.6.tgz#c0ab7a31942ae7e5e59a628954020bfe5f8642be"
+  integrity sha512-qj1BeAD5JxA5anO0gtZWCJU4MJrF6OlqHFLL1aFuh6qWx2H3aLZO2KGG6rz3zRBcq4c3CboITuc6eBiOaoBT9g==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
@@ -1772,10 +1772,10 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
 
-"@haqq/provider-mpc-react-native@0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.8.tgz#a19f2caac79dfbb036db4e464b7c9384d045482b"
-  integrity sha512-I9Pubd9WCEc2IK4KVFmsk9GSywZG6Y3qbhjKXDEL3XeAKTCRca9Tb7FO6HZkMZRtOmvbPNzWH9tQL8JdbYY6gg==
+"@haqq/provider-mpc-react-native@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.9.tgz#584f1da600f54911b0d2d70a6134df6d9b8412b7"
+  integrity sha512-/MubQApwJNtX4tXF++Xj2+Zdmtzm3gUqkoNFvQ0rGnyvp+950QBBMF17MCU7PThZNZpZ4EnrmRukygPVZkthPA==
   dependencies:
     "@ethersproject/bytes" "5.7.0"
     "@ethersproject/transactions" "5.7.0"
@@ -1787,14 +1787,16 @@
   resolved "https://registry.yarnpkg.com/@haqq/provider-web3-utils/-/provider-web3-utils-0.0.12.tgz#5554c4f55d8fde4621ff4733b1e37dbfd3039d13"
   integrity sha512-shGWV3v25866eYOplCYNH4lx0Npuf3HiMsVH7hC8lwYO0ic6nvwMlG0MXjCmRABrt6ikH59G0BCu+BFLEvtdbg==
 
-"@haqq/shared-react-native@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.4.tgz#4acba9aefd46b94ba2f9d906630dab2750021444"
-  integrity sha512-nGxIx2bXSg+z5DNmWb4HQ2m+MmD/kHUpgauhgZTB16A5YnAkUm9cH1/gdPONJ5M3kk+65NFsdKNRym3w6ExrjQ==
+"@haqq/shared-react-native@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@haqq/shared-react-native/-/shared-react-native-0.0.7.tgz#84ee9982f438818b00384b04af038dcc0279d7c9"
+  integrity sha512-ITRzZiLi9uMapi/4tx0wOOPiACIsggPR00jmqh3JMwYY7tORnz8xjLrTwIurMGYBjWz3BWJHYtykNJu7jiKtgg==
   dependencies:
+    base-64 "^1.0.0"
     bn.js "5.2.1"
     json-stable-stringify "1.0.2"
-    react-native-base64 "0.2.1"
+    polyfill-crypto.getrandomvalues "^1.0.0"
+    react-native-aes-crypto "2.1.0"
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
