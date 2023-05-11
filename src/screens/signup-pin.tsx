@@ -1,8 +1,7 @@
 import React, {useCallback, useRef} from 'react';
 
 import {METADATA_URL} from '@env';
-import {decryptShare} from '@haqq/provider-mpc-react-native';
-import {getMetadataValue} from '@haqq/shared-react-native';
+import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
 
 import {MpcPin} from '@app/components/mpc-pin';
 import {PinInterface} from '@app/components/pin';

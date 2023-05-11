@@ -3,12 +3,12 @@ import {
   Polynomial,
   ProviderMpcReactNative,
   StorageInterface,
-  encryptShare,
   lagrangeInterpolation,
 } from '@haqq/provider-mpc-react-native';
 import {ITEM_KEY} from '@haqq/provider-mpc-react-native/dist/constants';
 import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
 import {
+  encryptShare,
   getMetadataValue,
   jsonrpcRequest,
   setMetadataValue,
