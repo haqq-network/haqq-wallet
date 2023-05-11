@@ -14,6 +14,7 @@ import {TopTabNavigator} from './top-tab-navigator';
 export interface BrowserHomePageProps {
   favouriteLinks: Link[];
   recentLinks: Link[];
+  focused: boolean;
 
   onSearchPress(): void;
 
@@ -29,6 +30,7 @@ export interface BrowserHomePageProps {
 export const BrowserHomePage = ({
   favouriteLinks,
   recentLinks,
+  focused,
   // onSearchPress,
   onFavouritePress,
   onRecentPress,
@@ -65,7 +67,14 @@ export const BrowserHomePage = ({
   return (
     <View style={styles.container}>
       <View style={styles.animationContainer}>
-        <LottieWrap style={styles.animation} autoPlay loop source={animation} />
+        {focused && (
+          <LottieWrap
+            style={styles.animation}
+            autoPlay
+            loop
+            source={animation}
+          />
+        )}
       </View>
       <View style={styles.searchContainer}>
         {/*<TouchableOpacity onPress={onSearchPress}>*/}
