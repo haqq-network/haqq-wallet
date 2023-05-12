@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
+
 import {BrowserHomePage} from '@app/components/browser-home-page';
 import {useTypedNavigation} from '@app/hooks';
 import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
@@ -36,6 +38,7 @@ export const BrowserHomePageScreen = () => {
     () => searchHistory.map(item => item),
     [searchHistory],
   );
+  const [focused, setFocused] = React.useState(false);
 
   const onFavouritePress = useCallback(
     (link: Link) => {
@@ -65,8 +68,16 @@ export const BrowserHomePageScreen = () => {
     });
   }, []);
 
+  useFocusEffect(() => {
+    setFocused(true);
+    return () => {
+      setFocused(false);
+    };
+  });
+
   return (
     <BrowserHomePage
+      focused={focused}
       favouriteLinks={favouriteLinks}
       recentLinks={recentLinks}
       onSearchPress={onSearchPress}
