@@ -12,7 +12,7 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
   if (params && params.type === 'mpc') {
     const storage = await getProviderStorage('', 'cloud');
     return await ProviderMpcReactNative.initialize(
-      params.mpcPrivateKey,
+      params.mpcPrivateKey || null,
       params.mpcCloudShare || null,
       null,
       params.verifier,
