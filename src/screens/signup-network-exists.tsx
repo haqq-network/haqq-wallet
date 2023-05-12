@@ -63,7 +63,12 @@ export const SignupNetworkExistsScreen = () => {
             const nextScreen = user.onboarded
               ? 'signupStoreWallet'
               : 'onboardingSetupPin';
-            navigation.navigate(nextScreen, route.params);
+
+            // @ts-ignore
+            navigation.navigate(nextScreen, {
+              ...route.params,
+              mpcPrivateKey: null,
+            });
           },
         },
       ],

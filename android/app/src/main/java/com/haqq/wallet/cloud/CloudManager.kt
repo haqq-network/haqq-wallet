@@ -19,12 +19,14 @@ import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.haqq.wallet.R
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 class CloudManager(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
   override fun getName() = "RNCloud"
 
   private var reactContext: ReactApplicationContext
+  private val folderName = "HAQQ Backup"
 
   init {
     this.reactContext = reactContext
@@ -91,6 +93,12 @@ class CloudManager(reactContext: ReactApplicationContext) :
       } else {
         val gfile = com.google.api.services.drive.model.File()
         gfile.name = key
+
+        val realFolderId = getFolder(folderName);
+
+        if (realFolderId != null) {
+          gfile.parents = Collections.singletonList(realFolderId)
+        }
         googleDriveService.Files().create(gfile, contentStream).execute()
       }
       promise.resolve(true)
@@ -115,6 +123,24 @@ class CloudManager(reactContext: ReactApplicationContext) :
     }
 
     return null
+  }
+
+  private fun getFolder(key: String): String? {
+    val googleDriveService = getDriveService()
+      ?: return null
+
+    val exists = getFileId(key)
+
+    if (exists != null) {
+      return exists
+    }
+
+    val gfile = File()
+    gfile.name = key
+    gfile.mimeType = "application/vnd.google-apps.folder"
+    googleDriveService.Files().create(gfile).execute()
+
+    return getFileId(key)
   }
 
   private fun isUserSignedIn(): Boolean {

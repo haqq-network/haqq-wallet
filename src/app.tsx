@@ -38,7 +38,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {trackEvent} from '@app/helpers/track-event';
-import {useTheme} from '@app/hooks';
+import {useTheme, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
@@ -150,6 +150,7 @@ const withoutHeader = {
 
 export const App = () => {
   const theme = useTheme();
+  const user = useUser();
 
   const navTheme = useMemo(
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
@@ -158,19 +159,18 @@ export const App = () => {
 
   useEffect(() => {
     showModal('splash');
+
     sleep(150)
       .then(() => SplashScreen.hide())
-      .then(() => app.init())
-      .then(() => migrationWallets())
-      .then(() => awaitForEventDone(Events.onAppLoggedId))
-      .catch(e => {
-        switch (e) {
-          case 'user_not_found':
-            navigator.navigate('welcome');
-            break;
-          default:
-            captureException(e, 'app init');
+      .then(async () => {
+        if (app.getUser().onboarded) {
+          await app.init();
+          await migrationWallets();
+          await awaitForEventDone(Events.onAppLoggedId);
         }
+      })
+      .catch(async e => {
+        captureException(e, 'app init');
       })
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
@@ -256,7 +256,10 @@ export const App = () => {
             ref={navigator}
             theme={navTheme}
             onStateChange={onStateChange}>
-            <Stack.Navigator screenOptions={basicScreenOptions} key={theme}>
+            <Stack.Navigator
+              screenOptions={basicScreenOptions}
+              key={theme}
+              initialRouteName={user.onboarded ? 'home' : 'welcome'}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="welcome" component={WelcomeScreen} />
               {/* Modals group */}

@@ -7,13 +7,12 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {WalletInitialData} from '@app/types';
 
 export async function getProviderForNewWallet(params: WalletInitialData) {
-  console.log('getProviderForNewWallet params', JSON.stringify(params));
   const getPassword = app.getPassword.bind(app);
 
   if (params && params.type === 'mpc') {
     const storage = await getProviderStorage('', 'cloud');
     return await ProviderMpcReactNative.initialize(
-      params.mpcPrivateKey,
+      params.mpcPrivateKey || null,
       params.mpcCloudShare || null,
       null,
       params.verifier,
