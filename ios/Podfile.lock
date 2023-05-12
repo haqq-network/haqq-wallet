@@ -612,6 +612,10 @@ PODS:
     - React-perflogger (= 0.71.7)
   - RealmJS (11.8.0):
     - React
+  - rive-react-native (4.0.4):
+    - React-Core
+    - RiveRuntime (= 3.1.11)
+  - RiveRuntime (3.1.11)
   - RNAppleAuthentication (2.2.2):
     - React-Core
   - RNCAsyncStorage (1.18.1):
@@ -779,6 +783,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RealmJS (from `../node_modules/realm`)
+  - rive-react-native (from `../node_modules/rive-react-native`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
@@ -837,6 +842,7 @@ SPEC REPOS:
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
+    - RiveRuntime
     - secp256k1.swift
     - secp256k1Swift
     - secp256k1Wrapper
@@ -955,6 +961,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RealmJS:
     :path: "../node_modules/realm"
+  rive-react-native:
+    :path: "../node_modules/rive-react-native"
   RNAppleAuthentication:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCAsyncStorage:
@@ -1081,6 +1089,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: c5c89f8f543842dd864b63ded1b0bbb9c9445328
   ReactCommon: dbfbe2f7f3c5ce4ce44f43f2fd0d5950d1eb67c5
   RealmJS: 27b8d695fa4bc9606a4a4a378de55511edc2084c
+  rive-react-native: 6deec883511cb6c07e13e56cc5c6d00e29477d48
+  RiveRuntime: 2e04dbf0b89e7c520ca43312ccc2dd2da30a60d4
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
@@ -1108,6 +1118,6 @@ SPEC CHECKSUMS:
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 5126f53285dd6184586fe62e511ebb0408837996
+PODFILE CHECKSUM: 150a5ffefe2377152d1b3ff799662db7c624388a
 
 COCOAPODS: 1.12.1
