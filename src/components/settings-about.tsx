@@ -1,32 +1,29 @@
 import React from 'react';
 
-import {ScrollView, View, useWindowDimensions} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
+import {
+  PRIVACY_POLICY,
+  TERMS_OF_CONDITIONS,
+  WINDOW_WIDTH,
+} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
 
 export const SettingsAbout = () => {
   const insets = useSafeAreaInsets();
-  const windowWidth = useWindowDimensions().width;
   return (
     <ScrollView
       style={{paddingBottom: insets.bottom}}
       contentContainerStyle={styles.content}>
       <Spacer style={styles.animation}>
         <LottieWrap
-          style={[
-            styles.imageStyle,
-            {
-              width: windowWidth * 0.8,
-              height: windowWidth * 0.8,
-            },
-          ]}
+          style={styles.imageStyle}
           source={require('@assets/animations/first-screen-animation.json')}
           autoPlay
           loop
@@ -113,6 +110,8 @@ const styles = createTheme({
     alignItems: 'center',
   },
   imageStyle: {
+    width: WINDOW_WIDTH * 0.8,
+    height: WINDOW_WIDTH * 0.8,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
