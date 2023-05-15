@@ -112,7 +112,7 @@ export class WalletConnect extends EventEmitter {
     }
 
     try {
-      const resp = await this._core.pairing.pair({uri, activatePairing: true});
+      const resp = await this._core.pairing.pair({uri});
 
       if (!resp) {
         sendNotification(I18N.walletConnectPairError);

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
 import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -86,10 +87,10 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           vibrate(HapticEffects.success);
           setIsOpen(true);
         }
-      } else if (address.startsWith('wc:')) {
+      } else if (parseUri(address)?.protocol === 'wc') {
         hideModal();
         setTimeout(() => {
-          app.emit(Events.onWalletConnectUri, 'address');
+          app.emit(Events.onWalletConnectUri, address);
         }, 1000);
       } else {
         setError(true);
