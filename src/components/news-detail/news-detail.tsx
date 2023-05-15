@@ -116,7 +116,7 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
       <Text t3>{item.title}</Text>
       <Spacer height={12} />
       <Text t17 color={Color.textBase2}>
-        {format(item.publishedAt, 'ccc dd, yyyy')}
+        {format(item.publishedAt, 'MMM dd, yyyy')}
       </Text>
       <Spacer height={20} />
       <Markdown
