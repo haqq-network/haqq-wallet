@@ -46,7 +46,7 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
           </Text>
           <Spacer />
           <Text t17 color={Color.textBase2}>
-            {format(item.publishedAt, 'ccc dd, yyyy')}
+            {format(item.publishedAt, 'MMM dd, yyyy')}
           </Text>
         </View>
       </View>
