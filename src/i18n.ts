@@ -610,6 +610,7 @@ export enum I18N {
   goToPhoneSettings,
   walletConnectPairError,
   walletConnectPairPending,
+  walletConnectNotSupported,
   walletConnectPairInitError,
   backupNotificationNewsAlertTitle,
   backupNotificationNewsAlertDescription,
@@ -1345,6 +1346,7 @@ const en: Record<I18N, string> = {
   [I18N.goToPhoneSettings]: 'Go to Phone settings',
   [I18N.walletConnectPairError]: 'Relay protocol is not supported',
   [I18N.walletConnectPairPending]: 'Connection may take some time',
+  [I18N.walletConnectNotSupported]: 'WalletConnect v1 is not supported',
   [I18N.walletConnectPairInitError]: 'WalletConnect is not initialized',
   [I18N.backupNotificationNewsAlertTitle]: 'Proceed without subscription?',
   [I18N.backupNotificationNewsAlertDescription]:
