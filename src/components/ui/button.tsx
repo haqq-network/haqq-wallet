@@ -17,12 +17,29 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
 
+import {First} from './first';
 import {Icon, IconProps} from './icon';
 import {Text} from './text';
 
 export type ButtonValue =
-  | {title: string; i18n?: undefined; i18params?: undefined}
-  | {i18n: I18N; i18params?: Record<string, string>; title?: undefined};
+  | {
+      title: string;
+      i18n?: undefined;
+      i18params?: undefined;
+      children?: undefined;
+    }
+  | {
+      i18n: I18N;
+      i18params?: Record<string, string>;
+      title?: undefined;
+      children?: undefined;
+    }
+  | {
+      children: React.ReactNode;
+      title?: undefined;
+      i18n?: undefined;
+      i18params?: undefined;
+    };
 
 export type ButtonRightIconProps =
   | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
@@ -55,6 +72,7 @@ export enum ButtonVariant {
   contained = 'contained',
   second = 'second',
   third = 'third',
+  warning = 'warning',
 }
 
 export enum ButtonSize {
@@ -85,6 +103,7 @@ export const Button = ({
   loading,
   iconLeftStyle,
   iconRightStyle,
+  children,
   ...props
 }: ButtonProps) => {
   const onPressButton = useCallback(() => {
@@ -99,6 +118,7 @@ export const Button = ({
         styles.container,
         variant === ButtonVariant.second && styles.secondContainer,
         variant === ButtonVariant.contained && styles.containedContainer,
+        variant === ButtonVariant.warning && styles.warningContainer,
         size === ButtonSize.small && styles.smallContainer,
         size === ButtonSize.middle && styles.middleContainer,
         size === ButtonSize.large && styles.largeContainer,
@@ -111,6 +131,9 @@ export const Button = ({
           styles.secondDisabledContainer,
         disabled &&
           variant === ButtonVariant.contained &&
+          styles.containedDisabledContainer,
+        disabled &&
+          variant === ButtonVariant.warning &&
           styles.containedDisabledContainer,
         color && {backgroundColor: getColor(color)},
         style,
@@ -125,6 +148,7 @@ export const Button = ({
         iconRight && styles.textIconRight,
         variant === ButtonVariant.second && styles.secondText,
         variant === ButtonVariant.contained && styles.containedText,
+        variant === ButtonVariant.warning && styles.warningText,
         error && styles.errorText,
         disabled &&
           variant === ButtonVariant.second &&
@@ -155,16 +179,19 @@ export const Button = ({
               <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
             </View>
           )}
-          {/* @ts-expect-error */}
-          <Text
-            t9={size !== ButtonSize.small}
-            t12={size === ButtonSize.small}
-            style={textStyleFlatten}
-            color={textColor}
-            i18n={i18n}
-            i18params={i18params}>
-            {title}
-          </Text>
+          <First>
+            {!!children && children}
+            {/* @ts-expect-error */}
+            <Text
+              t9={size !== ButtonSize.small}
+              t12={size === ButtonSize.small}
+              style={textStyleFlatten}
+              color={textColor}
+              i18n={i18n}
+              i18params={i18params}>
+              {title}
+            </Text>
+          </First>
           {iconRight && (
             <View style={iconRightStyle}>
               <Icon
@@ -211,6 +238,11 @@ const styles = createTheme({
     borderRadius: 12,
     height: 54,
   },
+  warningContainer: {
+    backgroundColor: Color.bg6,
+    borderRadius: 12,
+    height: 54,
+  },
   containedDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
@@ -232,6 +264,9 @@ const styles = createTheme({
   },
   containedText: {
     color: Color.textBase3,
+  },
+  warningText: {
+    color: Color.textYellow1,
   },
   containedDisabledText: {
     color: Color.textSecond1,

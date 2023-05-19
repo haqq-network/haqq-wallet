@@ -1,5 +1,6 @@
 import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
+import {differenceInMinutes} from 'date-fns';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
@@ -67,9 +68,7 @@ export const asyncTiming = (pan: Animated.Value, toValue: number) => {
 
 export function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    // eslint-disable-next-line no-bitwise
     const r = (Math.random() * 16) | 0,
-      // eslint-disable-next-line no-bitwise
       v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
@@ -402,3 +401,13 @@ export const isValidUrl = (string: string) => {
 export const isI18N = (obj: any): obj is I18N => {
   return obj in I18N;
 };
+
+export function calculateEstimateTime(
+  start: Date | number,
+  end: Date | number,
+) {
+  const diff = differenceInMinutes(end, start);
+  const hours = Math.floor(diff / 60);
+  const minutes = diff % 60;
+  return `${hours}h ${minutes}m`;
+}

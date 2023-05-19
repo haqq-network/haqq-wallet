@@ -14,6 +14,8 @@ export const HomeScreenLabel = ({route, focused}: HomeScreenLabelProps) => {
     switch (route) {
       case 'homeFeed':
         return I18N.homeWallet;
+      case 'homeEarn':
+        return I18N.homeEarn;
       case 'homeStaking':
         return I18N.homeStaking;
       case 'homeBrowser':

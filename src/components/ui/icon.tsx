@@ -60,6 +60,7 @@ export enum IconsName {
   star = 'star',
   swap = 'swap',
   time = 'time',
+  ticket = 'ticket',
   timer_governance = 'timer_governance',
   timer = 'timer',
   trash = 'trash',

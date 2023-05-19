@@ -68,6 +68,7 @@ import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
+import {HomeStakingScreen} from './screens/home-staking';
 import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {Modals} from './screens/modals';
@@ -76,6 +77,8 @@ import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
 import {PopupTrackActivityScreen} from './screens/popup-track-activity';
 import {ProposalDepositScreen} from './screens/proposal-deposit';
+import {RaffleDetailsScreen} from './screens/raffle-details';
+import {RaffleRewardScreen} from './screens/raffle-reward';
 import {RestoreScreen} from './screens/restore';
 import {SettingsAboutScreen} from './screens/settings-about';
 import {SettingsAccountDetailScreen} from './screens/settings-account-detail';
@@ -363,6 +366,16 @@ export const App = () => {
                     title: 'Manage accounts',
                   }}
                 />
+                <Stack.Screen
+                  name="raffleDetails"
+                  component={RaffleDetailsScreen}
+                />
+                <Stack.Screen
+                  name="raffleReward"
+                  component={RaffleRewardScreen}
+                  options={withoutHeader}
+                />
+                <Stack.Screen name="staking" component={HomeStakingScreen} />
                 <Stack.Screen
                   name="settingsAccountDetail"
                   component={SettingsAccountDetailScreen}

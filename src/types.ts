@@ -84,6 +84,7 @@ export type RootStackParamList = {
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
+  staking: undefined;
   web3browser: {
     url: string;
   };
@@ -115,6 +116,13 @@ export type RootStackParamList = {
         params: RootStackParamList['settingsProviderForm'];
       };
   homeGovernance: undefined;
+  homeEarn: undefined;
+  raffleDetails: {
+    item: Raffle;
+  };
+  raffleReward: {
+    item: Raffle;
+  };
   accountInfo: {
     accountId: string;
   };
@@ -707,3 +715,31 @@ export type NewsRow = {
   updated_at: string;
   created_at: string;
 };
+
+export enum RaffleStatus {
+  open = 'open',
+  closed = 'closed',
+  unknown = 'unknown',
+  created = 'created',
+}
+
+export type Raffle = {
+  id: string;
+  title: string;
+  description: string;
+  budget: string;
+  status: RaffleStatus;
+  winners: number;
+  close_at: number;
+  start_at: number;
+  total_tickets: number;
+  winner_tickets: number;
+  locked_until: number;
+};
+
+export enum TimerUpdateInterval {
+  second = 1000,
+  minute = 1000 * 60,
+  hour = 1000 * 60 * 60,
+  day = 1000 * 60 * 60 * 24,
+}

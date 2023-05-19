@@ -19,6 +19,7 @@ import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
 
 import {HomeBrowserScreen} from './home-browser';
+import {HomeEarnScreen} from './home-earn';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
@@ -58,6 +59,10 @@ const feedOptions = {
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 
+const earnOptions = {
+  tabBarIcon: tabBarIcon('homeEarn'),
+};
+
 const stakingOptions = {
   unmountOnBlur: true,
   tabBarIcon: tabBarIcon('homeStaking'),
@@ -88,6 +93,11 @@ export const HomeScreen = () => {
         name="homeFeed"
         component={HomeFeedScreen}
         options={feedOptions}
+      />
+      <Tab.Screen
+        name="homeEarn"
+        component={HomeEarnScreen}
+        options={earnOptions}
       />
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
