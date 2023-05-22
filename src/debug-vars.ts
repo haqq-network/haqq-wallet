@@ -23,7 +23,7 @@ const debug: DebugVars = {
   enableWeb3BrowserIncognito: false,
   enableWalletConnectLogger: false,
   enableCaptchaLogger: __DEV__,
-  enableSkipPinOnLogin: ENABLE_SKIP_PIN_ON_LOGIN === '1',
+  enableSkipPinOnLogin: ENABLE_SKIP_PIN_ON_LOGIN === '0',
   enableWeb3BrowserLogger: __DEV__,
 };
 

@@ -12,6 +12,8 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
     switch (route) {
       case 'homeFeed':
         return I18N.homeWalletTitle;
+      case 'homeEarn':
+        return I18N.homeEarnTitle;
       case 'homeStaking':
         return I18N.homeStakingTitle;
       case 'homeBrowser':
