@@ -1,55 +1,46 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {HAQQ_BACKEND} from '@env';
 
 import {HomeEarn} from '@app/components/home-earn';
+import {Loading} from '@app/components/ui';
+import {wallets} from '@app/contexts';
+import {getProviderInstanceForWallet} from '@app/helpers';
+import {awaitForSession} from '@app/helpers/await-for-session';
+import {getLeadingAccount} from '@app/helpers/get-leading-account';
+import {getUid} from '@app/helpers/get-uid';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {Raffle, RaffleStatus} from '@app/types';
-
-const RAFFLES: Raffle[] = [
-  {
-    id: '1',
-    title: 'Raffle 1',
-    description: 'Raffle 1 description',
-    budget: '1000000',
-    close_at: Date.now() + 86400000,
-    start_at: Date.now(),
-    locked_until: 0,
-    status: RaffleStatus.open,
-    total_tickets: 10,
-    winner_tickets: 2,
-    winners: 4,
-  },
-  {
-    id: '2',
-    title: 'Raffle 2',
-    description: 'Raffle 2 description',
-    budget: '1000000',
-    close_at: Date.now() + 86400000,
-    start_at: Date.now() - 86400000,
-    locked_until: Date.now() + 86400000,
-    status: RaffleStatus.open,
-    total_tickets: 10,
-    winner_tickets: 2,
-    winners: 4,
-  },
-  {
-    id: '3',
-    title: 'Raffle 3',
-    description: 'Raffle 3 description',
-    budget: '100',
-    close_at: Date.now() - 1000,
-    start_at: Date.now(),
-    locked_until: 0,
-    status: RaffleStatus.open,
-    total_tickets: 0,
-    winner_tickets: 1,
-    winners: 1,
-  },
-];
+import {Raffle} from '@app/types';
 
 export const HomeEarnScreen = () => {
   const navigation = useTypedNavigation();
+
+  console.log(Wallet.getAll().snapshot());
+
+  const [raffles, setRaffles] = useState(null);
+
+  useEffect(() => {
+    fetch(`${HAQQ_BACKEND}contests`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        accounts: wallets.getWallets().map(wallet => wallet.address),
+        uid: getUid(),
+      }),
+    })
+      .then(resp => resp.json())
+      .then(contests => {
+        setRaffles(contests);
+      });
+  }, []);
 
   const onPressStaking = useCallback(() => {
     navigation.navigate('staking');
@@ -58,9 +49,43 @@ export const HomeEarnScreen = () => {
   const onPressGetRewards = useCallback(() => {
     console.log('🟢 onPressGetRewards');
   }, []);
-  const onPressGetTicket = useCallback((raffle: Raffle) => {
+  const onPressGetTicket = useCallback(async (raffle: Raffle) => {
+    const leadingAccount = getLeadingAccount();
+
+    if (!leadingAccount) {
+      throw new Error('No leading account');
+    }
+
+    const session = await awaitForSession();
+    console.log('session', session);
+    const uid = getUid();
+    const provider = await getProviderInstanceForWallet(leadingAccount);
+
+    const signature = await provider.signPersonalMessage(
+      leadingAccount?.path ?? '',
+      `${raffle.id}:${uid}:${session}`,
+    );
+
+    const resp = await fetch(`${HAQQ_BACKEND}contests/${raffle.id}`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        ts: Math.floor(Date.now() / 1000),
+        uid: uid,
+        signature: signature,
+        session: session,
+      }),
+    });
+
+    const res = await resp.json();
+
     sendNotification(I18N.earnTicketRecieved);
-    console.log('🟢 onPressGetTicket', JSON.stringify(raffle, null, 2));
+    console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
   }, []);
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
@@ -77,6 +102,10 @@ export const HomeEarnScreen = () => {
     [navigation],
   );
 
+  if (raffles === null) {
+    return <Loading />;
+  }
+
   return (
     <HomeEarn
       rewardAmount={5000}
@@ -87,7 +116,7 @@ export const HomeEarnScreen = () => {
       onPressShowResult={onPressShowResult}
       onPressStaking={onPressStaking}
       onPressRaffle={onPressRaffle}
-      raffleList={RAFFLES}
+      raffleList={raffles}
     />
   );
 };
