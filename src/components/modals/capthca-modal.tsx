@@ -7,13 +7,14 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {Captcha} from '../captcha';
+import {Captcha, CaptchaType} from '../captcha';
 
 export type CaptchaModalProps = {
   onClose: () => void;
+  variant: CaptchaType;
 };
 
-export const CaptchaModal = ({onClose}: CaptchaModalProps) => {
+export const CaptchaModal = ({onClose, variant}: CaptchaModalProps) => {
   useEffect(() => {
     vibrate(HapticEffects.warning);
   }, []);
@@ -23,6 +24,7 @@ export const CaptchaModal = ({onClose}: CaptchaModalProps) => {
       {onCloseModal => (
         <View style={page.modalView}>
           <Captcha
+            type={variant}
             onData={data => {
               if (data === 'chalcancel') {
                 return;

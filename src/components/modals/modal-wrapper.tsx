@@ -96,7 +96,7 @@ export const ModalWrapper = ({
       case 'providersBottomSheet':
         return <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />;
       case 'captcha':
-        return <CaptchaModal onClose={onCloseModalPress} />;
+        return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
       default:
         return null;
     }

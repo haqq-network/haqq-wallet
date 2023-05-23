@@ -645,6 +645,12 @@ export enum I18N {
   raffleRewardUnderstood,
   raffleRewardWonTickets,
   raffleRewardPrize,
+  sliderCaptchaDragText,
+  sliderCaptchaTitle,
+  sliderCaptchaErrorToast,
+  sliderCaptchaSuccessToast,
+  sliderCaptchaRefresh,
+  sliderCaptchaReportProblem,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1418,4 +1424,10 @@ const en: Record<I18N, string> = {
     '{{winner_tickets}} out of {{total_tickets}} tickets won',
   [I18N.raffleDetailsPrizeByTicketDescription]:
     'Price by ticket: {{islm}} ISLM. The raffle is held once a month. Each participant can get several tickets. To get a ticket, click on the "get a ticket" button, another ticket will be available only after 24 hours',
+  [I18N.sliderCaptchaDragText]: 'Drag the slider',
+  [I18N.sliderCaptchaTitle]: 'Drag the slider to fit the puzzle',
+  [I18N.sliderCaptchaErrorToast]: 'Incorrect. Please try again',
+  [I18N.sliderCaptchaSuccessToast]: 'Puzzle solved in {{sec}} seconds',
+  [I18N.sliderCaptchaRefresh]: 'Refresh',
+  [I18N.sliderCaptchaReportProblem]: 'Report a problem',
 };

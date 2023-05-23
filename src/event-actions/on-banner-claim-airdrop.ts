@@ -27,7 +27,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
   } catch (e) {
     return;
   }
-  const captchaKey = await awaitForCaptcha();
+  const captchaKey = await awaitForCaptcha({});
 
   await Airdrop.instance.claim(wallet, claimCode, captchaKey);
 
