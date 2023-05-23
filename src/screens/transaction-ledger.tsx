@@ -11,7 +11,7 @@ import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents} from '@app/types';
@@ -21,7 +21,6 @@ export const TransactionLedgerScreen = () => {
   const transport = useRef<ProviderInterface | null>(null);
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionConfirmation'>();
-  const user = useUser();
 
   useEffect(() => {
     const subscription = (modal: string) => {
@@ -55,12 +54,10 @@ export const TransactionLedgerScreen = () => {
 
         if (transaction) {
           Adjust.trackEvent(new AdjustEvent(AdjustEvents.sendFund));
-
           await awaitForEventDone(
             Events.onAddressBookCreate,
-            transaction,
-            user.providerId,
-            route.params.fee,
+            transaction?.to,
+            transaction?.chainId,
           );
 
           navigation.navigate('transactionFinish', {
@@ -80,14 +77,7 @@ export const TransactionLedgerScreen = () => {
         }
       }
     }
-  }, [
-    navigation,
-    route.params.amount,
-    route.params.from,
-    route.params.fee,
-    route.params.to,
-    user,
-  ]);
+  }, [navigation, route.params.amount, route.params.from, route.params.to]);
 
   useEffect(() => {
     requestAnimationFrame(async () => {
