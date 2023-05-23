@@ -14,6 +14,7 @@ export interface SettingsNotificationProps {
   onToggleNewsPushNotification: (event: SwitchChangeEvent) => void;
   onPressGoToPhoneSettings: () => void;
 }
+
 export const SettingsNotification = ({
   hasNotificationPermission,
   transactionPushNotificationEnabled,

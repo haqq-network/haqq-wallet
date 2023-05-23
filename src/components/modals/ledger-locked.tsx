@@ -12,11 +12,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export const LedgerLocked = ({onClose}: {onClose: () => void}) => {
+export const LedgerLocked = ({onClose}: Modals['ledgerLocked']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -36,12 +36,7 @@ export const LedgerLocked = ({onClose}: {onClose: () => void}) => {
           </Spacer>
           <Button
             i18n={I18N.ledgerLockedClose}
-            onPress={() =>
-              onCloseModal(() => {
-                hideModal();
-                onClose();
-              })
-            }
+            onPress={() => onCloseModal(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

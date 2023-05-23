@@ -12,15 +12,13 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export type BluetoothPoweredOffProps = {
-  onClose: () => void;
-};
-
-export const BluetoothPoweredOff = ({onClose}: BluetoothPoweredOffProps) => {
+export const BluetoothPoweredOff = ({
+  onClose,
+}: Modals['bluetoothPoweredOff']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -39,12 +37,7 @@ export const BluetoothPoweredOff = ({onClose}: BluetoothPoweredOffProps) => {
           </Spacer>
           <Button
             i18n={I18N.bluetoothPoweredOffClose}
-            onPress={() =>
-              onCloseModal(() => {
-                hideModal();
-                onClose();
-              })
-            }
+            onPress={() => onCloseModal(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

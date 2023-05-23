@@ -59,8 +59,8 @@ export const HomeEarn = ({
 
   const stakingAnimationRef = useRef<RiveRef>(null);
   const stakingAnimationName = useThemeSelector({
-    light: 'staking-on-earn-page-light',
-    dark: 'staking-on-earn-page-dark',
+    light: 'staking_on_earn_page_light',
+    dark: 'staking_on_earn_page_dark',
   });
 
   const handlePressGetRewards = useCallback(() => {

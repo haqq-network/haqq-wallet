@@ -12,14 +12,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export type LedgerNoAppProps = {
-  onRetry: () => Promise<void>;
-};
-export const LedgerNoApp = ({onRetry}: LedgerNoAppProps) => {
+export const LedgerNoApp = ({onRetry, onClose}: Modals['ledgerNoApp']) => {
   const [retry, setRetry] = useState(false);
 
   useEffect(() => {
@@ -52,11 +49,7 @@ export const LedgerNoApp = ({onRetry}: LedgerNoAppProps) => {
           <Spacer height={16} />
           <Button
             i18n={I18N.ledgerNoAppClose}
-            onPress={() =>
-              onCloseModal(() => {
-                hideModal();
-              })
-            }
+            onPress={() => onCloseModal(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

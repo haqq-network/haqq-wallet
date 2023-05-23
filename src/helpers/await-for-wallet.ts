@@ -68,8 +68,8 @@ export async function awaitForWallet({
       }
       case WalletSelectType.bottomSheet:
       default:
-        return showModal('wallets-bottom-sheet', {
-          wallets,
+        return showModal('walletsBottomSheet', {
+          wallets: wallets as Wallet[],
           closeDistance: WINDOW_HEIGHT / 6,
           title,
           autoSelectWallet,

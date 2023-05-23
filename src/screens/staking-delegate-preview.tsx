@@ -87,7 +87,7 @@ export const StakingDelegatePreviewScreen = () => {
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
-              showModal('ledger-locked');
+              showModal('ledgerLocked');
               break;
             default:
               captureException(e, 'staking-delegate', {

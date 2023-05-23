@@ -12,6 +12,7 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {NewsButton} from '@app/components/news-button';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useUser} from '@app/hooks';
 import {Provider} from '@app/models/provider';
 import {HomeGovernanceScreen} from '@app/screens/home-governance';
@@ -94,11 +95,13 @@ export const HomeScreen = () => {
         component={HomeFeedScreen}
         options={feedOptions}
       />
-      <Tab.Screen
-        name="homeEarn"
-        component={HomeEarnScreen}
-        options={earnOptions}
-      />
+      {isFeatureEnabled(Feature.earn) && (
+        <Tab.Screen
+          name="homeEarn"
+          component={HomeEarnScreen}
+          options={earnOptions}
+        />
+      )}
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeStaking"

@@ -42,12 +42,12 @@ export const LedgerStoreWalletScreen = () => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              showModal('error-account-added');
+              showModal('errorAccountAdded');
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                showModal('error-create-account');
+                showModal('errorCreateAccount');
                 navigation.getParent()?.goBack();
                 captureException(error, 'ledgerStore');
               }

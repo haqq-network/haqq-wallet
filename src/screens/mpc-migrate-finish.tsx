@@ -9,7 +9,7 @@ export const MpcMigrateFinishScreen = () => {
   const navigation = useTypedNavigation();
 
   useEffect(() => {
-    hideModal();
+    hideModal('loading');
     vibrate(HapticEffects.success);
   }, []);
 

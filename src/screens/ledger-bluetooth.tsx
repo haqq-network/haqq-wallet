@@ -31,7 +31,7 @@ export const LedgerBluetoothScreen = () => {
     if (granted) {
       navigation.navigate('ledgerScan');
     } else {
-      showModal('location-unauthorized');
+      showModal('locationUnauthorized');
     }
 
     requestAnimationFrame(() => {

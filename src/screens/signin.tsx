@@ -30,7 +30,7 @@ export const SignInScreen = () => {
   const title = getText(I18N.signInTitle);
 
   const inittialRouteName = useMemo(() => {
-    return isFeatureEnabled(Feature.mpc) ? 'signinNetworks' : 'signinAgreement';
+    return isFeatureEnabled(Feature.sss) ? 'signinNetworks' : 'signinAgreement';
   }, []);
 
   return (

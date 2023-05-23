@@ -13,11 +13,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export const LedgerAttention = ({onClose}: {onClose: () => void}) => {
+export const LedgerAttention = ({onClose}: Modals['ledgerAttention']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -38,12 +38,7 @@ export const LedgerAttention = ({onClose}: {onClose: () => void}) => {
           </Spacer>
           <Button
             i18n={I18N.ledgerAttentionClose}
-            onPress={() =>
-              onCloseModal(() => {
-                hideModal();
-                onClose();
-              })
-            }
+            onPress={() => onCloseModal(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

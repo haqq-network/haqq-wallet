@@ -9,42 +9,27 @@ import {
   ButtonSize,
   ButtonVariant,
   Icon,
-  IconProps,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-export type ErrorModalImage =
-  | {
-      icon: IconProps['name'];
-      color: IconProps['color'];
-    }
-  | {
-      image: string;
-    }
-  | {};
-
-export type ErrorModalProps = {
-  title: string;
-  description?: string;
-  close: string;
-} & ErrorModalImage;
+import {Modals} from '@app/types';
 
 export const ErrorModal = ({
   title,
   description,
   close,
+  onClose,
   ...props
-}: ErrorModalProps) => {
+}: Modals['error']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
 
   return (
     <BottomPopupContainer>
-      {onClose => (
+      {onClosePopup => (
         <View style={page.modalView}>
           <Text t5 center>
             {title}
@@ -66,7 +51,7 @@ export const ErrorModal = ({
           <Spacer height={20} />
 
           <Button
-            onPress={() => onClose(hideModal)}
+            onPress={() => onClosePopup(onClose)}
             variant={ButtonVariant.second}
             size={ButtonSize.middle}
             style={page.button}

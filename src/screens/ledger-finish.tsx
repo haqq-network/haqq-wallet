@@ -19,7 +19,7 @@ export const LedgerFinishScreen = () => {
   }, [app, navigation]);
 
   useEffect(() => {
-    hideModal();
+    hideModal('loading');
     vibrate(HapticEffects.success);
   }, []);
 

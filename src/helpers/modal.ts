@@ -1,11 +1,17 @@
 import {app} from '@app/contexts/app';
+import {Modals} from '@app/types';
 
-type Params = Omit<Record<string, any>, 'type'>;
+type ModalName = Extract<keyof Modals, string>;
 
-export function showModal(modalName: string, params: Params = {}) {
-  app.emit('modal', {type: modalName, ...params});
+export function showModal(
+  modalName: ModalName,
+  params: Modals[ModalName] = {},
+) {
+  app.emit('showModal', {type: modalName, ...params});
+
+  return () => hideModal(modalName);
 }
 
-export function hideModal(modalName: String | null = null) {
+export function hideModal(modalName: ModalName) {
   app.emit('hideModal', {type: modalName});
 }

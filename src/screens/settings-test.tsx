@@ -363,7 +363,7 @@ export const SettingsTestScreen = () => {
         title="Show modal change on mainnet"
         onPress={() => {
           showModal('claimOnMainnet', {
-            network: provider?.name,
+            network: provider?.name ?? '',
             onChange: () => {
               app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
             },

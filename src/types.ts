@@ -8,6 +8,7 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
+import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -743,3 +744,91 @@ export enum TimerUpdateInterval {
   hour = 1000 * 60 * 60,
   day = 1000 * 60 * 60 * 24,
 }
+
+export type ModalsListBase = Record<string, object | undefined>;
+
+export type ErrorModalImage =
+  | {
+      icon: IconProps['name'];
+      color: IconProps['color'];
+    }
+  | {
+      image: string;
+    }
+  | {};
+
+export type Modals = {
+  splash: undefined;
+  pin: undefined;
+  noInternet: undefined;
+  loading: {
+    text?: string;
+  };
+  error: {
+    onClose?: () => void;
+    title: string;
+    description?: string;
+    close: string;
+  } & ErrorModalImage;
+  qr: {
+    onClose?: () => void;
+    qrWithoutFrom?: boolean;
+  };
+  cardDetailsQr: {
+    address: string;
+    onClose?: () => void;
+  };
+  bluetoothPoweredOff: {
+    onClose?: () => void;
+  };
+  bluetoothUnauthorized: {
+    onClose?: () => void;
+  };
+  ledgerNoApp: {
+    onClose?: () => void;
+    onRetry: () => Promise<void>;
+  };
+  ledgerAttention: {
+    onClose?: () => void;
+  };
+  ledgerLocked: {
+    onClose?: () => void;
+  };
+  errorAccountAdded: {
+    onClose?: () => void;
+  };
+  errorCreateAccount: {
+    onClose?: () => void;
+  };
+  claimOnMainnet: {
+    onClose?: () => void;
+    onChange: () => void;
+    network: string;
+  };
+  walletsBottomSheet: {
+    onClose?: () => void;
+    wallets: Wallet[];
+    closeDistance?: number;
+    title: I18N;
+    eventSuffix?: string;
+    autoSelectWallet?: boolean;
+  };
+  transactionError: {
+    onClose?: () => void;
+    message?: string;
+  };
+  locationUnauthorized: {
+    onClose?: () => void;
+  };
+  providersBottomSheet: {
+    onClose?: () => void;
+    title: I18N;
+    providers: Provider[] | Results<Provider>;
+    initialProviderId: string;
+    closeDistance?: number;
+    eventSuffix?: string;
+  };
+  captcha: {
+    onClose?: () => void;
+  };
+};

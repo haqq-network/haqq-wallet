@@ -24,7 +24,7 @@ export const TransactionLedgerScreen = () => {
 
   useEffect(() => {
     const subscription = (modal: string) => {
-      if (modal === 'ledger-locked') {
+      if (modal === 'ledgerLocked') {
         navigation.goBack();
       }
     };
@@ -70,7 +70,7 @@ export const TransactionLedgerScreen = () => {
             e.message === 'can_not_connected' ||
             e.message === 'ledger_locked'
           ) {
-            showModal('ledger-locked');
+            showModal('ledgerLocked');
           } else {
             navigation.goBack();
           }

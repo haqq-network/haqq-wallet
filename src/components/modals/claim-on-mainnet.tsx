@@ -11,22 +11,23 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export type ClaimOnMainNetProps = {
-  onChange: () => void;
-  network: string;
-};
-export const ClaimOnMainNet = ({onChange, network}: ClaimOnMainNetProps) => {
+export const ClaimOnMainNet = ({
+  onClose,
+  onChange,
+  network,
+}: Modals['claimOnMainnet']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
 
   return (
     <BottomPopupContainer>
-      {onClose => (
+      {onClosePopup => (
         <View style={styles.modalView}>
           <Text t5 i18n={I18N.claimOnMainnetTitle} center />
           <Spacer height={8} />
@@ -36,7 +37,7 @@ export const ClaimOnMainNet = ({onChange, network}: ClaimOnMainNetProps) => {
             i18n={I18N.claimOnMainnetChange}
             onPress={() => {
               onChange();
-              onClose(hideModal);
+              onClosePopup(onClose);
             }}
             variant={ButtonVariant.contained}
             size={ButtonSize.middle}
@@ -46,7 +47,7 @@ export const ClaimOnMainNet = ({onChange, network}: ClaimOnMainNetProps) => {
           <Button
             i18n={I18N.claimOnMainnetStay}
             i18params={{network}}
-            onPress={() => onClose(hideModal)}
+            onPress={() => onClosePopup(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
             style={styles.button}

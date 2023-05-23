@@ -17,7 +17,7 @@ export async function onAppBackup() {
 
   const mnemonics = await ProviderMnemonicReactNative.getAccounts();
 
-  if (isFeatureEnabled(Feature.mpc)) {
+  if (isFeatureEnabled(Feature.sss)) {
     const mpc = await ProviderMpcReactNative.getAccounts();
     if (mnemonics.length && !mpc.length) {
       navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});

@@ -35,7 +35,7 @@ export const SignUpScreen = () => {
   const route = useTypedRoute<'signup'>();
 
   const nextScreen = useMemo(() => {
-    return isFeatureEnabled(Feature.mpc)
+    return isFeatureEnabled(Feature.sss)
       ? 'signupNetworks'
       : 'onboardingSetupPin';
   }, []);

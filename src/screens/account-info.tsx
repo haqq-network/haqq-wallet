@@ -74,7 +74,7 @@ export const AccountInfoScreen = () => {
   }, [route.params.accountId]);
 
   const onReceive = useCallback(() => {
-    showModal('card-details-qr', {address: route.params.accountId});
+    showModal('cardDetailsQr', {address: route.params.accountId});
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {

@@ -33,7 +33,7 @@ export const SettingsAddressBookScreen =
         if (utils.isAddress(to)) {
           setSearch(to);
           app.off('address', subscription);
-          hideModal();
+          hideModal('qr');
         }
       };
 

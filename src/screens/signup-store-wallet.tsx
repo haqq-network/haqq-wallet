@@ -65,12 +65,12 @@ export const SignUpStoreWalletScreen = () => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            showModal('error-account-added');
+            showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
-              showModal('error-create-account');
+              showModal('errorCreateAccount');
               goBack();
               captureException(error, 'createStoreWallet');
             }

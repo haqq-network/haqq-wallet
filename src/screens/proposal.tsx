@@ -107,7 +107,7 @@ export const ProposalScreen = () => {
     setModalIsLoading(true);
     voteSelectedRef.current = decision;
     cardRef.current?.setSelected(decision);
-    showModal('wallets-bottom-sheet', {
+    showModal('walletsBottomSheet', {
       wallets: visible,
       closeDistance: WINDOW_HEIGHT / 6,
       title: I18N.proposalAccountTitle,

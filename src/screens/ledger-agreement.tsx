@@ -15,7 +15,7 @@ export const LedgerAgreementScreen = () => {
     if (granted || !user.bluetooth) {
       navigation.navigate(user.bluetooth ? 'ledgerScan' : 'ledgerBluetooth');
     } else {
-      showModal('location-unauthorized');
+      showModal('locationUnauthorized');
     }
   }, [navigation, user.bluetooth]);
 

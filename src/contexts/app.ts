@@ -22,7 +22,7 @@ import {migration} from '@app/models/migration';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {captureException, hideModal, showModal} from '../helpers';
+import {captureException, showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
@@ -254,7 +254,7 @@ class App extends EventEmitter {
   }
 
   async auth() {
-    showModal('pin');
+    const close = showModal('pin');
     if (this.biometry) {
       try {
         await this.biometryAuth();
@@ -269,8 +269,10 @@ class App extends EventEmitter {
       await this.pinAuth();
       this.authenticated = true;
     }
-
-    showModal('splash');
+    console.log('this.authenticated', this.authenticated);
+    if (this.authenticated) {
+      close();
+    }
   }
 
   biometryAuth() {
@@ -329,7 +331,6 @@ class App extends EventEmitter {
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             await this.auth();
-            hideModal('splash');
           }
           await awaitForEventDone(Events.onAppActive);
           break;

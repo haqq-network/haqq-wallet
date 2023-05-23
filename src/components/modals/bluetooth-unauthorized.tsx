@@ -12,17 +12,13 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {hideModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-
-export type BluetoothUnauthorizedProps = {
-  onClose: () => void;
-};
+import {Modals} from '@app/types';
 
 export const BluetoothUnauthorized = ({
   onClose,
-}: BluetoothUnauthorizedProps) => {
+}: Modals['bluetoothUnauthorized']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
@@ -41,12 +37,7 @@ export const BluetoothUnauthorized = ({
           </Spacer>
           <Button
             i18n={I18N.bluetoothUnauthorizedClose}
-            onPress={() =>
-              onCloseModal(() => {
-                hideModal();
-                onClose();
-              })
-            }
+            onPress={() => onCloseModal(onClose)}
             variant={ButtonVariant.third}
             size={ButtonSize.middle}
           />

@@ -3,18 +3,8 @@ import React, {useCallback, useEffect} from 'react';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {hideModal} from '@app/helpers';
 import {useApp} from '@app/hooks';
-import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
-
-export interface WalletsBottomSheetProps {
-  wallets: Wallet[];
-  closeDistance?: number;
-  title: I18N;
-  eventSuffix?: string;
-  autoSelectWallet?: boolean;
-}
+import {Modals} from '@app/types';
 
 export function WalletsBottomSheet({
   closeDistance,
@@ -22,35 +12,36 @@ export function WalletsBottomSheet({
   title,
   autoSelectWallet = true,
   eventSuffix = '',
-}: WalletsBottomSheetProps) {
+  onClose,
+}: Modals['walletsBottomSheet']) {
   const app = useApp();
 
   const onPressWallet = useCallback(
     (address: string) => {
-      hideModal();
+      onClose?.();
       app.emit(`wallet-selected${eventSuffix}`, address);
     },
-    [app, eventSuffix],
+    [app, eventSuffix, onClose],
   );
-  const onClose = () => {
+  const onCloseSheet = () => {
     app.emit(`wallet-selected-reject${eventSuffix}`);
-    hideModal();
+    onClose?.();
   };
 
   useEffect(() => {
     if (autoSelectWallet && wallets.length === 1) {
       onPressWallet(wallets[0].address);
-      hideModal();
+      onClose?.();
     }
 
     return () => {
       app.emit(`wallet-selected-reject${eventSuffix}`);
     };
-  }, [wallets, onPressWallet, app, eventSuffix, autoSelectWallet]);
+  }, [wallets, onPressWallet, app, eventSuffix, autoSelectWallet, onClose]);
 
   return (
     <BottomSheet
-      onClose={onClose}
+      onClose={onCloseSheet}
       closeDistance={closeDistance}
       i18nTitle={title}>
       {wallets.map((item, id) => (
