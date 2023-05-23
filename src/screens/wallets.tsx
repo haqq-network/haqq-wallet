@@ -77,7 +77,7 @@ export const WalletsWrapper = () => {
 
   const onPressProtection = useCallback(
     (accountId: string) => {
-      if (isFeatureEnabled(Feature.mpc)) {
+      if (isFeatureEnabled(Feature.sss)) {
         navigation.navigate('walletProtectionPopup', {accountId});
       } else {
         navigation.navigate('backup', {accountId});

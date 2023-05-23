@@ -1,13 +1,13 @@
 import {app} from '@app/contexts';
 
 export enum Feature {
-  mpc,
+  sss,
   earn,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
   switch (feature) {
-    case Feature.mpc:
+    case Feature.sss:
       return false && app.isOathSigninSupported;
     case Feature.earn:
       return false;

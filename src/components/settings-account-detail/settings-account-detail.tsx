@@ -70,7 +70,7 @@ export const SettingsAccountDetail = ({
         </Text>
         <Text t14>{wallet?.address}</Text>
       </View>
-      {isFeatureEnabled(Feature.mpc) && (
+      {isFeatureEnabled(Feature.sss) && (
         <First>
           {!wallet.mnemonicSaved && wallet.type !== WalletType.mpc && (
             <InfoBlock
