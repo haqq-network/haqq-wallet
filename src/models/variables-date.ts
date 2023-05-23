@@ -33,6 +33,7 @@ export class VariablesDate extends Realm.Object {
       id,
     );
   }
+
   static get(id: string) {
     return realm.objectForPrimaryKey<VariablesDate>(
       VariablesDate.schema.name,

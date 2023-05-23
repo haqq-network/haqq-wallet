@@ -100,7 +100,7 @@ export class SignJsonRpcRequest {
 
     if (wallet.type === WalletType.ledgerBt) {
       await awaitForBluetooth();
-      showModal('ledger-attention');
+      showModal('ledgerAttention');
     }
 
     let result: string | undefined;
@@ -193,7 +193,7 @@ export class SignJsonRpcRequest {
     }
 
     if (wallet.type === WalletType.ledgerBt) {
-      hideModal('ledger-attention');
+      hideModal('ledgerAttention');
     }
 
     if (!result) {

@@ -33,6 +33,7 @@ export class VariablesString extends Realm.Object {
       id,
     );
   }
+
   static get(id: string) {
     return realm.objectForPrimaryKey<VariablesString>(
       VariablesString.schema.name,

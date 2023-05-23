@@ -51,11 +51,13 @@ export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
 
       captureException(error, 'pin-guard');
     }
+
+    // @todo: wtf???
     const end = Date.now();
     if (end - start < 500) {
-      setTimeout(() => hideModal(), 1000);
+      setTimeout(() => hideModal('loading'), 1000);
     } else {
-      hideModal();
+      hideModal('loading');
     }
   };
 

@@ -42,7 +42,7 @@ export const BackupMpcNotificationScreen = () => {
         }
       } catch (e) {
         captureException(e, 'save mpc backup');
-        showModal('transaction-error', {
+        showModal('transactionError', {
           message: 'backup save error',
         });
       }

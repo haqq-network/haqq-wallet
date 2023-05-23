@@ -81,12 +81,12 @@ export const MpcStoreWalletScreen = () => {
         console.log(e);
         switch (e) {
           case 'wallet_already_exists':
-            showModal('error-account-added');
+            showModal('errorAccountAdded');
             navigator.goBack();
             break;
           default:
             if (e instanceof Error) {
-              showModal('error-create-account');
+              showModal('errorCreateAccount');
               navigator.goBack();
               captureException(e, 'mpcStore');
             }

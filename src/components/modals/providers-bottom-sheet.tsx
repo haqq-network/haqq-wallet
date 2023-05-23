@@ -2,16 +2,10 @@ import React, {useCallback, useEffect} from 'react';
 
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
-import {hideModal} from '@app/helpers';
-import {AwaitProviderParams} from '@app/helpers/await-for-provider';
 import {useApp} from '@app/hooks';
+import {Modals} from '@app/types';
 
 import {SettingsProvidersRow} from '../settings-providers/settings-providers-row';
-
-export type ProvidersBottomSheetProps = AwaitProviderParams & {
-  closeDistance?: number;
-  eventSuffix?: string;
-};
 
 export function ProvidersBottomSheet({
   title,
@@ -19,20 +13,21 @@ export function ProvidersBottomSheet({
   initialProviderId: initialProvider,
   closeDistance,
   eventSuffix = '',
-}: ProvidersBottomSheetProps) {
+  onClose,
+}: Modals['providersBottomSheet']) {
   const app = useApp();
 
   const onPressProvider = useCallback(
     (providerId: string) => {
-      hideModal();
+      onClose?.();
       app.emit(`provider-selected${eventSuffix}`, providerId);
     },
-    [app, eventSuffix],
+    [app, eventSuffix, onClose],
   );
 
-  const onClose = () => {
+  const onCloseModal = () => {
     app.emit(`provider-selected-reject${eventSuffix}`);
-    hideModal();
+    onClose?.();
   };
 
   useEffect(() => {
@@ -43,7 +38,7 @@ export function ProvidersBottomSheet({
 
   return (
     <BottomSheet
-      onClose={onClose}
+      onClose={onCloseModal}
       closeDistance={closeDistance}
       i18nTitle={title}>
       {providers.map((item, id) => (

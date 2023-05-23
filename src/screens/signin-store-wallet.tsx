@@ -102,13 +102,13 @@ export const SignInStoreWalletScreen = () => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            showModal('error-account-added');
+            showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
               console.log('error.message', error.message);
-              showModal('error-create-account');
+              showModal('errorCreateAccount');
               goBack();
               captureException(error, 'restoreStore');
             }

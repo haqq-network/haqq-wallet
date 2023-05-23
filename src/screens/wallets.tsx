@@ -71,7 +71,7 @@ export const WalletsWrapper = () => {
   );
 
   const onPressQR = useCallback((address: string) => {
-    showModal('card-details-qr', {address: address});
+    showModal('cardDetailsQr', {address});
   }, []);
 
   const onPressProtection = useCallback(

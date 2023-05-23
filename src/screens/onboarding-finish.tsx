@@ -35,7 +35,7 @@ export const OnboardingFinishScreen = () => {
   }, [app, navigation]);
 
   useEffect(() => {
-    hideModal();
+    hideModal('loading');
     vibrate(HapticEffects.success);
   }, []);
 

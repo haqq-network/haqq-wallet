@@ -73,7 +73,7 @@ export const TransactionAddress = ({
       if (utils.isAddress(to)) {
         setAddress(to);
         app.off('address', subscription);
-        hideModal();
+        hideModal('qr');
       }
     };
     app.on('address', subscription);

@@ -42,7 +42,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     if (provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f') {
       showModal('claimOnMainnet', {
-        network: provider?.name,
+        network: provider?.name ?? '',
         onChange: () => {
           app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
         },

@@ -13,7 +13,7 @@ export const awaitForLedger = (transport: ProviderInterface) => {
       code?: string,
     ) => {
       app.off(Events.onCloseModal, onCloseModal);
-      hideModal();
+      hideModal('ledgerAttention');
       transport.off('signTypedData', done);
       transport.abort();
       if (status) {
@@ -24,7 +24,7 @@ export const awaitForLedger = (transport: ProviderInterface) => {
     };
 
     const onCloseModal = async (modal: string) => {
-      if (modal === 'ledger-attention') {
+      if (modal === 'ledgerAttention') {
         done(false, '', '', '27013');
       }
     };
@@ -32,6 +32,6 @@ export const awaitForLedger = (transport: ProviderInterface) => {
     transport.on('signTypedData', done);
     app.on(Events.onCloseModal, onCloseModal);
 
-    showModal('ledger-attention');
+    showModal('ledgerAttention');
   });
 };

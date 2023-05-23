@@ -16,18 +16,19 @@ import {
   InfoBlock,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
+import {Modals} from '@app/types';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface DetailsQrModalProps {
   address: string;
 }
 
-export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
+export const DetailsQrModal = ({address, onClose}: Modals['cardDetailsQr']) => {
   const svg = useRef();
   const wallet = useWallet(address) as Wallet;
   const {width} = useWindowDimensions();
@@ -41,14 +42,8 @@ export const DetailsQrModal = ({address}: DetailsQrModalProps) => {
     Share.share({message: address});
   };
 
-  const onCloseBottomSheet = () => {
-    hideModal();
-  };
-
   return (
-    <BottomSheet
-      onClose={onCloseBottomSheet}
-      i18nTitle={I18N.modalDetailsQRReceive}>
+    <BottomSheet onClose={onClose} i18nTitle={I18N.modalDetailsQRReceive}>
       <InfoBlock
         warning
         style={page.info}

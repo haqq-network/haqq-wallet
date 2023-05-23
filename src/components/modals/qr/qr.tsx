@@ -13,20 +13,18 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {Events} from '@app/events';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useApp, useWallets} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 import {QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
 import {QrTopView} from './qr-top-view';
 
-export type QRModalProps = {
-  onClose?: () => void;
-  qrWithoutFrom?: boolean;
-};
+export type QRModalProps = Modals['qr'];
 
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +76,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     (address: string) => {
       if (utils.isAddress(address)) {
         if (rows.length === 1) {
-          hideModal();
+          onClose();
           app.emit('address', {
             to: prepareAddress(address),
             from: rows[0].address.trim(),
@@ -88,7 +86,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           setIsOpen(true);
         }
       } else if (parseUri(address)?.protocol === 'wc') {
-        hideModal();
+        onClose();
         setTimeout(() => {
           app.emit(Events.onWalletConnectUri, address);
         }, 1000);
@@ -100,7 +98,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [rows, app, prepareAddress],
+    [rows, onClose, app, prepareAddress],
   );
 
   const onGetAddress = useCallback(

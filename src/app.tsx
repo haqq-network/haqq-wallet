@@ -71,7 +71,7 @@ import {HomeScreen} from './screens/home';
 import {HomeStakingScreen} from './screens/home-staking';
 import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
-import {Modals} from './screens/modals';
+import {ModalsScreen} from './screens/modals-screen';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
@@ -177,7 +177,7 @@ export const App = () => {
       })
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
-        hideModal();
+        hideModal('splash');
         setInitialized(true);
       });
   }, []);
@@ -187,7 +187,7 @@ export const App = () => {
   useEffect(() => {
     if (initialized) {
       const subscription = ({isConnected}: NetInfoState) => {
-        isConnected ? hideModal('no-internet') : showModal('no-internet');
+        isConnected ? hideModal('noInternet') : showModal('noInternet');
       };
 
       const linkingSubscription = ({url}: {url: string}) => {
@@ -520,7 +520,7 @@ export const App = () => {
               </Stack.Group>
             </Stack.Navigator>
           </NavigationContainer>
-          <Modals initialModal={{type: 'splash'}} />
+          <ModalsScreen initialModal={{type: 'splash'}} />
         </WalletsContext.Provider>
       </AppContext.Provider>
     </SafeAreaProvider>

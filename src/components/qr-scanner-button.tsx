@@ -19,7 +19,7 @@ export const QrScannerButton = () => {
     const subscription = ({from, to}: any) => {
       if (utils.isAddress(to)) {
         app.off('address', subscription);
-        hideModal();
+        hideModal('qr');
         navigation.navigate('transaction', {to, from});
       }
     };

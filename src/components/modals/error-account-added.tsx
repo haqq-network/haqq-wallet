@@ -12,18 +12,19 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Modals} from '@app/types';
 
-export const ErrorAccountAdded = () => {
+export const ErrorAccountAdded = ({onClose}: Modals['errorAccountAdded']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
 
   return (
     <BottomPopupContainer>
-      {onClose => (
+      {onClosePopup => (
         <View style={styles.modalView}>
           <Text t5 i18n={I18N.errorAccountAddedTitle} center />
           <Spacer height={42} />
@@ -35,7 +36,7 @@ export const ErrorAccountAdded = () => {
           <Spacer height={42} />
           <Button
             i18n={I18N.errorAccountAddedClose}
-            onPress={() => onClose(hideModal)}
+            onPress={() => onClosePopup(onClose)}
             variant={ButtonVariant.second}
             size={ButtonSize.middle}
             style={styles.button}

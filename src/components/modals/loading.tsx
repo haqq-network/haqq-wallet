@@ -6,12 +6,9 @@ import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidSystemColors} from '@app/hooks';
+import {Modals} from '@app/types';
 
-export type LoadingModalProps = {
-  text?: string;
-};
-
-export const LoadingModal = ({text}: LoadingModalProps) => {
+export const LoadingModal = ({text}: Modals['loading']) => {
   useAndroidSystemColors();
 
   return (

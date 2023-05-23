@@ -104,7 +104,7 @@ export const LedgerScanScreen = () => {
 
       try {
         await suggestApp(transport, LEDGER_APP);
-        hideModal('ledger-no-app');
+        hideModal('ledgerNoApp');
         navigation.navigate('ledgerAccounts', {
           deviceId: item.id,
           deviceName: `Ledger ${item.name}`,
@@ -161,7 +161,7 @@ export const LedgerScanScreen = () => {
             case 'can_not_connected':
               break;
             case 'app_not_found':
-              showModal('ledger-no-app', {
+              showModal('ledgerNoApp', {
                 onRetry: () => {
                   return onRetry(item);
                 },

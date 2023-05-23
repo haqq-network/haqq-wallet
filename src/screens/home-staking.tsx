@@ -136,7 +136,7 @@ export const HomeStakingScreen = () => {
           await awaitForLedger(transport);
         } catch (e) {
           if (e === '27010') {
-            await awaitForPopupClosed('ledger-locked');
+            await awaitForPopupClosed('ledgerLocked');
           }
           transport.abort();
         }

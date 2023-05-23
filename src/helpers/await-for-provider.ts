@@ -44,7 +44,7 @@ export async function awaitForProvider({
     app.addListener('provider-selected', onAction);
     app.addListener('provider-selected-reject', onReject);
 
-    return showModal('providers-bottom-sheet', {
+    return showModal('providersBottomSheet', {
       title,
       providers,
       closeDistance: WINDOW_HEIGHT / 6,

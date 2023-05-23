@@ -12,7 +12,7 @@ export const awaitForCaptcha = (): Promise<string> => {
         reject('data is null');
       }
 
-      hideModal();
+      hideModal('captcha');
       switch (data) {
         case 'chalcancel':
         case 'chalexpired':

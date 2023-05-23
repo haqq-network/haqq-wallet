@@ -48,7 +48,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
       Sentry.captureException(e);
     } finally {
       setDisabled(false);
-      hideModal();
+      hideModal('loading');
     }
   }, [seed, onDoneTry]);
 
