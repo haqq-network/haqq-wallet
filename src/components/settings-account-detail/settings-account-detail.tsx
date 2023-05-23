@@ -19,6 +19,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -69,74 +70,76 @@ export const SettingsAccountDetail = ({
         </Text>
         <Text t14>{wallet?.address}</Text>
       </View>
-      <First>
-        {!wallet.mnemonicSaved && wallet.type !== WalletType.mpc && (
-          <InfoBlock
-            border
-            warning
-            icon={<Icon name={'warning'} color={Color.textYellow1} />}
-            i18n={I18N.settingsAccountDetailRecoveryWarning}
-            bottomContainerStyle={styles.row}
-            bottom={
-              <>
-                <Button
-                  style={styles.button}
-                  size={ButtonSize.small}
-                  i18n={I18N.settingsAccountDetailPharse}
-                  variant={ButtonVariant.second}
-                  onPress={onPressPharse}
-                />
-                <Spacer width={10} />
-                <Button
-                  style={styles.button}
-                  size={ButtonSize.small}
-                  i18n={I18N.settingsAccountDetailSocial}
-                  variant={ButtonVariant.second}
-                  onPress={onPressSocial}
-                />
-              </>
-            }
-          />
-        )}
-        {wallet.type !== WalletType.mpc && (
-          <InfoBlock
-            border
-            icon={<Icon name={'warning'} color={Color.graphicBase1} />}
-            i18n={I18N.settingsAccountDetailRecoverySocialWarning}
-            bottomContainerStyle={styles.row}
-            bottom={
-              <>
-                <Button
-                  style={styles.button}
-                  size={ButtonSize.small}
-                  i18n={I18N.settingsAccountDetailConnectSocialLogin}
-                  variant={ButtonVariant.second}
-                  onPress={onPressSocial}
-                />
-              </>
-            }
-          />
-        )}
-        {!wallet.mnemonicSaved && (
-          <InfoBlock
-            border
-            icon={<Icon name={'warning'} color={Color.graphicBase1} />}
-            i18n={I18N.settingsAccountDetailRecoveryPharseWarning}
-            bottomContainerStyle={styles.row}
-            bottom={
-              <>
-                <Button
-                  style={styles.button}
-                  size={ButtonSize.small}
-                  i18n={I18N.settingsAccountDetailCreateBackupPhrase}
-                  variant={ButtonVariant.second}
-                  onPress={onPressPharse}
-                />
-              </>
-            }
-          />
-        )}
-      </First>
+      {isFeatureEnabled(Feature.mpc) && (
+        <First>
+          {!wallet.mnemonicSaved && wallet.type !== WalletType.mpc && (
+            <InfoBlock
+              border
+              warning
+              icon={<Icon name={'warning'} color={Color.textYellow1} />}
+              i18n={I18N.settingsAccountDetailRecoveryWarning}
+              bottomContainerStyle={styles.row}
+              bottom={
+                <>
+                  <Button
+                    style={styles.button}
+                    size={ButtonSize.small}
+                    i18n={I18N.settingsAccountDetailPharse}
+                    variant={ButtonVariant.second}
+                    onPress={onPressPharse}
+                  />
+                  <Spacer width={10} />
+                  <Button
+                    style={styles.button}
+                    size={ButtonSize.small}
+                    i18n={I18N.settingsAccountDetailSocial}
+                    variant={ButtonVariant.second}
+                    onPress={onPressSocial}
+                  />
+                </>
+              }
+            />
+          )}
+          {wallet.type !== WalletType.mpc && (
+            <InfoBlock
+              border
+              icon={<Icon name={'warning'} color={Color.graphicBase1} />}
+              i18n={I18N.settingsAccountDetailRecoverySocialWarning}
+              bottomContainerStyle={styles.row}
+              bottom={
+                <>
+                  <Button
+                    style={styles.button}
+                    size={ButtonSize.small}
+                    i18n={I18N.settingsAccountDetailConnectSocialLogin}
+                    variant={ButtonVariant.second}
+                    onPress={onPressSocial}
+                  />
+                </>
+              }
+            />
+          )}
+          {!wallet.mnemonicSaved && (
+            <InfoBlock
+              border
+              icon={<Icon name={'warning'} color={Color.graphicBase1} />}
+              i18n={I18N.settingsAccountDetailRecoveryPharseWarning}
+              bottomContainerStyle={styles.row}
+              bottom={
+                <>
+                  <Button
+                    style={styles.button}
+                    size={ButtonSize.small}
+                    i18n={I18N.settingsAccountDetailCreateBackupPhrase}
+                    variant={ButtonVariant.second}
+                    onPress={onPressPharse}
+                  />
+                </>
+              }
+            />
+          )}
+        </First>
+      )}
       <MenuNavigationButton onPress={onPressRename}>
         <DataContent
           titleI18n={I18N.settingsAccountDetailRenameTitle}

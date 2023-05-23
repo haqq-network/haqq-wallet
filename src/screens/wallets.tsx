@@ -6,6 +6,7 @@ import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {onBannerAction} from '@app/event-actions/on-banner-action';
 import {showModal} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation, useWallets} from '@app/hooks';
 import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
@@ -76,7 +77,11 @@ export const WalletsWrapper = () => {
 
   const onPressProtection = useCallback(
     (accountId: string) => {
-      navigation.navigate('walletProtectionPopup', {accountId});
+      if (isFeatureEnabled(Feature.mpc)) {
+        navigation.navigate('walletProtectionPopup', {accountId});
+      } else {
+        navigation.navigate('backup', {accountId});
+      }
     },
     [navigation],
   );
