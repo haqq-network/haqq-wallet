@@ -1764,18 +1764,19 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
-"@haqq/provider-mnemonic-react-native@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.5.tgz#3299d814bcd62a02b812ea136f500b1ed40cb92f"
-  integrity sha512-zAPCgGBoozGMTp6fnENCXLhh5A0WS/1z9o+Vvjg3d75Zs4poctzwPsvKqFdNaRjox3G7lwyp3EHPSZJf5tUafg==
+"@haqq/provider-mnemonic-react-native@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.7.tgz#a1fb16525246e72e25af60a6e5bd4db46e70f522"
+  integrity sha512-b1ugYAQDJnn7ZfwJdaFRJAZA/0NY/rXTHTpTl21uiJCe40a1CnX8Zr9kmKQQp7bcFbKWIhTolZUON+SnExS4EA==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
+    bip39 "^3.1.0"
 
-"@haqq/provider-mpc-react-native@0.0.9":
+"@haqq/provider-sss-react-native@0.0.9":
   version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mpc-react-native/-/provider-mpc-react-native-0.0.9.tgz#584f1da600f54911b0d2d70a6134df6d9b8412b7"
-  integrity sha512-/MubQApwJNtX4tXF++Xj2+Zdmtzm3gUqkoNFvQ0rGnyvp+950QBBMF17MCU7PThZNZpZ4EnrmRukygPVZkthPA==
+  resolved "https://registry.yarnpkg.com/@haqq/provider-sss-react-native/-/provider-sss-react-native-0.0.9.tgz#638714c72b322ac1e45180a82b10742e70bba7a5"
+  integrity sha512-5p7zSY7Ny05D6vy1uXDkJZJa9yvfkgNQQwA+u4bQkp/hSAYizTm03JZexOCt8friyTDaptQB532Uz0zO75SQNg==
   dependencies:
     "@ethersproject/bytes" "5.7.0"
     "@ethersproject/transactions" "5.7.0"
@@ -2282,7 +2283,7 @@
   dependencies:
     "@noble/hashes" "1.3.0"
 
-"@noble/hashes@1.3.0", "@noble/hashes@^1", "@noble/hashes@^1.3.0", "@noble/hashes@~1.3.0":
+"@noble/hashes@1.3.0", "@noble/hashes@^1", "@noble/hashes@^1.2.0", "@noble/hashes@^1.3.0", "@noble/hashes@~1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.0.tgz#085fd70f6d7d9d109671090ccae1d3bec62554a1"
   integrity sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==
@@ -4367,6 +4368,13 @@ bindings@^1.5.0:
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
   dependencies:
     file-uri-to-path "1.0.0"
+
+bip39@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.1.0.tgz#c55a418deaf48826a6ceb34ac55b3ee1577e18a3"
+  integrity sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==
+  dependencies:
+    "@noble/hashes" "^1.2.0"
 
 bl@^4.0.3, bl@^4.1.0:
   version "4.1.0"
