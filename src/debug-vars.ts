@@ -1,4 +1,4 @@
-import {ENABLE_SKIP_PIN_ON_LOGIN} from '@env';
+// import {ENABLE_SKIP_PIN_ON_LOGIN} from '@env';
 
 interface DebugVars {
   enableSentry: boolean;
@@ -23,7 +23,8 @@ const debug: DebugVars = {
   enableWeb3BrowserIncognito: false,
   enableWalletConnectLogger: false,
   enableCaptchaLogger: __DEV__,
-  enableSkipPinOnLogin: ENABLE_SKIP_PIN_ON_LOGIN === '1',
+  enableSkipPinOnLogin: false,
+  // enableSkipPinOnLogin: ENABLE_SKIP_PIN_ON_LOGIN === '1',
   enableWeb3BrowserLogger: __DEV__,
 };
 
