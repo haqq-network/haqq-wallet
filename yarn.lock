@@ -1764,10 +1764,10 @@
     events "^3.3.0"
     rxjs "^7.8.0"
 
-"@haqq/provider-mnemonic-react-native@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.9.tgz#47727d0d4ae750f86e75b5baa7cddbcb7ae069e8"
-  integrity sha512-SMhEAh72jvVZAWFYQT4KSCv7WRmjzqwgSjd0+q7VL9P86vaG9qK529fgo1kDZZKs0Z2ZiEb6xnoWNr6pSXTEPg==
+"@haqq/provider-mnemonic-react-native@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@haqq/provider-mnemonic-react-native/-/provider-mnemonic-react-native-0.0.10.tgz#5fdd2a8db034bd637197ed76e08c146923c7d90b"
+  integrity sha512-mWNvBa5vO1kDY5LQsVc9D9mhE+oKiJiaHdJsiwh/us1ogOl6YZLXtF/m33TS7gB3krkGBsjrUdpHDNYFT0IXdw==
   dependencies:
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
