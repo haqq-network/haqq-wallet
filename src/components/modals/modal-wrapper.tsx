@@ -48,7 +48,7 @@ export const ModalWrapper = ({
   }, [modal, onClose]);
 
   const onCloseModalPress = useCallback(() => {
-    modal.onClose();
+    modal.onClose?.();
     hideModal(type);
   }, [modal, type]);
 
