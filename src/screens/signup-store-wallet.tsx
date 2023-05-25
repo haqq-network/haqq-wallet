@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
@@ -49,8 +49,8 @@ export const SignUpStoreWalletScreen = () => {
               });
         const {address} = await provider.getAccountInfo(hdPath);
         const type =
-          provider instanceof ProviderMpcReactNative
-            ? WalletType.mpc
+          provider instanceof ProviderSSSReactNative
+            ? WalletType.sss
             : WalletType.mnemonic;
         await wallets.addWallet(
           {

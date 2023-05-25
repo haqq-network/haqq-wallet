@@ -100,6 +100,7 @@ export const TransactionConfirmationScreen = () => {
           to: route.params.to,
           amount: route.params.amount,
           id: errorId,
+          walletType: wallet.type,
         });
 
         if (e instanceof Error) {

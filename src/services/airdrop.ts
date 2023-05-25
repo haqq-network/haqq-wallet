@@ -17,6 +17,10 @@ export type ClaimResponse =
       unavalible_reason: string;
     };
 
+export type CampaignCodeResponse = {
+  code_type: string;
+};
+
 export class Airdrop {
   static instance = new Airdrop();
 
@@ -69,6 +73,29 @@ export class Airdrop {
       },
       body: JSON.stringify({
         claim_code,
+      }),
+    });
+
+    const resp = await request.json();
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
+  async campaign_code(campaign_code: string): Promise<CampaignCodeResponse> {
+    const request = await fetch(`${this.getRemoteUrl()}/mobile/campaign_code`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
+        connection: 'keep-alive',
+        'content-type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        campaign_code,
       }),
     });
 

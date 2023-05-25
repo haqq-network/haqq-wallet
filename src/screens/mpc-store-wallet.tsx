@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
@@ -28,7 +28,7 @@ export const MpcStoreWalletScreen = () => {
       try {
         const storage = await getProviderStorage();
 
-        const provider = await ProviderMpcReactNative.initialize(
+        const provider = await ProviderSSSReactNative.initialize(
           route.params.privateKey,
           route.params.cloudShare,
           null,
@@ -64,7 +64,7 @@ export const MpcStoreWalletScreen = () => {
               await wallets.addWallet(
                 {
                   address: address,
-                  type: WalletType.mpc,
+                  type: WalletType.sss,
                   path: hdPath,
                   accountId: provider.getIdentifier(),
                 },

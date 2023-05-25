@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 
 import {app} from '@app/contexts';
@@ -42,7 +42,7 @@ export const MpcMigrateStoreScreen = () => {
 
         entropy = entropy.padStart(64, '0');
 
-        const provider = await ProviderMpcReactNative.initialize(
+        const provider = await ProviderSSSReactNative.initialize(
           route.params.privateKey,
           null,
           entropy,
@@ -61,7 +61,7 @@ export const MpcMigrateStoreScreen = () => {
             wallet.type === WalletType.mnemonic
           ) {
             wallet.update({
-              type: WalletType.mpc,
+              type: WalletType.sss,
               accountId: provider.getIdentifier(),
             });
           }

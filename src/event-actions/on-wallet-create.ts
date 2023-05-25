@@ -1,5 +1,5 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -33,10 +33,10 @@ export async function onWalletCreate(wallet: Wallet) {
       let mnemonicSaved: boolean;
 
       switch (wallet.type) {
-        case WalletType.mpc:
+        case WalletType.sss:
           const providerMpc = (await getProviderInstanceForWallet(
             wallet,
-          )) as ProviderMpcReactNative;
+          )) as ProviderSSSReactNative;
           mnemonicSaved = await providerMpc.isShareSaved();
           break;
         case WalletType.mnemonic:
