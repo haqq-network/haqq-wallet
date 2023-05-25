@@ -1,4 +1,4 @@
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -10,13 +10,13 @@ export async function onWalletMpcSaved(accountId: string) {
 
   const storage = await getProviderStorage(accountId);
 
-  const provider = new ProviderMpcReactNative({
+  const provider = new ProviderSSSReactNative({
     account: accountId,
     storage,
     getPassword: app.getPassword.bind(app),
   });
 
-  const storages = await ProviderMpcReactNative.getStoragesForAccount(
+  const storages = await ProviderSSSReactNative.getStoragesForAccount(
     accountId,
   );
 
@@ -30,7 +30,7 @@ export async function onWalletMpcSaved(accountId: string) {
   const mnemonicSaved = isShareSaved.some(t => t);
 
   for (const wallet of wallets) {
-    if (wallet.accountId === accountId && wallet.type === WalletType.mpc) {
+    if (wallet.accountId === accountId && wallet.type === WalletType.sss) {
       wallet.update({mnemonicSaved});
       // TODO: socialLinkEnabled
       // wallet.update({socialLinkEnabled: true});

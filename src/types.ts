@@ -517,7 +517,7 @@ export enum WalletType {
   mnemonic = 'mnemonic',
   hot = 'hot',
   ledgerBt = 'ledger-bt',
-  mpc = 'mpc',
+  sss = 'sss',
 }
 
 export enum WalletCardPattern {

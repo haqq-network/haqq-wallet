@@ -1,11 +1,11 @@
 import {ProviderBaseOptions} from '@haqq/provider-base';
 import {
   Polynomial,
-  ProviderMpcReactNative,
+  ProviderSSSReactNative,
   StorageInterface,
   lagrangeInterpolation,
-} from '@haqq/provider-mpc-react-native';
-import {ITEM_KEY} from '@haqq/provider-mpc-react-native/dist/constants';
+} from '@haqq/provider-sss-react-native';
+import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
 import {
   encryptShare,
@@ -37,7 +37,7 @@ export async function providerMpcInitialize(
     metadataUrl: string;
     generateSharesUrl: string;
   },
-): Promise<ProviderMpcReactNative> {
+): Promise<ProviderSSSReactNative> {
   let keyPK = socialPrivateKey;
   let shares = [];
 
@@ -152,7 +152,7 @@ export async function providerMpcInitialize(
     );
 
     if (stored) {
-      await ProviderMpcReactNative.setStorageForAccount(
+      await ProviderSSSReactNative.setStorageForAccount(
         address.toLowerCase(),
         storage,
       );
@@ -171,14 +171,14 @@ export async function providerMpcInitialize(
     JSON.stringify(sqStore),
   );
 
-  const accounts = await ProviderMpcReactNative.getAccounts();
+  const accounts = await ProviderSSSReactNative.getAccounts();
 
   await EncryptedStorage.setItem(
     `${ITEM_KEY}_accounts`,
     JSON.stringify(accounts.concat(address.toLowerCase())),
   );
 
-  return new ProviderMpcReactNative({
+  return new ProviderSSSReactNative({
     ...options,
     getPassword,
     storage,

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {addMinutes} from 'date-fns';
 
 import {
@@ -27,7 +27,7 @@ export const BackupMpcNotificationScreen = () => {
         if (accountId) {
           const storage = new Cloud();
 
-          const provider = new ProviderMpcReactNative({
+          const provider = new ProviderSSSReactNative({
             storage,
             account: accountId,
             getPassword: app.getPassword.bind(app),

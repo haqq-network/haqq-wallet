@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
@@ -80,7 +80,7 @@ export const SignInStoreWalletScreen = () => {
           case 'mpc':
             const storage = await getProviderStorage();
 
-            const mpcProvider = await ProviderMpcReactNative.initialize(
+            const mpcProvider = await ProviderSSSReactNative.initialize(
               params.mpcPrivateKey,
               params.mpcCloudShare,
               null,
@@ -94,7 +94,7 @@ export const SignInStoreWalletScreen = () => {
               },
             );
 
-            await createWalletsForProvider(mpcProvider, WalletType.mpc);
+            await createWalletsForProvider(mpcProvider, WalletType.sss);
             break;
         }
 

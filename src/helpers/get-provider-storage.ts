@@ -1,7 +1,7 @@
 import {
-  ProviderMpcReactNative,
+  ProviderSSSReactNative,
   StorageInterface,
-} from '@haqq/provider-mpc-react-native';
+} from '@haqq/provider-sss-react-native';
 
 import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {Cloud} from '@app/services/cloud';
@@ -13,7 +13,7 @@ export async function getProviderStorage(
 ): Promise<StorageInterface> {
   const storages = storage
     ? [storage]
-    : await ProviderMpcReactNative.getStoragesForAccount(accountId);
+    : await ProviderSSSReactNative.getStoragesForAccount(accountId);
 
   const cloudEnabled = await Cloud.isEnabled();
   const googleEnabled = await GoogleDrive.isEnabled();

@@ -2,7 +2,7 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -17,7 +17,7 @@ function getId(wallet: Wallet) {
     case WalletType.mnemonic:
     case WalletType.hot:
     case WalletType.ledgerBt:
-    case WalletType.mpc:
+    case WalletType.sss:
       return wallet.accountId ?? '';
   }
 }
@@ -66,11 +66,11 @@ export async function getProviderInstanceForWallet(
           }),
         );
         break;
-      case WalletType.mpc:
+      case WalletType.sss:
         const storage = await getProviderStorage(wallet.accountId as string);
         cache.set(
           id,
-          new ProviderMpcReactNative({
+          new ProviderSSSReactNative({
             storage,
             getPassword: app.getPassword.bind(app),
             account: wallet.accountId!,

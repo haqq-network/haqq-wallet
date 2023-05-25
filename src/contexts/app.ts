@@ -3,6 +3,7 @@ import {createContext} from 'react';
 import {EventEmitter} from 'events';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
+import RNAsyncStorage from '@react-native-async-storage/async-storage';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
@@ -227,6 +228,7 @@ class App extends EventEmitter {
   }
 
   async clean() {
+    await RNAsyncStorage.clear();
     await resetGenericPassword();
   }
 

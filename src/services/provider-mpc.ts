@@ -6,7 +6,7 @@ import {
   MPC_GOOGLE_ANDROID,
   MPC_GOOGLE_IOS,
 } from '@env';
-import {lagrangeInterpolation} from '@haqq/provider-mpc-react-native';
+import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
 import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';

@@ -1,5 +1,5 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
@@ -18,7 +18,7 @@ export async function onAppBackup() {
   const mnemonics = await ProviderMnemonicReactNative.getAccounts();
 
   if (isFeatureEnabled(Feature.sss)) {
-    const mpc = await ProviderMpcReactNative.getAccounts();
+    const mpc = await ProviderSSSReactNative.getAccounts();
     if (mnemonics.length && !mpc.length) {
       navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});
       return;

@@ -1,4 +1,4 @@
-import {StorageInterface} from '@haqq/provider-mpc-react-native';
+import {StorageInterface} from '@haqq/provider-sss-react-native';
 import RNAsyncStorage from '@react-native-async-storage/async-storage';
 
 export class AsyncLocalStorage implements StorageInterface {

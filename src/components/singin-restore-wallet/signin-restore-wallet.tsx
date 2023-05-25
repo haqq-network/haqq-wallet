@@ -64,6 +64,8 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
   return (
     <ScrollView
       contentContainerStyle={page.scrollContent}
+      keyboardShouldPersistTaps="always"
+      keyboardDismissMode="on-drag"
       showsVerticalScrollIndicator={false}>
       <KeyboardSafeArea style={page.container} testID="signin_restore">
         <Text

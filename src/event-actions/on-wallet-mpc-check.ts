@@ -1,4 +1,4 @@
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
@@ -16,14 +16,14 @@ export async function onWalletMpcCheck(snoozeBackup: Date) {
 
     const accounts = new Set(
       wallets
-        .filter(w => w.type === WalletType.mpc && !w.isHidden && w.accountId)
+        .filter(w => w.type === WalletType.sss && !w.isHidden && w.accountId)
         .map(w => w.accountId) as string[],
     );
 
     const storage = new Cloud();
     for (const accountId of accounts) {
       if (cloudAvailable) {
-        const provider = new ProviderMpcReactNative({
+        const provider = new ProviderSSSReactNative({
           storage,
           account: accountId,
           getPassword: app.getPassword.bind(app),

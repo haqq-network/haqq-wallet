@@ -1,6 +1,6 @@
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderMpcReactNative} from '@haqq/provider-mpc-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -11,7 +11,7 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
 
   if (params && params.type === 'mpc') {
     const storage = await getProviderStorage('', 'cloud');
-    return await ProviderMpcReactNative.initialize(
+    return await ProviderSSSReactNative.initialize(
       params.mpcPrivateKey || null,
       params.mpcCloudShare || null,
       null,
@@ -26,12 +26,12 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
     );
   }
 
-  const keysMpc = await ProviderMpcReactNative.getAccounts();
+  const keysMpc = await ProviderSSSReactNative.getAccounts();
 
   if (keysMpc.length) {
     const storage = await getProviderStorage(keysMpc[0]);
 
-    return new ProviderMpcReactNative({
+    return new ProviderSSSReactNative({
       storage,
       account: keysMpc[0],
       getPassword,

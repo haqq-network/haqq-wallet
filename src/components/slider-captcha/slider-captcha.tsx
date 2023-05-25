@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ActivityIndicator, Image, View} from 'react-native';
 import {
@@ -57,9 +57,11 @@ const STATE_DURATION_CHANGE = 400;
 
 export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   const theme = useTheme();
+  const abortController = useRef(new AbortController());
   const [imageContainerLayout, onImageContainerLayout] = useLayout();
   const [sliderLayout, onSliderLayout] = useLayout();
   const position = useSharedValue(0);
+  const intermediatePositionValues = useRef<number[]>([]);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const diffTime = useMemo(() => endTime - startTime, [endTime, startTime]);
@@ -68,6 +70,12 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     [diffTime],
   );
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
+  const refreshButtonEnabled = useMemo(
+    () =>
+      sliderState === SliderCaptchaState.initial ||
+      sliderState === SliderCaptchaState.loading,
+    [sliderState],
+  );
   const gestureEnabled = useMemo(
     () =>
       sliderState === SliderCaptchaState.initial ||
@@ -111,25 +119,79 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
   const onPressRefresh = useCallback(() => {
     console.log('onPressRefresh');
-  }, []);
+    setSliderState(SliderCaptchaState.loading);
+    abortController.current.abort();
+    abortController.current = new AbortController();
+    //TODO: request to server
+    setTimeout(() => {
+      setSliderState(SliderCaptchaState.initial);
+      position.value = withTiming(0);
+    }, 1000);
+  }, [position]);
 
   const onStartMovement = useCallback(() => {
     setStartTime(Date.now());
     setSliderState(SliderCaptchaState.move);
   }, []);
 
-  const onEndMovement = useCallback(() => {
-    const onePercentOfLayout = (sliderLayout.width - SLIDER_BUTTON_WIDTH) / 100;
-    const fillProgressInPercent = position.value / onePercentOfLayout;
-    const progressValue = (MAX_PROGRESS_VALUE / 100) * fillProgressInPercent;
+  const calculateProgressValue = useCallback(
+    (progress: number) => {
+      const onePercentOfLayout =
+        (sliderLayout.width - SLIDER_BUTTON_WIDTH) / 100;
+      const fillProgressInPercent = progress / onePercentOfLayout;
+      const progressValue = (MAX_PROGRESS_VALUE / 100) * fillProgressInPercent;
+      return Math.round(progressValue);
+    },
+    [sliderLayout.width],
+  );
 
-    console.log('🟢 progressValue', Math.round(progressValue));
+  const logIntermediatePositionValues = useCallback(
+    (progress: number) => {
+      const progressValue = calculateProgressValue(progress);
+      const lastIntermediateValue =
+        intermediatePositionValues.current?.[
+          intermediatePositionValues.current.length - 1
+        ];
+
+      if (progressValue !== lastIntermediateValue) {
+        console.log('🟢 progressValue', progressValue);
+        intermediatePositionValues.current.push(progressValue);
+      }
+    },
+    [calculateProgressValue],
+  );
+
+  const onEndMovement = useCallback(() => {
+    console.log(
+      '🟣 intermediatePositionValues',
+      intermediatePositionValues.current.length,
+      JSON.stringify(intermediatePositionValues.current, null, 2),
+    );
+
+    const progressValue = calculateProgressValue(position.value);
+    const intermediatePositionValuesBase64 = Buffer.from(
+      intermediatePositionValues.current,
+    ).toString('base64');
+
+    console.log('🟢 progressValue', progressValue);
+    console.log(
+      '🟢 intermediatePositionValuesBase64',
+      intermediatePositionValuesBase64,
+    );
 
     setEndTime(Date.now());
     setSliderState(SliderCaptchaState.loading);
 
-    // TODO: fetch result
+    // TODO: fetch result from server
+    // and pass abortController.current.signal to request
+
+    // for example
+    let aborted = false;
+    abortController.current.signal.onabort = () => (aborted = true);
     setTimeout(() => {
+      if (aborted) {
+        return;
+      }
       const isSuccess = Math.random() > 0.5;
       let data: CaptchaDataTypes;
 
@@ -146,7 +208,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         onData?.(data);
       }, STATE_DURATION_CHANGE + 1000);
     }, 2000);
-  }, [onData, position.value, sliderLayout.width]);
+  }, [calculateProgressValue, onData, position.value]);
 
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -171,6 +233,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         nextPosition = sliderLayout.width - SLIDER_BUTTON_WIDTH;
       }
 
+      runOnJS(logIntermediatePositionValues)(nextPosition);
       position.value = nextPosition;
     },
     onEnd() {
@@ -328,7 +391,10 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
       <Spacer height={13} />
       <View style={styles.buttonsContainer}>
-        <IconButton style={styles.iconButton} onPress={onPressRefresh}>
+        <IconButton
+          style={styles.iconButton}
+          disabled={!refreshButtonEnabled}
+          onPress={onPressRefresh}>
           <Icon i18 color={Color.textBase1} name={IconsName.refresh} />
           <Spacer width={6} />
           <Text t18 i18n={I18N.sliderCaptchaRefresh} />
