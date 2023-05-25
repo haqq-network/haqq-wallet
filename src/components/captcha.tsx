@@ -10,6 +10,7 @@ import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 import {Hcaptcha} from './hcaptcha';
+import {SliderCaptcha} from './slider-captcha/slider-captcha';
 
 export type CaptchaDataTypes = (
   | 'error'
@@ -20,9 +21,15 @@ export type CaptchaDataTypes = (
 ) &
   string;
 
+export enum CaptchaType {
+  hcaptcha,
+  slider,
+}
+
 export interface CaptchaProps {
   languageCode?: string;
   enableAutoOpenChallenge?: boolean;
+  type?: CaptchaType;
 
   onData(token: CaptchaDataTypes): void;
 }
@@ -30,6 +37,7 @@ export interface CaptchaProps {
 export const Captcha = ({
   languageCode = 'en',
   enableAutoOpenChallenge,
+  type = CaptchaType.slider,
   onData,
 }: CaptchaProps) => {
   const appTheme = useTheme();
@@ -45,18 +53,23 @@ export const Captcha = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.whiteBox} />
-      <Hcaptcha
-        siteKey={HCAPTCHA_SITE_KEY}
-        showLoading
-        size={'compact'}
-        onMessage={onMessage}
-        theme={theme}
-        style={styles.captcha}
-        backgroundColor={'transparent'}
-        enableAutoOpenChallenge={enableAutoOpenChallenge}
-        languageCode={languageCode}
-      />
+      {type === CaptchaType.hcaptcha && (
+        <>
+          <View style={styles.whiteBox} />
+          <Hcaptcha
+            siteKey={HCAPTCHA_SITE_KEY}
+            showLoading
+            size={'compact'}
+            onMessage={onMessage}
+            theme={theme}
+            style={styles.captcha}
+            backgroundColor={'transparent'}
+            enableAutoOpenChallenge={enableAutoOpenChallenge}
+            languageCode={languageCode}
+          />
+        </>
+      )}
+      {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
     </View>
   );
 };

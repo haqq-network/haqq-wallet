@@ -6,6 +6,7 @@ import {utils} from 'ethers';
 import {Alert, ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
+import {CaptchaType} from '@app/components/captcha';
 import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -403,10 +404,24 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="Show captcha"
+        title="Show hcaptcha captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha();
+            const result = await awaitForCaptcha({type: CaptchaType.hcaptcha});
+            Alert.alert('result', result);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', err?.message);
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Show puzzle captcha"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({type: CaptchaType.slider});
             Alert.alert('result', result);
           } catch (err) {
             // @ts-ignore

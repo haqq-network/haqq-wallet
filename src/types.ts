@@ -13,6 +13,7 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
+import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
 import {MpcProviders} from './services/provider-mpc';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
@@ -830,5 +831,6 @@ export type Modals = {
   };
   captcha: {
     onClose?: () => void;
+    variant?: CaptchaType;
   };
 };

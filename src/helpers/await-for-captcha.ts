@@ -1,11 +1,17 @@
-import {CaptchaDataTypes} from '@app/components/captcha';
+import {CaptchaDataTypes, CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 
 import {hideModal, showModal} from './modal';
 
-export const awaitForCaptcha = (): Promise<string> => {
+export interface AwaitForCaptchaParams {
+  type?: CaptchaType;
+}
+
+export const awaitForCaptcha = ({
+  type = CaptchaType.hcaptcha,
+}: AwaitForCaptchaParams): Promise<string> => {
   return new Promise((resolve, reject) => {
-    showModal('captcha');
+    showModal('captcha', {variant: type});
 
     app.once('captcha-data', (data: CaptchaDataTypes) => {
       if (!data) {

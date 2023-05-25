@@ -411,3 +411,10 @@ export function calculateEstimateTime(
   const minutes = diff % 60;
   return `${hours}h ${minutes}m`;
 }
+
+export function getBase64ImageSource(base64: string, extension = 'png') {
+  if (base64.substring(0, 5) !== 'data:') {
+    base64 = `data:image/${extension};base64,` + base64;
+  }
+  return {uri: base64};
+}

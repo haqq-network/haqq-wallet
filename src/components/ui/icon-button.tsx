@@ -22,7 +22,7 @@ export const IconButton = ({
 
   const onPressButton = useCallback(() => {
     if (!disabled) {
-      onPress();
+      onPress?.();
     }
   }, [disabled, onPress]);
 

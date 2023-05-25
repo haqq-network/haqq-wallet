@@ -23,6 +23,7 @@ export enum IconsName {
   color_flat = 'color_flat',
   color_gradient = 'color_gradient',
   copy = 'copy',
+  drag = 'drag',
   doc = 'doc',
   deposit = 'deposit',
   flash = 'flash',
