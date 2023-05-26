@@ -1,0 +1,75 @@
+diff --git a/node_modules/bip39/src/index.js b/node_modules/bip39/src/index.js
+index b83863f..8df2101 100644
+--- a/node_modules/bip39/src/index.js
++++ b/node_modules/bip39/src/index.js
+@@ -1,8 +1,7 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-const sha256_1 = require("@noble/hashes/sha256");
+-const sha512_1 = require("@noble/hashes/sha512");
+-const pbkdf2_1 = require("@noble/hashes/pbkdf2");
++const { pbkdf2 } = require('pbkdf2');
++const shajs = require('sha.js');
+ const utils_1 = require("@noble/hashes/utils");
+ const _wordlists_1 = require("./_wordlists");
+ let DEFAULT_WORDLIST = _wordlists_1._default;
+@@ -29,29 +28,28 @@ function bytesToBinary(bytes) {
+ function deriveChecksumBits(entropyBuffer) {
+     const ENT = entropyBuffer.length * 8;
+     const CS = ENT / 32;
+-    const hash = sha256_1.sha256(Uint8Array.from(entropyBuffer));
++    const hash = shajs('sha256').update(entropyBuffer).digest();
+     return bytesToBinary(Array.from(hash)).slice(0, CS);
+ }
+ function salt(password) {
+     return 'mnemonic' + (password || '');
+ }
+ function mnemonicToSeedSync(mnemonic, password) {
+-    const mnemonicBuffer = Uint8Array.from(Buffer.from(normalize(mnemonic), 'utf8'));
+-    const saltBuffer = Uint8Array.from(Buffer.from(salt(normalize(password)), 'utf8'));
+-    const res = pbkdf2_1.pbkdf2(sha512_1.sha512, mnemonicBuffer, saltBuffer, {
+-        c: 2048,
+-        dkLen: 64,
+-    });
+-    return Buffer.from(res);
++    throw new Error('deprecated use `mnemonicToSeed` instead');
+ }
+ exports.mnemonicToSeedSync = mnemonicToSeedSync;
+ function mnemonicToSeed(mnemonic, password) {
+     const mnemonicBuffer = Uint8Array.from(Buffer.from(normalize(mnemonic), 'utf8'));
+     const saltBuffer = Uint8Array.from(Buffer.from(salt(normalize(password)), 'utf8'));
+-    return pbkdf2_1.pbkdf2Async(sha512_1.sha512, mnemonicBuffer, saltBuffer, {
+-        c: 2048,
+-        dkLen: 64,
+-    }).then((res) => Buffer.from(res));
++    return new Promise((resolve, reject) => {
++        pbkdf2(mnemonicBuffer, saltBuffer, 2048, 64, 'sha512', (err, derivedKey) => {
++            if (err) {
++                reject(err);
++            } else {
++                resolve(derivedKey);
++            }
++        });
++    });
+ }
+ exports.mnemonicToSeed = mnemonicToSeed;
+ function mnemonicToEntropy(mnemonic, wordlist) {
+@@ -66,12 +64,12 @@ function mnemonicToEntropy(mnemonic, wordlist) {
+     // convert word indices to 11 bit binary strings
+     const bits = words
+         .map((word) => {
+-        const index = wordlist.indexOf(word);
+-        if (index === -1) {
+-            throw new Error(INVALID_MNEMONIC);
+-        }
+-        return lpad(index.toString(2), '0', 11);
+-    })
++            const index = wordlist.indexOf(word);
++            if (index === -1) {
++                throw new Error(INVALID_MNEMONIC);
++            }
++            return lpad(index.toString(2), '0', 11);
++        })
+         .join('');
+     // split the binary string into ENT/CS
+     const dividerIndex = Math.floor(bits.length / 33) * 32;
