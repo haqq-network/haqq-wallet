@@ -10,6 +10,7 @@ import {useReactiveDate} from '@app/hooks/use-reactive-date';
 import {I18N} from '@app/i18n';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {calculateEstimateTime} from '@app/utils';
+import {WEI} from '@app/variables/common';
 
 import {Button, ButtonSize, ButtonVariant} from './button';
 import {First} from './first';
@@ -65,7 +66,10 @@ export const RaffleBlock = ({
 }: RaffelBlockProps) => {
   console.log('item', item);
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
-  const formattedAmount = useMemo(() => cleanNumber(item.budget), [item]);
+  const formattedAmount = useMemo(
+    () => cleanNumber(parseInt(item.budget, 16) / WEI),
+    [item],
+  );
   const subtitle = useMemo(
     () => (item.total_tickets > 1 ? I18N.rafflePrizePool : I18N.rafflePrize),
     [item.total_tickets],
@@ -77,7 +81,7 @@ export const RaffleBlock = ({
   });
   const now = useReactiveDate(TimerUpdateInterval.minute);
   const estimateTime = useMemo(
-    () => calculateEstimateTime(now, item.locked_until),
+    () => calculateEstimateTime(now, new Date(item.locked_until * 1000)),
     [item, now],
   );
   const showGetTicket = useMemo(
