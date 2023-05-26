@@ -11,7 +11,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.sss:
       return false && app.isOathSigninSupported;
     case Feature.earn:
-      return true;
+      return false;
     case Feature.walletConnectSign:
       return false;
     default:
