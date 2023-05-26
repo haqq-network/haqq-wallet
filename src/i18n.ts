@@ -633,6 +633,7 @@ export enum I18N {
   raffleDetailsPreviousRaffle,
   raffleDetailsPreviousRaffleDetails,
   raffleDetailsHaveTickets,
+  raffleDetailsHaveTicket,
   timerDay,
   timerHour,
   timerMin,
@@ -1393,6 +1394,7 @@ const en: Record<I18N, string> = {
   [I18N.later]: 'Later',
   [I18N.raffleDetailsPreviousRaffle]: 'Previous raffle',
   [I18N.raffleDetailsHaveTickets]: 'You have: {{tickets}} tickets',
+  [I18N.raffleDetailsHaveTicket]: 'You have: {{tickets}} ticket',
   [I18N.raffleDetailsPreviousRaffleDetails]:
     'Prize {{islm}} ISLM ({{tickets}} tickets won)',
   [I18N.earnWelcomeRaffleTitle]: 'Welcome raffle',

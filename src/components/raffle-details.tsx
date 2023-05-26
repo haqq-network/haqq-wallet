@@ -8,6 +8,7 @@ import {useReactiveDate} from '@app/hooks/use-reactive-date';
 import {I18N} from '@app/i18n';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {calculateEstimateTime} from '@app/utils';
+import {WEI} from '@app/variables/common';
 
 import {
   Button,
@@ -32,18 +33,29 @@ export const RaffleDetails = ({
   onPressGetTicket,
   onPressShowResult,
 }: RaffleDetailsProps) => {
+  const closed_at = useMemo(
+    () => new Date(item.close_at * 1000),
+    [item.close_at],
+  );
+  const locked_until = useMemo(
+    () => new Date(item.locked_until * 1000),
+    [item.locked_until],
+  );
   const formattedBudget = useMemo(
-    () => cleanNumber(item.budget),
+    () => cleanNumber(parseInt(item.budget, 16) / WEI),
     [item.budget],
   );
   const now = useReactiveDate(TimerUpdateInterval.minute);
   const estimateTime = useMemo(
-    () => calculateEstimateTime(now, item.locked_until),
-    [item, now],
+    () => calculateEstimateTime(now, locked_until),
+    [locked_until, now],
   );
-  const showGetTiket = useMemo(() => Date.now() > item.locked_until, [item]);
-  const showTimer = useMemo(() => Date.now() < item.locked_until, [item]);
-  const showResult = useMemo(() => Date.now() > item.close_at, [item]);
+  const showGetTicket = useMemo(
+    () => new Date() > locked_until,
+    [locked_until],
+  );
+  const showTimer = useMemo(() => new Date() < locked_until, [locked_until]);
+  const showResult = useMemo(() => new Date() > closed_at, [closed_at]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,21 +72,17 @@ export const RaffleDetails = ({
 
       <Spacer height={12} />
 
-      <Text
-        t14
-        center
-        color={Color.textBase2}
-        i18params={{islm: `${formattedBudget}`}}
-        i18n={I18N.raffleDetailsPrizeByTicketDescription}
-      />
+      <Text t14 center color={Color.textBase2}>
+        {item.description}
+      </Text>
 
       <Spacer height={48} />
 
       <Timer
         finishTitleI18N={I18N.raffleDetailsTimerFinishTitle}
         progressTitleI18N={I18N.raffleDetailsTimerProgressTitle}
-        start={item.start_at}
-        end={item.close_at}
+        start={item.start_at * 1000}
+        end={item.close_at * 1000}
         showSeconds={false}
         updateInterval={TimerUpdateInterval.minute}
       />
@@ -113,9 +121,12 @@ export const RaffleDetails = ({
         <Spacer width={4} />
         <Text
           t12
-          i18n={I18N.raffleDetailsHaveTickets}
-          // TODO:
-          i18params={{tickets: '7'}}
+          i18n={
+            item.total_tickets === 1
+              ? I18N.raffleDetailsHaveTicket
+              : I18N.raffleDetailsHaveTickets
+          }
+          i18params={{tickets: String(item.total_tickets)}}
           color={Color.textYellow1}
         />
       </View>
@@ -139,7 +150,7 @@ export const RaffleDetails = ({
             title={estimateTime}
           />
         )}
-        {showGetTiket && (
+        {showGetTicket && (
           <Button
             style={styles.buttonStyle}
             variant={ButtonVariant.contained}
