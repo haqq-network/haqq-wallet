@@ -6,5 +6,5 @@ export function getUid() {
     VariablesString.set('uid', makeID(10));
   }
 
-  return VariablesString.get('uid');
+  return VariablesString.get('uid') ?? '';
 }

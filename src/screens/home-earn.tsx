@@ -1,42 +1,30 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {HAQQ_BACKEND} from '@env';
-
+import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
 import {wallets} from '@app/contexts';
-import {getProviderInstanceForWallet} from '@app/helpers';
-import {awaitForSession} from '@app/helpers/await-for-session';
+import {captureException, getProviderInstanceForWallet} from '@app/helpers';
+import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
+import {Backend} from '@app/services/backend';
 import {Raffle} from '@app/types';
 
 export const HomeEarnScreen = () => {
   const navigation = useTypedNavigation();
 
-  console.log(Wallet.getAll().snapshot());
-
-  const [raffles, setRaffles] = useState(null);
+  const [raffles, setRaffles] = useState<null | Raffle[]>(null);
 
   useEffect(() => {
-    fetch(`${HAQQ_BACKEND}contests`, {
-      method: 'POST',
-      headers: {
-        accept: 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
-        connection: 'keep-alive',
-        'content-type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify({
-        accounts: wallets.getWallets().map(wallet => wallet.address),
-        uid: getUid(),
-      }),
-    })
-      .then(resp => resp.json())
+    Backend.instance
+      .contests(
+        wallets.getWallets().map(wallet => wallet.address),
+        getUid(),
+      )
       .then(contests => {
         setRaffles(contests);
       });
@@ -56,36 +44,39 @@ export const HomeEarnScreen = () => {
       throw new Error('No leading account');
     }
 
-    const session = await awaitForSession();
-    console.log('session', session);
+    const session = await awaitForCaptcha({type: CaptchaType.slider});
+
     const uid = getUid();
     const provider = await getProviderInstanceForWallet(leadingAccount);
+
+    console.log(`sign ${raffle.id}:${uid}:${session}`);
+
+    const sig = await provider.signPersonalMessage(
+      leadingAccount?.path ?? '',
+      'Example `personal_sign` message',
+    );
+
+    console.log('sig', sig);
 
     const signature = await provider.signPersonalMessage(
       leadingAccount?.path ?? '',
       `${raffle.id}:${uid}:${session}`,
     );
 
-    const resp = await fetch(`${HAQQ_BACKEND}contests/${raffle.id}`, {
-      method: 'POST',
-      headers: {
-        accept: 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
-        connection: 'keep-alive',
-        'content-type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify({
-        ts: Math.floor(Date.now() / 1000),
-        uid: uid,
-        signature: signature,
-        session: session,
-      }),
-    });
+    try {
+      const res = Backend.instance.contestParticipate(
+        raffle.id,
+        uid,
+        session,
+        signature,
+        leadingAccount?.address ?? '',
+      );
 
-    const res = await resp.json();
-
-    sendNotification(I18N.earnTicketRecieved);
-    console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
+      sendNotification(I18N.earnTicketRecieved);
+      console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
+    } catch (e) {
+      captureException(e, 'onPressGetTicket');
+    }
   }, []);
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
