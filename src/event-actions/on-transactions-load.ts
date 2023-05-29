@@ -3,6 +3,7 @@ import {calcFee, captureException} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
+import {getHttpResponse} from '@app/utils';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getProviders().filter(p => !!p.explorer);
@@ -48,7 +49,7 @@ async function loadTransactionsFromExplorerWithProvider(
       },
     );
 
-    const rows = await txList.json();
+    const rows = await getHttpResponse(txList);
 
     return rows.result
       .filter((row: any) => !Transaction.getById(row.hash))

@@ -59,6 +59,7 @@ import {
   CosmosTxV1beta1TxResponse,
   CosmosTxV1betaSimulateResponse,
 } from '@app/types/cosmos';
+import {getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 export type GetValidatorResponse = {
@@ -107,7 +108,7 @@ export class Cosmos {
       headers: {'Content-Type': 'application/json'},
     });
 
-    return await resp.json();
+    return await getHttpResponse<T>(resp);
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
@@ -117,7 +118,7 @@ export class Cosmos {
       body: data,
     });
 
-    return await resp.json();
+    return await getHttpResponse<T>(resp);
   }
 
   async getAccountDelegations(

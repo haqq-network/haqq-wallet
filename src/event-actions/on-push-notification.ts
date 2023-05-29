@@ -4,6 +4,7 @@ import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {navigator} from '@app/navigator';
 import {NewsRow, RemoteMessage} from '@app/types';
+import {getHttpResponse} from '@app/utils';
 
 export async function onPushNotification(message: RemoteMessage) {
   if (message.data.type === 'news' && message.data.id) {
@@ -13,7 +14,7 @@ export async function onPushNotification(message: RemoteMessage) {
       const newsDetailResp = await fetch(
         `${HAQQ_BACKEND}news/${message.data.id}`,
       );
-      const row = (await newsDetailResp.json()) as NewsRow;
+      const row = await getHttpResponse<NewsRow>(newsDetailResp);
 
       News.create(row.id, {
         title: row.title,

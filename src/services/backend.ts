@@ -1,6 +1,7 @@
 import {HAQQ_BACKEND} from '@env';
 
 import {Raffle} from '@app/types';
+import {getHttpResponse} from '@app/utils';
 
 export type CaptchaRequestResponse = {
   id: string;
@@ -37,7 +38,7 @@ export class Backend {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
@@ -65,7 +66,7 @@ export class Backend {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
@@ -87,7 +88,7 @@ export class Backend {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
@@ -109,7 +110,7 @@ export class Backend {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);

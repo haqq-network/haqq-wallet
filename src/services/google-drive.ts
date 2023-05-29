@@ -1,7 +1,7 @@
 import {StorageInterface} from '@haqq/provider-sss-react-native';
 
 import {getGoogleTokens, hasGoogleToken} from '@app/helpers/get-google-tokens';
-import {makeID} from '@app/utils';
+import {getHttpResponse, makeID} from '@app/utils';
 
 const GOOGLE_API = 'https://content.googleapis.com/';
 
@@ -72,7 +72,7 @@ export class GoogleDrive implements StorageInterface {
       },
     );
 
-    return await res.json();
+    return await getHttpResponse(res);
   }
 
   contentDisposition(
@@ -100,9 +100,9 @@ export class GoogleDrive implements StorageInterface {
       },
     );
 
-    const files = (await filesResp.json()) as FilesResp;
+    const files = await getHttpResponse<FilesResp>(filesResp);
 
-    if (!files.files.length) {
+    if (!files?.files.length) {
       throw new Error('share_not_found');
     }
 
@@ -119,7 +119,7 @@ export class GoogleDrive implements StorageInterface {
       },
     );
 
-    return await resp.text();
+    return (await getHttpResponse(resp, 'text')) as string;
   }
 
   async hasItem(key: string): Promise<boolean> {
@@ -147,7 +147,7 @@ export class GoogleDrive implements StorageInterface {
         }),
       });
 
-      const data = await res.json();
+      const data = await getHttpResponse(res);
       fileId = data.id;
     }
 

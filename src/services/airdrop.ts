@@ -1,5 +1,7 @@
 import {AIRDROP_MAINNET_URL, AIRDROP_TESTEDGE2_URL} from '@env';
 
+import {getHttpResponse} from '@app/utils';
+
 export type ClaimResponse =
   | {
       available: true;
@@ -53,7 +55,7 @@ export class Airdrop {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
@@ -76,7 +78,7 @@ export class Airdrop {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
@@ -99,7 +101,7 @@ export class Airdrop {
       }),
     });
 
-    const resp = await request.json();
+    const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
       throw new Error(resp.error);
