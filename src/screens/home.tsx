@@ -102,13 +102,15 @@ export const HomeScreen = () => {
           options={earnOptions}
         />
       )}
-      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
-        <Tab.Screen
-          name="homeStaking"
-          component={HomeStakingScreen}
-          options={stakingOptions}
-        />
-      )}
+      {!isFeatureEnabled(Feature.earn) &&
+        provider?.ethChainId &&
+        provider?.ethChainId !== 11235 && (
+          <Tab.Screen
+            name="homeStaking"
+            component={HomeStakingScreen}
+            options={stakingOptions}
+          />
+        )}
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeBrowser"

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ActivityIndicator, Image, View} from 'react-native';
+import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -23,15 +24,16 @@ import {useTiming} from 'react-native-redash';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {getUid} from '@app/helpers/get-uid';
 import {useTheme} from '@app/hooks';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {generateUUID, getBase64ImageSource} from '@app/utils';
-
-import {mockSliderCaptcha} from './mock';
+import {Wallet} from '@app/models/wallet';
+import {Backend} from '@app/services/backend';
+import {getBase64ImageSource} from '@app/utils';
 
 import {CaptchaDataTypes} from '../captcha';
-import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
+import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
 
 export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
@@ -55,8 +57,17 @@ const PUZZLE_ASPECT_RATIO = 52 / 208; // width / height from figma
 const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
 
+export type CaptchaRequestState = {
+  id: string;
+  back: ImageURISource;
+  puzzle: ImageURISource;
+};
+
 export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   const theme = useTheme();
+  const [imageSource, setImageSource] = useState<
+    CaptchaRequestState | undefined
+  >();
   const abortController = useRef(new AbortController());
   const [imageContainerLayout, onImageContainerLayout] = useLayout();
   const [sliderLayout, onSliderLayout] = useLayout();
@@ -64,10 +75,10 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   const intermediatePositionValues = useRef<number[]>([]);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
-  const diffTime = useMemo(() => endTime - startTime, [endTime, startTime]);
+
   const diffTimeSeconds = useMemo(
-    () => (diffTime / 1000).toFixed(1),
-    [diffTime],
+    () => ((endTime - startTime) / 1000).toFixed(1),
+    [endTime, startTime],
   );
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
   const refreshButtonEnabled = useMemo(
@@ -92,15 +103,23 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       sliderState === SliderCaptchaState.error,
     [sliderState],
   );
-  const imageSource = useMemo(
-    () => ({
-      bg: getBase64ImageSource(mockSliderCaptcha.bg),
-      puzzle: getBase64ImageSource(mockSliderCaptcha.puzzle),
-    }),
-    [],
-  );
 
-  const siliderAnimatedColorsMap = useMemo(
+  useEffect(() => {
+    Backend.instance
+      .captchaRequest(
+        Wallet.getAll().map(wallet => wallet.address),
+        getUid(),
+      )
+      .then(resp => {
+        setImageSource({
+          id: resp.id,
+          back: getBase64ImageSource(resp.back),
+          puzzle: getBase64ImageSource(resp.puzzle),
+        });
+      });
+  }, []);
+
+  const sliderAnimatedColorsMap = useMemo(
     () => ({
       [SliderCaptchaState.initial]: getColor(Color.graphicGreen1),
       [SliderCaptchaState.move]: getColor(Color.graphicGreen1),
@@ -117,16 +136,24 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     position.value = withTiming(0);
   }, [position]);
 
-  const onPressRefresh = useCallback(() => {
-    console.log('onPressRefresh');
+  const onPressRefresh = useCallback(async () => {
     setSliderState(SliderCaptchaState.loading);
     abortController.current.abort();
     abortController.current = new AbortController();
-    //TODO: request to server
-    setTimeout(() => {
-      setSliderState(SliderCaptchaState.initial);
-      position.value = withTiming(0);
-    }, 1000);
+
+    const resp = await Backend.instance.captchaRequest(
+      Wallet.getAll().map(wallet => wallet.address),
+      getUid(),
+    );
+
+    setImageSource({
+      id: resp.id,
+      back: getBase64ImageSource(resp.back),
+      puzzle: getBase64ImageSource(resp.puzzle),
+    });
+
+    setSliderState(SliderCaptchaState.initial);
+    position.value = withTiming(0);
   }, [position]);
 
   const onStartMovement = useCallback(() => {
@@ -161,7 +188,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     [calculateProgressValue],
   );
 
-  const onEndMovement = useCallback(() => {
+  const onEndMovement = useCallback(async () => {
     console.log(
       '🟣 intermediatePositionValues',
       intermediatePositionValues.current.length,
@@ -182,33 +209,24 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     setEndTime(Date.now());
     setSliderState(SliderCaptchaState.loading);
 
-    // TODO: fetch result from server
-    // and pass abortController.current.signal to request
+    try {
+      const session = await Backend.instance.captchaSession(
+        imageSource?.id ?? '',
+        intermediatePositionValuesBase64,
+      );
 
-    // for example
-    let aborted = false;
-    abortController.current.signal.onabort = () => (aborted = true);
-    setTimeout(() => {
-      if (aborted) {
-        return;
-      }
-      const isSuccess = Math.random() > 0.5;
-      let data: CaptchaDataTypes;
-
-      if (isSuccess) {
-        setSliderState(SliderCaptchaState.success);
-        data = generateUUID() as CaptchaDataTypes;
-      } else {
-        setSliderState(SliderCaptchaState.error);
-        data = 'error';
-      }
-
-      // timeout for animation
-      setTimeout(() => {
-        onData?.(data);
-      }, STATE_DURATION_CHANGE + 1000);
-    }, 2000);
-  }, [calculateProgressValue, onData, position.value]);
+      onData?.(session.key as CaptchaDataTypes);
+    } catch (e) {
+      setSliderState(SliderCaptchaState.error);
+      await onPressRefresh();
+    }
+  }, [
+    calculateProgressValue,
+    imageSource?.id,
+    onData,
+    onPressRefresh,
+    position.value,
+  ]);
 
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -274,11 +292,11 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           SliderCaptchaState.error,
         ],
         [
-          siliderAnimatedColorsMap[SliderCaptchaState.initial],
-          siliderAnimatedColorsMap[SliderCaptchaState.move],
-          siliderAnimatedColorsMap[SliderCaptchaState.loading],
-          siliderAnimatedColorsMap[SliderCaptchaState.success],
-          siliderAnimatedColorsMap[SliderCaptchaState.error],
+          sliderAnimatedColorsMap[SliderCaptchaState.initial],
+          sliderAnimatedColorsMap[SliderCaptchaState.move],
+          sliderAnimatedColorsMap[SliderCaptchaState.loading],
+          sliderAnimatedColorsMap[SliderCaptchaState.success],
+          sliderAnimatedColorsMap[SliderCaptchaState.error],
         ],
       ),
     };
@@ -297,15 +315,19 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           SliderCaptchaState.error,
         ],
         [
-          siliderAnimatedColorsMap[SliderCaptchaState.initial],
-          siliderAnimatedColorsMap[SliderCaptchaState.move],
-          siliderAnimatedColorsMap[SliderCaptchaState.loading],
-          siliderAnimatedColorsMap[SliderCaptchaState.success],
-          siliderAnimatedColorsMap[SliderCaptchaState.error],
+          sliderAnimatedColorsMap[SliderCaptchaState.initial],
+          sliderAnimatedColorsMap[SliderCaptchaState.move],
+          sliderAnimatedColorsMap[SliderCaptchaState.loading],
+          sliderAnimatedColorsMap[SliderCaptchaState.success],
+          sliderAnimatedColorsMap[SliderCaptchaState.error],
         ],
       ),
     };
   });
+
+  if (!imageSource) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
@@ -321,7 +343,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
                 height: (imageContainerLayout.width || 1) / BG_ASPECT_RATIO,
               },
             ]}
-            source={imageSource.bg}
+            source={imageSource.back}
           />
 
           <Animated.View style={puzzleStyle}>

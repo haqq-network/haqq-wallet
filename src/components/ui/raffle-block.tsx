@@ -10,6 +10,7 @@ import {useReactiveDate} from '@app/hooks/use-reactive-date';
 import {I18N} from '@app/i18n';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {calculateEstimateTime} from '@app/utils';
+import {WEI} from '@app/variables/common';
 
 import {Button, ButtonSize, ButtonVariant} from './button';
 import {First} from './first';
@@ -63,28 +64,35 @@ export const RaffleBlock = ({
   onPressShowResult,
   onPress,
 }: RaffelBlockProps) => {
+  console.log('item', item);
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
-  const formattedAmount = useMemo(() => cleanNumber(item.budget), [item]);
+  const formattedAmount = useMemo(
+    () => cleanNumber(parseInt(item.budget, 16) / WEI),
+    [item],
+  );
   const subtitle = useMemo(
     () => (item.total_tickets > 1 ? I18N.rafflePrizePool : I18N.rafflePrize),
     [item.total_tickets],
   );
-  const [showTiketAnimation, setShowTiketAnimation] = useState(false);
-  const tiketAnimation = useThemeSelector({
+  const [showTicketAnimation, setShowTicketAnimation] = useState(false);
+  const ticketAnimation = useThemeSelector({
     light: require('@assets/animations/earn-ticket-light.json'),
     dark: require('@assets/animations/earn-ticket-dark.json'),
   });
   const now = useReactiveDate(TimerUpdateInterval.minute);
   const estimateTime = useMemo(
-    () => calculateEstimateTime(now, item.locked_until),
+    () => calculateEstimateTime(now, new Date(item.locked_until * 1000)),
     [item, now],
   );
-  const showGetTiket = useMemo(
-    () => showTiketAnimation || Date.now() > item.locked_until,
-    [item, showTiketAnimation],
+  const showGetTicket = useMemo(
+    () => showTicketAnimation || Date.now() > item.locked_until,
+    [item, showTicketAnimation],
   );
-  const showTimer = useMemo(() => Date.now() < item.locked_until, [item]);
-  const showResult = useMemo(() => Date.now() > item.close_at, [item]);
+  const showTimer = useMemo(
+    () => Date.now() < item.locked_until * 1000,
+    [item],
+  );
+  const showResult = useMemo(() => Date.now() > item.close_at * 1000, [item]);
 
   const handlePress = useCallback(() => {
     onPress?.(item);
@@ -95,7 +103,7 @@ export const RaffleBlock = ({
   }, [item, onPressShowResult]);
 
   const handleGetTicketPress = useCallback(() => {
-    setShowTiketAnimation(true);
+    setShowTicketAnimation(true);
     onPressGetTicket?.(item);
   }, [item, onPressGetTicket]);
 
@@ -159,16 +167,16 @@ export const RaffleBlock = ({
                       title={estimateTime}
                     />
                   )}
-                  {showGetTiket && (
+                  {showGetTicket && (
                     <First>
-                      {showTiketAnimation && (
+                      {showTicketAnimation && (
                         <Button
                           style={styles.tiketButton}
                           size={ButtonSize.small}
                           variant={ButtonVariant.second}>
                           <LottieWrap
                             progress={0}
-                            source={tiketAnimation}
+                            source={ticketAnimation}
                             autoPlay={true}
                             loop={false}
                           />
