@@ -418,3 +418,15 @@ export function getBase64ImageSource(base64: string, extension = 'png') {
   }
   return {uri: base64};
 }
+
+export async function getHttpResponse<T = any>(
+  response: Response,
+  method: 'json' | 'text' | 'blob' | 'arrayBuffer' = 'json',
+): Promise<T> {
+  try {
+    return (await response[method]()) as T;
+  } catch (e) {
+    console.error(`🔴 [getHttpResponse] ${e} ${response.url}`);
+    return {} as T;
+  }
+}

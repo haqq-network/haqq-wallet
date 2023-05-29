@@ -16,6 +16,7 @@ import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
+import {getHttpResponse} from '@app/utils';
 
 export enum MpcProviders {
   google = 'google',
@@ -50,7 +51,7 @@ export async function onLoginCustom() {
     }),
   });
 
-  const authState = await token.json();
+  const authState = await getHttpResponse(token);
 
   const authInfo = parseJwt(authState.idToken);
   return await onAuthorized(MPC_CUSTOM, authInfo.sub, authState.idToken);

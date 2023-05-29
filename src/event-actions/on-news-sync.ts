@@ -5,6 +5,7 @@ import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {NewsRow} from '@app/types';
+import {getHttpResponse} from '@app/utils';
 
 export async function onNewsSync() {
   try {
@@ -12,7 +13,7 @@ export async function onNewsSync() {
     const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
 
     const newsResp = await fetch(`${HAQQ_BACKEND}news${sync}`);
-    const news = (await newsResp.json()) as NewsRow[];
+    const news = await getHttpResponse<NewsRow[]>(newsResp);
 
     for (const row of news) {
       const exist = News.getById(row.id);

@@ -7,6 +7,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
+import {getHttpResponse} from '@app/utils';
 
 export enum PushNotificationTopicsEnum {
   news = 'news',
@@ -111,7 +112,7 @@ export class PushNotifications extends EventEmitter {
       }),
     });
 
-    return (await req.json()) as T;
+    return await getHttpResponse<T>(req);
   }
 
   async removeNotificationToken<T extends object>(token_id: string) {
@@ -125,7 +126,7 @@ export class PushNotifications extends EventEmitter {
       },
     });
 
-    return (await req.json()) as T;
+    return await getHttpResponse<T>(req);
   }
 
   async createNotificationSubscription<T extends object>(
@@ -146,7 +147,7 @@ export class PushNotifications extends EventEmitter {
       }),
     });
 
-    return (await req.json()) as T;
+    return await getHttpResponse<T>(req);
   }
 
   async unsubscribeByTokenAndAddress<T extends object>(
@@ -166,7 +167,7 @@ export class PushNotifications extends EventEmitter {
       },
     );
 
-    return (await req.json()) as T;
+    return await getHttpResponse<T>(req);
   }
 
   async unsubscribeByToken<T extends object>(token_id: string) {
@@ -183,6 +184,6 @@ export class PushNotifications extends EventEmitter {
       },
     );
 
-    return (await req.json()) as T;
+    return await getHttpResponse<T>(req);
   }
 }
