@@ -1,40 +1,55 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {StyleSheet, View} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {I18N} from '@app/i18n';
 
-import {Color} from '@app/colors';
-import {I18N, getText} from '@app/i18n';
-import {isI18N} from '@app/utils';
+import {TopTabNavigatorLarge} from './top-tab-navigator-large';
+import {TopTabNavigatorSmall} from './top-tab-navigator-small';
 
-import {Spacer, Text} from './ui';
+export enum TopTabNavigatorVariant {
+  small = 'small',
+  large = 'large',
+}
 
-export interface TopTabNavigatorProps {
+export interface TopTabNavigatorExtendedProps {
+  tabList: TabType[];
+  activeTab: TabType;
+  activeTabIndex: number;
+  onTabPress(tab: TabType, index: number): void;
+}
+
+export type TopTabNavigatorProps = {
   children: Element | Element[];
-  /** @default false */
+  /**
+   * @description only for `TopTabNavigatorVariant.small`
+   * @default false
+   * */
   scrollHeaderEnabled?: boolean;
   /** @default 0 */
   initialTabIndex?: number;
-}
+  variant: TopTabNavigatorVariant;
+};
 
-type TopTabNavigatorComponent = {
+export type TopTabNavigatorComponent = {
   Tab: typeof Tab;
 } & React.FC<TopTabNavigatorProps>;
 
-interface TabProps {
+export interface TabProps {
   name: string;
   title: string | I18N;
   component: React.ComponentType<{}> | JSX.Element;
+  /**
+   * @description only for `TopTabNavigatorVariant.small`
+   */
   rigntActon?: React.ComponentType<{}> | JSX.Element;
 }
 
-type TabType = Omit<JSX.Element, 'props'> & {
+export type TabType = Omit<JSX.Element, 'props'> & {
   type: object;
   props: TabProps;
 };
 /**
  * @example
- *   <TopTabNavigator scrollHeaderEnabled initialTabIndex={1}>
+ *   <TopTabNavigator scrollHeaderEnabled initialTabIndex={1} >
  *     <TopTabNavigator.Tab
  *       component={Component}
  *       name={'tab_1'}
@@ -51,8 +66,9 @@ type TabType = Omit<JSX.Element, 'props'> & {
  */
 const TopTabNavigator: TopTabNavigatorComponent = ({
   children,
-  scrollHeaderEnabled = false,
   initialTabIndex = 0,
+  variant,
+  ...props
 }) => {
   const filteredChildren: TabType[] = useMemo(() => {
     if (Array.isArray(children)) {
@@ -68,7 +84,6 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   const [activeTab, setActiveTab] = useState(
     filteredChildren?.[activeTabIndex],
   );
-  const RigntActon = activeTab?.props?.rigntActon;
 
   const onTabPress = useCallback((tab: TabType, index: number) => {
     setActiveTabIndex(index);
@@ -81,47 +96,30 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     }
   }, [activeTab, filteredChildren, activeTabIndex]);
 
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        scrollEnabled={scrollHeaderEnabled}
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.tabsHeader}>
-          {filteredChildren.map((tab, index) => {
-            const isActive = tab?.props?.name === activeTab?.props?.name;
-            const textColor = isActive ? Color.textBase1 : Color.textBase2;
-            const notFirstTab = index > 0;
-            const title = isI18N(tab.props.title)
-              ? getText(tab.props.title)
-              : tab.props.title;
-            return (
-              <TouchableOpacity
-                key={`${tab.props.title}_${index}`}
-                onPress={() => onTabPress(tab, index)}>
-                <Text
-                  color={textColor}
-                  style={notFirstTab && styles.tabTitleInsents}
-                  t10>
-                  {title}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-          {!!RigntActon && (
-            <>
-              <Spacer flex={1} width={12} />
-              {/* @ts-ignore */}
-              {React.isValidElement(RigntActon) ? RigntActon : <RigntActon />}
-            </>
-          )}
-        </View>
-      </ScrollView>
-      <View style={styles.tabContent}>{activeTab}</View>
-    </View>
-  );
+  switch (variant) {
+    case TopTabNavigatorVariant.small:
+      return (
+        <TopTabNavigatorSmall
+          tabList={filteredChildren}
+          activeTab={activeTab}
+          activeTabIndex={activeTabIndex}
+          onTabPress={onTabPress}
+          {...props}
+        />
+      );
+    case TopTabNavigatorVariant.large:
+      return (
+        <TopTabNavigatorLarge
+          tabList={filteredChildren}
+          activeTab={activeTab}
+          activeTabIndex={activeTabIndex}
+          onTabPress={onTabPress}
+          {...props}
+        />
+      );
+    default:
+      return <></>;
+  }
 };
 
 const Tab: React.FC<TabProps> = ({component}) => {
@@ -133,27 +131,3 @@ const Tab: React.FC<TabProps> = ({component}) => {
 TopTabNavigator.Tab = Tab;
 
 export {TopTabNavigator};
-
-const styles = StyleSheet.create({
-  scrollView: {
-    width: '100%',
-    minHeight: 22,
-  },
-  scrollViewContent: {
-    minWidth: '100%',
-    minHeight: 22,
-  },
-  container: {
-    width: '100%',
-  },
-  tabsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    minHeight: 22,
-  },
-  tabTitleInsents: {
-    marginLeft: 12,
-  },
-  tabContent: {},
-});
