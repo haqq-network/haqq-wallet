@@ -23,11 +23,12 @@ export async function onDynamicLink(link: DynamicLink | null) {
         parsedUrl.query.campaign_code as string,
       );
 
-      const exists = Refferal.getById(parsedUrl.query.claim_code as string);
+      console.log('info', info);
+      const exists = Refferal.getById(parsedUrl.query.campaign_code as string);
 
       if (!exists && info.code_type === 'airdrop') {
-        Refferal.create({code: parsedUrl.query.campaign as string});
-        await onBannerAddClaimCode(parsedUrl.query.campaign as string);
+        Refferal.create({code: parsedUrl.query.campaign_code as string});
+        await onBannerAddClaimCode(parsedUrl.query.campaign_code as string);
       }
     }
   }

@@ -28,7 +28,6 @@ export class Backend {
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
-    console.log('contests', this.getRemoteUrl(), accounts, uid);
     const request = await fetch(`${this.getRemoteUrl()}contests`, {
       method: 'POST',
       headers: Backend.headers,

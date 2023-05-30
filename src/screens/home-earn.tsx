@@ -52,15 +52,6 @@ export const HomeEarnScreen = () => {
       const uid = getUid();
       const provider = await getProviderInstanceForWallet(leadingAccount);
 
-      console.log(`sign ${raffle.id}:${uid}:${session}`);
-
-      const sig = await provider.signPersonalMessage(
-        leadingAccount?.path ?? '',
-        'Example `personal_sign` message',
-      );
-
-      console.log('sig', sig);
-
       const signature = await provider.signPersonalMessage(
         leadingAccount?.path ?? '',
         `${raffle.id}:${uid}:${session}`,
