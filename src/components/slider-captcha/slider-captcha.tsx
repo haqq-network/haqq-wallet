@@ -30,7 +30,7 @@ import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
-import {getBase64ImageSource} from '@app/utils';
+import {getBase64ImageSource, sleep} from '@app/utils';
 
 import {CaptchaDataTypes} from '../captcha';
 import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
@@ -56,6 +56,7 @@ const BG_ASPECT_RATIO = 295 / 208; // width / height from figma
 const PUZZLE_ASPECT_RATIO = 52 / 208; // width / height from figma
 const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
+const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
 
 export type CaptchaRequestState = {
   id: string;
@@ -109,6 +110,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       .captchaRequest(
         Wallet.getAll().map(wallet => wallet.address),
         getUid(),
+        abortController.current.signal,
       )
       .then(resp => {
         setImageSource({
@@ -213,20 +215,23 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       const session = await Backend.instance.captchaSession(
         imageSource?.id ?? '',
         intermediatePositionValuesBase64,
+        abortController.current.signal,
       );
 
+      setSliderState(SliderCaptchaState.success);
+      await sleep(SUCCESS_ERROR_DURATION);
       onData?.(session.key as CaptchaDataTypes);
-    } catch (e) {
-      setSliderState(SliderCaptchaState.error);
-      await onPressRefresh();
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.name === 'AbortError') {
+          return;
+        }
+        setSliderState(SliderCaptchaState.error);
+        await sleep(SUCCESS_ERROR_DURATION);
+        onData?.('error');
+      }
     }
-  }, [
-    calculateProgressValue,
-    imageSource?.id,
-    onData,
-    onPressRefresh,
-    position.value,
-  ]);
+  }, [calculateProgressValue, imageSource?.id, onData, position.value]);
 
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -498,6 +503,8 @@ const styles = createTheme({
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 24,
+    zIndex: 1,
+    elevation: 1,
   },
   dragSliderText: {
     position: 'absolute',

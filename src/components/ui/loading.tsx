@@ -1,13 +1,17 @@
 import React from 'react';
 
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
-export const Loading = () => {
+export interface LoadingProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+export const Loading = ({style}: LoadingProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <ActivityIndicator color={getColor(Color.graphicGreen1)} />
     </View>
   );

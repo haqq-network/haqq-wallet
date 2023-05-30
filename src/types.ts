@@ -121,6 +121,8 @@ export type RootStackParamList = {
   homeEarn: undefined;
   raffleDetails: {
     item: Raffle;
+    prevIslmCount: number;
+    prevTicketsCount: number;
   };
   raffleReward: {
     item: Raffle;

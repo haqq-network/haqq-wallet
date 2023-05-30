@@ -24,12 +24,16 @@ import {Timer} from './ui/timer';
 
 export interface RaffleDetailsProps {
   item: Raffle;
+  prevIslmCount: number;
+  prevTicketsCount: number;
   onPressGetTicket: () => void;
   onPressShowResult: () => void;
 }
 
 export const RaffleDetails = ({
   item,
+  prevIslmCount,
+  prevTicketsCount,
   onPressGetTicket,
   onPressShowResult,
 }: RaffleDetailsProps) => {
@@ -108,7 +112,10 @@ export const RaffleDetails = ({
           numberOfLines={1}
           i18n={I18N.raffleDetailsPreviousRaffleDetails}
           // TODO:
-          i18params={{islm: '3', tickets: '5'}}
+          i18params={{
+            islm: cleanNumber(prevIslmCount),
+            tickets: `${prevTicketsCount} `,
+          }}
         />
       </View>
       <Spacer height={8} />
