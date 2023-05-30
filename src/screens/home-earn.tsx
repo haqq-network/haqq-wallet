@@ -12,23 +12,25 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Raffle} from '@app/types';
+import {Raffle, RaffleStatus} from '@app/types';
+import {WEI} from '@app/variables/common';
 
 export const HomeEarnScreen = () => {
   const navigation = useTypedNavigation();
 
   const [raffles, setRaffles] = useState<null | Raffle[]>(null);
 
-  useEffect(() => {
-    Backend.instance
-      .contests(
-        wallets.getWallets().map(wallet => wallet.address),
-        getUid(),
-      )
-      .then(contests => {
-        setRaffles(contests);
-      });
+  const loadRaffles = useCallback(async () => {
+    const response = await Backend.instance.contests(
+      wallets.getWallets().map(wallet => wallet.address),
+      getUid(),
+    );
+    setRaffles(response);
   }, []);
+
+  useEffect(() => {
+    loadRaffles();
+  }, [loadRaffles]);
 
   const onPressStaking = useCallback(() => {
     navigation.navigate('staking');
@@ -37,47 +39,41 @@ export const HomeEarnScreen = () => {
   const onPressGetRewards = useCallback(() => {
     console.log('🟢 onPressGetRewards');
   }, []);
-  const onPressGetTicket = useCallback(async (raffle: Raffle) => {
-    const leadingAccount = getLeadingAccount();
+  const onPressGetTicket = useCallback(
+    async (raffle: Raffle) => {
+      const leadingAccount = getLeadingAccount();
 
-    if (!leadingAccount) {
-      throw new Error('No leading account');
-    }
+      if (!leadingAccount) {
+        throw new Error('No leading account');
+      }
 
-    const session = await awaitForCaptcha({type: CaptchaType.slider});
+      const session = await awaitForCaptcha({type: CaptchaType.slider});
 
-    const uid = getUid();
-    const provider = await getProviderInstanceForWallet(leadingAccount);
+      const uid = getUid();
+      const provider = await getProviderInstanceForWallet(leadingAccount);
 
-    console.log(`sign ${raffle.id}:${uid}:${session}`);
-
-    const sig = await provider.signPersonalMessage(
-      leadingAccount?.path ?? '',
-      'Example `personal_sign` message',
-    );
-
-    console.log('sig', sig);
-
-    const signature = await provider.signPersonalMessage(
-      leadingAccount?.path ?? '',
-      `${raffle.id}:${uid}:${session}`,
-    );
-
-    try {
-      const res = await Backend.instance.contestParticipate(
-        raffle.id,
-        uid,
-        session,
-        signature,
-        leadingAccount?.address ?? '',
+      const signature = await provider.signPersonalMessage(
+        leadingAccount?.path ?? '',
+        `${raffle.id}:${uid}:${session}`,
       );
 
-      sendNotification(I18N.earnTicketRecieved);
-      console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
-    } catch (e) {
-      captureException(e, 'onPressGetTicket');
-    }
-  }, []);
+      try {
+        const res = await Backend.instance.contestParticipate(
+          raffle.id,
+          uid,
+          session,
+          signature,
+          leadingAccount?.address ?? '',
+        );
+        sendNotification(I18N.earnTicketRecieved);
+        console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
+        await loadRaffles();
+      } catch (e) {
+        captureException(e, 'onPressGetTicket');
+      }
+    },
+    [loadRaffles],
+  );
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
       console.log('🟢 onPressShowResult', JSON.stringify(raffle, null, 2));
@@ -87,10 +83,25 @@ export const HomeEarnScreen = () => {
   );
   const onPressRaffle = useCallback(
     (raffle: Raffle) => {
+      const prevIslmCount =
+        raffles
+          ?.filter?.(it => it.status === RaffleStatus.closed)
+          .reduce((prev, curr) => prev + parseInt(curr.budget, 16) / WEI, 0) ||
+        0;
+
+      const prevTicketsCount =
+        raffles
+          ?.filter?.(it => it.status === RaffleStatus.closed)
+          .reduce((prev, curr) => prev + curr.winner_tickets, 0) || 0;
+
       console.log('🟢 onPressRaffle', JSON.stringify(raffle, null, 2));
-      navigation.navigate('raffleDetails', {item: raffle});
+      navigation.navigate('raffleDetails', {
+        item: raffle,
+        prevIslmCount,
+        prevTicketsCount,
+      });
     },
-    [navigation],
+    [navigation, raffles],
   );
 
   if (raffles === null) {

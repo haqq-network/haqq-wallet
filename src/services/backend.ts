@@ -77,6 +77,7 @@ export class Backend {
   async captchaRequest(
     wallets: string[],
     uid: string,
+    signal?: AbortController['signal'],
   ): Promise<CaptchaRequestResponse> {
     const request = await fetch(`${this.getRemoteUrl()}captcha/request`, {
       method: 'POST',
@@ -85,6 +86,7 @@ export class Backend {
         wallets,
         uid,
       }),
+      signal,
     });
 
     const resp = await getHttpResponse(request);
@@ -99,6 +101,7 @@ export class Backend {
   async captchaSession(
     id: string,
     code: string,
+    signal?: AbortController['signal'],
   ): Promise<CaptchaSessionResponse> {
     const request = await fetch(`${HAQQ_BACKEND}captcha/session`, {
       method: 'POST',
@@ -107,6 +110,7 @@ export class Backend {
         id,
         code,
       }),
+      signal,
     });
 
     const resp = await getHttpResponse(request);

@@ -69,6 +69,13 @@ export const HomeEarn = ({
     stakingAnimationRef?.current?.play?.();
   }, [onPressGetRewards]);
 
+  const resultsCount = useMemo(
+    () =>
+      raffleList?.filter?.(it => it.close_at && Date.now() > it.close_at * 1000)
+        ?.length || 0,
+    [raffleList],
+  );
+
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={onPressStaking}>
@@ -124,13 +131,12 @@ export const HomeEarn = ({
           <Spacer width={2} />
           <Text t8 i18n={I18N.earnRaffles} />
           <Spacer width={4} />
-          {/* TODO: add conition */}
-          {true && (
+          {!!resultsCount && (
             <Text
               t15
               i18n={I18N.earnRafflesResultCount}
               color={Color.textYellow1}
-              i18params={{count: '1'}}
+              i18params={{count: `${resultsCount}`}}
             />
           )}
         </View>

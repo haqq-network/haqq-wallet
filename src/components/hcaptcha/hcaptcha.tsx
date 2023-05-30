@@ -1,6 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {ActivityIndicator, Linking, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 import WebView from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
@@ -18,7 +24,8 @@ export interface HcaptchaProps {
   onMessage?: (event: any) => void;
   siteKey: string;
   size?: string;
-  style?: object;
+  style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   url?: string;
   languageCode?: string;
   showLoading?: boolean;
@@ -86,6 +93,7 @@ export const Hcaptcha = (props: HcaptchaProps) => {
       javaScriptEnabled
       injectedJavaScript={patchPostMessageJsCode}
       automaticallyAdjustContentInsets
+      containerStyle={props.containerStyle}
       style={[styles.webview, props.style]}
       source={{
         html: generateTheWebViewContent,

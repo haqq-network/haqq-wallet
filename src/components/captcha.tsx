@@ -51,8 +51,13 @@ export const Captcha = ({
     [onData],
   );
 
+  const onPressOutside = useCallback(() => {
+    onData?.('click-outside');
+  }, [onData]);
+
   return (
     <View style={styles.container}>
+      <View onTouchEnd={onPressOutside} style={styles.overlay} />
       {type === CaptchaType.hcaptcha && (
         <>
           <View style={styles.whiteBox} />
@@ -62,7 +67,8 @@ export const Captcha = ({
             size={'compact'}
             onMessage={onMessage}
             theme={theme}
-            style={styles.captcha}
+            style={styles.hcaptcha}
+            containerStyle={styles.hcaptchaContainer}
             backgroundColor={'transparent'}
             enableAutoOpenChallenge={enableAutoOpenChallenge}
             languageCode={languageCode}
@@ -81,7 +87,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  captcha: {
+  overlay: {
+    position: 'absolute',
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
+    elevation: 1,
+  },
+  hcaptchaContainer: {
+    zIndex: 3,
+    elevation: 3,
+  },
+  hcaptcha: {
     alignItems: 'center',
     justifyContent: 'center',
     height: WINDOW_HEIGHT,
@@ -94,5 +112,7 @@ const styles = StyleSheet.create({
     height: WINDOW_HEIGHT * 0.185,
     backgroundColor: getColor(Color.bg1),
     transform: [{translateX: -2}, {translateY: 2}],
+    zIndex: 2,
+    elevation: 2,
   },
 });

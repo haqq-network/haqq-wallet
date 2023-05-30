@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {cleanNumber} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Raffle} from '@app/types';
+import {WEI} from '@app/variables/common';
 
 import {LottieWrap} from './lottie';
 import {Button, ButtonVariant, Icon, IconsName, Spacer, Text} from './ui';
@@ -20,6 +22,11 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
     light: require('@assets/animations/raffle-reward-light.json'),
     dark: require('@assets/animations/raffle-reward-dark.json'),
   });
+
+  const budget = useMemo(
+    () => cleanNumber(parseInt(item.budget, 16) / WEI),
+    [item],
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,8 +61,7 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
           color={Color.textGreen1}
           numberOfLines={1}
           i18n={I18N.raffleRewardPrize}
-          // TODO:
-          i18params={{islm: '3'}}
+          i18params={{islm: `${budget}`}}
         />
       </View>
       <Spacer flex={1} />

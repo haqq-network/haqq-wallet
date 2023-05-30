@@ -34,6 +34,8 @@ export const RaffleDetailsScreen = () => {
   return (
     <RaffleDetails
       item={params.item}
+      prevIslmCount={params.prevIslmCount}
+      prevTicketsCount={params.prevTicketsCount}
       onPressGetTicket={onPressGetTicket}
       onPressShowResult={onPressShowResult}
     />
