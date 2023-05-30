@@ -1,86 +1,126 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import {StyleSheet, View} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {LayoutAnimation, UIManager, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
+import {useTiming} from 'react-native-redash';
 
 import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
+import {useLayout} from '@app/hooks/use-layout';
 import {getText} from '@app/i18n';
 import {isI18N} from '@app/utils';
+import {IS_ANDROID} from '@app/variables/common';
 
 import {TopTabNavigatorExtendedProps} from './top-tab-navigator';
-import {Spacer, Text} from './ui';
+import {Text} from './ui';
 
 export type TopTabNavigatorLargeProps = TopTabNavigatorExtendedProps;
+
+const TAB_PADDING = 3;
 
 export const TopTabNavigatorLarge = ({
   tabList,
   activeTab,
+  containerStyle,
+  activeTabIndex,
+  tabHeaderStyle,
   onTabPress,
 }: TopTabNavigatorLargeProps) => {
-  const RigntActon = activeTab?.props?.rigntActon;
+  const [tabLayout, onTabLayout] = useLayout();
+  const animatedIndex = useTiming(activeTabIndex);
+
+  const activeTabIndicatorStyle = useAnimatedStyle(() => {
+    const translateX =
+      animatedIndex.value * tabLayout.width +
+      TAB_PADDING * 2 * (activeTabIndex + 1) -
+      TAB_PADDING;
+    return {
+      transform: [{translateX}],
+    };
+  });
+
+  useEffect(() => {
+    if (IS_ANDROID) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+
+    return () => {
+      if (IS_ANDROID) {
+        UIManager.setLayoutAnimationEnabledExperimental(false);
+      }
+    };
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.tabsHeader}>
-          {tabList.map((tab, index) => {
-            const isActive = tab?.props?.name === activeTab?.props?.name;
-            const textColor = isActive ? Color.textBase1 : Color.textBase2;
-            const notFirstTab = index > 0;
-            const title = isI18N(tab.props.title)
-              ? getText(tab.props.title)
-              : tab.props.title;
-            return (
-              <TouchableOpacity
-                key={`${tab.props.title}_${index}`}
-                onPress={() => onTabPress(tab, index)}>
-                <Text
-                  color={textColor}
-                  style={notFirstTab && styles.tabTitleInsents}
-                  t10>
-                  {title}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-          {!!RigntActon && (
-            <>
-              <Spacer flex={1} width={12} />
-              {/* @ts-ignore */}
-              {React.isValidElement(RigntActon) ? RigntActon : <RigntActon />}
-            </>
-          )}
-        </View>
-      </ScrollView>
+    <View style={[styles.container, containerStyle]}>
+      <View style={[styles.tabsHeader, tabHeaderStyle]}>
+        <Animated.View
+          style={[
+            styles.activeTabIndicator,
+            activeTabIndicatorStyle,
+            {width: tabLayout.width, height: tabLayout.height},
+          ]}
+        />
+        {tabList.map((tab, index) => {
+          const isActive = tab?.props?.name === activeTab?.props?.name;
+          const title = isI18N(tab.props.title)
+            ? getText(tab.props.title)
+            : tab.props.title;
+
+          return (
+            <TouchableOpacity
+              onLayout={onTabLayout}
+              key={`${tab.props.title}_${index}`}
+              containerStyle={styles.tab}
+              style={styles.tabTouchable}
+              onPress={() => {
+                onTabPress(tab, index);
+                LayoutAnimation.easeInEaseOut();
+              }}>
+              <Text t14={!isActive} t13={isActive}>
+                {title}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
       <View style={styles.tabContent}>{activeTab}</View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollView: {
-    width: '100%',
-    minHeight: 22,
-  },
-  scrollViewContent: {
-    minWidth: '100%',
-    minHeight: 22,
+const styles = createTheme({
+  activeTabIndicator: {
+    backgroundColor: Color.bg1,
+    position: 'absolute',
+    borderRadius: 14,
   },
   container: {
-    width: '100%',
+    flex: 1,
   },
   tabsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    minHeight: 22,
+    minHeight: 40,
+    maxHeight: 40,
+    borderRadius: 14,
+    paddingVertical: TAB_PADDING,
+    backgroundColor: Color.bg3,
   },
-  tabTitleInsents: {
-    marginLeft: 12,
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    marginHorizontal: TAB_PADDING,
+  },
+  tabTouchable: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
   },
   tabContent: {},
 });

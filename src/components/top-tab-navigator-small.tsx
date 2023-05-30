@@ -18,19 +18,21 @@ export const TopTabNavigatorSmall = ({
   scrollHeaderEnabled = false,
   tabList,
   activeTab,
+  containerStyle,
+  tabHeaderStyle,
   onTabPress,
 }: TopTabNavigatorSmallProps) => {
   const RigntActon = activeTab?.props?.rigntActon;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <ScrollView
         horizontal
         scrollEnabled={scrollHeaderEnabled}
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.tabsHeader}>
+        <View style={[styles.tabsHeader, tabHeaderStyle]}>
           {tabList.map((tab, index) => {
             const isActive = tab?.props?.name === activeTab?.props?.name;
             const textColor = isActive ? Color.textBase1 : Color.textBase2;

@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {StyleProp, ViewStyle} from 'react-native';
+
 import {I18N} from '@app/i18n';
 
 import {TopTabNavigatorLarge} from './top-tab-navigator-large';
@@ -14,6 +16,8 @@ export interface TopTabNavigatorExtendedProps {
   tabList: TabType[];
   activeTab: TabType;
   activeTabIndex: number;
+  containerStyle?: StyleProp<ViewStyle>;
+  tabHeaderStyle?: StyleProp<ViewStyle>;
   onTabPress(tab: TabType, index: number): void;
 }
 
@@ -27,6 +31,9 @@ export type TopTabNavigatorProps = {
   /** @default 0 */
   initialTabIndex?: number;
   variant: TopTabNavigatorVariant;
+  containerStyle?: StyleProp<ViewStyle>;
+  tabHeaderStyle?: StyleProp<ViewStyle>;
+  onTabChange?(tabName: TabType['props']['name']): void;
 };
 
 export type TopTabNavigatorComponent = {
@@ -68,6 +75,9 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   children,
   initialTabIndex = 0,
   variant,
+  containerStyle,
+  tabHeaderStyle,
+  onTabChange,
   ...props
 }) => {
   const filteredChildren: TabType[] = useMemo(() => {
@@ -85,16 +95,22 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     filteredChildren?.[activeTabIndex],
   );
 
-  const onTabPress = useCallback((tab: TabType, index: number) => {
-    setActiveTabIndex(index);
-    setActiveTab(tab);
-  }, []);
+  const onTabPress = useCallback(
+    (tab: TabType, index: number) => {
+      setActiveTabIndex(index);
+      setActiveTab(tab);
+      onTabChange?.(tab?.props?.name);
+    },
+    [onTabChange],
+  );
 
   useEffect(() => {
-    if (filteredChildren[activeTabIndex]) {
+    const tab = filteredChildren[activeTabIndex];
+    if (tab) {
       setActiveTab(filteredChildren[activeTabIndex]);
+      onTabChange?.(tab?.props?.name);
     }
-  }, [activeTab, filteredChildren, activeTabIndex]);
+  }, [activeTab, filteredChildren, activeTabIndex, onTabChange]);
 
   switch (variant) {
     case TopTabNavigatorVariant.small:
@@ -103,6 +119,8 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           tabList={filteredChildren}
           activeTab={activeTab}
           activeTabIndex={activeTabIndex}
+          containerStyle={containerStyle}
+          tabHeaderStyle={tabHeaderStyle}
           onTabPress={onTabPress}
           {...props}
         />
@@ -113,6 +131,8 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           tabList={filteredChildren}
           activeTab={activeTab}
           activeTabIndex={activeTabIndex}
+          containerStyle={containerStyle}
+          tabHeaderStyle={tabHeaderStyle}
           onTabPress={onTabPress}
           {...props}
         />
