@@ -64,7 +64,7 @@ export const HomeEarnScreen = () => {
     );
 
     try {
-      const res = Backend.instance.contestParticipate(
+      const res = await Backend.instance.contestParticipate(
         raffle.id,
         uid,
         session,
