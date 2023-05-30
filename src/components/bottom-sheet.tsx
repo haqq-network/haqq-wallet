@@ -17,6 +17,7 @@ import {
 import {
   Gesture,
   GestureDetector,
+  GestureHandlerRootView,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
@@ -202,53 +203,60 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     }));
 
     return (
-      <View style={[StyleSheet.absoluteFill, page.container]}>
-        <AnimatedStatusBar backgroundColor={backgroundColor} />
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            page.background,
-            backgroundAnimatedStyle,
-          ]}
-        />
-        <TouchableWithoutFeedback onPress={onClosePopup}>
-          <View style={page.space} />
-        </TouchableWithoutFeedback>
-        <Animated.View
-          style={[page.animateView, page.content, bottomSheetStyle]}>
-          <GestureDetector gesture={headerGesture}>
-            <Animated.View>
-              <View style={page.swipe}>
-                <SwiperIcon color={getColor(Color.graphicSecond2)} />
-              </View>
-              <View style={page.header}>
-                <Text t6 color={Color.textBase1} i18n={i18nTitle} />
-                <Spacer />
-                <IconButton onPress={onClosePopup}>
-                  <Icon i24 name="close_circle" color={Color.graphicSecond2} />
-                </IconButton>
-              </View>
-            </Animated.View>
-          </GestureDetector>
-          <GestureDetector
-            gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
-            <Animated.ScrollView
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-              scrollEventThrottle={1}
-              onScrollBeginDrag={e => {
-                scrollOffset.value = e.nativeEvent.contentOffset.y;
-              }}>
-              {children}
-              <Spacer style={{height: bottomInsets}} />
-            </Animated.ScrollView>
-          </GestureDetector>
-        </Animated.View>
-      </View>
+      <GestureHandlerRootView style={page.wrap}>
+        <View style={[StyleSheet.absoluteFill, page.container]}>
+          <AnimatedStatusBar backgroundColor={backgroundColor} />
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              page.background,
+              backgroundAnimatedStyle,
+            ]}
+          />
+          <TouchableWithoutFeedback onPress={onClosePopup}>
+            <View style={page.space} />
+          </TouchableWithoutFeedback>
+          <Animated.View
+            style={[page.animateView, page.content, bottomSheetStyle]}>
+            <GestureDetector gesture={headerGesture}>
+              <Animated.View>
+                <View style={page.swipe}>
+                  <SwiperIcon color={getColor(Color.graphicSecond2)} />
+                </View>
+                <View style={page.header}>
+                  <Text t6 color={Color.textBase1} i18n={i18nTitle} />
+                  <Spacer />
+                  <IconButton onPress={onClosePopup}>
+                    <Icon
+                      i24
+                      name="close_circle"
+                      color={Color.graphicSecond2}
+                    />
+                  </IconButton>
+                </View>
+              </Animated.View>
+            </GestureDetector>
+            <GestureDetector
+              gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
+              <Animated.ScrollView
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={1}
+                onScrollBeginDrag={e => {
+                  scrollOffset.value = e.nativeEvent.contentOffset.y;
+                }}>
+                {children}
+                <Spacer style={{height: bottomInsets}} />
+              </Animated.ScrollView>
+            </GestureDetector>
+          </Animated.View>
+        </View>
+      </GestureHandlerRootView>
     );
   },
 );
 const page = createTheme({
+  wrap: {flex: 1},
   container: {
     justifyContent: 'flex-end',
     zIndex: 5,

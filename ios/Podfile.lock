@@ -166,10 +166,10 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleSignIn (6.2.4):
+  - GoogleSignIn (7.0.0):
     - AppAuth (~> 1.5)
-    - GTMAppAuth (~> 1.3)
-    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+    - GTMAppAuth (< 3.0, >= 1.3)
+    - GTMSessionFetcher/Core (< 4.0, >= 1.1)
   - GoogleUtilities (7.11.1):
     - GoogleUtilities/AppDelegateSwizzler (= 7.11.1)
     - GoogleUtilities/Environment (= 7.11.1)
@@ -203,10 +203,10 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.11.1):
     - GoogleUtilities/Logger
-  - GTMAppAuth (1.3.1):
+  - GTMAppAuth (2.0.0):
     - AppAuth/Core (~> 1.6)
-    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
-  - GTMSessionFetcher/Core (2.3.0)
+    - GTMSessionFetcher/Core (< 4.0, >= 1.5)
+  - GTMSessionFetcher/Core (3.1.1)
   - HaqqEncryptionRN (0.0.3):
     - CryptoSwift (= 1.5.1)
     - React-Core
@@ -220,7 +220,7 @@ PODS:
   - hermes-engine/Pre-built (0.71.8)
   - libevent (2.1.12)
   - lottie-ios (3.4.4)
-  - lottie-react-native (5.1.5):
+  - lottie-react-native (5.1.6):
     - lottie-ios (~> 3.4.0)
     - React-Core
   - MultiplatformBleAdapter (0.1.9)
@@ -492,7 +492,7 @@ PODS:
   - react-native-ble-plx (2.0.3):
     - MultiplatformBleAdapter (= 0.1.9)
     - React-Core
-  - react-native-blur (4.3.0):
+  - react-native-blur (4.3.2):
     - React-Core
   - react-native-camera (4.2.1):
     - React-Core
@@ -508,15 +508,15 @@ PODS:
     - React
   - react-native-encrypted-storage (4.0.3):
     - React-Core
-  - react-native-get-random-values (1.8.0):
+  - react-native-get-random-values (1.9.0):
     - React-Core
-  - react-native-image-picker (4.10.3):
+  - react-native-image-picker (5.4.0):
     - React-Core
-  - react-native-netinfo (9.3.8):
+  - react-native-netinfo (9.3.10):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.5.0):
+  - react-native-safe-area-context (4.5.3):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -612,39 +612,39 @@ PODS:
     - React-perflogger (= 0.71.8)
   - RealmJS (11.9.0):
     - React
-  - rive-react-native (4.0.4):
+  - rive-react-native (4.1.0):
     - React-Core
-    - RiveRuntime (= 3.1.11)
-  - RiveRuntime (3.1.11)
+    - RiveRuntime (= 4.0.2)
+  - RiveRuntime (4.0.2)
   - RNAppleAuthentication (2.2.2):
     - React-Core
   - RNCAsyncStorage (1.18.1):
     - React-Core
   - RNCClipboard (1.11.2):
     - React-Core
-  - RNFBAnalytics (17.4.2):
+  - RNFBAnalytics (17.5.0):
     - Firebase/Analytics (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (17.4.2):
+  - RNFBApp (17.5.0):
     - Firebase/CoreOnly (= 10.7.0)
     - React-Core
-  - RNFBDynamicLinks (17.4.2):
+  - RNFBDynamicLinks (17.5.0):
     - Firebase/DynamicLinks (= 10.7.0)
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
-  - RNFBMessaging (17.4.2):
+  - RNFBMessaging (17.5.0):
     - Firebase/Messaging (= 10.7.0)
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.10.1):
     - React-Core
-  - RNGoogleSignin (9.0.2):
-    - GoogleSignIn (~> 6.2)
+  - RNGoogleSignin (10.0.1):
+    - GoogleSignIn (~> 7.0)
     - React-Core
   - RNKeychain (8.1.1):
     - React-Core
@@ -680,18 +680,18 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (5.4.0):
+  - RNSentry (5.5.0):
     - React-Core
-    - Sentry/HybridSDK (= 8.5.0)
-  - RNSVG (12.5.1):
+    - Sentry/HybridSDK (= 8.7.1)
+  - RNSVG (13.9.0):
     - React-Core
   - secp256k1.swift (0.1.4)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
-  - Sentry/HybridSDK (8.5.0):
-    - SentryPrivate (= 8.5.0)
-  - SentryPrivate (8.5.0)
+  - Sentry/HybridSDK (8.7.1):
+    - SentryPrivate (= 8.7.1)
+  - SentryPrivate (8.7.1)
   - SocketRocket (0.6.0)
   - ToastViewSwift (1.3.2)
   - TouchID (4.4.1):
@@ -1031,16 +1031,16 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleAppMeasurement: fe17c92a32207dd5cdd4e8d742767f2da74857f6
   GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
-  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
+  GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
-  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
-  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+  GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
+  GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
   HaqqEncryptionRN: 704c5172541f5956fbd18ed64367a59c8b767ebf
   HaqqWeb3UtilsRN: 1282c34b3781aabf46db92564199eb3070aba391
   hermes-engine: 47986d26692ae75ee7a17ab049caee8864f855de
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 8f97d3271e155c2d688875c29cd3c74908aef5f8
-  lottie-react-native: 3e722c63015fdb9c27638b0a77969fc412067c18
+  lottie-react-native: 8f9d4be452e23f6e5ca0fdc11669dc99ab52be81
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -1063,16 +1063,16 @@ SPEC CHECKSUMS:
   react-native-adjust: 5f5966b51459bf8cb074bf8ebc1307a2bfb7b1da
   react-native-aes: c75c46aa744bef7c2415fdf7f5b2dcb75ca4364d
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
-  react-native-blur: 50c9feabacbc5f49b61337ebc32192c6be7ec3c3
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
-  react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
-  react-native-netinfo: fbc23bc2fe217155d85f2f7e0644b1654df8029b
+  react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
+  react-native-image-picker: 709d04e7df67bd3a90f376c3eedb2e8b8334dd04
+  react-native-netinfo: ccbe1085dffd16592791d550189772e13bf479e2
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-safe-area-context: b8979f5eda6ed5903d4dbc885be3846ea3daa753
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-webview: 133a6a5149f963259646e710b4545c67ef35d7c9
   React-perflogger: d21f182895de9d1b077f8a3cd00011095c8c9100
@@ -1089,29 +1089,29 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7c51ae9d4b3e9608a2366e39ccaa606aa551b9ed
   ReactCommon: 85c98ab0a509e70bf5ee5d9715cf68dbf495b84c
   RealmJS: 64ae0907c1f21ce8e74bd480a8503032b19804fd
-  rive-react-native: 6deec883511cb6c07e13e56cc5c6d00e29477d48
-  RiveRuntime: 2e04dbf0b89e7c520ca43312ccc2dd2da30a60d4
+  rive-react-native: 54ba735542bf8b0fb481b4589d032c7590c8cbbd
+  RiveRuntime: ecb99b3dc7fd8124123baa834669dc452f92fa05
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
-  RNFBAnalytics: 37f524d72996cd658b188ce750d9a45ed5dcf5de
-  RNFBApp: 0f6bd7ee155a50f5e68cd68aab2709a4d24bfdff
-  RNFBDynamicLinks: 748d6a75860926cefea18fc1c99577282db804b9
-  RNFBMessaging: 5d1480ff1fa7fd8dfd5a1a7f0df35c709f75dd4e
+  RNFBAnalytics: 3444df9286d36b630b5fae9283a5c797b524e437
+  RNFBApp: 0d8bf86673bbad0524d1ceac3944d71ccf48a0e4
+  RNFBDynamicLinks: 8cdcc0425d0b636ff079b4220785eb1132c24228
+  RNFBMessaging: 4b8cb1215465bacca36d0fcfc2f51e7e2aa1bc91
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
+  RNGestureHandler: 42ec7c28dd02d540ed6c9159c57a98ff016492dc
+  RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNReanimated: 29295af754cdd6f8e4428427d4195e02ea8766e0
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
-  RNSentry: 3c8dff994d317f98fc073a9ba85d2d8da3868353
-  RNSVG: d7d7bc8229af3842c9cfc3a723c815a52cdd1105
+  RNSentry: 4fb2cd7d2d6cb94423c24884488206ef881da136
+  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
-  Sentry: 3be3f42e40e5a552935552e115744d5810a216d9
-  SentryPrivate: 8c9463280e282527f938d1a5d1d60f8e10ff279b
+  Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
+  SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   ToastViewSwift: dee6680343e0e3bd978000da9af1c14917d437c4
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
