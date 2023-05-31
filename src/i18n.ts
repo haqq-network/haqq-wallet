@@ -652,6 +652,8 @@ export enum I18N {
   sliderCaptchaSuccessToast,
   sliderCaptchaRefresh,
   sliderCaptchaReportProblem,
+  stakingInfoUnDelegationNoAvailableWallets,
+  stakingInfoDelegationNoAvailableWallets,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -979,6 +981,10 @@ const en: Record<I18N, string> = {
   [I18N.settingsSecurity]: 'Security',
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
+  [I18N.stakingInfoDelegationNoAvailableWallets]:
+    'No wallets available for delegation.',
+  [I18N.stakingInfoUnDelegationNoAvailableWallets]:
+    'No wallets available for undelegation.',
   [I18N.stakingValidators]: 'Validators list',
   [I18N.stakingValidatorsRowPower]: 'Power: {{power}}',
   [I18N.stakingValidatorsRowStaked]: 'Staked: {{staked}}',
