@@ -111,7 +111,6 @@ export const RaffleDetails = ({
           t14
           numberOfLines={1}
           i18n={I18N.raffleDetailsPreviousRaffleDetails}
-          // TODO:
           i18params={{
             islm: cleanNumber(prevIslmCount),
             tickets: `${prevTicketsCount} `,

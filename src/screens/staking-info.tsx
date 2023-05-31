@@ -11,12 +11,12 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 import {MIN_AMOUNT} from '@app/variables/common';
@@ -25,7 +25,7 @@ export const StakingInfoScreen = () => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
   const {operator_address} = validator;
   const navigation = useTypedNavigation();
-  const [visible, setVisible] = useState(Wallet.getAllVisible().snapshot());
+  const visible = useWalletsVisible();
   const cosmos = useCosmos();
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
@@ -34,19 +34,6 @@ export const StakingInfoScreen = () => {
   const [rewards, setRewards] = useState<StakingMetadata[]>([]);
   const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
   const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
-
-  useEffect(() => {
-    const wallets = Wallet.getAllVisible();
-    const sub = () => {
-      setVisible(wallets.snapshot());
-    };
-
-    wallets.addListener(sub);
-
-    return () => {
-      wallets.removeListener(sub);
-    };
-  }, []);
 
   useEffect(() => {
     const r = StakingMetadata.getAllByValidator(operator_address);
@@ -158,8 +145,16 @@ export const StakingInfoScreen = () => {
   }, [cosmos, rewards, operator_address, visible]);
 
   const onDelegate = useCallback(async () => {
+    const available = visible.filter(
+      v => app.getBalance(v.address) >= MIN_AMOUNT,
+    );
+
+    if (!available?.length) {
+      return sendNotification(I18N.stakingInfoDelegationNoAvailableWallets);
+    }
+
     const address = await awaitForWallet({
-      wallets: visible.filter(v => app.getBalance(v.address) >= MIN_AMOUNT),
+      wallets: available,
       title: I18N.stakingDelegateAccountTitle,
     });
 
@@ -176,6 +171,10 @@ export const StakingInfoScreen = () => {
         .map(v => v.delegator),
     );
     const available = visible.filter(w => delegations.has(w.cosmosAddress));
+
+    if (!available?.length) {
+      return sendNotification(I18N.stakingInfoUnDelegationNoAvailableWallets);
+    }
 
     const address = await awaitForWallet({
       wallets: available,
