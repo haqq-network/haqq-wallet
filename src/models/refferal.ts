@@ -34,6 +34,16 @@ export class Refferal extends Realm.Object {
     }
   }
 
+  static removeAll() {
+    const items = Refferal.getAll();
+
+    for (const item of items) {
+      realm.write(() => {
+        realm.delete(item);
+      });
+    }
+  }
+
   static getAll() {
     return realm.objects<Refferal>(Refferal.schema.name);
   }

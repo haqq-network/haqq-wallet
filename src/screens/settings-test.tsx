@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
@@ -21,7 +21,6 @@ import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
-import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -170,10 +169,7 @@ export const SettingsTestScreen = () => {
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
   const user = useUser();
-  const provider = useMemo(
-    () => Provider.getProvider(user.providerId),
-    [user.providerId],
-  );
+
   const onTurnOffDeveloper = useCallback(() => {
     user.isDeveloper = false;
     navigation.goBack();
@@ -295,12 +291,11 @@ export const SettingsTestScreen = () => {
   }, []);
 
   const onClearBanners = useCallback(() => {
-    const banners = Banner.getAll();
+    Banner.removeAll();
+  }, []);
 
-    for (const banner of banners) {
-      Refferal.remove(banner.id);
-      Banner.remove(banner.id);
-    }
+  const onClearReferrals = useCallback(() => {
+    Refferal.removeAll();
   }, []);
 
   return (
@@ -361,19 +356,6 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="Show modal change on mainnet"
-        onPress={() => {
-          showModal('claimOnMainnet', {
-            network: provider?.name ?? '',
-            onChange: () => {
-              app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
-            },
-          });
-        }}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
         title="call contract"
         onPress={() => onCallContract()}
         variant={ButtonVariant.contained}
@@ -400,6 +382,12 @@ export const SettingsTestScreen = () => {
       <Button
         title="clear banners"
         onPress={onClearBanners}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="clear referral"
+        onPress={onClearReferrals}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
