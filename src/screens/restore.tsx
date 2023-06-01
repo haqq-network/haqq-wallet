@@ -8,7 +8,7 @@ import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
 import {SignInAgreementScreen} from '@app/screens/signin-agreement';
 import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
 import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
-import {ScreenOptionType} from '@app/types';
+import {AdjustEvents, ScreenOptionType} from '@app/types';
 
 const SignInStack = createStackNavigator();
 
@@ -51,7 +51,11 @@ export const RestoreScreen = () => {
         name="restoreFinish"
         component={OnboardingFinishScreen}
         options={screenOptions}
-        initialParams={{action: 'restore', hide: true}}
+        initialParams={{
+          action: 'restore',
+          hide: true,
+          event: AdjustEvents.accountImported,
+        }}
       />
     </SignInStack.Navigator>
   );

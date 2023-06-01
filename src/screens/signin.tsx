@@ -14,7 +14,7 @@ import {SignInNetworksScreen} from '@app/screens/signin-networks';
 import {SignInPinScreen} from '@app/screens/signin-pin';
 import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
 import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
-import {ScreenOptionType} from '@app/types';
+import {AdjustEvents, ScreenOptionType} from '@app/types';
 
 import {SigninNotExistsScreen} from './signin-not-exists';
 import {SigninNotRecoveryScreen} from './signin-not-recovery';
@@ -95,7 +95,7 @@ export const SignInScreen = () => {
         name="onboardingFinish"
         component={OnboardingFinishScreen}
         options={screenOptions}
-        initialParams={{action: 'restore'}}
+        initialParams={{action: 'restore', event: AdjustEvents.accountRestored}}
       />
     </SignInStack.Navigator>
   );

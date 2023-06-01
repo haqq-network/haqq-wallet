@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Decimal from 'decimal.js';
-import {Adjust, AdjustEvent} from 'react-native-adjust';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
@@ -79,7 +79,7 @@ export const TransactionConfirmationScreen = () => {
         );
 
         if (transaction) {
-          Adjust.trackEvent(new AdjustEvent(AdjustEvents.sendFund));
+          onTrackEvent(AdjustEvents.sendFund);
 
           await awaitForEventDone(
             Events.onTransactionCreate,

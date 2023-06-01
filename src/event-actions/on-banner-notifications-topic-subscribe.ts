@@ -1,5 +1,4 @@
-import {Adjust, AdjustEvent} from 'react-native-adjust';
-
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Banner} from '@app/models/banner';
 import {VariablesBool} from '@app/models/variables-bool';
 import {PushNotifications} from '@app/services/push-notifications';
@@ -13,9 +12,7 @@ export async function onBannerNotificationsTopicSubscribe(
 
   VariablesBool.set(`notificationsTopic:${topic}`, true);
 
-  const adjustEvent = new AdjustEvent(AdjustEvents.pushChannelSubscribe);
-  adjustEvent.addPartnerParameter('topic', topic);
-  Adjust.trackEvent(adjustEvent);
+  onTrackEvent(AdjustEvents.pushChannelSubscribe, {topic});
 
   Banner.remove(id);
 }

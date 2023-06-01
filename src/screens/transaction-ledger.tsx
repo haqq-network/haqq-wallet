@@ -2,10 +2,10 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
 import Decimal from 'decimal.js';
-import {Adjust, AdjustEvent} from 'react-native-adjust';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
@@ -53,7 +53,8 @@ export const TransactionLedgerScreen = () => {
         );
 
         if (transaction) {
-          Adjust.trackEvent(new AdjustEvent(AdjustEvents.sendFund));
+          onTrackEvent(AdjustEvents.sendFund);
+
           await awaitForEventDone(
             Events.onAddressBookCreate,
             transaction?.to,

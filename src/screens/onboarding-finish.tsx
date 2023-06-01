@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {Finish} from '@app/components/finish';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -35,9 +36,10 @@ export const OnboardingFinishScreen = () => {
   }, [app, navigation]);
 
   useEffect(() => {
+    onTrackEvent(route.params.event);
     hideModal('loading');
     vibrate(HapticEffects.success);
-  }, []);
+  }, [route.params.event]);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };
