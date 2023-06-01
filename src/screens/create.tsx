@@ -3,7 +3,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {ScreenOptionType} from '@app/types';
+import {AdjustEvents, ScreenOptionType} from '@app/types';
 
 import {OnboardingFinishScreen} from './onboarding-finish';
 import {SignUpAgreementScreen} from './signup-agreement';
@@ -39,7 +39,11 @@ export const CreateScreen = () => {
         name="createFinish"
         component={OnboardingFinishScreen}
         options={screenOptionsTitle}
-        initialParams={{action: 'create', hide: true}}
+        initialParams={{
+          action: 'create',
+          hide: true,
+          event: AdjustEvents.accountAdded,
+        }}
       />
     </SignUpStack.Navigator>
   );

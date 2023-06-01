@@ -19,6 +19,11 @@ import {MpcProviders} from './services/provider-mpc';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
 export enum AdjustEvents {
+  accountCreated = 'q3vxmg',
+  accountAdded = 'tgdgp7',
+  accountImported = 'iwqq4g',
+  accountRestored = '2bsnz9',
+  backupCompleted = '370jwc',
   sendFund = '44vsd8',
   pushNotifications = '2x889j',
   pushChannelSubscribe = '5juk3x',
@@ -211,6 +216,7 @@ export type RootStackParamList = {
   createFinish: {
     action: string;
     hide: boolean;
+    event: AdjustEvents;
   };
   createAgreement: {
     nextScreen: NextScreenT;

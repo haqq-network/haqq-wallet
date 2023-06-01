@@ -32,6 +32,7 @@ export class Airdrop {
   };
 
   getRemoteUrl() {
+    console.log('AIRDROP_MAINNET_URL ', AIRDROP_MAINNET_URL);
     return AIRDROP_MAINNET_URL;
   }
 

@@ -15,7 +15,7 @@ import {SignupNetworkExistsScreen} from '@app/screens/signup-network-exists';
 import {SignupNetworksScreen} from '@app/screens/signup-networks';
 import {SignupPinScreen} from '@app/screens/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
-import {ScreenOptionType} from '@app/types';
+import {AdjustEvents, ScreenOptionType} from '@app/types';
 
 const SignUpStack = createStackNavigator();
 
@@ -87,12 +87,12 @@ export const SignUpScreen = () => {
           title,
           header: () => null,
         }}
-        initialParams={{action: 'create'}}
+        initialParams={{action: 'create', event: AdjustEvents.accountCreated}}
       />
       <SignUpStack.Screen
         name="onboardingFinish"
         component={OnboardingFinishScreen}
-        initialParams={{action: 'create'}}
+        initialParams={{action: 'create', event: AdjustEvents.accountCreated}}
         options={screenOptions}
       />
     </SignUpStack.Navigator>
