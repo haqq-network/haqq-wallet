@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {LayoutAnimation, UIManager, View} from 'react-native';
+import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {useTiming} from 'react-native-redash';
@@ -8,9 +8,9 @@ import {useTiming} from 'react-native-redash';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {getText} from '@app/i18n';
 import {isI18N} from '@app/utils';
-import {IS_ANDROID} from '@app/variables/common';
 
 import {TopTabNavigatorExtendedProps} from './top-tab-navigator';
 import {Text} from './ui';
@@ -40,17 +40,7 @@ export const TopTabNavigatorLarge = ({
     };
   });
 
-  useEffect(() => {
-    if (IS_ANDROID) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-
-    return () => {
-      if (IS_ANDROID) {
-        UIManager.setLayoutAnimationEnabledExperimental(false);
-      }
-    };
-  }, []);
+  const {animate} = useLayoutAnimation();
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -76,7 +66,7 @@ export const TopTabNavigatorLarge = ({
               style={styles.tabTouchable}
               onPress={() => {
                 onTabPress(tab, index);
-                LayoutAnimation.easeInEaseOut();
+                animate();
               }}>
               <Text t14={!isActive} t13={isActive}>
                 {title}

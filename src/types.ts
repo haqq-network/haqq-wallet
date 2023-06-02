@@ -842,3 +842,28 @@ export type Modals = {
     variant?: CaptchaType;
   };
 };
+export interface NftAttribute {
+  trait_type: string;
+  value: string;
+  frequency: number;
+}
+
+export interface NftItem {
+  address: string;
+  name: string;
+  description: string;
+  image: string;
+  external_link: string;
+  attributes: NftAttribute[];
+  last_sale_price: string;
+}
+
+export interface NftCollection {
+  address: string;
+  name: string;
+  description: string;
+  image: string;
+  external_link: string;
+  items: NftItem[];
+  created_at: number;
+}

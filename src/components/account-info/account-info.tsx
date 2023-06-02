@@ -4,13 +4,15 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
-import {First, PopupContainer, Text} from '@app/components/ui';
+import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
+import {NftViewer} from '../nft-viewer';
+import {nftCollections} from '../nft-viewer/mock';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
 enum TabNames {
@@ -59,7 +61,12 @@ export const AccountInfo = ({
   const renderNftTab = useCallback(
     () => (
       <>
-        <Text>NFT TAB</Text>
+        <Spacer height={20} />
+        <NftViewer
+          data={nftCollections}
+          scrollEnabled={false}
+          style={styles.nftViewerContainer}
+        />
       </>
     ),
     [],
@@ -109,6 +116,9 @@ const styles = createTheme({
   },
   grow: {flexGrow: 1},
   tabHeaderStyle: {
+    marginHorizontal: 20,
+  },
+  nftViewerContainer: {
     marginHorizontal: 20,
   },
 });

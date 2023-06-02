@@ -654,6 +654,9 @@ export enum I18N {
   sliderCaptchaReportProblem,
   stakingInfoUnDelegationNoAvailableWallets,
   stakingInfoDelegationNoAvailableWallets,
+  sortByAdding,
+  sortByName,
+  nftCollectionPreviewItemsCount,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1438,4 +1441,7 @@ const en: Record<I18N, string> = {
   [I18N.sliderCaptchaSuccessToast]: 'Puzzle solved in {{sec}} seconds',
   [I18N.sliderCaptchaRefresh]: 'Refresh',
   [I18N.sliderCaptchaReportProblem]: 'Report a problem',
+  [I18N.sortByAdding]: 'By adding',
+  [I18N.sortByName]: 'By name',
+  [I18N.nftCollectionPreviewItemsCount]: '{{count}} items',
 };

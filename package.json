@@ -19,6 +19,7 @@
     "@ethersproject/shims": "5.7.0",
     "@evmos/provider": "0.3.1",
     "@evmos/transactions": "0.2.13",
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@haqq/encryption-react-native": "0.0.3",
     "@haqq/provider-base": "0.0.18",
     "@haqq/provider-hot-react-native": "0.0.6",
