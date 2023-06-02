@@ -160,7 +160,7 @@ export const SettingsAccountDetail = ({
           />
         </MenuNavigationButton>
       )}
-      <MenuNavigationButton onPress={onPressRename} hideArrow>
+      <MenuNavigationButton hideArrow>
         <DataContent
           titleI18n={I18N.settingsAccountDetailHideTitle}
           subtitleI18n={I18N.settingsAccountDetailHideSubtitle}

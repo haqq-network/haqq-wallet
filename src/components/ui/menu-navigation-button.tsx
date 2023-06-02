@@ -12,7 +12,7 @@ import {Icon} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
 export type MenuNavigationButtonProps = {
-  onPress: () => void;
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   hideArrow?: boolean;
