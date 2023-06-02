@@ -203,8 +203,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     }));
 
     return (
-      <GestureHandlerRootView style={page.wrap}>
-        <View style={[StyleSheet.absoluteFill, page.container]}>
+      <View style={[StyleSheet.absoluteFill, page.container]}>
+        <GestureHandlerRootView style={page.wrap}>
           <AnimatedStatusBar backgroundColor={backgroundColor} />
           <Animated.View
             style={[
@@ -250,8 +250,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
               </Animated.ScrollView>
             </GestureDetector>
           </Animated.View>
-        </View>
-      </GestureHandlerRootView>
+        </GestureHandlerRootView>
+      </View>
     );
   },
 );
