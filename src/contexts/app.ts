@@ -8,6 +8,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -228,6 +229,8 @@ class App extends EventEmitter {
   }
 
   async clean() {
+    //TODO: save session
+    EncryptedStorage.clear();
     await RNAsyncStorage.clear();
     await resetGenericPassword();
   }
