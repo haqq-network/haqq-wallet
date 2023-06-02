@@ -44,8 +44,12 @@ export const SignInStoreWalletScreen = () => {
                     number: `${total + 1}`,
                   });
 
+            let privateKey = params.privateKey.startsWith('0x')
+              ? params.privateKey.slice(2)
+              : params.privateKey;
+
             const provider = await ProviderHotReactNative.initialize(
-              params.privateKey,
+              privateKey,
               app.getPassword.bind(app),
               {},
             );
