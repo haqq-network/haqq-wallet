@@ -14,18 +14,18 @@ export const PopupNotificationScreen = () => {
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTurnOn(route.params.bannerId);
       close();
       goBack();
+      await onBannerNotificationsTurnOn(route.params.bannerId);
     },
     [goBack, route.params.bannerId],
   );
 
   const onClickNotNow = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsSnooze(route.params.bannerId);
       close();
       goBack();
+      await onBannerNotificationsSnooze(route.params.bannerId);
     },
     [goBack, route.params.bannerId],
   );
