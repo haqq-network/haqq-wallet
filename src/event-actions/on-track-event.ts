@@ -6,7 +6,7 @@ export function onTrackEvent(
   event: AdjustEvents,
   params: Record<string, string> = {},
 ) {
-  const adjustEvent = new AdjustEvent(AdjustEvents.pushChannelSubscribe);
+  const adjustEvent = new AdjustEvent(event);
 
   Object.entries(params).forEach(([key, value]) => {
     adjustEvent.addPartnerParameter(key, value);

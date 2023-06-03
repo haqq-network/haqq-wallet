@@ -7,17 +7,14 @@ import React, {
 } from 'react';
 
 import {isBefore} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {moderateVerticalScale} from '@app/helpers/scaling-utils';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {
-  LIGHT_GRAPHIC_SECOND_2,
-  LIGHT_TEXT_BASE_2,
-  LIGHT_TEXT_GREEN_1,
-} from '@app/variables/common';
 
 import {NumericKeyboard} from './pin/numeric-keyboard';
 import {ErrorText, Spacer, Text} from './ui';
@@ -126,7 +123,7 @@ export const Pin = forwardRef(
         <Text t4 i18n={title} i18params={i18params} style={page.title} />
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
-          <Text t11 color={LIGHT_TEXT_BASE_2} center>
+          <Text t11 color={Color.textBase2} center>
             {subtitle}
           </Text>
         )}
@@ -147,7 +144,7 @@ export const Pin = forwardRef(
   },
 );
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -162,13 +159,13 @@ const page = StyleSheet.create({
   dot: {
     width: 18,
     height: 18,
-    backgroundColor: LIGHT_GRAPHIC_SECOND_2,
+    backgroundColor: Color.graphicSecond2,
     margin: 5,
     borderRadius: 9,
     transform: [{scale: 0.66}],
   },
   active: {
-    backgroundColor: LIGHT_TEXT_GREEN_1,
+    backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
   },
   title: {

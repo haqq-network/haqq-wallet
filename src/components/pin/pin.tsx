@@ -102,7 +102,11 @@ export const Pin = forwardRef(
         <Text t4 style={styles.title}>
           {title}
         </Text>
-        {error && <Text clean>{error}</Text>}
+        {error && (
+          <Text t10 color={Color.textRed1}>
+            {error}
+          </Text>
+        )}
         {subtitle && !error && (
           <Text t11 color={Color.textBase2} center>
             {subtitle}

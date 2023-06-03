@@ -21,6 +21,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
 import {AppState, Linking, Platform} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
+import {AdjustOaid} from 'react-native-adjust-oaid';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -219,6 +220,11 @@ export const App = () => {
 
   useEffect(() => {
     const adjustConfig = new AdjustConfig(ADJUST_TOKEN, ADJUST_ENVIRONMENT);
+    adjustConfig.setLogLevel(AdjustConfig.LogLevelVerbose);
+    if (Platform.OS === 'android') {
+      AdjustOaid.readOaid();
+    }
+
     Adjust.create(adjustConfig);
 
     Adjust.getAppTrackingAuthorizationStatus(function (status) {
@@ -227,6 +233,44 @@ export const App = () => {
 
     Adjust.getAdid(adid => {
       console.log('Adid = ' + adid);
+    });
+
+    adjustConfig.setAttributionCallbackListener(function (attribution) {
+      console.log('Attribution callback received');
+      console.log('Tracker token = ' + attribution.trackerToken);
+      console.log('Tracker name = ' + attribution.trackerName);
+      console.log('Network = ' + attribution.network);
+      console.log('Campaign = ' + attribution.campaign);
+      console.log('Adgroup = ' + attribution.adgroup);
+      console.log('Creative = ' + attribution.creative);
+      console.log('Click label = ' + attribution.clickLabel);
+      console.log('Adid = ' + attribution.adid);
+      console.log('Cost type = ' + attribution.costType);
+      console.log('Cost amount = ' + attribution.costAmount);
+      console.log('Cost currency = ' + attribution.costCurrency);
+    });
+
+    adjustConfig.setEventTrackingSucceededCallbackListener(function (
+      eventSuccess,
+    ) {
+      console.log('Event tracking succeeded callback received');
+      console.log('Message: ' + eventSuccess.message);
+      console.log('Timestamp: ' + eventSuccess.timestamp);
+      console.log('Adid: ' + eventSuccess.adid);
+      console.log('Event token: ' + eventSuccess.eventToken);
+      console.log('Callback Id: ' + eventSuccess.callbackId);
+      console.log('JSON response: ' + eventSuccess.jsonResponse);
+    });
+
+    adjustConfig.setEventTrackingFailedCallbackListener(function (eventFailed) {
+      console.log('Event tracking failed callback received');
+      console.log('Message: ' + eventFailed.message);
+      console.log('Timestamp: ' + eventFailed.timestamp);
+      console.log('Adid: ' + eventFailed.adid);
+      console.log('Event token: ' + eventFailed.eventToken);
+      console.log('Callback Id: ' + eventFailed.callbackId);
+      console.log('Will retry: ' + eventFailed.willRetry);
+      console.log('JSON response: ' + eventFailed.jsonResponse);
     });
 
     return () => {
