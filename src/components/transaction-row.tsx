@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+
+import {View} from 'react-native';
 
 import {TransactionDate} from '@app/components/transactions/date';
 import {TransactionReceive} from '@app/components/transactions/receive';
@@ -11,14 +13,18 @@ export type TransactionPreviewProps = {
 };
 
 export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
-  switch (item.source) {
-    case TransactionSource.date:
-      return <TransactionDate item={item} />;
-    case TransactionSource.send:
-      return <TransactionSend item={item} onPress={onPress} />;
-    case TransactionSource.receive:
-      return <TransactionReceive item={item} onPress={onPress} />;
-    default:
-      return null;
-  }
+  const element = useMemo(() => {
+    switch (item.source) {
+      case TransactionSource.date:
+        return <TransactionDate item={item} />;
+      case TransactionSource.send:
+        return <TransactionSend item={item} onPress={onPress} />;
+      case TransactionSource.receive:
+        return <TransactionReceive item={item} onPress={onPress} />;
+      default:
+        return null;
+    }
+  }, [item, onPress]);
+
+  return <View>{element}</View>;
 };

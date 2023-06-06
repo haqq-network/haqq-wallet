@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
@@ -16,6 +16,11 @@ export type TransactionPreviewProps = {
 };
 
 export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
+  const address = useMemo(
+    () => shortAddress(item.to || item.contractAddress || '', '•'),
+    [item.contractAddress, item.to],
+  );
+  const text = useMemo(() => `- ${cleanNumber(item.value)} ISLM`, [item.value]);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -29,13 +34,13 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           style={styles.infoContainer}
           titleI18n={I18N.transactionSendTitle}
           subtitleI18nParams={{
-            address: shortAddress(item.to || item.contractAddress || '', '•'),
+            address,
           }}
           subtitleI18n={I18N.transactionSendTo}
           short
         />
         <Text t11 color={Color.textRed1}>
-          {`- ${cleanNumber(item.value)} ISLM`}
+          {text}
         </Text>
       </View>
     </TouchableWithoutFeedback>

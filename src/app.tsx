@@ -75,6 +75,7 @@ import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {ModalsScreen} from './screens/modals-screen';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
+import {NftDetailsScreen} from './screens/nft-details';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
 import {PopupTrackActivityScreen} from './screens/popup-track-activity';
@@ -322,6 +323,10 @@ export const App = () => {
                   <Stack.Screen
                     name="jsonRpcSign"
                     component={JsonRpcSignPopup}
+                  />
+                  <Stack.Screen
+                    name="nftDetails"
+                    component={NftDetailsScreen}
                   />
                   <Stack.Screen name="backup" component={BackupScreen} />
                   <Stack.Screen name="signin" component={SignInScreen} />

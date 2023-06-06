@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {LayoutAnimation, UIManager} from 'react-native';
 
@@ -6,22 +6,26 @@ import {IS_ANDROID} from '@app/variables/common';
 
 export const useLayoutAnimation = () => {
   useEffect(() => {
-    if (!UIManager.setLayoutAnimationEnabledExperimental) {
+    if (!UIManager.setLayoutAnimationEnabledExperimental || !IS_ANDROID) {
       return;
     }
 
-    if (IS_ANDROID) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
+    UIManager.setLayoutAnimationEnabledExperimental(true);
 
     return () => {
-      if (IS_ANDROID) {
-        UIManager.setLayoutAnimationEnabledExperimental(false);
-      }
+      UIManager.setLayoutAnimationEnabledExperimental(false);
     };
   }, []);
 
-  const animate = useRef(LayoutAnimation.easeInEaseOut).current;
+  const animate = useCallback(() => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(
+        200,
+        LayoutAnimation.Types.linear,
+        LayoutAnimation.Properties.opacity,
+      ),
+    );
+  }, []);
 
   return {
     animate,

@@ -12,12 +12,14 @@ import {
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
 import {NftViewerCollectionPreviewList} from './nft-viewer-collection-preview-list';
+import {NftViewerItemPreviewVariant} from './nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from './nft-viewer-item-preview-list';
 import {NftViewerSectionHeader} from './nft-viewer-section-header';
 
@@ -59,6 +61,7 @@ export const NftViewer = ({
   style,
   scrollEnabled = true,
 }: NftViewerProps) => {
+  const navigation = useTypedNavigation();
   const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
 
@@ -118,13 +121,19 @@ export const NftViewer = ({
     setViewMode(nextViewMode);
   }, [animate, viewMode]);
 
-  const onNftCollectionPress = useCallback((collection: NftCollection) => {
-    console.log('onSectionHeaderPress', collection);
-  }, []);
+  const onNftCollectionPress = useCallback(
+    (item: NftCollection) => {
+      navigation.navigate('nftDetails', {type: 'collection', item});
+    },
+    [navigation],
+  );
 
-  const onNftItemPress = useCallback((item: NftItem) => {
-    console.log('onSectionItemPress', item);
-  }, []);
+  const onNftItemPress = useCallback(
+    (item: NftItem) => {
+      navigation.navigate('nftDetails', {type: 'nft', item});
+    },
+    [navigation],
+  );
 
   const keyExtractor = useCallback((item: NftCollection) => item.address, []);
 
@@ -132,6 +141,7 @@ export const NftViewer = ({
     useCallback(
       ({item: section}) => (
         <NftViewerItemPreviewList
+          variant={NftViewerItemPreviewVariant.medium}
           onPress={onNftItemPress}
           data={section.items}
         />

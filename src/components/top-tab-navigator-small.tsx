@@ -19,6 +19,7 @@ export const TopTabNavigatorSmall = ({
   tabList,
   activeTab,
   containerStyle,
+  contentContainerStyle,
   tabHeaderStyle,
   onTabPress,
 }: TopTabNavigatorSmallProps) => {
@@ -62,7 +63,11 @@ export const TopTabNavigatorSmall = ({
           )}
         </View>
       </ScrollView>
-      <View style={styles.tabContent}>{activeTab}</View>
+      {!!activeTab && (
+        <View style={[styles.tabContent, contentContainerStyle]}>
+          {activeTab}
+        </View>
+      )}
     </View>
   );
 };

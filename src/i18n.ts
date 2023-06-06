@@ -657,6 +657,16 @@ export enum I18N {
   sortByAdding,
   sortByName,
   nftCollectionPreviewItemsCount,
+  nftCollectionDetailsTitle,
+  nftItemDetailsTitle,
+  trimmedTextReadMore,
+  trimmedTextShowLess,
+  nftDetailsDescription,
+  nftDetailsYourItems,
+  nftDetailsLastSalePrice,
+  nftDetailsAttributes,
+  nftDetailsSend,
+  transactionNftFinishSendingComplete,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1444,4 +1454,14 @@ const en: Record<I18N, string> = {
   [I18N.sortByAdding]: 'By adding',
   [I18N.sortByName]: 'By name',
   [I18N.nftCollectionPreviewItemsCount]: '{{count}} items',
+  [I18N.nftCollectionDetailsTitle]: 'NFT Collection',
+  [I18N.nftItemDetailsTitle]: 'Your NFT',
+  [I18N.trimmedTextReadMore]: 'Read more',
+  [I18N.trimmedTextShowLess]: 'Show less',
+  [I18N.nftDetailsDescription]: 'Description',
+  [I18N.nftDetailsLastSalePrice]: 'Last sale price',
+  [I18N.nftDetailsAttributes]: 'Attributes',
+  [I18N.nftDetailsSend]: 'Send',
+  [I18N.nftDetailsYourItems]: 'Your items',
+  [I18N.transactionNftFinishSendingComplete]: 'Sending Completed',
 };

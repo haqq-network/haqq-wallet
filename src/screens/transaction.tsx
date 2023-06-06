@@ -13,6 +13,8 @@ import {TransactionConfirmationScreen} from '@app/screens/transaction-confirmati
 import {TransactionContactEditScreen} from '@app/screens/transaction-contact-edit';
 import {TransactionFinishScreen} from '@app/screens/transaction-finish';
 import {TransactionLedgerScreen} from '@app/screens/transaction-ledger';
+import {TransactionNftConfirmationScreen} from '@app/screens/transaction-nft-confirmation';
+import {TransactionNftFinishScreen} from '@app/screens/transaction-nft-finish';
 import {TransactionSumScreen} from '@app/screens/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/transaction-sum-address';
 import {ScreenOptionType} from '@app/types';
@@ -50,7 +52,7 @@ const screenOptionsConfirmation: ScreenOptionType = {
 export const TransactionScreen = () => {
   const wallets = useWallets();
   const {
-    params: {from, to},
+    params: {from, to, nft},
   } = useTypedRoute<'transaction'>();
 
   const screenOptionsAddressRoute: ScreenOptionType = {
@@ -63,14 +65,14 @@ export const TransactionScreen = () => {
     <TransactionStack.Navigator
       screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}
       initialRouteName={
-        from || wallets.visible.length === 1
+        nft || from || wallets.visible.length === 1
           ? 'transactionAddress'
           : 'transactionAccount'
       }>
       <TransactionStack.Screen
         name="transactionAddress"
         component={TransactionAddressScreen}
-        initialParams={{from, to}}
+        initialParams={{from, to, nft}}
         options={screenOptionsAddressRoute}
       />
       <TransactionStack.Screen
@@ -84,8 +86,18 @@ export const TransactionScreen = () => {
         options={screenOptionsConfirmation}
       />
       <TransactionStack.Screen
+        name="transactionNftConfirmation"
+        component={TransactionNftConfirmationScreen}
+        options={screenOptionsConfirmation}
+      />
+      <TransactionStack.Screen
         name="transactionFinish"
         component={TransactionFinishScreen}
+        options={screenOptions}
+      />
+      <TransactionStack.Screen
+        name="transactionNftFinish"
+        component={TransactionNftFinishScreen}
         options={screenOptions}
       />
       <TransactionStack.Screen

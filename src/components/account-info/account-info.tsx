@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ScrollView} from 'react-native-gesture-handler';
+import {FlatList, ListRenderItem} from 'react-native';
 
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
@@ -44,46 +44,18 @@ export const AccountInfo = ({
     [activeTab, transactionsList.length],
   );
 
-  const renderTransactionTab = useCallback(
-    () => (
-      <First>
-        {!transactionsList?.length && <TransactionEmpty />}
-        <>
-          {transactionsList?.map(tx => (
-            <TransactionRow key={tx.hash} item={tx} onPress={onPressRow} />
-          ))}
-        </>
-      </First>
-    ),
-    [onPressRow, transactionsList],
-  );
-
-  const renderNftTab = useCallback(
-    () => (
-      <>
-        <Spacer height={20} />
-        <NftViewer
-          data={nftCollections}
-          scrollEnabled={false}
-          style={styles.nftViewerContainer}
-        />
-      </>
-    ),
-    [],
+  const data = useMemo(
+    () => (activeTab === TabNames.transactions ? transactionsList : []),
+    [activeTab, transactionsList],
   );
 
   const onTabChange = useCallback((tabName: TabNames) => {
     setActiveTab(tabName);
   }, []);
 
-  return (
-    <PopupContainer plain>
-      <ScrollView
-        overScrollMode="never"
-        bounces={false}
-        style={styles.container}
-        scrollEnabled={scrollEnabled}
-        contentContainerStyle={styles.grow}>
+  const renderListHeader = useCallback(
+    () => (
+      <>
         <AccountInfoHeader
           wallet={wallet}
           balance={balance}
@@ -91,26 +63,72 @@ export const AccountInfo = ({
           onReceive={onReceive}
         />
         <TopTabNavigator
+          contentContainerStyle={styles.tabsContentContainerStyle}
           tabHeaderStyle={styles.tabHeaderStyle}
           variant={TopTabNavigatorVariant.large}
           onTabChange={onTabChange}>
           <TopTabNavigator.Tab
             name={TabNames.transactions}
-            title="Transactions"
-            component={renderTransactionTab}
+            title={'Transactions'}
+            component={null}
           />
           <TopTabNavigator.Tab
             name={TabNames.nft}
             title={'NFTs'}
-            component={renderNftTab}
+            component={null}
           />
         </TopTabNavigator>
-      </ScrollView>
+      </>
+    ),
+    [balance, onReceive, onSend, onTabChange, wallet],
+  );
+
+  const renderItem: ListRenderItem<TransactionList> = useCallback(
+    ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
+    [onPressRow],
+  );
+
+  const renderListEmptyComponent = useCallback(
+    () => (
+      <First>
+        {activeTab === TabNames.transactions && <TransactionEmpty />}
+        <>
+          <Spacer height={24} />
+          <NftViewer
+            data={nftCollections}
+            scrollEnabled={false}
+            style={styles.nftViewerContainer}
+          />
+        </>
+      </First>
+    ),
+    [activeTab],
+  );
+
+  const keyExtractor = useCallback((item: TransactionList) => item.hash, []);
+
+  return (
+    <PopupContainer plain>
+      <FlatList
+        overScrollMode="never"
+        bounces={false}
+        style={styles.container}
+        scrollEnabled={scrollEnabled}
+        ListHeaderComponent={renderListHeader}
+        contentContainerStyle={styles.grow}
+        ListEmptyComponent={renderListEmptyComponent}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
     </PopupContainer>
   );
 };
 
 const styles = createTheme({
+  tabsContentContainerStyle: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

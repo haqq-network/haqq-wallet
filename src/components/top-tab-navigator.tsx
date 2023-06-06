@@ -14,9 +14,10 @@ export enum TopTabNavigatorVariant {
 
 export interface TopTabNavigatorExtendedProps {
   tabList: TabType[];
-  activeTab: TabType;
+  activeTab: TabType | null;
   activeTabIndex: number;
   containerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
   onTabPress(tab: TabType, index: number): void;
 }
@@ -32,6 +33,7 @@ export type TopTabNavigatorProps = {
   initialTabIndex?: number;
   variant: TopTabNavigatorVariant;
   containerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
   onTabChange?(tabName: TabType['props']['name']): void;
 };
@@ -43,7 +45,7 @@ export type TopTabNavigatorComponent = {
 export interface TabProps {
   name: string;
   title: string | I18N;
-  component: React.ComponentType<{}> | JSX.Element;
+  component: React.ComponentType<{}> | JSX.Element | null;
   /**
    * @description only for `TopTabNavigatorVariant.small`
    */
@@ -76,6 +78,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   initialTabIndex = 0,
   variant,
   containerStyle,
+  contentContainerStyle,
   tabHeaderStyle,
   onTabChange,
   ...props
@@ -83,7 +86,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   const filteredChildren: TabType[] = useMemo(() => {
     if (Array.isArray(children)) {
       return children?.filter((child: TabType) => {
-        return child.type === Tab;
+        return child?.type === Tab;
       });
     } else {
       return [children];
@@ -121,6 +124,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           activeTabIndex={activeTabIndex}
           containerStyle={containerStyle}
           tabHeaderStyle={tabHeaderStyle}
+          contentContainerStyle={contentContainerStyle}
           onTabPress={onTabPress}
           {...props}
         />
@@ -133,6 +137,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           activeTabIndex={activeTabIndex}
           containerStyle={containerStyle}
           tabHeaderStyle={tabHeaderStyle}
+          contentContainerStyle={contentContainerStyle}
           onTabPress={onTabPress}
           {...props}
         />
@@ -144,6 +149,9 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
 
 const Tab: React.FC<TabProps> = ({component}) => {
   const Component = component;
+  if (!Component) {
+    return <></>;
+  }
   //@ts-ignore
   return React.isValidElement(Component) ? Component : <Component />;
 };

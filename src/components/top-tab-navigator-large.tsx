@@ -8,7 +8,6 @@ import {useTiming} from 'react-native-redash';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
-import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {getText} from '@app/i18n';
 import {isI18N} from '@app/utils';
 
@@ -23,6 +22,7 @@ export const TopTabNavigatorLarge = ({
   tabList,
   activeTab,
   containerStyle,
+  contentContainerStyle,
   activeTabIndex,
   tabHeaderStyle,
   onTabPress,
@@ -39,8 +39,6 @@ export const TopTabNavigatorLarge = ({
       transform: [{translateX}],
     };
   });
-
-  const {animate} = useLayoutAnimation();
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -66,7 +64,6 @@ export const TopTabNavigatorLarge = ({
               style={styles.tabTouchable}
               onPress={() => {
                 onTabPress(tab, index);
-                animate();
               }}>
               <Text t14={!isActive} t13={isActive}>
                 {title}
@@ -75,7 +72,11 @@ export const TopTabNavigatorLarge = ({
           );
         })}
       </View>
-      <View style={styles.tabContent}>{activeTab}</View>
+      {!!activeTab && (
+        <View style={[styles.tabContent, contentContainerStyle]}>
+          {activeTab}
+        </View>
+      )}
     </View>
   );
 };

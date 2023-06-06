@@ -41,3 +41,4 @@ export * from './progress-circle';
 export * from './terms';
 export * from './mnemonic-table';
 export * from './first';
+export * from './trimmed-text';

@@ -66,8 +66,8 @@ const styles = createTheme({
     justifyContent: 'center',
     borderRadius: 12,
     width: '48.5%',
-    height: 150,
-    backgroundColor: Color.graphicGreen1,
+    height: 160,
+    backgroundColor: Color.bg9,
   },
   itemText: {
     backgroundColor: addOpacityToColor(Color.bg9, 0.6),
