@@ -33,7 +33,7 @@ export enum RaffleBlocButtonType {
 type ButtonType =
   | {
       buttonType: RaffleBlocButtonType.ticket;
-      onPressGetTicket: (raffle: Raffle) => void;
+      onPressGetTicket: (raffle: Raffle) => Promise<void>;
       onPressShowResult: (raffle: Raffle) => void;
       rightAction?: never;
     }
@@ -44,7 +44,7 @@ type ButtonType =
       onPressShowResult?: never;
     };
 
-export type RaffelBlockProps = {
+export type RaffleBlockProps = {
   item: Raffle;
   gradient: RaffleBlockGradientVariant;
   onPress: (raffle: Raffle) => void;
@@ -63,8 +63,7 @@ export const RaffleBlock = ({
   onPressGetTicket,
   onPressShowResult,
   onPress,
-}: RaffelBlockProps) => {
-  console.log('item', item);
+}: RaffleBlockProps) => {
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
   const formattedAmount = useMemo(
     () => cleanNumber(parseInt(item.budget, 16) / WEI),
@@ -92,7 +91,10 @@ export const RaffleBlock = ({
     () => Date.now() < item.locked_until * 1000,
     [item],
   );
-  const showResult = useMemo(() => Date.now() > item.close_at * 1000, [item]);
+  const showResult = useMemo(
+    () => item.status === 'closed' || Date.now() > item.close_at * 1000,
+    [item],
+  );
 
   const handlePress = useCallback(() => {
     onPress?.(item);
@@ -102,9 +104,13 @@ export const RaffleBlock = ({
     onPressShowResult?.(item);
   }, [item, onPressShowResult]);
 
-  const handleGetTicketPress = useCallback(() => {
-    setShowTicketAnimation(true);
-    onPressGetTicket?.(item);
+  const handleGetTicketPress = useCallback(async () => {
+    try {
+      setShowTicketAnimation(true);
+      await onPressGetTicket?.(item);
+    } finally {
+      setShowTicketAnimation(false);
+    }
   }, [item, onPressGetTicket]);
 
   return (

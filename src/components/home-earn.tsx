@@ -36,7 +36,7 @@ export interface HomeEarnProps {
   raffleList: Raffle[];
   onPressGetRewards: () => void;
   onPressStaking: () => void;
-  onPressGetTicket: (raffle: Raffle) => void;
+  onPressGetTicket: (raffle: Raffle) => Promise<void>;
   onPressShowResult: (raffle: Raffle) => void;
   onPressRaffle: (raffle: Raffle) => void;
 }
@@ -125,33 +125,31 @@ export const HomeEarn = ({
         </View>
       </TouchableOpacity>
 
-      <View>
-        <View style={styles.row}>
-          <Icon i24 color={Color.graphicBase1} name={IconsName.ticket} />
-          <Spacer width={2} />
-          <Text t8 i18n={I18N.earnRaffles} />
-          <Spacer width={4} />
-          {!!resultsCount && (
-            <Text
-              t15
-              i18n={I18N.earnRafflesResultCount}
-              color={Color.textYellow1}
-              i18params={{count: `${resultsCount}`}}
-            />
-          )}
-        </View>
-        <Text t14 color={Color.textBase2} i18n={I18N.earnRafflesDescription} />
-
-        <Spacer height={12} />
-
-        <RaffleBlockList
-          data={raffleList}
-          scrollEnabled={false}
-          onPress={onPressRaffle}
-          onPressGetTicket={onPressGetTicket}
-          onPressShowResult={onPressShowResult}
-        />
+      <View style={styles.row}>
+        <Icon i24 color={Color.graphicBase1} name={IconsName.ticket} />
+        <Spacer width={2} />
+        <Text t8 i18n={I18N.earnRaffles} />
+        <Spacer width={4} />
+        {!!resultsCount && (
+          <Text
+            t15
+            i18n={I18N.earnRafflesResultCount}
+            color={Color.textYellow1}
+            i18params={{count: `${resultsCount}`}}
+          />
+        )}
       </View>
+      <Text t14 color={Color.textBase2} i18n={I18N.earnRafflesDescription} />
+
+      <Spacer height={12} />
+
+      <RaffleBlockList
+        data={raffleList}
+        scrollEnabled={false}
+        onPress={onPressRaffle}
+        onPressGetTicket={onPressGetTicket}
+        onPressShowResult={onPressShowResult}
+      />
     </ScrollView>
   );
 };

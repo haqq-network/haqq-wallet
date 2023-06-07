@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ActivityIndicator, Image, View} from 'react-native';
 import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
 import {
+  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -335,7 +336,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Text t9 i18n={I18N.sliderCaptchaTitle} />
       <Spacer height={20} />
       <View style={styles.imageContainerInsets}>
@@ -489,7 +490,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           </Animated.View>
         </PanGestureHandler>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
