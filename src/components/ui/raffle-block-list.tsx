@@ -15,7 +15,7 @@ export interface RaffleBlockListProps {
   data: Raffle[];
   scrollEnabled?: boolean;
   onPress: (raffle: Raffle) => void;
-  onPressGetTicket: (raffle: Raffle) => void;
+  onPressGetTicket: (raffle: Raffle) => Promise<void>;
   onPressShowResult: (raffle: Raffle) => void;
 }
 

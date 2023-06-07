@@ -102,15 +102,13 @@ export const HomeScreen = () => {
           options={earnOptions}
         />
       )}
-      {!isFeatureEnabled(Feature.earn) &&
-        provider?.ethChainId &&
-        provider?.ethChainId !== 11235 && (
-          <Tab.Screen
-            name="homeStaking"
-            component={HomeStakingScreen}
-            options={stakingOptions}
-          />
-        )}
+      {!isFeatureEnabled(Feature.earn) && (
+        <Tab.Screen
+          name="homeStaking"
+          component={HomeStakingScreen}
+          options={stakingOptions}
+        />
+      )}
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeBrowser"
@@ -118,13 +116,11 @@ export const HomeScreen = () => {
           options={browserOptions}
         />
       )}
-      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
-        <Tab.Screen
-          name="homeGovernance"
-          component={HomeGovernanceScreen}
-          options={governanceOptions}
-        />
-      )}
+      <Tab.Screen
+        name="homeGovernance"
+        component={HomeGovernanceScreen}
+        options={governanceOptions}
+      />
       <Tab.Screen
         name="homeSettings"
         component={HomeSettingsScreen}

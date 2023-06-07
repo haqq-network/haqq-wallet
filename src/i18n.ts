@@ -712,7 +712,7 @@ const en: Record<I18N, string> = {
   [I18N.backupWarningTitle]: 'Important Recovery Info',
   [I18N.backupWarningParagraph]:
     'A backup is a restoring phrase of 12 words. It is better to write down the phrase on paper and not keep it online.',
-  [I18N.ledgerBluetoothAllow]: 'Allow',
+  [I18N.ledgerBluetoothAllow]: 'Continue',
   [I18N.ledgerBluetoothTitleUnknown]: 'Allow using Bluetooth',
   [I18N.ledgerBluetoothTitleDisabled]: 'No access to Bluetooth',
   [I18N.ledgerBluetoothDescriptionUnknown]:

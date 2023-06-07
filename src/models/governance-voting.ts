@@ -276,7 +276,9 @@ export class GovernanceVoting extends Realm.Object {
   }
 
   static getAll() {
-    return realm.objects<GovernanceVoting>(GovernanceVoting.schema.name);
+    return realm
+      .objects<GovernanceVoting>(GovernanceVoting.schema.name)
+      .sorted('orderNumber', true);
   }
 }
 
