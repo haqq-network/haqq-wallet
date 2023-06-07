@@ -36,7 +36,7 @@ export interface HomeEarnProps {
   raffleList: Raffle[];
   onPressGetRewards: () => void;
   onPressStaking: () => void;
-  onPressGetTicket: (raffle: Raffle) => void;
+  onPressGetTicket: (raffle: Raffle) => Promise<void>;
   onPressShowResult: (raffle: Raffle) => void;
   onPressRaffle: (raffle: Raffle) => void;
 }
