@@ -9,7 +9,7 @@ import {I18N} from '@app/i18n';
 import {Link} from '@app/types';
 
 import {BrowserHomePageLinkList} from './browser-home-page-link-list';
-import {TopTabNavigator} from './top-tab-navigator';
+import {TopTabNavigator, TopTabNavigatorVariant} from './top-tab-navigator';
 
 export interface BrowserHomePageProps {
   favouriteLinks: Link[];
@@ -91,7 +91,7 @@ export const BrowserHomePage = ({
       </View>
 
       <View>
-        <TopTabNavigator>
+        <TopTabNavigator variant={TopTabNavigatorVariant.small}>
           <TopTabNavigator.Tab
             name={'favourite'}
             title={I18N.favourite}

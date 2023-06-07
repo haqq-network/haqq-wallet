@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
@@ -18,6 +18,12 @@ export const TransactionReceive = ({
   item,
   onPress,
 }: TransactionPreviewProps) => {
+  const subtitle = useMemo(
+    () => `from ${shortAddress(item.from, '•')}`,
+    [item.from],
+  );
+  const text = useMemo(() => `+${cleanNumber(item.value)} ISLM`, [item.value]);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -30,11 +36,11 @@ export const TransactionReceive = ({
         <DataContent
           style={styles.infoContainer}
           title="Received"
-          subtitle={`from ${shortAddress(item.from, '•')}`}
+          subtitle={subtitle}
           short
         />
         <Text t11 color={Color.textGreen1}>
-          {`+${cleanNumber(item.value)} ISLM`}
+          {text}
         </Text>
       </View>
     </TouchableWithoutFeedback>

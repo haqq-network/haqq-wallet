@@ -257,6 +257,7 @@ export type RootStackParamList = {
   transaction: {
     from?: string | boolean;
     to?: string;
+    nft?: NftItem;
   };
   transactionDetail: {
     hash: string;
@@ -272,6 +273,10 @@ export type RootStackParamList = {
   transactionFinish: {
     hash: string;
   };
+  transactionNftFinish: {
+    hash: string;
+    nft: NftItem;
+  };
   transactionFinishDetails: {
     hash: string;
   };
@@ -279,6 +284,12 @@ export type RootStackParamList = {
     from: string;
     to: string;
     amount: number;
+    fee?: number;
+  };
+  transactionNftConfirmation: {
+    from: string;
+    to: string;
+    nft: NftItem;
     fee?: number;
   };
   transactionLedger: {
@@ -294,6 +305,7 @@ export type RootStackParamList = {
   transactionAddress: {
     from: string;
     to?: string;
+    nft?: NftItem;
   };
   ledgerAgreement: undefined;
   ledgerBluetooth: undefined;
@@ -473,6 +485,19 @@ export type RootStackParamList = {
     id: string;
   };
   news: undefined;
+  nftDetails:
+    | ({
+        type: 'nft';
+      } & RootStackParamList['nftItemDetails'])
+    | ({
+        type: 'collection';
+      } & RootStackParamList['nftCollectionDetails']);
+  nftCollectionDetails: {
+    item: NftCollection;
+  };
+  nftItemDetails: {
+    item: NftItem;
+  };
 };
 
 export type StackPresentationTypes =
@@ -842,3 +867,29 @@ export type Modals = {
     variant?: CaptchaType;
   };
 };
+export interface NftAttribute {
+  trait_type: string;
+  value: string;
+  frequency: number;
+}
+
+export interface NftItem {
+  address: string;
+  name: string;
+  description: string;
+  image: string;
+  external_link: string;
+  attributes: NftAttribute[];
+  last_sale_price: string;
+  owner_address: string;
+}
+
+export interface NftCollection {
+  address: string;
+  name: string;
+  description: string;
+  image: string;
+  external_link: string;
+  items: NftItem[];
+  created_at: number;
+}

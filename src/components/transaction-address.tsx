@@ -25,6 +25,7 @@ import {isHexString} from '@app/utils';
 
 export type TransactionAddressProps = {
   initial?: string;
+  loading?: boolean;
   onAddress: (address: string) => void;
 };
 
@@ -34,6 +35,7 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 
 export const TransactionAddress = ({
   initial = '',
+  loading = false,
   onAddress,
 }: TransactionAddressProps) => {
   const app = useApp();
@@ -139,6 +141,7 @@ export const TransactionAddress = ({
         i18n={I18N.continue}
         onPress={onDone}
         style={styles.button}
+        loading={loading}
       />
       <Spacer height={32} />
     </KeyboardSafeArea>

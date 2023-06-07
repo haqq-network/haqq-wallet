@@ -4,6 +4,7 @@ import {differenceInMinutes} from 'date-fns';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
+import {Color, getColor} from './colors';
 import {I18N} from './i18n';
 import {
   EthType,
@@ -429,4 +430,39 @@ export async function getHttpResponse<T = any>(
     console.error(`🔴 [getHttpResponse] ${e} ${response.url}`);
     return {} as T;
   }
+}
+
+export function addOpacityToHEX(color: string, value: number) {
+  const opacity = Math.floor(value * 255).toString(16);
+  const str = color.toString();
+  return str + opacity;
+}
+
+export function addOpacityToColor(color: Color, value: number) {
+  return addOpacityToHEX(getColor(color), value);
+}
+
+export enum SortDirectionEnum {
+  ascending = 'asc',
+  descending = 'desc',
+}
+
+export type SortUtilFunction<T> = (a: T, b: T) => number;
+
+export function arraySortUtil<T>(
+  sortDirection: SortDirectionEnum,
+  fieldName: keyof T,
+): SortUtilFunction<T> {
+  return (a: T, b: T) => {
+    const aValue = a[fieldName];
+    const bValue = b[fieldName];
+
+    if (aValue < bValue) {
+      return sortDirection === SortDirectionEnum.ascending ? -1 : 1;
+    } else if (aValue > bValue) {
+      return sortDirection === SortDirectionEnum.ascending ? 1 : -1;
+    } else {
+      return 0;
+    }
+  };
 }

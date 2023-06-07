@@ -11,6 +11,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ADJUST_ENVIRONMENT, ADJUST_TOKEN} from '@env';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
@@ -74,6 +75,7 @@ import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {ModalsScreen} from './screens/modals-screen';
 import {MpcMigrateScreen} from './screens/mpc-migrate';
+import {NftDetailsScreen} from './screens/nft-details';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
 import {PopupTrackActivityScreen} from './screens/popup-track-activity';
@@ -292,281 +294,295 @@ export const App = () => {
 
   // @ts-ignore
   return (
-    <SafeAreaProvider>
-      <AppContext.Provider value={app}>
-        <StatusBarColor
-          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor={getColor(Color.bg1)}
-        />
-        <WalletsContext.Provider value={wallets}>
-          <NavigationContainer
-            ref={navigator}
-            theme={navTheme}
-            onStateChange={onStateChange}>
-            <Stack.Navigator
-              screenOptions={basicScreenOptions}
-              key={theme}
-              initialRouteName={user.onboarded ? 'home' : 'welcome'}>
-              <Stack.Screen name="home" component={HomeScreen} />
-              <Stack.Screen name="welcome" component={WelcomeScreen} />
-              {/* Modals group */}
-              <Stack.Group screenOptions={stackScreenOptions}>
-                <Stack.Screen name="mpcMigrate" component={MpcMigrateScreen} />
-                <Stack.Screen name="jsonRpcSign" component={JsonRpcSignPopup} />
-                <Stack.Screen name="backup" component={BackupScreen} />
-                <Stack.Screen name="signin" component={SignInScreen} />
-                <Stack.Screen name="signup" component={SignUpScreen} />
+    <ActionSheetProvider>
+      <SafeAreaProvider>
+        <AppContext.Provider value={app}>
+          <StatusBarColor
+            barStyle={
+              theme === AppTheme.dark ? 'light-content' : 'dark-content'
+            }
+            backgroundColor={getColor(Color.bg1)}
+          />
+          <WalletsContext.Provider value={wallets}>
+            <NavigationContainer
+              ref={navigator}
+              theme={navTheme}
+              onStateChange={onStateChange}>
+              <Stack.Navigator
+                screenOptions={basicScreenOptions}
+                key={theme}
+                initialRouteName={user.onboarded ? 'home' : 'welcome'}>
+                <Stack.Screen name="home" component={HomeScreen} />
+                <Stack.Screen name="welcome" component={WelcomeScreen} />
+                {/* Modals group */}
+                <Stack.Group screenOptions={stackScreenOptions}>
+                  <Stack.Screen
+                    name="mpcMigrate"
+                    component={MpcMigrateScreen}
+                  />
+                  <Stack.Screen
+                    name="jsonRpcSign"
+                    component={JsonRpcSignPopup}
+                  />
+                  <Stack.Screen
+                    name="nftDetails"
+                    component={NftDetailsScreen}
+                  />
+                  <Stack.Screen name="backup" component={BackupScreen} />
+                  <Stack.Screen name="signin" component={SignInScreen} />
+                  <Stack.Screen name="signup" component={SignUpScreen} />
+                  <Stack.Screen
+                    name="transaction"
+                    component={TransactionScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnect"
+                    component={WalletConnectScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationListPopup"
+                    component={WalletConnectApplicationListPopupScreen}
+                  />
+                  <Stack.Screen
+                    name="walletProtectionPopup"
+                    component={WalletProtectionPopup}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetailsPopup"
+                    component={WalletConnectApplicationDetailsPopupScreen}
+                  />
+                  <Stack.Screen
+                    name="walletSelector"
+                    component={WalletSelectorScreen}
+                  />
+                  <Stack.Screen name="restore" component={RestoreScreen} />
+                  <Stack.Screen name="create" component={CreateScreen} />
+                  <Stack.Screen name="ledger" component={LedgerScreen} />
+                  <Stack.Screen
+                    name="stakingDelegate"
+                    component={StakingDelegateScreen}
+                  />
+                  <Stack.Screen
+                    name="stakingUnDelegate"
+                    component={StakingUnDelegateScreen}
+                  />
+                  <Stack.Screen
+                    name="proposalDeposit"
+                    component={ProposalDepositScreen}
+                  />
+                </Stack.Group>
                 <Stack.Screen
-                  name="transaction"
-                  component={TransactionScreen}
+                  name="accountInfo"
+                  component={AccountInfoScreen}
+                  options={getWalletTitle}
                 />
                 <Stack.Screen
-                  name="walletConnect"
-                  component={WalletConnectScreen}
+                  name="backupNotification"
+                  component={BackupNotificationScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletConnectApplicationListPopup"
-                  component={WalletConnectApplicationListPopupScreen}
+                  name="backupMpcNotification"
+                  component={BackupMpcNotificationScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletProtectionPopup"
-                  component={WalletProtectionPopup}
+                  name="backupMpcSuggestion"
+                  component={BackupMpcSuggestionScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletConnectApplicationDetailsPopup"
-                  component={WalletConnectApplicationDetailsPopupScreen}
+                  name="popupNotification"
+                  component={PopupNotificationScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletSelector"
-                  component={WalletSelectorScreen}
-                />
-                <Stack.Screen name="restore" component={RestoreScreen} />
-                <Stack.Screen name="create" component={CreateScreen} />
-                <Stack.Screen name="ledger" component={LedgerScreen} />
-                <Stack.Screen
-                  name="stakingDelegate"
-                  component={StakingDelegateScreen}
+                  name="popupNotificationNews"
+                  component={PopupNotificationNewsScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="stakingUnDelegate"
-                  component={StakingUnDelegateScreen}
+                  name="popupTrackActivity"
+                  component={PopupTrackActivityScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="proposalDeposit"
-                  component={ProposalDepositScreen}
+                  name="transactionDetail"
+                  component={TransactionDetailScreen}
+                  options={actionsSheet}
                 />
-              </Stack.Group>
-              <Stack.Screen
-                name="accountInfo"
-                component={AccountInfoScreen}
-                options={getWalletTitle}
-              />
-              <Stack.Screen
-                name="backupNotification"
-                component={BackupNotificationScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="backupMpcNotification"
-                component={BackupMpcNotificationScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="backupMpcSuggestion"
-                component={BackupMpcSuggestionScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupNotification"
-                component={PopupNotificationScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupNotificationNews"
-                component={PopupNotificationNewsScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupTrackActivity"
-                component={PopupTrackActivityScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="transactionDetail"
-                component={TransactionDetailScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen name="news" component={NewsScreen} />
-              <Stack.Screen
-                name="newsDetail"
-                component={NewsDetailScreen}
-                options={getNewsDetailAppTitle}
-              />
-              <Stack.Group screenOptions={screenOptions}>
+                <Stack.Screen name="news" component={NewsScreen} />
                 <Stack.Screen
-                  name="settingsAccounts"
-                  component={SettingsAccountsScreen}
-                  options={{
-                    title: 'Manage accounts',
-                  }}
+                  name="newsDetail"
+                  component={NewsDetailScreen}
+                  options={getNewsDetailAppTitle}
                 />
-                <Stack.Screen
-                  name="raffleDetails"
-                  component={RaffleDetailsScreen}
-                />
-                <Stack.Screen
-                  name="raffleReward"
-                  component={RaffleRewardScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen name="staking" component={HomeStakingScreen} />
-                <Stack.Screen
-                  name="settingsAccountDetail"
-                  component={SettingsAccountDetailScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="walletConnectWalletList"
-                  component={WalletConnectWalletListScreen}
-                  options={{
-                    title: getText(I18N.walletConnectWalletListTitle),
-                  }}
-                />
-                <Stack.Screen
-                  name="walletConnectApplicationList"
-                  component={WalletConnectApplicationListScreen}
-                />
-                <Stack.Screen
-                  name="walletConnectApplicationDetails"
-                  component={WalletConnectApplicationDetailsScreen}
-                />
-                <Stack.Screen
-                  name="settingsAccountStyle"
-                  component={SettingsAccountStyleScreen}
-                  options={{
-                    title: 'Change style',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAddressBook"
-                  component={SettingsAddressBookScreen}
-                  options={{
-                    title: 'Address book',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsLanguage"
-                  component={SettingsLanguageScreen}
-                  options={{
-                    title: 'Language',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsProviders"
-                  component={SettingsProvidersScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsSecurityPin"
-                  component={SettingsSecurityPinScreen}
-                  options={{
-                    title: 'Change PIN',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsNotification"
-                  component={SettingsNotificationScreen}
-                  options={{
-                    title: getText(I18N.settingsNotification),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsFaq"
-                  component={SettingsFAQScreen}
-                  options={{
-                    title: getText(I18N.settingsSecurity),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAbout"
-                  component={SettingsAboutScreen}
-                  options={{
-                    title: 'About',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsTest"
-                  component={SettingsTestScreen}
-                  options={{
-                    title: 'Test',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAccountEdit"
-                  component={SettingsAccountEditScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsContactEdit"
-                  component={SettingsContactEditScreen}
-                  options={withoutHeader}
-                />
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="settingsAccounts"
+                    component={SettingsAccountsScreen}
+                    options={{
+                      title: 'Manage accounts',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="raffleDetails"
+                    component={RaffleDetailsScreen}
+                  />
+                  <Stack.Screen
+                    name="raffleReward"
+                    component={RaffleRewardScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen name="staking" component={HomeStakingScreen} />
+                  <Stack.Screen
+                    name="settingsAccountDetail"
+                    component={SettingsAccountDetailScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="walletConnectWalletList"
+                    component={WalletConnectWalletListScreen}
+                    options={{
+                      title: getText(I18N.walletConnectWalletListTitle),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationList"
+                    component={WalletConnectApplicationListScreen}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetails"
+                    component={WalletConnectApplicationDetailsScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountStyle"
+                    component={SettingsAccountStyleScreen}
+                    options={{
+                      title: 'Change style',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAddressBook"
+                    component={SettingsAddressBookScreen}
+                    options={{
+                      title: 'Address book',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsLanguage"
+                    component={SettingsLanguageScreen}
+                    options={{
+                      title: 'Language',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsProviders"
+                    component={SettingsProvidersScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurityPin"
+                    component={SettingsSecurityPinScreen}
+                    options={{
+                      title: 'Change PIN',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsNotification"
+                    component={SettingsNotificationScreen}
+                    options={{
+                      title: getText(I18N.settingsNotification),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsFaq"
+                    component={SettingsFAQScreen}
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAbout"
+                    component={SettingsAboutScreen}
+                    options={{
+                      title: 'About',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsTest"
+                    component={SettingsTestScreen}
+                    options={{
+                      title: 'Test',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountEdit"
+                    component={SettingsAccountEditScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsContactEdit"
+                    component={SettingsContactEditScreen}
+                    options={withoutHeader}
+                  />
 
-                <Stack.Screen
-                  name="settingsProviderForm"
-                  component={SettingsProviderEditScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsTheme"
-                  component={SettingsThemeScreen}
-                  options={{
-                    title: getText(I18N.settingsThemeScreen),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsViewRecoveryPhrase"
-                  options={{
-                    title: getText(I18N.settingsViewRecoveryPhraseTitle),
-                  }}
-                  component={SettingsViewRecoveryPhraseScreen}
-                />
-                <Stack.Screen
-                  name="settingsSecurity"
-                  options={{
-                    title: getText(I18N.settingsSecurity),
-                  }}
-                  component={SettingsSecurityScreen}
-                />
-              </Stack.Group>
-              <Stack.Group screenOptions={screenOptions}>
-                <Stack.Screen
-                  name="stakingValidators"
-                  component={StakingValidatorsScreen}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="stakingInfo"
-                  component={StakingInfoScreen}
-                  options={{
-                    title: getText(I18N.stakingInfo),
-                  }}
-                />
-              </Stack.Group>
-              <Stack.Group screenOptions={screenOptions}>
-                <Stack.Screen
-                  name="proposal"
-                  component={ProposalScreen}
-                  options={{
-                    title: getText(I18N.proposalTitle),
-                  }}
-                />
-              </Stack.Group>
-            </Stack.Navigator>
-          </NavigationContainer>
-          <ModalsScreen initialModal={{type: 'splash'}} />
-        </WalletsContext.Provider>
-      </AppContext.Provider>
-    </SafeAreaProvider>
+                  <Stack.Screen
+                    name="settingsProviderForm"
+                    component={SettingsProviderEditScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsTheme"
+                    component={SettingsThemeScreen}
+                    options={{
+                      title: getText(I18N.settingsThemeScreen),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhraseTitle),
+                    }}
+                    component={SettingsViewRecoveryPhraseScreen}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    component={SettingsSecurityScreen}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="stakingValidators"
+                    component={StakingValidatorsScreen}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="stakingInfo"
+                    component={StakingInfoScreen}
+                    options={{
+                      title: getText(I18N.stakingInfo),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="proposal"
+                    component={ProposalScreen}
+                    options={{
+                      title: getText(I18N.proposalTitle),
+                    }}
+                  />
+                </Stack.Group>
+              </Stack.Navigator>
+            </NavigationContainer>
+            <ModalsScreen initialModal={{type: 'splash'}} />
+          </WalletsContext.Provider>
+        </AppContext.Provider>
+      </SafeAreaProvider>
+    </ActionSheetProvider>
   );
 };
