@@ -83,6 +83,11 @@ export const HomeEarnScreen = () => {
   );
   const onPressRaffle = useCallback(
     (raffle: Raffle) => {
+      if (raffle.status === 'closed') {
+        navigation.navigate('raffleReward', {item: raffle});
+        return;
+      }
+
       const prevIslmCount =
         raffles
           ?.filter?.(it => it.status === RaffleStatus.closed)
