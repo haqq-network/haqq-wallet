@@ -64,7 +64,6 @@ export const RaffleBlock = ({
   onPressShowResult,
   onPress,
 }: RaffelBlockProps) => {
-  console.log('item', item);
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
   const formattedAmount = useMemo(
     () => cleanNumber(parseInt(item.budget, 16) / WEI),
@@ -92,7 +91,10 @@ export const RaffleBlock = ({
     () => Date.now() < item.locked_until * 1000,
     [item],
   );
-  const showResult = useMemo(() => Date.now() > item.close_at * 1000, [item]);
+  const showResult = useMemo(
+    () => item.status === 'closed' || Date.now() > item.close_at * 1000,
+    [item],
+  );
 
   const handlePress = useCallback(() => {
     onPress?.(item);

@@ -25,7 +25,7 @@ export const HomeEarnScreen = () => {
       wallets.getWallets().map(wallet => wallet.address),
       getUid(),
     );
-    setRaffles(response);
+    setRaffles(response.sort((a, b) => b.start_at - a.start_at));
   }, []);
 
   useEffect(() => {
