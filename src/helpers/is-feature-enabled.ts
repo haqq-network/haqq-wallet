@@ -12,7 +12,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.sss:
       return app.isOathSigninSupported;
     case Feature.earn:
-      return app.isDeveloper;
+      return true;
     case Feature.walletConnectSign:
       return false;
     case Feature.governanceAndStaking:
