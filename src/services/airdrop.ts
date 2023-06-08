@@ -38,6 +38,7 @@ export class Airdrop {
 
   async claim(
     wallet: string,
+    signature: string,
     claim_code: string,
     hcaptcha_token: string,
   ): Promise<{}> {
@@ -51,6 +52,7 @@ export class Airdrop {
       },
       body: JSON.stringify({
         wallet,
+        signature,
         claim_code,
         hcaptcha_token,
       }),
