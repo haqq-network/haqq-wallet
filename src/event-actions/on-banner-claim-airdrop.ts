@@ -1,5 +1,9 @@
 import {app} from '@app/contexts';
-import {awaitForWallet, showModal} from '@app/helpers';
+import {
+  awaitForWallet,
+  getProviderInstanceForWallet,
+  showModal,
+} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -17,10 +21,10 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
   const visible = Wallet.getAllVisible();
 
-  let wallet;
+  let walletId;
 
   try {
-    wallet = await awaitForWallet({
+    walletId = await awaitForWallet({
       wallets: visible.snapshot(),
       title: I18N.stakingDelegateAccountTitle,
     });
@@ -29,15 +33,28 @@ export async function onBannerClaimAirdrop(claimCode: string) {
   }
   const captchaKey = await awaitForCaptcha({});
 
-  await Airdrop.instance.claim(wallet, claimCode, captchaKey);
+  const wallet = Wallet.getById(walletId);
+
+  if (!wallet) {
+    throw new Error('wallet not found');
+  }
+
+  const walletProvider = await getProviderInstanceForWallet(wallet!);
+
+  const signature = await walletProvider.signPersonalMessage(
+    wallet.path!,
+    claimCode,
+  );
+
+  await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
 
   banner.update({
     isUsed: true,
   });
 
-  const refferal = Refferal.getById(claimCode);
+  const referral = Refferal.getById(claimCode);
 
-  if (refferal) {
+  if (referral) {
     const provider = Provider.getProvider(app.getUser().providerId);
 
     if (provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f') {
@@ -49,7 +66,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       });
     }
 
-    refferal.update({
+    referral.update({
       isUsed: true,
     });
   }
