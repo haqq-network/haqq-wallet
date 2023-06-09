@@ -22,7 +22,7 @@ export const HomeEarnScreen = () => {
 
   const loadRaffles = useCallback(async () => {
     const response = await Backend.instance.contests(
-      Wallet.getAll().map(wallet => wallet.address),
+      Wallet.addressList(),
       getUid(),
     );
     setRaffles(response.sort((a, b) => b.start_at - a.start_at));

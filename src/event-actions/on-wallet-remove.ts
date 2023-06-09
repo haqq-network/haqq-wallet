@@ -7,9 +7,7 @@ import {PushNotifications} from '@app/services/push-notifications';
 
 export async function onWalletRemove(address: string) {
   try {
-    const wallets = Wallet.getAll()
-      .snapshot()
-      .map(item => item.address);
+    const wallets = Wallet.addressList();
 
     const transactions = Transaction.getAll().snapshot();
     const transactionsTo = transactions.filtered(
