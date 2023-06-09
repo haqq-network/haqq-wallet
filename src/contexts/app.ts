@@ -3,16 +3,13 @@ import {createContext} from 'react';
 import {EventEmitter} from 'events';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import RNAsyncStorage from '@react-native-async-storage/async-storage';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {AppState, Platform} from 'react-native';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
-  resetGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
@@ -226,13 +223,6 @@ class App extends EventEmitter {
     }
 
     return creds.password;
-  }
-
-  async clean() {
-    //TODO: save session
-    EncryptedStorage.clear();
-    await RNAsyncStorage.clear();
-    await resetGenericPassword();
   }
 
   async setPin(password: string) {

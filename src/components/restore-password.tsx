@@ -3,13 +3,12 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Events} from '@app/events';
-import {captureException, hideModal} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
+import {onAppReset} from '@app/event-actions/on-app-reset';
+import {onWalletReset} from '@app/event-actions/on-wallet-reset';
+import {captureException, hideModal, showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {sleep} from '@app/utils';
 
 import {BottomSheet, BottomSheetRef} from './bottom-sheet';
 import {Button, ButtonVariant, Spacer, Text} from './ui';
@@ -22,8 +21,6 @@ type RestorePasswordProps = {
 };
 
 export const RestorePassword = ({onClose}: RestorePasswordProps) => {
-  const wallet = useWallets();
-  const app = useApp();
   const pan = useRef(new Animated.Value(1)).current;
   const bottomSheetRef = useRef<BottomSheetRef>(null);
 
@@ -47,6 +44,32 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
     onOpenPopup();
   }, [onOpenPopup]);
 
+  const onClickResetConfirm = useCallback(async () => {
+    let closeLoading = showModal('loading');
+
+    try {
+      await sleep(150);
+      await onAppReset();
+      bottomSheetRef.current?.close?.();
+      await new Promise(resolve => {
+        Animated.timing(pan, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }).start(resolve);
+      });
+
+      await onWalletReset();
+
+      hideModal('pin');
+      hideModal('splash');
+    } catch (e) {
+      captureException(e, 'onClickResetConfirm');
+    } finally {
+      closeLoading();
+    }
+  }, [pan]);
+
   const onClickReset = useCallback(() => {
     vibrate(HapticEffects.warning);
     Alert.alert(
@@ -60,30 +83,11 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         {
           style: 'destructive',
           text: getText(I18N.restorePasswordReset),
-          onPress: async () => {
-            try {
-              wallet.clean();
-              Transaction.removeAll();
-              Contact.removeAll();
-              await app.clean();
-              bottomSheetRef.current?.close?.();
-              Animated.timing(pan, {
-                toValue: 1,
-                duration: 250,
-                useNativeDriver: true,
-              }).start(() => {
-                hideModal('splash');
-                hideModal('pin');
-                app.emit(Events.onWalletReset);
-              });
-            } catch (e) {
-              captureException(e);
-            }
-          },
+          onPress: onClickResetConfirm,
         },
       ],
     );
-  }, [app, pan, wallet]);
+  }, [onClickResetConfirm]);
 
   return (
     <BottomSheet

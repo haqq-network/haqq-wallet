@@ -10,6 +10,7 @@ export enum NftViewerItemPreviewVariant {
 
 export interface NftViewerItemPreviewExtendedProps {
   item: NftItem;
+
   onPress(item: NftItem): void;
 }
 

@@ -1,6 +1,5 @@
 import {ProviderInterface} from '@haqq/provider-base';
 
-import {wallets} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
@@ -33,7 +32,7 @@ export async function createWalletsForProvider(
       canNext = balance > 0 || index === 0;
 
       if (canNext) {
-        await wallets.addWallet(
+        await Wallet.create(
           {
             address: address,
             type: walletType,

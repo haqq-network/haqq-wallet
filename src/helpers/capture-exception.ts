@@ -48,6 +48,6 @@ export const openURL = async (url: string) => {
     }
   } catch (error) {
     openAlert();
-    captureException(error);
+    captureException(error, 'openURL');
   }
 };

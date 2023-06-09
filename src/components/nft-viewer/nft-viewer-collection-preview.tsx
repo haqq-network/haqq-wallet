@@ -13,6 +13,7 @@ import {Text} from '../ui';
 
 export interface NftViewerCollectionPreviewProps {
   item: NftCollection;
+
   onPress(item: NftCollection): void;
 }
 

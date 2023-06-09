@@ -6,6 +6,7 @@ import {AppState, Appearance, StatusBar} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {app} from '@app/contexts';
+import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -246,6 +247,15 @@ export class User extends EventEmitter {
   static getById(id: string) {
     const user = realm.objectForPrimaryKey(UserSchema.name, id);
     return new User(user as UserType & Realm.Object<UserType>);
+  }
+
+  async resetUserData() {
+    await awaitForRealm();
+    realm.write(() => {
+      this._raw.onboarded = false;
+      this._raw.pinAttempts = null;
+      this._raw.pinBanned = null;
+    });
   }
 
   listenTheme = () => {

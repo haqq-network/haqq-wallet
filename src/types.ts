@@ -841,7 +841,7 @@ export type Modals = {
   };
   walletsBottomSheet: {
     onClose?: () => void;
-    wallets: Wallet[];
+    wallets: Wallet[] | Results<Wallet>;
     closeDistance?: number;
     title: I18N;
     eventSuffix?: string;
@@ -867,6 +867,7 @@ export type Modals = {
     variant?: CaptchaType;
   };
 };
+
 export interface NftAttribute {
   trait_type: string;
   value: string;

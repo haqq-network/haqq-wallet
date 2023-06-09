@@ -4,9 +4,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {useWallets} from '@app/hooks';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {TransactionAccountScreen} from '@app/screens/transaction-account';
 import {TransactionAddressScreen} from '@app/screens/transaction-address';
 import {TransactionConfirmationScreen} from '@app/screens/transaction-confirmation';
@@ -50,14 +50,13 @@ const screenOptionsConfirmation: ScreenOptionType = {
 };
 
 export const TransactionScreen = () => {
-  const wallets = useWallets();
   const {
     params: {from, to, nft},
   } = useTypedRoute<'transaction'>();
 
   const screenOptionsAddressRoute: ScreenOptionType = {
     title: getText(I18N.transactionSumAddressTitle),
-    headerBackHidden: from || wallets.visible.length === 1,
+    headerBackHidden: from || Wallet.getAllVisible().length === 1,
     headerRight: DismissPopupButton,
   };
 
@@ -65,7 +64,7 @@ export const TransactionScreen = () => {
     <TransactionStack.Navigator
       screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}
       initialRouteName={
-        nft || from || wallets.visible.length === 1
+        nft || from || Wallet.getAllVisible().length === 1
           ? 'transactionAddress'
           : 'transactionAccount'
       }>

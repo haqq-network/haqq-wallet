@@ -14,6 +14,7 @@ import {TrimmedText} from './ui/trimmed-text';
 
 export interface NftItemDetailsProps {
   item: NftItem;
+
   onPressSend(): void;
 }
 

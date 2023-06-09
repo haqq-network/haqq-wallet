@@ -11,8 +11,9 @@ import {Spacer} from '../ui';
 
 export interface NftViewerCollectionPreviewListProps {
   data: NftCollection[];
-  onPress(item: NftCollection): void;
   scrollEnabled?: boolean;
+
+  onPress(item: NftCollection): void;
 }
 
 export const NftViewerCollectionPreviewList = ({

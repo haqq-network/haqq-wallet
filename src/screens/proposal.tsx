@@ -6,12 +6,8 @@ import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWalletsList,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {GovernanceVoting} from '@app/models/governance-voting';
 import {Wallet} from '@app/models/wallet';
@@ -33,7 +29,7 @@ export const ProposalScreen = () => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const cosmos = useCosmos();
-  const {visible} = useWalletsList();
+  const visible = useWalletsVisible();
 
   useEffect(() => {
     setItem(GovernanceVoting.getById(id));

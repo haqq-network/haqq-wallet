@@ -3,13 +3,13 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
-import {wallets} from '@app/contexts';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Raffle, RaffleStatus} from '@app/types';
@@ -22,7 +22,7 @@ export const HomeEarnScreen = () => {
 
   const loadRaffles = useCallback(async () => {
     const response = await Backend.instance.contests(
-      wallets.getWallets().map(wallet => wallet.address),
+      Wallet.getAll().map(wallet => wallet.address),
       getUid(),
     );
     setRaffles(response.sort((a, b) => b.start_at - a.start_at));

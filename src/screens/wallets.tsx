@@ -7,16 +7,18 @@ import {app} from '@app/contexts';
 import {onBannerAction} from '@app/event-actions/on-banner-action';
 import {showModal} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = () => {
   const navigation = useTypedNavigation();
-  const wallets = useWallets();
-  const [visibleRows, setVisibleRows] = useState(wallets.visible);
+
+  const visible = useWalletsVisible();
+
   const {activeSessions} = useWalletConnectSessions();
   const banners = useBanners();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
@@ -25,23 +27,23 @@ export const WalletsWrapper = () => {
 
   const [balance, setBalance] = useState(
     Object.fromEntries(
-      visibleRows.map(w => [w.address, app.getBalance(w.address)]),
+      visible.map(w => [w.address, app.getBalance(w.address)]),
     ),
   );
 
   useEffect(() => {
     setWalletConnectSessions(
-      visibleRows.map(wallet =>
+      visible.map(wallet =>
         filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
       ),
     );
-  }, [visibleRows, activeSessions]);
+  }, [visible, activeSessions]);
 
   useEffect(() => {
     const onBalance = () => {
       setBalance(
         Object.fromEntries(
-          visibleRows.map(w => [w.address, app.getBalance(w.address)]),
+          visible.map(w => [w.address, app.getBalance(w.address)]),
         ),
       );
     };
@@ -50,19 +52,7 @@ export const WalletsWrapper = () => {
     return () => {
       app.off('balance', onBalance);
     };
-  }, [visibleRows]);
-
-  const updateWallets = useCallback(() => {
-    setVisibleRows(wallets.visible);
-  }, [wallets]);
-
-  useEffect(() => {
-    wallets.on('wallets', updateWallets);
-
-    return () => {
-      wallets.off('wallets', updateWallets);
-    };
-  }, [updateWallets, wallets]);
+  }, [visible]);
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -142,7 +132,7 @@ export const WalletsWrapper = () => {
   return (
     <Wallets
       balance={balance}
-      wallets={visibleRows}
+      wallets={visible}
       banners={banners}
       walletConnectSessions={walletConnectSessions}
       onWalletConnectPress={onWalletConnectPress}

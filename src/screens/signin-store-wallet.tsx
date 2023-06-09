@@ -10,7 +10,7 @@ import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -19,7 +19,6 @@ import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 export const SignInStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
   const {nextScreen, ...params} = useTypedRoute<'restoreStore'>().params;
-  const wallets = useWallets();
 
   useEffect(() => {
     showModal('loading', {text: getText(I18N.signinStoreWalletText)});
@@ -56,7 +55,7 @@ export const SignInStoreWalletScreen = () => {
 
             const {address} = await provider.getAccountInfo('');
 
-            await wallets.addWallet(
+            await Wallet.create(
               {
                 path: '',
                 address: address,
@@ -119,7 +118,7 @@ export const SignInStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [navigation, nextScreen, wallets, params]);
+  }, [navigation, nextScreen, params]);
 
   return <View />;
 };
