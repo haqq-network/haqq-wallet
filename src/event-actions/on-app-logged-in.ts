@@ -11,7 +11,9 @@ export async function onAppLoggedIn() {
 
   await Promise.all(
     Wallet.getAllVisible().map(w => Image.prefetch(getPatternName(w.pattern))),
-  );
+  ).catch(err => {
+    console.error('onAppLoggedIn Image.prefetch error', err);
+  });
 
   await Promise.all(
     wallets.map(wallet =>
