@@ -1,5 +1,6 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Pressable, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -15,50 +16,51 @@ import {
 } from '@app/components/ui';
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
 import {
-  GovernanceVoting,
-  ProposalRealmType,
-} from '@app/models/governance-voting';
+  dataDifference,
+  proposalDepositNeeds,
+  proposalVotes,
+  timeLeftPercent,
+} from '@app/helpers/governance';
+import {I18N} from '@app/i18n';
+import {VoteNamesType} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 type VotingCardActiveProps = {
-  id: number;
-  onPress?: (hash: number) => void;
+  item: Proposal;
+  onPress: (proposal: Proposal) => void;
 };
 
-const initialVotes = {
+const initialVotes: Record<VoteNamesType, number> = {
   yes: 1,
   no: 1,
   abstain: 1,
-  veto: 1,
+  no_with_veto: 1,
 };
 
-const colorVotes = {
+const colorVotes: Record<VoteNamesType, Color> = {
   yes: Color.graphicGreen1,
   no: Color.textRed1,
   abstain: Color.graphicSecond4,
-  veto: Color.textYellow1,
+  no_with_veto: Color.textYellow1,
 };
 
-export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
-  const item = useMemo(() => {
-    return GovernanceVoting.getById(id) as ProposalRealmType;
-  }, [id]);
+export const VotingCardActive = ({item, onPress}: VotingCardActiveProps) => {
   const isVoted = true; // PASS
   const yourDeposit = 100; // PASS
 
-  const {daysLeft, hourLeft, minLeft} = item.dataDifference;
+  const {daysLeft, hourLeft, minLeft} = dataDifference(item);
   const circleRef = useRef<ProgressCircleInterface>();
   const linesRef = useRef<VotingLineInterface>(null);
   const depositProgressRef = useRef<ProgressLineInterface>(null);
 
-  const votesList = Object.entries(item.proposalVotes) as [
-    keyof typeof item.proposalVotes,
-    number,
-  ][];
+  const votesList: [VoteNamesType, number][] = Object.entries(
+    item.final_tally_result,
+  ).map(c => [c[0] as VoteNamesType, parseInt(c[1], 10)]);
 
   const isDeposited = item.status === 'deposited';
+
+  const pdn = proposalDepositNeeds(item);
 
   const [majorityVotes] = votesList.reduce((prev, cur) => {
     return prev[1] > cur[1] ? prev : cur;
@@ -69,22 +71,24 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
   );
 
   useEffect(() => {
-    circleRef.current?.animateTo(item.timeLeftPercent);
-  }, [item.timeLeftPercent]);
+    circleRef.current?.animateTo(timeLeftPercent(item));
+  }, [item]);
 
   useEffect(() => {
-    linesRef.current?.updateValues(item.proposalVotes);
-  }, [item.proposalVotes]);
+    linesRef.current?.updateValues(proposalVotes(item));
+  }, [item]);
 
   useEffect(() => {
-    if (item.proposalDepositNeeds && isDeposited) {
+    if (pdn && isDeposited) {
       depositProgressRef.current?.updateProgress(
-        /*depositCollected*/ 100 / item.proposalDepositNeeds, // PASS
+        /*depositCollected*/ 100 / pdn, // PASS
       );
     }
-  }, [item.proposalDepositNeeds, isDeposited]);
+  }, [pdn, isDeposited]);
 
-  const handlePress = () => onPress?.(id);
+  const handlePress = useCallback(() => {
+    onPress(item);
+  }, [onPress, item]);
 
   return (
     <Pressable
@@ -124,11 +128,11 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
       </View>
       <View style={styles.container}>
         <Text t14 color={Color.textBase2}>
-          #{item.orderNumber}
+          #{item.proposal_id}
         </Text>
         <Spacer height={2} />
         <Text t8 numberOfLines={2} color={Color.textBase1}>
-          {item.title}
+          {item.content.title}
         </Text>
         <Spacer height={12} />
         <View style={styles.timeContainer}>
@@ -168,7 +172,7 @@ export const VotingCardActive = ({id, onPress}: VotingCardActiveProps) => {
             ref={depositProgressRef}
             initialProgress={0}
             showBottomInfo
-            max={item.proposalDepositNeeds}
+            max={pdn}
             total={95}
           />
         ) : (

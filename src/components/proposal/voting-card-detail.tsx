@@ -1,5 +1,6 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -15,8 +16,14 @@ import {
 } from '@app/components/ui';
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
+import {
+  dataDifference,
+  proposalDepositNeeds,
+  proposalVotes,
+  timeLeftPercent,
+  yesPercent,
+} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
-import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
@@ -28,7 +35,7 @@ export type VotingCardDetailRefInterface =
   | undefined;
 
 interface VotingCardDetailProps {
-  item: ProposalRealmType;
+  item: Proposal;
   yourVote?: VoteNamesType;
   totalCollected?: number;
 }
@@ -37,13 +44,15 @@ export const VotingCardDetail = forwardRef<
   VotingCardDetailRefInterface,
   VotingCardDetailProps
 >(({item, yourVote, totalCollected}, ref) => {
-  const {
-    dataDifference: {daysLeft, minLeft, hourLeft},
-    isActive,
-    proposalVotes,
-    isDeposited,
-    isVoting,
-  } = item;
+  const {daysLeft, minLeft, hourLeft} = dataDifference(item);
+
+  const isVoting = item.status === 'PROPOSAL_STATUS_VOTING_PERIOD';
+  const isDeposited = item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD';
+
+  const isActive = isVoting || isDeposited;
+
+  const pv = proposalVotes(item);
+
   const circleRef = useRef<ProgressCircleInterface>();
   const votingRef = useRef<VotingLineInterface | undefined>();
   const depositLineRef = useRef<ProgressLineInterface | undefined>();
@@ -61,10 +70,10 @@ export const VotingCardDetail = forwardRef<
   }));
 
   useEffect(() => {
-    circleRef.current?.animateTo(item.timeLeftPercent);
-  }, [item.timeLeftPercent]);
+    circleRef.current?.animateTo(timeLeftPercent(item));
+  }, [item]);
 
-  const isNotEnoughVotes = item.yesPercent < 51;
+  const isNotEnoughVotes = yesPercent(item) < 51;
 
   const iconColor = isDeposited ? Color.textBlue1 : Color.graphicGreen1;
   return (
@@ -122,15 +131,11 @@ export const VotingCardDetail = forwardRef<
             initialProgress={0}
             showBottomInfo
             ref={depositLineRef}
-            max={item.proposalDepositNeeds}
+            max={proposalDepositNeeds(item)}
             total={totalCollected}
           />
         ) : (
-          <VotingLine
-            ref={votingRef}
-            showBottomText
-            initialVotes={proposalVotes}
-          />
+          <VotingLine ref={votingRef} showBottomText initialVotes={pv} />
         )}
       </View>
       {isVoting && isNotEnoughVotes && (
@@ -145,7 +150,7 @@ export const VotingCardDetail = forwardRef<
           <Text>
             <Text
               t18
-              i18params={{percent: item.yesPercent.toFixed(0)}}
+              i18params={{percent: yesPercent(item).toFixed(0)}}
               color={Color.textBase2}
               i18n={I18N.proposalNotEnough}
             />

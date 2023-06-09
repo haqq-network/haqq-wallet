@@ -38,7 +38,8 @@ export const VotingLine = memo(
     const initPercentYes = initialSum && initialVotes.yes / initialSum;
     const initPercentNo = initialSum && initialVotes.no / initialSum;
     const initPercentAbstain = initialSum && initialVotes.abstain / initialSum;
-    const initPercentVeto = initialSum && initialVotes.veto / initialSum;
+    const initPercentVeto =
+      initialSum && initialVotes.no_with_veto / initialSum;
 
     const yesVotes = useSharedValue(initPercentYes);
     const noVotes = useSharedValue(initPercentNo);
@@ -72,7 +73,7 @@ export const VotingLine = memo(
         const yes = newVotes.yes / factor;
         const no = newVotes.no / factor;
         const abstain = newVotes.abstain / factor;
-        const veto = newVotes.veto / factor;
+        const veto = newVotes.no_with_veto / factor;
 
         yesVotes.value = withTiming(yes, animConfig);
         noVotes.value = withTiming(no, animConfig);
@@ -117,7 +118,8 @@ export const VotingLine = memo(
 
     const vetoVotesWidth = useAnimatedStyle(() => {
       const {value} = vetoVotes;
-      const isSelected = selected === 'veto' || typeof selected === 'undefined';
+      const isSelected =
+        selected === 'no_with_veto' || typeof selected === 'undefined';
       return {
         width: `${value}%`,
         opacity: !isSelected ? 0.5 : 1,

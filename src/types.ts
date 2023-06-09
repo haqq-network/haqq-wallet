@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Validator} from '@evmos/provider';
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
@@ -333,7 +334,7 @@ export type RootStackParamList = {
   };
   proposalDepositForm: {
     account: string;
-    proposalId: number;
+    proposalId: string;
     title: string;
   };
   proposalDepositPreview: {
@@ -350,7 +351,7 @@ export type RootStackParamList = {
     amount: number;
   };
   proposalDeposit: {
-    proposalId: number;
+    proposal: Proposal;
     account: string;
   };
   settingsAccountEdit: {address: string};
@@ -430,7 +431,7 @@ export type RootStackParamList = {
     bannerId: string;
   };
   proposal: {
-    id: number;
+    proposal: Proposal;
   };
   settingsViewRecoveryPhrase: {
     accountId: string;
@@ -633,20 +634,17 @@ export type ValidatorItem = Validator & {
 export type ColorType = Color | string;
 
 export type ProposalsTagKeys =
-  | 'all'
-  | 'voting'
-  | 'deposited'
-  | 'passed'
-  | 'rejected';
+  | '*'
+  | 'PROPOSAL_STATUS_VOTING_PERIOD'
+  | 'PROPOSAL_STATUS_DEPOSIT_PERIOD'
+  | 'PROPOSAL_STATUS_PASSED'
+  | 'PROPOSAL_STATUS_REJECTED'
+  | 'PROPOSAL_STATUS_FAILED'
+  | 'PROPOSAL_STATUS_UNSPECIFIED';
 
-export type VotesType = {
-  yes: number;
-  no: number;
-  abstain: number;
-  veto: number;
-};
+export type VotesType = Record<VoteNamesType, number>;
 
-export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
+export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'no_with_veto';
 
 export type DepositResponse = {
   deposits: {

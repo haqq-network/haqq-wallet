@@ -1,5 +1,6 @@
-import React, {useMemo} from 'react';
+import React, {useCallback} from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {format} from 'date-fns';
 import {Pressable, View} from 'react-native';
 
@@ -7,11 +8,8 @@ import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {VotingLine} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
+import {proposalVotes} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
-import {
-  GovernanceVoting,
-  ProposalRealmType,
-} from '@app/models/governance-voting';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export enum VotingCompletedStatuses {
@@ -22,19 +20,14 @@ export enum VotingCompletedStatuses {
 export type VotingCompletedStatusesKeys = keyof typeof VotingCompletedStatuses;
 
 type VotingCardCompletedProps = {
-  id: number;
-
-  onPress?: (id: number) => void;
+  item: Proposal;
+  onPress: (item: Proposal) => void;
 };
 
 export const VotingCardCompleted = ({
-  id,
+  item,
   onPress,
 }: VotingCardCompletedProps) => {
-  const item = useMemo(() => {
-    return GovernanceVoting.getById(id) as ProposalRealmType;
-  }, [id]);
-
   const isVoted = false; // PASS
 
   const status =
@@ -43,7 +36,9 @@ export const VotingCardCompleted = ({
   const isRejected = status === VotingCompletedStatuses.rejected;
   const statusColor = isRejected ? Color.textRed1 : Color.textGreen1;
 
-  const handlePress = () => onPress?.(id);
+  const handlePress = useCallback(() => {
+    onPress(item);
+  }, [onPress, item]);
 
   return (
     <Pressable onPress={handlePress} style={styles.backgroundContainer}>
@@ -62,11 +57,11 @@ export const VotingCardCompleted = ({
       </View>
       <View style={styles.container}>
         <Text t14 color={Color.textBase2}>
-          #{item.orderNumber}
+          #{item.proposal_id}
         </Text>
         <Spacer height={2} />
         <Text t8 numberOfLines={2} color={Color.textBase2}>
-          {item.title}
+          {item.content.title}
         </Text>
         <Spacer height={12} />
         <View style={styles.dateContainer}>
@@ -78,7 +73,8 @@ export const VotingCardCompleted = ({
             />
             <Spacer height={4} />
             <Text t14 color={Color.textBase1}>
-              {item.dateStart && format(item.dateStart, 'dd MMM yyyy, H:mm')}
+              {item.voting_start_time &&
+                format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
           <Spacer width={16} />
@@ -90,12 +86,13 @@ export const VotingCardCompleted = ({
             />
             <Spacer height={4} />
             <Text t14 color={Color.textBase1}>
-              {item.dateEnd && format(item.dateEnd, 'dd MMM yyyy, H:mm')}
+              {item.voting_end_time &&
+                format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
         </View>
         <Spacer height={16} />
-        <VotingLine initialVotes={item.proposalVotes} />
+        <VotingLine initialVotes={proposalVotes(item)} />
       </View>
     </Pressable>
   );

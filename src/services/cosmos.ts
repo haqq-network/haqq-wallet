@@ -173,7 +173,7 @@ export class Cosmos {
     );
   }
 
-  getProposalDeposits(proposal_id: number | string) {
+  getProposalDeposits(proposal_id: string) {
     return this.getQuery<DepositResponse>(
       `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits`,
     );
@@ -401,7 +401,7 @@ export class Cosmos {
   async vote(
     transport: ProviderInterface,
     hdPath: string,
-    proposalId: number,
+    proposalId: string,
     option: number,
   ) {
     const sender = await this.getSender(transport, hdPath);

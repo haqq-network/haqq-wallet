@@ -159,7 +159,7 @@ export class GovernanceVoting extends Realm.Object {
       return {
         yes: 1,
         no: 1,
-        veto: 1,
+        no_with_veto: 1,
         abstain: 1,
       };
     }

@@ -17,7 +17,7 @@ function prepareProposals(list: ProposalsRealmType) {
 
 export function useProposals() {
   const [allProposals, setAllProposals] = useState<ProposalsCroppedList>([]);
-  const [statusFilter, setStatusFilter] = useState<ProposalsTagKeys>('all');
+  const [statusFilter, setStatusFilter] = useState<ProposalsTagKeys>('*');
   const [searchText, setSearchText] = useState<string>('');
 
   const proposalsRef = useRef<ProposalsRealmType>();
@@ -40,7 +40,7 @@ export function useProposals() {
   }, []);
 
   const proposals = useMemo(() => {
-    if (statusFilter === 'all' || !statusFilter) {
+    if (statusFilter === '*' || !statusFilter) {
       return allProposals;
     } else {
       const filtered = proposalsRef.current?.filtered(
