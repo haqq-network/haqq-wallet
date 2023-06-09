@@ -26,5 +26,5 @@ export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
     }
   }, [item, onPress]);
 
-  return <View>{element}</View>;
+  return <View key={`TransactionRow_${item.hash}`}>{element}</View>;
 };

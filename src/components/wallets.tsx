@@ -8,11 +8,10 @@ import {Color} from '@app/colors';
 import {Banners} from '@app/components/banners/banners';
 import {CarouselItem} from '@app/components/carousel-item';
 import {HomeBannerProps} from '@app/components/home-banner';
-import {Icon, Text} from '@app/components/ui';
+import {Icon} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Wallet} from '@app/models/wallet';
 
@@ -116,7 +115,6 @@ export const Wallets = ({
         </Animated.View>
       </View>
       <Banners banners={banners} onPressBanner={onPressBanner} />
-      <Text t6 i18n={I18N.transactions} style={styles.t6} />
     </View>
   );
 };
@@ -144,11 +142,5 @@ const styles = createTheme({
   animateView: {
     width: 12,
     height: 12,
-  },
-  t6: {
-    marginVertical: 12,
-    textAlign: 'left',
-    paddingHorizontal: 20,
-    color: Color.textBase1,
   },
 });

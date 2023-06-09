@@ -28,6 +28,7 @@ export type AccountInfoProps = {
   onReceive: () => void;
   onPressRow: (hash: string) => void;
 };
+const PAGE_ITEMS_COUNT = 15;
 export const AccountInfo = ({
   wallet,
   balance,
@@ -36,23 +37,28 @@ export const AccountInfo = ({
   onPressRow,
   transactionsList,
 }: AccountInfoProps) => {
+  const [page, setPage] = useState(1);
+  const transactionListdata = useMemo(
+    () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
+    [page, transactionsList],
+  );
   const [activeTab, setActiveTab] = useState(TabNames.transactions);
-
   const scrollEnabled = useMemo(
     () =>
       activeTab === TabNames.transactions ? !!transactionsList.length : true,
     [activeTab, transactionsList.length],
   );
-
   const data = useMemo(
-    () => (activeTab === TabNames.transactions ? transactionsList : []),
-    [activeTab, transactionsList],
+    () => (activeTab === TabNames.transactions ? transactionListdata : []),
+    [activeTab, transactionListdata],
   );
 
+  const onEndReached = useCallback(() => {
+    setPage(prevState => prevState + 1);
+  }, []);
   const onTabChange = useCallback((tabName: TabNames) => {
     setActiveTab(tabName);
   }, []);
-
   const renderListHeader = useCallback(
     () => (
       <>
@@ -82,12 +88,10 @@ export const AccountInfo = ({
     ),
     [balance, onReceive, onSend, onTabChange, wallet],
   );
-
   const renderItem: ListRenderItem<TransactionList> = useCallback(
     ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
     [onPressRow],
   );
-
   const renderListEmptyComponent = useCallback(
     () => (
       <First>
@@ -120,6 +124,8 @@ export const AccountInfo = ({
         data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
       />
     </PopupContainer>
   );

@@ -159,9 +159,9 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    console.log(proposalId, params);
+    console.log('approveSession', proposalId, JSON.stringify(params, null, 2));
 
-    const {requiredNamespaces, relays} = params;
+    const {requiredNamespaces, relays, optionalNamespaces} = params;
 
     const namespaces: SessionTypes.Namespaces = {};
     Object.keys(requiredNamespaces).forEach(key => {
@@ -170,12 +170,28 @@ export class WalletConnect extends EventEmitter {
         [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
       });
 
+      optionalNamespaces?.[key]?.chains?.map?.((chain: any) => {
+        [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
+      });
+
       namespaces[key] = {
         accounts,
-        methods: requiredNamespaces[key].methods,
-        events: requiredNamespaces[key].events,
+        methods: [
+          ...requiredNamespaces[key].methods,
+          ...optionalNamespaces[key].methods,
+        ],
+        events: [
+          ...requiredNamespaces[key].events,
+          ...optionalNamespaces[key].events,
+        ],
+        chains: [
+          ...(requiredNamespaces[key].chains || []),
+          ...(optionalNamespaces[key].chains || []),
+        ],
       };
     });
+
+    console.log('namespaces', JSON.stringify(namespaces, null, 2));
 
     const session = await this._client.approveSession({
       id: proposalId,
