@@ -112,6 +112,7 @@ import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-lis
 import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {WelcomeScreen} from './screens/welcome';
+import {RemoteConfig} from './services/remote-config';
 
 const screenOptions: ScreenOptionType = {
   tab: Platform.select({ios: true, android: false}),
@@ -168,6 +169,7 @@ export const App = () => {
 
     sleep(150)
       .then(() => SplashScreen.hide())
+      .then(() => RemoteConfig.init())
       .then(async () => {
         if (app.getUser().onboarded) {
           await app.init();
