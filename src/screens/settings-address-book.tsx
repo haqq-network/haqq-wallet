@@ -4,8 +4,9 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 
 import {SettingsAddressBook} from '@app/components/settings-address-book';
+import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers/modal';
-import {useApp, useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -13,8 +14,6 @@ type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
 export const SettingsAddressBookScreen =
   ({}: SettingsAddressBookScreenProps) => {
-    const app = useApp();
-
     const [search, setSearch] = useState('');
     const [canAdd, setCanAdd] = useState(false);
     const {navigate} = useTypedNavigation();
@@ -40,7 +39,7 @@ export const SettingsAddressBookScreen =
       app.on('address', subscription);
 
       showModal('qr', {qrWithoutFrom: true});
-    }, [app]);
+    }, []);
 
     const onPressClear = useCallback(() => {
       setSearch('');
