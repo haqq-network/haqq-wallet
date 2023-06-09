@@ -27,6 +27,21 @@ export function dataDifference(item: Proposal) {
   };
 }
 
+export function dataDifferenceBetweenDates(to: string, from: string) {
+  const f = Math.max(new Date(from).getTime(), Date.now());
+  const diff = differenceInSeconds(new Date(to), f);
+
+  const daysLeft = Math.floor(diff / 86400);
+  const hourLeft = Math.floor(diff / (60 * 60)) - daysLeft * 24;
+  const minLeft = Math.floor(diff / 60) - hourLeft * 60 - daysLeft * 24 * 60;
+
+  return {
+    daysLeft,
+    hourLeft,
+    minLeft,
+  };
+}
+
 export function timeLeftPercent(item: Proposal) {
   const dateStart = new Date(item.voting_start_time);
   const createdAt = getCreatedAt(item);

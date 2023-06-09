@@ -109,7 +109,7 @@ export const ProposalScreen = () => {
   };
 
   useEffect(() => {
-    if (item?.status === 'voting') {
+    if (item?.status === 'PROPOSAL_STATUS_VOTING_PERIOD') {
       setModalIsVisible(true);
     }
   }, [item]);

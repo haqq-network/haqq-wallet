@@ -17,7 +17,7 @@ import {
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {
-  dataDifference,
+  dataDifferenceBetweenDates,
   proposalDepositNeeds,
   proposalVotes,
   timeLeftPercent,
@@ -44,7 +44,10 @@ export const VotingCardDetail = forwardRef<
   VotingCardDetailRefInterface,
   VotingCardDetailProps
 >(({item, yourVote, totalCollected}, ref) => {
-  const {daysLeft, minLeft, hourLeft} = dataDifference(item);
+  const {daysLeft, minLeft, hourLeft} = dataDifferenceBetweenDates(
+    item.voting_end_time,
+    item.voting_start_time,
+  );
 
   const isVoting = item.status === 'PROPOSAL_STATUS_VOTING_PERIOD';
   const isDeposited = item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD';

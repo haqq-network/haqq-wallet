@@ -64,7 +64,7 @@ export const VotingLine = memo(
       yes: initPercentYes,
       no: initPercentNo,
       abstain: initPercentAbstain,
-      veto: initPercentVeto,
+      no_with_veto: initPercentVeto,
     });
 
     useImperativeHandle(ref, () => ({
