@@ -11,7 +11,8 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
-import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
+import {useCosmos, useTypedNavigation} from '@app/hooks';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -27,7 +28,7 @@ const initData = {
 };
 
 export const HomeStakingScreen = () => {
-  const {visible} = useWalletsList();
+  const visible = useWalletsVisible();
 
   const [data, setData] = useState({
     ...initData,

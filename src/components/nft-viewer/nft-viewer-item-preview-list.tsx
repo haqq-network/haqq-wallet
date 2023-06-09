@@ -16,6 +16,7 @@ export interface NftViewerItemPreviewListProps {
   data: NftItem[];
   variant: NftViewerItemPreviewVariant;
   scrollEnabled?: boolean;
+
   onPress(item: NftItem): void;
 }
 

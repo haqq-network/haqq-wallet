@@ -1,25 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 
 import {SettingsAccounts} from '@app/components/settings-accounts';
-import {useTypedNavigation, useWallets} from '@app/hooks';
+import {useTypedNavigation, useWalletsList} from '@app/hooks';
 
 export const SettingsAccountsScreen = () => {
   const navigation = useTypedNavigation();
-  const wallets = useWallets();
-  const [rows, setRows] = useState(wallets.getWallets());
-
-  useEffect(() => {
-    setRows(wallets.getWallets());
-
-    const callback = () => {
-      setRows(wallets.getWallets());
-    };
-
-    wallets.on('wallets', callback);
-    return () => {
-      wallets.off('wallets', callback);
-    };
-  }, [wallets]);
+  const wallets = useWalletsList();
 
   const onPressRow = useCallback(
     (address: string) => {
@@ -30,5 +16,5 @@ export const SettingsAccountsScreen = () => {
     [navigation],
   );
 
-  return <SettingsAccounts rows={rows} onPressRow={onPressRow} />;
+  return <SettingsAccounts rows={wallets} onPressRow={onPressRow} />;
 };

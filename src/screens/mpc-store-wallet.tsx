@@ -6,7 +6,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -16,7 +16,6 @@ import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const MpcStoreWalletScreen = () => {
   const route = useTypedRoute<'mpcStoreWallet'>();
-  const wallets = useWallets();
   const navigation = useTypedNavigation();
 
   useEffect(() => {
@@ -61,7 +60,7 @@ export const MpcStoreWalletScreen = () => {
             canNext = balance > 0 || index === 0;
 
             if (canNext) {
-              await wallets.addWallet(
+              await Wallet.create(
                 {
                   address: address,
                   type: WalletType.sss,
@@ -93,7 +92,7 @@ export const MpcStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [navigation, route, wallets]);
+  }, [navigation, route]);
 
   return <></>;
 };

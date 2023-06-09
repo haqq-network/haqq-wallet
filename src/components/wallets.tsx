@@ -17,7 +17,7 @@ import {Banner} from '@app/models/banner';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
-  wallets: Wallet[];
+  wallets: Wallet[] | Results<Wallet>;
   balance: Record<string, number>;
   banners: Results<Banner>;
   walletConnectSessions: SessionTypes.Struct[][];

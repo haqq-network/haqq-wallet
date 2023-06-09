@@ -6,19 +6,19 @@ import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
-import {useTypedNavigation, useUser, useWallets} from '@app/hooks';
+import {useTypedNavigation, useUser} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
-  const wallets = useWallets();
   const [refreshing, setRefreshing] = useState(false);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
-      wallets.addressList,
+      Wallet.addressList(),
       Transaction.getAllByProviderId(user.providerId).snapshot(),
     ),
   );
@@ -26,7 +26,7 @@ export const HomeFeedScreen = () => {
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
 
-    const actions = wallets.addressList.map(
+    const actions = Wallet.addressList().map(
       address =>
         new Promise(resolve => {
           app.emit(Events.onTransactionsLoad, address, resolve);
@@ -42,7 +42,7 @@ export const HomeFeedScreen = () => {
     Promise.all(actions).then(() => {
       setRefreshing(false);
     });
-  }, [wallets]);
+  }, []);
 
   const onPressRow = useCallback(
     (hash: string) => {
@@ -61,24 +61,24 @@ export const HomeFeedScreen = () => {
         changes.deletions.length
       ) {
         setTransactionsList(
-          prepareTransactions(wallets.addressList, collection.snapshot()),
+          prepareTransactions(Wallet.addressList(), collection.snapshot()),
         );
       }
     },
-    [wallets],
+    [],
   );
 
   useEffect(() => {
     const transactions = Transaction.getAllByProviderId(user.providerId);
     setTransactionsList(
-      prepareTransactions(wallets.addressList, transactions.snapshot()),
+      prepareTransactions(Wallet.addressList(), transactions.snapshot()),
     );
 
     transactions.addListener(onTransactionsList);
     return () => {
       transactions.removeListener(onTransactionsList);
     };
-  }, [onTransactionsList, user.providerId, wallets]);
+  }, [onTransactionsList, user.providerId]);
 
   return (
     <HomeFeed

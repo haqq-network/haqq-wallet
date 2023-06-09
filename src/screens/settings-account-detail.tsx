@@ -5,10 +5,11 @@ import {Alert} from 'react-native';
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {hideModal, showModal} from '@app/helpers';
-import {useWallet, useWallets} from '@app/hooks';
+import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -16,7 +17,6 @@ export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
   const params = useTypedRoute<'settingsAccountDetail'>().params;
   const {address} = params;
-  const wallets = useWallets();
   const wallet = useWallet(address);
 
   const onPressRename = useCallback(() => {
@@ -62,7 +62,7 @@ export const SettingsAccountDetailScreen = () => {
           onPress: () => {
             showModal('loading');
             requestAnimationFrame(async () => {
-              await wallets.removeWallet(address);
+              await Wallet.remove(address);
               hideModal('loading');
               navigation.goBack();
               sendNotification(I18N.notificationAccountDeleted);
@@ -71,7 +71,7 @@ export const SettingsAccountDetailScreen = () => {
         },
       ],
     );
-  }, [navigation, address, wallets]);
+  }, [navigation, address]);
 
   const onPressPharse = useCallback(() => {
     navigation.navigate('backup', {accountId: wallet?.accountId!});
