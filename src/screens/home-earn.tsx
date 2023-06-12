@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
@@ -12,7 +13,7 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Raffle, RaffleStatus} from '@app/types';
+import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export const HomeEarnScreen = () => {
@@ -31,6 +32,10 @@ export const HomeEarnScreen = () => {
   useEffect(() => {
     loadRaffles();
   }, [loadRaffles]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.earnOpen);
+  }, []);
 
   const onPressStaking = useCallback(() => {
     navigation.navigate('staking');

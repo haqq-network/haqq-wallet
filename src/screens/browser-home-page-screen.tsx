@@ -3,12 +3,13 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 
 import {BrowserHomePage} from '@app/components/browser-home-page';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useTypedNavigation} from '@app/hooks';
 import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSearchHistory} from '@app/hooks/use-web3-browser-search-history';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
-import {Link} from '@app/types';
+import {AdjustEvents, Link} from '@app/types';
 
 export const STRICT_URLS: Partial<Link>[] = [
   {
@@ -74,6 +75,10 @@ export const BrowserHomePageScreen = () => {
       setFocused(false);
     };
   });
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.browserOpen);
+  }, []);
 
   return (
     <BrowserHomePage
