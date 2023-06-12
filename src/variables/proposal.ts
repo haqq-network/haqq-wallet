@@ -13,35 +13,35 @@ export type ProposalsTagType = [
 
 export const ProposalsTags: ProposalsTagType[] = [
   [
-    'all',
+    '*',
     I18N.homeGovernanceTagAll,
     Color.graphicGreen1,
     Color.textBase3,
     undefined,
   ],
   [
-    'voting',
+    'PROPOSAL_STATUS_VOTING_PERIOD',
     I18N.homeGovernanceTagVoting,
     Color.graphicGreen1,
     Color.textBase3,
     IconsNameUI.time,
   ],
   [
-    'deposited',
+    'PROPOSAL_STATUS_DEPOSIT_PERIOD',
     I18N.homeGovernanceVotingCardDepositPeriod,
     Color.graphicBlue1,
     Color.textBase3,
     IconsNameUI.deposit,
   ],
   [
-    'passed',
+    'PROPOSAL_STATUS_PASSED',
     I18N.homeGovernanceTagPassed,
     undefined,
     Color.textGreen1,
     IconsNameUI.check,
   ],
   [
-    'rejected',
+    'PROPOSAL_STATUS_REJECTED',
     I18N.homeGovernanceTagRejected,
     undefined,
     Color.textRed1,

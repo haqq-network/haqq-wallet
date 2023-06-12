@@ -5,11 +5,11 @@ import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card
 import {app} from '@app/contexts';
 import {captureException, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
+import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
-import {GovernanceVoting} from '@app/models/governance-voting';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {VoteNamesType, WalletType} from '@app/types';
@@ -17,13 +17,13 @@ import {WINDOW_HEIGHT} from '@app/variables/common';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = () => {
-  const {id} = useTypedRoute<'proposal'>().params;
+  const {proposal} = useTypedRoute<'proposal'>().params;
   const {navigate} = useTypedNavigation();
 
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
   const [vote, setVote] = useState<VoteNamesType>();
-  const [item, setItem] = useState(GovernanceVoting.getById(id));
+  const [item, setItem] = useState(proposal);
   const [collectedDeposit, setCollectedDeposit] = useState(0);
   const [modalIsLoading, setModalIsLoading] = useState(false);
   const [modalIsVisible, setModalIsVisible] = useState(false);
@@ -31,14 +31,10 @@ export const ProposalScreen = () => {
   const cosmos = useCosmos();
   const visible = useWalletsVisible();
 
-  useEffect(() => {
-    setItem(GovernanceVoting.getById(id));
-  }, [id]);
-
   const onDepositSubmit = async (address: string) => {
     navigate('proposalDeposit', {
       account: address,
-      proposalId: id,
+      proposal: proposal,
     });
     app.off('wallet-selected-proposal-deposit', onDepositSubmit);
   };
@@ -57,7 +53,7 @@ export const ProposalScreen = () => {
         const query = cosmos.vote(
           transport,
           wallet.path!,
-          item.orderNumber,
+          item.proposal_id,
           opinion,
         );
 
@@ -67,9 +63,8 @@ export const ProposalScreen = () => {
 
         await query;
 
-        const proposal = await cosmos.getProposalDetails(item.orderNumber);
-        GovernanceVoting.create(proposal.proposal);
-        setItem(GovernanceVoting.getById(item.orderNumber));
+        const prop = await cosmos.getProposalDetails(item.proposal_id);
+        setItem(prop.proposal);
 
         setModalIsVisible(false);
         sendNotification(I18N.voteRegistered);
@@ -91,12 +86,9 @@ export const ProposalScreen = () => {
   }, [item, cosmos]);
 
   useEffect(() => {
-    if (item) {
-      cosmos.getProposalDeposits(item.orderNumber).then(voter => {
-        const sum = GovernanceVoting.depositSum(voter);
-        setCollectedDeposit(sum);
-      });
-    }
+    cosmos.getProposalDeposits(item.proposal_id).then(voter => {
+      setCollectedDeposit(depositSum(voter));
+    });
   }, [item, cosmos]);
 
   const onVote = (decision: VoteNamesType) => {
@@ -117,14 +109,10 @@ export const ProposalScreen = () => {
   };
 
   useEffect(() => {
-    if (item?.status === 'voting') {
+    if (item?.status === 'PROPOSAL_STATUS_VOTING_PERIOD') {
       setModalIsVisible(true);
     }
   }, [item]);
-
-  if (!(item && item.isValid())) {
-    return <></>;
-  }
 
   return (
     <Proposal

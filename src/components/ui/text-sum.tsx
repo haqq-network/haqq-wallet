@@ -5,7 +5,6 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
 
 import {Spacer} from './spacer';
@@ -41,7 +40,7 @@ export function TextSum({
   return (
     <View style={[styles.container, viewStyles]}>
       <Text t13 center color={color}>
-        {cleanNumber(sum)}
+        {sum}
       </Text>
       <Spacer width={2} />
       <Text t13 center style={styles.opacityText} color={color}>

@@ -1,24 +1,21 @@
 import React, {useCallback} from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {FlatList, ListRenderItem, View} from 'react-native';
 
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  ProposalsCroppedItem,
-  ProposalsCroppedList,
-  ProposalsTagKeys,
-} from '@app/types';
+import {ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType, ProposalsTags} from '@app/variables/proposal';
 
 import {VotingCard} from './voting-card';
 
 export interface HomeGovernanceProps {
-  proposals: ProposalsCroppedList;
+  proposals: Proposal[];
   statusFilter: ProposalsTagKeys;
-  onPressCard?: (id: number) => void;
+  onPressCard: (id: Proposal) => void;
   onRefresh?: () => void;
   refreshing?: boolean;
   loading?: boolean;
@@ -39,17 +36,11 @@ export const HomeGovernance = ({
   const listHeader = useCallback(() => <Spacer height={12} />, []);
   const listSeparator = useCallback(() => <Spacer height={24} />, []);
   const keyExtractorProposalsItem = useCallback(
-    (item: ProposalsCroppedItem) => String(item.id),
+    (item: Proposal) => item.proposal_id,
     [],
   );
-  const renderProposalsItem: ListRenderItem<ProposalsCroppedItem> = useCallback(
-    ({item}) => (
-      <VotingCard
-        id={item.id}
-        onPress={onPressCard}
-        status={item.status as ProposalsTagKeys}
-      />
-    ),
+  const renderProposalsItem: ListRenderItem<Proposal> = useCallback(
+    ({item}) => <VotingCard item={item} onPress={onPressCard} />,
     [onPressCard],
   );
   const renderProposalTagItem: ListRenderItem<ProposalsTagType> = useCallback(

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -23,7 +24,7 @@ export type ProposalDepositFinishProps = {
   amount: number;
   fee: number;
   txhash: string;
-  title: string;
+  proposal: Proposal;
   onDone: () => void;
 };
 
@@ -31,7 +32,7 @@ export const ProposalDepositFinish = ({
   onDone,
   amount,
   fee,
-  title,
+  proposal,
   txhash,
 }: ProposalDepositFinishProps) => {
   const onPressHash = async () => {
@@ -64,7 +65,7 @@ export const ProposalDepositFinish = ({
         {cleanNumber(amount)} ISLM
       </Text>
       <Text t13 center style={styles.address}>
-        {title}
+        {proposal.content.title}
       </Text>
       <NetworkFee fee={fee} />
       <Spacer />

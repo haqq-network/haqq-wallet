@@ -49,8 +49,6 @@ import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
 import {captureException} from '@app/helpers';
-import {realm} from '@app/models';
-import {GovernanceVoting} from '@app/models/governance-voting';
 import {Provider} from '@app/models/provider';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {DepositResponse, StakingParamsResponse} from '@app/types';
@@ -173,7 +171,7 @@ export class Cosmos {
     );
   }
 
-  getProposalDeposits(proposal_id: number | string) {
+  getProposalDeposits(proposal_id: string) {
     return this.getQuery<DepositResponse>(
       `/cosmos/gov/v1beta1/proposals/${proposal_id}/deposits`,
     );
@@ -367,14 +365,14 @@ export class Cosmos {
   async deposit(
     transport: ProviderInterface,
     hdPath: string,
-    proposalId: number,
+    proposalId: number | string,
     amount: number,
   ) {
     const sender = await this.getSender(transport, hdPath);
     const memo = '';
     const strAmount = new Decimal(amount).mul(WEI);
     const params = {
-      proposalId,
+      proposalId: parseInt(proposalId.toString(), 10),
       deposit: {
         amount: strAmount.toFixed(),
         denom: 'aISLM',
@@ -401,13 +399,13 @@ export class Cosmos {
   async vote(
     transport: ProviderInterface,
     hdPath: string,
-    proposalId: number,
+    proposalId: string,
     option: number,
   ) {
     const sender = await this.getSender(transport, hdPath);
 
     const params = {
-      proposalId,
+      proposalId: parseInt(proposalId, 10),
       option,
     };
 
@@ -643,36 +641,5 @@ export class Cosmos {
           .flat();
       })
       .then(hashes => hashes.filter(Boolean) as string[]);
-  }
-
-  async syncGovernanceVoting() {
-    try {
-      const rows = realm.objects<GovernanceVoting>(
-        GovernanceVoting.schema.name,
-      );
-      const cache: number[] = [];
-
-      for (const row of rows) {
-        cache.push(row.orderNumber);
-      }
-
-      const proposals = await this.getProposals();
-      const hashes = proposals.proposals
-        .map(proposal => {
-          try {
-            return GovernanceVoting.create(proposal);
-          } catch (e) {
-            captureException(e, 'Cosmos.syncGovernanceVoting.getProposals');
-            return null;
-          }
-        })
-        .filter(Boolean);
-
-      cache
-        .filter(r => !hashes.includes(r))
-        .forEach(r => GovernanceVoting.remove(r));
-    } catch (e) {
-      captureException(e, 'Cosmos.syncGovernanceVoting');
-    }
   }
 }

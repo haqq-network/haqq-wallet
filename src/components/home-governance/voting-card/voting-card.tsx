@@ -1,20 +1,20 @@
 import React from 'react';
 
-import {ProposalsTagKeys} from '@app/types';
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 
 import {VotingCardActive} from './voting-card-active';
 import {VotingCardCompleted} from './voting-card-completed';
 
 interface VotingCardProps {
-  id: number;
-  status: ProposalsTagKeys;
-  onPress?: (hash: number) => void;
+  item: Proposal;
+  onPress: (proposal: Proposal) => void;
 }
 
-export function VotingCard({id, onPress, status}: VotingCardProps) {
-  if (status === 'voting' || status === 'deposited') {
-    return <VotingCardActive id={id} onPress={onPress} />;
+export function VotingCard({item, onPress}: VotingCardProps) {
+  console.log('item', item);
+  if (item.status === 'voting' || item.status === 'deposited') {
+    return <VotingCardActive item={item} onPress={onPress} />;
   } else {
-    return <VotingCardCompleted id={id} onPress={onPress} />;
+    return <VotingCardCompleted item={item} onPress={onPress} />;
   }
 }

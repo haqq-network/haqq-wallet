@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Image, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -19,7 +20,7 @@ import {WEI} from '@app/variables/common';
 export type ProposalDepositPreviewProps = {
   amount: number;
   fee: number;
-  title: string;
+  proposal: Proposal;
   error?: string;
   disabled: boolean;
   onSend: () => void;
@@ -29,7 +30,7 @@ export const ProposalDepositPreview = ({
   amount,
   fee,
   error,
-  title,
+  proposal,
   disabled,
   onSend,
 }: ProposalDepositPreviewProps) => {
@@ -59,7 +60,7 @@ export const ProposalDepositPreview = ({
         style={styles.subtitle}
       />
       <Text t10 center style={styles.contact}>
-        {title}
+        {proposal.content.title}
       </Text>
 
       <View style={styles.info}>
