@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 
 import {OnboardingRepeatPin} from '@app/components/onboarding-repeat-pin';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const OnboardingRepeatPinScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'onboardingRepeatPin'>();
-  const app = useApp();
 
   const onSetPin = useCallback(
     (pin: string) => {
@@ -24,7 +24,7 @@ export const OnboardingRepeatPinScreen = () => {
         }
       });
     },
-    [app, navigation, route.params],
+    [navigation, route.params],
   );
 
   return <OnboardingRepeatPin onSetPin={onSetPin} />;

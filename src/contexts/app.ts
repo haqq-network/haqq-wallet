@@ -1,5 +1,3 @@
-import {createContext} from 'react';
-
 import {EventEmitter} from 'events';
 
 import {appleAuth} from '@invertase/react-native-apple-authentication';
@@ -369,8 +367,4 @@ class App extends EventEmitter {
   }
 }
 
-export type AppType = typeof App;
-
 export const app = new App();
-
-export const AppContext = createContext(app);

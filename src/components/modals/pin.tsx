@@ -6,15 +6,15 @@ import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
 import {Text} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useApp, useTheme} from '@app/hooks';
+import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export type PinModalProps = {};
 
 export const PinModal = () => {
-  const app = useApp();
   const pinRef = useRef<PinInterface>();
   const theme = useTheme();
   const [showRestore, setShowRestore] = useState(false);
@@ -23,7 +23,7 @@ export const PinModal = () => {
     if (app.pinBanned) {
       pinRef?.current?.locked(app.pinBanned);
     }
-  }, [app, pinRef]);
+  }, [pinRef]);
 
   const onPin = useCallback(
     (pin: string) => {
@@ -44,7 +44,7 @@ export const PinModal = () => {
           }
         });
     },
-    [app, pinRef],
+    [pinRef],
   );
 
   return (

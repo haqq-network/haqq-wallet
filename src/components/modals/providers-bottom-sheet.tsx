@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
-import {useApp} from '@app/hooks';
+import {app} from '@app/contexts';
 import {Modals} from '@app/types';
 
 import {SettingsProvidersRow} from '../settings-providers/settings-providers-row';
@@ -15,14 +15,12 @@ export function ProvidersBottomSheet({
   eventSuffix = '',
   onClose,
 }: Modals['providersBottomSheet']) {
-  const app = useApp();
-
   const onPressProvider = useCallback(
     (providerId: string) => {
       onClose?.();
       app.emit(`provider-selected${eventSuffix}`, providerId);
     },
-    [app, eventSuffix, onClose],
+    [eventSuffix, onClose],
   );
 
   const onCloseModal = () => {
@@ -34,7 +32,7 @@ export function ProvidersBottomSheet({
     return () => {
       app.emit(`provider-selected-reject${eventSuffix}`);
     };
-  }, [onPressProvider, app, eventSuffix]);
+  }, [onPressProvider, eventSuffix]);
 
   return (
     <BottomSheet

@@ -1,12 +1,12 @@
 import React, {useCallback, useState} from 'react';
 
 import {OnboardingBiometry} from '@app/components/onboarding-biometry';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const OnboardingBiometryScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'onboardingBiometry'>();
-  const app = useApp();
   const [error, setError] = useState('');
   const {biometryType} = route.params;
 
@@ -27,7 +27,7 @@ export const OnboardingBiometryScreen = () => {
         setError(e.message);
       }
     }
-  }, [app, onClickSkip]);
+  }, [onClickSkip]);
 
   return (
     <OnboardingBiometry

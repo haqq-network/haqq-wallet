@@ -15,10 +15,10 @@ import {
   Spacer,
   TextField,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
-import {useApp} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
@@ -38,7 +38,6 @@ export const TransactionAddress = ({
   loading = false,
   onAddress,
 }: TransactionAddressProps) => {
-  const app = useApp();
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
@@ -80,7 +79,7 @@ export const TransactionAddress = ({
     };
     app.on('address', subscription);
     showModal('qr');
-  }, [app]);
+  }, []);
 
   const onPressClear = useCallback(() => {
     setAddress('');

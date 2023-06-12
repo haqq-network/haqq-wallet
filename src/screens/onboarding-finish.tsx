@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {Finish} from '@app/components/finish';
+import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
@@ -12,8 +13,8 @@ import {WalletConnect} from '@app/services/wallet-connect';
 export const OnboardingFinishScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'createFinish'>();
+  const user = useUser();
 
-  const app = useApp();
   const title: I18N = useMemo(
     () =>
       route.params.action === 'create'
@@ -23,17 +24,17 @@ export const OnboardingFinishScreen = () => {
   );
 
   const onEnd = useCallback(() => {
-    if (app.getUser().onboarded) {
+    if (user.onboarded) {
       navigation.getParent()?.goBack();
     } else {
-      app.getUser().onboarded = true;
+      user.onboarded = true;
       WalletConnect.instance.init();
       navigation.replace('home');
     }
     requestAnimationFrame(() => {
       app.emit(Events.onAppStarted);
     });
-  }, [app, navigation]);
+  }, [user, navigation]);
 
   useEffect(() => {
     onTrackEvent(route.params.event);

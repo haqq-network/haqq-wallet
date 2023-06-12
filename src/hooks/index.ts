@@ -5,7 +5,6 @@ export * from './use-user';
 export * from './use-wallet';
 export * from './use-wallets-list';
 export * from './use-wallets-visible';
-export * from './use-app';
 export * from './use-typed-route';
 export * from './use-cosmos';
 export * from './use-proposals';
