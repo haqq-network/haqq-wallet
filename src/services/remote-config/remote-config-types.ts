@@ -5,6 +5,7 @@ export type WalletConnectAllowedNamespaces = Omit<
   'accounts'
 >;
 
-export interface ConfigTypes {
+export interface RemoteConfigTypes {
   wallet_connect: WalletConnectAllowedNamespaces;
+  web3_app_whitelist: string[];
 }
