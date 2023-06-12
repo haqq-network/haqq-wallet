@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Validator} from '@evmos/provider/dist/rest/staking';
 
 import {StakingValidators} from '@app/components/staking-validators';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {validatorsSort} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
@@ -11,7 +12,7 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {ValidatorItem} from '@app/types';
+import {AdjustEvents, ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {
   const navigation = useTypedNavigation();
@@ -21,6 +22,10 @@ export const StakingValidatorsScreen = () => {
     Record<string, Record<StakingMetadataType, number>>
   >({});
   const [validators, setValidators] = useState<Validator[]>([]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.stakingValidators);
+  }, []);
 
   const onCache = useThrottle(() => {
     const cache = StakingMetadata.getAll().reduce<Record<string, any>>(

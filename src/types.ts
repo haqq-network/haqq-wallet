@@ -29,6 +29,17 @@ export enum AdjustEvents {
   pushNotifications = '2x889j',
   pushChannelSubscribe = '5juk3x',
   pushChannelUnsubscribe = 'za2nkc',
+  newsOpenItem = 'gpha6n',
+  newsScrolledItem = 'egpogy',
+  newsOpen = 'dh3eeu',
+  earnOpen = '9tn1b8',
+  browserOpen = 'q77dcs',
+  governanceOpen = 'txvtb0',
+  settingsOpen = '450fpt',
+  settingsAccountDetails = 'xbxrpy',
+  stakingOpen = 'lzf6ty',
+  stakingDelegate = 'xh19jh',
+  stakingValidators = 'ejspf6',
 }
 
 export enum TransactionSource {

@@ -3,8 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 
 import {HomeGovernance} from '@app/components/home-governance';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
-import {ProposalsTagKeys} from '@app/types';
+import {AdjustEvents, ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType} from '@app/variables/proposal';
 
 export const HomeGovernanceScreen = () => {
@@ -28,6 +29,10 @@ export const HomeGovernanceScreen = () => {
         setLoading(false);
       });
   }, [cosmos]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.governanceOpen);
+  }, []);
 
   const onPressCard = useCallback(
     (proposal: Proposal) => {

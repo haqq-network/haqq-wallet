@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {captureException, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
@@ -15,7 +16,7 @@ import {
   useWallet,
 } from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {WalletType} from '@app/types';
+import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
 export const StakingDelegatePreviewScreen = () => {
@@ -73,6 +74,10 @@ export const StakingDelegatePreviewScreen = () => {
           errMessage = resp.tx_response.raw_log ?? '';
           throw new Error('transaction_error');
         }
+
+        onTrackEvent(AdjustEvents.stakingDelegate, {
+          operator_address: validator.operator_address,
+        });
 
         navigation.navigate('stakingDelegateFinish', {
           txhash: resp.tx_response.txhash,

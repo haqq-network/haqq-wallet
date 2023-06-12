@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
 import {some} from 'lodash';
 import {Image, Linking} from 'react-native';
+import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
+import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import Markdown from 'react-native-markdown-package';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {createTheme} from '@app/helpers';
 import {News} from '@app/models/news';
+import {AdjustEvents} from '@app/types';
 
 type NodeImage = {
   alt: string;
@@ -111,8 +115,28 @@ const rules = {
 };
 
 export const NewsDetail = ({item}: NewsDetailProps) => {
+  const scrolled = useRef(false);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.newsOpenItem, {
+      id: item.id,
+    });
+  }, [item.id]);
+
+  const onScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (!scrolled.current && e.nativeEvent.contentOffset.y > 50) {
+        onTrackEvent(AdjustEvents.newsScrolledItem, {
+          id: item.id,
+        });
+        scrolled.current = true;
+      }
+    },
+    [item.id],
+  );
+
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} onScroll={onScroll}>
       <Text t3>{item.title}</Text>
       <Spacer height={12} />
       <Text t17 color={Color.textBase2}>
