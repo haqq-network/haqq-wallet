@@ -1,14 +1,11 @@
-import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {
   differenceInMilliseconds,
   differenceInSeconds,
   getSeconds,
 } from 'date-fns';
-import Decimal from 'decimal.js';
 
 import {I18N} from '@app/i18n';
-import {realm} from '@app/models/index';
 import {DepositResponse, VotesType} from '@app/types';
 
 export const GovernanceVotingState = {
@@ -185,107 +182,4 @@ export class GovernanceVoting extends Realm.Object {
       0,
     );
   }
-
-  // async getDepositor(address: string) {
-  //   try {
-  //     const cosmos = new Cosmos(app.provider!);
-  //     const details = await cosmos.getProposalDepositor(
-  //       this.orderNumber,
-  //       address,
-  //     );
-  //     return details;
-  //   } catch (error) {
-  //     captureException(error);
-  //     return [];
-  //   }
-  // }
-
-  static getById(id: number) {
-    return realm.objectForPrimaryKey<GovernanceVoting>(
-      GovernanceVoting.schema.name,
-      id,
-    );
-  }
-
-  static keyFromStatus(status: string) {
-    return (
-      {
-        proposal_status_voting_period: 'voting',
-        proposal_status_deposit_period: 'deposited',
-        proposal_status_passed: 'passed',
-        proposal_status_rejected: 'rejected',
-      }[status] ?? ''
-    );
-  }
-
-  static remove(id: number) {
-    const obj = realm.objectForPrimaryKey<GovernanceVoting>(
-      GovernanceVoting.schema.name,
-      id,
-    );
-
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
-      });
-    }
-  }
-
-  static create(proposal: Proposal) {
-    const {no_with_veto: veto, ...copy}: any = proposal.final_tally_result;
-    delete copy.no_with_veto;
-    const votes: any = {};
-
-    Object.entries({...copy, veto}).map(([key, val]) => {
-      votes[key] = Math.round(Number(val));
-    });
-
-    realm.write(() => {
-      realm.create(
-        GovernanceVoting.schema.name,
-        {
-          status: GovernanceVoting.keyFromStatus(proposal.status.toLowerCase()),
-          endDate: proposal.voting_end_time,
-          startDate: proposal.voting_start_time,
-          depositNeeds: JSON.stringify(proposal.total_deposit),
-          depositEndTime: proposal.deposit_end_time,
-          createdAtTime: proposal.submit_time,
-          orderNumber: Number(proposal.proposal_id),
-          description: proposal.content.description,
-          title: proposal.content.title,
-          type: proposal.content['@type'],
-          changes:
-            'changes' in proposal.content
-              ? JSON.stringify(proposal.content.changes, null, 4)
-              : null,
-          plan:
-            'plan' in proposal.content
-              ? JSON.stringify(proposal.content.plan, null, 4)
-              : null,
-
-          votes: JSON.stringify(votes),
-          deposit: proposal.total_deposit
-            .reduce((memo, curr) => memo.plus(curr.amount), new Decimal(0))
-            .toString(),
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
-
-    return Number(proposal.proposal_id);
-  }
-
-  static getAll() {
-    return realm
-      .objects<GovernanceVoting>(GovernanceVoting.schema.name)
-      .sorted('orderNumber', true);
-  }
 }
-
-export type ProposalRealmType = GovernanceVoting & Realm.Object<unknown, never>;
-
-export type ProposalsRealmType = Realm.Results<ProposalRealmType>;
-
-export type ProposalRealmSubType = Realm.CollectionChangeCallback<
-  GovernanceVoting & Realm.Object<unknown, never>
->;
