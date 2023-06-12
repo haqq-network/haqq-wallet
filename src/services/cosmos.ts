@@ -367,14 +367,14 @@ export class Cosmos {
   async deposit(
     transport: ProviderInterface,
     hdPath: string,
-    proposalId: number,
+    proposalId: number | string,
     amount: number,
   ) {
     const sender = await this.getSender(transport, hdPath);
     const memo = '';
     const strAmount = new Decimal(amount).mul(WEI);
     const params = {
-      proposalId,
+      proposalId: parseInt(proposalId.toString(), 10),
       deposit: {
         amount: strAmount.toFixed(),
         denom: 'aISLM',
@@ -407,7 +407,7 @@ export class Cosmos {
     const sender = await this.getSender(transport, hdPath);
 
     const params = {
-      proposalId,
+      proposalId: parseInt(proposalId, 10),
       option,
     };
 

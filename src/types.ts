@@ -334,18 +334,16 @@ export type RootStackParamList = {
   };
   proposalDepositForm: {
     account: string;
-    proposalId: string;
-    title: string;
+    proposal: Proposal;
   };
   proposalDepositPreview: {
-    title: string;
     fee: number;
     account: string;
     amount: number;
-    proposalId: number;
+    proposal: Proposal;
   };
   proposalDepositFinish: {
-    title: string;
+    proposal: Proposal;
     fee: number;
     txhash: string;
     amount: number;

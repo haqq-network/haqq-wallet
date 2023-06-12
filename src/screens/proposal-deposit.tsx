@@ -1,11 +1,10 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {GovernanceVoting} from '@app/models/governance-voting';
 import {ProposalDepositFinishScreen} from '@app/screens/proposal-deposit-finish';
 import {ProposalDepositFormScreen} from '@app/screens/proposal-deposit-form';
 import {ProposalDepositPreviewScreen} from '@app/screens/proposal-deposit-preview';
@@ -31,11 +30,7 @@ const screenOptionsFinish: ScreenOptionType = {
 };
 
 export const ProposalDepositScreen = () => {
-  const {account, proposalId} = useTypedRoute<'proposalDeposit'>().params;
-
-  const item = useMemo(() => {
-    return GovernanceVoting.getById(proposalId);
-  }, [proposalId]);
+  const {account, proposal} = useTypedRoute<'proposalDeposit'>().params;
 
   const fee = parseInt(Cosmos.fee.amount, 10);
 
@@ -46,19 +41,19 @@ export const ProposalDepositScreen = () => {
         <ProposalDepositStack.Screen
           name="proposalDepositForm"
           component={ProposalDepositFormScreen}
-          initialParams={{account, proposalId, title: item?.title}}
+          initialParams={{account, proposal}}
           options={screenOptionsForm}
         />
         <ProposalDepositStack.Screen
           name="proposalDepositPreview"
-          initialParams={{title: item?.title}}
+          initialParams={{proposal}}
           component={ProposalDepositPreviewScreen}
           options={screenOptionsPreview}
         />
       </ProposalDepositStack.Group>
       <ProposalDepositStack.Screen
         name="proposalDepositFinish"
-        initialParams={{account, fee}}
+        initialParams={{account, fee, proposal}}
         component={ProposalDepositFinishScreen}
         options={screenOptionsFinish}
       />
