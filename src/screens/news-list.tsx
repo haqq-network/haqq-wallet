@@ -3,9 +3,11 @@ import {useCallback, useEffect, useState} from 'react';
 import {Collection, CollectionChangeSet} from 'realm';
 
 import {News as NewsComponent} from '@app/components/news';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
+import {AdjustEvents} from '@app/types';
 
 export const NewsListScreen = () => {
   const navigation = useTypedNavigation();
@@ -15,6 +17,11 @@ export const NewsListScreen = () => {
       .sorted('publishedAt', true)
       .snapshot(),
   );
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.newsOpen);
+  }, []);
+
   useEffect(() => {
     VariablesBool.set('isNewNews', false);
 

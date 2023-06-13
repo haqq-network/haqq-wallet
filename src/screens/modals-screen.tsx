@@ -11,12 +11,12 @@ import {makeID} from '@app/utils';
 type ModalStates<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
-> = ModalsList[ModalName] & {type: ModalName};
+> = ModalsList[ModalName] & {type: ModalName; uid: string};
 
-type ModalState = ModalStates<Modals, any>;
+type ModalState = ModalStates<Modals, keyof Modals>;
 
 export type ModalProps = {
-  initialModal?: ModalState;
+  initialModal?: Partial<ModalState>;
 };
 
 export const ModalsScreen = ({initialModal}: ModalProps) => {

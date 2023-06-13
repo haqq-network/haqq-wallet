@@ -1,9 +1,10 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {Alert} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
 import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
@@ -12,6 +13,7 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {AdjustEvents} from '@app/types';
 
 export const SettingsAccountDetailScreen = () => {
   const navigation = useTypedNavigation();
@@ -28,6 +30,12 @@ export const SettingsAccountDetailScreen = () => {
       address: address,
     });
   }, [navigation, address]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.settingsAccountDetails, {
+      address: address,
+    });
+  }, [address]);
 
   const onToggleIsHidden = useCallback(() => {
     if (wallet) {

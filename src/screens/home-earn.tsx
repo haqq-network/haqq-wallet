@@ -10,6 +10,7 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
@@ -24,7 +25,7 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Raffle, RaffleStatus} from '@app/types';
+import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
 import {WalletType} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 import {MIN_AMOUNT} from '@app/variables/common';
@@ -105,6 +106,10 @@ export const HomeEarnScreen = () => {
   useEffect(() => {
     loadRaffles();
   }, [loadRaffles]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.earnOpen);
+  }, []);
 
   const onPressStaking = useCallback(() => {
     navigation.navigate('staking');
