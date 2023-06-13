@@ -3,7 +3,7 @@ import {HAQQ_BACKEND} from '@env';
 import {Raffle} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
-import {ConfigTypes} from './remote-config';
+import {RemoteConfigTypes} from './remote-config';
 
 export type CaptchaRequestResponse = {
   id: string;
@@ -124,12 +124,12 @@ export class Backend {
     return resp;
   }
 
-  async getRemoteConfig(): Promise<ConfigTypes> {
+  async getRemoteConfig(): Promise<RemoteConfigTypes> {
     const response = await fetch(`${HAQQ_BACKEND}config`, {
       method: 'GET',
       headers: Backend.headers,
     });
 
-    return getHttpResponse<ConfigTypes>(response);
+    return getHttpResponse<RemoteConfigTypes>(response);
   }
 }

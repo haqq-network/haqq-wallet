@@ -1,7 +1,7 @@
 import {VariablesString} from '@app/models/variables-string';
 import {isValidJSON} from '@app/utils';
 
-import {ConfigTypes} from './remote-config-types';
+import {RemoteConfigTypes} from './remote-config-types';
 
 import {Backend} from '../backend';
 
@@ -33,14 +33,19 @@ export class RemoteConfig {
     }
   }
 
-  public static get<K extends keyof ConfigTypes>(
+  public static get<K extends keyof RemoteConfigTypes>(
     key: K,
-  ): ConfigTypes[K] | undefined {
+  ): RemoteConfigTypes[K] | undefined {
     const cacheString = VariablesString.get(KEY);
 
     if (isValidJSON(cacheString)) {
       const config = JSON.parse(cacheString);
-      return config[key];
+      const value = config[key];
+      // TODO: remove mock data
+      if (key === 'web3_app_whitelist' && !value) {
+        return ['https://app.haqq.network'] as RemoteConfigTypes[K];
+      }
+      return value;
     }
 
     console.error('🔴 [RemoteConfig]: not valid JSON', cacheString);
