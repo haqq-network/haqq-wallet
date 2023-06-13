@@ -4,13 +4,13 @@ import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {
   awaitForPopupClosed,
   captureException,
   getProviderInstanceForWallet,
 } from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
@@ -25,10 +25,8 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
-import {WalletType} from '@app/types';
-import {NUM_PRECISION, WEI} from '@app/variables/common';
-import {MIN_AMOUNT} from '@app/variables/common';
+import {AdjustEvents, Raffle, RaffleStatus, WalletType} from '@app/types';
+import {MIN_AMOUNT, NUM_PRECISION, WEI} from '@app/variables/common';
 
 const initData = {
   stakingSum: 0,
