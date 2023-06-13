@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-svg/src/lib/extract/extractTransform.ts b/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
+index 3961868..f19e351 100644
+--- a/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
++++ b/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
+@@ -68,6 +68,7 @@ export function transformsArrayToProps(
+   transformObjectsArray: TransformsStyle['transform'],
+ ) {
+   const props: TransformProps = {};
++  // @ts-ignore
+   transformObjectsArray?.forEach((transformObject) => {
+     const keys = Object.keys(transformObject);
+     if (keys.length !== 1) {
