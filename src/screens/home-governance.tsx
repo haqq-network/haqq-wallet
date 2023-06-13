@@ -49,7 +49,7 @@ export const HomeGovernanceScreen = () => {
         setProposals(p.proposals);
       })
       .finally(() => {
-        setLoading(false);
+        setRefreshing(false);
       });
   }, [cosmos]);
 
