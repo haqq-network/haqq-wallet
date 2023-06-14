@@ -24,6 +24,7 @@
 		191A5E34914F492BA629B950 /* bluetooth-unauthorized@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */; };
 		1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */; };
 		1A6D4E362A149298001B1549 /* staking_on_earn_page_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */; };
+		1AFE83802A39B181001CFE73 /* moving_arrow_captcha.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */; };
 		210DBD2128E6A8D90036A851 /* Haptic.m in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2028E6A8D90036A851 /* Haptic.m */; };
 		210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2228E6A8E70036A851 /* Haptic.swift */; };
 		210E9B952907F09400AC3C34 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 210E9B942907F09400AC3C34 /* Version.m */; };
@@ -172,6 +173,7 @@
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
 		1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_dark.riv; sourceTree = "<group>"; };
 		1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_light.riv; sourceTree = "<group>"; };
+		1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = moving_arrow_captcha.riv; sourceTree = "<group>"; };
 		1BBEC351BC0E4923BD204391 /* card-circles-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0.png"; path = "../assets/images/card-circles-0.png"; sourceTree = "<group>"; };
 		1F07DE85536A472686AD07FB /* mnemonic-notify@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify@2x.png"; path = "../assets/images/mnemonic-notify@2x.png"; sourceTree = "<group>"; };
 		1FE6B84566F34C3DA53DEDC2 /* bluetooth-powered-off@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off@3x.png"; path = "../assets/images/bluetooth-powered-off@3x.png"; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 		21AB3DC02A0E4539002D9727 /* animations */ = {
 			isa = PBXGroup;
 			children = (
+				1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */,
 				1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */,
 				1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */,
 				21AB3DC42A0E45BE002D9727 /* thumbs_up.riv */,
@@ -749,6 +752,7 @@
 				0DC659CFE3ED45AFAAD09C69 /* card-maks@2x.png in Resources */,
 				4ACA9EE834BF4E829F2235AB /* card-maks@3x.png in Resources */,
 				01C80C029C264E059AFF702C /* card-rhombus-0.png in Resources */,
+				1AFE83802A39B181001CFE73 /* moving_arrow_captcha.riv in Resources */,
 				8799854AD253405E84309D53 /* card-rhombus-0@2x.png in Resources */,
 				E173578A6FFA4632A2C1E840 /* card-rhombus-0@3x.png in Resources */,
 				C799065A631B4EFCA1E0CB6B /* exclamation-mark-error.png in Resources */,

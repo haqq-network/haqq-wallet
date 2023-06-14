@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
 import {ScrollView, TouchableOpacity, View} from 'react-native';
-import Rive, {RiveRef} from 'rive-react-native';
+import {RiveRef} from 'rive-react-native';
 
 import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
@@ -20,6 +20,7 @@ import {
   Text,
 } from './ui';
 import {RaffleBlockList} from './ui/raffle-block-list';
+import {RiveWrapper} from './ui/rive-wrapper';
 import {Separator} from './ui/separator';
 
 export enum RaffleStateEnum {
@@ -82,7 +83,9 @@ export const HomeEarn = ({
         <View style={styles.stakingCard}>
           <View style={styles.row}>
             <View style={styles.earnStakingAnimation}>
-              <Rive
+              <RiveWrapper
+                width={62}
+                height={62}
                 ref={stakingAnimationRef}
                 resourceName={stakingAnimationName}
                 autoplay={false}

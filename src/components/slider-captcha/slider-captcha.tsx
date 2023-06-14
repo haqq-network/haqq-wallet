@@ -34,6 +34,7 @@ import {getBase64ImageSource, sleep} from '@app/utils';
 
 import {CaptchaDataTypes} from '../captcha';
 import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
+import {RiveWrapper} from '../ui/rive-wrapper';
 
 export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
@@ -454,11 +455,11 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
             <First>
               {sliderState === SliderCaptchaState.initial && (
                 <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon
-                    i24
-                    style={styles.arrowForward}
-                    color={Color.graphicBase3}
-                    name={IconsName.arrow_forward}
+                  <RiveWrapper
+                    width={24}
+                    height={24}
+                    resourceName={'moving_arrow_captcha'}
+                    autoplay={true}
                   />
                 </Animated.View>
               )}
@@ -572,9 +573,6 @@ const styles = createTheme({
     height: 48,
     borderRadius: 8,
     backgroundColor: Color.graphicSecond1,
-  },
-  arrowForward: {
-    transform: [{translateX: -6}],
   },
   successCircle: {
     position: 'absolute',
