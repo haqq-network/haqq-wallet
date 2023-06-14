@@ -667,6 +667,9 @@ export enum I18N {
   nftDetailsAttributes,
   nftDetailsSend,
   transactionNftFinishSendingComplete,
+  domainBlockedTitle,
+  domainBlockedDescription1,
+  domainBlockedDescription2,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1463,4 +1466,7 @@ const en: Record<I18N, string> = {
   [I18N.nftDetailsSend]: 'Send',
   [I18N.nftDetailsYourItems]: 'Your items',
   [I18N.transactionNftFinishSendingComplete]: 'Sending Completed',
+  [I18N.domainBlockedTitle]: 'Domain is blocked',
+  [I18N.domainBlockedDescription1]: 'Domain ',
+  [I18N.domainBlockedDescription2]: ' not allwed for this operation.',
 };

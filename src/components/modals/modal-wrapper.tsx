@@ -27,6 +27,8 @@ import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
 import {Modals, ModalsListBase} from '@app/types';
 
+import {DomainBlocked} from './domain-blocked';
+
 export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
@@ -97,6 +99,8 @@ export const ModalWrapper = ({
         return <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />;
       case 'captcha':
         return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
+      case 'domainBlocked':
+        return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

@@ -41,10 +41,6 @@ export class RemoteConfig {
     if (isValidJSON(cacheString)) {
       const config = JSON.parse(cacheString);
       const value = config[key];
-      // TODO: remove mock data
-      if (key === 'web3_app_whitelist' && !value) {
-        return ['https://app.haqq.network'] as RemoteConfigTypes[K];
-      }
       return value;
     }
 
