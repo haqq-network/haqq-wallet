@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -10,7 +11,6 @@ import {generateUUID} from '@app/utils';
 export const TransactionSumScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionSum'>();
-  const app = useApp();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
 
@@ -28,7 +28,7 @@ export const TransactionSumScreen = () => {
     return () => {
       app.off(event, onAddress);
     };
-  }, [app, event, onAddress]);
+  }, [event, onAddress]);
 
   const onAmount = useCallback(
     (amount: number) => {

@@ -14,6 +14,8 @@ import {I18N} from '@app/i18n';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {sendNotification} from '@app/services/toast';
 
+import {RemoteConfig} from './remote-config';
+
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
 
 export class WalletConnect extends EventEmitter {
@@ -161,33 +163,55 @@ export class WalletConnect extends EventEmitter {
 
     console.log('approveSession', proposalId, JSON.stringify(params, null, 2));
 
-    const {requiredNamespaces, relays, optionalNamespaces} = params;
+    const {requiredNamespaces, optionalNamespaces, relays} = params;
 
+    const allowedNamespaces = RemoteConfig.get('wallet_connect');
+
+    if (!allowedNamespaces) {
+      throw Error('[WalletConnect]: allowedNamespaces not found');
+    }
     const namespaces: SessionTypes.Namespaces = {};
-    Object.keys(requiredNamespaces).forEach(key => {
-      const accounts: string[] = [];
-      requiredNamespaces?.[key]?.chains?.map?.((chain: any) => {
-        [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
+
+    Object.keys(allowedNamespaces).forEach(namespace => {
+      const allowed = allowedNamespaces[namespace];
+      const required = requiredNamespaces[namespace];
+      const optional = optionalNamespaces[namespace];
+
+      const methods: string[] = [];
+      [...required?.methods, ...optional?.methods].forEach(method => {
+        if (
+          !methods.includes?.(method) &&
+          allowed.methods?.includes?.(method)
+        ) {
+          methods.push(method);
+        }
       });
 
-      optionalNamespaces?.[key]?.chains?.map?.((chain: any) => {
-        [currentETHAddress].map(acc => accounts.push(`${chain}:${acc}`));
+      const events: string[] = [];
+      [...required?.events, ...optional?.events].forEach(event => {
+        if (!events.includes?.(event) && allowed.events?.includes?.(event)) {
+          events.push(event);
+        }
       });
 
-      namespaces[key] = {
+      const chains: string[] = [];
+      [...(required?.chains || []), ...(optional?.chains || [])].forEach(
+        chain => {
+          if (!chains.includes?.(chain) && allowed.chains?.includes?.(chain)) {
+            chains.push(chain);
+          }
+        },
+      );
+
+      const accounts = Array.from(chains).map(
+        chain => `${chain}:${currentETHAddress}`,
+      );
+
+      namespaces[namespace] = {
         accounts,
-        methods: [
-          ...requiredNamespaces[key].methods,
-          ...optionalNamespaces[key].methods,
-        ],
-        events: [
-          ...requiredNamespaces[key].events,
-          ...optionalNamespaces[key].events,
-        ],
-        chains: [
-          ...(requiredNamespaces[key].chains || []),
-          ...(optionalNamespaces[key].chains || []),
-        ],
+        methods,
+        events,
+        chains,
       };
     });
 

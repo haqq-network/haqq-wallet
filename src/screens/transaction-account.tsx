@@ -6,7 +6,7 @@ import {useTypedNavigation, useTypedRoute, useWalletsList} from '@app/hooks';
 export const TransactionAccountScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionAccount'>();
-  const rows = useWalletsList();
+  const wallets = useWalletsList();
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate('transactionAddress', {
@@ -17,5 +17,5 @@ export const TransactionAccountScreen = () => {
     [navigation, route.params],
   );
 
-  return <TransactionAccount rows={rows.wallets} onPressRow={onPressRow} />;
+  return <TransactionAccount rows={wallets} onPressRow={onPressRow} />;
 };

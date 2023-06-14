@@ -19,6 +19,7 @@ export interface TopTabNavigatorExtendedProps {
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
+
   onTabPress(tab: TabType, index: number): void;
 }
 

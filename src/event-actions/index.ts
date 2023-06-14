@@ -30,7 +30,7 @@ import {callbackWrapper, throttle} from '@app/utils';
 app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 app.on(Events.onDeepLink, onDeepLink);
 app.on(Events.onWalletCreate, onWalletCreate);
-app.on(Events.onWalletRemove, onWalletRemove);
+app.on(Events.onWalletRemove, callbackWrapper(onWalletRemove));
 app.on(Events.onStakingSync, throttle(onStakingSync, 1000));
 app.on(Events.onTransactionsLoad, callbackWrapper(onTransactionsLoad));
 app.on(Events.onAppActive, callbackWrapper(onAppActive));

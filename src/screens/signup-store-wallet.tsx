@@ -5,7 +5,7 @@ import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -15,7 +15,6 @@ export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'createStoreWallet'>();
 
-  const wallets = useWallets();
   const goBack = useCallback(() => {
     navigation.reset({
       routes: [{name: 'welcome'}, {name: 'signup', params: {next: 'restore'}}],
@@ -42,17 +41,17 @@ export const SignUpStoreWalletScreen = () => {
         }, 0);
         const hdPath = `${ETH_HD_SHORT_PATH}/${nextHdPathIndex}`;
         const name =
-          wallets.getSize() === 0
+          Wallet.getSize() === 0
             ? MAIN_ACCOUNT_NAME
             : getText(I18N.signupStoreWalletAccountNumber, {
-                number: `${wallets.getSize() + 1}`,
+                number: `${Wallet.getSize() + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
         const type =
           provider instanceof ProviderSSSReactNative
             ? WalletType.sss
             : WalletType.mnemonic;
-        await wallets.addWallet(
+        await Wallet.create(
           {
             address,
             accountId: provider.getIdentifier(),
@@ -77,7 +76,7 @@ export const SignUpStoreWalletScreen = () => {
         }
       }
     }, 350);
-  }, [goBack, navigation, route.params, wallets]);
+  }, [goBack, navigation, route.params]);
 
   return <View />;
 };

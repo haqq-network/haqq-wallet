@@ -7,7 +7,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const ProposalDepositFinishScreen = () => {
   const navigation = useTypedNavigation();
-  const {params} = useTypedRoute<'proposalDepositFinish'>();
+  const route = useTypedRoute<'proposalDepositFinish'>();
 
   const onDone = useCallback(() => {
     app.emit(Events.onStakingSync);
@@ -17,10 +17,10 @@ export const ProposalDepositFinishScreen = () => {
   return (
     <ProposalDepositFinish
       onDone={onDone}
-      txhash={params.txhash}
-      title={params.title}
-      amount={params.amount}
-      fee={params.fee}
+      txhash={route.params.txhash}
+      proposal={route.params.proposal}
+      amount={route.params.amount}
+      fee={route.params.fee}
     />
   );
 };

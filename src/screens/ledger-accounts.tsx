@@ -5,12 +5,8 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {
-  useTypedNavigation,
-  useTypedRoute,
-  useUser,
-  useWallets,
-} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {ETH_HD_SHORT_PATH, LEDGER_APP} from '@app/variables/common';
@@ -29,7 +25,6 @@ export const LedgerAccountsScreen = () => {
   const [lastIndex, setLastIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<LedgerAccountItem[]>([]);
-  const wallets = useWallets();
 
   useEffect(() => {
     return () => {
@@ -56,7 +51,7 @@ export const LedgerAccountsScreen = () => {
             address: data.address.toLowerCase(),
             hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
             publicKey: data.publicKey,
-            exists: wallets.addressList.includes(data.address.toLowerCase()),
+            exists: Wallet.addressList().includes(data.address.toLowerCase()),
             balance,
           });
         }
@@ -71,7 +66,7 @@ export const LedgerAccountsScreen = () => {
         setLoading(false);
       }
     });
-  }, [lastIndex, provider, wallets.addressList]);
+  }, [lastIndex, provider]);
 
   useEffect(() => {
     if (lastIndex === 0 && !loading) {

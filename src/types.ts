@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Validator} from '@evmos/provider';
+import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
@@ -28,6 +29,17 @@ export enum AdjustEvents {
   pushNotifications = '2x889j',
   pushChannelSubscribe = '5juk3x',
   pushChannelUnsubscribe = 'za2nkc',
+  newsOpenItem = 'gpha6n',
+  newsScrolledItem = 'egpogy',
+  newsOpen = 'dh3eeu',
+  earnOpen = '9tn1b8',
+  browserOpen = 'q77dcs',
+  governanceOpen = 'txvtb0',
+  settingsOpen = '450fpt',
+  settingsAccountDetails = 'xbxrpy',
+  stakingOpen = 'lzf6ty',
+  stakingDelegate = 'xh19jh',
+  stakingValidators = 'ejspf6',
 }
 
 export enum TransactionSource {
@@ -333,24 +345,22 @@ export type RootStackParamList = {
   };
   proposalDepositForm: {
     account: string;
-    proposalId: number;
-    title: string;
+    proposal: Proposal;
   };
   proposalDepositPreview: {
-    title: string;
     fee: number;
     account: string;
     amount: number;
-    proposalId: number;
+    proposal: Proposal;
   };
   proposalDepositFinish: {
-    title: string;
+    proposal: Proposal;
     fee: number;
     txhash: string;
     amount: number;
   };
   proposalDeposit: {
-    proposalId: number;
+    proposal: Proposal;
     account: string;
   };
   settingsAccountEdit: {address: string};
@@ -430,7 +440,7 @@ export type RootStackParamList = {
     bannerId: string;
   };
   proposal: {
-    id: number;
+    proposal: Proposal;
   };
   settingsViewRecoveryPhrase: {
     accountId: string;
@@ -633,20 +643,17 @@ export type ValidatorItem = Validator & {
 export type ColorType = Color | string;
 
 export type ProposalsTagKeys =
-  | 'all'
-  | 'voting'
-  | 'deposited'
-  | 'passed'
-  | 'rejected';
+  | '*'
+  | 'PROPOSAL_STATUS_VOTING_PERIOD'
+  | 'PROPOSAL_STATUS_DEPOSIT_PERIOD'
+  | 'PROPOSAL_STATUS_PASSED'
+  | 'PROPOSAL_STATUS_REJECTED'
+  | 'PROPOSAL_STATUS_FAILED'
+  | 'PROPOSAL_STATUS_UNSPECIFIED';
 
-export type VotesType = {
-  yes: number;
-  no: number;
-  abstain: number;
-  veto: number;
-};
+export type VotesType = Record<VoteNamesType, number>;
 
-export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'veto';
+export type VoteNamesType = 'yes' | 'no' | 'abstain' | 'no_with_veto';
 
 export type DepositResponse = {
   deposits: {
@@ -841,7 +848,7 @@ export type Modals = {
   };
   walletsBottomSheet: {
     onClose?: () => void;
-    wallets: Wallet[];
+    wallets: Wallet[] | Results<Wallet>;
     closeDistance?: number;
     title: I18N;
     eventSuffix?: string;
@@ -867,6 +874,7 @@ export type Modals = {
     variant?: CaptchaType;
   };
 };
+
 export interface NftAttribute {
   trait_type: string;
   value: string;

@@ -80,11 +80,9 @@ export class Transaction extends Realm.Object {
   static removeAll() {
     const transactions = realm.objects<Transaction>(Transaction.schema.name);
 
-    for (const transaction of transactions) {
-      realm.write(() => {
-        realm.delete(transaction);
-      });
-    }
+    realm.write(() => {
+      realm.delete(transactions);
+    });
   }
 
   static create(

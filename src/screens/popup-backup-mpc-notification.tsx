@@ -7,9 +7,10 @@ import {
   BackupMpcNotification,
   BottomPopupContainer,
 } from '@app/components/bottom-popups';
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {captureException, showModal} from '@app/helpers';
-import {useApp, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
 import {Cloud} from '@app/services/cloud';
 import {GoogleDrive} from '@app/services/google-drive';
@@ -18,8 +19,6 @@ import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 export const BackupMpcNotificationScreen = () => {
   const {goBack} = useTypedNavigation();
   const {accountId} = useTypedRoute<'backupNotification'>().params;
-
-  const app = useApp();
 
   const onPressBackupGoogle = useCallback(
     async (onDone: () => void) => {
@@ -47,7 +46,7 @@ export const BackupMpcNotificationScreen = () => {
         });
       }
     },
-    [accountId, app, goBack],
+    [accountId, goBack],
   );
 
   const onClickSkip = useCallback(

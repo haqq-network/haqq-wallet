@@ -3,15 +3,15 @@ import React, {useEffect} from 'react';
 import {View} from 'react-native';
 
 import {captureException, showModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallets} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'ledgerStore'>();
-  const wallets = useWallets();
 
   useEffect(() => {
     showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
@@ -24,7 +24,7 @@ export const LedgerStoreWalletScreen = () => {
       const lastIndex = route.params.hdPath.split('/').pop() ?? '0';
 
       actions.push(
-        wallets.addWallet(
+        Wallet.create(
           {
             type: WalletType.ledgerBt,
             path: route.params.hdPath,
@@ -54,7 +54,7 @@ export const LedgerStoreWalletScreen = () => {
           }
         });
     }, 350);
-  }, [navigation, route, wallets]);
+  }, [navigation, route]);
 
   return <View />;
 };

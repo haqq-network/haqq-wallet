@@ -2,18 +2,29 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
+import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
 import {getUserAddressFromJRPCRequest} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export const JsonRpcSignScreen = () => {
+  const whitelist = useRemoteConfigVar('web3_app_whitelist');
+  const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
   const navigation = useTypedNavigation();
   const {metadata, request, chainId, selectedAccount} =
     useTypedRoute<'jsonRpcSign'>().params || {};
+
+  useEffect(() => {
+    const host = getHost(metadata.url);
+    setIsAllowed(
+      !!whitelist?.find?.(url => new RegExp(host).test(url))?.length,
+    );
+  }, [metadata, whitelist]);
 
   useEffect(() => {
     const onBlur = () => {
@@ -64,6 +75,7 @@ export const JsonRpcSignScreen = () => {
 
   return (
     <JsonRpcSign
+      isAllowed={isAllowed}
       rejectLoading={rejectLoading}
       signLoading={signLoading}
       isTransaction={isTransaction}

@@ -7,8 +7,7 @@ import {Cosmos} from '@app/services/cosmos';
 
 export const ProposalDepositFormScreen = () => {
   const navigation = useTypedNavigation();
-  const {account, title, proposalId} =
-    useTypedRoute<'proposalDepositForm'>().params;
+  const {account, proposal} = useTypedRoute<'proposalDepositForm'>().params;
   const fee = parseInt(Cosmos.fee.amount, 10);
   const [balance, setBalance] = useState(0);
 
@@ -21,14 +20,13 @@ export const ProposalDepositFormScreen = () => {
   const onAmount = useCallback(
     (amount: number) => {
       navigation.navigate('proposalDepositPreview', {
-        title,
+        proposal,
         account,
         fee,
         amount,
-        proposalId,
       });
     },
-    [fee, navigation, account, title, proposalId],
+    [fee, navigation, account, proposal],
   );
 
   return (

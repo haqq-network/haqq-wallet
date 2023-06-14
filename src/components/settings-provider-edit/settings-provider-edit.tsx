@@ -213,7 +213,7 @@ export const SettingsProviderEdit = memo(
         return {
           textRight: getText(I18N.save),
           disabledRight: !state.isChanged,
-          onPressRight: () => {
+          onPressRight: (): void => {
             const errors = validate(state, constraints) as Partial<
               Record<ProviderKeys, string[]>
             >;

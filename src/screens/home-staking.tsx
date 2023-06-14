@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {awaitForPopupClosed} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
@@ -11,12 +12,13 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
-import {useCosmos, useTypedNavigation, useWalletsList} from '@app/hooks';
+import {useCosmos, useTypedNavigation} from '@app/hooks';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {WalletType} from '@app/types';
+import {AdjustEvents, WalletType} from '@app/types';
 import {MIN_AMOUNT} from '@app/variables/common';
 
 const initData = {
@@ -27,7 +29,7 @@ const initData = {
 };
 
 export const HomeStakingScreen = () => {
-  const {visible} = useWalletsList();
+  const visible = useWalletsVisible();
 
   const [data, setData] = useState({
     ...initData,
@@ -42,6 +44,10 @@ export const HomeStakingScreen = () => {
   const onPressValidators = useCallback(() => {
     navigation.navigate('stakingValidators');
   }, [navigation]);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.stakingOpen);
+  }, []);
 
   useEffect(() => {
     const rows = StakingMetadata.getAll();

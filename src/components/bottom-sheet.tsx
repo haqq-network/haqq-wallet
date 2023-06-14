@@ -14,6 +14,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
+import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import {
   Gesture,
   GestureDetector,
@@ -242,7 +244,9 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                 bounces={false}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={1}
-                onScrollBeginDrag={e => {
+                onScrollBeginDrag={(
+                  e: NativeSyntheticEvent<NativeScrollEvent>,
+                ) => {
                   scrollOffset.value = e.nativeEvent.contentOffset.y;
                 }}>
                 {children}

@@ -3,7 +3,6 @@ import Realm from 'realm';
 import {AddressBook} from '@app/models/address-book';
 import {Banner, BannerButton} from '@app/models/banner';
 import {Contact} from '@app/models/contact';
-import {GovernanceVoting} from '@app/models/governance-voting';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
@@ -39,7 +38,6 @@ export const realm = new Realm({
     Contact,
     Provider,
     StakingMetadata,
-    GovernanceVoting,
     Refferal,
     Banner,
     BannerButton,
@@ -50,7 +48,7 @@ export const realm = new Realm({
     VariablesBool,
     VariablesString,
   ],
-  schemaVersion: 57,
+  schemaVersion: 58,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

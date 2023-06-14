@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
-import {some} from 'lodash';
-import {Image, Linking} from 'react-native';
+import {head, includes, some} from 'lodash';
+import {Image, Linking, View} from 'react-native';
+import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
+import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import Markdown from 'react-native-markdown-package';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {createTheme} from '@app/helpers';
 import {News} from '@app/models/news';
+import {AdjustEvents} from '@app/types';
 
 type NodeImage = {
   alt: string;
@@ -32,7 +36,14 @@ type NodeText = {
   content: string;
 };
 
-type Node = NodeImage | NodeHeading | NodeParagraph | NodeText;
+type NodeList = {
+  items: Node[][];
+  ordered: boolean;
+  start: undefined;
+  type: 'list';
+};
+
+type Node = NodeImage | NodeHeading | NodeParagraph | NodeText | NodeList;
 
 export type NewsDetailProps = {
   item: News;
@@ -64,7 +75,7 @@ const rules = {
           key={state.key}
           source={{uri: node.target}}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="center"
         />
       );
     },
@@ -108,11 +119,80 @@ const rules = {
       );
     },
   },
+  list: {
+    react: function (node: NodeList, output: Output, {...state}) {
+      let numberIndex = 1;
+      const items = node.items.map((item, i) => {
+        state.withinList = false;
+
+        if (item.length > 1) {
+          if (item[1].type === 'list') {
+            state.withinList = true;
+          }
+        }
+
+        const content = output(item, state);
+        let listItem;
+        if (
+          includes(['text', 'paragraph', 'strong'], (head(item) || {}).type) &&
+          !state.withinList
+        ) {
+          state.withinList = true;
+
+          listItem = (
+            <Text t11 key={1}>
+              {content}
+            </Text>
+          );
+        } else {
+          listItem = <View key={1}>{content}</View>;
+        }
+        state.withinList = false;
+        numberIndex++;
+
+        return (
+          <View key={i} style={styles.listRow}>
+            <Text key={0} t11>
+              {node.ordered ? numberIndex + '. ' : '\u2022 '}
+            </Text>
+            {listItem}
+          </View>
+        );
+      });
+      return <View key={state.key}>{items}</View>;
+    },
+  },
 };
 
 export const NewsDetail = ({item}: NewsDetailProps) => {
+  const scrolled = useRef(false);
+
+  useEffect(() => {
+    onTrackEvent(AdjustEvents.newsOpenItem, {
+      id: item.id,
+    });
+  }, [item.id]);
+
+  const onScroll = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (!scrolled.current && e.nativeEvent.contentOffset.y > 50) {
+        onTrackEvent(AdjustEvents.newsScrolledItem, {
+          id: item.id,
+        });
+        scrolled.current = true;
+      }
+    },
+    [item.id],
+  );
+
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} onScroll={onScroll}>
+      {item.preview && (
+        <>
+          <Image source={{uri: item.preview}} style={styles.preview} />
+          <Spacer height={24} />
+        </>
+      )}
       <Text t3>{item.title}</Text>
       <Spacer height={12} />
       <Text t17 color={Color.textBase2}>
@@ -133,15 +213,25 @@ const styles = createTheme({
   container: {
     paddingHorizontal: 20,
   },
+  preview: {
+    height: 200,
+    flex: 1,
+    borderRadius: 12,
+  },
   image: {
     height: 200,
     flex: 1,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
+    justifyContent: 'center',
   },
   heading: {marginBottom: 8, marginTop: 28},
   paragraph: {marginVertical: 8},
+  listRow: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
 });
 
 const markdownStyle = createTheme({

@@ -11,7 +11,7 @@ import {Cosmos} from '@app/services/cosmos';
 
 export const ProposalDepositPreviewScreen = () => {
   const navigation = useTypedNavigation();
-  const {fee, account, amount, title, proposalId} =
+  const {fee, account, amount, proposal} =
     useTypedRoute<'proposalDepositPreview'>().params;
 
   const wallet = useWallet(account);
@@ -29,14 +29,14 @@ export const ProposalDepositPreviewScreen = () => {
         const resp = await cosmos.deposit(
           provider,
           wallet.path!,
-          proposalId,
+          proposal.proposal_id,
           amount,
         );
 
         if (resp) {
           navigation.navigate('proposalDepositFinish', {
             txhash: resp.tx_response.txhash,
-            title,
+            proposal,
             amount,
             fee,
           });
@@ -49,7 +49,7 @@ export const ProposalDepositPreviewScreen = () => {
         setDisabled(false);
       }
     }
-  }, [wallet, amount, fee, navigation, proposalId, title]);
+  }, [wallet, amount, fee, navigation, proposal]);
 
   useEffect(() => {
     return () => {
@@ -59,7 +59,7 @@ export const ProposalDepositPreviewScreen = () => {
 
   return (
     <ProposalDepositPreview
-      title={title}
+      proposal={proposal}
       amount={amount}
       fee={fee}
       disabled={disabled}

@@ -466,3 +466,17 @@ export function arraySortUtil<T>(
     }
   };
 }
+
+export function isValidJSON(
+  jsonString: string | undefined,
+): jsonString is string {
+  try {
+    if (!jsonString) {
+      return false;
+    }
+    JSON.parse(jsonString);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}

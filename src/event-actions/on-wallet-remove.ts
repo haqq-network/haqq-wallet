@@ -1,50 +1,40 @@
 import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
-import {realm} from '@app/models';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {PushNotifications} from '@app/services/push-notifications';
 
-export async function onWalletRemove(
-  address: string,
-  snapshot: Wallet,
-  callback?: () => void,
-) {
+export async function onWalletRemove(address: string) {
   try {
-    const wallets = realm.objects<Wallet>(Wallet.schema.name);
-    const addressArr = wallets.map(item => item.address);
-    const transactions = realm.objects<Transaction>(Transaction.schema.name);
+    const wallets = Wallet.addressList();
 
+    const transactions = Transaction.getAll().snapshot();
     const transactionsTo = transactions.filtered(
       `to = '${address.toLowerCase()}'`,
     );
+
     const transactionsFrom = transactions.filtered(
       `from = '${address.toLowerCase()}'`,
     );
 
     for (const transaction of transactionsTo) {
-      if (!addressArr.includes(transaction.from)) {
+      if (!wallets.includes(transaction.from)) {
         Transaction.remove(transaction.hash);
       }
     }
     for (const transaction of transactionsFrom) {
-      if (!addressArr.includes(transaction.to)) {
+      if (!wallets.includes(transaction.to)) {
         Transaction.remove(transaction.hash);
       }
     }
 
     const subscription = VariablesString.get('notificationToken');
-
     if (subscription) {
       await PushNotifications.instance.unsubscribeByTokenAndAddress(
         subscription,
         address,
       );
-    }
-
-    if (callback) {
-      callback();
     }
   } catch (e) {
     captureException(e, Events.onWalletRemove, {

@@ -3,7 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {useApp} from '@app/hooks';
+import {app} from '@app/contexts';
 import {Modals} from '@app/types';
 
 export function WalletsBottomSheet({
@@ -14,14 +14,12 @@ export function WalletsBottomSheet({
   eventSuffix = '',
   onClose,
 }: Modals['walletsBottomSheet']) {
-  const app = useApp();
-
   const onPressWallet = useCallback(
     (address: string) => {
       onClose?.();
       app.emit(`wallet-selected${eventSuffix}`, address);
     },
-    [app, eventSuffix, onClose],
+    [eventSuffix, onClose],
   );
   const onCloseSheet = () => {
     app.emit(`wallet-selected-reject${eventSuffix}`);
@@ -37,7 +35,7 @@ export function WalletsBottomSheet({
     return () => {
       app.emit(`wallet-selected-reject${eventSuffix}`);
     };
-  }, [wallets, onPressWallet, app, eventSuffix, autoSelectWallet, onClose]);
+  }, [wallets, onPressWallet, eventSuffix, autoSelectWallet, onClose]);
 
   return (
     <BottomSheet

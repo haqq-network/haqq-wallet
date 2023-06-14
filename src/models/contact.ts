@@ -65,11 +65,9 @@ export class Contact extends Realm.Object {
   static removeAll() {
     const contacts = realm.objects<Contact>(Contact.schema.name);
 
-    for (const contact of contacts) {
-      realm.write(() => {
-        realm.delete(contact);
-      });
-    }
+    realm.write(() => {
+      realm.delete(contacts);
+    });
   }
 
   update(params: Partial<Contact>) {

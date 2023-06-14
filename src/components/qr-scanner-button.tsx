@@ -7,12 +7,11 @@ import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {useApp} from '@app/hooks';
 import {RootStackParamList} from '@app/types';
 
 export const QrScannerButton = () => {
-  const app = useApp();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const onPressQR = useCallback(() => {
@@ -26,7 +25,7 @@ export const QrScannerButton = () => {
 
     app.on('address', subscription);
     showModal('qr');
-  }, [app, navigation]);
+  }, [navigation]);
 
   return (
     <IconButton onPress={onPressQR} style={page.container}>

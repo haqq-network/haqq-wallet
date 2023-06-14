@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 
+import {Proposal as ProposalType} from '@evmos/provider/dist/rest/gov';
 import {format} from 'date-fns';
 import Decimal from 'decimal.js';
 import {Pressable, ScrollView, View} from 'react-native';
@@ -8,8 +9,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
-import {ProposalRealmType} from '@app/models/governance-voting';
 import {VoteNamesType} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 import {ProposalsTags} from '@app/variables/proposal';
@@ -21,7 +22,7 @@ import {
 } from './voting-card-detail';
 
 interface ProposalProps {
-  item?: ProposalRealmType;
+  item: ProposalType;
   onDepositSubmit?: (address: string) => Promise<void>;
   collectedDeposit: number;
   vote?: VoteNamesType;
@@ -58,12 +59,22 @@ export function Proposal({
   //   }
   // };
 
-  useEffect(() => {
-    item && cardRef.current?.updateNotEnoughProgress(item.yesPercent / 100);
-    cardRef.current?.updateDepositProgress(
-      collectedDeposit / (item?.proposalDepositNeeds ?? 0),
+  const yp = useMemo(() => yesPercent(item), [item]);
+  const pdn = useMemo(() => proposalDepositNeeds(item), [item]);
+
+  const deposit = useMemo(() => {
+    return cleanNumber(
+      item.total_deposit
+        .reduce((memo, curr) => memo.plus(curr.amount), new Decimal(0))
+        .div(WEI)
+        .toFixed(NUM_PRECISION + 1),
     );
-  }, [cardRef, collectedDeposit, item]);
+  }, [item]);
+
+  useEffect(() => {
+    item && cardRef.current?.updateNotEnoughProgress(yp / 100);
+    cardRef.current?.updateDepositProgress(collectedDeposit / (pdn ?? 0));
+  }, [cardRef, collectedDeposit, item, pdn, yp]);
 
   const badgeStatus = useMemo(
     () => ProposalsTags.find(tag => tag[0] === item?.status),
@@ -71,7 +82,7 @@ export function Proposal({
   );
 
   const type = useMemo(() => {
-    switch (item?.type) {
+    switch (item.content['@type']) {
       case '/cosmos.params.v1beta1.ParameterChangeProposal':
         return I18N.proposalTypeParameterChangeProposal;
       case '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal':
@@ -81,21 +92,11 @@ export function Proposal({
       default:
         return I18N.proposalTypeUnknown;
     }
-  }, [item?.type]);
+  }, [item]);
 
-  const deposit = useMemo(
-    () =>
-      cleanNumber(
-        new Decimal(item?.deposit || '0').div(WEI).toFixed(NUM_PRECISION + 1),
-      ),
-    [item?.deposit],
-  );
-
-  if (!item) {
-    return <></>;
-  }
-
-  const {orderNumber, title, description, isDeposited} = item;
+  const isDeposited = useMemo(() => {
+    return item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD';
+  }, [item]);
 
   return (
     <>
@@ -113,11 +114,11 @@ export function Proposal({
           )}
           <Spacer height={16} />
           <Text center color={Color.textBase2} t14>
-            #{orderNumber}
+            #{item.proposal_id}
           </Text>
           <Spacer height={2} />
           <Text center t5>
-            {title}
+            {item.content.title}
           </Text>
           <Spacer height={24} />
           <VotingCardDetail
@@ -156,28 +157,28 @@ export function Proposal({
           <View style={styles.block}>
             <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
             <Spacer height={4} />
-            <Text t14>{description}</Text>
+            <Text t14>{item.content.description}</Text>
           </View>
-          {item.changes && (
+          {'changes' in item.content && (
             <>
               <Spacer height={24} />
               <Text t9 i18n={I18N.proposalChanges} />
               <Spacer height={12} />
               <View style={styles.codeBlock}>
                 <Text t14 color={Color.textBase1}>
-                  {item.changes}
+                  {JSON.stringify(item.content.changes, null, 4)}
                 </Text>
               </View>
             </>
           )}
-          {item.plan && (
+          {'plan' in item.content && (
             <>
               <Spacer height={24} />
               <Text t9 i18n={I18N.proposalPlan} />
               <Spacer height={12} />
               <View style={styles.codeBlock}>
                 <Text t14 color={Color.textBase1}>
-                  {item.plan}
+                  {JSON.stringify(item.content.plan, null, 4)}
                 </Text>
               </View>
             </>
@@ -189,13 +190,15 @@ export function Proposal({
               <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
               <Spacer height={4} />
               <Text t14>
-                {item.createdAt && format(item.createdAt, 'dd MMM yyyy, H:mm')}
+                {item.submit_time &&
+                  format(new Date(item.submit_time), 'dd MMM yyyy, H:mm')}
               </Text>
               <Spacer height={8} />
               <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
               <Spacer height={4} />
               <Text t14>
-                {item.dateStart && format(item.dateStart, 'dd MMM yyyy, H:mm')}
+                {item.voting_start_time &&
+                  format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
               </Text>
             </View>
             <Spacer width={16} />
@@ -207,14 +210,15 @@ export function Proposal({
               />
               <Spacer height={4} />
               <Text t14>
-                {item.depositEnd &&
-                  format(item.depositEnd, 'dd MMM yyyy, H:mm')}
+                {item.deposit_end_time &&
+                  format(new Date(item.deposit_end_time), 'dd MMM yyyy, H:mm')}
               </Text>
               <Spacer height={8} />
               <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
               <Spacer height={4} />
               <Text t14>
-                {item.dateEnd && format(item.dateEnd, 'dd MMM yyyy, H:mm')}
+                {item.voting_end_time &&
+                  format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
               </Text>
             </View>
           </View>

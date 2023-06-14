@@ -10,6 +10,7 @@ import {MenuNavigationButton, Spacer, Text} from '../ui';
 
 export interface NftViewerSectionHeaderProps {
   item: NftCollection;
+
   onPress(item: NftCollection): void;
 }
 

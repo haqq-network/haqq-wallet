@@ -20,7 +20,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {Context} from 'react-native-reanimated/lib/types/lib/reanimated2/hook/commonTypes';
 import {useTiming} from 'react-native-redash';
 
 import {Color, getColor} from '@app/colors';
@@ -40,7 +39,7 @@ export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
 }
 
-interface GestureHandlerCtx extends Context {
+interface GestureHandlerCtx extends Record<string, unknown> {
   startX: number;
 }
 

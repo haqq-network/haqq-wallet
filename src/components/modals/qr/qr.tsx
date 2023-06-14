@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
@@ -12,9 +12,10 @@ import {Color, getColor} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
-import {useApp, useWallets} from '@app/hooks';
+import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
@@ -28,11 +29,9 @@ export type QRModalProps = Modals['qr'];
 
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const wallets = useWallets();
-  const app = useApp();
+  const visible = useWalletsVisible();
 
   const closeDistance = useWindowDimensions().height / 6;
-  const [rows, setRows] = useState(wallets.visible);
   const [code, setCode] = useState('');
 
   const prepareAddress = useCallback((data: string) => {
@@ -55,19 +54,8 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         from: address.trim(),
       });
     },
-    [app, prepareAddress, code],
+    [prepareAddress, code],
   );
-
-  useEffect(() => {
-    const callback = () => {
-      setRows(wallets.visible);
-    };
-    callback();
-    wallets.on('wallets', callback);
-    return () => {
-      wallets.off('wallets', callback);
-    };
-  }, [wallets]);
 
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
@@ -75,11 +63,11 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const checkAddress = useCallback(
     (address: string) => {
       if (utils.isAddress(address)) {
-        if (rows.length === 1) {
+        if (visible.length === 1) {
           onClose();
           app.emit('address', {
             to: prepareAddress(address),
-            from: rows[0].address.trim(),
+            from: visible[0].address.trim(),
           });
         } else {
           vibrate(HapticEffects.success);
@@ -98,7 +86,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [rows, onClose, app, prepareAddress],
+    [visible, onClose, prepareAddress],
   );
 
   const onGetAddress = useCallback(
@@ -112,7 +100,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         checkAddress(slicedAddress);
       }
     },
-    [checkAddress, app, qrWithoutFrom],
+    [checkAddress, qrWithoutFrom],
   );
 
   const onSuccess = useCallback(
@@ -194,7 +182,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
           onClose={onCloseBottomSheet}
           closeDistance={closeDistance}
           i18nTitle={I18N.qrModalSendFunds}>
-          {rows.map((item, id) => (
+          {visible.map((item, id) => (
             <WalletRow key={id} item={item} onPress={handleAddressEvent} />
           ))}
           <Spacer height={50} />

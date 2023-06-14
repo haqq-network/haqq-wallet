@@ -1,15 +1,10 @@
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
 
 export async function onWalletConnectSignTransaction(
   event: WalletConnectSessionRequestType,
 ) {
-  if (!isFeatureEnabled(Feature.walletConnectSign)) {
-    return;
-  }
-
   try {
     const session = WalletConnect.instance.getSessionByTopic(event.topic);
     if (session) {

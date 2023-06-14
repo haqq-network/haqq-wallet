@@ -1,7 +1,6 @@
-import {decrypt} from '@haqq/encryption-react-native';
-
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Cosmos} from '@app/services/cosmos';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
@@ -76,6 +75,14 @@ export class Wallet extends Realm.Object {
     }
 
     return this._cosmosAddress;
+  }
+
+  static getSize() {
+    return realm.objects<Wallet>(Wallet.schema.name).length;
+  }
+
+  static addressList() {
+    return realm.objects<Wallet>(Wallet.schema.name).map(w => w.address);
   }
 
   static getAll() {
@@ -182,18 +189,21 @@ export class Wallet extends Realm.Object {
 
   static async remove(address: string) {
     const obj = Wallet.getById(address);
-
     if (obj) {
-      const snapshot = obj.toJSON();
-
       realm.write(() => {
         realm.delete(obj);
       });
 
-      await new Promise(resolve => {
-        app.emit(Events.onWalletRemove, address, snapshot, resolve);
-      });
+      await awaitForEventDone(Events.onWalletRemove, address);
     }
+  }
+
+  static async removeAll() {
+    const wallets = realm.objects<Wallet>(Wallet.schema.name);
+
+    realm.write(() => {
+      realm.delete(wallets);
+    });
   }
 
   update(params: Partial<Wallet>) {
@@ -224,18 +234,5 @@ export class Wallet extends Realm.Object {
       this.colorPattern = colorPattern;
       this.pattern = pattern;
     });
-  }
-
-  async getMnemonic(password: string) {
-    const decrypted = await decrypt<{mnemonic: {phrase: string} | string}>(
-      password,
-      this.data,
-    );
-
-    return (
-      (typeof decrypted.mnemonic === 'string'
-        ? decrypted.mnemonic
-        : decrypted.mnemonic.phrase) ?? ''
-    );
   }
 }
