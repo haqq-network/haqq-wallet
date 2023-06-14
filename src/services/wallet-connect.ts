@@ -161,7 +161,7 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    console.log(proposalId, params);
+    console.log('approveSession', proposalId, JSON.stringify(params, null, 2));
 
     const {requiredNamespaces, optionalNamespaces, relays} = params;
 
@@ -214,6 +214,8 @@ export class WalletConnect extends EventEmitter {
         chains,
       };
     });
+
+    console.log('namespaces', JSON.stringify(namespaces, null, 2));
 
     const session = await this._client.approveSession({
       id: proposalId,

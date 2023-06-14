@@ -14,7 +14,9 @@ import {isI18N} from '@app/utils';
 import {TopTabNavigatorExtendedProps} from './top-tab-navigator';
 import {Text} from './ui';
 
-export type TopTabNavigatorLargeProps = TopTabNavigatorExtendedProps;
+export type TopTabNavigatorLargeProps = TopTabNavigatorExtendedProps & {
+  showSeparators?: boolean;
+};
 
 const TAB_PADDING = 3;
 
@@ -23,6 +25,7 @@ export const TopTabNavigatorLarge = ({
   activeTab,
   containerStyle,
   contentContainerStyle,
+  showSeparators,
   activeTabIndex,
   tabHeaderStyle,
   onTabPress,
@@ -55,20 +58,23 @@ export const TopTabNavigatorLarge = ({
           const title = isI18N(tab.props.title)
             ? getText(tab.props.title)
             : tab.props.title;
+          const showSeparator = showSeparators && index !== tabList.length - 1;
 
           return (
-            <TouchableOpacity
-              onLayout={onTabLayout}
-              key={`${tab.props.title}_${index}`}
-              containerStyle={styles.tab}
-              style={styles.tabTouchable}
-              onPress={() => {
-                onTabPress(tab, index);
-              }}>
-              <Text t14={!isActive} t13={isActive}>
-                {title}
-              </Text>
-            </TouchableOpacity>
+            <React.Fragment key={`${tab.props.title}_${index}`}>
+              <TouchableOpacity
+                onLayout={onTabLayout}
+                containerStyle={styles.tab}
+                style={styles.tabTouchable}
+                onPress={() => {
+                  onTabPress(tab, index);
+                }}>
+                <Text t14={!isActive} t13={isActive}>
+                  {title}
+                </Text>
+              </TouchableOpacity>
+              {showSeparator && <View style={styles.tabSeparator} />}
+            </React.Fragment>
           );
         })}
       </View>
@@ -82,6 +88,13 @@ export const TopTabNavigatorLarge = ({
 };
 
 const styles = createTheme({
+  tabSeparator: {
+    width: 1,
+    height: 16,
+    alignSelf: 'center',
+    backgroundColor: Color.graphicSecond2,
+    transform: [{translateX: -0.5}],
+  },
   activeTabIndicator: {
     backgroundColor: Color.bg1,
     position: 'absolute',
@@ -111,7 +124,6 @@ const styles = createTheme({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 14,
   },
   tabContent: {},
 });

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
@@ -23,12 +23,12 @@ export const TransactionReceive = ({
     [item.from],
   );
   const text = useMemo(() => `+${cleanNumber(item.value)} ISLM`, [item.value]);
+  const handlePress = useCallback(() => {
+    onPress(item.hash);
+  }, [item.hash, onPress]);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        onPress(item.hash);
-      }}>
+    <TouchableWithoutFeedback onPress={handlePress}>
       <View style={styles.container}>
         <View style={styles.iconWrapper}>
           <Icon name="arrow_receive" color={Color.graphicBase1} />

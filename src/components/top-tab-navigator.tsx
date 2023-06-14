@@ -36,6 +36,7 @@ export type TopTabNavigatorProps = {
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
+  showSeparators?: boolean;
   onTabChange?(tabName: TabType['props']['name']): void;
 };
 
@@ -80,6 +81,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   variant,
   containerStyle,
   contentContainerStyle,
+  showSeparators,
   tabHeaderStyle,
   onTabChange,
   ...props
@@ -133,6 +135,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     case TopTabNavigatorVariant.large:
       return (
         <TopTabNavigatorLarge
+          showSeparators={showSeparators}
           tabList={filteredChildren}
           activeTab={activeTab}
           activeTabIndex={activeTabIndex}
