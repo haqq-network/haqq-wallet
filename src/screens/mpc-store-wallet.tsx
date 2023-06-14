@@ -87,7 +87,7 @@ export const MpcStoreWalletScreen = () => {
             if (e instanceof Error) {
               showModal('errorCreateAccount');
               navigator.goBack();
-              captureException(e, 'mpcStore');
+              captureException(e, 'MpcStoreWalletScreen');
             }
         }
       }
