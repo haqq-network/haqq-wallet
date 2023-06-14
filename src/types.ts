@@ -825,6 +825,10 @@ export type Modals = {
   bluetoothUnauthorized: {
     onClose?: () => void;
   };
+  domainBlocked: {
+    onClose?: () => void;
+    domain: string;
+  };
   ledgerNoApp: {
     onClose?: () => void;
     onRetry: () => Promise<void>;

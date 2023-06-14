@@ -29,6 +29,7 @@ export const Markdown = ({children}: MarkdownProps) => {
   );
 
   return (
+    // @ts-ignore
     <RNMarkdown style={styles} rules={rules} markdownit={markdownIt.current}>
       {children}
     </RNMarkdown>
