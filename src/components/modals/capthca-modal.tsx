@@ -4,7 +4,7 @@ import {View} from 'react-native';
 
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {Captcha, CaptchaType} from '../captcha';
@@ -30,9 +30,9 @@ export const CaptchaModal = ({onClose, variant}: CaptchaModalProps) => {
                 return;
               }
 
-              app.emit('captcha-data', data);
-
               onCloseModal(() => {
+                app.emit('captcha-data', data);
+                hideModal('captcha');
                 onClose?.();
               });
             }}
