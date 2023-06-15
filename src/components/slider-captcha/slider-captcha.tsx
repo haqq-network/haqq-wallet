@@ -30,7 +30,7 @@ import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
-import {getBase64ImageSource, sleep} from '@app/utils';
+import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
 
 import {CaptchaDataTypes} from '../captcha';
 import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
@@ -84,9 +84,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   );
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
   const refreshButtonEnabled = useMemo(
-    () =>
-      sliderState === SliderCaptchaState.initial ||
-      sliderState === SliderCaptchaState.loading,
+    () => sliderState === SliderCaptchaState.initial,
     [sliderState],
   );
   const gestureEnabled = useMemo(
@@ -106,22 +104,6 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     [sliderState],
   );
 
-  useEffect(() => {
-    Backend.instance
-      .captchaRequest(
-        Wallet.getAll().map(wallet => wallet.address),
-        getUid(),
-        abortController.current.signal,
-      )
-      .then(resp => {
-        setImageSource({
-          id: resp.id,
-          back: getBase64ImageSource(resp.back),
-          puzzle: getBase64ImageSource(resp.puzzle),
-        });
-      });
-  }, []);
-
   const sliderAnimatedColorsMap = useMemo(
     () => ({
       [SliderCaptchaState.initial]: getColor(Color.graphicGreen1),
@@ -134,30 +116,40 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     [theme],
   );
 
-  useEffect(() => {
+  const fetchImageSource = useCallback(async (): Promise<void> => {
+    try {
+      setSliderState(SliderCaptchaState.loading);
+      abortController.current.abort();
+      abortController.current = new AbortController();
+
+      const resp = await Backend.instance.captchaRequest(
+        Wallet.getAll().map(wallet => wallet.address),
+        getUid(),
+      );
+
+      setImageSource({
+        id: resp.id,
+        back: getBase64ImageSource(resp.back),
+        puzzle: getBase64ImageSource(resp.puzzle),
+      });
+    } catch (err) {
+      if (isAbortControllerError(err)) {
+        return;
+      }
+
+      return await fetchImageSource();
+    }
+
     setSliderState(SliderCaptchaState.initial);
     position.value = withTiming(0);
   }, [position]);
 
   const onPressRefresh = useCallback(async () => {
-    setSliderState(SliderCaptchaState.loading);
-    abortController.current.abort();
-    abortController.current = new AbortController();
-
-    const resp = await Backend.instance.captchaRequest(
-      Wallet.getAll().map(wallet => wallet.address),
-      getUid(),
-    );
-
-    setImageSource({
-      id: resp.id,
-      back: getBase64ImageSource(resp.back),
-      puzzle: getBase64ImageSource(resp.puzzle),
-    });
-
-    setSliderState(SliderCaptchaState.initial);
-    position.value = withTiming(0);
-  }, [position]);
+    if (sliderState === SliderCaptchaState.loading) {
+      return;
+    }
+    await fetchImageSource();
+  }, [fetchImageSource, sliderState]);
 
   const onStartMovement = useCallback(() => {
     setStartTime(Date.now());
@@ -184,7 +176,6 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         ];
 
       if (progressValue !== lastIntermediateValue) {
-        console.log('🟢 progressValue', progressValue);
         intermediatePositionValues.current.push(progressValue);
       }
     },
@@ -192,22 +183,9 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   );
 
   const onEndMovement = useCallback(async () => {
-    console.log(
-      '🟣 intermediatePositionValues',
-      intermediatePositionValues.current.length,
-      JSON.stringify(intermediatePositionValues.current, null, 2),
-    );
-
-    const progressValue = calculateProgressValue(position.value);
     const intermediatePositionValuesBase64 = Buffer.from(
       intermediatePositionValues.current,
     ).toString('base64');
-
-    console.log('🟢 progressValue', progressValue);
-    console.log(
-      '🟢 intermediatePositionValuesBase64',
-      intermediatePositionValuesBase64,
-    );
 
     setEndTime(Date.now());
     setSliderState(SliderCaptchaState.loading);
@@ -223,16 +201,14 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       await sleep(SUCCESS_ERROR_DURATION);
       onData?.(session.key as CaptchaDataTypes);
     } catch (err) {
-      if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          return;
-        }
-        setSliderState(SliderCaptchaState.error);
-        await sleep(SUCCESS_ERROR_DURATION);
-        onData?.('error');
+      if (isAbortControllerError(err)) {
+        return;
       }
+      setSliderState(SliderCaptchaState.error);
+      await sleep(SUCCESS_ERROR_DURATION);
+      onData?.('error');
     }
-  }, [calculateProgressValue, imageSource?.id, onData, position.value]);
+  }, [imageSource?.id, onData]);
 
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -330,6 +306,12 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       ),
     };
   });
+
+  useEffect(() => {
+    setSliderState(SliderCaptchaState.initial);
+    position.value = withTiming(0);
+    fetchImageSource();
+  }, [fetchImageSource, position]);
 
   if (!imageSource) {
     return <Loading />;

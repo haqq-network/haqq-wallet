@@ -480,3 +480,11 @@ export function isValidJSON(
   }
   return true;
 }
+
+export function isError(err: any): err is Error {
+  return err instanceof Error;
+}
+
+export function isAbortControllerError(err: any): err is Error {
+  return isError(err) && err.name === 'AbortError';
+}
