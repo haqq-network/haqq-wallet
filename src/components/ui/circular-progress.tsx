@@ -57,6 +57,7 @@ export const CircularProgress = ({
       cx: '50%',
       strokeWidth: STROKE_WIDTH,
       r: radius,
+      fill: 'transparent',
     }),
     [radius],
   );
