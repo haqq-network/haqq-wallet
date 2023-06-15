@@ -11,6 +11,7 @@ import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 import {Hcaptcha} from './hcaptcha';
 import {SliderCaptcha} from './slider-captcha/slider-captcha';
+import {First} from './ui';
 
 export type CaptchaDataTypes = (
   | 'error'
@@ -58,24 +59,26 @@ export const Captcha = ({
   return (
     <View style={styles.container}>
       <View onTouchEnd={onPressOutside} style={styles.overlay} />
-      {type === CaptchaType.hcaptcha && (
-        <>
-          <View style={styles.whiteBox} />
-          <Hcaptcha
-            siteKey={HCAPTCHA_SITE_KEY}
-            showLoading
-            size={'compact'}
-            onMessage={onMessage}
-            theme={theme}
-            style={styles.hcaptcha}
-            containerStyle={styles.hcaptchaContainer}
-            backgroundColor={'transparent'}
-            enableAutoOpenChallenge={enableAutoOpenChallenge}
-            languageCode={languageCode}
-          />
-        </>
-      )}
-      {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+      <First>
+        {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+        {type === CaptchaType.hcaptcha && (
+          <>
+            <View style={styles.whiteBox} />
+            <Hcaptcha
+              siteKey={HCAPTCHA_SITE_KEY}
+              showLoading
+              size={'compact'}
+              onMessage={onMessage}
+              theme={theme}
+              style={styles.hcaptcha}
+              containerStyle={styles.hcaptchaContainer}
+              backgroundColor={'transparent'}
+              enableAutoOpenChallenge={enableAutoOpenChallenge}
+              languageCode={languageCode}
+            />
+          </>
+        )}
+      </First>
     </View>
   );
 };

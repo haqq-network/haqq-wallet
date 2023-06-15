@@ -75,13 +75,10 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   const [sliderLayout, onSliderLayout] = useLayout();
   const position = useSharedValue(0);
   const intermediatePositionValues = useRef<number[]>([]);
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const startTime = useRef(0);
+  const endTime = useRef(0);
+  const [diffTimeSeconds, setDiffTimeSeconds] = useState('0');
 
-  const diffTimeSeconds = useMemo(
-    () => ((endTime - startTime) / 1000).toFixed(1),
-    [endTime, startTime],
-  );
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
   const refreshButtonEnabled = useMemo(
     () => sliderState === SliderCaptchaState.initial,
@@ -152,7 +149,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   }, [fetchImageSource, sliderState]);
 
   const onStartMovement = useCallback(() => {
-    setStartTime(Date.now());
+    startTime.current = Date.now();
     setSliderState(SliderCaptchaState.move);
   }, []);
 
@@ -187,7 +184,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       intermediatePositionValues.current,
     ).toString('base64');
 
-    setEndTime(Date.now());
+    endTime.current = Date.now();
     setSliderState(SliderCaptchaState.loading);
 
     try {
@@ -197,6 +194,9 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         abortController.current.signal,
       );
 
+      setDiffTimeSeconds(
+        ((endTime.current - startTime.current) / 1000).toFixed(1),
+      );
       setSliderState(SliderCaptchaState.success);
       await sleep(SUCCESS_ERROR_DURATION);
       onData?.(session.key as CaptchaDataTypes);
