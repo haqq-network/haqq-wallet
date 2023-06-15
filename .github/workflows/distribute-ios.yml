@@ -73,12 +73,10 @@ jobs:
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
           echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
-          echo "MPC_STORE_URL=${{secrets.MPC_STORE_URL}}" >> .env
-          echo "MPC_NETWORK=${{secrets.MPC_NETWORK}}" >> .env
-          echo "MPC_GOOGLE_IOS=${{secrets.MPC_GOOGLE_IOS}}" >> .env
-          echo "MPC_GOOGLE_ANDROID=${{secrets.MPC_GOOGLE_ANDROID}}" >> .env
-          echo "MPC_APPLE=${{secrets.MPC_APPLE}}" >> .env
-          echo "MPC_CUSTOM=${{secrets.MPC_CUSTOM}}" >> .env
+          echo "SSS_GOOGLE_IOS=${{secrets.SSS_GOOGLE_IOS}}" >> .env
+          echo "SSS_GOOGLE_ANDROID=${{secrets.SSS_GOOGLE_ANDROID}}" >> .env
+          echo "SSS_APPLE=${{secrets.SSS_APPLE}}" >> .env
+          echo "SSS_CUSTOM=${{secrets.SSS_CUSTOM}}" >> .env
           echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
           echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
           echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
