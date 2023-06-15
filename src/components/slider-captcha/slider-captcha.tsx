@@ -53,8 +53,8 @@ enum SliderCaptchaState {
 }
 
 const MAX_PROGRESS_VALUE = 255;
-const BG_ASPECT_RATIO = 295 / 208; // width / height from figma
-const PUZZLE_ASPECT_RATIO = 52 / 208; // width / height from figma
+const BG_ASPECT_RATIO = 1.4182692307692308; // 295 / 208 width / height from figma
+const PUZZLE_ASPECT_RATIO = 0.25; // 52 / 208 width / height from figma
 const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
 const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
@@ -249,7 +249,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           translateX: interpolate(
             position.value,
             [0, sliderLayout.width],
-            [0, imageContainerLayout.width],
+            [0, imageContainerLayout.width || styles.puzzle.width],
           ),
         },
       ],
@@ -327,8 +327,10 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
             style={[
               styles.bg,
               {
-                width: imageContainerLayout.width,
-                height: (imageContainerLayout.width || 1) / BG_ASPECT_RATIO,
+                width: imageContainerLayout.width || styles.bg.width,
+                height:
+                  (imageContainerLayout.width || styles.bg.height) /
+                  BG_ASPECT_RATIO,
               },
             ]}
             source={imageSource.back}
@@ -340,8 +342,9 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
                 styles.puzzle,
                 {
                   width:
-                    (imageContainerLayout.height || 1) * PUZZLE_ASPECT_RATIO,
-                  height: imageContainerLayout.height,
+                    (imageContainerLayout.height || styles.puzzle.width) *
+                    PUZZLE_ASPECT_RATIO,
+                  height: imageContainerLayout.height || styles.puzzle.height,
                 },
               ]}
               source={imageSource.puzzle}
