@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
-import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {RefreshControl, ScrollView, TouchableOpacity, View} from 'react-native';
 import {RiveRef} from 'rive-react-native';
 
 import {Color} from '@app/colors';
@@ -34,9 +34,11 @@ export interface HomeEarnProps {
   rewardAmount: number;
   showStakingRewards?: boolean;
   showStakingGetRewardsButtons?: boolean;
+  isRafflesLoading: boolean;
   raffleList: Raffle[];
   onPressGetRewards: () => void;
   onPressStaking: () => void;
+  loadRaffles: () => void;
   onPressGetTicket: (raffle: Raffle) => Promise<void>;
   onPressShowResult: (raffle: Raffle) => void;
   onPressRaffle: (raffle: Raffle) => void;
@@ -47,7 +49,9 @@ export const HomeEarn = ({
   showStakingGetRewardsButtons,
   showStakingRewards,
   raffleList,
+  isRafflesLoading,
   onPressGetRewards,
+  loadRaffles,
   onPressGetTicket,
   onPressShowResult,
   onPressStaking,
@@ -78,7 +82,11 @@ export const HomeEarn = ({
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={isRafflesLoading} onRefresh={loadRaffles} />
+      }>
       <TouchableOpacity onPress={onPressStaking}>
         <View style={styles.stakingCard}>
           <View style={styles.row}>

@@ -40,6 +40,7 @@ export const HomeEarnScreen = () => {
   const visible = useWalletsVisible();
   const cosmos = useCosmos();
   const [raffles, setRaffles] = useState<null | Raffle[]>(null);
+  const [isRafflesLoading, setIsRafflesLoading] = useState<boolean>(false);
 
   const [data, setData] = useState({
     ...initData,
@@ -99,11 +100,17 @@ export const HomeEarnScreen = () => {
   }, [visible]);
 
   const loadRaffles = useCallback(async () => {
-    const response = await Backend.instance.contests(
-      Wallet.addressList(),
-      getUid(),
-    );
-    setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+    try {
+      setIsRafflesLoading(true);
+      const response = await Backend.instance.contests(
+        Wallet.addressList(),
+        getUid(),
+      );
+      setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+    } catch (err) {
+      captureException(err, 'HomeEarnScreen.loadRaffles', Wallet.addressList());
+    }
+    setIsRafflesLoading(false);
   }, []);
 
   useEffect(() => {
@@ -297,12 +304,14 @@ export const HomeEarnScreen = () => {
       rewardAmount={data.rewardsSum}
       showStakingRewards={haveAvailablSum}
       showStakingGetRewardsButtons={canGetRewards}
+      raffleList={raffles}
+      isRafflesLoading={isRafflesLoading}
+      loadRaffles={loadRaffles}
       onPressGetRewards={onPressGetRewards}
       onPressGetTicket={onPressGetTicket}
       onPressShowResult={onPressShowResult}
       onPressStaking={onPressStaking}
       onPressRaffle={onPressRaffle}
-      raffleList={raffles}
     />
   );
 };
