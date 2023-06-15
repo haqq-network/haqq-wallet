@@ -54,6 +54,11 @@ export const HomeEarnScreen = () => {
     [data],
   );
 
+  const haveAvailablSum = useMemo(
+    () => data.availableSum >= 1 / NUM_PRECISION,
+    [data],
+  );
+
   useEffect(() => {
     const rows = StakingMetadata.getAll();
 
@@ -290,8 +295,8 @@ export const HomeEarnScreen = () => {
   return (
     <HomeEarn
       rewardAmount={data.rewardsSum}
-      showStakingRewards={canGetRewards}
-      showStakingGetRewardsButtons
+      showStakingRewards={haveAvailablSum}
+      showStakingGetRewardsButtons={canGetRewards}
       onPressGetRewards={onPressGetRewards}
       onPressGetTicket={onPressGetTicket}
       onPressShowResult={onPressShowResult}
