@@ -106,7 +106,9 @@ export type RootStackParamList = {
   staking: undefined;
   web3browser: {
     url: string;
+    popup?: boolean;
   };
+  web3BrowserPopup: RootStackParamList['web3browser'];
   browserHomePage: undefined;
   browserSearchPage: undefined | {initialSearchText?: string};
   browserEditBookmarksScreen: undefined;

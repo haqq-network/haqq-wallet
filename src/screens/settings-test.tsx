@@ -17,7 +17,6 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -27,6 +26,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {Link} from '@app/types';
+import {openInAppBrowser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('setBackgroundMessageHandler', remoteMessage);
@@ -180,10 +180,7 @@ export const SettingsTestScreen = () => {
   };
 
   const onPressOpenBrowser = () => {
-    navigation.navigate('homeBrowser', {
-      screen: 'web3browser',
-      params: {url: onUrlSubmit(browserUrl)},
-    });
+    openInAppBrowser(browserUrl);
   };
 
   const onCallContract = async () => {
