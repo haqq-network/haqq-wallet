@@ -9,11 +9,11 @@ import {WalletInitialData} from '@app/types';
 export async function getProviderForNewWallet(params: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
 
-  if (params && params.type === 'mpc') {
+  if (params && params.type === 'sss') {
     const storage = await getProviderStorage('', 'cloud');
     return await ProviderSSSReactNative.initialize(
-      params.mpcPrivateKey || null,
-      params.mpcCloudShare || null,
+      params.sssPrivateKey || null,
+      params.sssCloudShare || null,
       null,
       params.verifier,
       params.token,
@@ -26,14 +26,14 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
     );
   }
 
-  const keysMpc = await ProviderSSSReactNative.getAccounts();
+  const keysSss = await ProviderSSSReactNative.getAccounts();
 
-  if (keysMpc.length) {
-    const storage = await getProviderStorage(keysMpc[0]);
+  if (keysSss.length) {
+    const storage = await getProviderStorage(keysSss[0]);
 
     return new ProviderSSSReactNative({
       storage,
-      account: keysMpc[0],
+      account: keysSss[0],
       getPassword,
     });
   }

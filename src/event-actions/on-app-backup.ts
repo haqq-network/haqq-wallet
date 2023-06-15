@@ -18,14 +18,14 @@ export async function onAppBackup() {
   const mnemonics = await ProviderMnemonicReactNative.getAccounts();
 
   if (isFeatureEnabled(Feature.sss)) {
-    const mpc = await ProviderSSSReactNative.getAccounts();
-    if (mnemonics.length && !mpc.length) {
-      navigator.navigate('backupMpcSuggestion', {accountId: mnemonics[0]});
+    const sss = await ProviderSSSReactNative.getAccounts();
+    if (mnemonics.length && !sss.length) {
+      navigator.navigate('backupSssSuggestion', {accountId: mnemonics[0]});
       return;
     }
 
-    if (mpc.length) {
-      app.emit(Events.onWalletMpcCheck, app.snoozeBackup);
+    if (sss.length) {
+      app.emit(Events.onWalletSssCheck, app.snoozeBackup);
     }
   }
   if (mnemonics.length) {

@@ -1,42 +1,43 @@
 import React from 'react';
 
 import {Image, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
+import {
+  Button,
+  ButtonVariant,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
 
-import {Button, ButtonVariant, Spacer, Text} from './ui';
-
-interface SignNotExistsProps {
+export type SssMigrateAgreementProps = {
   provider: SssProviders;
   email?: string;
+  onDone: () => void;
+  onCancel: () => void;
+};
 
-  onPressCreate(): void;
-
-  onPressChoice(): void;
-}
-
-export const SigninNotExists = ({
+export const SssMigrateRewrite = ({
   provider,
   email,
-  onPressChoice,
-  onPressCreate,
-}: SignNotExistsProps) => {
-  const insets = useSafeAreaInsets();
+  onDone,
+  onCancel,
+}: SssMigrateAgreementProps) => {
   return (
-    <View style={styles.container}>
+    <PopupContainer style={styles.container}>
       <View>
         <Image
-          source={require('@assets/images/question-circle.png')}
+          source={require('@assets/images/exclamation-mark-error.png')}
           style={styles.img}
         />
         <Spacer height={44} />
         <Text
           t4
           center
-          i18n={I18N.signNotExitsTitle}
+          i18n={I18N.sssMigrateRewriteTitle}
           i18params={{provider, email: email || ''}}
         />
         <Spacer height={5} />
@@ -44,7 +45,14 @@ export const SigninNotExists = ({
           t11
           color={Color.textBase2}
           center
-          i18n={I18N.signNotExitsDescription}
+          i18n={I18N.sssMigrateRewriteDescription}
+        />
+        <Spacer height={5} />
+        <Text
+          t11
+          color={Color.textRed1}
+          center
+          i18n={I18N.sssMigrateRewriteWarning}
         />
       </View>
 
@@ -52,19 +60,18 @@ export const SigninNotExists = ({
         <Button
           style={styles.button}
           variant={ButtonVariant.contained}
-          onPress={onPressCreate}
-          i18n={I18N.signNotExitsCreateAccount}
+          i18n={I18N.sssMigrateRewriteCancel}
+          onPress={onCancel}
         />
         <Button
           style={styles.button}
-          variant={ButtonVariant.second}
-          onPress={onPressChoice}
-          i18n={I18N.signNotExitsChoiceAnother}
+          variant={ButtonVariant.text}
+          textColor={Color.textRed1}
+          i18n={I18N.sssMigrateRewriteRewrite}
+          onPress={onDone}
         />
-
-        <Spacer height={insets.bottom} />
       </View>
-    </View>
+    </PopupContainer>
   );
 };
 

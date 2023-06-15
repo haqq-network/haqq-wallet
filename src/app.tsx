@@ -46,8 +46,8 @@ import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
 import {NewsScreen} from '@app/screens/news';
 import {NewsDetailScreen} from '@app/screens/news-detail';
-import {BackupMpcNotificationScreen} from '@app/screens/popup-backup-mpc-notification';
-import {BackupMpcSuggestionScreen} from '@app/screens/popup-backup-mpc-suggestion';
+import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notification';
+import {BackupSssSuggestionScreen} from '@app/screens/popup-backup-sss-suggestion';
 import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
 import {ProposalScreen} from '@app/screens/proposal';
 import {SettingsNotificationScreen} from '@app/screens/settings-notification-screen';
@@ -74,7 +74,6 @@ import {HomeStakingScreen} from './screens/home-staking';
 import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {ModalsScreen} from './screens/modals-screen';
-import {MpcMigrateScreen} from './screens/mpc-migrate';
 import {NftDetailsScreen} from './screens/nft-details';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
@@ -101,6 +100,7 @@ import {SettingsThemeScreen} from './screens/settings-theme';
 import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
+import {SssMigrateScreen} from './screens/sss-migrate';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
@@ -314,7 +314,7 @@ export const App = () => {
             <Stack.Screen name="welcome" component={WelcomeScreen} />
             {/* Modals group */}
             <Stack.Group screenOptions={stackScreenOptions}>
-              <Stack.Screen name="mpcMigrate" component={MpcMigrateScreen} />
+              <Stack.Screen name="sssMigrate" component={SssMigrateScreen} />
               <Stack.Screen name="jsonRpcSign" component={JsonRpcSignPopup} />
               <Stack.Screen name="nftDetails" component={NftDetailsScreen} />
               <Stack.Screen name="backup" component={BackupScreen} />
@@ -368,13 +368,13 @@ export const App = () => {
               options={actionsSheet}
             />
             <Stack.Screen
-              name="backupMpcNotification"
-              component={BackupMpcNotificationScreen}
+              name="backupSssNotification"
+              component={BackupSssNotificationScreen}
               options={actionsSheet}
             />
             <Stack.Screen
-              name="backupMpcSuggestion"
-              component={BackupMpcSuggestionScreen}
+              name="backupSssSuggestion"
+              component={BackupSssSuggestionScreen}
               options={actionsSheet}
             />
             <Stack.Screen

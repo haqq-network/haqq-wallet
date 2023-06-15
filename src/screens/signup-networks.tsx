@@ -9,27 +9,27 @@ import {app} from '@app/contexts';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
-  MpcProviders,
+  SssProviders,
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
-} from '@app/services/provider-mpc';
+} from '@app/services/provider-sss';
 
 export const SignupNetworksScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
 
   const onLogin = useCallback(
-    async (provider: MpcProviders) => {
+    async (provider: SssProviders) => {
       let creds;
       switch (provider) {
-        case MpcProviders.apple:
+        case SssProviders.apple:
           creds = await onLoginApple();
           break;
-        case MpcProviders.google:
+        case SssProviders.google:
           creds = await onLoginGoogle();
           break;
-        case MpcProviders.custom:
+        case SssProviders.custom:
           creds = await onLoginCustom();
           break;
       }
@@ -51,11 +51,11 @@ export const SignupNetworksScreen = () => {
       }
       // @ts-ignore
       navigation.navigate(nextScreen, {
-        type: 'mpc',
-        mpcPrivateKey: creds.privateKey,
+        type: 'sss',
+        sssPrivateKey: creds.privateKey,
         token: creds.token,
         verifier: creds.verifier,
-        mpcCloudShare: null,
+        sssCloudShare: null,
         provider: provider,
       });
     },
@@ -64,8 +64,8 @@ export const SignupNetworksScreen = () => {
 
   const onLoginLaterPress = useCallback(() => {
     Alert.alert(
-      getText(I18N.mpcLoginLaterTitle),
-      getText(I18N.mpcLoginLaterDescription),
+      getText(I18N.sssLoginLaterTitle),
+      getText(I18N.sssLoginLaterDescription),
       [
         {
           text: 'Cancel',

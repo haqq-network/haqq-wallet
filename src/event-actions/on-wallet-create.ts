@@ -34,10 +34,10 @@ export async function onWalletCreate(wallet: Wallet) {
 
       switch (wallet.type) {
         case WalletType.sss:
-          const providerMpc = (await getProviderInstanceForWallet(
+          const providerSss = (await getProviderInstanceForWallet(
             wallet,
           )) as ProviderSSSReactNative;
-          mnemonicSaved = await providerMpc.isShareSaved();
+          mnemonicSaved = await providerSss.isShareSaved();
           break;
         case WalletType.mnemonic:
           const providerMnemonic = (await getProviderInstanceForWallet(
