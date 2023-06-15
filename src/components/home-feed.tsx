@@ -4,6 +4,7 @@ import {FlatList, ListRenderItem, StyleSheet} from 'react-native';
 
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {User} from '@app/models/user';
 import {WalletsWrapper} from '@app/screens/wallets';
 import {TransactionList} from '@app/types';
@@ -59,23 +60,25 @@ export const HomeFeed = ({
     () => (
       <>
         <WalletsWrapper />
-        <TopTabNavigator
-          contentContainerStyle={styles.tabsContentContainerStyle}
-          tabHeaderStyle={styles.tabHeaderStyle}
-          variant={TopTabNavigatorVariant.large}
-          showSeparators
-          onTabChange={onTabChange}>
-          <TopTabNavigator.Tab
-            name={TabNames.nft}
-            title={'NFTs'}
-            component={null}
-          />
-          <TopTabNavigator.Tab
-            name={TabNames.transactions}
-            title={'Transactions'}
-            component={null}
-          />
-        </TopTabNavigator>
+        {isFeatureEnabled(Feature.nft) && (
+          <TopTabNavigator
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            tabHeaderStyle={styles.tabHeaderStyle}
+            variant={TopTabNavigatorVariant.large}
+            showSeparators
+            onTabChange={onTabChange}>
+            <TopTabNavigator.Tab
+              name={TabNames.nft}
+              title={'NFTs'}
+              component={null}
+            />
+            <TopTabNavigator.Tab
+              name={TabNames.transactions}
+              title={'Transactions'}
+              component={null}
+            />
+          </TopTabNavigator>
+        )}
       </>
     ),
     [onTabChange],
