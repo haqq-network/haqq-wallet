@@ -9,7 +9,7 @@ export const captureException = (
   if (!error) {
     console.log(
       source,
-      'captureException called with messing or incorrect arguments',
+      'captureException called with missing or incorrect arguments',
     );
     console.trace();
     return;
