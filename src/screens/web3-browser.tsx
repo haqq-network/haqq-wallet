@@ -101,9 +101,7 @@ export const Web3BrowserScreen = () => {
 
   const onPressHome = useCallback(() => {
     setShowActionMenu(false);
-    navigation.reset({
-      routes: [{name: 'home', params: {screen: 'homeBrowser'}}],
-    });
+    navigation.goBack();
   }, [navigation]);
 
   const onPressAddBookmark = useCallback(

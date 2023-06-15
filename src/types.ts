@@ -16,7 +16,7 @@ import {Wallet} from '@app/models/wallet';
 
 import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
-import {MpcProviders} from './services/provider-mpc';
+import {SssProviders} from './services/provider-sss';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
 
 export enum AdjustEvents {
@@ -91,9 +91,9 @@ export type WalletInitialData =
       deviceName: string;
     }
   | {
-      type: 'mpc';
-      mpcPrivateKey: string | null;
-      mpcCloudShare: string | null;
+      type: 'sss';
+      sssPrivateKey: string | null;
+      sssCloudShare: string | null;
       verifier: string;
       token: string;
     }
@@ -165,27 +165,27 @@ export type RootStackParamList = {
     accountId: string;
   };
 
-  mpcMigrate: {
+  sssMigrate: {
     accountId: string;
   };
-  mpcMigrateAgreement: {
+  sssMigrateAgreement: {
     accountId: string;
   };
-  mpcMigrateNetworks: {
+  sssMigrateNetworks: {
     accountId: string;
   };
-  mpcMigrateFinish: undefined;
-  mpcMigrateStore: {
+  sssMigrateFinish: undefined;
+  sssMigrateStore: {
     accountId: string;
     privateKey: string | null;
     verifier: string;
     token: string;
   };
 
-  mpcMigrateRewrite: {
+  sssMigrateRewrite: {
     accountId: string;
     privateKey: string;
-    provider: MpcProviders;
+    provider: SssProviders;
     email?: string;
     verifier: string;
     token: string;
@@ -216,10 +216,10 @@ export type RootStackParamList = {
   backupNotification: {
     accountId: string;
   };
-  backupMpcNotification: {
+  backupSssNotification: {
     accountId: string;
   };
-  backupMpcSuggestion: {
+  backupSssSuggestion: {
     accountId: string;
   };
   backupWarning: {
@@ -257,10 +257,10 @@ export type RootStackParamList = {
   signupNetworks: undefined;
   signinPin: WalletInitialData;
   signupPin: WalletInitialData;
-  signinNotExists: {provider: MpcProviders; email?: string} & WalletInitialData;
+  signinNotExists: {provider: SssProviders; email?: string} & WalletInitialData;
   signinNotRecovery: WalletInitialData;
   signupNetworkExists: {
-    provider: MpcProviders;
+    provider: SssProviders;
     email?: string;
   } & WalletInitialData;
   signinNetworks: undefined;
@@ -476,18 +476,18 @@ export type RootStackParamList = {
     chainId?: number;
     selectedAccount?: string;
   };
-  mpcNetwork: undefined;
-  mpcBackup: {
+  sssNetwork: undefined;
+  sssBackup: {
     privateKey: string;
   };
-  mpcStoreWallet: {
+  sssStoreWallet: {
     privateKey: string;
     cloudShare: string | null;
     questionAnswer: string | null;
     token: string;
     verifier: string;
   };
-  mpcFinish: undefined;
+  sssFinish: undefined;
   walletProtectionPopup: {
     accountId: string;
   };

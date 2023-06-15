@@ -17,7 +17,7 @@ export const SignupNetworkExistsScreen = () => {
     let nextScreen: string = '';
     let nextParams: WalletInitialData = route.params;
 
-    if (nextParams.type !== 'mpc' || !nextParams.mpcPrivateKey) {
+    if (nextParams.type !== 'sss' || !nextParams.sssPrivateKey) {
       return;
     }
 
@@ -29,7 +29,7 @@ export const SignupNetworkExistsScreen = () => {
 
     const cloud = new Cloud();
 
-    const account = await accountInfo(nextParams.mpcPrivateKey);
+    const account = await accountInfo(nextParams.sssPrivateKey);
 
     const share = await cloud.getItem(`haqq_${account.address.toLowerCase()}`);
 
@@ -38,7 +38,7 @@ export const SignupNetworkExistsScreen = () => {
     } else {
       nextScreen = user.onboarded ? 'signupStoreWallet' : 'onboardingSetupPin';
 
-      nextParams.mpcCloudShare = share;
+      nextParams.sssCloudShare = share;
     }
 
     navigation.navigate(
@@ -67,7 +67,7 @@ export const SignupNetworkExistsScreen = () => {
             // @ts-ignore
             navigation.navigate(nextScreen, {
               ...route.params,
-              mpcPrivateKey: null,
+              sssPrivateKey: null,
             });
           },
         },

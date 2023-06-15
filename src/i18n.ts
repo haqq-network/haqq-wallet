@@ -494,25 +494,25 @@ export enum I18N {
   walletConnectApprovalConnected,
   walletConnectApprovalExpired,
   settingsTestShareCopied,
-  mpcConnect,
-  mpcFinishCongratulations,
-  mpcStoreWalletSaving,
-  mpcQuestionWrongPassword,
-  backupMpcNotificationBackupGoogleDrive,
-  backupMpcNotificationBackupICloud,
-  backupMpcNotificationCheck,
-  backupMpcSuggestionConnect,
-  backupMpcSuggestionCancel,
+  sssConnect,
+  sssFinishCongratulations,
+  sssStoreWalletSaving,
+  sssQuestionWrongPassword,
+  backupSssNotificationBackupGoogleDrive,
+  backupSssNotificationBackupICloud,
+  backupSssNotificationCheck,
+  backupSssSuggestionConnect,
+  backupSssSuggestionCancel,
   locationUnauthorizedDescription,
   locationUnauthorizedTitle,
-  mpcMigrateAgreementAgree,
-  mpcMigrateRewriteRewrite,
-  mpcMigrateRewriteCancel,
+  sssMigrateAgreementAgree,
+  sssMigrateRewriteRewrite,
+  sssMigrateRewriteCancel,
   socialButtonContinueWith,
-  mpcNetworkWeb3AuthDescription,
-  mpcLoginLater,
-  mpcLoginLaterTitle,
-  mpcLoginLaterDescription,
+  sssNetworkWeb3AuthDescription,
+  sssLoginLater,
+  sssLoginLaterTitle,
+  sssLoginLaterDescription,
   walletCardWithoutProtection,
   walletProtectionTitle,
   walletProtectionDescription,
@@ -543,18 +543,18 @@ export enum I18N {
   signNotRecoveryDescription,
   signNotRecoveryOldPin,
   signNotRecoveryChangeSocial,
-  backupMpcSuggestionTitle,
-  backupMpcSuggestionDescription,
-  mpcMigrateAgrementTitle,
-  mpcMigrateAgrementDescription,
-  mpcMigrateAgrementWarning2,
-  mpcMigrateAgrementWarning1,
-  mpcMigrateFinishText,
-  mpcMigrateRewriteTitle,
-  mpcMigrateRewriteDescription,
-  mpcMigrateRewriteWarning,
-  mpcMigrateRewriteAlertTitle,
-  mpcMigrateRewriteAlertDescription,
+  backupSssSuggestionTitle,
+  backupSssSuggestionDescription,
+  sssMigrateAgrementTitle,
+  sssMigrateAgrementDescription,
+  sssMigrateAgrementWarning2,
+  sssMigrateAgrementWarning1,
+  sssMigrateFinishText,
+  sssMigrateRewriteTitle,
+  sssMigrateRewriteDescription,
+  sssMigrateRewriteWarning,
+  sssMigrateRewriteAlertTitle,
+  sssMigrateRewriteAlertDescription,
   signupNetworkExitsTitle,
   signupNetworkExitsTitleWithoutEmail,
   signupNetworkExitsDescription1,
@@ -1258,38 +1258,38 @@ const en: Record<I18N, string> = {
     '• View your balance and activity\n• Request approval for transactions',
   [I18N.walletCardConnectedApps]: '{{count}} connect',
   [I18N.settingsTestShareCopied]: 'Share copied',
-  [I18N.mpcFinishCongratulations]:
+  [I18N.sssFinishCongratulations]:
     'Сongratulations!You have successfully added a new account',
-  [I18N.mpcConnect]: 'Social login',
-  [I18N.mpcStoreWalletSaving]: 'Account saving in progress',
-  [I18N.mpcQuestionWrongPassword]: 'Wrong password',
-  [I18N.backupMpcNotificationBackupGoogleDrive]:
+  [I18N.sssConnect]: 'Social login',
+  [I18N.sssStoreWalletSaving]: 'Account saving in progress',
+  [I18N.sssQuestionWrongPassword]: 'Wrong password',
+  [I18N.backupSssNotificationBackupGoogleDrive]:
     'Create backup on Google Drive',
-  [I18N.backupMpcNotificationBackupICloud]: 'Create backup on iCloud',
-  [I18N.backupMpcNotificationCheck]: 'Check backup on google drive',
-  [I18N.backupMpcSuggestionConnect]: 'Connect',
-  [I18N.backupMpcSuggestionCancel]: 'Connect later',
+  [I18N.backupSssNotificationBackupICloud]: 'Create backup on iCloud',
+  [I18N.backupSssNotificationCheck]: 'Check backup on google drive',
+  [I18N.backupSssSuggestionConnect]: 'Connect',
+  [I18N.backupSssSuggestionCancel]: 'Connect later',
   [I18N.locationUnauthorizedTitle]: 'No access to precise location',
   [I18N.socialButtonContinueWith]: 'Continue with {{provider}}',
-  [I18N.mpcLoginLater]: 'Make a social login later',
-  [I18N.mpcLoginLaterDescription]:
+  [I18N.sssLoginLater]: 'Make a social login later',
+  [I18N.sssLoginLaterDescription]:
     'This will help to keep access to the account in case it is lost. You can always enable this feature in your account settings',
-  [I18N.mpcLoginLaterTitle]:
+  [I18N.sssLoginLaterTitle]:
     "Are you sure you don't want to enable social login?",
-  [I18N.mpcNetworkWeb3AuthDescription]:
+  [I18N.sssNetworkWeb3AuthDescription]:
     'Web3Auth does not store any data related to your social logins.',
   [I18N.signinNetworkDisclaimer]:
     'Web3Auth does not store any data related to your social logins.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
-  [I18N.mpcMigrateAgreementAgree]: 'Understood',
-  [I18N.mpcMigrateRewriteRewrite]: 'Replace',
-  [I18N.mpcMigrateRewriteCancel]: 'Change social login',
-  [I18N.mpcMigrateRewriteTitle]:
+  [I18N.sssMigrateAgreementAgree]: 'Understood',
+  [I18N.sssMigrateRewriteRewrite]: 'Replace',
+  [I18N.sssMigrateRewriteCancel]: 'Change social login',
+  [I18N.sssMigrateRewriteTitle]:
     'You already have an account on {{provider}} login {{email}}',
-  [I18N.mpcMigrateRewriteDescription]:
+  [I18N.sssMigrateRewriteDescription]:
     'You can choose another social login your account or replace it.',
-  [I18N.mpcMigrateRewriteWarning]:
+  [I18N.sssMigrateRewriteWarning]:
     'In case of replacement, all account data will be lost',
   [I18N.settingsAccountDetailPharse]: 'Pharse',
   [I18N.settingsAccountDetailSocial]: 'Social',
@@ -1326,22 +1326,22 @@ const en: Record<I18N, string> = {
     'To restore, you can enter the old PIN code or choose a different social login',
   [I18N.signNotRecoveryOldPin]: 'Enter the old PIN code',
   [I18N.signNotRecoveryChangeSocial]: 'Change social login',
-  [I18N.mpcMigrateRewriteAlertTitle]:
+  [I18N.sssMigrateRewriteAlertTitle]:
     'Are you sure you want to replace your account?',
-  [I18N.mpcMigrateRewriteAlertDescription]:
+  [I18N.sssMigrateRewriteAlertDescription]:
     'All data on the account will be lost and will not be recoverable',
-  [I18N.mpcMigrateFinishText]:
+  [I18N.sssMigrateFinishText]:
     "Сongratulations! You've successfully connected your social network.",
-  [I18N.mpcMigrateAgrementTitle]: 'Important Social login Info',
-  [I18N.mpcMigrateAgrementDescription]:
+  [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
+  [I18N.sssMigrateAgrementDescription]:
     'We use Web3Auth technology. Web3Auth does not store any data related to your social logins.',
-  [I18N.mpcMigrateAgrementWarning1]:
+  [I18N.sssMigrateAgrementWarning1]:
     'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
-  [I18N.mpcMigrateAgrementWarning2]:
+  [I18N.sssMigrateAgrementWarning2]:
     'Account recovery using a social network account will work only in our application',
-  [I18N.backupMpcSuggestionTitle]:
+  [I18N.backupSssSuggestionTitle]:
     'Make your account safer - connect it to the social network',
-  [I18N.backupMpcSuggestionDescription]:
+  [I18N.backupSssSuggestionDescription]:
     'If you lose access to your account, you can always restore it using your social network',
   [I18N.signNotExitsDescription]:
     'There are no linked accounts in our network for the social login you have chosen. Create a new account based on this social login or choose another social login',

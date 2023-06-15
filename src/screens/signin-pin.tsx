@@ -3,10 +3,10 @@ import React, {useCallback, useRef} from 'react';
 import {METADATA_URL} from '@env';
 import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
 
-import {MpcPin} from '@app/components/mpc-pin';
 import {PinInterface} from '@app/components/pin';
+import {SssPin} from '@app/components/sss-pin';
 import {captureException} from '@app/helpers';
-import {MpcError} from '@app/helpers/mpc-error';
+import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -18,20 +18,20 @@ export const SignInPinScreen = () => {
 
   const onPin = useCallback(
     async (password: string) => {
-      if (route.params.type === 'mpc') {
+      if (route.params.type === 'sss') {
         try {
-          if (!route.params.mpcPrivateKey) {
-            throw new MpcError('signinNotExists');
+          if (!route.params.sssPrivateKey) {
+            throw new SssError('signinNotExists');
           }
 
           const securityQuestion = await getMetadataValue(
             METADATA_URL,
-            route.params.mpcPrivateKey,
+            route.params.sssPrivateKey,
             'securityQuestion',
           );
 
           if (!securityQuestion) {
-            throw new MpcError('signinNotExists');
+            throw new SssError('signinNotExists');
           }
 
           await decryptShare(JSON.parse(securityQuestion), password);
@@ -39,16 +39,16 @@ export const SignInPinScreen = () => {
           if (user.onboarded) {
             navigation.navigate('signinStoreWallet', {
               ...route.params,
-              type: 'mpc',
-              mpcPrivateKey: route.params.mpcPrivateKey,
-              mpcCloudShare: null,
+              type: 'sss',
+              sssPrivateKey: route.params.sssPrivateKey,
+              sssCloudShare: null,
             });
           } else {
             navigation.navigate('onboardingSetupPin', {
               ...route.params,
-              type: 'mpc',
-              mpcPrivateKey: route.params.mpcPrivateKey,
-              mpcCloudShare: null,
+              type: 'sss',
+              sssPrivateKey: route.params.sssPrivateKey,
+              sssCloudShare: null,
             });
           }
         } catch (e) {
@@ -59,7 +59,7 @@ export const SignInPinScreen = () => {
             if ('code' in e && e.code === 2103) {
               throw new Error('wrong_password');
             } else {
-              captureException(e, 'mpc backup check password');
+              captureException(e, 'sss backup check password');
             }
           }
         }
@@ -74,5 +74,5 @@ export const SignInPinScreen = () => {
     [navigation, route.params, user.onboarded],
   );
 
-  return <MpcPin onPin={onPin} pinRef={pinRef} />;
+  return <SssPin onPin={onPin} pinRef={pinRef} />;
 };

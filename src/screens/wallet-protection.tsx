@@ -13,7 +13,7 @@ export const WalletProtectionScreen = () => {
   }, [accountId, navigation]);
 
   const onPressSocial = useCallback(() => {
-    navigation.navigate('mpcMigrate', {accountId});
+    navigation.navigate('sssMigrate', {accountId});
   }, [accountId, navigation]);
 
   return (

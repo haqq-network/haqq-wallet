@@ -13,16 +13,16 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {MpcProviders} from '@app/services/provider-mpc';
+import {SssProviders} from '@app/services/provider-sss';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';
 
-export type MpcNetworksProps = {
-  onLogin: (provider: MpcProviders) => Promise<void>;
+export type SssNetworksProps = {
+  onLogin: (provider: SssProviders) => Promise<void>;
   onSkip: () => void;
 };
 
-export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
+export const SigninNetworks = ({onLogin, onSkip}: SssNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
@@ -33,7 +33,7 @@ export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
     try {
       setIsGoogle(true);
 
-      await onLogin(MpcProviders.google);
+      await onLogin(SssProviders.google);
     } finally {
       setIsGoogle(false);
     }
@@ -43,7 +43,7 @@ export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
     try {
       setIsApple(true);
 
-      await onLogin(MpcProviders.apple);
+      await onLogin(SssProviders.apple);
     } finally {
       setIsApple(false);
     }
@@ -53,7 +53,7 @@ export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
     try {
       setIsCustom(true);
 
-      await onLogin(MpcProviders.custom);
+      await onLogin(SssProviders.custom);
     } finally {
       setIsCustom(false);
     }
@@ -105,7 +105,7 @@ export const SigninNetworks = ({onLogin, onSkip}: MpcNetworksProps) => {
       <Text
         t15
         center
-        i18n={I18N.mpcNetworkWeb3AuthDescription}
+        i18n={I18N.sssNetworkWeb3AuthDescription}
         color={Color.textBase2}
       />
       <Spacer height={28} />

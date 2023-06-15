@@ -92,9 +92,9 @@ export class SignJsonRpcRequest {
       ? Provider.getByChainId(chainId)?.rpcProvider || getDefaultNetwork()
       : getDefaultNetwork();
 
-    if (!wallet?.path || !provider) {
+    if (!provider) {
       throw new Error(
-        '[SignJsonRpcRequest:SignJsonRpcRequest]: wallet.path or provider is undefined',
+        '[SignJsonRpcRequest:SignJsonRpcRequest]: provider is undefined',
       );
     }
 
@@ -103,6 +103,7 @@ export class SignJsonRpcRequest {
       showModal('ledgerAttention');
     }
 
+    const path = wallet.path || '/';
     let result: string | undefined;
 
     try {
@@ -116,7 +117,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = getSignParamsMessage(request.params);
-        result = await provider.signPersonalMessage(wallet.path, message);
+        result = await provider.signPersonalMessage(path, message);
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
@@ -125,7 +126,7 @@ export class SignJsonRpcRequest {
         if (isEthTypedData(typedData)) {
           const cosmos = new Cosmos(app.provider!);
           const signedMessageHash = await cosmos.signTypedData(
-            wallet.path!,
+            path,
             provider,
             typedData.domain,
             // @ts-ignore
@@ -145,7 +146,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
         let sendTransactionRequest: TransactionRequest = request.params[0];
 
-        const {address} = await provider.getAccountInfo(wallet.path);
+        const {address} = await provider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
         const {_hex: estimateGas} = await rpcProvider.estimateGas({
           ...sendTransactionRequest,
@@ -164,7 +165,7 @@ export class SignJsonRpcRequest {
         }
 
         const signedTransaction = await provider.signTransaction(
-          wallet.path,
+          path,
           sendTransactionRequest,
         );
 
@@ -181,10 +182,7 @@ export class SignJsonRpcRequest {
           signTransactionRequest.chainId = chainId;
         }
 
-        result = await provider.signTransaction(
-          wallet.path,
-          signTransactionRequest,
-        );
+        result = await provider.signTransaction(path, signTransactionRequest);
         break;
       default:
         throw new Error(

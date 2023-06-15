@@ -86,7 +86,7 @@ export const SettingsAccountDetailScreen = () => {
   }, [navigation, wallet?.accountId]);
 
   const onPressSocial = useCallback(() => {
-    navigation.navigate('backupMpcNotification', {
+    navigation.navigate('backupSssSuggestion', {
       accountId: wallet?.accountId!,
     });
   }, [navigation, wallet?.accountId]);

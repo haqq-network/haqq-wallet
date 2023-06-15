@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {appleAuth} from '@invertase/react-native-apple-authentication';
+
 import {Color} from '@app/colors';
 import {
   Button,
@@ -15,21 +17,11 @@ import {SssProviders} from '@app/services/provider-sss';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';
 
-export type SssNetworksProps = {
-  isGoogleSupported: boolean;
-  isAppleSupported: boolean;
-  isDeveloper: boolean;
+export type SssMigrateNetworksProps = {
   onLogin: (provider: SssProviders) => Promise<void>;
-  onLoginLaterPress(): void;
 };
 
-export const SignupNetworks = ({
-  isGoogleSupported,
-  isAppleSupported,
-  isDeveloper,
-  onLogin,
-  onLoginLaterPress,
-}: SssNetworksProps) => {
+export const SssMigrateNetworks = ({onLogin}: SssMigrateNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
   const [isCustom, setIsCustom] = useState(false);
@@ -65,6 +57,7 @@ export const SignupNetworks = ({
       setIsCustom(false);
     }
   }, [onLogin]);
+
   return (
     <PopupContainer style={styles.container}>
       <Spacer centered>
@@ -75,13 +68,8 @@ export const SignupNetworks = ({
           loop
         />
       </Spacer>
-      {/* <SocialButton variant={SocialButtonVariant.discord} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.twitter} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.facebook} /> */}
 
-      {isAppleSupported && (
+      {appleAuth.isSupported && (
         <>
           <Spacer height={10} />
           <SocialButton
@@ -92,40 +80,27 @@ export const SignupNetworks = ({
           />
         </>
       )}
-      {isGoogleSupported && (
-        <>
-          <Spacer height={10} />
-          <SocialButton
-            loading={isGoogle}
-            disabled={isLoading && !isGoogle}
-            onPress={onPressLoginGoogle}
-            variant={SocialButtonVariant.google}
-          />
-        </>
-      )}
-      {isDeveloper && (
-        <>
-          <Spacer height={10} />
-          <Button
-            onPress={onPressLoginCustom}
-            loading={isCustom}
-            i18n={I18N.customNetwork}
-            variant={ButtonVariant.contained}
-          />
-        </>
-      )}
+
+      <Spacer height={10} />
+      <SocialButton
+        loading={isGoogle}
+        disabled={isLoading && !isGoogle}
+        onPress={onPressLoginGoogle}
+        variant={SocialButtonVariant.google}
+      />
+      <Spacer height={10} />
+      <Button
+        onPress={onPressLoginCustom}
+        loading={isCustom}
+        i18n={I18N.customNetwork}
+        variant={ButtonVariant.contained}
+      />
       <Spacer height={10} />
       <Text
         t15
+        center
         i18n={I18N.sssNetworkWeb3AuthDescription}
         color={Color.textBase2}
-      />
-      <Spacer height={8} />
-      <Button
-        onPress={onLoginLaterPress}
-        i18n={I18N.sssLoginLater}
-        variant={ButtonVariant.text}
-        textColor={Color.textRed1}
       />
     </PopupContainer>
   );

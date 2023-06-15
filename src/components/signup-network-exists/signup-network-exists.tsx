@@ -12,10 +12,10 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {MpcProviders} from '@app/services/provider-mpc';
+import {SssProviders} from '@app/services/provider-sss';
 
 export type SignupNetworkExistsProps = {
-  provider: MpcProviders;
+  provider: SssProviders;
   email?: string;
   onRestore: () => void;
   onRewrite: () => void;

@@ -5,38 +5,38 @@ import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {SigninNetworks} from '@app/components/signin-networks';
-import {MpcError} from '@app/helpers/mpc-error';
+import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {
-  MpcProviders,
+  SssProviders,
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
-} from '@app/services/provider-mpc';
+} from '@app/services/provider-sss';
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
   const user = useUser();
 
   const onLogin = useCallback(
-    async (provider: MpcProviders) => {
+    async (provider: SssProviders) => {
       let creds;
       switch (provider) {
-        case MpcProviders.apple:
+        case SssProviders.apple:
           creds = await onLoginApple();
           break;
-        case MpcProviders.google:
+        case SssProviders.google:
           creds = await onLoginGoogle();
           break;
-        case MpcProviders.custom:
+        case SssProviders.custom:
           creds = await onLoginCustom();
           break;
       }
 
       try {
         if (!creds.privateKey) {
-          throw new MpcError('signinNotExists');
+          throw new SssError('signinNotExists');
         }
 
         const walletInfo = await getMetadataValue(
@@ -46,12 +46,12 @@ export const SignInNetworksScreen = () => {
         );
 
         if (!walletInfo) {
-          throw new MpcError('signinNotExists');
+          throw new SssError('signinNotExists');
         }
 
         const supported = await Cloud.isEnabled();
         if (!supported) {
-          throw new MpcError('signinNotExists');
+          throw new SssError('signinNotExists');
         }
 
         const cloud = new Cloud();
@@ -63,7 +63,7 @@ export const SignInNetworksScreen = () => {
         );
 
         if (!share) {
-          throw new MpcError('signinNotRecovery');
+          throw new SssError('signinNotRecovery');
         }
 
         const nextScreen = user.onboarded
@@ -71,22 +71,22 @@ export const SignInNetworksScreen = () => {
           : 'onboardingSetupPin';
 
         navigation.navigate(nextScreen, {
-          type: 'mpc',
-          mpcPrivateKey: creds.privateKey,
+          type: 'sss',
+          sssPrivateKey: creds.privateKey,
           token: creds.token,
           verifier: creds.verifier,
-          mpcCloudShare: share,
+          sssCloudShare: share,
         });
       } catch (e) {
-        console.log('error', e, e instanceof MpcError);
-        if (e instanceof MpcError) {
+        console.log('error', e, e instanceof SssError);
+        if (e instanceof SssError) {
           // @ts-ignore
           navigation.navigate(e.message, {
-            type: 'mpc',
-            mpcPrivateKey: creds.privateKey,
+            type: 'sss',
+            sssPrivateKey: creds.privateKey,
             token: creds.token,
             verifier: creds.verifier,
-            mpcCloudShare: null,
+            sssCloudShare: null,
           });
         }
       }

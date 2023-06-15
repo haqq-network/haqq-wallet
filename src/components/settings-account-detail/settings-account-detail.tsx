@@ -72,7 +72,7 @@ export const SettingsAccountDetail = ({
       </View>
       {isFeatureEnabled(Feature.sss) && (
         <First>
-          {!wallet.mnemonicSaved && wallet.type !== WalletType.sss && (
+          {!wallet.mnemonicSaved && wallet.type === WalletType.mnemonic && (
             <InfoBlock
               border
               warning
@@ -100,7 +100,7 @@ export const SettingsAccountDetail = ({
               }
             />
           )}
-          {wallet.type !== WalletType.sss && (
+          {wallet.type === WalletType.mnemonic && (
             <InfoBlock
               border
               icon={<Icon name={'warning'} color={Color.graphicBase1} />}

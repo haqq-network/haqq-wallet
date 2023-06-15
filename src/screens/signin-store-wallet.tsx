@@ -80,12 +80,12 @@ export const SignInStoreWalletScreen = () => {
               WalletType.mnemonic,
             );
             break;
-          case 'mpc':
+          case 'sss':
             const storage = await getProviderStorage();
 
-            const mpcProvider = await ProviderSSSReactNative.initialize(
-              params.mpcPrivateKey,
-              params.mpcCloudShare,
+            const sssProvider = await ProviderSSSReactNative.initialize(
+              params.sssPrivateKey,
+              params.sssCloudShare,
               null,
               params.verifier,
               params.token,
@@ -97,7 +97,7 @@ export const SignInStoreWalletScreen = () => {
               },
             );
 
-            await createWalletsForProvider(mpcProvider, WalletType.sss);
+            await createWalletsForProvider(sssProvider, WalletType.sss);
             break;
         }
 
