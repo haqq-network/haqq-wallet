@@ -54,30 +54,6 @@
       "sha1": "9560ae412d73c7c9af72333db50464b4e597b0f9"
     },
     {
-      "path": "assets/images/backup-mpc-suggestion-dark.png",
-      "sha1": "9297904dc589db30ff3b6219dba2bdf15811435f"
-    },
-    {
-      "path": "assets/images/backup-mpc-suggestion-dark@2x.png",
-      "sha1": "a4a55fb1cc0cf6cd064c8fa04e70459781becb7c"
-    },
-    {
-      "path": "assets/images/backup-mpc-suggestion-dark@3x.png",
-      "sha1": "efc8672d93a34a2f341b47a29e9e45f583ef3755"
-    },
-    {
-      "path": "assets/images/backup-mpc-suggestion-light.png",
-      "sha1": "1d360b53a27002ef49d55d876d759836d37437ba"
-    },
-    {
-      "path": "assets/images/backup-mpc-suggestion-light@2x.png",
-      "sha1": "d25d098f58a32d31568b46d36275f6759d5ae6f6"
-    },
-    {
-      "path": "assets/images/backup-mpc-suggestion-light@3x.png",
-      "sha1": "f716f116f74ed3e593a2989bfd7303d7e25867af"
-    },
-    {
       "path": "assets/images/backup-notification-dark.png",
       "sha1": "a7a5201381eb87b7c3422505962aa5f38fccc51f"
     },
@@ -100,6 +76,30 @@
     {
       "path": "assets/images/backup-notification-light@3x.png",
       "sha1": "12bb8524ca6f9b624f755e2423d09e49f4a7268a"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-dark.png",
+      "sha1": "9297904dc589db30ff3b6219dba2bdf15811435f"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-dark@2x.png",
+      "sha1": "a4a55fb1cc0cf6cd064c8fa04e70459781becb7c"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-dark@3x.png",
+      "sha1": "efc8672d93a34a2f341b47a29e9e45f583ef3755"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-light.png",
+      "sha1": "1d360b53a27002ef49d55d876d759836d37437ba"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-light@2x.png",
+      "sha1": "d25d098f58a32d31568b46d36275f6759d5ae6f6"
+    },
+    {
+      "path": "assets/images/backup-sss-suggestion-light@3x.png",
+      "sha1": "f716f116f74ed3e593a2989bfd7303d7e25867af"
     },
     {
       "path": "assets/images/banner_analytics.png",
@@ -208,6 +208,42 @@
     {
       "path": "assets/images/card-rhombus-0@3x.png",
       "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
+    },
+    {
+      "path": "assets/images/domain-blocked-dark.png",
+      "sha1": "0b187e6ed8d7d9daabf9e019aff40f3787ca4dff"
+    },
+    {
+      "path": "assets/images/domain-blocked-dark@2x.png",
+      "sha1": "783b1bef85db2088c75a8ee78b09331c3996bdf0"
+    },
+    {
+      "path": "assets/images/domain-blocked-dark@3x.png",
+      "sha1": "eb15dd1f705c80a0846aedbea6bb60bfabeaf362"
+    },
+    {
+      "path": "assets/images/domain-blocked-light.png",
+      "sha1": "ee06392852cb92971fe67f321d8c4dfc0cbaf764"
+    },
+    {
+      "path": "assets/images/domain-blocked-light@2x.png",
+      "sha1": "3288cd9e45dcaf17f3911e32890ebc25fc02f3c2"
+    },
+    {
+      "path": "assets/images/domain-blocked-light@3x.png",
+      "sha1": "7fe45ddac1635b2ec80187a7b82be71bc04bf641"
+    },
+    {
+      "path": "assets/images/earn-staking.png",
+      "sha1": "2206474b367535f1bb32a14bd655f7a77c57b343"
+    },
+    {
+      "path": "assets/images/earn-staking@2x.png",
+      "sha1": "e986869085681f218e393dbaa82bd73b8dedb628"
+    },
+    {
+      "path": "assets/images/earn-staking@3x.png",
+      "sha1": "1cea164bed829ca09847a9e723273c0fb09549a2"
     },
     {
       "path": "assets/images/exclamation-mark-error.png",
