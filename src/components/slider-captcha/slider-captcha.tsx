@@ -334,6 +334,8 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
               },
             ]}
             source={imageSource.back}
+            resizeMode="cover"
+            resizeMethod="scale"
           />
 
           <Animated.View style={puzzleStyle}>
@@ -348,6 +350,8 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
                 },
               ]}
               source={imageSource.puzzle}
+              resizeMode="cover"
+              resizeMethod="scale"
             />
           </Animated.View>
 
