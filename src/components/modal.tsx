@@ -1,7 +1,6 @@
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
-import Animated, {SlideInDown, SlideOutUp} from 'react-native-reanimated';
+import {StyleSheet, View} from 'react-native';
 
 export interface ModalPops {
   children: React.ReactNode;
@@ -11,14 +10,7 @@ export interface ModalPops {
 export const Modal = ({children, visible}: ModalPops) => {
   return (
     <>
-      {visible && (
-        <Animated.View
-          style={StyleSheet.absoluteFillObject}
-          entering={SlideInDown}
-          exiting={SlideOutUp}>
-          {children}
-        </Animated.View>
-      )}
+      {visible && <View style={StyleSheet.absoluteFillObject}>{children}</View>}
     </>
   );
 };
