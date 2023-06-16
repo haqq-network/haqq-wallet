@@ -31,6 +31,7 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {CaptchaDataTypes} from '../captcha';
 import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
@@ -53,11 +54,13 @@ enum SliderCaptchaState {
 }
 
 const MAX_PROGRESS_VALUE = 255;
-const BG_ASPECT_RATIO = 1.4182692307692308; // 295 / 208 width / height from figma
-const PUZZLE_ASPECT_RATIO = 0.25; // 52 / 208 width / height from figma
 const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
 const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
+
+const BACK_WIDTH = WINDOW_WIDTH - 80;
+const BACK_HEIGHT = (BACK_WIDTH * 400) / 600;
+const PUZZLE_WIDTH = (BACK_WIDTH * 120) / 600;
 
 export type CaptchaRequestState = {
   id: string;
@@ -71,7 +74,6 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     CaptchaRequestState | undefined
   >();
   const abortController = useRef(new AbortController());
-  const [imageContainerLayout, onImageContainerLayout] = useLayout();
   const [sliderLayout, onSliderLayout] = useLayout();
   const position = useSharedValue(0);
   const intermediatePositionValues = useRef<number[]>([]);
@@ -249,7 +251,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           translateX: interpolate(
             position.value,
             [0, sliderLayout.width],
-            [0, imageContainerLayout.width || styles.puzzle.width],
+            [0, BACK_WIDTH],
           ),
         },
       ],
@@ -322,17 +324,9 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       <Text t9 i18n={I18N.sliderCaptchaTitle} />
       <Spacer height={20} />
       <View style={styles.imageContainerInsets}>
-        <View style={styles.imageContainer} onLayout={onImageContainerLayout}>
+        <View style={styles.imageContainer}>
           <Image
-            style={[
-              styles.bg,
-              {
-                width: imageContainerLayout.width || styles.bg.width,
-                height:
-                  (imageContainerLayout.width || styles.bg.height) /
-                  BG_ASPECT_RATIO,
-              },
-            ]}
+            style={styles.bg}
             source={imageSource.back}
             resizeMode="cover"
             resizeMethod="scale"
@@ -340,15 +334,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
           <Animated.View style={puzzleStyle}>
             <Image
-              style={[
-                styles.puzzle,
-                {
-                  width:
-                    (imageContainerLayout.height || styles.puzzle.width) *
-                    PUZZLE_ASPECT_RATIO,
-                  height: imageContainerLayout.height || styles.puzzle.height,
-                },
-              ]}
+              style={styles.puzzle}
               source={imageSource.puzzle}
               resizeMode="cover"
               resizeMethod="scale"
@@ -502,13 +488,13 @@ const styles = createTheme({
   },
   bg: {
     alignSelf: 'center',
-    width: 295,
-    height: 208,
+    width: BACK_WIDTH,
+    height: BACK_HEIGHT,
     borderRadius: 12,
   },
   puzzle: {
-    width: 52,
-    height: 208,
+    width: PUZZLE_WIDTH,
+    height: BACK_HEIGHT,
   },
   imageContainer: {
     width: '100%',
