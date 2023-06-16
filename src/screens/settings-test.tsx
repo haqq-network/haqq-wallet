@@ -62,10 +62,6 @@ const TEST_MODALS: Partial<Modals> = {
     onClose: () => {},
     qrWithoutFrom: false,
   },
-  cardDetailsQr: {
-    address: Wallet.getAllVisible()[0].address,
-    onClose: () => {},
-  },
   bluetoothPoweredOff: {
     onClose: () => {},
   },
