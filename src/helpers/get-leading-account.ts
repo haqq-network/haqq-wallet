@@ -17,7 +17,7 @@ export function getLeadingAccount() {
     }
   }
 
-  if (leadingAccount) {
+  if (!leadingAccount) {
     const wallets = Wallet.getAll();
     const walletTypes = [
       `"${WalletType.mnemonic}"`,
