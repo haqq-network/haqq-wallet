@@ -23,6 +23,7 @@ import Animated, {
 import {useTiming} from 'react-native-redash';
 
 import {Color, getColor} from '@app/colors';
+import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
 import {useTheme} from '@app/hooks';
@@ -34,8 +35,7 @@ import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {CaptchaDataTypes} from '../captcha';
-import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
-import {RiveWrapper} from '../ui/rive-wrapper';
+import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
 
 export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
@@ -362,31 +362,29 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
           <View style={styles.toastContainer}>
             <Spacer flex={1} />
-            <First>
-              {sliderState === SliderCaptchaState.error && (
-                <Animated.View
-                  style={[styles.toast, styles.toastError]}
-                  entering={FadeInDown}>
-                  <Text
-                    t18
-                    color={Color.textBase3}
-                    i18n={I18N.sliderCaptchaErrorToast}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.success && (
-                <Animated.View
-                  style={[styles.toast, styles.toastSuccess]}
-                  entering={FadeInDown}>
-                  <Text
-                    t18
-                    color={Color.textBase3}
-                    i18n={I18N.sliderCaptchaSuccessToast}
-                    i18params={{sec: diffTimeSeconds}}
-                  />
-                </Animated.View>
-              )}
-            </First>
+            {sliderState === SliderCaptchaState.error && (
+              <Animated.View
+                style={[styles.toast, styles.toastError]}
+                entering={FadeInDown}>
+                <Text
+                  t18
+                  color={Color.textBase3}
+                  i18n={I18N.sliderCaptchaErrorToast}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.success && (
+              <Animated.View
+                style={[styles.toast, styles.toastSuccess]}
+                entering={FadeInDown}>
+                <Text
+                  t18
+                  color={Color.textBase3}
+                  i18n={I18N.sliderCaptchaSuccessToast}
+                  i18params={{sec: diffTimeSeconds}}
+                />
+              </Animated.View>
+            )}
             <Spacer flex={1} />
           </View>
         </View>
@@ -427,41 +425,39 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           onGestureEvent={gestureHandler}
           enabled={gestureEnabled}>
           <Animated.View style={[styles.sliderButton, sliderButtonStyle]}>
-            <First>
-              {sliderState === SliderCaptchaState.initial && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <RiveWrapper
-                    width={24}
-                    height={24}
-                    resourceName={'moving_arrow_captcha'}
-                    autoplay={true}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.move && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.drag} />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.loading && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <ActivityIndicator
-                    size="small"
-                    color={getColor(Color.textBase3)}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.success && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.check} />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.error && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.close} />
-                </Animated.View>
-              )}
-            </First>
+            {sliderState === SliderCaptchaState.initial && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <RiveWrapper
+                  width={24}
+                  height={24}
+                  resourceName={'moving_arrow_captcha'}
+                  autoplay={true}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.move && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.drag} />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.loading && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <ActivityIndicator
+                  size="small"
+                  color={getColor(Color.textBase3)}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.success && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.check} />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.error && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.close} />
+              </Animated.View>
+            )}
           </Animated.View>
         </PanGestureHandler>
       </View>
@@ -471,14 +467,11 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
 const styles = createTheme({
   container: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: Color.bg1,
-    width: '92%',
+    width: WINDOW_WIDTH - 32,
+    margin: 16,
     borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    padding: 24,
     zIndex: 1,
     elevation: 1,
   },
