@@ -3,13 +3,14 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {NoInternetIcon, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {Button, ButtonVariant, NoInternetIcon, Text} from '@app/components/ui';
+import {createTheme, hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Modals} from '@app/types';
 
 import {BottomPopupContainer} from '../bottom-popups';
 
-export const NoInternet = () => {
+export const NoInternet = ({showClose = false}: Modals['noInternet']) => {
   return (
     <BottomPopupContainer>
       {() => (
@@ -25,6 +26,14 @@ export const NoInternet = () => {
             color={getColor(Color.graphicSecond4)}
             style={page.icon}
           />
+          {showClose && (
+            <Button
+              variant={ButtonVariant.second}
+              title={'OK'}
+              onPress={() => hideModal('noInternet')}
+              style={page.closeButton}
+            />
+          )}
         </View>
       )}
     </BottomPopupContainer>
@@ -32,6 +41,10 @@ export const NoInternet = () => {
 };
 
 const page = createTheme({
+  closeButton: {
+    width: '100%',
+    marginTop: 10,
+  },
   descriptionText: {
     paddingTop: 6,
     width: 290,

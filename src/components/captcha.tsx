@@ -85,7 +85,7 @@ export const Captcha = ({
 };
 
 const styles = createTheme({
-  container: StyleSheet.absoluteFillObject,
+  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   overlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,

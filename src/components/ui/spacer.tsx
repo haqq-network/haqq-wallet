@@ -47,5 +47,5 @@ export const Spacer = ({
 
 const styles = createTheme({
   flexOne: {flex: 1},
-  centered: {justifyContent: 'center'},
+  centered: {justifyContent: 'center', alignItems: 'center'},
 });

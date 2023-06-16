@@ -801,7 +801,7 @@ export type ErrorModalImage =
 export type Modals = {
   splash: undefined;
   pin: undefined;
-  noInternet: undefined;
+  noInternet: {showClose?: boolean};
   loading: {
     text?: string;
   };

@@ -66,7 +66,7 @@ export const ModalWrapper = ({
       case 'splash':
         return <SplashModal />;
       case 'noInternet':
-        return <NoInternet />;
+        return <NoInternet {...modal} />;
       case 'bluetoothPoweredOff':
         return <BluetoothPoweredOff onClose={onCloseModalPress} />;
       case 'bluetoothUnauthorized':

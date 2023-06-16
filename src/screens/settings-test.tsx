@@ -14,6 +14,7 @@ import {
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
+  hideModal,
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
@@ -21,12 +22,14 @@ import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
-import {Link} from '@app/types';
+import {Link, Modals} from '@app/types';
+import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('setBackgroundMessageHandler', remoteMessage);
@@ -39,6 +42,89 @@ messaging()
       console.log('getInitialNotification', remoteMessage);
     }
   });
+
+const TEST_MODALS: Partial<Modals> = {
+  // splash: undefined,
+  // pin: undefined,
+  noInternet: {showClose: true},
+  loading: {
+    text: 'a few moment later...',
+  },
+  error: {
+    onClose: () => {
+      hideModal('loading');
+    },
+    title: 'Something went wrong',
+    description: 'Please try again later',
+    close: 'OK',
+  },
+  qr: {
+    onClose: () => {},
+    qrWithoutFrom: false,
+  },
+  cardDetailsQr: {
+    address: Wallet.getAllVisible()[0].address,
+    onClose: () => {},
+  },
+  bluetoothPoweredOff: {
+    onClose: () => {},
+  },
+  bluetoothUnauthorized: {
+    onClose: () => {},
+  },
+  domainBlocked: {
+    onClose: () => {},
+    domain: 'example.com',
+  },
+  ledgerNoApp: {
+    onClose: () => {},
+    onRetry: Promise.resolve,
+  },
+  ledgerAttention: {
+    onClose: () => {},
+  },
+  ledgerLocked: {
+    onClose: () => {},
+  },
+  errorAccountAdded: {
+    onClose: () => {},
+  },
+  errorCreateAccount: {
+    onClose: () => {},
+  },
+  claimOnMainnet: {
+    onClose: () => {},
+    onChange: () => {},
+    network: 'MainMet',
+  },
+  walletsBottomSheet: {
+    onClose: () => {},
+    wallets: Wallet.getAllVisible(),
+    closeDistance: WINDOW_HEIGHT / 6,
+    title: I18N.welcomeTitle,
+    autoSelectWallet: false,
+    eventSuffix: '-test',
+  },
+  transactionError: {
+    onClose: () => {},
+    message: 'Something went wrong',
+  },
+  locationUnauthorized: {
+    onClose: () => {},
+  },
+  providersBottomSheet: {
+    onClose: () => {},
+    title: I18N.welcomeTitle,
+    providers: Provider.getProviders(),
+    initialProviderId: Provider.getProviders()[0].id,
+    closeDistance: WINDOW_HEIGHT / 6,
+    eventSuffix: '-test',
+  },
+  captcha: {
+    onClose: () => {},
+    variant: CaptchaType.slider,
+  },
+};
 
 const abi = [
   {
@@ -415,6 +501,17 @@ export const SettingsTestScreen = () => {
             // @ts-ignore
             Alert.alert('Error', err?.message);
           }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Open all modals"
+        onPress={async () => {
+          Object.keys(TEST_MODALS).forEach(modalName => {
+            // @ts-ignore
+            showModal(modalName, TEST_MODALS[modalName]);
+          });
         }}
         variant={ButtonVariant.contained}
       />
