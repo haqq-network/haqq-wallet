@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {StakingMetadata} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
@@ -9,5 +10,89 @@ export async function onStakingSync() {
   const addressList = wallets
     .filtered('isHidden != true')
     .map(w => Cosmos.address(w.address));
-  await cosmos.sync(addressList);
+  await sync(addressList, cosmos);
+}
+
+async function sync(addressList: string[], cosmos: Cosmos) {
+  const rows = StakingMetadata.getAll().snapshot();
+
+  return Promise.all(
+    addressList.reduce<Promise<string[]>[]>((memo, curr) => {
+      return memo.concat([
+        syncStakingDelegations(curr, cosmos),
+        syncStakingUnDelegations(curr, cosmos),
+        syncStakingRewards(curr, cosmos),
+      ]);
+    }, []),
+  ).then(results => {
+    const hashes = new Set(results.flat());
+    for (const e of rows) {
+      if (!hashes.has(e.hash)) {
+        StakingMetadata.remove(e.hash);
+      }
+    }
+  });
+}
+
+async function syncStakingDelegations(
+  address: string,
+  cosmos: Cosmos,
+): Promise<string[]> {
+  return cosmos
+    .getAccountDelegations(address)
+    .then(resp =>
+      resp.delegation_responses.map(d =>
+        StakingMetadata.createDelegation(
+          d.delegation.delegator_address,
+          d.delegation.validator_address,
+          d.balance.amount,
+        ),
+      ),
+    )
+    .then(hashes => hashes.filter(Boolean) as string[]);
+}
+
+async function syncStakingUnDelegations(
+  address: string,
+  cosmos: Cosmos,
+): Promise<string[]> {
+  return cosmos
+    .getAccountUnDelegations(address)
+    .then(resp => {
+      return resp.unbonding_responses
+        .map(ur => {
+          return ur.entries.map(ure =>
+            StakingMetadata.createUnDelegation(
+              ur.delegator_address,
+              ur.validator_address,
+              ure.balance,
+              ure.completion_time,
+            ),
+          );
+        })
+        .flat();
+    })
+    .then(hashes => hashes.filter(Boolean) as string[]);
+}
+
+async function syncStakingRewards(
+  address: string,
+  cosmos: Cosmos,
+): Promise<string[]> {
+  return cosmos
+    .getAccountRewardsInfo(address)
+    .then(resp => {
+      return resp.rewards
+        .map(r =>
+          r.reward.map(rr =>
+            StakingMetadata.createReward(
+              address,
+              r.validator_address,
+              rr.amount,
+            ),
+          ),
+        )
+        .flat();
+    })
+    .then(hashes => hashes.filter(Boolean) as string[]);
 }
