@@ -19,7 +19,6 @@ import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 import {
   Gesture,
   GestureDetector,
-  GestureHandlerRootView,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
@@ -206,7 +205,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     return (
       <View style={[StyleSheet.absoluteFill, page.container]}>
-        <GestureHandlerRootView style={page.wrap}>
+        <View style={page.wrap}>
           <AnimatedStatusBar backgroundColor={backgroundColor} />
           <Animated.View
             style={[
@@ -254,7 +253,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
               </Animated.ScrollView>
             </GestureDetector>
           </Animated.View>
-        </GestureHandlerRootView>
+        </View>
       </View>
     );
   },

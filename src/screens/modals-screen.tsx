@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {Modal} from 'react-native';
-
+import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -57,7 +56,7 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
   }, [modals]);
 
   return (
-    <Modal animationType="none" visible={!!modals.length} transparent={true}>
+    <Modal visible={!!modals.length}>
       {modals.map(modal => (
         <ModalWrapper
           type={modal.type}
