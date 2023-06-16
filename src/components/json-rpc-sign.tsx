@@ -19,7 +19,9 @@ export interface WalletConnectSignProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   wallet: Wallet;
+
   onPressSign(): void;
+
   onPressReject(): void;
 }
 

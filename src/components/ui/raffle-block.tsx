@@ -13,7 +13,6 @@ import {calculateEstimateTime} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {Button, ButtonSize, ButtonVariant} from './button';
-import {First} from './first';
 import {Icon, IconsName} from './icon';
 import {Spacer} from './spacer';
 import {Text} from './text';
@@ -83,18 +82,20 @@ export const RaffleBlock = ({
     () => calculateEstimateTime(now, new Date(item.locked_until * 1000)),
     [item, now],
   );
-  const showGetTicket = useMemo(
-    () => showTicketAnimation || Date.now() > item.locked_until,
-    [item, showTicketAnimation],
-  );
-  const showTimer = useMemo(
-    () => Date.now() < item.locked_until * 1000,
-    [item],
-  );
-  const showResult = useMemo(
-    () => item.status === 'closed' || Date.now() > item.close_at * 1000,
-    [item],
-  );
+
+  const state = useMemo(() => {
+    if (item.status === 'closed' || Date.now() > item.close_at * 1000) {
+      return 'result';
+    }
+
+    if (Date.now() < item.locked_until * 1000) {
+      return 'timer';
+    }
+
+    if (showTicketAnimation || Date.now() > item.locked_until) {
+      return 'getTicket';
+    }
+  }, [item.close_at, item.locked_until, item.status, showTicketAnimation]);
 
   const handlePress = useCallback(() => {
     onPress?.(item);
@@ -131,7 +132,6 @@ export const RaffleBlock = ({
                 name={IconsName.arrow_forward_small}
               />
             </View>
-
             <View style={styles.row}>
               <Text
                 t14
@@ -154,52 +154,49 @@ export const RaffleBlock = ({
           </View>
           <Spacer flex={1} />
           <View>
-            <First>
-              {buttonType === RaffleBlocButtonType.ticket && (
-                <First>
-                  {showResult && (
-                    <Button
-                      size={ButtonSize.small}
-                      variant={ButtonVariant.warning}
-                      i18n={I18N.earnShowResult}
-                      onPress={handleShowResultPress}
+            {buttonType === RaffleBlocButtonType.ticket && (
+              <>
+                {state === 'result' && (
+                  <Button
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.warning}
+                    i18n={I18N.earnShowResult}
+                    onPress={handleShowResultPress}
+                  />
+                )}
+                {state === 'timer' && (
+                  <Button
+                    disabled
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.second}
+                    title={estimateTime}
+                  />
+                )}
+                {state === 'getTicket' && !showTicketAnimation && (
+                  <Button
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.second}
+                    i18n={I18N.earnGetTicket}
+                    onPress={handleGetTicketPress}
+                  />
+                )}
+
+                {state === 'getTicket' && showTicketAnimation && (
+                  <Button
+                    style={styles.tiketButton}
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.second}>
+                    <LottieWrap
+                      progress={0}
+                      source={ticketAnimation}
+                      autoPlay={true}
+                      loop={false}
                     />
-                  )}
-                  {showTimer && (
-                    <Button
-                      disabled
-                      size={ButtonSize.small}
-                      variant={ButtonVariant.second}
-                      title={estimateTime}
-                    />
-                  )}
-                  {showGetTicket && (
-                    <First>
-                      {showTicketAnimation && (
-                        <Button
-                          style={styles.tiketButton}
-                          size={ButtonSize.small}
-                          variant={ButtonVariant.second}>
-                          <LottieWrap
-                            progress={0}
-                            source={ticketAnimation}
-                            autoPlay={true}
-                            loop={false}
-                          />
-                        </Button>
-                      )}
-                      <Button
-                        size={ButtonSize.small}
-                        variant={ButtonVariant.second}
-                        i18n={I18N.earnGetTicket}
-                        onPress={handleGetTicketPress}
-                      />
-                    </First>
-                  )}
-                </First>
-              )}
-              {buttonType === RaffleBlocButtonType.custom && rightAction}
-            </First>
+                  </Button>
+                )}
+              </>
+            )}
+            {buttonType === RaffleBlocButtonType.custom && rightAction}
           </View>
         </View>
       </LinearGradient>

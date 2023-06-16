@@ -27,6 +27,7 @@ enum TabNames {
   nft = 'nft',
   tokens = 'tokens',
 }
+
 const PAGE_ITEMS_COUNT = 15;
 export const HomeFeed = ({
   user,

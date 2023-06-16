@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
@@ -83,18 +84,10 @@ export const Captcha = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const styles = createTheme({
+  container: StyleSheet.absoluteFillObject,
   overlay: {
-    position: 'absolute',
-    flex: 1,
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     zIndex: 1,
     elevation: 1,
   },

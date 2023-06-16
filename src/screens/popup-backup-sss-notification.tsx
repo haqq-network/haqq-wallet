@@ -3,8 +3,10 @@ import React, {useCallback} from 'react';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {addMinutes} from 'date-fns';
 
-import {BottomPopupContainer} from '@app/components/bottom-popups';
-import {BackupSssNotification} from '@app/components/bottom-popups';
+import {
+  BackupSssNotification,
+  BottomPopupContainer,
+} from '@app/components/bottom-popups';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {captureException, showModal} from '@app/helpers';
