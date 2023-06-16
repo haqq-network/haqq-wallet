@@ -1,5 +1,8 @@
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
+
+import {Feature, isFeatureEnabled} from './is-feature-enabled';
 
 export function getLeadingAccount() {
   let leadingAccount = VariablesString.get('leadingAccount');
@@ -14,33 +17,23 @@ export function getLeadingAccount() {
     }
   }
 
-  if (!leadingAccount) {
+  if (leadingAccount) {
     const wallets = Wallet.getAll();
+    const walletTypes = [
+      `"${WalletType.mnemonic}"`,
+      `"${WalletType.hot}"`,
+      `"${WalletType.ledgerBt}"`,
+    ];
+
+    if (isFeatureEnabled(Feature.sss)) {
+      walletTypes.push(`"${WalletType.sss}"`);
+    }
+
     const mnemonic = wallets
-      .filtered('type = "mnemonic" and isHidden = false')
+      .filtered(`type in { ${walletTypes.toString()} } and isHidden = false`)
       .sorted('path');
     if (mnemonic.length) {
       leadingAccount = mnemonic[0].address;
-    }
-  }
-
-  if (!leadingAccount) {
-    const wallets = Wallet.getAll();
-    const hot = wallets
-      .filtered('type = "hot" and isHidden = false')
-      .sorted('path');
-    if (hot.length) {
-      leadingAccount = hot[0].address;
-    }
-  }
-
-  if (!leadingAccount) {
-    const wallets = Wallet.getAll();
-    const ledger = wallets
-      .filtered('type = "ledger" and isHidden = false')
-      .sorted('path');
-    if (ledger.length) {
-      leadingAccount = ledger[0].address;
     }
   }
 

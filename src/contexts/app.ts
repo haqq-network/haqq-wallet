@@ -248,7 +248,7 @@ class App extends EventEmitter {
 
   async auth() {
     const close = showModal('pin');
-    if (this.biometry) {
+    if (this.biometry && !this.pinBanned) {
       try {
         await this.biometryAuth();
         vibrate(HapticEffects.success);
