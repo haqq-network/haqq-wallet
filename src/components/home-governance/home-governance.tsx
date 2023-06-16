@@ -21,6 +21,7 @@ export interface HomeGovernanceProps {
   loading?: boolean;
   onSelect?: (tag: ProposalsTagType) => () => void;
   onSearchChange?: (text: string) => void;
+  onGoBack: () => void;
 }
 
 export const HomeGovernance = ({
@@ -32,6 +33,7 @@ export const HomeGovernance = ({
   refreshing,
   loading,
   onSelect,
+  onGoBack,
 }: HomeGovernanceProps) => {
   const listHeader = useCallback(() => <Spacer height={12} />, []);
   const listSeparator = useCallback(() => <Spacer height={24} />, []);
@@ -70,6 +72,8 @@ export const HomeGovernance = ({
         onSearchChange={onSearchChange}
         title={I18N.homeGovernance}
         iconRight="search"
+        iconLeft="arrow_back"
+        onPressLeft={onGoBack}
       />
       <Spacer height={12} />
       <View>

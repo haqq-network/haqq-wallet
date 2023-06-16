@@ -45,6 +45,7 @@ import {useTheme, useUser} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
 import {AccountInfoScreen} from '@app/screens/account-info';
+import {GovernanceScreen} from '@app/screens/governance';
 import {NewsScreen} from '@app/screens/news';
 import {NewsDetailScreen} from '@app/screens/news-detail';
 import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notification';
@@ -405,6 +406,13 @@ export const App = () => {
                 options={actionsSheet}
               />
               <Stack.Screen name="news" component={NewsScreen} />
+              <Stack.Screen
+                name="governance"
+                component={GovernanceScreen}
+                options={{
+                  title: getText(I18N.homeGovernanceTitle),
+                }}
+              />
               <Stack.Screen
                 name="newsDetail"
                 component={NewsDetailScreen}

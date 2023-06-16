@@ -8,7 +8,7 @@ import {useCosmos, useTypedNavigation} from '@app/hooks';
 import {AdjustEvents, ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType} from '@app/variables/proposal';
 
-export const HomeGovernanceScreen = () => {
+export const GovernanceListScreen = () => {
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
   const {navigate, goBack} = useTypedNavigation();
@@ -18,6 +18,10 @@ export const HomeGovernanceScreen = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const cosmos = useCosmos();
+
+  const onGoBack = useCallback(() => {
+    goBack();
+  }, [goBack]);
 
   useEffect(() => {
     cosmos
@@ -59,10 +63,6 @@ export const HomeGovernanceScreen = () => {
     },
     [],
   );
-
-  const onGoBack = useCallback(() => {
-    goBack();
-  }, [goBack]);
 
   const onSearchChange = (text: string) => setSearchText(text);
 

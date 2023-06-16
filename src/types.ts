@@ -495,6 +495,7 @@ export type RootStackParamList = {
     id: string;
   };
   news: undefined;
+  governance: undefined;
   nftDetails:
     | ({
         type: 'nft';
