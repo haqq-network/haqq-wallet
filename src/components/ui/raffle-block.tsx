@@ -153,51 +153,49 @@ export const RaffleBlock = ({
             </View>
           </View>
           <Spacer flex={1} />
-          <View>
-            {buttonType === RaffleBlocButtonType.ticket && (
-              <>
-                {state === 'result' && (
-                  <Button
-                    size={ButtonSize.small}
-                    variant={ButtonVariant.warning}
-                    i18n={I18N.earnShowResult}
-                    onPress={handleShowResultPress}
-                  />
-                )}
-                {state === 'timer' && (
-                  <Button
-                    disabled
-                    size={ButtonSize.small}
-                    variant={ButtonVariant.second}
-                    title={estimateTime}
-                  />
-                )}
-                {state === 'getTicket' && !showTicketAnimation && (
-                  <Button
-                    size={ButtonSize.small}
-                    variant={ButtonVariant.second}
-                    i18n={I18N.earnGetTicket}
-                    onPress={handleGetTicketPress}
-                  />
-                )}
+          {buttonType === RaffleBlocButtonType.ticket && (
+            <>
+              {state === 'result' && (
+                <Button
+                  size={ButtonSize.small}
+                  variant={ButtonVariant.warning}
+                  i18n={I18N.earnShowResult}
+                  onPress={handleShowResultPress}
+                />
+              )}
+              {state === 'timer' && (
+                <Button
+                  disabled
+                  size={ButtonSize.small}
+                  variant={ButtonVariant.second}
+                  title={estimateTime}
+                />
+              )}
+              {state === 'getTicket' && !showTicketAnimation && (
+                <Button
+                  size={ButtonSize.small}
+                  variant={ButtonVariant.second}
+                  i18n={I18N.earnGetTicket}
+                  onPress={handleGetTicketPress}
+                />
+              )}
 
-                {state === 'getTicket' && showTicketAnimation && (
-                  <Button
-                    style={styles.tiketButton}
-                    size={ButtonSize.small}
-                    variant={ButtonVariant.second}>
-                    <LottieWrap
-                      progress={0}
-                      source={ticketAnimation}
-                      autoPlay={true}
-                      loop={false}
-                    />
-                  </Button>
-                )}
-              </>
-            )}
-            {buttonType === RaffleBlocButtonType.custom && rightAction}
-          </View>
+              {state === 'getTicket' && showTicketAnimation && (
+                <Button
+                  style={styles.ticketButton}
+                  size={ButtonSize.small}
+                  variant={ButtonVariant.second}>
+                  <LottieWrap
+                    progress={0}
+                    source={ticketAnimation}
+                    autoPlay={true}
+                    loop={false}
+                  />
+                </Button>
+              )}
+            </>
+          )}
+          {buttonType === RaffleBlocButtonType.custom && rightAction}
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -226,12 +224,13 @@ const styles = createTheme({
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
+    marginVertical: 6,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  tiketButton: {
+  ticketButton: {
     width: 95,
   },
 });
