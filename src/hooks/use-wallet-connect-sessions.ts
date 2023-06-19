@@ -7,12 +7,10 @@ import {WalletConnect} from '@app/services/wallet-connect';
 
 export const useWalletConnectSessions = () => {
   const [activeSessions, setActiveSessions] = useState<SessionTypes.Struct[]>(
-    [],
+    WalletConnect.instance?.getActiveSessions?.(),
   );
 
   useEffect(() => {
-    setActiveSessions(WalletConnect.instance?.getActiveSessions?.());
-
     WalletConnect.instance.on(
       WalletConnectEvents.onSessionsChange,
       setActiveSessions,

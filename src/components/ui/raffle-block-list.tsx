@@ -9,7 +9,6 @@ import {
   RaffleBlock,
   RaffleBlockGradientVariant,
 } from './raffle-block';
-import {Spacer} from './spacer';
 
 export interface RaffleBlockListProps {
   data: Raffle[];
@@ -27,8 +26,7 @@ export const RaffleBlockList = ({
   onPressShowResult,
 }: RaffleBlockListProps) => {
   const renderItem: ListRenderItem<Raffle> = useCallback(
-    ({item, index}) => {
-      const showSeparator = index !== data.length - 1;
+    ({item}) => {
       // TODO: add logic for gradient
       const gradient =
         item.total_tickets > 1
@@ -36,20 +34,17 @@ export const RaffleBlockList = ({
           : RaffleBlockGradientVariant.blue;
 
       return (
-        <>
-          <RaffleBlock
-            item={item}
-            onPress={onPress}
-            buttonType={RaffleBlocButtonType.ticket}
-            gradient={gradient}
-            onPressGetTicket={onPressGetTicket}
-            onPressShowResult={onPressShowResult}
-          />
-          {showSeparator && <Spacer height={12} />}
-        </>
+        <RaffleBlock
+          item={item}
+          onPress={onPress}
+          buttonType={RaffleBlocButtonType.ticket}
+          gradient={gradient}
+          onPressGetTicket={onPressGetTicket}
+          onPressShowResult={onPressShowResult}
+        />
       );
     },
-    [data.length, onPress, onPressGetTicket, onPressShowResult],
+    [onPress, onPressGetTicket, onPressShowResult],
   );
 
   const keyExtractor = useCallback((item: Raffle) => item.id, []);

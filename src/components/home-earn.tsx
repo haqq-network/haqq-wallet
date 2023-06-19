@@ -152,7 +152,7 @@ export const HomeEarn = ({
       </View>
       <Text t14 color={Color.textBase2} i18n={I18N.earnRafflesDescription} />
 
-      <Spacer height={12} />
+      <Spacer height={6} />
 
       <RaffleBlockList
         data={raffleList}
