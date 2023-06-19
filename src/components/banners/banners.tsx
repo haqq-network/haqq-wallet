@@ -8,50 +8,62 @@ import {createTheme} from '@app/helpers';
 import {Banner} from '@app/models/banner';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
+import {First, Spacer} from '../ui';
+
 export type BannersProps = {
   banners: Results<Banner>;
   onPressBanner: HomeBannerProps['onPress'];
 };
 export const Banners = ({banners, onPressBanner}: BannersProps) => {
-  if (banners.length === 1) {
-    const banner = banners[0];
-    return (
-      <View style={styles.container}>
-        <HomeBanner key={banner.id} banner={banner} onPress={onPressBanner} />
-      </View>
-    );
+  if (!banners.length) {
+    return null;
   }
 
+  const banner = banners[0];
+
   return (
-    <ScrollView
-      horizontal
-      pagingEnabled
-      decelerationRate={0}
-      snapToInterval={WINDOW_WIDTH - 110}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      style={styles.scrollContainer}
-      snapToAlignment="center">
-      {banners.map(b => (
-        <HomeBanner
-          key={b.id}
-          banner={b}
-          onPress={onPressBanner}
-          style={styles.banner}
-        />
-      ))}
-    </ScrollView>
+    <>
+      <Spacer height={20} />
+      <First>
+        {banners.length === 1 && (
+          <View style={styles.container}>
+            <HomeBanner
+              key={banner.id}
+              banner={banner}
+              onPress={onPressBanner}
+            />
+          </View>
+        )}
+        <ScrollView
+          horizontal
+          pagingEnabled
+          decelerationRate={0}
+          snapToInterval={WINDOW_WIDTH - 110}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollContainer}
+          snapToAlignment="center">
+          {banners.map(b => (
+            <HomeBanner
+              key={b.id}
+              banner={b}
+              onPress={onPressBanner}
+              style={styles.banner}
+            />
+          ))}
+        </ScrollView>
+      </First>
+      <Spacer height={24} />
+    </>
   );
 };
 
 const styles = createTheme({
   container: {
     marginHorizontal: 15,
-    marginVertical: 10,
   },
   scrollContainer: {
     marginHorizontal: 20,
-    marginVertical: 10,
     overflow: 'visible',
   },
   banner: {

@@ -7,6 +7,7 @@ import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
@@ -77,12 +78,12 @@ export const AccountInfo = ({
             onTabChange={onTabChange}>
             <TopTabNavigator.Tab
               name={TabNames.transactions}
-              title={'Transactions'}
+              title={I18N.accountInfoTransactionTabTitle}
               component={null}
             />
             <TopTabNavigator.Tab
               name={TabNames.nft}
-              title={'NFTs'}
+              title={I18N.accountInfoNftTabTitle}
               component={null}
             />
           </TopTabNavigator>

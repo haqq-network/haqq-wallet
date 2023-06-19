@@ -71,16 +71,16 @@ export const HomeFeed = ({
             contentContainerStyle={styles.tabsContentContainerStyle}
             tabHeaderStyle={styles.tabHeaderStyle}
             variant={TopTabNavigatorVariant.large}
-            showSeparators
+            // showSeparators
             onTabChange={onTabChange}>
             <TopTabNavigator.Tab
-              name={TabNames.nft}
-              title={'NFTs'}
+              name={TabNames.transactions}
+              title={I18N.homeFeedTransactionTabTitle}
               component={null}
             />
             <TopTabNavigator.Tab
-              name={TabNames.transactions}
-              title={'Transactions'}
+              name={TabNames.nft}
+              title={I18N.homeFeedNftTabTitle}
               component={null}
             />
           </TopTabNavigator>
