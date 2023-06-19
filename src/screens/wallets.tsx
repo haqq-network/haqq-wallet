@@ -4,11 +4,9 @@ import {SessionTypes} from '@walletconnect/types';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
-import {onBannerAction} from '@app/event-actions/on-banner-action';
 import {showModal} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
-import {useBanners} from '@app/hooks/use-banners';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {WalletConnect} from '@app/services/wallet-connect';
@@ -20,7 +18,6 @@ export const WalletsWrapper = () => {
   const visible = useWalletsVisible();
 
   const {activeSessions} = useWalletConnectSessions();
-  const banners = useBanners();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
@@ -30,6 +27,22 @@ export const WalletsWrapper = () => {
       visible.map(w => [w.address, app.getBalance(w.address)]),
     ),
   );
+
+  useEffect(() => {
+    console.log('visible changed');
+  }, [visible]);
+
+  useEffect(() => {
+    console.log('navigation changed');
+  }, [navigation]);
+
+  useEffect(() => {
+    console.log('activeSessions changed');
+  }, [activeSessions]);
+
+  useEffect(() => {
+    console.log('walletConnectSessions changed');
+  }, [walletConnectSessions]);
 
   useEffect(() => {
     setWalletConnectSessions(
@@ -76,7 +89,7 @@ export const WalletsWrapper = () => {
     [navigation],
   );
 
-  const onWalletConnectPress = useCallback(
+  const onPressWalletConnect = useCallback(
     (address: string) => {
       const sessionsByAddress = filterWalletConnectSessionsByAddress(
         WalletConnect.instance.getActiveSessions(),
@@ -115,13 +128,6 @@ export const WalletsWrapper = () => {
     navigation.navigate('signin', {next: ''});
   }, [navigation]);
 
-  const onPressBannerAction = useCallback(
-    async (id: string, event: string, params: Record<string, any> = {}) => {
-      await onBannerAction(id, event, params);
-    },
-    [],
-  );
-
   const onPressAccountInfo = useCallback(
     (accountId: string) => {
       navigation.navigate('accountInfo', {accountId});
@@ -133,16 +139,14 @@ export const WalletsWrapper = () => {
     <Wallets
       balance={balance}
       wallets={visible}
-      banners={banners}
       walletConnectSessions={walletConnectSessions}
-      onWalletConnectPress={onWalletConnectPress}
+      onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}
       onPressCreate={onPressCreate}
       onPressRestore={onPressRestore}
       onPressQR={onPressQR}
       onPressProtection={onPressProtection}
-      onPressBanner={onPressBannerAction}
       onPressAccountInfo={onPressAccountInfo}
     />
   );

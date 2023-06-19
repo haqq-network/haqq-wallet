@@ -52,6 +52,7 @@ export class Banner extends Realm.Object {
       defaultParams: 'string{}',
       closeEvent: 'string?',
       closeParams: 'string{}',
+      priority: {type: 'double', default: 0},
     },
     primaryKey: 'id',
   };
@@ -73,6 +74,7 @@ export class Banner extends Realm.Object {
   defaultParams: object;
   closeEvent: string;
   closeParams: object;
+  priority: number;
 
   static create(
     params: Omit<Partial<Banner>, 'buttons'> & {
@@ -123,7 +125,7 @@ export class Banner extends Realm.Object {
   }
 
   static getAvailable() {
-    return Banner.getAll().filtered('isUsed = false');
+    return Banner.getAll().filtered('isUsed = false').sorted('priority', true);
   }
 
   static getById(id: string) {

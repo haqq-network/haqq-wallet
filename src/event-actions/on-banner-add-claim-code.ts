@@ -42,6 +42,7 @@ export async function onBannerAddClaimCode(claimCode: string) {
       backgroundColorFrom: info.background_color_from,
       backgroundColorTo: info.background_color_to,
       backgroundImage: info.background_image_url,
+      priority: 100,
     });
   }
 }
