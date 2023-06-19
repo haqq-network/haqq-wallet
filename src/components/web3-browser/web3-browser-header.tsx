@@ -9,7 +9,7 @@ import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
 import {clearUrl} from '../../helpers/web3-browser-utils';
-import {Icon, IconButton, IconsName, Spacer, Text} from '../ui';
+import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
 export interface Web3BrowserPressHeaderEvent {
@@ -21,6 +21,7 @@ interface Web3BrowserHeaderProps {
   wallet: Wallet;
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
+  popup?: boolean;
 
   onPressMore(): void;
 
@@ -32,6 +33,8 @@ interface Web3BrowserHeaderProps {
 
   onPressGoForward(): void;
 
+  onPressClose(): void;
+
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
 }
 
@@ -39,6 +42,8 @@ export const Web3BrowserHeader = ({
   wallet,
   webviewNavigationData,
   siteUrl,
+  popup,
+  onPressClose,
   onPressMore,
   onPressHeaderUrl,
   onMoreIconLayout,
@@ -93,9 +98,16 @@ export const Web3BrowserHeader = ({
         </Text>
       </TouchableOpacity>
       <Spacer width={15} />
-      <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
-        <Icon color={Color.graphicBase1} name={IconsName.more} />
-      </IconButton>
+      <First>
+        {popup && (
+          <IconButton onPress={onPressClose}>
+            <Icon color={Color.graphicBase2} name={IconsName.close_circle} />
+          </IconButton>
+        )}
+        <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
+          <Icon color={Color.graphicBase1} name={IconsName.more} />
+        </IconButton>
+      </First>
       {!!wallet && (
         <>
           <Spacer width={15} />

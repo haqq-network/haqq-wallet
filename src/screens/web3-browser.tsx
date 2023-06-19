@@ -25,7 +25,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {sendNotification} from '@app/services';
 
 export const Web3BrowserScreen = () => {
-  const {url} = useTypedRoute<'web3browser'>().params;
+  const {url, popup} = useTypedRoute<'web3browser'>().params;
   const navigation = useTypedNavigation();
   const [showActionMenu, setShowActionMenu] = useState(false);
   const toggleActionMenu = useCallback(
@@ -104,6 +104,10 @@ export const Web3BrowserScreen = () => {
     navigation.goBack();
   }, [navigation]);
 
+  const onPressClose = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   const onPressAddBookmark = useCallback(
     (windowInfo: WindowInfoEvent['payload']) => {
       setShowActionMenu(false);
@@ -161,6 +165,7 @@ export const Web3BrowserScreen = () => {
 
   return (
     <Web3Browser
+      popup={popup}
       webviewRef={webviewRef}
       helper={helper}
       initialUrl={url}
@@ -168,6 +173,7 @@ export const Web3BrowserScreen = () => {
       bookmarks={bookmarks}
       showActionMenu={showActionMenu}
       userProvider={userProvider!}
+      onPressClose={onPressClose}
       onPressHeaderUrl={onPressHeaderUrl}
       onPressHeaderWallet={onPressHeaderWallet}
       toggleActionMenu={toggleActionMenu}
