@@ -1,13 +1,13 @@
 import React, {useCallback, useState} from 'react';
 
+import {useActionSheet} from '@expo/react-native-action-sheet';
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
 import {Alert, ScrollView} from 'react-native';
 
-import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
-import {Button, ButtonVariant, Input, Spacer} from '@app/components/ui';
+import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
@@ -20,7 +20,7 @@ import {
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {onUrlSubmit} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useUser} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
@@ -43,83 +43,104 @@ messaging()
     }
   });
 
-const TEST_MODALS: Partial<Modals> = {
-  // splash: undefined,
-  // pin: undefined,
-  noInternet: {showClose: true},
-  loading: {
-    text: 'a few moment later...',
-  },
-  error: {
-    onClose: () => {
-      hideModal('loading');
+const getTestModals = (): Partial<Modals> => {
+  const wallets = Wallet.getAllVisible();
+  const firstWalletAddress = wallets[0].address;
+  const providers = Provider.getProviders();
+  const firstProviderId = providers[0].id;
+  const modals: Partial<Modals> = {
+    // splash: undefined,
+    // pin: undefined,
+    noInternet: {showClose: true},
+    loading: {
+      text: 'a few moment later...',
     },
-    title: 'Something went wrong',
-    description: 'Please try again later',
-    close: 'OK',
-  },
-  qr: {
-    onClose: () => {},
-    qrWithoutFrom: false,
-  },
-  bluetoothPoweredOff: {
-    onClose: () => {},
-  },
-  bluetoothUnauthorized: {
-    onClose: () => {},
-  },
-  domainBlocked: {
-    onClose: () => {},
-    domain: 'example.com',
-  },
-  ledgerNoApp: {
-    onClose: () => {},
-    onRetry: Promise.resolve,
-  },
-  ledgerAttention: {
-    onClose: () => {},
-  },
-  ledgerLocked: {
-    onClose: () => {},
-  },
-  errorAccountAdded: {
-    onClose: () => {},
-  },
-  errorCreateAccount: {
-    onClose: () => {},
-  },
-  claimOnMainnet: {
-    onClose: () => {},
-    onChange: () => {},
-    network: 'MainMet',
-  },
-  walletsBottomSheet: {
-    onClose: () => {},
-    wallets: Wallet.getAllVisible(),
-    closeDistance: WINDOW_HEIGHT / 6,
-    title: I18N.welcomeTitle,
-    autoSelectWallet: false,
-    eventSuffix: '-test',
-  },
-  transactionError: {
-    onClose: () => {},
-    message: 'Something went wrong',
-  },
-  locationUnauthorized: {
-    onClose: () => {},
-  },
-  providersBottomSheet: {
-    onClose: () => {},
-    title: I18N.welcomeTitle,
-    providers: Provider.getProviders(),
-    initialProviderId: Provider.getProviders()[0].id,
-    closeDistance: WINDOW_HEIGHT / 6,
-    eventSuffix: '-test',
-  },
-  captcha: {
-    onClose: () => {},
-    variant: CaptchaType.slider,
-  },
+    error: {
+      onClose: () => {
+        hideModal('loading');
+      },
+      title: 'Something went wrong',
+      description: 'Please try again later',
+      close: 'OK',
+    },
+    qr: {
+      onClose: () => {},
+      qrWithoutFrom: false,
+    },
+    bluetoothPoweredOff: {
+      onClose: () => {},
+    },
+    bluetoothUnauthorized: {
+      onClose: () => {},
+    },
+    domainBlocked: {
+      onClose: () => {},
+      domain: 'example.com',
+    },
+    ledgerNoApp: {
+      onClose: () => {},
+      onRetry: Promise.resolve,
+    },
+    ledgerAttention: {
+      onClose: () => {},
+    },
+    ledgerLocked: {
+      onClose: () => {},
+    },
+    errorAccountAdded: {
+      onClose: () => {},
+    },
+    errorCreateAccount: {
+      onClose: () => {},
+    },
+    claimOnMainnet: {
+      onClose: () => {},
+      onChange: () => {},
+      network: 'MainMet',
+    },
+    transactionError: {
+      onClose: () => {},
+      message: 'Something went wrong',
+    },
+    locationUnauthorized: {
+      onClose: () => {},
+    },
+    captcha: {
+      onClose: () => {},
+      variant: CaptchaType.slider,
+    },
+  };
+
+  if (wallets.length) {
+    modals.walletsBottomSheet = {
+      onClose: () => {},
+      wallets,
+      closeDistance: WINDOW_HEIGHT / 6,
+      title: I18N.welcomeTitle,
+      autoSelectWallet: false,
+      eventSuffix: '-test',
+    };
+  }
+
+  if (firstWalletAddress) {
+    modals.cardDetailsQr = {
+      address: firstWalletAddress,
+      onClose: () => {},
+    };
+  }
+
+  if (firstProviderId) {
+    modals.providersBottomSheet = {
+      onClose: () => {},
+      title: I18N.welcomeTitle,
+      providers,
+      initialProviderId: firstProviderId,
+      closeDistance: WINDOW_HEIGHT / 6,
+      eventSuffix: '-test',
+    };
+  }
+
+  return modals;
 };
 
 const abi = [
@@ -245,7 +266,16 @@ async function callContract(to: string, func: string, ...params: any[]) {
   return iface.decodeFunctionResult(func, resp);
 }
 
+const Title = ({text = ''}) => (
+  <>
+    <Spacer height={10} />
+    <Text t10 children={text} />
+    <Spacer height={5} />
+  </>
+);
+
 export const SettingsTestScreen = () => {
+  const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
@@ -383,6 +413,7 @@ export const SettingsTestScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <Spacer height={20} />
+      <Title text="WalletConnect" />
       <Input
         placeholder="wc:"
         value={wc}
@@ -390,26 +421,26 @@ export const SettingsTestScreen = () => {
           setWc(v);
         }}
       />
-      <Spacer height={5} />
+      <Spacer height={8} />
       <Button
         title="wallet connect"
         disabled={!wc}
         onPress={onPressWc}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={8} />
+      <Title text="web3 browser" />
       <Input
         placeholder="https://app.haqq.network"
         value={browserUrl}
         onChangeText={setBrowserUrl}
       />
-      <Spacer height={5} />
+      <Spacer height={8} />
       <Button
         title="Open web3 browser"
         onPress={onPressOpenBrowser}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={5} />
+      <Spacer height={8} />
       <Button
         title="load test bookmarks for browser"
         onPress={() => {
@@ -422,21 +453,40 @@ export const SettingsTestScreen = () => {
         }}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={5} />
+      <Title text="Modals" />
       <Button
-        title="Show modal"
-        onPress={() =>
-          showModal('error', {
-            title: getText(I18N.modalRewardErrorTitle),
-            description: getText(I18N.modalRewardErrorDescription),
-            close: getText(I18N.modalRewardErrorClose),
-            icon: 'reward_error',
-            color: Color.graphicSecond4,
-          })
-        }
+        title="Open all modals"
+        onPress={async () => {
+          const testModals = getTestModals();
+          Object.keys(testModals).forEach(modalName => {
+            // @ts-ignore
+            showModal(modalName, testModals[modalName]);
+          });
+        }}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
+      <Button
+        title="Show modall"
+        onPress={async () => {
+          const testModals = getTestModals();
+          const modalsKeys = Object.keys(testModals);
+          showActionSheetWithOptions({options: modalsKeys}, index => {
+            if (typeof index === 'number') {
+              const name = modalsKeys[index];
+              if (name === 'loading') {
+                setTimeout(() => {
+                  hideModal('loading');
+                }, 5000);
+              }
+              // @ts-ignore
+              showModal(name, testModals[name]);
+            }
+          });
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="Contracts" />
       <Button
         title="call contract"
         onPress={() => onCallContract()}
@@ -454,7 +504,7 @@ export const SettingsTestScreen = () => {
         onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={8} />
+      <Title text="Referrals" />
       <Button
         title="create banner"
         onPress={onCreateBanner}
@@ -472,7 +522,8 @@ export const SettingsTestScreen = () => {
         onPress={onClearReferrals}
         variant={ButtonVariant.contained}
       />
-      <Spacer height={8} />
+
+      <Title text="Captcha" />
       <Button
         title="Show hcaptcha captcha"
         onPress={async () => {
@@ -497,17 +548,6 @@ export const SettingsTestScreen = () => {
             // @ts-ignore
             Alert.alert('Error', err?.message);
           }
-        }}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
-      <Button
-        title="Open all modals"
-        onPress={async () => {
-          Object.keys(TEST_MODALS).forEach(modalName => {
-            // @ts-ignore
-            showModal(modalName, TEST_MODALS[modalName]);
-          });
         }}
         variant={ButtonVariant.contained}
       />
