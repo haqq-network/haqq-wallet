@@ -79,7 +79,11 @@ export const RaffleBlock = ({
   });
   const now = useReactiveDate(TimerUpdateInterval.minute);
   const estimateTime = useMemo(
-    () => calculateEstimateTime(now, new Date(item.locked_until * 1000)),
+    () =>
+      calculateEstimateTime(
+        now,
+        new Date(Math.min(item.locked_until, item.close_at) * 1000),
+      ),
     [item, now],
   );
 

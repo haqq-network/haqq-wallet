@@ -42,8 +42,8 @@ export const RaffleDetails = ({
     [item.close_at],
   );
   const locked_until = useMemo(
-    () => new Date(item.locked_until * 1000),
-    [item.locked_until],
+    () => new Date(Math.min(item.locked_until, item.close_at) * 1000),
+    [item.locked_until, item.close_at],
   );
   const formattedBudget = useMemo(
     () => cleanNumber(parseInt(item.budget, 16) / WEI),
