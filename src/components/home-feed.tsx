@@ -62,7 +62,6 @@ export const HomeFeed = ({
     setActiveTab(tabName);
   }, []);
   const renderListHeader = useCallback(() => {
-    console.log('renderListHeader');
     return (
       <>
         <WalletsWrapper />

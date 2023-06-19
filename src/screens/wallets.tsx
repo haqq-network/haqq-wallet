@@ -29,22 +29,6 @@ export const WalletsWrapper = () => {
   );
 
   useEffect(() => {
-    console.log('visible changed');
-  }, [visible]);
-
-  useEffect(() => {
-    console.log('navigation changed');
-  }, [navigation]);
-
-  useEffect(() => {
-    console.log('activeSessions changed');
-  }, [activeSessions]);
-
-  useEffect(() => {
-    console.log('walletConnectSessions changed');
-  }, [walletConnectSessions]);
-
-  useEffect(() => {
     setWalletConnectSessions(
       visible.map(wallet =>
         filterWalletConnectSessionsByAddress(activeSessions, wallet.address),

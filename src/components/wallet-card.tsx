@@ -76,8 +76,6 @@ export const WalletCard = memo(
       onPressAccountInfo(wallet?.address);
     };
 
-    console.log('wallet.address', wallet.address);
-
     return (
       <Card
         colorFrom={wallet?.colorFrom}
