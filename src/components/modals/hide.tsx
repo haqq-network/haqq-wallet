@@ -5,11 +5,8 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useAndroidSystemColors} from '@app/hooks';
 
 export const HideModal = () => {
-  useAndroidSystemColors();
-
   return (
     <View style={styles.container}>
       <Icon i120 name="logo" color={Color.graphicBase3} />

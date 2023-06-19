@@ -8,6 +8,5 @@ export * from './use-wallets-visible';
 export * from './use-typed-route';
 export * from './use-cosmos';
 export * from './use-sum-amount';
-export * from './use-android-system-colors';
 export * from './use-keyboard-dismiss-in-background';
 export * from './use-theme-selector';

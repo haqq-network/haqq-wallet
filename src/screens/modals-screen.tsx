@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
@@ -8,7 +8,6 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Modals, ModalsListBase} from '@app/types';
 import {makeID} from '@app/utils';
-import {IS_ANDROID} from '@app/variables/common';
 
 type ModalStates<
   ModalsList extends ModalsListBase,
@@ -29,15 +28,17 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
     })),
   );
 
+  const hasModals = useMemo(() => Boolean(modals.length), [modals.length]);
+
   useEffect(() => {
-    if (IS_ANDROID && modals.length) {
+    if (hasModals) {
       SystemNavigationBar.navigationHide();
 
       return () => {
         SystemNavigationBar.navigationShow();
       };
     }
-  }, [modals.length]);
+  }, [hasModals]);
 
   const onClose = useCallback((event: ModalState) => {
     app.emit(Events.onCloseModal, event.type);

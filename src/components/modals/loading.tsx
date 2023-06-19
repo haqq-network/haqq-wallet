@@ -5,12 +5,9 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useAndroidSystemColors} from '@app/hooks';
 import {Modals} from '@app/types';
 
 export const LoadingModal = ({text}: Modals['loading']) => {
-  useAndroidSystemColors();
-
   return (
     <View style={styles.container}>
       <Waiting style={styles.waiting} />
