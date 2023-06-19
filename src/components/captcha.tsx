@@ -5,12 +5,14 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
+import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 import {Hcaptcha} from './hcaptcha';
 import {SliderCaptcha} from './slider-captcha/slider-captcha';
+import {First} from './ui';
 
 export type CaptchaDataTypes = (
   | 'error'
@@ -58,40 +60,34 @@ export const Captcha = ({
   return (
     <View style={styles.container}>
       <View onTouchEnd={onPressOutside} style={styles.overlay} />
-      {type === CaptchaType.hcaptcha && (
-        <>
-          <View style={styles.whiteBox} />
-          <Hcaptcha
-            siteKey={HCAPTCHA_SITE_KEY}
-            showLoading
-            size={'compact'}
-            onMessage={onMessage}
-            theme={theme}
-            style={styles.hcaptcha}
-            containerStyle={styles.hcaptchaContainer}
-            backgroundColor={'transparent'}
-            enableAutoOpenChallenge={enableAutoOpenChallenge}
-            languageCode={languageCode}
-          />
-        </>
-      )}
-      {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+      <First>
+        {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+        {type === CaptchaType.hcaptcha && (
+          <>
+            <View style={styles.whiteBox} />
+            <Hcaptcha
+              siteKey={HCAPTCHA_SITE_KEY}
+              showLoading
+              size={'compact'}
+              onMessage={onMessage}
+              theme={theme}
+              style={styles.hcaptcha}
+              containerStyle={styles.hcaptchaContainer}
+              backgroundColor={'transparent'}
+              enableAutoOpenChallenge={enableAutoOpenChallenge}
+              languageCode={languageCode}
+            />
+          </>
+        )}
+      </First>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const styles = createTheme({
+  container: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   overlay: {
-    position: 'absolute',
-    flex: 1,
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
     zIndex: 1,
     elevation: 1,
   },

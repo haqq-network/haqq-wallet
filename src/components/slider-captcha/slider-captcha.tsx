@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ActivityIndicator, Image, View} from 'react-native';
 import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
 import {
-  GestureHandlerRootView,
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
@@ -23,6 +22,7 @@ import Animated, {
 import {useTiming} from 'react-native-redash';
 
 import {Color, getColor} from '@app/colors';
+import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
 import {useTheme} from '@app/hooks';
@@ -31,10 +31,10 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
+import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {CaptchaDataTypes} from '../captcha';
-import {First, Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
-import {RiveWrapper} from '../ui/rive-wrapper';
+import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
 
 export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
@@ -53,11 +53,13 @@ enum SliderCaptchaState {
 }
 
 const MAX_PROGRESS_VALUE = 255;
-const BG_ASPECT_RATIO = 295 / 208; // width / height from figma
-const PUZZLE_ASPECT_RATIO = 52 / 208; // width / height from figma
 const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
 const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
+
+const BACK_WIDTH = WINDOW_WIDTH - 80;
+const BACK_HEIGHT = (BACK_WIDTH * 400) / 600;
+const PUZZLE_WIDTH = (BACK_WIDTH * 120) / 600;
 
 export type CaptchaRequestState = {
   id: string;
@@ -71,17 +73,13 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
     CaptchaRequestState | undefined
   >();
   const abortController = useRef(new AbortController());
-  const [imageContainerLayout, onImageContainerLayout] = useLayout();
   const [sliderLayout, onSliderLayout] = useLayout();
   const position = useSharedValue(0);
   const intermediatePositionValues = useRef<number[]>([]);
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const startTime = useRef(0);
+  const endTime = useRef(0);
+  const [diffTimeSeconds, setDiffTimeSeconds] = useState('0');
 
-  const diffTimeSeconds = useMemo(
-    () => ((endTime - startTime) / 1000).toFixed(1),
-    [endTime, startTime],
-  );
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
   const refreshButtonEnabled = useMemo(
     () => sliderState === SliderCaptchaState.initial,
@@ -152,7 +150,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   }, [fetchImageSource, sliderState]);
 
   const onStartMovement = useCallback(() => {
-    setStartTime(Date.now());
+    startTime.current = Date.now();
     setSliderState(SliderCaptchaState.move);
   }, []);
 
@@ -187,7 +185,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       intermediatePositionValues.current,
     ).toString('base64');
 
-    setEndTime(Date.now());
+    endTime.current = Date.now();
     setSliderState(SliderCaptchaState.loading);
 
     try {
@@ -197,6 +195,9 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         abortController.current.signal,
       );
 
+      setDiffTimeSeconds(
+        ((endTime.current - startTime.current) / 1000).toFixed(1),
+      );
       setSliderState(SliderCaptchaState.success);
       await sleep(SUCCESS_ERROR_DURATION);
       onData?.(session.key as CaptchaDataTypes);
@@ -249,7 +250,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           translateX: interpolate(
             position.value,
             [0, sliderLayout.width],
-            [0, imageContainerLayout.width],
+            [0, BACK_WIDTH],
           ),
         },
       ],
@@ -318,33 +319,24 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <View style={styles.container}>
       <Text t9 i18n={I18N.sliderCaptchaTitle} />
       <Spacer height={20} />
       <View style={styles.imageContainerInsets}>
-        <View style={styles.imageContainer} onLayout={onImageContainerLayout}>
+        <View style={styles.imageContainer}>
           <Image
-            style={[
-              styles.bg,
-              {
-                width: imageContainerLayout.width,
-                height: (imageContainerLayout.width || 1) / BG_ASPECT_RATIO,
-              },
-            ]}
+            style={styles.bg}
             source={imageSource.back}
+            resizeMode="cover"
+            resizeMethod="scale"
           />
 
           <Animated.View style={puzzleStyle}>
             <Image
-              style={[
-                styles.puzzle,
-                {
-                  width:
-                    (imageContainerLayout.height || 1) * PUZZLE_ASPECT_RATIO,
-                  height: imageContainerLayout.height,
-                },
-              ]}
+              style={styles.puzzle}
               source={imageSource.puzzle}
+              resizeMode="cover"
+              resizeMethod="scale"
             />
           </Animated.View>
 
@@ -369,31 +361,29 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
           <View style={styles.toastContainer}>
             <Spacer flex={1} />
-            <First>
-              {sliderState === SliderCaptchaState.error && (
-                <Animated.View
-                  style={[styles.toast, styles.toastError]}
-                  entering={FadeInDown}>
-                  <Text
-                    t18
-                    color={Color.textBase3}
-                    i18n={I18N.sliderCaptchaErrorToast}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.success && (
-                <Animated.View
-                  style={[styles.toast, styles.toastSuccess]}
-                  entering={FadeInDown}>
-                  <Text
-                    t18
-                    color={Color.textBase3}
-                    i18n={I18N.sliderCaptchaSuccessToast}
-                    i18params={{sec: diffTimeSeconds}}
-                  />
-                </Animated.View>
-              )}
-            </First>
+            {sliderState === SliderCaptchaState.error && (
+              <Animated.View
+                style={[styles.toast, styles.toastError]}
+                entering={FadeInDown}>
+                <Text
+                  t18
+                  color={Color.textBase3}
+                  i18n={I18N.sliderCaptchaErrorToast}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.success && (
+              <Animated.View
+                style={[styles.toast, styles.toastSuccess]}
+                entering={FadeInDown}>
+                <Text
+                  t18
+                  color={Color.textBase3}
+                  i18n={I18N.sliderCaptchaSuccessToast}
+                  i18params={{sec: diffTimeSeconds}}
+                />
+              </Animated.View>
+            )}
             <Spacer flex={1} />
           </View>
         </View>
@@ -434,58 +424,53 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
           onGestureEvent={gestureHandler}
           enabled={gestureEnabled}>
           <Animated.View style={[styles.sliderButton, sliderButtonStyle]}>
-            <First>
-              {sliderState === SliderCaptchaState.initial && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <RiveWrapper
-                    width={24}
-                    height={24}
-                    resourceName={'moving_arrow_captcha'}
-                    autoplay={true}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.move && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.drag} />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.loading && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <ActivityIndicator
-                    size="small"
-                    color={getColor(Color.textBase3)}
-                  />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.success && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.check} />
-                </Animated.View>
-              )}
-              {sliderState === SliderCaptchaState.error && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Icon i24 color={Color.graphicBase3} name={IconsName.close} />
-                </Animated.View>
-              )}
-            </First>
+            {sliderState === SliderCaptchaState.initial && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <RiveWrapper
+                  width={24}
+                  height={24}
+                  resourceName={'moving_arrow_captcha'}
+                  autoplay={true}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.move && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.drag} />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.loading && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <ActivityIndicator
+                  size="small"
+                  color={getColor(Color.textBase3)}
+                />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.success && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.check} />
+              </Animated.View>
+            )}
+            {sliderState === SliderCaptchaState.error && (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Icon i24 color={Color.graphicBase3} name={IconsName.close} />
+              </Animated.View>
+            )}
           </Animated.View>
         </PanGestureHandler>
       </View>
-    </GestureHandlerRootView>
+    </View>
   );
 };
 
 const styles = createTheme({
   container: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: Color.bg1,
-    width: '92%',
+    width: WINDOW_WIDTH - 32,
+    margin: 16,
     borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+    padding: 24,
     zIndex: 1,
     elevation: 1,
   },
@@ -495,13 +480,13 @@ const styles = createTheme({
   },
   bg: {
     alignSelf: 'center',
-    width: 295,
-    height: 208,
+    width: BACK_WIDTH,
+    height: BACK_HEIGHT,
     borderRadius: 12,
   },
   puzzle: {
-    width: 52,
-    height: 208,
+    width: PUZZLE_WIDTH,
+    height: BACK_HEIGHT,
   },
   imageContainer: {
     width: '100%',

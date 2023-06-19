@@ -44,6 +44,7 @@ export const RiveWrapper = React.forwardRef<RiveRef, RiveWrapperProps>(
       width,
       style,
       enableClickToAnimation = false,
+      autoplay = false,
       ...props
     }: RiveWrapperProps,
     ref,
@@ -51,7 +52,12 @@ export const RiveWrapper = React.forwardRef<RiveRef, RiveWrapperProps>(
     return (
       <View
         style={[styles.container, {minWidth: width, minHeight: height}, style]}>
-        <Rive ref={ref} style={{width, height}} {...props} />
+        <Rive
+          ref={ref}
+          style={{width, height}}
+          autoplay={autoplay}
+          {...props}
+        />
         {/* if you unmount the component while clicking on the animation, the application will crash */}
         {/* View component bellow prevent click  */}
         {!enableClickToAnimation && <View style={styles.overlay} />}

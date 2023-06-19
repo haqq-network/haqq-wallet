@@ -26,6 +26,8 @@ export const HomeScreenTabBarIcon = ({
         return IconsName.settings;
       case 'homeGovernance':
         return IconsName.governance;
+      case 'homeNews':
+        return IconsName.news;
     }
   }, [route]);
 

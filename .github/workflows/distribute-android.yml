@@ -9,9 +9,18 @@ on:
         options:
           - 0
           - 1
+      IS_SSS_ENABLED:
+        type: choice
+        description: IS_SSS_ENABLED
+        options:
+          - false
+          - true
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
+        required: true
+        type: string
+      IS_SSS_ENABLED:
         required: true
         type: string
 
@@ -57,12 +66,10 @@ jobs:
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
           echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
-          echo "MPC_STORE_URL=${{secrets.MPC_STORE_URL}}" >> .env
-          echo "MPC_NETWORK=${{secrets.MPC_NETWORK}}" >> .env
-          echo "MPC_GOOGLE_IOS=${{secrets.MPC_GOOGLE_IOS}}" >> .env
-          echo "MPC_GOOGLE_ANDROID=${{secrets.MPC_GOOGLE_ANDROID}}" >> .env
-          echo "MPC_APPLE=${{secrets.MPC_APPLE}}" >> .env
-          echo "MPC_CUSTOM=${{secrets.MPC_CUSTOM}}" >> .env
+          echo "SSS_GOOGLE_IOS=${{secrets.SSS_GOOGLE_IOS}}" >> .env
+          echo "SSS_GOOGLE_ANDROID=${{secrets.SSS_GOOGLE_ANDROID}}" >> .env
+          echo "SSS_APPLE=${{secrets.SSS_APPLE}}" >> .env
+          echo "SSS_CUSTOM=${{secrets.SSS_CUSTOM}}" >> .env
           echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
           echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
           echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
@@ -71,6 +78,7 @@ jobs:
           echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
+          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
 
       - name: Install Fastlane
         run: |

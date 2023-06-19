@@ -50,7 +50,6 @@ import {utils} from 'ethers';
 
 import {captureException} from '@app/helpers';
 import {Provider} from '@app/models/provider';
-import {StakingMetadata} from '@app/models/staking-metadata';
 import {DepositResponse, StakingParamsResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
@@ -569,77 +568,5 @@ export class Cosmos {
     );
 
     return await this.sendMsg(transport, hdPath, sender, msg);
-  }
-
-  sync(addressList: string[]) {
-    const rows = StakingMetadata.getAll().snapshot();
-
-    return Promise.all(
-      addressList.reduce<Promise<string[]>[]>((memo, curr) => {
-        return memo.concat([
-          this.syncStakingDelegations(curr),
-          this.syncStakingUnDelegations(curr),
-          this.syncStakingRewards(curr),
-        ]);
-      }, []),
-    ).then(results => {
-      const hashes = new Set(results.flat());
-      for (const e of rows) {
-        if (!hashes.has(e.hash)) {
-          StakingMetadata.remove(e.hash);
-        }
-      }
-    });
-  }
-
-  async syncStakingDelegations(address: string): Promise<string[]> {
-    return this.getAccountDelegations(address)
-      .then(resp =>
-        resp.delegation_responses.map(d =>
-          StakingMetadata.createDelegation(
-            d.delegation.delegator_address,
-            d.delegation.validator_address,
-            d.balance.amount,
-          ),
-        ),
-      )
-      .then(hashes => hashes.filter(Boolean) as string[]);
-  }
-
-  async syncStakingUnDelegations(address: string): Promise<string[]> {
-    return this.getAccountUnDelegations(address)
-      .then(resp => {
-        return resp.unbonding_responses
-          .map(ur => {
-            return ur.entries.map(ure =>
-              StakingMetadata.createUnDelegation(
-                ur.delegator_address,
-                ur.validator_address,
-                ure.balance,
-                ure.completion_time,
-              ),
-            );
-          })
-          .flat();
-      })
-      .then(hashes => hashes.filter(Boolean) as string[]);
-  }
-
-  async syncStakingRewards(address: string): Promise<string[]> {
-    return this.getAccountRewardsInfo(address)
-      .then(resp => {
-        return resp.rewards
-          .map(r =>
-            r.reward.map(rr =>
-              StakingMetadata.createReward(
-                address,
-                r.validator_address,
-                rr.amount,
-              ),
-            ),
-          )
-          .flat();
-      })
-      .then(hashes => hashes.filter(Boolean) as string[]);
   }
 }

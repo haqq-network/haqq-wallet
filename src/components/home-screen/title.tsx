@@ -22,6 +22,8 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
         return I18N.homeGovernanceTitle;
       case 'homeSettings':
         return I18N.homeSettingsTitle;
+      case 'homeNews':
+        return I18N.homeNewsTitle;
     }
   }, [route]);
 

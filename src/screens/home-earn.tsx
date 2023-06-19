@@ -4,19 +4,14 @@ import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {
-  awaitForPopupClosed,
-  captureException,
-  getProviderInstanceForWallet,
-} from '@app/helpers';
-import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {sumReduce} from '@app/helpers/staking';
-import {useCosmos, useTypedNavigation, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
@@ -25,8 +20,8 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {AdjustEvents, Raffle, RaffleStatus, WalletType} from '@app/types';
-import {MIN_AMOUNT, NUM_PRECISION, WEI} from '@app/variables/common';
+import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
+import {NUM_PRECISION, WEI} from '@app/variables/common';
 
 const initData = {
   stakingSum: 0,
@@ -38,8 +33,8 @@ const initData = {
 export const HomeEarnScreen = () => {
   const navigation = useTypedNavigation();
   const visible = useWalletsVisible();
-  const cosmos = useCosmos();
   const [raffles, setRaffles] = useState<null | Raffle[]>(null);
+  const [isRafflesLoading, setIsRafflesLoading] = useState<boolean>(false);
 
   const [data, setData] = useState({
     ...initData,
@@ -51,6 +46,11 @@ export const HomeEarnScreen = () => {
 
   const canGetRewards = useMemo(
     () => data.rewardsSum >= 1 / NUM_PRECISION,
+    [data],
+  );
+
+  const haveAvailableSum = useMemo(
+    () => data.availableSum >= 1 / NUM_PRECISION,
     [data],
   );
 
@@ -94,11 +94,17 @@ export const HomeEarnScreen = () => {
   }, [visible]);
 
   const loadRaffles = useCallback(async () => {
-    const response = await Backend.instance.contests(
-      Wallet.addressList(),
-      getUid(),
-    );
-    setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+    try {
+      setIsRafflesLoading(true);
+      const response = await Backend.instance.contests(
+        Wallet.addressList(),
+        getUid(),
+      );
+      setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+    } catch (err) {
+      captureException(err, 'HomeEarnScreen.loadRaffles', Wallet.addressList());
+    }
+    setIsRafflesLoading(false);
   }, []);
 
   useEffect(() => {
@@ -112,106 +118,6 @@ export const HomeEarnScreen = () => {
   const onPressStaking = useCallback(() => {
     navigation.navigate('staking');
   }, [navigation]);
-
-  const onPressGetRewards = useCallback(async () => {
-    const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
-    console.log('rewards', rewards);
-    const delegators: any = {};
-
-    for (const row of rewards) {
-      if (row.amount > MIN_AMOUNT) {
-        delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
-          row.validator,
-        );
-      }
-    }
-
-    const exists = visible.filter(
-      w => w.isValid() && w.cosmosAddress in delegators,
-    );
-
-    console.log('exists', exists);
-
-    const queue = exists
-      .filter(w => w.type !== WalletType.ledgerBt)
-      .map(async w => {
-        const provider = await getProviderInstanceForWallet(w);
-        await cosmos.multipleWithdrawDelegatorReward(
-          provider,
-          w.path!,
-          delegators[w.cosmosAddress],
-        );
-        return [w.cosmosAddress, delegators[w.cosmosAddress]];
-      });
-
-    const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
-
-    console.log('queue', queue);
-
-    while (ledger.length) {
-      const current = ledger.shift();
-
-      if (current && current.isValid()) {
-        const transport = await getProviderInstanceForWallet(current);
-        console.log('iter transport', transport);
-
-        queue.push(
-          cosmos
-            .multipleWithdrawDelegatorReward(
-              transport,
-              current.path!,
-              delegators[current.cosmosAddress],
-            )
-            .then(() => [
-              current.cosmosAddress,
-              delegators[current.cosmosAddress],
-            ]),
-        );
-        try {
-          await awaitForBluetooth();
-          await awaitForLedger(transport);
-        } catch (e) {
-          if (e === '27010') {
-            await awaitForPopupClosed('ledgerLocked');
-          }
-          transport.abort();
-        }
-      }
-    }
-
-    const responses = await Promise.all(
-      queue.map(p =>
-        p
-          .then(value => ({
-            status: 'fulfilled',
-            value,
-          }))
-          .catch(reason => ({
-            status: 'rejected',
-            reason,
-            value: null,
-          })),
-      ),
-    );
-
-    console.log('responses', responses);
-
-    for (const resp of responses) {
-      if (resp.status === 'fulfilled' && resp.value) {
-        for (const reward of rewards) {
-          if (
-            reward &&
-            reward.delegator === resp.value[0] &&
-            reward.validator === resp.value[1]
-          ) {
-            StakingMetadata.remove(reward.hash);
-          }
-        }
-      }
-    }
-
-    rewards.forEach(r => StakingMetadata.remove(r.hash));
-  }, [cosmos, visible]);
 
   const onPressGetTicket = useCallback(
     async (raffle: Raffle) => {
@@ -232,7 +138,7 @@ export const HomeEarnScreen = () => {
       );
 
       try {
-        const res = await Backend.instance.contestParticipate(
+        await Backend.instance.contestParticipate(
           raffle.id,
           uid,
           session,
@@ -240,7 +146,6 @@ export const HomeEarnScreen = () => {
           leadingAccount?.address ?? '',
         );
         sendNotification(I18N.earnTicketRecieved);
-        console.log('🟢 onPressGetTicket', JSON.stringify(res, null, 2));
         await loadRaffles();
       } catch (e) {
         captureException(e, 'onPressGetTicket');
@@ -250,7 +155,6 @@ export const HomeEarnScreen = () => {
   );
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
-      console.log('🟢 onPressShowResult', JSON.stringify(raffle, null, 2));
       navigation.navigate('raffleReward', {item: raffle});
     },
     [navigation],
@@ -273,7 +177,6 @@ export const HomeEarnScreen = () => {
           ?.filter?.(it => it.status === RaffleStatus.closed)
           .reduce((prev, curr) => prev + curr.winner_tickets, 0) || 0;
 
-      console.log('🟢 onPressRaffle', JSON.stringify(raffle, null, 2));
       navigation.navigate('raffleDetails', {
         item: raffle,
         prevIslmCount,
@@ -290,14 +193,16 @@ export const HomeEarnScreen = () => {
   return (
     <HomeEarn
       rewardAmount={data.rewardsSum}
-      showStakingRewards={canGetRewards}
-      showStakingGetRewardsButtons
-      onPressGetRewards={onPressGetRewards}
+      showStakingRewards={haveAvailableSum}
+      showStakingGetRewardsButtons={canGetRewards}
+      raffleList={raffles}
+      isRafflesLoading={isRafflesLoading}
+      loadRaffles={loadRaffles}
+      onPressGetRewards={onStakingRewards}
       onPressGetTicket={onPressGetTicket}
       onPressShowResult={onPressShowResult}
       onPressStaking={onPressStaking}
       onPressRaffle={onPressRaffle}
-      raffleList={raffles}
     />
   );
 };

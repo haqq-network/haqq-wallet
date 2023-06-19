@@ -2,7 +2,13 @@ name: Distribute apps
 
 on:
   workflow_dispatch:
-
+    inputs:
+      IS_SSS_ENABLED:
+        type: choice
+        description: IS_SSS_ENABLED
+        options:
+          - false
+          - true
 jobs:
   test:
     name: Tests
@@ -27,6 +33,7 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: 0
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
     needs:
       - test
 
@@ -37,6 +44,7 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: 0
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
     needs:
       - test
 

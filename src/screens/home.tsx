@@ -7,15 +7,15 @@ import {
 import {TransitionPresets} from '@react-navigation/stack';
 
 import {Color} from '@app/colors';
+import {GovernanceButton} from '@app/components/governance-button';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
-import {NewsButton} from '@app/components/news-button';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useUser} from '@app/hooks';
 import {Provider} from '@app/models/provider';
-import {HomeGovernanceScreen} from '@app/screens/home-governance';
+import {HomeNewsScreen} from '@app/screens/home-news';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
 
@@ -56,12 +56,16 @@ const tabBarIcon = (route: string) => (props: {focused: boolean}) =>
 
 const feedOptions = {
   headerRight: QrScannerButton,
-  headerLeft: NewsButton,
+  headerLeft: GovernanceButton,
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 
 const earnOptions = {
   tabBarIcon: tabBarIcon('homeEarn'),
+};
+
+const newsOptions = {
+  tabBarIcon: tabBarIcon('homeNews'),
 };
 
 const stakingOptions = {
@@ -73,11 +77,6 @@ const browserOptions = {
   ...TransitionPresets.ModalSlideFromBottomIOS,
   headerShown: false,
   tabBarIcon: tabBarIcon('homeBrowser'),
-};
-
-const governanceOptions = {
-  headerShown: false,
-  tabBarIcon: tabBarIcon('homeGovernance'),
 };
 
 const settingsOptions = {
@@ -117,9 +116,9 @@ export const HomeScreen = () => {
         />
       )}
       <Tab.Screen
-        name="homeGovernance"
-        component={HomeGovernanceScreen}
-        options={governanceOptions}
+        name="homeNews"
+        component={HomeNewsScreen}
+        options={newsOptions}
       />
       <Tab.Screen
         name="homeSettings"

@@ -6,6 +6,7 @@ import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
@@ -68,22 +69,24 @@ export const AccountInfo = ({
           onSend={onSend}
           onReceive={onReceive}
         />
-        <TopTabNavigator
-          contentContainerStyle={styles.tabsContentContainerStyle}
-          tabHeaderStyle={styles.tabHeaderStyle}
-          variant={TopTabNavigatorVariant.large}
-          onTabChange={onTabChange}>
-          <TopTabNavigator.Tab
-            name={TabNames.transactions}
-            title={'Transactions'}
-            component={null}
-          />
-          <TopTabNavigator.Tab
-            name={TabNames.nft}
-            title={'NFTs'}
-            component={null}
-          />
-        </TopTabNavigator>
+        {isFeatureEnabled(Feature.nft) && (
+          <TopTabNavigator
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            tabHeaderStyle={styles.tabHeaderStyle}
+            variant={TopTabNavigatorVariant.large}
+            onTabChange={onTabChange}>
+            <TopTabNavigator.Tab
+              name={TabNames.transactions}
+              title={'Transactions'}
+              component={null}
+            />
+            <TopTabNavigator.Tab
+              name={TabNames.nft}
+              title={'NFTs'}
+              component={null}
+            />
+          </TopTabNavigator>
+        )}
       </>
     ),
     [balance, onReceive, onSend, onTabChange, wallet],

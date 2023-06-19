@@ -14,11 +14,13 @@ export const awaitForCaptcha = ({
     showModal('captcha', {variant: type});
 
     app.once('captcha-data', (data: CaptchaDataTypes) => {
+      console.log('captcha-data', data);
+      hideModal('captcha');
+
       if (!data) {
         reject('data is null');
       }
 
-      hideModal('captcha');
       switch (data) {
         case 'chalcancel':
         case 'chalexpired':

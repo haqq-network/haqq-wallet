@@ -1,18 +1,23 @@
+import {IS_SSS_ENABLED} from '@env';
+
 import {app} from '@app/contexts';
 
 export enum Feature {
   sss,
   earn,
   governanceAndStaking,
+  nft,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
   switch (feature) {
     case Feature.sss:
-      return app.isOathSigninSupported;
+      return IS_SSS_ENABLED === 'true' && app.isOathSigninSupported;
     case Feature.earn:
       return true;
     case Feature.governanceAndStaking:
+      return app.isDeveloper;
+    case Feature.nft:
       return app.isDeveloper;
     default:
       return false;

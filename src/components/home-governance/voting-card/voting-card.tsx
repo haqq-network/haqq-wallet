@@ -11,7 +11,6 @@ interface VotingCardProps {
 }
 
 export function VotingCard({item, onPress}: VotingCardProps) {
-  console.log('item', item);
   if (item.status === 'voting' || item.status === 'deposited') {
     return <VotingCardActive item={item} onPress={onPress} />;
   } else {

@@ -24,6 +24,8 @@ export const HomeScreenLabel = ({route, focused}: HomeScreenLabelProps) => {
         return I18N.homeGovernance;
       case 'homeSettings':
         return I18N.homeSettings;
+      case 'homeNews':
+        return I18N.homeNews;
     }
   }, [route]);
 
