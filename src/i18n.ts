@@ -1320,7 +1320,7 @@ const en: Record<I18N, string> = {
   [I18N.signupNetworkExistsRewrite]: 'Replace',
   [I18N.signinNetworksSkip]: 'Phrase or private key',
   [I18N.signinPinTitle]: 'Enter your PIN code from HAQQ app',
-  [I18N.signinOldPinTitle]: 'Enter your old ISLM Wallet PIN',
+  [I18N.signinOldPinTitle]: 'Enter your old HAQQ Wallet PIN',
   [I18N.customNetwork]: 'Custom network',
   [I18N.signNotExitsCreateAccount]: 'Create Account',
   [I18N.signNotExitsChoiceAnother]: 'Choice another',
@@ -1392,22 +1392,21 @@ const en: Record<I18N, string> = {
   [I18N.newsTitle]: 'News',
   [I18N.popupNotificationNewsTitle]: 'Subscribe to IslamicCoin News',
   [I18N.popupNotificationNewsDescription]:
-    'Get the latest news and updates about Islamic Coin and the ISLM Wallet',
+    'Get the latest news and updates about Islamic Coin and the HAQQ Wallet',
   [I18N.popupNotificationNewsSubscribe]: 'Turn on news notifications',
   [I18N.popupNotificationNewsNotNow]: 'Not now',
   [I18N.homeSettingsNotification]: 'Notification',
   [I18N.settingsNotification]: 'Notification',
   [I18N.newsPushNotification]: 'Newsletter notifications',
   [I18N.newsPushNotificationsDescription]:
-    'Get the latest news and updates about Islamic Coin and the ISLM Wallet',
+    'Get the latest news and updates about Islamic Coin and the HAQQ Wallet',
   [I18N.transactionPushNotification]: 'Transaction Push-Notifications',
   [I18N.transactionPushNotificationsDescription]:
     'Get notified about deposits, withdrawals and successful transactions',
   [I18N.weDontHaveNotificationPermission]:
-    "We don't have permission to send you notifications\n",
+    "We don't have permission to send you notifications",
   [I18N.weDontHaveNotificationPermissionDescription]:
-    'To allow ISLM Wallet to send notifications, please go to Phone Settings\n' +
-    'and grant permission',
+    'To allow HAQQ Wallet to send notifications, please go to Phone Settings and grant permission',
   [I18N.goToPhoneSettings]: 'Go to Phone settings',
   [I18N.walletConnectPairError]: 'Relay protocol is not supported',
   [I18N.walletConnectPairPending]: 'Connection may take some time',
