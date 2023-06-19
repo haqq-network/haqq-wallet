@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {memo, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
@@ -28,137 +28,137 @@ export type BalanceProps = {
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressProtection: (address: string) => void;
-  onWalletConnectPress?: (address: string) => void;
+  onPressWalletConnect?: (address: string) => void;
 };
 
-export const WalletCard = ({
-  wallet,
-  balance,
-  walletConnectSessions,
-  onPressSend,
-  onPressQR,
-  onWalletConnectPress,
-  onPressProtection,
-  onPressAccountInfo,
-}: BalanceProps) => {
-  const [cardState, setCardState] = useState('loading');
-  const screenWidth = useWindowDimensions().width;
-  const enableProtectionWarning =
-    !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
-  const disableTopNavMarginBottom =
-    enableProtectionWarning || !!walletConnectSessions?.length;
+export const WalletCard = memo(
+  ({
+    wallet,
+    balance,
+    walletConnectSessions,
+    onPressSend,
+    onPressQR,
+    onPressWalletConnect,
+    onPressProtection,
+    onPressAccountInfo,
+  }: BalanceProps) => {
+    const [cardState, setCardState] = useState('loading');
+    const screenWidth = useWindowDimensions().width;
+    const enableProtectionWarning =
+      !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
+    const disableTopNavMarginBottom =
+      enableProtectionWarning || !!walletConnectSessions?.length;
 
-  const formattedAddress = useMemo(
-    () => shortAddress(wallet?.address ?? '', '•'),
-    [wallet?.address],
-  );
+    const formattedAddress = useMemo(
+      () => shortAddress(wallet?.address ?? '', '•'),
+      [wallet?.address],
+    );
 
-  const onQr = () => {
-    onPressQR(wallet.address);
-  };
+    const onQr = () => {
+      onPressQR(wallet.address);
+    };
 
-  const onProtection = () => {
-    if (wallet.accountId) {
-      onPressProtection(wallet.accountId);
-    }
-  };
+    const onProtection = () => {
+      if (wallet.accountId) {
+        onPressProtection(wallet.accountId);
+      }
+    };
 
-  const onSend = () => {
-    onPressSend(wallet.address);
-  };
+    const onSend = () => {
+      onPressSend(wallet.address);
+    };
 
-  const onWalletConnect = () => {
-    onWalletConnectPress?.(wallet?.address);
-  };
+    const onWalletConnect = () => {
+      onPressWalletConnect?.(wallet?.address);
+    };
 
-  const onAccountInfo = () => {
-    onPressAccountInfo(wallet?.address);
-  };
+    const onAccountInfo = () => {
+      onPressAccountInfo(wallet?.address);
+    };
 
-  if (!wallet) {
-    return null;
-  }
-
-  return (
-    <Card
-      colorFrom={wallet?.colorFrom}
-      colorTo={wallet?.colorTo}
-      colorPattern={wallet?.colorPattern}
-      pattern={wallet?.pattern}
-      style={styles.container}
-      width={screenWidth - 40}
-      onLoad={() => {
-        setCardState('laded');
-      }}>
-      <View
-        style={[
-          styles.topNav,
-          disableTopNavMarginBottom && styles.marginBottom,
-        ]}>
-        <Text
-          t12
-          style={styles.name}
-          ellipsizeMode="tail"
-          numberOfLines={1}
-          onPress={onAccountInfo}>
-          {wallet.name || 'name'}
-        </Text>
-        <CopyButton style={styles.copyIcon} value={wallet.address}>
-          <Text t14 color={Color.textBase3}>
-            {formattedAddress}
+    return (
+      <Card
+        colorFrom={wallet?.colorFrom}
+        colorTo={wallet?.colorTo}
+        colorPattern={wallet?.colorPattern}
+        pattern={wallet?.pattern}
+        style={styles.container}
+        width={screenWidth - 40}
+        onLoad={() => {
+          setCardState('laded');
+        }}>
+        <View
+          style={[
+            styles.topNav,
+            disableTopNavMarginBottom && styles.marginBottom,
+          ]}>
+          <Text
+            t12
+            style={styles.name}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            onPress={onAccountInfo}>
+            {wallet.name || 'name'}
           </Text>
-          <Icon
-            i16
-            name="copy"
-            color={Color.graphicBase3}
-            style={styles.marginLeft}
-          />
-        </CopyButton>
-      </View>
-      {!!walletConnectSessions?.length && (
-        <IconButton onPress={onWalletConnect} style={styles.walletConnectApps}>
-          <Icon i16 name="link" color={Color.graphicBase3} />
-          <Spacer width={4} />
-          <Text
-            t15
-            i18n={I18N.walletCardConnectedApps}
-            i18params={{count: `${walletConnectSessions.length}`}}
-            color={Color.textBase3}
-          />
-        </IconButton>
-      )}
-      {enableProtectionWarning && (
-        <IconButton onPress={onProtection} style={styles.cacheButton}>
-          <Text
-            t15
-            i18n={I18N.walletCardWithoutProtection}
-            color={Color.textBase3}
-          />
-        </IconButton>
-      )}
-      <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-        {cleanNumber(balance)} ISLM
-      </Text>
-      <Spacer />
-      <View style={styles.buttonsContainer}>
-        <View style={styles.button}>
-          {IS_IOS && <BlurView action="sent" cardState={cardState} />}
-          <IconButton style={styles.spacer} onPress={onSend}>
-            <Icon i24 name="arrow_send" color={Color.graphicBase3} />
-            <Text i18n={I18N.walletCardSend} color={Color.textBase3} />
-          </IconButton>
+          <CopyButton style={styles.copyIcon} value={wallet.address}>
+            <Text t14 color={Color.textBase3}>
+              {formattedAddress}
+            </Text>
+            <Icon
+              i16
+              name="copy"
+              color={Color.graphicBase3}
+              style={styles.marginLeft}
+            />
+          </CopyButton>
         </View>
-        <View style={styles.button}>
-          {IS_IOS && <BlurView action="receive" cardState={cardState} />}
-          <IconButton style={styles.spacer} onPress={onQr}>
-            <Icon i24 name="arrow_receive" color={Color.graphicBase3} />
-            <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />
+        {!!walletConnectSessions?.length && (
+          <IconButton
+            onPress={onWalletConnect}
+            style={styles.walletConnectApps}>
+            <Icon i16 name="link" color={Color.graphicBase3} />
+            <Spacer width={4} />
+            <Text
+              t15
+              i18n={I18N.walletCardConnectedApps}
+              i18params={{count: `${walletConnectSessions.length}`}}
+              color={Color.textBase3}
+            />
           </IconButton>
+        )}
+        {enableProtectionWarning && (
+          <IconButton onPress={onProtection} style={styles.cacheButton}>
+            <Text
+              t15
+              i18n={I18N.walletCardWithoutProtection}
+              color={Color.textBase3}
+            />
+          </IconButton>
+        )}
+        <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
+          {cleanNumber(balance)} ISLM
+        </Text>
+        <Spacer />
+        <View style={styles.buttonsContainer}>
+          <View style={styles.button}>
+            {IS_IOS && <BlurView action="sent" cardState={cardState} />}
+            <IconButton style={styles.spacer} onPress={onSend}>
+              <Icon i24 name="arrow_send" color={Color.graphicBase3} />
+              <Text i18n={I18N.walletCardSend} color={Color.textBase3} />
+            </IconButton>
+          </View>
+          <View style={styles.button}>
+            {IS_IOS && <BlurView action="receive" cardState={cardState} />}
+            <IconButton style={styles.spacer} onPress={onQr}>
+              <Icon i24 name="arrow_receive" color={Color.graphicBase3} />
+              <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />
+            </IconButton>
+          </View>
         </View>
-      </View>
-    </Card>
-  );
-};
+      </Card>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

@@ -5,7 +5,9 @@ import {utils} from 'ethers';
 import {Animated} from 'react-native';
 
 import {Color, getColor} from './colors';
+import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
+import {navigator} from './navigator';
 import {
   EthType,
   EthTypedData,
@@ -481,6 +483,9 @@ export function isValidJSON(
   return true;
 }
 
+export const openInAppBrowser = (url: string) => {
+  navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
+};
 export function isError(err: any): err is Error {
   return err instanceof Error;
 }

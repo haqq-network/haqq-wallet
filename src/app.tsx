@@ -113,6 +113,7 @@ import {WalletConnectApplicationListPopupScreen} from './screens/wallet-connect-
 import {WalletConnectWalletListScreen} from './screens/wallet-connect-wallet-list';
 import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
+import {Web3BrowserPopup} from './screens/web3-browser-popup';
 import {WelcomeScreen} from './screens/welcome';
 import {RemoteConfig} from './services/remote-config';
 
@@ -319,6 +320,10 @@ export const App = () => {
               <Stack.Screen name="welcome" component={WelcomeScreen} />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
+                <Stack.Screen
+                  name="web3BrowserPopup"
+                  component={Web3BrowserPopup}
+                />
                 <Stack.Screen name="sssMigrate" component={SssMigrateScreen} />
                 <Stack.Screen name="jsonRpcSign" component={JsonRpcSignPopup} />
                 <Stack.Screen name="nftDetails" component={NftDetailsScreen} />

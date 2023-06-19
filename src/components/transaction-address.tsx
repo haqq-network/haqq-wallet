@@ -9,6 +9,7 @@ import {ListContact} from '@app/components/list-contact';
 import {
   Button,
   ButtonVariant,
+  First,
   Icon,
   IconButton,
   KeyboardSafeArea,
@@ -110,23 +111,25 @@ export const TransactionAddress = ({
         errorText={getText(I18N.transactionAddressError)}
         autoFocus
         multiline
+        numberOfLines={10}
         placeholder={I18N.transactionAddressPlaceholder}
         rightAction={
-          address === '' ? (
-            <View style={styles.inputButtonContainer}>
-              <IconButton onPress={onPressPaste}>
-                <Icon i24 name="paste" color={Color.graphicGreen1} />
-              </IconButton>
-              <Spacer width={12} />
-              <IconButton onPress={onPressQR}>
-                <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
-              </IconButton>
-            </View>
-          ) : (
+          <First>
+            {address === '' && (
+              <View style={styles.inputButtonContainer}>
+                <IconButton onPress={onPressPaste}>
+                  <Icon i24 name="paste" color={Color.graphicGreen1} />
+                </IconButton>
+                <Spacer width={12} />
+                <IconButton onPress={onPressQR}>
+                  <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
+                </IconButton>
+              </View>
+            )}
             <IconButton onPress={onPressClear}>
               <Icon i24 name="close_circle" color={Color.graphicBase2} />
             </IconButton>
-          )
+          </First>
         }
       />
 

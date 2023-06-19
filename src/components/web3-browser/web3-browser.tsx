@@ -46,6 +46,7 @@ export interface Web3BrowserProps {
   sessions: Realm.Results<Web3BrowserSession>;
   bookmarks: Realm.Results<Web3BrowserBookmark>;
   showActionMenu: boolean;
+  popup?: boolean;
   userProvider: Provider;
 
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
@@ -72,6 +73,8 @@ export interface Web3BrowserProps {
 
   onPressShare(): void;
 
+  onPressClose(): void;
+
   onPressAddBookmark(windowInfo: WindowInfoEvent['payload']): void;
 
   onPressRemoveBookmark(url: string): void;
@@ -80,6 +83,7 @@ export interface Web3BrowserProps {
 }
 
 export const Web3Browser = ({
+  popup,
   initialUrl,
   helper,
   webviewRef,
@@ -87,6 +91,7 @@ export const Web3Browser = ({
   bookmarks,
   showActionMenu,
   userProvider,
+  onPressClose,
   toggleActionMenu,
   onPressHeaderWallet,
   onPressHeaderUrl,
@@ -249,12 +254,14 @@ export const Web3Browser = ({
   }
 
   return (
-    <View style={[styles.container, {top: insets.top}]}>
+    <View style={[styles.container, !popup && {top: insets.top}]}>
       <Web3BrowserHeader
+        popup={popup}
         wallet={wallet!}
         webviewNavigationData={webviewNavigationData!}
         siteUrl={siteUrl}
         onPressMore={onPressMore}
+        onPressClose={onPressClose}
         onMoreIconLayout={onMoreIconLayout}
         onPressGoBack={onPressGoBack}
         onPressGoForward={onPressGoForward}

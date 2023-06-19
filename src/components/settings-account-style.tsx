@@ -177,7 +177,6 @@ export const SettingsAccountStyle = ({
     },
     [setCardStyle, setColors],
   );
-  console.log('patternVariants', patternStyle, patternVariants);
 
   return (
     <PopupContainer style={styles.container}>

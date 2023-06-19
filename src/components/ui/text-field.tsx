@@ -55,6 +55,7 @@ export const TextField: React.FC<Props> = memo(
     placeholder,
     rightAction,
     multiline,
+    numberOfLines,
     ...restOfProps
   }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -95,11 +96,18 @@ export const TextField: React.FC<Props> = memo(
 
     const contentSizeChangeEvent = useCallback(
       (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-        height.value =
-          Math.max(Math.ceil(e.nativeEvent.contentSize.height), lines * 22) +
-          36;
+        let nextHeght = Math.max(
+          Math.ceil(e.nativeEvent.contentSize.height),
+          lines * 22,
+        );
+
+        if (numberOfLines) {
+          nextHeght = Math.min(nextHeght, numberOfLines * 22);
+        }
+
+        height.value = nextHeght + 36;
       },
-      [lines, height],
+      [numberOfLines, height, lines],
     );
 
     useEffect(() => {
@@ -165,6 +173,7 @@ export const TextField: React.FC<Props> = memo(
               onBlur={onBlurEvent}
               onFocus={onFocusEvent}
               autoFocus={autoFocus}
+              numberOfLines={numberOfLines}
             />
           </View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
