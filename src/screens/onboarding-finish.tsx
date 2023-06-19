@@ -27,7 +27,6 @@ export const OnboardingFinishScreen = () => {
     if (user.onboarded) {
       navigation.getParent()?.goBack();
     } else {
-      user.onboarded = true;
       WalletConnect.instance.init();
       navigation.replace('home');
     }
@@ -37,10 +36,14 @@ export const OnboardingFinishScreen = () => {
   }, [user, navigation]);
 
   useEffect(() => {
+    if (!user.onboarded) {
+      user.onboarded = true;
+    }
+
     onTrackEvent(route.params.event);
     hideModal('loading');
     vibrate(HapticEffects.success);
-  }, [route.params.event]);
+  }, [route.params.event, user]);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
 };
