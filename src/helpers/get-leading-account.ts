@@ -29,7 +29,7 @@ export function getLeadingAccount() {
     const walletType = walletTypes[index];
 
     const w = wallets
-      .filtered(`type = ${walletType} } and isHidden = false`)
+      .filtered(`type = "${walletType}" and isHidden = false`)
       .sorted('path');
     if (w.length) {
       leadingAccount = w[0].address;

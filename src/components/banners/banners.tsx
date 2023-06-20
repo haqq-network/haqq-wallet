@@ -19,19 +19,13 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
     return null;
   }
 
-  const banner = banners[0];
-
   return (
     <>
       <Spacer height={20} />
       <First>
         {banners.length === 1 && (
           <View style={styles.container}>
-            <HomeBanner
-              key={banner.id}
-              banner={banner}
-              onPress={onPressBanner}
-            />
+            <HomeBanner banner={banners[0]} onPress={onPressBanner} />
           </View>
         )}
         <ScrollView

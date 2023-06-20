@@ -65,13 +65,10 @@ export const RaffleBlock = ({
 }: RaffleBlockProps) => {
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
   const formattedAmount = useMemo(
-    () => cleanNumber(parseInt(item.budget, 16) / WEI / item.winners),
+    () => cleanNumber(parseInt(item.budget, 16) / WEI),
     [item],
   );
-  const subtitle = useMemo(
-    () => (item.total_tickets > 1 ? I18N.rafflePrizePool : I18N.rafflePrize),
-    [item.total_tickets],
-  );
+
   const [showTicketAnimation, setShowTicketAnimation] = useState(false);
   const ticketAnimation = useThemeSelector({
     light: require('@assets/animations/earn-ticket-light.json'),
@@ -141,7 +138,7 @@ export const RaffleBlock = ({
                 t14
                 numberOfLines={1}
                 color={Color.textBase3}
-                i18n={subtitle}
+                i18n={I18N.rafflePrizePool}
               />
               <Image
                 style={styles.islmIcon}

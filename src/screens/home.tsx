@@ -12,9 +12,8 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
-import {app} from '@app/contexts';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {Provider} from '@app/models/provider';
+import {useProvider} from '@app/hooks/use-provider';
 import {HomeNewsScreen} from '@app/screens/home-news';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
@@ -84,7 +83,7 @@ const settingsOptions = {
 };
 
 export const HomeScreen = () => {
-  const provider = Provider.getById(app.providerId);
+  const provider = useProvider();
 
   return (
     <Tab.Navigator screenOptions={screenOptions}>
