@@ -18,7 +18,7 @@ export interface Web3BrowserPressHeaderEvent {
 }
 
 interface Web3BrowserHeaderProps {
-  wallet: Wallet;
+  walletAddress?: string;
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
   popup?: boolean;
@@ -39,7 +39,7 @@ interface Web3BrowserHeaderProps {
 }
 
 export const Web3BrowserHeader = ({
-  wallet,
+  walletAddress,
   webviewNavigationData,
   siteUrl,
   popup,
@@ -60,9 +60,12 @@ export const Web3BrowserHeader = ({
     });
   }, [clearSiteUrl, onPressHeaderUrl, siteUrl]);
 
-  const handlePressHeaderWallet = () => {
-    onPressHeaderWallet?.(wallet?.accountId!);
-  };
+  const handlePressHeaderWallet = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+    onPressHeaderWallet?.(Wallet.getById(walletAddress)?.accountId!);
+  }, [onPressHeaderWallet, walletAddress]);
 
   return (
     <View style={styles.header}>
@@ -108,13 +111,13 @@ export const Web3BrowserHeader = ({
           <Icon color={Color.graphicBase1} name={IconsName.more} />
         </IconButton>
       </First>
-      {!!wallet && (
+      {!!walletAddress && (
         <>
           <Spacer width={15} />
           <Animated.View entering={SlideInRight} exiting={SlideOutRight}>
             <WalletRow
               type={WalletRowTypes.variant3}
-              item={wallet}
+              item={Wallet.getById(walletAddress)!}
               onPress={handlePressHeaderWallet}
             />
           </Animated.View>
