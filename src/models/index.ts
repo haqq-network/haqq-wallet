@@ -48,7 +48,7 @@ export const realm = new Realm({
     VariablesBool,
     VariablesString,
   ],
-  schemaVersion: 59,
+  schemaVersion: 60,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -386,16 +386,6 @@ export const realm = new Realm({
           id: 'providerId',
           value: user.providerId,
         });
-      }
-
-      const providers = realm.objects<Provider>('Provider');
-
-      if (!providers.length) {
-        const providersList = require('@assets/migrations/providers.json');
-
-        for (const provider of providersList) {
-          newRealm.create('Provider', provider);
-        }
       }
     }
   },

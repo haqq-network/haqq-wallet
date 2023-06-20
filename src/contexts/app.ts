@@ -17,6 +17,7 @@ import {Color, getColor} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {seedData} from '@app/models/seedData';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
@@ -69,6 +70,8 @@ class App extends EventEmitter {
 
   constructor() {
     super();
+
+    seedData();
 
     TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {

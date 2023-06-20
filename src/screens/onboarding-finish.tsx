@@ -23,16 +23,16 @@ export const OnboardingFinishScreen = () => {
   );
 
   const onEnd = useCallback(() => {
-    if (app.onboarded) {
-      navigation.getParent()?.goBack();
-    } else {
+    if (route.params.onboarding) {
       WalletConnect.instance.init();
       navigation.replace('home');
+      requestAnimationFrame(() => {
+        app.emit(Events.onAppStarted);
+      });
+    } else {
+      navigation.getParent()?.goBack();
     }
-    requestAnimationFrame(() => {
-      app.emit(Events.onAppStarted);
-    });
-  }, [navigation]);
+  }, [route, navigation]);
 
   useEffect(() => {
     if (!app.onboarded) {
