@@ -2,7 +2,7 @@ import {Provider} from './provider';
 
 import {realm} from './index';
 
-export const migration = () => {
+export const seedData = () => {
   const providers = realm.objects<Provider>('Provider');
 
   if (!providers.length) {

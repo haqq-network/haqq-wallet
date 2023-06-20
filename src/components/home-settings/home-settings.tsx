@@ -4,7 +4,6 @@ import {ScrollView} from 'react-native';
 
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useUser} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {capitalize} from '@app/utils';
@@ -12,8 +11,7 @@ import {capitalize} from '@app/utils';
 import {SettingsButton} from './settings-button';
 
 export const HomeSettings = () => {
-  const {theme} = useUser();
-  const capitalizedTheme = capitalize(theme);
+  const capitalizedTheme = capitalize(app.theme);
   const {accounts} = useWalletConnectAccounts();
 
   return (

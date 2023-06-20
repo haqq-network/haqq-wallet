@@ -3,23 +3,22 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings-providers';
 import {CustomHeader} from '@app/components/ui';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {realm} from '@app/models';
 import {Provider} from '@app/models/provider';
 
 export const SettingsProvidersScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
   const [providers, setProviders] = useState<Realm.Results<Provider>>(
-    realm.objects<Provider>('Provider'),
+    Provider.getAll().snapshot(),
   );
 
   useEffect(() => {
-    const list = realm.objects<Provider>('Provider');
+    const list = Provider.getAll();
 
     const callback = () => {
-      setProviders(realm.objects<Provider>('Provider'));
+      setProviders(Provider.getAll().snapshot());
     };
 
     list.addListener(callback);
@@ -54,7 +53,7 @@ export const SettingsProvidersScreen = () => {
       />
       <SettingsProviders
         providers={providers}
-        providerId={user.providerId}
+        providerId={app.providerId}
         onSelect={onSelectProvider}
       />
     </>

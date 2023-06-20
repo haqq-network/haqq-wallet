@@ -9,7 +9,7 @@ import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Transaction} from '@app/models/transaction';
-import {UserSchema} from '@app/models/user';
+import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
@@ -48,7 +48,7 @@ export const realm = new Realm({
     VariablesBool,
     VariablesString,
   ],
-  schemaVersion: 59,
+  schemaVersion: 60,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -343,6 +343,49 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.chainId = chainIds.get(oldObjects[objectIndex].providerId);
+      }
+    }
+
+    if (oldRealm.schemaVersion < 60) {
+      const users = oldRealm.objects<UserType>('User');
+
+      if (users.length) {
+        const user = users[0];
+
+        newRealm.create('VariablesBool', {
+          id: 'isDeveloper',
+          value: user.isDeveloper,
+        });
+
+        newRealm.create('VariablesBool', {
+          id: 'biometry',
+          value: user.biometry,
+        });
+
+        newRealm.create('VariablesBool', {
+          id: 'bluetooth',
+          value: user.bluetooth,
+        });
+
+        newRealm.create('VariablesBool', {
+          id: 'onboarded',
+          value: user.onboarded,
+        });
+
+        newRealm.create('VariablesString', {
+          id: 'language',
+          value: user.language,
+        });
+
+        newRealm.create('VariablesString', {
+          id: 'theme',
+          value: user.theme,
+        });
+
+        newRealm.create('VariablesString', {
+          id: 'providerId',
+          value: user.providerId,
+        });
       }
     }
   },

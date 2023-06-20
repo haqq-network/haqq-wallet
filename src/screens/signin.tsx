@@ -95,7 +95,11 @@ export const SignInScreen = () => {
         name="onboardingFinish"
         component={OnboardingFinishScreen}
         options={screenOptions}
-        initialParams={{action: 'restore', event: AdjustEvents.accountRestored}}
+        initialParams={{
+          action: 'restore',
+          event: AdjustEvents.accountRestored,
+          onboarding: true,
+        }}
       />
     </SignInStack.Navigator>
   );

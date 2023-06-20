@@ -6,7 +6,7 @@ import {Transaction} from '@app/models/transaction';
 import {getHttpResponse} from '@app/utils';
 
 export async function onTransactionsLoad(address: string) {
-  const providers = Provider.getProviders().filter(p => !!p.explorer);
+  const providers = Provider.getAll().filter(p => !!p.explorer);
 
   const rows = (
     await Promise.all(
@@ -34,7 +34,7 @@ async function loadTransactionsFromExplorerWithProvider(
   providerId: string,
 ) {
   try {
-    const p = Provider.getProvider(providerId);
+    const p = Provider.getById(providerId);
 
     if (!p?.explorer) {
       return [];

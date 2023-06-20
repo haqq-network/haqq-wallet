@@ -92,7 +92,11 @@ export const SignUpScreen = () => {
       <SignUpStack.Screen
         name="onboardingFinish"
         component={OnboardingFinishScreen}
-        initialParams={{action: 'create', event: AdjustEvents.accountCreated}}
+        initialParams={{
+          action: 'create',
+          event: AdjustEvents.accountCreated,
+          onboarding: true,
+        }}
         options={screenOptions}
       />
     </SignUpStack.Navigator>

@@ -5,7 +5,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
@@ -14,7 +14,6 @@ import {ETH_HD_SHORT_PATH, LEDGER_APP} from '@app/variables/common';
 export const LedgerAccountsScreen = () => {
   const navigation = useTypedNavigation();
   const {deviceId, deviceName} = useTypedRoute<'ledgerAccounts'>().params;
-  const user = useUser();
   const provider = useRef(
     new ProviderLedgerReactNative({
       getPassword: app.getPassword.bind(app),
@@ -77,7 +76,7 @@ export const LedgerAccountsScreen = () => {
   const onPressAdd = useCallback(
     (item: LedgerAccountItem) => {
       navigation.navigate('ledgerVerify', {
-        nextScreen: user.onboarded ? 'ledgerStoreWallet' : 'onboardingSetupPin',
+        nextScreen: app.onboarded ? 'ledgerStoreWallet' : 'onboardingSetupPin',
         address: item.address,
         hdPath: item.hdPath,
         publicKey: item.publicKey,
@@ -85,7 +84,7 @@ export const LedgerAccountsScreen = () => {
         deviceName,
       });
     },
-    [navigation, user.onboarded, deviceId, deviceName],
+    [navigation, deviceId, deviceName],
   );
 
   return (

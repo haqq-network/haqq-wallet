@@ -9,6 +9,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
@@ -18,7 +19,6 @@ import {SocialButton, SocialButtonVariant} from '../social-button';
 export type SssNetworksProps = {
   isGoogleSupported: boolean;
   isAppleSupported: boolean;
-  isDeveloper: boolean;
   onLogin: (provider: SssProviders) => Promise<void>;
   onLoginLaterPress(): void;
 };
@@ -26,7 +26,6 @@ export type SssNetworksProps = {
 export const SignupNetworks = ({
   isGoogleSupported,
   isAppleSupported,
-  isDeveloper,
   onLogin,
   onLoginLaterPress,
 }: SssNetworksProps) => {
@@ -103,7 +102,7 @@ export const SignupNetworks = ({
           />
         </>
       )}
-      {isDeveloper && (
+      {app.isDeveloper && (
         <>
           <Spacer height={10} />
           <Button

@@ -1,22 +1,22 @@
 import React, {useCallback, useEffect} from 'react';
 
 import {Finish} from '@app/components/finish';
+import {app} from '@app/contexts';
 import {hideModal} from '@app/helpers/modal';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const LedgerFinishScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
   const onEnd = useCallback(() => {
-    if (user.onboarded) {
+    if (app.onboarded) {
       navigation.getParent()?.goBack();
     } else {
-      user.onboarded = true;
+      app.onboarded = true;
       navigation.replace('home');
     }
-  }, [navigation, user]);
+  }, [navigation]);
 
   useEffect(() => {
     hideModal('loading');

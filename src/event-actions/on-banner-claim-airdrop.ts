@@ -55,13 +55,13 @@ export async function onBannerClaimAirdrop(claimCode: string) {
   const referral = Refferal.getById(claimCode);
 
   if (referral) {
-    const provider = Provider.getProvider(app.getUser().providerId);
+    const provider = Provider.getById(app.providerId);
 
     if (provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f') {
       showModal('claimOnMainnet', {
         network: provider?.name ?? '',
         onChange: () => {
-          app.getUser().providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
+          app.providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
         },
       });
     }
