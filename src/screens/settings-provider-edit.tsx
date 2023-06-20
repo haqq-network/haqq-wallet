@@ -1,15 +1,15 @@
 import React, {useCallback, useMemo} from 'react';
 
 import {SettingsProviderEdit} from '@app/components/settings-provider-edit';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
 
 export const SettingsProviderEditScreen = () => {
-  const user = useUser();
   const {goBack, setParams} = useTypedNavigation();
   const route = useTypedRoute<'settingsProviderForm'>();
   const provider = useMemo(
-    () => (route.params?.id ? Provider.getProvider(route.params?.id) : null),
+    () => (route.params?.id ? Provider.getById(route.params?.id) : null),
     [route.params?.id],
   );
 
@@ -36,10 +36,10 @@ export const SettingsProviderEditScreen = () => {
 
   const onSelect = useCallback(() => {
     if (provider) {
-      user.providerId = provider.id;
+      app.providerId = provider.id;
     }
     goBack();
-  }, [goBack, provider, user]);
+  }, [goBack, provider]);
 
   const providerData = useMemo(() => {
     if (provider) {

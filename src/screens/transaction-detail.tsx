@@ -26,7 +26,7 @@ export const TransactionDetailScreen = () => {
   }, [transaction]);
 
   const provider = useMemo(
-    () => (transaction ? Provider.getProvider(transaction.providerId) : null),
+    () => (transaction ? Provider.getById(transaction.providerId) : null),
     [transaction],
   );
 

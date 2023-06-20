@@ -3,14 +3,14 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
 import {Subscription} from 'rxjs';
 
+import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {requestLocationPermission} from '@app/helpers/request-location-permission';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
 
 export const LedgerBluetoothScreen = () => {
-  const user = useUser();
   const navigation = useTypedNavigation();
 
   const subscription = useRef<null | Subscription>(null);
@@ -35,9 +35,9 @@ export const LedgerBluetoothScreen = () => {
     }
 
     requestAnimationFrame(() => {
-      user.bluetooth = true;
+      app.bluetooth = true;
     });
-  }, [navigation, user]);
+  }, [navigation]);
 
   const onPressAllow = useCallback(async () => {
     if (subscription.current) {

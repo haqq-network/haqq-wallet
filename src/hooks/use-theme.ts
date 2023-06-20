@@ -2,17 +2,15 @@ import {useEffect, useState} from 'react';
 
 import {Appearance} from 'react-native';
 
-import {app} from '../contexts/app';
+import {app} from '@app/contexts/app';
 
 export function useTheme() {
-  const [theme, setTheme] = useState(app.getTheme());
+  const [theme, setTheme] = useState(app.currentTheme);
 
   useEffect(() => {
     const subscription = () => {
-      if (theme !== app.getTheme()) {
-        setTheme(app.getTheme());
-
-        console.log('theme changed', app.getTheme());
+      if (theme !== app.currentTheme) {
+        setTheme(app.currentTheme);
       }
     };
 

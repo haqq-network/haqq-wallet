@@ -89,13 +89,12 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
   //   networkVersion: 1,
   // };
 
-  const user = app.getUser();
   const session = Web3BrowserSession.getByOrigin(helper.origin);
   let provider: Provider | null;
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.getProvider(user.providerId);
+    provider = Provider.getById(app.providerId);
   }
   return provider;
 };
@@ -179,7 +178,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_coinbase: getEthAccounts,
   wallet_switchEthereumChain: async ({helper}) => {
     try {
-      const providers = Provider.getProviders();
+      const providers = Provider.getAll();
       const session = Web3BrowserSession.getByOrigin(helper.origin);
 
       const initialProviderId = Provider.getByChainIdHex(
@@ -192,7 +191,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         title: I18N.networks,
       });
 
-      const selectedProvider = Provider.getProvider(providerId!);
+      const selectedProvider = Provider.getById(providerId!);
       session?.update({
         selectedChainIdHex: selectedProvider?.ethChainIdHex,
       });

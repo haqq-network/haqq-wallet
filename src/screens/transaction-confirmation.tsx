@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import Decimal from 'decimal.js';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
+import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {captureException} from '@app/helpers';
@@ -11,12 +12,7 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {
-  useTypedNavigation,
-  useTypedRoute,
-  useUser,
-  useWallet,
-} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
@@ -28,7 +24,6 @@ export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionConfirmation'>();
 
-  const user = useUser();
   const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
@@ -84,7 +79,7 @@ export const TransactionConfirmationScreen = () => {
           await awaitForEventDone(
             Events.onTransactionCreate,
             transaction,
-            user.providerId,
+            app.providerId,
             fee,
           );
 
@@ -121,7 +116,6 @@ export const TransactionConfirmationScreen = () => {
     route.params.amount,
     route.params.from,
     route.params.to,
-    user.providerId,
     wallet,
   ]);
 

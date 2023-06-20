@@ -27,9 +27,9 @@ export const AccountInfoScreen = () => {
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
       route.params.accountId,
-      user.providerId,
+      app.providerId,
     );
-  }, [route.params.accountId, user.providerId]);
+  }, [route.params.accountId]);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions([route.params.accountId], transactions.snapshot()),

@@ -3,15 +3,15 @@ import React, {useCallback} from 'react';
 import {utils} from 'ethers';
 
 import {SignInRestore} from '@app/components/singin-restore-wallet';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation} from '@app/hooks';
 
 export const SignInRestoreScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
 
   const onDoneTry = useCallback(
     (seed: string) => {
-      const nextScreen = user.onboarded
+      const nextScreen = app.onboarded
         ? 'signinStoreWallet'
         : 'onboardingSetupPin';
 
@@ -40,7 +40,7 @@ export const SignInRestoreScreen = () => {
 
       throw new Error('unknown key');
     },
-    [navigation, user.onboarded],
+    [navigation],
   );
 
   return <SignInRestore onDoneTry={onDoneTry} />;

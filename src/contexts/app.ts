@@ -1,10 +1,11 @@
 import {EventEmitter} from 'events';
 
+import {ENVIRONMENT} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
-import {AppState, Platform} from 'react-native';
+import {AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -12,18 +13,25 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
+import {Color, getColor} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {migration} from '@app/models/migration';
+import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-import {captureException, showModal} from '../helpers';
+import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
-import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
+import {
+  IS_ANDROID,
+  LIGHT_GRAPHIC_GREEN_1,
+  MAIN_NETWORK,
+  TEST_NETWORK,
+} from '../variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
@@ -50,7 +58,6 @@ class App extends EventEmitter {
   private user: User;
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _lastTheme: AppTheme = AppTheme.light;
   private _balance: Map<string, number> = new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
@@ -58,11 +65,10 @@ class App extends EventEmitter {
       android: false,
       ios: appleAuth.isSupported,
     }) || false;
+  private _systemTheme: AppTheme;
 
   constructor() {
     super();
-
-    migration();
 
     TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {
@@ -84,20 +90,11 @@ class App extends EventEmitter {
 
     this.user = User.getOrCreate();
 
-    this._provider = Provider.getProvider(this.user.providerId);
+    this._provider = Provider.getById(this.providerId);
 
     if (this._provider) {
       EthNetwork.init(this._provider);
     }
-
-    this.user.on('providerId', providerId => {
-      const p = Provider.getProvider(providerId);
-      if (p) {
-        this._provider = p;
-        EthNetwork.init(p);
-        app.emit(Events.onProviderChanged);
-      }
-    });
 
     this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
     this.checkBalance = this.checkBalance.bind(this);
@@ -108,6 +105,11 @@ class App extends EventEmitter {
 
     dynamicLinks().onLink(this.handleDynamicLink);
     dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+
+    this.listenTheme = this.listenTheme.bind(this);
+
+    Appearance.addChangeListener(this.listenTheme);
+    AppState.addEventListener('change', this.listenTheme);
   }
 
   private _biometryType: BiometryType | null = null;
@@ -138,24 +140,41 @@ class App extends EventEmitter {
     return this._provider;
   }
 
+  get providerId() {
+    return (
+      VariablesString.get('providerId') ??
+      (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
+        ? MAIN_NETWORK
+        : TEST_NETWORK)
+    );
+  }
+
+  set providerId(value) {
+    const p = Provider.getById(value);
+    if (p) {
+      VariablesString.set('providerId', value);
+      this._provider = p;
+      EthNetwork.init(p);
+      app.emit(Events.onProviderChanged);
+    } else {
+      throw new Error('Provider not found');
+    }
+  }
+
   get biometry() {
-    return this.user?.biometry || false;
+    return VariablesBool.get('biometry') || false;
   }
 
   set biometry(value) {
-    if (this.user) {
-      this.user.biometry = value;
-    }
+    VariablesBool.set('biometry', value);
   }
 
   get language() {
-    return this.user?.language || AppLanguage.en;
+    return (VariablesString.get('language') as AppLanguage) || AppLanguage.en;
   }
 
   set language(value) {
-    if (this.user) {
-      this.user.language = value;
-    }
+    VariablesString.set('language', value);
   }
 
   get isUnlocked() {
@@ -163,17 +182,39 @@ class App extends EventEmitter {
   }
 
   get bluetooth() {
-    return this.user?.bluetooth || false;
+    return VariablesBool.get('bluetooth') || false;
   }
 
   set bluetooth(value) {
-    if (this.user) {
-      this.user.bluetooth = value;
-    }
+    VariablesBool.set('bluetooth', value);
+  }
+
+  get onboarded() {
+    return VariablesBool.get('onboarded') || false;
+  }
+
+  set onboarded(value) {
+    VariablesBool.set('onboarded', value);
+  }
+
+  get hasNotifications() {
+    return this.notifications && this.notificationToken !== '';
   }
 
   get notifications() {
-    return this.user.notifications && this.user.subscription;
+    return VariablesBool.get('notifications') || false;
+  }
+
+  set notifications(value) {
+    VariablesBool.set('notifications', value);
+  }
+
+  get notificationToken() {
+    return VariablesString.get('notificationToken') ?? '';
+  }
+
+  set notificationToken(value: string) {
+    VariablesString.set('notificationToken', value);
   }
 
   get snoozeBackup(): Date {
@@ -193,11 +234,44 @@ class App extends EventEmitter {
   }
 
   get isDeveloper() {
-    return this.user.isDeveloper ?? false;
+    return VariablesBool.get('isDeveloper') ?? false;
+  }
+
+  get currentTheme() {
+    const theme = VariablesString.get('theme') as AppTheme;
+    return theme === AppTheme.system ? this._systemTheme : theme;
+  }
+
+  get theme() {
+    return (VariablesString.get('theme') as AppTheme) || AppTheme.system;
+  }
+
+  set theme(value) {
+    VariablesString.set('theme', value);
+
+    app.emit('theme', value);
+    if (IS_ANDROID) {
+      StatusBar.setBackgroundColor(getColor(Color.bg1));
+      StatusBar.setBarStyle(
+        value === AppTheme.dark ? 'light-content' : 'dark-content',
+      );
+    }
+  }
+
+  listenTheme() {
+    const theme = Appearance.getColorScheme() as AppTheme;
+
+    if (theme !== this._systemTheme) {
+      this._systemTheme = theme;
+
+      if (this.theme === AppTheme.system) {
+        app.emit('theme');
+      }
+    }
   }
 
   async init(): Promise<void> {
-    if (!this.user.onboarded) {
+    if (!this.onboarded) {
       return Promise.resolve();
     }
 
@@ -299,21 +373,6 @@ class App extends EventEmitter {
 
   getUser() {
     return this.user;
-  }
-
-  getTheme() {
-    try {
-      if (this.user) {
-        this._lastTheme =
-          this.user.theme === AppTheme.system
-            ? this.user.systemTheme
-            : this.user.theme;
-      }
-    } catch (e) {
-      captureException(e, 'app.getTheme');
-    } finally {
-      return this._lastTheme;
-    }
   }
 
   async onAppStatusChanged() {

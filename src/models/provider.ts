@@ -71,11 +71,11 @@ export class Provider extends Realm.Object {
     }
   }
 
-  static getProviders() {
+  static getAll() {
     return realm.objects<Provider>('Provider');
   }
 
-  static getProvider(providerId: string) {
+  static getById(providerId: string) {
     return realm.objectForPrimaryKey<Provider>('Provider', providerId);
   }
 
@@ -86,9 +86,7 @@ export class Provider extends Realm.Object {
       return null;
     }
 
-    return Provider.getProviders()?.filtered?.(
-      `ethChainId = '${ethChainId}'`,
-    )?.[0];
+    return Provider.getAll()?.filtered?.(`ethChainId = '${ethChainId}'`)?.[0];
   }
 
   static getByChainIdHex(ethChainIdHex: string) {

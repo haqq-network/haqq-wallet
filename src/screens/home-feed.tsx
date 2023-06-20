@@ -19,7 +19,7 @@ export const HomeFeedScreen = () => {
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
       Wallet.addressList(),
-      Transaction.getAllByProviderId(user.providerId).snapshot(),
+      Transaction.getAllByProviderId(app.providerId).snapshot(),
     ),
   );
 
@@ -69,7 +69,7 @@ export const HomeFeedScreen = () => {
   );
 
   useEffect(() => {
-    const transactions = Transaction.getAllByProviderId(user.providerId);
+    const transactions = Transaction.getAllByProviderId(app.providerId);
     setTransactionsList(
       prepareTransactions(Wallet.addressList(), transactions.snapshot()),
     );
@@ -78,7 +78,7 @@ export const HomeFeedScreen = () => {
     return () => {
       transactions.removeListener(onTransactionsList);
     };
-  }, [onTransactionsList, user.providerId]);
+  }, [onTransactionsList]);
 
   return (
     <HomeFeed

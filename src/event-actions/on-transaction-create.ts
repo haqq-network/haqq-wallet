@@ -29,7 +29,7 @@ export async function onTransactionCreate(
     return;
   }
 
-  const provider = Provider.getProvider(providerId);
+  const provider = Provider.getById(providerId);
   if (!provider) {
     return;
   }

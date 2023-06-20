@@ -31,7 +31,7 @@ export function createTheme<T extends NamedStyles<T> | NamedStyles<any>>(
   keys.forEach(key => {
     Object.defineProperty(style, key, {
       get() {
-        const k = `${key}_${app.getTheme()}`;
+        const k = `${key}_${app.currentTheme}`;
         if (!cache.has(k)) {
           // @ts-ignore
           const res = Object.entries(styles[key]).reduce(

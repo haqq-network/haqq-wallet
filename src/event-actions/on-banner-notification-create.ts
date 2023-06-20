@@ -1,12 +1,12 @@
 import {isAfter} from 'date-fns';
 
 import {Color, getColor} from '@app/colors';
+import {app} from '@app/contexts';
 import {Banner} from '@app/models/banner';
-import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 
 export async function onBannerNotificationCreate() {
-  if (VariablesBool.get('notifications')) {
+  if (app.notifications) {
     return;
   }
 

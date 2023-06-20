@@ -4,13 +4,13 @@ import {accountInfo} from '@haqq/provider-web3-utils';
 import {Alert} from 'react-native';
 
 import {SignupNetworkExists} from '@app/components/signup-network-exists';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {app} from '@app/contexts';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Cloud} from '@app/services/cloud';
 import {RootStackParamList, WalletInitialData} from '@app/types';
 
 export const SignupNetworkExistsScreen = () => {
-  const user = useUser();
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'signupNetworkExists'>();
   const onRestore = useCallback(async () => {
@@ -36,7 +36,7 @@ export const SignupNetworkExistsScreen = () => {
     if (!share) {
       nextScreen = 'signupPin';
     } else {
-      nextScreen = user.onboarded ? 'signupStoreWallet' : 'onboardingSetupPin';
+      nextScreen = app.onboarded ? 'signupStoreWallet' : 'onboardingSetupPin';
 
       nextParams.sssCloudShare = share;
     }
@@ -46,7 +46,7 @@ export const SignupNetworkExistsScreen = () => {
       nextScreen as keyof RootStackParamList,
       nextParams,
     );
-  }, [navigation, route.params, user.onboarded]);
+  }, [navigation, route.params]);
   const onRewrite = useCallback(() => {
     Alert.alert(
       getText(I18N.signupNetworkExitsAlertTitle),
@@ -60,7 +60,7 @@ export const SignupNetworkExistsScreen = () => {
           text: getText(I18N.accept),
           style: 'destructive',
           onPress: () => {
-            const nextScreen = user.onboarded
+            const nextScreen = app.onboarded
               ? 'signupStoreWallet'
               : 'onboardingSetupPin';
 
@@ -73,7 +73,7 @@ export const SignupNetworkExistsScreen = () => {
         },
       ],
     );
-  }, [navigation, route.params, user.onboarded]);
+  }, [navigation, route.params]);
 
   return (
     <SignupNetworkExists

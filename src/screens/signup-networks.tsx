@@ -6,7 +6,7 @@ import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
   SssProviders,
@@ -17,7 +17,6 @@ import {
 
 export const SignupNetworksScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
@@ -34,7 +33,7 @@ export const SignupNetworksScreen = () => {
           break;
       }
 
-      let nextScreen = user.onboarded
+      let nextScreen = app.onboarded
         ? 'signupStoreWallet'
         : 'onboardingSetupPin';
 
@@ -59,7 +58,7 @@ export const SignupNetworksScreen = () => {
         provider: provider,
       });
     },
-    [navigation, user.onboarded],
+    [navigation],
   );
 
   const onLoginLaterPress = useCallback(() => {
@@ -87,7 +86,6 @@ export const SignupNetworksScreen = () => {
     <SignupNetworks
       onLogin={onLogin}
       onLoginLaterPress={onLoginLaterPress}
-      isDeveloper={user.isDeveloper || false}
       isAppleSupported={app.isAppleSigninSupported}
       isGoogleSupported={app.isGoogleSigninSupported}
     />

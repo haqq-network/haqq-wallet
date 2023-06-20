@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 import base64 from 'react-native-base64';
 
-import {app} from '@app/contexts';
+import {VariablesBool} from '@app/models/variables-bool';
 import {navigator} from '@app/navigator';
 
 export async function onDeepLink(link: string) {
@@ -31,8 +31,7 @@ export async function onDeepLink(link: string) {
         Alert.alert('Referral code', params[2]);
         break;
       case 'enableDeveloperMode':
-        const user = app.getUser();
-        user.isDeveloper = true;
+        VariablesBool.set('isDeveloper', true);
         break;
     }
   }
