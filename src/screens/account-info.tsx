@@ -6,17 +6,11 @@ import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {prepareTransactions, showModal} from '@app/helpers';
-import {
-  useTypedNavigation,
-  useTypedRoute,
-  useUser,
-  useWallet,
-} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 
 export const AccountInfoScreen = () => {
-  const user = useUser();
   const route = useTypedRoute<'accountInfo'>();
   const navigation = useTypedNavigation();
   const wallet = useWallet(route.params.accountId);
@@ -55,12 +49,10 @@ export const AccountInfoScreen = () => {
 
   useEffect(() => {
     transactions.addListener(onTransactionList);
-    user.on('change', onTransactionList);
     return () => {
       transactions.removeListener(onTransactionList);
-      user.off('change', onTransactionList);
     };
-  }, [onTransactionList, transactions, user]);
+  }, [onTransactionList, transactions]);
 
   useEffect(() => {
     const onBalance = () => {

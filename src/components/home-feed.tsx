@@ -9,7 +9,6 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
-import {User} from '@app/models/user';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/wallets';
 import {TransactionList} from '@app/types';
@@ -20,7 +19,6 @@ import {TopTabNavigator, TopTabNavigatorVariant} from './top-tab-navigator';
 import {First, Spacer, Text} from './ui';
 
 type HomeFeedProps = {
-  user: User;
   refreshing: boolean;
   onWalletsRefresh: () => void;
   transactionsList: TransactionList[];

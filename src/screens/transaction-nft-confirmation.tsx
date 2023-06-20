@@ -2,12 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {
-  useTypedNavigation,
-  useTypedRoute,
-  useUser,
-  useWallet,
-} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 
 // TODO:
@@ -15,8 +10,6 @@ export const TransactionNftConfirmationScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionNftConfirmation'>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const user = useUser();
   const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
