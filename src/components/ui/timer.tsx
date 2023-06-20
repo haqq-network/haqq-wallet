@@ -106,7 +106,7 @@ export const Timer = ({
   }, [isFinish, updateInterval]);
 
   return (
-    <CircularProgress size={220} progress={isFinish ? 0 : progress}>
+    <CircularProgress size={220} inverted progress={isFinish ? 0 : progress}>
       <First>
         {isFinish && (
           <>
