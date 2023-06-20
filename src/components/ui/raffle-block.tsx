@@ -1,9 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Image, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {useReactiveDate} from '@app/hooks/use-reactive-date';
@@ -13,6 +13,7 @@ import {calculateEstimateTime} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {Button, ButtonSize, ButtonVariant} from './button';
+import {First} from './first';
 import {Icon, IconsName} from './icon';
 import {Spacer} from './spacer';
 import {Text} from './text';
@@ -70,6 +71,9 @@ export const RaffleBlock = ({
   );
 
   const [showTicketAnimation, setShowTicketAnimation] = useState(false);
+  const [ticketAnimationFinish, setTicketAnimationFinish] = useState(false);
+  const [loadingSuccess, setLoadingSuccess] = useState(false);
+
   const ticketAnimation = useThemeSelector({
     light: require('@assets/animations/earn-ticket-light.json'),
     dark: require('@assets/animations/earn-ticket-dark.json'),
@@ -110,10 +114,18 @@ export const RaffleBlock = ({
     try {
       setShowTicketAnimation(true);
       await onPressGetTicket?.(item);
+      setLoadingSuccess(true);
+    } catch (e) {
+      setLoadingSuccess(false);
     } finally {
+      setTicketAnimationFinish(false);
       setShowTicketAnimation(false);
     }
   }, [item, onPressGetTicket]);
+
+  const onTicketAnimationFinish = useCallback(() => {
+    setTicketAnimationFinish(true);
+  }, []);
 
   return (
     <TouchableOpacity onPress={handlePress}>
@@ -172,28 +184,40 @@ export const RaffleBlock = ({
                   title={estimateTime}
                 />
               )}
-              {state === 'getTicket' && !showTicketAnimation && (
-                <Button
-                  size={ButtonSize.small}
-                  variant={ButtonVariant.second}
-                  i18n={I18N.earnGetTicket}
-                  onPress={handleGetTicketPress}
-                />
-              )}
-
-              {state === 'getTicket' && showTicketAnimation && (
-                <Button
-                  style={styles.ticketButton}
-                  size={ButtonSize.small}
-                  variant={ButtonVariant.second}>
-                  <LottieWrap
-                    progress={0}
-                    source={ticketAnimation}
-                    autoPlay={true}
-                    loop={false}
+              {state === 'getTicket' &&
+                !showTicketAnimation &&
+                !loadingSuccess && (
+                  <Button
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.second}
+                    i18n={I18N.earnGetTicket}
+                    onPress={handleGetTicketPress}
                   />
-                </Button>
-              )}
+                )}
+
+              {state === 'getTicket' &&
+                (showTicketAnimation || loadingSuccess) && (
+                  <Button
+                    style={styles.ticketButton}
+                    size={ButtonSize.small}
+                    variant={ButtonVariant.second}>
+                    <First>
+                      {(ticketAnimationFinish || loadingSuccess) && (
+                        <ActivityIndicator
+                          size={'small'}
+                          color={getColor(Color.graphicGreen1)}
+                        />
+                      )}
+                      <LottieWrap
+                        progress={0}
+                        source={ticketAnimation}
+                        onAnimationFinish={onTicketAnimationFinish}
+                        autoPlay={true}
+                        loop={false}
+                      />
+                    </First>
+                  </Button>
+                )}
             </>
           )}
           {buttonType === RaffleBlocButtonType.custom && rightAction}

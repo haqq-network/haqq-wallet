@@ -25,6 +25,7 @@ export const RaffleDetailsScreen = () => {
       setRaffle(r);
     } catch (e) {
       captureException(e, 'onPressGetTicket raffle details');
+      throw e;
     }
   }, [params]);
 
