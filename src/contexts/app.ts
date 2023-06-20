@@ -237,6 +237,10 @@ class App extends EventEmitter {
     return VariablesBool.get('isDeveloper') ?? false;
   }
 
+  set isDeveloper(value) {
+    VariablesBool.set('isDeveloper', value);
+  }
+
   get currentTheme() {
     const theme = VariablesString.get('theme') as AppTheme;
     return theme === AppTheme.system ? this._systemTheme : theme;

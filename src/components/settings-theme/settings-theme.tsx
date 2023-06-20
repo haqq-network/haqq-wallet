@@ -12,7 +12,6 @@ export type SettingsThemeProps = {
 };
 
 export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
-  console.log('SettingsTheme', theme);
   return (
     <PopupContainer style={styles.container}>
       <ThemedButton

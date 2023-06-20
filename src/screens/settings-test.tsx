@@ -25,7 +25,6 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
-import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
@@ -285,7 +284,7 @@ export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
 
   const onTurnOffDeveloper = useCallback(() => {
-    VariablesBool.set('isDeveloper', false);
+    app.isDeveloper = false;
     navigation.goBack();
   }, [navigation]);
 
