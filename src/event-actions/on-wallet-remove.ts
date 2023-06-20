@@ -3,6 +3,7 @@ import {captureException} from '@app/helpers';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {PushNotifications} from '@app/services/push-notifications';
 
 export async function onWalletRemove(address: string) {
@@ -35,6 +36,11 @@ export async function onWalletRemove(address: string) {
         subscription,
         address,
       );
+    }
+
+    const sessions = Web3BrowserSession.getBySelectedAccount(address);
+    for (const session of sessions) {
+      session.disconnect();
     }
   } catch (e) {
     captureException(e, Events.onWalletRemove, {

@@ -7,8 +7,6 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
-import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 import {DataContent, Icon, IconButton, IconsName} from '../ui';
@@ -17,11 +15,11 @@ const ACTION_MENU_WIDTH = 220;
 const ACTION_MENU_PADDING_HORIZONTAL = 16;
 
 interface Web3BrowserActionMenuProps {
-  wallet: Wallet;
+  walletAddress?: string;
   showActionMenu: boolean;
   isSiteInBookmarks: boolean;
   currentProvider: Provider;
-  currentSession: Web3BrowserSession;
+  currentSessionOrigin?: string;
   moreIconLayout: Partial<LayoutRectangle>;
 
   toggleActionMenu(): void;
@@ -44,12 +42,12 @@ interface Web3BrowserActionMenuProps {
 }
 
 export const Web3BrowserActionMenu = ({
-  wallet,
+  walletAddress,
   showActionMenu,
   currentProvider,
   moreIconLayout,
   isSiteInBookmarks,
-  currentSession,
+  currentSessionOrigin,
   toggleActionMenu,
   onPressProviders,
   onPressHome,
@@ -81,7 +79,7 @@ export const Web3BrowserActionMenu = ({
             ]}
             entering={FadeIn}
             exiting={FadeOut}>
-            {!!currentSession && (
+            {!!currentSessionOrigin && (
               <>
                 <IconButton
                   style={styles.actionMenuButton}
@@ -148,7 +146,7 @@ export const Web3BrowserActionMenu = ({
               <DataContent short titleI18n={I18N.browserActionMenuShare} />
               <Icon name={IconsName.share} color={Color.graphicBase1} />
             </IconButton>
-            {!!wallet && (
+            {!!walletAddress && (
               <>
                 <View style={styles.moreButtonSeparator} />
                 <IconButton

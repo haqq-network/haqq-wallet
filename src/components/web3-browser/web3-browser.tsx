@@ -12,6 +12,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useLayout} from '@app/hooks/use-layout';
+import {usePrevious} from '@app/hooks/use-previous';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -108,7 +109,7 @@ export const Web3Browser = ({
   addSiteToSearchHistory,
 }: Web3BrowserProps) => {
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
-  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>();
+  const [selectedAccount, setSelectedAccount] = useState<string | undefined>();
   const [windowInfo, setWindowInfo] = useState<WindowInfoEvent['payload']>();
   const [webviewNavigationData, setWebviewNavigationData] =
     useState<WebViewNavigation>();
@@ -118,20 +119,37 @@ export const Web3Browser = ({
     () => (popup ? View : SafeAreaView),
     [popup],
   );
-  const currentSession = useMemo(
-    () =>
-      sessions.filtered(
-        `origin = '${getOriginFromUrl(
-          webviewNavigationData?.url || initialUrl,
-        )}'`,
-      )[0],
-    [initialUrl, sessions, webviewNavigationData?.url],
-  );
-  const walletFromSession = useMemo(
-    () => Wallet.getById(currentSession?.selectedAccount),
-    [currentSession],
-  );
-  const wallet = selectedWallet || walletFromSession;
+  const currentSession = useMemo(() => {
+    if (!sessions?.length) {
+      return;
+    }
+    return sessions.filtered(
+      `origin = '${getOriginFromUrl(
+        webviewNavigationData?.url || initialUrl,
+      )}'`,
+    )[0];
+  }, [initialUrl, sessions, webviewNavigationData?.url]);
+  const prevSession = usePrevious(currentSession);
+
+  useEffect(() => {
+    if (prevSession && !currentSession) {
+      helper.disconnectAccount();
+      webviewRef.current?.reload();
+    }
+  }, [currentSession, helper, prevSession, webviewRef]);
+
+  useEffect(() => {
+    // if saved account in session removed from wallet
+    if (
+      currentSession?.selectedAccount &&
+      !Wallet.getById(currentSession?.selectedAccount)
+    ) {
+      helper.disconnectAccount();
+      webviewRef.current?.reload();
+    }
+  }, [currentSession, helper, webviewRef]);
+
+  const walletAddress = selectedAccount || currentSession?.selectedAccount;
   const siteUrl = useMemo(
     () =>
       webviewNavigationData?.url ||
@@ -240,9 +258,9 @@ export const Web3Browser = ({
     helper?.on(WebViewEventsEnum.ACCOUNTS_CHANGED, ([accountId]: string[]) => {
       if (accountId) {
         const foundWallet = Wallet.getById(accountId);
-        setSelectedWallet(foundWallet);
+        setSelectedAccount(foundWallet?.address);
       } else {
-        setSelectedWallet(null);
+        setSelectedAccount(undefined);
       }
     });
 
@@ -259,7 +277,7 @@ export const Web3Browser = ({
     <ContainerComponent style={[styles.container, !popup && styles.marginTop]}>
       <Web3BrowserHeader
         popup={popup}
-        wallet={wallet!}
+        walletAddress={walletAddress}
         webviewNavigationData={webviewNavigationData!}
         siteUrl={siteUrl}
         onPressMore={onPressMore}
@@ -296,10 +314,10 @@ export const Web3Browser = ({
         />
       </View>
       <Web3BrowserActionMenu
-        wallet={wallet!}
+        walletAddress={walletAddress}
         showActionMenu={showActionMenu}
         currentProvider={currentProvider!}
-        currentSession={currentSession}
+        currentSessionOrigin={currentSession?.origin}
         moreIconLayout={moreIconLayout}
         isSiteInBookmarks={isSiteInBookmarks}
         toggleActionMenu={toggleActionMenu}

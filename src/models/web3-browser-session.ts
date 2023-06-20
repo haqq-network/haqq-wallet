@@ -42,10 +42,10 @@ export class Web3BrowserSession extends Realm.Object {
     return origin;
   }
 
-  static remove(topic: string) {
+  static remove(origin: string) {
     const obj = realm.objectForPrimaryKey<Web3BrowserSession>(
       Web3BrowserSession.schema.name,
-      topic.toLowerCase(),
+      origin.toLowerCase(),
     );
 
     if (obj) {
@@ -63,6 +63,12 @@ export class Web3BrowserSession extends Realm.Object {
     return realm.objectForPrimaryKey<Web3BrowserSession>(
       Web3BrowserSession.schema.name,
       origin.toLowerCase(),
+    );
+  }
+
+  static getBySelectedAccount(account: string) {
+    return Web3BrowserSession.getAll()?.filtered?.(
+      `selectedAccount = '${account}'`,
     );
   }
 
