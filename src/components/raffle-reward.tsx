@@ -24,7 +24,10 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
   });
 
   const budget = useMemo(
-    () => cleanNumber(parseInt(item.budget, 16) / WEI),
+    () =>
+      cleanNumber(
+        (parseInt(item.budget, 16) / WEI / item.winners) * item.winner_tickets,
+      ),
     [item],
   );
 

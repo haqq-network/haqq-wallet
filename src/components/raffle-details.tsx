@@ -48,7 +48,7 @@ export const RaffleDetails = ({
   );
   const formattedBudget = useMemo(
     () => cleanNumber(parseInt(item.budget, 16) / WEI),
-    [item.budget],
+    [item],
   );
   const now = useReactiveDate(TimerUpdateInterval.minute);
   const estimateTime = useMemo(
@@ -65,7 +65,7 @@ export const RaffleDetails = ({
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.row}>
-        <Text t8 numberOfLines={1} i18n={I18N.rafflePrize} />
+        <Text t8 numberOfLines={1} i18n={I18N.rafflePrizePool} />
         <Image
           style={styles.islmIcon}
           source={require('@assets/images/islm_icon.png')}
