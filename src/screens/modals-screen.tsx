@@ -9,6 +9,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Modals, ModalsListBase} from '@app/types';
 import {makeID} from '@app/utils';
+import {IS_ANDROID} from '@app/variables/common';
 
 type ModalStates<
   ModalsList extends ModalsListBase,
@@ -35,12 +36,12 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
     if (hasModals) {
       SystemNavigationBar.navigationHide();
       StatusBar.setHidden(true);
-      StatusBar.setTranslucent(true);
+      IS_ANDROID && StatusBar.setTranslucent(true);
 
       return () => {
         SystemNavigationBar.navigationShow();
         StatusBar.setHidden(false);
-        StatusBar.setTranslucent(false);
+        IS_ANDROID && StatusBar.setTranslucent(false);
       };
     }
   }, [hasModals]);
