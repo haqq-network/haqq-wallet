@@ -1,8 +1,7 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
   WebViewNavigation,
@@ -115,7 +114,10 @@ export const Web3Browser = ({
     useState<WebViewNavigation>();
   const addedToSearchHistory = useRef(false);
   const [moreIconLayout, onMoreIconLayout] = useLayout();
-  const insets = useSafeAreaInsets();
+  const ContainerComponent = useMemo(
+    () => (popup ? View : SafeAreaView),
+    [popup],
+  );
   const currentSession = useMemo(
     () =>
       sessions.filtered(
@@ -254,7 +256,7 @@ export const Web3Browser = ({
   }
 
   return (
-    <View style={[styles.container, !popup && {top: insets.top}]}>
+    <ContainerComponent style={[styles.container, !popup && styles.marginTop]}>
       <Web3BrowserHeader
         popup={popup}
         wallet={wallet!}
@@ -278,7 +280,6 @@ export const Web3Browser = ({
           allowsInlineMediaPlayback
           dataDetectorTypes={'all'}
           originWhitelist={['*']}
-          containerStyle={{paddingBottom: insets.top}}
           ref={webviewRef}
           userAgent={WebViewUserAgent}
           onMessage={helper.handleMessage}
@@ -311,7 +312,7 @@ export const Web3Browser = ({
         onPressAddBookmark={handlePressAddBookmark}
         onPressRemoveBookmark={handlePressRemoveBookmark}
       />
-    </View>
+    </ContainerComponent>
   );
 };
 
@@ -321,5 +322,8 @@ const styles = createTheme({
   },
   container: {
     flex: 1,
+  },
+  marginTop: {
+    marginTop: 10,
   },
 });
