@@ -120,9 +120,11 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       abortController.current.abort();
       abortController.current = new AbortController();
 
+      const uid = await getUid();
+
       const resp = await Backend.instance.captchaRequest(
         Wallet.getAll().map(wallet => wallet.address),
-        getUid(),
+        uid,
       );
 
       setImageSource({

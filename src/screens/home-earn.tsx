@@ -1,24 +1,21 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {CaptchaType} from '@app/components/captcha';
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {captureException, getProviderInstanceForWallet} from '@app/helpers';
-import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {getLeadingAccount} from '@app/helpers/get-leading-account';
+import {Events} from '@app/events';
+import {captureException} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
-import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
-import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
@@ -96,9 +93,10 @@ export const HomeEarnScreen = () => {
   const loadRaffles = useCallback(async () => {
     try {
       setIsRafflesLoading(true);
+      let uid = await getUid();
       const response = await Backend.instance.contests(
         Wallet.addressList(),
-        getUid(),
+        uid,
       );
       setRaffles(response.sort((a, b) => b.start_at - a.start_at));
     } catch (err) {
@@ -109,6 +107,12 @@ export const HomeEarnScreen = () => {
 
   useEffect(() => {
     loadRaffles();
+
+    app.on(Events.onRaffleTicket, loadRaffles);
+
+    return () => {
+      app.off(Events.onRaffleTicket, loadRaffles);
+    };
   }, [loadRaffles]);
 
   useEffect(() => {
@@ -119,40 +123,13 @@ export const HomeEarnScreen = () => {
     navigation.navigate('staking');
   }, [navigation]);
 
-  const onPressGetTicket = useCallback(
-    async (raffle: Raffle) => {
-      const leadingAccount = getLeadingAccount();
-
-      if (!leadingAccount) {
-        throw new Error('No leading account');
-      }
-
-      const session = await awaitForCaptcha({type: CaptchaType.slider});
-
-      const uid = getUid();
-      const provider = await getProviderInstanceForWallet(leadingAccount);
-
-      const signature = await provider.signPersonalMessage(
-        leadingAccount?.path ?? '',
-        `${raffle.id}:${uid}:${session}`,
-      );
-
-      try {
-        await Backend.instance.contestParticipate(
-          raffle.id,
-          uid,
-          session,
-          signature,
-          leadingAccount?.address ?? '',
-        );
-        sendNotification(I18N.earnTicketRecieved);
-        await loadRaffles();
-      } catch (e) {
-        captureException(e, 'onPressGetTicket');
-      }
-    },
-    [loadRaffles],
-  );
+  const onPressGetTicket = useCallback(async (raffle: Raffle) => {
+    try {
+      await onEarnGetTicket(raffle.id);
+    } catch (e) {
+      captureException(e, 'onPressGetTicket');
+    }
+  }, []);
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
       navigation.navigate('raffleReward', {item: raffle});

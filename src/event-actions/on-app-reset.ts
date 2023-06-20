@@ -8,6 +8,7 @@ import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 
 export async function onAppReset() {
+  const uid = await EncryptedStorage.getItem('uid');
   //TODO: save session
   await EncryptedStorage.clear();
   Transaction.removeAll();
@@ -19,4 +20,8 @@ export async function onAppReset() {
   }
   await app.getUser().resetUserData();
   await resetGenericPassword();
+
+  if (uid) {
+    await EncryptedStorage.setItem('uid', uid);
+  }
 }
