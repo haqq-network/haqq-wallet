@@ -65,7 +65,7 @@ export const RaffleBlock = ({
 }: RaffleBlockProps) => {
   const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
   const formattedAmount = useMemo(
-    () => cleanNumber(parseInt(item.budget, 16) / WEI),
+    () => cleanNumber(parseInt(item.budget, 16) / WEI / item.winners),
     [item],
   );
   const subtitle = useMemo(
