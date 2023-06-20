@@ -4,6 +4,7 @@ import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -13,6 +14,8 @@ export const SettingsProvidersScreen = () => {
   const [providers, setProviders] = useState<Realm.Results<Provider>>(
     Provider.getAll().snapshot(),
   );
+
+  const [providerId, setProviderId] = useState(app.providerId);
 
   useEffect(() => {
     const list = Provider.getAll();
@@ -28,10 +31,22 @@ export const SettingsProvidersScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const callback = () => {
+      setProviderId(app.providerId);
+    };
+
+    app.on(Events.onProviderChanged, callback);
+
+    return () => {
+      app.off(Events.onProviderChanged, callback);
+    };
+  }, []);
+
   const onSelectProvider = useCallback(
-    (providerId: string) => {
+    (pid: string) => {
       navigation.navigate('settingsProviderForm', {
-        id: providerId,
+        id: pid,
       });
     },
     [navigation],
@@ -53,7 +68,7 @@ export const SettingsProvidersScreen = () => {
       />
       <SettingsProviders
         providers={providers}
-        providerId={app.providerId}
+        providerId={providerId}
         onSelect={onSelectProvider}
       />
     </>
