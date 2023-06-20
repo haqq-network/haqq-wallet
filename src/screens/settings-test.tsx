@@ -444,7 +444,7 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
-        title="Show modall"
+        title="Show modal"
         onPress={async () => {
           const testModals = getTestModals();
           const modalsKeys = Object.keys(testModals);
