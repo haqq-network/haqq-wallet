@@ -10,10 +10,11 @@ import {
   WindowInfoEvent,
 } from '@app/components/web3-browser';
 import {Web3BrowserPressHeaderEvent} from '@app/components/web3-browser/web3-browser-header';
+import {app} from '@app/contexts';
 import {awaitForWallet} from '@app/helpers';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {getOriginFromUrl} from '@app/helpers/web3-browser-utils';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSessions} from '@app/hooks/use-web3-browser-sessions';
 import {I18N} from '@app/i18n';
@@ -38,11 +39,7 @@ export const Web3BrowserScreen = () => {
   const helper = useRef<Web3BrowserHelper>(
     new Web3BrowserHelper({webviewRef, initialUrl: url}),
   ).current;
-  const user = useUser();
-  const userProvider = useMemo(
-    () => Provider.getProvider(user.providerId),
-    [user.providerId],
-  );
+  const userProvider = useMemo(() => Provider.getById(app.providerId), []);
 
   const onPressHeaderUrl = useCallback(({}: Web3BrowserPressHeaderEvent) => {
     // navigation.navigate('browserSearchPage', {
@@ -81,7 +78,7 @@ export const Web3BrowserScreen = () => {
 
   const onPressProviders = useCallback(async () => {
     setShowActionMenu(false);
-    const providers = Provider.getProviders();
+    const providers = Provider.getAll();
     const session = Web3BrowserSession.getByOrigin(helper.origin);
 
     const initialProviderId = Provider.getByChainIdHex(
@@ -93,7 +90,7 @@ export const Web3BrowserScreen = () => {
       initialProviderId: initialProviderId!,
       title: I18N.networks,
     });
-    const provider = Provider.getProvider(providerId);
+    const provider = Provider.getById(providerId);
     if (provider) {
       helper.changeChainId(provider.ethChainIdHex);
     }

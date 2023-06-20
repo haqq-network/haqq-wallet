@@ -20,7 +20,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
@@ -48,7 +48,7 @@ messaging()
 const getTestModals = (): Partial<Modals> => {
   const wallets = Wallet.getAllVisible();
   const firstWalletAddress = wallets[0].address;
-  const providers = Provider.getProviders();
+  const providers = Provider.getAll();
   const firstProviderId = providers[0].id;
   const modals: Partial<Modals> = {
     // splash: undefined,
@@ -282,12 +282,11 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
-  const user = useUser();
 
   const onTurnOffDeveloper = useCallback(() => {
-    user.isDeveloper = false;
+    app.isDeveloper = false;
     navigation.goBack();
-  }, [user, navigation]);
+  }, [navigation]);
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);

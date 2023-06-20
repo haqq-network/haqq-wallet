@@ -7,7 +7,7 @@ export async function onTransactionCheck(hash: string) {
 
   if (transaction && !transaction.confirmed) {
     try {
-      const provider = Provider.getProvider(transaction.providerId);
+      const provider = Provider.getById(transaction.providerId);
 
       if (provider) {
         const receipt = await provider.rpcProvider.getTransactionReceipt(

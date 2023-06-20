@@ -135,7 +135,7 @@ export function getColor(key: Color | string) {
     return key;
   }
 
-  if (app.getTheme() === AppTheme.dark) {
+  if (app.currentTheme === AppTheme.dark) {
     return dark[key as Color];
   }
 

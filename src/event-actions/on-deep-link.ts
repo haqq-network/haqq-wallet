@@ -31,8 +31,7 @@ export async function onDeepLink(link: string) {
         Alert.alert('Referral code', params[2]);
         break;
       case 'enableDeveloperMode':
-        const user = app.getUser();
-        user.isDeveloper = true;
+        app.isDeveloper = true;
         break;
     }
   }

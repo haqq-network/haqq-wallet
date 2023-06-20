@@ -4,14 +4,13 @@ import {Alert} from 'react-native';
 
 import {SettingsSecurity} from '@app/components/settings-security';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 
 import {PinGuardScreen} from './pin-guard';
 
 export const SettingsSecurityScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
-  const [biometry, setBiometry] = useState(user.biometry);
+  const [biometry, setBiometry] = useState(app.biometry);
 
   const onSubmit = () => {
     navigation.navigate('settingsSecurityPin');
@@ -21,20 +20,20 @@ export const SettingsSecurityScreen = () => {
     if (!biometry) {
       try {
         await app.biometryAuth();
-        user.biometry = true;
+        app.biometry = true;
         setBiometry(true);
       } catch (e) {
         if (e instanceof Error) {
           Alert.alert(e.message);
         }
-        user.biometry = false;
+        app.biometry = false;
         setBiometry(false);
       }
     } else {
-      user.biometry = false;
+      app.biometry = false;
       setBiometry(false);
     }
-  }, [biometry, user]);
+  }, [biometry]);
 
   return (
     <PinGuardScreen>

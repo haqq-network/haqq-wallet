@@ -6,6 +6,8 @@ import {Cosmos} from '@app/services/cosmos';
 export async function onStakingSync() {
   const wallets = Wallet.getAll();
 
+  console.log('app.provider', app.provider);
+
   const cosmos = new Cosmos(app.provider!);
   const addressList = wallets
     .filtered('isHidden != true')

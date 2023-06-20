@@ -2,17 +2,13 @@ import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
-import {AppState, Appearance, StatusBar} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {app} from '@app/contexts';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
 import {AppLanguage, AppTheme} from '../types';
 import {
-  IS_ANDROID,
   MAIN_NETWORK,
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
@@ -69,124 +65,12 @@ export class User extends EventEmitter {
     this._raw.addListener((obj, changes) => {
       if (changes.changedProperties.length) {
         this.emit('change');
-
-        if (changes.changedProperties.includes('theme')) {
-          app.emit('theme', obj.theme);
-          if (IS_ANDROID) {
-            StatusBar.setBackgroundColor(getColor(Color.bg1));
-            StatusBar.setBarStyle(
-              obj.theme === AppTheme.dark ? 'light-content' : 'dark-content',
-            );
-          }
-        }
       }
     });
-
-    this._systemTheme = Appearance.getColorScheme() as AppTheme;
-
-    Appearance.addChangeListener(this.listenTheme);
-
-    AppState.addEventListener('change', this.listenTheme);
-  }
-
-  private _systemTheme: AppTheme;
-
-  get systemTheme(): AppTheme {
-    return this._systemTheme;
   }
 
   get uuid() {
     return this._raw.username;
-  }
-
-  get isLoaded() {
-    return !!this._raw;
-  }
-
-  get providerId() {
-    return this._raw.providerId;
-  }
-
-  set providerId(value) {
-    realm.write(() => {
-      this._raw.providerId = value;
-    });
-
-    this.emit('providerId', value);
-  }
-
-  get isDeveloper() {
-    return this._raw?.isDeveloper ?? false;
-  }
-
-  set isDeveloper(value) {
-    realm.write(() => {
-      this._raw.isDeveloper = value;
-    });
-  }
-
-  get biometry() {
-    return this._raw.biometry;
-  }
-
-  set biometry(biometry) {
-    realm.write(() => {
-      this._raw.biometry = biometry;
-    });
-  }
-
-  get language() {
-    return this._raw.language as AppLanguage;
-  }
-
-  set language(language) {
-    realm.write(() => {
-      this._raw.language = language;
-    });
-  }
-
-  get subscription() {
-    return this._raw.subscription;
-  }
-
-  set subscription(subscription) {
-    realm.write(() => {
-      this._raw.subscription = subscription;
-    });
-  }
-
-  get notifications() {
-    return this._raw.notifications;
-  }
-
-  get theme(): AppTheme {
-    return this._raw.theme;
-  }
-
-  set theme(value) {
-    realm.write(() => {
-      this._raw.theme = value;
-    });
-  }
-
-  get bluetooth() {
-    return this._raw.bluetooth ?? false;
-  }
-
-  set bluetooth(value) {
-    realm.write(() => {
-      this._raw.bluetooth = value;
-    });
-  }
-
-  get onboarded() {
-    return this._raw.onboarded ?? false;
-  }
-
-  set onboarded(value) {
-    realm.write(() => {
-      this._raw.onboarded = value;
-    });
   }
 
   get snoozeBackup() {
@@ -257,18 +141,6 @@ export class User extends EventEmitter {
       this._raw.pinBanned = null;
     });
   }
-
-  listenTheme = () => {
-    const theme = Appearance.getColorScheme() as AppTheme;
-
-    if (theme !== this._systemTheme) {
-      this._systemTheme = theme;
-
-      if (this._raw.theme === AppTheme.system) {
-        app.emit('theme');
-      }
-    }
-  };
 
   successEnter() {
     realm.write(() => {

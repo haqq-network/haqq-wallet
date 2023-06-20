@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {SettingsTheme} from '@app/components/settings-theme';
-import {useUser} from '@app/hooks';
+import {app} from '@app/contexts';
 import {AppTheme} from '@app/types';
 
 export const SettingsThemeScreen = () => {
-  const user = useUser();
+  const [theme, setTheme] = useState(app.theme);
+  const onChangeTheme = useCallback((newTheme: AppTheme) => {
+    app.theme = newTheme;
+    setTheme(newTheme);
+  }, []);
 
-  const updateTheme = (theme: AppTheme) => {
-    user.theme = theme;
-  };
-
-  return <SettingsTheme theme={user.theme} onChangeTheme={updateTheme} />;
+  return <SettingsTheme theme={theme} onChangeTheme={onChangeTheme} />;
 };

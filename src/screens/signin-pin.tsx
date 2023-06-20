@@ -5,16 +5,16 @@ import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
+import {app} from '@app/contexts';
 import {captureException} from '@app/helpers';
 import {SssError} from '@app/helpers/sss-error';
-import {useTypedNavigation, useTypedRoute, useUser} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const SignInPinScreen = () => {
   const pinRef = useRef<PinInterface>();
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'signinPin'>();
-  const user = useUser();
 
   const onPin = useCallback(
     async (password: string) => {
@@ -36,7 +36,7 @@ export const SignInPinScreen = () => {
 
           await decryptShare(JSON.parse(securityQuestion), password);
 
-          if (user.onboarded) {
+          if (app.onboarded) {
             navigation.navigate('signinStoreWallet', {
               ...route.params,
               type: 'sss',
@@ -64,14 +64,14 @@ export const SignInPinScreen = () => {
           }
         }
       } else {
-        const nextScreen = user.onboarded
+        const nextScreen = app.onboarded
           ? 'signinStoreWallet'
           : 'onboardingSetupPin';
 
         navigation.navigate(nextScreen, route.params);
       }
     },
-    [navigation, route.params, user.onboarded],
+    [navigation, route.params],
   );
 
   return <SssPin onPin={onPin} pinRef={pinRef} />;

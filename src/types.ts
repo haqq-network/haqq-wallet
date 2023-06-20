@@ -231,6 +231,7 @@ export type RootStackParamList = {
     action: string;
     hide: boolean;
     event: AdjustEvents;
+    onboarding?: boolean;
   };
   createAgreement: {
     nextScreen: NextScreenT;

@@ -6,20 +6,19 @@ import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {TransactionList} from '@app/types';
 
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
   const [refreshing, setRefreshing] = useState(false);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
       Wallet.addressList(),
-      Transaction.getAllByProviderId(user.providerId).snapshot(),
+      Transaction.getAllByProviderId(app.providerId).snapshot(),
     ),
   );
 
@@ -53,6 +52,13 @@ export const HomeFeedScreen = () => {
     [navigation],
   );
 
+  const updateTransactionsList = useCallback(() => {
+    const transactions = Transaction.getAllByProviderId(app.providerId);
+    setTransactionsList(
+      prepareTransactions(Wallet.addressList(), transactions.snapshot()),
+    );
+  }, []);
+
   const onTransactionsList = useCallback(
     (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
       if (
@@ -60,16 +66,14 @@ export const HomeFeedScreen = () => {
         changes.newModifications.length ||
         changes.deletions.length
       ) {
-        setTransactionsList(
-          prepareTransactions(Wallet.addressList(), collection.snapshot()),
-        );
+        updateTransactionsList();
       }
     },
-    [],
+    [updateTransactionsList],
   );
 
   useEffect(() => {
-    const transactions = Transaction.getAllByProviderId(user.providerId);
+    const transactions = Transaction.getAllByProviderId(app.providerId);
     setTransactionsList(
       prepareTransactions(Wallet.addressList(), transactions.snapshot()),
     );
@@ -78,13 +82,20 @@ export const HomeFeedScreen = () => {
     return () => {
       transactions.removeListener(onTransactionsList);
     };
-  }, [onTransactionsList, user.providerId]);
+  }, [onTransactionsList]);
+
+  useEffect(() => {
+    app.on(Events.onProviderChanged, updateTransactionsList);
+
+    return () => {
+      app.off(Events.onProviderChanged, updateTransactionsList);
+    };
+  }, [updateTransactionsList]);
 
   return (
     <HomeFeed
       transactionsList={transactionsList}
       refreshing={refreshing}
-      user={user}
       onWalletsRefresh={onWalletsRefresh}
       onPressRow={onPressRow}
     />

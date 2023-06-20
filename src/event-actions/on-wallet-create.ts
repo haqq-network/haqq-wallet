@@ -11,7 +11,7 @@ import {WalletType} from '@app/types';
 
 export async function onWalletCreate(wallet: Wallet) {
   try {
-    let subscription = app.notifications;
+    let subscription = app.notificationToken;
     if (subscription) {
       await PushNotifications.instance.createNotificationSubscription(
         subscription,

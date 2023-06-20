@@ -5,8 +5,9 @@ import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {SigninNetworks} from '@app/components/signin-networks';
+import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
-import {useTypedNavigation, useUser} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
@@ -17,7 +18,6 @@ import {
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
-  const user = useUser();
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
@@ -66,7 +66,7 @@ export const SignInNetworksScreen = () => {
           throw new SssError('signinNotRecovery');
         }
 
-        const nextScreen = user.onboarded
+        const nextScreen = app.onboarded
           ? 'signinStoreWallet'
           : 'onboardingSetupPin';
 
@@ -91,7 +91,7 @@ export const SignInNetworksScreen = () => {
         }
       }
     },
-    [navigation, user.onboarded],
+    [navigation],
   );
 
   const onSkip = useCallback(() => {
