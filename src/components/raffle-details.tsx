@@ -138,7 +138,7 @@ export const RaffleDetails = ({
         />
       </View>
 
-      <Spacer height={19} />
+      <Spacer height={16} />
 
       <First>
         {showResult && (
@@ -166,6 +166,7 @@ export const RaffleDetails = ({
           />
         )}
       </First>
+      <Spacer height={20} />
     </PopupContainer>
   );
 };

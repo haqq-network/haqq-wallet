@@ -71,6 +71,7 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
         i18n={I18N.raffleRewardUnderstood}
         onPress={onPressUnderstood}
       />
+      <Spacer height={20} />
     </SafeAreaView>
   );
 };
