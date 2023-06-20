@@ -672,6 +672,10 @@ export enum I18N {
   domainBlockedTitle,
   domainBlockedDescription1,
   domainBlockedDescription2,
+  homeFeedTransactionTabTitle,
+  homeFeedNftTabTitle,
+  accountInfoNftTabTitle,
+  accountInfoTransactionTabTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1472,4 +1476,8 @@ const en: Record<I18N, string> = {
   [I18N.domainBlockedTitle]: 'Domain is blocked',
   [I18N.domainBlockedDescription1]: 'Domain ',
   [I18N.domainBlockedDescription2]: ' not allwed for this operation.',
+  [I18N.homeFeedTransactionTabTitle]: 'Transactions',
+  [I18N.accountInfoTransactionTabTitle]: 'Transactions',
+  [I18N.homeFeedNftTabTitle]: 'NFTs',
+  [I18N.accountInfoNftTabTitle]: 'NFTs',
 };

@@ -10,6 +10,7 @@ import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {getText} from '@app/i18n';
 import {isI18N} from '@app/utils';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 import {TopTabNavigatorExtendedProps} from './top-tab-navigator';
 import {Text} from './ui';
@@ -98,7 +99,14 @@ const styles = createTheme({
   activeTabIndicator: {
     backgroundColor: Color.bg1,
     position: 'absolute',
-    borderRadius: 14,
+    borderRadius: 12,
+    shadowColor: SHADOW_COLOR_1,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowRadius: 8,
+    shadowOpacity: 1,
   },
   container: {
     flex: 1,

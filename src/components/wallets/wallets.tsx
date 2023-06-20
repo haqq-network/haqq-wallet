@@ -61,8 +61,7 @@ export const Wallets = ({
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollInner}>
+        style={styles.scroll}>
         {wallets.map((w, i) => (
           <CarouselItem index={i} pan={pan} key={w.address}>
             <WalletCard
@@ -85,6 +84,7 @@ export const Wallets = ({
           />
         </CarouselItem>
       </Animated.ScrollView>
+      <Spacer height={9} />
       <View style={styles.sub}>
         {wallets.map((w, i) => (
           <Dot pan={pan} index={i} key={w.address} />
@@ -97,12 +97,9 @@ export const Wallets = ({
 
 const styles = createTheme({
   scroll: {overflow: 'hidden'},
-  scrollInner: {paddingBottom: 24, paddingTop: 6},
   sub: {
-    height: 20,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: -20,
   },
 });

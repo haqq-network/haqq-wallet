@@ -22,7 +22,7 @@ export const Web3BrowserPopup = () => {
   return (
     <WalletProtection.Navigator screenOptions={screenOptions}>
       <WalletProtection.Screen
-        name="web3BrowserPopup"
+        name="web3BrowserPopupInner"
         component={Web3BrowserScreen}
         options={TransitionPresets.ModalSlideFromBottomIOS}
         initialParams={route.params}
