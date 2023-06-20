@@ -85,7 +85,7 @@ export const HomeStaking = ({
           onPress={onPressValidators}
           style={styles.margin}
         />
-        <Spacer height={12} />
+        <Spacer height={20} />
       </View>
     </ScrollView>
   );
