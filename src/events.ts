@@ -29,6 +29,7 @@ export enum Events {
   onPushNotification = 'onPushNotification',
   onAddressBookCreate = 'onAddressBookCreate',
   onAddressBookSync = 'onAddressBookSync',
+  onRaffleTicket = 'onRaffleTicket',
 }
 
 export enum WalletConnectEvents {

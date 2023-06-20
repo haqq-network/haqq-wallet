@@ -486,6 +486,7 @@ export function isValidJSON(
 export const openInAppBrowser = (url: string) => {
   navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
 };
+
 export function isError(err: any): err is Error {
   return err instanceof Error;
 }

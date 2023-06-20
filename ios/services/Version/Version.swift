@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AdSupport
 
 @objc(RNVersion)
 class RNVersion: NSObject {
@@ -17,11 +18,23 @@ class RNVersion: NSObject {
     return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
   }
   
+  var isTrackingEnabled: Bool {
+    return ASIdentifierManager.shared().isAdvertisingTrackingEnabled
+  }
+  
+  var adId: String {
+    if isTrackingEnabled {
+      return  ASIdentifierManager.shared().advertisingIdentifier.uuidString;
+    }
+    
+    return "unknown"
+  }
+  
   @objc
   static func requiresMainQueueSetup() -> Bool { return false }
   
   @objc
   public func constantsToExport() -> [AnyHashable : Any]! {
-    return ["appVersion": appVersion ?? "unknown", "buildNumber": buildNumber ?? "unknown"]
+    return ["appVersion": appVersion ?? "unknown", "buildNumber": buildNumber ?? "unknown", "adId": adId, "isTrackingEnabled": isTrackingEnabled ]
   }
 }

@@ -5,6 +5,8 @@ import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
 import {Alert, ScrollView} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import shajs from 'sha.js';
 
 import {CaptchaType} from '@app/components/captcha';
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
@@ -28,7 +30,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {Link, Modals} from '@app/types';
-import {openInAppBrowser} from '@app/utils';
+import {makeID, openInAppBrowser} from '@app/utils';
 import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -373,30 +375,9 @@ export const SettingsTestScreen = () => {
     console.log('symbol', ...symbol);
   }, [contract]);
 
-  const onCreateBanner = useCallback(() => {
-    Banner.create({
-      id: 'qwerty',
-      title: 'Reward for creating the first account',
-      description:
-        'Join us in the spirit of Ramadan and claim your free ISLM coins.',
-      type: 'claimCode',
-      buttons: [
-        {
-          id: new Realm.BSON.UUID(),
-          title: 'Claim reward',
-          event: 'claimCode',
-          params: {
-            claim_code: 'qwerty',
-          },
-          color: '#01B26E',
-          backgroundColor: '#EEF9F5',
-        },
-      ],
-      backgroundColorFrom: '#1D69A4',
-      backgroundColorTo: '#0C9FA5',
-      backgroundImage:
-        'https://storage.googleapis.com/mobile-static/reward-banner-1.png',
-    });
+  const onResetUid = useCallback(async () => {
+    const uid = shajs('sha256').update(makeID(10)).digest('hex');
+    await EncryptedStorage.setItem('uid', uid);
   }, []);
 
   const onClearBanners = useCallback(() => {
@@ -501,13 +482,8 @@ export const SettingsTestScreen = () => {
         onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
-      <Title text="Referrals" />
-      <Button
-        title="create banner"
-        onPress={onCreateBanner}
-        variant={ButtonVariant.contained}
-      />
-      <Spacer height={8} />
+
+      <Title text="Services" />
       <Button
         title="clear banners"
         onPress={onClearBanners}
@@ -517,6 +493,12 @@ export const SettingsTestScreen = () => {
       <Button
         title="clear referral"
         onPress={onClearReferrals}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="reset uid"
+        onPress={onResetUid}
         variant={ButtonVariant.contained}
       />
 

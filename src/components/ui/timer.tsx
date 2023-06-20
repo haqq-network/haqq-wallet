@@ -56,6 +56,7 @@ export const Timer = ({
   const [currentDate, setCurrentDate] = useState(new Date());
   const startDate = useMemo(() => new Date(start), [start]);
   const endDate = useMemo(() => new Date(end), [end]);
+
   const daysRemaining = useMemo(
     () => String(differenceInDays(endDate, currentDate)).padStart(2, '0'),
     [currentDate, endDate],
@@ -75,13 +76,14 @@ export const Timer = ({
     [currentDate, endDate],
   );
   const timeDifference = useMemo(
-    () => differenceInMilliseconds(endDate, currentDate),
-    [currentDate, endDate],
+    () => differenceInMilliseconds(currentDate, startDate),
+    [currentDate, startDate],
   );
   const totalTimeDifference = useMemo(
     () => differenceInMilliseconds(endDate, startDate),
     [endDate, startDate],
   );
+
   const progress = useMemo(
     () => timeDifference / totalTimeDifference,
     [timeDifference, totalTimeDifference],
@@ -104,7 +106,7 @@ export const Timer = ({
   }, [isFinish, updateInterval]);
 
   return (
-    <CircularProgress size={220} inverted progress={isFinish ? 0 : progress}>
+    <CircularProgress size={220} progress={isFinish ? 0 : progress}>
       <First>
         {isFinish && (
           <>

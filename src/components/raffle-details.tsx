@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, SafeAreaView, View} from 'react-native';
+import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
@@ -16,6 +16,7 @@ import {
   First,
   Icon,
   IconsName,
+  PopupContainer,
   Spacer,
   Text,
 } from './ui';
@@ -62,7 +63,7 @@ export const RaffleDetails = ({
   const showResult = useMemo(() => new Date() > closed_at, [closed_at]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <PopupContainer style={styles.container}>
       <View style={styles.row}>
         <Text t8 numberOfLines={1} i18n={I18N.rafflePrize} />
         <Image
@@ -165,7 +166,7 @@ export const RaffleDetails = ({
           />
         )}
       </First>
-    </SafeAreaView>
+    </PopupContainer>
   );
 };
 

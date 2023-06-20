@@ -1,15 +1,17 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
 
 import {RaffleDetails} from '@app/components/raffle-details';
+import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
+import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {I18N} from '@app/i18n';
-import {sendNotification} from '@app/services';
 
 export const RaffleDetailsScreen = () => {
   const navigation = useTypedNavigation();
   const params = useTypedRoute<'raffleDetails'>()?.params;
+
+  const [raffle, setRaffle] = useState(params?.item);
 
   useFocusEffect(() => {
     navigation.setOptions({
@@ -17,23 +19,26 @@ export const RaffleDetailsScreen = () => {
     });
   });
 
-  const onPressGetTicket = useCallback(() => {
-    sendNotification(I18N.earnTicketRecieved);
-    console.log('🟢 onPressGetTicket', JSON.stringify(params, null, 2));
+  const onPressGetTicket = useCallback(async () => {
+    try {
+      const r = await onEarnGetTicket(params?.item?.id);
+      setRaffle(r);
+    } catch (e) {
+      captureException(e, 'onPressGetTicket raffle details');
+    }
   }, [params]);
 
   const onPressShowResult = useCallback(() => {
-    console.log('🟢 onPressShowResult', JSON.stringify(params, null, 2));
     navigation.navigate('raffleReward', params);
   }, [navigation, params]);
 
-  if (!params.item) {
+  if (!raffle) {
     return null;
   }
 
   return (
     <RaffleDetails
-      item={params.item}
+      item={raffle}
       prevIslmCount={params.prevIslmCount}
       prevTicketsCount={params.prevTicketsCount}
       onPressGetTicket={onPressGetTicket}
