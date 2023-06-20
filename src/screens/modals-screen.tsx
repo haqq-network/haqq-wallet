@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {StatusBar} from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 import {Modal} from '@app/components/modal';
@@ -33,9 +34,13 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
   useEffect(() => {
     if (hasModals) {
       SystemNavigationBar.navigationHide();
+      StatusBar.setHidden(true);
+      StatusBar.setTranslucent(true);
 
       return () => {
         SystemNavigationBar.navigationShow();
+        StatusBar.setHidden(false);
+        StatusBar.setTranslucent(false);
       };
     }
   }, [hasModals]);
