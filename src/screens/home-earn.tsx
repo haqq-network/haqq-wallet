@@ -128,6 +128,7 @@ export const HomeEarnScreen = () => {
       await onEarnGetTicket(raffle.id);
     } catch (e) {
       captureException(e, 'onPressGetTicket');
+      throw e;
     }
   }, []);
   const onPressShowResult = useCallback(

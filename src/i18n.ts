@@ -676,6 +676,8 @@ export enum I18N {
   homeFeedNftTabTitle,
   accountInfoNftTabTitle,
   accountInfoTransactionTabTitle,
+  homeEarnEmptyRaffleTitle,
+  homeEarnEmptyRaffleDescription,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1480,4 +1482,7 @@ const en: Record<I18N, string> = {
   [I18N.accountInfoTransactionTabTitle]: 'Transactions',
   [I18N.homeFeedNftTabTitle]: 'NFTs',
   [I18N.accountInfoNftTabTitle]: 'NFTs',
+  [I18N.homeEarnEmptyRaffleTitle]: 'Raffles will be here soon',
+  [I18N.homeEarnEmptyRaffleDescription]:
+    'Soon you will be able to participate in raffles and receive prizes',
 };

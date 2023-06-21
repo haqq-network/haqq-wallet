@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -38,6 +38,16 @@ export const RaffleDetails = ({
   onPressGetTicket,
   onPressShowResult,
 }: RaffleDetailsProps) => {
+  const [loading, setLoading] = useState(false);
+  const handlePressGetTicket = useCallback(async () => {
+    try {
+      setLoading(true);
+      await onPressGetTicket();
+    } finally {
+      setLoading(false);
+    }
+  }, [onPressGetTicket]);
+
   const closed_at = useMemo(
     () => new Date(item.close_at * 1000),
     [item.close_at],
@@ -159,9 +169,10 @@ export const RaffleDetails = ({
         )}
         {showGetTicket && (
           <Button
+            loading={loading}
             style={styles.buttonStyle}
             variant={ButtonVariant.contained}
-            onPress={onPressGetTicket}
+            onPress={handlePressGetTicket}
             i18n={I18N.earnGetTicket}
           />
         )}
