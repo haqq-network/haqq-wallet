@@ -245,8 +245,9 @@ class App extends EventEmitter {
   }
 
   get currentTheme() {
-    const theme = VariablesString.get('theme') as AppTheme;
-    return theme === AppTheme.system ? this._systemTheme : theme;
+    return this.theme === AppTheme.system
+      ? this._systemTheme ?? AppTheme.light
+      : this.theme;
   }
 
   get theme() {
