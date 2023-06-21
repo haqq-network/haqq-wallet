@@ -66,7 +66,7 @@ class App extends EventEmitter {
       android: false,
       ios: appleAuth.isSupported,
     }) || false;
-  private _systemTheme: AppTheme;
+  private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
 
   constructor() {
     super();
@@ -256,7 +256,7 @@ class App extends EventEmitter {
   set theme(value) {
     VariablesString.set('theme', value);
 
-    app.emit('theme', value);
+    this.emit('theme', value);
     if (IS_ANDROID) {
       StatusBar.setBackgroundColor(getColor(Color.bg1));
       StatusBar.setBarStyle(
@@ -272,7 +272,7 @@ class App extends EventEmitter {
       this._systemTheme = theme;
 
       if (this.theme === AppTheme.system) {
-        app.emit('theme');
+        this.emit('theme');
       }
     }
   }
@@ -343,7 +343,7 @@ class App extends EventEmitter {
       await this.pinAuth();
       this.authenticated = true;
     }
-    console.log('this.authenticated', this.authenticated);
+
     if (this.authenticated) {
       close();
     }
