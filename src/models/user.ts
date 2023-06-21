@@ -136,7 +136,6 @@ export class User extends EventEmitter {
   async resetUserData() {
     await awaitForRealm();
     realm.write(() => {
-      this._raw.onboarded = false;
       this._raw.pinAttempts = null;
       this._raw.pinBanned = null;
     });

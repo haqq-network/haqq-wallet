@@ -12,7 +12,6 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 
 export async function onAppReset() {
   const uid = await EncryptedStorage.getItem('uid');
-  //TODO: save session
   await EncryptedStorage.clear();
   Transaction.removeAll();
   await Wallet.removeAll();
@@ -25,6 +24,7 @@ export async function onAppReset() {
     await RNAsyncStorage.removeItem(key);
   }
   await app.getUser().resetUserData();
+  app.onboarded = false;
   await resetGenericPassword();
 
   if (uid) {
