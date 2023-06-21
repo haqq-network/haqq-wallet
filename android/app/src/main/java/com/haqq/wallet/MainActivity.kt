@@ -8,7 +8,6 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.ReactFragment
 import com.facebook.react.ReactRootView
 import com.haqq.wallet.MainActivity.MainActivityDelegate
-import com.scottyab.rootbeer.RootBeer
 import org.devio.rn.splashscreen.SplashScreen
 
 class MainActivity : ReactActivity() {
@@ -17,10 +16,15 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String? {
-    val rootBeer = RootBeer(this);
-    if (rootBeer.isRooted) {
-      return "jailbreak"
-    } else {
+    try {
+      return if (RootUtil.isDeviceRooted) {
+        "jailbreak"
+      } else {
+        "haqq"
+      }
+    } catch (e: Exception) {
+      println("getMainComponentName error")
+      println(e)
       return "haqq"
     }
   }
