@@ -111,6 +111,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       networkVersion: `${provider?.ethChainId}`,
       accounts: getEthAccounts({helper, req}),
       isUnlocked: app.isUnlocked,
+      isHaqqWallet: true,
     };
   },
   eth_requestAccounts: async ({helper}) => {

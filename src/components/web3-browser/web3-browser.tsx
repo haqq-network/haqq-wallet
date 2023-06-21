@@ -185,6 +185,10 @@ export const Web3Browser = ({
       ${inpageBridgeWeb3}
       ${WebViewEventsJS.getWindowInformation}
       console.log('ethereum loaded:', !!window.ethereum);
+      if(window.ethereum) {
+        window.ethereum.isMetaMask = false;
+        window.ethereum.isHaqqWallet = true;
+      }
       true;`,
     [inpageBridgeWeb3],
   );
