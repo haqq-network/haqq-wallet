@@ -3,3 +3,12 @@
 //
 
 #import <React/RCTBridgeModule.h>
+#import <RCTAppDelegate.h>
+#import <React/RCTBundleURLProvider.h>
+
+#import <RNSplashScreen.h>
+#import <Firebase.h>
+
+#import <React/RCTRootView.h>
+#import <React/RCTAppSetupUtils.h>
+#import <React/RCTLinkingManager.h>

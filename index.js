@@ -12,10 +12,11 @@ import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
 import {Overview} from './src/overview';
+import {Jailbreak} from './src/jailbreak';
 
 if(!global.BigInt){
   const BigInt = require('big-integer');
-  
+
   Object.assign(global, {
     BigInt: BigInt,
   });
@@ -86,3 +87,4 @@ const Wrapped = Sentry.wrap(App);
 AppRegistry.registerComponent(appName, () => Wrapped);
 
 AppRegistry.registerComponent('overview', () => Overview);
+AppRegistry.registerComponent('jailbreak', () => Jailbreak);
