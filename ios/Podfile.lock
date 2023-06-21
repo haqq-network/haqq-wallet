@@ -9,7 +9,7 @@ PODS:
   - AppAuth/ExternalUserAgent (1.6.2):
     - AppAuth/Core
   - boost (1.76.0)
-  - BVLinearGradient (2.7.2):
+  - BVLinearGradient (2.7.3):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
   - CryptoSwift (1.5.1)
@@ -510,13 +510,13 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.9.0):
     - React-Core
-  - react-native-image-picker (5.4.2):
+  - react-native-image-picker (5.6.0):
     - React-Core
   - react-native-netinfo (9.3.10):
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.5.3):
+  - react-native-safe-area-context (4.6.0):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -610,7 +610,7 @@ PODS:
     - React-jsi (= 0.71.11)
     - React-logger (= 0.71.11)
     - React-perflogger (= 0.71.11)
-  - RealmJS (11.10.0):
+  - RealmJS (11.10.1):
     - React
   - rive-react-native (4.1.1):
     - React-Core
@@ -679,7 +679,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.21.0):
+  - RNScreens (3.21.1):
     - React-Core
     - React-RCTImage
   - RNSentry (5.6.0):
@@ -1006,7 +1006,7 @@ SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  BVLinearGradient: 252e4a39d23d69d2d89b55b165c8900f7caf93fc
+  BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -1071,10 +1071,10 @@ SPEC CHECKSUMS:
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
-  react-native-image-picker: 77f552291e993f3fdcdf48cc3c280ef7f11789c8
+  react-native-image-picker: db60857e03d63721f19b6f4027de20429ddd9cba
   react-native-netinfo: ccbe1085dffd16592791d550189772e13bf479e2
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: b8979f5eda6ed5903d4dbc885be3846ea3daa753
+  react-native-safe-area-context: eb0b9284834d1173db8de53ef32dde3d608ee533
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-webview: 133a6a5149f963259646e710b4545c67ef35d7c9
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
@@ -1090,7 +1090,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: f09f08de63e4122deb32506e20ca4cae6e4e14c1
   React-runtimeexecutor: 4817d63dbc9d658f8dc0ec56bd9b83ce531129f0
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
-  RealmJS: c62e2a26971c68b140b1f822b7d2919720d41543
+  RealmJS: 8deebf00c84f499c654bc585583c54f55b586751
   rive-react-native: f79a9bf6a32ced1f3d789129c4d502f013488da1
   RiveRuntime: b01c11e015ed13e66fe96a06490ee43ae9548349
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
@@ -1106,7 +1106,7 @@ SPEC CHECKSUMS:
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNReanimated: 9976fbaaeb8a188c36026154c844bf374b3b7eeb
-  RNScreens: d037903436160a4b039d32606668350d2a808806
+  RNScreens: d3675ab2878704de70c9dae57fa5d024802404cc
   RNSentry: 9f0447b3ce13806f544903748de423259ead8552
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634

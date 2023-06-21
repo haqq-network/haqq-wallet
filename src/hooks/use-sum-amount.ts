@@ -6,8 +6,11 @@ import validate from 'validate.js';
 import {I18N, getText} from '@app/i18n';
 import {MIN_AMOUNT} from '@app/variables/common';
 
-export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
-  console.log('initialMaxSum', initialMaxSum);
+export function useSumAmount(
+  initialSum = 0,
+  initialMaxSum = 0,
+  minAmount = MIN_AMOUNT,
+) {
   const [{amount, amountText}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum > 0 ? new Decimal(initialSum).toString() : '',
@@ -26,21 +29,23 @@ export function useSumAmount(initialSum = 0, initialMaxSum = 0) {
         validate.single(amount, {
           numericality: {
             notValid: 'Invalid number',
-            greaterThanOrEqualTo: MIN_AMOUNT,
+            greaterThanOrEqualTo: minAmount,
             lessThanOrEqualTo: maxAmount,
-            notGreaterThan: getText(I18N.sumAmountTooLow),
+            notGreaterThan: getText(I18N.sumAmountTooLow, {
+              amount: String(maxAmount),
+            }),
             notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
           },
         }),
       );
     }
-  }, [amount, maxAmount]);
+  }, [amount, maxAmount, minAmount]);
 
   const decAmount = new Decimal(amount);
 
   return {
     isValid:
-      decAmount.greaterThanOrEqualTo(MIN_AMOUNT) &&
+      decAmount.greaterThanOrEqualTo(minAmount) &&
       decAmount.lessThanOrEqualTo(new Decimal(maxAmount)) &&
       !error,
     maxAmount: maxAmount,

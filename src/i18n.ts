@@ -1092,7 +1092,7 @@ const en: Record<I18N, string> = {
   [I18N.sumBlockMax]: 'Max',
   [I18N.sumBlockAvailable]: 'Available',
   [I18N.sumAmountNotEnough]: "You don't have enough ISLM to pay the fee",
-  [I18N.sumAmountTooLow]: 'Should be greater than 0.0001',
+  [I18N.sumAmountTooLow]: 'Should be equal or greater than {{amount}}',
   [I18N.popupNotificationTitle]: 'Turn on push notifications',
   [I18N.popupNotificationDescription]:
     'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the wallet. We detect any risks for the security of your account',

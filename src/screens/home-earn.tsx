@@ -147,8 +147,13 @@ export const HomeEarnScreen = () => {
       const prevIslmCount =
         raffles
           ?.filter?.(it => it.status === RaffleStatus.closed)
-          .reduce((prev, curr) => prev + parseInt(curr.budget, 16) / WEI, 0) ||
-        0;
+          .reduce(
+            (prev, curr) =>
+              prev +
+              (parseInt(curr.budget, 16) / WEI / curr.winners) *
+                curr.winner_tickets,
+            0,
+          ) || 0;
 
       const prevTicketsCount =
         raffles
