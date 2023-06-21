@@ -16,7 +16,17 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String? {
-    return "haqq"
+    try {
+      return if (RootUtil.isDeviceRooted) {
+        "jailbreak"
+      } else {
+        "haqq"
+      }
+    } catch (e: Exception) {
+      println("getMainComponentName error")
+      println(e)
+      return "haqq"
+    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +35,7 @@ class MainActivity : ReactActivity() {
   }
 
   override fun onPause() {
-    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
+    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
     super.onPause()
 
   }

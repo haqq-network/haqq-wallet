@@ -22,6 +22,7 @@
 		<string>ha</string>
 		<string>yammer</string>
 		<string>discord</string>
+    <string>cydia</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
