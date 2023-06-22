@@ -7,7 +7,6 @@
 import Foundation
 import UIKit
 import React
-import FirebaseCore
 
 func clearKeychainIfNecessary() {
     // Checks whether or not this is the first time the app is run

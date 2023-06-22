@@ -7,6 +7,7 @@
 #import <React/RCTBundleURLProvider.h>
 
 #import <RNSplashScreen.h>
+#import <Firebase.h>
 
 #import <React/RCTRootView.h>
 #import <React/RCTAppSetupUtils.h>
