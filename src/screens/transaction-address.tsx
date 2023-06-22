@@ -1,13 +1,16 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 
 export const TransactionAddressScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionAddress'>();
 
   const [loading, setLoading] = React.useState(false);
+  const wallets = useWalletsVisible();
+  const contacts = useRef(Contact.getAll().snapshot()).current;
 
   const onDone = useCallback(
     async (address: string) => {
@@ -46,6 +49,8 @@ export const TransactionAddressScreen = () => {
     <TransactionAddress
       initial={route.params?.to}
       loading={loading}
+      wallets={wallets}
+      contacts={contacts}
       onAddress={onDone}
     />
   );

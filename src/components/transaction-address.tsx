@@ -2,7 +2,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {utils} from 'ethers';
-import {Keyboard, View} from 'react-native';
+import {Keyboard, ListRenderItem, View} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -14,6 +15,7 @@ import {
   IconButton,
   KeyboardSafeArea,
   Spacer,
+  Text,
   TextField,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
@@ -21,12 +23,18 @@ import {createTheme} from '@app/helpers';
 import {hideModal, showModal} from '@app/helpers/modal';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
+
+import {WalletRow, WalletRowTypes} from './wallet-row';
 
 export type TransactionAddressProps = {
   initial?: string;
   loading?: boolean;
+  wallets?: Realm.Results<Wallet>;
+  contacts?: Realm.Results<Contact>;
   onAddress: (address: string) => void;
 };
 
@@ -37,11 +45,28 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 export const TransactionAddress = ({
   initial = '',
   loading = false,
+  wallets,
+  contacts,
   onAddress,
 }: TransactionAddressProps) => {
   const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
+  const filteredWallets = useMemo(() => {
+    if (!wallets || !wallets.length) {
+      return;
+    }
+
+    if (!address) {
+      return wallets.snapshot();
+    }
+
+    return wallets
+      .filtered(
+        `address CONTAINS[c] '${address}' or name CONTAINS[c] '${address}'`,
+      )
+      .snapshot();
+  }, [address, wallets]);
 
   useEffect(() => {
     const toTrim = address.trim();
@@ -100,6 +125,25 @@ export const TransactionAddress = ({
     setAddress(pasteString);
   }, []);
 
+  const myAccountsKeyExtractor = useCallback(
+    (item: Wallet) => item.address,
+    [],
+  );
+
+  const myAccountsRenderItem: ListRenderItem<Wallet> = useCallback(
+    ({item}) => (
+      <>
+        <WalletRow
+          item={item}
+          onPress={() => onPressAddress(item.address)}
+          type={WalletRowTypes.variant4}
+        />
+        <Spacer width={8} />
+      </>
+    ),
+    [onPressAddress],
+  );
+
   return (
     <KeyboardSafeArea>
       <TextField
@@ -133,10 +177,30 @@ export const TransactionAddress = ({
         }
       />
 
-      <Spacer>
-        <ListOfContacts onPressAddress={onPressAddress} />
-      </Spacer>
-      <Spacer height={16} />
+      {Boolean(filteredWallets?.length) && (
+        <View style={styles.marginHorizontal}>
+          <Text t6 i18n={I18N.transactionMyAccounts} />
+          <Spacer height={12} />
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={filteredWallets}
+            keyExtractor={myAccountsKeyExtractor}
+            renderItem={myAccountsRenderItem}
+          />
+          <Spacer height={12} />
+        </View>
+      )}
+
+      {Boolean(contacts?.length) && (
+        <>
+          <Spacer height={12} />
+          <View style={styles.marginHorizontal}>
+            <Text t6 i18n={I18N.transactionMyContacts} />
+          </View>
+          <ListOfContacts onPressAddress={onPressAddress} />
+        </>
+      )}
       <Button
         disabled={!checked}
         variant={ButtonVariant.contained}
@@ -159,6 +223,9 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   button: {
+    marginHorizontal: 20,
+  },
+  marginHorizontal: {
     marginHorizontal: 20,
   },
 });

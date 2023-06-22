@@ -678,6 +678,8 @@ export enum I18N {
   accountInfoTransactionTabTitle,
   homeEarnEmptyRaffleTitle,
   homeEarnEmptyRaffleDescription,
+  transactionMyAccounts,
+  transactionMyContacts,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1485,4 +1487,6 @@ const en: Record<I18N, string> = {
   [I18N.homeEarnEmptyRaffleTitle]: 'Raffles will be here soon',
   [I18N.homeEarnEmptyRaffleDescription]:
     'Soon you will be able to participate in raffles and receive prizes',
+  [I18N.transactionMyAccounts]: 'My accounts',
+  [I18N.transactionMyContacts]: 'My contacts',
 };
