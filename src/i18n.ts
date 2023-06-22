@@ -678,9 +678,7 @@ export enum I18N {
   accountInfoTransactionTabTitle,
   homeEarnEmptyRaffleTitle,
   homeEarnEmptyRaffleDescription,
-  jailbreakTitle,
-  jailbreakDescription2,
-  jailbreakDescription1,
+  qrModalInvalidCode,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1227,6 +1225,7 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.qrModalSendFunds]: 'Send funds from',
+  [I18N.qrModalInvalidCode]: 'Invalid code',
   [I18N.ledgerAttentionTitle]: `Open ${LEDGER_APP} app on your Ledger and Confirm the transaction by pressing both buttons together`,
   [I18N.ledgerAttentionClose]: 'Close',
   [I18N.ledgerLockedTitle]: 'Turn on and unlock the Ledger',
@@ -1488,10 +1487,4 @@ const en: Record<I18N, string> = {
   [I18N.homeEarnEmptyRaffleTitle]: 'Raffles will be here soon',
   [I18N.homeEarnEmptyRaffleDescription]:
     'Soon you will be able to participate in raffles and receive prizes',
-  [I18N.jailbreakTitle]:
-    'It is not possible to use the wallet on a hacked device',
-  [I18N.jailbreakDescription1]:
-    'In accordance with our security policy, we do not allow use of the application on hacked devices. This is necessary to maintain safety of user funds',
-  [I18N.jailbreakDescription2]:
-    'We recommend that you update your device to the original firmware provided by your manufacturer',
 };

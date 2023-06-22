@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
@@ -33,6 +33,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const closeDistance = useWindowDimensions().height / 6;
   const [code, setCode] = useState('');
+  const isProcessing = useRef(false);
 
   const prepareAddress = useCallback((data: string) => {
     if (data.startsWith('haqq:')) {
@@ -78,7 +79,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         setTimeout(() => {
           app.emit(Events.onWalletConnectUri, address);
         }, 1000);
-      } else {
+      } else if (!error) {
         setError(true);
         vibrate(HapticEffects.error);
         setTimeout(() => {
@@ -86,7 +87,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [visible, onClose, prepareAddress],
+    [error, visible, onClose, prepareAddress],
   );
 
   const onGetAddress = useCallback(
@@ -105,12 +106,17 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
-      if (e.data && e.data !== code) {
-        vibrate(HapticEffects.selection);
-        setCode(e.data);
-        const slicedAddress = prepareAddress(e.data);
-        if (slicedAddress) {
-          onGetAddress(slicedAddress);
+      if (!isProcessing.current && e.data && e.data !== code) {
+        isProcessing.current = true;
+        try {
+          vibrate(HapticEffects.selection);
+          setCode(e.data);
+          const slicedAddress = prepareAddress(e.data);
+          if (slicedAddress) {
+            onGetAddress(slicedAddress);
+          }
+        } finally {
+          isProcessing.current = false;
         }
       }
     },
@@ -171,9 +177,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       {error && (
         <View style={styles.bottomErrorContainer}>
           <View style={styles.bottomError}>
-            <Text t8 color={Color.textBase3}>
-              Invalid code
-            </Text>
+            <Text t8 color={Color.textBase3} i18n={I18N.qrModalInvalidCode} />
           </View>
         </View>
       )}
