@@ -3,6 +3,7 @@ import {RefObject} from 'react';
 import EventEmitter from 'events';
 
 import {PhishingController} from '@metamask/phishing-controller';
+import {parseUri} from '@walletconnect/utils';
 import {JsonRpcEngine, JsonRpcRequest, JsonRpcResponse} from 'json-rpc-engine';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {
@@ -11,7 +12,9 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
+import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {Events} from '@app/events';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {
@@ -148,6 +151,11 @@ export class Web3BrowserHelper extends EventEmitter {
           this.go(url);
         }
       });
+      return false;
+    }
+
+    if (parseUri(url)?.protocol === 'wc') {
+      app.emit(Events.onWalletConnectUri, url);
       return false;
     }
 
