@@ -7,6 +7,7 @@ import {WebViewNavigation} from 'react-native-webview';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {IS_ANDROID} from '@app/variables/common';
 
 import {clearUrl} from '../../helpers/web3-browser-utils';
 import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
@@ -67,8 +68,10 @@ export const Web3BrowserHeader = ({
     onPressHeaderWallet?.(Wallet.getById(walletAddress)?.accountId!);
   }, [onPressHeaderWallet, walletAddress]);
 
+  const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];
+
   return (
-    <View style={styles.header}>
+    <View style={stylesHeaderWithRule}>
       <IconButton
         disabled={!webviewNavigationData?.canGoBack}
         onPress={onPressGoBack}>

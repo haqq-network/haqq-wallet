@@ -1,13 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {
-  Pressable,
-  Animated as RNAnimated,
-  StatusBar,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolate,
@@ -32,8 +25,6 @@ const timingInAnimationConfig: WithTimingConfig = {
   easing: ANIMATION_TYPE,
 };
 
-const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
-
 export type PopupBottomContainerHandleCloseType = (onEnd?: () => void) => void;
 
 interface BottomPopupContainerProps {
@@ -53,7 +44,7 @@ export const BottomPopupContainer = ({
 
   const fullyOpen = 0;
   const fullyClosed = H * 0.85;
-  const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
+  const {toDark, toLight} = useAndroidStatusBarAnimation({
     animatedValueRange: [fullyOpen, fullyClosed],
   });
   const fadeAnim = useSharedValue(fullyClosed);
@@ -91,7 +82,6 @@ export const BottomPopupContainer = ({
       <Animated.View
         style={[styles.fullFill, bgAnimation, !transparent && styles.bgColor]}
       />
-      <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View style={[styles.fullFill, bgAnimation]} />
       <Animated.View style={[styles.animateViewFade, slideFromBottomAnimation]}>
         <Pressable style={styles.fullFill} onPress={handlePressOut} />

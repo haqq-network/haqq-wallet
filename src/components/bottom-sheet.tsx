@@ -7,8 +7,6 @@ import React, {
 } from 'react';
 
 import {
-  Animated as RNAnimated,
-  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -51,8 +49,6 @@ export type BottomSheetRef = {
   open: () => void;
   close: () => void;
 };
-
-const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
 type pointsT = [number, number];
 
@@ -125,7 +121,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       const minTranslateY = Math.max(fullyOpenSnapPoint, translateY);
       return Math.min(closedSnapPoint, minTranslateY);
     });
-    const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
+    const {toDark, toLight} = useAndroidStatusBarAnimation({
       animatedValueRange: snapPointFromTop,
     });
 
@@ -206,7 +202,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     return (
       <View style={[StyleSheet.absoluteFill, page.container]}>
         <View style={page.wrap}>
-          <AnimatedStatusBar backgroundColor={backgroundColor} />
           <Animated.View
             style={[
               StyleSheet.absoluteFill,

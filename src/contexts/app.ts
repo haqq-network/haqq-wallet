@@ -13,7 +13,6 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
-import {Color, getColor} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
@@ -28,7 +27,6 @@ import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
 import {
-  IS_ANDROID,
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
   TEST_NETWORK,
@@ -258,23 +256,33 @@ class App extends EventEmitter {
     VariablesString.set('theme', value);
 
     this.emit('theme', value);
-    if (IS_ANDROID) {
-      StatusBar.setBackgroundColor(getColor(Color.bg1));
+
+    if (AppTheme.system === value) {
+      const scheme = this._systemTheme;
+      StatusBar.setBarStyle(
+        scheme === 'light' ? 'dark-content' : 'light-content',
+        false,
+      );
+    } else {
       StatusBar.setBarStyle(
         value === AppTheme.dark ? 'light-content' : 'dark-content',
+        false,
       );
     }
   }
 
   listenTheme() {
-    const theme = Appearance.getColorScheme() as AppTheme;
+    const systemColorScheme = Appearance.getColorScheme() as AppTheme;
 
-    if (theme !== this._systemTheme) {
-      this._systemTheme = theme;
+    if (systemColorScheme !== this._systemTheme) {
+      this._systemTheme = systemColorScheme;
+    }
 
-      if (this.theme === AppTheme.system) {
-        this.emit('theme');
-      }
+    if (this.theme === AppTheme.system) {
+      StatusBar.setBarStyle(
+        this.currentTheme === 'light' ? 'dark-content' : 'light-content',
+        false,
+      );
     }
   }
 

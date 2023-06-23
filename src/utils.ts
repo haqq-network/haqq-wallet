@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
 import {differenceInMinutes} from 'date-fns';

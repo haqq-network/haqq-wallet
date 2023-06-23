@@ -2,7 +2,7 @@ import React, {useCallback, useRef, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
-import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
+import {Dimensions, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 // @ts-ignore
@@ -19,7 +19,6 @@ import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
-import {QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
@@ -152,7 +151,6 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   return (
     <>
-      <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}

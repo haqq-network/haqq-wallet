@@ -27,7 +27,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -67,7 +67,6 @@ import {
 } from '@app/types';
 import {sleep} from '@app/utils';
 
-import {StatusBarColor} from './components/ui';
 import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
@@ -301,12 +300,6 @@ export const App = () => {
     <GestureHandlerRootView style={styles.rootView}>
       <ActionSheetProvider>
         <SafeAreaProvider>
-          <StatusBarColor
-            barStyle={
-              theme === AppTheme.dark ? 'light-content' : 'dark-content'
-            }
-            backgroundColor={getColor(Color.bg1)}
-          />
           <NavigationContainer
             ref={navigator}
             theme={navTheme}

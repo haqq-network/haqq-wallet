@@ -31,7 +31,7 @@ const screenOptions: BottomTabNavigationOptions = {
     backgroundColor: Color.transparent,
   },
   headerTitleAlign: 'center',
-  headerStatusBarHeight: IS_IOS ? undefined : 0,
+  headerStatusBarHeight: IS_IOS ? undefined : 40,
   tabBarStyle: {
     backgroundColor: Color.transparent,
     borderTopWidth: 0,
@@ -41,7 +41,7 @@ const screenOptions: BottomTabNavigationOptions = {
     marginBottom: IS_IOS ? 0 : 23,
   },
   tabBarItemStyle: {
-    marginTop: IS_IOS ? 5 : 8,
+    marginTop: 5,
     height: IS_IOS ? 50 : 40,
   },
   headerTitle: ({children}) => <HomeScreenTitle route={children} />,

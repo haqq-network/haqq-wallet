@@ -26,7 +26,7 @@ const browserHomePageScreenOptions = {
     backgroundColor: Color.transparent,
   },
   headerTitleAlign: 'center',
-  headerStatusBarHeight: IS_IOS ? undefined : 0,
+  headerStatusBarHeight: IS_IOS ? undefined : 40,
   headerTitle: () => <Text t8 center i18n={I18N.homeBrowserTitle} />,
   headerLeft: () => <></>,
 };

@@ -10,6 +10,7 @@ import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
 import {ScreenOptionType} from '@app/types';
+import {IS_ANDROID} from '@app/variables/common';
 
 type PopupHeaderProps = StackHeaderProps & {
   options: ScreenOptionType;
@@ -41,7 +42,11 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
   }, [canGoBack, navigation]);
 
   return (
-    <View style={[page.container, options.tab && {marginTop: insets.top}]}>
+    <View
+      style={[
+        page.container,
+        (options.tab || IS_ANDROID) && {marginTop: insets.top},
+      ]}>
       {options.headerLeft ? (
         options.headerLeft({})
       ) : canGoBack ? (

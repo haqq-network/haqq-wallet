@@ -77,7 +77,7 @@ export const CustomHeader = forwardRef<
       () =>
         Platform.select({
           ios: insets.top,
-          android: 0,
+          android: insets.top,
         }),
       [insets],
     );
