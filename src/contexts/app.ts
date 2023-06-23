@@ -97,7 +97,6 @@ class App extends EventEmitter {
       EthNetwork.init(this._provider);
     }
 
-    this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
     setInterval(this.checkBalance, 6000);

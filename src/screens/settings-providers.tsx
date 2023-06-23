@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings-providers';
@@ -56,16 +56,32 @@ export const SettingsProvidersScreen = () => {
     navigation.push('settingsProviderForm', {});
   }, [navigation]);
 
-  return (
-    <>
+  const header = useMemo(() => {
+    if (app.isDeveloper) {
+      return (
+        <CustomHeader
+          onPressLeft={navigation.goBack}
+          iconLeft="arrow_back"
+          title={I18N.settingsProvidersTitle}
+          i18nTextRight={I18N.settingsProvidersTitleRight}
+          colorRight={Color.textGreen1}
+          onPressRight={onPressAdd}
+        />
+      );
+    }
+
+    return (
       <CustomHeader
         onPressLeft={navigation.goBack}
         iconLeft="arrow_back"
         title={I18N.settingsProvidersTitle}
-        i18nTextRight={I18N.settingsProvidersTitleRight}
-        colorRight={Color.textGreen1}
-        onPressRight={onPressAdd}
       />
+    );
+  }, [navigation.goBack, onPressAdd]);
+
+  return (
+    <>
+      {header}
       <SettingsProviders
         providers={providers}
         providerId={providerId}

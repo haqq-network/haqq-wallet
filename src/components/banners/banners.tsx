@@ -19,8 +19,6 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
     return null;
   }
 
-  console.log('banners.length', banners.length);
-
   return (
     <>
       <Spacer height={20} />
