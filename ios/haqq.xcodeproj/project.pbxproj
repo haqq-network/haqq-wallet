@@ -60,6 +60,7 @@
 		21F04B162A42B99D0048922A /* UIDevice+isJailBroken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */; };
 		21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */; };
 		21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */; };
+		21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */; };
 		269FDEB110975FAA48908707 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF7A8588211C7750BA341AD /* libPods-haqq.a */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		31297D92EC01449C9FE823F4 /* ledger-no-app.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C57942F9C9B4973B42F735D /* ledger-no-app.png */; };
@@ -129,7 +130,7 @@
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
 		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
 		CEBA4969BB874AF6B924DA37 /* domain-blocked-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FCD1005E8E4C08BB4782E3 /* domain-blocked-dark@3x.png */; };
-		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		CF0D49E2FABD41D9A34AB04C /* (null) in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
 		D2EF8B9028754ED2AA9994E5 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */; };
@@ -220,6 +221,7 @@
 		21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isJailBroken.swift"; sourceTree = "<group>"; };
 		21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
 		21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
+		21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+modelName.swift"; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		237ACC1D53D140F093CE4102 /* bluetooth-powered-off.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off.png"; path = "../assets/images/bluetooth-powered-off.png"; sourceTree = "<group>"; };
 		273D756B386048F4B413B149 /* earn-staking@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking@3x.png"; path = "../assets/images/earn-staking@3x.png"; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				210F818B29110E66002A27EB /* String+split.swift */,
 				210F818F29112548002A27EB /* Data+hexEncodedString.swift */,
 				21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */,
+				21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -747,7 +750,7 @@
 				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
 				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 				2129B78329CACF69005C0CCA /* overview.storyboard in Resources */,
-				CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */,
+				CF0D49E2FABD41D9A34AB04C /* (null) in Resources */,
 				1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */,
 				7CE3C371577D43A6BAA1DF94 /* backup-notification-dark.png in Resources */,
 				8EF155B29CA4479AA8E82E4A /* backup-notification-dark@2x.png in Resources */,
@@ -1039,6 +1042,7 @@
 				21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
+				21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
 				2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */,
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
