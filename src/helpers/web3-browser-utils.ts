@@ -1,5 +1,5 @@
 import {JsonRpcRequest} from 'json-rpc-engine';
-import {Alert, Linking, Platform} from 'react-native';
+import {Alert, Linking} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {isValidUrl} from '@app/utils';
@@ -88,12 +88,6 @@ export const emitToEthereumJS = <EventName extends EthereumEventsEnum>(
 export const changeWebViewUrlJS = (href: string) => {
   return `(function(){window.location.href = '${href}' })()`;
 };
-
-export const WebViewUserAgent = Platform.select({
-  android:
-    'Mozilla/5.0 (Linux; Android 10; Android SDK built for x86 Build/OSM1.180201.023) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.92 Mobile Safari/537.36',
-  ios: 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/76.0.3809.123 Mobile/15E148 Safari/605.1',
-});
 
 // Checking whether an application can navigate to another application through a deep link.
 // return true if deeplink detected

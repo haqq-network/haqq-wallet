@@ -10,4 +10,4 @@ export const getAdId = () => RNVersion.adId;
 
 export const getIsTrackingEnabled = () => RNVersion.isTrackingEnabled;
 
-export const getUserAgent = () => RNVersion.userAgent;
+export const getUserAgent = () => RNVersion.userAgent as string;

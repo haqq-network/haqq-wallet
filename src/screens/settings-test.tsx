@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
@@ -390,8 +391,16 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text t11>userAgent: {getUserAgent()}</Text>
-      <Spacer height={20} />
+      <Title text="user agent" />
+      <Text
+        t11
+        onPress={() => {
+          Clipboard.setString(getUserAgent());
+          toastMessage('Copied to clipboard');
+        }}>
+        {getUserAgent()}
+      </Text>
+      <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input
         placeholder="wc:"
