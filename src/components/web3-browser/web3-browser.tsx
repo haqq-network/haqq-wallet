@@ -18,6 +18,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
+import {getUserAgent} from '@app/services/version';
 
 import {
   InpageBridgeWeb3,
@@ -32,11 +33,7 @@ import {
 } from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
 
-import {
-  WebViewUserAgent,
-  clearUrl,
-  getOriginFromUrl,
-} from '../../helpers/web3-browser-utils';
+import {clearUrl, getOriginFromUrl} from '../../helpers/web3-browser-utils';
 import {BrowserError} from '../browser-error';
 
 export interface Web3BrowserProps {
@@ -108,6 +105,7 @@ export const Web3Browser = ({
   onPressRemoveBookmark,
   addSiteToSearchHistory,
 }: Web3BrowserProps) => {
+  const userAgent = useRef(getUserAgent()).current;
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>();
   const [windowInfo, setWindowInfo] = useState<WindowInfoEvent['payload']>();
@@ -303,7 +301,7 @@ export const Web3Browser = ({
           dataDetectorTypes={'all'}
           originWhitelist={['*']}
           ref={webviewRef}
-          userAgent={WebViewUserAgent}
+          userAgent={userAgent}
           onMessage={helper.handleMessage}
           onLoad={onLoad}
           onLoadEnd={helper.onLoadEnd}
