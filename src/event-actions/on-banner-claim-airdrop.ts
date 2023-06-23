@@ -57,7 +57,12 @@ export async function onBannerClaimAirdrop(claimCode: string) {
   if (referral) {
     const provider = Provider.getById(app.providerId);
 
-    if (provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f') {
+    const info = await Airdrop.instance.campaign_code(claimCode);
+
+    if (
+      provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f' &&
+      info.code_type !== 'raffle'
+    ) {
       showModal('claimOnMainnet', {
         network: provider?.name ?? '',
         onChange: () => {
