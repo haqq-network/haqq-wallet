@@ -2,7 +2,8 @@ import React, {useCallback, useRef, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
-import {Dimensions, View, useWindowDimensions} from 'react-native';
+import _ from 'lodash';
+import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 // @ts-ignore
@@ -19,6 +20,7 @@ import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
+import {QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
@@ -26,23 +28,18 @@ import {QrTopView} from './qr-top-view';
 
 export type QRModalProps = Modals['qr'];
 
+const debbouncedVibrate = _.debounce(vibrate, 1000);
+
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const visible = useWalletsVisible();
-  const [error, setError] = useState(false);
-  const [flashMode, setFlashMode] = useState(false);
+
   const closeDistance = useWindowDimensions().height / 6;
   const [code, setCode] = useState('');
   const isProcessing = useRef(false);
 
-  const vibrateWrapper = useCallback(
-    (effect: HapticEffects) => {
-      if (!error) {
-        vibrate(effect);
-      }
-    },
-    [error],
-  );
+  const [error, setError] = useState(false);
+  const [flashMode, setFlashMode] = useState(false);
 
   const prepareAddress = useCallback((data: string) => {
     if (data.startsWith('haqq:')) {
@@ -77,7 +74,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             from: visible[0].address.trim(),
           });
         } else {
-          vibrateWrapper(HapticEffects.success);
+          vibrate(HapticEffects.success);
           setIsOpen(true);
         }
       } else if (parseUri(address)?.protocol === 'wc') {
@@ -87,19 +84,19 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 1000);
       } else if (!error) {
         setError(true);
-        vibrateWrapper(HapticEffects.error);
+        debbouncedVibrate(HapticEffects.error);
         setTimeout(() => {
           setError(false);
         }, 5000);
       }
     },
-    [error, visible, onClose, prepareAddress, vibrateWrapper],
+    [error, visible, onClose, prepareAddress],
   );
 
   const onGetAddress = useCallback(
     (slicedAddress: string) => {
       if (slicedAddress && qrWithoutFrom) {
-        vibrateWrapper(HapticEffects.success);
+        vibrate(HapticEffects.success);
         app.emit('address', {
           to: slicedAddress,
         });
@@ -107,15 +104,17 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         checkAddress(slicedAddress);
       }
     },
-    [checkAddress, qrWithoutFrom, vibrateWrapper],
+    [checkAddress, qrWithoutFrom],
   );
 
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
-      if (!isProcessing.current && e.data && e.data !== code) {
+      const newCode = e.data?.trim?.()?.toLowerCase?.();
+      const currentCode = code?.trim?.()?.toLowerCase?.();
+      if (!isProcessing.current && e.data && newCode !== currentCode) {
         isProcessing.current = true;
         try {
-          vibrateWrapper(HapticEffects.selection);
+          vibrate(HapticEffects.selection);
           setCode(e.data);
           const slicedAddress = prepareAddress(e.data);
           if (slicedAddress) {
@@ -126,7 +125,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }
       }
     },
-    [code, onGetAddress, prepareAddress, vibrateWrapper],
+    [code, onGetAddress, prepareAddress],
   );
 
   const onClickGallery = useCallback(async () => {
@@ -153,11 +152,12 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onToggleFlashMode = useCallback(() => {
     setFlashMode(pr => !pr);
-    vibrateWrapper(HapticEffects.impactLight);
-  }, [vibrateWrapper]);
+    vibrate(HapticEffects.impactLight);
+  }, []);
 
   return (
     <>
+      <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}
