@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {Image, SafeAreaView, View} from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 
 import {Spacer, StatusBarColor, Text} from '@app/components/ui';
 
@@ -12,6 +13,10 @@ import {AppTheme} from './types';
 
 export const Jailbreak = () => {
   const theme = useTheme();
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   return (
     <View style={styles.container}>
