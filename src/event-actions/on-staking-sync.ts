@@ -49,7 +49,8 @@ async function syncStakingDelegations(
         ),
       ),
     )
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }
 
 async function syncStakingUnDelegations(
@@ -72,7 +73,8 @@ async function syncStakingUnDelegations(
         })
         .flat();
     })
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }
 
 async function syncStakingRewards(
@@ -94,5 +96,6 @@ async function syncStakingRewards(
         )
         .flat();
     })
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }

@@ -42,22 +42,23 @@ export async function onAppStarted() {
   const refferal = Refferal.getAll().filtered('isUsed = false');
 
   if (refferal.length) {
-    const ref = refferal[0];
-    try {
-      await onBannerAddClaimCode(ref.code);
-    } catch (e) {
-      if (e instanceof Error) {
-        showModal('error', {
-          title: getText(I18N.modalRewardErrorTitle),
-          description: e.message,
-          close: getText(I18N.modalRewardErrorClose),
-          icon: 'reward_error',
-          color: Color.graphicSecond4,
-        });
+    for (const ref of refferal) {
+      try {
+        await onBannerAddClaimCode(ref.code);
+      } catch (e) {
+        if (e instanceof Error) {
+          showModal('error', {
+            title: getText(I18N.modalRewardErrorTitle),
+            description: e.message,
+            close: getText(I18N.modalRewardErrorClose),
+            icon: 'reward_error',
+            color: Color.graphicSecond4,
+          });
 
-        ref.update({
-          isUsed: true,
-        });
+          ref.update({
+            isUsed: true,
+          });
+        }
       }
     }
   }

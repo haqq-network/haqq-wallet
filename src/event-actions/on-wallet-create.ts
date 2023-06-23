@@ -4,6 +4,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {captureException, getProviderInstanceForWallet} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {PushNotifications} from '@app/services/push-notifications';
@@ -22,12 +23,12 @@ export async function onWalletCreate(wallet: Wallet) {
     }
 
     EthNetwork.getBalance(wallet.address).then(balance => {
-      app.emit(Events.onWalletsBalance, {
+      app.onWalletsBalance({
         [wallet.address]: balance,
       });
     });
 
-    app.emit(Events.onTransactionsLoad, wallet.address);
+    awaitForEventDone(Events.onTransactionsLoad, wallet.address);
 
     if (!wallet.mnemonicSaved) {
       let mnemonicSaved: boolean;
