@@ -29,6 +29,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
+import {getUserAgent} from '@app/services/version';
 import {Link, Modals} from '@app/types';
 import {makeID, openInAppBrowser} from '@app/utils';
 import {WINDOW_HEIGHT} from '@app/variables/common';
@@ -389,6 +390,7 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <Text t11>userAgent: {getUserAgent()}</Text>
       <Spacer height={20} />
       <Title text="WalletConnect" />
       <Input
