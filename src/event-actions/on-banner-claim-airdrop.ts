@@ -10,6 +10,7 @@ import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
+import {sendNotification} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
@@ -70,6 +71,8 @@ export async function onBannerClaimAirdrop(claimCode: string) {
         },
       });
     }
+
+    sendNotification(I18N.raffleTicketRecieved);
 
     referral.update({
       isUsed: true,

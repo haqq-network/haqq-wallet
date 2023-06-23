@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {
   Image,
@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
 import {Banner, BannerButton} from '@app/models/banner';
+import {sleep} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 import {
@@ -37,6 +38,8 @@ export interface HomeBannerProps {
 }
 
 export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
+  const [loading, setLoading] = useState(false);
+
   const onPressClose = useCallback(async () => {
     await onPress(banner.id, banner.closeEvent, banner.closeParams);
   }, [banner, onPress]);
@@ -44,6 +47,16 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
   const onPressBack = useCallback(async () => {
     await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
   }, [banner, onPress]);
+
+  const onPressBanner = useCallback(
+    (button: BannerButton) => async () => {
+      setLoading(true);
+      await sleep(250);
+      await onPress(banner.id, button.event, button.params, button);
+      setLoading(false);
+    },
+    [banner, onPress],
+  );
 
   const borderStyle = useMemo(() => {
     if (banner.backgroundBorder) {
@@ -90,11 +103,11 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
             {banner.buttons.map(button => (
               <Button
                 key={banner.id}
-                onPress={() =>
-                  onPress(banner.id, button.event, button.params, button)
-                }
+                loading={loading}
+                onPress={onPressBanner(button)}
                 color={button.backgroundColor}
                 textColor={button.color}
+                loadingColor={button.color}
                 variant={ButtonVariant.contained}
                 size={ButtonSize.small}
                 title={button.title}
@@ -112,7 +125,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [banner, onPress, onPressClose, style, borderStyle],
+    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
   );
 
   if (!banner.buttons.length && banner.defaultEvent) {
