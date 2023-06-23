@@ -29,20 +29,10 @@ export type QRModalProps = Modals['qr'];
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const visible = useWalletsVisible();
-  const [error, setError] = useState(false);
-  const [flashMode, setFlashMode] = useState(false);
+
   const closeDistance = useWindowDimensions().height / 6;
   const [code, setCode] = useState('');
   const isProcessing = useRef(false);
-
-  const vibrateWrapper = useCallback(
-    (effect: HapticEffects) => {
-      if (!error) {
-        vibrate(effect);
-      }
-    },
-    [error],
-  );
 
   const prepareAddress = useCallback((data: string) => {
     if (data.startsWith('haqq:')) {
@@ -67,6 +57,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     [prepareAddress, code],
   );
 
+  const [error, setError] = useState(false);
+  const [flashMode, setFlashMode] = useState(false);
+
   const checkAddress = useCallback(
     (address: string) => {
       if (utils.isAddress(address)) {
@@ -77,7 +70,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             from: visible[0].address.trim(),
           });
         } else {
-          vibrateWrapper(HapticEffects.success);
+          vibrate(HapticEffects.success);
           setIsOpen(true);
         }
       } else if (parseUri(address)?.protocol === 'wc') {
@@ -87,19 +80,19 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 1000);
       } else if (!error) {
         setError(true);
-        vibrateWrapper(HapticEffects.error);
+        vibrate(HapticEffects.error);
         setTimeout(() => {
           setError(false);
         }, 5000);
       }
     },
-    [error, visible, onClose, prepareAddress, vibrateWrapper],
+    [error, visible, onClose, prepareAddress],
   );
 
   const onGetAddress = useCallback(
     (slicedAddress: string) => {
       if (slicedAddress && qrWithoutFrom) {
-        vibrateWrapper(HapticEffects.success);
+        vibrate(HapticEffects.success);
         app.emit('address', {
           to: slicedAddress,
         });
@@ -107,7 +100,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         checkAddress(slicedAddress);
       }
     },
-    [checkAddress, qrWithoutFrom, vibrateWrapper],
+    [checkAddress, qrWithoutFrom],
   );
 
   const onSuccess = useCallback(
@@ -115,7 +108,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       if (!isProcessing.current && e.data && e.data !== code) {
         isProcessing.current = true;
         try {
-          vibrateWrapper(HapticEffects.selection);
+          vibrate(HapticEffects.selection);
           setCode(e.data);
           const slicedAddress = prepareAddress(e.data);
           if (slicedAddress) {
@@ -126,7 +119,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }
       }
     },
-    [code, onGetAddress, prepareAddress, vibrateWrapper],
+    [code, onGetAddress, prepareAddress],
   );
 
   const onClickGallery = useCallback(async () => {
@@ -153,8 +146,8 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onToggleFlashMode = useCallback(() => {
     setFlashMode(pr => !pr);
-    vibrateWrapper(HapticEffects.impactLight);
-  }, [vibrateWrapper]);
+    vibrate(HapticEffects.impactLight);
+  }, []);
 
   return (
     <>
