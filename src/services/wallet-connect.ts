@@ -17,6 +17,11 @@ import {sendNotification} from '@app/services/toast';
 import {RemoteConfig} from './remote-config';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
+const EMPTY_NAMESPACE = {
+  methods: [],
+  events: [],
+  chains: [],
+};
 
 export class WalletConnect extends EventEmitter {
   static instance = new WalletConnect();
@@ -161,8 +166,6 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    console.log('approveSession', proposalId, JSON.stringify(params, null, 2));
-
     const {requiredNamespaces, optionalNamespaces, relays} = params;
 
     const allowedNamespaces = RemoteConfig.get('wallet_connect');
@@ -173,9 +176,9 @@ export class WalletConnect extends EventEmitter {
     const namespaces: SessionTypes.Namespaces = {};
 
     Object.keys(allowedNamespaces).forEach(namespace => {
-      const allowed = allowedNamespaces[namespace];
-      const required = requiredNamespaces[namespace];
-      const optional = optionalNamespaces[namespace];
+      const allowed = {...EMPTY_NAMESPACE, ...allowedNamespaces[namespace]};
+      const required = {...EMPTY_NAMESPACE, ...requiredNamespaces[namespace]};
+      const optional = {...EMPTY_NAMESPACE, ...optionalNamespaces[namespace]};
 
       const methods: string[] = [];
       [...required?.methods, ...optional?.methods].forEach(method => {
