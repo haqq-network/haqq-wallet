@@ -44,6 +44,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {AccountDetailScreen} from '@app/screens/account-detail';
 import {AccountInfoScreen} from '@app/screens/account-info';
 import {GovernanceScreen} from '@app/screens/governance';
 import {NewsScreen} from '@app/screens/news';
@@ -140,7 +141,7 @@ const appTheme = createTheme({
 
 const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
-  animation: 'fade',
+  animation: undefined,
   animationDuration: 0,
 };
 
@@ -375,6 +376,11 @@ export const App = () => {
               <Stack.Screen
                 name="transactionDetail"
                 component={TransactionDetailScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="accountDetail"
+                component={AccountDetailScreen}
                 options={actionsSheet}
               />
               <Stack.Screen name="news" component={NewsScreen} />

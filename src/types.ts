@@ -280,6 +280,9 @@ export type RootStackParamList = {
     to?: string;
     nft?: NftItem;
   };
+  accountDetail: {
+    address: string;
+  };
   transactionDetail: {
     hash: string;
   };

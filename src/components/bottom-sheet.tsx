@@ -20,7 +20,6 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
-  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -35,7 +34,11 @@ import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {WINDOW_WIDTH} from '@app/variables/common';
+import {
+  ANIMATION_DURATION,
+  ANIMATION_TYPE,
+  WINDOW_WIDTH,
+} from '@app/variables/common';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -157,8 +160,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       bottomSheetTranslateY.value = withTiming(
         closedSnapPoint,
         {
-          duration: 400,
-          easing: Easing.bezierFn(0.16, 1, 0.3, 1),
+          duration: ANIMATION_DURATION,
+          easing: ANIMATION_TYPE,
         },
         () => onClose && runOnJS(onClose)(),
       );
@@ -167,8 +170,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const onOpenPopup = useCallback(() => {
       toDark();
       bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-        duration: 400,
-        easing: Easing.bezierFn(0.16, 1, 0.3, 1),
+        duration: ANIMATION_DURATION,
+        easing: ANIMATION_TYPE,
       });
     }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
 
