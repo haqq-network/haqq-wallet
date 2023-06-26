@@ -7,6 +7,7 @@ declare module '@env' {
   export const PATTERNS_SOURCE: string;
   export const ENVIRONMENT: string;
   export const IS_DEVELOPMENT: string;
+  export const IS_WELCOME_NEWS_ENABLED: string;
   export const PUSH_NOTIFICATIONS_URL: string;
   export const PROVIDER_BASE_PACKAGE: string;
   export const WALLET_CONNECT_PROJECT_ID: string;

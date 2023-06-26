@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT} from '@env';
+import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -110,6 +110,17 @@ class App extends EventEmitter {
 
     Appearance.addChangeListener(this.listenTheme);
     AppState.addEventListener('change', this.listenTheme);
+
+    if (!VariablesBool.exists('isDeveloper')) {
+      VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
+    }
+
+    if (!VariablesBool.exists('isWelcomeNewsEnabled')) {
+      VariablesBool.set(
+        'isWelcomeNewsEnabled',
+        IS_WELCOME_NEWS_ENABLED === 'true',
+      );
+    }
   }
 
   private _biometryType: BiometryType | null = null;
@@ -239,6 +250,14 @@ class App extends EventEmitter {
 
   set isDeveloper(value) {
     VariablesBool.set('isDeveloper', value);
+  }
+
+  get isWelcomeNewsEnabled() {
+    return VariablesBool.get('isWelcomeNewsEnabled') ?? false;
+  }
+
+  set isWelcomeNewsEnabled(value) {
+    VariablesBool.set('isWelcomeNewsEnabled', value);
   }
 
   get currentTheme() {

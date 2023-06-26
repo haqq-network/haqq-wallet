@@ -155,6 +155,7 @@ export type RootStackParamList = {
     accountId: string;
   };
   welcome: undefined;
+  welcomeNews: undefined;
   create: undefined;
   scanQr: undefined;
   signin: {next: string};
