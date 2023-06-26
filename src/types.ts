@@ -40,6 +40,7 @@ export enum AdjustEvents {
   stakingOpen = 'lzf6ty',
   stakingDelegate = 'xh19jh',
   stakingValidators = 'ejspf6',
+  jailed = 'k13htx',
 }
 
 export enum TransactionSource {
