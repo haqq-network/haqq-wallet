@@ -57,6 +57,7 @@ import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
+import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {
   ActionSheetType,
   AppTheme,
@@ -295,6 +296,17 @@ export const App = () => {
     });
   }, []);
 
+  const initialRoute = useMemo(() => {
+    if (app.onboarded) {
+      return 'home';
+    }
+    if (app.isWelcomeNewsEnabled) {
+      return 'welcomeNews';
+    }
+
+    return 'welcome';
+  }, []);
+
   // @ts-ignore
   return (
     <GestureHandlerRootView style={styles.rootView}>
@@ -307,9 +319,10 @@ export const App = () => {
             <Stack.Navigator
               screenOptions={basicScreenOptions}
               key={theme}
-              initialRouteName={app.onboarded ? 'home' : 'welcome'}>
+              initialRouteName={initialRoute}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="welcome" component={WelcomeScreen} />
+              <Stack.Screen name="welcomeNews" component={WelcomeNewsScreen} />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
                 <Stack.Screen

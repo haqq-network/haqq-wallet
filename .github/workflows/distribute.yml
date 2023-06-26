@@ -3,6 +3,13 @@ name: Distribute apps
 on:
   workflow_dispatch:
     inputs:
+      IS_WELCOME_NEWS_ENABLED:
+        type: choice
+        description: IS_WELCOME_NEWS_ENABLED
+        options:
+          - false
+          - true
+
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
@@ -32,8 +39,9 @@ jobs:
     uses: ./.github/workflows/distribute-android.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: 0
+      IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      IS_WELCOME_NEWS_ENABLED: ${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}
     needs:
       - test
 
@@ -43,8 +51,9 @@ jobs:
     uses: ./.github/workflows/distribute-ios.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: 0
+      IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      IS_WELCOME_NEWS_ENABLED: ${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}
     needs:
       - test
 
