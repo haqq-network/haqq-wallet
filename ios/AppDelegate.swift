@@ -91,7 +91,7 @@ class AppDelegate: RCTAppDelegate {
 
   func getModuleName() -> String {
     if UIDevice.current.isJailBroken {
-      return "jailbrake"
+      return "jailbreak"
     } else {
       return "haqq"
     }
