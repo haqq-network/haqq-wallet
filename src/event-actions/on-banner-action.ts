@@ -1,4 +1,3 @@
-import {Color} from '@app/colors';
 import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-click';
 import {onBannerAnalyticsSnooze} from '@app/event-actions/on-banner-analytics-snooze';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
@@ -8,8 +7,6 @@ import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifica
 import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
-import {showModal} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
 
 export async function onBannerAction(
   id: string,
@@ -18,19 +15,7 @@ export async function onBannerAction(
 ) {
   switch (event) {
     case 'claimCode':
-      try {
-        await onBannerClaimAirdrop(id);
-      } catch (e) {
-        if (e instanceof Error) {
-          showModal('error', {
-            title: getText(I18N.modalRewardErrorTitle),
-            description: e.message,
-            close: getText(I18N.modalRewardErrorClose),
-            icon: 'reward_error',
-            color: Color.graphicSecond4,
-          });
-        }
-      }
+      await onBannerClaimAirdrop(id);
       break;
     case 'close':
       await onBannerSnoozeUntil(id);

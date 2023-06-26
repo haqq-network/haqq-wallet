@@ -18,6 +18,7 @@ export interface AwaitForWalletParams {
   type?: WalletSelectType;
   initialAddress?: string;
   autoSelectWallet?: boolean;
+  suggestedAddress?: string;
 }
 
 export class AwaitForWalletError {
@@ -33,10 +34,19 @@ export async function awaitForWallet({
   wallets,
   initialAddress,
   type,
+  suggestedAddress,
   autoSelectWallet = true,
 }: AwaitForWalletParams): Promise<string> {
   if (autoSelectWallet && wallets.length === 1) {
     return Promise.resolve(wallets[0].address);
+  }
+
+  if (suggestedAddress) {
+    const wallet = Wallet.getById(suggestedAddress.toLowerCase());
+
+    if (wallet) {
+      return Promise.resolve(wallet.address);
+    }
   }
 
   return new Promise((resolve, reject) => {

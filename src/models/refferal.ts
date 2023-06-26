@@ -7,12 +7,14 @@ export class Refferal extends Realm.Object {
       code: 'string',
       isUsed: {type: 'bool', default: false},
       snoozedUntil: 'date?',
+      wallet: 'string?',
     },
     primaryKey: 'code',
   };
   code!: string;
   isUsed!: boolean;
   snoozedUntil: Date;
+  wallet: string;
 
   static create(params: Partial<Refferal> & {code: string}) {
     const exists = Refferal.getById(params.code);
