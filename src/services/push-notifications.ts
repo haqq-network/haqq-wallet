@@ -4,9 +4,11 @@ import {HAQQ_BACKEND} from '@env';
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
+import {AdjustEvents} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 export enum PushNotificationTopicsEnum {
@@ -58,6 +60,8 @@ export class PushNotifications extends EventEmitter {
         VariablesString.set('notificationToken', subscription.id);
         VariablesBool.set('notifications', true);
       }
+
+      onTrackEvent(AdjustEvents.pushNotifications);
     }
   }
 
