@@ -517,6 +517,7 @@ export type RootStackParamList = {
   nftItemDetails: {
     item: NftItem;
   };
+  settingsTestRiveCapthcaState: undefined;
 };
 
 export type StackPresentationTypes =

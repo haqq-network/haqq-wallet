@@ -492,7 +492,6 @@ export const SettingsTestScreen = () => {
         onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Services" />
       <Button
         title="clear banners"
@@ -511,7 +510,6 @@ export const SettingsTestScreen = () => {
         onPress={onResetUid}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Captcha" />
       <Button
         title="Show hcaptcha captcha"
@@ -538,6 +536,12 @@ export const SettingsTestScreen = () => {
             Alert.alert('Error', err?.message);
           }
         }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="Playgrounds" />
+      <Button
+        title="rive capthca state playground"
+        onPress={() => navigation.navigate('settingsTestRiveCapthcaState')}
         variant={ButtonVariant.contained}
       />
 

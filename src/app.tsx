@@ -97,6 +97,7 @@ import {SettingsProvidersScreen} from './screens/settings-providers';
 import {SettingsSecurityScreen} from './screens/settings-security';
 import {SettingsSecurityPinScreen} from './screens/settings-security-pin';
 import {SettingsTestScreen} from './screens/settings-test';
+import {SettingsTestRiveCapthcaState} from './screens/settings-test-rive-capthca-state.tsx';
 import {SettingsThemeScreen} from './screens/settings-theme';
 import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery-phrase';
 import {SignInScreen} from './screens/signin';
@@ -310,6 +311,11 @@ export const App = () => {
               initialRouteName={app.onboarded ? 'home' : 'welcome'}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="welcome" component={WelcomeScreen} />
+              <Stack.Screen
+                options={{headerShown: true}}
+                name="settingsTestRiveCapthcaState"
+                component={SettingsTestRiveCapthcaState}
+              />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
                 <Stack.Screen
