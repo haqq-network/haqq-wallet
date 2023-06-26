@@ -2,6 +2,7 @@ import {EventEmitter} from 'events';
 
 import {HAQQ_BACKEND} from '@env';
 import messaging from '@react-native-firebase/messaging';
+import {PermissionsAndroid} from 'react-native';
 
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -10,6 +11,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {AdjustEvents} from '@app/types';
 import {getHttpResponse} from '@app/utils';
+import {IS_ANDROID} from '@app/variables/common';
 
 export enum PushNotificationTopicsEnum {
   news = 'news',
@@ -41,6 +43,12 @@ export class PushNotifications extends EventEmitter {
   async requestPermissions() {
     if (!this.isAvailable) {
       throw new Error('push messages unavailable');
+    }
+
+    if (IS_ANDROID) {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
     }
 
     const authStatus = await messaging().requestPermission();
