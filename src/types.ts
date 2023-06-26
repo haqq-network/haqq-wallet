@@ -585,6 +585,7 @@ export type ActionSheetType = {
   presentation: PresentationNavigation;
   animation: 'fade' | 'flip' | 'default' | undefined;
   animationDuration: number;
+  animationEnabled: boolean;
 };
 
 export type PresentationNavigation =

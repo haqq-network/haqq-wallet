@@ -32,7 +32,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   ANIMATION_DURATION,
@@ -124,9 +123,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       const minTranslateY = Math.max(fullyOpenSnapPoint, translateY);
       return Math.min(closedSnapPoint, minTranslateY);
     });
-    const {toDark, toLight} = useAndroidStatusBarAnimation({
-      animatedValueRange: snapPointFromTop,
-    });
 
     const panGesture = Gesture.Pan()
       .onUpdate(e => {
@@ -156,7 +152,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     );
 
     const onClosePopup = useCallback(() => {
-      toLight();
       bottomSheetTranslateY.value = withTiming(
         closedSnapPoint,
         {
@@ -165,15 +160,14 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
         },
         () => onClose && runOnJS(onClose)(),
       );
-    }, [bottomSheetTranslateY, closedSnapPoint, onClose, toLight]);
+    }, [bottomSheetTranslateY, closedSnapPoint, onClose]);
 
     const onOpenPopup = useCallback(() => {
-      toDark();
       bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
         duration: ANIMATION_DURATION,
         easing: ANIMATION_TYPE,
       });
-    }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
+    }, [bottomSheetTranslateY, fullyOpenSnapPoint]);
 
     useEffect(() => {
       onOpenPopup();

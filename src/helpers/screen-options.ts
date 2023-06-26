@@ -7,6 +7,7 @@ export const actionSheet: ActionSheetType = {
   presentation: 'transparentModal',
   animation: 'fade',
   animationDuration: 0,
+  animationEnabled: true,
 };
 
 export const hideBack = {
