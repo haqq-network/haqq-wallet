@@ -27,7 +27,7 @@ async function sync(addressList: string[], cosmos: Cosmos) {
   ).then(results => {
     const hashes = new Set(results.flat());
     for (const e of rows) {
-      if (!hashes.has(e.hash)) {
+      if (e && e.isValid() && !hashes.has(e.hash)) {
         StakingMetadata.remove(e.hash);
       }
     }
