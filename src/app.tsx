@@ -232,53 +232,15 @@ export const App = () => {
     }
 
     Adjust.create(adjustConfig);
+    if (app.isDeveloper) {
+      Adjust.getAppTrackingAuthorizationStatus(function (status) {
+        console.log('Authorization status = ' + status);
+      });
 
-    Adjust.getAppTrackingAuthorizationStatus(function (status) {
-      console.log('Authorization status = ' + status);
-    });
-
-    Adjust.getAdid(adid => {
-      console.log('Adid = ' + adid);
-    });
-
-    adjustConfig.setAttributionCallbackListener(function (attribution) {
-      console.log('Attribution callback received');
-      console.log('Tracker token = ' + attribution.trackerToken);
-      console.log('Tracker name = ' + attribution.trackerName);
-      console.log('Network = ' + attribution.network);
-      console.log('Campaign = ' + attribution.campaign);
-      console.log('Adgroup = ' + attribution.adgroup);
-      console.log('Creative = ' + attribution.creative);
-      console.log('Click label = ' + attribution.clickLabel);
-      console.log('Adid = ' + attribution.adid);
-      console.log('Cost type = ' + attribution.costType);
-      console.log('Cost amount = ' + attribution.costAmount);
-      console.log('Cost currency = ' + attribution.costCurrency);
-    });
-
-    adjustConfig.setEventTrackingSucceededCallbackListener(function (
-      eventSuccess,
-    ) {
-      console.log('Event tracking succeeded callback received');
-      console.log('Message: ' + eventSuccess.message);
-      console.log('Timestamp: ' + eventSuccess.timestamp);
-      console.log('Adid: ' + eventSuccess.adid);
-      console.log('Event token: ' + eventSuccess.eventToken);
-      console.log('Callback Id: ' + eventSuccess.callbackId);
-      console.log('JSON response: ' + eventSuccess.jsonResponse);
-    });
-
-    adjustConfig.setEventTrackingFailedCallbackListener(function (eventFailed) {
-      console.log('Event tracking failed callback received');
-      console.log('Message: ' + eventFailed.message);
-      console.log('Timestamp: ' + eventFailed.timestamp);
-      console.log('Adid: ' + eventFailed.adid);
-      console.log('Event token: ' + eventFailed.eventToken);
-      console.log('Callback Id: ' + eventFailed.callbackId);
-      console.log('Will retry: ' + eventFailed.willRetry);
-      console.log('JSON response: ' + eventFailed.jsonResponse);
-    });
-
+      Adjust.getAdid(adid => {
+        console.log('Adid = ' + adid);
+      });
+    }
     return () => {
       Adjust.componentWillUnmount();
     };
