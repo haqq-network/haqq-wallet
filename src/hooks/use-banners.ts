@@ -5,7 +5,7 @@ import {Collection, CollectionChangeSet} from 'realm';
 import {Banner} from '@app/models/banner';
 
 export const useBanners = () => {
-  const [banners, setBanners] = useState(Banner.getAvailable().snapshot());
+  const [banners, setBanners] = useState(Banner.getAvailable());
 
   useEffect(() => {
     const handler = Banner.getAvailable();
@@ -19,7 +19,7 @@ export const useBanners = () => {
         changes.newModifications.length ||
         changes.deletions.length
       ) {
-        setBanners(Banner.getAvailable().snapshot());
+        setBanners(Banner.getAvailable());
       }
     };
 
