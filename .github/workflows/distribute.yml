@@ -7,8 +7,8 @@ on:
         type: choice
         description: IS_WELCOME_NEWS_ENABLED
         options:
-          - false
           - true
+          - false
 
       IS_SSS_ENABLED:
         type: choice
