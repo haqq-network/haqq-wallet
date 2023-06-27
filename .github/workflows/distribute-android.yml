@@ -39,7 +39,7 @@ on:
 jobs:
   build:
     name: Build and distribute Android app
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, android]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
