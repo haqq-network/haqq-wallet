@@ -17,7 +17,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
@@ -39,7 +39,7 @@ jobs:
           yarn prettier:check
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
     needs:
       - test
     steps:
