@@ -20,8 +20,8 @@ func clearKeychainIfNecessary() {
             "mnemonic_saved",
             "hot_accoutns",
             "hot_saved",
-            "mpc_accounts",
-            "mpc_saved",
+            "sss_accounts",
+            "sss_saved",
             "ledger_accounts",
             "ledger_saved"
         ]
