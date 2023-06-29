@@ -1,20 +1,15 @@
-import {HAQQ_BACKEND} from '@env';
-
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {navigator} from '@app/navigator';
-import {NewsRow, RemoteMessage} from '@app/types';
-import {getHttpResponse} from '@app/utils';
+import {Backend} from '@app/services/backend';
+import {RemoteMessage} from '@app/types';
 
 export async function onPushNotification(message: RemoteMessage) {
   if (message.data.type === 'news' && message.data.id) {
     const exists = News.getById(message.data.id);
 
     if (!exists) {
-      const newsDetailResp = await fetch(
-        `${HAQQ_BACKEND}news/${message.data.id}`,
-      );
-      const row = await getHttpResponse<NewsRow>(newsDetailResp);
+      const row = await Backend.instance.news_row(message.data.id);
 
       News.create(row.id, {
         title: row.title,

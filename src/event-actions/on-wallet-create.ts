@@ -7,15 +7,15 @@ import {captureException, getProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {Backend} from '@app/services/backend';
 import {Cosmos} from '@app/services/cosmos';
-import {PushNotifications} from '@app/services/push-notifications';
 import {WalletType} from '@app/types';
 
 export async function onWalletCreate(wallet: Wallet) {
   try {
     let subscription = app.notificationToken;
     if (subscription) {
-      await PushNotifications.instance.createNotificationSubscription(
+      await Backend.instance.createNotificationSubscription(
         subscription,
         Cosmos.address(wallet.address),
       );

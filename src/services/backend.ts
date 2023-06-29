@@ -1,6 +1,6 @@
 import {HAQQ_BACKEND} from '@env';
 
-import {Raffle} from '@app/types';
+import {NewsRow, Raffle} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config';
@@ -105,7 +105,7 @@ export class Backend {
     code: string,
     signal?: AbortController['signal'],
   ): Promise<CaptchaSessionResponse> {
-    const request = await fetch(`${HAQQ_BACKEND}captcha/session`, {
+    const request = await fetch(`${this.getRemoteUrl()}captcha/session`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
@@ -125,11 +125,97 @@ export class Backend {
   }
 
   async getRemoteConfig(): Promise<RemoteConfigTypes> {
-    const response = await fetch(`${HAQQ_BACKEND}config`, {
+    const response = await fetch(`${this.getRemoteUrl()}config`, {
       method: 'GET',
       headers: Backend.headers,
     });
 
-    return getHttpResponse<RemoteConfigTypes>(response);
+    return await getHttpResponse<RemoteConfigTypes>(response);
+  }
+
+  async news_row(item_id: string): Promise<NewsRow> {
+    const newsDetailResp = await fetch(
+      `${this.getRemoteUrl()}news/${item_id}`,
+      {
+        headers: Backend.headers,
+      },
+    );
+    return await getHttpResponse<NewsRow>(newsDetailResp);
+  }
+
+  async news(lastSyncNews: Date | undefined): Promise<NewsRow[]> {
+    const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
+
+    const newsResp = await fetch(`${this.getRemoteUrl()}news${sync}`, {
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<NewsRow[]>(newsResp);
+  }
+
+  async createNotificationToken(token: string): Promise<{id: string}> {
+    const req = await fetch(`${this.getRemoteUrl()}notification_token`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        token,
+      }),
+    });
+
+    return await getHttpResponse<{id: string}>(req);
+  }
+
+  async createNotificationSubscription<T extends object>(
+    token_id: string,
+    address: string,
+  ) {
+    const req = await fetch(`${this.getRemoteUrl()}notification_subscription`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        token_id,
+        address,
+      }),
+    });
+
+    return await getHttpResponse<T>(req);
+  }
+
+  async removeNotificationToken<T extends object>(token_id: string) {
+    const req = await fetch(
+      `${this.getRemoteUrl()}notification_token/${token_id}`,
+      {
+        method: 'DELETE',
+        headers: Backend.headers,
+      },
+    );
+
+    return await getHttpResponse<T>(req);
+  }
+
+  async unsubscribeByTokenAndAddress<T extends object>(
+    token_id: string,
+    address: string,
+  ) {
+    const req = await fetch(
+      `${this.getRemoteUrl()}notification_subscription/${token_id}/${address}`,
+      {
+        method: 'DELETE',
+        headers: Backend.headers,
+      },
+    );
+
+    return await getHttpResponse<T>(req);
+  }
+
+  async unsubscribeByToken<T extends object>(token_id: string) {
+    const req = await fetch(
+      `${this.getRemoteUrl()}notification_subscription/${token_id}`,
+      {
+        method: 'DELETE',
+        headers: Backend.headers,
+      },
+    );
+
+    return await getHttpResponse<T>(req);
   }
 }
