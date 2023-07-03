@@ -11,18 +11,22 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/wallets';
-import {TransactionList} from '@app/types';
+import {NftCollection, TokenItem, TransactionList} from '@app/types';
 
 import {NftViewer} from './nft-viewer';
-import {nftCollections} from './nft-viewer/mock';
+import {TokenRow} from './token-row';
 import {TopTabNavigator, TopTabNavigatorVariant} from './top-tab-navigator';
 import {First, Spacer, Text} from './ui';
 
 type HomeFeedProps = {
   refreshing: boolean;
-  onWalletsRefresh: () => void;
   transactionsList: TransactionList[];
-  onPressRow: (hash: string) => void;
+  tokensList: TokenItem[];
+  nftColletionsList: NftCollection[];
+  islmPrice: number;
+  onWalletsRefresh: () => void;
+  onPressTransactionRow: (hash: string) => void;
+  onPressTokenRow: (tiker: string) => void;
 };
 
 enum TabNames {
@@ -32,11 +36,16 @@ enum TabNames {
 }
 
 const PAGE_ITEMS_COUNT = 15;
+
 export const HomeFeed = ({
   refreshing,
-  onWalletsRefresh,
   transactionsList,
-  onPressRow,
+  tokensList,
+  nftColletionsList,
+  islmPrice,
+  onWalletsRefresh,
+  onPressTokenRow,
+  onPressTransactionRow,
 }: HomeFeedProps) => {
   const [page, setPage] = useState(1);
   const transactionListData = useMemo(
@@ -49,7 +58,7 @@ export const HomeFeed = ({
       activeTab === TabNames.transactions ? !!transactionsList.length : true,
     [activeTab, transactionsList.length],
   );
-  const data = useMemo(
+  const transactionsData = useMemo(
     () => (activeTab === TabNames.transactions ? transactionListData : []),
     [activeTab, transactionListData],
   );
@@ -64,34 +73,65 @@ export const HomeFeed = ({
       <>
         <WalletsWrapper />
         <BannersWrapper />
-        {isFeatureEnabled(Feature.nft) ? (
-          <TopTabNavigator
-            contentContainerStyle={styles.tabsContentContainerStyle}
-            tabHeaderStyle={styles.tabHeaderStyle}
-            variant={TopTabNavigatorVariant.large}
-            // showSeparators
-            onTabChange={onTabChange}>
-            <TopTabNavigator.Tab
-              name={TabNames.transactions}
-              title={I18N.homeFeedTransactionTabTitle}
-              component={null}
-            />
-            <TopTabNavigator.Tab
-              name={TabNames.nft}
-              title={I18N.homeFeedNftTabTitle}
-              component={null}
-            />
-          </TopTabNavigator>
-        ) : (
+        <First>
+          {isFeatureEnabled(Feature.tokens) && (
+            <>
+              <Spacer height={12} />
+              <TopTabNavigator
+                contentContainerStyle={styles.tabsContentContainerStyle}
+                tabHeaderStyle={styles.tabHeaderStyle}
+                variant={TopTabNavigatorVariant.large}
+                showSeparators
+                onTabChange={onTabChange}>
+                <TopTabNavigator.Tab
+                  name={TabNames.tokens}
+                  title={I18N.homeFeedTokensTabTitle}
+                  component={<Spacer height={12} />}
+                />
+                <TopTabNavigator.Tab
+                  name={TabNames.nft}
+                  title={I18N.homeFeedNftTabTitle}
+                  component={null}
+                />
+                <TopTabNavigator.Tab
+                  name={TabNames.transactions}
+                  title={I18N.homeFeedTransactionTabTitle}
+                  component={null}
+                />
+              </TopTabNavigator>
+            </>
+          )}
+          {isFeatureEnabled(Feature.nft) && (
+            <>
+              <Spacer height={12} />
+              <TopTabNavigator
+                contentContainerStyle={styles.tabsContentContainerStyle}
+                tabHeaderStyle={styles.tabHeaderStyle}
+                variant={TopTabNavigatorVariant.large}
+                showSeparators={false}
+                onTabChange={onTabChange}>
+                <TopTabNavigator.Tab
+                  name={TabNames.transactions}
+                  title={I18N.homeFeedTransactionTabTitle}
+                  component={null}
+                />
+                <TopTabNavigator.Tab
+                  name={TabNames.nft}
+                  title={I18N.homeFeedNftTabTitle}
+                  component={null}
+                />
+              </TopTabNavigator>
+            </>
+          )}
           <Text t6 i18n={I18N.transactions} style={styles.t6} />
-        )}
+        </First>
       </>
     );
   }, [onTabChange]);
 
-  const renderItem: ListRenderItem<TransactionList> = useCallback(
-    ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
-    [onPressRow],
+  const transactionRenderItem: ListRenderItem<TransactionList> = useCallback(
+    ({item}) => <TransactionRow item={item} onPress={onPressTransactionRow} />,
+    [onPressTransactionRow],
   );
 
   const renderListEmptyComponent = useCallback(
@@ -102,7 +142,7 @@ export const HomeFeed = ({
           <>
             <Spacer height={24} />
             <NftViewer
-              data={nftCollections}
+              data={nftColletionsList}
               scrollEnabled={false}
               style={styles.nftViewerContainer}
             />
@@ -110,10 +150,41 @@ export const HomeFeed = ({
         )}
       </First>
     ),
-    [activeTab],
+    [activeTab, nftColletionsList],
   );
 
-  const keyExtractor = useCallback((item: TransactionList) => item.hash, []);
+  const transactionKeyExtractor = useCallback(
+    (item: TransactionList) => item.hash,
+    [],
+  );
+
+  const tokensKeyExtractor = useCallback((item: TokenItem) => item.ticker, []);
+  const tokensRenderItem: ListRenderItem<TokenItem> = useCallback(
+    ({item}) => (
+      <TokenRow islmPrice={islmPrice} item={item} onPress={onPressTokenRow} />
+    ),
+    [islmPrice, onPressTokenRow],
+  );
+
+  if (activeTab === TabNames.tokens) {
+    return (
+      <FlatList
+        key={app.providerId}
+        style={styles.container}
+        refreshing={refreshing}
+        onRefresh={onWalletsRefresh}
+        contentContainerStyle={styles.grow}
+        scrollEnabled={scrollEnabled}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={renderListEmptyComponent}
+        data={tokensList}
+        renderItem={tokensRenderItem}
+        keyExtractor={tokensKeyExtractor}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
+      />
+    );
+  }
 
   return (
     <FlatList
@@ -125,9 +196,9 @@ export const HomeFeed = ({
       scrollEnabled={scrollEnabled}
       ListHeaderComponent={renderListHeader}
       ListEmptyComponent={renderListEmptyComponent}
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
+      data={transactionsData}
+      renderItem={transactionRenderItem}
+      keyExtractor={transactionKeyExtractor}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.2}
     />
