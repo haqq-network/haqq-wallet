@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT} from '@env';
+import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -13,7 +13,6 @@ import Keychain, {
 } from 'react-native-keychain';
 import TouchID from 'react-native-touch-id';
 
-import {Color, getColor} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
@@ -28,7 +27,6 @@ import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
 import {
-  IS_ANDROID,
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
   TEST_NETWORK,
@@ -99,7 +97,6 @@ class App extends EventEmitter {
       EthNetwork.init(this._provider);
     }
 
-    this.on(Events.onWalletsBalance, this.onWalletsBalance.bind(this));
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
     setInterval(this.checkBalance, 6000);
@@ -113,6 +110,17 @@ class App extends EventEmitter {
 
     Appearance.addChangeListener(this.listenTheme);
     AppState.addEventListener('change', this.listenTheme);
+
+    if (!VariablesBool.exists('isDeveloper')) {
+      VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
+    }
+
+    if (!VariablesBool.exists('isWelcomeNewsEnabled')) {
+      VariablesBool.set(
+        'isWelcomeNewsEnabled',
+        IS_WELCOME_NEWS_ENABLED === 'true',
+      );
+    }
   }
 
   private _biometryType: BiometryType | null = null;
@@ -244,6 +252,14 @@ class App extends EventEmitter {
     VariablesBool.set('isDeveloper', value);
   }
 
+  get isWelcomeNewsEnabled() {
+    return VariablesBool.get('isWelcomeNewsEnabled') ?? false;
+  }
+
+  set isWelcomeNewsEnabled(value) {
+    VariablesBool.set('isWelcomeNewsEnabled', value);
+  }
+
   get currentTheme() {
     return this.theme === AppTheme.system
       ? this._systemTheme ?? AppTheme.light
@@ -258,23 +274,33 @@ class App extends EventEmitter {
     VariablesString.set('theme', value);
 
     this.emit('theme', value);
-    if (IS_ANDROID) {
-      StatusBar.setBackgroundColor(getColor(Color.bg1));
+
+    if (AppTheme.system === value) {
+      const scheme = this._systemTheme;
+      StatusBar.setBarStyle(
+        scheme === 'light' ? 'dark-content' : 'light-content',
+        false,
+      );
+    } else {
       StatusBar.setBarStyle(
         value === AppTheme.dark ? 'light-content' : 'dark-content',
+        false,
       );
     }
   }
 
   listenTheme() {
-    const theme = Appearance.getColorScheme() as AppTheme;
+    const systemColorScheme = Appearance.getColorScheme() as AppTheme;
 
-    if (theme !== this._systemTheme) {
-      this._systemTheme = theme;
+    if (systemColorScheme !== this._systemTheme) {
+      this._systemTheme = systemColorScheme;
+    }
 
-      if (this.theme === AppTheme.system) {
-        this.emit('theme');
-      }
+    if (this.theme === AppTheme.system) {
+      StatusBar.setBarStyle(
+        this.currentTheme === 'light' ? 'dark-content' : 'light-content',
+        false,
+      );
     }
   }
 

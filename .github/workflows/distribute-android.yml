@@ -7,14 +7,23 @@ on:
         type: choice
         description: IS_DEVELOPMENT
         options:
-          - 0
-          - 1
+          - false
+          - true
+
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
         options:
           - false
           - true
+
+      IS_WELCOME_NEWS_ENABLED:
+        type: choice
+        description: IS_WELCOME_NEWS_ENABLED
+        options:
+          - false
+          - true
+
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
@@ -23,11 +32,14 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
+      IS_WELCOME_NEWS_ENABLED:
+        required: true
+        type: string
 
 jobs:
   build:
     name: Build and distribute Android app
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, android]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -43,9 +55,9 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1.2'
+#       - uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: '3.2.0'
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -79,6 +91,7 @@ jobs:
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
+          echo "IS_WELCOME_NEWS_ENABLED=${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}" >> .env
 
       - name: Install Fastlane
         run: |

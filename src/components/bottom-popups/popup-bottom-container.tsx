@@ -1,13 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {
-  Pressable,
-  Animated as RNAnimated,
-  StatusBar,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolate,
@@ -19,7 +12,6 @@ import Animated, {
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 const timingOutAnimationConfig: WithTimingConfig = {
@@ -31,8 +23,6 @@ const timingInAnimationConfig: WithTimingConfig = {
   duration: ANIMATION_DURATION,
   easing: ANIMATION_TYPE,
 };
-
-const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
 export type PopupBottomContainerHandleCloseType = (onEnd?: () => void) => void;
 
@@ -53,26 +43,22 @@ export const BottomPopupContainer = ({
 
   const fullyOpen = 0;
   const fullyClosed = H * 0.85;
-  const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
-    animatedValueRange: [fullyOpen, fullyClosed],
-  });
+
   const fadeAnim = useSharedValue(fullyClosed);
 
   const fadeOut = useCallback(
     (endCallback?: () => void) => {
       const onEnd = () => endCallback?.();
-      toLight();
       fadeAnim.value = withTiming(fullyClosed, timingOutAnimationConfig, () =>
         runOnJS(onEnd)(),
       );
     },
-    [fullyClosed, fadeAnim, toLight],
+    [fullyClosed, fadeAnim],
   );
 
   useEffect(() => {
-    toDark();
     fadeAnim.value = withTiming(fullyOpen, timingInAnimationConfig);
-  }, [fadeAnim, toDark]);
+  }, [fadeAnim]);
 
   const bgAnimation = useAnimatedStyle(() => ({
     opacity: interpolate(fadeAnim.value, [fullyOpen, fullyClosed], [1, 0]),
@@ -91,7 +77,6 @@ export const BottomPopupContainer = ({
       <Animated.View
         style={[styles.fullFill, bgAnimation, !transparent && styles.bgColor]}
       />
-      <AnimatedStatusBar backgroundColor={backgroundColor} />
       <Animated.View style={[styles.fullFill, bgAnimation]} />
       <Animated.View style={[styles.animateViewFade, slideFromBottomAnimation]}>
         <Pressable style={styles.fullFill} onPress={handlePressOut} />

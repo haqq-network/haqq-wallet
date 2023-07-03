@@ -21,6 +21,7 @@ export type ClaimResponse =
 
 export type CampaignCodeResponse = {
   code_type: string;
+  wallet?: string;
 };
 
 export class Airdrop {

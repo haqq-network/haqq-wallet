@@ -35,7 +35,7 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
           snapToInterval={WINDOW_WIDTH - 110}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          style={styles.scrollContainer}
+          contentContainerStyle={styles.scrollContainer}
           snapToAlignment="center">
           {banners.map(b => (
             <HomeBanner
@@ -57,8 +57,7 @@ const styles = createTheme({
     marginHorizontal: 15,
   },
   scrollContainer: {
-    marginHorizontal: 20,
-    overflow: 'visible',
+    paddingHorizontal: 20,
   },
   banner: {
     width: WINDOW_WIDTH - 120,

@@ -14,6 +14,14 @@ class RNVersion: NSObject {
     return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
   }
   
+  var appName: String? {
+    return Bundle.main.infoDictionary?["CFBundleName"] as? String
+  }
+  
+  var getCfnVersion: String? {
+    return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+  }
+  
   var buildNumber: String? {
     return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
   }
@@ -35,6 +43,12 @@ class RNVersion: NSObject {
   
   @objc
   public func constantsToExport() -> [AnyHashable : Any]! {
-    return ["appVersion": appVersion ?? "unknown", "buildNumber": buildNumber ?? "unknown", "adId": adId, "isTrackingEnabled": isTrackingEnabled ]
+    return [
+      "appVersion": appVersion ?? "unknown",
+      "buildNumber": buildNumber ?? "unknown",
+      "adId": adId,
+      "isTrackingEnabled": isTrackingEnabled,
+      "userAgent": "\(appName ?? "unknown")/\(appVersion  ?? "unknown").\(buildNumber  ?? "unknown") CFNetwork/\(getCfnVersion  ?? "unknown") Darwin \(UIDevice.modelName) \(UIDevice.current.systemName)/\(UIDevice.current.systemVersion)"
+    ]
   }
 }

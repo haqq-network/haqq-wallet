@@ -7,8 +7,6 @@ import React, {
 } from 'react';
 
 import {
-  Animated as RNAnimated,
-  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -22,7 +20,6 @@ import {
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
 import Animated, {
-  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -35,9 +32,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color, getColor} from '@app/colors';
 import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useAndroidStatusBarAnimation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {WINDOW_WIDTH} from '@app/variables/common';
+import {
+  ANIMATION_DURATION,
+  ANIMATION_TYPE,
+  WINDOW_WIDTH,
+} from '@app/variables/common';
 
 export type BottomSheetProps = {
   children: React.ReactNode;
@@ -51,8 +51,6 @@ export type BottomSheetRef = {
   open: () => void;
   close: () => void;
 };
-
-const AnimatedStatusBar = RNAnimated.createAnimatedComponent(StatusBar);
 
 type pointsT = [number, number];
 
@@ -125,9 +123,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       const minTranslateY = Math.max(fullyOpenSnapPoint, translateY);
       return Math.min(closedSnapPoint, minTranslateY);
     });
-    const {toDark, toLight, backgroundColor} = useAndroidStatusBarAnimation({
-      animatedValueRange: snapPointFromTop,
-    });
 
     const panGesture = Gesture.Pan()
       .onUpdate(e => {
@@ -157,24 +152,22 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     );
 
     const onClosePopup = useCallback(() => {
-      toLight();
       bottomSheetTranslateY.value = withTiming(
         closedSnapPoint,
         {
-          duration: 400,
-          easing: Easing.bezierFn(0.16, 1, 0.3, 1),
+          duration: ANIMATION_DURATION,
+          easing: ANIMATION_TYPE,
         },
         () => onClose && runOnJS(onClose)(),
       );
-    }, [bottomSheetTranslateY, closedSnapPoint, onClose, toLight]);
+    }, [bottomSheetTranslateY, closedSnapPoint, onClose]);
 
     const onOpenPopup = useCallback(() => {
-      toDark();
       bottomSheetTranslateY.value = withTiming(fullyOpenSnapPoint, {
-        duration: 400,
-        easing: Easing.bezierFn(0.16, 1, 0.3, 1),
+        duration: ANIMATION_DURATION,
+        easing: ANIMATION_TYPE,
       });
-    }, [bottomSheetTranslateY, fullyOpenSnapPoint, toDark]);
+    }, [bottomSheetTranslateY, fullyOpenSnapPoint]);
 
     useEffect(() => {
       onOpenPopup();
@@ -206,7 +199,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     return (
       <View style={[StyleSheet.absoluteFill, page.container]}>
         <View style={page.wrap}>
-          <AnimatedStatusBar backgroundColor={backgroundColor} />
           <Animated.View
             style={[
               StyleSheet.absoluteFill,

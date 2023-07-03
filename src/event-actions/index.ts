@@ -27,9 +27,12 @@ import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check
 import {Events} from '@app/events';
 import {callbackWrapper, throttle} from '@app/utils';
 
-app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
+app.on(
+  Events.onWalletsBalanceCheck,
+  throttle(callbackWrapper(onWalletsBalanceCheck), 1000),
+);
 app.on(Events.onDeepLink, onDeepLink);
-app.on(Events.onWalletCreate, onWalletCreate);
+app.on(Events.onWalletCreate, callbackWrapper(onWalletCreate));
 app.on(Events.onWalletRemove, callbackWrapper(onWalletRemove));
 app.on(Events.onStakingSync, throttle(onStakingSync, 1000));
 app.on(Events.onTransactionsLoad, callbackWrapper(onTransactionsLoad));

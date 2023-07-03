@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {NavigationAction} from '@react-navigation/routers';
 import {TransitionPresets} from '@react-navigation/stack';
 
 import {Color} from '@app/colors';
@@ -13,6 +14,7 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
 import {HomeNewsScreen} from '@app/screens/home-news';
 import {HomeStakingScreen} from '@app/screens/home-staking';
@@ -31,7 +33,7 @@ const screenOptions: BottomTabNavigationOptions = {
     backgroundColor: Color.transparent,
   },
   headerTitleAlign: 'center',
-  headerStatusBarHeight: IS_IOS ? undefined : 0,
+  headerStatusBarHeight: IS_IOS ? undefined : 40,
   tabBarStyle: {
     backgroundColor: Color.transparent,
     borderTopWidth: 0,
@@ -41,7 +43,7 @@ const screenOptions: BottomTabNavigationOptions = {
     marginBottom: IS_IOS ? 0 : 23,
   },
   tabBarItemStyle: {
-    marginTop: IS_IOS ? 5 : 8,
+    marginTop: 5,
     height: IS_IOS ? 50 : 40,
   },
   headerTitle: ({children}) => <HomeScreenTitle route={children} />,
@@ -84,6 +86,21 @@ const settingsOptions = {
 
 export const HomeScreen = () => {
   const provider = useProvider();
+  const navigation = useTypedNavigation();
+  useEffect(() => {
+    const subscription = (e: {
+      preventDefault: () => void;
+      data: {action: NavigationAction};
+    }) => {
+      e.preventDefault();
+    };
+
+    navigation.addListener('beforeRemove', subscription);
+
+    return () => {
+      navigation.removeListener('beforeRemove', subscription);
+    };
+  }, [navigation]);
 
   return (
     <Tab.Navigator screenOptions={screenOptions}>

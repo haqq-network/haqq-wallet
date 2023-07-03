@@ -6,6 +6,7 @@ import {HomeFeed} from '@app/components/home-feed';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
@@ -25,18 +26,11 @@ export const HomeFeedScreen = () => {
   const onWalletsRefresh = useCallback(() => {
     setRefreshing(true);
 
-    const actions = Wallet.addressList().map(
-      address =>
-        new Promise(resolve => {
-          app.emit(Events.onTransactionsLoad, address, resolve);
-        }),
+    const actions = Wallet.addressList().map(address =>
+      awaitForEventDone(Events.onTransactionsLoad, address),
     );
 
-    actions.push(
-      new Promise(resolve => {
-        app.emit(Events.onWalletsBalanceCheck, resolve);
-      }),
-    );
+    actions.push(awaitForEventDone(Events.onWalletsBalanceCheck));
 
     Promise.all(actions).then(() => {
       setRefreshing(false);

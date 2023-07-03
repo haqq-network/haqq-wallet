@@ -27,7 +27,7 @@ async function sync(addressList: string[], cosmos: Cosmos) {
   ).then(results => {
     const hashes = new Set(results.flat());
     for (const e of rows) {
-      if (!hashes.has(e.hash)) {
+      if (e && e.isValid() && !hashes.has(e.hash)) {
         StakingMetadata.remove(e.hash);
       }
     }
@@ -49,7 +49,8 @@ async function syncStakingDelegations(
         ),
       ),
     )
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }
 
 async function syncStakingUnDelegations(
@@ -72,7 +73,8 @@ async function syncStakingUnDelegations(
         })
         .flat();
     })
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }
 
 async function syncStakingRewards(
@@ -94,5 +96,6 @@ async function syncStakingRewards(
         )
         .flat();
     })
-    .then(hashes => hashes.filter(Boolean) as string[]);
+    .then(hashes => hashes.filter(Boolean) as string[])
+    .catch(() => []);
 }

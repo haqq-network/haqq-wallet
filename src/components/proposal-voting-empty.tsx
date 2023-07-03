@@ -14,6 +14,30 @@ export const ProposalVotingEmpty = ({
   votingCategory,
 }: ProposalVotingEmptyProps) => {
   const height = useWindowDimensions().height / 1.5;
+
+  switch (votingCategory) {
+    case 'PROPOSAL_STATUS_VOTING_PERIOD':
+      votingCategory = 'voting';
+      break;
+    case 'PROPOSAL_STATUS_DEPOSIT_PERIOD':
+      votingCategory = 'deposit';
+      break;
+    case 'PROPOSAL_STATUS_PASSED':
+      votingCategory = 'passed';
+      break;
+    case 'PROPOSAL_STATUS_REJECTED':
+      votingCategory = 'rejected';
+      break;
+    case 'PROPOSAL_STATUS_FAILED':
+      votingCategory = 'failed';
+      break;
+    case 'PROPOSAL_STATUS_UNSPECIFIED':
+      votingCategory = 'unspecified';
+      break;
+    default:
+      votingCategory = '';
+  }
+
   return (
     <View style={[styles.container, {height}]}>
       <Icon
@@ -23,7 +47,7 @@ export const ProposalVotingEmpty = ({
         style={styles.icon}
       />
       <Text
-        t14
+        t8
         color={Color.textSecond1}
         i18params={{votingCategory}}
         i18n={I18N.proposalNoVoting}

@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js b/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
-index 93f2d16..31797a4 100644
+index 93f2d16..d2d93bd 100644
 --- a/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
 +++ b/node_modules/react-native-qr-decode-image-camera/src/QRScanner.js
 @@ -76,9 +76,6 @@ export default class QRScanner extends PureComponent {
@@ -22,3 +22,18 @@ index 93f2d16..31797a4 100644
            <View
              style={[styles.bottomButtonsContainer, this.props.bottomViewStyle]}
            >
+@@ -188,12 +188,12 @@ export default class QRScanner extends PureComponent {
+ 
+     // The following are unrestricted scanning areas
+     if (this.props.isRepeatScan) {
+-      Vibration.vibrate();
++      this.props.vibrate && Vibration.vibrate();
+       this.props.onRead(e);
+     } else {
+       if (!this.isShowCode) {
+         this.isShowCode = true;
+-        Vibration.vibrate();
++        this.props.vibrate && Vibration.vibrate();
+         this.props.onRead(e);
+       }
+     }

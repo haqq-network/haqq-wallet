@@ -346,6 +346,10 @@ export class Cosmos {
     try {
       const resp = await this.postSimulate(data, account);
 
+      if (!resp.gas_info) {
+        return {...Cosmos.fee};
+      }
+
       return {
         ...Cosmos.fee,
         gas: String(

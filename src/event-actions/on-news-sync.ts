@@ -1,19 +1,13 @@
-import {HAQQ_BACKEND} from '@env';
-
 import {captureException} from '@app/helpers';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
-import {NewsRow} from '@app/types';
-import {getHttpResponse} from '@app/utils';
+import {Backend} from '@app/services/backend';
 
 export async function onNewsSync() {
   try {
     const lastSyncNews = VariablesDate.get('lastSyncNews');
-    const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
-
-    const newsResp = await fetch(`${HAQQ_BACKEND}news${sync}`);
-    const news = await getHttpResponse<NewsRow[]>(newsResp);
+    const news = await Backend.instance.news(lastSyncNews);
 
     for (const row of news) {
       const exist = News.getById(row.id);

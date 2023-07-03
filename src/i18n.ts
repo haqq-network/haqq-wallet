@@ -643,6 +643,7 @@ export enum I18N {
   raffleDetailsTimerFinishTitle,
   raffleDetailsTimerProgressTitle,
   raffleDetailsPrizeByTicketDescription,
+  raffleTicketRecieved,
   earnTicketRecieved,
   raffleRewardСongratulations,
   raffleRewardUnderstood,
@@ -680,6 +681,10 @@ export enum I18N {
   homeEarnEmptyRaffleDescription,
   transactionMyAccounts,
   transactionMyContacts,
+  qrModalInvalidCode,
+  jailbreakTitle,
+  jailbreakDescription2,
+  jailbreakDescription1,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1188,7 +1193,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNotEnough]: 'Current {{percent}}% (Minimum 51%). ',
   [I18N.proposalNotEnoughDescription]:
     'If the proposal does not get the required number of votes in a certain time, then it will reject',
-  [I18N.proposalNoVoting]: 'No {{votingCategory}} proposal',
+  [I18N.proposalNoVoting]: 'No {{votingCategory}} proposals',
 
   [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
@@ -1226,6 +1231,7 @@ const en: Record<I18N, string> = {
   [I18N.errorCreateAccountPopupClose]: 'Close',
   [I18N.networkFee]: 'Network fee: {{fee}} {{currency}}',
   [I18N.qrModalSendFunds]: 'Send funds from',
+  [I18N.qrModalInvalidCode]: 'Invalid code',
   [I18N.ledgerAttentionTitle]: `Open ${LEDGER_APP} app on your Ledger and Confirm the transaction by pressing both buttons together`,
   [I18N.ledgerAttentionClose]: 'Close',
   [I18N.ledgerLockedTitle]: 'Turn on and unlock the Ledger',
@@ -1448,6 +1454,7 @@ const en: Record<I18N, string> = {
   [I18N.timerHour]: 'Hour',
   [I18N.timerMin]: 'Min',
   [I18N.timerSec]: 'Sec',
+  [I18N.raffleTicketRecieved]: 'You have successfully claimed your reward',
   [I18N.earnTicketRecieved]: 'The ticket has been received',
   [I18N.raffleDetailsTimerFinishTitle]: 'Raffle is end',
   [I18N.raffleDetailsTimerProgressTitle]: 'The raffle will end in',
@@ -1489,4 +1496,10 @@ const en: Record<I18N, string> = {
     'Soon you will be able to participate in raffles and receive prizes',
   [I18N.transactionMyAccounts]: 'My accounts',
   [I18N.transactionMyContacts]: 'My contacts',
+  [I18N.jailbreakTitle]:
+    'It is not possible to use the wallet on a hacked device',
+  [I18N.jailbreakDescription1]:
+    'In accordance with our security policy, we do not allow use of the application on hacked devices. This is necessary to maintain safety of user funds',
+  [I18N.jailbreakDescription2]:
+    'We recommend that you update your device to the original firmware provided by your manufacturer',
 };

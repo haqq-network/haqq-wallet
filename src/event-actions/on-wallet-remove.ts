@@ -4,7 +4,7 @@ import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {PushNotifications} from '@app/services/push-notifications';
+import {Backend} from '@app/services/backend';
 
 export async function onWalletRemove(address: string) {
   try {
@@ -32,7 +32,7 @@ export async function onWalletRemove(address: string) {
 
     const subscription = VariablesString.get('notificationToken');
     if (subscription) {
-      await PushNotifications.instance.unsubscribeByTokenAndAddress(
+      await Backend.instance.unsubscribeByTokenAndAddress(
         subscription,
         address,
       );

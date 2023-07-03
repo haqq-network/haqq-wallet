@@ -36,10 +36,15 @@ export enum AdjustEvents {
   browserOpen = 'q77dcs',
   governanceOpen = 'txvtb0',
   settingsOpen = '450fpt',
+  claimOpened = '50vfgf',
+  claimFetched = '6420g4',
+  claimCreated = 'u4h7vr',
+  claimFailed = 'iitz4i',
   settingsAccountDetails = 'xbxrpy',
   stakingOpen = 'lzf6ty',
   stakingDelegate = 'xh19jh',
   stakingValidators = 'ejspf6',
+  jailed = 'k13htx',
 }
 
 export enum TransactionSource {
@@ -150,6 +155,7 @@ export type RootStackParamList = {
     accountId: string;
   };
   welcome: undefined;
+  welcomeNews: undefined;
   create: undefined;
   scanQr: undefined;
   signin: {next: string};
@@ -273,6 +279,9 @@ export type RootStackParamList = {
     from?: string | boolean;
     to?: string;
     nft?: NftItem;
+  };
+  accountDetail: {
+    address: string;
   };
   transactionDetail: {
     hash: string;
@@ -576,6 +585,7 @@ export type ActionSheetType = {
   presentation: PresentationNavigation;
   animation: 'fade' | 'flip' | 'default' | undefined;
   animationDuration: number;
+  animationEnabled: boolean;
 };
 
 export type PresentationNavigation =

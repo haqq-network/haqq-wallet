@@ -3,10 +3,8 @@ import {cosmosAddress} from '@haqq/provider-base';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
-import {
-  PushNotificationTopicsEnum,
-  PushNotifications,
-} from '@app/services/push-notifications';
+import {Backend} from '@app/services/backend';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 import {COSMOS_PREFIX} from '@app/variables/common';
 
 export async function onPushSubscriptionTransactionsSubscribe() {
@@ -22,7 +20,7 @@ export async function onPushSubscriptionTransactionsSubscribe() {
 
     await Promise.all(
       wallets.map(async w =>
-        PushNotifications.instance.createNotificationSubscription(
+        Backend.instance.createNotificationSubscription(
           subscription,
           cosmosAddress(w.address, COSMOS_PREFIX),
         ),

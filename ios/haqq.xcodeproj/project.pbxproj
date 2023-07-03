@@ -60,6 +60,7 @@
 		21F04B162A42B99D0048922A /* UIDevice+isJailBroken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */; };
 		21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */; };
 		21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */; };
+		21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */; };
 		269FDEB110975FAA48908707 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF7A8588211C7750BA341AD /* libPods-haqq.a */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
 		31297D92EC01449C9FE823F4 /* ledger-no-app.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C57942F9C9B4973B42F735D /* ledger-no-app.png */; };
@@ -220,6 +221,7 @@
 		21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isJailBroken.swift"; sourceTree = "<group>"; };
 		21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
 		21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
+		21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+modelName.swift"; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		237ACC1D53D140F093CE4102 /* bluetooth-powered-off.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off.png"; path = "../assets/images/bluetooth-powered-off.png"; sourceTree = "<group>"; };
 		273D756B386048F4B413B149 /* earn-staking@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking@3x.png"; path = "../assets/images/earn-staking@3x.png"; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				210F818B29110E66002A27EB /* String+split.swift */,
 				210F818F29112548002A27EB /* Data+hexEncodedString.swift */,
 				21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */,
+				21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -684,8 +687,9 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -1038,6 +1042,7 @@
 				21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
+				21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
 				2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */,
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
@@ -1136,7 +1141,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 173;
+				CURRENT_PROJECT_VERSION = 189;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
@@ -1174,7 +1179,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 173;
+				CURRENT_PROJECT_VERSION = 189;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";
@@ -1335,6 +1340,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

@@ -4,7 +4,6 @@ import {SessionTypes} from '@walletconnect/types';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
@@ -58,9 +57,12 @@ export const WalletsWrapper = () => {
     [navigation],
   );
 
-  const onPressQR = useCallback((address: string) => {
-    showModal('cardDetailsQr', {address});
-  }, []);
+  const onPressQR = useCallback(
+    (address: string) => {
+      navigation.navigate('accountDetail', {address});
+    },
+    [navigation],
+  );
 
   const onPressProtection = useCallback(
     (accountId: string) => {

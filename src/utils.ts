@@ -1,8 +1,11 @@
+/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
 import {differenceInMinutes} from 'date-fns';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
+
+import {app} from '@app/contexts';
 
 import {Color, getColor} from './colors';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
@@ -191,11 +194,15 @@ export function callbackWrapper<T extends Array<any>>(
 
     const tx = makeID(5);
 
-    console.log(new Date(), 'event started', tx, func.name, ...args);
+    if (app.isDeveloper) {
+      console.log(new Date(), 'event started', tx, func.name, ...args);
+    }
 
     func(...args).then(() => {
       callback();
-      console.log(new Date(), 'event finished', tx, func.name);
+      if (app.isDeveloper) {
+        console.log(new Date(), 'event finished', tx, func.name);
+      }
     });
   };
 }

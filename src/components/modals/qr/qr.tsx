@@ -1,7 +1,8 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
+import _ from 'lodash';
 import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -27,12 +28,18 @@ import {QrTopView} from './qr-top-view';
 
 export type QRModalProps = Modals['qr'];
 
+const debbouncedVibrate = _.debounce(vibrate, 1000);
+
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const visible = useWalletsVisible();
 
   const closeDistance = useWindowDimensions().height / 6;
   const [code, setCode] = useState('');
+  const isProcessing = useRef(false);
+
+  const [error, setError] = useState(false);
+  const [flashMode, setFlashMode] = useState(false);
 
   const prepareAddress = useCallback((data: string) => {
     if (data.startsWith('haqq:')) {
@@ -57,9 +64,6 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     [prepareAddress, code],
   );
 
-  const [error, setError] = useState(false);
-  const [flashMode, setFlashMode] = useState(false);
-
   const checkAddress = useCallback(
     (address: string) => {
       if (utils.isAddress(address)) {
@@ -78,15 +82,15 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         setTimeout(() => {
           app.emit(Events.onWalletConnectUri, address);
         }, 1000);
-      } else {
+      } else if (!error) {
         setError(true);
-        vibrate(HapticEffects.error);
+        debbouncedVibrate(HapticEffects.error);
         setTimeout(() => {
           setError(false);
         }, 5000);
       }
     },
-    [visible, onClose, prepareAddress],
+    [error, visible, onClose, prepareAddress],
   );
 
   const onGetAddress = useCallback(
@@ -105,12 +109,19 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onSuccess = useCallback(
     (e: BarCodeReadEvent) => {
-      if (e.data && e.data !== code) {
-        vibrate(HapticEffects.selection);
-        setCode(e.data);
-        const slicedAddress = prepareAddress(e.data);
-        if (slicedAddress) {
-          onGetAddress(slicedAddress);
+      const newCode = e.data?.trim?.()?.toLowerCase?.();
+      const currentCode = code?.trim?.()?.toLowerCase?.();
+      if (!isProcessing.current && e.data && newCode !== currentCode) {
+        isProcessing.current = true;
+        try {
+          vibrate(HapticEffects.selection);
+          setCode(e.data);
+          const slicedAddress = prepareAddress(e.data);
+          if (slicedAddress) {
+            onGetAddress(slicedAddress);
+          }
+        } finally {
+          isProcessing.current = false;
         }
       }
     },
@@ -171,9 +182,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
       {error && (
         <View style={styles.bottomErrorContainer}>
           <View style={styles.bottomError}>
-            <Text t8 color={Color.textBase3}>
-              Invalid code
-            </Text>
+            <Text t8 color={Color.textBase3} i18n={I18N.qrModalInvalidCode} />
           </View>
         </View>
       )}

@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
@@ -29,6 +30,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
+import {getUserAgent} from '@app/services/version';
 import {Link, Modals} from '@app/types';
 import {makeID, openInAppBrowser} from '@app/utils';
 import {WINDOW_HEIGHT} from '@app/variables/common';
@@ -389,7 +391,16 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Spacer height={20} />
+      <Title text="user agent" />
+      <Text
+        t11
+        onPress={() => {
+          Clipboard.setString(getUserAgent());
+          toastMessage('Copied to clipboard');
+        }}>
+        {getUserAgent()}
+      </Text>
+      <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input
         placeholder="wc:"

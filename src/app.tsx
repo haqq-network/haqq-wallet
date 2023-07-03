@@ -27,7 +27,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -44,6 +44,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
+import {AccountDetailScreen} from '@app/screens/account-detail';
 import {AccountInfoScreen} from '@app/screens/account-info';
 import {GovernanceScreen} from '@app/screens/governance';
 import {NewsScreen} from '@app/screens/news';
@@ -57,6 +58,7 @@ import {StakingDelegateScreen} from '@app/screens/staking-delegate';
 import {StakingInfoScreen} from '@app/screens/staking-info';
 import {StakingUnDelegateScreen} from '@app/screens/staking-undelegate';
 import {StakingValidatorsScreen} from '@app/screens/staking-validators';
+import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {
   ActionSheetType,
   AppTheme,
@@ -67,7 +69,6 @@ import {
 } from '@app/types';
 import {sleep} from '@app/utils';
 
-import {StatusBarColor} from './components/ui';
 import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
@@ -140,8 +141,9 @@ const appTheme = createTheme({
 
 const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
-  animation: 'fade',
+  animation: undefined,
   animationDuration: 0,
+  animationEnabled: false,
 };
 
 const basicScreenOptions = {
@@ -232,53 +234,15 @@ export const App = () => {
     }
 
     Adjust.create(adjustConfig);
+    if (app.isDeveloper) {
+      Adjust.getAppTrackingAuthorizationStatus(function (status) {
+        console.log('Authorization status = ' + status);
+      });
 
-    Adjust.getAppTrackingAuthorizationStatus(function (status) {
-      console.log('Authorization status = ' + status);
-    });
-
-    Adjust.getAdid(adid => {
-      console.log('Adid = ' + adid);
-    });
-
-    adjustConfig.setAttributionCallbackListener(function (attribution) {
-      console.log('Attribution callback received');
-      console.log('Tracker token = ' + attribution.trackerToken);
-      console.log('Tracker name = ' + attribution.trackerName);
-      console.log('Network = ' + attribution.network);
-      console.log('Campaign = ' + attribution.campaign);
-      console.log('Adgroup = ' + attribution.adgroup);
-      console.log('Creative = ' + attribution.creative);
-      console.log('Click label = ' + attribution.clickLabel);
-      console.log('Adid = ' + attribution.adid);
-      console.log('Cost type = ' + attribution.costType);
-      console.log('Cost amount = ' + attribution.costAmount);
-      console.log('Cost currency = ' + attribution.costCurrency);
-    });
-
-    adjustConfig.setEventTrackingSucceededCallbackListener(function (
-      eventSuccess,
-    ) {
-      console.log('Event tracking succeeded callback received');
-      console.log('Message: ' + eventSuccess.message);
-      console.log('Timestamp: ' + eventSuccess.timestamp);
-      console.log('Adid: ' + eventSuccess.adid);
-      console.log('Event token: ' + eventSuccess.eventToken);
-      console.log('Callback Id: ' + eventSuccess.callbackId);
-      console.log('JSON response: ' + eventSuccess.jsonResponse);
-    });
-
-    adjustConfig.setEventTrackingFailedCallbackListener(function (eventFailed) {
-      console.log('Event tracking failed callback received');
-      console.log('Message: ' + eventFailed.message);
-      console.log('Timestamp: ' + eventFailed.timestamp);
-      console.log('Adid: ' + eventFailed.adid);
-      console.log('Event token: ' + eventFailed.eventToken);
-      console.log('Callback Id: ' + eventFailed.callbackId);
-      console.log('Will retry: ' + eventFailed.willRetry);
-      console.log('JSON response: ' + eventFailed.jsonResponse);
-    });
-
+      Adjust.getAdid(adid => {
+        console.log('Adid = ' + adid);
+      });
+    }
     return () => {
       Adjust.componentWillUnmount();
     };
@@ -296,17 +260,22 @@ export const App = () => {
     });
   }, []);
 
+  const initialRoute = useMemo(() => {
+    if (app.onboarded) {
+      return 'home';
+    }
+    if (app.isWelcomeNewsEnabled) {
+      return 'welcomeNews';
+    }
+
+    return 'welcome';
+  }, []);
+
   // @ts-ignore
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <ActionSheetProvider>
         <SafeAreaProvider>
-          <StatusBarColor
-            barStyle={
-              theme === AppTheme.dark ? 'light-content' : 'dark-content'
-            }
-            backgroundColor={getColor(Color.bg1)}
-          />
           <NavigationContainer
             ref={navigator}
             theme={navTheme}
@@ -314,9 +283,10 @@ export const App = () => {
             <Stack.Navigator
               screenOptions={basicScreenOptions}
               key={theme}
-              initialRouteName={app.onboarded ? 'home' : 'welcome'}>
+              initialRouteName={initialRoute}>
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="welcome" component={WelcomeScreen} />
+              <Stack.Screen name="welcomeNews" component={WelcomeNewsScreen} />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
                 <Stack.Screen
@@ -407,6 +377,11 @@ export const App = () => {
               <Stack.Screen
                 name="transactionDetail"
                 component={TransactionDetailScreen}
+                options={actionsSheet}
+              />
+              <Stack.Screen
+                name="accountDetail"
+                component={AccountDetailScreen}
                 options={actionsSheet}
               />
               <Stack.Screen name="news" component={NewsScreen} />

@@ -7,6 +7,7 @@ export enum Feature {
   earn,
   governanceAndStaking,
   nft,
+  abnews,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
@@ -19,6 +20,8 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
       return app.isDeveloper;
     case Feature.nft:
       return app.isDeveloper;
+    case Feature.abnews:
+      return app.isWelcomeNewsEnabled;
     default:
       return false;
   }

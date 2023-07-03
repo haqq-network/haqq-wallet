@@ -15,7 +15,7 @@ const newsOptions = {
   title: getText(I18N.newsTitle),
   tab: Platform.select({
     ios: true,
-    android: false,
+    android: true,
   }),
 };
 
