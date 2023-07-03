@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {
+  Image,
   SectionList,
   SectionListData,
   SectionListRenderItem,
@@ -163,6 +164,19 @@ export const NftViewer = ({
     [],
   );
 
+  if (!data?.length) {
+    return (
+      <View style={styles.empty}>
+        <Image
+          style={styles.emptyImage}
+          source={require('@assets/images/none-nft.png')}
+        />
+        <Spacer height={12} />
+        <Text t13 color={Color.textSecond1} i18n={I18N.nftViewerNoNFTs} />
+      </View>
+    );
+  }
+
   return (
     <View style={style}>
       <View style={styles.row}>
@@ -203,5 +217,15 @@ const styles = createTheme({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyImage: {
+    height: 80,
+    width: 80,
+    tintColor: Color.graphicSecond3,
   },
 });

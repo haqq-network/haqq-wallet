@@ -683,6 +683,9 @@ export enum I18N {
   jailbreakTitle,
   jailbreakDescription2,
   jailbreakDescription1,
+  homeFeedTokensTabTitle,
+  accountInfoTokensTabTitle,
+  nftViewerNoNFTs,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1489,6 +1492,8 @@ const en: Record<I18N, string> = {
   [I18N.accountInfoTransactionTabTitle]: 'Transactions',
   [I18N.homeFeedNftTabTitle]: 'NFTs',
   [I18N.accountInfoNftTabTitle]: 'NFTs',
+  [I18N.accountInfoTokensTabTitle]: 'Tokens',
+  [I18N.homeFeedTokensTabTitle]: 'Tokens',
   [I18N.homeEarnEmptyRaffleTitle]: 'Raffles will be here soon',
   [I18N.homeEarnEmptyRaffleDescription]:
     'Soon you will be able to participate in raffles and receive prizes',
@@ -1498,4 +1503,5 @@ const en: Record<I18N, string> = {
     'In accordance with our security policy, we do not allow use of the application on hacked devices. This is necessary to maintain safety of user funds',
   [I18N.jailbreakDescription2]:
     'We recommend that you update your device to the original firmware provided by your manufacturer',
+  [I18N.nftViewerNoNFTs]: 'No NFTs',
 };
