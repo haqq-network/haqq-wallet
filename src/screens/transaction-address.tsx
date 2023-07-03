@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
 import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
@@ -12,8 +12,25 @@ export const TransactionAddressScreen = () => {
   const wallets = useWalletsVisible();
   const contacts = useRef(Contact.getAll().snapshot()).current;
 
+  const [address, setAddress] = useState(route.params?.to || '');
+  const filteredWallets = useMemo(() => {
+    if (!wallets || !wallets.length) {
+      return;
+    }
+
+    if (!address) {
+      return wallets.snapshot();
+    }
+
+    return wallets
+      .filtered(
+        `address CONTAINS[c] '${address}' or name CONTAINS[c] '${address}'`,
+      )
+      .snapshot();
+  }, [address, wallets]);
+
   const onDone = useCallback(
-    async (address: string) => {
+    async (result: string) => {
       const nft = route.params.nft;
       if (nft) {
         try {
@@ -28,7 +45,7 @@ export const TransactionAddressScreen = () => {
           const fee = 1;
           navigation.navigate('transactionNftConfirmation', {
             from: route.params.from,
-            to: address,
+            to: result,
             nft,
             fee,
           });
@@ -38,7 +55,7 @@ export const TransactionAddressScreen = () => {
       } else {
         navigation.navigate('transactionSum', {
           from: route.params.from,
-          to: address,
+          to: result,
         });
       }
     },
@@ -47,9 +64,10 @@ export const TransactionAddressScreen = () => {
 
   return (
     <TransactionAddress
-      initial={route.params?.to}
       loading={loading}
-      wallets={wallets}
+      address={address}
+      setAddress={setAddress}
+      filteredWallets={filteredWallets}
       contacts={contacts}
       onAddress={onDone}
     />

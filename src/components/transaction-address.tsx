@@ -29,13 +29,16 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {isHexString} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';
+import {WALLET_ROW_4_WIDTH} from './wallet-row-variant-4';
 
 export type TransactionAddressProps = {
   initial?: string;
   loading?: boolean;
-  wallets?: Realm.Results<Wallet>;
+  filteredWallets?: Realm.Results<Wallet>;
   contacts?: Realm.Results<Contact>;
+  address: string;
   onAddress: (address: string) => void;
+  setAddress: (address: string) => void;
 };
 
 const ListOfContacts = withActionsContactItem(ListContact, {
@@ -43,30 +46,15 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 });
 
 export const TransactionAddress = ({
-  initial = '',
   loading = false,
-  wallets,
+  address,
+  setAddress,
+  filteredWallets,
   contacts,
   onAddress,
 }: TransactionAddressProps) => {
-  const [address, setAddress] = useState(initial);
   const [error, setError] = useState(false);
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
-  const filteredWallets = useMemo(() => {
-    if (!wallets || !wallets.length) {
-      return;
-    }
-
-    if (!address) {
-      return wallets.snapshot();
-    }
-
-    return wallets
-      .filtered(
-        `address CONTAINS[c] '${address}' or name CONTAINS[c] '${address}'`,
-      )
-      .snapshot();
-  }, [address, wallets]);
 
   useEffect(() => {
     const toTrim = address.trim();
@@ -105,11 +93,11 @@ export const TransactionAddress = ({
     };
     app.on('address', subscription);
     showModal('qr');
-  }, []);
+  }, [setAddress]);
 
   const onPressClear = useCallback(() => {
     setAddress('');
-  }, []);
+  }, [setAddress]);
 
   const onPressAddress = useCallback(
     (item: string) => {
@@ -123,7 +111,7 @@ export const TransactionAddress = ({
     vibrate(HapticEffects.impactLight);
     const pasteString = await Clipboard.getString();
     setAddress(pasteString);
-  }, []);
+  }, [setAddress]);
 
   const myAccountsKeyExtractor = useCallback(
     (item: Wallet) => item.address,
@@ -187,6 +175,7 @@ export const TransactionAddress = ({
             data={filteredWallets}
             keyExtractor={myAccountsKeyExtractor}
             renderItem={myAccountsRenderItem}
+            snapToInterval={WALLET_ROW_4_WIDTH}
           />
           <Spacer height={12} />
         </View>

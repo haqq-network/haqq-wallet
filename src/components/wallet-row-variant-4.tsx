@@ -11,7 +11,9 @@ import {splitAddress} from '@app/utils';
 import {WalletRowProps} from './wallet-row';
 
 const CARD_WIDTH = 78;
+const MARGIN_HORIZONTAL = 8;
 const CARD_RADIUS = 8;
+export const WALLET_ROW_4_WIDTH = CARD_WIDTH + MARGIN_HORIZONTAL;
 
 export const WalletRowVariant4 = ({
   item,
@@ -67,6 +69,6 @@ const styles = createTheme({
   textContainer: {
     position: 'absolute',
     alignSelf: 'center',
-    marginHorizontal: 8,
+    marginHorizontal: MARGIN_HORIZONTAL,
   },
 });
