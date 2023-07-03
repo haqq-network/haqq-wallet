@@ -143,6 +143,7 @@ const actionsSheet: ActionSheetType = {
   presentation: 'transparentModal' as PresentationNavigation,
   animation: undefined,
   animationDuration: 0,
+  animationEnabled: false,
 };
 
 const basicScreenOptions = {

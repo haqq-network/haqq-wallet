@@ -33,11 +33,14 @@ export const JsonRpcSignScreen = () => {
     [request, selectedAccount],
   );
 
-  const onPressReject = useCallback(async () => {
-    setRejectLoading(true);
-    app.emit('json-rpc-sign-reject');
-    navigation.goBack();
-  }, [navigation]);
+  const onPressReject = useCallback(
+    async (errMsg?: string) => {
+      setRejectLoading(true);
+      app.emit('json-rpc-sign-reject', errMsg);
+      navigation.goBack();
+    },
+    [navigation],
+  );
 
   const onPressSign = useCallback(async () => {
     try {
@@ -68,7 +71,10 @@ export const JsonRpcSignScreen = () => {
     )?.length;
     setIsAllowed(isAllowedDomain);
     if (!isAllowedDomain) {
-      showModal('domainBlocked', {domain: host, onClose: onPressReject});
+      showModal('domainBlocked', {
+        domain: host,
+        onClose: () => onPressReject('domain is blocked'),
+      });
     }
   }, [metadata, onPressReject, whitelist]);
 
