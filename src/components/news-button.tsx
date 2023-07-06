@@ -1,33 +1,34 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton} from '@app/components/ui';
+import {Icon} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useVariablesBool} from '@app/hooks/use-variables-bool';
-import {RootStackParamList} from '@app/types';
 
-export const NewsButton = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+export interface NewsButtonProps {
+  focused: boolean;
+}
+
+export const NewsButton = ({focused}: NewsButtonProps) => {
   const isNewNews = useVariablesBool('isNewNews');
-
-  const onPressNews = useCallback(() => {
-    navigation.navigate('news');
-  }, [navigation]);
+  const isNewRssNews = useVariablesBool('isNewRssNews');
+  const haveNewNews = isNewRssNews || isNewNews;
 
   return (
-    <IconButton onPress={onPressNews} style={page.container}>
-      <Icon name="news" color={Color.graphicBase1} />
-      {isNewNews && <View style={page.hasNews} />}
-    </IconButton>
+    <View style={page.container}>
+      <Icon
+        name="news"
+        color={focused ? Color.graphicGreen1 : Color.graphicBase2}
+      />
+      {haveNewNews && <View style={page.hasNews} />}
+    </View>
   );
 };
 
 const page = createTheme({
-  container: {marginLeft: 12, position: 'relative'},
+  container: {position: 'relative'},
   hasNews: {
     top: -2,
     right: -2,

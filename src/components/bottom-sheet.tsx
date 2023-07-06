@@ -7,9 +7,11 @@ import React, {
 } from 'react';
 
 import {
+  StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
@@ -30,7 +32,14 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
-import {Icon, IconButton, Spacer, SwiperIcon, Text} from '@app/components/ui';
+import {
+  First,
+  Icon,
+  IconButton,
+  Spacer,
+  SwiperIcon,
+  Text,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {
@@ -39,13 +48,31 @@ import {
   WINDOW_WIDTH,
 } from '@app/variables/common';
 
+type TitleProp =
+  | {
+      title: string;
+      i18nTitle?: undefined;
+      renderTitle?: undefined;
+    }
+  | {
+      title?: undefined;
+      renderTitle?: undefined;
+      i18nTitle: I18N;
+    }
+  | {
+      renderTitle: () => React.ReactNode;
+      title?: undefined;
+      i18nTitle?: undefined;
+    };
+
 export type BottomSheetProps = {
   children: React.ReactNode;
-  i18nTitle: I18N;
   onClose?: () => void;
   closeDistance?: number;
   scrollable?: boolean;
-};
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  titleContainerStyle?: StyleProp<ViewStyle>;
+} & TitleProp;
 
 export type BottomSheetRef = {
   open: () => void;
@@ -55,7 +82,20 @@ export type BottomSheetRef = {
 type pointsT = [number, number];
 
 export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
-  ({children, onClose, i18nTitle, closeDistance}, ref) => {
+  (
+    {
+      children,
+      onClose,
+      i18nTitle,
+      closeDistance,
+      title,
+      renderTitle,
+      scrollable,
+      contentContainerStyle,
+      titleContainerStyle,
+    },
+    ref,
+  ) => {
     const {height} = useWindowDimensions();
     const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
 
@@ -210,15 +250,33 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
             <View style={page.space} />
           </TouchableWithoutFeedback>
           <Animated.View
-            style={[page.animateView, page.content, bottomSheetStyle]}>
+            style={[
+              page.animateView,
+              page.content,
+              bottomSheetStyle,
+              contentContainerStyle,
+            ]}>
             <GestureDetector gesture={headerGesture}>
-              <Animated.View>
+              <Animated.View style={titleContainerStyle}>
                 <View style={page.swipe}>
                   <SwiperIcon color={getColor(Color.graphicSecond2)} />
                 </View>
                 <View style={page.header}>
-                  <Text t6 color={Color.textBase1} i18n={i18nTitle} />
-                  <Spacer />
+                  <First>
+                    {!!renderTitle && renderTitle?.()}
+                    {!!i18nTitle && (
+                      <>
+                        <Text t6 color={Color.textBase1} i18n={i18nTitle} />
+                        <Spacer />
+                      </>
+                    )}
+                    {!!title && (
+                      <>
+                        <Text t6 color={Color.textBase1} children={title} />
+                        <Spacer />
+                      </>
+                    )}
+                  </First>
                   <IconButton onPress={onClosePopup}>
                     <Icon
                       i24
@@ -233,6 +291,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
               gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
               <Animated.ScrollView
                 bounces={false}
+                scrollEnabled={scrollable}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={1}
                 onScrollBeginDrag={(

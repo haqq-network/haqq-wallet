@@ -8,7 +8,7 @@ import {ScreenOptionType} from '@app/types';
 
 import {Web3BrowserScreen} from './web3-browser';
 
-const WalletProtection = createStackNavigator();
+const Navigator = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {
   keyboardHandlingEnabled: false,
@@ -20,13 +20,13 @@ const screenOptions: ScreenOptionType = {
 export const Web3BrowserPopup = () => {
   const route = useTypedRoute<'web3BrowserPopup'>();
   return (
-    <WalletProtection.Navigator screenOptions={screenOptions}>
-      <WalletProtection.Screen
+    <Navigator.Navigator screenOptions={screenOptions}>
+      <Navigator.Screen
         name="web3BrowserPopupInner"
         component={Web3BrowserScreen}
         options={TransitionPresets.ModalSlideFromBottomIOS}
         initialParams={route.params}
       />
-    </WalletProtection.Navigator>
+    </Navigator.Navigator>
   );
 };

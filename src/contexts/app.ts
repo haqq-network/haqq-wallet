@@ -14,6 +14,7 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
+import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {seedData} from '@app/models/seed-data';
@@ -419,6 +420,7 @@ class App extends EventEmitter {
             await this.auth();
           }
           await awaitForEventDone(Events.onAppActive);
+          await onUpdatesSync();
           break;
         case AppStatus.inactive:
           if (this.authenticated) {

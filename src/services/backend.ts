@@ -1,6 +1,6 @@
 import {HAQQ_BACKEND} from '@env';
 
-import {NewsRow, Raffle} from '@app/types';
+import {NewsRow, NewsUpdatesResponse, Raffle} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config';
@@ -150,6 +150,19 @@ export class Backend {
       headers: Backend.headers,
     });
     return await getHttpResponse<NewsRow[]>(newsResp);
+  }
+
+  async updates(
+    lastSyncUpdates: Date | undefined,
+  ): Promise<NewsUpdatesResponse> {
+    const sync = lastSyncUpdates
+      ? `?timestamp=${lastSyncUpdates.toISOString()}`
+      : '';
+
+    const newsResp = await fetch(`${this.getRemoteUrl()}updates${sync}`, {
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<NewsUpdatesResponse>(newsResp);
   }
 
   async createNotificationToken(token: string): Promise<{id: string}> {

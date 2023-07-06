@@ -3,6 +3,8 @@ import React, {useMemo} from 'react';
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
 
+import {NewsButton} from '../news-button';
+
 export type HomeScreenTabBarIconProps = {
   route: string;
   focused: boolean;
@@ -33,6 +35,10 @@ export const HomeScreenTabBarIcon = ({
 
   if (!name) {
     return null;
+  }
+
+  if (route === 'homeNews') {
+    return <NewsButton focused={focused} />;
   }
 
   return (

@@ -202,6 +202,7 @@ export type RootStackParamList = {
   settingsTheme: undefined;
   settingsTest: undefined;
   settingsAccounts: undefined;
+  ourNews: undefined;
   settingsAccountDetail: {address: string};
   settingsAccountStyle: {address: string};
   settingsAddressBook: undefined;
@@ -285,6 +286,10 @@ export type RootStackParamList = {
   };
   transactionDetail: {
     hash: string;
+  };
+  inAppBrowser: {
+    url: string;
+    title?: string;
   };
   transactionAccount: {
     from: string;
@@ -760,17 +765,54 @@ export interface RemoteMessage {
   notification: {body: string; title: string};
 }
 
-export type NewsRow = {
-  id: string;
-  title: string;
-  preview: string;
-  description: string;
+export interface NewsUpdatesResponse {
+  news: NewsRow[];
+  rss_feed: RssNewsRow[];
+  timestamp: Date;
+}
+
+export interface NewsRow {
   content: string;
-  status: string;
-  published_at: string;
-  updated_at: string;
-  created_at: string;
-};
+  created_at: Date;
+  description: string;
+  id: string;
+  preview: string;
+  published_at: Date;
+  status: NewsStatus;
+  storyblok_slug: string;
+  storyblok_space_id: string;
+  storyblok_story_id: string;
+  title: string;
+  updated_at: Date;
+}
+
+export enum NewsStatus {
+  published = 'published',
+  unpublished = 'unpublished',
+}
+
+export enum RssNewsStatus {
+  approved = 'approved',
+  disapproved = 'disapproved',
+  wait_for_review = 'wait_for_review',
+  unknown = 'unknown',
+}
+
+export interface RssNewsRow {
+  approves: string[];
+  created_at: Date;
+  description: string;
+  disapproves: any[];
+  id: string;
+  preview: string;
+  rss_source_id: string;
+  status: RssNewsStatus;
+  tg_channel_id: string;
+  tg_message_id: string;
+  title: string;
+  updated_at: Date;
+  url: string;
+}
 
 export enum RaffleStatus {
   open = 'open',
@@ -926,4 +968,22 @@ export interface TokenItem {
   ticker: string;
   count: number;
   priceUsd: number;
+}
+
+export interface BaseNewsItem {
+  id: string;
+  title: string;
+  preview: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  viewed: boolean;
+  status: string;
+}
+
+export interface NewsItem extends BaseNewsItem {
+  content: string;
+}
+export interface RssNewsItem extends BaseNewsItem {
+  url: string;
 }

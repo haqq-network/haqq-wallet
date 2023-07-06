@@ -7,6 +7,7 @@
 
 import Foundation
 import AdSupport
+import WebKit
 
 @objc(RNVersion)
 class RNVersion: NSObject {
@@ -41,6 +42,55 @@ class RNVersion: NSObject {
   @objc
   static func requiresMainQueueSetup() -> Bool { return false }
   
+  func getDeviceModel() -> String {
+      let deviceModel = UIDevice.current.model
+      let deviceName = UIDevice.modelName
+      let osVersion = UIDevice.current.systemVersion
+    
+      return "(\(deviceModel); CPU \(deviceModel) OS \(osVersion) like Mac OS X)"
+  }
+
+  func getOperatingSystem() -> String {
+      let osVersion = UIDevice.current.systemVersion
+      let osName = UIDevice.current.systemName
+    
+      return "\(osName) \(osVersion)"
+  }
+  
+  func getAppForUserAgent() -> String {
+    return "\(appName ?? "unknown")/\(appVersion  ?? "unknown").\(buildNumber  ?? "unknown")"
+  }
+  
+  func getWebKitVersion(completion: @escaping (String) -> Void) {
+      DispatchQueue.main.async {
+        let webView = WKWebView(frame: .zero)
+        let configuration = webView.configuration
+        let applicationName = configuration.applicationNameForUserAgent ?? ""
+        
+        completion(applicationName)
+      }
+  }
+
+  func buildUserAgentString() -> String {
+      var userAgentString = ""
+      let group = DispatchGroup()
+      group.enter()
+      getWebKitVersion { [self] webKitVersion in
+          let userAgentComponents = [
+              getAppForUserAgent(),
+              getDeviceModel(),
+              "AppleWebKit/\(webKitVersion)",
+              "(KHTML, like Gecko)",
+              getOperatingSystem()
+          ]
+          userAgentString = userAgentComponents.joined(separator: " ")
+          group.leave()
+      }
+      group.wait()
+      return userAgentString
+  }
+
+  
   @objc
   public func constantsToExport() -> [AnyHashable : Any]! {
     return [
@@ -48,7 +98,7 @@ class RNVersion: NSObject {
       "buildNumber": buildNumber ?? "unknown",
       "adId": adId,
       "isTrackingEnabled": isTrackingEnabled,
-      "userAgent": "\(appName ?? "unknown")/\(appVersion  ?? "unknown").\(buildNumber  ?? "unknown") CFNetwork/\(getCfnVersion  ?? "unknown") Darwin \(UIDevice.modelName) \(UIDevice.current.systemName)/\(UIDevice.current.systemVersion)"
+      "userAgent": buildUserAgentString(),
     ]
   }
 }

@@ -32,7 +32,7 @@ import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals} from '@app/types';
-import {makeID, openInAppBrowser} from '@app/utils';
+import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -294,8 +294,12 @@ export const SettingsTestScreen = () => {
     app.emit(Events.onWalletConnectUri, wc);
   };
 
-  const onPressOpenBrowser = () => {
+  const onPressOpenInAppBrowser = () => {
     openInAppBrowser(browserUrl);
+  };
+
+  const onPressOpenWeb3Browser = () => {
+    openWeb3Browser(browserUrl);
   };
 
   const onCallContract = async () => {
@@ -416,7 +420,7 @@ export const SettingsTestScreen = () => {
         onPress={onPressWc}
         variant={ButtonVariant.contained}
       />
-      <Title text="web3 browser" />
+      <Title text="Browser" />
       <Input
         placeholder="https://app.haqq.network"
         value={browserUrl}
@@ -425,7 +429,13 @@ export const SettingsTestScreen = () => {
       <Spacer height={8} />
       <Button
         title="Open web3 browser"
-        onPress={onPressOpenBrowser}
+        onPress={onPressOpenWeb3Browser}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Open in app browser"
+        onPress={onPressOpenInAppBrowser}
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />

@@ -21,6 +21,7 @@ import {
   TEST_NETWORK,
 } from '@app/variables/common';
 
+import {RssNews} from './rss-news';
 import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
 import {Web3BrowserBookmark} from './web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from './web3-browser-search-history';
@@ -47,8 +48,9 @@ export const realm = new Realm({
     VariablesDate,
     VariablesBool,
     VariablesString,
+    RssNews,
   ],
-  schemaVersion: 61,
+  schemaVersion: 62,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');

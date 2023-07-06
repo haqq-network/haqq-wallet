@@ -18,9 +18,9 @@ import {
   NavigationContainer,
   Theme,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking, Platform, StyleSheet} from 'react-native';
+import {AppState, Linking, Platform, StatusBar, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -69,15 +69,18 @@ import {
 } from '@app/types';
 import {sleep} from '@app/utils';
 
+import {Spacer} from './components/ui';
 import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {HomeStakingScreen} from './screens/home-staking';
+import {InAppBrowserScreen} from './screens/in-app-browser';
 import {JsonRpcSignPopup} from './screens/json-rpc-sign-popup';
 import {LedgerScreen} from './screens/ledger';
 import {ModalsScreen} from './screens/modals-screen';
 import {NftDetailsScreen} from './screens/nft-details';
+import {OurNewsScreen} from './screens/our-news';
 import {BackupNotificationScreen} from './screens/popup-backup-notification';
 import {PopupNotificationScreen} from './screens/popup-notification';
 import {PopupTrackActivityScreen} from './screens/popup-track-activity';
@@ -146,6 +149,16 @@ const actionsSheet: ActionSheetType = {
   animationEnabled: false,
 };
 
+const fullScreenModalOptions: ScreenOptionType = {
+  keyboardHandlingEnabled: false,
+  headerBackHidden: true,
+  headerShown: true,
+  gestureEnabled: false,
+  header: () => <Spacer height={StatusBar.currentHeight} />,
+  headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
+  ...TransitionPresets.ModalSlideFromBottomIOS,
+};
+
 const basicScreenOptions = {
   headerShown: false,
   gestureEnabled: false,
@@ -169,7 +182,7 @@ export const App = () => {
   );
 
   useEffect(() => {
-    showModal('splash');
+    hideModal('splash');
 
     sleep(150)
       .then(() => SplashScreen.hide())
@@ -287,6 +300,11 @@ export const App = () => {
               <Stack.Screen name="home" component={HomeScreen} />
               <Stack.Screen name="welcome" component={WelcomeScreen} />
               <Stack.Screen name="welcomeNews" component={WelcomeNewsScreen} />
+              <Stack.Screen
+                name="inAppBrowser"
+                component={InAppBrowserScreen}
+                options={fullScreenModalOptions}
+              />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
                 <Stack.Screen
@@ -403,6 +421,13 @@ export const App = () => {
                   component={SettingsAccountsScreen}
                   options={{
                     title: 'Manage accounts',
+                  }}
+                />
+                <Stack.Screen
+                  name="ourNews"
+                  component={OurNewsScreen}
+                  options={{
+                    title: getText(I18N.ourNewsTitle),
                   }}
                 />
                 <Stack.Screen
