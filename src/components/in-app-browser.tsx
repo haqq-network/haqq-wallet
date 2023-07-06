@@ -86,15 +86,10 @@ export const InAppBrowser = ({
   );
 
   const onPressRefresh = useCallback(() => {
-    console.log('reload', webviewRef?.current?.reload);
-    console.log('reload', webviewRef?.current);
-
     webviewRef?.current?.reload?.();
   }, [webviewRef]);
 
   const onPressStopLoading = useCallback(() => {
-    console.log('stopLoading', webviewRef?.current?.stopLoading);
-    console.log('stopLoading', webviewRef?.current);
     webviewRef?.current?.stopLoading?.();
   }, [webviewRef]);
 
@@ -205,8 +200,7 @@ export const InAppBrowser = ({
           sendCookies
           useWebkit
           javascriptEnabled
-          startInLoadingState={false}
-          // scalesPageToFit={false}
+          startInLoadingState
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
           allowsFullscreenVideo

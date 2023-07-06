@@ -363,7 +363,7 @@ class App extends EventEmitter {
         vibrate(HapticEffects.success);
         this.authenticated = true;
       } catch (error) {
-        console.log(error);
+        console.error('app.auth', error);
       }
     }
 

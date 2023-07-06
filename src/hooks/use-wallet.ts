@@ -19,7 +19,6 @@ export function useWallet(address: string) {
     if (wallet && wallet.isValid()) {
       const sub = (_: unknown, params: ObjectChangeSet<Wallet>) => {
         if (params.changedProperties.length || params.deleted) {
-          console.log('changed');
           updateWallet();
         }
       };
