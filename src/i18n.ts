@@ -679,6 +679,8 @@ export enum I18N {
   accountInfoTransactionTabTitle,
   homeEarnEmptyRaffleTitle,
   homeEarnEmptyRaffleDescription,
+  transactionMyAccounts,
+  transactionMyContacts,
   qrModalInvalidCode,
   jailbreakTitle,
   jailbreakDescription2,
@@ -1497,6 +1499,8 @@ const en: Record<I18N, string> = {
   [I18N.homeEarnEmptyRaffleTitle]: 'Raffles will be here soon',
   [I18N.homeEarnEmptyRaffleDescription]:
     'Soon you will be able to participate in raffles and receive prizes',
+  [I18N.transactionMyAccounts]: 'My accounts',
+  [I18N.transactionMyContacts]: 'My contacts',
   [I18N.jailbreakTitle]:
     'It is not possible to use the wallet on a hacked device',
   [I18N.jailbreakDescription1]:
