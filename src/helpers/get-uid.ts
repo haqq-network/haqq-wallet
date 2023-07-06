@@ -20,7 +20,5 @@ export async function getUid() {
     await EncryptedStorage.setItem('uid', uid);
   }
 
-  console.log(`uid: ${uid}`);
-
   return uid ?? '';
 }

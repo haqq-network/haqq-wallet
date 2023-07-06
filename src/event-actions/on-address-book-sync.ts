@@ -26,12 +26,10 @@ export async function onAddressBookSync(id: string) {
       'tokensOfOwner',
     );
 
-    console.log('tokens', tokens);
-
     addressBook.update({
       tokens: tokens.map((t: any) => BigNumber.from(t).toString()),
     });
   } catch (e) {
-    console.log('onAddressBookSync', e);
+    console.error('onAddressBookSync', e);
   }
 }

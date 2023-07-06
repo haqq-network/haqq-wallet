@@ -8,13 +8,14 @@ import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code'
 import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-create';
 import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
-import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
+
+import {onUpdatesSync} from './on-updates-sync';
 
 export async function onAppStarted() {
   messaging()
@@ -63,7 +64,7 @@ export async function onAppStarted() {
     }
   }
 
-  await onNewsSync();
+  await onUpdatesSync();
   await onAppBackup();
 
   await onStakingSync();

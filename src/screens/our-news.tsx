@@ -1,15 +1,15 @@
-import {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
-import {NewsRowList} from '@app/components/news';
+import {NewsRowList as NewsComponent} from '@app/components/news';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {AdjustEvents} from '@app/types';
 
-export const NewsListScreen = () => {
+export const OurNewsScreen = () => {
   const navigation = useTypedNavigation();
   const [rows, setRows] = useState(
     News.getAll()
@@ -59,5 +59,5 @@ export const NewsListScreen = () => {
     [navigation],
   );
 
-  return <NewsRowList data={rows} onPress={onPressRow} />;
+  return <NewsComponent data={rows} onPress={onPressRow} />;
 };

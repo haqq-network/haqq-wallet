@@ -688,6 +688,10 @@ export enum I18N {
   homeFeedTokensTabTitle,
   accountInfoTokensTabTitle,
   nftViewerNoNFTs,
+  ourNewsTitle,
+  homeNewsOurNews,
+  homeNewsViewAll,
+  homeNewsCryptoNews,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1508,4 +1512,8 @@ const en: Record<I18N, string> = {
   [I18N.jailbreakDescription2]:
     'We recommend that you update your device to the original firmware provided by your manufacturer',
   [I18N.nftViewerNoNFTs]: 'No NFTs',
+  [I18N.ourNewsTitle]: 'Our news',
+  [I18N.homeNewsOurNews]: 'Our news',
+  [I18N.homeNewsViewAll]: 'View all',
+  [I18N.homeNewsCryptoNews]: 'Crypto news',
 };

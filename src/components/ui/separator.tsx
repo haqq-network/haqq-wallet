@@ -5,10 +5,10 @@ import {View, ViewProps} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
-export type SeparatorProps = ViewProps;
+export type SeparatorProps = {height?: number} & ViewProps;
 
-export const Separator = ({style, ...props}: SeparatorProps) => {
-  return <View style={[styles.separator, style]} {...props} />;
+export const Separator = ({style, height, ...props}: SeparatorProps) => {
+  return <View style={[styles.separator, style, {height}]} {...props} />;
 };
 
 const styles = createTheme({

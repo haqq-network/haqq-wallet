@@ -1,16 +1,15 @@
 import {realm} from '@app/models';
-import {NewsItem} from '@app/types';
+import {RssNewsItem} from '@app/types';
 
-export class News extends Realm.Object implements NewsItem {
+export class RssNews extends Realm.Object implements RssNewsItem {
   static schema = {
-    name: 'News',
+    name: 'RssNews',
     properties: {
       id: 'string',
       title: 'string',
       preview: 'string',
       description: 'string',
-      content: 'string',
-      publishedAt: 'date?',
+      url: 'string',
       viewed: 'bool?',
       createdAt: {type: 'date', default: () => new Date()},
       updatedAt: {type: 'date', default: () => new Date()},
@@ -22,18 +21,17 @@ export class News extends Realm.Object implements NewsItem {
   title!: string;
   preview!: string;
   description!: string;
-  content!: string;
-  publishedAt: Date;
+  url!: string;
   createdAt!: Date;
   updatedAt!: Date;
   viewed: boolean;
   status!: string;
 
-  static create(id: string, params: Omit<Partial<News>, 'id'>) {
-    const exists = News.getById(id);
+  static create(id: string, params: Omit<Partial<RssNews>, 'id'>) {
+    const exists = RssNews.getById(id);
     realm.write(() => {
-      realm.create<News>(
-        News.schema.name,
+      realm.create<RssNews>(
+        RssNews.schema.name,
         {
           ...(exists ?? {}),
           ...params,
@@ -47,7 +45,10 @@ export class News extends Realm.Object implements NewsItem {
   }
 
   static remove(address: string) {
-    const obj = realm.objectForPrimaryKey<News>(News.schema.name, address);
+    const obj = realm.objectForPrimaryKey<RssNews>(
+      RssNews.schema.name,
+      address,
+    );
 
     if (obj) {
       realm.write(() => {
@@ -57,15 +58,18 @@ export class News extends Realm.Object implements NewsItem {
   }
 
   static getAll() {
-    return realm.objects<News>(News.schema.name);
+    return realm.objects<RssNews>(RssNews.schema.name);
   }
 
   static getById(id: string) {
-    return realm.objectForPrimaryKey<News>(News.schema.name, id.toLowerCase());
+    return realm.objectForPrimaryKey<RssNews>(
+      RssNews.schema.name,
+      id.toLowerCase(),
+    );
   }
 
   static removeAll() {
-    const contacts = realm.objects<News>(News.schema.name);
+    const contacts = realm.objects<RssNews>(RssNews.schema.name);
 
     for (const contact of contacts) {
       realm.write(() => {
@@ -74,10 +78,10 @@ export class News extends Realm.Object implements NewsItem {
     }
   }
 
-  update(params: Partial<News>) {
+  update(params: Partial<RssNews>) {
     realm.write(() => {
       realm.create(
-        News.schema.name,
+        RssNews.schema.name,
         {
           ...this.toJSON(),
           ...params,

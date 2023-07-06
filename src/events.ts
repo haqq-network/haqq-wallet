@@ -29,6 +29,7 @@ export enum Events {
   onAddressBookCreate = 'onAddressBookCreate',
   onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
+  openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
 }
 
 export enum WalletConnectEvents {

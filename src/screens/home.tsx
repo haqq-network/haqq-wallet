@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {NavigationAction} from '@react-navigation/routers';
 import {TransitionPresets} from '@react-navigation/stack';
+import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
 import {GovernanceButton} from '@app/components/governance-button';
@@ -13,6 +14,7 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
+import {Spacer} from '@app/components/ui';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
@@ -65,8 +67,12 @@ const earnOptions = {
   tabBarIcon: tabBarIcon('homeEarn'),
 };
 
-const newsOptions = {
+const newsOptions: BottomTabNavigationOptions = {
   tabBarIcon: tabBarIcon('homeNews'),
+  headerTitle: () => <Spacer />,
+  headerStyle: {
+    height: StatusBar.currentHeight,
+  },
 };
 
 const stakingOptions = {
@@ -123,6 +129,11 @@ export const HomeScreen = () => {
           options={stakingOptions}
         />
       )}
+      <Tab.Screen
+        name="homeNews"
+        component={HomeNewsScreen}
+        options={newsOptions}
+      />
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeBrowser"
@@ -130,11 +141,6 @@ export const HomeScreen = () => {
           options={browserOptions}
         />
       )}
-      <Tab.Screen
-        name="homeNews"
-        component={HomeNewsScreen}
-        options={newsOptions}
-      />
       <Tab.Screen
         name="homeSettings"
         component={HomeSettingsScreen}

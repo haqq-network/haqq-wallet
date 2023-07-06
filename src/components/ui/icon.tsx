@@ -88,6 +88,8 @@ export enum IconsName {
   star_fill = 'star_fill',
   list_squares = 'list_squares',
   squares = 'squares',
+  export = 'export',
+  scroll = 'scroll',
 }
 
 export type IconSize =

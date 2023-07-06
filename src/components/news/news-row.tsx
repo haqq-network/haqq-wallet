@@ -6,10 +6,10 @@ import {Image, TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {News} from '@app/models/news';
+import {BaseNewsItem} from '@app/types';
 
 export type NewsRowProps = {
-  item: News;
+  item: BaseNewsItem;
   onPress: (id: string) => void;
 };
 export const NewsRow = ({item, onPress}: NewsRowProps) => {
@@ -46,7 +46,7 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
           </Text>
           <Spacer />
           <Text t17 color={Color.textBase2}>
-            {format(item.publishedAt, 'MMM dd, yyyy')}
+            {format(item.createdAt, 'MMM dd, yyyy')}
           </Text>
         </View>
       </View>

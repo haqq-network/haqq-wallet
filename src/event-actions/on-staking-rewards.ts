@@ -51,8 +51,6 @@ export async function onStakingRewards() {
 
     if (current && current.isValid()) {
       const transport = await getProviderInstanceForWallet(current);
-      console.log('iter transport', transport);
-
       queue.push(
         cosmos
           .multipleWithdrawDelegatorReward(

@@ -8,6 +8,7 @@ import Foundation
 import UIKit
 import React
 import FirebaseCore
+import AVFoundation
 
 func clearKeychainIfNecessary() {
     // Checks whether or not this is the first time the app is run
@@ -47,8 +48,8 @@ class AppDelegate: RCTAppDelegate {
     FirebaseApp.configure()
     let app = super.application(application, didFinishLaunchingWithOptions: launchOptions);
 
-    RNSplashScreen.show()
-
+    RNSplashScreen.show();
+    configureAudioSession();
     return app;
   }
 
@@ -95,5 +96,16 @@ class AppDelegate: RCTAppDelegate {
     } else {
       return "haqq"
     }
+  }
+  
+  func configureAudioSession() {
+      // Retrieve the shared audio session.
+      let audioSession = AVAudioSession.sharedInstance()
+      do {
+          // Set the audio session category and mode.
+          try audioSession.setCategory(.playback, mode: .moviePlayback)
+      } catch {
+          print("Failed to set the audio session configuration")
+      }
   }
 }

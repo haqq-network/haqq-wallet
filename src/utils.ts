@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
 import {differenceInMinutes} from 'date-fns';
@@ -8,6 +7,7 @@ import {Animated} from 'react-native';
 import {app} from '@app/contexts';
 
 import {Color, getColor} from './colors';
+import {Events} from './events';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
 import {navigator} from './navigator';
@@ -490,10 +490,6 @@ export function isValidJSON(
   return true;
 }
 
-export const openInAppBrowser = (url: string) => {
-  navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
-};
-
 export function isError(err: any): err is Error {
   return err instanceof Error;
 }
@@ -501,3 +497,27 @@ export function isError(err: any): err is Error {
 export function isAbortControllerError(err: any): err is Error {
   return isError(err) && err.name === 'AbortError';
 }
+
+export interface InAppBrowserOptions {
+  title?: string;
+  onPageLoaded?: () => void;
+}
+
+export const openInAppBrowser = (
+  url: string,
+  options?: InAppBrowserOptions,
+) => {
+  const {title, onPageLoaded} = options || {};
+  const eventId = `${Events.openInAppBrowserPageLoaded}-${url}`;
+  if (onPageLoaded) {
+    app.once(eventId, onPageLoaded);
+  }
+  navigator.navigate('inAppBrowser', {
+    url: onUrlSubmit(url),
+    title,
+  });
+};
+
+export const openWeb3Browser = (url: string) => {
+  navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
+};
