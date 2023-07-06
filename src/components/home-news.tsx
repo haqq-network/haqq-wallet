@@ -62,6 +62,7 @@ export function HomeNews({
         data={cryptoNews}
         onPress={onPressCryptoNews}
         renderListHeaderComponent={renderListHeaderComponent}
+        popupContainerEnabled={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
