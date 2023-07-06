@@ -70,6 +70,7 @@ const earnOptions = {
 const newsOptions: BottomTabNavigationOptions = {
   tabBarIcon: tabBarIcon('homeNews'),
   headerTitle: () => <Spacer />,
+  headerBackground: () => <Spacer bg={Color.bg1} />,
   headerStyle: {
     height: StatusBar.currentHeight,
   },
