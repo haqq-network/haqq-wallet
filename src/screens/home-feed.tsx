@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
 import {HomeFeed} from '@app/components/home-feed';
+import {nftCollections} from '@app/components/nft-viewer/mock';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
@@ -10,11 +11,41 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {TransactionList} from '@app/types';
+import {TokenItem, TransactionList} from '@app/types';
+
+const MOCK_TOKENS: TokenItem[] = [
+  {
+    name: 'Iclamic Coin',
+    ticker: 'ISLM',
+    icon: 'https://i.ibb.co/ZHvy09Y/Islamic-coin-ISLM.png',
+    count: 414,
+    priceUsd: 0.35,
+  },
+  {
+    name: 'Etherium',
+    ticker: 'ETH',
+    icon: 'https://i.ibb.co/1v7WQDv/Ethereum-ETH.png',
+    count: 0.0013,
+    priceUsd: 1500,
+  },
+  {
+    name: 'Bitcoin',
+    ticker: 'BTC',
+    icon: 'https://i.ibb.co/Z6ftjmX/Bitcoin-BTC.png',
+    count: 2.5,
+    priceUsd: 30000,
+  },
+];
 
 export const HomeFeedScreen = () => {
   const navigation = useTypedNavigation();
   const [refreshing, setRefreshing] = useState(false);
+
+  // TODO:
+  const islmPrice = useMemo(
+    () => MOCK_TOKENS.find(it => it.ticker === 'ISLM')?.priceUsd ?? 0,
+    [],
+  );
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions(
@@ -37,7 +68,7 @@ export const HomeFeedScreen = () => {
     });
   }, []);
 
-  const onPressRow = useCallback(
+  const onPressTransactionRow = useCallback(
     (hash: string) => {
       navigation.navigate('transactionDetail', {
         hash,
@@ -45,6 +76,10 @@ export const HomeFeedScreen = () => {
     },
     [navigation],
   );
+
+  const onPressTokenRow = useCallback((tiker: string) => {
+    console.log('token row pressed', tiker);
+  }, []);
 
   const updateTransactionsList = useCallback(() => {
     const transactions = Transaction.getAllByProviderId(app.providerId);
@@ -88,10 +123,14 @@ export const HomeFeedScreen = () => {
 
   return (
     <HomeFeed
+      islmPrice={islmPrice}
       transactionsList={transactionsList}
+      nftColletionsList={nftCollections}
+      tokensList={MOCK_TOKENS}
       refreshing={refreshing}
       onWalletsRefresh={onWalletsRefresh}
-      onPressRow={onPressRow}
+      onPressTransactionRow={onPressTransactionRow}
+      onPressTokenRow={onPressTokenRow}
     />
   );
 };

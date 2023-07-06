@@ -919,3 +919,11 @@ export interface NftCollection {
   items: NftItem[];
   created_at: number;
 }
+
+export interface TokenItem {
+  icon: string;
+  name: string;
+  ticker: string;
+  count: number;
+  priceUsd: number;
+}
