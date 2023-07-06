@@ -1,20 +1,48 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 
 export const TransactionSumAddressScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionSumAddress'>();
+  const wallets = useWalletsVisible();
+  const contacts = useRef(Contact.getAll().snapshot()).current;
+
+  const [address, setAddress] = useState(route.params?.to || '');
+  const filteredWallets = useMemo(() => {
+    if (!wallets || !wallets.length) {
+      return;
+    }
+
+    if (!address) {
+      return wallets.snapshot();
+    }
+
+    return wallets
+      .filtered(
+        `address CONTAINS[c] '${address}' or name CONTAINS[c] '${address}'`,
+      )
+      .snapshot();
+  }, [address, wallets]);
 
   const onDone = useCallback(
-    (address: string) => {
-      app.emit(route.params.event, address);
+    (result: string) => {
+      app.emit(route.params.event, result);
       navigation.goBack();
     },
     [navigation, route.params.event],
   );
 
-  return <TransactionAddress initial={route.params.to} onAddress={onDone} />;
+  return (
+    <TransactionAddress
+      address={address}
+      setAddress={setAddress}
+      filteredWallets={filteredWallets}
+      contacts={contacts}
+      onAddress={onDone}
+    />
+  );
 };
