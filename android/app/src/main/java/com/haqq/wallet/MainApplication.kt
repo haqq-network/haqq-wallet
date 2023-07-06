@@ -2,7 +2,6 @@ package com.haqq.wallet
 
 import android.app.Application
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import com.facebook.react.*
 import com.facebook.react.config.ReactFeatureFlags
 import com.haqq.wallet.haptic.HapticPackage
@@ -14,8 +13,8 @@ import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
-import com.rnfs.RNFSPackage;
 import android.webkit.WebView;
+import com.haqq.wallet.apputils.AppUtilsPackage
 
 class MainApplication : Application(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost = object : ReactNativeHost(this) {
@@ -32,6 +31,7 @@ class MainApplication : Application(), ReactApplication {
       packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
       packages.add(CloudPackage())
+      packages.add(AppUtilsPackage())
 
       return packages
     }

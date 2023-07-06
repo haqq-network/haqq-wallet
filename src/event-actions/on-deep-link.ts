@@ -2,13 +2,29 @@ import {Alert} from 'react-native';
 import base64 from 'react-native-base64';
 
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {VariablesBool} from '@app/models/variables-bool';
 import {navigator} from '@app/navigator';
 
 export async function onDeepLink(link: string) {
-  if (link && link.startsWith('haqq:')) {
+  if (!link) {
+    return;
+  }
+
+  if (link.startsWith('wc:')) {
+    const uri = decodeURIComponent(link.replace('wc:', ''));
+    VariablesBool.set('isWalletConnectFromDeepLink', true);
+    return app.emit(Events.onWalletConnectUri, uri);
+  }
+
+  if (link.startsWith('haqq:')) {
     let params = link.split(':');
 
-    console.log('link', link, params);
+    if (link.startsWith('haqq://wc')) {
+      const uri = decodeURIComponent(link.replace('haqq://wc?uri=', ''));
+      VariablesBool.set('isWalletConnectFromDeepLink', true);
+      return app.emit(Events.onWalletConnectUri, uri);
+    }
 
     if (params[1].startsWith('0x')) {
       navigator.navigate('transaction', {

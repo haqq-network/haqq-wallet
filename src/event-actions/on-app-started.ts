@@ -28,7 +28,7 @@ export async function onAppStarted() {
 
   const initialUrl = await Linking.getInitialURL();
 
-  if (initialUrl && initialUrl.startsWith('haqq:')) {
+  if (initialUrl) {
     app.emit(Events.onDeepLink, initialUrl);
   }
 
