@@ -12,7 +12,7 @@ export async function onDeepLink(link: string) {
   }
 
   if (link.startsWith('wc:')) {
-    const uri = decodeURIComponent(link.replace('wc:', ''));
+    const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
     VariablesBool.set('isWalletConnectFromDeepLink', true);
     return app.emit(Events.onWalletConnectUri, uri);
   }
