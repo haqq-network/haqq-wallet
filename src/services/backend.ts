@@ -1,6 +1,6 @@
 import {HAQQ_BACKEND} from '@env';
 
-import {NewsRow, NewsUpdatesResponse, Raffle} from '@app/types';
+import {NewsRow, NewsUpdatesResponse, Raffle, RssNewsRow} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config';
@@ -150,6 +150,15 @@ export class Backend {
       headers: Backend.headers,
     });
     return await getHttpResponse<NewsRow[]>(newsResp);
+  }
+
+  async rss_feed(before: Date | undefined): Promise<RssNewsRow[]> {
+    const sync = before ? `?before=${before.toISOString()}` : '';
+
+    const newsResp = await fetch(`${this.getRemoteUrl()}rss_feed${sync}`, {
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<RssNewsRow[]>(newsResp);
   }
 
   async updates(

@@ -1,9 +1,14 @@
 import React, {useCallback} from 'react';
 
-import {RefreshControl, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {Results} from 'realm';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {I18N} from '@app/i18n';
 import {BaseNewsItem} from '@app/types';
 
@@ -12,10 +17,12 @@ import {NewsCardCarousel} from './news/news-card-carousel';
 import {Button, Icon, IconsName, Spacer, Text} from './ui';
 
 export interface HomeNewsProps {
-  ourNews: Results<BaseNewsItem>;
-  cryptoNews: Results<BaseNewsItem>;
+  ourNews: Results<BaseNewsItem> | BaseNewsItem[];
+  cryptoNews: Results<BaseNewsItem> | BaseNewsItem[];
   refreshing: boolean;
-  onRefresh: () => void;
+  rssRefreshing: boolean;
+  onEndReached(): void;
+  onRefresh(): void;
   onPressCryptoNews(id: string): void;
   onPressOurNews(id: string): void;
   onPressViewAll(): void;
@@ -25,6 +32,8 @@ export function HomeNews({
   ourNews,
   cryptoNews,
   refreshing,
+  rssRefreshing,
+  onEndReached,
   onPressCryptoNews,
   onPressOurNews,
   onPressViewAll,
@@ -56,16 +65,31 @@ export function HomeNews({
     [onPressOurNews, onPressViewAll, ourNews],
   );
 
+  const renderListFooterComponent = useCallback(
+    () => (
+      <>
+        {rssRefreshing && (
+          <ActivityIndicator size="small" color={getColor(Color.textBase2)} />
+        )}
+      </>
+    ),
+    [rssRefreshing],
+  );
+
   return (
     <View style={styles.flexOne}>
       <NewsRowList
         data={cryptoNews}
         onPress={onPressCryptoNews}
-        renderListHeaderComponent={renderListHeaderComponent}
         popupContainerEnabled={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        refreshing={rssRefreshing}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
+        ListHeaderComponent={renderListHeaderComponent}
+        ListFooterComponent={renderListFooterComponent}
       />
     </View>
   );
