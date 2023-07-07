@@ -5,15 +5,18 @@ import {Core} from '@walletconnect/core';
 import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {getSdkError} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
+import {InteractionManager} from 'react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
 import {captureException} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {VariablesBool} from '@app/models/variables-bool';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {sendNotification} from '@app/services/toast';
 
+import {AppUtils} from './app-utils';
 import {RemoteConfig} from './remote-config';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
@@ -228,6 +231,15 @@ export class WalletConnect extends EventEmitter {
 
     WalletConnectSessionMetadata.create(session.topic);
     this._emitActiveSessions();
+    const isWalletConnectFromDeepLink = VariablesBool.get(
+      'isWalletConnectFromDeepLink',
+    );
+    if (isWalletConnectFromDeepLink) {
+      VariablesBool.set('isWalletConnectFromDeepLink', false);
+      InteractionManager.runAfterInteractions(() => {
+        AppUtils.goBack();
+      });
+    }
     return session;
   }
 

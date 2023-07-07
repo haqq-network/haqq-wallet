@@ -23,6 +23,8 @@
 		191A5E34914F492BA629B950 /* bluetooth-unauthorized@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */; };
 		1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */; };
 		1A6D4E362A149298001B1549 /* staking_on_earn_page_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */; };
+		1AC1D57C2A570036003C40E6 /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC1D57B2A570036003C40E6 /* AppUtils.m */; };
+		1AC1D5802A570202003C40E6 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC1D57F2A570202003C40E6 /* AppUtils.swift */; };
 		1AFE83802A39B181001CFE73 /* moving_arrow_captcha.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */; };
 		1F08E1AE9D94489F94C0C928 /* backup-sss-suggestion-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BE2B06FDD684F41AF889148 /* backup-sss-suggestion-light@2x.png */; };
 		210DBD2128E6A8D90036A851 /* Haptic.m in Sources */ = {isa = PBXBuildFile; fileRef = 210DBD2028E6A8D90036A851 /* Haptic.m */; };
@@ -181,6 +183,8 @@
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
 		1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_dark.riv; sourceTree = "<group>"; };
 		1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_light.riv; sourceTree = "<group>"; };
+		1AC1D57B2A570036003C40E6 /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppUtils.m; sourceTree = "<group>"; };
+		1AC1D57F2A570202003C40E6 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = moving_arrow_captcha.riv; sourceTree = "<group>"; };
 		1BBEC351BC0E4923BD204391 /* card-circles-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0.png"; path = "../assets/images/card-circles-0.png"; sourceTree = "<group>"; };
 		1F07DE85536A472686AD07FB /* mnemonic-notify@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify@2x.png"; path = "../assets/images/mnemonic-notify@2x.png"; sourceTree = "<group>"; };
@@ -382,9 +386,19 @@
 			name = haqq;
 			sourceTree = "<group>";
 		};
+		1AC1D57A2A570001003C40E6 /* AppUtils */ = {
+			isa = PBXGroup;
+			children = (
+				1AC1D57B2A570036003C40E6 /* AppUtils.m */,
+				1AC1D57F2A570202003C40E6 /* AppUtils.swift */,
+			);
+			path = AppUtils;
+			sourceTree = "<group>";
+		};
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				1AC1D57A2A570001003C40E6 /* AppUtils */,
 				2142F4A729BAE97900CD8EE6 /* Cloud */,
 				212B00F9294AD37800E57091 /* Toast */,
 				21D7A7882910DA8B00399978 /* EthUtils */,
@@ -1034,6 +1048,7 @@
 				212B00FF294ADDB800E57091 /* ToastView.swift in Sources */,
 				210F818C29110E66002A27EB /* String+split.swift in Sources */,
 				2142F4AB29BAE9B300CD8EE6 /* Cloud.swift in Sources */,
+				1AC1D57C2A570036003C40E6 /* AppUtils.m in Sources */,
 				21E6B18F291247A60055570A /* logger.swift in Sources */,
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
@@ -1041,6 +1056,7 @@
 				21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */,
 				21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
+				1AC1D5802A570202003C40E6 /* AppUtils.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
 				21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */,
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,

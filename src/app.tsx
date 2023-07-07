@@ -213,7 +213,7 @@ export const App = () => {
       };
 
       const linkingSubscription = ({url}: {url: string}) => {
-        if (url.startsWith('haqq:')) {
+        if (url) {
           app.emit(Events.onDeepLink, url);
         }
       };
