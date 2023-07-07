@@ -71,6 +71,6 @@ export async function onUpdatesSync() {
 
     VariablesDate.set('lastSyncUpdates', new Date());
   } catch (e) {
-    captureException(e, 'sync news');
+    captureException(e, 'onUpdatesSync');
   }
 }

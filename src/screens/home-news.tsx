@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
 import {HomeNews} from '@app/components/home-news';
+import {onRssFeedSync} from '@app/event-actions/on-rss-feed-sync';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {useTypedNavigation} from '@app/hooks';
@@ -12,20 +13,30 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {AdjustEvents, NewsStatus, RssNewsStatus} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
+const RSS_FEED_ITEMS_PAGE_LIMIT = 15;
+const NEWS_ITEMS_LIMIT = 10;
+
 export const HomeNewsScreen = () => {
   const navigation = useTypedNavigation();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setRefreshing] = useState(false);
+  const [isRssRefreshing, setRssRefreshing] = useState(false);
+  const [rssPage, setRssPage] = useState(1);
   const [newsRows, setNewsRows] = useState(
     News.getAll()
       .filtered(`status = "${NewsStatus.published}"`)
       .sorted('createdAt', true)
-      .snapshot(),
+      .snapshot()
+      .slice(0, NEWS_ITEMS_LIMIT),
   );
   const [rssRowsNews, setRssNewsRows] = useState(
     RssNews.getAll()
       .filtered(`status = "${RssNewsStatus.approved}"`)
       .sorted('createdAt', true)
       .snapshot(),
+  );
+  const trimmedRssRowsNews = useMemo(
+    () => rssRowsNews.slice(0, RSS_FEED_ITEMS_PAGE_LIMIT * rssPage),
+    [rssPage, rssRowsNews],
   );
 
   useEffect(() => {
@@ -48,7 +59,8 @@ export const HomeNewsScreen = () => {
           News.getAll()
             .filtered(`status = "${NewsStatus.published}"`)
             .sorted('createdAt', true)
-            .snapshot(),
+            .snapshot()
+            .slice(0, NEWS_ITEMS_LIMIT),
         );
       }
     };
@@ -118,23 +130,44 @@ export const HomeNewsScreen = () => {
 
   const onRefresh = useCallback(async () => {
     try {
-      setIsRefreshing(true);
+      setRefreshing(true);
       await onUpdatesSync();
     } finally {
-      setIsRefreshing(false);
+      setRefreshing(false);
     }
   }, []);
 
+  const onEndReached = useCallback(async () => {
+    try {
+      const lastRssPageItems = rssRowsNews.slice(
+        (rssPage - 1) * RSS_FEED_ITEMS_PAGE_LIMIT,
+      );
+
+      if (
+        lastRssPageItems.length < RSS_FEED_ITEMS_PAGE_LIMIT ||
+        rssRowsNews.length < RSS_FEED_ITEMS_PAGE_LIMIT * rssPage
+      ) {
+        setRssRefreshing(true);
+        const lastItem = rssRowsNews[rssRowsNews.length - 1];
+        await onRssFeedSync(lastItem.updatedAt);
+      }
+      setRssPage(prev => prev + 1);
+    } finally {
+      setRssRefreshing(false);
+    }
+  }, [rssPage, rssRowsNews]);
+
   return (
     <HomeNews
-      onRefresh={onRefresh}
-      refreshing={isRefreshing}
-      cryptoNews={rssRowsNews}
-      // cryptoNews={[...rssRowsNews, ...rssRowsNews, ...rssRowsNews, ...rssRowsNews, ...rssRowsNews ,...rssRowsNews, ...rssRowsNews, ...rssRowsNews, ...rssRowsNews, ...rssRowsNews, ...rssRowsNews]}
       ourNews={newsRows}
-      onPressCryptoNews={onPressCryptoNews}
+      cryptoNews={trimmedRssRowsNews}
+      refreshing={isRefreshing}
+      rssRefreshing={isRssRefreshing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
       onPressOurNews={onPressOurNews}
       onPressViewAll={onPressViewAll}
+      onPressCryptoNews={onPressCryptoNews}
     />
   );
 };

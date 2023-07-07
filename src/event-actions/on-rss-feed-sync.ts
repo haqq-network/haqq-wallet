@@ -1,46 +1,40 @@
 import {captureException} from '@app/helpers';
-import {News} from '@app/models/news';
+import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariablesDate} from '@app/models/variables-date';
 import {Backend} from '@app/services/backend';
 
-export async function onNewsSync() {
+export async function onRssFeedSync(before = new Date()) {
   try {
-    const lastSyncNews = VariablesDate.get('lastSyncNews');
-    const news = await Backend.instance.news(lastSyncNews);
+    const rss_feed = (await Backend.instance.rss_feed(before)) || [];
 
-    for (const row of news) {
-      const exist = News.getById(row.id);
+    for (const row of rss_feed) {
+      const exist = RssNews.getById(row.id);
 
       if (!exist) {
-        News.create(row.id, {
+        RssNews.create(row.id, {
           title: row.title,
           preview: row.preview,
           description: row.description,
-          content: row.content,
+          url: row.url,
           status: row.status,
           createdAt: new Date(row.created_at),
           updatedAt: new Date(row.updated_at),
-          publishedAt: new Date(row.published_at),
         });
 
-        VariablesBool.set('isNewNews', true);
+        VariablesBool.set('isNewRssNews', true);
       } else {
         exist.update({
           title: row.title,
           preview: row.preview,
           description: row.description,
-          content: row.content,
+          url: row.url,
           status: row.status,
           createdAt: new Date(row.created_at),
           updatedAt: new Date(row.updated_at),
-          publishedAt: new Date(row.published_at),
         });
       }
     }
-
-    VariablesDate.set('lastSyncNews', new Date());
   } catch (e) {
-    captureException(e, 'onNewsSync');
+    captureException(e, 'onRssFeedSync');
   }
 }

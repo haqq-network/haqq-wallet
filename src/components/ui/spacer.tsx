@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet, View, ViewProps} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {addOpacityToColor} from '@app/utils';
 
@@ -13,6 +13,7 @@ export type SpacerProps = ViewProps & {
   centered?: boolean;
   debug?: boolean;
   flex?: number;
+  bg?: Color;
 };
 
 export const Spacer = ({
@@ -24,6 +25,7 @@ export const Spacer = ({
   centered,
   debug,
   flex,
+  bg,
   ...props
 }: SpacerProps) => {
   const container = useMemo(() => {
@@ -40,8 +42,9 @@ export const Spacer = ({
       centered && styles.centered,
       debug && __DEV__ && styles.debug,
       style,
+      bg && {backgroundColor: getColor(bg)},
     ].filter(Boolean);
-  }, [height, minHeight, width, flex, centered, debug, style]);
+  }, [height, minHeight, width, flex, centered, debug, style, bg]);
 
   return (
     <View style={container} {...props}>
