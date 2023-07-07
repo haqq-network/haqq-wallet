@@ -25,10 +25,7 @@ export type NewsRowProps = {
 const MARGIN_HORIZONTAL = 20;
 export const NEWS_CARD_WIDTH =
   WINDOW_WIDTH - MARGIN_HORIZONTAL - MARGIN_HORIZONTAL;
-export const NEWS_CARD_HEIGHT = Math.max(
-  NEWS_CARD_WIDTH * MAGIC_CARD_HEIGHT,
-  212,
-);
+export const NEWS_CARD_HEIGHT = NEWS_CARD_WIDTH * MAGIC_CARD_HEIGHT;
 
 export const NewsCard = ({item, onPress}: NewsRowProps) => {
   const preview = useMemo(() => {
