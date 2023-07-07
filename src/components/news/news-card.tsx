@@ -13,7 +13,7 @@ import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {BaseNewsItem} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
-import {MAGIC_CARD_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
+import {MAGIC_NEWS_CARD_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 import {Text} from '../ui';
 
@@ -25,7 +25,7 @@ export type NewsRowProps = {
 const MARGIN_HORIZONTAL = 20;
 export const NEWS_CARD_WIDTH =
   WINDOW_WIDTH - MARGIN_HORIZONTAL - MARGIN_HORIZONTAL;
-export const NEWS_CARD_HEIGHT = NEWS_CARD_WIDTH * MAGIC_CARD_HEIGHT;
+export const NEWS_CARD_HEIGHT = NEWS_CARD_WIDTH * MAGIC_NEWS_CARD_HEIGHT;
 
 export const NewsCard = ({item, onPress}: NewsRowProps) => {
   const preview = useMemo(() => {
