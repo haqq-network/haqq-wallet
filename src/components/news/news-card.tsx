@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import {format} from 'date-fns';
 import {
   ImageBackground,
-  StyleSheet,
+  // StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -67,7 +67,7 @@ export const NewsCard = ({item, onPress}: NewsRowProps) => {
           </View>
         </TouchableWithoutFeedback>
       </ImageBackground>
-      {item.viewed && <View style={[styles.viewed, StyleSheet.absoluteFill]} />}
+      {/* {item.viewed && <View style={[styles.viewed, StyleSheet.absoluteFill]} />} */}
     </View>
   );
 };
@@ -84,10 +84,10 @@ const styles = createTheme({
   fade: {
     flex: 2,
   },
-  viewed: {
-    opacity: 0.5,
-    backgroundColor: Color.bg1,
-  },
+  // viewed: {
+  //   opacity: 0.5,
+  //   backgroundColor: Color.bg1,
+  // },
   imageSize: {
     width: NEWS_CARD_WIDTH,
     height: NEWS_CARD_HEIGHT,

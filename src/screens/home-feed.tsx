@@ -15,7 +15,7 @@ import {TokenItem, TransactionList} from '@app/types';
 
 const MOCK_TOKENS: TokenItem[] = [
   {
-    name: 'Iclamic Coin',
+    name: 'Islamic Coin',
     ticker: 'ISLM',
     icon: 'https://i.ibb.co/ZHvy09Y/Islamic-coin-ISLM.png',
     count: 414,
