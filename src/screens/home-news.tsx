@@ -21,6 +21,7 @@ export const HomeNewsScreen = () => {
   const [isRefreshing, setRefreshing] = useState(false);
   const [isRssRefreshing, setRssRefreshing] = useState(false);
   const [rssPage, setRssPage] = useState(1);
+  const [latestRssLenght, setLatestRssLenght] = useState(0);
   const [newsRows, setNewsRows] = useState(
     News.getAll()
       .filtered(`status = "${NewsStatus.published}"`)
@@ -138,6 +139,10 @@ export const HomeNewsScreen = () => {
   }, []);
 
   const onEndReached = useCallback(async () => {
+    if (latestRssLenght === rssRowsNews.length && latestRssLenght > 0) {
+      return;
+    }
+
     try {
       const lastRssPageItems = rssRowsNews.slice(
         (rssPage - 1) * RSS_FEED_ITEMS_PAGE_LIMIT,
@@ -151,11 +156,12 @@ export const HomeNewsScreen = () => {
         const lastItem = rssRowsNews[rssRowsNews.length - 1];
         await onRssFeedSync(lastItem.updatedAt);
       }
+      setLatestRssLenght(rssRowsNews.length);
       setRssPage(prev => prev + 1);
     } finally {
       setRssRefreshing(false);
     }
-  }, [rssPage, rssRowsNews]);
+  }, [rssPage, rssRowsNews, latestRssLenght]);
 
   return (
     <HomeNews
