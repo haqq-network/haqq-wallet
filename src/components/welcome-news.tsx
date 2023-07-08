@@ -6,7 +6,7 @@ import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {NewsRow} from '@app/components/news/news-row';
-import {Button, ButtonSize, ButtonVariant} from '@app/components/ui';
+import {Button, ButtonSize, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {News as NewsModel} from '@app/models/news';
@@ -38,32 +38,32 @@ export const WelcomeNews = ({
         data={news}
         renderItem={({item}) => <NewsRow item={item} onPress={onPress} />}
       />
-
-      <Button
-        i18n={I18N.welcomeCreateWallet}
-        testID="welcome_signup"
-        style={styles.button}
-        variant={ButtonVariant.contained}
-        onPress={onPressSignup}
-        size={ButtonSize.large}
-      />
-      <Button
-        testID="welcome_ledger"
-        i18n={I18N.welcomeLedgerWallet}
-        iconRight="ledger"
-        iconRightColor={Color.graphicGreen1}
-        style={styles.button}
-        variant={ButtonVariant.second}
-        onPress={onPressLedger}
-        size={ButtonSize.large}
-      />
-      <Button
-        testID="welcome_signin"
-        i18n={I18N.welcomeRestoreWallet}
-        style={styles.button}
-        onPress={onPressSignIn}
-        size={ButtonSize.large}
-      />
+      <View style={styles.buttons}>
+        <Button
+          i18n={I18N.welcomeCreateWallet}
+          testID="welcome_signup"
+          variant={ButtonVariant.contained}
+          onPress={onPressSignup}
+          size={ButtonSize.large}
+        />
+        <Spacer height={16} />
+        <Button
+          testID="welcome_ledger"
+          i18n={I18N.welcomeLedgerWallet}
+          iconRight="ledger"
+          iconRightColor={Color.graphicGreen1}
+          variant={ButtonVariant.second}
+          onPress={onPressLedger}
+          size={ButtonSize.large}
+        />
+        <Spacer height={16} />
+        <Button
+          testID="welcome_signin"
+          i18n={I18N.welcomeRestoreWallet}
+          onPress={onPressSignIn}
+          size={ButtonSize.large}
+        />
+      </View>
     </View>
   );
 };
@@ -71,9 +71,9 @@ export const WelcomeNews = ({
 const styles = createTheme({
   container: {
     flex: 1,
-    marginHorizontal: 20,
   },
-  button: {
-    marginBottom: 16,
+  buttons: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
 });
