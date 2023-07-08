@@ -1,5 +1,5 @@
 import {realm} from '@app/models';
-import {RssNewsItem} from '@app/types';
+import {RssNewsItem, RssNewsStatus} from '@app/types';
 
 export class RssNews extends Realm.Object implements RssNewsItem {
   static schema = {
@@ -59,6 +59,12 @@ export class RssNews extends Realm.Object implements RssNewsItem {
 
   static getAll() {
     return realm.objects<RssNews>(RssNews.schema.name);
+  }
+
+  static getAllApprovedNews() {
+    return RssNews.getAll()
+      .filtered(`status = "${RssNewsStatus.approved}"`)
+      .sorted('updatedAt', true);
   }
 
   static getById(id: string) {

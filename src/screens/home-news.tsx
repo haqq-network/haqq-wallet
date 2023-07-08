@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -10,18 +10,16 @@ import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {AdjustEvents, NewsStatus, RssNewsStatus} from '@app/types';
+import {AdjustEvents, NewsStatus} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
-const RSS_FEED_ITEMS_PAGE_LIMIT = 15;
 const NEWS_ITEMS_LIMIT = 10;
 
 export const HomeNewsScreen = () => {
   const navigation = useTypedNavigation();
   const [isRefreshing, setRefreshing] = useState(false);
   const [isRssRefreshing, setRssRefreshing] = useState(false);
-  const [rssPage, setRssPage] = useState(1);
-  const [latestRssLenght, setLatestRssLenght] = useState(0);
+  const [canLoadNext, setCanLoadNext] = useState(true);
   const [newsRows, setNewsRows] = useState(
     News.getAll()
       .filtered(`status = "${NewsStatus.published}"`)
@@ -30,14 +28,7 @@ export const HomeNewsScreen = () => {
       .slice(0, NEWS_ITEMS_LIMIT),
   );
   const [rssRowsNews, setRssNewsRows] = useState(
-    RssNews.getAll()
-      .filtered(`status = "${RssNewsStatus.approved}"`)
-      .sorted('createdAt', true)
-      .snapshot(),
-  );
-  const trimmedRssRowsNews = useMemo(
-    () => rssRowsNews.slice(0, RSS_FEED_ITEMS_PAGE_LIMIT * rssPage),
-    [rssPage, rssRowsNews],
+    RssNews.getAllApprovedNews().snapshot(),
   );
 
   useEffect(() => {
@@ -57,11 +48,7 @@ export const HomeNewsScreen = () => {
         changes.deletions.length
       ) {
         setNewsRows(
-          News.getAll()
-            .filtered(`status = "${NewsStatus.published}"`)
-            .sorted('createdAt', true)
-            .snapshot()
-            .slice(0, NEWS_ITEMS_LIMIT),
+          News.getAllPublishedNews().snapshot().slice(0, NEWS_ITEMS_LIMIT),
         );
       }
     };
@@ -85,12 +72,7 @@ export const HomeNewsScreen = () => {
         changes.newModifications.length ||
         changes.deletions.length
       ) {
-        setRssNewsRows(
-          RssNews.getAll()
-            .filtered(`status = "${RssNewsStatus.approved}"`)
-            .sorted('createdAt', true)
-            .snapshot(),
-        );
+        setRssNewsRows(RssNews.getAllApprovedNews().snapshot());
       }
     };
 
@@ -139,34 +121,24 @@ export const HomeNewsScreen = () => {
   }, []);
 
   const onEndReached = useCallback(async () => {
-    if (latestRssLenght === rssRowsNews.length && latestRssLenght > 0) {
+    if (!canLoadNext) {
       return;
     }
 
     try {
-      const lastRssPageItems = rssRowsNews.slice(
-        (rssPage - 1) * RSS_FEED_ITEMS_PAGE_LIMIT,
-      );
-
-      if (
-        lastRssPageItems.length < RSS_FEED_ITEMS_PAGE_LIMIT ||
-        rssRowsNews.length < RSS_FEED_ITEMS_PAGE_LIMIT * rssPage
-      ) {
-        setRssRefreshing(true);
-        const lastItem = rssRowsNews[rssRowsNews.length - 1];
-        await onRssFeedSync(lastItem.updatedAt);
-      }
-      setLatestRssLenght(rssRowsNews.length);
-      setRssPage(prev => prev + 1);
+      setRssRefreshing(true);
+      const lastItem = rssRowsNews[rssRowsNews.length - 1];
+      const rows = await onRssFeedSync(lastItem.updatedAt);
+      setCanLoadNext(rows > 0);
     } finally {
       setRssRefreshing(false);
     }
-  }, [rssPage, rssRowsNews, latestRssLenght]);
+  }, [canLoadNext, rssRowsNews]);
 
   return (
     <HomeNews
       ourNews={newsRows}
-      cryptoNews={trimmedRssRowsNews}
+      cryptoNews={rssRowsNews}
       refreshing={isRefreshing}
       rssRefreshing={isRssRefreshing}
       onRefresh={onRefresh}

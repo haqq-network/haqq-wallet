@@ -60,6 +60,13 @@ export class News extends Realm.Object implements NewsItem {
     return realm.objects<News>(News.schema.name);
   }
 
+  static getAllPublishedNews() {
+    return realm
+      .objects<News>(News.schema.name)
+      .filtered('status = "published"')
+      .sorted('createdAt', true);
+  }
+
   static getById(id: string) {
     return realm.objectForPrimaryKey<News>(News.schema.name, id.toLowerCase());
   }

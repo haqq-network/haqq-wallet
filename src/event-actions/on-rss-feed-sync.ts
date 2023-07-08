@@ -34,7 +34,10 @@ export async function onRssFeedSync(before = new Date()) {
         });
       }
     }
+
+    return rss_feed.length;
   } catch (e) {
     captureException(e, 'onRssFeedSync');
+    return 0;
   }
 }
