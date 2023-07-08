@@ -21,10 +21,15 @@ export interface HomeNewsProps {
   cryptoNews: Results<BaseNewsItem> | BaseNewsItem[];
   refreshing: boolean;
   rssRefreshing: boolean;
+
   onEndReached(): void;
+
   onRefresh(): void;
+
   onPressCryptoNews(id: string): void;
+
   onPressOurNews(id: string): void;
+
   onPressViewAll(): void;
 }
 
@@ -88,6 +93,7 @@ export function HomeNews({
         refreshing={rssRefreshing}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.2}
+        initialNumToRender={15}
         ListHeaderComponent={renderListHeaderComponent}
         ListFooterComponent={renderListFooterComponent}
       />
