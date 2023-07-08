@@ -1,12 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {format} from 'date-fns';
-import {
-  ImageBackground,
-  // StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {ImageBackground, TouchableWithoutFeedback, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
@@ -37,7 +32,8 @@ export const NewsCard = ({item, onPress}: NewsRowProps) => {
   }, [item.preview]);
 
   return (
-    <View style={[styles.flexOne, styles.container]}>
+    <View
+      style={[styles.flexOne, styles.container, item.viewed && styles.viewed]}>
       <ImageBackground
         source={preview}
         style={styles.imageSize}
@@ -67,7 +63,6 @@ export const NewsCard = ({item, onPress}: NewsRowProps) => {
           </View>
         </TouchableWithoutFeedback>
       </ImageBackground>
-      {/* {item.viewed && <View style={[styles.viewed, StyleSheet.absoluteFill]} />} */}
     </View>
   );
 };
@@ -84,10 +79,9 @@ const styles = createTheme({
   fade: {
     flex: 2,
   },
-  // viewed: {
-  //   opacity: 0.5,
-  //   backgroundColor: Color.bg1,
-  // },
+  viewed: {
+    opacity: 0.5,
+  },
   imageSize: {
     width: NEWS_CARD_WIDTH,
     height: NEWS_CARD_HEIGHT,
