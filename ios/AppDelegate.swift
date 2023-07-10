@@ -49,7 +49,7 @@ class AppDelegate: RCTAppDelegate {
     let app = super.application(application, didFinishLaunchingWithOptions: launchOptions);
 
     RNSplashScreen.show();
-    configureAudioSession();
+    // configureAudioSession();
     return app;
   }
 
