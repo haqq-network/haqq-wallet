@@ -5,7 +5,6 @@ import {Core} from '@walletconnect/core';
 import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
 import {getSdkError} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
-import {InteractionManager} from 'react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -236,9 +235,9 @@ export class WalletConnect extends EventEmitter {
     );
     if (isWalletConnectFromDeepLink) {
       VariablesBool.set('isWalletConnectFromDeepLink', false);
-      InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
         AppUtils.goBack();
-      });
+      }, 500);
     }
     return session;
   }
