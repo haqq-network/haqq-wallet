@@ -23,9 +23,18 @@ export const NewsRowList = ({
     ({item}) => <NewsRow item={item} onPress={onPress} />,
     [onPress],
   );
+  const keyExtractor = useCallback(
+    (item: BaseNewsItem) => `news-row-item-${item.id}`,
+    [],
+  );
   return (
     <ContainerComponent plain>
-      <FlatList data={data} renderItem={renderItem} {...props} />
+      <FlatList
+        data={data}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        {...props}
+      />
     </ContainerComponent>
   );
 };

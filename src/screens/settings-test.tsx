@@ -24,8 +24,12 @@ import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {News} from '@app/models/news';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
+import {RssNews} from '@app/models/rss-news';
+import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
@@ -284,6 +288,8 @@ export const SettingsTestScreen = () => {
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
+  const [newsCount, setNewsCount] = useState(News.getAll().length);
+  const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -547,6 +553,21 @@ export const SettingsTestScreen = () => {
             // @ts-ignore
             Alert.alert('Error', err?.message);
           }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="Realm" />
+      <Button
+        title={`clear news cache [RSS: ${rssNewsCount} | OUR:${newsCount}]`}
+        onPress={() => {
+          VariablesDate.remove('lastSyncUpdates');
+          VariablesDate.remove('lastSyncNews');
+          VariablesBool.remove('isNewNews');
+          VariablesBool.remove('isNewRssNews');
+          RssNews.removeAll();
+          News.removeAll();
+          setRssNewsCount(0);
+          setNewsCount(0);
         }}
         variant={ButtonVariant.contained}
       />

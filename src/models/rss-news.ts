@@ -91,7 +91,6 @@ export class RssNews extends Realm.Object implements RssNewsItem {
         {
           ...this.toJSON(),
           ...params,
-          updatedAt: new Date(),
           id: this.id,
         },
         Realm.UpdateMode.Modified,
