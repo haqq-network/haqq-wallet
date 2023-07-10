@@ -3,12 +3,13 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {BackupCreateScreen} from '@app/screens/backup-create';
 import {BackupFinishScreen} from '@app/screens/backup-finish';
 import {BackupVerifyScreen} from '@app/screens/backup-verify';
 import {BackupWarningScreen} from '@app/screens/backup-warning';
-import {RoutePropT, ScreenOptionType} from '@app/types';
+import {ScreenOptionType} from '@app/types';
 
 const BackupStack = createStackNavigator();
 
@@ -22,13 +23,14 @@ const stackScreenOptions = {
   ...popupScreenOptions,
 };
 
-export const BackupScreen = ({route}: RoutePropT) => {
+export const BackupScreen = () => {
+  const {accountId} = useTypedRoute<'backup'>().params;
   return (
     <BackupStack.Navigator screenOptions={stackScreenOptions}>
       <BackupStack.Screen
         name="backupWarning"
         component={BackupWarningScreen}
-        initialParams={{accountId: route?.params.accountId}}
+        initialParams={{accountId: accountId}}
         options={screenOptions}
       />
       <BackupStack.Screen name="backupCreate" component={BackupCreateScreen} />
