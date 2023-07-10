@@ -30,6 +30,7 @@ export enum AdjustEvents {
   pushChannelSubscribe = '5juk3x',
   pushChannelUnsubscribe = 'za2nkc',
   newsOpenItem = 'gpha6n',
+  newsOpenLink = 'yjfbpz',
   newsScrolledItem = 'egpogy',
   newsOpen = 'dh3eeu',
   earnOpen = '9tn1b8',

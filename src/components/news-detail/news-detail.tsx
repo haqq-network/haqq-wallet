@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
 import {head, includes, some} from 'lodash';
-import {Image, Linking, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
 import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import Markdown from 'react-native-markdown-package';
@@ -10,7 +10,7 @@ import Markdown from 'react-native-markdown-package';
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {createTheme} from '@app/helpers';
+import {createTheme, openURL} from '@app/helpers';
 import {News} from '@app/models/news';
 import {AdjustEvents} from '@app/types';
 
@@ -185,6 +185,14 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
     [item.id],
   );
 
+  const onClickLink = useCallback(async (url: string) => {
+    onTrackEvent(AdjustEvents.newsOpenLink, {
+      url,
+    });
+
+    await openURL(url);
+  }, []);
+
   return (
     <PopupContainer style={styles.container} onScroll={onScroll}>
       {item.preview && (
@@ -199,10 +207,7 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
         {format(item.publishedAt, 'MMM dd, yyyy')}
       </Text>
       <Spacer height={20} />
-      <Markdown
-        rules={rules}
-        styles={markdownStyle}
-        onLink={(url: string) => Linking.openURL(url)}>
+      <Markdown rules={rules} styles={markdownStyle} onLink={onClickLink}>
         {item.content}
       </Markdown>
     </PopupContainer>
