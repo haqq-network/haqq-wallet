@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -13,6 +13,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {AdjustEvents, NewsStatus} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
+const RSS_FEED_ITEMS_PAGE_LIMIT = 15;
 const NEWS_ITEMS_LIMIT = 10;
 
 export const HomeNewsScreen = () => {
@@ -29,6 +30,11 @@ export const HomeNewsScreen = () => {
   );
   const [rssRowsNews, setRssNewsRows] = useState(
     RssNews.getAllApprovedNews().snapshot(),
+  );
+  const [rssPage, setRssPage] = useState(1);
+  const trimmedRssRowsNews = useMemo(
+    () => rssRowsNews.slice(0, RSS_FEED_ITEMS_PAGE_LIMIT * rssPage),
+    [rssPage, rssRowsNews],
   );
 
   useEffect(() => {
@@ -115,6 +121,8 @@ export const HomeNewsScreen = () => {
     try {
       setRefreshing(true);
       await onUpdatesSync();
+      setCanLoadNext(true);
+      setRssPage(1);
     } finally {
       setRefreshing(false);
     }
@@ -126,19 +134,25 @@ export const HomeNewsScreen = () => {
     }
 
     try {
-      setRssRefreshing(true);
-      const lastItem = rssRowsNews[rssRowsNews.length - 1];
-      const rows = await onRssFeedSync(lastItem.updatedAt);
-      setCanLoadNext(rows > 0);
+      // if the cached records are over, then load new
+      if (rssRowsNews.length < RSS_FEED_ITEMS_PAGE_LIMIT * rssPage) {
+        setRssRefreshing(true);
+        const lastItem = rssRowsNews[rssRowsNews.length - 1];
+        const rows = await onRssFeedSync(lastItem.updatedAt);
+        // if the rows equals 0, it means that it is the last page.
+        setCanLoadNext(rows > 0);
+      }
+
+      setRssPage(prev => prev + 1);
     } finally {
       setRssRefreshing(false);
     }
-  }, [canLoadNext, rssRowsNews]);
+  }, [canLoadNext, rssPage, rssRowsNews]);
 
   return (
     <HomeNews
       ourNews={newsRows}
-      cryptoNews={rssRowsNews}
+      cryptoNews={trimmedRssRowsNews}
       refreshing={isRefreshing}
       rssRefreshing={isRssRefreshing}
       onRefresh={onRefresh}

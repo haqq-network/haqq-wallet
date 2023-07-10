@@ -72,11 +72,10 @@ export function HomeNews({
 
   const renderListFooterComponent = useCallback(
     () => (
-      <>
-        {rssRefreshing && (
-          <ActivityIndicator size="small" color={getColor(Color.textBase2)} />
-        )}
-      </>
+      <ActivityIndicator
+        size="small"
+        color={rssRefreshing ? getColor(Color.textBase2) : 'transparent'}
+      />
     ),
     [rssRefreshing],
   );
