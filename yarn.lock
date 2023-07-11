@@ -2419,9 +2419,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/shared-react-native@npm:0.0.7":
-  version: 0.0.7
-  resolution: "@haqq/shared-react-native@npm:0.0.7"
+"@haqq/shared-react-native@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@haqq/shared-react-native@npm:0.0.8"
   dependencies:
     base-64: ^1.0.0
     bn.js: 5.2.1
@@ -2432,7 +2432,7 @@ __metadata:
     "@haqq/provider-web3-utils": 0.0.10
     react: "*"
     react-native: "*"
-  checksum: 2bba3443d273557efa38d13f3e5a9c73110a44cf9a16881bef18d6aeb9bd32cf3667ec7f58d4006b467c2019e3d3eff8bd4f8b57392c3a3fdd70bff65fe7d861
+  checksum: 07e1e0e7fbefbc443df6bc060f493cdd5af03df8774785741d24f7b660239c909f16ce74cb37420de37f1ae88e5af79051735de2c03c07678f59c67ef5d980d7
   languageName: node
   linkType: hard
 
@@ -9337,7 +9337,7 @@ __metadata:
     "@haqq/provider-mnemonic-react-native": 0.0.10
     "@haqq/provider-sss-react-native": 0.0.9
     "@haqq/provider-web3-utils": 0.0.12
-    "@haqq/shared-react-native": 0.0.7
+    "@haqq/shared-react-native": 0.0.8
     "@invertase/react-native-apple-authentication": ^2.2.2
     "@metamask/phishing-controller": ^3.0.0
     "@react-native-async-storage/async-storage": 1.18.2

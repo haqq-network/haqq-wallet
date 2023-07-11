@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
+import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -17,6 +18,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -335,21 +337,30 @@ class App extends EventEmitter {
       return Promise.reject('password_not_found');
     }
 
-    return creds.password;
+    const uid = await getUid();
+
+    if (creds.password.length === 6) {
+      creds.password = await this.setPin(creds.password);
+    }
+
+    const resp = await decryptPassworder<{password: string}>(
+      uid,
+      creds.password,
+    );
+
+    return resp.password;
   }
 
   async setPin(password: string) {
-    await setGenericPassword(this.user.uuid, password, {
-      storage: STORAGE_TYPE.AES,
-      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    });
-  }
+    const uid = await getUid();
+    const pass = await encryptPassworder(uid, {password});
 
-  async updatePin(pin: string) {
-    await setGenericPassword(this.user.uuid, pin, {
+    await setGenericPassword(this.user.uuid, pass, {
       storage: STORAGE_TYPE.AES,
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
+
+    return password;
   }
 
   async comparePin(pin: string) {
