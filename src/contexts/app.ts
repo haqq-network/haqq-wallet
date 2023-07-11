@@ -22,6 +22,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {throttle} from '@app/utils';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -109,8 +110,13 @@ class App extends EventEmitter {
 
     this.listenTheme = this.listenTheme.bind(this);
 
-    Appearance.addChangeListener(this.listenTheme);
-    AppState.addEventListener('change', this.listenTheme);
+    const listenTheme = Platform.select({
+      // 🐞 iOS bug with appearance https://github.com/facebook/react-native/issues/28525
+      ios: throttle(this.listenTheme, 1000),
+      default: this.listenTheme,
+    });
+    Appearance.addChangeListener(listenTheme);
+    AppState.addEventListener('change', listenTheme);
 
     if (!VariablesBool.exists('isDeveloper')) {
       VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
