@@ -106,6 +106,8 @@ jobs:
           echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
+          echo "AIRDROP_GASDROP_SECRET=${{secrets.AIRDROP_GASDROP_SECRET}}" >> .env
+          echo "AIRDROP_GASDROP_CAMPAIGN_ID=${{secrets.AIRDROP_GASDROP_CAMPAIGN_ID}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
           echo "IS_WELCOME_NEWS_ENABLED=${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}" >> .env
 

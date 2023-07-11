@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {onAppBackup} from '@app/event-actions/on-app-backup';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-create';
+import {onBannerGasdropCreate} from '@app/event-actions/on-banner-gasdrop-create';
 import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
@@ -39,6 +40,8 @@ export async function onAppStarted() {
   await onBannerNotificationTopicCreate('news');
 
   await onBannerAnalyticsCreate();
+
+  await onBannerGasdropCreate();
 
   const refferal = Refferal.getAll().filtered('isUsed = false');
 
