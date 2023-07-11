@@ -27,7 +27,7 @@
     "@haqq/provider-mnemonic-react-native": "0.0.10",
     "@haqq/provider-sss-react-native": "0.0.9",
     "@haqq/provider-web3-utils": "0.0.12",
-    "@haqq/shared-react-native": "0.0.7",
+    "@haqq/shared-react-native": "0.0.8",
     "@invertase/react-native-apple-authentication": "^2.2.2",
     "@metamask/phishing-controller": "^3.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",

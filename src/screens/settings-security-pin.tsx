@@ -27,7 +27,7 @@ export const SettingsSecurityPinScreen = () => {
           viewed.add(wallet.accountId);
         }
       }
-      await app.updatePin(pin);
+      await app.setPin(pin);
       close();
       sendNotification(I18N.notificationPinChanged);
       goBack();
