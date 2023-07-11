@@ -1,4 +1,5 @@
 import {Color} from '@app/colors';
+import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {
@@ -43,7 +44,9 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     } catch (e) {
       return;
     }
-    const captchaKey = await awaitForCaptcha({});
+    const captchaKey = await awaitForCaptcha({
+      type: CaptchaType.slider,
+    });
 
     const wallet = Wallet.getById(walletId);
 
