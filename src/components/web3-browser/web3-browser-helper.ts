@@ -28,6 +28,7 @@ import {
   EthereumEventsEnum,
   EthereumEventsParams,
   changeWebViewUrlJS,
+  detectDeeplink,
   detectDeeplinkAndNavigate,
   emitToEthereumJS,
   getOriginFromUrl,
@@ -156,6 +157,11 @@ export class Web3BrowserHelper extends EventEmitter {
 
     if (parseUri(url)?.protocol === 'wc') {
       app.emit(Events.onWalletConnectUri, url);
+      return false;
+    }
+
+    if (detectDeeplink(url)) {
+      this.go(url);
       return false;
     }
 
