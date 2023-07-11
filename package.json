@@ -1,6 +1,6 @@
 {
   "name": "haqq",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
