@@ -144,12 +144,12 @@ export class WalletConnect extends EventEmitter {
     });
   }
 
-  public rejectSessionRequest(
+  public async rejectSessionRequest(
     eventId: number,
     topic: string,
     message?: string,
   ) {
-    return this._client?.respondSessionRequest({
+    await this._client?.respondSessionRequest({
       topic,
       response: {
         id: eventId,
@@ -157,6 +157,7 @@ export class WalletConnect extends EventEmitter {
         error: getSdkError('USER_REJECTED', message),
       },
     });
+    this.redirect();
   }
 
   public async approveSession(
@@ -230,6 +231,15 @@ export class WalletConnect extends EventEmitter {
 
     WalletConnectSessionMetadata.create(session.topic);
     this._emitActiveSessions();
+    this.redirect();
+    return session;
+  }
+
+  public getSessionByTopic(topic: string) {
+    return this._client?.engine?.signClient?.session?.get?.(topic);
+  }
+
+  private redirect() {
     const isWalletConnectFromDeepLink = VariablesBool.get(
       'isWalletConnectFromDeepLink',
     );
@@ -239,11 +249,6 @@ export class WalletConnect extends EventEmitter {
         AppUtils.goBack();
       }, 500);
     }
-    return session;
-  }
-
-  public getSessionByTopic(topic: string) {
-    return this._client?.engine?.signClient?.session?.get?.(topic);
   }
 
   public async approveSessionRequest(

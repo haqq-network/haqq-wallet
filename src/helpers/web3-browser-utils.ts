@@ -89,11 +89,16 @@ export const changeWebViewUrlJS = (href: string) => {
   return `(function(){window.location.href = '${href}' })()`;
 };
 
+export const detectDeeplink = (url: string) => !/^https?:\/\//.test(url);
+
 // Checking whether an application can navigate to another application through a deep link.
 // return true if deeplink detected
 export const detectDeeplinkAndNavigate = async (url: string) => {
   try {
-    if (!/^https?:\/\//.test(url)) {
+    if (detectDeeplink(url)) {
+      if (url.startsWith('haqq:')) {
+        return Linking.openURL(url);
+      }
       const supported = await Linking.canOpenURL(url);
       if (supported) {
         Alert.alert('Warning', `This website has been open ${url}`, [

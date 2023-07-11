@@ -16,6 +16,7 @@ import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
 import {
   changeWebViewUrlJS,
+  detectDeeplink,
   detectDeeplinkAndNavigate,
   showPhishingAlert,
 } from '@app/helpers/web3-browser-utils';
@@ -156,6 +157,11 @@ export const InAppBrowser = ({
 
       if (parseUri(nextUrl)?.protocol === 'wc') {
         app.emit(Events.onWalletConnectUri, nextUrl);
+        return false;
+      }
+
+      if (detectDeeplink(nextUrl)) {
+        go(nextUrl);
         return false;
       }
 
