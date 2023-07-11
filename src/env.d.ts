@@ -29,4 +29,6 @@ declare module '@env' {
 
   export const ADJUST_TOKEN: string;
   export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';
+  export const AIRDROP_GASDROP_SECRET: string;
+  export const AIRDROP_GASDROP_CAMPAIGN_ID: string;
 }
