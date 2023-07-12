@@ -64,7 +64,7 @@ export class RssNews extends Realm.Object implements RssNewsItem {
   static getAllApprovedNews() {
     return RssNews.getAll()
       .filtered(`status = "${RssNewsStatus.approved}"`)
-      .sorted('updatedAt', true);
+      .sorted('createdAt', true);
   }
 
   static getById(id: string) {
