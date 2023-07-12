@@ -81,7 +81,7 @@ export const NftViewer = ({
   const sections = useMemo(
     () =>
       data
-        ?.map?.(it => ({...it, data: [it]} as SectionElement))
+        ?.map?.(it => ({...it, data: [it]}) as SectionElement)
         ?.sort?.(arraySortUtil(sortDirection, sortFieldName)),
     [data, sortDirection, sortFieldName],
   );
