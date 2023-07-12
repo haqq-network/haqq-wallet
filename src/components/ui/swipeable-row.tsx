@@ -24,14 +24,13 @@ export const SwipeableRow = ({
   }, [item]);
 
   const rActions = useMemo(
-    () => (progress: Animated.AnimatedInterpolation<number>) =>
-      (
-        <SwipeableButtonList
-          item={item}
-          rightActions={rightActions}
-          progress={progress}
-        />
-      ),
+    () => (progress: Animated.AnimatedInterpolation<number>) => (
+      <SwipeableButtonList
+        item={item}
+        rightActions={rightActions}
+        progress={progress}
+      />
+    ),
     [item, rightActions],
   );
 
