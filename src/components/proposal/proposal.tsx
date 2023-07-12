@@ -3,11 +3,18 @@ import React, {useEffect, useMemo} from 'react';
 import {Proposal as ProposalType} from '@evmos/provider/dist/rest/gov';
 import {format} from 'date-fns';
 import Decimal from 'decimal.js';
-import {Pressable, ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {Badge, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
+import {
+  Badge,
+  Icon,
+  InfoBlock,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
@@ -29,7 +36,6 @@ interface ProposalProps {
   cardRef: React.RefObject<VotingCardDetailRefInterface | undefined>;
   modalIsLoading: boolean;
   modalIsVisible: boolean;
-  onTouchContent: () => void;
   modalOnVote: (vote: VoteNamesType) => void;
   modalOnChangeVote: (vote: VoteNamesType) => void;
 }
@@ -40,7 +46,6 @@ export function Proposal({
   vote,
   cardRef,
   modalIsLoading,
-  onTouchContent,
   modalOnVote,
   modalOnChangeVote,
   modalIsVisible,
@@ -100,138 +105,126 @@ export function Proposal({
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Pressable onPress={onTouchContent}>
-          <Spacer height={24} />
-          {badgeStatus && (
-            <Badge
-              center
-              i18n={badgeStatus[1]}
-              labelColor={badgeStatus[2]}
-              textColor={badgeStatus[3]}
-              iconLeftName={badgeStatus[4]}
-            />
-          )}
-          <Spacer height={16} />
-          <Text center color={Color.textBase2} t14>
-            #{item.proposal_id}
-          </Text>
-          <Spacer height={2} />
-          <Text center t5>
-            {item.content.title}
-          </Text>
-          <Spacer height={24} />
-          <VotingCardDetail
-            totalCollected={collectedDeposit}
-            yourVote={vote}
-            ref={cardRef}
-            item={item}
+      <PopupContainer
+        style={[styles.container, modalIsVisible && styles.voting]}>
+        {badgeStatus && (
+          <Badge
+            center
+            i18n={badgeStatus[1]}
+            labelColor={badgeStatus[2]}
+            textColor={badgeStatus[3]}
+            iconLeftName={badgeStatus[4]}
           />
-          {isDeposited && (
-            <InfoBlock
-              style={styles.infoBlockMargin}
-              warning
-              icon={<Icon name="warning" color={Color.textYellow1} />}
-              i18n={I18N.proposalDepositAttention}
-            />
-          )}
-          <Spacer height={24} />
-          <Text t9 i18n={I18N.proposalInfo} />
-          <View style={styles.row}>
-            <View style={styles.block}>
-              <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
-              <Spacer height={4} />
-              <Text t14 i18n={type} />
-            </View>
-            <Spacer width={16} />
-            <View style={styles.block}>
-              <Text
-                t14
-                color={Color.textBase2}
-                i18n={I18N.proposalTotalDeposit}
-              />
-              <Spacer height={4} />
-              <Text t14 i18n={I18N.amountISLM} i18params={{amount: deposit}} />
-            </View>
-          </View>
+        )}
+        <Spacer height={16} />
+        <Text center color={Color.textBase2} t14>
+          #{item.proposal_id}
+        </Text>
+        <Spacer height={2} />
+        <Text center t5>
+          {item.content.title}
+        </Text>
+        <Spacer height={24} />
+        <VotingCardDetail
+          totalCollected={collectedDeposit}
+          yourVote={vote}
+          ref={cardRef}
+          item={item}
+        />
+        {isDeposited && (
+          <InfoBlock
+            style={styles.infoBlockMargin}
+            warning
+            icon={<Icon name="warning" color={Color.textYellow1} />}
+            i18n={I18N.proposalDepositAttention}
+          />
+        )}
+        <Spacer height={24} />
+        <Text t9 i18n={I18N.proposalInfo} />
+        <View style={styles.row}>
           <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
             <Spacer height={4} />
-            <Text t14>{item.content.description}</Text>
+            <Text t14 i18n={type} />
           </View>
-          {'changes' in item.content && (
-            <>
-              <Spacer height={24} />
-              <Text t9 i18n={I18N.proposalChanges} />
-              <Spacer height={12} />
-              <View style={styles.codeBlock}>
-                <Text t14 color={Color.textBase1}>
-                  {JSON.stringify(item.content.changes, null, 4)}
-                </Text>
-              </View>
-            </>
-          )}
-          {'plan' in item.content && (
-            <>
-              <Spacer height={24} />
-              <Text t9 i18n={I18N.proposalPlan} />
-              <Spacer height={12} />
-              <View style={styles.codeBlock}>
-                <Text t14 color={Color.textBase1}>
-                  {JSON.stringify(item.content.plan, null, 4)}
-                </Text>
-              </View>
-            </>
-          )}
-          <Spacer height={24} />
-          <Text t9 i18n={I18N.proposalDate} />
-          <View style={styles.row}>
-            <View style={styles.block}>
-              <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
-              <Spacer height={4} />
-              <Text t14>
-                {item.submit_time &&
-                  format(new Date(item.submit_time), 'dd MMM yyyy, H:mm')}
-              </Text>
-              <Spacer height={8} />
-              <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
-              <Spacer height={4} />
-              <Text t14>
-                {item.voting_start_time &&
-                  format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
+          <Spacer width={16} />
+          <View style={styles.block}>
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.proposalTotalDeposit}
+            />
+            <Spacer height={4} />
+            <Text t14 i18n={I18N.amountISLM} i18params={{amount: deposit}} />
+          </View>
+        </View>
+        <View style={styles.block}>
+          <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
+          <Spacer height={4} />
+          <Text t14>{item.content.description}</Text>
+        </View>
+        {'changes' in item.content && (
+          <>
+            <Spacer height={24} />
+            <Text t9 i18n={I18N.proposalChanges} />
+            <Spacer height={12} />
+            <View style={styles.codeBlock}>
+              <Text t14 color={Color.textBase1}>
+                {JSON.stringify(item.content.changes, null, 4)}
               </Text>
             </View>
-            <Spacer width={16} />
-            <View style={styles.block}>
-              <Text
-                t14
-                color={Color.textBase2}
-                i18n={I18N.proposalDepositEnd}
-              />
-              <Spacer height={4} />
-              <Text t14>
-                {item.deposit_end_time &&
-                  format(new Date(item.deposit_end_time), 'dd MMM yyyy, H:mm')}
-              </Text>
-              <Spacer height={8} />
-              <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
-              <Spacer height={4} />
-              <Text t14>
-                {item.voting_end_time &&
-                  format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
+          </>
+        )}
+        {'plan' in item.content && (
+          <>
+            <Spacer height={24} />
+            <Text t9 i18n={I18N.proposalPlan} />
+            <Spacer height={12} />
+            <View style={styles.codeBlock}>
+              <Text t14 color={Color.textBase1}>
+                {JSON.stringify(item.content.plan, null, 4)}
               </Text>
             </View>
+          </>
+        )}
+        <Spacer height={24} />
+        <Text t9 i18n={I18N.proposalDate} />
+        <View style={styles.row}>
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.submit_time &&
+                format(new Date(item.submit_time), 'dd MMM yyyy, H:mm')}
+            </Text>
+            <Spacer height={8} />
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.voting_start_time &&
+                format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
+            </Text>
           </View>
-          <Spacer height={(isDeposited ? 0 : bottom) + 28} />
-        </Pressable>
-      </ScrollView>
-      <ProposalVote
-        isLoading={modalIsLoading}
-        modalIsVisible={modalIsVisible}
-        onChangeVote={modalOnChangeVote}
-        onVote={modalOnVote}
-      />
-      {/* {isDeposited && (
+          <Spacer width={16} />
+          <View style={styles.block}>
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalDepositEnd} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.deposit_end_time &&
+                format(new Date(item.deposit_end_time), 'dd MMM yyyy, H:mm')}
+            </Text>
+            <Spacer height={8} />
+            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
+            <Spacer height={4} />
+            <Text t14>
+              {item.voting_end_time &&
+                format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
+            </Text>
+          </View>
+        </View>
+        <Spacer height={(isDeposited ? 0 : bottom) + 28} />
+
+        {/* {isDeposited && (
         <View style={styles.depositButtonContainer}>
           <Button
             variant={ButtonVariant.contained}
@@ -241,12 +234,20 @@ export function Proposal({
           <Spacer height={bottom} />
         </View>
       )} */}
+      </PopupContainer>
+      <ProposalVote
+        isLoading={modalIsLoading}
+        modalIsVisible={modalIsVisible}
+        onChangeVote={modalOnChangeVote}
+        onVote={modalOnVote}
+      />
     </>
   );
 }
 
 const styles = createTheme({
   container: {
+    paddingTop: 24,
     paddingHorizontal: 20,
   },
   block: {
@@ -265,6 +266,7 @@ const styles = createTheme({
   infoBlockMargin: {
     marginTop: 8,
   },
+  voting: {paddingBottom: 120},
   // depositButtonContainer: {
   //   padding: 20,
   // },

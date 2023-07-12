@@ -41,7 +41,7 @@ export const ProposalScreen = () => {
 
   useEffect(() => {
     const onVotedSubmit = async (address: string) => {
-      const opinion = VOTES.findIndex(v => v.name === voteSelectedRef.current);
+      const opinion = VOTES.find(v => v.name === voteSelectedRef.current);
       const wallet = Wallet.getById(address);
       if (!(wallet && item)) {
         sendNotification(I18N.voteNotRegistered);
@@ -54,7 +54,7 @@ export const ProposalScreen = () => {
           transport,
           wallet.path!,
           item.proposal_id,
-          opinion,
+          opinion?.value || 0,
         );
 
         if (wallet.type === WalletType.ledgerBt) {
@@ -70,7 +70,7 @@ export const ProposalScreen = () => {
         sendNotification(I18N.voteRegistered);
       } catch (error) {
         sendNotification(I18N.voteNotRegistered);
-        captureException(error, 'proposal.vite');
+        captureException(error, 'proposal.vote');
       }
 
       setModalIsLoading(false);
@@ -114,9 +114,10 @@ export const ProposalScreen = () => {
     }
   }, [item]);
 
+  console.log('item', item);
+
   return (
     <Proposal
-      onTouchContent={() => setModalIsVisible(false)}
       cardRef={cardRef}
       vote={vote}
       collectedDeposit={collectedDeposit}
