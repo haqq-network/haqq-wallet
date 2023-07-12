@@ -360,7 +360,7 @@ class App extends EventEmitter {
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
 
-    return password;
+    return pass;
   }
 
   async comparePin(pin: string) {
