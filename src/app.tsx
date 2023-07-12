@@ -178,7 +178,7 @@ export const App = () => {
   const theme = useTheme();
 
   const navTheme = useMemo(
-    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors} as Theme),
+    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
     [theme],
   );
 

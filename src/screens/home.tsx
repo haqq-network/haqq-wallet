@@ -54,8 +54,9 @@ const screenOptions: BottomTabNavigationOptions = {
   ),
 };
 
-const tabBarIcon = (route: string) => (props: {focused: boolean}) =>
-  <HomeScreenTabBarIcon focused={props.focused} route={route} />;
+const tabBarIcon = (route: string) => (props: {focused: boolean}) => (
+  <HomeScreenTabBarIcon focused={props.focused} route={route} />
+);
 
 const feedOptions = {
   headerRight: QrScannerButton,
