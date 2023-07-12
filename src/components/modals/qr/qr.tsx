@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {parseUri} from '@walletconnect/utils';
 import {utils} from 'ethers';
@@ -16,11 +16,12 @@ import {WalletRow} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
-import {QR_STATUS_BAR} from '@app/variables/common';
+import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
@@ -40,6 +41,19 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
+
+  const theme = useTheme();
+
+  useEffect(() => {
+    if (IS_IOS) {
+      return;
+    }
+
+    StatusBar.setBackgroundColor(QR_STATUS_BAR);
+    return () => {
+      StatusBar.setBackgroundColor('transparent');
+    };
+  }, [theme]);
 
   const prepareAddress = useCallback((data: string) => {
     if (data.startsWith('haqq:')) {
@@ -157,7 +171,6 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   return (
     <>
-      <StatusBar backgroundColor={QR_STATUS_BAR} />
       <QRscanner
         isRepeatScan={true}
         vibrate={false}

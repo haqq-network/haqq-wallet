@@ -24,7 +24,6 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {throttle} from '@app/utils';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -112,13 +111,9 @@ class App extends EventEmitter {
 
     this.listenTheme = this.listenTheme.bind(this);
 
-    const listenTheme = Platform.select({
-      // 🐞 iOS bug with appearance https://github.com/facebook/react-native/issues/28525
-      ios: throttle(this.listenTheme, 1000),
-      default: this.listenTheme,
-    });
-    Appearance.addChangeListener(listenTheme);
-    AppState.addEventListener('change', listenTheme);
+    Appearance.addChangeListener(this.listenTheme);
+    AppState.addEventListener('change', this.listenTheme);
+    this.listenTheme();
 
     if (!VariablesBool.exists('isDeveloper')) {
       VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
@@ -301,16 +296,19 @@ class App extends EventEmitter {
   listenTheme() {
     const systemColorScheme = Appearance.getColorScheme() as AppTheme;
 
-    if (systemColorScheme !== this._systemTheme) {
-      this._systemTheme = systemColorScheme;
+    if (getAppStatus() === AppStatus.inactive) {
+      return;
     }
 
-    if (this.theme === AppTheme.system) {
-      StatusBar.setBarStyle(
-        this.currentTheme === 'light' ? 'dark-content' : 'light-content',
-        false,
-      );
+    if (systemColorScheme !== this._systemTheme) {
+      this._systemTheme = systemColorScheme;
+      this.emit('theme', systemColorScheme);
     }
+
+    StatusBar.setBarStyle(
+      this.currentTheme === AppTheme.light ? 'dark-content' : 'light-content',
+      false,
+    );
   }
 
   async init(): Promise<void> {
