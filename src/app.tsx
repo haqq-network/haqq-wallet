@@ -15,6 +15,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
+  NavigationAction,
   NavigationContainer,
   Theme,
 } from '@react-navigation/native';
@@ -206,6 +207,7 @@ export const App = () => {
   }, []);
 
   const [initialized, setInitialized] = useState(false);
+  const [isPinReseted, setPinReseted] = useState(false);
 
   useEffect(() => {
     if (initialized) {
@@ -275,14 +277,21 @@ export const App = () => {
   }, []);
 
   const initialRoute = useMemo(() => {
-    if (app.onboarded) {
+    if (app.onboarded && !isPinReseted) {
       return 'home';
     }
+
     if (app.isWelcomeNewsEnabled) {
       return 'welcomeNews';
     }
 
     return 'welcome';
+  }, [isPinReseted]);
+
+  const onUnhandledAction = useCallback((action: NavigationAction) => {
+    if (action.type === 'reset-pin') {
+      setPinReseted(true);
+    }
   }, []);
 
   // @ts-ignore
@@ -291,6 +300,8 @@ export const App = () => {
       <ActionSheetProvider>
         <SafeAreaProvider>
           <NavigationContainer
+            key={initialRoute}
+            onUnhandledAction={onUnhandledAction}
             ref={navigator}
             theme={navTheme}
             onStateChange={onStateChange}>

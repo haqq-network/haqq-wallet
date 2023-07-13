@@ -76,7 +76,7 @@ export type BottomSheetProps = {
 
 export type BottomSheetRef = {
   open: () => void;
-  close: () => void;
+  close: () => Promise<void>;
 };
 
 type pointsT = [number, number];
@@ -192,14 +192,19 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     );
 
     const onClosePopup = useCallback(() => {
-      bottomSheetTranslateY.value = withTiming(
-        closedSnapPoint,
-        {
-          duration: ANIMATION_DURATION,
-          easing: ANIMATION_TYPE,
-        },
-        () => onClose && runOnJS(onClose)(),
-      );
+      return new Promise<void>(resolve => {
+        bottomSheetTranslateY.value = withTiming(
+          closedSnapPoint,
+          {
+            duration: ANIMATION_DURATION,
+            easing: ANIMATION_TYPE,
+          },
+          () => {
+            onClose && runOnJS(onClose)();
+            runOnJS(resolve)();
+          },
+        );
+      });
     }, [bottomSheetTranslateY, closedSnapPoint, onClose]);
 
     const onOpenPopup = useCallback(() => {
