@@ -14,6 +14,7 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {sendNotification} from '@app/services/toast';
+import {sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
 import {RemoteConfig} from './remote-config';
@@ -41,7 +42,7 @@ export class WalletConnect extends EventEmitter {
     });
   }
 
-  public async init() {
+  public async init(): Promise<void> {
     try {
       if (DEBUG_VARS.enableWalletConnectLogger) {
         console.log(
@@ -111,6 +112,8 @@ export class WalletConnect extends EventEmitter {
       if (err instanceof Error) {
         console.error('[WalletConnect] init error', err);
         captureException(err, 'WalletConnect:init');
+        await sleep(5000);
+        return WalletConnect.instance._reInit();
       }
     }
   }
@@ -171,7 +174,9 @@ export class WalletConnect extends EventEmitter {
 
     const {requiredNamespaces, optionalNamespaces, relays} = params;
 
-    const allowedNamespaces = RemoteConfig.get('wallet_connect');
+    const allowedNamespaces = DEBUG_VARS.allowAnySourcesForWalletConnectLogin
+      ? requiredNamespaces
+      : RemoteConfig.get('wallet_connect');
 
     if (!allowedNamespaces) {
       throw Error('[WalletConnect]: allowedNamespaces not found');
@@ -281,7 +286,9 @@ export class WalletConnect extends EventEmitter {
   }
 
   private async _reInit() {
-    await this._core?.relayer?.transportClose?.();
+    if (this._core?.relayer?.connected) {
+      await this._core?.relayer?.transportClose?.();
+    }
     this._core = null;
     this._client = null;
     await this.init();

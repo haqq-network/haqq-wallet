@@ -1,6 +1,7 @@
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
+import {isError} from '@app/utils';
 
 export async function onWalletConnectSignTransaction(
   event: WalletConnectSessionRequestType,
@@ -22,13 +23,13 @@ export async function onWalletConnectSignTransaction(
       await WalletConnect.instance.rejectSessionRequest(event.id, event.topic);
     }
   } catch (err) {
-    if (err instanceof Error) {
+    if (isError(err)) {
+      console.error('onWalletConnectSignTransaction error', err);
       await WalletConnect.instance.rejectSessionRequest(
         event.id,
         event.topic,
         err.message,
       );
-      console.error('onWalletConnectSignTransaction error', err);
     }
   }
 }

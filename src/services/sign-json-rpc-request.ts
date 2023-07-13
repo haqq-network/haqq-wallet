@@ -77,10 +77,14 @@ export class SignJsonRpcRequest {
    * ]
    */
   public static async signEIP155Request(
-    wallet: Wallet,
+    wallet: Wallet | string,
     request: PartialJsonRpcRequest,
     chainId?: number,
   ) {
+    if (typeof wallet === 'string') {
+      wallet = Wallet.getById(wallet)!;
+    }
+
     if (!wallet) {
       throw new Error(
         '[SignJsonRpcRequest:SignJsonRpcRequest]: wallet is undefined',

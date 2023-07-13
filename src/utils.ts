@@ -366,7 +366,7 @@ export const filterWalletConnectSessionsByAddress = (
 
 export const getUserAddressFromJRPCRequest = (
   request: PartialJsonRpcRequest,
-): string => {
+): string | null => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       return request.params?.[1];
@@ -379,9 +379,10 @@ export const getUserAddressFromJRPCRequest = (
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       return request?.params?.[0]?.from;
     default:
-      throw new Error(
+      console.error(
         `[getUserAddressFromSessionRequest]: INVALID_METHOD ${request.method}`,
       );
+      return null;
   }
 };
 
@@ -491,7 +492,7 @@ export function isValidJSON(
 }
 
 export function isError(err: any): err is Error {
-  return err instanceof Error;
+  return err instanceof Error || typeof err?.message === 'string';
 }
 
 export function isAbortControllerError(err: any): err is Error {

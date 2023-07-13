@@ -24,17 +24,23 @@ interface WalletConnectSignInfoProps {
 const getMessageByRequest = (request: PartialJsonRpcRequest) => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-      return {
-        text: Buffer.from(request.params?.[0]?.slice(2), 'hex').toString(
-          'utf8',
-        ),
-      };
+      const personalSignMessage: string = request.params?.[0] || '';
+      if (personalSignMessage?.startsWith?.('0x')) {
+        return {
+          text: Buffer.from(personalSignMessage?.slice(2), 'hex').toString(
+            'utf8',
+          ),
+        };
+      }
+      return {text: personalSignMessage};
     case EIP155_SIGNING_METHODS.ETH_SIGN:
-      return {
-        text: Buffer.from(request.params?.[1]?.slice(2), 'hex').toString(
-          'utf8',
-        ),
-      };
+      const ethSignMessage: string = request.params?.[0] || '';
+      if (ethSignMessage?.startsWith?.('0x')) {
+        return {
+          text: Buffer.from(ethSignMessage?.slice(2), 'hex').toString('utf8'),
+        };
+      }
+      return {text: ethSignMessage};
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
