@@ -1,13 +1,7 @@
-import {Adjust} from 'react-native-adjust';
-
 import {Banner} from '@app/models/banner';
+import {requestTrackingAuthorization} from '@app/utils';
 
 export async function onBannerAnalyticsEnable(id: string) {
-  await new Promise(resolve => {
-    Adjust.requestTrackingAuthorizationWithCompletionHandler(s => {
-      resolve(s);
-    });
-  });
-
+  await requestTrackingAuthorization();
   Banner.remove(id);
 }

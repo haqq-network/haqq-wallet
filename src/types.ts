@@ -254,6 +254,13 @@ export type RootStackParamList = {
       | 'signinStoreWallet'
       | 'ledgerStoreWallet';
   } & WalletInitialData;
+  onboardingTrackUserActivity: {
+    biometryType: BiometryType;
+    nextScreen?:
+      | 'signupStoreWallet'
+      | 'signinStoreWallet'
+      | 'ledgerStoreWallet';
+  } & WalletInitialData;
   onboardingRepeatPin: {
     currentPin: string;
     nextScreen?:
@@ -987,4 +994,13 @@ export interface NewsItem extends BaseNewsItem {
 }
 export interface RssNewsItem extends BaseNewsItem {
   url: string;
+}
+
+// https://github.com/adjust/react_native_sdk#get-current-authorisation-status
+export enum AdjustTrackingAuthorizationStatus {
+  userNotAsked = 0,
+  userDeviceRestricted = 1,
+  userDeniedAccess = 2,
+  userAuthorizedAccess = 3,
+  statusNotAvailable = -1,
 }

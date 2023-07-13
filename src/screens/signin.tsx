@@ -16,6 +16,7 @@ import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
 import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {AdjustEvents, ScreenOptionType} from '@app/types';
 
+import {OnboardingTrackUserActivityScreen} from './onboarding-track-user-activity';
 import {SigninNotExistsScreen} from './signin-not-exists';
 import {SigninNotRecoveryScreen} from './signin-not-recovery';
 
@@ -82,6 +83,12 @@ export const SignInScreen = () => {
       <SignInStack.Screen
         name="onboardingBiometry"
         component={OnboardingBiometryScreen}
+        options={{title}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
+      />
+      <SignInStack.Screen
+        name="onboardingTrackUserActivity"
+        component={OnboardingTrackUserActivityScreen}
         options={{title}}
         initialParams={{nextScreen: 'signinStoreWallet'}}
       />
