@@ -1,5 +1,3 @@
-// import {ENABLE_SKIP_PIN_ON_LOGIN} from '@env';
-
 interface DebugVars {
   enableSentry: boolean;
   enableWalletConnectLogger: boolean;
@@ -7,6 +5,8 @@ interface DebugVars {
   enableCaptchaLogger: boolean;
   enableSkipPinOnLogin: boolean;
   enableWeb3BrowserLogger: boolean;
+  allowAnySourcesForWalletConnectLogin: boolean;
+  disableWeb3DomainBlocking: boolean;
 }
 
 const production: DebugVars = {
@@ -16,6 +16,8 @@ const production: DebugVars = {
   enableCaptchaLogger: false,
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: false,
+  allowAnySourcesForWalletConnectLogin: false,
+  disableWeb3DomainBlocking: false,
 };
 
 const debug: DebugVars = {
@@ -24,8 +26,9 @@ const debug: DebugVars = {
   enableWalletConnectLogger: false,
   enableCaptchaLogger: __DEV__,
   enableSkipPinOnLogin: false,
-  // enableSkipPinOnLogin: ENABLE_SKIP_PIN_ON_LOGIN === '1',
-  enableWeb3BrowserLogger: __DEV__,
+  enableWeb3BrowserLogger: true,
+  allowAnySourcesForWalletConnectLogin: false,
+  disableWeb3DomainBlocking: false,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

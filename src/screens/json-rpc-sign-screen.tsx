@@ -2,13 +2,14 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {getUserAddressFromJRPCRequest} from '@app/utils';
+import {getUserAddressFromJRPCRequest, isError} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export const JsonRpcSignScreen = () => {
@@ -29,7 +30,9 @@ export const JsonRpcSignScreen = () => {
 
   const wallet = useMemo(
     () =>
-      Wallet.getById(selectedAccount || getUserAddressFromJRPCRequest(request)),
+      Wallet.getById(
+        selectedAccount || getUserAddressFromJRPCRequest(request)!,
+      ),
     [request, selectedAccount],
   );
 
@@ -44,7 +47,7 @@ export const JsonRpcSignScreen = () => {
 
   const onPressSign = useCallback(async () => {
     try {
-      if (!isAllowed) {
+      if (!isAllowed && !DEBUG_VARS.disableWeb3DomainBlocking) {
         return onPressReject();
       }
       setSignLoading(true);
@@ -55,8 +58,8 @@ export const JsonRpcSignScreen = () => {
       );
       app.emit('json-rpc-sign-success', result);
     } catch (err) {
-      if (err instanceof Error) {
-        app.emit('json-rpc-sign-reject', err.message);
+      if (isError(err)) {
+        onPressReject(err.message);
         console.log('🔴 JsonRpcSignScreen:onPressSign error', err);
       }
     } finally {
@@ -70,7 +73,7 @@ export const JsonRpcSignScreen = () => {
       new RegExp(host).test(url),
     )?.length;
     setIsAllowed(isAllowedDomain);
-    if (!isAllowedDomain) {
+    if (!isAllowedDomain && !DEBUG_VARS.disableWeb3DomainBlocking) {
       showModal('domainBlocked', {
         domain: host,
         onClose: () => onPressReject('domain is blocked'),
@@ -86,6 +89,13 @@ export const JsonRpcSignScreen = () => {
     navigation.addListener('blur', onBlur);
     return () => navigation.removeListener('blur', onBlur);
   }, [navigation]);
+
+  useEffect(() => {
+    const address = selectedAccount || getUserAddressFromJRPCRequest(request);
+    if (!address) {
+      onPressReject(`method not implemented: ${request.method}`);
+    }
+  }, [onPressReject, request, selectedAccount]);
 
   return (
     <JsonRpcSign

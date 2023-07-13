@@ -97,12 +97,15 @@ export class Wallet extends Realm.Object {
     return Wallet.getAll().filtered(`accountId = '${accountId.toLowerCase()}'`);
   }
 
-  static getById(id: string) {
+  static getById(id: string = '') {
     if (!id) {
       return null;
     }
 
-    const item = realm.objectForPrimaryKey<Wallet>(Wallet.schema.name, id);
+    const item = realm.objectForPrimaryKey<Wallet>(
+      Wallet.schema.name,
+      id.toLowerCase(),
+    );
 
     if (!item) {
       return null;
