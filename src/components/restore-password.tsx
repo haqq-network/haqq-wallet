@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 
-import {Alert, Animated, Dimensions, StyleSheet} from 'react-native';
+import {Alert, Dimensions, StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {onAppReset} from '@app/event-actions/on-app-reset';
@@ -20,55 +20,26 @@ type RestorePasswordProps = {
   onClose: () => void;
 };
 
+const LOADING_DURATION = 600;
+
 export const RestorePassword = ({onClose}: RestorePasswordProps) => {
-  const pan = useRef(new Animated.Value(1)).current;
   const bottomSheetRef = useRef<BottomSheetRef>(null);
 
-  const onClosePopup = useCallback(() => {
-    Animated.timing(pan, {
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: true,
-    }).start(onClose);
-  }, [pan, onClose]);
-
-  const onOpenPopup = useCallback(() => {
-    Animated.timing(pan, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  }, [pan]);
-
-  useEffect(() => {
-    onOpenPopup();
-  }, [onOpenPopup]);
-
   const onClickResetConfirm = useCallback(async () => {
-    let closeLoading = showModal('loading');
-
+    await bottomSheetRef.current?.close?.();
+    const closeLoading = showModal('loading');
     try {
-      await sleep(150);
+      await sleep(LOADING_DURATION);
       await onAppReset();
-      bottomSheetRef.current?.close?.();
-      await new Promise(resolve => {
-        Animated.timing(pan, {
-          toValue: 1,
-          duration: 250,
-          useNativeDriver: true,
-        }).start(resolve);
-      });
-
-      await onWalletReset();
-
       hideModal('pin');
       hideModal('splash');
+      await onWalletReset();
     } catch (e) {
       captureException(e, 'onClickResetConfirm');
     } finally {
       closeLoading();
     }
-  }, [pan]);
+  }, []);
 
   const onClickReset = useCallback(() => {
     vibrate(HapticEffects.warning);
@@ -92,7 +63,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      onClose={onClosePopup}
+      onClose={onClose}
       i18nTitle={I18N.restorePasswordForgot}
       closeDistance={closeDistance}>
       <Text t14 color={Color.textBase2} i18n={I18N.restorePasswordWarning} />
