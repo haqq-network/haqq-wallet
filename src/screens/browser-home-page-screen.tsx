@@ -14,8 +14,8 @@ import {AdjustEvents, Link} from '@app/types';
 export const STRICT_URLS: Partial<Link>[] = [
   {
     title: 'HAQQ Dashboard',
-    url: 'https://app.haqq.network',
-    icon: 'https://app.haqq.network/assets/favicon.svg',
+    url: 'https://shell.haqq.network',
+    icon: 'https://shell.haqq.network/assets/favicon.svg',
   },
   {
     title: 'HAQQ Vesting',

@@ -238,8 +238,8 @@ const abi = [
 const TEST_URLS: Partial<Link>[] = [
   {
     title: 'HAQQ Dashboard',
-    url: 'https://app.haqq.network',
-    icon: 'https://app.haqq.network/assets/favicon.svg',
+    url: 'https://shell.haqq.network',
+    icon: 'https://shell.haqq.network/assets/favicon.svg',
   },
   {
     title: 'HAQQ Vesting',
@@ -428,7 +428,7 @@ export const SettingsTestScreen = () => {
       />
       <Title text="Browser" />
       <Input
-        placeholder="https://app.haqq.network"
+        placeholder="https://shell.haqq.network"
         value={browserUrl}
         onChangeText={setBrowserUrl}
       />
