@@ -155,6 +155,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   description: {
-    opacity: 0.5,
+    opacity: 0.7,
   },
 });
