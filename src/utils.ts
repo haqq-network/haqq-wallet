@@ -3,6 +3,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {differenceInMinutes} from 'date-fns';
 import {utils} from 'ethers';
 import {Animated} from 'react-native';
+import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
 
@@ -12,11 +13,13 @@ import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
 import {navigator} from './navigator';
 import {
+  AdjustTrackingAuthorizationStatus,
   EthType,
   EthTypedData,
   PartialJsonRpcRequest,
   WalletConnectParsedAccount,
 } from './types';
+import {IS_ANDROID} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -521,4 +524,30 @@ export const openInAppBrowser = (
 
 export const openWeb3Browser = (url: string) => {
   navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
+};
+
+export const requestTrackingAuthorization = () => {
+  return new Promise<AdjustTrackingAuthorizationStatus>(resolve => {
+    if (IS_ANDROID) {
+      return resolve(AdjustTrackingAuthorizationStatus.statusNotAvailable);
+    }
+    Adjust.requestTrackingAuthorizationWithCompletionHandler(
+      (status: AdjustTrackingAuthorizationStatus) => {
+        resolve(status);
+      },
+    );
+  });
+};
+
+export const getAppTrackingAuthorizationStatus = () => {
+  return new Promise<AdjustTrackingAuthorizationStatus>(resolve => {
+    if (IS_ANDROID) {
+      return resolve(AdjustTrackingAuthorizationStatus.statusNotAvailable);
+    }
+    Adjust.getAppTrackingAuthorizationStatus(
+      (status: AdjustTrackingAuthorizationStatus) => {
+        resolve(status);
+      },
+    );
+  });
 };
