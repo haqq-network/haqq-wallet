@@ -32,6 +32,16 @@ export function abortProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
+export function removeProviderInstanceForWallet(wallet: Wallet) {
+  let id = getId(wallet);
+  let instance = cache.get(id);
+  if (instance) {
+    instance.abort();
+    instance = null;
+    cache.delete(id);
+  }
+}
+
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
 ): Promise<ProviderInterface> {

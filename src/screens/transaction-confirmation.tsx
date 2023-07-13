@@ -6,7 +6,7 @@ import {TransactionConfirmation} from '@app/components/transaction-confirmation'
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {captureException} from '@app/helpers';
+import {captureException, removeProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
@@ -107,6 +107,7 @@ export const TransactionConfirmationScreen = () => {
         }
       } finally {
         setDisabled(false);
+        removeProviderInstanceForWallet(wallet);
       }
     }
   }, [

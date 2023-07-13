@@ -14,6 +14,8 @@ export type ClaimResponse =
       background_color_from: string;
       background_color_to: string;
       background_image_url: string;
+      title_color: string | undefined;
+      description_color: string | undefined;
     }
   | {
       available: false;
