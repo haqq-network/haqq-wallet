@@ -17,6 +17,8 @@ import {SignupPinScreen} from '@app/screens/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
 import {AdjustEvents, ScreenOptionType} from '@app/types';
 
+import {OnboardingTrackUserActivityScreen} from './onboarding-track-user-activity';
+
 const SignUpStack = createStackNavigator();
 
 const screenOptions: ScreenOptionType = {
@@ -77,6 +79,12 @@ export const SignUpScreen = () => {
       <SignUpStack.Screen
         name="onboardingBiometry"
         component={OnboardingBiometryScreen}
+        options={screenOptionsBiometry}
+        initialParams={{nextScreen: 'signupStoreWallet'}}
+      />
+      <SignUpStack.Screen
+        name="onboardingTrackUserActivity"
+        component={OnboardingTrackUserActivityScreen}
         options={screenOptionsBiometry}
         initialParams={{nextScreen: 'signupStoreWallet'}}
       />

@@ -3,6 +3,8 @@ import React, {useCallback, useState} from 'react';
 import {OnboardingBiometry} from '@app/components/onboarding-biometry';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AdjustTrackingAuthorizationStatus} from '@app/types';
+import {getAppTrackingAuthorizationStatus} from '@app/utils';
 
 export const OnboardingBiometryScreen = () => {
   const navigation = useTypedNavigation();
@@ -11,9 +13,14 @@ export const OnboardingBiometryScreen = () => {
   const {biometryType} = route.params;
 
   const onClickSkip = useCallback(() => {
-    requestAnimationFrame(() => {
+    requestAnimationFrame(async () => {
       const {nextScreen, ...params} = route.params;
-      navigation.navigate(nextScreen ?? 'signupStoreWallet', params);
+      const status = await getAppTrackingAuthorizationStatus();
+      if (status === AdjustTrackingAuthorizationStatus.userNotAsked) {
+        navigation.navigate('onboardingTrackUserActivity', params);
+      } else {
+        navigation.navigate(nextScreen ?? 'signupStoreWallet', params);
+      }
     });
   }, [route, navigation]);
 

@@ -692,6 +692,13 @@ export enum I18N {
   homeNewsOurNews,
   homeNewsViewAll,
   homeNewsCryptoNews,
+  onboardingTrackingUserActivityTitle,
+  onboardingTrackingUserActivityHint1Title,
+  onboardingTrackingUserActivityHint2Title,
+  onboardingTrackingUserActivityHint1Description,
+  onboardingTrackingUserActivityHint2Description,
+  onboardingTrackingUserActivityNotNow,
+  onboardingTrackingUserActivityContinue,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1516,4 +1523,14 @@ const en: Record<I18N, string> = {
   [I18N.homeNewsOurNews]: 'Our news',
   [I18N.homeNewsViewAll]: 'View all',
   [I18N.homeNewsCryptoNews]: 'Crypto news',
+  [I18N.onboardingTrackingUserActivityTitle]:
+    "Help us improve: We'll enhance the features you actually use",
+  [I18N.onboardingTrackingUserActivityHint1Title]: 'Improvement',
+  [I18N.onboardingTrackingUserActivityHint1Description]:
+    'This will help us to collect more information about the problems of the application',
+  [I18N.onboardingTrackingUserActivityHint2Title]: 'Security and privacy',
+  [I18N.onboardingTrackingUserActivityHint2Description]:
+    'We securely store the data we receive. All data is non-personalized',
+  [I18N.onboardingTrackingUserActivityContinue]: 'Continue',
+  [I18N.onboardingTrackingUserActivityNotNow]: 'Not now',
 };
