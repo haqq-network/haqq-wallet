@@ -100,9 +100,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     if (e instanceof AirdropError) {
       if (e.code === AirdropErrorCode.adressAlreadyUsed) {
-        return banner?.update?.({
-          isUsed: true,
-        });
+        Banner.remove(claimCode);
       }
       showModal('error', {
         title: getText(I18N.modalRewardErrorTitle),
