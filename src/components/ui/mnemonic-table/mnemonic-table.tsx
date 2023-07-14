@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -16,23 +16,25 @@ interface MnemonicTableProps {
 }
 
 export function MnemonicTable({mnemonic}: MnemonicTableProps) {
+  const words = useMemo(() => mnemonic.split(' '), [mnemonic]);
   return (
     <>
       <View style={styles.mnemonics}>
         <View style={styles.column}>
-          {mnemonic
-            .split(' ')
-            .slice(0, 6)
-            .map((t, i) => (
-              <MnemonicWord key={`${t}${i}`} word={t} index={i + 1} />
-            ))}
+          {words.slice(0, words.length / 2).map((t, i) => (
+            <MnemonicWord key={`${t}${i}`} word={t} index={i + 1} />
+          ))}
         </View>
         <View style={styles.column}>
           {mnemonic
             .split(' ')
-            .slice(6, 12)
+            .slice(words.length / 2, words.length)
             .map((t, i) => (
-              <MnemonicWord key={`${t}${i}`} word={t} index={i + 7} />
+              <MnemonicWord
+                key={`${t}${i}`}
+                word={t}
+                index={i + words.length / 2 + 1}
+              />
             ))}
         </View>
       </View>
