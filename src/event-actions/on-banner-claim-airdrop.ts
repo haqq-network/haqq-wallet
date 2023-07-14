@@ -14,13 +14,12 @@ import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {Airdrop} from '@app/services/airdrop';
+import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
 import {AdjustEvents} from '@app/types';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
+  const banner = Banner.getById(claimCode);
   try {
-    const banner = Banner.getById(claimCode);
-
     if (!banner) {
       throw new Error('Claim not found');
     }
@@ -99,7 +98,12 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       claimCode: claimCode,
     });
 
-    if (e instanceof Error) {
+    if (e instanceof AirdropError) {
+      if (e.code === AirdropErrorCode.adressAlreadyUsed) {
+        return banner?.update?.({
+          isUsed: true,
+        });
+      }
       showModal('error', {
         title: getText(I18N.modalRewardErrorTitle),
         description: e.message,

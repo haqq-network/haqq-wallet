@@ -32,6 +32,19 @@ export type GetDynamicLinkResponse = {
   code: string;
 };
 
+export enum AirdropErrorCode {
+  adressAlreadyUsed = '2094220699',
+}
+
+export class AirdropError {
+  message: string;
+  code: AirdropErrorCode;
+  constructor(message: string, code: AirdropErrorCode) {
+    this.message = message;
+    this.code = code;
+  }
+}
+
 export class Airdrop {
   static instance = new Airdrop();
 
@@ -72,7 +85,10 @@ export class Airdrop {
     const resp = await getHttpResponse(request);
 
     if (request.status !== 200) {
-      throw new Error(resp.error);
+      throw new AirdropError(
+        resp.error,
+        String(resp?.code) as AirdropErrorCode,
+      );
     }
 
     return resp;
