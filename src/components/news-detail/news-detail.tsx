@@ -6,6 +6,7 @@ import {Image, View} from 'react-native';
 import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
 import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import Markdown from 'react-native-markdown-package';
+import SimpleMarkdown from 'simple-markdown';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
@@ -36,6 +37,12 @@ type NodeText = {
   content: string;
 };
 
+type NodeLink = {
+  type: 'text';
+  content: Node | Node[];
+  target: string;
+};
+
 type NodeList = {
   items: Node[][];
   ordered: boolean;
@@ -53,6 +60,10 @@ type Output = (
   content: Node | Node[],
   state: Record<string, any>,
 ) => React.ReactNode;
+
+const LINK_INSIDE = '(?:\\[[^\\]]*\\]|[^\\]]|\\](?=[^\\[]*\\]))*';
+const LINK_HREF_AND_TITLE =
+  '\\s*<?([^\\s]*?)>?(?:\\s+[\'"]([\\s\\S]*?)[\'"])?\\s*';
 
 const rules = {
   heading: {
@@ -148,18 +159,39 @@ const rules = {
           listItem = <View key={1}>{content}</View>;
         }
         state.withinList = false;
-        numberIndex++;
 
         return (
           <View key={i} style={styles.listRow}>
             <Text key={0} t11>
-              {node.ordered ? numberIndex + '. ' : '\u2022 '}
+              {node.ordered ? numberIndex++ + '. ' : '\u2022 '}
             </Text>
             {listItem}
           </View>
         );
       });
       return <View key={state.key}>{items}</View>;
+    },
+  },
+  link: {
+    match: SimpleMarkdown.inlineRegex(
+      new RegExp(
+        '^\\[(' + LINK_INSIDE + ')\\]\\(' + LINK_HREF_AND_TITLE + '\\)',
+      ),
+    ),
+    react: function (node: NodeLink, output: Output, {...state}) {
+      state.withinLink = true;
+      const _pressHandler = async () => {
+        onTrackEvent(AdjustEvents.newsOpenLink, {
+          url: node.target,
+        });
+
+        await openURL(node.target);
+      };
+      return (
+        <Text t11 onPress={_pressHandler} key={state.key} color={'blue'}>
+          {output(node.content, {...state, withinLink: true})}
+        </Text>
+      );
     },
   },
 };
