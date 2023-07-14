@@ -9,12 +9,12 @@ export const VOTES: {
   value: number;
 }[] = [
   {name: 'yes', color: Color.graphicGreen1, i18n: I18N.yes, value: 0x1},
-  {name: 'no', color: Color.textRed1, i18n: I18N.no, value: 0x2},
+  {name: 'no', color: Color.textRed1, i18n: I18N.no, value: 0x3},
   {
     name: 'abstain',
     color: Color.graphicSecond4,
     i18n: I18N.voteAbstain,
-    value: 0x3,
+    value: 0x2,
   },
   {
     name: 'no_with_veto',

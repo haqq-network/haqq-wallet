@@ -5,7 +5,10 @@ import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {PushNotifications} from '@app/services/push-notifications';
+import {
+  PushNotificationTopicsEnum,
+  PushNotifications,
+} from '@app/services/push-notifications';
 
 export const WelcomeNewsScreen = () => {
   const navigation = useTypedNavigation();
@@ -20,6 +23,10 @@ export const WelcomeNewsScreen = () => {
         .requestPermissions()
         .then(() => {
           VariablesBool.set('notifications', true);
+          VariablesBool.set(
+            `notificationsTopic:${PushNotificationTopicsEnum.transactions}`,
+            true,
+          );
         })
         .catch(() => {
           VariablesBool.set('notifications', false);
