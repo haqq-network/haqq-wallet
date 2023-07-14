@@ -2,11 +2,7 @@ import React from 'react';
 
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {useTiming} from 'react-native-redash';
 
 import {Color} from '@app/colors';
@@ -30,7 +26,7 @@ export const TopTabNavigatorLarge = ({
   activeTab,
   containerStyle,
   contentContainerStyle,
-  showSeparators,
+  // showSeparators,
   activeTabIndex,
   tabHeaderStyle,
   onTabPress,
@@ -63,33 +59,34 @@ export const TopTabNavigatorLarge = ({
           const title = isI18N(tab.props.title)
             ? getText(tab.props.title)
             : tab.props.title;
-          const showSeparator =
-            showSeparators &&
-            index !== tabList.length - 1 &&
-            activeTabIndex !== index &&
-            activeTabIndex - 1 !== index;
+          // const showSeparator =
+          //   showSeparators &&
+          //   index !== tabList.length - 1 &&
+          //   activeTabIndex !== index &&
+          //   activeTabIndex - 1 !== index;
 
           return (
-            <React.Fragment key={`${tab.props.title}_${index}`}>
-              <TouchableOpacity
-                onLayout={onTabLayout}
-                containerStyle={styles.tab}
-                style={styles.tabTouchable}
-                onPress={() => {
-                  onTabPress(tab, index);
-                }}>
-                <Text t14={!isActive} t13={isActive}>
-                  {title}
-                </Text>
-              </TouchableOpacity>
-              {showSeparator && (
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={styles.tabSeparator}
-                />
-              )}
-            </React.Fragment>
+            // <React.Fragment key={`${tab.props.title}_${index}`}>
+            <TouchableOpacity
+              key={`${tab.props.title}_${index}`}
+              onLayout={onTabLayout}
+              containerStyle={styles.tab}
+              style={styles.tabTouchable}
+              onPress={() => {
+                onTabPress(tab, index);
+              }}>
+              <Text t14={!isActive} t13={isActive}>
+                {title}
+              </Text>
+            </TouchableOpacity>
+            //   {showSeparator && (
+            //     <Animated.View
+            //       entering={FadeIn}
+            //       exiting={FadeOut}
+            //       style={styles.tabSeparator}
+            //     />
+            //   )}
+            // </React.Fragment>
           );
         })}
       </View>
@@ -103,14 +100,14 @@ export const TopTabNavigatorLarge = ({
 };
 
 const styles = createTheme({
-  tabSeparator: {
-    width: 1,
-    height: 16,
-    alignSelf: 'center',
-    backgroundColor: Color.graphicSecond2,
-    transform: [{translateX: -0.5}],
-    zIndex: 1,
-  },
+  // tabSeparator: {
+  //   width: 1,
+  //   height: 16,
+  //   alignSelf: 'center',
+  //   backgroundColor: Color.graphicSecond2,
+  //   transform: [{translateX: -0.5}],
+  //   zIndex: 1,
+  // },
   activeTabIndicator: {
     zIndex: 2,
     backgroundColor: Color.bg1,
