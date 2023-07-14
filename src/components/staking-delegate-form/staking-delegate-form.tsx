@@ -38,7 +38,7 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001), 1);
+  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001), 0.01);
 
   const validatorCommission = useMemo(() => {
     return formatPercents(commission_rates.rate);
