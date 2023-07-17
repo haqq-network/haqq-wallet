@@ -19,9 +19,10 @@ import {AppTheme} from '@app/types';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
+  testID?: string;
 }
 
-export function BackupWarning({onPressBackup}: BackupWarningProps) {
+export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
   const theme = useTheme();
 
   const animation = useMemo(() => {
@@ -32,7 +33,7 @@ export function BackupWarning({onPressBackup}: BackupWarningProps) {
   }, [theme]);
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} testID={testID}>
       <Spacer style={styles.imageContainer}>
         <LottieWrap source={animation} style={styles.image} autoPlay loop />
       </Spacer>
@@ -61,6 +62,7 @@ export function BackupWarning({onPressBackup}: BackupWarningProps) {
         style={styles.submit}
         i18n={I18N.backupWarningButton}
         onPress={onPressBackup}
+        testID={`${testID}_next`}
       />
     </PopupContainer>
   );

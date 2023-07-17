@@ -26,7 +26,9 @@ export const OnboardingTrackUserActivity = ({
   onClickEnable,
 }: OnboardingBiometryProps) => {
   return (
-    <PopupContainer style={style.container}>
+    <PopupContainer
+      style={style.container}
+      testID="onboarding_track_user_activity">
       <Spacer style={style.animation}>
         <LottieWrap
           loop

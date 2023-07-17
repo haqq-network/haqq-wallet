@@ -35,6 +35,7 @@ export const BackupNotificationScreen = () => {
     <BottomPopupContainer>
       {onClose => (
         <BackupNotification
+          testID="backup_notification"
           onClickBackup={() => onClose(onClickBackup)}
           onClickSkip={() => onClose(onClickSkip)}
         />

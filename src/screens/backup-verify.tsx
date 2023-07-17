@@ -51,6 +51,7 @@ export const BackupVerifyScreen = () => {
       phrase={mnemonic}
       onDone={onDone}
       key={error}
+      testID="backup_verify"
     />
   );
 };

@@ -21,10 +21,16 @@ import {shuffleWords} from '@app/utils';
 export type BackupVerifyProps = {
   error: boolean;
   phrase: string;
+  testID?: string;
   onDone: (phrase: string) => void;
 };
 
-export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
+export const BackupVerify = ({
+  error,
+  phrase,
+  onDone,
+  testID,
+}: BackupVerifyProps) => {
   const words = useMemo(
     () => new Map(phrase.split(' ').map((value, pos) => [String(pos), value])),
     [phrase],
@@ -68,7 +74,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
   }, []);
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} testID={testID}>
       <Text t4 style={styles.title} i18n={I18N.backupVerifyTitle} center />
       {error ? (
         <Text
@@ -141,6 +147,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
             style={styles.buttonStyle}
             title={words.get(val) ?? ''}
             onPress={onPressWord(val)}
+            testID={`${testID}_word_${words.get(val)}`}
           />
         ))}
       </View>
@@ -151,6 +158,7 @@ export const BackupVerify = ({error, phrase, onDone}: BackupVerifyProps) => {
         i18n={I18N.backupVerifyCheck}
         onPress={onPressDone}
         style={styles.margin}
+        testID={`${testID}_check`}
       />
     </PopupContainer>
   );

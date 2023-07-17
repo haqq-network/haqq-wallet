@@ -7580,9 +7580,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.11.0":
-  version: 20.11.0
-  resolution: "detox@npm:20.11.0"
+"detox-getprops@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "detox-getprops@npm:0.1.2"
+  peerDependencies:
+    detox: "*"
+  checksum: 70208318eda9acbe8b12b0a5e5b5f97dcb7a9faa13c2d555b39328eb49b9cab6c119551073bf7a868736799f4f1722bd00f0f16ac68ab700c0cc071c4bb6b1eb
+  languageName: node
+  linkType: hard
+
+"detox@npm:20.11.1":
+  version: 20.11.1
+  resolution: "detox@npm:20.11.1"
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -7625,7 +7634,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 88e829cee74b06d8c14a650e04fd46a6a7c28cdf735a7c417cd67df039709bd212696ef30a7a1e6a371646d71f3ebd27aff3335ad9ff106277ce2f9cb7010ffc
+  checksum: 48bdc6b84dcb498ccd7961717daeeffc2967ba3a0184852d157b73ecbc5124c340b22b2c26f2b771383df43123ce7dffa06f2408f78df41d776d8c2addf63eeb
   languageName: node
   linkType: hard
 
@@ -8297,9 +8306,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.44.0":
-  version: 8.44.0
-  resolution: "eslint@npm:8.44.0"
+"eslint@npm:8.45.0":
+  version: 8.45.0
+  resolution: "eslint@npm:8.45.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.4.0
@@ -8326,7 +8335,6 @@ __metadata:
     globals: ^13.19.0
     graphemer: ^1.4.0
     ignore: ^5.2.0
-    import-fresh: ^3.0.0
     imurmurhash: ^0.1.4
     is-glob: ^4.0.0
     is-path-inside: ^3.0.3
@@ -8338,11 +8346,10 @@ __metadata:
     natural-compare: ^1.4.0
     optionator: ^0.9.3
     strip-ansi: ^6.0.1
-    strip-json-comments: ^3.1.0
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: d06309ce4aafb9d27d558c8e5e5aa5cba3bbec3ce8ceccbc7d4b7a35f2b67fd40189159155553270e2e6febeb69bd8a3b60d6241c8f5ddc2ef1702ccbd328501
+  checksum: 3e6dcce5cc43c5e301662db88ee26d1d188b22c177b9f104d7eefd1191236980bd953b3670fe2fac287114b26d7c5420ab48407d7ea1c3a446d6313c000009da
   languageName: node
   linkType: hard
 
@@ -9700,9 +9707,10 @@ __metadata:
     date-fns: 2.30.0
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
-    detox: 20.11.0
+    detox: 20.11.1
+    detox-getprops: ^0.1.2
     dotenv: 16.3.1
-    eslint: 8.44.0
+    eslint: 8.45.0
     eslint-plugin-import: 2.27.5
     eslint-plugin-jest: 27.2.3
     eslint-plugin-prettier: 5.0.0
@@ -10146,7 +10154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-fresh@npm:^3.0.0, import-fresh@npm:^3.2.1":
+"import-fresh@npm:^3.2.1":
   version: 3.3.0
   resolution: "import-fresh@npm:3.3.0"
   dependencies:
@@ -16360,7 +16368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strip-json-comments@npm:^3.1.0, strip-json-comments@npm:^3.1.1":
+"strip-json-comments@npm:^3.1.1":
   version: 3.1.1
   resolution: "strip-json-comments@npm:3.1.1"
   checksum: 492f73e27268f9b1c122733f28ecb0e7e8d8a531a6662efbd08e22cccb3f9475e90a1b82cab06a392f6afae6d2de636f977e231296400d0ec5304ba70f166443

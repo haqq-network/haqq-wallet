@@ -20,9 +20,14 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 interface BackupCreateProps {
   onSubmit: () => void;
   mnemonic: string;
+  testID: string;
 }
 
-export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
+export const BackupCreate = ({
+  mnemonic,
+  onSubmit,
+  testID,
+}: BackupCreateProps) => {
   const [checked, setChecked] = useState(false);
 
   const onClickCheck = (val: boolean) => {
@@ -31,7 +36,7 @@ export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
   };
 
   return (
-    <PopupContainer style={page.container}>
+    <PopupContainer style={page.container} testID={testID}>
       <Text t4 style={page.t4} i18n={I18N.backupCreateRecoveryPhrase} />
       <Text
         t11
@@ -40,7 +45,7 @@ export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
         i18n={I18N.backupCreateRecoverySaveWords}
       />
       <Spacer style={page.space}>
-        <MnemonicTable mnemonic={mnemonic} />
+        <MnemonicTable mnemonic={mnemonic} testID={`${testID}_mnemonic`} />
       </Spacer>
       <InfoBlock
         i18n={I18N.backupCreateRecoveryWarningMessage}
@@ -48,7 +53,10 @@ export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
         style={page.marginBottom}
       />
       <View style={page.agree}>
-        <Checkbox value={checked} onPress={onClickCheck}>
+        <Checkbox
+          value={checked}
+          onPress={onClickCheck}
+          testID={`${testID}_checkbox`}>
           <Text
             t13
             style={page.agreeText}
@@ -62,6 +70,7 @@ export const BackupCreate = ({mnemonic, onSubmit}: BackupCreateProps) => {
         variant={ButtonVariant.contained}
         disabled={!checked}
         onPress={onSubmit}
+        testID={`${testID}_next`}
       />
     </PopupContainer>
   );

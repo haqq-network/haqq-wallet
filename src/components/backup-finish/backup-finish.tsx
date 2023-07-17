@@ -18,9 +18,10 @@ import {AppTheme} from '@app/types';
 
 type BackupFinishProps = {
   onSubmit: () => void;
+  testID?: string;
 };
 
-export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
+export const BackupFinish = ({onSubmit, testID}: BackupFinishProps) => {
   const theme = useTheme();
   const animationSize = useWindowDimensions().width - 116;
   useEffect(() => {
@@ -36,7 +37,7 @@ export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
   }, [theme]);
 
   return (
-    <PopupContainer style={page.popupContainer}>
+    <PopupContainer style={page.popupContainer} testID={testID}>
       <Spacer style={page.container}>
         <LottieWrap
           source={animation}
@@ -52,6 +53,7 @@ export const BackupFinish = ({onSubmit}: BackupFinishProps) => {
         variant={ButtonVariant.contained}
         i18n={I18N.backupFinishFinish}
         onPress={onSubmit}
+        testID={`${testID}_finish`}
       />
     </PopupContainer>
   );
