@@ -13,6 +13,7 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
@@ -22,6 +23,10 @@ import {WEI} from '@app/variables/common';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
+  useAndroidBackHandler(() => {
+    navigation.goBack();
+    return true;
+  }, [navigation]);
   const route = useTypedRoute<'transactionConfirmation'>();
 
   const wallet = useWallet(route.params.from);
