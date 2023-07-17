@@ -244,18 +244,6 @@ export class WalletConnect extends EventEmitter {
     return this._client?.engine?.signClient?.session?.get?.(topic);
   }
 
-  private redirect() {
-    const isWalletConnectFromDeepLink = VariablesBool.get(
-      'isWalletConnectFromDeepLink',
-    );
-    if (isWalletConnectFromDeepLink) {
-      VariablesBool.set('isWalletConnectFromDeepLink', false);
-      setTimeout(() => {
-        AppUtils.goBack();
-      }, 500);
-    }
-  }
-
   public async approveSessionRequest(
     result: any,
     event: SignClientTypes.EventArguments['session_request'],
@@ -279,6 +267,18 @@ export class WalletConnect extends EventEmitter {
       topic: event.topic,
       response: {id: event.id, result, jsonrpc: '2.0'},
     });
+  }
+
+  private redirect() {
+    const isWalletConnectFromDeepLink = VariablesBool.get(
+      'isWalletConnectFromDeepLink',
+    );
+    if (isWalletConnectFromDeepLink) {
+      VariablesBool.set('isWalletConnectFromDeepLink', false);
+      setTimeout(() => {
+        AppUtils.goBack();
+      }, 500);
+    }
   }
 
   private _emitActiveSessions() {

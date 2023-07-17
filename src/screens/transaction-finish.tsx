@@ -3,13 +3,13 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
+import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {shortAddress} from '@app/utils';
 
 export const TransactionFinishScreen = () => {
   const {navigate, getParent} = useTypedNavigation();
@@ -84,6 +84,7 @@ export const TransactionFinishScreen = () => {
       transaction={transaction}
       contact={contact}
       short={short}
+      testID="transaction_finish"
     />
   );
 };

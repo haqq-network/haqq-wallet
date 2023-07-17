@@ -11,6 +11,7 @@ import {Spacer, Text} from './ui';
 export interface TokenRowProps {
   item: TokenItem;
   islmPrice: number;
+
   onPress?(tiker: string): void;
 }
 

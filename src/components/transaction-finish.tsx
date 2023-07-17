@@ -28,6 +28,7 @@ type TransactionFinishProps = {
   onPressContact: () => void;
   contact: Contact | null;
   short: string;
+  testID?: string;
 };
 
 export const TransactionFinish = ({
@@ -36,6 +37,7 @@ export const TransactionFinish = ({
   onPressContact,
   contact,
   short,
+  testID,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -43,7 +45,7 @@ export const TransactionFinish = ({
   };
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} testID={testID}>
       <View style={styles.sub}>
         <LottieWrap
           source={require('@assets/animations/transaction-finish.json')}
@@ -144,6 +146,7 @@ export const TransactionFinish = ({
         variant={ButtonVariant.contained}
         i18n={I18N.transactionFinishDone}
         onPress={onSubmit}
+        testID={`${testID}_finish`}
       />
     </PopupContainer>
   );

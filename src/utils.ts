@@ -38,13 +38,6 @@ export function isNumber(value: string) {
   return value.match(numbersRegExp);
 }
 
-export function shortAddress(address: string, delimiter: string = '.') {
-  return `${address.slice(0, 4)}${delimiter.repeat(4)}${address.slice(
-    address.length - 4,
-    address.length,
-  )}`;
-}
-
 const regex = /(0x\w{2})(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {

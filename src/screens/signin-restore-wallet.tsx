@@ -43,5 +43,5 @@ export const SignInRestoreScreen = () => {
     [navigation],
   );
 
-  return <SignInRestore onDoneTry={onDoneTry} />;
+  return <SignInRestore onDoneTry={onDoneTry} testID="signin_restore" />;
 };

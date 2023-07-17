@@ -39,6 +39,7 @@ export enum AirdropErrorCode {
 export class AirdropError {
   message: string;
   code: AirdropErrorCode;
+
   constructor(message: string, code: AirdropErrorCode) {
     this.message = message;
     this.code = code;
@@ -52,18 +53,17 @@ export class Airdrop {
     54211: AIRDROP_TESTEDGE2_URL,
     11235: AIRDROP_MAINNET_URL,
   };
-
-  getRemoteUrl() {
-    console.log('AIRDROP_MAINNET_URL ', AIRDROP_MAINNET_URL);
-    return AIRDROP_MAINNET_URL;
-  }
-
   static headers = {
     accept: 'application/json, text/plain, */*',
     'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
     connection: 'keep-alive',
     'content-type': 'application/json;charset=UTF-8',
   };
+
+  getRemoteUrl() {
+    console.log('AIRDROP_MAINNET_URL ', AIRDROP_MAINNET_URL);
+    return AIRDROP_MAINNET_URL;
+  }
 
   async claim(
     wallet: string,

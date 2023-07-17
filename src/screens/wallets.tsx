@@ -134,6 +134,7 @@ export const WalletsWrapper = () => {
       onPressQR={onPressQR}
       onPressProtection={onPressProtection}
       onPressAccountInfo={onPressAccountInfo}
+      testID="wallets"
     />
   );
 };

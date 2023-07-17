@@ -20,9 +20,13 @@ import {I18N} from '@app/i18n';
 
 interface SinginRestoreWalletProps {
   onDoneTry: (seed: string) => void;
+  testID?: string;
 }
 
-export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
+export const SignInRestore = ({
+  onDoneTry,
+  testID,
+}: SinginRestoreWalletProps) => {
   const [disabled, setDisabled] = useState(false);
   const [seed, setSeed] = useState('');
 
@@ -66,8 +70,9 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
       contentContainerStyle={page.scrollContent}
       keyboardShouldPersistTaps="always"
       keyboardDismissMode="on-drag"
-      showsVerticalScrollIndicator={false}>
-      <KeyboardSafeArea style={page.container} testID="signin_restore">
+      showsVerticalScrollIndicator={false}
+      testID={testID}>
+      <KeyboardSafeArea style={page.container} testID={`${testID}_area`}>
         <Text
           t11
           color={getColor(Color.textBase2)}
@@ -83,6 +88,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           onChangeText={onChangeKey}
           multiline
           errorTextI18n={I18N.signinRestoreWalletTextFieldError}
+          testID={`${testID}_input`}
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>
@@ -99,6 +105,7 @@ export const SignInRestore = ({onDoneTry}: SinginRestoreWalletProps) => {
           onPress={onDone}
           variant={ButtonVariant.contained}
           style={page.submit}
+          testID={`${testID}_submit`}
         />
       </KeyboardSafeArea>
     </ScrollView>

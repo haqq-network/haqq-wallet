@@ -135,6 +135,7 @@ export const TransactionConfirmationScreen = () => {
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
       error={error}
+      testID="transaction_confirmation"
     />
   );
 };

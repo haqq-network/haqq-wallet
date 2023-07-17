@@ -23,9 +23,11 @@ export type CardProps = {
   colorPattern: string;
   pattern: string;
   onLoad?: () => void;
+  testID?: string;
 };
 
 export const Card = ({
+  testID,
   children,
   width,
   height,
@@ -50,7 +52,8 @@ export const Card = ({
             borderRadius,
           },
           style,
-        ]}>
+        ]}
+        testID={testID}>
         <Image
           onLoad={onLoad}
           source={uri}
@@ -75,7 +78,8 @@ export const Card = ({
           borderRadius,
         },
         style,
-      ]}>
+      ]}
+      testID={testID}>
       <LinearGradient
         colors={[colorFrom, colorTo]}
         start={GRADIENT_START}

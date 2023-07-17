@@ -7580,15 +7580,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox-getprops@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "detox-getprops@npm:0.1.2"
-  peerDependencies:
-    detox: "*"
-  checksum: 70208318eda9acbe8b12b0a5e5b5f97dcb7a9faa13c2d555b39328eb49b9cab6c119551073bf7a868736799f4f1722bd00f0f16ac68ab700c0cc071c4bb6b1eb
-  languageName: node
-  linkType: hard
-
 "detox@npm:20.11.1":
   version: 20.11.1
   resolution: "detox@npm:20.11.1"
@@ -7735,7 +7726,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.3.1, dotenv@npm:^16.3.1":
+"dotenv@npm:^16.3.1":
   version: 16.3.1
   resolution: "dotenv@npm:16.3.1"
   checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
@@ -9708,8 +9699,7 @@ __metadata:
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
     detox: 20.11.1
-    detox-getprops: ^0.1.2
-    dotenv: 16.3.1
+    dotenv: ^16.3.1
     eslint: 8.45.0
     eslint-plugin-import: 2.27.5
     eslint-plugin-jest: 27.2.3

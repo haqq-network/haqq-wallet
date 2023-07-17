@@ -19,6 +19,7 @@ export type SumBlockProps = {
   balance: number;
   onChange: (value: string) => void;
   onMax: () => void;
+  testID?: string;
 };
 export const SumBlock = ({
   onChange,
@@ -27,6 +28,7 @@ export const SumBlock = ({
   currency,
   onMax,
   error,
+  testID,
 }: SumBlockProps) => {
   const inputSumRef = useRef<TextInput>(null);
 
@@ -66,7 +68,7 @@ export const SumBlock = ({
   }, [onMax]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testID}>
       <Text t8 center style={styles.subtitle} color={Color.textBase2}>
         {currency}
       </Text>
@@ -90,6 +92,7 @@ export const SumBlock = ({
             placeholderTextColor={getColor(Color.textBase2)}
             ref={inputSumRef}
             textAlign="left"
+            testID={`${testID}_input`}
           />
         </Pressable>
         <View style={styles.max}>
@@ -99,6 +102,7 @@ export const SumBlock = ({
               onPress={onPressMax}
               variant={ButtonVariant.second}
               size={ButtonSize.small}
+              testID={`${testID}_max`}
             />
           )}
         </View>
@@ -107,11 +111,11 @@ export const SumBlock = ({
       {/*  <Text t15>$ {amountUsd}</Text>*/}
       {/*</View>*/}
       {error ? (
-        <Text center color={Color.textRed1} t14>
+        <Text center color={Color.textRed1} t14 testID={`${testID}_error`}>
           {error}
         </Text>
       ) : (
-        <Text center color={Color.textBase2} t14>
+        <Text center color={Color.textBase2} t14 testID={`${testID}_hint`}>
           {getText(I18N.sumBlockAvailable)}:{' '}
           <Text t14 color={Color.textGreen1}>
             {cleanNumber(balance)} {currency}

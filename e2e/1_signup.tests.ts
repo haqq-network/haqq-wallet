@@ -1,5 +1,6 @@
 import {by, device, element, expect, waitFor} from 'detox';
 
+import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {PIN} from './test-variables';
 
 describe('Signup', () => {
@@ -8,7 +9,6 @@ describe('Signup', () => {
       newInstance: true,
       permissions: {notifications: 'NO'},
     });
-    await device.reloadReactNative();
   });
 
   it('should create and backup phrase', async () => {
@@ -67,7 +67,7 @@ describe('Signup', () => {
 
     await waitFor(element(by.id('backup_create'))).toBeVisible();
 
-    const mnemonic = [];
+    const mnemonic_words = [];
 
     for (let i = 1; i <= 12; i++) {
       // @ts-ignore
@@ -75,25 +75,27 @@ describe('Signup', () => {
         by.id(`backup_create_mnemonic_word_${i}`),
       ).getAttributes();
 
-      mnemonic.push(text);
+      mnemonic_words.push(text);
     }
 
-    console.log('mnemonic', mnemonic.join(' '));
+    console.log('mnemonic', mnemonic_words.join(' '));
 
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
     await waitFor(element(by.id('backup_verify'))).toBeVisible();
 
-    for (const word of mnemonic) {
+    for (const word of mnemonic_words) {
       const el = element(by.id(`backup_verify_word_${word}`));
       await waitFor(el).toBeVisible();
       await el.tap();
     }
 
-    await element(by.id(`backup_verify_check`)).tap();
+    await element(by.id('backup_verify_check')).tap();
 
     await waitFor(element(by.id('backup_finish'))).toBeVisible();
     await element(by.id('backup_finish_finish')).tap();
+
+    await ensureWalletIsVisible(mnemonic_words.join(' '));
   });
 });

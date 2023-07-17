@@ -1,13 +1,13 @@
 <svg width="81" height="80" viewBox="0 0 81 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="7.5" y="1" width="66" height="78" rx="7" stroke="#CCCDD2" stroke-width="2"/>
-<rect x="20.5" y="18" width="40" height="2" rx="1" fill="#CCCDD2"/>
-<rect x="31.5" y="23" width="9" height="2" rx="1" fill="#CCCDD2"/>
-<rect x="31.5" y="27" width="21" height="2" rx="1" fill="#CCCDD2"/>
-<circle cx="24.5" cy="26" r="3" stroke="#CCCDD2" stroke-width="2"/>
-<rect x="15.5" y="13" width="50" height="22" rx="2" stroke="#CCCDD2" stroke-width="2"/>
-<rect x="20.5" y="48" width="40" height="2" rx="1" fill="#CCCDD2"/>
-<rect x="31.5" y="53" width="9" height="2" rx="1" fill="#CCCDD2"/>
-<rect x="31.5" y="57" width="21" height="2" rx="1" fill="#CCCDD2"/>
-<circle cx="24.5" cy="56" r="3" stroke="#CCCDD2" stroke-width="2"/>
-<rect x="15.5" y="43" width="50" height="22" rx="2" stroke="#CCCDD2" stroke-width="2"/>
+  <rect x="7.5" y="1" width="66" height="78" rx="7" stroke="#CCCDD2" stroke-width="2"/>
+  <rect x="20.5" y="18" width="40" height="2" rx="1" fill="#CCCDD2"/>
+  <rect x="31.5" y="23" width="9" height="2" rx="1" fill="#CCCDD2"/>
+  <rect x="31.5" y="27" width="21" height="2" rx="1" fill="#CCCDD2"/>
+  <circle cx="24.5" cy="26" r="3" stroke="#CCCDD2" stroke-width="2"/>
+  <rect x="15.5" y="13" width="50" height="22" rx="2" stroke="#CCCDD2" stroke-width="2"/>
+  <rect x="20.5" y="48" width="40" height="2" rx="1" fill="#CCCDD2"/>
+  <rect x="31.5" y="53" width="9" height="2" rx="1" fill="#CCCDD2"/>
+  <rect x="31.5" y="57" width="21" height="2" rx="1" fill="#CCCDD2"/>
+  <circle cx="24.5" cy="56" r="3" stroke="#CCCDD2" stroke-width="2"/>
+  <rect x="15.5" y="43" width="50" height="22" rx="2" stroke="#CCCDD2" stroke-width="2"/>
 </svg>

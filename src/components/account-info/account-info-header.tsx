@@ -13,9 +13,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {shortAddress} from '@app/utils';
 
 const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
