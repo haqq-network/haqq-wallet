@@ -12,6 +12,7 @@ import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents} from '@app/types';
@@ -20,6 +21,10 @@ import {WEI} from '@app/variables/common';
 export const TransactionLedgerScreen = () => {
   const transport = useRef<ProviderInterface | null>(null);
   const navigation = useTypedNavigation();
+  useAndroidBackHandler(() => {
+    navigation.goBack();
+    return true;
+  }, [navigation]);
   const route = useTypedRoute<'transactionConfirmation'>();
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import prompt from 'react-native-prompt-android';
 
 import {TransactionNftFinish} from '@app/components/transaction-nft-finish';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
@@ -12,7 +13,11 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {shortAddress} from '@app/utils';
 
 export const TransactionNftFinishScreen = () => {
-  const {navigate, getParent} = useTypedNavigation();
+  const {navigate, getParent, goBack} = useTypedNavigation();
+  useAndroidBackHandler(() => {
+    goBack();
+    return true;
+  }, [goBack]);
   const {hash, nft} = useTypedRoute<'transactionNftFinish'>().params;
   const [transaction, setTransaction] = useState<Transaction | null>(
     Transaction.getById(hash),

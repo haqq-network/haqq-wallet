@@ -17,6 +17,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -43,6 +44,11 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   const [flashMode, setFlashMode] = useState(false);
 
   const theme = useTheme();
+
+  useAndroidBackHandler(() => {
+    onClose();
+    return true;
+  }, [onClose]);
 
   useEffect(() => {
     if (IS_IOS) {
