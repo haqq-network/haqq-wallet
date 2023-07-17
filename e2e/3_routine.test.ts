@@ -62,6 +62,19 @@ describe('Routine', () => {
     await ensureWalletIsVisible(mnemonic);
   });
 
+  it('should reopen app', async () => {
+    await device.terminateApp();
+    await device.launchApp();
+
+    await waitFor(element(by.id('pin'))).toBeVisible();
+
+    for (const num of PIN.split('')) {
+      await element(by.id(`numeric_keyboard_${num}`)).tap();
+    }
+
+    await ensureWalletIsVisible(mnemonic);
+  });
+
   it('should transfer coins', async () => {
     await waitFor(element(by.id('wallets'))).toBeVisible();
 

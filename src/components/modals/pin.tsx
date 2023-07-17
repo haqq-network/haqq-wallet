@@ -48,7 +48,7 @@ export const PinModal = () => {
   );
 
   return (
-    <View style={page.container} key={theme}>
+    <View style={page.container} key={theme} testID="pin">
       <Pin
         ref={pinRef}
         title={getText(I18N.modalPinTitle)}
