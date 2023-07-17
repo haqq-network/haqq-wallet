@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {StyleSheet} from 'react-native';
 import Animated, {
@@ -25,6 +25,15 @@ export function NewsCardCarousel({data, onPress}: NewsCardCarouselProps) {
     pan.value = event.contentOffset.x / WINDOW_WIDTH;
   });
 
+  const renderItem = useCallback(
+    (item: BaseNewsItem, i: number) => (
+      <CarouselItem index={i} pan={pan} key={item.id}>
+        <NewsCard item={item} onPress={onPress} />
+      </CarouselItem>
+    ),
+    [onPress, pan],
+  );
+
   return (
     <Animated.ScrollView
       pagingEnabled
@@ -34,11 +43,7 @@ export function NewsCardCarousel({data, onPress}: NewsCardCarouselProps) {
       scrollEventThrottle={16}
       onScroll={scrollHandler}
       style={styles.scroll}>
-      {data.map((item, i) => (
-        <CarouselItem index={i} pan={pan} key={item.id}>
-          <NewsCard item={item} onPress={onPress} />
-        </CarouselItem>
-      ))}
+      {data.map(renderItem)}
     </Animated.ScrollView>
   );
 }
