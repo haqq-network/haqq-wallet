@@ -1,6 +1,7 @@
 package com.haqq.wallet.haptic
 
 import android.content.Context
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import com.facebook.react.bridge.ReactApplicationContext
@@ -29,14 +30,13 @@ class HapticManager(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun vibrate(effect: String) {
     this.vibrateMap[effect]?.let {
-      val vibrator = reactContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-
-      vibrator.vibrate(
-        VibrationEffect.createWaveform(
-          it,
-          -1
-        )
-      )
+      val vibrator = reactApplicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val vibrationEffect = VibrationEffect.createWaveform(it, -1)
+        vibrator.vibrate(vibrationEffect)
+      } else {
+        vibrator.vibrate(it, -1)
+      }
     }
   }
 }
