@@ -18,11 +18,13 @@ import {SHADOW_COLOR_1, WINDOW_WIDTH} from '@app/variables/common';
 export type BackupNotificationProps = {
   onClickBackup: () => void;
   onClickSkip: () => void;
+  testID: string;
 };
 
 export const BackupNotification = ({
   onClickBackup,
   onClickSkip,
+  testID,
 }: BackupNotificationProps) => {
   const warningImage = useThemeSelector({
     dark: require('@assets/images/backup-notification-dark.png'),
@@ -48,7 +50,7 @@ export const BackupNotification = ({
   }, [onClickSkip]);
 
   return (
-    <View style={styles.sub}>
+    <View style={styles.sub} testID={testID}>
       <View style={styles.imageWrapper}>
         <Image
           resizeMode="contain"
@@ -75,6 +77,7 @@ export const BackupNotification = ({
         onPress={onClickBackup}
         style={styles.margin}
         size={ButtonSize.middle}
+        testID={`${testID}_backup`}
       />
       <Button
         i18n={I18N.backupNotificationSkip}
@@ -83,6 +86,7 @@ export const BackupNotification = ({
         onPress={onSkip}
         size={ButtonSize.middle}
         style={styles.margin}
+        testID={`${testID}_skip`}
       />
     </View>
   );

@@ -75,6 +75,7 @@ export const TransactionAddressScreen = () => {
       filteredWallets={filteredWallets}
       contacts={contacts}
       onAddress={onDone}
+      testID="transaction_address"
     />
   );
 };

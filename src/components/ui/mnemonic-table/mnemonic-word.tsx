@@ -8,15 +8,16 @@ import {Text} from '@app/components/ui';
 export type MnemonicWordProps = {
   word: string;
   index: number;
+  testID?: string;
 };
 
-export const MnemonicWord = ({word, index}: MnemonicWordProps) => {
+export const MnemonicWord = ({word, index, testID}: MnemonicWordProps) => {
   return (
     <View style={page.container}>
       <Text t14 color={Color.textBase2} style={page.index}>
         {index}
       </Text>
-      <Text t10 color={Color.graphicBase1}>
+      <Text t10 color={Color.graphicBase1} testID={`${testID}_${index}`}>
         {word}
       </Text>
     </View>

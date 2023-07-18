@@ -76,6 +76,7 @@ export const TransactionSumScreen = () => {
       from={route.params.from}
       onAmount={onAmount}
       onContact={onContact}
+      testID="transaction_sum"
     />
   );
 };

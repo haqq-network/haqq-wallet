@@ -57,5 +57,11 @@ export const BackupCreateScreen = () => {
     return <Loading />;
   }
 
-  return <BackupCreate onSubmit={onSubmit} mnemonic={mnemonic} />;
+  return (
+    <BackupCreate
+      onSubmit={onSubmit}
+      mnemonic={mnemonic}
+      testID="backup_create"
+    />
+  );
 };

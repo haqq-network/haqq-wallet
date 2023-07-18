@@ -33,7 +33,8 @@ export const WelcomeNews = ({
       style={[
         styles.container,
         {paddingTop: insets.top, paddingBottom: insets.bottom},
-      ]}>
+      ]}
+      testID="welcome">
       <FlatList
         data={news}
         renderItem={({item}) => <NewsRow item={item} onPress={onPress} />}

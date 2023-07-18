@@ -18,8 +18,13 @@ export const OnboardingSetupPin = ({
   pin,
 }: OnboardingSetupPinProps) => {
   return (
-    <PopupContainer style={page.container} testID="onboarding-setup-pin">
-      <Text t4 i18n={I18N.onboardingSetupPinSet} style={page.title} />
+    <PopupContainer style={page.container} testID="onboarding_setup_pin">
+      <Text
+        t4
+        i18n={I18N.onboardingSetupPinSet}
+        style={page.title}
+        testID="onboarding_setup_pin_set"
+      />
       <Text
         t11
         color={Color.textBase2}

@@ -6,8 +6,8 @@ import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
+import {shortAddress} from '@app/helpers/short-address';
 import {TransactionListReceive} from '@app/types';
-import {shortAddress} from '@app/utils';
 
 export type TransactionPreviewProps = {
   item: TransactionListReceive;

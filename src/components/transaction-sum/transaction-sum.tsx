@@ -14,11 +14,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {shortAddress} from '@app/utils';
 
 export type TransactionSumProps = {
   balance: number;
@@ -28,6 +28,7 @@ export type TransactionSumProps = {
   contact: Contact | null;
   onAmount: (amount: number) => void;
   onContact: () => void;
+  testID?: string;
 };
 
 export const TransactionSum = ({
@@ -37,6 +38,7 @@ export const TransactionSum = ({
   contact,
   onAmount,
   onContact,
+  testID,
 }: TransactionSumProps) => {
   const amounts = useSumAmount();
 
@@ -67,7 +69,7 @@ export const TransactionSum = ({
   }, [amounts]);
 
   return (
-    <KeyboardSafeArea isNumeric style={styles.container}>
+    <KeyboardSafeArea isNumeric style={styles.container} testID={testID}>
       <TouchableWithoutFeedback onPress={onContact}>
         <LabeledBlock
           i18nLabel={I18N.transactionSumSend}
@@ -89,6 +91,7 @@ export const TransactionSum = ({
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}
+          testID={`${testID}_form`}
         />
       </Spacer>
       <Spacer minHeight={16} />
@@ -97,6 +100,7 @@ export const TransactionSum = ({
         variant={ButtonVariant.contained}
         i18n={I18N.transactionSumPreview}
         onPress={onDone}
+        testID={`${testID}_next`}
       />
       <Spacer height={16} />
     </KeyboardSafeArea>

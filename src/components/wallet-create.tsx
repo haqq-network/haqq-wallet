@@ -20,17 +20,19 @@ import {
 } from '@app/variables/common';
 
 export type BalanceProps = {
+  testID?: string;
   onPressCreate: () => void;
   onPressLedger: () => void;
   onPressRestore: () => void;
 };
 export const WalletCreate = ({
+  testID,
   onPressCreate,
   onPressLedger,
   onPressRestore,
 }: BalanceProps) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testID}>
       <Text
         t8
         i18n={I18N.walletCreateAddAccount}

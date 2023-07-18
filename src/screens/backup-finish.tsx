@@ -13,5 +13,5 @@ export const BackupFinishScreen = () => {
     navigation.getParent()?.goBack();
   };
 
-  return <BackupFinish onSubmit={onSubmit} />;
+  return <BackupFinish onSubmit={onSubmit} testID="backup_finish" />;
 };

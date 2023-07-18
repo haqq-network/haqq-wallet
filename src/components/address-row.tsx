@@ -4,11 +4,11 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {shortAddress} from '@app/helpers/short-address';
 
 import {Box, DataContent, Text} from './ui';
 
 import {Contact} from '../models/contact';
-import {shortAddress} from '../utils';
 
 export type AddressRowProps = {
   item: Contact;

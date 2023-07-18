@@ -10,8 +10,11 @@ import {NewsRowList} from './news';
 export interface OurNewsProps {
   data: Results<BaseNewsItem> | BaseNewsItem[];
   refreshing: boolean;
+
   onEndReached(): void;
+
   onRefresh(): void;
+
   onPress(id: string): void;
 }
 

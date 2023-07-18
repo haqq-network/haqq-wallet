@@ -30,6 +30,7 @@ export type WalletsProps = {
   onPressLedger: () => void;
   onPressRestore: () => void;
   onPressAccountInfo: (address: string) => void;
+  testID?: string;
 };
 
 export const Wallets = ({
@@ -44,6 +45,7 @@ export const Wallets = ({
   onPressRestore,
   onPressWalletConnect,
   onPressAccountInfo,
+  testID,
 }: WalletsProps) => {
   const pan = useSharedValue(0);
 
@@ -65,6 +67,7 @@ export const Wallets = ({
         {wallets.map((w, i) => (
           <CarouselItem index={i} pan={pan} key={w.address}>
             <WalletCard
+              testID={`${testID}_${w.address}`}
               wallet={w}
               balance={balance[w.address] ?? 0}
               walletConnectSessions={walletConnectSessions[i]}
@@ -78,6 +81,7 @@ export const Wallets = ({
         ))}
         <CarouselItem index={wallets.length} pan={pan}>
           <WalletCreate
+            testID={`${testID}_create`}
             onPressCreate={onPressCreate}
             onPressLedger={onPressLedger}
             onPressRestore={onPressRestore}

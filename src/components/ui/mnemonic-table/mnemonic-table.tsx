@@ -13,16 +13,22 @@ import {MnemonicWord} from './mnemonic-word';
 
 interface MnemonicTableProps {
   mnemonic: string;
+  testID?: string;
 }
 
-export function MnemonicTable({mnemonic}: MnemonicTableProps) {
+export function MnemonicTable({mnemonic, testID}: MnemonicTableProps) {
   const words = useMemo(() => mnemonic.split(' '), [mnemonic]);
   return (
     <>
       <View style={styles.mnemonics}>
         <View style={styles.column}>
           {words.slice(0, words.length / 2).map((t, i) => (
-            <MnemonicWord key={`${t}${i}`} word={t} index={i + 1} />
+            <MnemonicWord
+              testID={`${testID}_word`}
+              key={`${t}${i}`}
+              word={t}
+              index={i + 1}
+            />
           ))}
         </View>
         <View style={styles.column}>
@@ -31,6 +37,7 @@ export function MnemonicTable({mnemonic}: MnemonicTableProps) {
             .slice(words.length / 2, words.length)
             .map((t, i) => (
               <MnemonicWord
+                testID={`${testID}_word`}
                 key={`${t}${i}`}
                 word={t}
                 index={i + words.length / 2 + 1}

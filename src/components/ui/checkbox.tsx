@@ -28,14 +28,18 @@ export type CheckboxProps = {
   value: boolean;
   onPress: (value: boolean) => void;
   children: React.ReactNode;
+  testID?: string;
 };
 
-export const Checkbox = ({value, onPress, children}: CheckboxProps) => {
+export const Checkbox = ({value, onPress, children, testID}: CheckboxProps) => {
   const onPressCheckbox = useCallback(() => {
     onPress(!value);
   }, [value, onPress]);
   return (
-    <TouchableOpacity onPress={onPressCheckbox} style={page.container}>
+    <TouchableOpacity
+      onPress={onPressCheckbox}
+      style={page.container}
+      testID={testID}>
       {value ? (
         <CheckboxFilled color={LIGHT_GRAPHIC_GREEN_1} />
       ) : (

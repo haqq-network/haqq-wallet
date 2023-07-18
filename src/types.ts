@@ -992,6 +992,7 @@ export interface BaseNewsItem {
 export interface NewsItem extends BaseNewsItem {
   content: string;
 }
+
 export interface RssNewsItem extends BaseNewsItem {
   url: string;
 }

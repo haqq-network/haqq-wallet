@@ -13,5 +13,7 @@ export const BackupWarningScreen = () => {
     });
   };
 
-  return <BackupWarning onPressBackup={onPressBackup} />;
+  return (
+    <BackupWarning onPressBackup={onPressBackup} testID="backup_warning" />
+  );
 };

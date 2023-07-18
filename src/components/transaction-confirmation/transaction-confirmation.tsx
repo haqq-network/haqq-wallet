@@ -19,6 +19,7 @@ import {splitAddress} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
+  testID?: string;
   to: string;
   amount: number;
   fee: number;
@@ -30,6 +31,7 @@ interface TransactionConfirmationProps {
 }
 
 export const TransactionConfirmation = ({
+  testID,
   error,
   disabled,
   contact,
@@ -41,7 +43,7 @@ export const TransactionConfirmation = ({
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} testID={testID}>
       <Image
         source={require('@assets/images/islm_icon.png')}
         style={styles.icon}
@@ -134,6 +136,7 @@ export const TransactionConfirmation = ({
         onPress={onConfirmTransaction}
         style={styles.submit}
         loading={disabled}
+        testID={`${testID}_submit`}
       />
     </PopupContainer>
   );

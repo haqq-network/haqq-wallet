@@ -14,6 +14,7 @@ import {
   Icon,
   IconButton,
   KeyboardSafeArea,
+  PopupContainer,
   Spacer,
   Text,
   TextField,
@@ -32,6 +33,7 @@ import {WalletRow, WalletRowTypes} from './wallet-row';
 import {WALLET_ROW_4_WIDTH} from './wallet-row-variant-4';
 
 export type TransactionAddressProps = {
+  testID?: string;
   initial?: string;
   loading?: boolean;
   filteredWallets?: Realm.Results<Wallet>;
@@ -52,6 +54,7 @@ export const TransactionAddress = ({
   filteredWallets,
   contacts,
   onAddress,
+  testID,
 }: TransactionAddressProps) => {
   const [error, setError] = useState(false);
   const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
@@ -133,73 +136,77 @@ export const TransactionAddress = ({
   );
 
   return (
-    <KeyboardSafeArea>
-      <TextField
-        label={I18N.transactionAddressLabel}
-        style={styles.input}
-        value={address}
-        onChangeText={setAddress}
-        error={error}
-        errorText={getText(I18N.transactionAddressError)}
-        autoFocus
-        multiline
-        numberOfLines={10}
-        placeholder={I18N.transactionAddressPlaceholder}
-        rightAction={
-          <First>
-            {address === '' && (
-              <View style={styles.inputButtonContainer}>
-                <IconButton onPress={onPressPaste}>
-                  <Icon i24 name="paste" color={Color.graphicGreen1} />
-                </IconButton>
-                <Spacer width={12} />
-                <IconButton onPress={onPressQR}>
-                  <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
-                </IconButton>
-              </View>
-            )}
-            <IconButton onPress={onPressClear}>
-              <Icon i24 name="close_circle" color={Color.graphicBase2} />
-            </IconButton>
-          </First>
-        }
-      />
+    <PopupContainer testID={testID}>
+      <KeyboardSafeArea>
+        <TextField
+          label={I18N.transactionAddressLabel}
+          style={styles.input}
+          value={address}
+          onChangeText={setAddress}
+          error={error}
+          errorText={getText(I18N.transactionAddressError)}
+          autoFocus
+          multiline
+          numberOfLines={10}
+          placeholder={I18N.transactionAddressPlaceholder}
+          testID={`${testID}_input`}
+          rightAction={
+            <First>
+              {address === '' && (
+                <View style={styles.inputButtonContainer}>
+                  <IconButton onPress={onPressPaste}>
+                    <Icon i24 name="paste" color={Color.graphicGreen1} />
+                  </IconButton>
+                  <Spacer width={12} />
+                  <IconButton onPress={onPressQR}>
+                    <Icon i24 name="qr_scanner" color={Color.graphicGreen1} />
+                  </IconButton>
+                </View>
+              )}
+              <IconButton onPress={onPressClear}>
+                <Icon i24 name="close_circle" color={Color.graphicBase2} />
+              </IconButton>
+            </First>
+          }
+        />
 
-      {Boolean(filteredWallets?.length) && (
-        <View style={styles.marginHorizontal}>
-          <Text t6 i18n={I18N.transactionMyAccounts} />
-          <Spacer height={12} />
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={filteredWallets}
-            keyExtractor={myAccountsKeyExtractor}
-            renderItem={myAccountsRenderItem}
-            snapToInterval={WALLET_ROW_4_WIDTH}
-          />
-          <Spacer height={12} />
-        </View>
-      )}
-
-      {Boolean(contacts?.length) && (
-        <>
-          <Spacer height={12} />
+        {Boolean(filteredWallets?.length) && (
           <View style={styles.marginHorizontal}>
-            <Text t6 i18n={I18N.transactionMyContacts} />
+            <Text t6 i18n={I18N.transactionMyAccounts} />
+            <Spacer height={12} />
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={filteredWallets}
+              keyExtractor={myAccountsKeyExtractor}
+              renderItem={myAccountsRenderItem}
+              snapToInterval={WALLET_ROW_4_WIDTH}
+            />
+            <Spacer height={12} />
           </View>
-          <ListOfContacts onPressAddress={onPressAddress} />
-        </>
-      )}
-      <Button
-        disabled={!checked}
-        variant={ButtonVariant.contained}
-        i18n={I18N.continue}
-        onPress={onDone}
-        style={styles.button}
-        loading={loading}
-      />
-      <Spacer height={32} />
-    </KeyboardSafeArea>
+        )}
+
+        {Boolean(contacts?.length) && (
+          <>
+            <Spacer height={12} />
+            <View style={styles.marginHorizontal}>
+              <Text t6 i18n={I18N.transactionMyContacts} />
+            </View>
+            <ListOfContacts onPressAddress={onPressAddress} />
+          </>
+        )}
+        <Button
+          disabled={!checked}
+          variant={ButtonVariant.contained}
+          i18n={I18N.continue}
+          onPress={onDone}
+          style={styles.button}
+          loading={loading}
+          testID={`${testID}_next`}
+        />
+        <Spacer height={32} />
+      </KeyboardSafeArea>
+    </PopupContainer>
   );
 };
 

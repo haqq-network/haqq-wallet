@@ -36,7 +36,7 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
       <Spacer>
         <LottieWrap source={animation} autoPlay loop={false} />
       </Spacer>
-      <Text t4 i18n={title} style={styles.title} />
+      <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />
       <Button
         style={styles.button}
         variant={ButtonVariant.contained}

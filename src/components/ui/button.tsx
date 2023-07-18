@@ -166,6 +166,7 @@ export const Button = ({
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
       activeOpacity={0.7}
+      disabled={disabled || loading}
       {...props}>
       {loading ? (
         <ActivityIndicator
