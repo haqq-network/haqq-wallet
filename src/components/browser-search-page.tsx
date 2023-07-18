@@ -52,7 +52,8 @@ export const BrowserSearchPage = ({
     () =>
       text
         ? searchHistory.filtered(
-            `url CONTAINS[c] '${text}' or title CONTAINS[c] '${text}'`,
+            'url CONTAINS[c] $0 or title CONTAINS[c] $0',
+            text,
           )
         : searchHistory,
     [searchHistory, text],
