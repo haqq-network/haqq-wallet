@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
 import {HomeFeed} from '@app/components/home-feed';
-import {nftCollections} from '@app/components/nft-viewer/mock';
+import {createNftCollectionSet} from '@app/components/nft-viewer/mock';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
@@ -31,6 +31,7 @@ const MOCK_TOKENS: TokenItem[] = [
 ];
 
 export const HomeFeedScreen = () => {
+  const nftCollections = useRef(createNftCollectionSet()).current;
   const navigation = useTypedNavigation();
   const [refreshing, setRefreshing] = useState(false);
 

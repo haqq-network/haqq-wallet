@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
@@ -14,7 +14,7 @@ import {TransactionList} from '@app/types';
 import {AccountInfoHeader} from './account-info-header';
 
 import {NftViewer} from '../nft-viewer';
-import {nftCollections} from '../nft-viewer/mock';
+import {createNftCollectionSet} from '../nft-viewer/mock';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
 enum TabNames {
@@ -39,6 +39,7 @@ export const AccountInfo = ({
   onPressRow,
   transactionsList,
 }: AccountInfoProps) => {
+  const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
   const transactionListdata = useMemo(
     () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
@@ -110,7 +111,7 @@ export const AccountInfo = ({
         </>
       </First>
     ),
-    [activeTab],
+    [activeTab, nftCollections],
   );
 
   const keyExtractor = useCallback((item: TransactionList) => item.hash, []);
