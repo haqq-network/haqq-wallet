@@ -3,13 +3,17 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
 
 // TODO:
 export const TransactionNftConfirmationScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'transactionNftConfirmation'>();
-
+  useAndroidBackHandler(() => {
+    navigation.goBack();
+    return true;
+  }, [navigation]);
   const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),

@@ -12,7 +12,7 @@ export const NewsDetailScreen = () => {
 
   useEffect(() => {
     const row = News.getById(route.params.id);
-    if (row) {
+    if (row && !row.viewed) {
       row.update({
         viewed: true,
       });
