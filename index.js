@@ -33,6 +33,7 @@ if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
       // We recommend adjusting this value in production.
       tracesSampleRate: 1.0,
       environment: ENVIRONMENT ?? 'development',
+      enableWatchdogTerminationTracking: false
     });
   } catch (e) {
     console.log('sentry init failed');
