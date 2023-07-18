@@ -122,9 +122,8 @@ export const Web3Browser = ({
       return;
     }
     return sessions.filtered(
-      `origin = '${getOriginFromUrl(
-        webviewNavigationData?.url || initialUrl,
-      )}'`,
+      'origin = $0',
+      getOriginFromUrl(webviewNavigationData?.url || initialUrl),
     )[0];
   }, [initialUrl, sessions, webviewNavigationData?.url]);
   const prevSession = usePrevious(currentSession);

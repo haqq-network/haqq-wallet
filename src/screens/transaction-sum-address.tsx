@@ -27,9 +27,7 @@ export const TransactionSumAddressScreen = () => {
     }
 
     return wallets
-      .filtered(
-        `address CONTAINS[c] '${address}' or name CONTAINS[c] '${address}'`,
-      )
+      .filtered('address CONTAINS[c] $0 or name CONTAINS[c] $0', address)
       .snapshot();
   }, [address, wallets]);
 
