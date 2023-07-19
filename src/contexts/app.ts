@@ -372,6 +372,15 @@ class App extends EventEmitter {
 
   async auth() {
     const close = showModal('pin');
+
+    await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
+
+    if (this.authenticated) {
+      close();
+    }
+  }
+
+  async makeBiometryAuth() {
     if (this.biometry && !this.pinBanned) {
       try {
         await this.biometryAuth();
@@ -379,16 +388,15 @@ class App extends EventEmitter {
         this.authenticated = true;
       } catch (error) {
         console.error('app.auth', error);
+        await awaitForEventDone(Events.enterPinSuccess);
       }
     }
+  }
 
+  async makePinAuth() {
     if (!this.authenticated) {
       await this.pinAuth();
       this.authenticated = true;
-    }
-
-    if (this.authenticated) {
-      close();
     }
   }
 
@@ -403,6 +411,7 @@ class App extends EventEmitter {
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
+          this.emit(Events.enterPinSuccess);
           resolve();
         } else {
           this.emit('errorPin', 'not match');
