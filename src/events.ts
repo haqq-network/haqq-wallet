@@ -30,6 +30,7 @@ export enum Events {
   onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
+  enterPinSuccess = 'enterPinSuccess',
 }
 
 export enum WalletConnectEvents {
