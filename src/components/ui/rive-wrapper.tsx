@@ -59,7 +59,7 @@ export const RiveWrapper = React.forwardRef<RiveRef, RiveWrapperProps>(
           {...props}
         />
         {/* if you unmount the component while clicking on the animation, the application will crash */}
-        {/* View component bellow prevent click  */}
+        {/* View component below prevent click  */}
         {!enableClickToAnimation && <View style={styles.overlay} />}
       </View>
     );
