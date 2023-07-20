@@ -390,6 +390,8 @@ class App extends EventEmitter {
         console.error('app.auth', error);
         await awaitForEventDone(Events.enterPinSuccess);
       }
+    } else {
+      await awaitForEventDone(Events.enterPinSuccess);
     }
   }
 
