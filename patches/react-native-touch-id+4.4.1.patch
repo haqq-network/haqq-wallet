@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-touch-id/android/src/main/java/com/rnfingerprint/FingerprintHandler.java b/node_modules/react-native-touch-id/android/src/main/java/com/rnfingerprint/FingerprintHandler.java
+index 1ae00e6..e1d4300 100644
+--- a/node_modules/react-native-touch-id/android/src/main/java/com/rnfingerprint/FingerprintHandler.java
++++ b/node_modules/react-native-touch-id/android/src/main/java/com/rnfingerprint/FingerprintHandler.java
+@@ -23,7 +23,17 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
+     public void startAuth(FingerprintManager.CryptoObject cryptoObject) {
+         cancellationSignal = new CancellationSignal();
+         selfCancelled = false;
+-        mFingerprintManager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
++        if (!mFingerprintManager.isHardwareDetected()) {
++          return;
++        }
++        if (!mFingerprintManager.hasEnrolledFingerprints()) {
++          return;
++        }
++        try {
++          mFingerprintManager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
++        } catch (NullPointerException e) {
++          e.printStackTrace();
++        }
+     }
+ 
+     public void endAuth() {
