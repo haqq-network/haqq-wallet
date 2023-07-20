@@ -44,6 +44,7 @@ export const OnboardingTrackUserActivity = ({
           <Spacer width={12} />
           <View style={style.flexOne}>
             <Text t12 i18n={I18N.onboardingTrackingUserActivityHint1Title} />
+            <Spacer width={4} />
             <Text
               t14
               color={Color.textBase2}
@@ -57,6 +58,7 @@ export const OnboardingTrackUserActivity = ({
           <Spacer width={12} />
           <View style={style.flexOne}>
             <Text t12 i18n={I18N.onboardingTrackingUserActivityHint2Title} />
+            <Spacer width={4} />
             <Text
               t14
               color={Color.textBase2}

@@ -101,6 +101,7 @@ export type IconSize =
   | {i24: boolean}
   | {i32: boolean}
   | {i42: boolean}
+  | {i48: boolean}
   | {i72: boolean}
   | {i80: boolean}
   | {i120: boolean}
@@ -125,6 +126,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i24' in props && styles.i24Container,
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
+        'i48' in props && styles.i48Container,
         'i72' in props && styles.i72Container,
         'i80' in props && styles.i80Container,
         'i120' in props && styles.i120Container,
@@ -153,6 +155,10 @@ const styles = StyleSheet.create({
   i42Container: {
     width: 42,
     height: 42,
+  },
+  i48Container: {
+    width: 48,
+    height: 48,
   },
   i32Container: {
     width: 32,
