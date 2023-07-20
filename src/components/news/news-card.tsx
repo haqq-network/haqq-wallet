@@ -10,7 +10,7 @@ import {BaseNewsItem} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
 import {MAGIC_NEWS_CARD_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
-import {Text} from '../ui';
+import {Spacer, Text} from '../ui';
 
 export type NewsRowProps = {
   item: BaseNewsItem;
@@ -57,9 +57,11 @@ export const NewsCard = ({item, onPress}: NewsRowProps) => {
               <Text numberOfLines={2} t8 color={Color.textBase3}>
                 {item.title}
               </Text>
+              <Spacer height={2} />
               <Text t17 color={Color.textBase2}>
                 {format(item.createdAt, 'MMM dd, yyyy')}
               </Text>
+              <Spacer height={12} />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -95,5 +97,6 @@ const styles = createTheme({
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
     paddingHorizontal: 12,
+    justifyContent: 'flex-end',
   },
 });
