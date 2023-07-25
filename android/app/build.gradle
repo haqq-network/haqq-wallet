@@ -101,7 +101,7 @@ android {
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 174
-    versionName "1.4.4"
+    versionName "1.4.5"
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
       appAuthRedirectScheme    : 'haqq'
