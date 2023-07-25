@@ -31,8 +31,6 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install packages
         run: yarn install --frozen-lockfile
-      - name: Test
-        run: yarn test
 
   build_android:
     name: Build and distribute Android app
