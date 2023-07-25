@@ -8,6 +8,9 @@ import {
 
 import {DepositResponse, VotesType} from '@app/types';
 
+/**
+ * @deprecated use calculateEstimateTime or useTimer instead
+ */
 export function dataDifference(item: Proposal) {
   const date = new Date(item.voting_end_time);
 
@@ -27,6 +30,9 @@ export function dataDifference(item: Proposal) {
   };
 }
 
+/**
+ * @deprecated use calculateEstimateTime or useTimer instead
+ */
 export function dataDifferenceBetweenDates(to: string, from: string) {
   const f = Math.max(new Date(from).getTime(), Date.now());
   const diff = differenceInSeconds(new Date(to), f);

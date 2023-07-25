@@ -17,13 +17,13 @@ import {
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {
-  dataDifference,
   proposalDepositNeeds,
   proposalVotes,
   timeLeftPercent,
 } from '@app/helpers/governance';
+import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
-import {VoteNamesType} from '@app/types';
+import {TimerUpdateInterval, VoteNamesType} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 type VotingCardActiveProps = {
@@ -49,7 +49,11 @@ export const VotingCardActive = ({item, onPress}: VotingCardActiveProps) => {
   const isVoted = true; // PASS
   const yourDeposit = 100; // PASS
 
-  const {daysLeft, hourLeft, minLeft} = dataDifference(item);
+  const {days, hours, minutes} = useTimer({
+    start: item.voting_start_time,
+    end: item.voting_end_time,
+    updateInterval: TimerUpdateInterval.minute,
+  });
   const circleRef = useRef<ProgressCircleInterface>();
   const linesRef = useRef<VotingLineInterface>(null);
   const depositProgressRef = useRef<ProgressLineInterface>(null);
@@ -150,17 +154,17 @@ export const VotingCardActive = ({item, onPress}: VotingCardActiveProps) => {
             <View style={styles.timeValuesContainer}>
               <TextSum
                 style={styles.timeUnit}
-                sum={daysLeft.toFixed(0)}
+                sum={days.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardDay}
               />
               <TextSum
                 style={styles.timeUnit}
-                sum={hourLeft.toFixed(0)}
+                sum={hours.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardHour}
               />
               <TextSum
                 style={styles.timeUnit}
-                sum={minLeft.toFixed(0)}
+                sum={minutes.toFixed(0)}
                 rightText={I18N.homeGovernanceVotingCardMin}
               />
             </View>

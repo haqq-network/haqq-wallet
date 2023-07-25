@@ -17,14 +17,14 @@ import {
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {
-  dataDifferenceBetweenDates,
   proposalDepositNeeds,
   proposalVotes,
   timeLeftPercent,
   yesPercent,
 } from '@app/helpers/governance';
+import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
-import {VoteNamesType} from '@app/types';
+import {TimerUpdateInterval, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
 export type VotingCardDetailRefInterface =
@@ -44,10 +44,11 @@ export const VotingCardDetail = forwardRef<
   VotingCardDetailRefInterface,
   VotingCardDetailProps
 >(({item, yourVote, totalCollected}, ref) => {
-  const {daysLeft, minLeft, hourLeft} = dataDifferenceBetweenDates(
-    item.voting_end_time,
-    item.voting_start_time,
-  );
+  const {days, hours, minutes} = useTimer({
+    start: item.voting_start_time,
+    end: item.voting_end_time,
+    updateInterval: TimerUpdateInterval.minute,
+  });
 
   const isVoting = item.status === 'PROPOSAL_STATUS_VOTING_PERIOD';
   const isDeposited = item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD';
@@ -110,17 +111,17 @@ export const VotingCardDetail = forwardRef<
                 <View style={styles.row}>
                   <TextSum
                     style={styles.timeUnit}
-                    sum={daysLeft.toFixed(0)}
+                    sum={days.toFixed(0)}
                     rightText={I18N.homeGovernanceVotingCardDay}
                   />
                   <TextSum
                     style={styles.timeUnit}
-                    sum={hourLeft.toFixed(0)}
+                    sum={hours.toFixed(0)}
                     rightText={I18N.homeGovernanceVotingCardHour}
                   />
                   <TextSum
                     style={styles.timeUnit}
-                    sum={minLeft.toFixed(0)}
+                    sum={minutes.toFixed(0)}
                     rightText={I18N.homeGovernanceVotingCardMin}
                   />
                 </View>
