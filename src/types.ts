@@ -841,6 +841,7 @@ export type Raffle = {
   total_tickets: number;
   winner_tickets: number;
   locked_until: number;
+  locked_duration: number;
 };
 
 export enum TimerUpdateInterval {

@@ -1,7 +1,13 @@
 import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
-import {differenceInMinutes} from 'date-fns';
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMilliseconds,
+  differenceInMinutes,
+} from 'date-fns';
 import {utils} from 'ethers';
+import _ from 'lodash';
 import {Animated} from 'react-native';
 import {Adjust} from 'react-native-adjust';
 
@@ -409,15 +415,89 @@ export const isI18N = (obj: any): obj is I18N => {
   return obj in I18N;
 };
 
-export function calculateEstimateTime(
-  start: Date | number,
-  end: Date | number,
-) {
-  const diff = differenceInMinutes(end, start);
-  const hours = Math.floor(diff / 60);
-  const minutes = diff % 60;
-  return `${hours}h ${minutes}m`;
+interface CalculateEstimateTimeParams {
+  endDate: number | Date;
+  startDate?: number | Date;
+  currentDate?: number | Date;
 }
+
+export const calculateEstimateTime = _.memoize(
+  ({
+    endDate,
+    startDate = Date.now(),
+    currentDate = Date.now(),
+  }: CalculateEstimateTimeParams) => {
+    const milliseconds = differenceInMilliseconds(endDate, currentDate) % 60000;
+    const seconds = Math.floor(milliseconds / 1000) + 1;
+    const minutes = differenceInMinutes(endDate, currentDate) % 60;
+    const hours = differenceInHours(endDate, currentDate) % 24;
+    const days = differenceInDays(endDate, currentDate);
+    const secondsFormatted = String(seconds).padStart(2, '0');
+    const minutesFormatted = String(minutes).padStart(2, '0');
+    const hoursFormatted = String(hours).padStart(2, '0');
+    const daysFormatted = String(days).padStart(2, '0');
+
+    const elapsedTime = differenceInMilliseconds(currentDate, startDate);
+    const duration = differenceInMilliseconds(endDate, startDate);
+    const progress = elapsedTime / duration;
+
+    return {
+      // Remaining time in milliseconds. It shows the part of a minute left.
+      milliseconds,
+      // Remaining time in seconds. It is calculated from the remaining milliseconds.
+      seconds,
+      secondsFormatted,
+      // Remaining time in minutes. It's calculated from the remaining total time, and it shows the part of an hour left.
+      minutes,
+      minutesFormatted,
+      // Remaining time in hours. It's calculated from the remaining total time, and it shows the part of a day left.
+      hours,
+      hoursFormatted,
+      // Remaining time in days. It's calculated from the remaining total time.
+      days,
+      daysFormatted,
+      // Elapsed time in milliseconds. It shows how much time has passed since the start.
+      elapsedTime,
+      // Total duration of the timer in milliseconds. It shows how much time in total the timer was set for from start to end.
+      duration,
+      // Progress of the timer. It's a value between 0 and 1 showing the proportion of elapsed time to the total duration.
+      progress,
+    };
+  },
+);
+
+export const calculateEstimateTimeString = _.memoize(
+  (params: CalculateEstimateTimeParams) => {
+    const {
+      days,
+      daysFormatted,
+      hours,
+      hoursFormatted,
+      minutes,
+      minutesFormatted,
+      seconds,
+      secondsFormatted,
+    } = calculateEstimateTime(params);
+
+    if (days > 0) {
+      return `${daysFormatted}d ${hoursFormatted}h ${minutesFormatted}m`;
+    }
+
+    if (hours > 0) {
+      return `${hoursFormatted}h ${minutesFormatted}m`;
+    }
+
+    if (minutes > 0) {
+      return `${minutesFormatted}m`;
+    }
+
+    if (seconds > 0) {
+      return `00m ${secondsFormatted}s`;
+    }
+
+    return 'Invalid date';
+  },
+);
 
 export function getBase64ImageSource(base64: string, extension = 'png') {
   if (base64.substring(0, 5) !== 'data:') {

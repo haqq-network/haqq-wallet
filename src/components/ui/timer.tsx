@@ -1,17 +1,11 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React from 'react';
 
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMilliseconds,
-  differenceInMinutes,
-  differenceInSeconds,
-  format,
-} from 'date-fns';
+import {format} from 'date-fns';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
 import {TimerUpdateInterval} from '@app/types';
 
@@ -52,58 +46,19 @@ export const Timer = ({
   showSeconds = true,
   updateInterval = TimerUpdateInterval.second,
 }: TimerProps) => {
-  const intervalId = useRef<NodeJS.Timer>();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const startDate = useMemo(() => new Date(start), [start]);
-  const endDate = useMemo(() => new Date(end), [end]);
-
-  const daysRemaining = useMemo(
-    () => String(differenceInDays(endDate, currentDate)).padStart(2, '0'),
-    [currentDate, endDate],
-  );
-  const hoursRemaining = useMemo(
-    () => String(differenceInHours(endDate, currentDate) % 24).padStart(2, '0'),
-    [currentDate, endDate],
-  );
-  const minutesRemaining = useMemo(
-    () =>
-      String(differenceInMinutes(endDate, currentDate) % 60).padStart(2, '0'),
-    [currentDate, endDate],
-  );
-  const secondsRemaining = useMemo(
-    () =>
-      String(differenceInSeconds(endDate, currentDate) % 60).padStart(2, '0'),
-    [currentDate, endDate],
-  );
-  const timeDifference = useMemo(
-    () => differenceInMilliseconds(currentDate, startDate),
-    [currentDate, startDate],
-  );
-  const totalTimeDifference = useMemo(
-    () => differenceInMilliseconds(endDate, startDate),
-    [endDate, startDate],
-  );
-
-  const progress = useMemo(
-    () => timeDifference / totalTimeDifference,
-    [timeDifference, totalTimeDifference],
-  );
-
-  const isFinish = useMemo(
-    () => progress <= 0 || endDate <= currentDate,
-    [currentDate, endDate, progress],
-  );
-
-  useEffect(() => {
-    intervalId.current = setInterval(() => {
-      if (isFinish) {
-        return clearInterval(intervalId.current);
-      }
-      setCurrentDate(new Date());
-    }, updateInterval);
-
-    return () => clearInterval(intervalId.current);
-  }, [isFinish, updateInterval]);
+  const {
+    isFinish,
+    secondsFormatted,
+    minutesFormatted,
+    hoursFormatted,
+    daysFormatted,
+    progress,
+    endDate,
+  } = useTimer({
+    start,
+    end,
+    updateInterval,
+  });
 
   return (
     <CircularProgress size={220} inverted progress={isFinish ? 0 : progress}>
@@ -127,7 +82,7 @@ export const Timer = ({
                 <Spacer width={5} />
                 <View style={styles.timerValueContainer}>
                   <Text center t3 style={styles.timerValue}>
-                    {daysRemaining}
+                    {daysFormatted}
                   </Text>
                   <Text
                     center
@@ -144,7 +99,7 @@ export const Timer = ({
                 <Spacer width={5} />
                 <View style={styles.timerValueContainer}>
                   <Text center t3 style={styles.timerValue}>
-                    {hoursRemaining}
+                    {hoursFormatted}
                   </Text>
                   <Text
                     center
@@ -161,7 +116,7 @@ export const Timer = ({
                 <Spacer width={5} />
                 <View style={styles.timerValueContainer}>
                   <Text center t3 style={styles.timerValue}>
-                    {minutesRemaining}
+                    {minutesFormatted}
                   </Text>
                   <Text
                     center
@@ -178,7 +133,7 @@ export const Timer = ({
                 <Spacer width={5} />
                 <View style={styles.timerValueContainer}>
                   <Text center t3 style={styles.timerValue}>
-                    {secondsRemaining}
+                    {secondsFormatted}
                   </Text>
                   <Text
                     center
