@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
+
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
@@ -105,15 +107,17 @@ export const HomeEarnScreen = () => {
     setIsRafflesLoading(false);
   }, []);
 
-  useEffect(() => {
-    loadRaffles();
+  useFocusEffect(
+    useCallback(() => {
+      loadRaffles();
 
-    app.on(Events.onRaffleTicket, loadRaffles);
+      app.on(Events.onRaffleTicket, loadRaffles);
 
-    return () => {
-      app.off(Events.onRaffleTicket, loadRaffles);
-    };
-  }, [loadRaffles]);
+      return () => {
+        app.off(Events.onRaffleTicket, loadRaffles);
+      };
+    }, [loadRaffles]),
+  );
 
   useEffect(() => {
     onTrackEvent(AdjustEvents.earnOpen);

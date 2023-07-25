@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 
+import _ from 'lodash';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Animated, {
   useAnimatedProps,
@@ -8,7 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Circle, CircleProps} from 'react-native-svg';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
+import {useColor} from '@app/hooks/use-color';
 
 export interface CircularProgressProps {
   /**
@@ -29,8 +31,18 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const STROKE_WIDTH = 4;
 const ANIMATION_DURATION = 1000;
 
+const calculateStrokeDashOffset = _.memoize(
+  (progress: number, circumference: number, inverted?: boolean) => {
+    const formattedProgress = progress > 1 ? 1 : progress < 0 ? 0 : progress;
+    const progressOffset = inverted
+      ? formattedProgress - 1
+      : 1 - formattedProgress;
+    return circumference * progressOffset;
+  },
+);
+
 export const CircularProgress = ({
-  inverted,
+  inverted = false,
   children,
   progress = 0,
   size = 220,
@@ -40,10 +52,12 @@ export const CircularProgress = ({
   childrenContainerStyle,
 }: CircularProgressProps) => {
   const radius = useMemo(() => size / 2 - STROKE_WIDTH / 2, [size]);
-  const dashColorString = useMemo(() => getColor(dashColor), [dashColor]);
-  const fillColorString = useMemo(() => getColor(fillColor), [fillColor]);
+  const dashColorString = useColor(dashColor);
+  const fillColorString = useColor(fillColor);
   const circumference = useMemo(() => 2 * Math.PI * radius, [radius]);
-  const animatedStrokeDashoffset = useSharedValue(progress);
+  const animatedStrokeDashoffset = useSharedValue(
+    calculateStrokeDashOffset(progress, circumference, inverted),
+  );
   const animatedCircleProps = useAnimatedProps(() => {
     return {
       strokeDashoffset: withTiming(animatedStrokeDashoffset.value, {
@@ -70,12 +84,11 @@ export const CircularProgress = ({
   );
 
   useEffect(() => {
-    const formattedProgress = progress > 1 ? 1 : progress < 0 ? 0 : progress;
-    const progressOffset = inverted
-      ? formattedProgress - 1
-      : 1 - formattedProgress;
-    const progressStrokeDashoffset = circumference * progressOffset;
-    animatedStrokeDashoffset.value = progressStrokeDashoffset;
+    animatedStrokeDashoffset.value = calculateStrokeDashOffset(
+      progress,
+      circumference,
+      inverted,
+    );
   }, [progress, animatedStrokeDashoffset, inverted, circumference]);
 
   return (

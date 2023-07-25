@@ -4,10 +4,9 @@ import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
-import {useReactiveDate} from '@app/hooks/use-reactive-date';
+import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
 import {Raffle, TimerUpdateInterval} from '@app/types';
-import {calculateEstimateTime} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {
@@ -39,14 +38,10 @@ export const RaffleDetails = ({
   onPressShowResult,
 }: RaffleDetailsProps) => {
   const [loading, setLoading] = useState(false);
-  const handlePressGetTicket = useCallback(async () => {
-    try {
-      setLoading(true);
-      await onPressGetTicket();
-    } finally {
-      setLoading(false);
-    }
-  }, [onPressGetTicket]);
+  const {timerString} = useTimer({
+    end: Date.now() + item.locked_duration * 1000,
+    updateInterval: TimerUpdateInterval.minute,
+  });
 
   const closed_at = useMemo(
     () => new Date(item.close_at * 1000),
@@ -60,17 +55,24 @@ export const RaffleDetails = ({
     () => cleanNumber(parseInt(item.budget, 16) / WEI),
     [item],
   );
-  const now = useReactiveDate(TimerUpdateInterval.minute);
-  const estimateTime = useMemo(
-    () => calculateEstimateTime(now, locked_until),
-    [locked_until, now],
-  );
   const showGetTicket = useMemo(
     () => new Date() > locked_until,
     [locked_until],
   );
-  const showTimer = useMemo(() => new Date() < locked_until, [locked_until]);
+  const showTimer = useMemo(
+    () => item.locked_duration > 0,
+    [item.locked_duration],
+  );
   const showResult = useMemo(() => new Date() > closed_at, [closed_at]);
+
+  const handlePressGetTicket = useCallback(async () => {
+    try {
+      setLoading(true);
+      await onPressGetTicket();
+    } finally {
+      setLoading(false);
+    }
+  }, [onPressGetTicket]);
 
   return (
     <PopupContainer style={styles.container}>
@@ -164,7 +166,7 @@ export const RaffleDetails = ({
             disabled
             style={styles.buttonStyle}
             variant={ButtonVariant.contained}
-            title={estimateTime}
+            title={timerString}
           />
         )}
         {showGetTicket && (

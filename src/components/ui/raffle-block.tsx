@@ -6,10 +6,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Color, getColor} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
-import {useReactiveDate} from '@app/hooks/use-reactive-date';
+import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
 import {Raffle, TimerUpdateInterval} from '@app/types';
-import {calculateEstimateTime} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {Button, ButtonSize, ButtonVariant} from './button';
@@ -78,29 +77,31 @@ export const RaffleBlock = ({
     light: require('@assets/animations/earn-ticket-light.json'),
     dark: require('@assets/animations/earn-ticket-dark.json'),
   });
-  const now = useReactiveDate(TimerUpdateInterval.minute);
-  const estimateTime = useMemo(
-    () =>
-      calculateEstimateTime(
-        now,
-        new Date(Math.min(item.locked_until, item.close_at) * 1000),
-      ),
-    [item, now],
-  );
+
+  const {timerString} = useTimer({
+    end: Date.now() + item.locked_duration * 1000,
+    updateInterval: TimerUpdateInterval.minute,
+  });
 
   const state = useMemo(() => {
     if (item.status === 'closed' || Date.now() > item.close_at * 1000) {
       return 'result';
     }
 
-    if (Date.now() < item.locked_until * 1000) {
+    if (item.locked_duration > 0) {
       return 'timer';
     }
 
     if (showTicketAnimation || Date.now() > item.locked_until) {
       return 'getTicket';
     }
-  }, [item.close_at, item.locked_until, item.status, showTicketAnimation]);
+  }, [
+    item.close_at,
+    item.locked_duration,
+    item.locked_until,
+    item.status,
+    showTicketAnimation,
+  ]);
 
   const handlePress = useCallback(() => {
     onPress?.(item);
@@ -179,9 +180,10 @@ export const RaffleBlock = ({
               {state === 'timer' && (
                 <Button
                   disabled
+                  style={styles.timerButton}
                   size={ButtonSize.small}
                   variant={ButtonVariant.second}
-                  title={estimateTime}
+                  title={timerString}
                 />
               )}
               {state === 'getTicket' &&
@@ -257,5 +259,8 @@ const styles = createTheme({
   },
   ticketButton: {
     width: 95,
+  },
+  timerButton: {
+    minWidth: 85,
   },
 });
