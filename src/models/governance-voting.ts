@@ -1,12 +1,9 @@
 import {Coin} from '@evmos/transactions';
-import {
-  differenceInMilliseconds,
-  differenceInSeconds,
-  getSeconds,
-} from 'date-fns';
+import {differenceInMilliseconds, getSeconds} from 'date-fns';
 
 import {I18N} from '@app/i18n';
 import {DepositResponse, VotesType} from '@app/types';
+import {calculateEstimateTime} from '@app/utils';
 
 export const GovernanceVotingState = {
   passed: I18N.homeGovernanceTagPassed,
@@ -114,20 +111,16 @@ export class GovernanceVoting extends Realm.Object {
 
   get dataDifference() {
     const date = new Date(this.endDate);
-
-    const diff = differenceInSeconds(
-      getSeconds(date) > 1 ? date : new Date(this.depositEndTime ?? ''),
-      new Date(Date.now()),
-    );
-
-    const daysLeft = Math.floor(diff / 86400);
-    const hourLeft = Math.floor(diff / (60 * 60)) - daysLeft * 24;
-    const minLeft = Math.floor(diff / 60) - hourLeft * 60 - daysLeft * 24 * 60;
+    const {days, hours, minutes} = calculateEstimateTime({
+      startDate:
+        getSeconds(date) > 1 ? date : new Date(this.depositEndTime ?? ''),
+      endDate: Date.now(),
+    });
 
     return {
-      daysLeft,
-      hourLeft,
-      minLeft,
+      daysLeft: days,
+      hourLeft: hours,
+      minLeft: minutes,
     };
   }
 

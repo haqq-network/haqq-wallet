@@ -427,11 +427,14 @@ export const calculateEstimateTime = _.memoize(
     startDate = Date.now(),
     currentDate = Date.now(),
   }: CalculateEstimateTimeParams) => {
-    const milliseconds = differenceInMilliseconds(endDate, currentDate) % 60000;
-    const seconds = Math.floor(milliseconds / 1000) + 1;
-    const minutes = differenceInMinutes(endDate, currentDate) % 60;
-    const hours = differenceInHours(endDate, currentDate) % 24;
-    const days = differenceInDays(endDate, currentDate);
+    const milliseconds = Math.max(
+      0,
+      differenceInMilliseconds(endDate, currentDate) % 60000,
+    );
+    const seconds = Math.max(0, Math.floor(milliseconds / 1000) + 1);
+    const minutes = Math.max(0, differenceInMinutes(endDate, currentDate) % 60);
+    const hours = Math.max(0, differenceInHours(endDate, currentDate) % 24);
+    const days = Math.max(0, differenceInDays(endDate, currentDate));
     const secondsFormatted = String(seconds).padStart(2, '0');
     const minutesFormatted = String(minutes).padStart(2, '0');
     const hoursFormatted = String(hours).padStart(2, '0');
