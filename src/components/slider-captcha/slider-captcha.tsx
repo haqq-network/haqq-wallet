@@ -57,9 +57,12 @@ const SLIDER_BUTTON_WIDTH = 60;
 const STATE_DURATION_CHANGE = 400;
 const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
 
+const BG_ASPECT_RATIO = 600 / 400; // original image width / height
+const PUZZLE_ASPECT_RATIO = 120 / 400; // original image width / height
+
 const BACK_WIDTH = WINDOW_WIDTH - 80;
-const BACK_HEIGHT = (BACK_WIDTH * 400) / 600;
-const PUZZLE_WIDTH = (BACK_WIDTH * 120) / 600;
+const BACK_HEIGHT = BACK_WIDTH / BG_ASPECT_RATIO;
+const PUZZLE_WIDTH = BACK_HEIGHT * PUZZLE_ASPECT_RATIO;
 
 export type CaptchaRequestState = {
   id: string;
@@ -251,8 +254,8 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
         {
           translateX: interpolate(
             position.value,
-            [0, sliderLayout.width],
-            [0, BACK_WIDTH],
+            [0, sliderLayout.width - SLIDER_BUTTON_WIDTH],
+            [0, BACK_WIDTH - PUZZLE_WIDTH],
           ),
         },
       ],
@@ -496,7 +499,6 @@ const styles = createTheme({
     borderRadius: 12,
   },
   imageContainerInsets: {
-    paddingHorizontal: 4,
     width: '100%',
   },
   overlayContainer: {
