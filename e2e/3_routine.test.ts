@@ -19,24 +19,22 @@ describe('Routine', () => {
     await expect(element(by.id('welcome'))).toBeVisible();
 
     await element(by.id('welcome_signin')).tap();
-    await expect(element(by.id('signin_agreement'))).toBeVisible();
+    await waitFor(element(by.id('signin_agreement'))).toBeVisible();
 
     await element(by.id('signin_agreement_agree')).tap();
-
-    await expect(element(by.id('signin_restore'))).toBeVisible();
+    await waitFor(element(by.id('signin_restore'))).toBeVisible();
 
     await element(by.id('signin_restore_input')).tap();
     await element(by.id('signin_restore_input')).typeText(mnemonic);
 
     await element(by.id('signin_restore_submit')).tap();
-
-    await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
+    await waitFor(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await waitFor(element(by.text('Please repeat pin code'))).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
@@ -54,7 +52,7 @@ describe('Routine', () => {
     }
     await waitFor(element(by.id('onboarding_finish_title'))).toBeVisible();
 
-    await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
+    await waitFor(element(by.id('onboarding_finish_title'))).toBeVisible();
 
     await element(by.id('onboarding_finish_finish')).tap();
   });
