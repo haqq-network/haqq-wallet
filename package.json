@@ -14,7 +14,8 @@
     "ts-coverage": "typescript-coverage-report",
     "link-assets": "npx react-native-asset",
     "logcat": "adb logcat -v color -v time --pid $(adb shell ps | grep com.haqq.wallet  | tr -s ' ' | cut -d' ' -f2)",
-    "detox:ios": "detox build --configuration ios.sim.release && detox test --configuration ios.sim.release"
+    "detox:ios": "detox build --configuration ios.sim.release && detox test --configuration ios.sim.release",
+    "clean-ios-app": "sh ./scripts/clean-ios-app.sh"
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",
