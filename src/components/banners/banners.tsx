@@ -32,7 +32,7 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
           horizontal
           pagingEnabled
           decelerationRate={0}
-          snapToInterval={WINDOW_WIDTH - 110}
+          snapToInterval={WINDOW_WIDTH - 80}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}
@@ -60,6 +60,6 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   banner: {
-    width: WINDOW_WIDTH - 120,
+    width: WINDOW_WIDTH - 80,
   },
 });

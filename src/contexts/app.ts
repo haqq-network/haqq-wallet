@@ -17,7 +17,10 @@ import TouchID from 'react-native-touch-id';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {
+  EventResolverSymbol,
+  awaitForEventDone,
+} from '@app/helpers/await-for-event-done';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -114,6 +117,7 @@ class App extends EventEmitter {
     Appearance.addChangeListener(this.listenTheme);
     AppState.addEventListener('change', this.listenTheme);
     this.listenTheme();
+    AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
     if (!VariablesBool.exists('isDeveloper')) {
       VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
@@ -324,8 +328,6 @@ class App extends EventEmitter {
 
     this.appStatus = getAppStatus();
 
-    AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
-
     return Promise.resolve();
   }
 
@@ -359,6 +361,28 @@ class App extends EventEmitter {
     });
 
     return pass;
+  }
+
+  on(eventName: string | symbol, listener: (...args: any[]) => void): this {
+    const wrappedListener = async (...args: any[]) => {
+      // check if event called from `awaitForEventDone` function
+      if (args?.length) {
+        const resolver = args[args.length - 1];
+        if (
+          typeof resolver === 'function' &&
+          resolver.prototype.key === EventResolverSymbol
+        ) {
+          // event start
+          try {
+            await listener(...args);
+          } catch (e) {}
+          // event done'
+          return await resolver();
+        }
+      }
+      return await listener(...args);
+    };
+    return super.on(eventName, wrappedListener);
   }
 
   async comparePin(pin: string) {

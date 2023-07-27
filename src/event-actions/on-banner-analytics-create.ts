@@ -1,18 +1,15 @@
 import {isAfter} from 'date-fns';
-import {Adjust} from 'react-native-adjust';
 
 import {Color, getColor} from '@app/colors';
 import {Banner} from '@app/models/banner';
 import {VariablesDate} from '@app/models/variables-date';
+import {AdjustTrackingAuthorizationStatus} from '@app/types';
+import {getAppTrackingAuthorizationStatus} from '@app/utils';
 
 export async function onBannerAnalyticsCreate() {
-  const status = await new Promise(resolve => {
-    Adjust.getAppTrackingAuthorizationStatus(s => {
-      resolve(s);
-    });
-  });
+  const status = await getAppTrackingAuthorizationStatus();
 
-  if (status !== 0) {
+  if (status !== AdjustTrackingAuthorizationStatus.userNotAsked) {
     return;
   }
 

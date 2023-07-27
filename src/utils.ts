@@ -14,6 +14,7 @@ import {Adjust} from 'react-native-adjust';
 import {app} from '@app/contexts';
 
 import {Color, getColor} from './colors';
+import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
@@ -509,6 +510,19 @@ export function getBase64ImageSource(base64: string, extension = 'png') {
   return {uri: base64};
 }
 
+export const promiseLogger = async (tag: string, promise: Promise<any>) => {
+  try {
+    const result = await promise;
+    console.log(
+      `⚪️ [promiseLogger] ${tag}: `,
+      JSON.stringify({result}, null, 2),
+    );
+    return result;
+  } catch (e) {
+    console.warn(`Failed to get promise data: ${tag} `);
+  }
+};
+
 export async function getHttpResponse<T = any>(
   response: Response,
   method: 'json' | 'text' | 'blob' | 'arrayBuffer' = 'json',
@@ -517,6 +531,15 @@ export async function getHttpResponse<T = any>(
     return (await response[method]()) as T;
   } catch (e) {
     console.error(`🔴 [getHttpResponse] ${e} ${response.url}`);
+    if (DEBUG_VARS.enableHttpErrorDetails) {
+      promiseLogger('getHttpResponse: text', response.clone().text());
+      promiseLogger('getHttpResponse: blob', response.clone().blob());
+      promiseLogger(
+        'getHttpResponse: arrayBuffer',
+        response.clone().arrayBuffer(),
+      );
+      promiseLogger('getHttpResponse: json', response.clone().json());
+    }
     return {} as T;
   }
 }
