@@ -13,7 +13,8 @@
     "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto,url --yarn --hack && hooks/install",
     "ts-coverage": "typescript-coverage-report",
     "link-assets": "npx react-native-asset",
-    "logcat": "adb logcat -v color -v time --pid $(adb shell ps | grep com.haqq.wallet  | tr -s ' ' | cut -d' ' -f2)"
+    "logcat": "adb logcat -v color -v time --pid $(adb shell ps | grep com.haqq.wallet  | tr -s ' ' | cut -d' ' -f2)",
+    "detox:ios": "detox build --configuration ios.sim.release && detox test --configuration ios.sim.release"
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",

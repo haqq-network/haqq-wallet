@@ -111,6 +111,14 @@ jobs:
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
           echo "IS_WELCOME_NEWS_ENABLED=${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}" >> .env
 
+          echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
+          echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
+          echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
+
+      - name: Execute e2e
+        run: |
+          yarn run detox:ios
+
       - name: Execute build
         run: |
           eval "$(ssh-agent -s)"

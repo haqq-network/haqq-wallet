@@ -2,6 +2,7 @@ import {by, device, element, expect, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
 describe('Routine', () => {
@@ -87,6 +88,8 @@ describe('Routine', () => {
     };
 
     await milkWallet.sendTransaction(tx);
+
+    await sleep(6000);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
