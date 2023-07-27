@@ -68,7 +68,7 @@ import {
   ScreenOptionType,
   StackPresentationTypes,
 } from '@app/types';
-import {sleep} from '@app/utils';
+import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 
 import {Spacer} from './components/ui';
 import {themeUpdaterHOC} from './helpers/theme-updater-hoc';
@@ -251,7 +251,7 @@ export const App = () => {
 
     Adjust.create(adjustConfig);
     if (app.isDeveloper) {
-      Adjust.getAppTrackingAuthorizationStatus(function (status) {
+      getAppTrackingAuthorizationStatus().then(status => {
         console.log('Authorization status = ' + status);
       });
 

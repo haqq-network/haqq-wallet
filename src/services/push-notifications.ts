@@ -67,6 +67,7 @@ export class PushNotifications extends EventEmitter {
 
       onTrackEvent(AdjustEvents.pushNotifications);
     }
+    return enabled;
   }
 
   async hasPermission() {

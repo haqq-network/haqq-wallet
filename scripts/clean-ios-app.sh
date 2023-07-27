@@ -10,12 +10,12 @@ APP_PACKAGE_NAME="com.haqq.wallet"
 # Function to execute a command and print an error message if needed
 execute_command() {
     COMMAND=$1
-    echo "✅ $COMMAND"
+    echo "✅ ${GREEN}$COMMAND"
     OUTPUT=$($COMMAND 2>&1)
     RESULT=$?
 
     if [ $RESULT -ne 0 ]; then
-        echo -e "${RED}ERROR:\n$OUTPUT${GREEN}"
+        echo -e "${RED}ERROR:\n$OUTPUT"
     fi
 }
 

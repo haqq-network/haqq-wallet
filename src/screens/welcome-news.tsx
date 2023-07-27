@@ -1,14 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {WelcomeNews} from '@app/components/welcome-news';
+import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {
-  PushNotificationTopicsEnum,
-  PushNotifications,
-} from '@app/services/push-notifications';
+import {PopupNotificationBannerTypes} from '@app/types';
 
 export const WelcomeNewsScreen = () => {
   const navigation = useTypedNavigation();
@@ -19,18 +17,7 @@ export const WelcomeNewsScreen = () => {
 
   useEffect(() => {
     if (!VariablesBool.exists('notifications')) {
-      PushNotifications.instance
-        .requestPermissions()
-        .then(() => {
-          VariablesBool.set('notifications', true);
-          VariablesBool.set(
-            `notificationsTopic:${PushNotificationTopicsEnum.transactions}`,
-            true,
-          );
-        })
-        .catch(() => {
-          VariablesBool.set('notifications', false);
-        });
+      onBannerNotificationsTurnOn(PopupNotificationBannerTypes.notification);
     }
 
     onNewsSync().then(() => {

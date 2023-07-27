@@ -13,17 +13,23 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Overview} from './src/overview';
 import {Jailbreak} from './src/jailbreak';
+import messaging from '@react-native-firebase/messaging';
 
 if(!global.BigInt){
   const BigInt = require('big-integer');
-
+  
   Object.assign(global, {
     BigInt: BigInt,
   });
 }
 
 import './src/event-actions';
+import { IS_IOS } from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
+
+if (__DEV__ && IS_IOS) {
+  messaging().setAPNSToken('dev-apns-token', 'sandbox');
+}
 
 if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
   try {

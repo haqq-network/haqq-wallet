@@ -6,15 +6,18 @@ import {SettingsNotification} from '@app/components/settings-notification';
 import {app} from '@app/contexts';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerNotificationsTopicUnsubscribe} from '@app/event-actions/on-banner-notifications-topic-unsubscribe';
+import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onPushSubscriptionTransactionsSubscribe} from '@app/event-actions/on-push-subscription-transactions-subscribe';
 import {onPushSubscriptionTransactionsUnsubscribe} from '@app/event-actions/on-push-subscription-transactions-unsubscribe';
 import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
+import {usePrevious} from '@app/hooks/use-previous';
 import {VariablesBool} from '@app/models/variables-bool';
 import {
   PushNotificationTopicsEnum,
   PushNotifications,
 } from '@app/services/push-notifications';
+import {PopupNotificationBannerTypes} from '@app/types';
 
 const TRANSACTION_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.transactions}`;
 const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.news}`;
@@ -29,7 +32,7 @@ export const SettingsNotificationScreen = () => {
     useState(VariablesBool.get(NEWS_TOPIC_VARIABLE_NAME));
   const [hasNotificationPermission, setHasNotificationPermission] =
     useState(false);
-
+  const prevHasNotificationPermission = usePrevious(hasNotificationPermission);
   const onToggleTransactionPushNotification = useCallback(
     async ({nativeEvent: {value}}: SwitchChangeEvent) => {
       setTransactionPushNotificationEnabled(value);
@@ -69,10 +72,16 @@ export const SettingsNotificationScreen = () => {
   useEffect(() => {
     const checkPermission = async () => {
       const hasPermission = await PushNotifications.instance.hasPermission();
-      setHasNotificationPermission(hasPermission);
-      if (!hasPermission) {
-        navigation.navigate('popupNotification', {bannerId: 'notification'});
+      if (
+        prevHasNotificationPermission !== hasPermission &&
+        hasPermission &&
+        !VariablesBool.get('notifications')
+      ) {
+        await onBannerNotificationsTurnOn(
+          PopupNotificationBannerTypes.notification,
+        );
       }
+      setHasNotificationPermission(hasPermission);
     };
 
     checkPermission().then();
@@ -81,7 +90,7 @@ export const SettingsNotificationScreen = () => {
     return () => {
       app.removeListener(Events.onAppActive, checkPermission);
     };
-  }, [navigation]);
+  }, [navigation, prevHasNotificationPermission, setHasNotificationPermission]);
 
   return (
     <SettingsNotification
