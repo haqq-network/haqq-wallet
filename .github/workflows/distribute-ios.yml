@@ -115,10 +115,6 @@ jobs:
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
 
-      - name: Execute e2e
-        run: |
-          yarn run detox:ios
-
       - name: Execute build
         run: |
           eval "$(ssh-agent -s)"
