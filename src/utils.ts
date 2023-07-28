@@ -279,7 +279,7 @@ function findReferencedTypes(
   fieldTypes.forEach(fieldType => {
     if (typeof fieldType === 'object') {
       // @ts-ignore
-      const typeName = fieldType.type;
+      const typeName = fieldType.type?.replace?.('[]', '');
       if (types[typeName] && !newTypes[typeName]) {
         newTypes[typeName] = types[typeName];
         findReferencedTypes(types[typeName], types, newTypes);
@@ -301,7 +301,7 @@ export function getSignTypedDataParamsData(
     if (typeof data === 'string') {
       return removeUnusedTypes(JSON.parse(data));
     } else {
-      removeUnusedTypes(data);
+      return removeUnusedTypes(data);
     }
   } catch (e) {}
   return null;
