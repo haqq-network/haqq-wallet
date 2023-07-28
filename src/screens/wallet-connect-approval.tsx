@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {WalletConnectApproval} from '@app/components/wallet-connect-approval';
-import {WalletSelectType, awaitForWallet} from '@app/helpers';
+import {WalletSelectType, awaitForWallet, captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
@@ -30,20 +30,24 @@ export const WalletConnectApprovalScreen = () => {
         event?.params,
       );
       isApproved.current = true;
-    } catch (e) {
-      console.error('WalletConnectApprovalScreen:onPressApprove', e);
+    } catch (err) {
+      captureException(err, 'WalletConnectApprovalScreen:onPressApprove', {
+        event,
+      });
     }
     navigation.goBack();
-  }, [event?.id, event?.params, navigation, selectedWallet?.address]);
+  }, [event, navigation, selectedWallet?.address]);
 
   const onPressReject = useCallback(async () => {
     try {
       await rejectSession();
-    } catch (e) {
-      console.error('WalletConnectApprovalScreen:onPressReject', e);
+    } catch (err) {
+      captureException(err, 'WalletConnectApprovalScreen:onPressReject', {
+        event,
+      });
     }
     navigation.goBack();
-  }, [navigation, rejectSession]);
+  }, [event, navigation, rejectSession]);
 
   const onSelectWalletPress = async () => {
     const address = await awaitForWallet({

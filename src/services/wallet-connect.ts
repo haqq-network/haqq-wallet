@@ -2,7 +2,12 @@ import {EventEmitter} from 'events';
 
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
 import {Core} from '@walletconnect/core';
-import {ICore, SessionTypes, SignClientTypes} from '@walletconnect/types';
+import {
+  ICore,
+  PairingTypes,
+  SessionTypes,
+  SignClientTypes,
+} from '@walletconnect/types';
 import {getSdkError} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
@@ -13,8 +18,8 @@ import {captureException} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
-import {sendNotification} from '@app/services/toast';
-import {sleep} from '@app/utils';
+import {message as sendMessage, sendNotification} from '@app/services/toast';
+import {isError, sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
 import {RemoteConfig} from './remote-config';
@@ -123,8 +128,10 @@ export class WalletConnect extends EventEmitter {
       return sendNotification(I18N.walletConnectPairInitError);
     }
 
+    let resp: PairingTypes.Struct;
+
     try {
-      const resp = await this._core.pairing.pair({uri});
+      resp = await this._core.pairing.pair({uri});
 
       if (!resp) {
         sendNotification(I18N.walletConnectPairError);
@@ -134,9 +141,12 @@ export class WalletConnect extends EventEmitter {
         console.log('WalletConnect:pair ', resp);
       }
     } catch (err) {
-      console.error('[WalletConnect] pair', err);
-      sendNotification(I18N.walletConnectPairError);
-      await this._reInit();
+      if (isError(err)) {
+        sendMessage(`[WC]: ${err.message}`);
+        // @ts-ignore
+        captureException(err, 'WalletConnect.pair', {resp});
+        await this._reInit();
+      }
     }
   }
 

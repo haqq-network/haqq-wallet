@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {showModal} from '@app/helpers';
+import {captureException, showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
@@ -48,7 +48,7 @@ export const JsonRpcSignScreen = () => {
   const onPressSign = useCallback(async () => {
     try {
       if (!isAllowed && !DEBUG_VARS.disableWeb3DomainBlocking) {
-        return onPressReject();
+        return onPressReject('domain is blocked');
       }
       setSignLoading(true);
       const result = await SignJsonRpcRequest.signEIP155Request(
@@ -60,7 +60,10 @@ export const JsonRpcSignScreen = () => {
     } catch (err) {
       if (isError(err)) {
         onPressReject(err.message);
-        console.log('🔴 JsonRpcSignScreen:onPressSign error', err);
+        captureException(err, 'JsonRpcSignScreen:onPressSign', {
+          request,
+          chainId,
+        });
       }
     } finally {
       navigation.goBack();

@@ -16,6 +16,7 @@ import {app} from '@app/contexts';
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
+import {captureException} from './helpers';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
 import {navigator} from './navigator';
@@ -382,8 +383,12 @@ export const getUserAddressFromJRPCRequest = (
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       return request?.params?.[0]?.from;
     default:
-      console.error(
-        `[getUserAddressFromSessionRequest]: INVALID_METHOD ${request.method}`,
+      captureException(
+        {
+          message: `INVALID_METHOD ${request.method}`,
+        },
+        'getUserAddressFromSessionRequest',
+        {request},
       );
       return null;
   }
