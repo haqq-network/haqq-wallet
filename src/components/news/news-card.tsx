@@ -80,7 +80,7 @@ const styles = createTheme({
     flex: 1,
   },
   fade: {
-    flex: 2,
+    flex: 2.1,
   },
   viewed: {
     opacity: 0.5,
