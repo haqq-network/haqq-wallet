@@ -1,5 +1,3 @@
-import {EventEmitter} from 'events';
-
 import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
@@ -17,10 +15,8 @@ import TouchID from 'react-native-touch-id';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
-import {
-  EventResolverSymbol,
-  awaitForEventDone,
-} from '@app/helpers/await-for-event-done';
+import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -59,7 +55,7 @@ function getAppStatus() {
     : AppStatus.inactive;
 }
 
-class App extends EventEmitter {
+class App extends AsyncEventEmitter {
   private user: User;
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
@@ -361,28 +357,6 @@ class App extends EventEmitter {
     });
 
     return pass;
-  }
-
-  on(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    const wrappedListener = async (...args: any[]) => {
-      // check if event called from `awaitForEventDone` function
-      if (args?.length) {
-        const resolver = args[args.length - 1];
-        if (
-          typeof resolver === 'function' &&
-          resolver.prototype.key === EventResolverSymbol
-        ) {
-          // event start
-          try {
-            await listener(...args);
-          } catch (e) {}
-          // event done'
-          return await resolver();
-        }
-      }
-      return await listener(...args);
-    };
-    return super.on(eventName, wrappedListener);
   }
 
   async comparePin(pin: string) {
