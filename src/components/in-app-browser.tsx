@@ -206,7 +206,6 @@ export const InAppBrowser = ({
           sendCookies
           useWebkit
           javascriptEnabled
-          startInLoadingState
           allowsInlineMediaPlayback
           allowsBackForwardNavigationGestures
           allowsFullscreenVideo
