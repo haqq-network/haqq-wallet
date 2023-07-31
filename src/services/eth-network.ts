@@ -76,8 +76,12 @@ export class EthNetwork {
   }
 
   static async getBalance(address: string) {
-    const balance = await EthNetwork.network.getBalance(address);
-    return Number(utils.formatEther(balance));
+    try {
+      const balance = await EthNetwork.network.getBalance(address);
+      return Number(utils.formatEther(balance));
+    } catch (e) {
+      return 0;
+    }
   }
 
   static init(provider: Provider) {
