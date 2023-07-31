@@ -4194,6 +4194,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tatumio/tatum@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@tatumio/tatum@npm:3.0.0"
+  dependencies:
+    bignumber.js: ^9.1.1
+    reflect-metadata: ^0.1.13
+    typedi: ^0.10.0
+  checksum: 474bd0fb07f46c816d37b79a8deb7dcc91e02a9ed4ab654c752c64da9d54e2b845357f99f71f565140e4ea6564afb3cb6c3b458c7e6556f2d55962c3a2ae67b2
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -6078,7 +6089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bignumber.js@npm:^9.1.0":
+"bignumber.js@npm:^9.1.0, bignumber.js@npm:^9.1.1":
   version: 9.1.1
   resolution: "bignumber.js@npm:9.1.1"
   checksum: ad243b7e2f9120b112d670bb3d674128f0bd2ca1745b0a6c9df0433bd2c0252c43e6315d944c2ac07b4c639e7496b425e46842773cf89c6a2dcd4f31e5c4b11e
@@ -9668,6 +9679,7 @@ __metadata:
     "@react-navigation/native": 6.1.7
     "@react-navigation/stack": 6.3.17
     "@sentry/react-native": 5.7.1
+    "@tatumio/tatum": ^3.0.0
     "@tradle/react-native-http": 2.0.1
     "@tsconfig/react-native": 3.0.2
     "@types/create-hash": 1.2.2
@@ -15000,6 +15012,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reflect-metadata@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "reflect-metadata@npm:0.1.13"
+  checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
+  languageName: node
+  linkType: hard
+
 "regenerate-unicode-properties@npm:^10.1.0":
   version: 10.1.0
   resolution: "regenerate-unicode-properties@npm:10.1.0"
@@ -16961,6 +16980,13 @@ __metadata:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: 33b39f3d0e8463985eeaeeacc3cb2e28bc3dfaf2a5ed219628c0b629d5d7b810b0eb2165f9f607c34871d5daa92ba1dc69f49051cf7d578b4cbd26c340b9d1b1
+  languageName: node
+  linkType: hard
+
+"typedi@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "typedi@npm:0.10.0"
+  checksum: d26491e3684677d898f745b2ea5403cad4e03f7ed87b35d0a1cc80cbb4837d50042e100574da77d56dd04e3f0270a6f7df18270171c828bec6b93cefbac059a3
   languageName: node
   linkType: hard
 
