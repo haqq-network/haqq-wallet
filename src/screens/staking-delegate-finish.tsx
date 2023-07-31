@@ -4,13 +4,15 @@ import {StakingDelegateFinish} from '@app/components/staking-delegate-finish/sta
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppReview} from '@app/services/app-review';
 
 export const StakingDelegateFinishScreen = () => {
   const navigation = useTypedNavigation();
   const {params} = useTypedRoute<'stakingDelegateFinish'>();
 
-  const onDone = useCallback(() => {
+  const onDone = useCallback(async () => {
     app.emit(Events.onStakingSync);
+    await AppReview.requestReview();
     navigation.getParent()?.goBack();
   }, [navigation]);
 

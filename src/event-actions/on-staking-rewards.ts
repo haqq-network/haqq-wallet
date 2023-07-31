@@ -10,6 +10,7 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
+import {AppReview} from '@app/services/app-review';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
 import {MIN_AMOUNT} from '@app/variables/common';
@@ -105,4 +106,5 @@ export async function onStakingRewards() {
   }
 
   rewards.forEach(r => StakingMetadata.remove(r.hash));
+  AppReview.requestReview();
 }

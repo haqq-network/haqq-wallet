@@ -10,6 +10,7 @@ import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
+import {AppReview} from '@app/services/app-review';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const TransactionFinishScreen = () => {
@@ -38,9 +39,10 @@ export const TransactionFinishScreen = () => {
     [transaction?.to],
   );
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(async () => {
+    await AppReview.requestReview();
     getParent()?.goBack();
-  };
+  }, [getParent]);
 
   const onPressContact = useCallback(() => {
     if (transaction?.to) {

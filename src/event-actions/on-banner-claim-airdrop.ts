@@ -15,6 +15,7 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
+import {AppReview} from '@app/services/app-review';
 import {AdjustEvents} from '@app/types';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
@@ -61,6 +62,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     );
 
     await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
+    AppReview.requestReview();
 
     banner.update({
       isUsed: true,
