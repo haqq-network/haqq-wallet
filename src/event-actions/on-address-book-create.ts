@@ -1,4 +1,3 @@
-import {captureException} from '@app/helpers';
 import {AddressBook, AddressBookType} from '@app/models/address-book';
 import {EthNetwork} from '@app/services';
 
@@ -31,6 +30,6 @@ export async function onAddressBookCreate(address: string, ethChainId: number) {
 
     AddressBook.create(address.toLowerCase(), String(ethChainId), upd);
   } catch (e) {
-    captureException(e, 'onAddressBookCreate');
+    Logger.captureException(e, 'onAddressBookCreate');
   }
 }

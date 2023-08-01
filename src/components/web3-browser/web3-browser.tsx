@@ -181,7 +181,7 @@ export const Web3Browser = ({
       ${WebViewLogger.script}
       ${inpageBridgeWeb3}
       ${WebViewEventsJS.getWindowInformation}
-      console.log('ethereum loaded:', !!window.ethereum);
+      Logger.log('ethereum loaded:', !!window.ethereum);
       if(window.ethereum) {
         window.ethereum.isMetaMask = false;
         window.ethereum.isHaqqWallet = true;

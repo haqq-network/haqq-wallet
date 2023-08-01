@@ -3,7 +3,7 @@ export * from './await-for-ledger';
 export * from './await-for-popup-closed';
 export * from './await-for-wallet';
 export * from './calc-fee';
-export * from './capture-exception';
+export * from './open-url';
 export * from './clean-number';
 export * from './create-theme';
 export * from './format-percents';

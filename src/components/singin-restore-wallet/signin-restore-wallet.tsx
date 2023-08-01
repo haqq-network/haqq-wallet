@@ -49,7 +49,7 @@ export const SignInRestore = ({
     try {
       onDoneTry(seed);
     } catch (e) {
-      Sentry.captureException(e);
+      Sentry.Logger.captureException(e);
     } finally {
       setDisabled(false);
       hideModal('loading');

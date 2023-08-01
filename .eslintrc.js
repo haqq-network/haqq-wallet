@@ -62,4 +62,7 @@ module.exports = {
       jsx: true,
     },
   },
+  globals: {
+    Logger: 'readonly'
+  }
 };

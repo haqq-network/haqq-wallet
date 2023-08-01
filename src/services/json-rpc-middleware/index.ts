@@ -2,7 +2,6 @@ import {JsonRpcError, createAsyncMiddleware} from 'json-rpc-engine';
 
 import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
 import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
-import {captureException} from '@app/helpers';
 
 import {JsonRpcMethodsHandlers} from './json-rpc-methods-handlers';
 
@@ -25,11 +24,14 @@ export const createJsonRpcMiddleware = ({
           code: -32601,
           message: 'Method not implemented',
         };
-        console.log(
+        Logger.log(
           `🔴 JRPC ${req.method} not implemented, params:`,
           JSON.stringify(req.params, null, 2),
         );
-        captureException(res.error, 'createJsonRpcMiddleware', {req, res});
+        Logger.captureException(res.error, 'createJsonRpcMiddleware', {
+          req,
+          res,
+        });
         return;
       }
 
@@ -43,9 +45,9 @@ export const createJsonRpcMiddleware = ({
       if (typeof err.code === 'number' && typeof err.message === 'string') {
         res.error = err as JsonRpcError;
       } else {
-        console.error('🔴 json rpc middleware error', req, err);
+        Logger.error('🔴 json rpc middleware error', req, err);
       }
-      captureException(err, 'createJsonRpcMiddleware:error', {req, res});
+      Logger.captureException(err, 'createJsonRpcMiddleware:error', {req, res});
     }
 
     // if in the engine has less than one middleware then this is crash app
@@ -57,7 +59,7 @@ export const createJsonRpcMiddleware = ({
 
 export const createJsonRpcLoggerMiddleWare = () => {
   return createAsyncMiddleware(async (req, res) => {
-    console.log(
+    Logger.log(
       `🟣 JRPC ${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
         req.params || '{}',
         null,

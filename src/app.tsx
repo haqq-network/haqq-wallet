@@ -32,12 +32,7 @@ import {Color} from '@app/colors';
 import {PopupHeader} from '@app/components';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {
-  captureException,
-  createTheme,
-  hideModal,
-  showModal,
-} from '@app/helpers';
+import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
@@ -197,7 +192,7 @@ export const App = () => {
         }
       })
       .catch(async e => {
-        captureException(e, 'app init');
+        Logger.captureException(e, 'app init');
       })
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
@@ -252,11 +247,11 @@ export const App = () => {
     Adjust.create(adjustConfig);
     if (app.isDeveloper) {
       getAppTrackingAuthorizationStatus().then(status => {
-        console.log('Authorization status = ' + status);
+        Logger.log('Authorization status = ' + status);
       });
 
       Adjust.getAdid(adid => {
-        console.log('Adid = ' + adid);
+        Logger.log('Adid = ' + adid);
       });
     }
     return () => {

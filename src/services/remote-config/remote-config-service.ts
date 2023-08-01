@@ -24,11 +24,11 @@ export class RemoteConfig {
         RemoteConfig.isInited = true;
         return true;
       } else {
-        console.error('🔴 [RemoteConfig]: remote config is empty', config);
+        Logger.error('🔴 [RemoteConfig]: remote config is empty', config);
         return false;
       }
     } catch (err) {
-      console.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
+      Logger.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
       return false;
     }
   }
@@ -44,7 +44,7 @@ export class RemoteConfig {
       return value;
     }
 
-    console.error('🔴 [RemoteConfig]: not valid JSON', cacheString);
+    Logger.error('🔴 [RemoteConfig]: not valid JSON', cacheString);
     return undefined;
   }
 }

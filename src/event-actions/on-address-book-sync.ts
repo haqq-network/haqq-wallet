@@ -30,6 +30,6 @@ export async function onAddressBookSync(id: string) {
       tokens: tokens.map((t: any) => BigNumber.from(t).toString()),
     });
   } catch (e) {
-    console.error('onAddressBookSync', e);
+    Logger.error('onAddressBookSync', e);
   }
 }

@@ -77,7 +77,7 @@ export const SssStoreWalletScreen = () => {
 
         navigation.navigate('sssFinish');
       } catch (e) {
-        console.log(e);
+        Logger.log(e);
         switch (e) {
           case 'wallet_already_exists':
             showModal('errorAccountAdded');
@@ -87,7 +87,7 @@ export const SssStoreWalletScreen = () => {
             if (e instanceof Error) {
               showModal('errorCreateAccount');
               navigator.goBack();
-              captureException(e, 'SssStoreWalletScreen');
+              Logger.captureException(e, 'SssStoreWalletScreen');
             }
         }
       }

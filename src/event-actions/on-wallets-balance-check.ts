@@ -12,6 +12,6 @@ export async function onWalletsBalanceCheck() {
 
     app.onWalletsBalance(Object.fromEntries(responses));
   } catch (e) {
-    console.error('onWalletsBalanceCheck', e);
+    Logger.error('onWalletsBalanceCheck', e);
   }
 }

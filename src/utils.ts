@@ -16,7 +16,6 @@ import {app} from '@app/contexts';
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
-import {captureException} from './helpers';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
 import {navigator} from './navigator';
@@ -199,13 +198,13 @@ export function callbackWrapper<T extends Array<any>>(
     const tx = makeID(5);
 
     if (app.isDeveloper) {
-      console.log(new Date(), 'event started', tx, func.name, ...args);
+      Logger.log(new Date(), 'event started', tx, func.name, ...args);
     }
 
     func(...args).then(() => {
       callback();
       if (app.isDeveloper) {
-        console.log(new Date(), 'event finished', tx, func.name);
+        Logger.log(new Date(), 'event finished', tx, func.name);
       }
     });
   };
@@ -383,7 +382,7 @@ export const getUserAddressFromJRPCRequest = (
     case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
       return request?.params?.[0]?.from;
     default:
-      captureException(
+      Logger.captureException(
         {
           message: `INVALID_METHOD ${request.method}`,
         },
@@ -518,13 +517,13 @@ export function getBase64ImageSource(base64: string, extension = 'png') {
 export const promiseLogger = async (tag: string, promise: Promise<any>) => {
   try {
     const result = await promise;
-    console.log(
+    Logger.log(
       `⚪️ [promiseLogger] ${tag}: `,
       JSON.stringify({result}, null, 2),
     );
     return result;
   } catch (e) {
-    console.warn(`Failed to get promise data: ${tag} `);
+    Logger.warn(`Failed to get promise data: ${tag} `);
   }
 };
 
@@ -535,7 +534,7 @@ export async function getHttpResponse<T = any>(
   try {
     return (await response[method]()) as T;
   } catch (e) {
-    console.error(`🔴 [getHttpResponse] ${e} ${response.url}`);
+    Logger.error(`🔴 [getHttpResponse] ${e} ${response.url}`);
     if (DEBUG_VARS.enableHttpErrorDetails) {
       promiseLogger('getHttpResponse: text', response.clone().text());
       promiseLogger('getHttpResponse: blob', response.clone().blob());

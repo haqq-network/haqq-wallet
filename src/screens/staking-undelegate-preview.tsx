@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
@@ -89,7 +89,7 @@ export const StakingUnDelegatePreviewScreen = () => {
               showModal('ledgerLocked');
               break;
             default:
-              captureException(e, 'staking-undelegate', {
+              Logger.captureException(e, 'staking-undelegate', {
                 id: errorId,
                 message: errMessage || e.message,
               });

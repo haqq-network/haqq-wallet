@@ -1,7 +1,6 @@
 import {BigNumber} from '@ethersproject/bignumber';
 
 import {Events} from '@app/events';
-import {captureException} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {AddressBook, AddressBookType} from '@app/models/address-book';
 import {Provider} from '@app/models/provider';
@@ -41,7 +40,7 @@ export async function onTransactionCreate(
         tx.setConfirmed(receipt);
       }
     } catch (e) {
-      captureException(e, 'checkTransaction');
+      Logger.captureException(e, 'checkTransaction');
     }
   }
 

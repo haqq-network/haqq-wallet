@@ -9,7 +9,6 @@ import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {captureException} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
@@ -102,7 +101,11 @@ export const HomeEarnScreen = () => {
       );
       setRaffles(response.sort((a, b) => b.start_at - a.start_at));
     } catch (err) {
-      captureException(err, 'HomeEarnScreen.loadRaffles', Wallet.addressList());
+      Logger.captureException(
+        err,
+        'HomeEarnScreen.loadRaffles',
+        Wallet.addressList(),
+      );
     }
     setIsRafflesLoading(false);
   }, []);
@@ -131,7 +134,7 @@ export const HomeEarnScreen = () => {
     try {
       await onEarnGetTicket(raffle.id);
     } catch (e) {
-      captureException(e, 'onPressGetTicket');
+      Logger.captureException(e, 'onPressGetTicket');
       throw e;
     }
   }, []);

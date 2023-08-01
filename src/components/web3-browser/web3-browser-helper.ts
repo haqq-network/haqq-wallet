@@ -112,7 +112,7 @@ export class Web3BrowserHelper extends EventEmitter {
         return this.emit(WebViewEventsEnum.WINDOW_INFO, parsedEvent);
       }
     } catch (err) {
-      console.error('🔴 Web3BrowserHelper:handleMessage', err);
+      Logger.error('🔴 Web3BrowserHelper:handleMessage', err);
     }
   };
 

@@ -46,7 +46,7 @@ export async function providerSssInitialize(
   }
 
   if (socialPrivateKey) {
-    console.log('socialPrivateKey', socialPrivateKey);
+    Logger.log('socialPrivateKey', socialPrivateKey);
     const socialShareIndex = await getMetadataValue(
       options.metadataUrl,
       socialPrivateKey,

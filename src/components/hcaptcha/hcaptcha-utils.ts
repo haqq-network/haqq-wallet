@@ -98,23 +98,23 @@ export const generateWebViewContent = (props: HcaptchaProps) => {
   <script type="text/javascript">
     var onloadCallback = function() {
       try {
-        console.log("challenge onload starting");
+        Logger.log("challenge onload starting");
         hcaptcha.render("submit", getRenderConfig("${
           siteKey || ''
         }", ${theme}, "${size || 'invisible'}"));
         // have loaded by this point; render is sync.
-        console.log("challenge render complete");
+        Logger.log("challenge render complete");
       } catch (e) {
-        console.log("challenge failed to render");
+        Logger.log("challenge failed to render");
         window.ReactNativeWebView.postMessage("error");
       }
       try {
-        console.log("showing challenge");
+        Logger.log("showing challenge");
         if(${enableAutoOpenChallenge}) {
           hcaptcha.execute(getExecuteOpts());
         }
       } catch (e) {
-        console.log("failed to show challenge");
+        Logger.log("failed to show challenge");
         window.ReactNativeWebView.postMessage("error");
       }
     };
@@ -127,12 +127,12 @@ export const generateWebViewContent = (props: HcaptchaProps) => {
     var onOpen = function() {
       // NOTE: disabled for simplicity.
       // window.ReactNativeWebView.postMessage("open");
-      console.log("challenge opened");
+      Logger.log("challenge opened");
     };
     var onDataExpiredCallback = function(error) { window.ReactNativeWebView.postMessage("expired"); };
     var onChalExpiredCallback = function(error) { window.ReactNativeWebView.postMessage("chalexpired"); };
     var onDataErrorCallback = function(error) {
-      console.log("challenge error callback fired");
+      Logger.log("challenge error callback fired");
       window.ReactNativeWebView.postMessage("error");
     };
     const getRenderConfig = function(siteKey, theme, size) {
