@@ -7,6 +7,7 @@ import {BigNumber, BigNumberish, utils} from 'ethers';
 
 import {app} from '@app/contexts';
 import {calcFeeWei} from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {getDefaultChainId} from '@app/network';
 import {WEI} from '@app/variables/common';
@@ -22,12 +23,14 @@ export class EthNetwork {
     data: string = '0x',
     minGas = 21000,
   ) {
-    const nonce = await app.rpcProvider.getTransactionCount(from, 'latest');
-    const gasPrice = await app.rpcProvider.getGasPrice();
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    const nonce = await rpcProvider.getTransactionCount(from, 'latest');
+    const gasPrice = await rpcProvider.getGasPrice();
 
     let estimateGas;
     try {
-      const resp = await app.rpcProvider.estimateGas({
+      const resp = await rpcProvider.estimateGas({
         from,
         to,
         value: '0x' + value.toString('hex'),
@@ -71,7 +74,8 @@ export class EthNetwork {
 
   static async getBalance(address: string) {
     try {
-      const balance = await app.rpcProvider.getBalance(address);
+      const rpcProvider = await getRpcProvider(app.provider);
+      const balance = await rpcProvider.getBalance(address);
       return Number(utils.formatEther(balance));
     } catch (e) {
       return 0;
@@ -79,7 +83,8 @@ export class EthNetwork {
   }
 
   static async call(to: string, data: string) {
-    return await app.rpcProvider.call({
+    const rpcProvider = await getRpcProvider(app.provider);
+    return await rpcProvider.call({
       to,
       data,
     });
@@ -87,18 +92,23 @@ export class EthNetwork {
 
   static async getCode(address: string) {
     try {
-      return await app.rpcProvider.getCode(address);
+      const rpcProvider = await getRpcProvider(app.provider);
+      return await rpcProvider.getCode(address);
     } catch (e) {
       return '0x';
     }
   }
 
   static async sendTransaction(signedTx: string) {
-    return await app.rpcProvider.sendTransaction(signedTx);
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    return await rpcProvider.sendTransaction(signedTx);
   }
 
   static async getTransactionReceipt(txHash: string) {
-    return await app.rpcProvider.getTransactionReceipt(txHash);
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    return await rpcProvider.getTransactionReceipt(txHash);
   }
 
   static init(provider: Provider) {
@@ -116,9 +126,11 @@ export class EthNetwork {
     feeData: FeeData;
     estimateGas: BigNumberish;
   }> {
+    const rpcProvider = await getRpcProvider(app.provider);
+
     const result = await Promise.all([
-      app.rpcProvider.getFeeData(),
-      app.rpcProvider.estimateGas({
+      rpcProvider.getFeeData(),
+      rpcProvider.estimateGas({
         from,
         to,
         amount,

@@ -1,6 +1,7 @@
 import {BigNumber} from '@ethersproject/bignumber';
 
 import {captureException} from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 
@@ -33,7 +34,9 @@ export async function onTransactionCreate(
 
   if (!tx.confirmed) {
     try {
-      const receipt = await provider.rpcProvider.getTransactionReceipt(tx.hash);
+      const rpcProvider = await getRpcProvider(provider);
+
+      const receipt = await rpcProvider.getTransactionReceipt(tx.hash);
       if (receipt && receipt.confirmations > 0) {
         tx.setConfirmed(receipt);
       }

@@ -155,10 +155,6 @@ class App extends AsyncEventEmitter {
     return this._provider as Provider;
   }
 
-  get rpcProvider() {
-    return this.provider.rpcProvider;
-  }
-
   get providerId() {
     return (
       VariablesString.get('providerId') ??

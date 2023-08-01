@@ -1,5 +1,3 @@
-import {ethers} from 'ethers';
-
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -42,13 +40,6 @@ export class Provider extends Realm.Object {
 
   get networkVersion() {
     return this.cosmosChainId.split('-')[1];
-  }
-
-  get rpcProvider() {
-    return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
-      chainId: this.ethChainId,
-      name: this.id,
-    });
   }
 
   setEvmEndpoint(endpoint: string) {
