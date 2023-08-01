@@ -3,6 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
+import {Events} from '@app/events';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -10,7 +12,6 @@ import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
-import {AppReview} from '@app/services/app-review';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const TransactionFinishScreen = () => {
@@ -40,7 +41,7 @@ export const TransactionFinishScreen = () => {
   );
 
   const onSubmit = useCallback(async () => {
-    await AppReview.requestReview();
+    await awaitForEventDone(Events.onAppReviewRequest);
     getParent()?.goBack();
   }, [getParent]);
 

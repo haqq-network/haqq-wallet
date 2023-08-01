@@ -2,6 +2,7 @@ import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
+import {Events} from '@app/events';
 import {
   awaitForWallet,
   getProviderInstanceForWallet,
@@ -15,7 +16,6 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
-import {AppReview} from '@app/services/app-review';
 import {AdjustEvents} from '@app/types';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
@@ -62,7 +62,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     );
 
     await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
-    AppReview.requestReview();
+    app.emit(Events.onAppReviewRequest);
 
     banner.update({
       isUsed: true,
