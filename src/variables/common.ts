@@ -1,3 +1,4 @@
+import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Dimensions, Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
@@ -176,6 +177,12 @@ export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';
 export const PRIVACY_POLICY = 'https://www.boredgen.net/wallet/privacy-policy';
 export const TERMS_OF_CONDITIONS =
   'https://www.boredgen.net/wallet/terms-and-conditions';
+
+export const STORE_PAGE_URL = Platform.select({
+  ios: `https://apps.apple.com/app/id${APPSTORE_APP_ID}`,
+  android: `https://play.google.com/store/apps/details?id=${GOOGLE_PLAY_PACKAGE}`,
+  default: 'https://haqq.network/wallet',
+});
 
 export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;

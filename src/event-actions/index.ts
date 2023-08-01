@@ -8,6 +8,7 @@ import {onAppProviderSssBackup} from '@app/event-actions/on-app-provider-sss-bac
 import {onAppStarted} from '@app/event-actions/on-app-started';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
+import {onNeedUpdate} from '@app/event-actions/on-need-update';
 import {onProviderChanged} from '@app/event-actions/on-provider-changed';
 import {onPushNotification} from '@app/event-actions/on-push-notification';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
@@ -60,3 +61,4 @@ app.on(Events.onAddressBookCreate, callbackWrapper(onAddressBookCreate));
 app.on(Events.onTransactionCreate, callbackWrapper(onTransactionCreate));
 app.on(Events.onAddressBookSync, callbackWrapper(onAddressBookSync));
 app.on(Events.onProviderChanged, callbackWrapper(onProviderChanged));
+app.on(Events.onNeedUpdate, callbackWrapper(onNeedUpdate));

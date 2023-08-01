@@ -17,6 +17,7 @@ import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -483,6 +484,12 @@ class App extends AsyncEventEmitter {
 
   handleDynamicLink(link: DynamicLink | null) {
     this.emit(Events.onDynamicLink, link);
+  }
+
+  checkUpdate() {
+    if (checkNeedUpdate()) {
+      this.emit(Events.onNeedUpdate);
+    }
   }
 }
 

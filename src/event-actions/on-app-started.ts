@@ -19,6 +19,8 @@ import {Refferal} from '@app/models/refferal';
 import {onUpdatesSync} from './on-updates-sync';
 
 export async function onAppStarted() {
+  app.checkUpdate();
+
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
@@ -69,6 +71,5 @@ export async function onAppStarted() {
 
   await onUpdatesSync();
   await onAppBackup();
-
   await onStakingSync();
 }

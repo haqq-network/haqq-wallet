@@ -8,7 +8,7 @@ import {
 } from 'date-fns';
 import {utils} from 'ethers';
 import _ from 'lodash';
-import {Animated} from 'react-native';
+import {Animated, Linking} from 'react-native';
 import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
@@ -27,7 +27,7 @@ import {
   PartialJsonRpcRequest,
   WalletConnectParsedAccount,
 } from './types';
-import {IS_ANDROID} from './variables/common';
+import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -655,3 +655,13 @@ export const getAppTrackingAuthorizationStatus = () => {
     );
   });
 };
+
+export async function openStorePage() {
+  try {
+    await Linking.openURL(STORE_PAGE_URL);
+    return true;
+  } catch (err) {
+    captureException(err, 'utils:openStorePage');
+    return false;
+  }
+}
