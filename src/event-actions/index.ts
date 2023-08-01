@@ -1,6 +1,4 @@
 import {app} from '@app/contexts';
-import {onAddressBookCreate} from '@app/event-actions/on-address-book-create';
-import {onAddressBookSync} from '@app/event-actions/on-address-book-sync';
 import {onAppActive} from '@app/event-actions/on-app-active';
 import {onAppLoggedIn} from '@app/event-actions/on-app-logged-in';
 import {onAppMnemonicBackup} from '@app/event-actions/on-app-mnemonic-backup';
@@ -55,6 +53,4 @@ app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
 app.on(Events.onDynamicLink, onDynamicLink);
 app.on(Events.onTransactionCheck, onTransactionCheck);
 app.on(Events.onPushNotification, callbackWrapper(onPushNotification));
-app.on(Events.onAddressBookCreate, callbackWrapper(onAddressBookCreate));
 app.on(Events.onTransactionCreate, callbackWrapper(onTransactionCreate));
-app.on(Events.onAddressBookSync, callbackWrapper(onAddressBookSync));

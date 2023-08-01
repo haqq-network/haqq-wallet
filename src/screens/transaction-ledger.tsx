@@ -9,7 +9,6 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -50,7 +49,7 @@ export const TransactionLedgerScreen = () => {
         transport.current = await getProviderInstanceForWallet(wallet);
 
         const ethNetworkProvider = new EthNetwork();
-        const transaction = await ethNetworkProvider.sendTransaction(
+        const transaction = await ethNetworkProvider.transferTransaction(
           transport.current!,
           wallet.path!,
           route.params.to,
@@ -59,12 +58,6 @@ export const TransactionLedgerScreen = () => {
 
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
-
-          await awaitForEventDone(
-            Events.onAddressBookCreate,
-            transaction?.to,
-            transaction?.chainId,
-          );
 
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,

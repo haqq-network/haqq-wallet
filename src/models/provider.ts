@@ -19,6 +19,8 @@ export class Provider extends Realm.Object {
       tmRpcEndpoint: 'string',
       explorer: 'string?',
       isEditable: 'bool',
+      evmEndpoints: 'string[]',
+      tmEndpoints: 'string[]',
     },
     primaryKey: 'id',
   };
@@ -31,6 +33,8 @@ export class Provider extends Realm.Object {
   tmRpcEndpoint!: string;
   explorer: string | undefined;
   isEditable!: boolean;
+  evmEndpoints: string[];
+  tmEndpoints: string[];
 
   get ethChainIdHex() {
     return '0x' + this.ethChainId.toString(16);
@@ -44,6 +48,12 @@ export class Provider extends Realm.Object {
     return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
       chainId: this.ethChainId,
       name: this.id,
+    });
+  }
+
+  setEvmEndpoint(endpoint: string) {
+    realm.write(() => {
+      this.ethRpcEndpoint = endpoint;
     });
   }
 

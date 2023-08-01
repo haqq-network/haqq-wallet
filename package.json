@@ -47,7 +47,6 @@
     "@react-navigation/native": "6.1.7",
     "@react-navigation/stack": "6.3.17",
     "@sentry/react-native": "5.7.1",
-    "@tatumio/tatum": "^3.0.0",
     "@tradle/react-native-http": "2.0.1",
     "@walletconnect/core": "2.7.3",
     "@walletconnect/react-native-compat": "2.7.3",
