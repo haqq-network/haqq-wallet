@@ -70,8 +70,12 @@ export class EthNetwork {
   }
 
   static async getBalance(address: string) {
-    const balance = await app.rpcProvider.getBalance(address);
-    return Number(utils.formatEther(balance));
+    try {
+      const balance = await app.rpcProvider.getBalance(address);
+      return Number(utils.formatEther(balance));
+    } catch (e) {
+      return 0;
+    }
   }
 
   static async call(to: string, data: string) {
