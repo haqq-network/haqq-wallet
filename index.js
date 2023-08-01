@@ -1,7 +1,7 @@
 /**
  * @format
  */
-import './src/global'
+import './global'
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat'
 import {AppRegistry} from 'react-native';

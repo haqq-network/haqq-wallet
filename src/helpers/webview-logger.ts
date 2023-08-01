@@ -33,7 +33,7 @@ const handleEvent = (event: WebViewMessageEvent, prefix = 'WebView') => {
     const data = JSON.parse(event?.nativeEvent?.data);
     if (data.msg && data.type) {
       // @ts-ignore
-      const logger = console[data.type];
+      const logger = Logger[data.type];
       // @ts-ignore
       const emoji = LOGS_TYPE_EMOJI_MAP[data.type];
       logger(`${emoji} [${prefix}]:`, ...data.msg);

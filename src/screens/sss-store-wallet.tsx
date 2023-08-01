@@ -4,7 +4,7 @@ import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';

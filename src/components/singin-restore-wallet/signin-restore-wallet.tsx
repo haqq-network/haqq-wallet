@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import * as Sentry from '@sentry/react-native';
 import {utils} from 'ethers';
 import {ScrollView, StyleSheet} from 'react-native';
 
@@ -49,7 +48,7 @@ export const SignInRestore = ({
     try {
       onDoneTry(seed);
     } catch (e) {
-      Sentry.Logger.captureException(e);
+      Logger.captureException(e);
     } finally {
       setDisabled(false);
       hideModal('loading');

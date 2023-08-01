@@ -14,6 +14,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'no-console': 'error',
         'import/order': [
           'error',
           {
