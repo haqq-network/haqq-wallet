@@ -1,3 +1,5 @@
+import {jsonrpcRequest} from '@haqq/shared-react-native';
+
 import {app} from '@app/contexts';
 
 export async function onCheckAvailability() {
@@ -5,22 +7,9 @@ export async function onCheckAvailability() {
 
   if (provider && provider.evmEndpoints.length > 0) {
     const available = provider.evmEndpoints.map(endpoint =>
-      runWithTimeout<{result: string}>(
-        fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'eth_blockNumber',
-            params: [],
-          }),
-        }).then(response => response.json()),
-      )
+      runWithTimeout<string>(jsonrpcRequest(endpoint, 'eth_blockNumber', []))
         .then(data => ({
-          block: parseInt(data.result, 16),
+          block: parseInt(data, 16),
           endpoint,
         }))
         .catch(() => ({
