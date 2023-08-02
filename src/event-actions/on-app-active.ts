@@ -1,6 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
+import {onCheckAvailability} from '@app/event-actions/on-check-availability';
 import {Events} from '@app/events';
 
 export async function onAppActive() {
@@ -11,4 +12,6 @@ export async function onAppActive() {
         app.emit(Events.onPushNotification, remoteMessage);
       }
     });
+
+  await onCheckAvailability();
 }

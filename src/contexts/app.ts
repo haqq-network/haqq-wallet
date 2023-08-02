@@ -152,7 +152,7 @@ class App extends AsyncEventEmitter {
   private _provider: Provider | null;
 
   get provider() {
-    return this._provider;
+    return this._provider as Provider;
   }
 
   get providerId() {

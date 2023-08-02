@@ -8,6 +8,9 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {VariablesDate} from '@app/models/variables-date';
 import {navigator} from '@app/navigator';
 
+/**
+ * @description Check if mnemonic or sss is not backed up and show backup suggestion
+ */
 export async function onAppBackup() {
   const snoozed = VariablesDate.get('appBackupSnooze');
 
