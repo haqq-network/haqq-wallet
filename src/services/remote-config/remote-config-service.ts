@@ -9,6 +9,7 @@ const KEY = 'remote-config-cache';
 
 export class RemoteConfig {
   public static isInited = false;
+  public static KEY = KEY;
 
   /**
    * @return `true` if remote config is successfully initialized
@@ -30,6 +31,14 @@ export class RemoteConfig {
     } catch (err) {
       console.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
       return false;
+    }
+  }
+
+  public static set(config: RemoteConfigTypes) {
+    if (Object.keys(config).length) {
+      VariablesString.set(KEY, JSON.stringify(config));
+    } else {
+      console.error('🔴 [RemoteConfig]: remote config is empty', config);
     }
   }
 

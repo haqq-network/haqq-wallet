@@ -1,5 +1,6 @@
 import {app} from '@app/contexts';
 import {onAppActive} from '@app/event-actions/on-app-active';
+import {onAppInitialized} from '@app/event-actions/on-app-initialized';
 import {onAppLoggedIn} from '@app/event-actions/on-app-logged-in';
 import {onAppMnemonicBackup} from '@app/event-actions/on-app-mnemonic-backup';
 import {onAppProviderSssBackup} from '@app/event-actions/on-app-provider-sss-backup';
@@ -36,6 +37,7 @@ app.on(Events.onWalletRemove, callbackWrapper(onWalletRemove));
 app.on(Events.onStakingSync, throttle(onStakingSync, 1000));
 app.on(Events.onTransactionsLoad, callbackWrapper(onTransactionsLoad));
 app.on(Events.onAppActive, callbackWrapper(onAppActive));
+app.on(Events.onAppInitialized, callbackWrapper(onAppInitialized));
 app.on(Events.onAppStarted, callbackWrapper(onAppStarted));
 app.on(Events.onAppLoggedId, callbackWrapper(onAppLoggedIn));
 app.on(Events.onAppMnemonicBackup, onAppMnemonicBackup);

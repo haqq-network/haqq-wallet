@@ -80,7 +80,11 @@ export class Provider extends Realm.Object {
     return realm.objectForPrimaryKey<Provider>('Provider', providerId);
   }
 
-  static getByChainId(
+  static getByCosmosChainId(cosmosChainId: string) {
+    return Provider.getAll()?.filtered?.(`cosmosChainId = '${cosmosChainId}'`);
+  }
+
+  static getByEthChainId(
     ethChainId: number | string,
   ): (Provider & Realm.Object<unknown, never>) | null {
     if (!ethChainId && Number.isNaN(ethChainId)) {
@@ -94,7 +98,7 @@ export class Provider extends Realm.Object {
     if (!ethChainIdHex) {
       return null;
     }
-    return Provider.getByChainId(parseInt(ethChainIdHex, 16));
+    return Provider.getByEthChainId(parseInt(ethChainIdHex, 16));
   }
 
   update(params: Partial<Provider>) {

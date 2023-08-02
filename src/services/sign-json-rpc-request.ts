@@ -100,7 +100,7 @@ export class SignJsonRpcRequest {
       );
     }
 
-    const provider = chainId && Provider.getByChainId(chainId);
+    const provider = chainId && Provider.getByEthChainId(chainId);
 
     const rpcProvider = provider
       ? await getRpcProvider(provider)
