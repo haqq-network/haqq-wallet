@@ -34,7 +34,7 @@ const debug: DebugVars = {
   allowAnySourcesForWalletConnectLogin: false,
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: true,
-  enableAsyncEventEmitterLogs: true,
+  enableAsyncEventEmitterLogs: false,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;
