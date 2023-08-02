@@ -4,7 +4,6 @@ import {useFocusEffect} from '@react-navigation/native';
 
 import {RaffleDetails} from '@app/components/raffle-details';
 import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
-import {captureException} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
 export const RaffleDetailsScreen = () => {
@@ -24,7 +23,7 @@ export const RaffleDetailsScreen = () => {
       const r = await onEarnGetTicket(params?.item?.id);
       setRaffle(r);
     } catch (e) {
-      captureException(e, 'onPressGetTicket raffle details');
+      Logger.captureException(e, 'onPressGetTicket raffle details');
       throw e;
     }
   }, [params]);

@@ -2,7 +2,6 @@ import {AIRDROP_GASDROP_CAMPAIGN_ID, AIRDROP_GASDROP_SECRET} from '@env';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {captureException} from '@app/helpers';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Refferal} from '@app/models/refferal';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -50,6 +49,6 @@ export async function onBannerGasdropCreate() {
 
     VariablesBool.set('gasdropTaken', true);
   } catch (e) {
-    captureException(e, 'onBannerGasdropCreate');
+    Logger.captureException(e, 'onBannerGasdropCreate');
   }
 }

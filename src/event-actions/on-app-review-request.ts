@@ -1,15 +1,15 @@
 import {differenceInDays} from 'date-fns';
 import InAppReview from 'react-native-in-app-review';
 
-import {captureException} from '@app/helpers';
 import {VariablesDate} from '@app/models/variables-date';
 
 const REQUEST_REVIEW_DAYS_INTERVAL = 7;
 
+const logger = Logger.create('onAppReviewRequest');
 export async function onAppReviewRequest() {
   try {
     if (!InAppReview.isAvailable()) {
-      return console.warn('[AppReview]: in app review not supported');
+      return logger.warn('in app review not supported');
     }
 
     const lastReviewDate = VariablesDate.get('lastInAppReviewDate');
@@ -20,7 +20,7 @@ export async function onAppReviewRequest() {
         REQUEST_REVIEW_DAYS_INTERVAL;
 
     if (notReadyForReview) {
-      return console.warn('[AppReview]: not ready for review');
+      return logger.warn('not ready for review');
     }
 
     // `hasFlowFinishedSuccessfully` means:
@@ -39,7 +39,7 @@ export async function onAppReviewRequest() {
       VariablesDate.set('lastInAppReviewDate', new Date());
     }
   } catch (err) {
-    captureException(err, 'AppReview.requestReview', {
+    logger.captureException(err, 'onAppReviewRequest', {
       // @ts-ignore
       code: err.code,
     });

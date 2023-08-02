@@ -385,7 +385,7 @@ class App extends AsyncEventEmitter {
         vibrate(HapticEffects.success);
         this.authenticated = true;
       } catch (error) {
-        console.error('app.auth', error);
+        Logger.error('app.auth', error);
         await awaitForEventDone(Events.enterPinSuccess);
       }
     } else {

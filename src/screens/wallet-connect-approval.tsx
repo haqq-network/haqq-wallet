@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {WalletConnectApproval} from '@app/components/wallet-connect-approval';
-import {WalletSelectType, awaitForWallet, captureException} from '@app/helpers';
+import {WalletSelectType, awaitForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
@@ -31,9 +31,13 @@ export const WalletConnectApprovalScreen = () => {
       );
       isApproved.current = true;
     } catch (err) {
-      captureException(err, 'WalletConnectApprovalScreen:onPressApprove', {
-        event,
-      });
+      Logger.captureException(
+        err,
+        'WalletConnectApprovalScreen:onPressApprove',
+        {
+          event,
+        },
+      );
     }
     navigation.goBack();
   }, [event, navigation, selectedWallet?.address]);
@@ -42,9 +46,13 @@ export const WalletConnectApprovalScreen = () => {
     try {
       await rejectSession();
     } catch (err) {
-      captureException(err, 'WalletConnectApprovalScreen:onPressReject', {
-        event,
-      });
+      Logger.captureException(
+        err,
+        'WalletConnectApprovalScreen:onPressReject',
+        {
+          event,
+        },
+      );
     }
     navigation.goBack();
   }, [event, navigation, rejectSession]);

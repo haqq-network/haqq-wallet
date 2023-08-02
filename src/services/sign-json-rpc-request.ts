@@ -212,7 +212,7 @@ export class SignJsonRpcRequest {
     }
 
     if (DEBUG_VARS.enableWalletConnectLogger) {
-      console.log('✅ signEIP155Request result:', result, result.length);
+      Logger.log('✅ signEIP155Request result:', result, result.length);
     }
 
     return result;

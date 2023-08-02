@@ -1,4 +1,5 @@
 interface DebugVars {
+  enableAsyncEventEmitterLogs: boolean;
   enableHttpErrorDetails: any;
   enableSentry: boolean;
   enableWalletConnectLogger: boolean;
@@ -20,6 +21,7 @@ const production: DebugVars = {
   allowAnySourcesForWalletConnectLogin: false,
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: false,
+  enableAsyncEventEmitterLogs: true,
 };
 
 const debug: DebugVars = {
@@ -32,6 +34,7 @@ const debug: DebugVars = {
   allowAnySourcesForWalletConnectLogin: false,
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: true,
+  enableAsyncEventEmitterLogs: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

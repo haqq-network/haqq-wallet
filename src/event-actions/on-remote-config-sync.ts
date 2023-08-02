@@ -45,9 +45,9 @@ export async function onRemoteConfigSync() {
         }
       }
     } else {
-      console.error('🔴 [RemoteConfig]: remote config is empty', config);
+      Logger.error('🔴 [RemoteConfig]: remote config is empty', config);
     }
   } catch (err) {
-    console.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
+    Logger.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
   }
 }

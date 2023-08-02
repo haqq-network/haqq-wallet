@@ -79,7 +79,7 @@ export const TransactionNftConfirmationScreen = () => {
     //     }
     //   } catch (e) {
     //     const errorId = makeID(4);
-    //     captureException(e, 'transaction-confirmation', {
+    //     Logger.captureException(e, 'transaction-confirmation', {
     //       from: route.params.from,
     //       to: route.params.to,
     //       amount: route.params.amount,

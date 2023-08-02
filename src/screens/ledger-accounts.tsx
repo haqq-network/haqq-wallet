@@ -59,7 +59,7 @@ export const LedgerAccountsScreen = () => {
         setLastIndex(lastIndex + 5);
       } catch (e) {
         if (e instanceof Error) {
-          console.log(e.message);
+          Logger.log(e.message);
         }
       } finally {
         setLoading(false);

@@ -48,7 +48,6 @@ import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
-import {captureException} from '@app/helpers';
 import {Provider} from '@app/models/provider';
 import {DepositResponse, StakingParamsResponse} from '@app/types';
 import {
@@ -360,7 +359,7 @@ export class Cosmos {
         ),
       };
     } catch (e) {
-      captureException(e, 'getFee');
+      Logger.captureException(e, 'getFee');
       return {...Cosmos.fee};
     }
   }

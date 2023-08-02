@@ -3,7 +3,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {captureException, getProviderInstanceForWallet} from '@app/helpers';
+import {getProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
@@ -56,7 +56,7 @@ export async function onWalletCreate(wallet: Wallet) {
       });
     }
   } catch (e) {
-    captureException(e, Events.onWalletCreate, {
+    Logger.captureException(e, Events.onWalletCreate, {
       address: wallet.address,
     });
   }

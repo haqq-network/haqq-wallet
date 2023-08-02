@@ -6,7 +6,6 @@ import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
-import {captureException} from '@app/helpers';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 
@@ -47,7 +46,7 @@ export const SignupPinScreen = () => {
             if ('code' in e && e.code === 2103) {
               throw new Error('wrong_password');
             } else {
-              captureException(e, 'sss backup check password');
+              Logger.captureException(e, 'sss backup check password');
             }
           }
         }

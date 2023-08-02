@@ -6,7 +6,7 @@ import {TransactionConfirmation} from '@app/components/transaction-confirmation'
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {captureException, removeProviderInstanceForWallet} from '@app/helpers';
+import {removeProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
@@ -95,7 +95,7 @@ export const TransactionConfirmationScreen = () => {
       } catch (e) {
         const errorId = makeID(4);
 
-        captureException(e, 'transaction-confirmation', {
+        Logger.captureException(e, 'transaction-confirmation', {
           from: route.params.from,
           to: route.params.to,
           amount: route.params.amount,

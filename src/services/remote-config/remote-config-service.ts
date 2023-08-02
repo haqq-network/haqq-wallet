@@ -7,6 +7,7 @@ import {Backend} from '../backend';
 
 const KEY = 'remote-config-cache';
 
+const logger = Logger.create('RemoteConfig', {emodjiPrefix: '🔴'});
 export class RemoteConfig {
   public static isInited = false;
   public static KEY = KEY;
@@ -25,11 +26,11 @@ export class RemoteConfig {
         RemoteConfig.isInited = true;
         return true;
       } else {
-        console.error('🔴 [RemoteConfig]: remote config is empty', config);
+        logger.error('remote config is empty', config);
         return false;
       }
     } catch (err) {
-      console.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
+      logger.error('failed to fetch remote config', err);
       return false;
     }
   }
@@ -38,7 +39,7 @@ export class RemoteConfig {
     if (Object.keys(config).length) {
       VariablesString.set(KEY, JSON.stringify(config));
     } else {
-      console.error('🔴 [RemoteConfig]: remote config is empty', config);
+      logger.error('remote config is empty', config);
     }
   }
 
@@ -53,7 +54,7 @@ export class RemoteConfig {
       return value;
     }
 
-    console.error('🔴 [RemoteConfig]: not valid JSON', cacheString);
+    logger.error('not valid JSON', cacheString);
     return undefined;
   }
 }

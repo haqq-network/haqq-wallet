@@ -7,7 +7,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -110,10 +110,10 @@ export const SignInStoreWalletScreen = () => {
             break;
           default:
             if (error instanceof Error) {
-              console.log('error.message', error.message);
+              Logger.log('error.message', error.message);
               showModal('errorCreateAccount');
               goBack();
-              captureException(error, 'restoreStore');
+              Logger.captureException(error, 'restoreStore');
             }
         }
       }

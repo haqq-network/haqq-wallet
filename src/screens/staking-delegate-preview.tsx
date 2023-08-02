@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
@@ -95,7 +95,7 @@ export const StakingDelegatePreviewScreen = () => {
               showModal('ledgerLocked');
               break;
             default:
-              captureException(e, 'staking-delegate', {
+              Logger.captureException(e, 'staking-delegate', {
                 id: errorId,
                 message: errMessage || e.message,
               });

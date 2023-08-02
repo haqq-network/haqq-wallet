@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -49,7 +49,7 @@ export const LedgerStoreWalletScreen = () => {
               if (error instanceof Error) {
                 showModal('errorCreateAccount');
                 navigation.getParent()?.goBack();
-                captureException(error, 'ledgerStore');
+                Logger.captureException(error, 'ledgerStore');
               }
           }
         });

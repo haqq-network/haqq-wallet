@@ -293,7 +293,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   wallet_addEthereumChain: ({req}) => {
     const chainInfo = req.params?.[0];
     if (isEthereumChainParams(chainInfo)) {
-      console.log('wallet_addEthereumChain', chainInfo?.chainName);
+      Logger.log('wallet_addEthereumChain', chainInfo?.chainName);
     }
   },
 };

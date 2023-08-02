@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
@@ -60,7 +60,7 @@ export const JsonRpcSignScreen = () => {
     } catch (err) {
       if (isError(err)) {
         onPressReject(err.message);
-        captureException(err, 'JsonRpcSignScreen:onPressSign', {
+        Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
           request,
           chainId,
         });

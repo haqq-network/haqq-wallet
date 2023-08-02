@@ -1,4 +1,3 @@
-import {captureException} from '@app/helpers';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Backend} from '@app/services/backend';
@@ -37,7 +36,7 @@ export async function onRssFeedSync(before = new Date()) {
 
     return rss_feed.length;
   } catch (e) {
-    captureException(e, 'onRssFeedSync');
+    Logger.captureException(e, 'onRssFeedSync');
     return 0;
   }
 }
