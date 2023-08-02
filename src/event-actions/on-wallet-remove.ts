@@ -1,5 +1,4 @@
 import {Events} from '@app/events';
-import {captureException} from '@app/helpers';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -43,7 +42,7 @@ export async function onWalletRemove(address: string) {
       session.disconnect();
     }
   } catch (e) {
-    captureException(e, Events.onWalletRemove, {
+    Logger.captureException(e, Events.onWalletRemove, {
       address: address,
     });
   }

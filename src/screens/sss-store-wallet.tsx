@@ -4,7 +4,7 @@ import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -77,7 +77,7 @@ export const SssStoreWalletScreen = () => {
 
         navigation.navigate('sssFinish');
       } catch (e) {
-        console.log(e);
+        Logger.log(e);
         switch (e) {
           case 'wallet_already_exists':
             showModal('errorAccountAdded');
@@ -87,7 +87,7 @@ export const SssStoreWalletScreen = () => {
             if (e instanceof Error) {
               showModal('errorCreateAccount');
               navigator.goBack();
-              captureException(e, 'SssStoreWalletScreen');
+              Logger.captureException(e, 'SssStoreWalletScreen');
             }
         }
       }

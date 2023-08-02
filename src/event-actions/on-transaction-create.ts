@@ -1,6 +1,5 @@
 import {BigNumber} from '@ethersproject/bignumber';
 
-import {captureException} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
@@ -41,7 +40,7 @@ export async function onTransactionCreate(
         tx.setConfirmed(receipt);
       }
     } catch (e) {
-      captureException(e, 'checkTransaction');
+      Logger.captureException(e, 'checkTransaction');
     }
   }
 }

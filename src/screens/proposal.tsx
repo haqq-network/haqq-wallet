@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
@@ -70,7 +70,7 @@ export const ProposalScreen = () => {
         sendNotification(I18N.voteRegistered);
       } catch (error) {
         sendNotification(I18N.voteNotRegistered);
-        captureException(error, 'proposal.vote');
+        Logger.captureException(error, 'proposal.vote');
       }
 
       setModalIsLoading(false);
@@ -114,7 +114,7 @@ export const ProposalScreen = () => {
     }
   }, [item]);
 
-  console.log('item', item);
+  Logger.log('item', item);
 
   return (
     <Proposal

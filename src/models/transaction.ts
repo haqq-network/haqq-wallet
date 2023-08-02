@@ -2,7 +2,7 @@ import {TransactionReceipt} from '@ethersproject/abstract-provider';
 import {BigNumber} from '@ethersproject/bignumber';
 import {utils} from 'ethers';
 
-import {calcFee, captureException} from '@app/helpers';
+import {calcFee} from '@app/helpers';
 import {realm} from '@app/models/index';
 
 export class Transaction extends Realm.Object {
@@ -145,7 +145,7 @@ export class Transaction extends Realm.Object {
         );
       });
     } catch (e) {
-      captureException(e, 'Transaction.setConfirmed', {
+      Logger.captureException(e, 'Transaction.setConfirmed', {
         receipt: JSON.stringify(receipt),
       });
     }

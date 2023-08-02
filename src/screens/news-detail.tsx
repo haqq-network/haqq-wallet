@@ -27,7 +27,7 @@ export const NewsDetailScreen = () => {
         id: route.params.id,
         duration: endTimestamp - startTimestamp,
       }).finally(() => {
-        console.log('event tracked');
+        Logger.log('event tracked');
       });
     };
   }, [route.params.id]);

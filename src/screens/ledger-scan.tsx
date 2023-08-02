@@ -78,7 +78,7 @@ export const LedgerScanScreen = () => {
 
   useEffect(() => {
     awaitForBluetooth().then(() => {
-      console.log('connected');
+      Logger.log('connected');
     });
   }, []);
 
@@ -133,7 +133,7 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
-        console.error('ledgerScan:onRetry', item.name, err);
+        Logger.error('ledgerScan:onRetry', item.name, err);
 
         if (err instanceof Error) {
           switch (err.message) {
@@ -153,7 +153,7 @@ export const LedgerScanScreen = () => {
       try {
         await tryToConnect(item);
       } catch (err) {
-        console.error('ledgerScan:onPress', item.name, err);
+        Logger.error('ledgerScan:onPress', item.name, err);
 
         if (err instanceof Error) {
           switch (err.message) {

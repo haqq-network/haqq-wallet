@@ -72,7 +72,7 @@ export const HomeFeedScreen = () => {
   );
 
   const onPressTokenRow = useCallback((tiker: string) => {
-    console.log('token row pressed', tiker);
+    Logger.log('token row pressed', tiker);
   }, []);
 
   const updateTransactionsList = useCallback(() => {

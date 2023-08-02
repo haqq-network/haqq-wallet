@@ -40,14 +40,14 @@ import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('setBackgroundMessageHandler', remoteMessage);
+  Logger.log('setBackgroundMessageHandler', remoteMessage);
 });
 
 messaging()
   .getInitialNotification()
   .then(remoteMessage => {
     if (remoteMessage) {
-      console.log('getInitialNotification', remoteMessage);
+      Logger.log('getInitialNotification', remoteMessage);
     }
   });
 
@@ -262,7 +262,7 @@ const TEST_URLS: Partial<Link>[] = [
 
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
-  console.log('params', params);
+  Logger.log('params', params);
   const data = iface.encodeFunctionData(func, params);
 
   const resp = await EthNetwork.call(to, data);
@@ -310,17 +310,17 @@ export const SettingsTestScreen = () => {
     ]);
 
     const resp = await EthNetwork.call(contract, data);
-    console.log('resp', resp);
+    Logger.log('resp', resp);
     const r = iface.decodeFunctionResult('tokensOfOwner', resp);
 
-    console.log(JSON.stringify(r));
+    Logger.log(JSON.stringify(r));
   };
 
   const onMintContract = async () => {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData('mintNFTs', [1]);
 
-    console.log('data', data);
+    Logger.log('data', data);
 
     const walletId = await awaitForWallet({
       wallets: Wallet.getAll().snapshot(),
@@ -345,19 +345,19 @@ export const SettingsTestScreen = () => {
 
     const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
 
-    console.log('signedTx', signedTx);
+    Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
 
-    console.log('resp', resp);
+    Logger.log('resp', resp);
     const r = iface.decodeFunctionData('mintNFTs', resp.data);
 
-    console.log(JSON.stringify(r));
+    Logger.log(JSON.stringify(r));
   };
 
   const onCheckContract = useCallback(async () => {
     const code = await EthNetwork.getCode(contract);
-    console.log('code', code);
+    Logger.log('code', code);
 
     const interfaces = await callContract(
       contract,
@@ -365,13 +365,13 @@ export const SettingsTestScreen = () => {
       0x80ac58cd,
     );
 
-    console.log('interfaces', ...interfaces);
+    Logger.log('interfaces', ...interfaces);
 
     const name = await callContract(contract, 'name');
-    console.log('name', ...name);
+    Logger.log('name', ...name);
 
     const symbol = await callContract(contract, 'symbol');
-    console.log('symbol', ...symbol);
+    Logger.log('symbol', ...symbol);
   }, [contract]);
 
   const onResetUid = useCallback(async () => {

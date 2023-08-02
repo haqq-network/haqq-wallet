@@ -109,7 +109,7 @@ export const detectDeeplinkAndNavigate = async (url: string) => {
       }
     }
   } catch (err) {
-    console.log("checkAndNavigateToDepplink can't navigate to:", url);
+    Logger.log("checkAndNavigateToDepplink can't navigate to:", url);
   }
   return false;
 };

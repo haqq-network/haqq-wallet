@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {PinInterface} from '@app/components/pin';
 import {PinGuard} from '@app/components/pin-guard';
 import {app} from '@app/contexts';
-import {captureException, hideModal, showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
@@ -49,7 +49,7 @@ export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
         pinRef.current?.locked(app.pinBanned);
       }
 
-      captureException(error, 'pin-guard');
+      Logger.captureException(error, 'pin-guard');
     }
 
     // @todo: wtf???

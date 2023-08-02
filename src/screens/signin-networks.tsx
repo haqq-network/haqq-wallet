@@ -78,7 +78,7 @@ export const SignInNetworksScreen = () => {
           sssCloudShare: share,
         });
       } catch (e) {
-        console.log('error', e, e instanceof SssError);
+        Logger.log('error', e, e instanceof SssError);
         if (e instanceof SssError) {
           // @ts-ignore
           navigation.navigate(e.message, {

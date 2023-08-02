@@ -19,7 +19,7 @@ import {EventResolverSymbol} from './await-for-event-done';
  *
  * // Define an async event listener
  * const listener = async (message: string) => {
- *   console.log('event start with param: ', message);
+ *   Logger.log('event start with param: ', message);
  *   await sleep(5000);
  * };
  *
@@ -29,7 +29,7 @@ import {EventResolverSymbol} from './await-for-event-done';
  * // Emit the 'greet' event and wait for it to be done
  * awaitForEventDone('TestEvent', 'Hello World!');
  *    // will be call after 5000ms delay
- *   .then(() => console.log('event done'));
+ *   .then(() => Logger.log('event done'));
  */
 export class AsyncEventEmitter extends EventEmitter {
   private listenerMap = new WeakMap<
