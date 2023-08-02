@@ -1,4 +1,3 @@
-import {captureException} from '@app/helpers';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
@@ -41,6 +40,6 @@ export async function onNewsSync() {
 
     VariablesDate.set('lastSyncNews', new Date());
   } catch (e) {
-    captureException(e, 'onNewsSync');
+    Logger.captureException(e, 'onNewsSync');
   }
 }

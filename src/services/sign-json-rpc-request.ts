@@ -8,6 +8,7 @@ import {
   hideModal,
   showModal,
 } from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
@@ -91,16 +92,19 @@ export class SignJsonRpcRequest {
       );
     }
 
-    const provider = await getProviderInstanceForWallet(wallet);
-    const rpcProvider = chainId
-      ? Provider.getByChainId(chainId)?.rpcProvider || getDefaultNetwork()
-      : getDefaultNetwork();
+    const instanceProvider = await getProviderInstanceForWallet(wallet);
 
-    if (!provider) {
+    if (!instanceProvider) {
       throw new Error(
         '[SignJsonRpcRequest:SignJsonRpcRequest]: provider is undefined',
       );
     }
+
+    const provider = chainId && Provider.getByEthChainId(chainId);
+
+    const rpcProvider = provider
+      ? await getRpcProvider(provider)
+      : getDefaultNetwork();
 
     if (wallet.type === WalletType.ledgerBt) {
       await awaitForBluetooth();
@@ -121,7 +125,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = getSignParamsMessage(request.params);
-        result = await provider.signPersonalMessage(path, message);
+        result = await instanceProvider.signPersonalMessage(path, message);
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
@@ -131,7 +135,7 @@ export class SignJsonRpcRequest {
           const cosmos = new Cosmos(app.provider!);
           const signedMessageHash = await cosmos.signTypedData(
             path,
-            provider,
+            instanceProvider,
             typedData.domain,
             // @ts-ignore
             typedData.types,
@@ -150,7 +154,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
         let sendTransactionRequest: TransactionRequest = request.params[0];
 
-        const {address} = await provider.getAccountInfo(path);
+        const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
         const {_hex: estimateGas} = await rpcProvider.estimateGas({
           ...sendTransactionRequest,
@@ -168,7 +172,7 @@ export class SignJsonRpcRequest {
           sendTransactionRequest.chainId = chainId;
         }
 
-        const signedTransaction = await provider.signTransaction(
+        const signedTransaction = await instanceProvider.signTransaction(
           path,
           sendTransactionRequest,
         );
@@ -186,7 +190,10 @@ export class SignJsonRpcRequest {
           signTransactionRequest.chainId = chainId;
         }
 
-        result = await provider.signTransaction(path, signTransactionRequest);
+        result = await instanceProvider.signTransaction(
+          path,
+          signTransactionRequest,
+        );
         break;
       default:
         throw new Error(
@@ -205,7 +212,7 @@ export class SignJsonRpcRequest {
     }
 
     if (DEBUG_VARS.enableWalletConnectLogger) {
-      console.log('✅ signEIP155Request result:', result, result.length);
+      Logger.log('✅ signEIP155Request result:', result, result.length);
     }
 
     return result;

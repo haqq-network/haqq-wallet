@@ -1,6 +1,5 @@
 import analytics from '@react-native-firebase/analytics';
 
-import {captureException} from '@app/helpers/capture-exception';
 import {VariablesBool} from '@app/models/variables-bool';
 
 export async function trackEvent(
@@ -11,7 +10,7 @@ export async function trackEvent(
     try {
       await analytics().logEvent(event, params);
     } catch (e) {
-      captureException(e, 'trackEvent', {event, params});
+      Logger.captureException(e, 'trackEvent', {event, params});
     }
   }
 }

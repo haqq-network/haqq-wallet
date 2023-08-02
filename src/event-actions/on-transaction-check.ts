@@ -1,4 +1,4 @@
-import {captureException} from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 
@@ -10,7 +10,9 @@ export async function onTransactionCheck(hash: string) {
       const provider = Provider.getById(transaction.providerId);
 
       if (provider) {
-        const receipt = await provider.rpcProvider.getTransactionReceipt(
+        const rpcProvider = await getRpcProvider(provider);
+
+        const receipt = await rpcProvider.getTransactionReceipt(
           transaction.hash,
         );
         if (receipt && receipt.confirmations > 0) {
@@ -18,7 +20,7 @@ export async function onTransactionCheck(hash: string) {
         }
       }
     } catch (e) {
-      captureException(e, 'checkTransaction');
+      Logger.captureException(e, 'checkTransaction');
     }
   }
 }

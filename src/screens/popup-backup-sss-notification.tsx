@@ -9,7 +9,7 @@ import {
 } from '@app/components/bottom-popups';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
 import {Cloud} from '@app/services/cloud';
@@ -40,7 +40,7 @@ export const BackupSssNotificationScreen = () => {
           onDone();
         }
       } catch (e) {
-        captureException(e, 'save sss backup');
+        Logger.captureException(e, 'save sss backup');
         showModal('transactionError', {
           message: 'backup save error',
         });

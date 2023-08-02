@@ -14,6 +14,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'no-console': 'error',
         'import/order': [
           'error',
           {
@@ -62,4 +63,7 @@ module.exports = {
       jsx: true,
     },
   },
+  globals: {
+    Logger: 'readonly'
+  }
 };

@@ -14,7 +14,6 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
-import {captureException} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
@@ -50,7 +49,7 @@ export class WalletConnect extends EventEmitter {
   public async init(): Promise<void> {
     try {
       if (DEBUG_VARS.enableWalletConnectLogger) {
-        console.log(
+        Logger.log(
           'WalletConnect:init',
           WALLET_CONNECT_PROJECT_ID,
           WALLET_CONNECT_RELAY_URL,
@@ -58,7 +57,7 @@ export class WalletConnect extends EventEmitter {
       }
 
       if (this._client) {
-        return console.warn('WalletConnect:init already initialized');
+        return Logger.warn('WalletConnect:init already initialized');
       }
 
       this._core = new Core({
@@ -83,7 +82,7 @@ export class WalletConnect extends EventEmitter {
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
           if (DEBUG_VARS.enableWalletConnectLogger) {
-            console.log(
+            Logger.log(
               '🟢 session_proposal',
               JSON.stringify(proposal, null, 2),
             );
@@ -93,14 +92,14 @@ export class WalletConnect extends EventEmitter {
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         .on('session_request', async event => {
           if (DEBUG_VARS.enableWalletConnectLogger) {
-            console.log('🟢 session_request', JSON.stringify(event, null, 2));
+            Logger.log('🟢 session_request', JSON.stringify(event, null, 2));
           }
           app.emit(Events.onWalletConnectSignTransaction, event);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
         .on('session_update', async event => {
           if (DEBUG_VARS.enableWalletConnectLogger) {
-            console.log('🟢 session_update', JSON.stringify(event, null, 2));
+            Logger.log('🟢 session_update', JSON.stringify(event, null, 2));
           }
           await this._client?.extendSession?.({topic: event?.topic});
           this._emitActiveSessions();
@@ -115,8 +114,8 @@ export class WalletConnect extends EventEmitter {
       );
     } catch (err) {
       if (err instanceof Error) {
-        console.error('[WalletConnect] init error', err);
-        captureException(err, 'WalletConnect:init');
+        Logger.error('[WalletConnect] init error', err);
+        Logger.captureException(err, 'WalletConnect:init');
         await sleep(5000);
         return WalletConnect.instance._reInit();
       }
@@ -138,13 +137,13 @@ export class WalletConnect extends EventEmitter {
       }
 
       if (DEBUG_VARS.enableWalletConnectLogger) {
-        console.log('WalletConnect:pair ', resp);
+        Logger.log('WalletConnect:pair ', resp);
       }
     } catch (err) {
       if (isError(err)) {
         sendMessage(`[WC]: ${err.message}`);
         // @ts-ignore
-        captureException(err, 'WalletConnect.pair', {resp});
+        Logger.captureException(err, 'WalletConnect.pair', {resp});
         await this._reInit();
       }
     }
@@ -236,7 +235,7 @@ export class WalletConnect extends EventEmitter {
       };
     });
 
-    console.log('namespaces', JSON.stringify(namespaces, null, 2));
+    Logger.log('namespaces', JSON.stringify(namespaces, null, 2));
 
     const session = await this._client.approveSession({
       id: proposalId,
@@ -265,7 +264,7 @@ export class WalletConnect extends EventEmitter {
     }
 
     if (DEBUG_VARS.enableWalletConnectLogger) {
-      console.log('✅ approveSessionRequest result:', result);
+      Logger.log('✅ approveSessionRequest result:', result);
     }
 
     const isDisconnected = !this.getSessionByTopic(event?.topic);

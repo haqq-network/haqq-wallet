@@ -162,7 +162,7 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             onGetAddress(slicedAddress);
           }
         } catch (err) {
-          console.log(err);
+          Logger.log(err);
         }
       }
     }

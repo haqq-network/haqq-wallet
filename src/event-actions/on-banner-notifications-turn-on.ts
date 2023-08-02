@@ -1,6 +1,5 @@
 import {app} from '@app/contexts';
 import {onPushSubscriptionTransactionsSubscribe} from '@app/event-actions/on-push-subscription-transactions-subscribe';
-import {captureException} from '@app/helpers';
 import {Banner} from '@app/models/banner';
 import {navigator} from '@app/navigator';
 import {PushNotifications} from '@app/services/push-notifications';
@@ -26,6 +25,6 @@ export async function onBannerNotificationsTurnOn(
 
     Banner.remove(id);
   } catch (e) {
-    captureException(e, 'onBannerNotificationsTurnOn', {id});
+    Logger.captureException(e, 'onBannerNotificationsTurnOn', {id});
   }
 }

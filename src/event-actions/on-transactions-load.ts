@@ -1,5 +1,5 @@
 import {Events} from '@app/events';
-import {calcFee, captureException} from '@app/helpers';
+import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
@@ -60,7 +60,7 @@ async function loadTransactionsFromExplorerWithProvider(
         timeStamp: Number(row.timeStamp),
       }));
   } catch (e) {
-    captureException(e, 'loadTransactionsFromExplorer');
+    Logger.captureException(e, 'loadTransactionsFromExplorer');
     return [];
   }
 }

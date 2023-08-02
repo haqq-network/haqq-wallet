@@ -6,7 +6,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 
 import {app} from '@app/contexts';
-import {captureException, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -72,7 +72,7 @@ export const SssMigrateStoreScreen = () => {
         if (e instanceof Error) {
           showModal('errorCreateAccount');
           navigation.getParent()?.goBack();
-          captureException(e, 'SssMigrateStoreScreen');
+          Logger.captureException(e, 'SssMigrateStoreScreen');
         }
       }
     }, 350);

@@ -8,6 +8,7 @@ import {
   AwaitProviderError,
   awaitForProvider,
 } from '@app/helpers/await-for-provider';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -99,8 +100,9 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
   return provider;
 };
 
-const getRpcProvider = (helper: Web3BrowserHelper) => {
-  return getNetworkProvier(helper)?.rpcProvider || getDefaultNetwork();
+const getLocalRpcProvider = async (helper: Web3BrowserHelper) => {
+  const provider = getNetworkProvier(helper);
+  return provider ? await getRpcProvider(provider) : getDefaultNetwork();
 };
 
 export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
@@ -208,7 +210,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_getBlockByNumber: () => 0,
   eth_call: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.call(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
@@ -216,9 +218,9 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       }
     }
   },
-  eth_getTransactionCount: ({req, helper}) => {
+  eth_getTransactionCount: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.getTransactionCount(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
@@ -228,9 +230,9 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_mining: () => false,
   net_listening: () => true,
-  eth_estimateGas: ({req, helper}) => {
+  eth_estimateGas: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.estimateGas(req.params[0]);
     } catch (err) {
       if (err instanceof Error) {
@@ -244,7 +246,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_getCode: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getCode(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
@@ -252,9 +254,9 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       }
     }
   },
-  eth_blockNumber: ({helper}) => {
+  eth_blockNumber: async ({helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.blockNumber;
     } catch (err) {
       if (err instanceof Error) {
@@ -264,7 +266,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_getTransactionByHash: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransaction(req.params?.[0]);
     } catch (err) {
       if (err instanceof Error) {
@@ -274,7 +276,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_getTransactionReceipt: async ({req, helper}) => {
     try {
-      const rpcProvider = getRpcProvider(helper);
+      const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransactionReceipt(req.params?.[0]);
     } catch (err) {
       if (err instanceof Error) {
@@ -291,7 +293,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   wallet_addEthereumChain: ({req}) => {
     const chainInfo = req.params?.[0];
     if (isEthereumChainParams(chainInfo)) {
-      console.log('wallet_addEthereumChain', chainInfo?.chainName);
+      Logger.log('wallet_addEthereumChain', chainInfo?.chainName);
     }
   },
 };

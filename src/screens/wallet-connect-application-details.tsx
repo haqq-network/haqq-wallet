@@ -43,7 +43,7 @@ export const WalletConnectApplicationDetailsScreen = () => {
       await WalletConnect.instance.disconnectSession(session.topic);
       navivation.goBack();
     } catch (err) {
-      console.error(
+      Logger.error(
         'WalletConnectApplicationDetailsScreen:handleDisconnectPress',
         err,
       );

@@ -24,7 +24,7 @@ export async function requestLocationPermission(): Promise<LocationRequestResult
 
   const status = await PermissionsAndroid.request(locationPermission);
 
-  console.log(
+  Logger.log(
     'requestLocationPermission status: ',
     status,
     'granded: ',

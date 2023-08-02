@@ -16,6 +16,7 @@ export enum Events {
   onTransactionCheck = 'onTransactionCheck',
   onTransactionCreate = 'onTransactionCreate',
   onAppActive = 'onAppActive',
+  onAppInitialized = 'onAppInitialized',
   onAppStarted = 'onAppStarted',
   onAppLoggedId = 'onAppLoggedId',
   onAppMnemonicBackup = 'onAppMnemonicBackup',
@@ -30,6 +31,7 @@ export enum Events {
   onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
   onNeedUpdate = 'onNeedUpdate',
+  onAppReviewRequest = 'onAppReviewRequest',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
 }

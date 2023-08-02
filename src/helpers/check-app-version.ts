@@ -1,7 +1,5 @@
 import {getAppVersion} from '@app/services/version';
 
-import {captureException} from './capture-exception';
-
 export enum ComparisonResult {
   Older = -1,
   Same = 0,
@@ -70,10 +68,9 @@ export function checkNeedUpdate() {
     // TODO: get from remote config
     const remoteVersion = '1.4.6';
     const result = compareVersions(appVersion, remoteVersion);
-    console.log('result', result === ComparisonResult.Newer);
     return result === ComparisonResult.Newer;
   } catch (err) {
-    captureException(err, 'checkNeedUpdate');
+    Logger.captureException(err, 'checkNeedUpdate');
     return false;
   }
 }

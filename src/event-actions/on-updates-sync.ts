@@ -1,4 +1,3 @@
-import {captureException} from '@app/helpers';
 import {News} from '@app/models/news';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -71,6 +70,6 @@ export async function onUpdatesSync() {
 
     VariablesDate.set('lastSyncUpdates', new Date());
   } catch (e) {
-    captureException(e, 'onUpdatesSync');
+    Logger.captureException(e, 'onUpdatesSync');
   }
 }

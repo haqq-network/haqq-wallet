@@ -153,7 +153,7 @@ class App extends AsyncEventEmitter {
   private _provider: Provider | null;
 
   get provider() {
-    return this._provider;
+    return this._provider as Provider;
   }
 
   get providerId() {
@@ -386,7 +386,7 @@ class App extends AsyncEventEmitter {
         vibrate(HapticEffects.success);
         this.authenticated = true;
       } catch (error) {
-        console.error('app.auth', error);
+        Logger.error('app.auth', error);
         await awaitForEventDone(Events.enterPinSuccess);
       }
     } else {

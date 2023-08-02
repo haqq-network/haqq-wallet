@@ -1,10 +1,10 @@
 import {app} from '@app/contexts';
-import {onAddressBookCreate} from '@app/event-actions/on-address-book-create';
-import {onAddressBookSync} from '@app/event-actions/on-address-book-sync';
 import {onAppActive} from '@app/event-actions/on-app-active';
+import {onAppInitialized} from '@app/event-actions/on-app-initialized';
 import {onAppLoggedIn} from '@app/event-actions/on-app-logged-in';
 import {onAppMnemonicBackup} from '@app/event-actions/on-app-mnemonic-backup';
 import {onAppProviderSssBackup} from '@app/event-actions/on-app-provider-sss-backup';
+import {onAppReviewRequest} from '@app/event-actions/on-app-review-request';
 import {onAppStarted} from '@app/event-actions/on-app-started';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
@@ -27,20 +27,18 @@ import {onWalletSssCheck} from '@app/event-actions/on-wallet-sss-check';
 import {onWalletSssSaved} from '@app/event-actions/on-wallet-sss-saved';
 import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
-import {callbackWrapper, throttle} from '@app/utils';
+import {throttle} from '@app/utils';
 
-app.on(
-  Events.onWalletsBalanceCheck,
-  throttle(callbackWrapper(onWalletsBalanceCheck), 1000),
-);
+app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 app.on(Events.onDeepLink, onDeepLink);
-app.on(Events.onWalletCreate, callbackWrapper(onWalletCreate));
-app.on(Events.onWalletRemove, callbackWrapper(onWalletRemove));
+app.on(Events.onWalletCreate, onWalletCreate);
+app.on(Events.onWalletRemove, onWalletRemove);
 app.on(Events.onStakingSync, throttle(onStakingSync, 1000));
-app.on(Events.onTransactionsLoad, callbackWrapper(onTransactionsLoad));
-app.on(Events.onAppActive, callbackWrapper(onAppActive));
-app.on(Events.onAppStarted, callbackWrapper(onAppStarted));
-app.on(Events.onAppLoggedId, callbackWrapper(onAppLoggedIn));
+app.on(Events.onTransactionsLoad, onTransactionsLoad);
+app.on(Events.onAppActive, onAppActive);
+app.on(Events.onAppInitialized, onAppInitialized);
+app.on(Events.onAppStarted, onAppStarted);
+app.on(Events.onAppLoggedId, onAppLoggedIn);
 app.on(Events.onAppMnemonicBackup, onAppMnemonicBackup);
 app.on(Events.onWalletReset, onWalletReset);
 app.on(Events.onWalletMnemonicCheck, onWalletMnemonicCheck);
@@ -56,9 +54,8 @@ app.on(Events.onAppProviderSssBackup, onAppProviderSssBackup);
 app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
 app.on(Events.onDynamicLink, onDynamicLink);
 app.on(Events.onTransactionCheck, onTransactionCheck);
-app.on(Events.onPushNotification, callbackWrapper(onPushNotification));
-app.on(Events.onAddressBookCreate, callbackWrapper(onAddressBookCreate));
-app.on(Events.onTransactionCreate, callbackWrapper(onTransactionCreate));
-app.on(Events.onAddressBookSync, callbackWrapper(onAddressBookSync));
-app.on(Events.onProviderChanged, callbackWrapper(onProviderChanged));
-app.on(Events.onNeedUpdate, callbackWrapper(onNeedUpdate));
+app.on(Events.onPushNotification, onPushNotification);
+app.on(Events.onTransactionCreate, onTransactionCreate);
+app.on(Events.onProviderChanged, onProviderChanged);
+app.on(Events.onAppReviewRequest, onAppReviewRequest);
+app.on(Events.onNeedUpdate, onNeedUpdate);
