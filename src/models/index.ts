@@ -356,22 +356,22 @@ export const realm = new Realm({
 
         newRealm.create('VariablesBool', {
           id: 'isDeveloper',
-          value: user.isDeveloper,
+          value: !!user.isDeveloper,
         });
 
         newRealm.create('VariablesBool', {
           id: 'biometry',
-          value: user.biometry,
+          value: !!user.biometry,
         });
 
         newRealm.create('VariablesBool', {
           id: 'bluetooth',
-          value: user.bluetooth,
+          value: !!user.bluetooth,
         });
 
         newRealm.create('VariablesBool', {
           id: 'onboarded',
-          value: user.onboarded,
+          value: !!user.onboarded,
         });
 
         newRealm.create('VariablesString', {
