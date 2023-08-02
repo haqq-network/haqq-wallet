@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {
   awaitForBluetooth,
   awaitForLedger,
@@ -105,4 +106,5 @@ export async function onStakingRewards() {
   }
 
   rewards.forEach(r => StakingMetadata.remove(r.hash));
+  app.emit(Events.onAppReviewRequest);
 }

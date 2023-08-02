@@ -9741,6 +9741,7 @@ __metadata:
     react-native-gesture-handler: 2.12.0
     react-native-get-random-values: 1.9.0
     react-native-image-picker: 5.6.0
+    react-native-in-app-review: ^4.3.3
     react-native-json-tree: 1.3.0
     react-native-keyboard-aware-scroll-view: 0.9.5
     react-native-keychain: 8.1.1
@@ -14512,6 +14513,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3797ec006c2d1f7b96c088c25d972113ef61f42e499f1bdbc553630acecab613d671a2c7d050029a7b01df144e83992ea2639b33255cfa487bf422943ded419b
+  languageName: node
+  linkType: hard
+
+"react-native-in-app-review@npm:^4.3.3":
+  version: 4.3.3
+  resolution: "react-native-in-app-review@npm:4.3.3"
+  checksum: b697838a5bdb756447d3ea4cb963e3065fcfc88984db8ec3fbc67654fc12d1502f77e6473b59d32cf87f8f666c63d79a20ed1cd7ca9503647b0ea79848d41f86
   languageName: node
   linkType: hard
 

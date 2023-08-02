@@ -3,6 +3,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
+import {Events} from '@app/events';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -38,9 +40,10 @@ export const TransactionFinishScreen = () => {
     [transaction?.to],
   );
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(async () => {
+    await awaitForEventDone(Events.onAppReviewRequest);
     getParent()?.goBack();
-  };
+  }, [getParent]);
 
   const onPressContact = useCallback(() => {
     if (transaction?.to) {
