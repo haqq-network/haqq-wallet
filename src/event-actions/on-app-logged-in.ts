@@ -6,6 +6,9 @@ import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {getPatternName} from '@app/utils';
 
+/**
+ * @description Called when user logged in. Used to prefetch images and load transactions
+ */
 export async function onAppLoggedIn() {
   const wallets = Wallet.getAllVisible();
 

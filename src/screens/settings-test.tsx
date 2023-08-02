@@ -265,12 +265,7 @@ async function callContract(to: string, func: string, ...params: any[]) {
   Logger.log('params', params);
   const data = iface.encodeFunctionData(func, params);
 
-  const rawTx = {
-    to,
-    data,
-  };
-
-  const resp = await EthNetwork.network.call(rawTx);
+  const resp = await EthNetwork.call(to, data);
   return iface.decodeFunctionResult(func, resp);
 }
 
@@ -314,14 +309,7 @@ export const SettingsTestScreen = () => {
       '0x6e03A60fdf8954B4c10695292Baf5C4bdC34584B',
     ]);
 
-    Logger.log('data', data);
-
-    const rawTx = {
-      to: contract,
-      data: data,
-    };
-
-    const resp = await EthNetwork.network.call(rawTx);
+    const resp = await EthNetwork.call(contract, data);
     Logger.log('resp', resp);
     const r = iface.decodeFunctionResult('tokensOfOwner', resp);
 
@@ -359,7 +347,7 @@ export const SettingsTestScreen = () => {
 
     Logger.log('signedTx', signedTx);
 
-    const resp = await EthNetwork.network.sendTransaction(signedTx);
+    const resp = await EthNetwork.sendTransaction(signedTx);
 
     Logger.log('resp', resp);
     const r = iface.decodeFunctionData('mintNFTs', resp.data);
@@ -368,7 +356,7 @@ export const SettingsTestScreen = () => {
   };
 
   const onCheckContract = useCallback(async () => {
-    const code = await EthNetwork.network.getCode(contract);
+    const code = await EthNetwork.getCode(contract);
     Logger.log('code', code);
 
     const interfaces = await callContract(

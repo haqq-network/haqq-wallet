@@ -116,7 +116,6 @@ import {WalletProtectionPopup} from './screens/wallet-protection-popup';
 import {WalletSelectorScreen} from './screens/wallet-selector-screen';
 import {Web3BrowserPopup} from './screens/web3-browser-popup';
 import {WelcomeScreen} from './screens/welcome';
-import {RemoteConfig} from './services/remote-config';
 
 const screenOptions: ScreenOptionType = {
   tab: Platform.select({ios: true, android: false}),
@@ -183,14 +182,14 @@ export const App = () => {
 
     sleep(150)
       .then(() => SplashScreen.hide())
-      .then(() => RemoteConfig.init())
+      .then(() => awaitForEventDone(Events.onAppInitialized))
       .then(async () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
-          await awaitForEventDone(Events.onAppLoggedId);
         }
       })
+      .then(() => awaitForEventDone(Events.onAppLoggedId))
       .catch(async e => {
         Logger.captureException(e, 'app init');
       })

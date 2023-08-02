@@ -1,24 +1,37 @@
 /* eslint-disable no-console */
 import * as Sentry from '@sentry/react-native';
 
+interface LoggerOptions {
+  stringifyJson?: boolean;
+  emodjiPrefix?: '🟢' | '🔵' | '🟣' | '🔴' | '⚪️' | '🟡' | '🟠' | '🟤' | '⚫️';
+}
+
+const BG_GREEN_TEXT_WHITE_BOLD = __DEV__ ? '\x1b[42m\x1b[37m\x1b[1m' : '';
+const RESET = __DEV__ ? '\x1b[0m' : '';
 export class LoggerService {
   private _tag?: string = '';
   private _stringifyJson?: boolean;
+  private _emodji?: string;
+
+  public get emodji() {
+    return this._emodji || '';
+  }
 
   public get tag() {
     if (this._tag) {
-      return `[ ${this._tag} ]`;
+      return `${this.emodji} ${BG_GREEN_TEXT_WHITE_BOLD}[ ${this._tag} ]${RESET}`;
     }
-    return '';
+    return `${this.emodji}`;
   }
 
-  constructor(tag?: string, stringifyJson?: boolean) {
+  constructor(tag?: string, options?: LoggerOptions) {
     this._tag = tag;
-    this._stringifyJson = stringifyJson;
+    this._stringifyJson = options?.stringifyJson;
+    this._emodji = options?.emodjiPrefix;
   }
 
-  create(tag: string, stringifyJson?: boolean) {
-    return new LoggerService(tag, stringifyJson);
+  create(tag: string, options?: LoggerOptions) {
+    return new LoggerService(tag, options);
   }
 
   log(...args: any[]) {
@@ -43,21 +56,21 @@ export class LoggerService {
     context: any = {},
   ) {
     if (!error) {
-      Logger.log(
+      this.log(
         source,
         'captureException called with missing or incorrect arguments',
       );
-      Logger.trace();
+      this.trace();
       return;
     }
-    Logger.error('captureException', source, error, context);
+    this.error('captureException', source, error, context);
     try {
       Sentry.captureException(error, {
         tags: {source},
         extra: context,
       });
     } catch (e) {
-      Logger.error(
+      this.error(
         'captureException send error',
         source,
         error,

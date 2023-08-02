@@ -50,7 +50,7 @@ export const realm = new Realm({
     VariablesString,
     RssNews,
   ],
-  schemaVersion: 63,
+  schemaVersion: 64,
   onMigration: (oldRealm, newRealm) => {
     if (oldRealm.schemaVersion < 9) {
       const oldObjects = oldRealm.objects('Wallet');
@@ -388,6 +388,20 @@ export const realm = new Realm({
           id: 'providerId',
           value: user.providerId,
         });
+      }
+    }
+
+    if (oldRealm.schemaVersion < 64) {
+      const oldObjects = oldRealm.objects<{id: string}>('Provider');
+      const newObjects = newRealm.objects<{
+        tmEndpoints: string[];
+        evmEndpoints: string[];
+      }>('Provider');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.tmEndpoints = [];
+        newObject.evmEndpoints = [];
       }
     }
   },

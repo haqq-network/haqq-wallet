@@ -4,7 +4,7 @@
 import './global'
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat'
-import {AppRegistry} from 'react-native';
+import {AppRegistry, I18nManager} from 'react-native';
 
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
@@ -27,6 +27,14 @@ if(!global.BigInt){
 import './src/event-actions';
 import { IS_IOS } from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
+import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
+
+try {
+  const isRTLEnabled = isFeatureEnabled(Feature.rtl);
+  I18nManager.allowRTL(isRTLEnabled);
+  I18nManager.forceRTL(isRTLEnabled);
+  I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
+} catch (e){}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');

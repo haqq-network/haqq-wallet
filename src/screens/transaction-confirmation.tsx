@@ -71,7 +71,7 @@ export const TransactionConfirmationScreen = () => {
 
         const provider = await getProviderInstanceForWallet(wallet);
 
-        const transaction = await ethNetworkProvider.sendTransaction(
+        const transaction = await ethNetworkProvider.transferTransaction(
           provider,
           wallet.path!,
           route.params.to,

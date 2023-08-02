@@ -1,5 +1,3 @@
-import {ethers} from 'ethers';
-
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -19,6 +17,8 @@ export class Provider extends Realm.Object {
       tmRpcEndpoint: 'string',
       explorer: 'string?',
       isEditable: 'bool',
+      evmEndpoints: 'string[]',
+      tmEndpoints: 'string[]',
     },
     primaryKey: 'id',
   };
@@ -31,6 +31,8 @@ export class Provider extends Realm.Object {
   tmRpcEndpoint!: string;
   explorer: string | undefined;
   isEditable!: boolean;
+  evmEndpoints: string[];
+  tmEndpoints: string[];
 
   get ethChainIdHex() {
     return '0x' + this.ethChainId.toString(16);
@@ -40,10 +42,9 @@ export class Provider extends Realm.Object {
     return this.cosmosChainId.split('-')[1];
   }
 
-  get rpcProvider() {
-    return new ethers.providers.StaticJsonRpcProvider(this.ethRpcEndpoint, {
-      chainId: this.ethChainId,
-      name: this.id,
+  setEvmEndpoint(endpoint: string) {
+    realm.write(() => {
+      this.ethRpcEndpoint = endpoint;
     });
   }
 
@@ -79,7 +80,11 @@ export class Provider extends Realm.Object {
     return realm.objectForPrimaryKey<Provider>('Provider', providerId);
   }
 
-  static getByChainId(
+  static getByCosmosChainId(cosmosChainId: string) {
+    return Provider.getAll()?.filtered?.(`cosmosChainId = '${cosmosChainId}'`);
+  }
+
+  static getByEthChainId(
     ethChainId: number | string,
   ): (Provider & Realm.Object<unknown, never>) | null {
     if (!ethChainId && Number.isNaN(ethChainId)) {
@@ -93,7 +98,7 @@ export class Provider extends Realm.Object {
     if (!ethChainIdHex) {
       return null;
     }
-    return Provider.getByChainId(parseInt(ethChainIdHex, 16));
+    return Provider.getByEthChainId(parseInt(ethChainIdHex, 16));
   }
 
   update(params: Partial<Provider>) {

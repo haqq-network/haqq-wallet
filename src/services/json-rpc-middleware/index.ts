@@ -11,6 +11,8 @@ type CreateJsonRpcMiddlewareParams = {
   useNext?: boolean;
 };
 
+const logger = Logger.create('jrpc-middleware', {emodjiPrefix: '🟣'});
+
 export const createJsonRpcMiddleware = ({
   helper,
   useNext,
@@ -24,8 +26,8 @@ export const createJsonRpcMiddleware = ({
           code: -32601,
           message: 'Method not implemented',
         };
-        Logger.log(
-          `🔴 JRPC ${req.method} not implemented, params:`,
+        logger.log(
+          `${req.method} not implemented, params:`,
           JSON.stringify(req.params, null, 2),
         );
         Logger.captureException(res.error, 'createJsonRpcMiddleware', {
@@ -45,9 +47,9 @@ export const createJsonRpcMiddleware = ({
       if (typeof err.code === 'number' && typeof err.message === 'string') {
         res.error = err as JsonRpcError;
       } else {
-        Logger.error('🔴 json rpc middleware error', req, err);
+        logger.error('middleware error', req, err);
       }
-      Logger.captureException(err, 'createJsonRpcMiddleware:error', {req, res});
+      logger.captureException(err, 'createJsonRpcMiddleware:error', {req, res});
     }
 
     // if in the engine has less than one middleware then this is crash app
@@ -59,8 +61,8 @@ export const createJsonRpcMiddleware = ({
 
 export const createJsonRpcLoggerMiddleWare = () => {
   return createAsyncMiddleware(async (req, res) => {
-    Logger.log(
-      `🟣 JRPC ${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
+    logger.log(
+      `${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
         req.params || '{}',
         null,
         2,

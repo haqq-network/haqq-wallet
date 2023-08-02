@@ -18,6 +18,9 @@ import {Refferal} from '@app/models/refferal';
 
 import {onUpdatesSync} from './on-updates-sync';
 
+/**
+ * @description Called when app started (after logged in). Check banners, sync staking and updates
+ */
 export async function onAppStarted() {
   messaging()
     .getInitialNotification()

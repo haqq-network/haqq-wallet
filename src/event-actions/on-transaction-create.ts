@@ -1,8 +1,6 @@
 import {BigNumber} from '@ethersproject/bignumber';
 
-import {Events} from '@app/events';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {AddressBook, AddressBookType} from '@app/models/address-book';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 
@@ -35,26 +33,14 @@ export async function onTransactionCreate(
 
   if (!tx.confirmed) {
     try {
-      const receipt = await provider.rpcProvider.getTransactionReceipt(tx.hash);
+      const rpcProvider = await getRpcProvider(provider);
+
+      const receipt = await rpcProvider.getTransactionReceipt(tx.hash);
       if (receipt && receipt.confirmations > 0) {
         tx.setConfirmed(receipt);
       }
     } catch (e) {
       Logger.captureException(e, 'checkTransaction');
-    }
-  }
-
-  if (tx.to && tx.chainId) {
-    await awaitForEventDone(
-      Events.onAddressBookCreate,
-      tx.to.toLowerCase(),
-      tx.chainId,
-    );
-
-    const addressBook = AddressBook.getByAddressAndChainId(tx.to, tx.chainId);
-
-    if (addressBook && addressBook.type === AddressBookType.contract) {
-      await awaitForEventDone(Events.onAddressBookSync, addressBook.id);
     }
   }
 }
