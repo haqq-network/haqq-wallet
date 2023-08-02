@@ -3,23 +3,18 @@ import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {Deferrable} from '@ethersproject/properties';
 import {ProviderInterface} from '@haqq/provider-base';
 import BN from 'bn.js';
-import {BigNumber, BigNumberish, ethers, utils} from 'ethers';
+import {BigNumber, BigNumberish, utils} from 'ethers';
 
+import {app} from '@app/contexts';
 import {calcFeeWei} from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
-import {getDefaultChainId, getDefaultNetwork} from '@app/network';
+import {getDefaultChainId} from '@app/network';
 import {WEI} from '@app/variables/common';
 
 export class EthNetwork {
-  static network: ethers.providers.StaticJsonRpcProvider = getDefaultNetwork();
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
-  public stop = false;
-  private _provider;
-
-  constructor(provider = EthNetwork.network) {
-    this._provider = provider;
-  }
 
   static async populateTransaction(
     from: string,
@@ -28,12 +23,14 @@ export class EthNetwork {
     data: string = '0x',
     minGas = 21000,
   ) {
-    const nonce = await EthNetwork.network.getTransactionCount(from, 'latest');
-    const gasPrice = await EthNetwork.network.getGasPrice();
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    const nonce = await rpcProvider.getTransactionCount(from, 'latest');
+    const gasPrice = await rpcProvider.getGasPrice();
 
     let estimateGas;
     try {
-      const resp = await EthNetwork.network.estimateGas({
+      const resp = await rpcProvider.estimateGas({
         from,
         to,
         value: '0x' + value.toString('hex'),
@@ -77,17 +74,46 @@ export class EthNetwork {
 
   static async getBalance(address: string) {
     try {
-      const balance = await EthNetwork.network.getBalance(address);
+      const rpcProvider = await getRpcProvider(app.provider);
+      const balance = await rpcProvider.getBalance(address);
       return Number(utils.formatEther(balance));
     } catch (e) {
       return 0;
     }
   }
 
+  static async call(to: string, data: string) {
+    const rpcProvider = await getRpcProvider(app.provider);
+    return await rpcProvider.call({
+      to,
+      data,
+    });
+  }
+
+  static async getCode(address: string) {
+    try {
+      const rpcProvider = await getRpcProvider(app.provider);
+      return await rpcProvider.getCode(address);
+    } catch (e) {
+      return '0x';
+    }
+  }
+
+  static async sendTransaction(signedTx: string) {
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    return await rpcProvider.sendTransaction(signedTx);
+  }
+
+  static async getTransactionReceipt(txHash: string) {
+    const rpcProvider = await getRpcProvider(app.provider);
+
+    return await rpcProvider.getTransactionReceipt(txHash);
+  }
+
   static init(provider: Provider) {
     EthNetwork.chainId = provider.ethChainId;
     EthNetwork.explorer = provider.explorer;
-    EthNetwork.network = provider.rpcProvider;
   }
 
   static async estimateTransaction(
@@ -100,9 +126,11 @@ export class EthNetwork {
     feeData: FeeData;
     estimateGas: BigNumberish;
   }> {
+    const rpcProvider = await getRpcProvider(app.provider);
+
     const result = await Promise.all([
-      EthNetwork.network.getFeeData(),
-      EthNetwork.network.estimateGas({
+      rpcProvider.getFeeData(),
+      rpcProvider.estimateGas({
         from,
         to,
         amount,
@@ -119,7 +147,7 @@ export class EthNetwork {
     };
   }
 
-  async sendTransaction(
+  async transferTransaction(
     transport: ProviderInterface,
     hdPath: string,
     to: string,
@@ -137,19 +165,14 @@ export class EthNetwork {
       throw new Error('signedTx not found');
     }
 
-    return await this._provider.sendTransaction(signedTx);
+    return await EthNetwork.sendTransaction(signedTx);
   }
 
   async callContract(abi: any[], to: string, method: string, ...params: any[]) {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData(method, params);
 
-    const rawTx = {
-      to,
-      data,
-    };
-
-    const resp = await this._provider.call(rawTx);
+    const resp = await EthNetwork.call(to, data);
     return iface.decodeFunctionResult(method, resp);
   }
 }

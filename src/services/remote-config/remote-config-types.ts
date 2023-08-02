@@ -8,4 +8,6 @@ export type WalletConnectAllowedNamespaces = Omit<
 export interface RemoteConfigTypes {
   wallet_connect: WalletConnectAllowedNamespaces;
   web3_app_whitelist: string[];
+  evm_endpoints: Record<string, string[]>;
+  tm_endpoints: Record<string, string[]>;
 }
