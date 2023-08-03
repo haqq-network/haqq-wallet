@@ -27,6 +27,8 @@ import {Web3BrowserBookmark} from './web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from './web3-browser-search-history';
 import {Web3BrowserSession} from './web3-browser-session';
 
+const logger = Logger.create('realm', {stringifyJson: true});
+
 export const realm = new Realm({
   schema: [
     Web3BrowserSession,
@@ -52,12 +54,22 @@ export const realm = new Realm({
   ],
   schemaVersion: 64,
   onMigration: (oldRealm, newRealm) => {
+    logger.log('onMigration', {
+      oldRealmVersion: oldRealm.schemaVersion,
+      newRealmVersion: newRealm.schemaVersion,
+    });
     if (oldRealm.schemaVersion < 9) {
+      logger.log('migration step #1');
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{
         isHidden: boolean;
         cardStyle: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -67,8 +79,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 10) {
+      logger.log('migration step #2');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{language: string}>('User');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -77,8 +95,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 15) {
+      logger.log('migration step #3');
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{pattern: string}>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -87,8 +111,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 17) {
+      logger.log('migration step #4');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{snoozeBackup: null}>('User');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -97,8 +127,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 20) {
+      logger.log('migration step #5');
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{type: string}>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -107,8 +143,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 22) {
+      logger.log('migration step #6');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{providerId: string}>('User');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -117,8 +159,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 23) {
+      logger.log('migration step #7');
       const oldObjects = oldRealm.objects('Transaction');
       const newObjects = newRealm.objects<{providerId: string}>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -127,8 +175,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 24) {
+      logger.log('migration step #8');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{onboarded: boolean}>('User');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -137,8 +191,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 25) {
+      logger.log('migration step #9');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{theme: string}>('User');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -147,8 +207,14 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 26) {
+      logger.log('migration step #10');
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{isMain: boolean}>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -157,6 +223,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 27) {
+      logger.log('migration step #11');
       const providersList = require('@assets/migrations/providers.json');
 
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
@@ -167,6 +234,11 @@ export const realm = new Realm({
         cosmosRestEndpoint: string;
         tmRpcEndpoint: string;
       }>('Provider');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const provider = providersList.find(
@@ -185,10 +257,16 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 30) {
+      logger.log('migration step #12');
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
       const newObjects = newRealm.objects<{
         isEditable: boolean;
       }>('Provider');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -197,6 +275,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 33) {
+      logger.log('migration step #13');
       const oldObjects = oldRealm.objects<{
         address: string;
         rootAddress?: string;
@@ -205,6 +284,11 @@ export const realm = new Realm({
         address: string;
         rootAddress?: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -217,12 +301,18 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 34) {
+      logger.log('migration step #14');
       const oldObjects = oldRealm.objects<{
         cardStyle: string;
       }>('Wallet');
       const newObjects = newRealm.objects<{
         cardStyle: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -232,6 +322,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 35) {
+      logger.log('migration step #15');
       const oldObjects = oldRealm.objects<{
         path: string;
       }>('Wallet');
@@ -239,6 +330,11 @@ export const realm = new Realm({
         path: string;
         type: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -250,6 +346,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 36) {
+      logger.log('migration step #16');
       const oldObjects = oldRealm.objects<{
         mnemonicSaved: boolean;
       }>('Wallet');
@@ -257,6 +354,11 @@ export const realm = new Realm({
         mnemonicSaved: boolean;
         type: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -271,6 +373,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 37) {
+      logger.log('migration step #17');
       const oldObjects = oldRealm.objects('Wallet');
       const newObjects = newRealm.objects<{
         deviceId: string;
@@ -278,6 +381,11 @@ export const realm = new Realm({
         version: number;
         type: string;
       }>('Wallet');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -295,6 +403,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 43) {
+      logger.log('migration step #18');
       const oldObjects = oldRealm.objects<{
         hash: string;
         account: string;
@@ -307,6 +416,11 @@ export const realm = new Realm({
         from: string;
         to: string | null;
       }>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const oldObject = oldObjects[objectIndex];
@@ -323,6 +437,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 50) {
+      logger.log('migration step #19');
       const oldObjects = oldRealm.objects<{
         providerId: string;
       }>('Transaction');
@@ -338,6 +453,12 @@ export const realm = new Realm({
         ethChainId: number;
       }>('Provider');
 
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+        providers: providers.toJSON(),
+      });
+
       for (const provider of providers) {
         chainIds.set(provider.id, String(provider.ethChainId));
       }
@@ -349,10 +470,11 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 60) {
+      logger.log('migration step #20');
       const users = oldRealm.objects<UserType>('User');
-
       if (users.length) {
         const user = users[0];
+        logger.log('user', user.toJSON());
 
         newRealm.create('VariablesBool', {
           id: 'isDeveloper',
@@ -392,11 +514,16 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 64) {
+      logger.log('migration step #21');
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
       const newObjects = newRealm.objects<{
         tmEndpoints: string[];
         evmEndpoints: string[];
       }>('Provider');
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
@@ -404,5 +531,6 @@ export const realm = new Realm({
         newObject.evmEndpoints = [];
       }
     }
+    logger.log('migration finish');
   },
 });
