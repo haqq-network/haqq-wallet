@@ -12,6 +12,7 @@ export const awaitForPopupClosed = (
   return new Promise<void>(resolve => {
     const onCloseModal = (screen: string) => {
       if (screen === popup) {
+        app.off(Events.onCloseModal, onCloseModal);
         resolve();
       }
     };
