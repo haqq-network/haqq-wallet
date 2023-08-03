@@ -1,7 +1,7 @@
 import {Banner} from '@app/models/banner';
-import {requestTrackingAuthorization} from '@app/utils';
+import {SystemDialog} from '@app/services/system-dialog';
 
 export async function onBannerAnalyticsEnable(id: string) {
-  await requestTrackingAuthorization();
+  await SystemDialog.requestTrackingAuthorization();
   Banner.remove(id);
 }

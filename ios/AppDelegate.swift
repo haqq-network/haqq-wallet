@@ -74,23 +74,35 @@ class AppDelegate: RCTAppDelegate {
   }
   
   @objc private func onAppBackground(notification: NSNotification) {
-    print("🟠 onAppBackground: \(notification)")
-      self.window?.addSubview(overview)
-      UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
-          self.overview.alpha = 1
-      })
+    showOverview();
   }
-
-  @objc private func onAppActive(notification: NSNotification) {
-      print("🟣 onAppActive: \(notification)")
-      UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
-          self.overview.alpha = 0
-      }) { _ in
-          self.overview.removeFromSuperview()
-      }
-  }
-
   
+  @objc private func onAppActive(notification: NSNotification) {
+    hideOverview();
+  }
+  
+  func showOverview() {
+    let systemDialogEnabled = BooleanConfig.shared.storage[.systemDialogEnabled];
+    if(systemDialogEnabled == true){
+      return;
+    }
+    self.window?.addSubview(overview)
+    UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
+      self.overview.alpha = 1
+    })
+  }
+  
+  func hideOverview() {
+    guard let view = self.window.viewWithTag(OVERVIEW_TAG) else {
+      return
+    }
+    
+    UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
+      view.alpha = 0
+    }) { _ in
+      view.removeFromSuperview()
+    }
+  }
   
   @objc
   func concurrentRootEnabled() -> Bool {
