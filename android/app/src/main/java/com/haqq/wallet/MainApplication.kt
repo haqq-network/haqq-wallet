@@ -14,6 +14,7 @@ import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
 import android.webkit.WebView;
+import com.haqq.wallet.appnativeconfig.AppNativeConfigPackage
 import com.haqq.wallet.apputils.AppUtilsPackage
 
 class MainApplication : Application(), ReactApplication {
@@ -32,6 +33,7 @@ class MainApplication : Application(), ReactApplication {
       packages.add(ToastPackage())
       packages.add(CloudPackage())
       packages.add(AppUtilsPackage())
+      packages.add(AppNativeConfigPackage())
 
       return packages
     }

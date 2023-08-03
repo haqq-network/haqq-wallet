@@ -21,6 +21,9 @@
 		17F5D67167C5425FBEAB229E /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD4BF65C3D8F4812A58B909F /* SF-Pro-Display-Medium.ttf */; };
 		18A5EE4015E0467D8DB97235 /* backup-sss-suggestion-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE9E61AAF4045E78155DED7 /* backup-sss-suggestion-light@3x.png */; };
 		191A5E34914F492BA629B950 /* bluetooth-unauthorized@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */; };
+		1A2F92BB2A7B8EF000569DFF /* AppNativeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BA2A7B8EF000569DFF /* AppNativeConfig.swift */; };
+		1A2F92BD2A7B943500569DFF /* BooleanConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BC2A7B943500569DFF /* BooleanConfig.swift */; };
+		1A2F92BF2A7B94F400569DFF /* AppNativeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BE2A7B94F400569DFF /* AppNativeConfig.m */; };
 		1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */; };
 		1A6D4E362A149298001B1549 /* staking_on_earn_page_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */; };
 		1AC1D57C2A570036003C40E6 /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC1D57B2A570036003C40E6 /* AppUtils.m */; };
@@ -132,7 +135,7 @@
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
 		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
 		CEBA4969BB874AF6B924DA37 /* domain-blocked-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FCD1005E8E4C08BB4782E3 /* domain-blocked-dark@3x.png */; };
-		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		CF0D49E2FABD41D9A34AB04C /* (null) in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
 		D2EF8B9028754ED2AA9994E5 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */; };
@@ -181,6 +184,9 @@
 		164BC3E0578D429BB60C3882 /* banner_analytics.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = banner_analytics.png; path = ../assets/images/banner_analytics.png; sourceTree = "<group>"; };
 		166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning@2x.png"; path = "../assets/images/signup-network-exists-warning@2x.png"; sourceTree = "<group>"; };
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
+		1A2F92BA2A7B8EF000569DFF /* AppNativeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNativeConfig.swift; sourceTree = "<group>"; };
+		1A2F92BC2A7B943500569DFF /* BooleanConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanConfig.swift; sourceTree = "<group>"; };
+		1A2F92BE2A7B94F400569DFF /* AppNativeConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppNativeConfig.m; sourceTree = "<group>"; };
 		1A6D4E332A149298001B1549 /* staking_on_earn_page_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_dark.riv; sourceTree = "<group>"; };
 		1A6D4E342A149298001B1549 /* staking_on_earn_page_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = staking_on_earn_page_light.riv; sourceTree = "<group>"; };
 		1AC1D57B2A570036003C40E6 /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppUtils.m; sourceTree = "<group>"; };
@@ -386,6 +392,16 @@
 			name = haqq;
 			sourceTree = "<group>";
 		};
+		1A2F92B92A7B8ECC00569DFF /* AppNativeConfig */ = {
+			isa = PBXGroup;
+			children = (
+				1A2F92BA2A7B8EF000569DFF /* AppNativeConfig.swift */,
+				1A2F92BC2A7B943500569DFF /* BooleanConfig.swift */,
+				1A2F92BE2A7B94F400569DFF /* AppNativeConfig.m */,
+			);
+			path = AppNativeConfig;
+			sourceTree = "<group>";
+		};
 		1AC1D57A2A570001003C40E6 /* AppUtils */ = {
 			isa = PBXGroup;
 			children = (
@@ -398,6 +414,7 @@
 		210DBD1D28E6A89D0036A851 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				1A2F92B92A7B8ECC00569DFF /* AppNativeConfig */,
 				1AC1D57A2A570001003C40E6 /* AppUtils */,
 				2142F4A729BAE97900CD8EE6 /* Cloud */,
 				212B00F9294AD37800E57091 /* Toast */,
@@ -764,7 +781,7 @@
 				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
 				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 				2129B78329CACF69005C0CCA /* overview.storyboard in Resources */,
-				CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */,
+				CF0D49E2FABD41D9A34AB04C /* (null) in Resources */,
 				1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */,
 				7CE3C371577D43A6BAA1DF94 /* backup-notification-dark.png in Resources */,
 				8EF155B29CA4479AA8E82E4A /* backup-notification-dark@2x.png in Resources */,
@@ -1062,9 +1079,12 @@
 				210E9B952907F09400AC3C34 /* Version.m in Sources */,
 				2142F4A929BAE9A600CD8EE6 /* Cloud.m in Sources */,
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
+				1A2F92BD2A7B943500569DFF /* BooleanConfig.swift in Sources */,
+				1A2F92BF2A7B94F400569DFF /* AppNativeConfig.m in Sources */,
 				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
 				212B00FB294AD39900E57091 /* Toast.m in Sources */,
 				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
+				1A2F92BB2A7B8EF000569DFF /* AppNativeConfig.swift in Sources */,
 				21F04B142A42AB210048922A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

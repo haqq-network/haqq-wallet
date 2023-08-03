@@ -5,17 +5,23 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.ReactFragment
+import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactRootView
+import com.facebook.react.common.LifecycleState
+import com.facebook.react.shell.MainReactPackage
 import com.haqq.wallet.MainActivity.MainActivityDelegate
 import org.devio.rn.splashscreen.SplashScreen
 
 class MainActivity : ReactActivity() {
+  // private var mOverviewView: ReactRootView? = null
+
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
@@ -36,6 +42,8 @@ class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this, true)
+    // mOverviewView = ReactRootView(this)
+    // mOverviewView?.id = R.id.overview_tag;
     super.onCreate(null)
   }
 
@@ -100,12 +108,15 @@ class MainActivity : ReactActivity() {
   }
 
   override fun onPause() {
+    // mOverviewView?.startReactApplication(reactInstanceManager, "overview", null)
+    // (window.decorView.rootView as ViewGroup).addView(mOverviewView)
     window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
     super.onPause()
-
   }
 
   override fun onResume() {
+    // val viewToRemove = window.decorView.rootView.findViewById<View>(R.id.overview_tag) // get view by tag
+    // (window.decorView.rootView as ViewGroup).removeView(viewToRemove) // r
     super.onResume()
     window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
   }
