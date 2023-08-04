@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {ActivityIndicator, Image, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
 import {
   PanGestureHandler,
@@ -31,7 +36,6 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {CaptchaDataTypes} from '../captcha';
 import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
@@ -60,10 +64,6 @@ const SUCCESS_ERROR_DURATION = STATE_DURATION_CHANGE + 1000;
 const BG_ASPECT_RATIO = 600 / 400; // original image width / height
 const PUZZLE_ASPECT_RATIO = 120 / 400; // original image width / height
 
-const BACK_WIDTH = WINDOW_WIDTH - 80;
-const BACK_HEIGHT = BACK_WIDTH / BG_ASPECT_RATIO;
-const PUZZLE_WIDTH = BACK_HEIGHT * PUZZLE_ASPECT_RATIO;
-
 export type CaptchaRequestState = {
   id: string;
   back: ImageURISource;
@@ -82,8 +82,14 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   const startTime = useRef(0);
   const endTime = useRef(0);
   const [diffTimeSeconds, setDiffTimeSeconds] = useState('0');
-
   const [sliderState, setSliderState] = useState(SliderCaptchaState.initial);
+  const dimensions = useWindowDimensions();
+  const BACK_WIDTH = useMemo(() => dimensions.width - 80, [dimensions.width]);
+  const BACK_HEIGHT = useMemo(() => BACK_WIDTH / BG_ASPECT_RATIO, [BACK_WIDTH]);
+  const PUZZLE_WIDTH = useMemo(
+    () => BACK_HEIGHT * PUZZLE_ASPECT_RATIO,
+    [BACK_HEIGHT],
+  );
   const refreshButtonEnabled = useMemo(
     () => sliderState === SliderCaptchaState.initial,
     [sliderState],
@@ -324,13 +330,13 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {width: dimensions.width - 32}]}>
       <Text t9 i18n={I18N.sliderCaptchaTitle} />
       <Spacer height={20} />
       <View style={styles.imageContainerInsets}>
         <View style={styles.imageContainer}>
           <Image
-            style={styles.bg}
+            style={[styles.bg, {width: BACK_WIDTH, height: BACK_HEIGHT}]}
             source={imageSource.back}
             resizeMode="cover"
             resizeMethod="scale"
@@ -338,7 +344,10 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 
           <Animated.View style={puzzleStyle}>
             <Image
-              style={styles.puzzle}
+              style={[
+                styles.puzzle,
+                {width: PUZZLE_WIDTH, height: BACK_HEIGHT},
+              ]}
               source={imageSource.puzzle}
               resizeMode="cover"
               resizeMethod="scale"
@@ -472,7 +481,6 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
 const styles = createTheme({
   container: {
     backgroundColor: Color.bg1,
-    width: WINDOW_WIDTH - 32,
     margin: 16,
     borderRadius: 16,
     padding: 24,
@@ -485,14 +493,9 @@ const styles = createTheme({
   },
   bg: {
     alignSelf: 'center',
-    width: BACK_WIDTH,
-    height: BACK_HEIGHT,
     borderRadius: 12,
   },
-  puzzle: {
-    width: PUZZLE_WIDTH,
-    height: BACK_HEIGHT,
-  },
+  puzzle: {},
   imageContainer: {
     width: '100%',
     justifyContent: 'center',
