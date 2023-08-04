@@ -22,8 +22,6 @@ import {onUpdatesSync} from './on-updates-sync';
  * @description Called when app started (after logged in). Check banners, sync staking and updates
  */
 export async function onAppStarted() {
-  app.checkUpdate();
-
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
@@ -75,4 +73,5 @@ export async function onAppStarted() {
   await onUpdatesSync();
   await onAppBackup();
   await onStakingSync();
+  app.checkUpdate();
 }

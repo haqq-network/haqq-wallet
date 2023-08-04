@@ -1,6 +1,9 @@
+import {Platform} from 'react-native';
+
+import {RemoteConfig} from '@app/services/remote-config';
 import {getAppVersion} from '@app/services/version';
 
-export enum ComparisonResult {
+export enum VersionComparisonResult {
   Older = -1,
   Same = 0,
   Newer = 1,
@@ -27,7 +30,7 @@ export function parseVersion(version: string): Version | null {
 export function compareVersions(
   current: string,
   compareWith: string,
-): ComparisonResult {
+): VersionComparisonResult {
   const currentParsed = parseVersion(current);
   const compareWithParsed = parseVersion(compareWith);
 
@@ -36,39 +39,41 @@ export function compareVersions(
   }
 
   if (compareWithParsed.major > currentParsed.major) {
-    return ComparisonResult.Newer;
+    return VersionComparisonResult.Newer;
   }
 
   if (compareWithParsed.major < currentParsed.major) {
-    return ComparisonResult.Older;
+    return VersionComparisonResult.Older;
   }
 
   if (compareWithParsed.minor > currentParsed.minor) {
-    return ComparisonResult.Newer;
+    return VersionComparisonResult.Newer;
   }
 
   if (compareWithParsed.minor < currentParsed.minor) {
-    return ComparisonResult.Older;
+    return VersionComparisonResult.Older;
   }
 
   if (compareWithParsed.patch > currentParsed.patch) {
-    return ComparisonResult.Newer;
+    return VersionComparisonResult.Newer;
   }
 
   if (compareWithParsed.patch < currentParsed.patch) {
-    return ComparisonResult.Older;
+    return VersionComparisonResult.Older;
   }
 
-  return ComparisonResult.Same;
+  return VersionComparisonResult.Same;
 }
 
 export function checkNeedUpdate() {
   try {
     const appVersion = getAppVersion();
-    // TODO: get from remote config
-    const remoteVersion = '1.4.6';
-    const result = compareVersions(appVersion, remoteVersion);
-    return result === ComparisonResult.Newer;
+    const remoteVersion = Platform.select({
+      ios: RemoteConfig.get('ios_version'),
+      android: RemoteConfig.get('android_version'),
+    });
+    const result = compareVersions(appVersion, remoteVersion!);
+    return result !== VersionComparisonResult.Newer;
   } catch (err) {
     Logger.captureException(err, 'checkNeedUpdate');
     return false;

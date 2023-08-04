@@ -1,11 +1,19 @@
 import {Alert} from 'react-native';
 
+import {I18N, getText} from '@app/i18n';
 import {openStorePage} from '@app/utils';
 
 export async function onNeedUpdate() {
-  // TODO: wait for desiger
-  Alert.alert('New update avalivable', 'update now?', [
-    {text: 'Later'},
-    {text: 'Update', onPress: openStorePage},
-  ]);
+  Alert.alert(
+    getText(I18N.newUpdateTitle),
+    getText(I18N.newUpdateDescription),
+    [
+      {text: getText(I18N.newUpdateCancel)},
+      {
+        text: getText(I18N.newUpdateAccept),
+        onPress: openStorePage,
+        style: 'destructive',
+      },
+    ],
+  );
 }

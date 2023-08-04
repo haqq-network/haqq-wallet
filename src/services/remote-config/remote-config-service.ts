@@ -7,7 +7,11 @@ import {Backend} from '../backend';
 
 const KEY = 'remote-config-cache';
 
-const logger = Logger.create('RemoteConfig', {emodjiPrefix: '🔴'});
+const logger = Logger.create('RemoteConfig', {
+  emodjiPrefix: '🔴',
+  stringifyJson: true,
+});
+
 export class RemoteConfig {
   public static isInited = false;
   public static KEY = KEY;
@@ -15,23 +19,23 @@ export class RemoteConfig {
   /**
    * @return `true` if remote config is successfully initialized
    */
-  public static async init(): Promise<boolean> {
+  public static async init(): Promise<RemoteConfigTypes | undefined> {
     try {
       if (RemoteConfig.isInited) {
-        return true;
+        return RemoteConfig.getAll();
       }
       const config = await Backend.instance.getRemoteConfig();
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfig.isInited = true;
-        return true;
+        return config;
       } else {
         logger.error('remote config is empty', config);
-        return false;
+        return undefined;
       }
     } catch (err) {
       logger.error('failed to fetch remote config', err);
-      return false;
+      return undefined;
     }
   }
 
@@ -46,12 +50,18 @@ export class RemoteConfig {
   public static get<K extends keyof RemoteConfigTypes>(
     key: K,
   ): RemoteConfigTypes[K] | undefined {
+    const config = RemoteConfig.getAll();
+    if (config) {
+      return config[key];
+    }
+    return undefined;
+  }
+
+  public static getAll(): RemoteConfigTypes | undefined {
     const cacheString = VariablesString.get(KEY);
 
     if (isValidJSON(cacheString)) {
-      const config = JSON.parse(cacheString);
-      const value = config[key];
-      return value;
+      return JSON.parse(cacheString);
     }
 
     logger.error('not valid JSON', cacheString);

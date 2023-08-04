@@ -699,6 +699,10 @@ export enum I18N {
   onboardingTrackingUserActivityHint2Description,
   onboardingTrackingUserActivityNotNow,
   onboardingTrackingUserActivityContinue,
+  newUpdateTitle,
+  newUpdateDescription,
+  newUpdateCancel,
+  newUpdateAccept,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1532,4 +1536,9 @@ const en: Record<I18N, string> = {
     'We securely store the data we receive. All data is non-personalized',
   [I18N.onboardingTrackingUserActivityContinue]: 'Continue',
   [I18N.onboardingTrackingUserActivityNotNow]: 'Not now',
+  [I18N.newUpdateTitle]: 'Update avalivable',
+  [I18N.newUpdateDescription]:
+    'An update to Haqq Wallet is available. Would you like to update?',
+  [I18N.newUpdateCancel]: 'Not now',
+  [I18N.newUpdateAccept]: 'Update',
 };
