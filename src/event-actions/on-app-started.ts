@@ -10,6 +10,7 @@ import {onBannerGasdropCreate} from '@app/event-actions/on-banner-gasdrop-create
 import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
+import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
@@ -72,6 +73,6 @@ export async function onAppStarted() {
 
   await onUpdatesSync();
   await onAppBackup();
-  await onStakingSync();
+  await Promise.all([onStakingSync(), onVestingSync()]);
   app.checkUpdate();
 }

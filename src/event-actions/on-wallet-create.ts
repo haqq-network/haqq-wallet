@@ -2,9 +2,11 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
+import {onStakingSync} from '@app/event-actions/on-staking-sync';
+import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
+import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
@@ -29,7 +31,11 @@ export async function onWalletCreate(wallet: Wallet) {
       });
     });
 
-    awaitForEventDone(Events.onTransactionsLoad, wallet.address);
+    await Promise.all([
+      onTransactionsLoad(wallet.address),
+      onStakingSync(),
+      onVestingSync(),
+    ]);
 
     if (!wallet.mnemonicSaved) {
       let mnemonicSaved: boolean;
