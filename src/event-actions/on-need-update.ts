@@ -12,7 +12,7 @@ export async function onNeedUpdate() {
       {
         text: getText(I18N.newUpdateAccept),
         onPress: openStorePage,
-        style: 'destructive',
+        isPreferred: true,
       },
     ],
   );
