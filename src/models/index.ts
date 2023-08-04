@@ -13,6 +13,7 @@ import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
+import {VestingMetadata} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {AppTheme, WalletType} from '@app/types';
 import {
@@ -51,8 +52,9 @@ export const realm = new Realm({
     VariablesBool,
     VariablesString,
     RssNews,
+    VestingMetadata,
   ],
-  schemaVersion: 64,
+  schemaVersion: 65,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,

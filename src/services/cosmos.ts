@@ -54,6 +54,7 @@ import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
   CosmosTxV1betaSimulateResponse,
+  EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
 import {getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
@@ -115,6 +116,12 @@ export class Cosmos {
     });
 
     return await getHttpResponse<T>(resp);
+  }
+
+  async getVestingBalances(
+    address: string,
+  ): Promise<EvmosVestingV1BalancesResponse> {
+    return this.getQuery(`/evmos/vesting/v1/balances/${address}`);
   }
 
   async getAccountDelegations(
