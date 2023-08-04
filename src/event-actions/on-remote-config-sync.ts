@@ -1,6 +1,9 @@
 import {Provider} from '@app/models/provider';
-import {Backend} from '@app/services/backend';
 import {RemoteConfig} from '@app/services/remote-config';
+
+const logger = Logger.create('onRemoteConfigSync', {
+  stringifyJson: true,
+});
 
 export async function onRemoteConfigSync() {
   try {
@@ -8,11 +11,9 @@ export async function onRemoteConfigSync() {
       return;
     }
 
-    const config = await Backend.instance.getRemoteConfig();
+    const config = await RemoteConfig.init();
 
-    if (Object.keys(config).length) {
-      RemoteConfig.set(config);
-
+    if (config) {
       if (config.evm_endpoints) {
         for (const [chainId, endpoints] of Object.entries(
           config.evm_endpoints,
@@ -45,9 +46,9 @@ export async function onRemoteConfigSync() {
         }
       }
     } else {
-      Logger.error('🔴 [RemoteConfig]: remote config is empty', config);
+      logger.error('remote config is empty', config);
     }
   } catch (err) {
-    Logger.error('🔴 [RemoteConfig]: failed to fetch remote config', err);
+    logger.error('failed to fetch remote config', err);
   }
 }

@@ -74,4 +74,5 @@ export async function onAppStarted() {
   await onUpdatesSync();
   await onAppBackup();
   await Promise.all([onStakingSync(), onVestingSync()]);
+  app.checkUpdate();
 }

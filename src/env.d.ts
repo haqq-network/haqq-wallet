@@ -31,4 +31,6 @@ declare module '@env' {
   export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';
   export const AIRDROP_GASDROP_SECRET: string;
   export const AIRDROP_GASDROP_CAMPAIGN_ID: string;
+  export const GOOGLE_PLAY_PACKAGE: string;
+  export const APPSTORE_APP_ID: string;
 }

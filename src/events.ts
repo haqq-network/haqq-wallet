@@ -30,6 +30,7 @@ export enum Events {
   onAddressBookCreate = 'onAddressBookCreate',
   onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
+  onNeedUpdate = 'onNeedUpdate',
   onAppReviewRequest = 'onAppReviewRequest',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
