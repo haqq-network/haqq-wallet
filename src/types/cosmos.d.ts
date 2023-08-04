@@ -101,6 +101,12 @@ export interface CosmosTxV1beta1TxResponse {
   timestamp: string;
 }
 
+export interface EvmosVestingV1BalancesResponse {
+  locked: CosmosTxAmount[];
+  unvested: CosmosTxAmount[];
+  vested: CosmosTxAmount[];
+}
+
 export interface CosmosTxV1beta1GetTxResponse {
   tx: CosmosTxV1beta1Tx;
   tx_response: CosmosTxV1beta1TxResponse;
