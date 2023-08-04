@@ -8,7 +8,6 @@ export * from './error-create-account';
 export * from './ledger-attention';
 export * from './ledger-locked';
 export * from './ledger-no-app';
-export * from './hide';
 export * from './error-modal';
 export * from './claim-on-mainnet';
 export * from './qr';
