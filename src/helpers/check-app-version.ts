@@ -73,7 +73,7 @@ export function checkNeedUpdate() {
       android: RemoteConfig.get('android_version'),
     });
     const result = compareVersions(appVersion, remoteVersion!);
-    return result !== VersionComparisonResult.Newer;
+    return result === VersionComparisonResult.Newer;
   } catch (err) {
     Logger.captureException(err, 'checkNeedUpdate');
     return false;
