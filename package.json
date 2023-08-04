@@ -16,7 +16,9 @@
     "logcat": "adb logcat -v color -v time --pid $(adb shell ps | grep com.haqq.wallet  | tr -s ' ' | cut -d' ' -f2)",
     "detox:ios": "detox build --configuration ios.sim.release && detox test --configuration ios.sim.release",
     "clean-ios-app": "sh ./scripts/clean-ios-app.sh",
-    "clean-android-app": "sh ./scripts/clean-android-app.sh"
+    "clean-android-app": "sh ./scripts/clean-android-app.sh",
+    "devmode:ios": "xcrun simctl openurl booted haqq:enableDeveloperMode:true",
+    "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true"
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",
