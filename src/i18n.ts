@@ -703,6 +703,10 @@ export enum I18N {
   newUpdateDescription,
   newUpdateCancel,
   newUpdateAccept,
+  walletCardLocked,
+  lockedTokensTotalValue,
+  lockedTokensLocked,
+  lockedTokensAvailable,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1541,4 +1545,8 @@ const en: Record<I18N, string> = {
     'An update to Haqq Wallet is available. Would you like to update?',
   [I18N.newUpdateCancel]: 'Not now',
   [I18N.newUpdateAccept]: 'Update',
+  [I18N.walletCardLocked]: 'Locked: {{count}}',
+  [I18N.lockedTokensLocked]: 'Locked: {{count}}',
+  [I18N.lockedTokensAvailable]: 'Available: {{count}}',
+  [I18N.lockedTokensTotalValue]: 'Total value',
 };

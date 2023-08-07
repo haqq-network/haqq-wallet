@@ -10,6 +10,7 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {BannersWrapper} from '@app/screens/banners';
+import {LockedTokensWrapper} from '@app/screens/locked-tokens';
 import {WalletsWrapper} from '@app/screens/wallets';
 import {NftCollection, TokenItem, TransactionList} from '@app/types';
 
@@ -71,6 +72,7 @@ export const HomeFeed = ({
   const renderListHeader = useCallback(() => {
     return (
       <>
+        <LockedTokensWrapper />
         <WalletsWrapper />
         <BannersWrapper />
         <First>

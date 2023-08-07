@@ -11,6 +11,7 @@ export enum Feature {
   abnews,
   // right to left
   rtl,
+  lockedStakedVestedTokens,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
@@ -29,6 +30,8 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
       return app.isWelcomeNewsEnabled;
     case Feature.rtl:
       return false;
+    case Feature.lockedStakedVestedTokens:
+      return app.isDeveloper;
     default:
       return false;
   }
