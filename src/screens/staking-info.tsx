@@ -10,6 +10,7 @@ import {
   awaitForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
@@ -146,7 +147,7 @@ export const StakingInfoScreen = () => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address) >= MIN_AMOUNT,
+      v => formatBalanceWithWEI(app.getBalance(v.address)) >= MIN_AMOUNT,
     );
 
     if (!available?.length) {

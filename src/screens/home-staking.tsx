@@ -5,6 +5,7 @@ import {app} from '@app/contexts';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
+import {formatBalanceToNumber} from '@app/helpers/formatters';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
@@ -28,7 +29,7 @@ export const HomeStakingScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + app.getBalance(w.address),
+      (acc, w) => acc + formatBalanceToNumber(app.getBalance(w.address)),
       0,
     ),
   });
@@ -60,7 +61,7 @@ export const HomeStakingScreen = () => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc + app.getBalance(w.address),
+        (acc, w) => acc + formatBalanceToNumber(app.getBalance(w.address)),
         0,
       );
 

@@ -5,6 +5,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
@@ -51,7 +52,7 @@ export const LedgerAccountsScreen = () => {
             hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
             publicKey: data.publicKey,
             exists: Wallet.addressList().includes(data.address.toLowerCase()),
-            balance,
+            balance: formatBalanceWithWEI(balance),
           });
         }
 

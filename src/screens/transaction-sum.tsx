@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
@@ -58,10 +59,16 @@ export const TransactionSumScreen = () => {
   useEffect(() => {
     EthNetwork.getBalance(route.params.from)
       .then(b => {
-        setBalance(b);
+        setBalance(formatBalanceWithWEI(b));
         return b;
       })
-      .then(b => EthNetwork.estimateTransaction(route.params.from, to, b))
+      .then(b =>
+        EthNetwork.estimateTransaction(
+          route.params.from,
+          to,
+          formatBalanceWithWEI(b),
+        ),
+      )
       .then(estimateFee => {
         setFee(estimateFee.fee);
       });

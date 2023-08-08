@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {EthNetwork} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
@@ -13,7 +14,7 @@ export const ProposalDepositFormScreen = () => {
 
   useEffect(() => {
     EthNetwork.getBalance(account).then(newBalance => {
-      setBalance(newBalance);
+      setBalance(formatBalanceWithWEI(newBalance));
     });
   }, [account]);
 

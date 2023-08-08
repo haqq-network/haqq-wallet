@@ -6,6 +6,7 @@ import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {prepareTransactions, showModal} from '@app/helpers';
+import {formatBalanceToNumber} from '@app/helpers/formatters';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
@@ -15,7 +16,7 @@ export const AccountInfoScreen = () => {
   const navigation = useTypedNavigation();
   const wallet = useWallet(route.params.accountId);
   const [balance, setBalance] = useState(
-    app.getBalance(route.params.accountId),
+    formatBalanceToNumber(app.getBalance(route.params.accountId)),
   );
 
   const transactions = useMemo(() => {
@@ -56,7 +57,7 @@ export const AccountInfoScreen = () => {
 
   useEffect(() => {
     const onBalance = () => {
-      setBalance(app.getBalance(route.params.accountId));
+      setBalance(formatBalanceToNumber(app.getBalance(route.params.accountId)));
     };
 
     app.on('balance', onBalance);

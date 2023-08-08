@@ -14,6 +14,7 @@ import {Color} from '@app/colors';
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
@@ -104,7 +105,7 @@ export const StakingActive = forwardRef(
         <Spacer height={20} />
         <Text t8 center i18n={I18N.homeStakingRewards} />
         <Text t3 center color={Color.textGreen1}>
-          {cleanNumber(rewardSum)} ISLM
+          {cleanNumber(formatBalanceWithWEI(rewardSum))} ISLM
         </Text>
         <Spacer height={28} />
         <InfoBlockAmount

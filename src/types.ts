@@ -5,6 +5,7 @@ import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
+import BN from 'bn.js';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
@@ -1006,3 +1007,5 @@ export enum AdjustTrackingAuthorizationStatus {
   userAuthorizedAccess = 3,
   statusNotAvailable = -1,
 }
+
+export type Balance = BN;

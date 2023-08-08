@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
+import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {EthNetwork} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
@@ -14,7 +15,7 @@ export const StakingDelegateFormScreen = () => {
 
   useEffect(() => {
     EthNetwork.getBalance(account).then(newBalance => {
-      setBalance(newBalance);
+      setBalance(formatBalanceWithWEI(newBalance));
     });
   }, [account]);
 

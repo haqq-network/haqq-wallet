@@ -28,8 +28,15 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
-import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
 import {
+  AppLanguage,
+  AppTheme,
+  Balance,
+  BiometryType,
+  DynamicLink,
+} from '../types';
+import {
+  EMPTY_BALANCE,
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
   TEST_NETWORK,
@@ -60,7 +67,7 @@ class App extends AsyncEventEmitter {
   private user: User;
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balance: Map<string, number> = new Map();
+  private _balance: Map<string, Balance> = new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -464,7 +471,7 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  onWalletsBalance(balance: Record<string, number>) {
+  onWalletsBalance(balance: Record<string, Balance>) {
     let changed = false;
     for (const entry of Object.entries(balance)) {
       if (this._balance.get(entry[0]) !== entry[1]) {
@@ -479,7 +486,7 @@ class App extends AsyncEventEmitter {
   }
 
   getBalance(address: string) {
-    return this._balance.get(address) ?? 0;
+    return this._balance.get(address) ?? EMPTY_BALANCE;
   }
 
   handleDynamicLink(link: DynamicLink | null) {
