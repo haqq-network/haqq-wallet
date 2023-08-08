@@ -90,6 +90,7 @@ export enum IconsName {
   squares = 'squares',
   export = 'export',
   scroll = 'scroll',
+  coin = 'coin',
 }
 
 export type IconSize =

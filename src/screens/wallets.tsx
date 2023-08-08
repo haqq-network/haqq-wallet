@@ -1,31 +1,37 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 
 import {Wallets} from '@app/components/wallets';
-import {app} from '@app/contexts';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = () => {
   const navigation = useTypedNavigation();
-
   const visible = useWalletsVisible();
-
+  const balance = useWalletsBalance(visible);
   const {activeSessions} = useWalletConnectSessions();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
-
-  const [balance, setBalance] = useState(
-    Object.fromEntries(
-      visible.map(w => [w.address, app.getBalance(w.address)]),
-    ),
+  const [lockedTokensAmount, setLockedTokensAmount] = useState(0);
+  const showLockedTokens = useMemo(
+    () =>
+      visible?.length === 1 &&
+      lockedTokensAmount > 0 &&
+      isFeatureEnabled(Feature.lockedStakedVestedTokens),
+    [lockedTokensAmount, visible?.length],
   );
+
+  useEffect(() => {
+    // TODO: lockedStakedVestedTokens
+    setLockedTokensAmount(1149.69);
+  }, []);
 
   useEffect(() => {
     setWalletConnectSessions(
@@ -34,21 +40,6 @@ export const WalletsWrapper = () => {
       ),
     );
   }, [visible, activeSessions]);
-
-  useEffect(() => {
-    const onBalance = () => {
-      setBalance(
-        Object.fromEntries(
-          visible.map(w => [w.address, app.getBalance(w.address)]),
-        ),
-      );
-    };
-
-    app.on('balance', onBalance);
-    return () => {
-      app.off('balance', onBalance);
-    };
-  }, [visible]);
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -126,6 +117,8 @@ export const WalletsWrapper = () => {
       balance={balance}
       wallets={visible}
       walletConnectSessions={walletConnectSessions}
+      showLockedTokens={showLockedTokens}
+      lockedTokensAmount={lockedTokensAmount}
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}

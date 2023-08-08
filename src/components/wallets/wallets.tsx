@@ -15,6 +15,7 @@ import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {Wallet} from '@app/models/wallet';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
@@ -22,6 +23,8 @@ export type WalletsProps = {
   wallets: Wallet[] | Results<Wallet>;
   balance: Record<string, number>;
   walletConnectSessions: SessionTypes.Struct[][];
+  lockedTokensAmount: number;
+  showLockedTokens: boolean;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressWalletConnect: (address: string) => void;
@@ -37,6 +40,8 @@ export const Wallets = ({
   balance,
   wallets,
   walletConnectSessions,
+  lockedTokensAmount,
+  showLockedTokens,
   onPressSend,
   onPressQR,
   onPressCreate,
@@ -55,7 +60,9 @@ export const Wallets = ({
 
   return (
     <>
-      <Spacer height={24} />
+      <Spacer
+        height={isFeatureEnabled(Feature.lockedStakedVestedTokens) ? 12 : 24}
+      />
       <Animated.ScrollView
         pagingEnabled
         horizontal
@@ -71,6 +78,8 @@ export const Wallets = ({
               wallet={w}
               balance={balance[w.address] ?? 0}
               walletConnectSessions={walletConnectSessions[i]}
+              showLockedTokens={showLockedTokens}
+              lockedTokensAmount={lockedTokensAmount}
               onPressSend={onPressSend}
               onPressQR={onPressQR}
               onPressProtection={onPressProtection}

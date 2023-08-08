@@ -10,6 +10,7 @@ import {
   CopyButton,
   Icon,
   IconButton,
+  IconsName,
   Spacer,
   Text,
 } from '@app/components/ui';
@@ -24,6 +25,8 @@ export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
   balance: number;
+  lockedTokensAmount: number;
+  showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
@@ -38,6 +41,8 @@ export const WalletCard = memo(
     wallet,
     balance,
     walletConnectSessions,
+    showLockedTokens,
+    lockedTokensAmount,
     onPressSend,
     onPressQR,
     onPressWalletConnect,
@@ -115,32 +120,53 @@ export const WalletCard = memo(
             />
           </CopyButton>
         </View>
-        {!!walletConnectSessions?.length && (
-          <IconButton
-            onPress={onWalletConnect}
-            style={styles.walletConnectApps}>
-            <Icon i16 name="link" color={Color.graphicBase3} />
-            <Spacer width={4} />
-            <Text
-              t15
-              i18n={I18N.walletCardConnectedApps}
-              i18params={{count: `${walletConnectSessions.length}`}}
-              color={Color.textBase3}
-            />
-          </IconButton>
-        )}
-        {enableProtectionWarning && (
-          <IconButton onPress={onProtection} style={styles.cacheButton}>
-            <Text
-              t15
-              i18n={I18N.walletCardWithoutProtection}
-              color={Color.textBase3}
-            />
-          </IconButton>
-        )}
+        <View style={styles.row}>
+          {enableProtectionWarning && (
+            <>
+              <IconButton
+                onPress={onProtection}
+                style={styles.withoutProtection}>
+                <Text
+                  t15
+                  i18n={I18N.walletCardWithoutProtection}
+                  color={Color.textBase3}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
+          )}
+          {!!walletConnectSessions?.length && (
+            <IconButton
+              onPress={onWalletConnect}
+              style={styles.walletConnectApps}>
+              <Icon i16 name="link" color={Color.graphicBase3} />
+              <Spacer width={4} />
+              <Text
+                t15
+                i18n={I18N.walletCardConnectedApps}
+                i18params={{count: `${walletConnectSessions?.length}`}}
+                color={Color.textBase3}
+              />
+            </IconButton>
+          )}
+        </View>
         <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
           {cleanNumber(balance)} ISLM
         </Text>
+        {showLockedTokens && (
+          <>
+            <View style={[styles.row, styles.lokedTokensContainer]}>
+              <Icon i16 color={Color.textBase3} name={IconsName.lock} />
+              <Spacer width={4} />
+              <Text
+                t15
+                color={Color.textBase3}
+                i18n={I18N.walletCardLocked}
+                i18params={{count: cleanNumber(lockedTokensAmount)}}
+              />
+            </View>
+          </>
+        )}
         <Spacer />
         <View style={styles.buttonsContainer}>
           <View style={styles.button}>
@@ -170,6 +196,13 @@ export const WalletCard = memo(
 );
 
 const styles = createTheme({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  lokedTokensContainer: {
+    transform: [{translateY: -5}],
+  },
   container: {
     justifyContent: 'space-between',
     backgroundColor: Color.bg1,
@@ -215,19 +248,21 @@ const styles = createTheme({
     justifyContent: 'space-between',
     marginLeft: 12,
   },
-  cacheButton: {
+  withoutProtection: {
     alignSelf: 'flex-start',
     marginBottom: 8,
     backgroundColor: Color.bg5,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    height: 20,
   },
   walletConnectApps: {
     alignSelf: 'flex-start',
     flexDirection: 'row',
     marginBottom: 8,
     backgroundColor: Color.bg9,
+    height: 20,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
