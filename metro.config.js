@@ -8,6 +8,8 @@ const blacklist = require('metro-config/src/defaults/exclusionList');
 require('dotenv').config();
 
 module.exports = {
+  resetCache: true,
+  stickyWorkers: false,
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -37,4 +39,9 @@ module.exports = {
     // process.env.PROVIDER_WEB3_UTILS,
     // process.env.PROVIDER_LEDGER_RN_PACKAGE,
   ].filter(Boolean),
+  watcher: {
+    healthCheck: {
+      enabled: true
+    }
+  }
 };
