@@ -16,11 +16,11 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
+import {AppTheme, Balance} from '@app/types';
 import {IS_IOS, WEI} from '@app/variables/common';
 
 interface StakingActiveProps {
-  availableSum: number;
+  availableSum: Balance;
   rewardSum: number;
   stakedSum: number;
   unDelegationSum: number;
@@ -116,7 +116,7 @@ export const StakingActive = forwardRef(
         <Spacer height={12} />
         <Inline gap={12}>
           <InfoBlockAmount
-            value={availableSum}
+            value={availableSum.toNumber()}
             titleI18N={I18N.sumBlockAvailable}
           />
           <InfoBlockAmount

@@ -63,4 +63,13 @@ export class Balance implements IBalance {
   isPositive = () => {
     return this.bnRaw.gt(zeroBN);
   };
+
+  add = (value: BN | Balance) => {
+    if ((value as Balance).raw) {
+      this.bnRaw = this.bnRaw.add((value as Balance).raw);
+    } else {
+      this.bnRaw = this.bnRaw.add(value as BN);
+    }
+    return this;
+  };
 }

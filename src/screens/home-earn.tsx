@@ -18,6 +18,7 @@ import {
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 
@@ -37,8 +38,8 @@ export const HomeEarnScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + app.getBalance(w.address).toNumber(),
-      0,
+      (acc, w) => acc.add(app.getBalance(w.address)),
+      Balance.Empty,
     ),
   });
 
@@ -48,7 +49,7 @@ export const HomeEarnScreen = () => {
   );
 
   const haveAvailableSum = useMemo(
-    () => data.availableSum >= 1 / NUM_PRECISION,
+    () => data.availableSum.toNumber() >= 1 / NUM_PRECISION,
     [data],
   );
 
@@ -70,8 +71,8 @@ export const HomeEarnScreen = () => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc + app.getBalance(w.address).toNumber(),
-        0,
+        (acc, w) => acc.add(app.getBalance(w.address)),
+        Balance.Empty,
       );
 
       setData({

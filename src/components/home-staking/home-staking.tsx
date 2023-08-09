@@ -5,6 +5,7 @@ import {ScrollView, View} from 'react-native';
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/types';
 import {NUM_PRECISION} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
@@ -12,7 +13,7 @@ import {StakingEmpty} from './staking-empty';
 
 export type StakingHomeProps = {
   loading: boolean;
-  availableSum: number;
+  availableSum: Balance;
   stakingSum: number;
   rewardsSum: number;
   unDelegationSum: number;
