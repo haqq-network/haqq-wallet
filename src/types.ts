@@ -1008,4 +1008,12 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type Balance = BN;
+export interface Balance {
+  readonly raw: BN;
+  toNumber: () => number;
+  toFloat: () => number;
+  toFloatString: () => string;
+  toString: () => string;
+  toHex: () => string;
+  isPositive: () => boolean;
+}
