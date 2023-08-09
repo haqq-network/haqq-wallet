@@ -187,7 +187,7 @@ class App extends AsyncEventEmitter {
       return HAQQ_BACKEND;
     }
 
-    return VariablesString.get('backend') as string;
+    return VariablesString.get('backend') || HAQQ_BACKEND;
   }
 
   set backend(value) {
