@@ -12,17 +12,18 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/types';
 
 const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
   wallet: Wallet;
-  balance: number;
+  balance: Balance;
   onSend: () => void;
   onReceive: () => void;
 };
@@ -52,7 +53,7 @@ export const AccountInfoHeader = ({
           <Text
             t3
             i18n={I18N.amountISLM}
-            i18params={{amount: cleanNumber(balance)}}
+            i18params={{amount: balance.toFloatString()}}
           />
           <CopyButton value={wallet.address} style={styles.copyButton}>
             <Text t14 color={Color.textBase2}>

@@ -15,7 +15,7 @@ export const AccountInfoScreen = () => {
   const navigation = useTypedNavigation();
   const wallet = useWallet(route.params.accountId);
   const [balance, setBalance] = useState(
-    app.getBalance(route.params.accountId).toNumber(),
+    app.getBalance(route.params.accountId),
   );
 
   const transactions = useMemo(() => {
@@ -56,7 +56,7 @@ export const AccountInfoScreen = () => {
 
   useEffect(() => {
     const onBalance = () => {
-      setBalance(app.getBalance(route.params.accountId).toNumber());
+      setBalance(app.getBalance(route.params.accountId));
     };
 
     app.on('balance', onBalance);

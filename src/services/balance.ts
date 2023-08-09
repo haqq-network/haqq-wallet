@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import Decimal from 'decimal.js';
 
 import {cleanNumber} from '@app/helpers';
 import {Balance as IBalance} from '@app/types';
@@ -37,7 +38,7 @@ export class Balance implements IBalance {
    * Convert balance to float according to WEI
    */
   toFloat = () => {
-    const float = this.toNumber() / WEI;
+    const float = new Decimal(this.toNumber()).div(WEI).toNumber();
     return float;
   };
 

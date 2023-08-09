@@ -77,7 +77,7 @@ export const Wallets = ({
             <WalletCard
               testID={`${testID}_${w.address}`}
               wallet={w}
-              balance={balance[w.address].toFloat()}
+              balance={balance[w.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               lockedTokensAmount={lockedTokensAmount}

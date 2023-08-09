@@ -9,7 +9,7 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {TransactionList} from '@app/types';
+import {Balance, TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
@@ -25,7 +25,7 @@ enum TabNames {
 export type AccountInfoProps = {
   transactionsList: TransactionList[];
   wallet: Wallet;
-  balance: number;
+  balance: Balance;
   onSend: () => void;
   onReceive: () => void;
   onPressRow: (hash: string) => void;
