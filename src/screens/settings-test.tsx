@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
+import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
@@ -260,6 +261,11 @@ const TEST_URLS: Partial<Link>[] = [
   },
 ];
 
+const BACKENDS = [
+  ['production', HAQQ_BACKEND],
+  ['development', HAQQ_BACKEND_DEV],
+];
+
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
   Logger.log('params', params);
@@ -285,6 +291,7 @@ export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
+  const [backend, setBackend] = useState(app.backend);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -387,6 +394,16 @@ export const SettingsTestScreen = () => {
     Refferal.removeAll();
   }, []);
 
+  const onSetBackend = useCallback(() => {
+    const modalsKeys = BACKENDS.map(([title]) => title);
+    showActionSheetWithOptions({options: modalsKeys}, index => {
+      if (typeof index === 'number' && BACKENDS[index]) {
+        app.backend = BACKENDS[index][1];
+        setBackend(app.backend);
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
   return (
     <ScrollView style={styles.container}>
       <Title text="user agent" />
@@ -398,6 +415,16 @@ export const SettingsTestScreen = () => {
         }}>
         {getUserAgent()}
       </Text>
+      <Spacer height={8} />
+      <Title text="Backend" />
+      <Text t11>{backend}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select backend"
+        onPress={onSetBackend}
+        variant={ButtonVariant.contained}
+      />
+
       <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input
