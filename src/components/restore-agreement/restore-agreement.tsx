@@ -12,11 +12,10 @@ import {
   Terms,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type RestoreAgreementProps = {
   onDone: () => void;
@@ -65,13 +64,15 @@ export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
     </PopupContainer>
   );
 };
+const calculateHeight = () =>
+  Math.min(getWindowWidth(), getWindowHeight() * 0.355);
 
 const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
   animation: {
-    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355),
+    height: calculateHeight,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: -45,
@@ -89,7 +90,7 @@ const styles = createTheme({
     marginBottom: 16,
   },
   image: {
-    height: Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355) - 20,
+    height: () => calculateHeight() - 20,
     top: -10,
   },
 });

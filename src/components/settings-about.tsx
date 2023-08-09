@@ -5,13 +5,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  PRIVACY_POLICY,
-  TERMS_OF_CONDITIONS,
-  WINDOW_WIDTH,
-} from '@app/variables/common';
+import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
 
@@ -86,6 +82,7 @@ export const SettingsAbout = () => {
     </ScrollView>
   );
 };
+const calculateImageSize = () => getWindowWidth() * 0.8;
 
 const styles = createTheme({
   content: {
@@ -110,8 +107,8 @@ const styles = createTheme({
     alignItems: 'center',
   },
   imageStyle: {
-    width: WINDOW_WIDTH * 0.8,
-    height: WINDOW_WIDTH * 0.8,
+    width: calculateImageSize,
+    height: calculateImageSize,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',

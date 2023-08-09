@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -17,7 +17,6 @@ import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {Wallet} from '@app/models/wallet';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type WalletsProps = {
   wallets: Wallet[] | Results<Wallet>;
@@ -53,10 +52,13 @@ export const Wallets = ({
   testID,
 }: WalletsProps) => {
   const pan = useSharedValue(0);
-
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    pan.value = event.contentOffset.x / WINDOW_WIDTH;
-  });
+  const dimensions = useWindowDimensions();
+  const scrollHandler = useAnimatedScrollHandler(
+    event => {
+      pan.value = event.contentOffset.x / dimensions.width;
+    },
+    [dimensions],
+  );
 
   return (
     <>

@@ -1,10 +1,8 @@
 import React from 'react';
 
-import {StyleSheet} from 'react-native';
-
 import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerInfo = {
   address: string;
@@ -28,13 +26,13 @@ export const LedgerVerify = ({address}: LedgerVerifyProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   lottie: {
-    width: WINDOW_WIDTH,
+    width: () => getWindowWidth(),
   },
 });

@@ -161,7 +161,7 @@ const styles = createTheme({
     fontWeight: '600',
   },
   title: {
-    marginTop: moderateVerticalScale(40, 8),
+    marginTop: () => moderateVerticalScale(40, 8),
     marginBottom: 12,
     textAlign: 'center',
   },

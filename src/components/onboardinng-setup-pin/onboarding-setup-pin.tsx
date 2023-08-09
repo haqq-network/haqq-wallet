@@ -50,7 +50,7 @@ const page = createTheme({
   title: {marginBottom: 12},
   container: {
     alignItems: 'center',
-    marginTop: verticalScale(40),
+    marginTop: () => verticalScale(40),
     paddingBottom: 16,
     marginHorizontal: 20,
   },

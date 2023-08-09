@@ -8,13 +8,14 @@ import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {IS_IOS, WINDOW_HEIGHT} from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 
 type TransactionDetailProps = {
   source: TransactionSource;
@@ -43,7 +44,7 @@ export const TransactionDetail = ({
     () => splitAddress(isSent ? to : from),
     [from, isSent, to],
   );
-
+  const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
   const onPressAddress = useCallback(() => {
     Clipboard.setString(isSent ? to : from);
     sendNotification(I18N.notificationCopied);
@@ -69,7 +70,7 @@ export const TransactionDetail = ({
     <BottomSheet
       onClose={onCloseBottomSheet}
       i18nTitle={title}
-      closeDistance={WINDOW_HEIGHT / 4}>
+      closeDistance={closeDistance}>
       <Text
         i18n={I18N.transactionDetailTotalAmount}
         t14

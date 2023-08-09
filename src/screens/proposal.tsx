@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {getWindowHeight, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
@@ -13,7 +13,6 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {VoteNamesType, WalletType} from '@app/types';
-import {WINDOW_HEIGHT} from '@app/variables/common';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = () => {
@@ -97,7 +96,7 @@ export const ProposalScreen = () => {
     cardRef.current?.setSelected(decision);
     showModal('walletsBottomSheet', {
       wallets: visible,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       title: I18N.proposalAccountTitle,
       eventSuffix: '-proposal',
     });

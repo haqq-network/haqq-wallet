@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {
   ClaimOnMainNet,
@@ -25,6 +25,7 @@ import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-shee
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
+import {useTheme} from '@app/hooks';
 import {Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
@@ -53,6 +54,14 @@ export const ModalWrapper = ({
     modal.onClose?.();
     hideModal(type);
   }, [modal, type]);
+
+  const theme = useTheme();
+  const dimensions = useWindowDimensions();
+
+  const key = useMemo(
+    () => `${theme}-${dimensions.width}-${dimensions.height}`,
+    [dimensions, theme],
+  );
 
   const entry = useMemo(() => {
     if (!modal) {
@@ -106,5 +115,9 @@ export const ModalWrapper = ({
     }
   }, [modal, onCloseModalPress, type]);
 
-  return <View style={StyleSheet.absoluteFill}>{entry}</View>;
+  return (
+    <View key={key} style={StyleSheet.absoluteFill}>
+      {entry}
+    </View>
+  );
 };

@@ -1,5 +1,5 @@
 import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
-import {Dimensions, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
@@ -190,9 +190,6 @@ export const WEI = 10 ** 18;
 export const NUM_PRECISION = 2;
 
 export const MIN_AMOUNT = 0.001;
-export const WINDOW_WIDTH = Dimensions.get('window').width;
-export const WINDOW_HEIGHT = Dimensions.get('window').height;
-export const WINDOW_RATIO = WINDOW_WIDTH / 541;
 
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);

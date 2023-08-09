@@ -4,8 +4,7 @@ import {Pressable} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {WINDOW_WIDTH} from '@app/variables/common';
+import {createTheme, getWindowWidth} from '@app/helpers';
 
 export type FilledCellProps = {
   word: string;
@@ -26,7 +25,7 @@ const styles = createTheme({
   cell: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: (WINDOW_WIDTH - 56) / 2,
+    width: () => (getWindowWidth() - 56) / 2,
     height: 30,
     paddingHorizontal: 20,
     paddingVertical: 3,
