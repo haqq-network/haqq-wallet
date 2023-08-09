@@ -65,11 +65,13 @@ export class Balance implements IBalance {
   };
 
   add = (value: BN | Balance) => {
+    let newBalance;
+    const prev = this.bnRaw;
     if ((value as Balance).raw) {
-      this.bnRaw = this.bnRaw.add((value as Balance).raw);
+      newBalance = prev.add((value as Balance).raw);
     } else {
-      this.bnRaw = this.bnRaw.add(value as BN);
+      newBalance = prev.add(value as BN);
     }
-    return this;
+    return new Balance(newBalance);
   };
 }
