@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
+import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
@@ -285,6 +286,7 @@ export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
+  const [backend, setBackend] = useState(app.backend);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -398,6 +400,24 @@ export const SettingsTestScreen = () => {
         }}>
         {getUserAgent()}
       </Text>
+      <Spacer height={8} />
+      <Title text="Backend" />
+      <Text t11>{backend}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select backend"
+        onPress={async () => {
+          const modalsKeys = ['production', 'development'];
+          showActionSheetWithOptions({options: modalsKeys}, index => {
+            if (typeof index === 'number') {
+              app.backend = index === 1 ? HAQQ_BACKEND_DEV : HAQQ_BACKEND;
+              setBackend(app.backend);
+            }
+          });
+        }}
+        variant={ButtonVariant.contained}
+      />
+
       <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input

@@ -1,4 +1,9 @@
-import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
+import {
+  ENVIRONMENT,
+  HAQQ_BACKEND,
+  IS_DEVELOPMENT,
+  IS_WELCOME_NEWS_ENABLED,
+} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -175,6 +180,18 @@ class App extends AsyncEventEmitter {
     } else {
       throw new Error('Provider not found');
     }
+  }
+
+  get backend() {
+    if (!VariablesString.exists('backend')) {
+      return HAQQ_BACKEND;
+    }
+
+    return VariablesString.get('backend') as string;
+  }
+
+  set backend(value) {
+    VariablesString.set('backend', value);
   }
 
   get biometry() {

@@ -1,5 +1,4 @@
-import {HAQQ_BACKEND} from '@env';
-
+import {app} from '@app/contexts';
 import {NewsRow, NewsUpdatesResponse, Raffle, RssNewsRow} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
@@ -26,7 +25,7 @@ export class Backend {
   };
 
   getRemoteUrl() {
-    return HAQQ_BACKEND;
+    return app.backend;
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
