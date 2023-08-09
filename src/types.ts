@@ -918,7 +918,7 @@ export type Modals = {
   walletsBottomSheet: {
     onClose?: () => void;
     wallets: Wallet[] | Results<Wallet>;
-    closeDistance?: number;
+    closeDistance?: () => number;
     title: I18N;
     eventSuffix?: string;
     autoSelectWallet?: boolean;
@@ -935,7 +935,7 @@ export type Modals = {
     title: I18N;
     providers: Provider[] | Results<Provider>;
     initialProviderId: string;
-    closeDistance?: number;
+    closeDistance?: () => number;
     eventSuffix?: string;
   };
   captcha: {

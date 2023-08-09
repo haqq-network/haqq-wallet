@@ -5,10 +5,10 @@ import {ImageBackground, TouchableWithoutFeedback, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {BaseNewsItem} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
-import {MAGIC_NEWS_CARD_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
+import {MAGIC_NEWS_CARD_HEIGHT} from '@app/variables/common';
 
 import {Spacer, Text} from '../ui';
 
@@ -18,9 +18,11 @@ export type NewsRowProps = {
 };
 
 const MARGIN_HORIZONTAL = 20;
-export const NEWS_CARD_WIDTH =
-  WINDOW_WIDTH - MARGIN_HORIZONTAL - MARGIN_HORIZONTAL;
-export const NEWS_CARD_HEIGHT = NEWS_CARD_WIDTH * MAGIC_NEWS_CARD_HEIGHT;
+
+const calculateNewsCardWidth = () =>
+  getWindowWidth() - MARGIN_HORIZONTAL - MARGIN_HORIZONTAL;
+const calculateNewsCardHeight = () =>
+  calculateNewsCardWidth() * MAGIC_NEWS_CARD_HEIGHT;
 
 export const NewsCard = ({item, onPress}: NewsRowProps) => {
   const preview = useMemo(() => {
@@ -86,8 +88,8 @@ const styles = createTheme({
     opacity: 0.5,
   },
   imageSize: {
-    width: NEWS_CARD_WIDTH,
-    height: NEWS_CARD_HEIGHT,
+    width: calculateNewsCardWidth,
+    height: calculateNewsCardHeight,
   },
   image: {
     borderRadius: 12,

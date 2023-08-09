@@ -4,9 +4,9 @@ import {ScrollView, View} from 'react-native';
 import {Results} from 'realm';
 
 import {HomeBanner, HomeBannerProps} from '@app/components/home-banner';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {Banner} from '@app/models/banner';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {First, Spacer} from '../ui';
 
@@ -15,6 +15,8 @@ export type BannersProps = {
   onPressBanner: HomeBannerProps['onPress'];
 };
 export const Banners = ({banners, onPressBanner}: BannersProps) => {
+  const snapToInterval = useCalculatedDimensionsValue(({width}) => width - 80);
+
   if (!banners.length) {
     return null;
   }
@@ -32,7 +34,7 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
           horizontal
           pagingEnabled
           decelerationRate={0}
-          snapToInterval={WINDOW_WIDTH - 80}
+          snapToInterval={snapToInterval}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}
@@ -60,6 +62,6 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   banner: {
-    width: WINDOW_WIDTH - 80,
+    width: () => getWindowWidth() - 80,
   },
 });

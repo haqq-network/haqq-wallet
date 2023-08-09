@@ -3,6 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {Modals} from '@app/types';
 
 import {SettingsProvidersRow} from '../settings-providers/settings-providers-row';
@@ -15,6 +16,10 @@ export function ProvidersBottomSheet({
   eventSuffix = '',
   onClose,
 }: Modals['providersBottomSheet']) {
+  const closeDistanceCalculated = useCalculatedDimensionsValue(
+    () => closeDistance?.(),
+    [closeDistance],
+  );
   const onPressProvider = useCallback(
     (providerId: string) => {
       onClose?.();
@@ -37,7 +42,7 @@ export function ProvidersBottomSheet({
   return (
     <BottomSheet
       onClose={onCloseModal}
-      closeDistance={closeDistance}
+      closeDistance={closeDistanceCalculated}
       i18nTitle={title}>
       {providers.map((item, id) => (
         <SettingsProvidersRow

@@ -4,6 +4,7 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {Modals} from '@app/types';
 
 export function WalletsBottomSheet({
@@ -14,6 +15,10 @@ export function WalletsBottomSheet({
   eventSuffix = '',
   onClose,
 }: Modals['walletsBottomSheet']) {
+  const closeDistanceCalculated = useCalculatedDimensionsValue(
+    () => closeDistance?.(),
+    [closeDistance],
+  );
   const onPressWallet = useCallback(
     (address: string) => {
       onClose?.();
@@ -40,7 +45,7 @@ export function WalletsBottomSheet({
   return (
     <BottomSheet
       onClose={onCloseSheet}
-      closeDistance={closeDistance}
+      closeDistance={closeDistanceCalculated}
       i18nTitle={title}>
       {wallets.map((item, id) => (
         <WalletRow key={id} item={item} onPress={onPressWallet} />

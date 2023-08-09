@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {State} from 'react-native-ble-plx';
 
 import {Color} from '@app/colors';
@@ -12,8 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerBluetooth = {
   onPressAllow: () => void;
@@ -79,13 +79,13 @@ export const LedgerBluetooth = ({
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
   animation: {
-    width: WINDOW_WIDTH,
-    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355),
+    width: () => getWindowWidth(),
+    height: () => Math.min(getWindowWidth() * 0.8, getWindowHeight() * 0.355),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -101,8 +101,8 @@ const page = StyleSheet.create({
     marginHorizontal: 20,
   },
   imageStyle: {
-    width: WINDOW_WIDTH,
-    height: Math.min(WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.355) - 20,
+    width: () => getWindowWidth(),
+    height: Math.min(getWindowWidth() * 0.8, getWindowHeight() * 0.355) - 20,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',

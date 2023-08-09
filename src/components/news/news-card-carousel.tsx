@@ -1,13 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
 
 import {BaseNewsItem} from '@app/types';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 import {NewsCard} from './news-card';
 
@@ -20,10 +19,13 @@ export type NewsCardCarouselProps = {
 
 export function NewsCardCarousel({data, onPress}: NewsCardCarouselProps) {
   const pan = useSharedValue(0);
-
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    pan.value = event.contentOffset.x / WINDOW_WIDTH;
-  });
+  const dimensions = useWindowDimensions();
+  const scrollHandler = useAnimatedScrollHandler(
+    event => {
+      pan.value = event.contentOffset.x / dimensions.width;
+    },
+    [dimensions],
+  );
 
   const renderItem = useCallback(
     (item: BaseNewsItem, i: number) => (

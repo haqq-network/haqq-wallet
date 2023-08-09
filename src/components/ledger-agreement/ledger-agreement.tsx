@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {LottieWrap} from '@app/components/lottie';
@@ -12,10 +12,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {Terms} from '@app/components/ui/terms';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
@@ -56,14 +56,14 @@ export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'flex-end',
   },
   animation: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: Math.min(WINDOW_WIDTH, 330),
+    height: () => Math.min(getWindowWidth(), 330),
   },
   title: {
     marginBottom: 4,
@@ -79,6 +79,6 @@ const page = StyleSheet.create({
     marginBottom: 16,
   },
   image: {
-    height: Math.min(WINDOW_WIDTH, 330) - 20,
+    height: () => Math.min(getWindowWidth(), 330) - 20,
   },
 });

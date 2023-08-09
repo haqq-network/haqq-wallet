@@ -18,6 +18,7 @@ import {
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
+  getWindowHeight,
   hideModal,
   showModal,
 } from '@app/helpers';
@@ -38,7 +39,6 @@ import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals} from '@app/types';
 import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
-import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   Logger.log('setBackgroundMessageHandler', remoteMessage);
@@ -124,7 +124,7 @@ const getTestModals = (): Partial<Modals> => {
     modals.walletsBottomSheet = {
       onClose: () => {},
       wallets,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       title: I18N.welcomeTitle,
       autoSelectWallet: false,
       eventSuffix: '-test',
@@ -144,7 +144,7 @@ const getTestModals = (): Partial<Modals> => {
       title: I18N.welcomeTitle,
       providers,
       initialProviderId: firstProviderId,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       eventSuffix: '-test',
     };
   }
