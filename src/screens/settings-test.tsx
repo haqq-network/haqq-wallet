@@ -261,6 +261,11 @@ const TEST_URLS: Partial<Link>[] = [
   },
 ];
 
+const BACKENDS = [
+  ['production', HAQQ_BACKEND],
+  ['development', HAQQ_BACKEND_DEV],
+];
+
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
   Logger.log('params', params);
@@ -389,6 +394,16 @@ export const SettingsTestScreen = () => {
     Refferal.removeAll();
   }, []);
 
+  const onSetBackend = useCallback(() => {
+    const modalsKeys = BACKENDS.map(([title]) => title);
+    showActionSheetWithOptions({options: modalsKeys}, index => {
+      if (typeof index === 'number' && BACKENDS[index]) {
+        app.backend = BACKENDS[index][1];
+        setBackend(app.backend);
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
   return (
     <ScrollView style={styles.container}>
       <Title text="user agent" />
@@ -406,15 +421,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={8} />
       <Button
         title="Select backend"
-        onPress={async () => {
-          const modalsKeys = ['production', 'development'];
-          showActionSheetWithOptions({options: modalsKeys}, index => {
-            if (typeof index === 'number') {
-              app.backend = index === 1 ? HAQQ_BACKEND_DEV : HAQQ_BACKEND;
-              setBackend(app.backend);
-            }
-          });
-        }}
+        onPress={onSetBackend}
         variant={ButtonVariant.contained}
       />
 
