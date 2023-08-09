@@ -9,7 +9,6 @@ import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {formatBalanceToNumber} from '@app/helpers/formatters';
 import {getUid} from '@app/helpers/get-uid';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
@@ -38,7 +37,7 @@ export const HomeEarnScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + formatBalanceToNumber(app.getBalance(w.address)),
+      (acc, w) => acc + app.getBalance(w.address).toNumber(),
       0,
     ),
   });
@@ -71,7 +70,7 @@ export const HomeEarnScreen = () => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc + formatBalanceToNumber(app.getBalance(w.address)),
+        (acc, w) => acc + app.getBalance(w.address).toNumber(),
         0,
       );
 

@@ -23,20 +23,14 @@ import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
+import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
 import {
-  AppLanguage,
-  AppTheme,
-  Balance,
-  BiometryType,
-  DynamicLink,
-} from '../types';
-import {
-  EMPTY_BALANCE,
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
   TEST_NETWORK,
@@ -486,7 +480,7 @@ class App extends AsyncEventEmitter {
   }
 
   getBalance(address: string) {
-    return this._balance.get(address) ?? EMPTY_BALANCE;
+    return this._balance.get(address) ?? Balance.Empty;
   }
 
   handleDynamicLink(link: DynamicLink | null) {

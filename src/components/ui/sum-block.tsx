@@ -7,17 +7,16 @@ import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
-import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Balance} from '@app/types';
 import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type SumBlockProps = {
   value: string;
   error: string;
   currency: string;
-  balance: number;
+  balance: Balance;
   onChange: (value: string) => void;
   onMax: () => void;
   testID?: string;
@@ -97,7 +96,7 @@ export const SumBlock = ({
           />
         </Pressable>
         <View style={styles.max}>
-          {balance > 0 && (
+          {balance.isPositive() && (
             <Button
               title={getText(I18N.sumBlockMax)}
               onPress={onPressMax}
@@ -119,7 +118,7 @@ export const SumBlock = ({
         <Text center color={Color.textBase2} t14 testID={`${testID}_hint`}>
           {getText(I18N.sumBlockAvailable)}:{' '}
           <Text t14 color={Color.textGreen1}>
-            {cleanNumber(formatBalanceWithWEI(balance))} {currency}
+            {balance.toFloatString()} {currency}
           </Text>
         </Text>
       )}

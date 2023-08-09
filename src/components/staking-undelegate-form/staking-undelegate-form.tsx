@@ -16,9 +16,10 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/types';
 
 export type StakingDelegateFormProps = {
-  balance: number;
+  balance: Balance;
   onAmount: (amount: number) => void;
   fee: number;
   unboundingTime: number;
@@ -30,7 +31,7 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(0, balance);
+  const amounts = useSumAmount(0, balance.toNumber());
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);

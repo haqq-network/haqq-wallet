@@ -15,7 +15,6 @@ import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
-import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/types';
@@ -78,7 +77,7 @@ export const Wallets = ({
             <WalletCard
               testID={`${testID}_${w.address}`}
               wallet={w}
-              balance={formatBalanceWithWEI(balance[w.address])}
+              balance={balance[w.address].toFloat()}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               lockedTokensAmount={lockedTokensAmount}

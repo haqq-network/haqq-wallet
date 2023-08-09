@@ -11,13 +11,14 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {
   account: string;
   onAmount: (amount: number) => void;
   fee: number;
-  balance: number;
+  balance: Balance;
 };
 
 export const ProposalDepositForm = ({
@@ -25,7 +26,10 @@ export const ProposalDepositForm = ({
   fee,
   balance,
 }: ProposalDepositFormProps) => {
-  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001));
+  const amounts = useSumAmount(
+    0,
+    balance.toNumber() - Math.max(fee / WEI, 0.00001),
+  );
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));

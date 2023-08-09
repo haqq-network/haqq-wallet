@@ -6,8 +6,8 @@ import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
-import {formatBalanceWithWEI} from '@app/helpers/formatters';
 import {I18N} from '@app/i18n';
+import {WEI} from '@app/variables/common';
 
 interface StakingEmptyProps {
   availableSum: number;
@@ -26,7 +26,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
         <Spacer height={20} />
         <Text t8 center i18n={I18N.sumBlockAvailable} />
         <Text t3 center color={Color.textGreen1}>
-          {cleanNumber(formatBalanceWithWEI(availableSum))} ISLM
+          {cleanNumber(availableSum / WEI)} ISLM
         </Text>
       </View>
       <Spacer />

@@ -1,9 +1,6 @@
 import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
-import {BN} from 'bn.js';
 import {Dimensions, Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
-
-import {Balance} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -191,7 +188,6 @@ export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
 
 export const NUM_PRECISION = 2;
-export const EMPTY_BALANCE: Balance = new BN(0, 'hex');
 
 export const MIN_AMOUNT = 0.001;
 export const WINDOW_WIDTH = Dimensions.get('window').width;
