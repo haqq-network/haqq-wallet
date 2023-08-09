@@ -1,3 +1,5 @@
+import {utils} from 'ethers';
+
 import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -36,13 +38,63 @@ export async function onEarnGetTicket(raffleId: string) {
     `${raffleId}:${uid}:${session}`,
   );
 
-  const response = await Backend.instance.contestParticipate(
+  const response = await Backend.instance.contestParticipateUser(
     raffleId,
     uid,
     session,
     signature,
     leadingAccount?.address ?? '',
   );
+
+  const domainHash = utils._TypedDataEncoder.hashStruct(
+    'EIP712Domain',
+    {
+      ContestV2: [
+        {
+          name: 'name',
+          type: 'string',
+        },
+        {
+          name: 'version',
+          type: 'string',
+        },
+        {
+          name: 'chainId',
+          type: 'uint256',
+        },
+        {
+          name: 'verifyingContract',
+          type: 'string',
+        },
+      ],
+    },
+    {
+      name: 'ContestV2',
+      version: '1',
+      chainId: '11235',
+      verifyingContract: raffleId,
+    },
+  );
+  const valuesHash = utils._TypedDataEncoder
+    .from({
+      ParticipationPermit: [
+        {name: 'participant', type: 'address'},
+        {name: 'deadline', type: 'uint256'},
+      ],
+    })
+    .hash({
+      participant: response.participant,
+      deadline: response.deadline,
+    });
+
+  const usersSignature = await provider.signTypedData(
+    leadingAccount.path!,
+    domainHash,
+    valuesHash,
+  );
+
+  Logger.log('usersSignature', usersSignature);
+
   sendNotification(I18N.earnTicketRecieved);
   app.emit(Events.onRaffleTicket, response);
   return response;
