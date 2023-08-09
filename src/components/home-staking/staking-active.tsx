@@ -116,7 +116,7 @@ export const StakingActive = forwardRef(
         <Spacer height={12} />
         <Inline gap={12}>
           <InfoBlockAmount
-            value={availableSum.toNumber()}
+            value={availableSum.toFloat()}
             titleI18N={I18N.sumBlockAvailable}
           />
           <InfoBlockAmount
