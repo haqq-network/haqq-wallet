@@ -13,6 +13,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {VariablesBool} from '@app/models/variables-bool';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
 
@@ -23,6 +24,7 @@ export const RaffleAgreement = ({onClose}: Modals['ledgerLocked']) => {
 
   const onAgree = useCallback(
     (onCloseModal: (arg0: (() => void) | undefined) => void) => {
+      VariablesBool.set('raffleAgreement', true);
       onCloseModal(onClose);
     },
     [onClose],
@@ -30,6 +32,7 @@ export const RaffleAgreement = ({onClose}: Modals['ledgerLocked']) => {
 
   const onDisagree = useCallback(
     (onCloseModal: (arg0: (() => void) | undefined) => void) => {
+      VariablesBool.set('raffleAgreement', false);
       onCloseModal(onClose);
     },
     [onClose],
