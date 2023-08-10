@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
-import {Linking} from 'react-native';
+import {Alert, Linking} from 'react-native';
 
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
@@ -32,6 +32,8 @@ export async function onAppStarted() {
     });
 
   const initialUrl = await Linking.getInitialURL();
+
+  Alert.alert('initialUrl', initialUrl ?? '');
 
   if (initialUrl) {
     app.emit(Events.onDeepLink, initialUrl);
