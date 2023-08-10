@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import {utils} from 'ethers';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -9,8 +10,12 @@ import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
-import {sendNotification} from '@app/services';
+import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
+
+const abi = [
+  'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
+];
 
 export async function onEarnGetTicket(raffleId: string) {
   const leadingAccount = getLeadingAccount();
@@ -46,54 +51,32 @@ export async function onEarnGetTicket(raffleId: string) {
     leadingAccount?.address ?? '',
   );
 
-  const domainHash = utils._TypedDataEncoder.hashStruct(
-    'EIP712Domain',
+  const iface = new utils.Interface(abi);
+  const data = iface.encodeFunctionData('participateUser', [
     {
-      ContestV2: [
-        {
-          name: 'name',
-          type: 'string',
-        },
-        {
-          name: 'version',
-          type: 'string',
-        },
-        {
-          name: 'chainId',
-          type: 'uint256',
-        },
-        {
-          name: 'verifyingContract',
-          type: 'string',
-        },
-      ],
-    },
-    {
-      name: 'ContestV2',
-      version: '1',
-      chainId: '11235',
-      verifyingContract: raffleId,
-    },
-  );
-  const valuesHash = utils._TypedDataEncoder
-    .from({
-      ParticipationPermit: [
-        {name: 'participant', type: 'address'},
-        {name: 'deadline', type: 'uint256'},
-      ],
-    })
-    .hash({
       participant: response.participant,
       deadline: response.deadline,
-    });
+    },
+    Buffer.from(response.signature, 'hex'),
+  ]);
 
-  const usersSignature = await provider.signTypedData(
-    leadingAccount.path!,
-    domainHash,
-    valuesHash,
+  const unsignedTx = await EthNetwork.populateTransaction(
+    leadingAccount.address,
+    raffleId,
+    new BN(0),
+    data,
+    250000,
   );
 
-  Logger.log('usersSignature', usersSignature);
+  const signedTx = await provider.signTransaction(
+    leadingAccount.path!,
+    unsignedTx,
+  );
+
+  const resp = await EthNetwork.sendTransaction(signedTx);
+  const r = iface.decodeFunctionData('participateUser', resp.data);
+
+  Logger.log('tx', JSON.stringify(r));
 
   sendNotification(I18N.earnTicketRecieved);
   app.emit(Events.onRaffleTicket, response);
