@@ -75,6 +75,37 @@ export class Backend {
     return resp;
   }
 
+  async contestParticipateUser(
+    contest: string,
+    uid: string,
+    session: string,
+    signature: string,
+    address: string,
+  ): Promise<{signature: string; participant: string; deadline: number}> {
+    const request = await fetch(
+      `${this.getRemoteUrl()}contests/${contest}/participate`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          uid,
+          signature,
+          session,
+          address,
+        }),
+      },
+    );
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
   async captchaRequest(
     wallets: string[],
     uid: string,

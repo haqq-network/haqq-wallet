@@ -866,6 +866,7 @@ export type ErrorModalImage =
 export type Modals = {
   splash: undefined;
   pin: undefined;
+  raffleAgreement: undefined;
   noInternet: {showClose?: boolean};
   loading: {
     text?: string;
