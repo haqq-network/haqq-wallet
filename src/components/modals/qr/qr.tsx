@@ -21,6 +21,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SystemDialog} from '@app/services/system-dialog';
 import {Modals} from '@app/types';
 import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';
 
@@ -42,8 +43,15 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
-
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const theme = useTheme();
+
+  useEffect(() => {
+    SystemDialog.requestCameraPermissions().then(result => {
+      Logger.log('Camera permission is authorized: ', result);
+      setIsAuthorized(result);
+    });
+  }, []);
 
   useAndroidBackHandler(() => {
     onClose();
@@ -175,10 +183,36 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     vibrate(HapticEffects.impactLight);
   }, []);
 
+  const renserNotAuthorizedView = useCallback(
+    () => <QrNoAccess onClose={onClose} />,
+    [onClose],
+  );
+
+  const renderTopView = useCallback(
+    () => <QrTopView onClose={onClose} />,
+    [onClose],
+  );
+
+  const renderBottomView = useCallback(
+    () => (
+      <QrBottomView
+        flashMode={flashMode}
+        onClickGallery={onClickGallery}
+        onToggleFlashMode={onToggleFlashMode}
+      />
+    ),
+    [flashMode, onClickGallery, onToggleFlashMode],
+  );
+
+  if (!isAuthorized) {
+    return renserNotAuthorizedView();
+  }
+
   return (
     <>
       <QRscanner
         isRepeatScan={true}
+        captureAudio={false}
         vibrate={false}
         style={styles.container}
         onRead={onSuccess}
@@ -188,15 +222,9 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         cornerColor={getColor(error ? Color.graphicRed1 : Color.graphicBase3)}
         cornerWidth={7}
         zoom={0}
-        notAuthorizedView={() => <QrNoAccess onClose={onClose} />}
-        renderTopView={() => <QrTopView onClose={onClose} />}
-        renderBottomView={() => (
-          <QrBottomView
-            flashMode={flashMode}
-            onClickGallery={onClickGallery}
-            onToggleFlashMode={onToggleFlashMode}
-          />
-        )}
+        notAuthorizedView={renserNotAuthorizedView}
+        renderTopView={renderTopView}
+        renderBottomView={renderBottomView}
       />
       {error && (
         <View style={styles.bottomErrorContainer}>

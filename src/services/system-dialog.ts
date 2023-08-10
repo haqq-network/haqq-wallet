@@ -3,7 +3,10 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
 
-import {requestTrackingAuthorization} from '@app/utils';
+import {
+  requestCameraPermissions,
+  requestTrackingAuthorization,
+} from '@app/utils';
 
 import {AppNativeConfig, BooleanConfigKey} from './app-native-config';
 
@@ -15,6 +18,8 @@ class SystemDialogService {
   private _timeoutId: NodeJS.Timeout;
 
   tryToInitBt = () => this.getResult(tryToInitBt);
+
+  requestCameraPermissions = () => this.getResult(requestCameraPermissions);
 
   messagingRequestPermission = () =>
     this.getResult(function requestPermission() {
@@ -29,7 +34,7 @@ class SystemDialogService {
 
   getClipboardString = () => this.getResult(Clipboard.getString);
 
-  private getResult = async <Fn extends (...args: any) => Promise<any>>(
+  getResult = async <Fn extends (...args: any) => Promise<any>>(
     callback: Fn,
     ...args: Parameters<Fn>
     // @ts-ignore

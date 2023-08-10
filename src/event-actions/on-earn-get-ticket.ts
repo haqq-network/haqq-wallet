@@ -26,7 +26,6 @@ export async function onEarnGetTicket(raffleId: string) {
 
   if (!VariablesBool.get('raffleAgreement')) {
     await awaitForPopupClosed('raffleAgreement');
-    VariablesBool.set('raffleAgreement', true);
   }
 
   if (!VariablesBool.get('raffleAgreement')) {
