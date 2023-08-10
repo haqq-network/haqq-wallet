@@ -299,12 +299,6 @@ export class Cosmos {
     );
     const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
 
-    Logger.log(
-      JSON.stringify(EIP712Domain),
-      JSON.stringify(othTypes),
-      JSON.stringify(message),
-    );
-
     return await transport.signTypedData(hdPath, domainHash, valuesHash);
   }
 
