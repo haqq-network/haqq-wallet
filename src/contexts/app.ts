@@ -29,6 +29,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -387,13 +388,15 @@ class App extends AsyncEventEmitter {
   }
 
   async auth() {
-    const close = showModal('pin');
+    await SystemDialog.getResult(async () => {
+      const close = showModal('pin');
 
-    await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
+      await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
-    if (this.authenticated) {
-      close();
-    }
+      if (this.authenticated) {
+        close();
+      }
+    });
   }
 
   async makeBiometryAuth() {
