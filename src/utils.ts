@@ -8,7 +8,13 @@ import {
 } from 'date-fns';
 import {utils} from 'ethers';
 import _ from 'lodash';
-import {Animated, Linking} from 'react-native';
+import {
+  Animated,
+  Linking,
+  NativeModules,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
@@ -663,4 +669,18 @@ export async function openStorePage() {
     Logger.captureException(err, 'utils:openStorePage');
     return false;
   }
+}
+
+export async function requestCameraPermissions(): Promise<boolean> {
+  const CameraManager =
+    NativeModules.RNCameraManager || NativeModules.RNCameraModule;
+  if (Platform.OS === 'ios') {
+    return await CameraManager.checkVideoAuthorizationStatus();
+  } else if (Platform.OS === 'android') {
+    const cameraPermissionResult = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+    return cameraPermissionResult === PermissionsAndroid.RESULTS.GRANTED;
+  }
+  return false;
 }
