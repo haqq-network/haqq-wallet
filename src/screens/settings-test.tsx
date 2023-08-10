@@ -23,6 +23,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -32,6 +33,7 @@ import {Refferal} from '@app/models/refferal';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
@@ -292,6 +294,9 @@ export const SettingsTestScreen = () => {
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
   const [backend, setBackend] = useState(app.backend);
+  const [leadingAccount, setLeadingAccount] = useState(
+    VariablesString.get('leadingAccount'),
+  );
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -404,6 +409,19 @@ export const SettingsTestScreen = () => {
     });
   }, [showActionSheetWithOptions]);
 
+  const onSetLeadingAccount = useCallback(() => {
+    const wallets = Wallet.getAll().snapshot();
+    const walletsKeys = wallets.map(
+      wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
+    );
+    showActionSheetWithOptions({options: walletsKeys}, index => {
+      if (typeof index === 'number' && wallets[index]) {
+        VariablesString.set('leadingAccount', wallets[index].address);
+        setLeadingAccount(VariablesString.get('leadingAccount'));
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
   return (
     <ScrollView style={styles.container}>
       <Title text="user agent" />
@@ -422,6 +440,15 @@ export const SettingsTestScreen = () => {
       <Button
         title="Select backend"
         onPress={onSetBackend}
+        variant={ButtonVariant.contained}
+      />
+
+      <Title text="Leading account" />
+      <Text t11>{leadingAccount}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select leading account"
+        onPress={onSetLeadingAccount}
         variant={ButtonVariant.contained}
       />
 
