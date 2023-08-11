@@ -227,6 +227,7 @@ class App extends AsyncEventEmitter {
   }
 
   set onboarded(value) {
+    this.emit(Events.onOnboardedChanged, value);
     VariablesBool.set('onboarded', value);
   }
 
@@ -279,6 +280,7 @@ class App extends AsyncEventEmitter {
   }
 
   set isWelcomeNewsEnabled(value) {
+    this.emit(Events.onIsWelcomeNewsChanged, value);
     VariablesBool.set('isWelcomeNewsEnabled', value);
   }
 

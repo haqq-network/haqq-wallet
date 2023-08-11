@@ -3,7 +3,7 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
-import type {StackNavigationOptions} from '@react-navigation/stack';
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
@@ -13,6 +13,8 @@ import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
 
 import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
@@ -103,7 +105,15 @@ export type WalletInitialData =
       verifier: string;
       token: string;
     }
-  | {type: 'empty'};
+  | {type: 'empty'}
+  | {
+      type: 'ledger';
+      address: string;
+      hdPath: string;
+      publicKey: string;
+      deviceId: string;
+      deviceName: string;
+    };
 
 export type RootStackParamList = {
   home: undefined;
@@ -159,8 +169,8 @@ export type RootStackParamList = {
   welcomeNews: undefined;
   create: undefined;
   scanQr: undefined;
-  signin: {next: string};
-  signup: {next: string};
+  signin: {next: WelcomeStackRoutes};
+  signup: {next: SignUpStackRoutes};
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
@@ -607,7 +617,7 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export interface ScreenOptionType extends StackNavigationOptions {
+export interface ScreenOptionType extends NativeStackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;

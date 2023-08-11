@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {METADATA_URL} from '@env';
 import {accountInfo} from '@haqq/provider-web3-utils';
@@ -8,6 +8,10 @@ import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation} from '@app/hooks';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/screens/WelcomeStack/SignInStack';
 import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
@@ -16,8 +20,8 @@ import {
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
-export const SignInNetworksScreen = () => {
-  const navigation = useTypedNavigation();
+export const SignInNetworksScreen = memo(() => {
+  const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
@@ -95,8 +99,8 @@ export const SignInNetworksScreen = () => {
   );
 
   const onSkip = useCallback(() => {
-    navigation.navigate('signinAgreement');
+    navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 
   return <SigninNetworks onLogin={onLogin} onSkip={onSkip} />;
-};
+});

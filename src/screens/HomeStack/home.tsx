@@ -18,14 +18,13 @@ import {Spacer} from '@app/components/ui';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
+import {HomeBrowserScreen} from '@app/screens/home-browser';
+import {HomeEarnScreen} from '@app/screens/home-earn';
+import {HomeFeedScreen} from '@app/screens/home-feed';
 import {HomeNewsScreen} from '@app/screens/home-news';
+import {HomeSettingsScreen} from '@app/screens/home-settings';
 import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
-
-import {HomeBrowserScreen} from './home-browser';
-import {HomeEarnScreen} from './home-earn';
-import {HomeFeedScreen} from './home-feed';
-import {HomeSettingsScreen} from './home-settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -111,7 +110,7 @@ export const HomeScreen = () => {
   }, [navigation]);
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator screenOptions={{...screenOptions, animation: 'fade'}}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedScreen}

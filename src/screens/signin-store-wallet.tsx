@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
@@ -7,21 +7,29 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/screens/WelcomeStack/SignInStack';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export const SignInStoreWalletScreen = () => {
-  const navigation = useTypedNavigation();
-  const {nextScreen, ...params} = useTypedRoute<'restoreStore'>().params;
+export const SignInStoreWalletScreen = memo(() => {
+  const navigation = useTypedNavigation<SignInStackParamList>();
+  const {nextScreen, ...params} = useTypedRoute<
+    SignInStackParamList,
+    SignInStackRoutes.SigninRestoreWallet
+  >().params;
+
+  const [show] = useModal();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    show('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
@@ -105,13 +113,13 @@ export const SignInStoreWalletScreen = () => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            show('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              showModal('errorCreateAccount');
+              show('errorCreateAccount');
               goBack();
               Logger.captureException(error, 'restoreStore');
             }
@@ -121,4 +129,4 @@ export const SignInStoreWalletScreen = () => {
   }, [navigation, nextScreen, params]);
 
   return <View />;
-};
+});

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {
   Device,
@@ -12,10 +12,14 @@ import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation} from '@app/hooks';
+import {
+  LedgerStackParamList,
+  LedgerStackRoutes,
+} from '@app/screens/WelcomeStack/LedgerStack';
 import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';
 
-export const LedgerScanScreen = () => {
+export const LedgerScanScreen = memo(() => {
   const [refreshing, setRefreshing] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
   const scan = useRef(scanDevices()).current;
@@ -74,7 +78,7 @@ export const LedgerScanScreen = () => {
     };
   }, [ledgerProvidersMap, scan]);
 
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<LedgerStackParamList>();
 
   useEffect(() => {
     awaitForBluetooth().then(() => {
@@ -95,7 +99,6 @@ export const LedgerScanScreen = () => {
 
       ledgerProvidersMap[item.id] = {taskId, provider};
 
-      // @ts-ignore
       const transport = await provider.awaitForTransport(item.id, taskId);
 
       if (!transport) {
@@ -105,7 +108,7 @@ export const LedgerScanScreen = () => {
       try {
         await suggestApp(transport, LEDGER_APP);
         hideModal('ledgerNoApp');
-        navigation.navigate('ledgerAccounts', {
+        navigation.navigate(LedgerStackRoutes.LedgerAccounts, {
           deviceId: item.id,
           deviceName: `Ledger ${item.name}`,
         });
@@ -183,4 +186,4 @@ export const LedgerScanScreen = () => {
       refreshing={refreshing}
     />
   );
-};
+});

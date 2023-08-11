@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 
@@ -6,22 +6,31 @@ import {LedgerVerify} from '@app/components/ledger-verify';
 import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  LedgerStackParamList,
+  LedgerStackRoutes,
+} from '@app/screens/WelcomeStack/LedgerStack';
 import {LEDGER_APP} from '@app/variables/common';
 
-export const LedgerVerifyScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'ledgerVerify'>();
+export const LedgerVerifyScreen = memo(() => {
+  const navigation = useTypedNavigation<LedgerStackParamList>();
+  const route = useTypedRoute<
+    LedgerStackParamList,
+    LedgerStackRoutes.LedgerVerify
+  >();
 
   const onDone = useCallback(() => {
-    // @ts-ignore
-    return navigation.navigate(route.params.nextScreen ?? 'ledgerStore', {
-      type: 'ledger',
-      address: route.params.address,
-      hdPath: route.params.hdPath,
-      publicKey: route.params.publicKey,
-      deviceId: route.params.deviceId,
-      deviceName: route.params.deviceName,
-    });
+    return navigation.navigate(
+      route.params.nextScreen || LedgerStackRoutes.LedgerStoreWallet,
+      {
+        type: 'ledger',
+        address: route.params.address,
+        hdPath: route.params.hdPath,
+        publicKey: route.params.publicKey,
+        deviceId: route.params.deviceId,
+        deviceName: route.params.deviceName,
+      },
+    );
   }, [
     navigation,
     route.params.nextScreen,
@@ -65,4 +74,4 @@ export const LedgerVerifyScreen = () => {
   ]);
 
   return <LedgerVerify address={route.params.address} />;
-};
+});

@@ -1,18 +1,18 @@
 import React, {useEffect, useMemo} from 'react';
 
+import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {NavigationAction} from '@react-navigation/routers';
-import {StackHeaderProps} from '@react-navigation/stack';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
 import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
-type PopupHeaderProps = StackHeaderProps & {
+type PopupHeaderProps = NativeStackHeaderProps & {
   options: ScreenOptionType;
 };
 
@@ -44,6 +44,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
   return (
     <View
       style={[
+        options.headerStyle,
         page.container,
         (options.tab || IS_ANDROID) && {marginTop: insets.top},
       ]}>
@@ -76,6 +77,7 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
+    backgroundColor: getColor(Color.bg1),
   },
   text: {
     flex: 1,

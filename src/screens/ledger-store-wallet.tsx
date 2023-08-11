@@ -1,20 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {
+  LedgerStackParamList,
+  LedgerStackRoutes,
+} from '@app/screens/WelcomeStack/LedgerStack';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
-export const LedgerStoreWalletScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'ledgerStore'>();
+export const LedgerStoreWalletScreen = memo(() => {
+  const navigation = useTypedNavigation<LedgerStackParamList>();
+  const route = useTypedRoute<
+    LedgerStackParamList,
+    LedgerStackRoutes.LedgerStoreWallet
+  >();
+
+  const [show] = useModal();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
+    show('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -37,19 +46,22 @@ export const LedgerStoreWalletScreen = () => {
 
       Promise.all(actions)
         .then(() => {
-          navigation.navigate('ledgerFinish');
+          navigation.navigate(LedgerStackRoutes.LedgerFinish);
         })
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              showModal('errorAccountAdded');
+              show('errorAccountAdded');
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                showModal('errorCreateAccount');
+                show('errorCreateAccount');
                 navigation.getParent()?.goBack();
-                Logger.captureException(error, 'ledgerStore');
+                Logger.captureException(
+                  error,
+                  LedgerStackRoutes.LedgerStoreWallet,
+                );
               }
           }
         });
@@ -57,4 +69,4 @@ export const LedgerStoreWalletScreen = () => {
   }, [navigation, route]);
 
   return <View />;
-};
+});

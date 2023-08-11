@@ -1,20 +1,22 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {Finish} from '@app/components/finish';
 import {app} from '@app/contexts';
 import {hideModal} from '@app/helpers/modal';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {LedgerStackParamList} from '@app/screens/WelcomeStack/LedgerStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const LedgerFinishScreen = () => {
-  const navigation = useTypedNavigation();
+export const LedgerFinishScreen = memo(() => {
+  const navigation = useTypedNavigation<LedgerStackParamList>();
   const onEnd = useCallback(() => {
     if (app.onboarded) {
       navigation.getParent()?.goBack();
     } else {
       app.onboarded = true;
-      navigation.replace('home');
+      // FIXME: HomeStack should react to this
+      // navigation.replace('home');
     }
   }, [navigation]);
 
@@ -30,4 +32,4 @@ export const LedgerFinishScreen = () => {
       testID="ledger_finish"
     />
   );
-};
+});

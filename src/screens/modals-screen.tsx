@@ -1,9 +1,19 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
+
+import {
+  createNavigationContainerRef,
+  useNavigation,
+} from '@react-navigation/native';
 
 import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {useTypedRoute} from '@app/hooks';
+import {
+  WelcomeStackParamList,
+  WelcomeStackRoutes,
+} from '@app/screens/WelcomeStack';
 import {Modals, ModalsListBase} from '@app/types';
 import {makeID} from '@app/utils';
 
@@ -12,13 +22,13 @@ type ModalStates<
   ModalName extends keyof ModalsList,
 > = ModalsList[ModalName] & {type: ModalName; uid: string};
 
-type ModalState = ModalStates<Modals, keyof Modals>;
+export type ModalState = ModalStates<Modals, keyof Modals>;
 
 export type ModalProps = {
   initialModal?: Partial<ModalState>;
 };
 
-export const ModalsScreen = ({initialModal}: ModalProps) => {
+export const ModalsScreen = ({initialModal, route, navigation}: ModalProps) => {
   const [modals, setModal] = useState<ModalState[]>(
     ([initialModal].filter(Boolean) as ModalState[]).map(m => ({
       ...m,
@@ -30,30 +40,39 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
     app.emit(Events.onCloseModal, event.type);
   }, []);
 
+  // useEffect(() => {
+  //   const showModal = (event: ModalState) => {
+  //     console.log('here', event);
+  //     let exists = modals.some(m => m.type === event.type);
+
+  //     if (!exists) {
+  //       setModal(m => m.concat({...event, uid: makeID(6)}));
+  //     }
+  //   };
+
+  //   const hideModal = (event: {type: string}) => {
+  //     const navigationRef = createNavigationContainerRef();
+  //     navigationRef.goBack();
+  //     let exists = modals.some(m => m.type === event.type);
+
+  //     if (exists) {
+  //       setModal(m => m.filter(r => r.type !== event.type));
+  //     }
+  //   };
+
+  //   app.on('showModal', showModal);
+  //   app.on('hideModal', hideModal);
+  //   return () => {
+  //     app.off('showModal', showModal);
+  //     app.off('hideModal', hideModal);
+  //   };
+  // }, [modals, route]);
+
   useEffect(() => {
-    const showModal = (event: ModalState) => {
-      let exists = modals.some(m => m.type === event.type);
-
-      if (!exists) {
-        setModal(m => m.concat({...event, uid: makeID(6)}));
-      }
-    };
-
-    const hideModal = (event: {type: string}) => {
-      let exists = modals.some(m => m.type === event.type);
-
-      if (exists) {
-        setModal(m => m.filter(r => r.type !== event.type));
-      }
-    };
-
-    app.on('showModal', showModal);
-    app.on('hideModal', hideModal);
-    return () => {
-      app.off('showModal', showModal);
-      app.off('hideModal', hideModal);
-    };
-  }, [modals]);
+    if (route) {
+      setModal([route]);
+    }
+  }, [route]);
 
   return (
     <Modal visible={!!modals.length}>
@@ -68,3 +87,10 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
     </Modal>
   );
 };
+
+export const ModalsScreenConnected = memo(() => {
+  const navigation = useNavigation();
+  const route = useTypedRoute<WelcomeStackParamList, WelcomeStackRoutes.Modal>()
+    .params;
+  return <ModalsScreen route={route} navigation={navigation} />;
+});

@@ -28,6 +28,10 @@ import './src/event-actions';
 import { IS_IOS } from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
 import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
+import { enableScreens,enableFreeze } from 'react-native-screens';
+
+enableScreens();
+enableFreeze(true);
 
 try {
   const isRTLEnabled = isFeatureEnabled(Feature.rtl);

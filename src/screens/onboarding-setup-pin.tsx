@@ -1,12 +1,22 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {OnboardingSetupPin} from '@app/components/onboardinng-setup-pin';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useModal} from '@app/hooks/use-modal';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {
+  OnboardingStackParamList,
+  OnboardingStackRoutes,
+} from '@app/screens/WelcomeStack/OnboardingStack';
 import {vibrate} from '@app/services/haptic';
 
-export const OnboardingSetupPinScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'onboardingSetupPin'>().params;
+export const OnboardingSetupPinScreen = memo(() => {
+  const navigation = useTypedNavigation<OnboardingStackParamList>();
+  const route = useTypedRoute<
+    OnboardingStackParamList,
+    OnboardingStackRoutes.OnboardingSetupPin
+  >().params;
 
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
@@ -20,7 +30,7 @@ export const OnboardingSetupPinScreen = () => {
 
   useEffect(() => {
     if (pin.length === 6) {
-      navigation.navigate('onboardingRepeatPin', {
+      navigation.navigate(OnboardingStackRoutes.OnboardingRepeatPin, {
         ...route,
         currentPin: pin,
       });
@@ -29,4 +39,4 @@ export const OnboardingSetupPinScreen = () => {
   }, [navigation, pin, route]);
 
   return <OnboardingSetupPin onKeyboard={onKeyboard} pin={pin} />;
-};
+});

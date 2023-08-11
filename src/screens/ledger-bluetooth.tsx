@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
 import {Subscription} from 'rxjs';
@@ -7,11 +7,15 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {requestLocationPermission} from '@app/helpers/request-location-permission';
 import {useTypedNavigation} from '@app/hooks';
+import {
+  LedgerStackParamList,
+  LedgerStackRoutes,
+} from '@app/screens/WelcomeStack/LedgerStack';
 
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
 
-export const LedgerBluetoothScreen = () => {
-  const navigation = useTypedNavigation();
+export const LedgerBluetoothScreen = memo(() => {
+  const navigation = useTypedNavigation<LedgerStackParamList>();
 
   const subscription = useRef<null | Subscription>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +33,7 @@ export const LedgerBluetoothScreen = () => {
     const {granted} = await requestLocationPermission();
 
     if (granted) {
-      navigation.navigate('ledgerScan');
+      navigation.navigate(LedgerStackRoutes.LedgerScan);
     } else {
       showModal('locationUnauthorized');
     }
@@ -72,4 +76,4 @@ export const LedgerBluetoothScreen = () => {
       loading={loading}
     />
   );
-};
+});

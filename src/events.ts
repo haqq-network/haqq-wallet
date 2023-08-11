@@ -34,6 +34,9 @@ export enum Events {
   onAppReviewRequest = 'onAppReviewRequest',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
+
+  onOnboardedChanged = 'onOnboardedChanged',
+  onIsWelcomeNewsChanged = 'onIsWelcomeNewsChanged',
 }
 
 export enum WalletConnectEvents {

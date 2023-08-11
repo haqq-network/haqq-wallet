@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 
 import {METADATA_URL} from '@env';
 import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
@@ -8,12 +8,19 @@ import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/screens/WelcomeStack/SignInStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const SignInPinScreen = () => {
+export const SignInPinScreen = memo(() => {
   const pinRef = useRef<PinInterface>();
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'signinPin'>();
+  const navigation = useTypedNavigation<SignInStackParamList>();
+  const route = useTypedRoute<
+    SignInStackParamList,
+    SignInStackRoutes.SigninPin
+  >();
 
   const onPin = useCallback(
     async (password: string) => {
@@ -36,14 +43,14 @@ export const SignInPinScreen = () => {
           await decryptShare(JSON.parse(securityQuestion), password);
 
           if (app.onboarded) {
-            navigation.navigate('signinStoreWallet', {
+            navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
               ...route.params,
               type: 'sss',
               sssPrivateKey: route.params.sssPrivateKey,
               sssCloudShare: null,
             });
           } else {
-            navigation.navigate('onboardingSetupPin', {
+            navigation.navigate(SignInStackRoutes.OnboardingSetupPin, {
               ...route.params,
               type: 'sss',
               sssPrivateKey: route.params.sssPrivateKey,
@@ -64,8 +71,8 @@ export const SignInPinScreen = () => {
         }
       } else {
         const nextScreen = app.onboarded
-          ? 'signinStoreWallet'
-          : 'onboardingSetupPin';
+          ? SignInStackRoutes.SigninStoreWallet
+          : SignInStackRoutes.OnboardingSetupPin;
 
         navigation.navigate(nextScreen, route.params);
       }
@@ -74,4 +81,4 @@ export const SignInPinScreen = () => {
   );
 
   return <SssPin onPin={onPin} pinRef={pinRef} />;
-};
+});

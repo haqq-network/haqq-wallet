@@ -1,19 +1,28 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
-import {showModal} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export const SignUpStoreWalletScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'createStoreWallet'>();
+export const SignUpStoreWalletScreen = memo(() => {
+  const navigation = useTypedNavigation<SignUpStackParamList>();
+  const route = useTypedRoute<
+    SignUpStackParamList,
+    SignUpStackRoutes.SignupStoreWallet
+  >();
+
+  const [show] = useModal();
 
   const goBack = useCallback(() => {
     navigation.reset({
@@ -22,7 +31,7 @@ export const SignUpStoreWalletScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    showModal('loading', {
+    show('loading', {
       text: getText(I18N.signupStoreWalletCreatingAccount),
     });
   }, []);
@@ -64,12 +73,12 @@ export const SignUpStoreWalletScreen = () => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            show('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
-              showModal('errorCreateAccount');
+              show('errorCreateAccount');
               goBack();
               Logger.captureException(error, 'createStoreWallet');
             }
@@ -78,5 +87,5 @@ export const SignUpStoreWalletScreen = () => {
     }, 350);
   }, [goBack, navigation, route.params]);
 
-  return <View />;
-};
+  return null;
+});

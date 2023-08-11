@@ -1,14 +1,21 @@
-import React, {useCallback, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 
 import {OnboardingBiometry} from '@app/components/onboarding-biometry';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  OnboardingStackParamList,
+  OnboardingStackRoutes,
+} from '@app/screens/WelcomeStack/OnboardingStack';
 import {AdjustTrackingAuthorizationStatus} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
 
-export const OnboardingBiometryScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'onboardingBiometry'>();
+export const OnboardingBiometryScreen = memo(() => {
+  const navigation = useTypedNavigation<OnboardingStackParamList>();
+  const route = useTypedRoute<
+    OnboardingStackParamList,
+    OnboardingStackRoutes.OnboardingBiometry
+  >();
   const [error, setError] = useState('');
   const {biometryType} = route.params;
 
@@ -17,9 +24,14 @@ export const OnboardingBiometryScreen = () => {
       const {nextScreen, ...params} = route.params;
       const status = await getAppTrackingAuthorizationStatus();
       if (status === AdjustTrackingAuthorizationStatus.userNotAsked) {
-        navigation.navigate('onboardingTrackUserActivity', params);
+        navigation.navigate(
+          OnboardingStackRoutes.OnboardingTrackUserActivity,
+          params,
+        );
       } else {
-        navigation.navigate(nextScreen ?? 'signupStoreWallet', params);
+        // TODO: Найти типы
+        // @ts-ignore
+        navigation.navigate(nextScreen, params);
       }
     });
   }, [route, navigation]);
@@ -44,4 +56,4 @@ export const OnboardingBiometryScreen = () => {
       biometryType={biometryType}
     />
   );
-};
+});

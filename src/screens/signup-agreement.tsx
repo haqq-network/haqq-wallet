@@ -1,18 +1,24 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
 
-export const SignUpAgreementScreen = () => {
-  const navigation = useTypedNavigation();
-  const {nextScreen} = useTypedRoute<'createAgreement'>().params;
+export const SignUpAgreementScreen = memo(() => {
+  const navigation = useTypedNavigation<SignUpStackParamList>();
+  const {nextScreen} = useTypedRoute<
+    SignUpStackParamList,
+    SignUpStackRoutes.SignUpAgreement
+  >().params;
 
   const onPressAgree = useCallback(() => {
-    // @ts-ignore
-    return navigation.navigate(nextScreen ?? 'onboardingSetupPin', {
+    return navigation.navigate(nextScreen, {
       type: 'empty',
     });
   }, [navigation, nextScreen]);
 
   return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;
-};
+});

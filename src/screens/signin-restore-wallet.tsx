@@ -1,13 +1,14 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {utils} from 'ethers';
 
 import {SignInRestore} from '@app/components/singin-restore-wallet';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
+import {SignInStackParamList} from '@app/screens/WelcomeStack/SignInStack';
 
-export const SignInRestoreScreen = () => {
-  const navigation = useTypedNavigation();
+export const SignInRestoreScreen = memo(() => {
+  const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onDoneTry = useCallback(
     (seed: string) => {
@@ -44,4 +45,4 @@ export const SignInRestoreScreen = () => {
   );
 
   return <SignInRestore onDoneTry={onDoneTry} testID="signin_restore" />;
-};
+});

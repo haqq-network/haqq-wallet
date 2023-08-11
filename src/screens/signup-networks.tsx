@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {METADATA_URL} from '@env';
 import {getMetadataValue} from '@haqq/shared-react-native';
@@ -9,14 +9,18 @@ import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
+import {
   SssProviders,
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
-export const SignupNetworksScreen = () => {
-  const navigation = useTypedNavigation();
+export const SignupNetworksScreen = memo(() => {
+  const navigation = useTypedNavigation<SignUpStackParamList>();
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
@@ -34,8 +38,8 @@ export const SignupNetworksScreen = () => {
       }
 
       let nextScreen = app.onboarded
-        ? 'signupStoreWallet'
-        : 'onboardingSetupPin';
+        ? SignUpStackRoutes.SignupStoreWallet
+        : SignUpStackRoutes.OnboardingSetupPin;
 
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
@@ -45,17 +49,18 @@ export const SignupNetworksScreen = () => {
         );
 
         if (walletInfo) {
-          nextScreen = 'signupNetworkExists';
+          nextScreen = SignUpStackRoutes.SignUpNetworkExists;
         }
       }
-      // @ts-ignore
+
       navigation.navigate(nextScreen, {
         type: 'sss',
         sssPrivateKey: creds.privateKey,
         token: creds.token,
         verifier: creds.verifier,
         sssCloudShare: null,
-        provider: provider,
+        // TODO: Проверить тип
+        // provider: provider,
       });
     },
     [navigation],
@@ -73,7 +78,7 @@ export const SignupNetworksScreen = () => {
           text: 'Accept',
           style: 'destructive',
           onPress() {
-            navigation.navigate('onboardingSetupPin', {
+            navigation.navigate(SignUpStackRoutes.OnboardingSetupPin, {
               type: 'empty',
             });
           },
@@ -90,4 +95,4 @@ export const SignupNetworksScreen = () => {
       isGoogleSupported={app.isGoogleSigninSupported}
     />
   );
-};
+});

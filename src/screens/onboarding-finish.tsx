@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {memo, useCallback, useEffect, useMemo} from 'react';
 
 import {Finish} from '@app/components/finish';
 import {app} from '@app/contexts';
@@ -7,12 +7,19 @@ import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {
+  OnboardingStackParamList,
+  OnboardingStackRoutes,
+} from '@app/screens/WelcomeStack/OnboardingStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
 
-export const OnboardingFinishScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'createFinish'>();
+export const OnboardingFinishScreen = memo(() => {
+  const navigation = useTypedNavigation<OnboardingStackParamList>();
+  const route = useTypedRoute<
+    OnboardingStackParamList,
+    OnboardingStackRoutes.OnboardingFinish
+  >();
 
   const title: I18N = useMemo(
     () =>
@@ -25,7 +32,8 @@ export const OnboardingFinishScreen = () => {
   const onEnd = useCallback(() => {
     if (route.params.onboarding) {
       WalletConnect.instance.init();
-      navigation.replace('home');
+      app.onboarded = true;
+
       requestAnimationFrame(() => {
         app.emit(Events.onAppStarted);
       });
@@ -35,14 +43,10 @@ export const OnboardingFinishScreen = () => {
   }, [route, navigation]);
 
   useEffect(() => {
-    if (!app.onboarded) {
-      app.onboarded = true;
-    }
-
     onTrackEvent(route.params.event);
     hideModal('loading');
     vibrate(HapticEffects.success);
   }, [route.params.event]);
 
   return <Finish title={title} onFinish={onEnd} testID="onboarding_finish" />;
-};
+});

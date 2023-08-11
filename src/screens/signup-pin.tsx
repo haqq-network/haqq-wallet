@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 
 import {METADATA_URL} from '@env';
 import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
@@ -8,11 +8,18 @@ import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
 
-export const SignupPinScreen = () => {
+export const SignupPinScreen = memo(() => {
   const pinRef = useRef<PinInterface>();
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'signupPin'>();
+  const navigation = useTypedNavigation<SignUpStackParamList>();
+  const route = useTypedRoute<
+    SignUpStackParamList,
+    SignUpStackRoutes.SignUpPin
+  >();
 
   const onPin = useCallback(
     async (password: string) => {
@@ -35,8 +42,8 @@ export const SignupPinScreen = () => {
           await decryptShare(JSON.parse(securityQuestion), password);
 
           const nextScreen = app.onboarded
-            ? 'signupStoreWallet'
-            : 'onboardingSetupPin';
+            ? SignUpStackRoutes.SignupStoreWallet
+            : SignUpStackRoutes.OnboardingSetupPin;
 
           navigation.navigate(nextScreen, {
             ...route.params,
@@ -52,8 +59,8 @@ export const SignupPinScreen = () => {
         }
       } else {
         const nextScreen = app.onboarded
-          ? 'signupStoreWallet'
-          : 'onboardingSetupPin';
+          ? SignUpStackRoutes.SignupStoreWallet
+          : SignUpStackRoutes.OnboardingSetupPin;
 
         navigation.navigate(nextScreen, route.params);
       }
@@ -62,4 +69,4 @@ export const SignupPinScreen = () => {
   );
 
   return <SssPin onPin={onPin} pinRef={pinRef} />;
-};
+});
