@@ -33,14 +33,13 @@ export const WelcomeNewsScreen = memo(() => {
     });
   }, []);
 
-  const onPressSignup = () =>
-    navigation.navigate(WelcomeStackRoutes.SignUp, {next: 'create'});
-  const onPressLedger = () => navigation.navigate('ledger');
-  const onPressSignIn = () => navigation.navigate('signin', {next: 'restore'});
+  const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
+  const onPressLedger = () => navigation.navigate(WelcomeStackRoutes.Ledger);
+  const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   const onPressRow = useCallback(
     (id: string) => {
-      navigation.navigate('newsDetail', {
+      navigation.navigate(WelcomeStackRoutes.NewsDetail, {
         id,
       });
     },

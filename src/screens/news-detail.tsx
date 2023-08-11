@@ -1,13 +1,20 @@
-import {useEffect, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
 
 import {NewsDetail} from '@app/components/news-detail';
 import {Loading} from '@app/components/ui';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTypedRoute} from '@app/hooks';
 import {News} from '@app/models/news';
+import {
+  WelcomeStackParamList,
+  WelcomeStackRoutes,
+} from '@app/screens/WelcomeStack';
 
-export const NewsDetailScreen = () => {
-  const route = useTypedRoute<'newsDetail'>();
+export const NewsDetailScreen = memo(() => {
+  const route = useTypedRoute<
+    WelcomeStackParamList,
+    WelcomeStackRoutes.NewsDetail
+  >();
   const item = useMemo(() => News.getById(route.params.id), [route.params.id]);
 
   useEffect(() => {
@@ -36,4 +43,4 @@ export const NewsDetailScreen = () => {
     return <Loading />;
   }
   return <NewsDetail item={item} />;
-};
+});

@@ -1,6 +1,5 @@
 import React, {memo, useMemo} from 'react';
 
-import {createNavigationContainerRef} from '@react-navigation/native';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -9,6 +8,7 @@ import {
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {basicScreenOptions} from '@app/screens';
 import {ModalState, ModalsScreenConnected} from '@app/screens/modals-screen';
+import {NewsDetailScreen} from '@app/screens/news-detail';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
@@ -17,20 +17,22 @@ import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
-  WelcomNews = 'welcomeNews',
+  WelcomeNews = 'welcomeNews',
   SignUp = 'signup',
   Ledger = 'ledger',
   SignIn = 'signin',
   Modal = 'modal',
+  NewsDetail = 'newsDetail',
 }
 
 export type WelcomeStackParamList = {
   [WelcomeStackRoutes.Welcome]: undefined;
-  [WelcomeStackRoutes.WelcomNews]: undefined;
+  [WelcomeStackRoutes.WelcomeNews]: undefined;
   [WelcomeStackRoutes.SignUp]: undefined;
   [WelcomeStackRoutes.Ledger]: undefined;
   [WelcomeStackRoutes.SignIn]: undefined;
   [WelcomeStackRoutes.Modal]: ModalState;
+  [WelcomeStackRoutes.NewsDetail]: {id: string};
 };
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
@@ -46,7 +48,7 @@ const WelcomeStack = memo(({isWelcomeNewsEnabled}: Props) => {
   const initialRouteName = useMemo(
     () =>
       isWelcomeNewsEnabled
-        ? WelcomeStackRoutes.WelcomNews
+        ? WelcomeStackRoutes.WelcomeNews
         : WelcomeStackRoutes.Welcome,
     [isWelcomeNewsEnabled],
   );
@@ -61,7 +63,11 @@ const WelcomeStack = memo(({isWelcomeNewsEnabled}: Props) => {
       />
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeNewsScreen)}
-        name={WelcomeStackRoutes.WelcomNews}
+        name={WelcomeStackRoutes.WelcomeNews}
+      />
+      <Stack.Screen
+        component={themeUpdaterHOC(NewsDetailScreen)}
+        name={WelcomeStackRoutes.NewsDetail}
       />
       <Stack.Screen
         component={themeUpdaterHOC(SignUpStack)}

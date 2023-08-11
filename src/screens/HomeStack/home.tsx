@@ -110,7 +110,7 @@ export const HomeScreen = () => {
   }, [navigation]);
 
   return (
-    <Tab.Navigator screenOptions={{...screenOptions, animation: 'fade'}}>
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedScreen}

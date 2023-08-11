@@ -23,7 +23,7 @@ const HomeStack = memo(() => {
       <Stack.Screen
         component={themeUpdaterHOC(HomeScreen)}
         name={HomeStackRoutes.Home}
-        options={{...basicScreenOptions, animation: 'fade'}}
+        options={basicScreenOptions}
       />
     </Stack.Navigator>
   );
