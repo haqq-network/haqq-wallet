@@ -2,13 +2,14 @@ import React, {useEffect, useMemo} from 'react';
 
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {NavigationAction} from '@react-navigation/routers';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
@@ -49,7 +50,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
         (options.tab || IS_ANDROID) && {marginTop: insets.top},
       ]}>
       {options.headerLeft ? (
-        options.headerLeft({})
+        options.headerLeft({canGoBack: canGoBack || false})
       ) : canGoBack ? (
         <GoBackPopupButton />
       ) : (
@@ -64,12 +65,16 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
         style={page.text}>
         {options.title}
       </Text>
-      {options.headerRight ? options.headerRight({}) : <SpacerPopupButton />}
+      {options.headerRight ? (
+        options.headerRight({canGoBack: canGoBack || false})
+      ) : (
+        <SpacerPopupButton />
+      )}
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -77,7 +82,7 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
-    backgroundColor: getColor(Color.bg1),
+    backgroundColor: Color.bg1,
   },
   text: {
     flex: 1,
