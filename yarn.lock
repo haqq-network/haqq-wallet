@@ -496,7 +496,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-nullish-coalescing-operator@npm:^7.0.0, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.13.8, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.18.0, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.18.6":
+"@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.0.0, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.13.8, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.18.0":
   version: 7.18.6
   resolution: "@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6"
   dependencies:
@@ -547,7 +547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-optional-chaining@npm:^7.0.0, @babel/plugin-proposal-optional-chaining@npm:^7.13.12, @babel/plugin-proposal-optional-chaining@npm:^7.20.0, @babel/plugin-proposal-optional-chaining@npm:^7.21.0":
+"@babel/plugin-proposal-optional-chaining@npm:7.21.0, @babel/plugin-proposal-optional-chaining@npm:^7.0.0, @babel/plugin-proposal-optional-chaining@npm:^7.13.12, @babel/plugin-proposal-optional-chaining@npm:^7.20.0":
   version: 7.21.0
   resolution: "@babel/plugin-proposal-optional-chaining@npm:7.21.0"
   dependencies:
@@ -2363,7 +2363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/react-native-action-sheet@npm:^4.0.1":
+"@expo/react-native-action-sheet@npm:4.0.1":
   version: 4.0.1
   resolution: "@expo/react-native-action-sheet@npm:4.0.1"
   dependencies:
@@ -2552,7 +2552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@invertase/react-native-apple-authentication@npm:^2.2.2":
+"@invertase/react-native-apple-authentication@npm:2.2.2":
   version: 2.2.2
   resolution: "@invertase/react-native-apple-authentication@npm:2.2.2"
   checksum: d51c121eba66721e914c16bfa352929b03bf8f6a38aae4b06157ee3399d0ecdc42bd53d5e655ae39b460ec7c759f87753d2c917bccedb3118e2c1bd75d6f874c
@@ -3074,7 +3074,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/phishing-controller@npm:^3.0.0":
+"@metamask/phishing-controller@npm:3.0.0":
   version: 3.0.0
   resolution: "@metamask/phishing-controller@npm:3.0.0"
   dependencies:
@@ -3602,7 +3602,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-google-signin/google-signin@npm:^10.0.1":
+"@react-native-google-signin/google-signin@npm:10.0.1":
   version: 10.0.1
   resolution: "@react-native-google-signin/google-signin@npm:10.0.1"
   peerDependencies:
@@ -3701,7 +3701,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/native-stack@npm:^6.9.13":
+"@react-navigation/native-stack@npm:6.9.13":
   version: 6.9.13
   resolution: "@react-navigation/native-stack@npm:6.9.13"
   dependencies:
@@ -4472,7 +4472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pump@npm:^1.1.1":
+"@types/pump@npm:1.1.1":
   version: 1.1.1
   resolution: "@types/pump@npm:1.1.1"
   dependencies:
@@ -4534,7 +4534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/readable-stream@npm:^2.3.15":
+"@types/readable-stream@npm:2.3.15":
   version: 2.3.15
   resolution: "@types/readable-stream@npm:2.3.15"
   dependencies:
@@ -7742,7 +7742,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.3.1":
+"dotenv@npm:16.3.1, dotenv@npm:^16.3.1":
   version: 16.3.1
   resolution: "dotenv@npm:16.3.1"
   checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
@@ -8929,7 +8929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-sha256@npm:^1.3.0":
+"fast-sha256@npm:1.3.0":
   version: 1.3.0
   resolution: "fast-sha256@npm:1.3.0"
   checksum: 2b0bea7d3a9955e67abd2d3fbef4ce57f7dbb75708fc206d14973bd1d97aaf35b5c0a59c1d65be6f755df43d73b7657b9eac4fb3c2d58e6849966db1ef1fa186
@@ -9650,15 +9650,15 @@ __metadata:
   resolution: "haqq@workspace:."
   dependencies:
     "@babel/core": 7.22.9
-    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.18.6
-    "@babel/plugin-proposal-optional-chaining": ^7.21.0
+    "@babel/plugin-proposal-nullish-coalescing-operator": 7.18.6
+    "@babel/plugin-proposal-optional-chaining": 7.21.0
     "@babel/preset-env": 7.22.9
     "@babel/preset-typescript": 7.22.5
     "@babel/runtime": 7.22.6
     "@ethersproject/shims": 5.7.0
     "@evmos/provider": 0.3.1
     "@evmos/transactions": 0.2.13
-    "@expo/react-native-action-sheet": ^4.0.1
+    "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.3
     "@haqq/provider-base": 0.0.18
     "@haqq/provider-hot-react-native": 0.0.6
@@ -9667,8 +9667,8 @@ __metadata:
     "@haqq/provider-sss-react-native": 0.0.9
     "@haqq/provider-web3-utils": 0.0.14
     "@haqq/shared-react-native": 0.0.8
-    "@invertase/react-native-apple-authentication": ^2.2.2
-    "@metamask/phishing-controller": ^3.0.0
+    "@invertase/react-native-apple-authentication": 2.2.2
+    "@metamask/phishing-controller": 3.0.0
     "@react-native-async-storage/async-storage": 1.19.0
     "@react-native-clipboard/clipboard": 1.11.2
     "@react-native-community/blur": 4.3.2
@@ -9679,10 +9679,10 @@ __metadata:
     "@react-native-firebase/app": 18.2.0
     "@react-native-firebase/dynamic-links": 18.2.0
     "@react-native-firebase/messaging": 18.2.0
-    "@react-native-google-signin/google-signin": ^10.0.1
+    "@react-native-google-signin/google-signin": 10.0.1
     "@react-navigation/bottom-tabs": 6.5.8
     "@react-navigation/native": 6.1.7
-    "@react-navigation/native-stack": ^6.9.13
+    "@react-navigation/native-stack": 6.9.13
     "@react-navigation/stack": 6.3.17
     "@sentry/react-native": 5.7.1
     "@tradle/react-native-http": 2.0.1
@@ -9690,12 +9690,12 @@ __metadata:
     "@types/create-hash": 1.2.2
     "@types/jest": 29.5.3
     "@types/pbkdf2": 3.1.0
-    "@types/pump": ^1.1.1
+    "@types/pump": 1.1.1
     "@types/randombytes": 2.0.0
     "@types/react-native": 0.72.2
     "@types/react-native-base64": 0.2.0
     "@types/react-test-renderer": 18.0.0
-    "@types/readable-stream": ^2.3.15
+    "@types/readable-stream": 2.3.15
     "@types/sha.js": 2.4.1
     "@typescript-eslint/eslint-plugin": 6.0.0
     "@typescript-eslint/parser": 6.0.0
@@ -9716,7 +9716,7 @@ __metadata:
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
     detox: 20.11.1
-    dotenv: ^16.3.1
+    dotenv: 16.3.1
     eslint: 8.45.0
     eslint-plugin-import: 2.27.5
     eslint-plugin-jest: 27.2.3
@@ -9724,27 +9724,27 @@ __metadata:
     eslint-plugin-react-native: 4.0.0
     eth-json-rpc-filters: 4.2.2
     events: 3.3.0
-    fast-sha256: ^1.3.0
+    fast-sha256: 1.3.0
     https-browserify: ~1.0.0
     jest: 29.6.1
     jest-circus: 29.6.1
-    js-sha3: ^0.8.0
-    json-rpc-engine: ^6.1.0
-    json-stable-stringify: ^1.0.2
+    js-sha3: 0.8.0
+    json-rpc-engine: 6.1.0
+    json-stable-stringify: 1.0.2
     lottie-react-native: 5.1.6
     markdown-it: 13.0.1
     metro-minify-terser: 0.77.0
     metro-react-native-babel-preset: 0.77.0
     obj-multiplex: 1.0.0
     patch-package: 7.0.2
-    pbkdf2: ^3.1.2
+    pbkdf2: 3.1.2
     prettier: 3.0.0
     pump: 3.0.0
     randombytes: 2.1.0
     react: 18.2.0
     react-native: 0.71.12
-    react-native-adjust: ^4.33.0
-    react-native-adjust-oaid: ^4.33.0
+    react-native-adjust: 4.33.0
+    react-native-adjust-oaid: 4.33.0
     react-native-aes-crypto: 2.1.1
     react-native-base64: 0.2.1
     react-native-ble-plx: 2.0.3
@@ -9752,26 +9752,26 @@ __metadata:
     react-native-crypto: 2.2.0
     react-native-detector: 0.2.3
     react-native-dotenv: 3.4.9
-    react-native-draggable-flatlist: ^4.0.1
+    react-native-draggable-flatlist: 4.0.1
     react-native-encrypted-storage: 4.0.3
-    react-native-fs: ^2.20.0
+    react-native-fs: 2.20.0
     react-native-gesture-handler: 2.12.0
     react-native-get-random-values: 1.9.0
     react-native-image-picker: 5.6.0
-    react-native-in-app-review: ^4.3.3
+    react-native-in-app-review: 4.3.3
     react-native-json-tree: 1.3.0
     react-native-keyboard-aware-scroll-view: 0.9.5
     react-native-keychain: 8.1.1
     react-native-linear-gradient: 2.7.3
     react-native-markdown-display: 7.0.0-alpha.2
-    react-native-markdown-package: ^1.8.2
+    react-native-markdown-package: 1.8.2
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-prompt-android: 1.1.0
     react-native-qr-decode-image-camera: 1.1.3
     react-native-qrcode-svg: 6.2.0
     react-native-randombytes: 3.6.1
     react-native-reanimated: 3.3.0
-    react-native-redash: ^18.1.0
+    react-native-redash: 18.1.0
     react-native-safe-area-context: 4.7.1
     react-native-screens: 3.22.1
     react-native-splash-screen: 3.3.0
@@ -9782,11 +9782,11 @@ __metadata:
     react-test-renderer: 18.2.0
     readable-stream: 4.4.2
     realm: 11.10.1
-    rive-react-native: ^4.1.2
+    rive-react-native: 4.1.2
     rn-nodeify: 10.3.0
     rxjs: 7.8.1
     sha.js: 2.4.11
-    simple-markdown: ^0.7.3
+    simple-markdown: 0.7.3
     stream-browserify: 3.0.0
     text-encoding: 0.7.0
     ts-jest: 29.1.1
@@ -11352,7 +11352,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-sha3@npm:0.8.0, js-sha3@npm:^0.8.0":
+"js-sha3@npm:0.8.0":
   version: 0.8.0
   resolution: "js-sha3@npm:0.8.0"
   checksum: 75df77c1fc266973f06cce8309ce010e9e9f07ec35ab12022ed29b7f0d9c8757f5a73e1b35aa24840dced0dea7059085aa143d817aea9e188e2a80d569d9adce
@@ -11487,6 +11487,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-rpc-engine@npm:6.1.0, json-rpc-engine@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "json-rpc-engine@npm:6.1.0"
+  dependencies:
+    "@metamask/safe-event-emitter": ^2.0.0
+    eth-rpc-errors: ^4.0.2
+  checksum: 33b6c9bbd81abf8e323a0281ee05871713203c40d34a4d0bda27706cd0a0935c7b51845238ba89b73027e44ebc8034bbd82db9f962e6c578eb922d9b95acc8bd
+  languageName: node
+  linkType: hard
+
 "json-rpc-engine@npm:^5.3.0":
   version: 5.4.0
   resolution: "json-rpc-engine@npm:5.4.0"
@@ -11494,16 +11504,6 @@ __metadata:
     eth-rpc-errors: ^3.0.0
     safe-event-emitter: ^1.0.1
   checksum: 310af9dc256a14e3695f917912046afcab1fe716d6243616702bc2ebcbc7d164e3c2c04a5ff267e3930ef451e4cd8905651b656988bceb96a7034bf144eb8e67
-  languageName: node
-  linkType: hard
-
-"json-rpc-engine@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "json-rpc-engine@npm:6.1.0"
-  dependencies:
-    "@metamask/safe-event-emitter": ^2.0.0
-    eth-rpc-errors: ^4.0.2
-  checksum: 33b6c9bbd81abf8e323a0281ee05871713203c40d34a4d0bda27706cd0a0935c7b51845238ba89b73027e44ebc8034bbd82db9f962e6c578eb922d9b95acc8bd
   languageName: node
   linkType: hard
 
@@ -11542,7 +11542,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-stable-stringify@npm:1.0.2, json-stable-stringify@npm:^1.0.1, json-stable-stringify@npm:^1.0.2":
+"json-stable-stringify@npm:1.0.2, json-stable-stringify@npm:^1.0.1":
   version: 1.0.2
   resolution: "json-stable-stringify@npm:1.0.2"
   dependencies:
@@ -13740,7 +13740,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pbkdf2@npm:^3.0.17, pbkdf2@npm:^3.0.3, pbkdf2@npm:^3.1.2":
+"pbkdf2@npm:3.1.2, pbkdf2@npm:^3.0.17, pbkdf2@npm:^3.0.3":
   version: 3.1.2
   resolution: "pbkdf2@npm:3.1.2"
   dependencies:
@@ -14337,14 +14337,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-adjust-oaid@npm:^4.33.0":
+"react-native-adjust-oaid@npm:4.33.0":
   version: 4.33.0
   resolution: "react-native-adjust-oaid@npm:4.33.0"
   checksum: 580b5d5e643770cf576ca0a5133f133ea6b36c65b20ed09a8112b6428e359f34fc9e7ffbc954ce4e24413642db194b4a6cb1e8199af59d3a8a072f03e0d886f0
   languageName: node
   linkType: hard
 
-"react-native-adjust@npm:^4.33.0":
+"react-native-adjust@npm:4.33.0":
   version: 4.33.0
   resolution: "react-native-adjust@npm:4.33.0"
   checksum: 2fedaf29bbbaf0c546e715626aebd48bd48e2e399097b65953ad0247292ffeb8b83665c6f145c22c2017863ca8e282bee7ae23df914d0c5832e43be748bd52e7
@@ -14441,7 +14441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-draggable-flatlist@npm:^4.0.1":
+"react-native-draggable-flatlist@npm:4.0.1":
   version: 4.0.1
   resolution: "react-native-draggable-flatlist@npm:4.0.1"
   dependencies:
@@ -14473,7 +14473,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-fs@npm:^2.20.0":
+"react-native-fs@npm:2.20.0":
   version: 2.20.0
   resolution: "react-native-fs@npm:2.20.0"
   dependencies:
@@ -14533,7 +14533,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-in-app-review@npm:^4.3.3":
+"react-native-in-app-review@npm:4.3.3":
   version: 4.3.3
   resolution: "react-native-in-app-review@npm:4.3.3"
   checksum: b697838a5bdb756447d3ea4cb963e3065fcfc88984db8ec3fbc67654fc12d1502f77e6473b59d32cf87f8f666c63d79a20ed1cd7ca9503647b0ea79848d41f86
@@ -14615,7 +14615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-markdown-package@npm:^1.8.2":
+"react-native-markdown-package@npm:1.8.2":
   version: 1.8.2
   resolution: "react-native-markdown-package@npm:1.8.2"
   dependencies:
@@ -14694,7 +14694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-redash@npm:^18.1.0":
+"react-native-redash@npm:18.1.0":
   version: 18.1.0
   resolution: "react-native-redash@npm:18.1.0"
   dependencies:
@@ -15377,7 +15377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rive-react-native@npm:^4.1.2":
+"rive-react-native@npm:4.1.2":
   version: 4.1.2
   resolution: "rive-react-native@npm:4.1.2"
   peerDependencies:
@@ -15859,7 +15859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-markdown@npm:^0.7.1, simple-markdown@npm:^0.7.3":
+"simple-markdown@npm:0.7.3, simple-markdown@npm:^0.7.1":
   version: 0.7.3
   resolution: "simple-markdown@npm:0.7.3"
   dependencies:
