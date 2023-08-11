@@ -1,12 +1,16 @@
-import {useNavigation} from '@react-navigation/native';
-
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
+import {
+  WelcomeStackParamList,
+  WelcomeStackRoutes,
+} from '@app/screens/WelcomeStack';
 import {makeID} from '@app/utils';
 
-export const useModal = () => {
-  const navigation = useNavigation();
+type UseModal = [(name: string, params?: any) => void, () => void];
 
-  const showModal = (name, params) =>
+export const useModal = (): UseModal => {
+  const navigation = useTypedNavigation<WelcomeStackParamList>();
+
+  const showModal = (name: string, params?: any) =>
     navigation.navigate(WelcomeStackRoutes.Modal, {
       type: name,
       uid: makeID(6),

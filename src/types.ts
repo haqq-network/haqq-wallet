@@ -93,12 +93,6 @@ export type WalletInitialData =
       privateKey: string;
     }
   | {
-      type: 'ledger';
-      address: string;
-      deviceId: string;
-      deviceName: string;
-    }
-  | {
       type: 'sss';
       sssPrivateKey: string | null;
       sssCloudShare: string | null;
@@ -106,14 +100,16 @@ export type WalletInitialData =
       token: string;
     }
   | {type: 'empty'}
-  | {
-      type: 'ledger';
-      address: string;
-      hdPath: string;
-      publicKey: string;
-      deviceId: string;
-      deviceName: string;
-    };
+  | LedgerWalletInitialData;
+
+export type LedgerWalletInitialData = {
+  type: 'ledger';
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  deviceId: string;
+  deviceName: string;
+};
 
 export type RootStackParamList = {
   home: undefined;

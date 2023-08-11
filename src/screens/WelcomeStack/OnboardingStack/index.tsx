@@ -6,13 +6,13 @@ import {
 } from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
-import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
-import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
-import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
-import {OnboardingSetupPinScreen} from '@app/screens/onboarding-setup-pin';
-import {OnboardingTrackUserActivityScreen} from '@app/screens/onboarding-track-user-activity';
 import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
 import {LedgerStackRoutes} from '@app/screens/WelcomeStack/LedgerStack';
+import {OnboardingBiometryScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-biometry';
+import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
+import {OnboardingRepeatPinScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-repeat-pin';
+import {OnboardingSetupPinScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-setup-pin';
+import {OnboardingTrackUserActivityScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-track-user-activity';
 import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
 import {AdjustEvents, BiometryType, WalletInitialData} from '@app/types';
@@ -48,7 +48,7 @@ export type OnboardingStackParamList = WelcomeStackParamList & {
     nextScreen: AnyRouteFromParent;
   };
   [OnboardingStackRoutes.OnboardingFinish]: {
-    nextScreen: AnyRouteFromParent;
+    nextScreen?: AnyRouteFromParent;
     action: 'create' | 'restore';
     hide?: boolean;
     event: AdjustEvents;

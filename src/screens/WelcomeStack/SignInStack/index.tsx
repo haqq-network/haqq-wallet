@@ -5,11 +5,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
-import {SignInAgreementScreen} from '@app/screens/signin-agreement';
-import {SignInNetworksScreen} from '@app/screens/signin-networks';
-import {SignInPinScreen} from '@app/screens/signin-pin';
-import {SignInRestoreScreen} from '@app/screens/signin-restore-wallet';
-import {SignInStoreWalletScreen} from '@app/screens/signin-store-wallet';
 import {
   WelcomeStackParamList,
   WelcomeStackRoutes,
@@ -18,6 +13,11 @@ import {
   OnboardingStack,
   OnboardingStackRoutes,
 } from '@app/screens/WelcomeStack/OnboardingStack';
+import {SignInAgreementScreen} from '@app/screens/WelcomeStack/SignInStack/signin-agreement';
+import {SignInNetworksScreen} from '@app/screens/WelcomeStack/SignInStack/signin-networks';
+import {SignInPinScreen} from '@app/screens/WelcomeStack/SignInStack/signin-pin';
+import {SignInRestoreScreen} from '@app/screens/WelcomeStack/SignInStack/signin-restore-wallet';
+import {SignInStoreWalletScreen} from '@app/screens/WelcomeStack/SignInStack/signin-store-wallet';
 import {
   AdjustEvents,
   BiometryType,
@@ -38,11 +38,13 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninNetworks]?: WelcomeStackParamList[WelcomeStackRoutes.SignIn];
   [SignInStackRoutes.SigninAgreement]?: WelcomeStackParamList[WelcomeStackRoutes.SignIn];
   [SignInStackRoutes.SigninRestoreWallet]: undefined;
-  [SignInStackRoutes.SigninPin]: undefined;
+  [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    biometryType: BiometryType;
+    biometryType?: BiometryType;
   };
-  [SignInStackRoutes.SigninStoreWallet]: {action: 'restore'};
+  [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
+    nextScreen?: SignInStackRoutes;
+  };
 };
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();
@@ -51,10 +53,9 @@ const screenOptions: ScreenOptionType = {
   title: '',
   headerBackHidden: true,
 };
+const title = getText(I18N.signInTitle);
 
 const SignInStack = memo(() => {
-  const title = getText(I18N.signInTitle);
-
   const inittialRouteName = useMemo(() => {
     return isFeatureEnabled(Feature.sss)
       ? SignInStackRoutes.SigninNetworks
@@ -76,7 +77,7 @@ const SignInStack = memo(() => {
             nextScreen: SignInStackRoutes.SigninStoreWallet,
           },
           [OnboardingStackRoutes.OnboardingFinish]: {
-            action: 'restore',
+            action: 'restore' as 'restore',
             event: AdjustEvents.accountRestored,
             onboarding: true,
           },
@@ -102,7 +103,7 @@ const SignInStack = memo(() => {
         options={{...hideBack, ...screenOptions}}
       />
 
-      {/* FIXME: Неиспользуется */}
+      {/* TODO: Используются!!! */}
       {/* <Stack.Screen
         name={SignInStackRoutes.SigninNotExists}
         component={SigninNotExistsScreen}

@@ -2,12 +2,11 @@ import {JsonRpcRequest} from 'json-rpc-engine';
 import {Alert, Linking} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
-import {isValidUrl} from '@app/utils';
-
 import {
   WebViewEventsEnum,
   WindowInfoEvent,
-} from '../components/web3-browser/scripts';
+} from '@app/components/web3-browser/scripts';
+import {isValidUrl} from '@app/utils';
 
 export enum EthereumEventsEnum {
   ACCOUNTS_CHANGED = 'accountsChanged',

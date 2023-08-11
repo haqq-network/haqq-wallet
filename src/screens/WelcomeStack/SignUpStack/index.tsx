@@ -8,16 +8,16 @@ import {
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
-import {SignUpAgreementScreen} from '@app/screens/signup-agreement';
-import {SignupNetworkExistsScreen} from '@app/screens/signup-network-exists';
-import {SignupNetworksScreen} from '@app/screens/signup-networks';
-import {SignupPinScreen} from '@app/screens/signup-pin';
-import {SignUpStoreWalletScreen} from '@app/screens/signup-store-wallet';
 import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
 import {
   OnboardingStack,
   OnboardingStackRoutes,
 } from '@app/screens/WelcomeStack/OnboardingStack';
+import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
+import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-network-exists';
+import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
+import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
+import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
 import {AdjustEvents, WalletInitialData} from '@app/types';
 
 export enum SignUpStackRoutes {
@@ -39,9 +39,9 @@ export type SignUpStackParamList = WelcomeStackParamList & {
   [SignUpStackRoutes.SignUpNetworkExists]: WalletInitialData;
   [SignUpStackRoutes.SignUpPin]: WalletInitialData;
   [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;
-  [SignUpStackRoutes.SignupStoreWallet]: {
+  [SignUpStackRoutes.SignupStoreWallet]: WalletInitialData & {
     nextScreen?: SignUpStackRoutes;
-  } & WalletInitialData;
+  };
 };
 
 const Stack = createNativeStackNavigator<SignUpStackParamList>();
