@@ -116,6 +116,9 @@ const getTestModals = (): Partial<Modals> => {
     locationUnauthorized: {
       onClose: () => {},
     },
+    raffleAgreement: {
+      onClose: () => {},
+    },
     captcha: {
       onClose: () => {},
       variant: CaptchaType.slider,

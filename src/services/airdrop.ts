@@ -69,7 +69,7 @@ export class Airdrop {
     wallet: string,
     signature: string,
     claim_code: string,
-    slider_token: string,
+    hcaptcha_token: string,
   ): Promise<{}> {
     const request = await fetch(`${this.getRemoteUrl()}/mobile/claim`, {
       method: 'POST',
@@ -78,7 +78,7 @@ export class Airdrop {
         wallet,
         signature,
         claim_code,
-        slider_token,
+        hcaptcha_token,
       }),
     });
 
