@@ -78,7 +78,7 @@ describe('Signup', () => {
       mnemonic_words.push(text);
     }
 
-    Logger.log('mnemonic', mnemonic_words.join(' '));
+    console.log('mnemonic', mnemonic_words.join(' '));
 
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();

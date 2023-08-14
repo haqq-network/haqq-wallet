@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -23,6 +23,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getUid} from '@app/helpers/get-uid';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -297,9 +298,16 @@ export const SettingsTestScreen = () => {
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
   const [backend, setBackend] = useState(app.backend);
+  const [uid, setUid] = useState<null | string>(null);
   const [leadingAccount, setLeadingAccount] = useState(
     VariablesString.get('leadingAccount'),
   );
+
+  useEffect(() => {
+    getUid().then(id => {
+      setUid(id);
+    });
+  }, []);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -427,6 +435,20 @@ export const SettingsTestScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {uid && (
+        <>
+          <Title text="uid" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(uid);
+              toastMessage('Copied to clipboard');
+            }}>
+            {uid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
       <Title text="user agent" />
       <Text
         t11
