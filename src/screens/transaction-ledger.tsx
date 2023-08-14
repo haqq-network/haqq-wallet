@@ -9,6 +9,7 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -18,13 +19,15 @@ import {AdjustEvents} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 export const TransactionLedgerScreen = () => {
+  const route = useTypedRoute<'transactionLedger'>();
+
   const transport = useRef<ProviderInterface | null>(null);
   const navigation = useTypedNavigation();
+
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const route = useTypedRoute<'transactionConfirmation'>();
 
   useEffect(() => {
     const subscription = (modal: string) => {
@@ -59,6 +62,13 @@ export const TransactionLedgerScreen = () => {
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
 
+          await awaitForEventDone(
+            Events.onTransactionCreate,
+            transaction,
+            app.providerId,
+            route.params.fee ?? 0,
+          );
+
           navigation.navigate('transactionFinish', {
             hash: transaction.hash,
           });
@@ -76,7 +86,13 @@ export const TransactionLedgerScreen = () => {
         }
       }
     }
-  }, [navigation, route.params.amount, route.params.from, route.params.to]);
+  }, [
+    navigation,
+    route.params.amount,
+    route.params.from,
+    route.params.to,
+    route.params.fee,
+  ]);
 
   useEffect(() => {
     requestAnimationFrame(async () => {
