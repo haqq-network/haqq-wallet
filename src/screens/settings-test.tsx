@@ -398,8 +398,8 @@ export const SettingsTestScreen = () => {
   }, [contract]);
 
   const onResetUid = useCallback(async () => {
-    const uid = shajs('sha256').update(makeID(10)).digest('hex');
-    await EncryptedStorage.setItem('uid', uid);
+    const newUid = shajs('sha256').update(makeID(10)).digest('hex');
+    await EncryptedStorage.setItem('uid', newUid);
   }, []);
 
   const onClearBanners = useCallback(() => {
