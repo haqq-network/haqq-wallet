@@ -273,11 +273,14 @@ export class Cosmos {
     const accInfo = await this.getAccountInfo(
       cosmosAddress(address, COSMOS_PREFIX),
     );
+    const account: AccountResponse['account'] =
+      //@ts-ignore
+      accInfo?.account?.base_vesting_account || accInfo?.account;
 
     return {
-      accountAddress: accInfo.account.base_account.address,
-      sequence: parseInt(accInfo.account.base_account.sequence as string, 10),
-      accountNumber: parseInt(accInfo.account.base_account.account_number, 10),
+      accountAddress: account.base_account.address,
+      sequence: parseInt(account.base_account.sequence as string, 10),
+      accountNumber: parseInt(account.base_account.account_number, 10),
       pubkey: base64PublicKey(publicKey),
     };
   }

@@ -1,5 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {LEDGER_APP} from '@app/variables/common';
+import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -712,6 +712,8 @@ export enum I18N {
   lockedTokensTotalValue,
   lockedTokensLocked,
   lockedTokensAvailable,
+  earnHint,
+  raffleAgreementDescriptionPlatform,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1560,4 +1562,8 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
+  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this
+  application`,
+  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is
+  this application.`,
 };
