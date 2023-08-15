@@ -1,24 +1,18 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {parseUri} from '@walletconnect/utils';
-import {utils} from 'ethers';
 import _ from 'lodash';
-import {Dimensions, StatusBar, View, useWindowDimensions} from 'react-native';
+import {Dimensions, StatusBar, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {launchImageLibrary} from 'react-native-image-picker';
 // @ts-ignore
 import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 
 import {Color, getColor} from '@app/colors';
-import {BottomSheet} from '@app/components/bottom-sheet';
-import {Spacer, Text} from '@app/components/ui';
-import {WalletRow} from '@app/components/wallet-row';
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
+import {Text} from '@app/components/ui';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
@@ -34,10 +28,6 @@ export type QRModalProps = Modals['qr'];
 const debbouncedVibrate = _.debounce(vibrate, 1000);
 
 export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const visible = useWalletsVisible();
-
-  const closeDistance = useWindowDimensions().height / 6;
   const [code, setCode] = useState('');
   const isProcessing = useRef(false);
 
@@ -69,48 +59,18 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     };
   }, [theme]);
 
-  const prepareAddress = useCallback((data: string) => {
-    if (data.startsWith('haqq:')) {
-      return data.slice(5);
-    }
+  const handleQRData = useCallback(
+    async (data: string) => {
+      vibrate(HapticEffects.selection);
+      setCode(data);
 
-    if (data.startsWith('etherium:')) {
-      return data.slice(9);
-    }
-    if (data.trim() !== '') {
-      return data.trim();
-    }
-  }, []);
+      Logger.log(data);
 
-  const handleAddressEvent = useCallback(
-    (address: string) => {
-      app.emit('address', {
-        to: prepareAddress(code),
-        from: address.trim(),
-      });
-    },
-    [prepareAddress, code],
-  );
+      const isUrlHandled = await onDeepLink(data, qrWithoutFrom);
 
-  const checkAddress = useCallback(
-    (address: string) => {
-      if (utils.isAddress(address)) {
-        if (visible.length === 1) {
-          onClose();
-          app.emit('address', {
-            to: prepareAddress(address),
-            from: visible[0].address.trim(),
-          });
-        } else {
-          vibrate(HapticEffects.success);
-          setIsOpen(true);
-        }
-      } else if (parseUri(address)?.protocol === 'wc') {
+      if (isUrlHandled) {
         onClose();
-        setTimeout(() => {
-          app.emit(Events.onWalletConnectUri, address);
-        }, 1000);
-      } else if (!error) {
+      } else {
         setError(true);
         debbouncedVibrate(HapticEffects.error);
         setTimeout(() => {
@@ -118,65 +78,39 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
         }, 5000);
       }
     },
-    [error, visible, onClose, prepareAddress],
-  );
-
-  const onGetAddress = useCallback(
-    (slicedAddress: string) => {
-      if (slicedAddress && qrWithoutFrom) {
-        vibrate(HapticEffects.success);
-        app.emit('address', {
-          to: slicedAddress,
-        });
-      } else if (slicedAddress) {
-        checkAddress(slicedAddress);
-      }
-    },
-    [checkAddress, qrWithoutFrom],
+    [onClose, qrWithoutFrom],
   );
 
   const onSuccess = useCallback(
-    (e: BarCodeReadEvent) => {
+    async (e: BarCodeReadEvent) => {
       const newCode = e.data?.trim?.()?.toLowerCase?.();
       const currentCode = code?.trim?.()?.toLowerCase?.();
       if (!isProcessing.current && e.data && newCode !== currentCode) {
         isProcessing.current = true;
         try {
-          vibrate(HapticEffects.selection);
-          setCode(e.data);
-          const slicedAddress = prepareAddress(e.data);
-          if (slicedAddress) {
-            onGetAddress(slicedAddress);
-          }
+          await handleQRData(newCode);
         } finally {
           isProcessing.current = false;
         }
       }
     },
-    [code, onGetAddress, prepareAddress],
+    [code, handleQRData],
   );
 
   const onClickGallery = useCallback(async () => {
     const response = await launchImageLibrary({mediaType: 'photo'});
     if (response.assets && response.assets.length) {
       const first = response.assets[0];
-
       if (first.uri) {
         try {
           const data = await QRreader(first.uri);
-          setCode(data);
-          const slicedAddress = prepareAddress(data);
-          if (slicedAddress) {
-            onGetAddress(slicedAddress);
-          }
+          await handleQRData(data);
         } catch (err) {
           Logger.log(err);
         }
       }
     }
-  }, [prepareAddress, onGetAddress]);
-
-  const onCloseBottomSheet = () => setIsOpen(false);
+  }, [handleQRData]);
 
   const onToggleFlashMode = useCallback(() => {
     setFlashMode(pr => !pr);
@@ -232,17 +166,6 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
             <Text t8 color={Color.textBase3} i18n={I18N.qrModalInvalidCode} />
           </View>
         </View>
-      )}
-      {isOpen && (
-        <BottomSheet
-          onClose={onCloseBottomSheet}
-          closeDistance={closeDistance}
-          i18nTitle={I18N.qrModalSendFunds}>
-          {visible.map((item, id) => (
-            <WalletRow key={id} item={item} onPress={handleAddressEvent} />
-          ))}
-          <Spacer height={50} />
-        </BottomSheet>
       )}
     </>
   );

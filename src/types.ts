@@ -1009,3 +1009,9 @@ export enum AdjustTrackingAuthorizationStatus {
   userAuthorizedAccess = 3,
   statusNotAvailable = -1,
 }
+
+export enum ValidUrlProtocol {
+  haqq = 'haqq',
+  etherium = 'etherium',
+  wc = 'wc',
+}
