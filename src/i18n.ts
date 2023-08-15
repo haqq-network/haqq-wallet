@@ -1562,8 +1562,7 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
-  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this
-  application`,
+  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this application`,
   [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is
   this application.`,
 };
