@@ -179,6 +179,8 @@ export const RaffleDetails = ({
           />
         )}
       </First>
+      <Spacer height={16} />
+      <Text center t17 color={Color.textBase2} i18n={I18N.earnHint} />
       <Spacer height={20} />
     </PopupContainer>
   );

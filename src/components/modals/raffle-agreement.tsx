@@ -16,7 +16,7 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Modals} from '@app/types';
-import {TERMS_OF_CONDITIONS} from '@app/variables/common';
+import {STRINGS, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 export const RaffleAgreement = ({onClose}: Modals['ledgerLocked']) => {
   useEffect(() => {
@@ -50,14 +50,26 @@ export const RaffleAgreement = ({onClose}: Modals['ledgerLocked']) => {
           <Text t5 center i18n={I18N.raffleAgreementTitle} />
           <Spacer height={8} />
           <Text t14 center>
-            <Text t14 i18n={I18N.raffleAgreementDescription} />
+            <Text
+              t14
+              i18n={I18N.raffleAgreementDescription}
+              color={Color.textBase2}
+            />
             <Text
               t14
               onPress={onPressLink}
               i18n={I18N.raffleAgreementDescriptionLink}
               color={Color.textGreen1}
             />
+            <Text>{STRINGS.N}</Text>
+            <Text>{STRINGS.N}</Text>
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.raffleAgreementDescriptionPlatform}
+            />
           </Text>
+
           <Spacer height={20} />
           <Button
             i18n={I18N.raffleAgreementAgree}
