@@ -6,7 +6,7 @@ import {Spacer} from '@app/components/ui';
 import {useTypedRoute} from '@app/hooks';
 import {ScreenOptionType} from '@app/types';
 
-import {Web3BrowserScreen} from './web3-browser';
+import {Web3BrowserScreen} from './HomeStack/BrowserStack/web3-browser';
 
 const Navigator = createStackNavigator();
 

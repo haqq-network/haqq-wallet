@@ -7,8 +7,8 @@ import {
 
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {basicScreenOptions} from '@app/screens';
+import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {ModalState, ModalsScreenConnected} from '@app/screens/modals-screen';
-import {NewsDetailScreen} from '@app/screens/news-detail';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';

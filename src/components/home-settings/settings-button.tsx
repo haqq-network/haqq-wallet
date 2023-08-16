@@ -6,20 +6,15 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {
+  SettingsStackParamList,
+  SettingsStackRoutes,
+} from '@app/screens/HomeStack/SettingsStack';
 
 import {DataContent, Icon, IconsName, MenuNavigationButton, Text} from '../ui';
 
 export type SettingsButtonProps = {
-  next:
-    | 'settingsAccounts'
-    | 'settingsAddressBook'
-    | 'settingsSecurity'
-    | 'settingsProviders'
-    | 'settingsAbout'
-    | 'settingsTheme'
-    | 'settingsTest'
-    | 'walletConnectWalletList'
-    | 'settingsNotification';
+  next: SettingsStackRoutes;
   icon: IconsName | keyof typeof IconsName;
   title: I18N;
   rightTitle?: string;
@@ -34,7 +29,7 @@ export const SettingsButton = ({
   style,
   rightTitle,
 }: SettingsButtonProps) => {
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<SettingsStackParamList>();
 
   const onClickButton = () => navigation.navigate(next);
 

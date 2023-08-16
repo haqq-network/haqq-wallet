@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {PinInterface} from '@app/components/pin';
 import {PinGuard} from '@app/components/pin-guard';
@@ -13,56 +13,58 @@ interface PinGuardProps {
   children?: any;
 }
 
-export const PinGuardScreen = ({onEnter, children = <></>}: PinGuardProps) => {
-  const pinRef = useRef<PinInterface>();
-  const {setOptions} = useTypedNavigation();
-  const [loggedIn, setLoggedIn] = useState(false);
+export const PinGuardScreen = memo(
+  ({onEnter, children = null}: PinGuardProps) => {
+    const pinRef = useRef<PinInterface>();
+    const {setOptions} = useTypedNavigation();
+    const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    setOptions({headerShown: loggedIn});
-  }, [loggedIn, setOptions]);
+    useEffect(() => {
+      setOptions({headerStyle: {display: loggedIn ? 'flex' : 'none'}});
+    }, [loggedIn, setOptions]);
 
-  useEffect(() => {
-    if (app.pinBanned) {
-      pinRef?.current?.locked(app.pinBanned);
-    }
-  }, [pinRef]);
+    useEffect(() => {
+      if (app.pinBanned) {
+        pinRef?.current?.locked(app.pinBanned);
+      }
+    }, [pinRef]);
 
-  const onPin = async (pin: string) => {
-    const start = Date.now();
-    showModal('loading');
-    try {
-      await app.comparePin(pin);
-      app.successEnter();
-      await onEnter?.();
-      pinRef.current?.reset();
-      setLoggedIn(true);
-    } catch (error) {
-      app.failureEnter();
-      if (app.canEnter) {
-        pinRef.current?.reset(
-          getText(I18N.pinCodeWrongPin, {
-            attempts: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
-          }),
-        );
-      } else {
-        pinRef.current?.locked(app.pinBanned);
+    const onPin = async (pin: string) => {
+      const start = Date.now();
+      showModal('loading');
+      try {
+        await app.comparePin(pin);
+        app.successEnter();
+        await onEnter?.();
+        pinRef.current?.reset();
+        setLoggedIn(true);
+      } catch (error) {
+        app.failureEnter();
+        if (app.canEnter) {
+          pinRef.current?.reset(
+            getText(I18N.pinCodeWrongPin, {
+              attempts: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
+            }),
+          );
+        } else {
+          pinRef.current?.locked(app.pinBanned);
+        }
+
+        Logger.captureException(error, 'pin-guard');
       }
 
-      Logger.captureException(error, 'pin-guard');
-    }
+      // @todo: wtf???
+      const end = Date.now();
+      if (end - start < 500) {
+        setTimeout(() => hideModal('loading'), 1000);
+      } else {
+        hideModal('loading');
+      }
+    };
 
-    // @todo: wtf???
-    const end = Date.now();
-    if (end - start < 500) {
-      setTimeout(() => hideModal('loading'), 1000);
-    } else {
-      hideModal('loading');
+    if (!loggedIn) {
+      return <PinGuard pinRef={pinRef} onPin={onPin} />;
     }
-  };
-
-  if (!loggedIn) {
-    return <PinGuard pinRef={pinRef} onPin={onPin} />;
-  }
-  return children;
-};
+    return children;
+  },
+);

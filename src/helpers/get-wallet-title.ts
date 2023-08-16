@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
-import {StackNavigationOptions} from '@react-navigation/stack';
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -10,7 +10,7 @@ import {RootStackParamList, StackPresentationTypes} from '@app/types';
 export function getWalletTitle(props: {
   route: RouteProp<RootStackParamList, 'accountInfo'>;
   navigation: any;
-}): StackNavigationOptions {
+}): NativeStackNavigationOptions {
   const wallet = Wallet.getById(props.route.params.accountId);
 
   return {

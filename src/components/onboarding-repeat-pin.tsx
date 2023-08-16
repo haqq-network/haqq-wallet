@@ -8,6 +8,10 @@ import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme, verticalScale} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {
+  OnboardingStackParamList,
+  OnboardingStackRoutes,
+} from '@app/screens/WelcomeStack/OnboardingStack';
 import {vibrate} from '@app/services/haptic';
 
 type OnboardingRepeatPinProps = {
@@ -17,7 +21,10 @@ type OnboardingRepeatPinProps = {
 export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
-  const route = useTypedRoute<'onboardingRepeatPin'>();
+  const route = useTypedRoute<
+    OnboardingStackParamList,
+    OnboardingStackRoutes.OnboardingRepeatPin
+  >();
   const {currentPin} = route.params;
 
   const onKeyboard = useCallback((value: number) => {

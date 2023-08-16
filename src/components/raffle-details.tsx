@@ -191,7 +191,7 @@ const styles = createTheme({
   container: {
     marginHorizontal: 20,
     alignItems: 'center',
-    flex: 1,
+    flex: 0,
   },
 
   islmIcon: {

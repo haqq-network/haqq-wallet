@@ -11,7 +11,7 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {BannersWrapper} from '@app/screens/banners';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
-import {WalletsWrapper} from '@app/screens/wallets';
+import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {NftCollection, TokenItem, TransactionList} from '@app/types';
 
 import {NftViewer} from './nft-viewer';

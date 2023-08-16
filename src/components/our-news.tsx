@@ -35,6 +35,7 @@ export function OurNews({
       refreshing={refreshing}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.2}
+      popupContainerEnabled={false}
     />
   );
 }

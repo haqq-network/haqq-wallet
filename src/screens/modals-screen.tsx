@@ -40,33 +40,32 @@ export const ModalsScreen = ({initialModal, route, navigation}: ModalProps) => {
     app.emit(Events.onCloseModal, event.type);
   }, []);
 
-  // useEffect(() => {
-  //   const showModal = (event: ModalState) => {
-  //     console.log('here', event);
-  //     let exists = modals.some(m => m.type === event.type);
+  useEffect(() => {
+    const showModal = (event: ModalState) => {
+      let exists = modals.some(m => m.type === event.type);
 
-  //     if (!exists) {
-  //       setModal(m => m.concat({...event, uid: makeID(6)}));
-  //     }
-  //   };
+      if (!exists) {
+        setModal(m => m.concat({...event, uid: makeID(6)}));
+      }
+    };
 
-  //   const hideModal = (event: {type: string}) => {
-  //     const navigationRef = createNavigationContainerRef();
-  //     navigationRef.goBack();
-  //     let exists = modals.some(m => m.type === event.type);
+    const hideModal = (event: {type: string}) => {
+      const navigationRef = createNavigationContainerRef();
+      navigationRef.goBack();
+      let exists = modals.some(m => m.type === event.type);
 
-  //     if (exists) {
-  //       setModal(m => m.filter(r => r.type !== event.type));
-  //     }
-  //   };
+      if (exists) {
+        setModal(m => m.filter(r => r.type !== event.type));
+      }
+    };
 
-  //   app.on('showModal', showModal);
-  //   app.on('hideModal', hideModal);
-  //   return () => {
-  //     app.off('showModal', showModal);
-  //     app.off('hideModal', hideModal);
-  //   };
-  // }, [modals, route]);
+    app.on('showModal', showModal);
+    app.on('hideModal', hideModal);
+    return () => {
+      app.off('showModal', showModal);
+      app.off('hideModal', hideModal);
+    };
+  }, [modals]);
 
   useEffect(() => {
     if (route) {

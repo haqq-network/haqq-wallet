@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -11,7 +11,7 @@ import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
 
-export const SettingsAbout = () => {
+export const SettingsAbout = memo(() => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -81,7 +81,7 @@ export const SettingsAbout = () => {
       />
     </ScrollView>
   );
-};
+});
 const calculateImageSize = () => getWindowWidth() * 0.8;
 
 const styles = createTheme({

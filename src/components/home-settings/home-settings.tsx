@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
+import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
@@ -19,13 +20,13 @@ export const HomeSettings = () => {
       <SettingsButton
         icon="wallet"
         title={I18N.homeSettingsAccounts}
-        next="settingsAccounts"
+        next={SettingsStackRoutes.SettingsAccounts}
       />
 
       <SettingsButton
         icon="address_book"
         title={I18N.homeSettingsAddressBook}
-        next="settingsAddressBook"
+        next={SettingsStackRoutes.SettingsAddressBook}
       />
 
       {!!accounts?.length && (
@@ -48,25 +49,25 @@ export const HomeSettings = () => {
         rightTitle={capitalizedTheme}
         icon="brush"
         title={I18N.homeSettingsAppearance}
-        next="settingsTheme"
+        next={SettingsStackRoutes.SettingsTheme}
       />
 
       <SettingsButton
         icon="shield"
         title={I18N.homeSettingsSecurity}
-        next="settingsSecurity"
+        next={SettingsStackRoutes.SettingsSecurity}
       />
 
       <SettingsButton
         icon="bell"
         title={I18N.homeSettingsNotification}
-        next="settingsNotification"
+        next={SettingsStackRoutes.SettingsNotification}
       />
 
       <SettingsButton
         icon="providers"
         title={I18N.homeSettingsProviders}
-        next="settingsProviders"
+        next={SettingsStackRoutes.SettingsProviders}
         style={page.button}
       />
 
@@ -80,7 +81,7 @@ export const HomeSettings = () => {
       <SettingsButton
         icon="islm"
         title={I18N.homeSettingsAbout}
-        next="settingsAbout"
+        next={SettingsStackRoutes.SettingsAbout}
         style={page.button}
       />
 
@@ -88,7 +89,7 @@ export const HomeSettings = () => {
         <SettingsButton
           icon="settings"
           title={I18N.homeSettingsTest}
-          next="settingsTest"
+          next={SettingsStackRoutes.SettingsTest}
           style={page.button}
         />
       )}

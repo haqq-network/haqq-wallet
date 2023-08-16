@@ -6,7 +6,7 @@ import {Platform} from 'react-native';
 import {popupScreenOptions} from '@app/helpers';
 import {getNewsDetailTitle} from '@app/helpers/get-news-detail-title';
 import {I18N, getText} from '@app/i18n';
-import {NewsDetailScreen} from '@app/screens/news-detail';
+import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {NewsListScreen} from '@app/screens/news-list';
 
 const NewsStack = createStackNavigator();

@@ -8,9 +8,11 @@ import {Color} from '@app/colors';
 import {Icon, IconButton} from '../ui';
 
 export const DismissPopupButton = () => {
-  const navigation = useNavigation();
+  //TODO: What type should be used heer?
+  // onPress should be prop
+  const navigation = useNavigation<any>();
   return (
-    <IconButton style={page.container} onPress={navigation.goBack}>
+    <IconButton style={page.container} onPress={navigation.pop}>
       <Icon i24 name="close_circle" color={Color.graphicSecond2} />
     </IconButton>
   );

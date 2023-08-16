@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
-import {StackNavigationOptions} from '@react-navigation/stack';
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -11,7 +11,7 @@ import {RootStackParamList, StackPresentationTypes} from '@app/types';
 export function getNewsDetailTitle(props: {
   route: RouteProp<RootStackParamList, 'newsDetail'>;
   navigation: any;
-}): StackNavigationOptions {
+}): NativeStackNavigationOptions {
   const news = News.getById(props.route.params.id);
 
   return {
@@ -27,7 +27,7 @@ export function getNewsDetailTitle(props: {
 export function getNewsDetailAppTitle(props: {
   route: RouteProp<RootStackParamList, 'newsDetail'>;
   navigation: any;
-}): StackNavigationOptions {
+}): NativeStackNavigationOptions {
   const news = News.getById(props.route.params.id);
 
   return {

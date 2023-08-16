@@ -1,29 +1,40 @@
-import React, {useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {NavigationAction} from '@react-navigation/routers';
 import {TransitionPresets} from '@react-navigation/stack';
 import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
-import {GovernanceButton} from '@app/components/governance-button';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
-import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Spacer} from '@app/components/ui';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
-import {HomeBrowserScreen} from '@app/screens/home-browser';
-import {HomeEarnScreen} from '@app/screens/home-earn';
-import {HomeFeedScreen} from '@app/screens/home-feed';
-import {HomeNewsScreen} from '@app/screens/home-news';
-import {HomeSettingsScreen} from '@app/screens/home-settings';
-import {HomeStakingScreen} from '@app/screens/home-staking';
+import {
+  BrowserStack,
+  BrowserStackRoutes,
+} from '@app/screens/HomeStack/BrowserStack';
+import {
+  HomeEarnStack,
+  HomeEarnStackRoutes,
+} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeStakingScreen} from '@app/screens/HomeStack/HomeEarnStack/home-staking';
+import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
+import {
+  HomeNewsStack,
+  NewsStackRoutes,
+} from '@app/screens/HomeStack/HomeNewsStack';
+import {
+  SettingsStack,
+  SettingsStackRoutes,
+} from '@app/screens/HomeStack/SettingsStack';
 import {IS_IOS} from '@app/variables/common';
 
 const Tab = createBottomTabNavigator();
@@ -51,6 +62,8 @@ const screenOptions: BottomTabNavigationOptions = {
   tabBarLabel: ({children, focused}) => (
     <HomeScreenLabel focused={focused} route={children} />
   ),
+  lazy: true,
+  unmountOnBlur: true,
 };
 
 const tabBarIcon = (route: string) => (props: {focused: boolean}) => (
@@ -58,8 +71,8 @@ const tabBarIcon = (route: string) => (props: {focused: boolean}) => (
 );
 
 const feedOptions = {
-  headerRight: QrScannerButton,
-  headerLeft: GovernanceButton,
+  // headerRight: QrScannerButton,
+  // headerLeft: GovernanceButton,
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 
@@ -88,10 +101,11 @@ const browserOptions = {
 };
 
 const settingsOptions = {
+  headerShown: false,
   tabBarIcon: tabBarIcon('homeSettings'),
 };
 
-export const HomeScreen = () => {
+export const HomeScreen = memo(() => {
   const provider = useProvider();
   const navigation = useTypedNavigation();
   useEffect(() => {
@@ -107,46 +121,104 @@ export const HomeScreen = () => {
     return () => {
       navigation.removeListener('beforeRemove', subscription);
     };
-  }, [navigation]);
+  }, []);
+
+  const isEarnEnabled: boolean = isFeatureEnabled(Feature.earn);
+  const initialRouteName = isEarnEnabled
+    ? HomeEarnStackRoutes.HomeEarn
+    : HomeEarnStackRoutes.Staking;
+  const stack = useCallback(isEarnEnabled ? HomeEarnStack : HomeStakingScreen, [
+    isEarnEnabled,
+  ]);
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator detachInactiveScreens screenOptions={screenOptions}>
       <Tab.Screen
         name="homeFeed"
-        component={HomeFeedScreen}
+        component={HomeFeedStack}
         options={feedOptions}
       />
-      {isFeatureEnabled(Feature.earn) && (
-        <Tab.Screen
-          name="homeEarn"
-          component={HomeEarnScreen}
-          options={earnOptions}
-        />
-      )}
-      {!isFeatureEnabled(Feature.earn) && (
-        <Tab.Screen
-          name="homeStaking"
-          component={HomeStakingScreen}
-          options={stakingOptions}
-        />
-      )}
+      <Tab.Screen
+        name="homeEarn"
+        component={stack}
+        options={({route}) => ({
+          ...(isEarnEnabled ? earnOptions : stakingOptions),
+          headerShown: (routeA => {
+            const routeName =
+              getFocusedRouteNameFromRoute(routeA) ?? initialRouteName;
+
+            if (routeName !== initialRouteName) {
+              return false;
+            }
+            return true;
+          })(route),
+          tabBarStyle: (routeA => {
+            const routeName =
+              getFocusedRouteNameFromRoute(routeA) ?? initialRouteName;
+
+            if (routeName !== initialRouteName) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
+      />
       <Tab.Screen
         name="homeNews"
-        component={HomeNewsScreen}
-        options={newsOptions}
+        component={HomeNewsStack}
+        options={({route}) => ({
+          ...newsOptions,
+          tabBarStyle: (routeA => {
+            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+              NewsStackRoutes.News) as NewsStackRoutes;
+            if (routeName !== NewsStackRoutes.News) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
       />
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeBrowser"
-          component={HomeBrowserScreen}
-          options={browserOptions}
+          component={BrowserStack}
+          options={({route}) => ({
+            ...browserOptions,
+            tabBarStyle: (routeA => {
+              const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+                BrowserStackRoutes.BrowserHomePage) as BrowserStackRoutes;
+              if (routeName !== BrowserStackRoutes.BrowserHomePage) {
+                return {
+                  height: 0,
+                };
+              }
+              return screenOptions.tabBarStyle;
+            })(route),
+          })}
         />
       )}
       <Tab.Screen
         name="homeSettings"
-        component={HomeSettingsScreen}
-        options={settingsOptions}
+        component={SettingsStack}
+        options={({route}) => ({
+          ...settingsOptions,
+          tabBarStyle: (routeA => {
+            const routeName =
+              getFocusedRouteNameFromRoute(routeA) ?? SettingsStackRoutes.Home;
+
+            if (routeName !== SettingsStackRoutes.Home) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
       />
     </Tab.Navigator>
   );
-};
+});
