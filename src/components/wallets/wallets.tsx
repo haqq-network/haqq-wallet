@@ -17,10 +17,11 @@ import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/types';
 
 export type WalletsProps = {
   wallets: Wallet[] | Results<Wallet>;
-  balance: Record<string, number>;
+  balance: Record<string, Balance>;
   walletConnectSessions: SessionTypes.Struct[][];
   lockedTokensAmount: number;
   showLockedTokens: boolean;
@@ -78,7 +79,7 @@ export const Wallets = ({
             <WalletCard
               testID={`${testID}_${w.address}`}
               wallet={w}
-              balance={balance[w.address] ?? 0}
+              balance={balance[w.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               lockedTokensAmount={lockedTokensAmount}

@@ -6,6 +6,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {generateUUID} from '@app/utils';
 
@@ -19,7 +20,7 @@ export const TransactionSumScreen = () => {
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(Balance.Empty);
   const [fee, setFee] = useState(0);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
@@ -61,7 +62,9 @@ export const TransactionSumScreen = () => {
         setBalance(b);
         return b;
       })
-      .then(b => EthNetwork.estimateTransaction(route.params.from, to, b))
+      .then(b =>
+        EthNetwork.estimateTransaction(route.params.from, to, b.toFloat()),
+      )
       .then(estimateFee => {
         setFee(estimateFee.fee);
       });

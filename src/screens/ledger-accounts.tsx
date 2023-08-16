@@ -51,7 +51,7 @@ export const LedgerAccountsScreen = () => {
             hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
             publicKey: data.publicKey,
             exists: Wallet.addressList().includes(data.address.toLowerCase()),
-            balance,
+            balance: balance.toFloat(),
           });
         }
 

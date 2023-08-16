@@ -19,9 +19,11 @@ import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Balance} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
-  balance: number;
+  balance: Balance;
   fee: number;
   to: string;
   from: string;
@@ -43,7 +45,7 @@ export const TransactionSum = ({
   const amounts = useSumAmount();
 
   useEffect(() => {
-    amounts.setMaxAmount(balance - Math.max(2 * fee, 0.00001));
+    amounts.setMaxAmount(balance.toNumber() - Math.max(2 * fee, 0.00001));
   }, [amounts, balance, fee]);
 
   const inputSumRef = useRef<TextInput>(null);
@@ -87,7 +89,7 @@ export const TransactionSum = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency="ISLM"
+          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}

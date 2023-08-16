@@ -8,6 +8,7 @@ import {
   useWallet,
 } from '@app/hooks';
 import {StakingMetadata} from '@app/models/staking-metadata';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
 export const StakingUnDelegateFormScreen = () => {
@@ -36,7 +37,7 @@ export const StakingUnDelegateFormScreen = () => {
       d => d.delegator === wallet?.cosmosAddress,
     );
 
-    return delegation?.amount ?? 0;
+    return new Balance(delegation?.amount ?? 0);
   }, [operator_address, wallet?.cosmosAddress]);
 
   const fee = parseInt(Cosmos.fee.amount, 10);

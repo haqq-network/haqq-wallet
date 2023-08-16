@@ -10,6 +10,7 @@ import {calcFeeWei} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {getDefaultChainId} from '@app/network';
+import {Balance} from '@app/services/balance';
 import {WEI} from '@app/variables/common';
 
 export class EthNetwork {
@@ -72,13 +73,15 @@ export class EthNetwork {
     };
   }
 
-  static async getBalance(address: string) {
+  static async getBalance(address: string): Promise<Balance> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
       const balance = await rpcProvider.getBalance(address);
-      return Number(utils.formatEther(balance));
+      // Removing 0x prefix here
+      const raw = new BN(balance._hex.slice(2), 'hex');
+      return new Balance(raw);
     } catch (e) {
-      return 0;
+      return Balance.Empty;
     }
   }
 

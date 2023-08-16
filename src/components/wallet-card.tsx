@@ -19,12 +19,13 @@ import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/types';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
-  balance: number;
+  balance: Balance;
   lockedTokensAmount: number;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
@@ -151,7 +152,7 @@ export const WalletCard = memo(
           )}
         </View>
         <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-          {cleanNumber(balance)} ISLM
+          {balance.toBalanceString()}
         </Text>
         {showLockedTokens && (
           <>

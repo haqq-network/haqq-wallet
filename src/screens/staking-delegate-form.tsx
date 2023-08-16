@@ -3,13 +3,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
 export const StakingDelegateFormScreen = () => {
   const navigation = useTypedNavigation();
   const {account, validator} = useTypedRoute<'stakingDelegateForm'>().params;
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(Balance.Empty);
   const fee = parseInt(Cosmos.fee.amount, 10);
 
   useEffect(() => {

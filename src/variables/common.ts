@@ -201,6 +201,7 @@ export const PLATFORM_COMPANY = Platform.select({
 });
 
 export const COSMOS_PREFIX = 'haqq';
+export const CURRENCY_NAME = 'ISLM';
 
 export const STRINGS = {
   /** non-breaking space  */

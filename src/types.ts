@@ -5,6 +5,7 @@ import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
+import BN from 'bn.js';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
@@ -1008,6 +1009,17 @@ export enum AdjustTrackingAuthorizationStatus {
   userDeniedAccess = 2,
   userAuthorizedAccess = 3,
   statusNotAvailable = -1,
+}
+
+export interface Balance {
+  readonly raw: BN;
+  toNumber: () => number;
+  toFloat: () => number;
+  toFloatString: () => string;
+  toString: () => string;
+  toHex: () => string;
+  isPositive: () => boolean;
+  toBalanceString: () => string;
 }
 
 export enum ValidUrlProtocol {

@@ -136,6 +136,7 @@
     "@babel/runtime": "7.22.6",
     "@react-native-community/eslint-config": "3.2.0",
     "@tsconfig/react-native": "3.0.2",
+    "@types/bn.js": "5.1.1",
     "@types/create-hash": "1.2.2",
     "@types/jest": "29.5.3",
     "@types/pbkdf2": "3.1.0",

@@ -13,12 +13,13 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 
 const initData = {
-  stakingSum: 0,
-  rewardsSum: 0,
-  unDelegationSum: 0,
+  stakingSum: new Balance(0),
+  rewardsSum: new Balance(0),
+  unDelegationSum: new Balance(0),
   loading: true,
 };
 
@@ -28,8 +29,8 @@ export const HomeStakingScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + app.getBalance(w.address),
-      0,
+      (acc, w) => acc.add(app.getBalance(w.address)),
+      Balance.Empty,
     ),
   });
   const navigation = useTypedNavigation();
@@ -56,12 +57,12 @@ export const HomeStakingScreen = () => {
         val => val.type === StakingMetadataType.undelegation,
       );
 
-      const rewardsSum = sumReduce(rewards);
-      const stakingSum = sumReduce(delegations);
-      const unDelegationSum = sumReduce(unDelegations);
+      const rewardsSum = new Balance(sumReduce(rewards));
+      const stakingSum = new Balance(sumReduce(delegations));
+      const unDelegationSum = new Balance(sumReduce(unDelegations));
       const availableSum = visible.reduce(
-        (acc, w) => acc + app.getBalance(w.address),
-        0,
+        (acc, w) => acc.add(app.getBalance(w.address)),
+        Balance.Empty,
       );
 
       setData({

@@ -2,8 +2,15 @@ import {useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/types';
 
-export function useWalletsBalance(wallets: Wallet[] | Realm.Results<Wallet>) {
+type WalletBalance = {
+  [key: string]: Balance;
+};
+
+export function useWalletsBalance(
+  wallets: Wallet[] | Realm.Results<Wallet>,
+): WalletBalance {
   const [balance, setBalance] = useState(
     Object.fromEntries(
       wallets.map(w => [w.address, app.getBalance(w.address)]),

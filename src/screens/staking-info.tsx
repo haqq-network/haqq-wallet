@@ -146,7 +146,7 @@ export const StakingInfoScreen = () => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address) >= MIN_AMOUNT,
+      v => app.getBalance(v.address).toFloat() >= MIN_AMOUNT,
     );
 
     if (!available?.length) {
