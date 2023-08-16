@@ -92,9 +92,9 @@ export const HomeEarnScreen = () => {
     };
   }, [visible]);
 
-  const loadRaffles = useCallback(async () => {
+  const loadRaffles = useCallback(async (isInitialCall = false) => {
     try {
-      setIsRafflesLoading(true);
+      !isInitialCall && setIsRafflesLoading(true);
       let uid = await getUid();
       const response = await Backend.instance.contests(
         Wallet.addressList(),
@@ -108,12 +108,12 @@ export const HomeEarnScreen = () => {
         Wallet.addressList(),
       );
     }
-    setIsRafflesLoading(false);
+    !isInitialCall && setIsRafflesLoading(false);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      loadRaffles();
+      loadRaffles(true);
 
       app.on(Events.onRaffleTicket, loadRaffles);
 

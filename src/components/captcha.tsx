@@ -5,10 +5,9 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 import {Hcaptcha} from './hcaptcha';
 import {SliderCaptcha} from './slider-captcha/slider-captcha';
@@ -98,14 +97,14 @@ const styles = createTheme({
   hcaptcha: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: WINDOW_HEIGHT,
-    width: WINDOW_WIDTH,
+    height: getWindowHeight,
+    width: getWindowWidth,
   },
   whiteBox: {
     position: 'absolute',
     borderRadius: 15,
-    width: WINDOW_WIDTH * 0.45,
-    height: WINDOW_HEIGHT * 0.185,
+    width: () => getWindowWidth() * 0.45,
+    height: () => getWindowHeight() * 0.185,
     backgroundColor: getColor(Color.bg1),
     transform: [{translateX: -2}, {translateY: 2}],
     zIndex: 2,

@@ -11,13 +11,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  MAGIC_CARD_HEIGHT,
-  SHADOW_COLOR_1,
-  WINDOW_WIDTH,
-} from '@app/variables/common';
+import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BalanceProps = {
   testID?: string;
@@ -91,8 +87,8 @@ const styles = createTheme({
     shadowOpacity: 1,
     elevation: 13,
 
-    width: WINDOW_WIDTH - 40,
-    height: Math.max((WINDOW_WIDTH - 40) * MAGIC_CARD_HEIGHT, 212),
+    width: () => getWindowWidth() - 40,
+    height: () => Math.max((getWindowWidth() - 40) * MAGIC_CARD_HEIGHT, 212),
   },
   title: {
     marginBottom: 4,

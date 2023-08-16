@@ -169,7 +169,7 @@ const page = createTheme({
     transform: [{scale: 1}],
   },
   title: {
-    marginTop: moderateVerticalScale(40, 8),
+    marginTop: () => moderateVerticalScale(40, 8),
     marginBottom: 12,
     textAlign: 'center',
   },

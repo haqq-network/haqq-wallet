@@ -1,4 +1,9 @@
-import {ENVIRONMENT, IS_DEVELOPMENT, IS_WELCOME_NEWS_ENABLED} from '@env';
+import {
+  ENVIRONMENT,
+  HAQQ_BACKEND,
+  IS_DEVELOPMENT,
+  IS_WELCOME_NEWS_ENABLED,
+} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -25,6 +30,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -176,6 +182,18 @@ class App extends AsyncEventEmitter {
     } else {
       throw new Error('Provider not found');
     }
+  }
+
+  get backend() {
+    if (!VariablesString.exists('backend')) {
+      return HAQQ_BACKEND;
+    }
+
+    return VariablesString.get('backend') || HAQQ_BACKEND;
+  }
+
+  set backend(value) {
+    VariablesString.set('backend', value);
   }
 
   get biometry() {
@@ -371,13 +389,15 @@ class App extends AsyncEventEmitter {
   }
 
   async auth() {
-    const close = showModal('pin');
+    await SystemDialog.getResult(async () => {
+      const close = showModal('pin');
 
-    await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
+      await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
-    if (this.authenticated) {
-      close();
-    }
+      if (this.authenticated) {
+        close();
+      }
+    });
   }
 
   async makeBiometryAuth() {

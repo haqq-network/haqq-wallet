@@ -45,7 +45,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       return;
     }
     const captchaKey = await awaitForCaptcha({
-      type: CaptchaType.slider,
+      type: CaptchaType.hcaptcha,
     });
 
     const wallet = Wallet.getById(walletId);

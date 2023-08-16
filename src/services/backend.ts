@@ -1,5 +1,4 @@
-import {HAQQ_BACKEND} from '@env';
-
+import {app} from '@app/contexts';
 import {NewsRow, NewsUpdatesResponse, Raffle, RssNewsRow} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
@@ -26,7 +25,7 @@ export class Backend {
   };
 
   getRemoteUrl() {
-    return HAQQ_BACKEND;
+    return app.backend;
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
@@ -66,6 +65,37 @@ export class Backend {
         address,
       }),
     });
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
+  async contestParticipateUser(
+    contest: string,
+    uid: string,
+    session: string,
+    signature: string,
+    address: string,
+  ): Promise<{signature: string; participant: string; deadline: number}> {
+    const request = await fetch(
+      `${this.getRemoteUrl()}contests/${contest}/participate`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          uid,
+          signature,
+          session,
+          address,
+        }),
+      },
+    );
 
     const resp = await getHttpResponse(request);
 

@@ -5,7 +5,8 @@ import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {WINDOW_HEIGHT} from '@app/variables/common';
+
+import {getWindowHeight} from './scaling-utils';
 
 export enum WalletSelectType {
   bottomSheet = 'bottomSheet',
@@ -80,7 +81,7 @@ export async function awaitForWallet({
       default:
         return showModal('walletsBottomSheet', {
           wallets: wallets as Wallet[],
-          closeDistance: WINDOW_HEIGHT / 6,
+          closeDistance: () => getWindowHeight() / 6,
           title,
           autoSelectWallet,
         });

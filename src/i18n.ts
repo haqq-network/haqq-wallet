@@ -1,5 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {LEDGER_APP} from '@app/variables/common';
+import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -699,6 +699,11 @@ export enum I18N {
   onboardingTrackingUserActivityHint2Description,
   onboardingTrackingUserActivityNotNow,
   onboardingTrackingUserActivityContinue,
+  raffleAgreementTitle,
+  raffleAgreementDescription,
+  raffleAgreementDescriptionLink,
+  raffleAgreementAgree,
+  raffleAgreementClose,
   newUpdateTitle,
   newUpdateDescription,
   newUpdateCancel,
@@ -707,6 +712,8 @@ export enum I18N {
   lockedTokensTotalValue,
   lockedTokensLocked,
   lockedTokensAvailable,
+  earnHint,
+  raffleAgreementDescriptionPlatform,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1540,7 +1547,13 @@ const en: Record<I18N, string> = {
     'We securely store the data we receive. All data is non-personalized',
   [I18N.onboardingTrackingUserActivityContinue]: 'Continue',
   [I18N.onboardingTrackingUserActivityNotNow]: 'Not now',
-  [I18N.newUpdateTitle]: 'Update avalivable',
+  [I18N.raffleAgreementTitle]: 'ToC Agreement',
+  [I18N.raffleAgreementDescription]:
+    'To join the raffle, you must agree to the ',
+  [I18N.raffleAgreementDescriptionLink]: 'Terms and Conditions',
+  [I18N.raffleAgreementAgree]: 'Continue',
+  [I18N.raffleAgreementClose]: 'Cancel',
+  [I18N.newUpdateTitle]: 'Update available',
   [I18N.newUpdateDescription]:
     'An update to Haqq Wallet is available. Would you like to update?',
   [I18N.newUpdateCancel]: 'Not now',
@@ -1549,4 +1562,7 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
+  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this application`,
+  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is
+  this application.`,
 };

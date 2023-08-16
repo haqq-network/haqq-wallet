@@ -1,5 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
+import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
@@ -17,10 +18,13 @@ import {
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
+  getWindowHeight,
   hideModal,
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getUid} from '@app/helpers/get-uid';
+import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -30,6 +34,7 @@ import {Refferal} from '@app/models/refferal';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
@@ -37,7 +42,6 @@ import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals} from '@app/types';
 import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
-import {WINDOW_HEIGHT} from '@app/variables/common';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   Logger.log('setBackgroundMessageHandler', remoteMessage);
@@ -113,6 +117,9 @@ const getTestModals = (): Partial<Modals> => {
     locationUnauthorized: {
       onClose: () => {},
     },
+    raffleAgreement: {
+      onClose: () => {},
+    },
     captcha: {
       onClose: () => {},
       variant: CaptchaType.slider,
@@ -123,7 +130,7 @@ const getTestModals = (): Partial<Modals> => {
     modals.walletsBottomSheet = {
       onClose: () => {},
       wallets,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       title: I18N.welcomeTitle,
       autoSelectWallet: false,
       eventSuffix: '-test',
@@ -143,7 +150,7 @@ const getTestModals = (): Partial<Modals> => {
       title: I18N.welcomeTitle,
       providers,
       initialProviderId: firstProviderId,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       eventSuffix: '-test',
     };
   }
@@ -260,6 +267,11 @@ const TEST_URLS: Partial<Link>[] = [
   },
 ];
 
+const BACKENDS = [
+  ['production', HAQQ_BACKEND],
+  ['development', HAQQ_BACKEND_DEV],
+];
+
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
   Logger.log('params', params);
@@ -285,6 +297,17 @@ export const SettingsTestScreen = () => {
   const navigation = useTypedNavigation();
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
+  const [backend, setBackend] = useState(app.backend);
+  const [uid, setUid] = useState<null | string>(null);
+  const [leadingAccount, setLeadingAccount] = useState(
+    VariablesString.get('leadingAccount'),
+  );
+
+  useEffect(() => {
+    getUid().then(id => {
+      setUid(id);
+    });
+  }, []);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -375,8 +398,8 @@ export const SettingsTestScreen = () => {
   }, [contract]);
 
   const onResetUid = useCallback(async () => {
-    const uid = shajs('sha256').update(makeID(10)).digest('hex');
-    await EncryptedStorage.setItem('uid', uid);
+    const newUid = shajs('sha256').update(makeID(10)).digest('hex');
+    await EncryptedStorage.setItem('uid', newUid);
   }, []);
 
   const onClearBanners = useCallback(() => {
@@ -387,8 +410,45 @@ export const SettingsTestScreen = () => {
     Refferal.removeAll();
   }, []);
 
+  const onSetBackend = useCallback(() => {
+    const modalsKeys = BACKENDS.map(([title]) => title);
+    showActionSheetWithOptions({options: modalsKeys}, index => {
+      if (typeof index === 'number' && BACKENDS[index]) {
+        app.backend = BACKENDS[index][1];
+        setBackend(app.backend);
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
+  const onSetLeadingAccount = useCallback(() => {
+    const wallets = Wallet.getAll().snapshot();
+    const walletsKeys = wallets.map(
+      wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
+    );
+    showActionSheetWithOptions({options: walletsKeys}, index => {
+      if (typeof index === 'number' && wallets[index]) {
+        VariablesString.set('leadingAccount', wallets[index].address);
+        setLeadingAccount(VariablesString.get('leadingAccount'));
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
   return (
     <ScrollView style={styles.container}>
+      {uid && (
+        <>
+          <Title text="uid" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(uid);
+              toastMessage('Copied to clipboard');
+            }}>
+            {uid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
       <Title text="user agent" />
       <Text
         t11
@@ -398,6 +458,25 @@ export const SettingsTestScreen = () => {
         }}>
         {getUserAgent()}
       </Text>
+      <Spacer height={8} />
+      <Title text="Backend" />
+      <Text t11>{backend}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select backend"
+        onPress={onSetBackend}
+        variant={ButtonVariant.contained}
+      />
+
+      <Title text="Leading account" />
+      <Text t11>{leadingAccount}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select leading account"
+        onPress={onSetLeadingAccount}
+        variant={ButtonVariant.contained}
+      />
+
       <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input

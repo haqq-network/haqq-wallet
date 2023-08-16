@@ -74,7 +74,7 @@ const styles = createTheme({
   title: {marginBottom: 12},
   container: {
     alignItems: 'center',
-    marginTop: verticalScale(40),
+    marginTop: () => verticalScale(40),
     paddingBottom: 16,
     marginHorizontal: 20,
   },
@@ -101,6 +101,6 @@ const styles = createTheme({
     justifyContent: 'center',
   },
   t11: {
-    marginBottom: verticalScale(5),
+    marginBottom: () => verticalScale(5),
   },
 });

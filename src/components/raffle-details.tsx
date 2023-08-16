@@ -108,28 +108,30 @@ export const RaffleDetails = ({
 
       <Separator />
       <Spacer height={8} />
-      <View style={styles.row}>
-        <Text
-          t14
-          numberOfLines={1}
-          i18n={I18N.raffleDetailsPreviousRaffle}
-          color={Color.textBase2}
-        />
-        <Spacer width={4} />
-        <Image
-          style={styles.islmIcon}
-          source={require('@assets/images/islm_icon.png')}
-        />
-        <Text
-          t14
-          numberOfLines={1}
-          i18n={I18N.raffleDetailsPreviousRaffleDetails}
-          i18params={{
-            islm: cleanNumber(prevIslmCount),
-            tickets: `${prevTicketsCount} `,
-          }}
-        />
-      </View>
+      {prevIslmCount > 0 && (
+        <View style={styles.row}>
+          <Text
+            t14
+            numberOfLines={1}
+            i18n={I18N.raffleDetailsPreviousRaffle}
+            color={Color.textBase2}
+          />
+          <Spacer width={4} />
+          <Image
+            style={styles.islmIcon}
+            source={require('@assets/images/islm_icon.png')}
+          />
+          <Text
+            t14
+            numberOfLines={1}
+            i18n={I18N.raffleDetailsPreviousRaffleDetails}
+            i18params={{
+              islm: cleanNumber(prevIslmCount),
+              tickets: `${prevTicketsCount} `,
+            }}
+          />
+        </View>
+      )}
       <Spacer height={8} />
       <Separator />
 
@@ -179,12 +181,24 @@ export const RaffleDetails = ({
           />
         )}
       </First>
+      <Spacer height={16} />
+      <Text
+        center
+        t17
+        color={Color.textBase2}
+        i18n={I18N.earnHint}
+        style={styles.hintStyle}
+      />
       <Spacer height={20} />
     </PopupContainer>
   );
 };
 
 const styles = createTheme({
+  hintStyle: {
+    marginHorizontal: 40,
+    fontSize: 9,
+  },
   buttonStyle: {
     width: '100%',
   },

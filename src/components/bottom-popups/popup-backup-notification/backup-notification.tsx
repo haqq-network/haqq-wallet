@@ -10,10 +10,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {SHADOW_COLOR_1, WINDOW_WIDTH} from '@app/variables/common';
+import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BackupNotificationProps = {
   onClickBackup: () => void;
@@ -107,7 +107,7 @@ const styles = createTheme({
   },
   margin: {marginVertical: 8},
   image: {
-    width: WINDOW_WIDTH - 80,
+    width: () => getWindowWidth() - 80,
   },
   imageWrapper: {
     backgroundColor: Color.bg1,

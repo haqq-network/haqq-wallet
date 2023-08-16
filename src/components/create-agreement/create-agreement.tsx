@@ -12,16 +12,16 @@ import {
   Text,
 } from '@app/components/ui';
 import {Terms} from '@app/components/ui/terms';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@app/variables/common';
 
 export type CreateAgreementProps = {
   onDone: () => void;
   testID?: string;
 };
 
-const calculatedHeight = Math.min(WINDOW_WIDTH, WINDOW_HEIGHT * 0.355);
+const calculateHeight = () =>
+  Math.min(getWindowWidth(), getWindowHeight() * 0.355);
 
 export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
   return (
@@ -61,12 +61,12 @@ const styles = createTheme({
     justifyContent: 'flex-end',
   },
   animation: {
-    height: calculatedHeight,
+    height: () => calculateHeight(),
     justifyContent: 'center',
     alignItems: 'center',
   },
   animationInner: {
-    height: calculatedHeight - 20,
+    height: () => calculateHeight() - 20,
   },
   title: {
     marginBottom: 4,

@@ -1,7 +1,14 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {PixelRatio, Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {
+  PixelRatio,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
@@ -10,7 +17,6 @@ import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Balance} from '@app/types';
-import {WINDOW_WIDTH} from '@app/variables/common';
 
 export type SumBlockProps = {
   value: string;
@@ -31,7 +37,7 @@ export const SumBlock = ({
   testID,
 }: SumBlockProps) => {
   const inputSumRef = useRef<TextInput>(null);
-
+  const dimensions = useWindowDimensions();
   useFocusEffect(
     useCallback(() => {
       setTimeout(() => inputSumRef.current?.focus(), 500);
@@ -47,8 +53,8 @@ export const SumBlock = ({
   );
 
   const ratio = useMemo(
-    () => (value.length > 0 ? (WINDOW_WIDTH - 180) / value.length : 30),
-    [value.length],
+    () => (value.length > 0 ? (dimensions.width - 180) / value.length : 30),
+    [dimensions.width, value.length],
   );
 
   const fontSize = Math.max(

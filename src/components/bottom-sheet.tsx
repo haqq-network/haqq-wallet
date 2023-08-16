@@ -40,13 +40,9 @@ import {
   SwiperIcon,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {
-  ANIMATION_DURATION,
-  ANIMATION_TYPE,
-  WINDOW_WIDTH,
-} from '@app/variables/common';
+import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 type TitleProp =
   | {
@@ -333,7 +329,7 @@ const page = createTheme({
     marginBottom: 2,
   },
   content: {
-    width: WINDOW_WIDTH,
+    width: () => getWindowWidth(),
     backgroundColor: Color.bg1,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,

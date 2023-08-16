@@ -867,6 +867,9 @@ export type ErrorModalImage =
 export type Modals = {
   splash: undefined;
   pin: undefined;
+  raffleAgreement: {
+    onClose?: () => void;
+  };
   noInternet: {showClose?: boolean};
   loading: {
     text?: string;
@@ -919,7 +922,7 @@ export type Modals = {
   walletsBottomSheet: {
     onClose?: () => void;
     wallets: Wallet[] | Results<Wallet>;
-    closeDistance?: number;
+    closeDistance?: () => number;
     title: I18N;
     eventSuffix?: string;
     autoSelectWallet?: boolean;
@@ -936,7 +939,7 @@ export type Modals = {
     title: I18N;
     providers: Provider[] | Results<Provider>;
     initialProviderId: string;
-    closeDistance?: number;
+    closeDistance?: () => number;
     eventSuffix?: string;
   };
   captcha: {
@@ -1017,4 +1020,10 @@ export interface Balance {
   toHex: () => string;
   isPositive: () => boolean;
   toBalanceString: () => string;
+}
+
+export enum ValidUrlProtocol {
+  haqq = 'haqq',
+  etherium = 'etherium',
+  wc = 'wc',
 }

@@ -4,7 +4,8 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {WINDOW_HEIGHT} from '@app/variables/common';
+
+import {getWindowHeight} from './scaling-utils';
 
 export interface AwaitProviderParams {
   title: I18N;
@@ -47,7 +48,7 @@ export async function awaitForProvider({
     return showModal('providersBottomSheet', {
       title,
       providers,
-      closeDistance: WINDOW_HEIGHT / 6,
+      closeDistance: () => getWindowHeight() / 6,
       initialProviderId,
     });
   });

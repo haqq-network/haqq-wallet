@@ -4,9 +4,9 @@ import {Animated, TouchableWithoutFeedback} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme, getWindowWidth} from '@app/helpers';
 import {asyncTiming, sleep} from '@app/utils';
-import {SHADOW_COLOR_2, WINDOW_WIDTH} from '@app/variables/common';
+import {SHADOW_COLOR_2} from '@app/variables/common';
 
 export type NotificationMessageProps = {
   message: string;
@@ -59,7 +59,7 @@ export const NotificationMessage = ({
 const styles = createTheme({
   container: {
     marginVertical: 4,
-    maxWidth: WINDOW_WIDTH - 40,
+    maxWidth: () => getWindowWidth() - 40,
     paddingHorizontal: 24,
     paddingVertical: 16,
     backgroundColor: Color.bg1,
