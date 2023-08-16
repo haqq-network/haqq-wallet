@@ -19,7 +19,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance, ValidatorItem, ValidatorStatus} from '@app/types';
-import {WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
@@ -66,7 +66,7 @@ export const StakingDelegateForm = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency="ISLM"
+          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}

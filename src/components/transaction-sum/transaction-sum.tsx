@@ -20,6 +20,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Balance} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;
@@ -88,7 +89,7 @@ export const TransactionSum = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency="ISLM"
+          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}

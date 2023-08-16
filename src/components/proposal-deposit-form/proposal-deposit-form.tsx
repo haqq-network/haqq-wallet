@@ -12,7 +12,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/types';
-import {WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {
   account: string;
@@ -45,7 +45,7 @@ export const ProposalDepositForm = ({
       <SumBlock
         value={amounts.amount}
         error={amounts.error}
-        currency="ISLM"
+        currency={CURRENCY_NAME}
         balance={balance}
         onChange={amounts.setAmount}
         onMax={onPressMax}

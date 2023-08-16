@@ -17,6 +17,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   balance: Balance;
@@ -51,7 +52,7 @@ export const StakingUnDelegateForm = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency="ISLM"
+          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}
