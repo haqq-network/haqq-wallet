@@ -14,9 +14,9 @@ import {StakingEmpty} from './staking-empty';
 export type StakingHomeProps = {
   loading: boolean;
   availableSum: Balance;
-  stakingSum: number;
-  rewardsSum: number;
-  unDelegationSum: number;
+  stakingSum: Balance;
+  rewardsSum: Balance;
+  unDelegationSum: Balance;
   onPressValidators: () => void;
   onPressGetRewards?: () => void;
 };
@@ -34,7 +34,7 @@ export const HomeStaking = ({
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
   const canGetRewards = useMemo(
-    () => rewardsSum >= 1 / NUM_PRECISION,
+    () => rewardsSum.toNumber() >= 1 / NUM_PRECISION,
     [rewardsSum],
   );
 
@@ -46,7 +46,7 @@ export const HomeStaking = ({
   };
 
   const hasStaking = useMemo(
-    () => stakingSum >= 1 / NUM_PRECISION,
+    () => stakingSum.toNumber() >= 1 / NUM_PRECISION,
     [stakingSum],
   );
 

@@ -25,7 +25,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
         <Spacer height={20} />
         <Text t8 center i18n={I18N.sumBlockAvailable} />
         <Text t3 center color={Color.textGreen1}>
-          {availableSum.toFloatString()} ISLM
+          {availableSum.toBalanceString()}
         </Text>
       </View>
       <Spacer />

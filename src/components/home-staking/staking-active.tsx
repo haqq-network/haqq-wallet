@@ -13,17 +13,16 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {AppTheme, Balance} from '@app/types';
-import {IS_IOS, WEI} from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {
   availableSum: Balance;
-  rewardSum: number;
-  stakedSum: number;
-  unDelegationSum: number;
+  rewardSum: Balance;
+  stakedSum: Balance;
+  unDelegationSum: Balance;
 }
 
 export interface StakingActiveInterface {
@@ -47,13 +46,13 @@ export const StakingActive = forwardRef(
             return require('@assets/animations/get-reward-dark.json');
           }
           return require('@assets/animations/get-reward-light.json');
-        case stakedSum > 100:
+        case stakedSum.toNumber() > 100:
           if (theme === AppTheme.dark) {
             return require('@assets/animations/stake-dark-100.json');
           }
 
           return require('@assets/animations/stake-light-100.json');
-        case stakedSum > 20:
+        case stakedSum.toNumber() > 20:
           if (theme === AppTheme.dark) {
             return require('@assets/animations/stake-dark-20-100.json');
           }
@@ -104,13 +103,13 @@ export const StakingActive = forwardRef(
         <Spacer height={20} />
         <Text t8 center i18n={I18N.homeStakingRewards} />
         <Text t3 center color={Color.textGreen1}>
-          {cleanNumber(rewardSum / WEI)} ISLM
+          {rewardSum.toBalanceString()}
         </Text>
         <Spacer height={28} />
         <InfoBlockAmount
           isLarge
           amountColor={Color.textGreen1}
-          value={stakedSum}
+          value={stakedSum.toFloat()}
           titleI18N={I18N.homeStakingStaked}
         />
         <Spacer height={12} />
@@ -120,7 +119,7 @@ export const StakingActive = forwardRef(
             titleI18N={I18N.sumBlockAvailable}
           />
           <InfoBlockAmount
-            value={unDelegationSum}
+            value={unDelegationSum.toFloat()}
             titleI18N={I18N.homeStakingUnbounded}
           />
         </Inline>

@@ -152,7 +152,7 @@ export const WalletCard = memo(
           )}
         </View>
         <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-          {balance.toFloatString()} ISLM
+          {balance.toBalanceString()}
         </Text>
         {showLockedTokens && (
           <>
