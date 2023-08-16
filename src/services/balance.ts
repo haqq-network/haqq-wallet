@@ -3,7 +3,7 @@ import Decimal from 'decimal.js';
 
 import {cleanNumber} from '@app/helpers';
 import {Balance as IBalance} from '@app/types';
-import {WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 const zeroBN = new BN(0, 'hex');
 
@@ -44,9 +44,19 @@ export class Balance implements IBalance {
 
   /**
    * Convert balance to float string according to cleanNumber helper
+   * @example 123.45
    */
   toFloatString = () => {
     return cleanNumber(this.toFloat());
+  };
+
+  /**
+   * Convert balance to float string according to cleanNumber helper and append currency name
+   * @example 123.45 ISLM
+   */
+  toBalanceString = () => {
+    const suffix = ` ${CURRENCY_NAME}`;
+    return this.toFloatString() + suffix;
   };
 
   toString = () => {
@@ -58,7 +68,7 @@ export class Balance implements IBalance {
   };
 
   /**
-   * Is balance has money
+   * Is balance has money (grater than zero)
    */
   isPositive = () => {
     return this.bnRaw.gt(zeroBN);

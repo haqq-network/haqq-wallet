@@ -1016,4 +1016,5 @@ export interface Balance {
   toString: () => string;
   toHex: () => string;
   isPositive: () => boolean;
+  toBalanceString: () => string;
 }
