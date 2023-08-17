@@ -18,7 +18,7 @@ export class Balance implements IBalance {
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new BN(balance, 'hex');
+      this.bnRaw = new BN(balance);
       return;
     }
 
