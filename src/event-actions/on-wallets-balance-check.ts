@@ -2,6 +2,7 @@ import {app} from '@app/contexts';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
 
@@ -13,6 +14,7 @@ export async function onWalletsBalanceCheck() {
       let lastBalanceUpdates = VariablesDate.get(
         `indexer_${app.provider.cosmosChainId}`,
       );
+
       let accounts = Wallet.getAll().map(w =>
         Cosmos.addressToBech32(w.address),
       );
@@ -21,14 +23,14 @@ export async function onWalletsBalanceCheck() {
         lastBalanceUpdates,
       );
 
-      balances = Object.entries(updates.balances).map(b => [
+      balances = Object.entries(updates.balance).map(b => [
         Cosmos.bech32ToAddress(b[0]),
-        b[1],
+        new Balance(b[1]),
       ]);
 
       VariablesDate.set(
         `indexer_${app.provider.cosmosChainId}`,
-        new Date(updates.last_updated),
+        new Date(updates.last_update),
       );
     } else {
       balances = await Promise.all(
@@ -41,7 +43,6 @@ export async function onWalletsBalanceCheck() {
       );
     }
 
-    Logger.log('balances', balances);
     app.onWalletsBalance(Object.fromEntries(balances));
   } catch (e) {
     Logger.error('onWalletsBalanceCheck', e);

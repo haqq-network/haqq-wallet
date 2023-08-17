@@ -3,8 +3,8 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 
 export type IndexerUpdatesResponse = {
-  balances: Record<string, string>;
-  last_updated: string;
+  balance: Record<string, string>;
+  last_update: string;
 };
 
 export class Indexer {
@@ -25,9 +25,12 @@ export class Indexer {
       throw new Error('Indexer is not configured');
     }
 
-    return await jsonrpcRequest(app.provider.indexer, 'updates', [
-      accounts,
-      lastUpdated,
-    ]);
+    const updated = lastUpdated || new Date(0);
+
+    return await jsonrpcRequest(
+      app.provider.indexer,
+      'updates',
+      [accounts, updated].filter(Boolean),
+    );
   }
 }
