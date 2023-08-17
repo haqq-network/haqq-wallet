@@ -13,7 +13,7 @@ export class Balance implements IBalance {
 
   constructor(balance: BN | number | string) {
     if (typeof balance === 'string') {
-      this.bnRaw = new BN(balance.slice(2), 'hex');
+      this.bnRaw = new BN(balance.replace('0x', ''), 'hex');
       return;
     }
 
