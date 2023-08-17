@@ -135,7 +135,7 @@
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
 		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
 		CEBA4969BB874AF6B924DA37 /* domain-blocked-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FCD1005E8E4C08BB4782E3 /* domain-blocked-dark@3x.png */; };
-		CF0D49E2FABD41D9A34AB04C /* (null) in Resources */ = {isa = PBXBuildFile; };
+		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
 		D2EF8B9028754ED2AA9994E5 /* logo-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */; };
@@ -781,7 +781,7 @@
 				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
 				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 				2129B78329CACF69005C0CCA /* overview.storyboard in Resources */,
-				CF0D49E2FABD41D9A34AB04C /* (null) in Resources */,
+				CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */,
 				1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */,
 				7CE3C371577D43A6BAA1DF94 /* backup-notification-dark.png in Resources */,
 				8EF155B29CA4479AA8E82E4A /* backup-notification-dark@2x.png in Resources */,

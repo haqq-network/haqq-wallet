@@ -19,7 +19,7 @@ export async function onWalletCreate(wallet: Wallet) {
     if (subscription) {
       await Backend.instance.createNotificationSubscription(
         subscription,
-        Cosmos.address(wallet.address),
+        Cosmos.addressToBech32(wallet.address),
       );
 
       wallet.update({subscription});

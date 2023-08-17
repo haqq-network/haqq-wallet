@@ -12,7 +12,7 @@ export async function onVestingSync() {
   const cosmos = new Cosmos(app.provider!);
   const addressList = wallets
     .filtered('isHidden != true')
-    .map(w => Cosmos.address(w.address));
+    .map(w => Cosmos.addressToBech32(w.address));
   await sync(addressList, cosmos);
 }
 
