@@ -1020,7 +1020,7 @@ export interface Balance {
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => this is boolean;
+  isPositive: () => this is Balance;
   toBalanceString: () => string;
   add: (value?: BalanceConstructor) => Balance;
   div: (value?: BalanceConstructor) => Balance;
