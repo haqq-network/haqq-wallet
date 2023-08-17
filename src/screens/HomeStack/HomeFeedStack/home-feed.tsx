@@ -19,10 +19,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/screens/HomeStack';
-import {
-  HomeFeedStackParamList,
-  HomeFeedStackRoutes,
-} from '@app/screens/HomeStack/HomeFeedStack';
+import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
 import {TokenItem, TransactionList} from '@app/types';
 
 const MOCK_TOKENS: TokenItem[] = [

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
@@ -7,6 +7,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -14,7 +15,7 @@ import {
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export const SignUpStoreWalletScreen = memo(() => {
+export const SignUpStoreWalletScreen = () => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const route = useTypedRoute<
     SignUpStackParamList,
@@ -25,7 +26,10 @@ export const SignUpStoreWalletScreen = memo(() => {
 
   const goBack = useCallback(() => {
     navigation.reset({
-      routes: [{name: 'welcome'}, {name: 'signup', params: {next: 'restore'}}],
+      routes: [
+        {name: WelcomeStackRoutes.Welcome},
+        {name: WelcomeStackRoutes.SignUp, params: {next: 'restore'}},
+      ],
     });
   }, [navigation]);
 
@@ -33,7 +37,7 @@ export const SignUpStoreWalletScreen = memo(() => {
     show('loading', {
       text: getText(I18N.signupStoreWalletCreatingAccount),
     });
-  }, []);
+  }, [show]);
 
   useEffect(() => {
     setTimeout(async () => {
@@ -68,6 +72,7 @@ export const SignUpStoreWalletScreen = memo(() => {
           },
           name,
         );
+        //@ts-ignore
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {
@@ -84,7 +89,7 @@ export const SignUpStoreWalletScreen = memo(() => {
         }
       }
     }, 350);
-  }, [goBack, navigation, route.params]);
+  }, [goBack, navigation, route.params, show]);
 
   return null;
-});
+};

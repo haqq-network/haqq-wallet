@@ -1,6 +1,9 @@
 import React, {memo} from 'react';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import {TransitionPresets} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
@@ -19,7 +22,6 @@ import {TransactionDetailScreen} from '@app/screens/HomeStack/HomeFeedStack/tran
 import {InAppBrowserScreen} from '@app/screens/HomeStack/in-app-browser';
 import {TransactionStack} from '@app/screens/HomeStack/TransactionStack';
 import {WalletProtectionPopupScreen} from '@app/screens/HomeStack/wallet-protection-popup';
-import {ModalsScreen} from '@app/screens/modals-screen';
 import {WalletConnectApplicationDetailsPopupScreen} from '@app/screens/wallet-connect-application-details-popup';
 import {WalletConnectApplicationListPopupScreen} from '@app/screens/wallet-connect-application-list-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
@@ -73,16 +75,40 @@ export type HomeStackParamList = {
   };
 };
 
+const navigatorOptions = {
+  gestureEnabled: false,
+  freezeOnBlur: true,
+};
+
+const modalOptions: NativeStackNavigationOptions = {
+  ...popupScreenOptions,
+  presentation: 'modal',
+  headerShown: false,
+};
+
+const fullScreenModalOptions: NativeStackNavigationOptions = {
+  headerShown: false,
+  presentation: 'transparentModal',
+  animation: 'fade',
+  animationDuration: 0,
+};
+
+const inAppBrowserOptions: NativeStackNavigationOptions = {
+  //@ts-ignore
+  headerBackHidden: true,
+  headerShown: true,
+  gestureEnabled: false,
+  header: () => <Spacer height={StatusBar.currentHeight} />,
+  headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
+  ...TransitionPresets.ModalSlideFromBottomIOS,
+};
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeStack = memo(() => {
   return (
     <>
       <Stack.Navigator
-        screenOptions={{
-          gestureEnabled: false,
-          freezeOnBlur: true,
-        }}
+        screenOptions={navigatorOptions}
         initialRouteName={HomeStackRoutes.Home}>
         <Stack.Screen
           component={themeUpdaterHOC(HomeScreen)}
@@ -92,29 +118,17 @@ const HomeStack = memo(() => {
         <Stack.Screen
           name={HomeStackRoutes.Create}
           component={CreateStack}
-          options={{
-            ...popupScreenOptions,
-            presentation: 'modal',
-            headerShown: false,
-          }}
+          options={modalOptions}
         />
         <Stack.Screen
           name={HomeStackRoutes.Ledger}
           component={LedgerStack}
-          options={{
-            ...popupScreenOptions,
-            presentation: 'modal',
-            headerShown: false,
-          }}
+          options={modalOptions}
         />
         <Stack.Screen
           name={HomeStackRoutes.SignIn}
           component={SignInStack}
-          options={{
-            ...popupScreenOptions,
-            presentation: 'modal',
-            headerShown: false,
-          }}
+          options={modalOptions}
         />
         <Stack.Screen
           name={HomeStackRoutes.AccountInfo}
@@ -125,89 +139,51 @@ const HomeStack = memo(() => {
         <Stack.Screen
           name={HomeStackRoutes.Transaction}
           component={TransactionStack}
-          options={{
-            ...popupScreenOptions,
-            presentation: 'modal',
-            headerShown: false,
-          }}
+          options={modalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.AccountDetail}
           component={AccountDetailScreen}
-          options={{
-            headerShown: false,
-            presentation: 'transparentModal',
-            animation: 'fade',
-            animationDuration: 0,
-          }}
+          options={fullScreenModalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.Backup}
           component={BackupStack}
-          options={{
-            ...popupScreenOptions,
-            presentation: 'modal',
-            headerShown: false,
-          }}
+          options={modalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.WalletProtectionPopup}
           component={WalletProtectionPopupScreen}
-          options={{
-            ...popupScreenOptions,
-            headerShown: false,
-            presentation: 'modal',
-          }}
+          options={modalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.WalletConnectApplicationDetailsPopup}
           component={WalletConnectApplicationDetailsPopupScreen}
-          options={{
-            ...popupScreenOptions,
-            headerShown: false,
-            presentation: 'modal',
-          }}
+          options={modalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.WalletConnectApplicationListPopup}
           component={WalletConnectApplicationListPopupScreen}
-          options={{
-            ...popupScreenOptions,
-            headerShown: false,
-            presentation: 'modal',
-          }}
+          options={modalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.TransactionDetail}
           component={TransactionDetailScreen}
-          options={{
-            headerShown: false,
-            presentation: 'transparentModal',
-            animation: 'fade',
-            animationDuration: 0,
-          }}
+          options={fullScreenModalOptions}
         />
 
         <Stack.Screen
           name={HomeStackRoutes.InAppBrowser}
           component={InAppBrowserScreen}
-          options={{
-            headerBackHidden: true,
-            headerShown: true,
-            gestureEnabled: false,
-            header: () => <Spacer height={StatusBar.currentHeight} />,
-            headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
-            ...TransitionPresets.ModalSlideFromBottomIOS,
-          }}
+          options={inAppBrowserOptions}
         />
       </Stack.Navigator>
-      <ModalsScreen />
     </>
   );
 });

@@ -1,9 +1,6 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
 
-import {
-  createNavigationContainerRef,
-  useNavigation,
-} from '@react-navigation/native';
+import {createNavigationContainerRef} from '@react-navigation/native';
 
 import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
@@ -26,9 +23,10 @@ export type ModalState = ModalStates<Modals, keyof Modals>;
 
 export type ModalProps = {
   initialModal?: Partial<ModalState>;
+  route: ModalState;
 };
 
-export const ModalsScreen = ({initialModal, route, navigation}: ModalProps) => {
+export const ModalsScreen = ({initialModal, route}: ModalProps) => {
   const [modals, setModal] = useState<ModalState[]>(
     ([initialModal].filter(Boolean) as ModalState[]).map(m => ({
       ...m,
@@ -88,8 +86,7 @@ export const ModalsScreen = ({initialModal, route, navigation}: ModalProps) => {
 };
 
 export const ModalsScreenConnected = memo(() => {
-  const navigation = useNavigation();
   const route = useTypedRoute<WelcomeStackParamList, WelcomeStackRoutes.Modal>()
     .params;
-  return <ModalsScreen route={route} navigation={navigation} />;
+  return <ModalsScreen route={route} />;
 });

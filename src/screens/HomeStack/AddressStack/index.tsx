@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
 import {basicScreenOptions} from '@app/screens';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {SettingsAddressBookScreen} from '@app/screens/HomeStack/AddressStack/settings-address-book';
 import {SettingsContactEditScreen} from '@app/screens/HomeStack/AddressStack/settings-contact-edit';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
@@ -14,15 +13,14 @@ export enum AddressBookStackRoutes {
   SettingsContactEdit = 'settingsContactEdit',
 }
 
-export type AddressBookParamList = HomeStackParamList &
-  SettingsStackParamList & {
-    [AddressBookStackRoutes.SettingsAddressBook]: undefined;
-    [AddressBookStackRoutes.SettingsContactEdit]: {
-      name: string;
-      address: string;
-      isCreate?: boolean;
-    };
+export type AddressBookParamList = SettingsStackParamList & {
+  [AddressBookStackRoutes.SettingsAddressBook]: undefined;
+  [AddressBookStackRoutes.SettingsContactEdit]: {
+    name: string;
+    address: string;
+    isCreate?: boolean;
   };
+};
 
 const Stack = createNativeStackNavigator<AddressBookParamList>();
 

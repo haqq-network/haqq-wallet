@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -26,7 +26,10 @@ import {
   HomeEarnStackRoutes,
 } from '@app/screens/HomeStack/HomeEarnStack';
 import {HomeStakingScreen} from '@app/screens/HomeStack/HomeEarnStack/home-staking';
-import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
+import {
+  HomeFeedStack,
+  HomeFeedStackRoutes,
+} from '@app/screens/HomeStack/HomeFeedStack';
 import {
   HomeNewsStack,
   NewsStackRoutes,
@@ -71,8 +74,7 @@ const tabBarIcon = (route: string) => (props: {focused: boolean}) => (
 );
 
 const feedOptions = {
-  // headerRight: QrScannerButton,
-  // headerLeft: GovernanceButton,
+  headerShown: false,
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 
@@ -121,22 +123,32 @@ export const HomeScreen = memo(() => {
     return () => {
       navigation.removeListener('beforeRemove', subscription);
     };
-  }, []);
+  }, [navigation]);
 
   const isEarnEnabled: boolean = isFeatureEnabled(Feature.earn);
   const initialRouteName = isEarnEnabled
     ? HomeEarnStackRoutes.HomeEarn
     : HomeEarnStackRoutes.Staking;
-  const stack = useCallback(isEarnEnabled ? HomeEarnStack : HomeStakingScreen, [
-    isEarnEnabled,
-  ]);
+  const stack = isEarnEnabled ? HomeEarnStack : HomeStakingScreen;
 
   return (
     <Tab.Navigator detachInactiveScreens screenOptions={screenOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedStack}
-        options={feedOptions}
+        options={({route}) => ({
+          ...feedOptions,
+          tabBarStyle: (routeA => {
+            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+              HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
+            if (routeName !== HomeFeedStackRoutes.HomeFeed) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
       />
       <Tab.Screen
         name="homeEarn"
