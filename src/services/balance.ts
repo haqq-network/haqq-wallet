@@ -12,7 +12,7 @@ export class Balance implements IBalance {
   private bnRaw;
 
   constructor(balance: BN | number) {
-    if (!(balance as BN)?.isZero()) {
+    if (!(balance as BN)?.isZero?.()) {
       this.bnRaw = balance as BN;
     } else {
       this.bnRaw = new BN(balance, 'hex');
