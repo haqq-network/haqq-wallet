@@ -11,12 +11,18 @@ export class Balance implements IBalance {
   static Empty = new Balance(zeroBN);
   private bnRaw;
 
-  constructor(balance: BN | number) {
-    if (!(balance as BN)?.isZero()) {
-      this.bnRaw = balance as BN;
-    } else {
-      this.bnRaw = new BN(balance, 'hex');
+  constructor(balance: BN | number | string) {
+    if (typeof balance === 'string') {
+      this.bnRaw = new BN(balance.replace('0x', ''), 'hex');
+      return;
     }
+
+    if (typeof balance === 'number') {
+      this.bnRaw = new BN(balance);
+      return;
+    }
+
+    this.bnRaw = balance as BN;
   }
 
   /**
