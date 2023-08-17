@@ -16,7 +16,7 @@ export type Version = {
 };
 
 export function parseVersion(version: string): Version | null {
-  const match = version.match(/^(\d+)\.(\d+)\.(\d+)$/);
+  const match = version.match(/^(\d+)\.(\d+)(?:\.(\d+))?$/);
 
   if (!match) {
     return null;
@@ -24,7 +24,11 @@ export function parseVersion(version: string): Version | null {
 
   const [major, minor, patch] = match.slice(1).map(Number);
 
-  return {major, minor, patch};
+  return {
+    major: major ?? 0,
+    minor: minor ?? 0,
+    patch: patch ?? 0,
+  };
 }
 
 export function compareVersions(
