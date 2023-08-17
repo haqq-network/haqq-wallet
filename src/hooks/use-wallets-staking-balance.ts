@@ -7,34 +7,34 @@ import {Balance} from '@app/types';
 
 import {usePrevious} from './use-previous';
 
-export type WalletBalance = {
+export type WalletStakingBalance = {
   [key: string]: Balance | undefined;
 };
 
-const getBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
+const getStakingBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getBalance(w.address)]),
+    wallets.map(w => [w.address, app.getStakingBalance(w.address)]),
   );
 };
 
-export function useWalletsBalance(
+export function useWalletsStakingBalance(
   wallets: Wallet[] | Realm.Results<Wallet>,
-): WalletBalance {
-  const [balance, setBalance] = useState(getBalance(wallets));
+): WalletStakingBalance {
+  const [balance, setBalance] = useState(getStakingBalance(wallets));
   const prevWalletsLength = usePrevious(wallets.length);
 
   useEffect(() => {
     const onBalance = () => {
-      setBalance(getBalance(wallets));
+      setBalance(getStakingBalance(wallets));
     };
 
     if (prevWalletsLength !== wallets.length) {
       onBalance();
     }
 
-    app.on(Events.onBalanceSync, onBalance);
+    app.on(Events.onStakingBalanceSync, onBalance);
     return () => {
-      app.off(Events.onBalanceSync, onBalance);
+      app.off(Events.onStakingBalanceSync, onBalance);
     };
   }, [prevWalletsLength, wallets]);
 

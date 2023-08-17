@@ -51,6 +51,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.delegation,
           delegator,
           validator,
+          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
         },
         Realm.UpdateMode.Modified,
@@ -78,6 +79,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.reward,
           delegator,
           validator,
+          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
         },
         Realm.UpdateMode.Modified,
@@ -112,6 +114,7 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.undelegation,
           delegator,
           validator,
+          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
           completion_time,
         },
@@ -171,5 +174,23 @@ export class StakingMetadata extends Realm.Object {
   static getAllByValidator(validator: string) {
     const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
     return rows.filtered(`validator = '${validator}'`);
+  }
+
+  /**
+   * @param {string} address - cosmos wallet address
+   */
+  static getAllByDelegator(address: string) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+    return rows.filtered('delegator = $0', address);
+  }
+
+  static toMap(rows: Realm.Results<StakingMetadata> | StakingMetadata[]) {
+    return (rows as StakingMetadata[])?.reduce?.(
+      (prev, curr) => ({
+        ...prev,
+        [curr.type]: curr,
+      }),
+      {},
+    ) as Record<StakingMetadataType, StakingMetadata>;
   }
 }

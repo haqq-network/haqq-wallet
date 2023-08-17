@@ -2,17 +2,20 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
+import {Color} from '@app/colors';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
-import {First, PopupContainer, Spacer} from '@app/components/ui';
+import {First, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance, TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
+import {BottomSheet} from '../bottom-sheet';
 import {NftViewer} from '../nft-viewer';
 import {createNftCollectionSet} from '../nft-viewer/mock';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
@@ -25,19 +28,35 @@ enum TabNames {
 export type AccountInfoProps = {
   transactionsList: TransactionList[];
   wallet: Wallet;
-  balance: Balance;
+  balance: Balance | undefined;
+  unvestedBalance: Balance | undefined;
+  lockedBalance: Balance | undefined;
+  vestedBalance: Balance | undefined;
+  stakingBalance: Balance | undefined;
+  showLockedTokensInfo: boolean;
+  onPressInfo: () => void;
+  onCloseLockedTokensInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
   onPressRow: (hash: string) => void;
 };
+
 const PAGE_ITEMS_COUNT = 15;
+
 export const AccountInfo = ({
   wallet,
   balance,
+  transactionsList,
+  stakingBalance,
+  unvestedBalance,
+  lockedBalance,
+  vestedBalance,
+  showLockedTokensInfo,
+  onCloseLockedTokensInfo,
+  onPressInfo,
   onSend,
   onReceive,
   onPressRow,
-  transactionsList,
 }: AccountInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
@@ -68,6 +87,11 @@ export const AccountInfo = ({
         <AccountInfoHeader
           wallet={wallet}
           balance={balance}
+          unvestedBalance={unvestedBalance}
+          lockedBalance={lockedBalance}
+          vestedBalance={vestedBalance}
+          stakingBalance={stakingBalance}
+          onPressInfo={onPressInfo}
           onSend={onSend}
           onReceive={onReceive}
         />
@@ -91,7 +115,18 @@ export const AccountInfo = ({
         )}
       </>
     ),
-    [balance, onReceive, onSend, onTabChange, wallet],
+    [
+      wallet,
+      balance,
+      unvestedBalance,
+      lockedBalance,
+      vestedBalance,
+      stakingBalance,
+      onPressInfo,
+      onSend,
+      onReceive,
+      onTabChange,
+    ],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(
     ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
@@ -115,7 +150,7 @@ export const AccountInfo = ({
   );
 
   const keyExtractor = useCallback((item: TransactionList) => item.hash, []);
-
+  const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
   return (
     <PopupContainer plain>
       <FlatList
@@ -132,6 +167,19 @@ export const AccountInfo = ({
         onEndReached={onEndReached}
         onEndReachedThreshold={0.2}
       />
+      {showLockedTokensInfo && (
+        <BottomSheet
+          i18nTitle={I18N.lockedTokensInfoTitle}
+          onClose={onCloseLockedTokensInfo}
+          closeDistance={closeDistance}>
+          <Text
+            t14
+            color={Color.textBase2}
+            i18n={I18N.lockedTokensInfoDescription}
+          />
+          <Spacer height={20} />
+        </BottomSheet>
+      )}
     </PopupContainer>
   );
 };

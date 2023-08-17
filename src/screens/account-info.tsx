@@ -7,15 +7,49 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {prepareTransactions, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
+import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Transaction} from '@app/models/transaction';
+import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {TransactionList} from '@app/types';
 
 export const AccountInfoScreen = () => {
   const route = useTypedRoute<'accountInfo'>();
+  const [showLockedTokensInfo, setShowLockedTokensInfo] = useState(false);
   const navigation = useTypedNavigation();
   const wallet = useWallet(route.params.accountId);
-  const [balance, setBalance] = useState(
-    app.getBalance(route.params.accountId),
+  const balances = useWalletsBalance([wallet!]);
+  const vestingBalances = useWalletsVestingBalance([wallet!]);
+  const stakingBalances = useWalletsStakingBalance([wallet!]);
+  const currentBalance = useMemo(
+    () => balances[wallet?.address!],
+    [balances, wallet?.address],
+  );
+  const currentVestingBalance = useMemo(
+    () => vestingBalances[wallet?.address!],
+    [vestingBalances, wallet?.address],
+  );
+
+  const unvestedBalance = useMemo(
+    () => currentVestingBalance?.[VestingMetadataType.unvested],
+    [currentVestingBalance],
+  );
+
+  const lockedBalance = useMemo(
+    () => currentVestingBalance?.[VestingMetadataType.locked],
+
+    [currentVestingBalance],
+  );
+
+  const vestedBalance = useMemo(
+    () => currentVestingBalance?.[VestingMetadataType.vested],
+    [currentVestingBalance],
+  );
+
+  const stakingBalance = useMemo(
+    () => stakingBalances?.[wallet?.address!],
+    [stakingBalances, wallet?.address],
   );
 
   const transactions = useMemo(() => {
@@ -47,24 +81,6 @@ export const AccountInfoScreen = () => {
     [route.params.accountId, transactions],
   );
 
-  useEffect(() => {
-    transactions.addListener(onTransactionList);
-    return () => {
-      transactions.removeListener(onTransactionList);
-    };
-  }, [onTransactionList, transactions]);
-
-  useEffect(() => {
-    const onBalance = () => {
-      setBalance(app.getBalance(route.params.accountId));
-    };
-
-    app.on('balance', onBalance);
-    return () => {
-      app.off('balance', onBalance);
-    };
-  }, [route.params.accountId]);
-
   const onReceive = useCallback(() => {
     showModal('cardDetailsQr', {address: route.params.accountId});
   }, [route.params.accountId]);
@@ -82,6 +98,21 @@ export const AccountInfoScreen = () => {
     [navigation],
   );
 
+  const onPressInfo = useCallback(() => {
+    setShowLockedTokensInfo(v => !v);
+  }, []);
+
+  const onCloseLockedTokensInfo = useCallback(() => {
+    setShowLockedTokensInfo(false);
+  }, []);
+
+  useEffect(() => {
+    transactions.addListener(onTransactionList);
+    return () => {
+      transactions.removeListener(onTransactionList);
+    };
+  }, [onTransactionList, transactions]);
+
   if (!wallet) {
     return <Loading />;
   }
@@ -89,10 +120,17 @@ export const AccountInfoScreen = () => {
   return (
     <AccountInfo
       wallet={wallet}
-      balance={balance}
+      balance={currentBalance}
+      transactionsList={transactionsList}
+      unvestedBalance={unvestedBalance}
+      lockedBalance={lockedBalance}
+      vestedBalance={vestedBalance}
+      stakingBalance={stakingBalance}
+      showLockedTokensInfo={showLockedTokensInfo}
+      onCloseLockedTokensInfo={onCloseLockedTokensInfo}
+      onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}
-      transactionsList={transactionsList}
       onPressRow={onPressRow}
     />
   );

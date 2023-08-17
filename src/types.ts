@@ -1011,6 +1011,8 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
+export type BalanceConstructor = Balance | BN | number | string;
+
 export interface Balance {
   readonly raw: BN;
   toNumber: () => number;
@@ -1018,8 +1020,12 @@ export interface Balance {
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => boolean;
+  isPositive: () => this is boolean;
   toBalanceString: () => string;
+  add: (value?: BalanceConstructor) => Balance;
+  div: (value?: BalanceConstructor) => Balance;
+  mul: (value?: BalanceConstructor) => Balance;
+  eq: (value?: BalanceConstructor) => boolean;
 }
 
 export enum ValidUrlProtocol {

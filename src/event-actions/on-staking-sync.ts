@@ -1,16 +1,17 @@
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
 export async function onStakingSync() {
-  const wallets = Wallet.getAll();
-
+  Logger.log('onStakingSync');
   const cosmos = new Cosmos(app.provider!);
-  const addressList = wallets
-    .filtered('isHidden != true')
-    .map(w => Cosmos.address(w.address));
+  const addressList = Wallet.getAllVisible().map(w =>
+    Cosmos.address(w.address),
+  );
   await sync(addressList, cosmos);
+  app.emit(Events.onWalletsStakingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {

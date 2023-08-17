@@ -10,15 +10,15 @@ import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 
 export interface LockedTokensProps {
   totalAmout: number;
-  availableAmout: number;
-  lockedAmout: number;
+  availableAmount: number;
+  lockedAmount: number;
   onForwardPress(): void;
 }
 
 export function LockedTokens({
   totalAmout,
-  availableAmout,
-  lockedAmout,
+  availableAmount,
+  lockedAmount,
   onForwardPress,
 }: LockedTokensProps) {
   return (
@@ -44,7 +44,7 @@ export function LockedTokens({
           t14
           color={Color.textBase2}
           i18n={I18N.lockedTokensAvailable}
-          i18params={{count: cleanNumber(availableAmout)}}
+          i18params={{count: cleanNumber(availableAmount)}}
         />
         <Spacer width={8} />
         <Icon i18 color={Color.graphicBase2} name={IconsName.lock} />
@@ -53,7 +53,7 @@ export function LockedTokens({
           t14
           color={Color.textBase2}
           i18n={I18N.lockedTokensLocked}
-          i18params={{count: cleanNumber(lockedAmout)}}
+          i18params={{count: cleanNumber(lockedAmount)}}
         />
       </View>
     </View>
