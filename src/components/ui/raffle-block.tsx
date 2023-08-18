@@ -14,7 +14,6 @@ import {WEI} from '@app/variables/common';
 import {Button, ButtonSize, ButtonVariant} from './button';
 import {First} from './first';
 import {Icon, IconsName} from './icon';
-import {Spacer} from './spacer';
 import {Text} from './text';
 
 import {LottieWrap} from '../lottie';
@@ -131,7 +130,7 @@ export const RaffleBlock = ({
   return (
     <TouchableOpacity onPress={handlePress}>
       <LinearGradient colors={colors} style={styles.gradientBlock}>
-        <View style={[styles.row, styles.flexOne]}>
+        <View style={styles.wrapper}>
           <View style={styles.textBlock}>
             <View style={[styles.row, styles.flexOne]}>
               <Text
@@ -161,16 +160,17 @@ export const RaffleBlock = ({
                 t13
                 numberOfLines={1}
                 style={styles.flexOne}
-                color={Color.textBase3}>
+                color={Color.textBase3}
+                ellipsizeMode={'tail'}>
                 {formattedAmount} ISLM
               </Text>
             </View>
           </View>
-          <Spacer flex={1} />
           {buttonType === RaffleBlocButtonType.ticket && (
-            <>
+            <View style={styles.buttonWrapper}>
               {state === 'result' && (
                 <Button
+                  style={styles.resultButton}
                   size={ButtonSize.small}
                   variant={ButtonVariant.warning}
                   i18n={I18N.earnShowResult}
@@ -190,6 +190,7 @@ export const RaffleBlock = ({
                 !showTicketAnimation &&
                 !loadingSuccess && (
                   <Button
+                    style={styles.ticketButton}
                     size={ButtonSize.small}
                     variant={ButtonVariant.second}
                     i18n={I18N.earnGetTicket}
@@ -220,7 +221,7 @@ export const RaffleBlock = ({
                     </First>
                   </Button>
                 )}
-            </>
+            </View>
           )}
           {buttonType === RaffleBlocButtonType.custom && rightAction}
         </View>
@@ -234,7 +235,7 @@ const styles = createTheme({
     transform: [{translateX: -10}],
   },
   textBlock: {
-    width: '60%',
+    flex: 1,
   },
   flexOne: {
     flex: 1,
@@ -258,9 +259,25 @@ const styles = createTheme({
     alignItems: 'center',
   },
   ticketButton: {
+    marginLeft: 8,
     width: 95,
   },
   timerButton: {
     minWidth: 85,
+    marginLeft: 8,
+  },
+  resultButton: {
+    width: 131,
+    marginLeft: 8,
+  },
+  wrapper: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonWrapper: {
+    flex: 0,
+    alignItems: 'flex-end',
   },
 });
