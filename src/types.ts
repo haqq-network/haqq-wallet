@@ -1066,7 +1066,7 @@ export interface IGovernanceWidget extends IWidgetBase {
 
 export interface ILayoutWidget extends IWidgetBase {
   component: 'Layout';
-  direction: 'horizontal | vertical';
+  direction: 'horizontal' | 'vertical';
   child: IWidget[];
 }
 
