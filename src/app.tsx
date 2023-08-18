@@ -66,6 +66,7 @@ import {
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 
 import {Spacer} from './components/ui';
+import {getModalScreenOptions} from './helpers/get-modal-screen-options';
 import {themeUpdaterHOC} from './helpers/theme-updater-hoc';
 import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
@@ -104,6 +105,7 @@ import {SettingsViewRecoveryPhraseScreen} from './screens/settings-view-recovery
 import {SignInScreen} from './screens/signin';
 import {SignUpScreen} from './screens/signup';
 import {SssMigrateScreen} from './screens/sss-migrate';
+import {TotalValueInfoScreen} from './screens/total-value-info';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
 import {WalletConnectScreen} from './screens/wallet-connect';
@@ -168,6 +170,8 @@ const stackScreenOptions = {
 const withoutHeader = {
   headerShown: false,
 };
+
+const totalValueInfoOptions = getModalScreenOptions(I18N.totalValueScreenTitle);
 
 export const App = () => {
   const theme = useTheme();
@@ -406,6 +410,11 @@ export const App = () => {
                 name="accountInfo"
                 component={themeUpdaterHOC(AccountInfoScreen)}
                 options={getWalletTitle}
+              />
+              <Stack.Screen
+                name="totalValueInfo"
+                component={themeUpdaterHOC(TotalValueInfoScreen)}
+                options={totalValueInfoOptions}
               />
               <Stack.Screen
                 name="backupNotification"

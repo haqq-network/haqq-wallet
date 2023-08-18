@@ -156,6 +156,7 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
+  totalValueInfo: undefined;
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -945,6 +946,9 @@ export type Modals = {
   captcha: {
     onClose?: () => void;
     variant?: CaptchaType;
+  };
+  lockedTokensInfo: {
+    onClose?: () => void;
   };
 };
 

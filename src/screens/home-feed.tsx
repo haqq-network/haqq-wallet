@@ -1,17 +1,13 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-
-import {Collection, CollectionChangeSet} from 'realm';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {HomeFeed} from '@app/components/home-feed';
 import {createNftCollectionSet} from '@app/components/nft-viewer/mock';
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {prepareTransactions} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation} from '@app/hooks';
-import {Transaction} from '@app/models/transaction';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
-import {TokenItem, TransactionList} from '@app/types';
+import {TokenItem} from '@app/types';
 
 const MOCK_TOKENS: TokenItem[] = [
   {
@@ -34,18 +30,13 @@ export const HomeFeedScreen = () => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const navigation = useTypedNavigation();
   const [refreshing, setRefreshing] = useState(false);
+  const adressList = useMemo(() => Wallet.addressList(), []);
+  const transactionsList = useTransactionList(adressList);
 
   // TODO:
   const islmPrice = useMemo(
     () => MOCK_TOKENS.find(it => it.ticker === 'ISLM')?.priceUsd ?? 0,
     [],
-  );
-
-  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions(
-      Wallet.addressList(),
-      Transaction.getAllByProviderId(app.providerId).snapshot(),
-    ),
   );
 
   const onWalletsRefresh = useCallback(() => {
@@ -74,46 +65,6 @@ export const HomeFeedScreen = () => {
   const onPressTokenRow = useCallback((tiker: string) => {
     Logger.log('token row pressed', tiker);
   }, []);
-
-  const updateTransactionsList = useCallback(() => {
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-    setTransactionsList(
-      prepareTransactions(Wallet.addressList(), transactions.snapshot()),
-    );
-  }, []);
-
-  const onTransactionsList = useCallback(
-    (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
-      if (
-        changes.insertions.length ||
-        changes.newModifications.length ||
-        changes.deletions.length
-      ) {
-        updateTransactionsList();
-      }
-    },
-    [updateTransactionsList],
-  );
-
-  useEffect(() => {
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-    setTransactionsList(
-      prepareTransactions(Wallet.addressList(), transactions.snapshot()),
-    );
-
-    transactions.addListener(onTransactionsList);
-    return () => {
-      transactions.removeListener(onTransactionsList);
-    };
-  }, [onTransactionsList]);
-
-  useEffect(() => {
-    app.on(Events.onProviderChanged, updateTransactionsList);
-
-    return () => {
-      app.off(Events.onProviderChanged, updateTransactionsList);
-    };
-  }, [updateTransactionsList]);
 
   return (
     <HomeFeed

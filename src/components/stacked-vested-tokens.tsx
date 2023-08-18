@@ -60,7 +60,6 @@ export function StackedVestedTokens({
             </View>
           </>
         )}
-        <Spacer height={8} />
       </View>
     </View>
   );

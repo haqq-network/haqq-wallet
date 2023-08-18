@@ -28,7 +28,7 @@ export function useWalletsBalance(
       setBalance(getBalance(wallets));
     };
 
-    if (prevWalletsLength !== wallets.length) {
+    if (prevWalletsLength !== wallets?.length) {
       onBalance();
     }
 

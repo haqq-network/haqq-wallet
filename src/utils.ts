@@ -6,6 +6,7 @@ import {
   differenceInMilliseconds,
   differenceInMinutes,
 } from 'date-fns';
+import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 import _ from 'lodash';
 import {
@@ -684,3 +685,5 @@ export async function requestCameraPermissions(): Promise<boolean> {
   }
   return false;
 }
+
+export const decimalToHex = (value: string) => new Decimal(value).toHex();

@@ -1,6 +1,7 @@
 import createHash from 'create-hash';
 
 import {realm} from '@app/models/index';
+import {decimalToHex} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export enum StakingMetadataType {
@@ -18,6 +19,7 @@ export class StakingMetadata extends Realm.Object {
       delegator: 'string',
       validator: 'string',
       amount: 'float',
+      amountHex: 'string',
       completion_time: 'string?',
     },
     primaryKey: 'hash',
@@ -27,6 +29,7 @@ export class StakingMetadata extends Realm.Object {
   delegator!: string;
   validator!: string;
   amount!: number;
+  amountHex!: string;
   completion_time: string | undefined;
 
   static createDelegation(
@@ -51,8 +54,8 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.delegation,
           delegator,
           validator,
-          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );
@@ -79,8 +82,8 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.reward,
           delegator,
           validator,
-          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );
@@ -114,9 +117,9 @@ export class StakingMetadata extends Realm.Object {
           type: StakingMetadataType.undelegation,
           delegator,
           validator,
-          // TODO: remove WEI
           amount: parseInt(amount, 10) / WEI,
           completion_time,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );

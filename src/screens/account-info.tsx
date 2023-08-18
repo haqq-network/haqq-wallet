@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -9,44 +9,24 @@ import {prepareTransactions, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Transaction} from '@app/models/transaction';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
+import {Balance} from '@app/services/balance';
 import {TransactionList} from '@app/types';
 
 export const AccountInfoScreen = () => {
   const route = useTypedRoute<'accountInfo'>();
-  const [showLockedTokensInfo, setShowLockedTokensInfo] = useState(false);
   const navigation = useTypedNavigation();
-  const wallet = useWallet(route.params.accountId);
+  const accountId = useMemo(() => route.params.accountId, [route]);
+  const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const vestingBalances = useWalletsVestingBalance([wallet!]);
+  const unvestedBalance = useRef(Balance.Empty).current;
+  const vestedBalance = useRef(Balance.Empty).current;
+  const lockedBalance = useRef(Balance.Empty).current;
   const stakingBalances = useWalletsStakingBalance([wallet!]);
   const currentBalance = useMemo(
     () => balances[wallet?.address!],
     [balances, wallet?.address],
   );
-  const currentVestingBalance = useMemo(
-    () => vestingBalances[wallet?.address!],
-    [vestingBalances, wallet?.address],
-  );
-
-  const unvestedBalance = useMemo(
-    () => currentVestingBalance?.[VestingMetadataType.unvested],
-    [currentVestingBalance],
-  );
-
-  const lockedBalance = useMemo(
-    () => currentVestingBalance?.[VestingMetadataType.locked],
-
-    [currentVestingBalance],
-  );
-
-  const vestedBalance = useMemo(
-    () => currentVestingBalance?.[VestingMetadataType.vested],
-    [currentVestingBalance],
-  );
-
   const stakingBalance = useMemo(
     () => stakingBalances?.[wallet?.address!],
     [stakingBalances, wallet?.address],
@@ -98,13 +78,7 @@ export const AccountInfoScreen = () => {
     [navigation],
   );
 
-  const onPressInfo = useCallback(() => {
-    setShowLockedTokensInfo(v => !v);
-  }, []);
-
-  const onCloseLockedTokensInfo = useCallback(() => {
-    setShowLockedTokensInfo(false);
-  }, []);
+  const onPressInfo = useCallback(() => showModal('lockedTokensInfo'), []);
 
   useEffect(() => {
     transactions.addListener(onTransactionList);
@@ -126,8 +100,6 @@ export const AccountInfoScreen = () => {
       lockedBalance={lockedBalance}
       vestedBalance={vestedBalance}
       stakingBalance={stakingBalance}
-      showLockedTokensInfo={showLockedTokensInfo}
-      onCloseLockedTokensInfo={onCloseLockedTokensInfo}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}

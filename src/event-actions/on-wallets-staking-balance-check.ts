@@ -1,5 +1,3 @@
-import Decimal from 'decimal.js';
-
 import {app} from '@app/contexts';
 import {
   StakingMetadata,
@@ -7,7 +5,6 @@ import {
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {WEI} from '@app/variables/common';
 
 export async function onWalletsStakingBalanceCheck() {
   try {
@@ -15,10 +12,11 @@ export async function onWalletsStakingBalanceCheck() {
       const metadata = StakingMetadata.getAllByDelegator(
         w.cosmosAddress,
       ).filtered('type != $0', StakingMetadataType.reward);
-      const total = metadata.reduce((prev, curr) => prev + curr.amount, 0);
-      // TODO: remove WEI after StakingMetadata
-      const parsedTotal = new Decimal(total).mul(WEI).toHex();
-      return [w.address, new Balance(parsedTotal)];
+      const total = metadata.reduce(
+        (prev, curr) => prev.add(curr.amountHex),
+        Balance.Empty,
+      );
+      return [w.address, total];
     });
 
     await app.onWalletsStakingBalance(Object.fromEntries(balances));
