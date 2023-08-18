@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {FlatList, ListRenderItem} from 'react-native';
+import {FlatList, ListRenderItem, ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {TransactionEmpty} from '@app/components/transaction-empty';
@@ -13,6 +13,7 @@ import {BannersWrapper} from '@app/screens/banners';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
 import {WalletsWrapper} from '@app/screens/wallets';
 import {NftCollection, TokenItem, TransactionList} from '@app/types';
+import {WidgetRoot} from '@app/widgets';
 
 import {NftViewer} from './nft-viewer';
 import {TokenRow} from './token-row';
@@ -71,10 +72,13 @@ export const HomeFeed = ({
   }, []);
   const renderListHeader = useCallback(() => {
     return (
-      <>
+      <ScrollView
+        contentContainerStyle={styles.contentContainerStyle}
+        style={styles.container}>
         <LockedTokensWrapper />
         <WalletsWrapper />
         <BannersWrapper />
+        <WidgetRoot />
         <First>
           {isFeatureEnabled(Feature.tokens) && (
             <>
@@ -127,7 +131,7 @@ export const HomeFeed = ({
           )}
           <Text t6 i18n={I18N.transactions} style={styles.t6} />
         </First>
-      </>
+      </ScrollView>
     );
   }, [onTabChange]);
 
@@ -168,46 +172,49 @@ export const HomeFeed = ({
     [islmPrice, onPressTokenRow],
   );
 
-  if (activeTab === TabNames.tokens) {
-    return (
-      <FlatList
-        key={app.providerId}
-        style={styles.container}
-        refreshing={refreshing}
-        onRefresh={onWalletsRefresh}
-        contentContainerStyle={styles.grow}
-        scrollEnabled={scrollEnabled}
-        ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={renderListEmptyComponent}
-        data={tokensList}
-        renderItem={tokensRenderItem}
-        keyExtractor={tokensKeyExtractor}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.2}
-      />
-    );
-  }
+  return renderListHeader();
 
-  return (
-    <FlatList
-      key={app.providerId}
-      style={styles.container}
-      refreshing={refreshing}
-      onRefresh={onWalletsRefresh}
-      contentContainerStyle={styles.grow}
-      scrollEnabled={scrollEnabled}
-      ListHeaderComponent={renderListHeader}
-      ListEmptyComponent={renderListEmptyComponent}
-      data={transactionsData}
-      renderItem={transactionRenderItem}
-      keyExtractor={transactionKeyExtractor}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.2}
-    />
-  );
+  // if (activeTab === TabNames.tokens) {
+  //   return (
+  //     <FlatList
+  //       key={app.providerId}
+  //       style={styles.container}
+  //       refreshing={refreshing}
+  //       onRefresh={onWalletsRefresh}
+  //       contentContainerStyle={styles.grow}
+  //       scrollEnabled={scrollEnabled}
+  //       ListHeaderComponent={renderListHeader}
+  //       ListEmptyComponent={renderListEmptyComponent}
+  //       data={tokensList}
+  //       renderItem={tokensRenderItem}
+  //       keyExtractor={tokensKeyExtractor}
+  //       onEndReached={onEndReached}
+  //       onEndReachedThreshold={0.2}
+  //     />
+  //   );
+  // }
+
+  // return (
+  //   <FlatList
+  //     key={app.providerId}
+  //     style={styles.container}
+  //     refreshing={refreshing}
+  //     onRefresh={onWalletsRefresh}
+  //     contentContainerStyle={styles.grow}
+  //     scrollEnabled={scrollEnabled}
+  //     ListHeaderComponent={renderListHeader}
+  //     ListEmptyComponent={renderListEmptyComponent}
+  //     data={transactionsData}
+  //     renderItem={transactionRenderItem}
+  //     keyExtractor={transactionKeyExtractor}
+  //     onEndReached={onEndReached}
+  //     onEndReachedThreshold={0.2}
+  //   />
+  // );
 };
 
 const styles = createTheme({
+  contentContainerStyle: {flex: 0},
   container: {
     flex: 1,
   },

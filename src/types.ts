@@ -1037,3 +1037,72 @@ export enum ValidUrlProtocol {
   etherium = 'etherium',
   wc = 'wc',
 }
+
+export type WidgetNames = 'Transactions' | 'TransactionShort' | 'итд';
+
+export interface IWidgetBase {
+  component: string;
+}
+
+export interface ITransactionsWidget extends IWidgetBase {
+  component: 'Transactions';
+}
+
+export interface ITransactionsShortWidget extends IWidgetBase {
+  component: 'TransactionsShort';
+}
+
+export interface IRafflesWidget extends IWidgetBase {
+  component: 'Raffles';
+}
+
+export interface IStakingWidget extends IWidgetBase {
+  component: 'Staking';
+}
+
+export interface IGovernanceWidget extends IWidgetBase {
+  component: 'Governance';
+}
+
+export interface ILayoutWidget extends IWidgetBase {
+  component: 'Layout';
+  direction: 'horizontal | vertical';
+  child: IWidget[];
+}
+
+export interface IAdWidget extends IWidgetBase {
+  component: 'Ad';
+  title: string;
+  description: string;
+  background_from: string;
+  background_to: string;
+  background_image?: string;
+  title_color?: string;
+  description_color?: string;
+  target: string;
+}
+
+export interface IBannerWidget extends IWidgetBase {
+  component: 'Banner';
+  title: string;
+  description: string;
+  button_title: string;
+  button_color: string;
+  button_background_color: string;
+  background_color_from: string;
+  background_color_to: string;
+  background_image_url: string;
+  title_color?: string;
+  description_color?: string;
+  target: string;
+}
+
+export type IWidget =
+  | ITransactionsWidget
+  | ITransactionsShortWidget
+  | IRafflesWidget
+  | IStakingWidget
+  | IGovernanceWidget
+  | ILayoutWidget
+  | IAdWidget
+  | IBannerWidget;
