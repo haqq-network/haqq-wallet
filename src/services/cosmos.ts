@@ -87,8 +87,12 @@ export class Cosmos {
     };
   }
 
-  static address(address: string) {
+  static addressToBech32(address: string) {
     return converter('haqq').toBech32(address);
+  }
+
+  static bech32ToAddress(address: string) {
+    return converter('haqq').toHex(address).toLowerCase();
   }
 
   getPath(subPath: string) {

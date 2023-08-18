@@ -19,6 +19,7 @@ export class Provider extends Realm.Object {
       isEditable: 'bool',
       evmEndpoints: 'string[]',
       tmEndpoints: 'string[]',
+      indexer: 'string?',
     },
     primaryKey: 'id',
   };
@@ -33,6 +34,7 @@ export class Provider extends Realm.Object {
   isEditable!: boolean;
   evmEndpoints: string[];
   tmEndpoints: string[];
+  indexer: string | undefined;
 
   get ethChainIdHex() {
     return '0x' + this.ethChainId.toString(16);
