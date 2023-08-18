@@ -1,20 +1,18 @@
 import React, {useCallback, useRef} from 'react';
 
-import {Alert, Dimensions, StyleSheet} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {onAppReset} from '@app/event-actions/on-app-reset';
 import {onWalletReset} from '@app/event-actions/on-wallet-reset';
 import {hideModal, showModal} from '@app/helpers';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {sleep} from '@app/utils';
 
 import {BottomSheet, BottomSheetRef} from './bottom-sheet';
 import {Button, ButtonVariant, Spacer, Text} from './ui';
-
-const h = Dimensions.get('window').height;
-const closeDistance = h / 5;
 
 type RestorePasswordProps = {
   onClose: () => void;
@@ -24,7 +22,7 @@ const LOADING_DURATION = 600;
 
 export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const bottomSheetRef = useRef<BottomSheetRef>(null);
-
+  const closeDistance = useCalculatedDimensionsValue(({height}) => height / 5);
   const onClickResetConfirm = useCallback(async () => {
     await bottomSheetRef.current?.close?.();
     const closeLoading = showModal('loading');

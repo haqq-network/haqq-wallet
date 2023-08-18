@@ -30,6 +30,7 @@ import {useTheme} from '@app/hooks';
 import {Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
+import {LockedTokensInfo} from './locked-tokens-info';
 
 export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
@@ -113,6 +114,8 @@ export const ModalWrapper = ({
         return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
       case 'raffleAgreement':
         return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
+      case 'lockedTokensInfo':
+        return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

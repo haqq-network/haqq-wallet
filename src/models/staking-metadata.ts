@@ -1,6 +1,7 @@
 import createHash from 'create-hash';
 
 import {realm} from '@app/models/index';
+import {decimalToHex} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 export enum StakingMetadataType {
@@ -18,6 +19,7 @@ export class StakingMetadata extends Realm.Object {
       delegator: 'string',
       validator: 'string',
       amount: 'float',
+      amountHex: 'string',
       completion_time: 'string?',
     },
     primaryKey: 'hash',
@@ -27,6 +29,7 @@ export class StakingMetadata extends Realm.Object {
   delegator!: string;
   validator!: string;
   amount!: number;
+  amountHex!: string;
   completion_time: string | undefined;
 
   static createDelegation(
@@ -52,6 +55,7 @@ export class StakingMetadata extends Realm.Object {
           delegator,
           validator,
           amount: parseInt(amount, 10) / WEI,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );
@@ -79,6 +83,7 @@ export class StakingMetadata extends Realm.Object {
           delegator,
           validator,
           amount: parseInt(amount, 10) / WEI,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );
@@ -114,6 +119,7 @@ export class StakingMetadata extends Realm.Object {
           validator,
           amount: parseInt(amount, 10) / WEI,
           completion_time,
+          amountHex: decimalToHex(amount),
         },
         Realm.UpdateMode.Modified,
       );
@@ -171,5 +177,23 @@ export class StakingMetadata extends Realm.Object {
   static getAllByValidator(validator: string) {
     const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
     return rows.filtered(`validator = '${validator}'`);
+  }
+
+  /**
+   * @param {string} address - cosmos wallet address
+   */
+  static getAllByDelegator(address: string) {
+    const rows = realm.objects<StakingMetadata>(StakingMetadata.schema.name);
+    return rows.filtered('delegator = $0', address);
+  }
+
+  static toMap(rows: Realm.Results<StakingMetadata> | StakingMetadata[]) {
+    return (rows as StakingMetadata[])?.reduce?.(
+      (prev, curr) => ({
+        ...prev,
+        [curr.type]: curr,
+      }),
+      {},
+    ) as Record<StakingMetadataType, StakingMetadata>;
   }
 }

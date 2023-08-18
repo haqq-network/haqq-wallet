@@ -63,8 +63,13 @@ export class VestingMetadata extends Realm.Object {
     return realm.objects<VestingMetadata>(VestingMetadata.schema.name);
   }
 
-  static getAllByType(type: string) {
+  static getAllByType(type: VestingMetadataType) {
     const rows = realm.objects<VestingMetadata>(VestingMetadata.schema.name);
-    return rows.filtered(`type = '${type}'`);
+    return rows.filtered('type = $0', type);
+  }
+
+  static getAllByAccount(account: string) {
+    const rows = realm.objects<VestingMetadata>(VestingMetadata.schema.name);
+    return rows.filtered('account = $0', account);
   }
 }

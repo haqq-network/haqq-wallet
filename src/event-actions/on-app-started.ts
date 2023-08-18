@@ -9,10 +9,9 @@ import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-cr
 import {onBannerGasdropCreate} from '@app/event-actions/on-banner-gasdrop-create';
 import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notification-create';
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
-import {onStakingSync} from '@app/event-actions/on-staking-sync';
-import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
@@ -73,6 +72,6 @@ export async function onAppStarted() {
 
   await onUpdatesSync();
   await onAppBackup();
-  await Promise.all([onStakingSync(), onVestingSync()]);
+  await awaitForEventDone(Events.onSyncAppBalances);
   app.checkUpdate();
 }

@@ -8,7 +8,9 @@ import {createTheme} from '@app/helpers';
 export type SeparatorProps = {height?: number} & ViewProps;
 
 export const Separator = ({style, height, ...props}: SeparatorProps) => {
-  return <View style={[styles.separator, style, {height}]} {...props} />;
+  return (
+    <View style={[styles.separator, style, !!height && {height}]} {...props} />
+  );
 };
 
 const styles = createTheme({

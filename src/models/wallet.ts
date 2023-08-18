@@ -209,6 +209,11 @@ export class Wallet extends Realm.Object {
     });
   }
 
+  async toggleIsHidden() {
+    this.update({isHidden: !this.isHidden});
+    await awaitForEventDone(Events.onWalletVisibilityChange);
+  }
+
   update(params: Partial<Wallet>) {
     realm.write(() => {
       realm.create(
