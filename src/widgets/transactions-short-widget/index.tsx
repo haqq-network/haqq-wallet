@@ -15,11 +15,11 @@ const TransactionsShortWidgetWrapper = memo(() => {
   const calculateInfo = useCallback(() => {
     wallets.map(wallet => {
       const receivedSum = transactions
-        .filtered(`to = '${wallet.toLowerCase()}'`)
+        .filtered('to = $0', wallet.toLocaleLowerCase())
         .sum('value');
 
       const sendedSum = transactions
-        .filtered(`from = '${wallet.toLowerCase()}'`)
+        .filtered('from = $0', wallet.toLocaleLowerCase())
         .sum('value');
 
       setReceived(prev => prev + receivedSum);
