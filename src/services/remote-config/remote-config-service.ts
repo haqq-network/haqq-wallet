@@ -25,6 +25,7 @@ export class RemoteConfig {
         return RemoteConfig.getAll();
       }
       const config = await Backend.instance.getRemoteConfig();
+      Logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfig.isInited = true;

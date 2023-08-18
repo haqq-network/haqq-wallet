@@ -71,7 +71,7 @@ export class Wallet extends Realm.Object {
 
   get cosmosAddress() {
     if (!this._cosmosAddress) {
-      this._cosmosAddress = Cosmos.address(this.address);
+      this._cosmosAddress = Cosmos.addressToBech32(this.address);
     }
 
     return this._cosmosAddress;
