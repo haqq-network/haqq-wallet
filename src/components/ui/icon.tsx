@@ -91,6 +91,7 @@ export enum IconsName {
   export = 'export',
   scroll = 'scroll',
   coin = 'coin',
+  staking_thin = 'staking_thin',
 }
 
 export type IconSize =
@@ -103,6 +104,7 @@ export type IconSize =
   | {i32: boolean}
   | {i42: boolean}
   | {i48: boolean}
+  | {i62: boolean}
   | {i72: boolean}
   | {i80: boolean}
   | {i120: boolean}
@@ -128,6 +130,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
         'i48' in props && styles.i48Container,
+        'i62' in props && styles.i62Container,
         'i72' in props && styles.i72Container,
         'i80' in props && styles.i80Container,
         'i120' in props && styles.i120Container,
@@ -188,5 +191,9 @@ const styles = StyleSheet.create({
   i12Container: {
     width: 12,
     height: 12,
+  },
+  i62Container: {
+    width: 62,
+    height: 62,
   },
 });
