@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js';
+
 import {app} from '@app/contexts';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
@@ -25,7 +27,7 @@ export async function onWalletsBalanceCheck() {
 
       balances = Object.entries(updates.balance).map(b => [
         Cosmos.bech32ToAddress(b[0]),
-        new Balance(b[1]),
+        new Balance(new Decimal(b[1]).toHex()),
       ]);
 
       VariablesDate.set(
