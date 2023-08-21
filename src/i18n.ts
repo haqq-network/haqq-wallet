@@ -728,6 +728,7 @@ export enum I18N {
   transactionWidgetSpendTitle,
   transactionWidgetTitle,
   transactionWidgetShortTitle,
+  transactionAmountText,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1059,6 +1060,7 @@ const en: Record<I18N, string> = {
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.transactionReceiveTitle]: 'Received',
+  [I18N.transactionAmountText]: `{{prefix}} {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionWidgetSpendTitle]: `Spend {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionWidgetTitle]: 'Transactions',

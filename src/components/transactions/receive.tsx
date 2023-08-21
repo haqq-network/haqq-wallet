@@ -7,7 +7,7 @@ import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {TransactionListReceive} from '@app/types';
 
 export type TransactionPreviewProps = {
@@ -23,7 +23,14 @@ export const TransactionReceive = ({
     () => `from ${shortAddress(item.from, '•')}`,
     [item.from],
   );
-  const text = useMemo(() => `+ ${cleanNumber(item.value)} ISLM`, [item.value]);
+  const text = useMemo(
+    () =>
+      getText(I18N.transactionAmountText, {
+        prefix: '+',
+        value: cleanNumber(item.value),
+      }),
+    [item.value],
+  );
   const handlePress = useCallback(() => {
     onPress(item.hash);
   }, [item.hash, onPress]);
