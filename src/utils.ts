@@ -686,4 +686,23 @@ export async function requestCameraPermissions(): Promise<boolean> {
   return false;
 }
 
+export async function fetchWithTimeout(
+  input: RequestInfo,
+  init?: RequestInit & {timeout?: number},
+): Promise<Response> {
+  const {timeout = 30000, ...opts} = init || {};
+  const controller = new AbortController();
+  const id = setTimeout(() => {
+    if (timeout > 0) {
+      controller.abort();
+    }
+  }, timeout);
+  const response = await fetch(input, {
+    ...opts,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+  return response;
+}
+
 export const decimalToHex = (value: string) => new Decimal(value).toHex();
