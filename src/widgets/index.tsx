@@ -98,10 +98,10 @@ const MOCK_DATA = [
         direction: 'horizontal',
         child: [
           {
-            component: 'Transactions',
+            component: 'Governance',
           },
           {
-            component: 'Transactions',
+            component: 'Governance',
           },
         ],
       },

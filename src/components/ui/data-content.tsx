@@ -3,9 +3,12 @@ import React from 'react';
 import {View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Card} from '@app/components/ui/card';
+import {Spacer} from '@app/components/ui/spacer';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 
 export type DataContentProps = {
   title?: React.ReactNode;
@@ -19,6 +22,7 @@ export type DataContentProps = {
   subtitleI18nParams?: Record<string, string>;
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
+  wallet?: Wallet;
 };
 export const DataContent = ({
   title,
@@ -32,6 +36,7 @@ export const DataContent = ({
   subtitleI18nParams,
   titleI18nParams,
   numberOfLines = 1,
+  wallet,
 }: DataContentProps) => {
   return (
     <View
@@ -54,7 +59,22 @@ export const DataContent = ({
         {title}
       </Text>
       {(subtitleI18n || subtitle) && (
-        <>
+        <View style={styles.walletWrapper}>
+          {!!wallet && (
+            <>
+              <Card
+                width={20}
+                height={14}
+                pattern={wallet?.pattern}
+                colorFrom={wallet?.colorFrom}
+                colorTo={wallet?.colorTo}
+                colorPattern={wallet?.colorPattern}
+                borderRadius={3}
+                style={styles.removePadding}
+              />
+              <Spacer width={6} />
+            </>
+          )}
           {/* @ts-expect-error */}
           <Text
             t14
@@ -63,12 +83,14 @@ export const DataContent = ({
             color={Color.textBase2}>
             {subtitle}
           </Text>
-        </>
+        </View>
       )}
     </View>
   );
 };
 const styles = createTheme({
+  walletWrapper: {flexDirection: 'row', alignItems: 'center'},
+  removePadding: {padding: 0},
   container: {
     paddingVertical: 16,
   },

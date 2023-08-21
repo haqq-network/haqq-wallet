@@ -236,6 +236,7 @@ export enum I18N {
   signinRestoreWalletTextFieldPlaceholder,
   settingsAddressBookLabel,
   transactionSendTitle,
+  transactionReceiveTitle,
   signupStoreWalletCreatingAccount,
   signupStoreWalletAccountNumber,
   signinStoreWalletText,
@@ -1047,6 +1048,7 @@ const en: Record<I18N, string> = {
   [I18N.settingsSecurity]: 'Security',
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
+  [I18N.transactionReceiveTitle]: 'Received',
   [I18N.stakingInfoDelegationNoAvailableWallets]:
     'No wallets available for delegation.',
   [I18N.stakingInfoUnDelegationNoAvailableWallets]:
