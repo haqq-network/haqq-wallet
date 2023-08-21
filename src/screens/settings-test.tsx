@@ -15,6 +15,7 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
+  awaitForLedger,
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
@@ -40,7 +41,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals} from '@app/types';
+import {Link, Modals, WalletType} from '@app/types';
 import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -366,8 +367,11 @@ export const SettingsTestScreen = () => {
       250000,
     );
 
-    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
-
+    const result = transport.signTransaction(wallet.path!, unsignedTx);
+    if (wallet.type === WalletType.ledgerBt) {
+      await awaitForLedger(transport);
+    }
+    const signedTx = await result;
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
