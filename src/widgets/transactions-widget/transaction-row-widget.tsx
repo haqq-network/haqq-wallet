@@ -22,6 +22,7 @@ import {CURRENCY_NAME} from '@app/variables/common';
 export type Props = {
   item: Transaction;
   onPress: (hash: string) => void;
+  wallets: Realm.Results<Wallet>;
 };
 
 type IMapItem = {
@@ -46,10 +47,11 @@ const DisplayMap: {[key: string]: IMapItem} = {
   },
 };
 
-export const TransactionRowWidget = ({item, onPress}: Props) => {
-  const wallets = useMemo(() => Wallet.addressList(), []);
+export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
   const isSend = useMemo(() => {
-    return wallets.includes(item.from.toLowerCase());
+    return wallets
+      .map(wallet => wallet.address.toLowerCase())
+      .includes(item.from.toLowerCase());
   }, [wallets, item.from]);
   const DisplayMapItem = useMemo(
     () => DisplayMap[isSend ? 'send' : 'receive'],
@@ -63,13 +65,12 @@ export const TransactionRowWidget = ({item, onPress}: Props) => {
     onPress(item.hash);
   }, [item.hash, onPress]);
   const currentWallet = useMemo(() => {
-    const allWallets = Wallet.getAll();
-    return allWallets.find(
+    return wallets.find(
       wallet =>
         item[isSend ? 'from' : 'to'].toLowerCase() ===
         wallet.address.toLowerCase(),
     );
-  }, [isSend, item]);
+  }, [isSend, item, wallets]);
   const subtitle = useMemo(
     () =>
       formatDistance(item.createdAt, Date.now(), {
