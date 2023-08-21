@@ -4,7 +4,14 @@ import {formatDistance} from 'date-fns';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataContent, Icon, IconsName, Text} from '@app/components/ui';
+import {
+  Card,
+  DataContent,
+  Icon,
+  IconsName,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
@@ -86,9 +93,29 @@ export const TransactionRowWidget = ({item, onPress}: Props) => {
         <DataContent
           style={styles.infoContainer}
           titleI18n={DisplayMapItem.title}
-          subtitle={subtitle}
+          subtitle={
+            <View style={styles.walletWrapper}>
+              {!!currentWallet && (
+                <>
+                  <Card
+                    width={20}
+                    height={14}
+                    pattern={currentWallet.pattern}
+                    colorFrom={currentWallet.colorFrom}
+                    colorTo={currentWallet.colorTo}
+                    colorPattern={currentWallet.colorPattern}
+                    borderRadius={3}
+                    style={styles.removePadding}
+                  />
+                  <Spacer width={6} />
+                </>
+              )}
+              <Text t14 color={Color.textBase2}>
+                {subtitle}
+              </Text>
+            </View>
+          }
           short
-          wallet={currentWallet}
         />
         <Text t11 color={DisplayMapItem.sumTextColor}>
           {text}
@@ -99,6 +126,8 @@ export const TransactionRowWidget = ({item, onPress}: Props) => {
 };
 
 const styles = createTheme({
+  walletWrapper: {flexDirection: 'row', alignItems: 'center', marginTop: 4},
+  removePadding: {padding: 0},
   logoIcon: {
     width: 10.67,
     height: 10.67,
