@@ -12,7 +12,7 @@ type Props = {
   largeIcon?: boolean;
 };
 
-const WidgetHeader = ({icon, title, description, largeIcon}: Props) => {
+export const WidgetHeader = ({icon, title, description, largeIcon}: Props) => {
   if (largeIcon) {
     return (
       <View style={styles.row}>
@@ -52,5 +52,3 @@ const styles = StyleSheet.create({
   textWrapper: {marginLeft: 10},
   description: {marginTop: 3},
 });
-
-export {WidgetHeader};

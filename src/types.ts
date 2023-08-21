@@ -1039,8 +1039,6 @@ export enum ValidUrlProtocol {
   wc = 'wc',
 }
 
-export type WidgetNames = 'Transactions' | 'TransactionShort' | 'итд';
-
 export interface IWidgetBase {
   component: string;
 }
