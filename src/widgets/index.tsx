@@ -44,26 +44,8 @@ const WidgetMap: IWidgetMap = {
       {...params}
     />
   ),
-  Ad: params => (
-    <AdWidget
-      key={generateUUID()}
-      banner={params}
-      //@ts-ignore
-      onPress={() => {
-        // TODO: What should we do here?
-      }}
-    />
-  ),
-  Banner: params => (
-    <BannerWidget
-      key={generateUUID()}
-      banner={params}
-      //@ts-ignore
-      onPress={() => {
-        // TODO: What should we do here?
-      }}
-    />
-  ),
+  Ad: params => <AdWidget key={generateUUID()} banner={params} />,
+  Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
 };
 
 export const WidgetRoot = memo(() => {

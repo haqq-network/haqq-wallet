@@ -15,43 +15,37 @@ import {
   Text,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {IBannerWidget} from '@app/types';
+import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
-  banner: Banner;
+  banner: IBannerWidget;
   style?: StyleProp<ViewStyle>;
-  onPress: (
-    id: string,
-    event: string,
-    params?: object,
-    button?: BannerButton,
-  ) => Promise<void>;
 }
 
-export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
+export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent, banner.closeParams);
-  }, [banner, onPress]);
+  }, []);
 
-  const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
-  }, [banner, onPress]);
-
-  const onPressBanner = useCallback(
-    (button: BannerButton) => async () => {
-      setLoading(true);
-      await sleep(250);
-      await onPress(banner.id, button.event, button.params, button);
-      setLoading(false);
-    },
-    [banner, onPress],
-  );
+  const onPressBanner = useCallback(() => {
+    setLoading(true);
+    const link = banner.target;
+    if (!link) {
+      return;
+    }
+    if (link.startsWith('haqq:')) {
+      onDeepLink(link);
+    } else {
+      openWeb3Browser(link);
+    }
+    setLoading(false);
+  }, [banner]);
 
   const borderStyle = useMemo(() => {
     if (banner.backgroundBorder) {
@@ -87,7 +81,7 @@ export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
         {banner.description && (
           <Text
             style={styles.description}
-            color={banner.descriptionColor ?? Color.textBase3}
+            color={banner.descriptionColor ?? Color.textBase2}
             t14>
             {banner.description}
           </Text>
@@ -99,7 +93,6 @@ export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
               <Button
                 key={banner.id}
                 loading={loading}
-                onPress={onPressBanner(button)}
                 color={button.backgroundColor}
                 textColor={button.color}
                 loadingColor={button.color}
@@ -120,7 +113,7 @@ export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
+    [borderStyle, style, banner, onPressClose, loading],
   );
 
   if (!isVisible) {
@@ -128,7 +121,7 @@ export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
   }
 
   return (
-    <ShadowCard style={styles.removePaddingVertical} onPress={onPressBack}>
+    <ShadowCard onPress={onPressBanner} style={styles.removePaddingVertical}>
       {elem}
     </ShadowCard>
   );
@@ -153,6 +146,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   description: {
-    opacity: 0.7,
+    marginTop: 8,
   },
 });

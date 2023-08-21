@@ -1071,10 +1071,12 @@ export interface ILayoutWidget extends IWidgetBase {
 
 export interface IAdWidget extends IWidgetBase, Banner {
   component: 'Ad';
+  target?: string;
 }
 
 export interface IBannerWidget extends IWidgetBase, Banner {
   component: 'Banner';
+  target?: string;
 }
 
 export type IWidget =

@@ -14,12 +14,14 @@ export const ShadowCard = ({
   style,
   disabled = false,
   children,
+  onPress,
   ...props
 }: Props) => {
   return (
     <TouchableOpacity
       {...props}
-      disabled={disabled}
+      onPress={onPress}
+      disabled={disabled || !onPress}
       style={[styles.wrapper, style, disabled && styles.disabledShadow]}>
       {children}
     </TouchableOpacity>

@@ -22,23 +22,18 @@ import {
   Text,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {getWindowDimensions} from '@app/helpers';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
+import {IAdWidget} from '@app/types';
+import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
-  banner: Banner;
+  banner: IAdWidget;
   style?: StyleProp<ViewStyle>;
-  onPress: (
-    id: string,
-    event: string,
-    params?: object,
-    button?: BannerButton,
-  ) => Promise<void>;
 }
 
-export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
+export const AdWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
   const widthRef = useRef(0);
@@ -46,22 +41,21 @@ export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent, banner.closeParams);
-  }, [banner, onPress]);
+  }, []);
 
-  const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
-  }, [banner, onPress]);
-
-  const onPressBanner = useCallback(
-    (button: BannerButton) => async () => {
-      setLoading(true);
-      await sleep(250);
-      await onPress(banner.id, button.event, button.params, button);
-      setLoading(false);
-    },
-    [banner, onPress],
-  );
+  const onPressBanner = useCallback(() => {
+    setLoading(true);
+    const link = banner.target;
+    if (!link) {
+      return;
+    }
+    if (link.startsWith('haqq:')) {
+      onDeepLink(link);
+    } else {
+      openWeb3Browser(link);
+    }
+    setLoading(false);
+  }, [banner]);
 
   const borderStyle = useMemo(() => {
     if (banner.backgroundBorder) {
@@ -124,7 +118,6 @@ export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
               <Button
                 key={banner.id}
                 loading={loading}
-                onPress={onPressBanner(button)}
                 color={button.backgroundColor}
                 textColor={button.color}
                 loadingColor={button.color}
@@ -145,7 +138,7 @@ export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner, isSmall],
+    [borderStyle, style, banner, onPressClose, loading, isSmall],
   );
 
   if (!isVisible) {
@@ -153,7 +146,7 @@ export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
   }
 
   return (
-    <ShadowCard style={styles.removePaddingVertical} onPress={onPressBack}>
+    <ShadowCard onPress={onPressBanner} style={styles.removePaddingVertical}>
       {elem}
     </ShadowCard>
   );
