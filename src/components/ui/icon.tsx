@@ -92,6 +92,7 @@ export enum IconsName {
   scroll = 'scroll',
   coin = 'coin',
   staking_thin = 'staking_thin',
+  home = 'home',
 }
 
 export type IconSize =

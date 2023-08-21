@@ -9,21 +9,17 @@ import {TransitionPresets} from '@react-navigation/stack';
 import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
-import {GovernanceButton} from '@app/components/governance-button';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Spacer} from '@app/components/ui';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
 import {HomeNewsScreen} from '@app/screens/home-news';
-import {HomeStakingScreen} from '@app/screens/home-staking';
 import {IS_IOS} from '@app/variables/common';
 
 import {HomeBrowserScreen} from './home-browser';
-import {HomeEarnScreen} from './home-earn';
 import {HomeFeedScreen} from './home-feed';
 import {HomeSettingsScreen} from './home-settings';
 
@@ -60,12 +56,7 @@ const tabBarIcon = (route: string) => (props: {focused: boolean}) => (
 
 const feedOptions = {
   headerRight: QrScannerButton,
-  headerLeft: GovernanceButton,
   tabBarIcon: tabBarIcon('homeFeed'),
-};
-
-const earnOptions = {
-  tabBarIcon: tabBarIcon('homeEarn'),
 };
 
 const newsOptions: BottomTabNavigationOptions = {
@@ -75,11 +66,6 @@ const newsOptions: BottomTabNavigationOptions = {
   headerStyle: {
     height: StatusBar.currentHeight,
   },
-};
-
-const stakingOptions = {
-  unmountOnBlur: true,
-  tabBarIcon: tabBarIcon('homeStaking'),
 };
 
 const browserOptions = {
@@ -117,25 +103,6 @@ export const HomeScreen = () => {
         component={HomeFeedScreen}
         options={feedOptions}
       />
-      {isFeatureEnabled(Feature.earn) && (
-        <Tab.Screen
-          name="homeEarn"
-          component={HomeEarnScreen}
-          options={earnOptions}
-        />
-      )}
-      {!isFeatureEnabled(Feature.earn) && (
-        <Tab.Screen
-          name="homeStaking"
-          component={HomeStakingScreen}
-          options={stakingOptions}
-        />
-      )}
-      <Tab.Screen
-        name="homeNews"
-        component={HomeNewsScreen}
-        options={newsOptions}
-      />
       {provider?.ethChainId && provider?.ethChainId !== 11235 && (
         <Tab.Screen
           name="homeBrowser"
@@ -143,6 +110,11 @@ export const HomeScreen = () => {
           options={browserOptions}
         />
       )}
+      <Tab.Screen
+        name="homeNews"
+        component={HomeNewsScreen}
+        options={newsOptions}
+      />
       <Tab.Screen
         name="homeSettings"
         component={HomeSettingsScreen}
