@@ -2,16 +2,21 @@ import BN from 'bn.js';
 import Decimal from 'decimal.js';
 
 import {cleanNumber} from '@app/helpers';
-import {Balance as IBalance} from '@app/types';
+import {BalanceConstructor, Balance as IBalance} from '@app/types';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 const zeroBN = new BN(0, 'hex');
 
 export class Balance implements IBalance {
   static Empty = new Balance(zeroBN);
-  private bnRaw;
+  private bnRaw = zeroBN;
 
-  constructor(balance: BN | number | string) {
+  constructor(balance: BalanceConstructor) {
+    if (balance instanceof Balance) {
+      this.bnRaw = balance.bnRaw as BN;
+      return;
+    }
+
     if (typeof balance === 'string') {
       this.bnRaw = new BN(balance.replace('0x', ''), 'hex');
       return;
@@ -24,7 +29,6 @@ export class Balance implements IBalance {
 
     this.bnRaw = balance as BN;
   }
-
   /**
    * Raw BN.js instance of balance
    * @readonly
@@ -80,14 +84,35 @@ export class Balance implements IBalance {
     return this.bnRaw.gt(zeroBN);
   };
 
-  add = (value: BN | Balance) => {
-    let newBalance;
-    const prev = this.bnRaw;
-    if ((value as Balance).raw) {
-      newBalance = prev.add((value as Balance).raw);
-    } else {
-      newBalance = prev.add(value as BN);
+  add = (value?: BalanceConstructor) => {
+    if (!value) {
+      return this;
     }
-    return new Balance(newBalance);
+    const {bnRaw} = new Balance(value);
+    return new Balance(this.bnRaw.add(bnRaw));
+  };
+
+  eq = (balance?: BalanceConstructor) => {
+    if (!balance) {
+      return false;
+    }
+    const {bnRaw} = new Balance(balance);
+    return this.bnRaw.eq(bnRaw);
+  };
+
+  mul = (balance?: BalanceConstructor) => {
+    if (!balance) {
+      return this;
+    }
+    const {bnRaw} = new Balance(balance);
+    return new Balance(this.bnRaw.mul(bnRaw));
+  };
+
+  div = (balance?: BalanceConstructor) => {
+    if (!balance) {
+      return this;
+    }
+    const {bnRaw} = new Balance(balance);
+    return new Balance(this.bnRaw.div(bnRaw));
   };
 }

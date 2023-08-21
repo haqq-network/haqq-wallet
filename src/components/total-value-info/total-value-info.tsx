@@ -8,10 +8,9 @@ import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
 import {Balance, TransactionList} from '@app/types';
 
-import {AccountInfoHeader} from './account-info-header';
+import {TotalValueInfoHeader} from './total-value-info-header';
 
 import {NftViewer} from '../nft-viewer';
 import {createNftCollectionSet} from '../nft-viewer/mock';
@@ -22,35 +21,29 @@ enum TabNames {
   nft = 'nft',
 }
 
-export type AccountInfoProps = {
+export type TotalValueInfoProps = {
   transactionsList: TransactionList[];
-  wallet: Wallet;
-  balance: Balance | undefined;
+  balance: Balance;
   unvestedBalance: Balance | undefined;
   lockedBalance: Balance | undefined;
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
   onPressInfo: () => void;
-  onSend: () => void;
-  onReceive: () => void;
   onPressRow: (hash: string) => void;
 };
 
 const PAGE_ITEMS_COUNT = 15;
 
-export const AccountInfo = ({
-  wallet,
+export const TotalValueInfo = ({
   balance,
   transactionsList,
+  lockedBalance,
   stakingBalance,
   unvestedBalance,
-  lockedBalance,
   vestedBalance,
   onPressInfo,
-  onSend,
-  onReceive,
   onPressRow,
-}: AccountInfoProps) => {
+}: TotalValueInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
   const transactionListdata = useMemo(
@@ -77,16 +70,13 @@ export const AccountInfo = ({
   const renderListHeader = useCallback(
     () => (
       <>
-        <AccountInfoHeader
-          wallet={wallet}
+        <TotalValueInfoHeader
           balance={balance}
-          unvestedBalance={unvestedBalance}
           lockedBalance={lockedBalance}
-          vestedBalance={vestedBalance}
           stakingBalance={stakingBalance}
+          unvestedBalance={unvestedBalance}
+          vestedBalance={vestedBalance}
           onPressInfo={onPressInfo}
-          onSend={onSend}
-          onReceive={onReceive}
         />
         {isFeatureEnabled(Feature.nft) && (
           <TopTabNavigator
@@ -109,16 +99,13 @@ export const AccountInfo = ({
       </>
     ),
     [
-      wallet,
       balance,
-      unvestedBalance,
       lockedBalance,
-      vestedBalance,
-      stakingBalance,
       onPressInfo,
-      onSend,
-      onReceive,
       onTabChange,
+      stakingBalance,
+      unvestedBalance,
+      vestedBalance,
     ],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(

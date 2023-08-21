@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {
   VestingMetadata,
   VestingMetadataType,
@@ -7,13 +8,13 @@ import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
 export async function onVestingSync() {
-  const wallets = Wallet.getAll();
-
+  Logger.log('onVestingSync');
   const cosmos = new Cosmos(app.provider!);
-  const addressList = wallets
-    .filtered('isHidden != true')
-    .map(w => Cosmos.address(w.address));
+  const addressList = Wallet.getAllVisible().map(w =>
+    Cosmos.addressToBech32(w.address),
+  );
   await sync(addressList, cosmos);
+  app.emit(Events.onWalletsVestingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {

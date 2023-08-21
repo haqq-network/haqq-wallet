@@ -156,6 +156,7 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
+  totalValueInfo: undefined;
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -946,6 +947,9 @@ export type Modals = {
     onClose?: () => void;
     variant?: CaptchaType;
   };
+  lockedTokensInfo: {
+    onClose?: () => void;
+  };
 };
 
 export interface NftAttribute {
@@ -1011,6 +1015,8 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
+export type BalanceConstructor = Balance | BN | number | string;
+
 export interface Balance {
   readonly raw: BN;
   toNumber: () => number;
@@ -1018,8 +1024,12 @@ export interface Balance {
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => boolean;
+  isPositive: () => this is Balance;
   toBalanceString: () => string;
+  add: (value?: BalanceConstructor) => Balance;
+  div: (value?: BalanceConstructor) => Balance;
+  mul: (value?: BalanceConstructor) => Balance;
+  eq: (value?: BalanceConstructor) => boolean;
 }
 
 export enum ValidUrlProtocol {

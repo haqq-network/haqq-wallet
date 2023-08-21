@@ -5,6 +5,9 @@ export function cleanNumber(
   delimiter = ' ',
   precision = NUM_PRECISION,
 ) {
+  if (!number) {
+    return '0';
+  }
   const num = parseFloat(String(number).trim().replace(/ /g, ''));
   let pr = precision;
   if (num < 1 / Math.pow(10, NUM_PRECISION)) {

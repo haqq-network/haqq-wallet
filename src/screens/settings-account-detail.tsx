@@ -37,9 +37,9 @@ export const SettingsAccountDetailScreen = () => {
     });
   }, [address]);
 
-  const onToggleIsHidden = useCallback(() => {
+  const onToggleIsHidden = useCallback(async () => {
     if (wallet) {
-      wallet.update({isHidden: !wallet.isHidden});
+      await wallet.toggleIsHidden();
       if (wallet.isHidden) {
         sendNotification(I18N.notificationAccountHidden);
       }

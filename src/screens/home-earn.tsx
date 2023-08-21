@@ -85,10 +85,10 @@ export const HomeEarnScreen = () => {
     };
 
     rows.addListener(listener);
-    app.addListener('balance', listener);
+    app.addListener(Events.onBalanceSync, listener);
     return () => {
       rows.removeListener(listener);
-      app.removeListener('balance', listener);
+      app.removeListener(Events.onBalanceSync, listener);
     };
   }, [visible]);
 

@@ -27,6 +27,7 @@ import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
+import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -68,6 +69,9 @@ class App extends AsyncEventEmitter {
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _balance: Map<string, Balance> = new Map();
+  private _stakingBalance: Map<string, Balance> = new Map();
+  private _vestingBalance: Map<string, Record<VestingMetadataType, Balance>> =
+    new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -488,19 +492,78 @@ class App extends AsyncEventEmitter {
   onWalletsBalance(balance: Record<string, Balance>) {
     let changed = false;
     for (const entry of Object.entries(balance)) {
-      if (this._balance.get(entry[0]) !== entry[1]) {
+      if (!this._stakingBalance.get(entry[0])?.eq?.(entry[1])) {
         this._balance.set(entry[0], entry[1]);
         changed = true;
       }
     }
 
     if (changed) {
-      this.emit('balance');
+      this.emit(Events.onBalanceSync);
     }
   }
 
-  getBalance(address: string) {
+  async onWalletsStakingBalance(balance: Record<string, Balance>) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      if (!this._stakingBalance.get(entry[0])?.eq?.(entry[1])) {
+        this._stakingBalance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit(Events.onStakingBalanceSync);
+    }
+  }
+
+  onWalletsVestingBalance(
+    balance: Record<string, Record<VestingMetadataType, Balance>>,
+  ) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      const balances = this._vestingBalance.get(entry[0]);
+      const lockedChanged = !balances?.[VestingMetadataType.locked].eq?.(
+        entry[1]?.[VestingMetadataType.locked],
+      );
+      const unvestedChanged = !balances?.[VestingMetadataType.unvested].eq?.(
+        entry[1]?.[VestingMetadataType.unvested],
+      );
+      const vestedChanged = !balances?.[VestingMetadataType.vested].eq?.(
+        entry[1]?.[VestingMetadataType.vested],
+      );
+
+      if (lockedChanged || unvestedChanged || vestedChanged) {
+        this._vestingBalance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit(Events.onVestingBalanceSync);
+    }
+  }
+
+  getBalance(address: string): Balance {
     return this._balance.get(address) ?? Balance.Empty;
+  }
+
+  getStakingBalance(address: string): Balance {
+    return this._stakingBalance.get(address) ?? Balance.Empty;
+  }
+
+  getVestingBalance(address: string): Record<VestingMetadataType, Balance> {
+    const balances = this._vestingBalance.get(address);
+
+    const locked = balances?.[VestingMetadataType.locked] ?? Balance.Empty;
+    const unvested = balances?.[VestingMetadataType.unvested] ?? Balance.Empty;
+    const vested = balances?.[VestingMetadataType.vested] ?? Balance.Empty;
+
+    return {
+      locked,
+      unvested,
+      vested,
+    };
   }
 
   handleDynamicLink(link: DynamicLink | null) {
