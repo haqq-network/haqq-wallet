@@ -3,7 +3,7 @@ import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
-import {getHttpResponse} from '@app/utils';
+import {fetchWithTimeout, getHttpResponse} from '@app/utils';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getAll().filter(p => !!p.explorer);
@@ -40,7 +40,7 @@ async function loadTransactionsFromExplorerWithProvider(
       return [];
     }
 
-    const txList = await fetch(
+    const txList = await fetchWithTimeout(
       `${p.explorer}api?module=account&action=txlist&address=${address}`,
       {
         headers: {
