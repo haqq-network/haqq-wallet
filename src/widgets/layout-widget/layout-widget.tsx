@@ -11,7 +11,7 @@ type Props = {
   deep: boolean;
 };
 
-const LayoutWidget = ({direction, children, deep}: Props) => {
+export const LayoutWidget = ({direction, children, deep}: Props) => {
   return (
     <View
       style={[
@@ -35,5 +35,3 @@ const styles = StyleSheet.create({
   row: {flexDirection: 'row'},
   column: {flexDirection: 'column'},
 });
-
-export {LayoutWidget};

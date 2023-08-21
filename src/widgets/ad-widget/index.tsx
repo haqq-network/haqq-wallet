@@ -1,20 +1,16 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {
   Image,
+  LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
-import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
-
 import {
   Button,
   ButtonSize,
@@ -24,7 +20,12 @@ import {
   Inline,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {ShadowCard} from '@app/components/ui/shadow-card';
+import {getWindowDimensions} from '@app/helpers';
+import {Banner, BannerButton} from '@app/models/banner';
+import {sleep} from '@app/utils';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
   banner: Banner;
@@ -37,9 +38,11 @@ export interface HomeBannerProps {
   ) => Promise<void>;
 }
 
-export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
+export const AdWidget = ({banner, style, onPress}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
+  const widthRef = useRef(0);
+  const [isSmall, setIsSmall] = useState(false);
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
@@ -71,9 +74,24 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     return {};
   }, [banner]);
 
+  const onLayout = ({nativeEvent}: LayoutChangeEvent) => {
+    widthRef.current = nativeEvent.layout.width;
+  };
+
+  const window = getWindowDimensions();
+
+  useEffect(() => {
+    if (widthRef.current) {
+      setIsSmall(widthRef.current <= window.width / 2);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widthRef.current, window.width]);
+
   const elem = useMemo(
     () => (
-      <View style={[styles.container, borderStyle, style]}>
+      <View
+        onLayout={onLayout}
+        style={[styles.container, borderStyle, style, isSmall && styles.small]}>
         {banner.backgroundImage ? (
           <Image
             resizeMode="cover"
@@ -88,14 +106,14 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
             style={styles.inner}
           />
         )}
-        <Text color={banner.titleColor ?? Color.textBase3} t10>
+        <Text color={banner.titleColor ?? Color.textBase1} t8>
           {banner.title}
         </Text>
         {banner.description && (
           <Text
             style={styles.description}
-            color={banner.descriptionColor ?? Color.textBase3}
-            t14>
+            color={banner.descriptionColor ?? Color.textBase2}
+            t15>
             {banner.description}
           </Text>
         )}
@@ -127,31 +145,31 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
+    [borderStyle, style, banner, onPressClose, loading, onPressBanner, isSmall],
   );
 
   if (!isVisible) {
-    return null;
+    return <View style={styles.removeLeftMargin} />;
   }
 
-  if (!banner.buttons.length && banner.defaultEvent) {
-    return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;
-  }
-
-  return elem;
+  return (
+    <ShadowCard style={styles.removePaddingVertical} onPress={onPressBack}>
+      {elem}
+    </ShadowCard>
+  );
 };
 
 const styles = StyleSheet.create({
+  removePaddingVertical: {paddingVertical: 0},
+  removeLeftMargin: {marginLeft: -20},
   container: {
-    borderRadius: 16,
+    borderRadius: 13,
     padding: 16,
-    marginHorizontal: 5,
-    minHeight: 100,
-    position: 'relative',
     flex: 1,
+    height: 111,
   },
   inner: {
-    borderRadius: 16,
+    borderRadius: 13,
     ...StyleSheet.absoluteFillObject,
   },
   closeButton: {
@@ -161,6 +179,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   description: {
-    opacity: 0.7,
+    marginTop: 8,
+  },
+  small: {
+    height: 188,
   },
 });

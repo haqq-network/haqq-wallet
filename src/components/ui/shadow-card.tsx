@@ -9,16 +9,19 @@ import {SHADOW_COLOR_3} from '@app/variables/common';
 type Props = {
   children: ReactNode;
 } & TouchableOpacityProps;
-const ShadowCard = (props: Props) => {
+
+export const ShadowCard = ({
+  style,
+  disabled = false,
+  children,
+  ...props
+}: Props) => {
   return (
     <TouchableOpacity
       {...props}
-      style={[
-        styles.wrapper,
-        props.style,
-        props.disabled && styles.disabledShadow,
-      ]}>
-      {props.children}
+      disabled={disabled}
+      style={[styles.wrapper, style, disabled && styles.disabledShadow]}>
+      {children}
     </TouchableOpacity>
   );
 };
@@ -33,12 +36,11 @@ const styles = createTheme({
     },
     backgroundColor: Color.bg1,
     shadowRadius: 24,
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     elevation: 13,
 
     paddingVertical: 16,
     marginTop: 24,
-    // marginHorizontal: 20,
     flex: 1,
     flexDirection: 'column',
   },
@@ -50,5 +52,3 @@ const styles = createTheme({
     elevation: 0,
   },
 });
-
-export {ShadowCard};

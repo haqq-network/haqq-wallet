@@ -10,13 +10,13 @@ type Props = {
   onPress: () => void;
 };
 
-const GovernanceWidget = ({onPress}: Props) => {
+export const GovernanceWidget = ({onPress}: Props) => {
   return (
     <ShadowCard onPress={onPress} style={styles.wrapper}>
       <WidgetHeader
         icon={'governance'}
         title={getText(I18N.homeGovernance)}
-        description={'Voting for changes in the network'}
+        description={getText(I18N.homeGovernanceDescription)}
       />
     </ShadowCard>
   );
@@ -25,5 +25,3 @@ const GovernanceWidget = ({onPress}: Props) => {
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},
 });
-
-export {GovernanceWidget};

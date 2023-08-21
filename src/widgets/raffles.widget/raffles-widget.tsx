@@ -11,20 +11,17 @@ import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
 
-type Props = {
-  onCardPress: () => void;
-} & RaffleBlockListProps;
+type Props = RaffleBlockListProps;
 
-const RafflesWidget = ({
+export const RafflesWidget = ({
   onPress,
   data,
   scrollEnabled,
-  onCardPress,
   onPressGetTicket,
   onPressShowResult,
 }: Props) => {
   return (
-    <ShadowCard disabled onPress={onCardPress} style={styles.wrapper}>
+    <ShadowCard disabled style={styles.wrapper}>
       <WidgetHeader
         icon={'ticket'}
         title={getText(I18N.earnRaffles)}
@@ -45,5 +42,3 @@ const RafflesWidget = ({
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},
 });
-
-export {RafflesWidget};

@@ -6,7 +6,7 @@ import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/transactions-short-widget';
 
-const TransactionsShortWidgetWrapper = memo(() => {
+export const TransactionsShortWidgetWrapper = memo(() => {
   const wallets = Wallet.addressList();
   const transactions = Transaction.getAll().snapshot();
   const navigation = useTypedNavigation();
@@ -45,5 +45,3 @@ const TransactionsShortWidgetWrapper = memo(() => {
     />
   );
 });
-
-export {TransactionsShortWidgetWrapper};

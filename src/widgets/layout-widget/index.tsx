@@ -3,7 +3,7 @@ import React, {ReactNode, memo} from 'react';
 import {ILayoutWidget} from '@app/types';
 import {LayoutWidget} from '@app/widgets/layout-widget/layout-widget';
 
-const LayoutWidgetWrapper = memo(
+export const LayoutWidgetWrapper = memo(
   (props: ILayoutWidget & {children: ReactNode[]; deep: boolean}) => {
     return (
       <LayoutWidget
@@ -14,5 +14,3 @@ const LayoutWidgetWrapper = memo(
     );
   },
 );
-
-export {LayoutWidgetWrapper};

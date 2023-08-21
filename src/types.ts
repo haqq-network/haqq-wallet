@@ -12,6 +12,7 @@ import {Results} from 'realm';
 import {Color} from '@app/colors';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
@@ -1070,31 +1071,12 @@ export interface ILayoutWidget extends IWidgetBase {
   child: IWidget[];
 }
 
-export interface IAdWidget extends IWidgetBase {
+export interface IAdWidget extends IWidgetBase, Banner {
   component: 'Ad';
-  title: string;
-  description: string;
-  background_from: string;
-  background_to: string;
-  background_image?: string;
-  title_color?: string;
-  description_color?: string;
-  target: string;
 }
 
-export interface IBannerWidget extends IWidgetBase {
+export interface IBannerWidget extends IWidgetBase, Banner {
   component: 'Banner';
-  title: string;
-  description: string;
-  button_title: string;
-  button_color: string;
-  button_background_color: string;
-  background_color_from: string;
-  background_color_to: string;
-  background_image_url: string;
-  title_color?: string;
-  description_color?: string;
-  target: string;
 }
 
 export type IWidget =
@@ -1106,3 +1088,13 @@ export type IWidget =
   | ILayoutWidget
   | IAdWidget
   | IBannerWidget;
+
+export interface MarkupResponse {
+  blocks: ILayoutWidget;
+  created_at: string;
+  id: string;
+  screen: string;
+  status: string;
+  updated_at: string;
+  version: number;
+}

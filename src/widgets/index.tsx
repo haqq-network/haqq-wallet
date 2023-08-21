@@ -1,7 +1,13 @@
-import React, {ReactNode, memo} from 'react';
+import React, {ReactNode, memo, useState} from 'react';
 
+import {getUid} from '@app/helpers/get-uid';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {Wallet} from '@app/models/wallet';
+import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
+import {AdWidget} from '@app/widgets/ad-widget';
+import {BannerWidget} from '@app/widgets/banner-widget';
 import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
 import {LayoutWidgetWrapper} from '@app/widgets/layout-widget';
 import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
@@ -38,12 +44,44 @@ const WidgetMap: IWidgetMap = {
       {...params}
     />
   ),
-  Ad: () => null,
-  Banner: () => null,
+  Ad: params => (
+    <AdWidget
+      key={generateUUID()}
+      banner={params}
+      //@ts-ignore
+      onPress={() => {
+        // TODO: What should we do here?
+      }}
+    />
+  ),
+  Banner: params => (
+    <BannerWidget
+      key={generateUUID()}
+      banner={params}
+      //@ts-ignore
+      onPress={() => {
+        // TODO: What should we do here?
+      }}
+    />
+  ),
 };
 
 export const WidgetRoot = memo(() => {
-  const data = MOCK_DATA;
+  const [data, setData] = useState<IWidget[]>([]);
+
+  useEffectAsync(async () => {
+    const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
+    const uid = await getUid();
+    const response = await Backend.instance.markup({
+      wallets,
+      screen: 'home',
+      uid,
+    });
+    if (response.blocks) {
+      setData([response.blocks]);
+    }
+  }, []);
+
   if (!data) {
     return null;
   }
@@ -72,39 +110,3 @@ export const WidgetRoot = memo(() => {
   //@ts-ignore
   return renderWidgetsList(data);
 });
-
-const MOCK_DATA = [
-  {
-    component: 'Layout',
-    direction: 'vertical',
-    child: [
-      {
-        component: 'TransactionsShort',
-      },
-      {
-        component: 'Transactions',
-      },
-      {
-        component: 'Raffles',
-      },
-      {
-        component: 'Staking',
-      },
-      {
-        component: 'Governance',
-      },
-      {
-        component: 'Layout',
-        direction: 'horizontal',
-        child: [
-          {
-            component: 'Governance',
-          },
-          {
-            component: 'Governance',
-          },
-        ],
-      },
-    ],
-  },
-];

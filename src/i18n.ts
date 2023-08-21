@@ -1,5 +1,9 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
+import {
+  CURRENCY_NAME,
+  LEDGER_APP,
+  PLATFORM_COMPANY,
+} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -719,6 +723,11 @@ export enum I18N {
   lockedTokensInfoDescription,
   totalValueScreenTitle,
   totalValueAccount,
+  homeGovernanceDescription,
+  transactionWidgetReceiveTitle,
+  transactionWidgetSpendTitle,
+  transactionWidgetTitle,
+  transactionWidgetShortTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -961,6 +970,7 @@ const en: Record<I18N, string> = {
   [I18N.homeGovernanceVotingCardMin]: 'Min',
   [I18N.homeGovernanceVotingCardPassed]: 'Passed',
   [I18N.homeGovernanceVotingCardRejected]: 'Rejected',
+  [I18N.homeGovernanceDescription]: 'Voting for changes in the network',
   [I18N.headerPlaceholderSearch]: 'Search',
   [I18N.homeStakingStaked]: 'Staked',
   [I18N.homeStakingRewards]: 'Rewards',
@@ -1049,6 +1059,10 @@ const en: Record<I18N, string> = {
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.transactionReceiveTitle]: 'Received',
+  [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionWidgetSpendTitle]: `Spend {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionWidgetTitle]: 'Transactions',
+  [I18N.transactionWidgetShortTitle]: 'Last transactions',
   [I18N.stakingInfoDelegationNoAvailableWallets]:
     'No wallets available for delegation.',
   [I18N.stakingInfoUnDelegationNoAvailableWallets]:

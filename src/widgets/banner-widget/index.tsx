@@ -1,20 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {
-  Image,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
-import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
-
 import {
   Button,
   ButtonSize,
@@ -24,7 +13,11 @@ import {
   Inline,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {ShadowCard} from '@app/components/ui/shadow-card';
+import {Banner, BannerButton} from '@app/models/banner';
+import {sleep} from '@app/utils';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
   banner: Banner;
@@ -37,7 +30,7 @@ export interface HomeBannerProps {
   ) => Promise<void>;
 }
 
-export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
+export const BannerWidget = ({banner, style, onPress}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
 
@@ -131,23 +124,22 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
   );
 
   if (!isVisible) {
-    return null;
+    return <View style={styles.removeLeftMargin} />;
   }
 
-  if (!banner.buttons.length && banner.defaultEvent) {
-    return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;
-  }
-
-  return elem;
+  return (
+    <ShadowCard style={styles.removePaddingVertical} onPress={onPressBack}>
+      {elem}
+    </ShadowCard>
+  );
 };
 
 const styles = StyleSheet.create({
+  removePaddingVertical: {paddingVertical: 0},
+  removeLeftMargin: {marginLeft: -20},
   container: {
     borderRadius: 16,
     padding: 16,
-    marginHorizontal: 5,
-    minHeight: 100,
-    position: 'relative',
     flex: 1,
   },
   inner: {

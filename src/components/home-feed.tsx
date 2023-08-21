@@ -22,7 +22,7 @@ export const HomeFeed = () => {
 };
 
 const styles = createTheme({
-  contentContainerStyle: {flex: 0},
+  contentContainerStyle: {flex: 0, paddingBottom: 20},
   container: {
     flex: 1,
   },

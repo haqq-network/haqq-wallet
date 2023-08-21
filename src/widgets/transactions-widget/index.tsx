@@ -4,7 +4,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {Transaction} from '@app/models/transaction';
 import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-widget';
 
-const TransactionsWidgetWrapper = memo(() => {
+export const TransactionsWidgetWrapper = memo(() => {
   const navigation = useTypedNavigation();
 
   const openTotalInfo = useCallback(() => {
@@ -33,5 +33,3 @@ const TransactionsWidgetWrapper = memo(() => {
     />
   );
 });
-
-export {TransactionsWidgetWrapper};
