@@ -33,14 +33,17 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
     setVisible(false);
   }, []);
 
-  const onPressBanner = useCallback(() => {
+  const onPressBanner = useCallback(async () => {
     setLoading(true);
     const link = banner.target;
     if (!link) {
       return;
     }
     if (link.startsWith('haqq:')) {
-      onDeepLink(link);
+      const isHandled = onDeepLink(link);
+      if (!isHandled) {
+        openWeb3Browser(link);
+      }
     } else {
       openWeb3Browser(link);
     }
