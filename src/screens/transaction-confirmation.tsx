@@ -6,7 +6,7 @@ import {TransactionConfirmation} from '@app/components/transaction-confirmation'
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {removeProviderInstanceForWallet} from '@app/helpers';
+import {awaitForLedger, removeProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
@@ -46,24 +46,8 @@ export const TransactionConfirmationScreen = () => {
     ).then(result => setFee(result.fee));
   }, [route.params.from, route.params.to, route.params.amount]);
 
-  const onDoneLedgerBt = useCallback(
-    () =>
-      navigation.navigate('transactionLedger', {
-        from: route.params.from,
-        to: route.params.to,
-        amount: route.params.amount,
-        fee: fee,
-      }),
-    [fee, navigation, route.params.amount, route.params.from, route.params.to],
-  );
-
   const onConfirmTransaction = useCallback(async () => {
     if (wallet) {
-      if (wallet.type === WalletType.ledgerBt) {
-        onDoneLedgerBt();
-        return;
-      }
-
       try {
         setDisabled(true);
 
@@ -71,12 +55,18 @@ export const TransactionConfirmationScreen = () => {
 
         const provider = await getProviderInstanceForWallet(wallet);
 
-        const transaction = await ethNetworkProvider.transferTransaction(
+        const result = ethNetworkProvider.transferTransaction(
           provider,
           wallet.path!,
           route.params.to,
           new Decimal(route.params.amount).mul(WEI).toFixed(),
         );
+
+        if (wallet.type === WalletType.ledgerBt) {
+          await awaitForLedger(provider);
+        }
+
+        const transaction = await result;
 
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
@@ -118,7 +108,6 @@ export const TransactionConfirmationScreen = () => {
   }, [
     fee,
     navigation,
-    onDoneLedgerBt,
     route.params.amount,
     route.params.from,
     route.params.to,

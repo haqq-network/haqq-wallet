@@ -4,7 +4,11 @@ import {utils} from 'ethers';
 import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {awaitForPopupClosed, getProviderInstanceForWallet} from '@app/helpers';
+import {
+  awaitForLedger,
+  awaitForPopupClosed,
+  getProviderInstanceForWallet,
+} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
@@ -12,6 +16,7 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
+import {WalletType} from '@app/types';
 
 const abi = [
   'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
@@ -37,10 +42,14 @@ export async function onEarnGetTicket(raffleId: string) {
   const uid = await getUid();
   const provider = await getProviderInstanceForWallet(leadingAccount);
 
-  const signature = await provider.signPersonalMessage(
+  const result = provider.signPersonalMessage(
     leadingAccount?.path ?? '',
     `${raffleId}:${uid}:${session}`,
   );
+  if (leadingAccount.type === WalletType.ledgerBt) {
+    await awaitForLedger(provider);
+  }
+  const signature = await result;
 
   const response = await Backend.instance.contestParticipateUser(
     raffleId,

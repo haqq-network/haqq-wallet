@@ -1,7 +1,6 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
-  awaitForBluetooth,
   awaitForLedger,
   awaitForPopupClosed,
   getProviderInstanceForWallet,
@@ -65,7 +64,6 @@ export async function onStakingRewards() {
           ]),
       );
       try {
-        await awaitForBluetooth();
         await awaitForLedger(transport);
       } catch (e) {
         if (e === '27010') {

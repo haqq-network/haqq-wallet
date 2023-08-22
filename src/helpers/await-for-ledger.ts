@@ -4,7 +4,17 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {hideModal, showModal} from '@app/helpers/modal';
 
-export const awaitForLedger = (transport: ProviderInterface) => {
+import {awaitForBluetooth} from './await-for-bluetooth';
+
+const LEDGER_PROVIDER_EVENTS = [
+  'signTypedData',
+  'signPersonalMessage',
+  'signTransaction',
+  'abortCall',
+];
+
+export const awaitForLedger = async (transport: ProviderInterface) => {
+  await awaitForBluetooth();
   return new Promise<void>((resolve, reject) => {
     const done = (
       status: boolean,
@@ -14,7 +24,7 @@ export const awaitForLedger = (transport: ProviderInterface) => {
     ) => {
       app.off(Events.onCloseModal, onCloseModal);
       hideModal('ledgerAttention');
-      transport.off('signTypedData', done);
+      LEDGER_PROVIDER_EVENTS.forEach(event => transport.off(event, done));
       transport.abort();
       if (status) {
         resolve();
@@ -29,9 +39,8 @@ export const awaitForLedger = (transport: ProviderInterface) => {
       }
     };
 
-    transport.on('signTypedData', done);
+    LEDGER_PROVIDER_EVENTS.forEach(event => transport.on(event, done));
     app.on(Events.onCloseModal, onCloseModal);
-
     showModal('ledgerAttention');
   });
 };
