@@ -182,8 +182,6 @@ export const App = () => {
   );
 
   useEffect(() => {
-    hideModal('splash');
-
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
@@ -193,6 +191,7 @@ export const App = () => {
           await migrationWallets();
         }
       })
+      .then(() => hideModal('splash'))
       .then(() => awaitForEventDone(Events.onAppLoggedId))
       .catch(async e => {
         Logger.captureException(e, 'app init');

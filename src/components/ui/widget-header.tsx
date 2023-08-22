@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
   column: {flexDirection: 'column'},
   row: {flexDirection: 'row'},
   title: {marginLeft: 4},
-  textWrapper: {marginLeft: 10},
+  textWrapper: {marginLeft: 10, flex: 1},
   description: {marginTop: 3},
 });
