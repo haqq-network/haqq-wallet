@@ -7,7 +7,7 @@ import {DataContent, Icon, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {TransactionListSend} from '@app/types';
 
 export type TransactionPreviewProps = {
@@ -19,14 +19,6 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
   const address = useMemo(
     () => shortAddress(item.to || item.contractAddress || '', '•'),
     [item.contractAddress, item.to],
-  );
-  const text = useMemo(
-    () =>
-      getText(I18N.transactionAmountText, {
-        prefix: '-',
-        value: cleanNumber(item.value),
-      }),
-    [item.value],
   );
   const handlePress = useCallback(() => {
     onPress(item.hash);
@@ -47,9 +39,12 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           subtitleI18n={I18N.transactionSendTo}
           short
         />
-        <Text t11 color={Color.textRed1}>
-          {text}
-        </Text>
+        <Text
+          t11
+          color={Color.textRed1}
+          i18n={I18N.transactionNegativeAmountText}
+          i18params={{value: cleanNumber(item.value)}}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

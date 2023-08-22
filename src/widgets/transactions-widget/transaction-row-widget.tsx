@@ -17,7 +17,6 @@ import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type Props = {
   item: Transaction;
@@ -29,7 +28,7 @@ type IMapItem = {
   iconName: IconsName;
   title: I18N;
   sumTextColor: Color;
-  sign: string;
+  amountText: I18N;
 };
 
 const DisplayMap: {[key: string]: IMapItem} = {
@@ -37,13 +36,13 @@ const DisplayMap: {[key: string]: IMapItem} = {
     iconName: IconsName.arrow_send,
     title: I18N.transactionSendTitle,
     sumTextColor: Color.textRed1,
-    sign: '-',
+    amountText: I18N.transactionNegativeAmountText,
   },
   receive: {
     iconName: IconsName.arrow_receive,
     title: I18N.transactionReceiveTitle,
     sumTextColor: Color.textGreen1,
-    sign: '+',
+    amountText: I18N.transactionPositiveAmountText,
   },
 };
 
@@ -56,10 +55,6 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
   const DisplayMapItem = useMemo(
     () => DisplayMap[isSend ? 'send' : 'receive'],
     [isSend],
-  );
-  const text = useMemo(
-    () => `${DisplayMapItem.sign} ${cleanNumber(item.value)} ${CURRENCY_NAME}`,
-    [item.value, DisplayMapItem],
   );
   const handlePress = useCallback(() => {
     onPress(item.hash);
@@ -118,9 +113,12 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
           }
           short
         />
-        <Text t11 color={DisplayMapItem.sumTextColor}>
-          {text}
-        </Text>
+        <Text
+          t11
+          color={DisplayMapItem.sumTextColor}
+          i18n={DisplayMapItem.amountText}
+          i18params={{value: cleanNumber(item.value)}}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
