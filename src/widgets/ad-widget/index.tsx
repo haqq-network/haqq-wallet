@@ -1,20 +1,16 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {
   Image,
+  LayoutChangeEvent,
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
-import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
-
 import {
   Button,
   ButtonSize,
@@ -24,41 +20,45 @@ import {
   Inline,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {ShadowCard} from '@app/components/ui/shadow-card';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {getWindowDimensions} from '@app/helpers';
+import {IAdWidget} from '@app/types';
+import {openWeb3Browser} from '@app/utils';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
-  banner: Banner;
+  banner: IAdWidget;
   style?: StyleProp<ViewStyle>;
-  onPress: (
-    id: string,
-    event: string,
-    params?: object,
-    button?: BannerButton,
-  ) => Promise<void>;
 }
 
-export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
+export const AdWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
+  const widthRef = useRef(0);
+  const [isSmall, setIsSmall] = useState(false);
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent, banner.closeParams);
-  }, [banner, onPress]);
+  }, []);
 
-  const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
-  }, [banner, onPress]);
-
-  const onPressBanner = useCallback(
-    (button: BannerButton) => async () => {
-      setLoading(true);
-      await sleep(250);
-      await onPress(banner.id, button.event, button.params, button);
-      setLoading(false);
-    },
-    [banner, onPress],
-  );
+  const onPressBanner = useCallback(async () => {
+    setLoading(true);
+    const link = banner.target;
+    if (!link) {
+      return;
+    }
+    if (link.startsWith('haqq:')) {
+      const isHandled = onDeepLink(link);
+      if (!isHandled) {
+        openWeb3Browser(link);
+      }
+    } else {
+      openWeb3Browser(link);
+    }
+    setLoading(false);
+  }, [banner]);
 
   const borderStyle = useMemo(() => {
     if (banner.backgroundBorder) {
@@ -71,9 +71,24 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     return {};
   }, [banner]);
 
+  const onLayout = ({nativeEvent}: LayoutChangeEvent) => {
+    widthRef.current = nativeEvent.layout.width;
+  };
+
+  const window = getWindowDimensions();
+
+  useEffect(() => {
+    if (widthRef.current) {
+      setIsSmall(widthRef.current <= window.width / 2);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widthRef.current, window.width]);
+
   const elem = useMemo(
     () => (
-      <View style={[styles.container, borderStyle, style]}>
+      <View
+        onLayout={onLayout}
+        style={[styles.container, borderStyle, style, isSmall && styles.small]}>
         {banner.backgroundImage ? (
           <Image
             resizeMode="cover"
@@ -88,14 +103,14 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
             style={styles.inner}
           />
         )}
-        <Text color={banner.titleColor ?? Color.textBase3} t10>
+        <Text color={banner.titleColor ?? Color.textBase1} t8>
           {banner.title}
         </Text>
         {banner.description && (
           <Text
             style={styles.description}
-            color={banner.descriptionColor ?? Color.textBase3}
-            t14>
+            color={banner.descriptionColor ?? Color.textBase2}
+            t15>
             {banner.description}
           </Text>
         )}
@@ -106,7 +121,6 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
               <Button
                 key={banner.id}
                 loading={loading}
-                onPress={onPressBanner(button)}
                 color={button.backgroundColor}
                 textColor={button.color}
                 loadingColor={button.color}
@@ -127,31 +141,31 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
+    [borderStyle, style, banner, onPressClose, loading, isSmall],
   );
 
   if (!isVisible) {
-    return null;
+    return <View style={styles.removeLeftMargin} />;
   }
 
-  if (!banner.buttons.length && banner.defaultEvent) {
-    return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;
-  }
-
-  return elem;
+  return (
+    <ShadowCard onPress={onPressBanner} style={styles.removePaddingVertical}>
+      {elem}
+    </ShadowCard>
+  );
 };
 
 const styles = StyleSheet.create({
+  removePaddingVertical: {paddingVertical: 0},
+  removeLeftMargin: {marginLeft: -20},
   container: {
-    borderRadius: 16,
+    borderRadius: 13,
     padding: 16,
-    marginHorizontal: 5,
-    minHeight: 100,
-    position: 'relative',
     flex: 1,
+    height: 111,
   },
   inner: {
-    borderRadius: 16,
+    borderRadius: 13,
     ...StyleSheet.absoluteFillObject,
   },
   closeButton: {
@@ -161,6 +175,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   description: {
-    opacity: 0.7,
+    marginTop: 8,
+  },
+  small: {
+    height: 188,
   },
 });

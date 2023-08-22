@@ -1,20 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {
-  Image,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {Banner, BannerButton} from '@app/models/banner';
-import {sleep} from '@app/utils';
-import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
-
 import {
   Button,
   ButtonSize,
@@ -24,41 +13,42 @@ import {
   Inline,
   Spacer,
   Text,
-} from './ui';
+} from '@app/components/ui';
+import {ShadowCard} from '@app/components/ui/shadow-card';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {IBannerWidget} from '@app/types';
+import {openWeb3Browser} from '@app/utils';
+import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
-  banner: Banner;
+  banner: IBannerWidget;
   style?: StyleProp<ViewStyle>;
-  onPress: (
-    id: string,
-    event: string,
-    params?: object,
-    button?: BannerButton,
-  ) => Promise<void>;
 }
 
-export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
+export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent, banner.closeParams);
-  }, [banner, onPress]);
+  }, []);
 
-  const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
-  }, [banner, onPress]);
-
-  const onPressBanner = useCallback(
-    (button: BannerButton) => async () => {
-      setLoading(true);
-      await sleep(250);
-      await onPress(banner.id, button.event, button.params, button);
-      setLoading(false);
-    },
-    [banner, onPress],
-  );
+  const onPressBanner = useCallback(async () => {
+    setLoading(true);
+    const link = banner.target;
+    if (!link) {
+      return;
+    }
+    if (link.startsWith('haqq:')) {
+      const isHandled = onDeepLink(link);
+      if (!isHandled) {
+        openWeb3Browser(link);
+      }
+    } else {
+      openWeb3Browser(link);
+    }
+    setLoading(false);
+  }, [banner]);
 
   const borderStyle = useMemo(() => {
     if (banner.backgroundBorder) {
@@ -94,7 +84,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         {banner.description && (
           <Text
             style={styles.description}
-            color={banner.descriptionColor ?? Color.textBase3}
+            color={banner.descriptionColor ?? Color.textBase2}
             t14>
             {banner.description}
           </Text>
@@ -106,7 +96,6 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
               <Button
                 key={banner.id}
                 loading={loading}
-                onPress={onPressBanner(button)}
                 color={button.backgroundColor}
                 textColor={button.color}
                 loadingColor={button.color}
@@ -127,27 +116,26 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
+    [borderStyle, style, banner, onPressClose, loading],
   );
 
   if (!isVisible) {
-    return null;
+    return <View style={styles.removeLeftMargin} />;
   }
 
-  if (!banner.buttons.length && banner.defaultEvent) {
-    return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;
-  }
-
-  return elem;
+  return (
+    <ShadowCard onPress={onPressBanner} style={styles.removePaddingVertical}>
+      {elem}
+    </ShadowCard>
+  );
 };
 
 const styles = StyleSheet.create({
+  removePaddingVertical: {paddingVertical: 0},
+  removeLeftMargin: {marginLeft: -20},
   container: {
     borderRadius: 16,
     padding: 16,
-    marginHorizontal: 5,
-    minHeight: 100,
-    position: 'relative',
     flex: 1,
   },
   inner: {
@@ -161,6 +149,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   description: {
-    opacity: 0.7,
+    marginTop: 8,
   },
 });

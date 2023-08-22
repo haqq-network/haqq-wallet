@@ -12,6 +12,7 @@ import {Results} from 'realm';
 import {Color} from '@app/colors';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
@@ -1036,4 +1037,64 @@ export enum ValidUrlProtocol {
   haqq = 'haqq',
   etherium = 'etherium',
   wc = 'wc',
+}
+
+export interface IWidgetBase {
+  component: string;
+}
+
+export interface ITransactionsWidget extends IWidgetBase {
+  component: 'Transactions';
+}
+
+export interface ITransactionsShortWidget extends IWidgetBase {
+  component: 'TransactionsShort';
+}
+
+export interface IRafflesWidget extends IWidgetBase {
+  component: 'Raffles';
+}
+
+export interface IStakingWidget extends IWidgetBase {
+  component: 'Staking';
+}
+
+export interface IGovernanceWidget extends IWidgetBase {
+  component: 'Governance';
+}
+
+export interface ILayoutWidget extends IWidgetBase {
+  component: 'Layout';
+  direction: 'horizontal' | 'vertical';
+  child: IWidget[];
+}
+
+export interface IAdWidget extends IWidgetBase, Banner {
+  component: 'Ad';
+  target?: string;
+}
+
+export interface IBannerWidget extends IWidgetBase, Banner {
+  component: 'Banner';
+  target?: string;
+}
+
+export type IWidget =
+  | ITransactionsWidget
+  | ITransactionsShortWidget
+  | IRafflesWidget
+  | IStakingWidget
+  | IGovernanceWidget
+  | ILayoutWidget
+  | IAdWidget
+  | IBannerWidget;
+
+export interface MarkupResponse {
+  blocks: ILayoutWidget;
+  created_at: string;
+  id: string;
+  screen: string;
+  status: string;
+  updated_at: string;
+  version: number;
 }

@@ -13,9 +13,10 @@ import {Text} from '../text';
 export interface BarChartProps {
   data: BarChartItem[];
   style?: StyleProp<ViewStyle>;
+  hideText?: boolean;
 }
 
-export function BarChart({data, style}: BarChartProps) {
+export function BarChart({data, style, hideText = false}: BarChartProps) {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.row}>
@@ -30,19 +31,23 @@ export function BarChart({data, style}: BarChartProps) {
           );
         })}
       </View>
-      <Spacer height={4} />
-      <Text>
-        {data.map((item, index) => {
-          return (
-            <BarChartText
-              key={`bar-chart-text-${item.id}`}
-              item={item}
-              index={index}
-              data={data}
-            />
-          );
-        })}
-      </Text>
+      {!hideText && (
+        <>
+          <Spacer height={4} />
+          <Text>
+            {data.map((item, index) => {
+              return (
+                <BarChartText
+                  key={`bar-chart-text-${item.id}`}
+                  item={item}
+                  index={index}
+                  data={data}
+                />
+              );
+            })}
+          </Text>
+        </>
+      )}
     </View>
   );
 }

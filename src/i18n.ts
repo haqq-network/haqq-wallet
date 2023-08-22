@@ -1,5 +1,9 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
+import {
+  CURRENCY_NAME,
+  LEDGER_APP,
+  PLATFORM_COMPANY,
+} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -236,6 +240,7 @@ export enum I18N {
   signinRestoreWalletTextFieldPlaceholder,
   settingsAddressBookLabel,
   transactionSendTitle,
+  transactionReceiveTitle,
   signupStoreWalletCreatingAccount,
   signupStoreWalletAccountNumber,
   signinStoreWalletText,
@@ -718,6 +723,13 @@ export enum I18N {
   lockedTokensInfoDescription,
   totalValueScreenTitle,
   totalValueAccount,
+  homeGovernanceDescription,
+  transactionWidgetReceiveTitle,
+  transactionWidgetSpendTitle,
+  transactionWidgetTitle,
+  transactionWidgetShortTitle,
+  transactionPositiveAmountText,
+  transactionNegativeAmountText,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -921,8 +933,8 @@ const en: Record<I18N, string> = {
   [I18N.notificationRewardReceived]: 'The reward is received',
   [I18N.modalPinForgotCode]: 'Forgot\nthe code',
   [I18N.pinManyAttempts]: 'Too many attempts, please wait for {{attempts}}',
-  [I18N.homeWallet]: 'Accounts',
-  [I18N.homeWalletTitle]: 'Your accounts',
+  [I18N.homeWallet]: 'Main',
+  [I18N.homeWalletTitle]: 'Your wallets',
   [I18N.homeSettings]: 'Settings',
   [I18N.homeSettingsTitle]: 'Settings',
   [I18N.homeBrowserTitle]: 'Browser',
@@ -960,6 +972,7 @@ const en: Record<I18N, string> = {
   [I18N.homeGovernanceVotingCardMin]: 'Min',
   [I18N.homeGovernanceVotingCardPassed]: 'Passed',
   [I18N.homeGovernanceVotingCardRejected]: 'Rejected',
+  [I18N.homeGovernanceDescription]: 'Voting for changes in the network',
   [I18N.headerPlaceholderSearch]: 'Search',
   [I18N.homeStakingStaked]: 'Staked',
   [I18N.homeStakingRewards]: 'Rewards',
@@ -1047,6 +1060,13 @@ const en: Record<I18N, string> = {
   [I18N.settingsSecurity]: 'Security',
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
+  [I18N.transactionReceiveTitle]: 'Received',
+  [I18N.transactionPositiveAmountText]: `+ {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionNegativeAmountText]: `- {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionWidgetSpendTitle]: `Spend {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionWidgetTitle]: 'Transactions',
+  [I18N.transactionWidgetShortTitle]: 'Last transactions',
   [I18N.stakingInfoDelegationNoAvailableWallets]:
     'No wallets available for delegation.',
   [I18N.stakingInfoUnDelegationNoAvailableWallets]:

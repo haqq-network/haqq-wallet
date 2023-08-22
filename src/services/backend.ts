@@ -1,5 +1,11 @@
 import {app} from '@app/contexts';
-import {NewsRow, NewsUpdatesResponse, Raffle, RssNewsRow} from '@app/types';
+import {
+  MarkupResponse,
+  NewsRow,
+  NewsUpdatesResponse,
+  Raffle,
+  RssNewsRow,
+} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config';
@@ -269,5 +275,26 @@ export class Backend {
     );
 
     return await getHttpResponse<T>(req);
+  }
+
+  async markup({
+    wallets,
+    uid,
+    screen,
+  }: {
+    wallets: string[];
+    uid: string;
+    screen: string;
+  }): Promise<MarkupResponse> {
+    const response = await fetch(`${this.getRemoteUrl()}markups`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        wallets,
+        uid,
+        screen,
+      }),
+    });
+    return await getHttpResponse<MarkupResponse>(response);
   }
 }
