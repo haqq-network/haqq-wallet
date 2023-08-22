@@ -1,15 +1,19 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 
 import {WalletConnectWalletList} from '@app/components/wallet-connect-wallet-list';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {Wallet} from '@app/models/wallet';
+import {
+  WalletConnectStackParamList,
+  WalletConnectStackRoutes,
+} from '@app/screens/HomeStack/WalletConnectStack';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
-export const WalletConnectWalletListScreen = () => {
+export const WalletConnectWalletListScreen = memo(() => {
   const {accounts} = useWalletConnectAccounts();
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<WalletConnectStackParamList>();
   const wallets = useMemo(
     () =>
       accounts
@@ -30,15 +34,21 @@ export const WalletConnectWalletListScreen = () => {
       }
 
       if (sessionsByAddress?.length === 1) {
-        return navigation.navigate('walletConnectApplicationDetails', {
-          session: sessionsByAddress[0],
-        });
+        return navigation.navigate(
+          WalletConnectStackRoutes.WalletConnectApplicationDetails,
+          {
+            session: sessionsByAddress[0],
+          },
+        );
       }
 
       if (sessionsByAddress?.length > 1) {
-        return navigation.navigate('walletConnectApplicationList', {
-          address,
-        });
+        return navigation.navigate(
+          WalletConnectStackRoutes.WalletConnectApplicationList,
+          {
+            address,
+          },
+        );
       }
     },
     [navigation],
@@ -50,4 +60,4 @@ export const WalletConnectWalletListScreen = () => {
       wallets={wallets}
     />
   );
-};
+});

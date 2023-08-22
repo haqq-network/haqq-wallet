@@ -31,6 +31,8 @@ export const SettingsButton = ({
 }: SettingsButtonProps) => {
   const navigation = useTypedNavigation<SettingsStackParamList>();
 
+  //FIXME: Test this
+  //@ts-ignore
   const onClickButton = () => navigation.navigate(next);
 
   return (

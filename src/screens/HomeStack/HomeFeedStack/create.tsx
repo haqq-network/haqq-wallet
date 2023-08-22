@@ -3,6 +3,7 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {basicScreenOptions} from '@app/screens';
 import {ModalsScreenConnected} from '@app/screens/modals-screen';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
@@ -14,13 +15,16 @@ const SignUpStack = createNativeStackNavigator();
 
 const title = 'Create a wallet';
 const screenOptionsTitle: ScreenOptionType = {
+  ...popupScreenOptions,
   title,
   ...hideBack,
+  presentation: 'modal',
+  headerShown: true,
 };
 
 export const CreateStack = memo(() => {
   return (
-    <SignUpStack.Navigator screenOptions={popupScreenOptions}>
+    <SignUpStack.Navigator screenOptions={basicScreenOptions}>
       <SignUpStack.Screen
         name="createAgreement"
         component={SignUpAgreementScreen}

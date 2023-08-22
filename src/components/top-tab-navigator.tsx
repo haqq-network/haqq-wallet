@@ -147,14 +147,14 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
         />
       );
     default:
-      return <></>;
+      return null;
   }
 };
 
 const Tab: React.FC<TabProps> = ({component}) => {
   const Component = component;
   if (!Component) {
-    return <></>;
+    return null;
   }
   //@ts-ignore
   return React.isValidElement(Component) ? Component : <Component />;

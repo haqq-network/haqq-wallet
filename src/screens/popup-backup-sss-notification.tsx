@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {addMinutes} from 'date-fns';
@@ -12,13 +12,17 @@ import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {Cloud} from '@app/services/cloud';
 import {GoogleDrive} from '@app/services/google-drive';
 import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
-export const BackupSssNotificationScreen = () => {
-  const {goBack} = useTypedNavigation();
-  const {accountId} = useTypedRoute<'backupNotification'>().params;
+export const BackupSssNotificationScreen = memo(() => {
+  const {goBack} = useTypedNavigation<HomeStackParamList>();
+  const {accountId} = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.BackupNotification
+  >().params;
 
   const onPressBackupGoogle = useCallback(
     async (onDone: () => void) => {
@@ -74,4 +78,4 @@ export const BackupSssNotificationScreen = () => {
       )}
     </BottomPopupContainer>
   );
-};
+});

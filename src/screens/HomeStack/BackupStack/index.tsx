@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
@@ -12,7 +12,27 @@ import {BackupVerifyScreen} from '@app/screens/HomeStack/BackupStack/backup-veri
 import {BackupWarningScreen} from '@app/screens/HomeStack/BackupStack/backup-warning';
 import {ScreenOptionType} from '@app/types';
 
-const Stack = createStackNavigator();
+export enum BackupStackRoutes {
+  BackupWarning = 'backupWarning',
+  BackupCreate = 'backupCreate',
+  BackupVerify = 'backupVerify',
+  BackupFinish = 'backupFinish',
+}
+
+export type BackupStackParamList = HomeStackParamList & {
+  [BackupStackRoutes.BackupWarning]: {
+    accountId: string;
+  };
+  [BackupStackRoutes.BackupCreate]: {
+    accountId: string;
+  };
+  [BackupStackRoutes.BackupVerify]: {
+    accountId: string;
+  };
+  [BackupStackRoutes.BackupFinish]: undefined;
+};
+
+const Stack = createNativeStackNavigator<BackupStackParamList>();
 
 const screenOptions: ScreenOptionType = {
   title: '',
@@ -32,15 +52,21 @@ export const BackupStack = memo(() => {
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen
-        name="backupWarning"
+        name={BackupStackRoutes.BackupWarning}
         component={BackupWarningScreen}
         initialParams={{accountId: accountId}}
         options={screenOptions}
       />
-      <Stack.Screen name="backupCreate" component={BackupCreateScreen} />
-      <Stack.Screen name="backupVerify" component={BackupVerifyScreen} />
       <Stack.Screen
-        name="backupFinish"
+        name={BackupStackRoutes.BackupCreate}
+        component={BackupCreateScreen}
+      />
+      <Stack.Screen
+        name={BackupStackRoutes.BackupVerify}
+        component={BackupVerifyScreen}
+      />
+      <Stack.Screen
+        name={BackupStackRoutes.BackupFinish}
         component={BackupFinishScreen}
         options={screenOptions}
       />

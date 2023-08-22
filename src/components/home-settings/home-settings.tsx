@@ -34,16 +34,9 @@ export const HomeSettings = () => {
           rightTitle={`${accounts.length}`}
           icon="wallet_connect"
           title={I18N.homeSettingsWalletConnect}
-          next="walletConnectWalletList"
+          next={SettingsStackRoutes.WalletConnectWalletList}
         />
       )}
-
-      {/* <SettingsButton
-        icon="language"
-        rightTitle="EN"
-        title={getText(I18N.homeSettingsLanguage)}
-        next="settingsLanguage"
-      /> */}
 
       <SettingsButton
         rightTitle={capitalizedTheme}
@@ -70,13 +63,6 @@ export const HomeSettings = () => {
         next={SettingsStackRoutes.SettingsProviders}
         style={page.button}
       />
-
-      {/*<SettingsButton*/}
-      {/*  icon={<HelpSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title={getText(I18N.homeSettingsFAQ)}*/}
-      {/*  onPress={onClickButton}*/}
-      {/*  next="settingsFaq"*/}
-      {/*/>*/}
 
       <SettingsButton
         icon="islm"

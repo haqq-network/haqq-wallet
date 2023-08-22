@@ -7,15 +7,9 @@ import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 export const WelcomeScreen = memo(() => {
   const navigation = useTypedNavigation();
 
-  const onPressSignup = () =>
-    navigation.navigate(WelcomeStackRoutes.SignUp, {
-      next: WelcomeStackRoutes.Create,
-    });
+  const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
   const onPressLedger = () => navigation.navigate(WelcomeStackRoutes.Ledger);
-  const onPressSignIn = () =>
-    navigation.navigate(WelcomeStackRoutes.SignIn, {
-      next: WelcomeStackRoutes.Restore,
-    });
+  const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   return (
     <Welcome

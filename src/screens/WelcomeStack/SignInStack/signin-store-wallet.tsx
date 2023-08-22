@@ -1,10 +1,9 @@
-import React, {memo, useEffect} from 'react';
+import {memo, useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import {View} from 'react-native';
 
 import {app} from '@app/contexts';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
@@ -13,7 +12,6 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {
   SignInStackParamList,
   SignInStackRoutes,
@@ -111,14 +109,7 @@ export const SignInStoreWalletScreen = memo(() => {
             break;
         }
 
-        // TODO: Check nav stack
-        // navigation.navigate(
-        //   nextScreen || OnboardingStackRoutes.OnboardingFinish,
-        // );
-        // FIXME:
-        navigation.navigate(OnboardingStackRoutes.OnboardingSetupPin, {
-          screen: nextScreen || OnboardingStackRoutes.OnboardingFinish,
-        });
+        navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
@@ -137,5 +128,5 @@ export const SignInStoreWalletScreen = memo(() => {
     }, 350);
   }, [navigation, nextScreen, params, show]);
 
-  return <View />;
+  return null;
 });

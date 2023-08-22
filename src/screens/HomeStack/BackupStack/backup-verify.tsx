@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 
@@ -7,11 +7,18 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  BackupStackParamList,
+  BackupStackRoutes,
+} from '@app/screens/HomeStack/BackupStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const BackupVerifyScreen = () => {
-  const navigation = useTypedNavigation();
-  const {accountId} = useTypedRoute<'backupVerify'>().params;
+export const BackupVerifyScreen = memo(() => {
+  const navigation = useTypedNavigation<BackupStackParamList>();
+  const {accountId} = useTypedRoute<
+    BackupStackParamList,
+    BackupStackRoutes.BackupVerify
+  >().params;
   const provider = useRef(
     new ProviderMnemonicReactNative({
       account: accountId,
@@ -32,7 +39,7 @@ export const BackupVerifyScreen = () => {
       if (selected === mnemonic) {
         await provider.setMnemonicSaved();
         app.emit(Events.onWalletMnemonicSaved, provider.getIdentifier());
-        navigation.navigate('backupFinish');
+        navigation.navigate(BackupStackRoutes.BackupFinish);
       } else {
         vibrate(HapticEffects.error);
         setError(Math.random);
@@ -54,4 +61,4 @@ export const BackupVerifyScreen = () => {
       testID="backup_verify"
     />
   );
-};
+});

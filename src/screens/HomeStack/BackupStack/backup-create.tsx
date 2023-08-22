@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {Alert} from 'react-native';
@@ -9,10 +9,17 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {
+  BackupStackParamList,
+  BackupStackRoutes,
+} from '@app/screens/HomeStack/BackupStack';
 
-export const BackupCreateScreen = () => {
-  const navigation = useTypedNavigation();
-  const {accountId} = useTypedRoute<'backupCreate'>().params;
+export const BackupCreateScreen = memo(() => {
+  const navigation = useTypedNavigation<BackupStackParamList>();
+  const {accountId} = useTypedRoute<
+    BackupStackParamList,
+    BackupStackRoutes.BackupCreate
+  >().params;
 
   const [mnemonic, setMnemonic] = useState<string | null>(null);
 
@@ -26,7 +33,7 @@ export const BackupCreateScreen = () => {
   }, [accountId]);
 
   const onSubmit = () => {
-    navigation.navigate('backupVerify', {
+    navigation.navigate(BackupStackRoutes.BackupVerify, {
       accountId,
     });
   };
@@ -64,4 +71,4 @@ export const BackupCreateScreen = () => {
       testID="backup_create"
     />
   );
-};
+});

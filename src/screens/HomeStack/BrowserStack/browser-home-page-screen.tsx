@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {memo, useCallback, useEffect, useMemo} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -9,6 +9,10 @@ import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSearchHistory} from '@app/hooks/use-web3-browser-search-history';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
+import {
+  BrowserStackParamList,
+  BrowserStackRoutes,
+} from '@app/screens/HomeStack/BrowserStack';
 import {AdjustEvents, Link} from '@app/types';
 
 export const STRICT_URLS: Partial<Link>[] = [
@@ -24,10 +28,10 @@ export const STRICT_URLS: Partial<Link>[] = [
   },
 ];
 
-export const BrowserHomePageScreen = () => {
-  const navigation = useTypedNavigation();
+export const BrowserHomePageScreen = memo(() => {
+  const navigation = useTypedNavigation<BrowserStackParamList>();
   const onSearchPress = useCallback(() => {
-    navigation.navigate('browserSearchPage');
+    navigation.navigate(BrowserStackRoutes.BrowserSearchPage);
   }, [navigation]);
   const bookmarks = useWeb3BrowserBookmark();
   const searchHistory = useWeb3BrowserSearchHistory();
@@ -43,13 +47,13 @@ export const BrowserHomePageScreen = () => {
 
   const onFavouritePress = useCallback(
     (link: Link) => {
-      navigation.navigate('web3browser', {url: link.url});
+      navigation.navigate(BrowserStackRoutes.Web3browser, {url: link.url});
     },
     [navigation],
   );
   const onRecentPress = useCallback(
     (link: Link) => {
-      navigation.navigate('web3browser', {url: link.url});
+      navigation.navigate(BrowserStackRoutes.Web3browser, {url: link.url});
     },
     [navigation],
   );
@@ -58,7 +62,7 @@ export const BrowserHomePageScreen = () => {
     Web3BrowserSearchHistory.removeAll();
   }, []);
   const onEditFavouritePress = useCallback(() => {
-    navigation.navigate('browserEditBookmarksScreen');
+    navigation.navigate(BrowserStackRoutes.BrowserEditBookmarks);
   }, [navigation]);
 
   useEffect(() => {
@@ -92,4 +96,4 @@ export const BrowserHomePageScreen = () => {
       onEditFavouritePress={onEditFavouritePress}
     />
   );
-};
+});

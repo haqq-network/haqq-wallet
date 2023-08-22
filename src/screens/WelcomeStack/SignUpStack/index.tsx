@@ -18,6 +18,7 @@ import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/s
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
+import {SssProviders} from '@app/services/provider-sss';
 import {AdjustEvents, WalletInitialData} from '@app/types';
 
 export enum SignUpStackRoutes {
@@ -36,7 +37,10 @@ export type SignUpStackParamList = WelcomeStackParamList & {
       | SignUpStackRoutes.SignUpNetworks;
   };
   [SignUpStackRoutes.SignUpNetworks]: WalletInitialData;
-  [SignUpStackRoutes.SignUpNetworkExists]: WalletInitialData;
+  [SignUpStackRoutes.SignUpNetworkExists]: {
+    provider: SssProviders;
+    email?: string;
+  } & WalletInitialData;
   [SignUpStackRoutes.SignUpPin]: WalletInitialData;
   [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;
   [SignUpStackRoutes.SignupStoreWallet]: WalletInitialData & {

@@ -14,7 +14,7 @@ export const AccountDetailScreen = memo(() => {
   const wallet = useWallet(route.params.address);
 
   const onCloseBottomSheet = () => {
-    navigation.canGoBack() && navigation.goBack();
+    navigation.goBack();
   };
 
   if (!wallet) {

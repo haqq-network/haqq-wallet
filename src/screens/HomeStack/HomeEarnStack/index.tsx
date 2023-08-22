@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {HomeStackParamList} from '@app/screens/HomeStack';
@@ -67,22 +67,18 @@ const HomeEarnStack = memo(() => {
         name={HomeEarnStackRoutes.StakingInfo}
         component={StakingInfoScreen}
         options={{
-          ...popupScreenOptions,
+          ...popupScreenOptionsWithMargin,
           title: getText(I18N.stakingInfo),
           headerShown: true,
-          //FIXME:
-          headerStyle: {marginTop: 20},
         }}
       />
       <Stack.Screen
         name={HomeEarnStackRoutes.Staking}
         component={HomeStakingScreen}
         options={{
-          ...popupScreenOptions,
+          ...popupScreenOptionsWithMargin,
           title: '',
           headerShown: true,
-          //FIXME:
-          headerStyle: {marginTop: 20},
         }}
       />
 
@@ -101,10 +97,8 @@ const HomeEarnStack = memo(() => {
         name={HomeEarnStackRoutes.RaffleDetails}
         component={RaffleDetailsScreen}
         options={{
-          ...popupScreenOptions,
+          ...popupScreenOptionsWithMargin,
           headerShown: true,
-          //FIXME:
-          headerStyle: {marginTop: 20},
         }}
       />
       <Stack.Screen

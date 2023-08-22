@@ -16,6 +16,7 @@ import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
 } from '@app/screens/HomeStack/ManageAccountsStack';
+import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {AdjustEvents} from '@app/types';
@@ -99,7 +100,8 @@ export const SettingsAccountDetailScreen = memo(() => {
   }, [navigation, wallet?.accountId]);
 
   const onPressSocial = useCallback(() => {
-    navigation.navigate('backupSssSuggestion', {
+    //FIXME: Test this
+    navigation.navigate(SettingsStackRoutes.BackupSssSuggestion, {
       accountId: wallet?.accountId!,
     });
   }, [navigation, wallet?.accountId]);

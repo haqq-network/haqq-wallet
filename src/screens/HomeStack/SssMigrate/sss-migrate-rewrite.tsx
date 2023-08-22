@@ -1,14 +1,21 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {Alert} from 'react-native';
 
 import {SssMigrateRewrite} from '@app/components/sss-migrate-rewrite/sss-migrate-rewrite';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {
+  SssMigrateStackParamList,
+  SssMigrateStackRoutes,
+} from '@app/screens/HomeStack/SssMigrate';
 
-export const SssMigrateRewriteScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'sssMigrateRewrite'>();
+export const SssMigrateRewriteScreen = memo(() => {
+  const navigation = useTypedNavigation<SssMigrateStackParamList>();
+  const route = useTypedRoute<
+    SssMigrateStackParamList,
+    SssMigrateStackRoutes.SssMigrateRewrite
+  >();
 
   const onDone = useCallback(() => {
     Alert.alert(
@@ -20,7 +27,7 @@ export const SssMigrateRewriteScreen = () => {
           text: 'Accept',
           style: 'destructive',
           onPress() {
-            navigation.navigate('sssMigrateStore', {
+            navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
               accountId: route.params.accountId,
               privateKey: route.params.privateKey,
               token: route.params.token,
@@ -50,4 +57,4 @@ export const SssMigrateRewriteScreen = () => {
       onCancel={onCancel}
     />
   );
-};
+});

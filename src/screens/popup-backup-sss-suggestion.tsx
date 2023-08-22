@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {addMinutes} from 'date-fns';
 
@@ -7,17 +7,26 @@ import {BackupSssSuggestion} from '@app/components/bottom-popups/popup-backup-ss
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
 import {navigator} from '@app/navigator';
+import {HomeStackRoutes} from '@app/screens/HomeStack';
+import {
+  SettingsStackParamList,
+  SettingsStackRoutes,
+} from '@app/screens/HomeStack/SettingsStack';
 import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
-export const BackupSssSuggestionScreen = () => {
-  const {goBack} = useTypedNavigation();
-  const {accountId} = useTypedRoute<'backupSssSuggestion'>().params;
+export const BackupSssSuggestionScreen = memo(() => {
+  const {goBack} = useTypedNavigation<SettingsStackParamList>();
+  const {accountId} = useTypedRoute<
+    SettingsStackParamList,
+    SettingsStackRoutes.BackupSssSuggestion
+  >().params;
 
   const onClickBackup = useCallback(
     async (onDone: () => void) => {
       if (accountId) {
         goBack();
-        navigator.navigate('sssMigrate', {
+        //FIXME: Test this
+        navigator.navigate(HomeStackRoutes.SssMigrate, {
           accountId,
         });
         onDone();
@@ -51,4 +60,4 @@ export const BackupSssSuggestionScreen = () => {
       )}
     </BottomPopupContainer>
   );
-};
+});

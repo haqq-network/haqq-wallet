@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {ProposalDepositPreview} from '@app/components/proposal-deposit-preview';
 import {app} from '@app/contexts';
@@ -7,12 +7,18 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {
+  ProposalDepositStackParamList,
+  ProposalDepositStackRoutes,
+} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
 import {Cosmos} from '@app/services/cosmos';
 
-export const ProposalDepositPreviewScreen = () => {
-  const navigation = useTypedNavigation();
-  const {fee, account, amount, proposal} =
-    useTypedRoute<'proposalDepositPreview'>().params;
+export const ProposalDepositPreviewScreen = memo(() => {
+  const navigation = useTypedNavigation<ProposalDepositStackParamList>();
+  const {fee, account, amount, proposal} = useTypedRoute<
+    ProposalDepositStackParamList,
+    ProposalDepositStackRoutes.ProposalDepositPreview
+  >().params;
 
   const wallet = useWallet(account);
 
@@ -34,12 +40,15 @@ export const ProposalDepositPreviewScreen = () => {
         );
 
         if (resp) {
-          navigation.navigate('proposalDepositFinish', {
-            txhash: resp.tx_response.txhash,
-            proposal,
-            amount,
-            fee,
-          });
+          navigation.navigate(
+            ProposalDepositStackRoutes.ProposalDepositFinish,
+            {
+              txhash: resp.tx_response.txhash,
+              proposal,
+              amount,
+              fee,
+            },
+          );
         }
       } catch (e) {
         if (e instanceof Error) {
@@ -67,4 +76,4 @@ export const ProposalDepositPreviewScreen = () => {
       error={error}
     />
   );
-};
+});

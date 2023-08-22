@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {memo, useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
@@ -11,11 +11,18 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {
+  SssMigrateStackParamList,
+  SssMigrateStackRoutes,
+} from '@app/screens/HomeStack/SssMigrate';
 import {WalletType} from '@app/types';
 
-export const SssMigrateStoreScreen = () => {
-  const route = useTypedRoute<'sssMigrateStore'>();
-  const navigation = useTypedNavigation();
+export const SssMigrateStoreScreen = memo(() => {
+  const route = useTypedRoute<
+    SssMigrateStackParamList,
+    SssMigrateStackRoutes.SssMigrateStore
+  >();
+  const navigation = useTypedNavigation<SssMigrateStackParamList>();
 
   useEffect(() => {
     showModal('loading', {text: getText(I18N.sssStoreWalletSaving)});
@@ -67,7 +74,7 @@ export const SssMigrateStoreScreen = () => {
           }
         }
 
-        navigation.navigate('sssMigrateFinish');
+        navigation.navigate(SssMigrateStackRoutes.SssMigrateFinish);
       } catch (e) {
         if (e instanceof Error) {
           showModal('errorCreateAccount');
@@ -78,5 +85,5 @@ export const SssMigrateStoreScreen = () => {
     }, 350);
   }, [navigation, route]);
 
-  return <></>;
-};
+  return null;
+});

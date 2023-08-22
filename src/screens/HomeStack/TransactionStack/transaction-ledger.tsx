@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {memo, useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
 import Decimal from 'decimal.js';
@@ -13,18 +13,25 @@ import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Wallet} from '@app/models/wallet';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents} from '@app/types';
 import {WEI} from '@app/variables/common';
 
-export const TransactionLedgerScreen = () => {
+export const TransactionLedgerScreen = memo(() => {
   const transport = useRef<ProviderInterface | null>(null);
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const route = useTypedRoute<'transactionConfirmation'>();
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionConfirmation
+  >();
 
   useEffect(() => {
     const subscription = (modal: string) => {
@@ -59,7 +66,7 @@ export const TransactionLedgerScreen = () => {
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
 
-          navigation.navigate('transactionFinish', {
+          navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             hash: transaction.hash,
           });
         }
@@ -94,4 +101,4 @@ export const TransactionLedgerScreen = () => {
       amount={route.params.amount}
     />
   );
-};
+});

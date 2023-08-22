@@ -13,7 +13,11 @@ import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
-import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
+import {
+  SignUpStack,
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
@@ -28,7 +32,10 @@ export enum WelcomeStackRoutes {
 export type WelcomeStackParamList = {
   [WelcomeStackRoutes.Welcome]: undefined;
   [WelcomeStackRoutes.WelcomeNews]: undefined;
-  [WelcomeStackRoutes.SignUp]: undefined;
+  [WelcomeStackRoutes.SignUp]?: {
+    screen: SignUpStackRoutes.SignupStoreWallet;
+    params: SignUpStackParamList[SignUpStackRoutes.SignupStoreWallet];
+  };
   [WelcomeStackRoutes.Ledger]: undefined;
   [WelcomeStackRoutes.SignIn]: undefined;
   [WelcomeStackRoutes.Modal]: ModalState;

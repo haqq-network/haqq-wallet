@@ -13,7 +13,6 @@ export const SignUpAgreementScreen = memo(() => {
     SignUpStackParamList,
     SignUpStackRoutes.SignUpAgreement
   >().params;
-
   const onPressAgree = useCallback(() => {
     return navigation.navigate(nextScreen, {
       type: 'empty',

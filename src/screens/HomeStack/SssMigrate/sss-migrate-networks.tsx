@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {METADATA_URL} from '@env';
 import {getMetadataValue} from '@haqq/shared-react-native';
@@ -6,15 +6,22 @@ import {getMetadataValue} from '@haqq/shared-react-native';
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
+  SssMigrateStackParamList,
+  SssMigrateStackRoutes,
+} from '@app/screens/HomeStack/SssMigrate';
+import {
   SssProviders,
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
-export const SssMigrateNetworksScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'sssMigrateNetworks'>();
+export const SssMigrateNetworksScreen = memo(() => {
+  const navigation = useTypedNavigation<SssMigrateStackParamList>();
+  const route = useTypedRoute<
+    SssMigrateStackParamList,
+    SssMigrateStackRoutes.SssMigrateNetworks
+  >();
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
@@ -37,9 +44,10 @@ export const SssMigrateNetworksScreen = () => {
           'socialShareIndex',
         );
 
-        const nextScreen = walletInfo ? 'sssMigrateRewrite' : 'sssMigrateStore';
+        const nextScreen = walletInfo
+          ? SssMigrateStackRoutes.SssMigrateRewrite
+          : SssMigrateStackRoutes.SssMigrateStore;
 
-        // @ts-ignore
         navigation.navigate(nextScreen, {
           accountId: route.params.accountId,
           privateKey: creds.privateKey,
@@ -49,7 +57,7 @@ export const SssMigrateNetworksScreen = () => {
           email: '',
         });
       } else {
-        navigation.navigate('sssMigrateStore', {
+        navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
           accountId: route.params.accountId,
           privateKey: null,
           token: creds.token,
@@ -61,4 +69,4 @@ export const SssMigrateNetworksScreen = () => {
   );
 
   return <SssMigrateNetworks onLogin={onLogin} />;
-};
+});

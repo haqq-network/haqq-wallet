@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import prompt from 'react-native-prompt-android';
 
@@ -9,16 +9,24 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const TransactionNftFinishScreen = () => {
-  const {navigate, getParent, goBack} = useTypedNavigation();
+export const TransactionNftFinishScreen = memo(() => {
+  const {navigate, getParent, goBack} =
+    useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, nft} = useTypedRoute<'transactionNftFinish'>().params;
+  const {hash, nft} = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionNftFinish
+  >().params;
   const [transaction, setTransaction] = useState<Transaction | null>(
     Transaction.getById(hash),
   );
@@ -92,4 +100,4 @@ export const TransactionNftFinishScreen = () => {
       short={short}
     />
   );
-};
+});

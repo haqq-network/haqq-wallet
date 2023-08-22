@@ -1,31 +1,34 @@
-import React from 'react';
+import React, {memo} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {ScreenOptionType} from '@app/types';
 
 import {WalletConnectApplicationDetailsScreen} from './wallet-connect-application-details';
 
-const WalletConnect = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const screenOptions: ScreenOptionType = {
   ...popupScreenOptions,
   headerRight: DismissPopupButton,
-  keyboardHandlingEnabled: false,
 };
 
-export const WalletConnectApplicationDetailsPopupScreen = () => {
-  const route = useTypedRoute<'walletConnectApplicationDetailsPopup'>();
+export const WalletConnectApplicationDetailsPopupScreen = memo(() => {
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.WalletConnectApplicationDetailsPopup
+  >();
   return (
-    <WalletConnect.Navigator screenOptions={screenOptions}>
-      <WalletConnect.Screen
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
         name="walletConnectApplicationDetailsPopupContent"
         component={WalletConnectApplicationDetailsScreen}
         initialParams={{...route.params, isPopup: true}}
       />
-    </WalletConnect.Navigator>
+    </Stack.Navigator>
   );
-};
+});

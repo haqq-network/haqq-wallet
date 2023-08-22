@@ -50,6 +50,15 @@ export const SignupNetworksScreen = memo(() => {
 
         if (walletInfo) {
           nextScreen = SignUpStackRoutes.SignUpNetworkExists;
+          navigation.navigate(nextScreen, {
+            type: 'sss',
+            sssPrivateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            sssCloudShare: null,
+            provider: provider,
+          });
+          return;
         }
       }
 
@@ -59,8 +68,6 @@ export const SignupNetworksScreen = memo(() => {
         token: creds.token,
         verifier: creds.verifier,
         sssCloudShare: null,
-        // TODO: Проверить тип
-        // provider: provider,
       });
     },
     [navigation],

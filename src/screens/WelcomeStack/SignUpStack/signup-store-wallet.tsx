@@ -21,7 +21,6 @@ export const SignUpStoreWalletScreen = () => {
     SignUpStackParamList,
     SignUpStackRoutes.SignupStoreWallet
   >();
-
   const [show] = useModal();
 
   const goBack = useCallback(() => {
@@ -72,6 +71,7 @@ export const SignUpStoreWalletScreen = () => {
           },
           name,
         );
+
         //@ts-ignore
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {

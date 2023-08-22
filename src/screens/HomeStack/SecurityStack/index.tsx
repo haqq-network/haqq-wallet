@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {HomeStackParamList} from '@app/screens/HomeStack';
@@ -32,8 +32,7 @@ const SecurityStack = memo(() => {
         name={SecurityStackRoutes.SettingsSecurity}
         component={SettingsSecurityScreen}
         options={{
-          ...popupScreenOptions,
-          headerStyle: {marginTop: 20},
+          ...popupScreenOptionsWithMargin,
           title: getText(I18N.settingsSecurity),
           headerShown: true,
         }}
@@ -42,8 +41,7 @@ const SecurityStack = memo(() => {
         name={SecurityStackRoutes.SettingsSecurityPin}
         component={SettingsSecurityPinScreen}
         options={{
-          ...popupScreenOptions,
-          headerStyle: {marginTop: 20},
+          ...popupScreenOptionsWithMargin,
           title: 'Change PIN',
           headerShown: true,
         }}

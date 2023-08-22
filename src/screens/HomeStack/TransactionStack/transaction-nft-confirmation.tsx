@@ -1,15 +1,22 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 
 // TODO:
-export const TransactionNftConfirmationScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'transactionNftConfirmation'>();
+export const TransactionNftConfirmationScreen = memo(() => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionNftConfirmation
+  >();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
@@ -46,7 +53,7 @@ export const TransactionNftConfirmationScreen = () => {
   const onConfirmTransaction = useCallback(async () => {
     const hash =
       '0x9915496c761b2ac2dd906d739be0d2228b801caa30243b28ba41875405e6ff80';
-    navigation.navigate('transactionNftFinish', {
+    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
       hash,
       nft: route.params.nft,
     });
@@ -116,4 +123,4 @@ export const TransactionNftConfirmationScreen = () => {
       error={error}
     />
   );
-};
+});

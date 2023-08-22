@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {app} from '@app/contexts';
@@ -8,18 +8,20 @@ import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
 import {getUserAddressFromJRPCRequest, isError} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-export const JsonRpcSignScreen = () => {
+export const JsonRpcSignScreen = memo(() => {
   const whitelist = useRemoteConfigVar('web3_app_whitelist');
   const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<HomeStackParamList>();
   const {metadata, request, chainId, selectedAccount} =
-    useTypedRoute<'jsonRpcSign'>().params || {};
+    useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
+    {};
 
   const isTransaction = useMemo(
     () =>
@@ -112,4 +114,4 @@ export const JsonRpcSignScreen = () => {
       onPressSign={onPressSign}
     />
   );
-};
+});

@@ -7,11 +7,13 @@ import {
 import {TransitionPresets} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
+import {Results} from 'realm';
 
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
+import {Wallet} from '@app/models/wallet';
 import {basicScreenOptions} from '@app/screens';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
 import {BackupStack} from '@app/screens/HomeStack/BackupStack';
@@ -20,13 +22,28 @@ import {AccountInfoScreen} from '@app/screens/HomeStack/HomeFeedStack/account-in
 import {CreateStack} from '@app/screens/HomeStack/HomeFeedStack/create';
 import {TransactionDetailScreen} from '@app/screens/HomeStack/HomeFeedStack/transaction-detail';
 import {InAppBrowserScreen} from '@app/screens/HomeStack/in-app-browser';
+import {JsonRpcSignPopupStack} from '@app/screens/HomeStack/JsonRpcSignPopupStack';
+import {SssMigrateStack} from '@app/screens/HomeStack/SssMigrate';
 import {TransactionStack} from '@app/screens/HomeStack/TransactionStack';
 import {WalletProtectionPopupScreen} from '@app/screens/HomeStack/wallet-protection-popup';
-import {WalletConnectApplicationDetailsPopupScreen} from '@app/screens/wallet-connect-application-details-popup';
-import {WalletConnectApplicationListPopupScreen} from '@app/screens/wallet-connect-application-list-popup';
+import {WalletConnectApprovalStack} from '@app/screens/HomeStack/WalletConnectApprovalStack';
+import {WalletConnectApplicationDetailsPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-details-popup';
+import {WalletConnectApplicationListPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-list-popup';
+import {BackupNotificationScreen} from '@app/screens/popup-backup-notification';
+import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notification';
+import {PopupNotificationScreen} from '@app/screens/popup-notification';
+import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
+import {PopupTrackActivityScreen} from '@app/screens/popup-track-activity';
+import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
-import {NftItem} from '@app/types';
+import {
+  JsonRpcMetadata,
+  NftItem,
+  PartialJsonRpcRequest,
+  PopupNotificationBannerId,
+} from '@app/types';
+import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 export enum HomeStackRoutes {
   Home = 'home',
@@ -43,6 +60,16 @@ export enum HomeStackRoutes {
   WalletConnectApplicationListPopup = 'walletConnectApplicationListPopup',
   TransactionDetail = 'transactionDetail',
   InAppBrowser = 'inAppBrowser',
+  WalletConnect = 'walletConnect',
+  SssMigrate = 'sssMigrate',
+  BackupNotification = 'backupNotification',
+  JsonRpcSign = 'jsonRpcSign',
+  BackupSssNotification = 'backupSssNotification',
+  PopupNotificationNews = 'popupNotificationNews',
+  PopupNotification = 'popupNotification',
+  PopupTrackActivity = 'popupTrackActivity',
+  Web3BrowserPopup = 'web3BrowserPopup',
+  WalletSelector = 'walletSelector',
 }
 
 export type HomeStackParamList = {
@@ -53,7 +80,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.SignIn]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string | boolean;
+    from?: string;
     to?: string;
     nft?: NftItem;
   };
@@ -72,6 +99,35 @@ export type HomeStackParamList = {
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
+  };
+  [HomeStackRoutes.WalletConnect]: {
+    screen: 'walletConnectApproval';
+    params: {
+      event: WalletConnectApproveConnectionEvent;
+    };
+  };
+  [HomeStackRoutes.SssMigrate]: {accountId: string};
+  [HomeStackRoutes.BackupNotification]: {accountId: string};
+  [HomeStackRoutes.JsonRpcSign]: {
+    request: PartialJsonRpcRequest;
+    metadata: JsonRpcMetadata;
+    chainId?: number;
+    selectedAccount?: string;
+  };
+  [HomeStackRoutes.BackupSssNotification]: {accountId: string};
+  [HomeStackRoutes.PopupNotificationNews]: {
+    bannerId: PopupNotificationBannerId;
+  };
+  [HomeStackRoutes.PopupNotification]: {
+    bannerId: PopupNotificationBannerId;
+  };
+  [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
+  [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
+  [HomeStackRoutes.WalletSelector]: {
+    wallets: Wallet[] | Results<Wallet>;
+    title: string;
+    initialAddress?: string;
+    eventSuffix?: string;
   };
 };
 
@@ -182,6 +238,60 @@ const HomeStack = memo(() => {
           name={HomeStackRoutes.InAppBrowser}
           component={InAppBrowserScreen}
           options={inAppBrowserOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.WalletConnect}
+          component={WalletConnectApprovalStack}
+          options={modalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.SssMigrate}
+          component={SssMigrateStack}
+          options={modalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.BackupNotification}
+          component={BackupNotificationScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.JsonRpcSign}
+          component={JsonRpcSignPopupStack}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.BackupSssNotification}
+          component={BackupSssNotificationScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.PopupNotificationNews}
+          component={PopupNotificationNewsScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.PopupNotification}
+          component={PopupNotificationScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.PopupTrackActivity}
+          component={PopupTrackActivityScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.Web3BrowserPopup}
+          component={Web3BrowserPopupScreen}
+          options={fullScreenModalOptions}
         />
       </Stack.Navigator>
     </>

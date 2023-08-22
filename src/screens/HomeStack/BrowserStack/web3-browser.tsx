@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Share} from 'react-native';
@@ -23,10 +23,17 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
+import {
+  BrowserStackParamList,
+  BrowserStackRoutes,
+} from '@app/screens/HomeStack/BrowserStack';
 import {sendNotification} from '@app/services';
 
-export const Web3BrowserScreen = () => {
-  const {url, popup} = useTypedRoute<'web3browser'>().params;
+export const Web3BrowserScreen = memo(() => {
+  const {url, popup} = useTypedRoute<
+    BrowserStackParamList,
+    BrowserStackRoutes.Web3browser
+  >().params;
   const navigation = useTypedNavigation();
   const [showActionMenu, setShowActionMenu] = useState(false);
   const toggleActionMenu = useCallback(
@@ -42,7 +49,7 @@ export const Web3BrowserScreen = () => {
   const userProvider = useMemo(() => Provider.getById(app.providerId), []);
 
   const onPressHeaderUrl = useCallback(({}: Web3BrowserPressHeaderEvent) => {
-    // navigation.navigate('browserSearchPage', {
+    // navigation.navigate(BrowserStackRoutes.BrowserSearchPage, {
     //   initialSearchText: siteUrl || clearSiteUrl,
     // });
   }, []);
@@ -188,4 +195,4 @@ export const Web3BrowserScreen = () => {
       addSiteToSearchHistory={addSiteToSearchHistory}
     />
   );
-};
+});

@@ -1,12 +1,13 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {SssMigrateFinish} from '@app/components/sss-migrate-finish';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
+import {SssMigrateStackParamList} from '@app/screens/HomeStack/SssMigrate';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const SssMigrateFinishScreen = () => {
-  const navigation = useTypedNavigation();
+export const SssMigrateFinishScreen = memo(() => {
+  const navigation = useTypedNavigation<SssMigrateStackParamList>();
 
   useEffect(() => {
     hideModal('loading');
@@ -18,4 +19,4 @@ export const SssMigrateFinishScreen = () => {
   }, [navigation]);
 
   return <SssMigrateFinish onSubmit={onSubmit} />;
-};
+});

@@ -1,16 +1,20 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {memo, useCallback, useEffect, useMemo} from 'react';
 
 import {WalletConnectApplicationDetails} from '@app/components/wallet-connect-application-details';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {getWalletConnectAccountsFromSession} from '@app/utils';
 
-export const WalletConnectApplicationDetailsScreen = () => {
-  const navivation = useTypedNavigation();
-  const {params} = useTypedRoute<'walletConnectApplicationDetails'>();
+export const WalletConnectApplicationDetailsScreen = memo(() => {
+  const navivation = useTypedNavigation<HomeStackParamList>();
+  const {params} = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.WalletConnectApplicationDetailsPopup
+  >();
   const session = useMemo(() => params?.session, [params?.session]);
 
   const account = useMemo(
@@ -58,4 +62,4 @@ export const WalletConnectApplicationDetailsScreen = () => {
       handleDisconnectPress={handleDisconnectPress}
     />
   );
-};
+});

@@ -1,32 +1,34 @@
-import React from 'react';
+import React, {memo} from 'react';
 
-import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {Spacer} from '@app/components/ui';
 import {useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {ScreenOptionType} from '@app/types';
 
 import {Web3BrowserScreen} from './HomeStack/BrowserStack/web3-browser';
 
-const Navigator = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const screenOptions: ScreenOptionType = {
-  keyboardHandlingEnabled: false,
   headerBackHidden: true,
   gestureEnabled: false,
   header: () => <Spacer height={10} />,
 };
 
-export const Web3BrowserPopup = () => {
-  const route = useTypedRoute<'web3BrowserPopup'>();
+export const Web3BrowserPopup = memo(() => {
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.Web3BrowserPopup
+  >();
   return (
-    <Navigator.Navigator screenOptions={screenOptions}>
-      <Navigator.Screen
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
         name="web3BrowserPopupInner"
         component={Web3BrowserScreen}
-        options={TransitionPresets.ModalSlideFromBottomIOS}
         initialParams={route.params}
       />
-    </Navigator.Navigator>
+    </Stack.Navigator>
   );
-};
+});

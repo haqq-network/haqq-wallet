@@ -1,21 +1,28 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {generateUUID} from '@app/utils';
 
-export const TransactionSumScreen = () => {
-  const navigation = useTypedNavigation();
+export const TransactionSumScreen = memo(() => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const route = useTypedRoute<'transactionSum'>();
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionSum
+  >();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
 
@@ -37,7 +44,7 @@ export const TransactionSumScreen = () => {
 
   const onAmount = useCallback(
     (amount: number) => {
-      navigation.navigate('transactionConfirmation', {
+      navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
         fee,
         from: route.params.from,
         to,
@@ -49,7 +56,7 @@ export const TransactionSumScreen = () => {
 
   const onContact = useCallback(() => {
     vibrate(HapticEffects.impactLight);
-    navigation.navigate('transactionSumAddress', {
+    navigation.navigate(TransactionStackRoutes.TransactionSumAddress, {
       to,
       event,
     });
@@ -79,4 +86,4 @@ export const TransactionSumScreen = () => {
       testID="transaction_sum"
     />
   );
-};
+});

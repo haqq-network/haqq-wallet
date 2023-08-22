@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import Decimal from 'decimal.js';
 
@@ -16,18 +16,25 @@ import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
-export const TransactionConfirmationScreen = () => {
-  const navigation = useTypedNavigation();
+export const TransactionConfirmationScreen = memo(() => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const route = useTypedRoute<'transactionConfirmation'>();
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionConfirmation
+  >();
 
   const wallet = useWallet(route.params.from);
   const contact = useMemo(
@@ -48,7 +55,7 @@ export const TransactionConfirmationScreen = () => {
 
   const onDoneLedgerBt = useCallback(
     () =>
-      navigation.navigate('transactionLedger', {
+      navigation.navigate(TransactionStackRoutes.TransactionLedger, {
         from: route.params.from,
         to: route.params.to,
         amount: route.params.amount,
@@ -88,7 +95,7 @@ export const TransactionConfirmationScreen = () => {
             fee,
           );
 
-          navigation.navigate('transactionFinish', {
+          navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             hash: transaction.hash,
           });
         }
@@ -143,4 +150,4 @@ export const TransactionConfirmationScreen = () => {
       testID="transaction_confirmation"
     />
   );
-};
+});

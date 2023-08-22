@@ -23,7 +23,7 @@ export type ModalState = ModalStates<Modals, keyof Modals>;
 
 export type ModalProps = {
   initialModal?: Partial<ModalState>;
-  route: ModalState;
+  route?: ModalState;
 };
 
 export const ModalsScreen = ({initialModal, route}: ModalProps) => {

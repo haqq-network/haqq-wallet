@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -8,6 +8,7 @@ import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
 import {TransactionAccountScreen} from '@app/screens/HomeStack/TransactionStack/transaction-account';
 import {TransactionAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-address';
 import {TransactionConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-confirmation';
@@ -18,9 +19,71 @@ import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/Transacti
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
-import {ScreenOptionType} from '@app/types';
+import {NftItem, ScreenOptionType} from '@app/types';
 
-const Stack = createNativeStackNavigator();
+export enum TransactionStackRoutes {
+  TransactionAddress = 'transactionAddress',
+  TransactionSum = 'transactionSum',
+  TransactionConfirmation = 'transactionConfirmation',
+  TransactionNftConfirmation = 'transactionNftConfirmation',
+  TransactionFinish = 'transactionFinish',
+  TransactionNftFinish = 'transactionNftFinish',
+  TransactionAccount = 'transactionAccount',
+  TransactionLedger = 'transactionLedger',
+  TransactionSumAddress = 'transactionSumAddress',
+  TransactionContactEdit = 'transactionContactEdit',
+}
+
+export type TransactionStackParamList = HomeFeedStackParamList & {
+  [TransactionStackRoutes.TransactionAddress]: {
+    from: string;
+    to?: string;
+    nft?: NftItem;
+  };
+  [TransactionStackRoutes.TransactionSum]: {
+    from: string;
+    to: string;
+  };
+  [TransactionStackRoutes.TransactionConfirmation]: {
+    from: string;
+    to: string;
+    amount: number;
+    fee?: number;
+  };
+  [TransactionStackRoutes.TransactionNftConfirmation]: {
+    from: string;
+    to: string;
+    nft: NftItem;
+    fee?: number;
+  };
+  [TransactionStackRoutes.TransactionFinish]: {
+    hash: string;
+  };
+  [TransactionStackRoutes.TransactionNftFinish]: {
+    hash: string;
+    nft: NftItem;
+  };
+  [TransactionStackRoutes.TransactionAccount]: {
+    from: string;
+    to: string;
+  };
+  [TransactionStackRoutes.TransactionLedger]: {
+    from: string;
+    to: string;
+    amount: number;
+    fee?: number;
+  };
+  [TransactionStackRoutes.TransactionSumAddress]: {
+    to: string;
+    event: string;
+  };
+  [TransactionStackRoutes.TransactionContactEdit]: {
+    name: string;
+    address: string;
+  };
+};
+
+const Stack = createNativeStackNavigator<TransactionStackParamList>();
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
@@ -61,63 +124,66 @@ export const TransactionStack = memo(() => {
     headerRight: DismissPopupButton,
   };
 
+  const initialRoute = useMemo(() => {
+    const condition = nft || from || Wallet.getAllVisible().length === 1;
+    return condition
+      ? TransactionStackRoutes.TransactionAddress
+      : TransactionStackRoutes.TransactionAccount;
+  }, [nft, from]);
+
   return (
     <Stack.Navigator
-      screenOptions={{...popupScreenOptions, keyboardHandlingEnabled: false}}
-      initialRouteName={
-        nft || from || Wallet.getAllVisible().length === 1
-          ? 'transactionAddress'
-          : 'transactionAccount'
-      }>
+      screenOptions={popupScreenOptions}
+      initialRouteName={initialRoute}>
       <Stack.Screen
-        name="transactionAddress"
+        name={TransactionStackRoutes.TransactionAddress}
         component={TransactionAddressScreen}
         initialParams={{from, to, nft}}
         options={screenOptionsAddressRoute}
       />
       <Stack.Screen
-        name="transactionSum"
+        name={TransactionStackRoutes.TransactionSum}
         component={TransactionSumScreen}
         options={screenOptionsSend}
       />
       <Stack.Screen
-        name="transactionConfirmation"
+        name={TransactionStackRoutes.TransactionConfirmation}
         component={TransactionConfirmationScreen}
         options={screenOptionsConfirmation}
       />
       <Stack.Screen
-        name="transactionNftConfirmation"
+        name={TransactionStackRoutes.TransactionNftConfirmation}
         component={TransactionNftConfirmationScreen}
         options={screenOptionsConfirmation}
       />
       <Stack.Screen
-        name="transactionFinish"
+        name={TransactionStackRoutes.TransactionFinish}
         component={TransactionFinishScreen}
         options={screenOptions}
       />
       <Stack.Screen
-        name="transactionNftFinish"
+        name={TransactionStackRoutes.TransactionNftFinish}
         component={TransactionNftFinishScreen}
         options={screenOptions}
       />
       <Stack.Screen
-        name="transactionAccount"
+        name={TransactionStackRoutes.TransactionAccount}
         initialParams={{to}}
         component={TransactionAccountScreen}
         options={screenOptionsSendFunds}
       />
       <Stack.Screen
-        name="transactionLedger"
+        name={TransactionStackRoutes.TransactionLedger}
         component={TransactionLedgerScreen}
         options={screenOptionsLedger}
       />
       <Stack.Screen
-        name="transactionSumAddress"
+        name={TransactionStackRoutes.TransactionSumAddress}
         component={TransactionSumAddressScreen}
         options={screenOptionsAddress}
       />
       <Stack.Screen
-        name="transactionContactEdit"
+        name={TransactionStackRoutes.TransactionContactEdit}
         component={TransactionContactEditScreen}
         options={screenOptionsEditContact}
       />

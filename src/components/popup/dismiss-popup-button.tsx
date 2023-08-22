@@ -12,7 +12,7 @@ export const DismissPopupButton = () => {
   // onPress should be prop
   const navigation = useNavigation<any>();
   return (
-    <IconButton style={page.container} onPress={navigation.pop}>
+    <IconButton style={page.container} onPress={navigation.goBack}>
       <Icon i24 name="close_circle" color={Color.graphicSecond2} />
     </IconButton>
   );

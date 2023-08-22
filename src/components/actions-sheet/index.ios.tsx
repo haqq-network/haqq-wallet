@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {ActionSheetIOS} from 'react-native';
 
@@ -30,5 +30,5 @@ export const ActionsSheet = ({
       },
     );
   }, [onPressKeepEditing, onPressDiscard]);
-  return <></>;
+  return null;
 };

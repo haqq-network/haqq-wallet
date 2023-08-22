@@ -1,13 +1,20 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  ProposalDepositStackParamList,
+  ProposalDepositStackRoutes,
+} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
 import {EthNetwork} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
 
-export const ProposalDepositFormScreen = () => {
-  const navigation = useTypedNavigation();
-  const {account, proposal} = useTypedRoute<'proposalDepositForm'>().params;
+export const ProposalDepositFormScreen = memo(() => {
+  const navigation = useTypedNavigation<ProposalDepositStackParamList>();
+  const {account, proposal} = useTypedRoute<
+    ProposalDepositStackParamList,
+    ProposalDepositStackRoutes.ProposalDepositForm
+  >().params;
   const fee = parseInt(Cosmos.fee.amount, 10);
   const [balance, setBalance] = useState(0);
 
@@ -19,7 +26,7 @@ export const ProposalDepositFormScreen = () => {
 
   const onAmount = useCallback(
     (amount: number) => {
-      navigation.navigate('proposalDepositPreview', {
+      navigation.navigate(ProposalDepositStackRoutes.ProposalDepositPreview, {
         proposal,
         account,
         fee,
@@ -37,4 +44,4 @@ export const ProposalDepositFormScreen = () => {
       fee={fee}
     />
   );
-};
+});

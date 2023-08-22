@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {Alert} from 'react-native';
@@ -7,12 +7,19 @@ import {SignupNetworkExists} from '@app/components/signup-network-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/screens/WelcomeStack/SignUpStack';
 import {Cloud} from '@app/services/cloud';
-import {RootStackParamList, WalletInitialData} from '@app/types';
+import {WalletInitialData} from '@app/types';
 
-export const SignupNetworkExistsScreen = () => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'signupNetworkExists'>();
+export const SignupNetworkExistsScreen = memo(() => {
+  const navigation = useTypedNavigation<SignUpStackParamList>();
+  const route = useTypedRoute<
+    SignUpStackParamList,
+    SignUpStackRoutes.SignUpNetworkExists
+  >();
   const onRestore = useCallback(async () => {
     let nextScreen: string = '';
     let nextParams: WalletInitialData = route.params;
@@ -24,7 +31,7 @@ export const SignupNetworkExistsScreen = () => {
     const supported = await Cloud.isEnabled();
 
     if (!supported) {
-      nextScreen = 'signupPin';
+      nextScreen = SignUpStackRoutes.SignUpPin;
     }
 
     const cloud = new Cloud();
@@ -34,18 +41,17 @@ export const SignupNetworkExistsScreen = () => {
     const share = await cloud.getItem(`haqq_${account.address.toLowerCase()}`);
 
     if (!share) {
-      nextScreen = 'signupPin';
+      nextScreen = SignUpStackRoutes.SignUpPin;
     } else {
-      nextScreen = app.onboarded ? 'signupStoreWallet' : 'onboardingSetupPin';
+      nextScreen = app.onboarded
+        ? SignUpStackRoutes.SignUpPin
+        : SignUpStackRoutes.OnboardingSetupPin;
 
       nextParams.sssCloudShare = share;
     }
 
-    navigation.navigate(
-      // @ts-ignore
-      nextScreen as keyof RootStackParamList,
-      nextParams,
-    );
+    //@ts-ignore
+    navigation.navigate(nextScreen, nextParams);
   }, [navigation, route.params]);
   const onRewrite = useCallback(() => {
     Alert.alert(
@@ -61,8 +67,8 @@ export const SignupNetworkExistsScreen = () => {
           style: 'destructive',
           onPress: () => {
             const nextScreen = app.onboarded
-              ? 'signupStoreWallet'
-              : 'onboardingSetupPin';
+              ? SignUpStackRoutes.SignUpPin
+              : SignUpStackRoutes.OnboardingSetupPin;
 
             // @ts-ignore
             navigation.navigate(nextScreen, {
@@ -83,4 +89,4 @@ export const SignupNetworkExistsScreen = () => {
       onRewrite={onRewrite}
     />
   );
-};
+});

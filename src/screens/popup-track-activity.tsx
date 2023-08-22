@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {
   BottomPopupContainer,
@@ -7,10 +7,14 @@ import {
 import {onBannerAnalyticsEnable} from '@app/event-actions/on-banner-analytics-enable';
 import {onBannerAnalyticsSnooze} from '@app/event-actions/on-banner-analytics-snooze';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
-export const PopupTrackActivityScreen = () => {
-  const route = useTypedRoute<'popupTrackActivity'>();
-  const {goBack} = useTypedNavigation();
+export const PopupTrackActivityScreen = memo(() => {
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.PopupTrackActivity
+  >();
+  const {goBack} = useTypedNavigation<HomeStackParamList>();
 
   const onClickContinue = useCallback(
     async (close: () => void) => {
@@ -40,4 +44,4 @@ export const PopupTrackActivityScreen = () => {
       )}
     </BottomPopupContainer>
   );
-};
+});

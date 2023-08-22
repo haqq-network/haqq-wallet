@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
@@ -11,13 +11,20 @@ import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {
+  GovernanceStackParamList,
+  GovernanceStackRoutes,
+} from '@app/screens/HomeStack/GovernanceStack';
 import {sendNotification} from '@app/services';
 import {VoteNamesType, WalletType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
-export const ProposalScreen = () => {
-  const {proposal} = useTypedRoute<'proposal'>().params;
-  const {navigate} = useTypedNavigation();
+export const ProposalScreen = memo(() => {
+  const {proposal} = useTypedRoute<
+    GovernanceStackParamList,
+    GovernanceStackRoutes.Proposal
+  >().params;
+  const {navigate} = useTypedNavigation<GovernanceStackParamList>();
 
   const cardRef = useRef<VotingCardDetailRefInterface>();
   const voteSelectedRef = useRef<VoteNamesType>();
@@ -31,7 +38,7 @@ export const ProposalScreen = () => {
   const visible = useWalletsVisible();
 
   const onDepositSubmit = async (address: string) => {
-    navigate('proposalDeposit', {
+    navigate(GovernanceStackRoutes.ProposalDeposit, {
       account: address,
       proposal: proposal,
     });
@@ -128,4 +135,4 @@ export const ProposalScreen = () => {
       modalOnVote={onVote}
     />
   );
-};
+});

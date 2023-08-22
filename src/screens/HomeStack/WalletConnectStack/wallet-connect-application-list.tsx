@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 
@@ -7,17 +7,25 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {HomeStackRoutes} from '@app/screens/HomeStack';
+import {
+  WalletConnectStackParamList,
+  WalletConnectStackRoutes,
+} from '@app/screens/HomeStack/WalletConnectStack';
 
-export const WalletConnectApplicationListScreen = () => {
-  const navivation = useTypedNavigation();
-  const {params} = useTypedRoute<'walletConnectApplicationList'>();
+export const WalletConnectApplicationListScreen = memo(() => {
+  const navivation = useTypedNavigation<WalletConnectStackParamList>();
+  const {params} = useTypedRoute<
+    WalletConnectStackParamList,
+    WalletConnectStackRoutes.WalletConnectApplicationList
+  >();
   const sessions = useWalletConnectFilteredSessionsByAddress(params.address);
 
   const handleAppPress = useCallback(
     (session: SessionTypes.Struct) => {
       const nextScreen = params.isPopup
-        ? 'walletConnectApplicationDetailsPopup'
-        : 'walletConnectApplicationDetails';
+        ? HomeStackRoutes.WalletConnectApplicationDetailsPopup
+        : WalletConnectStackRoutes.WalletConnectApplicationDetails;
       navivation.navigate(nextScreen, {session, isPopup: params.isPopup});
     },
     [navivation, params.isPopup],
@@ -53,4 +61,4 @@ export const WalletConnectApplicationListScreen = () => {
       sessions={sessions!}
     />
   );
-};
+});

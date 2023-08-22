@@ -1,7 +1,6 @@
 import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {TransitionPresets} from '@react-navigation/stack';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
@@ -20,27 +19,26 @@ export enum BrowserStackRoutes {
   BrowserEditBookmarks = 'browserEditBookmarksScreen',
 }
 
-export type HomeBrowserStackParamList = HomeStackParamList & {
+export type BrowserStackParamList = HomeStackParamList & {
   [BrowserStackRoutes.BrowserHomePage]: undefined;
-  [BrowserStackRoutes.Web3browser]: {url: string};
+  [BrowserStackRoutes.Web3browser]: {url: string; popup?: boolean};
   [BrowserStackRoutes.BrowserSearchPage]?: {initialSearchText?: string};
   [BrowserStackRoutes.BrowserEditBookmarks]: undefined;
 };
 
-const Stack = createNativeStackNavigator<HomeBrowserStackParamList>();
+const Stack = createNativeStackNavigator<BrowserStackParamList>();
 
 const screenOptions = {
   headerShown: false,
 };
 
 const browserHomePageScreenOptions = {
-  ...TransitionPresets.ModalSlideFromBottomIOS,
   headerShown: true,
   headerShadowVisible: false,
   headerStyle: {
     backgroundColor: Color.transparent,
   },
-  headerTitleAlign: 'center',
+  headerTitleAlign: 'center' as 'center',
   headerStatusBarHeight: IS_IOS ? undefined : 40,
   headerTitle: () => <Text t8 center i18n={I18N.homeBrowserTitle} />,
   headerLeft: () => <></>,
@@ -59,17 +57,14 @@ export const BrowserStack = memo(() => {
       <Stack.Screen
         name={BrowserStackRoutes.Web3browser}
         component={Web3BrowserScreen}
-        options={TransitionPresets.ModalSlideFromBottomIOS}
       />
       <Stack.Screen
         name={BrowserStackRoutes.BrowserSearchPage}
         component={BrowserSearchPageScreen}
-        options={TransitionPresets.ModalSlideFromBottomIOS}
       />
       <Stack.Screen
         name={BrowserStackRoutes.BrowserEditBookmarks}
         component={BrowserEditBookmarksScreen}
-        options={TransitionPresets.ModalSlideFromBottomIOS}
       />
     </Stack.Navigator>
   );

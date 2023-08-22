@@ -15,9 +15,12 @@ import {
 } from '@app/screens/WelcomeStack/OnboardingStack';
 import {SignInAgreementScreen} from '@app/screens/WelcomeStack/SignInStack/signin-agreement';
 import {SignInNetworksScreen} from '@app/screens/WelcomeStack/SignInStack/signin-networks';
+import {SigninNotExistsScreen} from '@app/screens/WelcomeStack/SignInStack/signin-not-exists';
+import {SigninNotRecoveryScreen} from '@app/screens/WelcomeStack/SignInStack/signin-not-recovery';
 import {SignInPinScreen} from '@app/screens/WelcomeStack/SignInStack/signin-pin';
 import {SignInRestoreScreen} from '@app/screens/WelcomeStack/SignInStack/signin-restore-wallet';
 import {SignInStoreWalletScreen} from '@app/screens/WelcomeStack/SignInStack/signin-store-wallet';
+import {SssProviders} from '@app/services/provider-sss';
 import {
   AdjustEvents,
   BiometryType,
@@ -32,6 +35,8 @@ export enum SignInStackRoutes {
   SigninPin = 'signinPin',
   OnboardingSetupPin = 'onboardingSetupPin',
   SigninStoreWallet = 'signinStoreWallet',
+  SigninNotExists = 'signinNotExists',
+  SigninNotRecovery = 'signinNotRecovery',
 }
 
 export type SignInStackParamList = WelcomeStackParamList & {
@@ -45,6 +50,11 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
     nextScreen?: SignInStackRoutes;
   };
+  [SignInStackRoutes.SigninNotExists]: WalletInitialData & {
+    provider: SssProviders;
+    email?: string;
+  };
+  [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
 };
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();
@@ -103,17 +113,17 @@ const SignInStack = memo(() => {
         options={{...hideBack, ...screenOptions}}
       />
 
-      {/* TODO: Используются!!! */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name={SignInStackRoutes.SigninNotExists}
         component={SigninNotExistsScreen}
         options={{...hideBack, ...screenOptions}}
       />
+
       <Stack.Screen
-        name="signinNotRecovery"
+        name={SignInStackRoutes.SigninNotRecovery}
         component={SigninNotRecoveryScreen}
         options={{...hideBack, ...screenOptions}}
-      /> */}
+      />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninRestoreWallet}
@@ -129,7 +139,6 @@ const SignInStack = memo(() => {
         name={SignInStackRoutes.SigninStoreWallet}
         component={SignInStoreWalletScreen}
         options={screenOptions}
-        initialParams={{action: 'restore'}}
       />
 
       <Stack.Screen

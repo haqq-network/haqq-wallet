@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {basicScreenOptions} from '@app/screens';
 import {SettingsAddressBookScreen} from '@app/screens/HomeStack/AddressStack/settings-address-book';
 import {SettingsContactEditScreen} from '@app/screens/HomeStack/AddressStack/settings-contact-edit';
@@ -22,6 +22,12 @@ export type AddressBookParamList = SettingsStackParamList & {
   };
 };
 
+const screenOptions = {
+  ...popupScreenOptionsWithMargin,
+  title: 'Address book',
+  headerShown: true,
+};
+
 const Stack = createNativeStackNavigator<AddressBookParamList>();
 
 const AddressBookStack = memo(() => {
@@ -32,12 +38,7 @@ const AddressBookStack = memo(() => {
       <Stack.Screen
         name={AddressBookStackRoutes.SettingsAddressBook}
         component={SettingsAddressBookScreen}
-        options={{
-          ...popupScreenOptions,
-          headerStyle: {marginTop: 20},
-          title: 'Address book',
-          headerShown: true,
-        }}
+        options={screenOptions}
       />
       <Stack.Screen
         name={AddressBookStackRoutes.SettingsContactEdit}

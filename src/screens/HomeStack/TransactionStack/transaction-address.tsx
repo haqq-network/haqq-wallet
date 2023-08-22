@@ -1,17 +1,24 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
 import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/screens/HomeStack/TransactionStack';
 
-export const TransactionAddressScreen = () => {
-  const navigation = useTypedNavigation();
+export const TransactionAddressScreen = memo(() => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const route = useTypedRoute<'transactionAddress'>();
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionAddress
+  >();
 
   const [loading, setLoading] = React.useState(false);
   const wallets = useWalletsVisible();
@@ -46,17 +53,20 @@ export const TransactionAddressScreen = () => {
           //   balance,
           // );
           const fee = 1;
-          navigation.navigate('transactionNftConfirmation', {
-            from: route.params.from,
-            to: result,
-            nft,
-            fee,
-          });
+          navigation.navigate(
+            TransactionStackRoutes.TransactionNftConfirmation,
+            {
+              from: route.params.from,
+              to: result,
+              nft,
+              fee,
+            },
+          );
         } catch (e) {
           setLoading(false);
         }
       } else {
-        navigation.navigate('transactionSum', {
+        navigation.navigate(TransactionStackRoutes.TransactionSum, {
           from: route.params.from,
           to: result,
         });
@@ -76,4 +86,4 @@ export const TransactionAddressScreen = () => {
       testID="transaction_address"
     />
   );
-};
+});

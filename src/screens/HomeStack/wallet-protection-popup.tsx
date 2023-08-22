@@ -1,34 +1,36 @@
 import React, {memo} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {ScreenOptionType} from '@app/types';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
 import {WalletProtectionScreen} from '../wallet-protection';
 
-const WalletProtection = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
-const screenOptions: ScreenOptionType = {
+const screenOptions = {
   ...popupScreenOptions,
   headerLeft: SpacerPopupButton,
   headerRight: DismissPopupButton,
-  keyboardHandlingEnabled: false,
   headerBackHidden: true,
 };
 
 export const WalletProtectionPopupScreen = memo(() => {
-  const route = useTypedRoute<'walletProtectionPopup'>();
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.WalletProtectionPopup
+  >();
   return (
-    <WalletProtection.Navigator screenOptions={screenOptions}>
-      <WalletProtection.Screen
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen
         name="walletProtection"
         component={WalletProtectionScreen}
         initialParams={route.params}
       />
-    </WalletProtection.Navigator>
+    </Stack.Navigator>
   );
 });
