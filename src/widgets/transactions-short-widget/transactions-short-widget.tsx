@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {memo, useMemo} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
@@ -18,47 +18,49 @@ type Props = {
   spend: number;
 };
 
-export const TransactionsShortWidget = ({onPress, received, spend}: Props) => {
-  const minAmount = useMinAmount();
-  const total = Math.max(received + spend, minAmount.toNumber());
+export const TransactionsShortWidget = memo(
+  ({onPress, received, spend}: Props) => {
+    const minAmount = useMinAmount();
+    const total = Math.max(received + spend, minAmount.toNumber());
 
-  const barInfo = useMemo(() => {
-    return [
-      {
-        id: '0',
-        title: '',
-        percentage: received / total,
-        color: Color.graphicBase1,
-      },
-      {
-        id: '1',
-        title: '',
-        percentage: spend / total,
-        color: Color.graphicBase2,
-      },
-    ];
-  }, [received, spend, total]);
+    const barInfo = useMemo(() => {
+      return [
+        {
+          id: '0',
+          title: '',
+          percentage: received / total,
+          color: Color.graphicBase1,
+        },
+        {
+          id: '1',
+          title: '',
+          percentage: spend / total,
+          color: Color.graphicBase2,
+        },
+      ];
+    }, [received, spend, total]);
 
-  return (
-    <ShadowCard onPress={onPress} style={styles.wrapper}>
-      <WidgetHeader title={getText(I18N.transactionWidgetTitle)} />
-      <View style={styles.textWrapper}>
-        <Text t14 color={LIGHT_TEXT_BASE_1}>
-          {getText(I18N.transactionWidgetReceiveTitle, {
-            value: cleanNumber(received),
-          })}
-        </Text>
-        <Spacer width={10} height={2} />
-        <Text t14 color={LIGHT_TEXT_BASE_2}>
-          {getText(I18N.transactionWidgetSpendTitle, {
-            value: cleanNumber(spend),
-          })}
-        </Text>
-      </View>
-      <BarChart hideText data={barInfo} />
-    </ShadowCard>
-  );
-};
+    return (
+      <ShadowCard onPress={onPress} style={styles.wrapper}>
+        <WidgetHeader title={getText(I18N.transactionWidgetTitle)} />
+        <View style={styles.textWrapper}>
+          <Text t14 color={LIGHT_TEXT_BASE_1}>
+            {getText(I18N.transactionWidgetReceiveTitle, {
+              value: cleanNumber(received),
+            })}
+          </Text>
+          <Spacer width={10} height={2} />
+          <Text t14 color={LIGHT_TEXT_BASE_2}>
+            {getText(I18N.transactionWidgetSpendTitle, {
+              value: cleanNumber(spend),
+            })}
+          </Text>
+        </View>
+        <BarChart hideText data={barInfo} />
+      </ShadowCard>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   textWrapper: {flexDirection: 'row', marginVertical: 8, flexWrap: 'wrap'},
