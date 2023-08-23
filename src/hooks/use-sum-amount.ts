@@ -2,20 +2,21 @@ import {useEffect, useState} from 'react';
 
 import validate from 'validate.js';
 
+import {getMinAmount} from '@app/helpers/get-min-amount';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {MIN_AMOUNT} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
-  minAmount = MIN_AMOUNT,
+  minAmount = getMinAmount(),
 ) {
   const [{amount, amountText}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum.isPositive() ? initialSum.toString() : '',
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
+  const minimumAmountConst = getMinAmount();
 
   useEffect(() => {
     setMaxAmount(initialMaxSum);
@@ -52,8 +53,8 @@ export function useSumAmount(
     },
     setMax() {
       const a =
-        Math.floor(maxAmount.toNumber() / MIN_AMOUNT.toNumber()) *
-        MIN_AMOUNT.toNumber();
+        Math.floor(maxAmount.toNumber() / minimumAmountConst.toNumber()) *
+        minimumAmountConst.toNumber();
       setAmount({
         amountText: String(a),
         amount: maxAmount,

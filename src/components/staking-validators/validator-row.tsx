@@ -8,15 +8,18 @@ import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
+import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {MIN_AMOUNT, WEI} from '@app/variables/common';
+import {WEI} from '@app/variables/common';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
   onPress: (validator: ValidatorItem) => void;
 };
 export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
+  const minAmount = useMinAmount();
+
   const validatorCommission = useMemo(() => {
     return formatPercents(item.commission.commission_rates.rate);
   }, [item.commission.commission_rates]);
@@ -67,7 +70,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
         </View>
         <View style={styles.badges}>
           {!!item.localDelegations &&
-            item.localDelegations > MIN_AMOUNT.toNumber() && (
+            item.localDelegations > minAmount.toNumber() && (
               <InfoBox
                 style={styles.badge}
                 i18n={I18N.stakingValidatorsRowStaked}
@@ -76,7 +79,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
                 }}
               />
             )}
-          {!!item.localRewards && item.localRewards > MIN_AMOUNT.toNumber() && (
+          {!!item.localRewards && item.localRewards > minAmount.toNumber() && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
@@ -86,7 +89,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             />
           )}
           {!!item.localUnDelegations &&
-            item.localUnDelegations > MIN_AMOUNT.toNumber() && (
+            item.localUnDelegations > minAmount.toNumber() && (
               <InfoBox
                 style={styles.badge}
                 i18n={I18N.stakingValidatorsRowWithdrawal}
