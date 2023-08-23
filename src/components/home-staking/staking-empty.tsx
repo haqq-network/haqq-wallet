@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 
 interface StakingEmptyProps {
   availableSum: Balance;

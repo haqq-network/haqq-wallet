@@ -15,7 +15,7 @@ export function LockedTokensWrapper() {
   const availableBalance = useMemo(
     () =>
       Object.values(balances).reduce(
-        (prev, curr) => prev?.add(curr),
+        (prev, curr) => prev?.operate(curr, 'add'),
         Balance.Empty,
       ) ?? Balance.Empty,
     [balances],
@@ -24,14 +24,14 @@ export function LockedTokensWrapper() {
   const lockedBalance = useMemo(
     () =>
       Object.values(stakingBalances).reduce(
-        (prev, curr) => prev?.add(curr),
+        (prev, curr) => prev?.operate(curr, 'add'),
         Balance.Empty,
       ) ?? Balance.Empty,
     [stakingBalances],
   );
 
   const totalBalance = useMemo(
-    () => availableBalance?.add(lockedBalance),
+    () => availableBalance?.operate(lockedBalance, 'add'),
     [availableBalance, lockedBalance],
   );
 

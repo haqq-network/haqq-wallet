@@ -9,7 +9,11 @@ import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {cleanNumber} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '@app/variables/common';
+import {
+  LIGHT_TEXT_BASE_1,
+  LIGHT_TEXT_BASE_2,
+  MIN_AMOUNT,
+} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -18,7 +22,7 @@ type Props = {
 };
 
 export const TransactionsShortWidget = ({onPress, received, spend}: Props) => {
-  const total = Math.max(received + spend, 0.001);
+  const total = Math.max(received + spend, MIN_AMOUNT.toNumber());
 
   const barInfo = useMemo(() => {
     return [

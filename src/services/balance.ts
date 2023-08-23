@@ -1,33 +1,36 @@
-import BN from 'bn.js';
 import Decimal from 'decimal.js';
 
 import {cleanNumber} from '@app/helpers';
-import {BalanceConstructor, Balance as IBalance} from '@app/types';
+import {BalanceConstructor, IBalance} from '@app/types';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
-const zeroBN = new BN(0, 'hex');
+const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance {
-  static Empty = new Balance(zeroBN);
+  static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
 
   constructor(balance: BalanceConstructor) {
     if (balance instanceof Balance) {
-      this.bnRaw = balance.bnRaw as BN;
+      this.bnRaw = balance.bnRaw as Decimal;
       return;
     }
 
     if (typeof balance === 'string') {
-      this.bnRaw = new BN(balance.replace('0x', ''), 'hex');
+      if (balance.startsWith('0x')) {
+        this.bnRaw = new Decimal(balance);
+      } else {
+        this.bnRaw = new Decimal('0x' + balance);
+      }
       return;
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new BN(balance);
+      this.bnRaw = new Decimal(balance);
       return;
     }
 
-    this.bnRaw = balance as BN;
+    this.bnRaw = balance as Decimal;
   }
   /**
    * Raw BN.js instance of balance
@@ -41,14 +44,14 @@ export class Balance implements IBalance {
    * Convert balance to a long integer
    */
   toNumber = () => {
-    return Number(this.bnRaw.toString());
+    return this.bnRaw.toNumber();
   };
 
   /**
    * Convert balance to float according to WEI
    */
   toFloat = () => {
-    const float = new Decimal(this.toNumber()).div(WEI).toNumber();
+    const float = new Decimal(this.bnRaw).div(WEI).toNumber();
     return float;
   };
 
@@ -74,7 +77,7 @@ export class Balance implements IBalance {
   };
 
   toHex = () => {
-    return this.bnRaw.toString('hex');
+    return this.bnRaw.toHex();
   };
 
   /**
@@ -84,12 +87,16 @@ export class Balance implements IBalance {
     return this.bnRaw.gt(zeroBN);
   };
 
-  add = (value?: BalanceConstructor) => {
+  operate = (
+    value: BalanceConstructor | undefined | null,
+    operation: 'add' | 'mul' | 'div' | 'sub',
+  ) => {
     if (!value) {
       return this;
     }
     const {bnRaw} = new Balance(value);
-    return new Balance(this.bnRaw.add(bnRaw));
+    const result = new Decimal(this.bnRaw)[operation](bnRaw.toHex());
+    return new Balance(result);
   };
 
   eq = (balance?: BalanceConstructor) => {
@@ -98,21 +105,5 @@ export class Balance implements IBalance {
     }
     const {bnRaw} = new Balance(balance);
     return this.bnRaw.eq(bnRaw);
-  };
-
-  mul = (balance?: BalanceConstructor) => {
-    if (!balance) {
-      return this;
-    }
-    const {bnRaw} = new Balance(balance);
-    return new Balance(this.bnRaw.mul(bnRaw));
-  };
-
-  div = (balance?: BalanceConstructor) => {
-    if (!balance) {
-      return this;
-    }
-    const {bnRaw} = new Balance(balance);
-    return new Balance(this.bnRaw.div(bnRaw));
   };
 }

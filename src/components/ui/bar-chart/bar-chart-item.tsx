@@ -26,7 +26,7 @@ export function BarChartItem({index, item, data}: BarChartItemProps) {
   const isLast = useMemo(() => index === data.length - 1, [data.length, index]);
   const color = useColor(item.color);
   const style = useMemo(
-    () => ({flex: item.percentage, backgroundColor: color}),
+    () => ({flex: item.percentage || 0, backgroundColor: color}),
     [color, item.percentage],
   );
   return (

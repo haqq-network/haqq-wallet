@@ -14,4 +14,5 @@ export interface RemoteConfigTypes {
   ios_version: string;
   android_version: string;
   version: number;
+  transfer_min_amount: string;
 }

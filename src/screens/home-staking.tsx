@@ -17,9 +17,9 @@ import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 
 const initData = {
-  stakingSum: new Balance(0),
-  rewardsSum: new Balance(0),
-  unDelegationSum: new Balance(0),
+  stakingSum: Balance.Empty,
+  rewardsSum: Balance.Empty,
+  unDelegationSum: Balance.Empty,
   loading: true,
 };
 
@@ -29,7 +29,7 @@ export const HomeStakingScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.add(app.getBalance(w.address)),
+      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
       Balance.Empty,
     ),
   });
@@ -61,7 +61,7 @@ export const HomeStakingScreen = () => {
       const stakingSum = new Balance(sumReduce(delegations));
       const unDelegationSum = new Balance(sumReduce(unDelegations));
       const availableSum = visible.reduce(
-        (acc, w) => acc.add(app.getBalance(w.address)),
+        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
         Balance.Empty,
       );
 

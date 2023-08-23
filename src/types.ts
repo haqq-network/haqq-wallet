@@ -5,7 +5,7 @@ import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
-import BN from 'bn.js';
+import Decimal from 'decimal.js';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
@@ -1016,20 +1016,21 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type BalanceConstructor = Balance | BN | number | string;
+export type BalanceConstructor = IBalance | Decimal | number | string;
 
-export interface Balance {
-  readonly raw: BN;
+export interface IBalance {
+  readonly raw: Decimal;
   toNumber: () => number;
   toFloat: () => number;
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => this is Balance;
+  isPositive: () => this is IBalance;
   toBalanceString: () => string;
-  add: (value?: BalanceConstructor) => Balance;
-  div: (value?: BalanceConstructor) => Balance;
-  mul: (value?: BalanceConstructor) => Balance;
+  operate: (
+    value: BalanceConstructor,
+    operation: 'add' | 'mul' | 'div' | 'sub',
+  ) => IBalance;
   eq: (value?: BalanceConstructor) => boolean;
 }
 

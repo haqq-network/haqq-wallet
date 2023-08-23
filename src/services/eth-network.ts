@@ -77,9 +77,7 @@ export class EthNetwork {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
       const balance = await rpcProvider.getBalance(address);
-      // Removing 0x prefix here
-      const raw = new BN(balance._hex.slice(2), 'hex');
-      return new Balance(raw);
+      return new Balance(balance._hex);
     } catch (e) {
       return Balance.Empty;
     }

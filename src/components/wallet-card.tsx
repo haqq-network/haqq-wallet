@@ -19,7 +19,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
@@ -64,7 +64,7 @@ export const WalletCard = memo(
     );
 
     const total = useMemo(
-      () => balance?.add?.(stakingBalance)?.toBalanceString(),
+      () => balance?.operate?.(stakingBalance, 'add')?.toBalanceString(),
       [balance, stakingBalance],
     );
 

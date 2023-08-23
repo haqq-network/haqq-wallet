@@ -146,7 +146,7 @@ export const StakingInfoScreen = () => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address).toFloat() >= MIN_AMOUNT,
+      v => app.getBalance(v.address).toFloat() >= MIN_AMOUNT.toNumber(),
     );
 
     if (!available?.length) {
@@ -167,7 +167,7 @@ export const StakingInfoScreen = () => {
   const onUnDelegate = useCallback(async () => {
     const delegations = new Set(
       StakingMetadata.getDelegationsForValidator(operator_address)
-        .filter(v => v.amount >= MIN_AMOUNT)
+        .filter(v => v.amount >= MIN_AMOUNT.toNumber())
         .map(v => v.delegator),
     );
     const available = visible.filter(w => delegations.has(w.cosmosAddress));

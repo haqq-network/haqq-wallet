@@ -18,9 +18,9 @@ import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Balance} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
+import {CURRENCY_NAME, FEE_AMOUNT, WEI} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;
@@ -42,11 +42,19 @@ export const TransactionSum = ({
   onContact,
   testID,
 }: TransactionSumProps) => {
+  const transactionFee = useMemo(
+    () => new Balance(Math.max(2 * fee, FEE_AMOUNT.toNumber())),
+    [fee],
+  );
+
   const amounts = useSumAmount();
 
   useEffect(() => {
-    amounts.setMaxAmount(balance.toNumber() - Math.max(2 * fee, 0.00001));
-  }, [amounts, balance, fee]);
+    amounts.setMaxAmount(
+      balance.operate(transactionFee, 'sub').operate(WEI, 'div'),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balance, transactionFee]);
 
   const inputSumRef = useRef<TextInput>(null);
 

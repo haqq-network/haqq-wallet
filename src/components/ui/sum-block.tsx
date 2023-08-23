@@ -15,8 +15,8 @@ import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Balance} from '@app/types';
 
 export type SumBlockProps = {
   value: string;

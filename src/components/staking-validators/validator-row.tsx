@@ -66,16 +66,17 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
           </View>
         </View>
         <View style={styles.badges}>
-          {!!item.localDelegations && item.localDelegations > MIN_AMOUNT && (
-            <InfoBox
-              style={styles.badge}
-              i18n={I18N.stakingValidatorsRowStaked}
-              i18params={{
-                staked: cleanNumber(item.localDelegations),
-              }}
-            />
-          )}
-          {!!item.localRewards && item.localRewards > MIN_AMOUNT && (
+          {!!item.localDelegations &&
+            item.localDelegations > MIN_AMOUNT.toNumber() && (
+              <InfoBox
+                style={styles.badge}
+                i18n={I18N.stakingValidatorsRowStaked}
+                i18params={{
+                  staked: cleanNumber(item.localDelegations),
+                }}
+              />
+            )}
+          {!!item.localRewards && item.localRewards > MIN_AMOUNT.toNumber() && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
@@ -85,7 +86,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             />
           )}
           {!!item.localUnDelegations &&
-            item.localUnDelegations > MIN_AMOUNT && (
+            item.localUnDelegations > MIN_AMOUNT.toNumber() && (
               <InfoBox
                 style={styles.badge}
                 i18n={I18N.stakingValidatorsRowWithdrawal}

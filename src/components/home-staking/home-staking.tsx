@@ -5,7 +5,7 @@ import {ScrollView, View} from 'react-native';
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 import {NUM_PRECISION} from '@app/variables/common';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';

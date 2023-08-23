@@ -1,19 +1,19 @@
 import {useEffect, useState} from 'react';
 
-import Decimal from 'decimal.js';
 import validate from 'validate.js';
 
 import {I18N, getText} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {MIN_AMOUNT} from '@app/variables/common';
 
 export function useSumAmount(
-  initialSum = 0,
-  initialMaxSum = 0,
+  initialSum = Balance.Empty,
+  initialMaxSum = Balance.Empty,
   minAmount = MIN_AMOUNT,
 ) {
   const [{amount, amountText}, setAmount] = useState({
     amount: initialSum,
-    amountText: initialSum > 0 ? new Decimal(initialSum).toString() : '',
+    amountText: initialSum.isPositive() ? initialSum.toString() : '',
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
 
@@ -25,38 +25,35 @@ export function useSumAmount(
 
   useEffect(() => {
     if (amount) {
-      setError(
-        validate.single(amount, {
-          numericality: {
-            notValid: 'Invalid number',
-            greaterThanOrEqualTo: minAmount,
-            lessThanOrEqualTo: maxAmount,
-            notGreaterThan: getText(I18N.sumAmountTooLow, {
-              amount: String(maxAmount),
-            }),
-            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
-          },
-        }),
-      );
+      const errorArray = validate.single(amount.toNumber(), {
+        numericality: {
+          notValid: 'Invalid number',
+          greaterThanOrEqualTo: minAmount.toNumber(),
+          lessThanOrEqualTo: maxAmount.toNumber(),
+          notGreaterThan: getText(I18N.sumAmountTooLow, {
+            amount: maxAmount.toString(),
+          }),
+          notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
+        },
+      });
+      const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
+      setError(newString);
     }
-  }, [amount, maxAmount, minAmount]);
-
-  const decAmount = new Decimal(amount);
+  }, [amount, minAmount, maxAmount]);
 
   return {
     isValid:
-      decAmount.greaterThanOrEqualTo(minAmount) &&
-      decAmount.lessThanOrEqualTo(new Decimal(maxAmount)) &&
-      !error,
+      amount.raw.gte(minAmount.raw) && amount.raw.lte(maxAmount.raw) && !error,
     maxAmount: maxAmount,
     amount: amountText,
     error,
-    setMaxAmount(value = 0) {
+    setMaxAmount(value = Balance.Empty) {
       setMaxAmount(value);
     },
     setMax() {
-      const a = Math.floor(maxAmount / MIN_AMOUNT) * MIN_AMOUNT;
-
+      const a =
+        Math.floor(maxAmount.toNumber() / MIN_AMOUNT.toNumber()) *
+        MIN_AMOUNT.toNumber();
       setAmount({
         amountText: String(a),
         amount: maxAmount,
@@ -67,7 +64,7 @@ export function useSumAmount(
         let i = 0;
         const textFormatted = text
           .replace(/,/g, '.')
-          .replace(/[\.\%]/g, function (match) {
+          .replace(/[.%]/g, function (match) {
             return match === '.' ? (i++ === 0 ? '.' : '') : '';
           })
           .replace(/\D/g, function (match) {
@@ -79,12 +76,12 @@ export function useSumAmount(
 
         setAmount({
           amountText: textFormatted,
-          amount: +textFormatted,
+          amount: new Balance(+textFormatted),
         });
       } else if (text === '') {
         setAmount({
           amountText: '',
-          amount: 0,
+          amount: Balance.Empty,
         });
       }
     },

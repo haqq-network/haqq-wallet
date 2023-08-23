@@ -15,7 +15,8 @@ import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme, Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
+import {AppTheme} from '@app/types';
 import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {

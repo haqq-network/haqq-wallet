@@ -5,7 +5,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 
