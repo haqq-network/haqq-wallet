@@ -1031,7 +1031,10 @@ export interface IBalance {
     value: BalanceConstructor,
     operation: 'add' | 'mul' | 'div' | 'sub',
   ) => IBalance;
-  eq: (value?: BalanceConstructor) => boolean;
+  compare: (
+    value: BalanceConstructor,
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
+  ) => boolean;
 }
 
 export enum ValidUrlProtocol {

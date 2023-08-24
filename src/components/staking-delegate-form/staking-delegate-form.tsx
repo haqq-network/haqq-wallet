@@ -18,9 +18,9 @@ import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/services/balance';
+import {Balance, FEE_AMOUNT} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {CURRENCY_NAME, FEE_AMOUNT, WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;

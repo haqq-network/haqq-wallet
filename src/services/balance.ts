@@ -26,7 +26,7 @@ export class Balance implements IBalance {
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new Decimal(balance);
+      this.bnRaw = new Decimal(balance * WEI);
       return;
     }
 
@@ -87,6 +87,12 @@ export class Balance implements IBalance {
     return this.bnRaw.gt(zeroBN);
   };
 
+  /**
+   * Math operations for Balance class
+   * @param {(BalanceConstructor | undefined | null)} value Balance instance
+   * @param {('add' | 'mul' | 'div' | 'sub')} operation Type of the operation
+   * @returns {Balance} new Balance instance
+   */
   operate = (
     value: BalanceConstructor | undefined | null,
     operation: 'add' | 'mul' | 'div' | 'sub',
@@ -99,11 +105,23 @@ export class Balance implements IBalance {
     return new Balance(result);
   };
 
-  eq = (balance?: BalanceConstructor) => {
-    if (!balance) {
+  /**
+   * Boolean logic operations for Balance class
+   * @param {(BalanceConstructor | undefined | null)} value Balance instance
+   * @param {('eq' | 'lt' | 'lte' | 'gt' | 'gte')} operation Type of the operation
+   * @returns {*} Logical result
+   */
+  compare = (
+    value: BalanceConstructor | undefined | null,
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
+  ) => {
+    if (!value) {
       return false;
     }
-    const {bnRaw} = new Balance(balance);
-    return this.bnRaw.eq(bnRaw);
+    const {bnRaw} = new Balance(value);
+    return this.bnRaw[operation](bnRaw);
   };
 }
+
+export const MIN_AMOUNT = new Balance(0.001);
+export const FEE_AMOUNT = new Balance(0.00001);
