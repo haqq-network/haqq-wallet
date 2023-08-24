@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 
-import {cleanNumber} from '@app/helpers';
+import {cleanNumber} from '@app/helpers/clean-number';
 import {BalanceConstructor, IBalance} from '@app/types';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
@@ -11,13 +11,27 @@ export class Balance implements IBalance {
   private bnRaw = zeroBN;
 
   constructor(balance: BalanceConstructor) {
+    if (Decimal.isDecimal(balance)) {
+      this.bnRaw = balance;
+      return;
+    }
+
     if (balance instanceof Balance) {
       this.bnRaw = balance.bnRaw as Decimal;
       return;
     }
 
     if (typeof balance === 'string') {
-      this.bnRaw = new Decimal(balance);
+      const hasPrefix = balance.includes('0x');
+      if (hasPrefix) {
+        this.bnRaw = new Decimal(balance);
+        return;
+      }
+
+      const isNegative = balance.startsWith('-');
+      this.bnRaw = new Decimal(
+        (isNegative ? '-0x' : '0x') + balance.replace('-', ''),
+      );
       return;
     }
 
@@ -25,8 +39,6 @@ export class Balance implements IBalance {
       this.bnRaw = new Decimal(balance * WEI);
       return;
     }
-
-    this.bnRaw = balance as Decimal;
   }
   /**
    * Raw BN.js instance of balance
@@ -103,7 +115,7 @@ export class Balance implements IBalance {
     } else {
       bnRaw = new Balance(value).bnRaw;
     }
-    const result = this.bnRaw[operation](bnRaw.toHex()).toHex();
+    const result = this.bnRaw[operation](bnRaw);
     return new Balance(result);
   };
 
