@@ -11,7 +11,7 @@ type Props = {
   deep: boolean;
 };
 
-export const LayoutWidget = ({direction, children, deep}: Props) => {
+export function LayoutWidget({direction, children, deep}: Props) {
   return (
     <View
       style={[
@@ -27,7 +27,7 @@ export const LayoutWidget = ({direction, children, deep}: Props) => {
       })}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   removeMargin: {marginHorizontal: 0},

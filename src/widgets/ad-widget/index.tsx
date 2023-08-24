@@ -33,7 +33,7 @@ export interface HomeBannerProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export const AdWidget = ({banner, style}: HomeBannerProps) => {
+export function AdWidget({banner, style}: HomeBannerProps) {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
   const widthRef = useRef(0);
@@ -64,7 +64,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
     if (banner.backgroundBorder) {
       return {
         borderWidth: 1,
-        borderColor: getColor(banner.backgroundBorder),
+        borderColor: getColor(banner.backgroundBorder ?? 'transparent'),
       };
     }
 
@@ -153,7 +153,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
       {elem}
     </ShadowCard>
   );
-};
+}
 
 const styles = StyleSheet.create({
   removePaddingVertical: {paddingVertical: 0},

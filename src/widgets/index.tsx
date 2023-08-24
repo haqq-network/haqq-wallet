@@ -10,7 +10,7 @@ import {AdWidget} from '@app/widgets/ad-widget';
 import {BannerWidget} from '@app/widgets/banner-widget';
 import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
 import {LayoutWidgetWrapper} from '@app/widgets/layout-widget';
-import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
+import {RafflesWidgetWrapper} from '@app/widgets/raffles-widget';
 import {StakingWidgetWrapper} from '@app/widgets/staking-widget';
 import {TransactionsShortWidgetWrapper} from '@app/widgets/transactions-short-widget';
 import {TransactionsWidgetWrapper} from '@app/widgets/transactions-widget';

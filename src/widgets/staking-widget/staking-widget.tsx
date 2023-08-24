@@ -19,41 +19,43 @@ type Props = {
   rewardAmount: Balance;
 };
 
-export const StakingWidget = memo(
-  ({onPress, onGetReward, rewardAmount}: Props) => {
-    const canGetRewards = useMemo(
-      () => rewardAmount.toNumber() >= 1 / NUM_PRECISION,
-      [rewardAmount],
-    );
+export const StakingWidget = memo(function StakingWidget({
+  onPress,
+  onGetReward,
+  rewardAmount,
+}: Props) {
+  const canGetRewards = useMemo(
+    () => rewardAmount.toNumber() >= 1 / NUM_PRECISION,
+    [rewardAmount],
+  );
 
-    return (
-      <ShadowCard onPress={onPress} style={styles.wrapper}>
-        <WidgetHeader
-          icon={'staking_thin'}
-          title={getText(I18N.earnStaking)}
-          description={getText(I18N.earnStakingDescription)}
-          largeIcon
-        />
-        <View style={styles.rewardsWrapper}>
-          <View style={styles.row}>
-            <Text t14>{`${getText(I18N.earnRewards)} `}</Text>
-            <Text t13 color={LIGHT_TEXT_GREEN_1}>
-              {rewardAmount.toBalanceString()}
-            </Text>
-          </View>
-          <Button
-            i18n={I18N.stakingHomeGetRewards}
-            variant={ButtonVariant.second}
-            size={ButtonSize.small}
-            disabled={!canGetRewards}
-            circleBorders
-            onPress={onGetReward}
-          />
+  return (
+    <ShadowCard onPress={onPress} style={styles.wrapper}>
+      <WidgetHeader
+        icon={'staking_thin'}
+        title={getText(I18N.earnStaking)}
+        description={getText(I18N.earnStakingDescription)}
+        largeIcon
+      />
+      <View style={styles.rewardsWrapper}>
+        <View style={styles.row}>
+          <Text t14>{`${getText(I18N.earnRewards)} `}</Text>
+          <Text t13 color={LIGHT_TEXT_GREEN_1}>
+            {rewardAmount.toBalanceString()}
+          </Text>
         </View>
-      </ShadowCard>
-    );
-  },
-);
+        <Button
+          i18n={I18N.stakingHomeGetRewards}
+          variant={ButtonVariant.second}
+          size={ButtonSize.small}
+          disabled={!canGetRewards}
+          circleBorders
+          onPress={onGetReward}
+        />
+      </View>
+    </ShadowCard>
+  );
+});
 
 const styles = StyleSheet.create({
   row: {flexDirection: 'row'},

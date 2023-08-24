@@ -46,7 +46,7 @@ const DisplayMap: {[key: string]: IMapItem} = {
   },
 };
 
-export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
+export function TransactionRowWidget({item, onPress, wallets}: Props) {
   const isSend = useMemo(() => {
     return wallets
       .map(wallet => wallet.address.toLowerCase())
@@ -122,7 +122,7 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
       </View>
     </TouchableWithoutFeedback>
   );
-};
+}
 
 const styles = createTheme({
   walletWrapper: {flexDirection: 'row', alignItems: 'center', marginTop: 4},

@@ -13,13 +13,13 @@ import {I18N, getText} from '@app/i18n';
 
 type Props = RaffleBlockListProps;
 
-export const RafflesWidget = ({
+export function RafflesWidget({
   onPress,
   data,
   scrollEnabled,
   onPressGetTicket,
   onPressShowResult,
-}: Props) => {
+}: Props) {
   return (
     <ShadowCard disabled style={styles.wrapper}>
       <WidgetHeader
@@ -37,7 +37,7 @@ export const RafflesWidget = ({
       />
     </ShadowCard>
   );
-};
+}
 
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},

@@ -16,12 +16,12 @@ type Props = {
   wallets: Realm.Results<Wallet>;
 };
 
-export const TransactionsWidget = ({
+export function TransactionsWidget({
   onPress,
   lastTransactions,
   onRowPress,
   wallets,
-}: Props) => {
+}: Props) {
   if (lastTransactions.length === 0) {
     return null;
   }
@@ -40,7 +40,7 @@ export const TransactionsWidget = ({
       })}
     </ShadowCard>
   );
-};
+}
 
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},

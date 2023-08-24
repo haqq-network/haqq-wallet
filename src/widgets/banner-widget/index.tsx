@@ -25,7 +25,7 @@ export interface HomeBannerProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export const BannerWidget = ({banner, style}: HomeBannerProps) => {
+export function BannerWidget({banner, style}: HomeBannerProps) {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
 
@@ -128,7 +128,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
       {elem}
     </ShadowCard>
   );
-};
+}
 
 const styles = StyleSheet.create({
   removePaddingVertical: {paddingVertical: 0},

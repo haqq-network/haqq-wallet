@@ -10,9 +10,9 @@ import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {Raffle, RaffleStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
-import {RafflesWidget} from '@app/widgets/raffles.widget/raffles-widget';
+import {RafflesWidget} from '@app/widgets/raffles-widget/raffles-widget';
 
-export const RafflesWidgetWrapper = memo(() => {
+export const RafflesWidgetWrapper = memo(function RafflesWidgetWrapper() {
   const [raffles, setRaffles] = useState<Raffle[]>([]);
   const navigation = useTypedNavigation();
 

@@ -17,7 +17,7 @@ type Props = {
   spend: number;
 };
 
-export const TransactionsShortWidget = ({onPress, received, spend}: Props) => {
+export function TransactionsShortWidget({onPress, received, spend}: Props) {
   const total = Math.max(received + spend, 0.001);
 
   const barInfo = useMemo(() => {
@@ -56,7 +56,7 @@ export const TransactionsShortWidget = ({onPress, received, spend}: Props) => {
       <BarChart hideText data={barInfo} />
     </ShadowCard>
   );
-};
+}
 
 const styles = StyleSheet.create({
   textWrapper: {flexDirection: 'row', marginVertical: 8, flexWrap: 'wrap'},

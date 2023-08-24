@@ -12,7 +12,7 @@ import {
 import {Balance} from '@app/services/balance';
 import {StakingWidget} from '@app/widgets/staking-widget/staking-widget';
 
-const StakingWidgetWrapper = memo(() => {
+export const StakingWidgetWrapper = memo(function StakingWidgetWrapper() {
   const navigation = useTypedNavigation();
   const onPress = useCallback(() => {
     navigation.navigate('staking');
@@ -48,5 +48,3 @@ const StakingWidgetWrapper = memo(() => {
     />
   );
 });
-
-export {StakingWidgetWrapper};
