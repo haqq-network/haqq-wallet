@@ -22,7 +22,7 @@ import {CURRENCY_NAME} from '@app/variables/common';
 export type StakingDelegateFormProps = {
   balance: Balance;
   onAmount: (amount: number) => void;
-  fee: number;
+  fee: Balance;
   unboundingTime: number;
 };
 

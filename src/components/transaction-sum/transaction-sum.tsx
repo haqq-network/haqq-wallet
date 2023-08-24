@@ -20,11 +20,11 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance, FEE_AMOUNT} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;
-  fee: number;
+  fee: Balance;
   to: string;
   from: string;
   contact: Contact | null;
@@ -42,17 +42,18 @@ export const TransactionSum = ({
   onContact,
   testID,
 }: TransactionSumProps) => {
-  const transactionFee = useMemo(
-    () => new Balance(Math.max(2 * fee, FEE_AMOUNT.toNumber())),
-    [fee],
-  );
+  const transactionFee = useMemo(() => {
+    const doubledFee = fee.operate(fee, 'add');
+    const maximumFee = doubledFee.compare(FEE_AMOUNT, 'gt')
+      ? doubledFee
+      : FEE_AMOUNT;
+    return new Balance(maximumFee);
+  }, [fee]);
 
   const amounts = useSumAmount();
 
   useEffect(() => {
-    amounts.setMaxAmount(
-      balance.operate(transactionFee, 'sub').operate(WEI, 'div'),
-    );
+    amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balance, transactionFee]);
 

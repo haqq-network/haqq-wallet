@@ -124,7 +124,7 @@ export const SumBlock = ({
         <Text center color={Color.textBase2} t14 testID={`${testID}_hint`}>
           {getText(I18N.sumBlockAvailable)}:{' '}
           <Text t14 color={Color.textGreen1}>
-            {balance.toFloatString()} {currency}
+            {balance.toBalanceString()}
           </Text>
         </Text>
       )}

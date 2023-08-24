@@ -70,6 +70,7 @@ export const TransactionLedgerScreen = () => {
           );
 
           navigation.navigate('transactionFinish', {
+            transaction,
             hash: transaction.hash,
           });
         }

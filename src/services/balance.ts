@@ -17,11 +17,7 @@ export class Balance implements IBalance {
     }
 
     if (typeof balance === 'string') {
-      if (balance.startsWith('0x')) {
-        this.bnRaw = new Decimal(balance);
-      } else {
-        this.bnRaw = new Decimal('0x' + balance);
-      }
+      this.bnRaw = new Decimal(balance);
       return;
     }
 
@@ -51,7 +47,7 @@ export class Balance implements IBalance {
    * Convert balance to float according to WEI
    */
   toFloat = () => {
-    const float = new Decimal(this.bnRaw).div(WEI).toNumber();
+    const float = this.bnRaw.div(WEI).toNumber();
     return float;
   };
 
@@ -100,8 +96,14 @@ export class Balance implements IBalance {
     if (!value) {
       return this;
     }
-    const {bnRaw} = new Balance(value);
-    const result = new Decimal(this.bnRaw)[operation](bnRaw.toHex());
+
+    let bnRaw: Decimal;
+    if (value instanceof Balance) {
+      bnRaw = value.bnRaw;
+    } else {
+      bnRaw = new Balance(value).bnRaw;
+    }
+    const result = this.bnRaw[operation](bnRaw.toHex()).toHex();
     return new Balance(result);
   };
 
@@ -118,8 +120,22 @@ export class Balance implements IBalance {
     if (!value) {
       return false;
     }
-    const {bnRaw} = new Balance(value);
+    let bnRaw: Decimal;
+    if (value instanceof Balance) {
+      bnRaw = value.bnRaw;
+    } else {
+      bnRaw = new Balance(value).bnRaw;
+    }
     return this.bnRaw[operation](bnRaw);
+  };
+
+  toEther = () => this.toFloat();
+  toEtherString = () => this.toBalanceString();
+  toWei = () => this.toNumber();
+  toWeiString = () => {
+    const float = this.toWei();
+    const suffix = ` a${CURRENCY_NAME}`;
+    return float + suffix;
   };
 }
 

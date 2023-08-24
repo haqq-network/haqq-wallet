@@ -21,7 +21,7 @@ type Props = {
 export const TransactionsShortWidget = memo(
   ({onPress, received, spend}: Props) => {
     const minAmount = useMinAmount();
-    const total = Math.max(received + spend, minAmount.toNumber());
+    const total = Math.max(received + spend, minAmount.toFloat());
 
     const barInfo = useMemo(() => {
       return [

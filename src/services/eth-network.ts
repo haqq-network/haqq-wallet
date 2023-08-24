@@ -77,7 +77,8 @@ export class EthNetwork {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
       const balance = await rpcProvider.getBalance(address);
-      return new Balance(balance._hex);
+      const balanceWithWEI = new Balance(balance._hex);
+      return new Balance(balanceWithWEI);
     } catch (e) {
       return Balance.Empty;
     }
@@ -123,7 +124,7 @@ export class EthNetwork {
     amount: number,
   ): Promise<{
     fee: number;
-    feeWei: number;
+    feeWei: Balance;
     feeData: FeeData;
     estimateGas: BigNumberish;
   }> {
@@ -142,7 +143,7 @@ export class EthNetwork {
 
     return {
       fee: feeWei / WEI,
-      feeWei,
+      feeWei: new Balance(String(feeWei)),
       feeData: result[0],
       estimateGas: result[1],
     };

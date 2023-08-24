@@ -1,20 +1,27 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 
 export type NetworkFeeProps = {
-  fee: number | string;
-  currency?: string;
+  fee: Balance;
+  currency?: 'aISLM' | 'ISLM';
 };
 export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
+  const value = useMemo(() => {
+    if (currency === 'aISLM') {
+      return fee.toWeiString();
+    }
+    return fee.toEtherString();
+  }, [fee, currency]);
+
   return (
     <Text
       t15
       i18n={I18N.networkFee}
-      i18params={{fee: cleanNumber(fee), currency: currency}}
+      i18params={{value}}
       center
       color={Color.textBase2}
     />

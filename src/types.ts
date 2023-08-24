@@ -15,6 +15,8 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 
 import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
@@ -82,6 +84,10 @@ export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
   | TransactionListDate;
+
+export type TransactionResponse = Awaited<
+  ReturnType<EthNetwork['transferTransaction']>
+>;
 
 export type WalletInitialData =
   | {
@@ -311,6 +317,7 @@ export type RootStackParamList = {
     to: string;
   };
   transactionFinish: {
+    transaction: TransactionResponse;
     hash: string;
   };
   transactionNftFinish: {
@@ -324,7 +331,7 @@ export type RootStackParamList = {
     from: string;
     to: string;
     amount: number;
-    fee?: number;
+    fee?: Balance;
   };
   transactionNftConfirmation: {
     from: string;
@@ -376,14 +383,14 @@ export type RootStackParamList = {
     proposal: Proposal;
   };
   proposalDepositPreview: {
-    fee: number;
+    fee: Balance;
     account: string;
     amount: number;
     proposal: Proposal;
   };
   proposalDepositFinish: {
     proposal: Proposal;
-    fee: number;
+    fee: Balance;
     txhash: string;
     amount: number;
   };
@@ -423,14 +430,14 @@ export type RootStackParamList = {
   stakingDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   stakingUnDelegate: {
     validator: string;
@@ -449,14 +456,14 @@ export type RootStackParamList = {
   stakingUnDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingUnDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   popupNotification: {
     bannerId: PopupNotificationBannerId;

@@ -70,7 +70,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
         </View>
         <View style={styles.badges}>
           {!!item.localDelegations &&
-            item.localDelegations > minAmount.toNumber() && (
+            item.localDelegations > minAmount.toFloat() && (
               <InfoBox
                 style={styles.badge}
                 i18n={I18N.stakingValidatorsRowStaked}
@@ -79,7 +79,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
                 }}
               />
             )}
-          {!!item.localRewards && item.localRewards > minAmount.toNumber() && (
+          {!!item.localRewards && item.localRewards > minAmount.toFloat() && (
             <InfoBox
               style={styles.badge}
               i18n={I18N.stakingValidatorsRowReward}
@@ -89,7 +89,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
             />
           )}
           {!!item.localUnDelegations &&
-            item.localUnDelegations > minAmount.toNumber() && (
+            item.localUnDelegations > minAmount.toFloat() && (
               <InfoBox
                 style={styles.badge}
                 i18n={I18N.stakingValidatorsRowWithdrawal}

@@ -26,11 +26,11 @@ export function useSumAmount(
 
   useEffect(() => {
     if (amount) {
-      const errorArray = validate.single(amount.toNumber(), {
+      const errorArray = validate.single(amount.toFloat(), {
         numericality: {
           notValid: 'Invalid number',
-          greaterThanOrEqualTo: minAmount.toNumber(),
-          lessThanOrEqualTo: maxAmount.toNumber(),
+          greaterThanOrEqualTo: minAmount.toFloat(),
+          lessThanOrEqualTo: maxAmount.toFloat(),
           notGreaterThan: getText(I18N.sumAmountTooLow, {
             amount: maxAmount.toString(),
           }),
@@ -53,8 +53,8 @@ export function useSumAmount(
     },
     setMax() {
       const a =
-        Math.floor(maxAmount.toNumber() / minimumAmountConst.toNumber()) *
-        minimumAmountConst.toNumber();
+        Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
+        minimumAmountConst.toFloat();
       setAmount({
         amountText: String(a),
         amount: maxAmount,

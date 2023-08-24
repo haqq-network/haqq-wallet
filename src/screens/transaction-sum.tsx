@@ -21,7 +21,7 @@ export const TransactionSumScreen = () => {
   const [to, setTo] = useState(route.params.to);
 
   const [balance, setBalance] = useState(Balance.Empty);
-  const [fee, setFee] = useState(0);
+  const [fee, setFee] = useState(Balance.Empty);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
@@ -66,7 +66,7 @@ export const TransactionSumScreen = () => {
         EthNetwork.estimateTransaction(route.params.from, to, b.toFloat()),
       )
       .then(estimateFee => {
-        setFee(estimateFee.fee);
+        setFee(estimateFee.feeWei);
       });
   }, [route.params.from, to]);
 

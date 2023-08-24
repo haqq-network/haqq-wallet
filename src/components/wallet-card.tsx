@@ -63,15 +63,20 @@ export const WalletCard = memo(
       [wallet?.address],
     );
 
-    const total = useMemo(
-      () => balance?.operate?.(stakingBalance, 'add')?.toBalanceString(),
-      [balance, stakingBalance],
-    );
+    const total = useMemo(() => {
+      if (!balance) {
+        return Balance.Empty.toBalanceString();
+      }
 
-    const locked = useMemo(
-      () => stakingBalance?.toFloatString?.() ?? '0',
-      [stakingBalance],
-    );
+      return balance.operate(stakingBalance, 'add').toBalanceString();
+    }, [balance, stakingBalance]);
+
+    const locked = useMemo(() => {
+      if (!stakingBalance) {
+        return Balance.Empty.toFloatString();
+      }
+      return stakingBalance.toFloatString();
+    }, [stakingBalance]);
 
     const onQr = () => {
       onPressQR(wallet.address);

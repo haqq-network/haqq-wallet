@@ -22,7 +22,7 @@ export async function onStakingRewards() {
   const minAmount = getMinAmount();
 
   for (const row of rewards) {
-    if (row.amount > minAmount.toNumber()) {
+    if (row.amount > minAmount.toFloat()) {
       delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
         row.validator,
       );

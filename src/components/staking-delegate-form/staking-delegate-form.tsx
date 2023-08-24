@@ -20,13 +20,13 @@ import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance, FEE_AMOUNT} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
-  fee: number;
+  fee: Balance;
   balance: Balance;
 };
 
@@ -39,13 +39,13 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const transactionFee = useMemo(
-    () => new Balance(Math.max(fee / WEI, FEE_AMOUNT.toNumber())),
-    [fee],
-  );
+  const transactionFee = useMemo(() => {
+    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
+    return new Balance(maximumFee);
+  }, [fee]);
 
   const maxAmount = useMemo(
-    () => balance.operate(transactionFee, 'sub').operate(WEI, 'div'),
+    () => balance.operate(transactionFee, 'sub'),
     [balance, transactionFee],
   );
 

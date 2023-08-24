@@ -15,11 +15,11 @@ import {
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
-import {WEI} from '@app/variables/common';
+import {Balance} from '@app/services/balance';
 
 export type ProposalDepositPreviewProps = {
   amount: number;
-  fee: number;
+  fee: Balance;
   proposal: Proposal;
   error?: string;
   disabled: boolean;
@@ -34,8 +34,6 @@ export const ProposalDepositPreview = ({
   disabled,
   onSend,
 }: ProposalDepositPreviewProps) => {
-  const feeValue = fee / WEI;
-
   return (
     <PopupContainer style={styles.container}>
       <Image
@@ -69,7 +67,7 @@ export const ProposalDepositPreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {feeValue * WEI} aISLM
+            {fee.toWeiString()}
           </Text>
         </DataView>
       </View>
