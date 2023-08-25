@@ -1258,7 +1258,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionDetailViewOnBlock]: 'View on block explorer',
   [I18N.transactionDetailSent]: 'Sent',
   [I18N.transactionDetailRecive]: 'Receive',
-  [I18N.transactionDetailSentTo]: 'Send to',
+  [I18N.transactionDetailSentTo]: 'Sent to',
   [I18N.transactionDetailReciveFrom]: 'Received from',
   [I18N.transactionDetailDate]: 'Date',
   [I18N.transactionDetailNetwork]: 'Network',
