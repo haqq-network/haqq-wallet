@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {ScrollView} from 'react-native';
 
@@ -6,12 +6,17 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/types';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
 
-export const HomeSettings = () => {
-  const capitalizedTheme = capitalize(app.theme);
+type Props = {
+  theme: AppTheme;
+};
+
+export const HomeSettings = memo(({theme}: Props) => {
+  const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
 
   return (
@@ -94,7 +99,7 @@ export const HomeSettings = () => {
       )}
     </ScrollView>
   );
-};
+});
 
 const page = createTheme({
   container: {

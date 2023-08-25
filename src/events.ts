@@ -41,6 +41,7 @@ export enum Events {
   onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
   onSyncAppBalances = 'onSyncAppBalances',
   onWalletVisibilityChange = 'onWalletVisibilityChange',
+  onThemeChanged = 'onThemeChanged',
 }
 
 export enum WalletConnectEvents {

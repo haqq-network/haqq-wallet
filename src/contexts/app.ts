@@ -301,7 +301,7 @@ class App extends AsyncEventEmitter {
   set theme(value) {
     VariablesString.set('theme', value);
 
-    this.emit('theme', value);
+    this.emit(Events.onThemeChanged, value);
 
     if (AppTheme.system === value) {
       const scheme = this._systemTheme;
@@ -326,7 +326,7 @@ class App extends AsyncEventEmitter {
 
     if (systemColorScheme !== this._systemTheme) {
       this._systemTheme = systemColorScheme;
-      this.emit('theme', systemColorScheme);
+      this.emit(Events.onThemeChanged, systemColorScheme);
     }
 
     StatusBar.setBarStyle(
