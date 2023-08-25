@@ -152,6 +152,7 @@
     "@walletconnect/types": "2.7.2",
     "babel-jest": "29.6.1",
     "babel-plugin-module-resolver": "5.0.0",
+    "babel-plugin-react-remove-properties": "0.3.0",
     "detox": "20.11.1",
     "dotenv": "^16.3.1",
     "eslint": "8.45.0",
