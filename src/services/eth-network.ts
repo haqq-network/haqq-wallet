@@ -37,6 +37,7 @@ export class EthNetwork {
         value: '0x' + value.toString('hex'),
         maxFeePerGas: gasPrice.toHexString(),
         maxPriorityFeePerGas: gasPrice.toHexString(),
+        data,
       } as Deferrable<TransactionRequest>);
 
       estimateGas = new BN(resp._hex, 16);
@@ -122,6 +123,7 @@ export class EthNetwork {
     from: string,
     to: string,
     amount: number,
+    data = '0x',
   ): Promise<{
     fee: number;
     feeWei: Balance;
@@ -136,6 +138,7 @@ export class EthNetwork {
         from,
         to,
         amount,
+        data,
       } as Deferrable<TransactionRequest>),
     ]);
 

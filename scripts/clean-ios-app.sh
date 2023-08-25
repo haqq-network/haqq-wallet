@@ -35,4 +35,4 @@ execute_command "xcrun simctl install Booted /tmp/$(basename $APP_PATH)"
 # Delete the temporary folder
 execute_command "rm -rf /tmp/$(basename $APP_PATH)"
 
-execute_command "xcrun simctl launch Booted $APP_PACKAGE_NAME"
+yarn devmode:ios

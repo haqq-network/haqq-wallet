@@ -8,6 +8,7 @@ import {
   awaitForLedger,
   awaitForPopupClosed,
   getProviderInstanceForWallet,
+  showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
@@ -16,7 +17,9 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {WalletType} from '@app/types';
+import {isSendTransactionError, sleep} from '@app/utils';
 
 const abi = [
   'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
@@ -81,11 +84,27 @@ export async function onEarnGetTicket(raffleId: string) {
     unsignedTx,
   );
 
-  const resp = await EthNetwork.sendTransaction(signedTx);
-  const r = iface.decodeFunctionData('participateUser', resp.data);
+  let txHash = null;
+  try {
+    const {hash} = await EthNetwork.sendTransaction(signedTx);
+    txHash = hash;
+  } catch (err) {
+    if (isSendTransactionError(err)) {
+      Logger.log('dont have fee for transaction', JSON.stringify(err, null, 2));
+      showModal('notEnoughGas', {
+        gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
+        currentAmount: app.getBalance(leadingAccount.address),
+      });
+    } else {
+      Logger.captureException(err, 'onEarnGetTicket sendTransaction', {
+        raffleId,
+      });
+      throw err;
+    }
+  }
 
-  Logger.log('tx', JSON.stringify(r));
-
+  await sleep(6000);
+  await Backend.instance.contestsResult(raffleId, response.signature, txHash);
   sendNotification(I18N.earnTicketRecieved);
   app.emit(Events.onRaffleTicket, response);
   return response;

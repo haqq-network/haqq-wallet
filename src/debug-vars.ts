@@ -14,7 +14,7 @@ interface DebugVars {
 const production: DebugVars = {
   enableSentry: true,
   enableWeb3BrowserIncognito: false,
-  enableWalletConnectLogger: false,
+  enableWalletConnectLogger: true,
   enableCaptchaLogger: false,
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: false,
