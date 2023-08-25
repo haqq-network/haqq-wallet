@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 
 import {app} from '@app/contexts/app';
+import {Events} from '@app/events';
 
 export function useTheme() {
   const [theme, setTheme] = useState(app.currentTheme);
@@ -12,10 +13,10 @@ export function useTheme() {
       }
     };
 
-    app.on('theme', subscription);
+    app.on(Events.onThemeChanged, subscription);
 
     return () => {
-      app.off('theme', subscription);
+      app.off(Events.onThemeChanged, subscription);
     };
   }, [theme]);
 
