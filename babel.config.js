@@ -1,4 +1,11 @@
 module.exports = {
+  env: {
+    production: {
+      plugins: [
+        ["react-remove-properties", {"properties": ["testID"]}]
+      ]
+    }
+  },
   presets: [
     'module:metro-react-native-babel-preset',
     '@babel/preset-typescript',

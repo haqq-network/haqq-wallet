@@ -5885,6 +5885,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-react-remove-properties@npm:0.3.0":
+  version: 0.3.0
+  resolution: "babel-plugin-react-remove-properties@npm:0.3.0"
+  checksum: dc7165301fb8667ebdac7808e7210cd25157e0988288124f4425df99b63169f271cd87f0c12b988c5f2c5294e61dc409e06413fa7067c2f205a77b5c59a45d6e
+  languageName: node
+  linkType: hard
+
 "babel-plugin-syntax-trailing-function-commas@npm:^7.0.0-beta.0":
   version: 7.0.0-beta.0
   resolution: "babel-plugin-syntax-trailing-function-commas@npm:7.0.0-beta.0"
@@ -9692,6 +9699,7 @@ __metadata:
     assert: 2.0.0
     babel-jest: 29.6.1
     babel-plugin-module-resolver: 5.0.0
+    babel-plugin-react-remove-properties: 0.3.0
     bech32-converting: 1.0.9
     big-integer: 1.6.51
     bn.js: 5.2.1
