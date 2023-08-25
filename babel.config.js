@@ -1,11 +1,7 @@
-module.exports = {
-  env: {
-    production: {
-      plugins: [
-        ["react-remove-properties", {"properties": ["testID"]}]
-      ]
-    }
-  },
+const currentEnv = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
+const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+const config = {
   presets: [
     'module:metro-react-native-babel-preset',
     '@babel/preset-typescript',
@@ -34,3 +30,13 @@ module.exports = {
     'react-native-reanimated/plugin',
   ],
 };
+
+if (currentEnv === 'production' && !isTestEnv) {
+  config.env.production = {
+     plugins: [
+        ["react-remove-properties", {"properties": ["testID"]}]
+      ]
+  }
+}
+
+module.exports = config;
