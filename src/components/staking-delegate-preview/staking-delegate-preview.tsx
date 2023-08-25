@@ -19,13 +19,13 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {WEI} from '@app/variables/common';
 
 export type StakingDelegatePreviewProps = {
   unboundingTime: number;
   amount: number;
-  fee: number;
+  fee: Balance;
   validator: ValidatorItem;
   error?: string;
   disabled: boolean;
@@ -41,7 +41,6 @@ export const StakingDelegatePreview = ({
   unboundingTime,
   onSend,
 }: StakingDelegatePreviewProps) => {
-  const feeValue = fee / WEI;
   const validatorCommission = useMemo(() => {
     return formatPercents(validator.commission.commission_rates.rate);
   }, [validator.commission.commission_rates]);
@@ -88,7 +87,7 @@ export const StakingDelegatePreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {feeValue * WEI} aISLM
+            {fee.toWeiString()}
           </Text>
         </DataView>
       </View>

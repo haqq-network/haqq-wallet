@@ -20,7 +20,8 @@ export const TransactionFinishScreen = () => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash} = useTypedRoute<'transactionFinish'>().params;
+  const {hash, transaction: transactionFromParent} =
+    useTypedRoute<'transactionFinish'>().params;
   const [transaction, setTransaction] = useState<Transaction | null>(
     Transaction.getById(hash),
   );
@@ -89,7 +90,7 @@ export const TransactionFinishScreen = () => {
     <TransactionFinish
       onPressContact={onPressContact}
       onSubmit={onSubmit}
-      transaction={transaction}
+      transaction={transaction || transactionFromParent}
       contact={contact}
       short={short}
       testID="transaction_finish"

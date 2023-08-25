@@ -17,6 +17,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 import {WEI} from '@app/variables/common';
@@ -36,14 +37,14 @@ export const TransactionConfirmationScreen = () => {
   );
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? 0);
+  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
 
   useEffect(() => {
     EthNetwork.estimateTransaction(
       route.params.from,
       route.params.to,
       route.params.amount,
-    ).then(result => setFee(result.fee));
+    ).then(result => setFee(result.feeWei));
   }, [route.params.from, route.params.to, route.params.amount]);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -79,6 +80,7 @@ export const TransactionConfirmationScreen = () => {
           );
 
           navigation.navigate('transactionFinish', {
+            transaction,
             hash: transaction.hash,
           });
         }

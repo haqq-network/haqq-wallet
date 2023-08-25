@@ -9,7 +9,7 @@ import {cleanNumber, createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {getHostnameFromUrl} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 
@@ -136,14 +136,10 @@ export const JsonRpcTransactionInfo = ({
           />
         </DataView>
         <DataView label="Network Fee">
-          <Text
-            t11
-            color={Color.textBase1}
-            i18n={I18N.transactionConfirmationestimateFee}
-            i18params={{
-              estimateFee,
-            }}
-          />
+          <Text t11 color={Color.textBase1}>
+            {/* TODO: Migrate to estimateFee.toWeiString() */}
+            {`${estimateFee} a${CURRENCY_NAME}`}
+          </Text>
         </DataView>
       </View>
     </>

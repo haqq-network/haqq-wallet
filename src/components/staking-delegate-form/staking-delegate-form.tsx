@@ -18,14 +18,15 @@ import {createTheme} from '@app/helpers';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {Balance, ValidatorItem, ValidatorStatus} from '@app/types';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {Balance, FEE_AMOUNT} from '@app/services/balance';
+import {ValidatorItem, ValidatorStatus} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
-  fee: number;
+  fee: Balance;
   balance: Balance;
 };
 
@@ -38,11 +39,17 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(
-    0,
-    balance.toNumber() - Math.max(fee / WEI, 0.00001),
-    0.01,
+  const transactionFee = useMemo(() => {
+    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
+    return new Balance(maximumFee);
+  }, [fee]);
+
+  const maxAmount = useMemo(
+    () => balance.operate(transactionFee, 'sub'),
+    [balance, transactionFee],
   );
+
+  const amounts = useSumAmount(Balance.Empty, maxAmount, new Balance(0.01));
 
   const validatorCommission = useMemo(() => {
     return formatPercents(commission_rates.rate);

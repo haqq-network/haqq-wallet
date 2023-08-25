@@ -15,12 +15,13 @@ import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {ValidatorItem} from '@app/types';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
   amount: number;
-  fee: number;
+  fee: Balance;
   txhash: string;
   onDone: () => void;
 };

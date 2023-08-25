@@ -40,7 +40,7 @@ export const StakingUnDelegateFormScreen = () => {
     return new Balance(delegation?.amount ?? 0);
   }, [operator_address, wallet?.cosmosAddress]);
 
-  const fee = parseInt(Cosmos.fee.amount, 10);
+  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
 
   const onAmount = useCallback(
     (amount: number) => {

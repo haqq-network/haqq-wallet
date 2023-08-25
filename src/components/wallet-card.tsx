@@ -19,7 +19,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
@@ -63,15 +63,20 @@ export const WalletCard = memo(
       [wallet?.address],
     );
 
-    const total = useMemo(
-      () => balance?.add?.(stakingBalance)?.toBalanceString(),
-      [balance, stakingBalance],
-    );
+    const total = useMemo(() => {
+      if (!balance) {
+        return Balance.Empty.toBalanceString();
+      }
 
-    const locked = useMemo(
-      () => stakingBalance?.toFloatString?.() ?? '0',
-      [stakingBalance],
-    );
+      return balance.operate(stakingBalance, 'add').toBalanceString();
+    }, [balance, stakingBalance]);
+
+    const locked = useMemo(() => {
+      if (!stakingBalance) {
+        return Balance.Empty.toFloatString();
+      }
+      return stakingBalance.toFloatString();
+    }, [stakingBalance]);
 
     const onQr = () => {
       onPressQR(wallet.address);

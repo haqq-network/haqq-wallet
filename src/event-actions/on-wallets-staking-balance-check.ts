@@ -13,7 +13,7 @@ export async function onWalletsStakingBalanceCheck() {
         w.cosmosAddress,
       ).filtered('type != $0', StakingMetadataType.reward);
       const total = metadata.reduce(
-        (prev, curr) => prev.add(curr.amountHex),
+        (prev, curr) => prev.operate(curr.amountHex, 'add'),
         Balance.Empty,
       );
       return [w.address, total];

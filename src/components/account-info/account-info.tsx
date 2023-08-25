@@ -9,7 +9,8 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Balance, TransactionList} from '@app/types';
+import {Balance} from '@app/services/balance';
+import {TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 

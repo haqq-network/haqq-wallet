@@ -8,7 +8,8 @@ import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
-import {Balance, TransactionList} from '@app/types';
+import {Balance} from '@app/services/balance';
+import {TransactionList} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 

@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 
 import {usePrevious} from './use-previous';
 

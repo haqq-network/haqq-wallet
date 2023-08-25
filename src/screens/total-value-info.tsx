@@ -20,7 +20,7 @@ export const TotalValueInfoScreen = () => {
   const balance = useMemo(
     () =>
       Object.values(balances).reduce(
-        (prev, curr) => prev?.add(curr),
+        (prev, curr) => prev?.operate(curr, 'add'),
         Balance.Empty,
       ) ?? Balance.Empty,
     [balances],
@@ -29,7 +29,7 @@ export const TotalValueInfoScreen = () => {
   const stakingBalance = useMemo(
     () =>
       Object.values(stakingBalances).reduce(
-        (prev, curr) => prev?.add(curr),
+        (prev, curr) => prev?.operate(curr, 'add'),
         Balance.Empty,
       ) ?? Balance.Empty,
     [stakingBalances],

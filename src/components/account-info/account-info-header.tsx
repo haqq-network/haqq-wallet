@@ -18,7 +18,7 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
@@ -54,7 +54,7 @@ export const AccountInfoHeader = ({
   );
 
   const totalBalance = useMemo(
-    () => balance?.add(stakingBalance)?.toFloatString() ?? '0',
+    () => balance?.operate(stakingBalance, 'add')?.toFloatString() ?? '0',
     [balance, stakingBalance],
   );
 

@@ -4,7 +4,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/types';
+import {Balance} from '@app/services/balance';
 
 import {usePrevious} from './use-previous';
 

@@ -18,7 +18,7 @@ const StakingWidgetWrapper = memo(() => {
     navigation.navigate('staking');
   }, [navigation]);
 
-  const [rewardAmount, setRewardAmount] = useState(new Balance(0));
+  const [rewardAmount, setRewardAmount] = useState(Balance.Empty);
 
   useEffect(() => {
     const rows = StakingMetadata.getAll();

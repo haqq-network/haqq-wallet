@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -9,7 +9,7 @@ import {Cosmos} from '@app/services/cosmos';
 export const ProposalDepositFormScreen = () => {
   const navigation = useTypedNavigation();
   const {account, proposal} = useTypedRoute<'proposalDepositForm'>().params;
-  const fee = parseInt(Cosmos.fee.amount, 10);
+  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
   const [balance, setBalance] = useState(Balance.Empty);
 
   useEffect(() => {

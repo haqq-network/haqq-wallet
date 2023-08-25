@@ -5,7 +5,7 @@ import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
-import BN from 'bn.js';
+import Decimal from 'decimal.js';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
@@ -15,6 +15,8 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 
 import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
@@ -82,6 +84,10 @@ export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
   | TransactionListDate;
+
+export type TransactionResponse = Awaited<
+  ReturnType<EthNetwork['transferTransaction']>
+>;
 
 export type WalletInitialData =
   | {
@@ -311,6 +317,7 @@ export type RootStackParamList = {
     to: string;
   };
   transactionFinish: {
+    transaction: TransactionResponse;
     hash: string;
   };
   transactionNftFinish: {
@@ -324,7 +331,7 @@ export type RootStackParamList = {
     from: string;
     to: string;
     amount: number;
-    fee?: number;
+    fee?: Balance;
   };
   transactionNftConfirmation: {
     from: string;
@@ -376,14 +383,14 @@ export type RootStackParamList = {
     proposal: Proposal;
   };
   proposalDepositPreview: {
-    fee: number;
+    fee: Balance;
     account: string;
     amount: number;
     proposal: Proposal;
   };
   proposalDepositFinish: {
     proposal: Proposal;
-    fee: number;
+    fee: Balance;
     txhash: string;
     amount: number;
   };
@@ -423,14 +430,14 @@ export type RootStackParamList = {
   stakingDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   stakingUnDelegate: {
     validator: string;
@@ -449,14 +456,14 @@ export type RootStackParamList = {
   stakingUnDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingUnDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   popupNotification: {
     bannerId: PopupNotificationBannerId;
@@ -1016,21 +1023,25 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type BalanceConstructor = Balance | BN | number | string;
+export type BalanceConstructor = IBalance | Decimal | number | string;
 
-export interface Balance {
-  readonly raw: BN;
+export interface IBalance {
+  readonly raw: Decimal;
   toNumber: () => number;
   toFloat: () => number;
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => this is Balance;
+  isPositive: () => this is IBalance;
   toBalanceString: () => string;
-  add: (value?: BalanceConstructor) => Balance;
-  div: (value?: BalanceConstructor) => Balance;
-  mul: (value?: BalanceConstructor) => Balance;
-  eq: (value?: BalanceConstructor) => boolean;
+  operate: (
+    value: BalanceConstructor,
+    operation: 'add' | 'mul' | 'div' | 'sub',
+  ) => IBalance;
+  compare: (
+    value: BalanceConstructor,
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
+  ) => boolean;
 }
 
 export enum ValidUrlProtocol {

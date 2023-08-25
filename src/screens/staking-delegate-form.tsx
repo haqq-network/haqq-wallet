@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -11,7 +11,7 @@ export const StakingDelegateFormScreen = () => {
   const {account, validator} = useTypedRoute<'stakingDelegateForm'>().params;
 
   const [balance, setBalance] = useState(Balance.Empty);
-  const fee = parseInt(Cosmos.fee.amount, 10);
+  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
 
   useEffect(() => {
     EthNetwork.getBalance(account).then(newBalance => {

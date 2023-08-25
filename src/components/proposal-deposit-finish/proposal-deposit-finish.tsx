@@ -19,10 +19,11 @@ import {NetworkFee} from '@app/components/ui/network-fee';
 import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 
 export type ProposalDepositFinishProps = {
   amount: number;
-  fee: number;
+  fee: Balance;
   txhash: string;
   proposal: Proposal;
   onDone: () => void;

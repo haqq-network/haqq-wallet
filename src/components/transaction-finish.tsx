@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -15,15 +15,15 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
+import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
-import {WEI} from '@app/variables/common';
+import {TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {
-  transaction: Transaction | null;
+  transaction: Transaction | TransactionResponse | null;
   onSubmit: () => void;
   onPressContact: () => void;
   contact: Contact | null;
@@ -43,6 +43,20 @@ export const TransactionFinish = ({
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
+
+  const fee = useMemo(() => {
+    if (transaction instanceof Transaction) {
+      return new Balance(transaction?.fee ?? 0);
+    }
+    return Balance.Empty;
+  }, [transaction]);
+
+  const transactionAmount = useMemo(() => {
+    if (transaction instanceof Transaction) {
+      return new Balance(transaction?.value ?? 0);
+    }
+    return new Balance(transaction?.value._hex ?? 0);
+  }, [transaction]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -67,7 +81,7 @@ export const TransactionFinish = ({
       />
       {transaction && (
         <Text t5 center style={styles.sum}>
-          - {cleanNumber(transaction?.value)} ISLM
+          - {transactionAmount.toBalanceString()}
         </Text>
       )}
 
@@ -82,7 +96,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={(transaction?.fee ?? 0) * WEI} />
+      <NetworkFee fee={fee} />
 
       <View style={styles.providerContainer}>
         <Text

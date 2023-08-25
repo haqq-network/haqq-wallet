@@ -17,7 +17,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   to: string;
@@ -71,14 +71,10 @@ export const TransactionNftConfirmation = ({
       </Text>
       <View style={styles.info}>
         <DataView label="Network Fee">
-          <Text
-            t11
-            color={Color.textBase1}
-            i18n={I18N.transactionConfirmationestimateFee}
-            i18params={{
-              estimateFee: `${+fee * WEI}`,
-            }}
-          />
+          <Text t11 color={Color.textBase1}>
+            {/* TODO: Migrate to fee.toWeiString() */}
+            {`${+fee * WEI} a${CURRENCY_NAME}`}
+          </Text>
         </DataView>
       </View>
       {error && (

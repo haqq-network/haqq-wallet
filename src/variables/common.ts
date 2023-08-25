@@ -192,8 +192,6 @@ export const WEI = 10 ** 18;
 
 export const NUM_PRECISION = 2;
 
-export const MIN_AMOUNT = 0.001;
-
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
 

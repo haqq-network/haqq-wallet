@@ -492,7 +492,7 @@ class App extends AsyncEventEmitter {
   onWalletsBalance(balance: Record<string, Balance>) {
     let changed = false;
     for (const entry of Object.entries(balance)) {
-      if (!this._stakingBalance.get(entry[0])?.eq?.(entry[1])) {
+      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
         this._balance.set(entry[0], entry[1]);
         changed = true;
       }
@@ -506,7 +506,7 @@ class App extends AsyncEventEmitter {
   async onWalletsStakingBalance(balance: Record<string, Balance>) {
     let changed = false;
     for (const entry of Object.entries(balance)) {
-      if (!this._stakingBalance.get(entry[0])?.eq?.(entry[1])) {
+      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
         this._stakingBalance.set(entry[0], entry[1]);
         changed = true;
       }
@@ -523,14 +523,16 @@ class App extends AsyncEventEmitter {
     let changed = false;
     for (const entry of Object.entries(balance)) {
       const balances = this._vestingBalance.get(entry[0]);
-      const lockedChanged = !balances?.[VestingMetadataType.locked].eq?.(
+      const lockedChanged = !balances?.[VestingMetadataType.locked]?.compare(
         entry[1]?.[VestingMetadataType.locked],
+        'eq',
       );
-      const unvestedChanged = !balances?.[VestingMetadataType.unvested].eq?.(
-        entry[1]?.[VestingMetadataType.unvested],
-      );
-      const vestedChanged = !balances?.[VestingMetadataType.vested].eq?.(
+      const unvestedChanged = !balances?.[
+        VestingMetadataType.unvested
+      ]?.compare(entry[1]?.[VestingMetadataType.unvested], 'eq');
+      const vestedChanged = !balances?.[VestingMetadataType.vested]?.compare(
         entry[1]?.[VestingMetadataType.vested],
+        'eq',
       );
 
       if (lockedChanged || unvestedChanged || vestedChanged) {

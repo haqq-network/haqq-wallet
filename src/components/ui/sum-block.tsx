@@ -15,8 +15,8 @@ import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Balance} from '@app/types';
 
 export type SumBlockProps = {
   value: string;
@@ -124,7 +124,7 @@ export const SumBlock = ({
         <Text center color={Color.textBase2} t14 testID={`${testID}_hint`}>
           {getText(I18N.sumBlockAvailable)}:{' '}
           <Text t14 color={Color.textGreen1}>
-            {balance.toFloatString()} {currency}
+            {balance.toBalanceString()}
           </Text>
         </Text>
       )}

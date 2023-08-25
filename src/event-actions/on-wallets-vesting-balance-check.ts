@@ -20,15 +20,15 @@ export async function onWalletsVestingBalanceCheck() {
       )?.filtered?.('type = $0', VestingMetadataType.vested);
 
       const lockedTotal = locked?.reduce?.(
-        (prev, curr) => prev.add(new Balance(curr.amount ?? 0)),
+        (prev, curr) => prev.operate(new Balance(curr.amount ?? 0), 'add'),
         Balance.Empty,
       );
       const unvestedTotal = unvested?.reduce?.(
-        (prev, curr) => prev.add(new Balance(curr.amount ?? 0)),
+        (prev, curr) => prev.operate(new Balance(curr.amount ?? 0), 'add'),
         Balance.Empty,
       );
       const vestedTotal = vested?.reduce?.(
-        (prev, curr) => prev.add(new Balance(curr.amount ?? 0)),
+        (prev, curr) => prev.operate(new Balance(curr.amount ?? 0), 'add'),
         Balance.Empty,
       );
 

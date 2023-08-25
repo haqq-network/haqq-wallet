@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   Button,
@@ -11,13 +11,13 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/types';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {Balance, FEE_AMOUNT} from '@app/services/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {
   account: string;
   onAmount: (amount: number) => void;
-  fee: number;
+  fee: Balance;
   balance: Balance;
 };
 
@@ -26,9 +26,13 @@ export const ProposalDepositForm = ({
   fee,
   balance,
 }: ProposalDepositFormProps) => {
+  const transactionFee = useMemo(() => {
+    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
+    return new Balance(maximumFee);
+  }, [fee]);
   const amounts = useSumAmount(
-    0,
-    balance.toNumber() - Math.max(fee / WEI, 0.00001),
+    Balance.Empty,
+    balance.operate(transactionFee, 'sub'),
   );
 
   const onDone = useCallback(() => {
