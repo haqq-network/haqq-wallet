@@ -13,7 +13,7 @@ import {
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
@@ -24,6 +24,8 @@ import {isSendTransactionError, sleep} from '@app/utils';
 const abi = [
   'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
 ];
+
+const logger = Logger.create('onEarnGetTicket', {stringifyJson: true});
 
 export async function onEarnGetTicket(raffleId: string) {
   const leadingAccount = getLeadingAccount();
@@ -89,14 +91,21 @@ export async function onEarnGetTicket(raffleId: string) {
     const {hash} = await EthNetwork.sendTransaction(signedTx);
     txHash = hash;
   } catch (err) {
-    if (isSendTransactionError(err)) {
-      Logger.log('dont have fee for transaction', JSON.stringify(err, null, 2));
+    if (isSendTransactionError(err) && err.code === 'INSUFFICIENT_FUNDS') {
+      logger.log('dont have fee', err);
       showModal('notEnoughGas', {
         gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
         currentAmount: app.getBalance(leadingAccount.address),
       });
+    } else if (isSendTransactionError(err)) {
+      logger.error('error', err);
+      showModal('error', {
+        title: getText(I18N.modalRewardErrorTitle),
+        description: err?.reason,
+        close: getText(I18N.modalRewardErrorClose),
+      });
     } else {
-      Logger.captureException(err, 'onEarnGetTicket sendTransaction', {
+      logger.captureException(err, 'onEarnGetTicket sendTransaction', {
         raffleId,
       });
       throw err;
