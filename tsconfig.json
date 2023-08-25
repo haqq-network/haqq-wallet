@@ -12,5 +12,8 @@
         "assets/*"
       ],
     }
-  }
+  },
+  "typeRoots": [
+    "./src/types"
+  ],
 }

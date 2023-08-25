@@ -3,14 +3,6 @@ import Decimal from 'decimal.js';
 import {Balance} from '@app/services/balance';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
-jest.mock('react-native-reanimated', () => {
-  return {
-    Easing: {
-      bezierFn: jest.fn,
-    },
-  };
-});
-
 const randomNumber = (
   min: number = Number.MIN_SAFE_INTEGER / 2,
   max: number = Number.MAX_SAFE_INTEGER / 2,

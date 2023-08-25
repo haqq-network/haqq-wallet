@@ -1,5 +1,5 @@
+import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
-import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from 'react-native-dotenv';
 import {Easing} from 'react-native-reanimated';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
