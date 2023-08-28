@@ -15,7 +15,7 @@ export const NftItemDetailsScreen = () => {
     navigation.navigate('transaction', {
       from,
       // TODO:
-      to: Wallet.getAllVisible()[0].address,
+      to: Wallet.getAllVisible()[0]?.address,
       nft: params.item,
     });
   }, [params.item, navigation]);

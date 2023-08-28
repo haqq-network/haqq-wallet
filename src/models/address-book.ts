@@ -118,9 +118,9 @@ export class AddressBook extends Realm.Object {
         {
           ...this.toJSON(),
           ...params,
-          address: this.address,
+          address: this?.address,
           chainId: this.chainId,
-          id: `${this.address.toLowerCase()}-${this.chainId}`,
+          id: `${this?.address.toLowerCase()}-${this.chainId}`,
         },
         Realm.UpdateMode.Modified,
       );

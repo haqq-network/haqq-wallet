@@ -58,7 +58,7 @@ messaging()
 
 const getTestModals = (): Partial<Modals> => {
   const wallets = Wallet.getAllVisible();
-  const firstWalletAddress = wallets[0].address;
+  const firstWalletAddress = wallets[0]?.address;
   const providers = Provider.getAll();
   const firstProviderId = providers[0].id;
   const modals: Partial<Modals> = {
@@ -360,7 +360,7 @@ export const SettingsTestScreen = () => {
     const transport = await getProviderInstanceForWallet(wallet);
 
     const unsignedTx = await EthNetwork.populateTransaction(
-      wallet.address,
+      wallet?.address,
       contract,
       new BN(100000000000000),
       data,
@@ -427,11 +427,11 @@ export const SettingsTestScreen = () => {
   const onSetLeadingAccount = useCallback(() => {
     const wallets = Wallet.getAll().snapshot();
     const walletsKeys = wallets.map(
-      wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
+      wallet => `${wallet.name} ${shortAddress(wallet?.address ?? '', '•')}`,
     );
     showActionSheetWithOptions({options: walletsKeys}, index => {
       if (typeof index === 'number' && wallets[index]) {
-        VariablesString.set('leadingAccount', wallets[index].address);
+        VariablesString.set('leadingAccount', wallets[index]?.address);
         setLeadingAccount(VariablesString.get('leadingAccount'));
       }
     });

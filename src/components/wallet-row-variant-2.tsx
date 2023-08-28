@@ -32,13 +32,13 @@ export const WalletRowVariant2 = ({
   );
 
   const pressCard = useCallback(
-    () => onPress?.(item.address),
-    [item.address, onPress],
+    () => onPress?.(item?.address),
+    [item?.address, onPress],
   );
 
   const addressString = useMemo(
-    () => `•••${splitAddress(item.address)[2]}`,
-    [item.address],
+    () => `•••${splitAddress(item?.address)[2]}`,
+    [item?.address],
   );
 
   return (

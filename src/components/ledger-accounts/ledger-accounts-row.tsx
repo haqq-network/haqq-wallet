@@ -41,7 +41,7 @@ export const LedgerAccountsRow = ({
       </View>
       <DataContent
         title={`${cleanNumber(item.balance)} ISLM`}
-        subtitle={shortAddress(item.address)}
+        subtitle={shortAddress(item?.address)}
       />
       <Spacer />
       {item.exists ? (

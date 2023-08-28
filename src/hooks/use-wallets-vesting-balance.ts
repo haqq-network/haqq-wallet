@@ -14,7 +14,7 @@ export type WalletVestingBalance = {
 
 const getVestingBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getVestingBalance(w.address)]),
+    wallets.map(w => [w?.address, app.getVestingBalance(w?.address)]),
   );
 };
 

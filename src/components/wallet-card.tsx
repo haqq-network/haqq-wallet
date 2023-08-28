@@ -79,7 +79,7 @@ export const WalletCard = memo(
     }, [stakingBalance]);
 
     const onQr = () => {
-      onPressQR(wallet.address);
+      onPressQR(wallet?.address);
     };
 
     const onProtection = () => {
@@ -89,7 +89,7 @@ export const WalletCard = memo(
     };
 
     const onSend = () => {
-      onPressSend(wallet.address);
+      onPressSend(wallet?.address);
     };
 
     const onWalletConnect = () => {
@@ -125,7 +125,7 @@ export const WalletCard = memo(
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
-          <CopyButton style={styles.copyIcon} value={wallet.address}>
+          <CopyButton style={styles.copyIcon} value={wallet?.address}>
             <Text t14 color={Color.textBase3} testID={`${testID}_address`}>
               {formattedAddress}
             </Text>

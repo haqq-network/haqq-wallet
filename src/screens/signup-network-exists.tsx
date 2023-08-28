@@ -31,7 +31,7 @@ export const SignupNetworkExistsScreen = () => {
 
     const account = await accountInfo(nextParams.sssPrivateKey);
 
-    const share = await cloud.getItem(`haqq_${account.address.toLowerCase()}`);
+    const share = await cloud.getItem(`haqq_${account?.address.toLowerCase()}`);
 
     if (!share) {
       nextScreen = 'signupPin';

@@ -38,7 +38,7 @@ export const WalletSelector = ({
     <PopupContainer style={style}>
       {wallets?.map?.(wallet => {
         return (
-          <View key={wallet.address} style={styles.walletRowContainer}>
+          <View key={wallet?.address} style={styles.walletRowContainer}>
             <WalletRow
               item={wallet}
               hideArrow

@@ -52,7 +52,9 @@ export const WidgetRoot = memo(() => {
   const [data, setData] = useState<IWidget[]>([]);
 
   useEffectAsync(async () => {
-    const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
+    const wallets = Wallet.getAll().map(
+      wallet => wallet?.address?.toLowerCase(),
+    );
     const uid = await getUid();
     const response = await Backend.instance.markup({
       wallets,

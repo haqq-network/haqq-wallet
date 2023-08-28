@@ -15,8 +15,8 @@ export async function onWalletsBalanceCheck() {
         `indexer_${app.provider.cosmosChainId}`,
       );
 
-      let accounts = Wallet.getAll().map(w =>
-        Cosmos.addressToBech32(w.address),
+      let accounts = Wallet.getAll().map(
+        w => Cosmos?.addressToBech32(w?.address),
       );
       const updates = await Indexer.instance.updates(
         accounts,
@@ -35,8 +35,8 @@ export async function onWalletsBalanceCheck() {
     } else {
       balances = await Promise.all(
         Wallet.getAll().map(w =>
-          EthNetwork.getBalance(w.address).then(balance => [
-            w.address,
+          EthNetwork.getBalance(w?.address).then(balance => [
+            w?.address,
             balance,
           ]),
         ),

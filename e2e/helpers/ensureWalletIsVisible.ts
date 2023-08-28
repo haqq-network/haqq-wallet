@@ -8,13 +8,13 @@ export async function ensureWalletIsVisible(mnemonic: string) {
 
   const wallet = Wallet.fromMnemonic(mnemonic);
 
-  const shorted = shortAddress(wallet.address.toLowerCase(), '•');
+  const shorted = shortAddress(wallet?.address.toLowerCase(), '•');
 
   await waitFor(
-    element(by.id(`wallets_${wallet.address.toLowerCase()}_card`)),
+    element(by.id(`wallets_${wallet?.address.toLowerCase()}_card`)),
   ).toBeVisible();
 
   await expect(
-    element(by.id(`wallets_${wallet.address.toLowerCase()}_address`)),
+    element(by.id(`wallets_${wallet?.address.toLowerCase()}_address`)),
   ).toHaveText(shorted);
 }

@@ -10,8 +10,8 @@ import {Cosmos} from '@app/services/cosmos';
 export async function onVestingSync() {
   Logger.log('onVestingSync');
   const cosmos = new Cosmos(app.provider!);
-  const addressList = Wallet.getAllVisible().map(w =>
-    Cosmos.addressToBech32(w.address),
+  const addressList = Wallet.getAllVisible().map(
+    w => Cosmos?.addressToBech32(w?.address),
   );
   await sync(addressList, cosmos);
   app.emit(Events.onWalletsVestingBalanceCheck);

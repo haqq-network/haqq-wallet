@@ -65,7 +65,7 @@ export const ProposalDepositFinish = ({
       <Text t3 center style={styles.sum}>
         {cleanNumber(amount)} ISLM
       </Text>
-      <Text t13 center style={styles.address}>
+      <Text t13 center style={styles?.address}>
         {proposal.content.title}
       </Text>
       <NetworkFee fee={fee} />

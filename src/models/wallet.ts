@@ -71,7 +71,7 @@ export class Wallet extends Realm.Object {
 
   get cosmosAddress() {
     if (!this._cosmosAddress) {
-      this._cosmosAddress = Cosmos.addressToBech32(this.address);
+      this._cosmosAddress = Cosmos?.addressToBech32(this?.address);
     }
 
     return this._cosmosAddress;
@@ -82,7 +82,7 @@ export class Wallet extends Realm.Object {
   }
 
   static addressList() {
-    return realm.objects<Wallet>(Wallet.schema.name).map(w => w.address);
+    return realm.objects<Wallet>(Wallet.schema.name).map(w => w?.address);
   }
 
   static getAll() {
@@ -118,7 +118,7 @@ export class Wallet extends Realm.Object {
     walletParams: AddWalletParams,
     name = '',
   ): Promise<Wallet | null> {
-    const exist = Wallet.getById(walletParams.address);
+    const exist = Wallet.getById(walletParams?.address);
     if (exist) {
       throw new Error('wallet_already_exists');
     }
@@ -165,7 +165,7 @@ export class Wallet extends Realm.Object {
     realm.write(() => {
       wallet = realm.create<Wallet>(Wallet.schema.name, {
         data: '',
-        address: walletParams.address.toLowerCase(),
+        address: walletParams?.address.toLowerCase(),
         mnemonicSaved: false,
         socialLinkEnabled: false,
         name: name,
@@ -191,13 +191,39 @@ export class Wallet extends Realm.Object {
   }
 
   static async remove(address: string) {
-    const obj = Wallet.getById(address);
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
-      });
+    try {
+      Logger.log(
+        `Start remove function: ${JSON.stringify({address}, null, 2)}`,
+      );
 
-      await awaitForEventDone(Events.onWalletRemove, address);
+      const obj = Wallet.getById(address);
+      Logger.log(`Wallet Object: ${JSON.stringify({obj}, null, 2)}`);
+
+      if (obj) {
+        Logger.log(`Removing Wallet with Address: ${address}`);
+        realm.write(() => {
+          realm.delete(obj);
+        });
+        Logger.log('Wallet Removed Successfully');
+
+        await awaitForEventDone(Events.onWalletRemove, address);
+        Logger.log(
+          `awaitForEventDone Completed: ${JSON.stringify(
+            {event: Events.onWalletRemove, address},
+            null,
+            2,
+          )}`,
+        );
+      } else {
+        Logger.log('Wallet Not Found');
+      }
+
+      Logger.log('End of remove function.');
+    } catch (e) {
+      Logger.captureException(e, Events.onWalletRemove, {
+        address: address,
+      });
+      Logger.log(`Exception: ${JSON.stringify(e, null, 2)}`);
     }
   }
 
@@ -221,7 +247,7 @@ export class Wallet extends Realm.Object {
         {
           ...this.toJSON(),
           ...params,
-          address: this.address,
+          address: this?.address,
         },
         Realm.UpdateMode.Modified,
       );

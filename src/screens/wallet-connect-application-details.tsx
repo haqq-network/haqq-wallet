@@ -19,8 +19,8 @@ export const WalletConnectApplicationDetailsScreen = () => {
   );
 
   const linkedWallet = useMemo(
-    () => Wallet.getById(account.address),
-    [account.address],
+    () => Wallet.getById(account?.address),
+    [account?.address],
   );
 
   const sessionMetadata = useMemo(
@@ -31,12 +31,12 @@ export const WalletConnectApplicationDetailsScreen = () => {
   useEffect(() => {
     const title = params?.isPopup
       ? getText(I18N.walletConnectTitle)
-      : Wallet.getById(account.address)?.name || account.address;
+      : Wallet.getById(account?.address)?.name || account?.address;
 
     navivation.setOptions({
       title,
     });
-  }, [navivation, params?.isPopup, account.address]);
+  }, [navivation, params?.isPopup, account?.address]);
 
   const handleDisconnectPress = useCallback(async () => {
     try {

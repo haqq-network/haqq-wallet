@@ -9,7 +9,7 @@ import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 /**
  * @example
- *  const adressList = useMemo(() => Wallet.addressList(), []);
+ *  const adressList = useMemo(() => Wallet?.addressList(), []);
  *  const transactionsList = useTransactionList(adressList);
  */
 export function useTransactionList(adressList: string[]) {

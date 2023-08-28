@@ -20,7 +20,7 @@ export async function onAppLoggedIn() {
 
   await Promise.race(
     wallets.map(wallet =>
-      awaitForEventDone(Events.onTransactionsLoad, wallet.address),
+      awaitForEventDone(Events.onTransactionsLoad, wallet?.address),
     ),
   );
 

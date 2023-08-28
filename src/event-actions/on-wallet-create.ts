@@ -19,20 +19,20 @@ export async function onWalletCreate(wallet: Wallet) {
     if (subscription) {
       await Backend.instance.createNotificationSubscription(
         subscription,
-        Cosmos.addressToBech32(wallet.address),
+        Cosmos?.addressToBech32(wallet?.address),
       );
 
       wallet.update({subscription});
     }
 
-    EthNetwork.getBalance(wallet.address).then(balance => {
+    EthNetwork.getBalance(wallet?.address).then(balance => {
       app.onWalletsBalance({
-        [wallet.address]: balance,
+        [wallet?.address]: balance,
       });
     });
 
     await Promise.all([
-      onTransactionsLoad(wallet.address),
+      onTransactionsLoad(wallet?.address),
       onStakingSync(),
       onVestingSync(),
     ]);
@@ -63,7 +63,7 @@ export async function onWalletCreate(wallet: Wallet) {
     }
   } catch (e) {
     Logger.captureException(e, Events.onWalletCreate, {
-      address: wallet.address,
+      address: wallet?.address,
     });
   }
 }

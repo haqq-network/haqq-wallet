@@ -33,7 +33,7 @@ export const WalletsWrapper = () => {
   useEffect(() => {
     setWalletConnectSessions(
       visible.map(wallet =>
-        filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
+        filterWalletConnectSessionsByAddress(activeSessions, wallet?.address),
       ),
     );
   }, [visible, activeSessions]);

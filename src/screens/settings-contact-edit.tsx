@@ -36,7 +36,7 @@ export const SettingsContactEditScreen = () => {
     if (!contact) {
       Contact.create(address, {
         name: newName || inputName,
-        type: ContactType.address,
+        type: ContactType?.address,
         visible: true,
       });
     } else {

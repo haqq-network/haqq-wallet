@@ -282,7 +282,7 @@ export class Cosmos {
       accInfo?.account?.base_vesting_account || accInfo?.account;
 
     return {
-      accountAddress: account.base_account.address,
+      accountAddress: account.base_account?.address,
       sequence: parseInt(account.base_account.sequence as string, 10),
       accountNumber: parseInt(account.base_account.account_number, 10),
       pubkey: base64PublicKey(publicKey),

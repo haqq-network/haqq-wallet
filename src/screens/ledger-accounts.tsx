@@ -44,13 +44,13 @@ export const LedgerAccountsScreen = () => {
             `${ETH_HD_SHORT_PATH}/${i}`,
           );
 
-          const balance = await EthNetwork.getBalance(data.address);
+          const balance = await EthNetwork.getBalance(data?.address);
 
           addressList.push({
-            address: data.address.toLowerCase(),
+            address: data?.address.toLowerCase(),
             hdPath: `${ETH_HD_SHORT_PATH}/${i}`,
             publicKey: data.publicKey,
-            exists: Wallet.addressList().includes(data.address.toLowerCase()),
+            exists: Wallet?.addressList().includes(data?.address.toLowerCase()),
             balance: balance.toFloat(),
           });
         }
@@ -77,7 +77,7 @@ export const LedgerAccountsScreen = () => {
     (item: LedgerAccountItem) => {
       navigation.navigate('ledgerVerify', {
         nextScreen: app.onboarded ? 'ledgerStoreWallet' : 'onboardingSetupPin',
-        address: item.address,
+        address: item?.address,
         hdPath: item.hdPath,
         publicKey: item.publicKey,
         deviceId,

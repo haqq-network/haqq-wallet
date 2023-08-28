@@ -132,7 +132,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       const uid = await getUid();
 
       const resp = await Backend.instance.captchaRequest(
-        Wallet.getAll().map(wallet => wallet.address),
+        Wallet.getAll().map(wallet => wallet?.address),
         uid,
       );
 

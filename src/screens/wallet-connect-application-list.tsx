@@ -11,7 +11,7 @@ import {Wallet} from '@app/models/wallet';
 export const WalletConnectApplicationListScreen = () => {
   const navivation = useTypedNavigation();
   const {params} = useTypedRoute<'walletConnectApplicationList'>();
-  const sessions = useWalletConnectFilteredSessionsByAddress(params.address);
+  const sessions = useWalletConnectFilteredSessionsByAddress(params?.address);
 
   const handleAppPress = useCallback(
     (session: SessionTypes.Struct) => {
@@ -40,12 +40,12 @@ export const WalletConnectApplicationListScreen = () => {
   useEffect(() => {
     const title = params?.isPopup
       ? getText(I18N.walletConnectTitle)
-      : Wallet.getById(params.address)?.name || params.address;
+      : Wallet.getById(params?.address)?.name || params?.address;
 
     navivation.setOptions({
       title,
     });
-  }, [params.address, navivation, params?.isPopup]);
+  }, [params?.address, navivation, params?.isPopup]);
 
   return (
     <WalletConnectApplicationList

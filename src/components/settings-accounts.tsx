@@ -36,7 +36,7 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
     <FlatList
       data={rows}
       renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
-      keyExtractor={(wallet: Wallet) => wallet.address}
+      keyExtractor={(wallet: Wallet) => wallet?.address}
       style={styles.container}
     />
   );

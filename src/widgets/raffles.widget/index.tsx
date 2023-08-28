@@ -20,7 +20,7 @@ export const RafflesWidgetWrapper = memo(() => {
     try {
       let uid = await getUid();
       const response = await Backend.instance.contests(
-        Wallet.addressList(),
+        Wallet?.addressList(),
         uid,
       );
       setRaffles(response.sort((a, b) => b.start_at - a.start_at));
@@ -28,7 +28,7 @@ export const RafflesWidgetWrapper = memo(() => {
       Logger.captureException(
         err,
         'RafflesWidgetWrapper.loadRaffles',
-        Wallet.addressList(),
+        Wallet?.addressList(),
       );
     }
   }, []);

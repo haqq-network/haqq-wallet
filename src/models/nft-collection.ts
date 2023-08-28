@@ -75,7 +75,7 @@ export class NftCollection extends Realm.Object {
         {
           ...this.toJSON(),
           ...params,
-          address: this.address,
+          address: this?.address,
         },
         Realm.UpdateMode.Modified,
       );

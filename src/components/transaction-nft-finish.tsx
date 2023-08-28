@@ -72,11 +72,11 @@ export const TransactionNftFinish = ({
       <Spacer height={8} />
       <View style={styles.contactLine}>
         {contact?.name && (
-          <Text t13 center style={styles.address}>
+          <Text t13 center style={styles?.address}>
             {contact.name + ' '}
           </Text>
         )}
-        <Text t14 center style={styles.address}>
+        <Text t14 center style={styles?.address}>
           {short}
         </Text>
       </View>

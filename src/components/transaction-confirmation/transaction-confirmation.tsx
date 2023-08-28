@@ -78,8 +78,8 @@ export const TransactionConfirmation = ({
           {contact.name}
         </Text>
       )}
-      <Text t11 color={Color.textBase1} center style={styles.address}>
-        <Text t11 color={Color.textBase1} center style={styles.address}>
+      <Text t11 color={Color.textBase1} center style={styles?.address}>
+        <Text t11 color={Color.textBase1} center style={styles?.address}>
           {splittedTo[0]}
         </Text>
         <Text t11 color={Color.textBase2}>

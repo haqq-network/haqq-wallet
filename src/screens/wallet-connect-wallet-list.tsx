@@ -13,7 +13,7 @@ export const WalletConnectWalletListScreen = () => {
   const wallets = useMemo(
     () =>
       accounts
-        ?.map?.(item => Wallet.getById(item.address) as Wallet)
+        ?.map?.(item => Wallet.getById(item?.address) as Wallet)
         .filter(item => !!item),
     [accounts],
   );

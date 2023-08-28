@@ -74,7 +74,7 @@ export async function onEarnGetTicket(raffleId: string) {
   ]);
 
   const unsignedTx = await EthNetwork.populateTransaction(
-    leadingAccount.address,
+    leadingAccount?.address,
     raffleId,
     new BN(0),
     data,
@@ -95,7 +95,7 @@ export async function onEarnGetTicket(raffleId: string) {
       logger.log('dont have fee', err);
       showModal('notEnoughGas', {
         gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
-        currentAmount: app.getBalance(leadingAccount.address),
+        currentAmount: app.getBalance(leadingAccount?.address),
       });
     } else if (isSendTransactionError(err)) {
       logger.error('error', err);

@@ -16,7 +16,7 @@ export const LedgerVerifyScreen = () => {
     // @ts-ignore
     return navigation.navigate(route.params.nextScreen ?? 'ledgerStore', {
       type: 'ledger',
-      address: route.params.address,
+      address: route.params?.address,
       hdPath: route.params.hdPath,
       publicKey: route.params.publicKey,
       deviceId: route.params.deviceId,
@@ -25,7 +25,7 @@ export const LedgerVerifyScreen = () => {
   }, [
     navigation,
     route.params.nextScreen,
-    route.params.address,
+    route.params?.address,
     route.params.hdPath,
     route.params.publicKey,
     route.params.deviceId,
@@ -45,7 +45,7 @@ export const LedgerVerifyScreen = () => {
 
         const address = await provider.confirmAddress(route.params.hdPath);
 
-        if (address && address.toLowerCase() === route.params.address) {
+        if (address && address.toLowerCase() === route.params?.address) {
           onDone();
         }
       } catch (e) {
@@ -60,9 +60,9 @@ export const LedgerVerifyScreen = () => {
     route.params.deviceId,
     route.params.hdPath,
     onDone,
-    route.params.address,
+    route.params?.address,
     navigation,
   ]);
 
-  return <LedgerVerify address={route.params.address} />;
+  return <LedgerVerify address={route.params?.address} />;
 };

@@ -21,7 +21,7 @@ export const NftViewerCollectionPreviewList = ({
   onPress,
   scrollEnabled = true,
 }: NftViewerCollectionPreviewListProps) => {
-  const keyExtractor = useCallback((item: NftCollection) => item.address, []);
+  const keyExtractor = useCallback((item: NftCollection) => item?.address, []);
 
   const renderItemSeparatorComponent = useCallback(
     () => <Spacer width={12} height={12} />,

@@ -49,7 +49,7 @@ const DisplayMap: {[key: string]: IMapItem} = {
 export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
   const isSend = useMemo(() => {
     return wallets
-      .map(wallet => wallet.address.toLowerCase())
+      .map(wallet => wallet?.address.toLowerCase())
       .includes(item.from.toLowerCase());
   }, [wallets, item.from]);
   const DisplayMapItem = useMemo(
@@ -63,7 +63,7 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
     return wallets.find(
       wallet =>
         item[isSend ? 'from' : 'to'].toLowerCase() ===
-        wallet.address.toLowerCase(),
+        wallet?.address.toLowerCase(),
     );
   }, [isSend, item, wallets]);
   const subtitle = useMemo(

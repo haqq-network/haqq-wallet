@@ -117,7 +117,7 @@ export const TransactionAddress = ({
   }, [setAddress]);
 
   const myAccountsKeyExtractor = useCallback(
-    (item: Wallet) => item.address,
+    (item: Wallet) => item?.address,
     [],
   );
 
@@ -126,7 +126,7 @@ export const TransactionAddress = ({
       <>
         <WalletRow
           item={item}
-          onPress={() => onPressAddress(item.address)}
+          onPress={() => onPressAddress(item?.address)}
           type={WalletRowTypes.variant4}
         />
         <Spacer width={8} />

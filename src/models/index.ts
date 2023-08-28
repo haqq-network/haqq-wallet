@@ -294,7 +294,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.address = newObject.address.toLowerCase();
+        newObject.address = newObject?.address.toLowerCase();
 
         if (newObject.rootAddress) {
           newObject.rootAddress = newObject.rootAddress.toLowerCase();

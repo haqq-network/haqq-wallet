@@ -22,7 +22,7 @@ export async function onPushSubscriptionTransactionsSubscribe() {
       wallets.map(async w =>
         Backend.instance.createNotificationSubscription(
           subscription,
-          cosmosAddress(w.address, COSMOS_PREFIX),
+          cosmosAddress(w?.address, COSMOS_PREFIX),
         ),
       ),
     );

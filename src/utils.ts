@@ -348,7 +348,7 @@ export const getWalletConnectAccountsFromSession = (
     });
   });
 
-  return accounts.flat().filter(it => utils.isAddress(it.address));
+  return accounts.flat().filter(it => utils.isAddress(it?.address));
 };
 
 export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
@@ -357,7 +357,7 @@ export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
   sessions.forEach(session => {
     const accounts = getWalletConnectAccountsFromSession(session);
     accounts.forEach(account => {
-      accountsMap[account.address] = account;
+      accountsMap[account?.address] = account;
     });
   });
 

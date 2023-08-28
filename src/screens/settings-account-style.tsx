@@ -9,7 +9,7 @@ export const SettingsAccountStyleScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'settingsAccountStyle'>();
 
-  const wallet = useWallet(route.params.address) as Wallet;
+  const wallet = useWallet(route.params?.address) as Wallet;
   const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(

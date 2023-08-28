@@ -7,7 +7,7 @@ import {Wallet} from '@app/models/wallet';
 import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/transactions-short-widget';
 
 export const TransactionsShortWidgetWrapper = memo(() => {
-  const wallets = Wallet.addressList();
+  const wallets = Wallet?.addressList();
   const transactions = Transaction.getAll().snapshot();
   const navigation = useTypedNavigation();
 

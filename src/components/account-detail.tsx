@@ -32,12 +32,12 @@ export const AccountDetail = ({wallet, onClose}: DetailsQrModalProps) => {
   const {width} = useWindowDimensions();
 
   const onCopy = useCallback(() => {
-    Clipboard.setString(wallet.address);
+    Clipboard.setString(wallet?.address);
     sendNotification(I18N.notificationCopied);
   }, [wallet]);
 
   const onShare = useCallback(() => {
-    Share.share({message: wallet.address});
+    Share.share({message: wallet?.address});
   }, [wallet]);
 
   return (
@@ -67,7 +67,7 @@ export const AccountDetail = ({wallet, onClose}: DetailsQrModalProps) => {
           <QRCode
             ecl={'H'}
             logo={require('@assets/images/qr-logo.png')}
-            value={`haqq:${wallet.address}`}
+            value={`haqq:${wallet?.address}`}
             size={width - 169}
             getRef={c => (svg.current = c)}
             logoSize={width / 5.86}
@@ -77,8 +77,8 @@ export const AccountDetail = ({wallet, onClose}: DetailsQrModalProps) => {
         <Text t14 style={page.title}>
           {wallet?.name}
         </Text>
-        <Text t10 style={page.address}>
-          {wallet.address}
+        <Text t10 style={page?.address}>
+          {wallet?.address}
         </Text>
       </LinearGradient>
 

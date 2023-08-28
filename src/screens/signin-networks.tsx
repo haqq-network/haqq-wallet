@@ -59,7 +59,7 @@ export const SignInNetworksScreen = () => {
         const account = await accountInfo(creds.privateKey as string);
 
         const share = await cloud.getItem(
-          `haqq_${account.address.toLowerCase()}`,
+          `haqq_${account?.address.toLowerCase()}`,
         );
 
         if (!share) {

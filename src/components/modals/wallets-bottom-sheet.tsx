@@ -33,7 +33,7 @@ export function WalletsBottomSheet({
 
   useEffect(() => {
     if (autoSelectWallet && wallets.length === 1) {
-      onPressWallet(wallets[0].address);
+      onPressWallet(wallets[0]?.address);
       onClose?.();
     }
 

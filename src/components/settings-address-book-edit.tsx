@@ -70,7 +70,7 @@ export const SettingsAddressBookEdit = memo(
         <View style={styles.spaceInput} />
         <Input
           multiline
-          i18nLabel={I18N.address}
+          i18nLabel={I18N?.address}
           editable={false}
           value={initAddress}
         />

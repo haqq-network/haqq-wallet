@@ -62,7 +62,7 @@ export const TransactionNftFinishScreen = () => {
           } else {
             Contact.create(transaction.to, {
               name: value,
-              type: ContactType.address,
+              type: ContactType?.address,
               visible: true,
             });
             sendNotification(I18N.transactionFinishContactAdded);

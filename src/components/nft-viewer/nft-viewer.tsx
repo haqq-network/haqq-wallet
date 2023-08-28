@@ -136,7 +136,7 @@ export const NftViewer = ({
     [navigation],
   );
 
-  const keyExtractor = useCallback((item: NftCollection) => item.address, []);
+  const keyExtractor = useCallback((item: NftCollection) => item?.address, []);
 
   const renderItem: SectionListRenderItem<NftCollection, SectionElement> =
     useCallback(

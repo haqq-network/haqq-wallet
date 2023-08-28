@@ -20,7 +20,7 @@ export const WalletConnectWalletList = ({
       {wallets?.map?.(item => {
         return (
           <WalletRow
-            key={item.address}
+            key={item?.address}
             onPress={handleWalletPress}
             item={item}
           />

@@ -13,7 +13,7 @@ export type WalletBalance = {
 
 const getBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getBalance(w.address)]),
+    wallets.map(w => [w?.address, app.getBalance(w?.address)]),
   );
 };
 

@@ -28,7 +28,7 @@ export const LedgerStoreWalletScreen = () => {
           {
             type: WalletType.ledgerBt,
             path: route.params.hdPath,
-            address: route.params.address,
+            address: route.params?.address,
             accountId: route?.params?.deviceId,
           },
           `${route?.params?.deviceName} #${lastIndex}`,

@@ -72,7 +72,7 @@ export const StakingUnDelegateFinish = ({
       <Text t3 center style={styles.sum}>
         - {cleanNumber(amount)} ISLM
       </Text>
-      <Text t13 center style={styles.address}>
+      <Text t13 center style={styles?.address}>
         {validator.description.moniker}
       </Text>
       <NetworkFee fee={fee} />

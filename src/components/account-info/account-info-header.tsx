@@ -49,8 +49,8 @@ export const AccountInfoHeader = ({
   onReceive,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
-    () => shortAddress(wallet.address, '•'),
-    [wallet.address],
+    () => shortAddress(wallet?.address, '•'),
+    [wallet?.address],
   );
 
   const totalBalance = useMemo(
@@ -71,7 +71,7 @@ export const AccountInfoHeader = ({
         />
         <View style={styles.headerContent}>
           <Text t3 i18n={I18N.amountISLM} i18params={{amount: totalBalance}} />
-          <CopyButton value={wallet.address} style={styles.copyButton}>
+          <CopyButton value={wallet?.address} style={styles.copyButton}>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
             </Text>

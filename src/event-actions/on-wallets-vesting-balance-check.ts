@@ -38,7 +38,7 @@ export async function onWalletsVestingBalanceCheck() {
         [VestingMetadataType.vested]: vestedTotal,
       };
 
-      return [w.address, balance];
+      return [w?.address, balance];
     });
 
     await app.onWalletsVestingBalance(Object.fromEntries(balances));

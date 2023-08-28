@@ -39,14 +39,14 @@ export async function awaitForWallet({
   autoSelectWallet = true,
 }: AwaitForWalletParams): Promise<string> {
   if (autoSelectWallet && wallets.length === 1) {
-    return Promise.resolve(wallets[0].address);
+    return Promise.resolve(wallets[0]?.address);
   }
 
   if (suggestedAddress) {
     const wallet = Wallet.getById(suggestedAddress.toLowerCase());
 
     if (wallet) {
-      return Promise.resolve(wallet.address);
+      return Promise.resolve(wallet?.address);
     }
   }
 

@@ -13,7 +13,7 @@ import {Balance} from '@app/services/balance';
 export const TotalValueInfoScreen = () => {
   const navigation = useTypedNavigation();
   const wallets = useWalletsVisible();
-  const adressList = useMemo(() => Wallet.addressList(), []);
+  const adressList = useMemo(() => Wallet?.addressList(), []);
   const transactionsList = useTransactionList(adressList);
   const balances = useWalletsBalance(wallets);
   const stakingBalances = useWalletsStakingBalance(wallets);

@@ -79,7 +79,7 @@ export const DetailsQrModal = ({address, onClose}: Modals['cardDetailsQr']) => {
         <Text t14 style={page.title}>
           {wallet?.name}
         </Text>
-        <Text t10 style={page.address}>
+        <Text t10 style={page?.address}>
           {address}
         </Text>
       </LinearGradient>

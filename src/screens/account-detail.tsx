@@ -7,7 +7,7 @@ export const AccountDetailScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'accountDetail'>();
 
-  const wallet = useWallet(route.params.address);
+  const wallet = useWallet(route.params?.address);
 
   const onCloseBottomSheet = () => {
     navigation.canGoBack() && navigation.goBack();

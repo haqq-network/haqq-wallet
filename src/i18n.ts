@@ -885,7 +885,7 @@ const en: Record<I18N, string> = {
   [I18N.yes]: 'Yes',
   [I18N.no]: 'No',
   [I18N.name]: 'Name',
-  [I18N.address]: 'Address',
+  [I18N?.address]: 'Address',
   [I18N.accept]: 'Accept',
   [I18N.cancel]: 'Cancel',
   [I18N.save]: 'Save',

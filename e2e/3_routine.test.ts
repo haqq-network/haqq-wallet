@@ -83,7 +83,7 @@ describe('Routine', () => {
 
     const amountInEther = '0.011';
     const tx = {
-      to: wallet.address,
+      to: wallet?.address,
       value: utils.parseEther(amountInEther),
     };
 
@@ -91,13 +91,13 @@ describe('Routine', () => {
 
     await sleep(6000);
 
-    await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
+    await element(by.id(`wallets_${wallet?.address.toLowerCase()}_send`)).tap();
 
     await waitFor(element(by.id('transaction_address'))).toBeVisible();
 
     const input_address = element(by.id('transaction_address_input'));
     await input_address.tap();
-    await input_address.typeText(milkWallet.address);
+    await input_address.typeText(milkWallet?.address);
 
     await element(by.id('transaction_address_next')).tap();
 

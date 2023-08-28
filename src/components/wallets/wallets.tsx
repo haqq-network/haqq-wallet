@@ -79,13 +79,13 @@ export const Wallets = ({
         onScroll={scrollHandler}
         style={styles.scroll}>
         {wallets.map((w, i) => (
-          <CarouselItem index={i} pan={pan} key={w.address}>
+          <CarouselItem index={i} pan={pan} key={w?.address}>
             <WalletCard
-              testID={`${testID}_${w.address}`}
+              testID={`${testID}_${w?.address}`}
               wallet={w}
-              balance={balance[w.address]}
-              stakingBalance={stakingBalance[w.address]}
-              vestingBalance={vestingBalance[w.address]}
+              balance={balance[w?.address]}
+              stakingBalance={stakingBalance[w?.address]}
+              vestingBalance={vestingBalance[w?.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               onPressSend={onPressSend}
@@ -108,7 +108,7 @@ export const Wallets = ({
       <Spacer height={9} />
       <View style={styles.sub}>
         {wallets.map((w, i) => (
-          <Dot pan={pan} index={i} key={w.address} />
+          <Dot pan={pan} index={i} key={w?.address} />
         ))}
         <Plus pan={pan} index={wallets.length} />
       </View>

@@ -32,7 +32,7 @@ export function getLeadingAccount() {
       .filtered(`type = '${walletType}' and isHidden = false`)
       .sorted('path');
     if (w.length) {
-      leadingAccount = w[0].address;
+      leadingAccount = w[0]?.address;
     }
     index += 1;
   }

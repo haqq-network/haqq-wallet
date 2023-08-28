@@ -27,13 +27,13 @@ export const WalletRowVariant3 = ({
     [item.isHidden, style],
   );
   const pressCard = useCallback(
-    () => onPress?.(item.address),
-    [item.address, onPress],
+    () => onPress?.(item?.address),
+    [item?.address, onPress],
   );
 
   const addressString = useMemo(
-    () => item.address.replace(/^0x/, '').slice(0, 4),
-    [item.address],
+    () => item?.address.replace(/^0x/, '').slice(0, 4),
+    [item?.address],
   );
 
   return (

@@ -13,7 +13,7 @@ export type WalletStakingBalance = {
 
 const getStakingBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getStakingBalance(w.address)]),
+    wallets.map(w => [w?.address, app.getStakingBalance(w?.address)]),
   );
 };
 

@@ -18,7 +18,7 @@ export const TransactionDetailScreen = () => {
   );
 
   const source = useMemo(() => {
-    const visible = Wallet.getAllVisible().map(w => w.address);
+    const visible = Wallet.getAllVisible().map(w => w?.address);
 
     return visible.includes(transaction?.from.toLowerCase() ?? '')
       ? TransactionSource.send

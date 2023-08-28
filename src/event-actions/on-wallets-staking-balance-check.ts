@@ -16,7 +16,7 @@ export async function onWalletsStakingBalanceCheck() {
         (prev, curr) => prev.operate(curr.amountHex, 'add'),
         Balance.Empty,
       );
-      return [w.address, total];
+      return [w?.address, total];
     });
 
     await app.onWalletsStakingBalance(Object.fromEntries(balances));

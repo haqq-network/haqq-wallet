@@ -38,7 +38,7 @@ export const HomeEarnScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      (acc, w) => acc.operate(app.getBalance(w?.address), 'add'),
       Balance.Empty,
     ),
   });
@@ -71,7 +71,7 @@ export const HomeEarnScreen = () => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+        (acc, w) => acc.operate(app.getBalance(w?.address), 'add'),
         Balance.Empty,
       );
 
@@ -97,7 +97,7 @@ export const HomeEarnScreen = () => {
       !isInitialCall && setIsRafflesLoading(true);
       let uid = await getUid();
       const response = await Backend.instance.contests(
-        Wallet.addressList(),
+        Wallet?.addressList(),
         uid,
       );
       setRaffles(response.sort((a, b) => b.start_at - a.start_at));
@@ -105,7 +105,7 @@ export const HomeEarnScreen = () => {
       Logger.captureException(
         err,
         'HomeEarnScreen.loadRaffles',
-        Wallet.addressList(),
+        Wallet?.addressList(),
       );
     }
     !isInitialCall && setIsRafflesLoading(false);

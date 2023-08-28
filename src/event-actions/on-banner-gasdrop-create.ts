@@ -26,7 +26,7 @@ export async function onBannerGasdropCreate() {
     const link_info = await Airdrop.instance.gasdrop_code(
       AIRDROP_GASDROP_CAMPAIGN_ID,
       AIRDROP_GASDROP_SECRET,
-      account.address,
+      account?.address,
     );
 
     const info = await Airdrop.instance.campaign_code(link_info.code);

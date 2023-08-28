@@ -24,8 +24,8 @@ export const WalletRowVariant1 = ({
   );
 
   const pressCard = useCallback(
-    () => onPress?.(item.address),
-    [item.address, onPress],
+    () => onPress?.(item?.address),
+    [item?.address, onPress],
   );
 
   return (
@@ -45,7 +45,7 @@ export const WalletRowVariant1 = ({
       <DataContent
         style={styles.info}
         title={item.name}
-        subtitle={shortAddress(item.address)}
+        subtitle={shortAddress(item?.address)}
       />
     </MenuNavigationButton>
   );
