@@ -64,6 +64,10 @@ export const RaffleDetails = ({
     [item.locked_duration],
   );
   const showResult = useMemo(() => new Date() > closed_at, [closed_at]);
+  const showPrewIslmCount = useMemo(
+    () => prevIslmCount > 0 && item?.winner_tickets > 0,
+    [item?.winner_tickets, prevIslmCount],
+  );
 
   const handlePressGetTicket = useCallback(async () => {
     try {
@@ -106,34 +110,36 @@ export const RaffleDetails = ({
 
       <Spacer height={48} />
 
-      <Separator />
-      <Spacer height={8} />
-      {prevIslmCount > 0 && (
-        <View style={styles.row}>
-          <Text
-            t14
-            numberOfLines={1}
-            i18n={I18N.raffleDetailsPreviousRaffle}
-            color={Color.textBase2}
-          />
-          <Spacer width={4} />
-          <Image
-            style={styles.islmIcon}
-            source={require('@assets/images/islm_icon.png')}
-          />
-          <Text
-            t14
-            numberOfLines={1}
-            i18n={I18N.raffleDetailsPreviousRaffleDetails}
-            i18params={{
-              islm: cleanNumber(prevIslmCount),
-              tickets: `${prevTicketsCount} `,
-            }}
-          />
-        </View>
+      {showPrewIslmCount && (
+        <>
+          <Separator />
+          <Spacer height={8} />
+          <View style={styles.row}>
+            <Text
+              t14
+              numberOfLines={1}
+              i18n={I18N.raffleDetailsPreviousRaffle}
+              color={Color.textBase2}
+            />
+            <Spacer width={4} />
+            <Image
+              style={styles.islmIcon}
+              source={require('@assets/images/islm_icon.png')}
+            />
+            <Text
+              t14
+              numberOfLines={1}
+              i18n={I18N.raffleDetailsPreviousRaffleDetails}
+              i18params={{
+                islm: cleanNumber(prevIslmCount),
+                tickets: `${prevTicketsCount} `,
+              }}
+            />
+          </View>
+          <Spacer height={8} />
+          <Separator />
+        </>
       )}
-      <Spacer height={8} />
-      <Separator />
 
       <Spacer flex={1} />
 
