@@ -72,7 +72,10 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
           />
         ) : (
           <LinearGradient
-            colors={[banner.backgroundColorFrom, banner.backgroundColorTo]}
+            colors={[
+              banner.backgroundColorFrom || getColor(Color.bg1),
+              banner.backgroundColorTo || getColor(Color.bg1),
+            ]}
             start={GRADIENT_START}
             end={GRADIENT_END}
             style={styles.inner}
@@ -131,7 +134,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
 };
 
 const styles = StyleSheet.create({
-  removePaddingVertical: {paddingVertical: 0},
+  removePaddingVertical: {paddingVertical: 0, marginHorizontal: 20},
   removeLeftMargin: {marginLeft: -20},
   container: {
     borderRadius: 16,
