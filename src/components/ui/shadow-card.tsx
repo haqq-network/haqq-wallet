@@ -3,8 +3,9 @@ import React, {ReactNode} from 'react';
 import {TouchableOpacity, TouchableOpacityProps} from 'react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {SHADOW_COLOR_3} from '@app/variables/common';
+import {SHADOW_COLOR_3_DARK, SHADOW_COLOR_3_LIGHT} from '@app/variables/common';
 
 type Props = {
   children: ReactNode;
@@ -31,14 +32,15 @@ export const ShadowCard = ({
 const styles = createTheme({
   wrapper: {
     borderRadius: 13,
-    shadowColor: SHADOW_COLOR_3,
+    shadowColor:
+      app.theme === 'dark' ? SHADOW_COLOR_3_DARK : SHADOW_COLOR_3_LIGHT,
     shadowOffset: {
       width: 0,
       height: 6,
     },
     backgroundColor: Color.bg1,
     shadowRadius: 24,
-    shadowOpacity: 0.15,
+    shadowOpacity: app.theme === 'dark' ? 1 : 0.1,
     elevation: 13,
 
     paddingVertical: 16,
