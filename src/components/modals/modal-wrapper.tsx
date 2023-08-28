@@ -31,6 +31,7 @@ import {Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
 import {LockedTokensInfo} from './locked-tokens-info';
+import {NotEnoughGas} from './not-enough-gas';
 
 export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
@@ -116,6 +117,8 @@ export const ModalWrapper = ({
         return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
       case 'lockedTokensInfo':
         return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
+      case 'notEnoughGas':
+        return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

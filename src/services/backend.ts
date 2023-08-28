@@ -112,6 +112,33 @@ export class Backend {
     return resp;
   }
 
+  async contestsResult(
+    contest: string,
+    signature: string,
+    tx_hash: string | null,
+  ): Promise<{signature: string; participant: string; deadline: number}> {
+    const request = await fetch(
+      `${this.getRemoteUrl()}contests/${contest}/result`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          tx_hash,
+          signature,
+        }),
+      },
+    );
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
   async captchaRequest(
     wallets: string[],
     uid: string,

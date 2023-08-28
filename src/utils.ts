@@ -31,6 +31,7 @@ import {
   EthType,
   EthTypedData,
   PartialJsonRpcRequest,
+  SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
@@ -606,6 +607,11 @@ export function isValidJSON(
 
 export function isError(err: any): err is Error {
   return err instanceof Error || typeof err?.message === 'string';
+}
+
+export function isSendTransactionError(err: any): err is SendTransactionError {
+  const e = err as SendTransactionError;
+  return typeof e?.transaction?.to === 'string' && typeof e.code === 'string';
 }
 
 export function isAbortControllerError(err: any): err is Error {

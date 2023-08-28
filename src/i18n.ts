@@ -729,6 +729,15 @@ export enum I18N {
   transactionWidgetShortTitle,
   transactionPositiveAmountText,
   transactionNegativeAmountText,
+  modalDontHaveFeeError,
+  modalDontHaveFeeClose,
+  notEnoughGasDescription,
+  notEnoughGasTitle,
+  notEnoughGasDescription5,
+  notEnoughGasDescription4,
+  notEnoughGasDescription2,
+  notEnoughGasDescription1,
+  notEnoughGasDescription3,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1592,4 +1601,14 @@ const en: Record<I18N, string> = {
     'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
   [I18N.totalValueScreenTitle]: 'Total value',
   [I18N.totalValueAccount]: 'Total account value',
+  [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
+  [I18N.modalDontHaveFeeClose]: 'Close',
+  [I18N.notEnoughGasTitle]: 'Not enough gas',
+  [I18N.notEnoughGasDescription]:
+    'Currently, a transaction **requires {{gasLimit}} aISLM**, but **you only have {{currentAmount}} aISLM** on your account.',
+  [I18N.notEnoughGasDescription1]: 'Currently, a transaction ',
+  [I18N.notEnoughGasDescription2]: 'requires {{gasLimit}} aISLM',
+  [I18N.notEnoughGasDescription3]: ', but ',
+  [I18N.notEnoughGasDescription4]: 'you only have {{currentAmount}} aISLM',
+  [I18N.notEnoughGasDescription5]: ' on your account.',
 };

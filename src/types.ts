@@ -89,6 +89,10 @@ export type TransactionResponse = Awaited<
   ReturnType<EthNetwork['transferTransaction']>
 >;
 
+export type SendTransactionRequest = Awaited<
+  ReturnType<(typeof EthNetwork)['sendTransaction']>
+>;
+
 export type WalletInitialData =
   | {
       type: 'mnemonic';
@@ -875,6 +879,11 @@ export type ErrorModalImage =
 
 export type Modals = {
   splash: undefined;
+  notEnoughGas: {
+    gasLimit: Balance;
+    currentAmount: Balance;
+    onClose?: () => void;
+  };
   pin: undefined;
   raffleAgreement: {
     onClose?: () => void;
@@ -1109,3 +1118,14 @@ export interface MarkupResponse {
   updated_at: string;
   version: number;
 }
+
+export type SendTransactionError = {
+  reason: string;
+  code: string;
+  error: {
+    code: number;
+  };
+  method: string;
+  transaction: SendTransactionRequest;
+  transactionHash: string;
+};

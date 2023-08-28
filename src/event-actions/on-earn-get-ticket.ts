@@ -8,19 +8,24 @@ import {
   awaitForLedger,
   awaitForPopupClosed,
   getProviderInstanceForWallet,
+  showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {WalletType} from '@app/types';
+import {isSendTransactionError, sleep} from '@app/utils';
 
 const abi = [
   'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
 ];
+
+const logger = Logger.create('onEarnGetTicket', {stringifyJson: true});
 
 export async function onEarnGetTicket(raffleId: string) {
   const leadingAccount = getLeadingAccount();
@@ -81,11 +86,34 @@ export async function onEarnGetTicket(raffleId: string) {
     unsignedTx,
   );
 
-  const resp = await EthNetwork.sendTransaction(signedTx);
-  const r = iface.decodeFunctionData('participateUser', resp.data);
+  let txHash = null;
+  try {
+    const {hash} = await EthNetwork.sendTransaction(signedTx);
+    txHash = hash;
+  } catch (err) {
+    if (isSendTransactionError(err) && err.code === 'INSUFFICIENT_FUNDS') {
+      logger.log('dont have fee', err);
+      showModal('notEnoughGas', {
+        gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
+        currentAmount: app.getBalance(leadingAccount.address),
+      });
+    } else if (isSendTransactionError(err)) {
+      logger.error('error', err);
+      showModal('error', {
+        title: getText(I18N.modalRewardErrorTitle),
+        description: err?.reason,
+        close: getText(I18N.modalRewardErrorClose),
+      });
+    } else {
+      logger.captureException(err, 'onEarnGetTicket sendTransaction', {
+        raffleId,
+      });
+      throw err;
+    }
+  }
 
-  Logger.log('tx', JSON.stringify(r));
-
+  await sleep(6000);
+  await Backend.instance.contestsResult(raffleId, response.signature, txHash);
   sendNotification(I18N.earnTicketRecieved);
   app.emit(Events.onRaffleTicket, response);
   return response;
