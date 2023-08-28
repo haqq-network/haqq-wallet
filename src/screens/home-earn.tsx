@@ -10,6 +10,7 @@ import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
+import {prepareRaffles} from '@app/helpers/prepare-raffles';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {
@@ -100,7 +101,7 @@ export const HomeEarnScreen = () => {
         Wallet.addressList(),
         uid,
       );
-      setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+      setRaffles(prepareRaffles(response));
     } catch (err) {
       Logger.captureException(
         err,
