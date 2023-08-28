@@ -1,7 +1,8 @@
 import React, {useCallback, useRef} from 'react';
 
-import {Share} from 'react-native';
+import {Linking, Share} from 'react-native';
 import WebView from 'react-native-webview';
+import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {InAppBrowser} from '@app/components/in-app-browser';
 import {openURL} from '@app/helpers';
@@ -32,6 +33,15 @@ export const InAppBrowserScreen = () => {
     openURL(url);
   }, []);
 
+  const onFileDownload = useCallback(
+    ({nativeEvent: {downloadUrl}}: FileDownloadEvent) => {
+      if (downloadUrl) {
+        Linking.openURL(downloadUrl);
+      }
+    },
+    [],
+  );
+
   return (
     <InAppBrowser
       url={route.params?.url}
@@ -42,6 +52,7 @@ export const InAppBrowserScreen = () => {
       onPressGoForward={onPressGoForward}
       onPressExport={onPressExport}
       onPressBrowser={onPressBrowser}
+      onFileDownload={onFileDownload}
     />
   );
 };

@@ -5,6 +5,7 @@ import {parseUri} from '@walletconnect/utils';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
+  FileDownloadEvent,
   ShouldStartLoadRequest,
   WebViewNavigation,
   WebViewNavigationEvent,
@@ -37,6 +38,7 @@ type InAppBrowserProps = {
   onPressGoForward: () => void;
   onPressExport: (url: string) => void;
   onPressBrowser: (url: string) => void;
+  onFileDownload: (event: FileDownloadEvent) => void;
 };
 
 export const InAppBrowser = ({
@@ -48,6 +50,7 @@ export const InAppBrowser = ({
   onPressGoForward,
   onPressBrowser,
   onPressExport,
+  onFileDownload,
 }: InAppBrowserProps) => {
   const [navigationEvent, setNavigationEvent] = useState<WebViewNavigation>();
   const [isPageLoading, setPageLoading] = useState(false);
@@ -225,6 +228,7 @@ export const InAppBrowser = ({
           decelerationRate={'normal'}
           testID={'in-app-browser-webview'}
           applicationNameForUserAgent={'HAQQ Wallet'}
+          onFileDownload={onFileDownload}
         />
       </View>
       <View style={styles.actionPanel}>
