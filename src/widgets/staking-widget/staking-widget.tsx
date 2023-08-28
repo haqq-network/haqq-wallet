@@ -1,17 +1,15 @@
 import React, {memo, useMemo} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
+import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {
-  LIGHT_GRAPHIC_SECOND_1,
-  LIGHT_TEXT_GREEN_1,
-  NUM_PRECISION,
-} from '@app/variables/common';
+import {NUM_PRECISION} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -37,7 +35,7 @@ export const StakingWidget = memo(
         <View style={styles.rewardsWrapper}>
           <View style={styles.row}>
             <Text t14>{`${getText(I18N.earnRewards)} `}</Text>
-            <Text t13 color={LIGHT_TEXT_GREEN_1}>
+            <Text t13 color={Color.textGreen1}>
               {rewardAmount.toBalanceString()}
             </Text>
           </View>
@@ -55,7 +53,7 @@ export const StakingWidget = memo(
   },
 );
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   row: {flexDirection: 'row'},
   wrapper: {paddingHorizontal: 16},
   rewardsWrapper: {
@@ -63,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 12,
-    borderTopColor: LIGHT_GRAPHIC_SECOND_1,
+    borderTopColor: Color.graphicSecond1,
     borderTopWidth: 1,
     marginTop: 16,
   },

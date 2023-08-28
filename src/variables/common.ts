@@ -104,8 +104,8 @@ export const DEFAULT_CARD_PATTERN = '#0DAC6F';
 export const SHADOW_COLOR_1 = 'rgba(25, 26, 28, 0.06)';
 export const SHADOW_COLOR_2 = 'rgba(25, 26, 28, 0.5)';
 
-//FIXME: Calculate valid color
-export const SHADOW_COLOR_3 = 'black';
+export const SHADOW_COLOR_3_LIGHT = '#191A1C';
+export const SHADOW_COLOR_3_DARK = '#0C0E0D';
 
 export const PLACEHOLDER_GRAY = '#AAAAAA';
 export const HR_GRAY = '#EEEEEE';

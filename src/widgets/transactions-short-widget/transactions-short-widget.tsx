@@ -10,7 +10,6 @@ import {WidgetHeader} from '@app/components/ui/widget-header';
 import {cleanNumber} from '@app/helpers';
 import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N, getText} from '@app/i18n';
-import {LIGHT_TEXT_BASE_1, LIGHT_TEXT_BASE_2} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -44,13 +43,13 @@ export const TransactionsShortWidget = memo(
       <ShadowCard onPress={onPress} style={styles.wrapper}>
         <WidgetHeader title={getText(I18N.transactionWidgetTitle)} />
         <View style={styles.textWrapper}>
-          <Text t14 color={LIGHT_TEXT_BASE_1}>
+          <Text t14 color={Color.textBase1}>
             {getText(I18N.transactionWidgetReceiveTitle, {
               value: cleanNumber(received),
             })}
           </Text>
           <Spacer width={10} height={2} />
-          <Text t14 color={LIGHT_TEXT_BASE_2}>
+          <Text t14 color={Color.textBase2}>
             {getText(I18N.transactionWidgetSpendTitle, {
               value: cleanNumber(spend),
             })}

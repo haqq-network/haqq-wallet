@@ -93,19 +93,22 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
           />
         ) : (
           <LinearGradient
-            colors={[banner.backgroundColorFrom, banner.backgroundColorTo]}
+            colors={[
+              getColor(banner.backgroundColorFrom),
+              getColor(banner.backgroundColorTo),
+            ]}
             start={GRADIENT_START}
             end={GRADIENT_END}
             style={styles.inner}
           />
         )}
-        <Text color={banner.titleColor ?? Color.textBase1} t8>
+        <Text color={getColor(banner.titleColor) ?? Color.textBase1} t8>
           {banner.title}
         </Text>
         {banner.description && (
           <Text
             style={styles.description}
-            color={banner.descriptionColor ?? Color.textBase2}
+            color={getColor(banner.descriptionColor) ?? Color.textBase2}
             t15>
             {banner.description}
           </Text>
@@ -117,7 +120,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
               <Button
                 key={banner.id}
                 loading={loading}
-                color={button.backgroundColor}
+                color={getColor(button.backgroundColor)}
                 textColor={button.color}
                 loadingColor={button.color}
                 variant={ButtonVariant.contained}
@@ -131,7 +134,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
           <IconButton style={styles.closeButton} onPress={onPressClose}>
             <Icon
               name="close_circle"
-              color={banner.closeButtonColor ?? Color.graphicBase3}
+              color={getColor(banner.closeButtonColor) ?? Color.graphicBase3}
             />
           </IconButton>
         )}
