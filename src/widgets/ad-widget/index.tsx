@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {
   Image,
@@ -38,6 +38,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
   const [isVisible, setVisible] = useState(true);
   const widthRef = useRef(0);
   const [isSmall, setIsSmall] = useState(false);
+  const window = getWindowDimensions();
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
@@ -71,18 +72,13 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
     return {};
   }, [banner]);
 
-  const onLayout = ({nativeEvent}: LayoutChangeEvent) => {
-    widthRef.current = nativeEvent.layout.width;
-  };
-
-  const window = getWindowDimensions();
-
-  useEffect(() => {
-    if (widthRef.current) {
+  const onLayout = useCallback(
+    ({nativeEvent}: LayoutChangeEvent) => {
+      widthRef.current = nativeEvent.layout.width;
       setIsSmall(widthRef.current <= window.width / 2);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [widthRef.current, window.width]);
+    },
+    [window.width],
+  );
 
   const elem = useMemo(
     () => (
@@ -141,7 +137,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, isSmall],
+    [borderStyle, style, banner, onPressClose, loading, isSmall, onLayout],
   );
 
   if (!isVisible) {
