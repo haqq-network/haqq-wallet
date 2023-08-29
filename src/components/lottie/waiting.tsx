@@ -15,6 +15,7 @@ export const Waiting = ({style}: WaitingProps) => {
       source={require('@assets/animations/waiting.json')}
       autoPlay
       loop
+      renderMode="HARDWARE"
     />
   );
 };

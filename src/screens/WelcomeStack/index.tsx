@@ -18,6 +18,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
@@ -25,7 +26,7 @@ export enum WelcomeStackRoutes {
   SignUp = 'signup',
   Ledger = 'ledger',
   SignIn = 'signin',
-  Modal = 'modal',
+  Modal = MODAL_SCREEN_NAME,
   NewsDetail = 'newsDetail',
 }
 

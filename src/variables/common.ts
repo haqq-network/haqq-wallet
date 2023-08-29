@@ -234,3 +234,5 @@ export const LIGHT_DISCORD_TEXT = '#FFFFFF';
 
 export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
+
+export const MODAL_SCREEN_NAME = 'modal';

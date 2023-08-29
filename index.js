@@ -4,7 +4,7 @@
 import './global'
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat'
-import {AppRegistry, I18nManager} from 'react-native';
+import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
@@ -32,6 +32,8 @@ import { enableScreens,enableFreeze } from 'react-native-screens';
 
 enableScreens();
 enableFreeze(true);
+
+LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
 
 try {
   const isRTLEnabled = isFeatureEnabled(Feature.rtl);

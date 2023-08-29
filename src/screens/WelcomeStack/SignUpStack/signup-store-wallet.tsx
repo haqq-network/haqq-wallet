@@ -2,9 +2,9 @@ import {useCallback, useEffect} from 'react';
 
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
+import {showModal} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
@@ -21,7 +21,6 @@ export const SignUpStoreWalletScreen = () => {
     SignUpStackParamList,
     SignUpStackRoutes.SignupStoreWallet
   >();
-  const [show] = useModal();
 
   const goBack = useCallback(() => {
     navigation.reset({
@@ -33,10 +32,10 @@ export const SignUpStoreWalletScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    show('loading', {
+    showModal('loading', {
       text: getText(I18N.signupStoreWalletCreatingAccount),
     });
-  }, [show]);
+  }, []);
 
   useEffect(() => {
     setTimeout(async () => {
@@ -77,19 +76,19 @@ export const SignUpStoreWalletScreen = () => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            show('errorAccountAdded');
+            showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
-              show('errorCreateAccount');
+              showModal('errorCreateAccount');
               goBack();
               Logger.captureException(error, 'createStoreWallet');
             }
         }
       }
     }, 350);
-  }, [goBack, navigation, route.params, show]);
+  }, [goBack, navigation, route.params]);
 
   return null;
 };

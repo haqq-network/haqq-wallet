@@ -29,6 +29,7 @@ import {WalletProtectionPopupScreen} from '@app/screens/HomeStack/wallet-protect
 import {WalletConnectApprovalStack} from '@app/screens/HomeStack/WalletConnectApprovalStack';
 import {WalletConnectApplicationDetailsPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-details-popup';
 import {WalletConnectApplicationListPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-list-popup';
+import {ModalsScreen} from '@app/screens/modals-screen';
 import {BackupNotificationScreen} from '@app/screens/popup-backup-notification';
 import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notification';
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
@@ -44,10 +45,11 @@ import {
   PopupNotificationBannerId,
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
+import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
 export enum HomeStackRoutes {
   Home = 'home',
-  Modal = 'modal',
+  Modal = MODAL_SCREEN_NAME,
   Create = 'create',
   Ledger = 'ledger',
   SignIn = 'signin',
@@ -291,6 +293,12 @@ const HomeStack = memo(() => {
         <Stack.Screen
           name={HomeStackRoutes.Web3BrowserPopup}
           component={Web3BrowserPopupScreen}
+          options={fullScreenModalOptions}
+        />
+
+        <Stack.Screen
+          name={HomeStackRoutes.Modal}
+          component={ModalsScreen}
           options={fullScreenModalOptions}
         />
       </Stack.Navigator>

@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {ModalController} from '@app/helpers';
 import {HomeStack} from '@app/screens/HomeStack';
 import {ModalsScreen} from '@app/screens/modals-screen';
 import {WelcomeStack} from '@app/screens/WelcomeStack';
@@ -13,6 +14,8 @@ type Props = {
 
 const RootStack = memo(
   ({onboarded, isPinReseted, isWelcomeNewsEnabled, isReady}: Props) => {
+    ModalController.init();
+
     if (!isReady) {
       return <ModalsScreen initialModal={{type: 'splash'}} />;
     }

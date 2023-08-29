@@ -2,8 +2,8 @@ import React, {memo, useEffect} from 'react';
 
 import {View} from 'react-native';
 
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -20,11 +20,9 @@ export const LedgerStoreWalletScreen = memo(() => {
     LedgerStackRoutes.LedgerStoreWallet
   >();
 
-  const [show] = useModal();
-
   useEffect(() => {
-    show('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
-  }, [show]);
+    showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,12 +49,12 @@ export const LedgerStoreWalletScreen = memo(() => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              show('errorAccountAdded');
+              showModal('errorAccountAdded');
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                show('errorCreateAccount');
+                showModal('errorCreateAccount');
                 navigation.getParent()?.goBack();
                 Logger.captureException(
                   error,
@@ -66,7 +64,7 @@ export const LedgerStoreWalletScreen = memo(() => {
           }
         });
     }, 350);
-  }, [navigation, route, show]);
+  }, [navigation, route]);
 
   return <View />;
 });

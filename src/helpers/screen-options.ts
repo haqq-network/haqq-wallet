@@ -17,9 +17,11 @@ export const popupScreenOptions = {
   gestureEnabled: false,
 };
 
-export const popupScreenOptionsWithMargin = {
+export const popupScreenOptionsWithMargin: NativeStackNavigationOptions = {
   header: PopupHeader,
   gestureEnabled: false,
+  //@ts-ignore
+  headerStyle: {marginTop: 14},
 };
 
 export const hideBack: NativeStackNavigationOptions = {

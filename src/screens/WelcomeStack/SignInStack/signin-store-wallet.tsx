@@ -6,10 +6,10 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
+import {showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useModal} from '@app/hooks/use-modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -26,11 +26,9 @@ export const SignInStoreWalletScreen = memo(() => {
     SignInStackRoutes.SigninStoreWallet
   >().params;
 
-  const [show] = useModal();
-
   useEffect(() => {
-    show('loading', {text: getText(I18N.signinStoreWalletText)});
-  }, [show]);
+    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+  }, []);
 
   useEffect(() => {
     const goBack = () => {
@@ -113,20 +111,20 @@ export const SignInStoreWalletScreen = memo(() => {
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            show('errorAccountAdded');
+            showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              show('errorCreateAccount');
+              showModal('errorCreateAccount');
               goBack();
               Logger.captureException(error, 'restoreStore');
             }
         }
       }
     }, 350);
-  }, [navigation, nextScreen, params, show]);
+  }, [navigation, nextScreen, params]);
 
   return null;
 });
