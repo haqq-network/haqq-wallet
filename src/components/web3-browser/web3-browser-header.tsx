@@ -33,7 +33,6 @@ interface Web3BrowserHeaderProps {
 
   onPressGoForward(): void;
 
-
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
 }
 
