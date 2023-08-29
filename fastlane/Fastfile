@@ -35,17 +35,6 @@ platform :android do
         version_code: current_build_number
       )
 
-      sentry_upload_sourcemap(
-        auth_token: ENV["SENTRY_AUTH_KEY"],
-        org_slug: 'haqq-network',
-        project_slug: 'faucet-app',
-        version: current_build_number.to_s,
-        app_identifier: 'com.haqq.wallet',
-        build: current_build_number.to_s,
-        sourcemap: ['index.android.bundle', 'index.android.bundle.map'],
-        rewrite: true
-      )
-
       gradle(task: 'clean bundleRelease', project_dir: './android', print_command: false, properties: {
         "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
         "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
@@ -169,17 +158,6 @@ platform :ios do
     increment_build_number(
       xcodeproj: './ios/haqq.xcodeproj',
       build_number: current_build_number
-    )
-
-    sentry_upload_sourcemap(
-      auth_token: ENV["SENTRY_AUTH_KEY"],
-      org_slug: 'haqq-network',
-      project_slug: 'faucet-app',
-      version: current_build_number.to_s,
-      app_identifier: app_identifier,
-      build: current_build_number.to_s,
-      sourcemap: ['main.jsbundle', 'main.jsbundle.map'],
-      rewrite: true
     )
 
     match(
