@@ -281,12 +281,10 @@ export const Web3Browser = ({
   return (
     <ContainerComponent style={[styles.container, !popup && styles.marginTop]}>
       <Web3BrowserHeader
-        popup={popup}
         walletAddress={walletAddress}
         webviewNavigationData={webviewNavigationData!}
         siteUrl={siteUrl}
         onPressMore={onPressMore}
-        onPressClose={onPressClose}
         onMoreIconLayout={onMoreIconLayout}
         onPressGoBack={onPressGoBack}
         onPressGoForward={onPressGoForward}
@@ -326,6 +324,8 @@ export const Web3Browser = ({
         currentSessionOrigin={currentSession?.origin}
         moreIconLayout={moreIconLayout}
         isSiteInBookmarks={isSiteInBookmarks}
+        popup={popup}
+        onPressClose={onPressClose}
         toggleActionMenu={toggleActionMenu}
         onPressProviders={onPressProviders}
         onPressHome={onPressHome}

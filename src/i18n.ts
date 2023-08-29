@@ -738,6 +738,7 @@ export enum I18N {
   notEnoughGasDescription2,
   notEnoughGasDescription1,
   notEnoughGasDescription3,
+  browserActionMenuClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1611,4 +1612,5 @@ const en: Record<I18N, string> = {
   [I18N.notEnoughGasDescription3]: ', but ',
   [I18N.notEnoughGasDescription4]: 'you only have {{currentAmount}} aISLM',
   [I18N.notEnoughGasDescription5]: ' on your account.',
+  [I18N.browserActionMenuClose]: 'Close',
 };
