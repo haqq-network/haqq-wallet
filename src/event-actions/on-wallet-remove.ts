@@ -6,12 +6,14 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
 import {Backend} from '@app/services/backend';
+import {WalletConnect} from '@app/services/wallet-connect';
 
 import {onAppReset} from './on-app-reset';
 import {onWalletReset} from './on-wallet-reset';
 
 export async function onWalletRemove(address: string) {
   try {
+    WalletConnect.instance.onWalletRemove(address);
     const wallets = Wallet.addressList();
 
     // last wallet removed

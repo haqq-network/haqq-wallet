@@ -1,5 +1,6 @@
 import {Image} from 'react-native';
 
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
@@ -24,5 +25,7 @@ export async function onAppLoggedIn() {
     ),
   );
 
-  await WalletConnect.instance.init();
+  if (app.onboarded) {
+    await WalletConnect.instance.init();
+  }
 }

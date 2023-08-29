@@ -201,7 +201,7 @@ export class Wallet extends Realm.Object {
     }
   }
 
-  static async removeAll() {
+  static removeAll() {
     const wallets = realm.objects<Wallet>(Wallet.schema.name);
 
     realm.write(() => {
