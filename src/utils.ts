@@ -6,9 +6,16 @@ import {
   differenceInMilliseconds,
   differenceInMinutes,
 } from 'date-fns';
+import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 import _ from 'lodash';
-import {Animated, Linking} from 'react-native';
+import {
+  Animated,
+  Linking,
+  NativeModules,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
@@ -24,6 +31,7 @@ import {
   EthType,
   EthTypedData,
   PartialJsonRpcRequest,
+  SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
@@ -601,6 +609,11 @@ export function isError(err: any): err is Error {
   return err instanceof Error || typeof err?.message === 'string';
 }
 
+export function isSendTransactionError(err: any): err is SendTransactionError {
+  const e = err as SendTransactionError;
+  return typeof e?.transaction?.to === 'string' && typeof e.code === 'string';
+}
+
 export function isAbortControllerError(err: any): err is Error {
   return isError(err) && err.name === 'AbortError';
 }
@@ -664,3 +677,38 @@ export async function openStorePage() {
     return false;
   }
 }
+
+export async function requestCameraPermissions(): Promise<boolean> {
+  const CameraManager =
+    NativeModules.RNCameraManager || NativeModules.RNCameraModule;
+  if (Platform.OS === 'ios') {
+    return await CameraManager.checkVideoAuthorizationStatus();
+  } else if (Platform.OS === 'android') {
+    const cameraPermissionResult = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+    return cameraPermissionResult === PermissionsAndroid.RESULTS.GRANTED;
+  }
+  return false;
+}
+
+export async function fetchWithTimeout(
+  input: RequestInfo,
+  init?: RequestInit & {timeout?: number},
+): Promise<Response> {
+  const {timeout = 30000, ...opts} = init || {};
+  const controller = new AbortController();
+  const id = setTimeout(() => {
+    if (timeout > 0) {
+      controller.abort();
+    }
+  }, timeout);
+  const response = await fetch(input, {
+    ...opts,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+  return response;
+}
+
+export const decimalToHex = (value: string) => new Decimal(value).toHex();

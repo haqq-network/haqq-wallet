@@ -14,18 +14,12 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
 import {
   BrowserStack,
   BrowserStackRoutes,
 } from '@app/screens/HomeStack/BrowserStack';
-import {
-  HomeEarnStack,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
-import {HomeStakingScreen} from '@app/screens/HomeStack/HomeEarnStack/home-staking';
 import {
   HomeFeedStack,
   HomeFeedStackRoutes,
@@ -78,10 +72,6 @@ const feedOptions = {
   tabBarIcon: tabBarIcon('homeFeed'),
 };
 
-const earnOptions = {
-  tabBarIcon: tabBarIcon('homeEarn'),
-};
-
 const newsOptions: BottomTabNavigationOptions = {
   tabBarIcon: tabBarIcon('homeNews'),
   headerTitle: () => <Spacer />,
@@ -89,11 +79,6 @@ const newsOptions: BottomTabNavigationOptions = {
   headerStyle: {
     height: StatusBar.currentHeight,
   },
-};
-
-const stakingOptions = {
-  unmountOnBlur: true,
-  tabBarIcon: tabBarIcon('homeStaking'),
 };
 
 const browserOptions = {
@@ -125,12 +110,6 @@ export const HomeScreen = memo(() => {
     };
   }, [navigation]);
 
-  const isEarnEnabled: boolean = isFeatureEnabled(Feature.earn);
-  const initialRouteName = isEarnEnabled
-    ? HomeEarnStackRoutes.HomeEarn
-    : HomeEarnStackRoutes.Staking;
-  const stack = isEarnEnabled ? HomeEarnStack : HomeStakingScreen;
-
   return (
     <Tab.Navigator detachInactiveScreens screenOptions={screenOptions}>
       <Tab.Screen
@@ -142,50 +121,6 @@ export const HomeScreen = memo(() => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
             if (routeName !== HomeFeedStackRoutes.HomeFeed) {
-              return {
-                height: 0,
-              };
-            }
-            return screenOptions.tabBarStyle;
-          })(route),
-        })}
-      />
-      <Tab.Screen
-        name="homeEarn"
-        component={stack}
-        options={({route}) => ({
-          ...(isEarnEnabled ? earnOptions : stakingOptions),
-          headerShown: (routeA => {
-            const routeName =
-              getFocusedRouteNameFromRoute(routeA) ?? initialRouteName;
-
-            if (routeName !== initialRouteName) {
-              return false;
-            }
-            return true;
-          })(route),
-          tabBarStyle: (routeA => {
-            const routeName =
-              getFocusedRouteNameFromRoute(routeA) ?? initialRouteName;
-
-            if (routeName !== initialRouteName) {
-              return {
-                height: 0,
-              };
-            }
-            return screenOptions.tabBarStyle;
-          })(route),
-        })}
-      />
-      <Tab.Screen
-        name="homeNews"
-        component={HomeNewsStack}
-        options={({route}) => ({
-          ...newsOptions,
-          tabBarStyle: (routeA => {
-            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
-              NewsStackRoutes.News) as NewsStackRoutes;
-            if (routeName !== NewsStackRoutes.News) {
               return {
                 height: 0,
               };
@@ -213,6 +148,23 @@ export const HomeScreen = memo(() => {
           })}
         />
       )}
+      <Tab.Screen
+        name="homeNews"
+        component={HomeNewsStack}
+        options={({route}) => ({
+          ...newsOptions,
+          tabBarStyle: (routeA => {
+            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+              NewsStackRoutes.News) as NewsStackRoutes;
+            if (routeName !== NewsStackRoutes.News) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
+      />
       <Tab.Screen
         name="homeSettings"
         component={SettingsStack}

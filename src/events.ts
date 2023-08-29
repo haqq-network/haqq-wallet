@@ -34,9 +34,16 @@ export enum Events {
   onAppReviewRequest = 'onAppReviewRequest',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
-
   onOnboardedChanged = 'onOnboardedChanged',
   onIsWelcomeNewsChanged = 'onIsWelcomeNewsChanged',
+  onBalanceSync = 'onBalanceSync',
+  onVestingBalanceSync = 'onVestingBalanceSync',
+  onStakingBalanceSync = 'onStakingBalanceSync',
+  onWalletsVestingBalanceCheck = 'onWalletsVestingBalanceCheck',
+  onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
+  onSyncAppBalances = 'onSyncAppBalances',
+  onWalletVisibilityChange = 'onWalletVisibilityChange',
+  onThemeChanged = 'onThemeChanged',
 }
 
 export enum WalletConnectEvents {

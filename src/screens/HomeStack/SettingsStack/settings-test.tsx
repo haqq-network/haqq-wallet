@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -15,6 +15,7 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
+  awaitForLedger,
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
@@ -23,6 +24,8 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getUid} from '@app/helpers/get-uid';
+import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -32,13 +35,14 @@ import {Refferal} from '@app/models/refferal';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
 import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals} from '@app/types';
+import {Link, Modals, WalletType} from '@app/types';
 import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -113,6 +117,9 @@ const getTestModals = (): Partial<Modals> => {
       message: 'Something went wrong',
     },
     locationUnauthorized: {
+      onClose: () => {},
+    },
+    raffleAgreement: {
       onClose: () => {},
     },
     captcha: {
@@ -293,6 +300,16 @@ export const SettingsTestScreen = memo(() => {
   const [newsCount, setNewsCount] = useState(News.getAll().length);
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
   const [backend, setBackend] = useState(app.backend);
+  const [uid, setUid] = useState<null | string>(null);
+  const [leadingAccount, setLeadingAccount] = useState(
+    VariablesString.get('leadingAccount'),
+  );
+
+  useEffect(() => {
+    getUid().then(id => {
+      setUid(id);
+    });
+  }, []);
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isDeveloper = false;
@@ -351,8 +368,11 @@ export const SettingsTestScreen = memo(() => {
       250000,
     );
 
-    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
-
+    const result = transport.signTransaction(wallet.path!, unsignedTx);
+    if (wallet.type === WalletType.ledgerBt) {
+      await awaitForLedger(transport);
+    }
+    const signedTx = await result;
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
@@ -383,8 +403,8 @@ export const SettingsTestScreen = memo(() => {
   }, [contract]);
 
   const onResetUid = useCallback(async () => {
-    const uid = shajs('sha256').update(makeID(10)).digest('hex');
-    await EncryptedStorage.setItem('uid', uid);
+    const newUid = shajs('sha256').update(makeID(10)).digest('hex');
+    await EncryptedStorage.setItem('uid', newUid);
   }, []);
 
   const onClearBanners = useCallback(() => {
@@ -405,8 +425,35 @@ export const SettingsTestScreen = memo(() => {
     });
   }, [showActionSheetWithOptions]);
 
+  const onSetLeadingAccount = useCallback(() => {
+    const wallets = Wallet.getAll().snapshot();
+    const walletsKeys = wallets.map(
+      wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
+    );
+    showActionSheetWithOptions({options: walletsKeys}, index => {
+      if (typeof index === 'number' && wallets[index]) {
+        VariablesString.set('leadingAccount', wallets[index].address);
+        setLeadingAccount(VariablesString.get('leadingAccount'));
+      }
+    });
+  }, [showActionSheetWithOptions]);
+
   return (
     <ScrollView style={styles.container}>
+      {uid && (
+        <>
+          <Title text="uid" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(uid);
+              toastMessage('Copied to clipboard');
+            }}>
+            {uid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
       <Title text="user agent" />
       <Text
         t11
@@ -423,6 +470,15 @@ export const SettingsTestScreen = memo(() => {
       <Button
         title="Select backend"
         onPress={onSetBackend}
+        variant={ButtonVariant.contained}
+      />
+
+      <Title text="Leading account" />
+      <Text t11>{leadingAccount}</Text>
+      <Spacer height={8} />
+      <Button
+        title="Select leading account"
+        onPress={onSetLeadingAccount}
         variant={ButtonVariant.contained}
       />
 

@@ -1,5 +1,11 @@
 import {app} from '@app/contexts';
-import {NewsRow, NewsUpdatesResponse, Raffle, RssNewsRow} from '@app/types';
+import {
+  MarkupResponse,
+  NewsRow,
+  NewsUpdatesResponse,
+  Raffle,
+  RssNewsRow,
+} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config';
@@ -65,6 +71,64 @@ export class Backend {
         address,
       }),
     });
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
+  async contestParticipateUser(
+    contest: string,
+    uid: string,
+    session: string,
+    signature: string,
+    address: string,
+  ): Promise<{signature: string; participant: string; deadline: number}> {
+    const request = await fetch(
+      `${this.getRemoteUrl()}contests/${contest}/participate`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          uid,
+          signature,
+          session,
+          address,
+        }),
+      },
+    );
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
+  async contestsResult(
+    contest: string,
+    signature: string,
+    tx_hash: string | null,
+  ): Promise<{signature: string; participant: string; deadline: number}> {
+    const request = await fetch(
+      `${this.getRemoteUrl()}contests/${contest}/result`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          tx_hash,
+          signature,
+        }),
+      },
+    );
 
     const resp = await getHttpResponse(request);
 
@@ -238,5 +302,26 @@ export class Backend {
     );
 
     return await getHttpResponse<T>(req);
+  }
+
+  async markup({
+    wallets,
+    uid,
+    screen,
+  }: {
+    wallets: string[];
+    uid: string;
+    screen: string;
+  }): Promise<MarkupResponse> {
+    const response = await fetch(`${this.getRemoteUrl()}markups`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        wallets,
+        uid,
+        screen,
+      }),
+    });
+    return await getHttpResponse<MarkupResponse>(response);
   }
 }

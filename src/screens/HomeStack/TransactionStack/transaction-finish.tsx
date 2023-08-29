@@ -25,7 +25,7 @@ export const TransactionFinishScreen = memo(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash} = useTypedRoute<
+  const {hash, transaction: transactionFromParent} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
@@ -97,7 +97,7 @@ export const TransactionFinishScreen = memo(() => {
     <TransactionFinish
       onPressContact={onPressContact}
       onSubmit={onSubmit}
-      transaction={transaction}
+      transaction={transaction || transactionFromParent}
       contact={contact}
       short={short}
       testID="transaction_finish"

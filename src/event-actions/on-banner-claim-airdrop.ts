@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {
+  awaitForLedger,
   awaitForWallet,
   getProviderInstanceForWallet,
   showModal,
@@ -16,7 +17,7 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, WalletType} from '@app/types';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
   const banner = Banner.getById(claimCode);
@@ -45,7 +46,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       return;
     }
     const captchaKey = await awaitForCaptcha({
-      type: CaptchaType.slider,
+      type: CaptchaType.hcaptcha,
     });
 
     const wallet = Wallet.getById(walletId);
@@ -55,11 +56,11 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     }
 
     const walletProvider = await getProviderInstanceForWallet(wallet!);
-
-    const signature = await walletProvider.signPersonalMessage(
-      wallet.path!,
-      claimCode,
-    );
+    const result = walletProvider.signPersonalMessage(wallet.path!, claimCode);
+    if (wallet.type === WalletType.ledgerBt) {
+      await awaitForLedger(walletProvider);
+    }
+    const signature = await result;
 
     await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
     app.emit(Events.onAppReviewRequest);

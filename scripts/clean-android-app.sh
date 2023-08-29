@@ -41,4 +41,4 @@ execute_command "adb install /tmp/app.apk"
 execute_command "rm /tmp/app.apk"
 
 # Launch the app
-execute_command "adb shell monkey -p $APP_PACKAGE_NAME -c android.intent.category.LAUNCHER 1"
+yarn devmode:android

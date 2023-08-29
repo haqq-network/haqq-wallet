@@ -9,6 +9,7 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
@@ -25,19 +26,31 @@ enum TabNames {
 export type AccountInfoProps = {
   transactionsList: TransactionList[];
   wallet: Wallet;
-  balance: number;
+  balance: Balance | undefined;
+  unvestedBalance: Balance | undefined;
+  lockedBalance: Balance | undefined;
+  vestedBalance: Balance | undefined;
+  stakingBalance: Balance | undefined;
+  onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
   onPressRow: (hash: string) => void;
 };
+
 const PAGE_ITEMS_COUNT = 15;
+
 export const AccountInfo = ({
   wallet,
   balance,
+  transactionsList,
+  stakingBalance,
+  unvestedBalance,
+  lockedBalance,
+  vestedBalance,
+  onPressInfo,
   onSend,
   onReceive,
   onPressRow,
-  transactionsList,
 }: AccountInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
@@ -68,6 +81,11 @@ export const AccountInfo = ({
         <AccountInfoHeader
           wallet={wallet}
           balance={balance}
+          unvestedBalance={unvestedBalance}
+          lockedBalance={lockedBalance}
+          vestedBalance={vestedBalance}
+          stakingBalance={stakingBalance}
+          onPressInfo={onPressInfo}
           onSend={onSend}
           onReceive={onReceive}
         />
@@ -91,7 +109,18 @@ export const AccountInfo = ({
         )}
       </>
     ),
-    [balance, onReceive, onSend, onTabChange, wallet],
+    [
+      wallet,
+      balance,
+      unvestedBalance,
+      lockedBalance,
+      vestedBalance,
+      stakingBalance,
+      onPressInfo,
+      onSend,
+      onReceive,
+      onTabChange,
+    ],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(
     ({item}) => <TransactionRow item={item} onPress={onPressRow} />,

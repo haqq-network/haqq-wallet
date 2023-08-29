@@ -39,8 +39,10 @@ export interface HomeBannerProps {
 
 export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
+  const [isVisible, setVisible] = useState(true);
 
   const onPressClose = useCallback(async () => {
+    setVisible(false);
     await onPress(banner.id, banner.closeEvent, banner.closeParams);
   }, [banner, onPress]);
 
@@ -127,6 +129,10 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     ),
     [borderStyle, style, banner, onPressClose, loading, onPressBanner],
   );
+
+  if (!isVisible) {
+    return null;
+  }
 
   if (!banner.buttons.length && banner.defaultEvent) {
     return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;

@@ -10,6 +10,7 @@ import {
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {generateUUID} from '@app/utils';
 
@@ -26,8 +27,8 @@ export const TransactionSumScreen = memo(() => {
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
 
-  const [balance, setBalance] = useState(0);
-  const [fee, setFee] = useState(0);
+  const [balance, setBalance] = useState(Balance.Empty);
+  const [fee, setFee] = useState(Balance.Empty);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
@@ -68,9 +69,11 @@ export const TransactionSumScreen = memo(() => {
         setBalance(b);
         return b;
       })
-      .then(b => EthNetwork.estimateTransaction(route.params.from, to, b))
+      .then(b =>
+        EthNetwork.estimateTransaction(route.params.from, to, b.toFloat()),
+      )
       .then(estimateFee => {
-        setFee(estimateFee.fee);
+        setFee(estimateFee.feeWei);
       });
   }, [route.params.from, to]);
 

@@ -15,17 +15,19 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 
 export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
-  balance: number;
-  lockedTokensAmount: number;
+  balance: Balance | undefined;
+  stakingBalance: Balance | undefined;
+  vestingBalance: Record<VestingMetadataType, Balance> | undefined;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
@@ -42,7 +44,7 @@ export const WalletCard = memo(
     balance,
     walletConnectSessions,
     showLockedTokens,
-    lockedTokensAmount,
+    stakingBalance,
     onPressSend,
     onPressQR,
     onPressWalletConnect,
@@ -60,6 +62,21 @@ export const WalletCard = memo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
+
+    const total = useMemo(() => {
+      if (!balance) {
+        return Balance.Empty.toBalanceString();
+      }
+
+      return balance.operate(stakingBalance, 'add').toBalanceString();
+    }, [balance, stakingBalance]);
+
+    const locked = useMemo(() => {
+      if (!stakingBalance) {
+        return Balance.Empty.toFloatString();
+      }
+      return stakingBalance.toFloatString();
+    }, [stakingBalance]);
 
     const onQr = () => {
       onPressQR(wallet.address);
@@ -151,9 +168,9 @@ export const WalletCard = memo(
           )}
         </View>
         <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-          {cleanNumber(balance)} ISLM
+          {total}
         </Text>
-        {showLockedTokens && (
+        {showLockedTokens && stakingBalance?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>
               <Icon i16 color={Color.textBase3} name={IconsName.lock} />
@@ -162,7 +179,7 @@ export const WalletCard = memo(
                 t15
                 color={Color.textBase3}
                 i18n={I18N.walletCardLocked}
-                i18params={{count: cleanNumber(lockedTokensAmount)}}
+                i18params={{count: locked}}
               />
             </View>
           </>

@@ -29,7 +29,7 @@ export async function createWalletsForProvider(
 
     if (!Wallet.getById(address)) {
       const balance = await EthNetwork.getBalance(address);
-      canNext = balance > 0 || index === 0;
+      canNext = balance.isPositive() || index === 0;
 
       if (canNext) {
         await Wallet.create(

@@ -84,7 +84,7 @@ export const Card = ({
         colors={[colorFrom, colorTo]}
         start={GRADIENT_START}
         end={GRADIENT_END}
-        style={[page.container, {borderRadius}]}>
+        style={[page.container, {borderRadius}, style]}>
         <Image
           source={uri}
           onLoad={onLoad}

@@ -1,8 +1,9 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Share} from 'react-native';
+import {Linking, Share} from 'react-native';
 import WebView from 'react-native-webview';
+import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {
   Web3Browser,
@@ -167,6 +168,15 @@ export const Web3BrowserScreen = memo(() => {
     [],
   );
 
+  const onFileDownload = useCallback(
+    ({nativeEvent: {downloadUrl}}: FileDownloadEvent) => {
+      if (downloadUrl) {
+        Linking.openURL(downloadUrl);
+      }
+    },
+    [],
+  );
+
   return (
     <Web3Browser
       popup={popup}
@@ -193,6 +203,7 @@ export const Web3BrowserScreen = memo(() => {
       onPressAddBookmark={onPressAddBookmark}
       onPressRemoveBookmark={onPressRemoveBookmark}
       addSiteToSearchHistory={addSiteToSearchHistory}
+      onFileDownload={onFileDownload}
     />
   );
 });

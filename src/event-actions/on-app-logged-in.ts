@@ -18,7 +18,7 @@ export async function onAppLoggedIn() {
     Logger.error('onAppLoggedIn Image.prefetch error', err);
   });
 
-  await Promise.all(
+  await Promise.race(
     wallets.map(wallet =>
       awaitForEventDone(Events.onTransactionsLoad, wallet.address),
     ),

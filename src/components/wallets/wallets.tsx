@@ -16,13 +16,17 @@ import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {WalletBalance} from '@app/hooks/use-wallets-balance';
+import {WalletStakingBalance} from '@app/hooks/use-wallets-staking-balance';
+import {WalletVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
   wallets: Wallet[] | Results<Wallet>;
-  balance: Record<string, number>;
+  balance: WalletBalance;
+  stakingBalance: WalletStakingBalance;
+  vestingBalance: WalletVestingBalance;
   walletConnectSessions: SessionTypes.Struct[][];
-  lockedTokensAmount: number;
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -38,8 +42,9 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
+  stakingBalance,
+  vestingBalance,
   walletConnectSessions,
-  lockedTokensAmount,
   showLockedTokens,
   onPressSend,
   onPressQR,
@@ -78,10 +83,11 @@ export const Wallets = ({
             <WalletCard
               testID={`${testID}_${w.address}`}
               wallet={w}
-              balance={balance[w.address] ?? 0}
+              balance={balance[w.address]}
+              stakingBalance={stakingBalance[w.address]}
+              vestingBalance={vestingBalance[w.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
-              lockedTokensAmount={lockedTokensAmount}
               onPressSend={onPressSend}
               onPressQR={onPressQR}
               onPressProtection={onPressProtection}

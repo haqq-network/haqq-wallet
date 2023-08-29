@@ -16,11 +16,13 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
-  balance: number;
+  balance: Balance;
   onAmount: (amount: number) => void;
-  fee: number;
+  fee: Balance;
   unboundingTime: number;
 };
 
@@ -30,7 +32,8 @@ export const StakingUnDelegateForm = ({
   onAmount,
   fee,
 }: StakingDelegateFormProps) => {
-  const amounts = useSumAmount(0, balance);
+  const amounts = useSumAmount(Balance.Empty, balance);
+
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
   }, [amounts, onAmount]);
@@ -50,7 +53,7 @@ export const StakingUnDelegateForm = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency="ISLM"
+          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}

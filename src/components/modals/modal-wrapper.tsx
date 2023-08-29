@@ -22,6 +22,7 @@ import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthoriz
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
+import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
@@ -29,6 +30,8 @@ import {useTheme} from '@app/hooks';
 import {Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
+import {LockedTokensInfo} from './locked-tokens-info';
+import {NotEnoughGas} from './not-enough-gas';
 
 export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
@@ -110,6 +113,12 @@ export const ModalWrapper = ({
         return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
       case 'domainBlocked':
         return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
+      case 'raffleAgreement':
+        return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
+      case 'lockedTokensInfo':
+        return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
+      case 'notEnoughGas':
+        return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

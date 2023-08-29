@@ -4310,21 +4310,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bn.js@npm:5.1.1, @types/bn.js@npm:^5.1.0":
+  version: 5.1.1
+  resolution: "@types/bn.js@npm:5.1.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: e50ed2dd3abe997e047caf90e0352c71e54fc388679735217978b4ceb7e336e51477791b715f49fd77195ac26dd296c7bad08a3be9750e235f9b2e1edb1b51c2
+  languageName: node
+  linkType: hard
+
 "@types/bn.js@npm:^4.11.3":
   version: 4.11.6
   resolution: "@types/bn.js@npm:4.11.6"
   dependencies:
     "@types/node": "*"
   checksum: 7f66f2c7b7b9303b3205a57184261974b114495736b77853af5b18d857c0b33e82ce7146911e86e87a87837de8acae28986716fd381ac7c301fd6e8d8b6c811f
-  languageName: node
-  linkType: hard
-
-"@types/bn.js@npm:^5.1.0":
-  version: 5.1.1
-  resolution: "@types/bn.js@npm:5.1.1"
-  dependencies:
-    "@types/node": "*"
-  checksum: e50ed2dd3abe997e047caf90e0352c71e54fc388679735217978b4ceb7e336e51477791b715f49fd77195ac26dd296c7bad08a3be9750e235f9b2e1edb1b51c2
   languageName: node
   linkType: hard
 
@@ -5898,6 +5898,13 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 85a56d28b34586fbe482225fb6a9592fc793a459c5eea987a3427fb723c7aa2f76916348a9fc5e9ca48754ebf6086cfbb9226f4cd0cf9c6257f94553622562ed
+  languageName: node
+  linkType: hard
+
+"babel-plugin-react-remove-properties@npm:0.3.0":
+  version: 0.3.0
+  resolution: "babel-plugin-react-remove-properties@npm:0.3.0"
+  checksum: dc7165301fb8667ebdac7808e7210cd25157e0988288124f4425df99b63169f271cd87f0c12b988c5f2c5294e61dc409e06413fa7067c2f205a77b5c59a45d6e
   languageName: node
   linkType: hard
 
@@ -9687,6 +9694,7 @@ __metadata:
     "@sentry/react-native": 5.7.1
     "@tradle/react-native-http": 2.0.1
     "@tsconfig/react-native": 3.0.2
+    "@types/bn.js": 5.1.1
     "@types/create-hash": 1.2.2
     "@types/jest": 29.5.3
     "@types/pbkdf2": 3.1.0
@@ -9708,6 +9716,7 @@ __metadata:
     assert: 2.0.0
     babel-jest: 29.6.1
     babel-plugin-module-resolver: 5.0.0
+    babel-plugin-react-remove-properties: 0.3.0
     bech32-converting: 1.0.9
     big-integer: 1.6.51
     bn.js: 5.2.1

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -17,8 +17,6 @@ export const RaffleDetailsScreen = memo(() => {
     HomeEarnStackRoutes.RaffleDetails
   >()?.params;
 
-  const [raffle, setRaffle] = useState(params?.item);
-
   useFocusEffect(() => {
     navigation.setOptions({
       title: params?.item?.title,
@@ -27,8 +25,7 @@ export const RaffleDetailsScreen = memo(() => {
 
   const onPressGetTicket = useCallback(async () => {
     try {
-      const r = await onEarnGetTicket(params?.item?.id);
-      setRaffle(r);
+      await onEarnGetTicket(params?.item?.id);
     } catch (e) {
       Logger.captureException(e, 'onPressGetTicket raffle details');
       throw e;
@@ -39,13 +36,13 @@ export const RaffleDetailsScreen = memo(() => {
     navigation.navigate(HomeEarnStackRoutes.RaffleReward, params);
   }, [navigation, params]);
 
-  if (!raffle) {
+  if (!params?.item) {
     return null;
   }
 
   return (
     <RaffleDetails
-      item={raffle}
+      item={params.item}
       prevIslmCount={params.prevIslmCount}
       prevTicketsCount={params.prevTicketsCount}
       onPressGetTicket={onPressGetTicket}

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   Button,
@@ -11,13 +11,14 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {WEI} from '@app/variables/common';
+import {Balance, FEE_AMOUNT} from '@app/services/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {
   account: string;
   onAmount: (amount: number) => void;
-  fee: number;
-  balance: number;
+  fee: Balance;
+  balance: Balance;
 };
 
 export const ProposalDepositForm = ({
@@ -25,7 +26,14 @@ export const ProposalDepositForm = ({
   fee,
   balance,
 }: ProposalDepositFormProps) => {
-  const amounts = useSumAmount(0, balance - Math.max(fee / WEI, 0.00001));
+  const transactionFee = useMemo(() => {
+    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
+    return new Balance(maximumFee);
+  }, [fee]);
+  const amounts = useSumAmount(
+    Balance.Empty,
+    balance.operate(transactionFee, 'sub'),
+  );
 
   const onDone = useCallback(() => {
     onAmount(parseFloat(amounts.amount));
@@ -41,7 +49,7 @@ export const ProposalDepositForm = ({
       <SumBlock
         value={amounts.amount}
         error={amounts.error}
-        currency="ISLM"
+        currency={CURRENCY_NAME}
         balance={balance}
         onChange={amounts.setAmount}
         onMax={onPressMax}

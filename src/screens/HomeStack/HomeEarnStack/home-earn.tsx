@@ -10,6 +10,7 @@ import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
+import {prepareRaffles} from '@app/helpers/prepare-raffles';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {
@@ -22,6 +23,7 @@ import {
   HomeEarnStackRoutes,
 } from '@app/screens/HomeStack/HomeEarnStack';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 
@@ -41,8 +43,8 @@ export const HomeEarnScreen = memo(() => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + app.getBalance(w.address),
-      0,
+      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      Balance.Empty,
     ),
   });
 
@@ -52,7 +54,7 @@ export const HomeEarnScreen = memo(() => {
   );
 
   const haveAvailableSum = useMemo(
-    () => data.availableSum >= 1 / NUM_PRECISION,
+    () => data.availableSum.toNumber() >= 1 / NUM_PRECISION,
     [data],
   );
 
@@ -74,8 +76,8 @@ export const HomeEarnScreen = memo(() => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc + app.getBalance(w.address),
-        0,
+        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+        Balance.Empty,
       );
 
       setData({
@@ -88,22 +90,22 @@ export const HomeEarnScreen = memo(() => {
     };
 
     rows.addListener(listener);
-    app.addListener('balance', listener);
+    app.addListener(Events.onBalanceSync, listener);
     return () => {
       rows.removeListener(listener);
-      app.removeListener('balance', listener);
+      app.removeListener(Events.onBalanceSync, listener);
     };
   }, [visible]);
 
-  const loadRaffles = useCallback(async () => {
+  const loadRaffles = useCallback(async (isInitialCall = false) => {
     try {
-      setIsRafflesLoading(true);
+      !isInitialCall && setIsRafflesLoading(true);
       let uid = await getUid();
       const response = await Backend.instance.contests(
         Wallet.addressList(),
         uid,
       );
-      setRaffles(response.sort((a, b) => b.start_at - a.start_at));
+      setRaffles(prepareRaffles(response));
     } catch (err) {
       Logger.captureException(
         err,
@@ -111,12 +113,12 @@ export const HomeEarnScreen = memo(() => {
         Wallet.addressList(),
       );
     }
-    setIsRafflesLoading(false);
+    !isInitialCall && setIsRafflesLoading(false);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      loadRaffles();
+      loadRaffles(true);
 
       app.on(Events.onRaffleTicket, loadRaffles);
 

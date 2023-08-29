@@ -6,35 +6,56 @@ import {Color} from '@app/colors';
 import {
   CardSmall,
   CopyButton,
+  First,
   Icon,
   IconButton,
   Inline,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
+
+import {StackedVestedTokens} from '../stacked-vested-tokens';
 
 const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
   wallet: Wallet;
-  balance: number;
+  balance: Balance | undefined;
+  unvestedBalance: Balance | undefined;
+  lockedBalance: Balance | undefined;
+  vestedBalance: Balance | undefined;
+  stakingBalance: Balance | undefined;
+  onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
 };
+
 export const AccountInfoHeader = ({
   wallet,
   balance,
+  unvestedBalance,
+  lockedBalance,
+  vestedBalance,
+  stakingBalance,
+  onPressInfo,
   onSend,
   onReceive,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
     () => shortAddress(wallet.address, '•'),
     [wallet.address],
+  );
+
+  const totalBalance = useMemo(
+    () => balance?.operate(stakingBalance, 'add')?.toFloatString() ?? '0',
+    [balance, stakingBalance],
   );
 
   return (
@@ -49,11 +70,7 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text
-            t3
-            i18n={I18N.amountISLM}
-            i18params={{amount: cleanNumber(balance)}}
-          />
+          <Text t3 i18n={I18N.amountISLM} i18params={{amount: totalBalance}} />
           <CopyButton value={wallet.address} style={styles.copyButton}>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
@@ -67,7 +84,19 @@ export const AccountInfoHeader = ({
           </CopyButton>
         </View>
       </View>
-      <Spacer height={24} />
+      <First>
+        {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
+          <StackedVestedTokens
+            balance={balance}
+            unvestedBalance={unvestedBalance}
+            lockedBalance={lockedBalance}
+            vestedBalance={vestedBalance}
+            stakingBalance={stakingBalance}
+            onPressInfo={onPressInfo}
+          />
+        )}
+        <Spacer height={24} />
+      </First>
       <Inline gap={12} style={styles.iconButtons}>
         <IconButton onPress={onSend} style={styles.iconButton}>
           <Icon i24 name="arrow_send" color={Color.textBase1} />

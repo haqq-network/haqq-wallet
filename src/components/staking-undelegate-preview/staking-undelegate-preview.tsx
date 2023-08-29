@@ -18,12 +18,13 @@ import {
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {ValidatorItem} from '@app/types';
 
 export type StakingDelegatePreviewProps = {
   unboundingTime: number;
   amount: number;
-  fee: number;
+  fee: Balance;
   validator: ValidatorItem;
   error?: string;
   disabled: boolean;
@@ -75,7 +76,7 @@ export const StakingUnDelegatePreview = ({
         </DataView>
         <DataView i18n={I18N.stakingUnDelegatePreviewNetworkFee}>
           <Text t11 color={Color.textBase1}>
-            {cleanNumber(fee)} aISLM
+            {fee.toWeiString()}
           </Text>
         </DataView>
       </View>

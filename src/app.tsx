@@ -78,6 +78,7 @@ export const App = () => {
         app.addListener(Events.onIsWelcomeNewsChanged, setIsWelcomeNewsEnabled);
         awaitForEventDone(Events.onAppLoggedId);
       })
+      .then(() => hideModal('splash'))
       .catch(async e => {
         Logger.captureException(e, 'app init');
       })

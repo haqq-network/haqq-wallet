@@ -45,6 +45,22 @@ export async function onRemoteConfigSync() {
           }
         }
       }
+
+      if (config.indexer_endpoints) {
+        for (const [chainId, endpoints] of Object.entries(
+          config.indexer_endpoints,
+        )) {
+          if (endpoints.length > 0) {
+            const providers = Provider.getByCosmosChainId(chainId);
+
+            for (const provider of providers) {
+              provider.update({
+                indexer: endpoints,
+              });
+            }
+          }
+        }
+      }
     } else {
       logger.error('remote config is empty', config);
     }

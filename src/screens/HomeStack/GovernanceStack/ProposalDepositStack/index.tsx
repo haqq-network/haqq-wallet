@@ -13,6 +13,7 @@ import {
 import {ProposalDepositFinishScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-finish';
 import {ProposalDepositFormScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-form';
 import {ProposalDepositPreviewScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-preview';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {ScreenOptionType} from '@app/types';
 
@@ -28,14 +29,14 @@ export type ProposalDepositStackParamList = GovernanceStackParamList & {
     proposal: Proposal;
   };
   [ProposalDepositStackRoutes.ProposalDepositPreview]: {
-    fee: number;
+    fee: Balance;
     account: string;
     amount: number;
     proposal: Proposal;
   };
   [ProposalDepositStackRoutes.ProposalDepositFinish]: {
     proposal: Proposal;
-    fee: number;
+    fee: Balance;
     txhash: string;
     amount: number;
   };

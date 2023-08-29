@@ -17,12 +17,13 @@ import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
 } from '@app/screens/HomeStack/HomeEarnStack';
+import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 
 const initData = {
-  stakingSum: 0,
-  rewardsSum: 0,
-  unDelegationSum: 0,
+  stakingSum: Balance.Empty,
+  rewardsSum: Balance.Empty,
+  unDelegationSum: Balance.Empty,
   loading: true,
 };
 
@@ -32,8 +33,8 @@ export const HomeStakingScreen = memo(() => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc + app.getBalance(w.address),
-      0,
+      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      Balance.Empty,
     ),
   });
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
@@ -60,12 +61,12 @@ export const HomeStakingScreen = memo(() => {
         val => val.type === StakingMetadataType.undelegation,
       );
 
-      const rewardsSum = sumReduce(rewards);
-      const stakingSum = sumReduce(delegations);
-      const unDelegationSum = sumReduce(unDelegations);
+      const rewardsSum = new Balance(sumReduce(rewards));
+      const stakingSum = new Balance(sumReduce(delegations));
+      const unDelegationSum = new Balance(sumReduce(unDelegations));
       const availableSum = visible.reduce(
-        (acc, w) => acc + app.getBalance(w.address),
-        0,
+        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+        Balance.Empty,
       );
 
       setData({
@@ -78,10 +79,10 @@ export const HomeStakingScreen = memo(() => {
     };
 
     rows.addListener(listener);
-    app.addListener('balance', listener);
+    app.addListener(Events.onBalanceSync, listener);
     return () => {
       rows.removeListener(listener);
-      app.removeListener('balance', listener);
+      app.removeListener(Events.onBalanceSync, listener);
     };
   }, [visible]);
 

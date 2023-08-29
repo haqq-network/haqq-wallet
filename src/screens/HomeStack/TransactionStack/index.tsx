@@ -19,7 +19,8 @@ import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/Transacti
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
-import {NftItem, ScreenOptionType} from '@app/types';
+import {Balance} from '@app/services/balance';
+import {NftItem, ScreenOptionType, TransactionResponse} from '@app/types';
 
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
@@ -48,16 +49,17 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     amount: number;
-    fee?: number;
+    fee?: Balance;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {
     from: string;
     to: string;
     nft: NftItem;
-    fee?: number;
+    fee?: Balance;
   };
   [TransactionStackRoutes.TransactionFinish]: {
     hash: string;
+    transaction: TransactionResponse;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
     hash: string;
@@ -71,7 +73,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     amount: number;
-    fee?: number;
+    fee?: Balance;
   };
   [TransactionStackRoutes.TransactionSumAddress]: {
     to: string;

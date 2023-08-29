@@ -15,14 +15,14 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Balance} from '@app/services/balance';
 import {splitAddress} from '@app/utils';
-import {WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   testID?: string;
   to: string;
   amount: number;
-  fee: number;
+  fee: Balance;
   contact: Contact | null;
   error?: string;
 
@@ -41,6 +41,7 @@ export const TransactionConfirmation = ({
   onConfirmTransaction,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
+  const balanceAmount = new Balance(amount);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -61,7 +62,9 @@ export const TransactionConfirmation = ({
         center
         style={styles.sum}
         i18n={I18N.transactionConfirmationSum}
-        i18params={{sum: `${+(amount + fee).toFixed(8)}`}}
+        i18params={{
+          sum: `${+fee.operate(balanceAmount, 'add').toFloat().toFixed(8)}`,
+        }}
       />
       <Text
         t11
@@ -113,14 +116,9 @@ export const TransactionConfirmation = ({
             />
           </DataView>
           <DataView label="Network Fee">
-            <Text
-              t11
-              color={Color.textBase1}
-              i18n={I18N.transactionConfirmationestimateFee}
-              i18params={{
-                estimateFee: `${+fee * WEI}`,
-              }}
-            />
+            <Text t11 color={Color.textBase1}>
+              {fee.toWeiString()}
+            </Text>
           </DataView>
         </View>
         {error && (
@@ -130,7 +128,7 @@ export const TransactionConfirmation = ({
         )}
       </Spacer>
       <Button
-        disabled={fee === 0 && !disabled}
+        disabled={!fee.isPositive() && !disabled}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onConfirmTransaction}

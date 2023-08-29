@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -7,6 +7,7 @@ import {
   ProposalDepositStackRoutes,
 } from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
 export const ProposalDepositFormScreen = memo(() => {
@@ -15,8 +16,8 @@ export const ProposalDepositFormScreen = memo(() => {
     ProposalDepositStackParamList,
     ProposalDepositStackRoutes.ProposalDepositForm
   >().params;
-  const fee = parseInt(Cosmos.fee.amount, 10);
-  const [balance, setBalance] = useState(0);
+  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
+  const [balance, setBalance] = useState(Balance.Empty);
 
   useEffect(() => {
     EthNetwork.getBalance(account).then(newBalance => {

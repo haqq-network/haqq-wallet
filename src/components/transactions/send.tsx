@@ -20,7 +20,6 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
     () => shortAddress(item.to || item.contractAddress || '', '•'),
     [item.contractAddress, item.to],
   );
-  const text = useMemo(() => `- ${cleanNumber(item.value)} ISLM`, [item.value]);
   const handlePress = useCallback(() => {
     onPress(item.hash);
   }, [item.hash, onPress]);
@@ -40,9 +39,12 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           subtitleI18n={I18N.transactionSendTo}
           short
         />
-        <Text t11 color={Color.textRed1}>
-          {text}
-        </Text>
+        <Text
+          t11
+          color={Color.textRed1}
+          i18n={I18N.transactionNegativeAmountText}
+          i18params={{value: cleanNumber(item.value)}}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

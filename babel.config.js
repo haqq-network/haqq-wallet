@@ -1,9 +1,13 @@
-module.exports = {
-  presets: [
+module.exports = function (api) {
+  api.cache(true);
+  const currentEnv = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
+  const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+  const presets = [
     'module:metro-react-native-babel-preset',
-    '@babel/preset-typescript',
-  ],
-  plugins: [
+    '@babel/preset-typescript'
+  ];
+  const plugins = [
     [
       'module-resolver',
       {
@@ -25,5 +29,14 @@ module.exports = {
       },
     ],
     'react-native-reanimated/plugin',
-  ],
-};
+  ];
+
+  if (currentEnv === 'production' && !isTestEnv) {
+    plugins.push(["react-remove-properties", {"properties": ["testID"]}]);
+  }
+
+  return {
+    presets,
+    plugins
+  };
+}

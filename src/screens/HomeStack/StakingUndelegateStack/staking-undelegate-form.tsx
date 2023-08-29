@@ -12,6 +12,7 @@ import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
 } from '@app/screens/HomeStack/StakingUndelegateStack';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
 export const StakingUnDelegateFormScreen = memo(() => {
@@ -43,10 +44,10 @@ export const StakingUnDelegateFormScreen = memo(() => {
       d => d.delegator === wallet?.cosmosAddress,
     );
 
-    return delegation?.amount ?? 0;
+    return new Balance(delegation?.amount ?? 0);
   }, [operator_address, wallet?.cosmosAddress]);
 
-  const fee = parseInt(Cosmos.fee.amount, 10);
+  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
 
   const onAmount = useCallback(
     (amount: number) => {

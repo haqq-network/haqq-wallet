@@ -71,7 +71,7 @@ export class Wallet extends Realm.Object {
 
   get cosmosAddress() {
     if (!this._cosmosAddress) {
-      this._cosmosAddress = Cosmos.address(this.address);
+      this._cosmosAddress = Cosmos.addressToBech32(this.address);
     }
 
     return this._cosmosAddress;
@@ -207,6 +207,11 @@ export class Wallet extends Realm.Object {
     realm.write(() => {
       realm.delete(wallets);
     });
+  }
+
+  async toggleIsHidden() {
+    this.update({isHidden: !this.isHidden});
+    await awaitForEventDone(Events.onWalletVisibilityChange);
   }
 
   update(params: Partial<Wallet>) {

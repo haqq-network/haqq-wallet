@@ -8,6 +8,7 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
+import {Balance} from '@app/services/balance';
 
 export const TransactionAddressScreen = memo(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -52,7 +53,7 @@ export const TransactionAddressScreen = memo(() => {
           //   address,
           //   balance,
           // );
-          const fee = 1;
+          const fee = new Balance(1);
           navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {

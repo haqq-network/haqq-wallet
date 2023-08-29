@@ -104,6 +104,9 @@ export const DEFAULT_CARD_PATTERN = '#0DAC6F';
 export const SHADOW_COLOR_1 = 'rgba(25, 26, 28, 0.06)';
 export const SHADOW_COLOR_2 = 'rgba(25, 26, 28, 0.5)';
 
+export const SHADOW_COLOR_3_LIGHT = 'rgba(25, 26, 28, 0.1)';
+export const SHADOW_COLOR_3_DARK = 'rgba(12, 14, 13, 1)';
+
 export const PLACEHOLDER_GRAY = '#AAAAAA';
 export const HR_GRAY = '#EEEEEE';
 
@@ -189,14 +192,17 @@ export const WEI = 10 ** 18;
 
 export const NUM_PRECISION = 2;
 
-export const MIN_AMOUNT = 0.001;
-
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
 
 export const LEDGER_APP = 'Ethereum';
+export const PLATFORM_COMPANY = Platform.select({
+  ios: 'Apple',
+  android: 'Google',
+});
 
 export const COSMOS_PREFIX = 'haqq';
+export const CURRENCY_NAME = 'ISLM';
 
 export const STRINGS = {
   /** non-breaking space  */

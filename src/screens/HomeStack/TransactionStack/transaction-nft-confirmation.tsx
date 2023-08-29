@@ -9,6 +9,7 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
+import {Balance} from '@app/services/balance';
 
 // TODO:
 export const TransactionNftConfirmationScreen = memo(() => {
@@ -31,7 +32,7 @@ export const TransactionNftConfirmationScreen = memo(() => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [disabled, setDisabled] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [fee, setFee] = useState(route.params.fee ?? 0);
+  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
 
   useEffect(() => {
     // EthNetwork.estimateTransaction(

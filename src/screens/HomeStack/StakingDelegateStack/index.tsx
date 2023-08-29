@@ -15,6 +15,7 @@ import {
 import {StakingDelegateFinishScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-finish';
 import {StakingDelegateFormScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-form';
 import {StakingDelegatePreviewScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-preview';
+import {Balance} from '@app/services/balance';
 import {ScreenOptionType, ValidatorItem} from '@app/types';
 
 export enum StakingDelegateStackRoutes {
@@ -31,14 +32,14 @@ export type StakingDelegateStackParamList = HomeStackParamList & {
   [StakingDelegateStackRoutes.StakingDelegatePreview]: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   [StakingDelegateStackRoutes.StakingDelegateFinish]: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
 };
 

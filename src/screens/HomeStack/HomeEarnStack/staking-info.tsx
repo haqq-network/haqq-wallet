@@ -11,6 +11,7 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useMinAmount} from '@app/hooks/use-min-amount';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {
@@ -23,7 +24,6 @@ import {
 } from '@app/screens/HomeStack/HomeEarnStack';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
-import {MIN_AMOUNT} from '@app/variables/common';
 
 export const StakingInfoScreen = memo(() => {
   const {validator} = useTypedRoute<
@@ -34,6 +34,7 @@ export const StakingInfoScreen = memo(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
   const visible = useWalletsVisible();
   const cosmos = useCosmos();
+  const minAmount = useMinAmount();
 
   const [withdrawDelegatorRewardProgress, setWithdrawDelegatorRewardProgress] =
     useState(false);
@@ -153,7 +154,7 @@ export const StakingInfoScreen = memo(() => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address) >= MIN_AMOUNT,
+      v => app.getBalance(v.address).toFloat() >= minAmount.toFloat(),
     );
 
     if (!available?.length) {
@@ -169,12 +170,12 @@ export const StakingInfoScreen = memo(() => {
       validator: operator_address,
       selectedWalletAddress: address,
     });
-  }, [navigation, operator_address, visible]);
+  }, [navigation, operator_address, visible, minAmount]);
 
   const onUnDelegate = useCallback(async () => {
     const delegations = new Set(
       StakingMetadata.getDelegationsForValidator(operator_address)
-        .filter(v => v.amount >= MIN_AMOUNT)
+        .filter(v => v.amount >= minAmount.toFloat())
         .map(v => v.delegator),
     );
     const available = visible.filter(w => delegations.has(w.cosmosAddress));
@@ -192,7 +193,7 @@ export const StakingInfoScreen = memo(() => {
       validator: operator_address,
       selectedWalletAddress: address,
     });
-  }, [navigation, operator_address, visible]);
+  }, [navigation, operator_address, visible, minAmount]);
 
   return (
     <StakingInfo

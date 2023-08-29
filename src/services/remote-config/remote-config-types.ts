@@ -10,7 +10,9 @@ export interface RemoteConfigTypes {
   web3_app_whitelist: string[];
   evm_endpoints: Record<string, string[]>;
   tm_endpoints: Record<string, string[]>;
+  indexer_endpoints: Record<string, string>;
   ios_version: string;
   android_version: string;
   version: number;
+  transfer_min_amount: string;
 }

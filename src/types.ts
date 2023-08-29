@@ -5,16 +5,20 @@ import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
+import Decimal from 'decimal.js';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
+import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 
 import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
@@ -82,6 +86,14 @@ export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
   | TransactionListDate;
+
+export type TransactionResponse = Awaited<
+  ReturnType<EthNetwork['transferTransaction']>
+>;
+
+export type SendTransactionRequest = Awaited<
+  ReturnType<(typeof EthNetwork)['sendTransaction']>
+>;
 
 export type WalletInitialData =
   | {
@@ -161,6 +173,7 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
+  totalValueInfo: undefined;
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -314,6 +327,7 @@ export type RootStackParamList = {
     to: string;
   };
   transactionFinish: {
+    transaction: TransactionResponse;
     hash: string;
   };
   transactionNftFinish: {
@@ -327,7 +341,7 @@ export type RootStackParamList = {
     from: string;
     to: string;
     amount: number;
-    fee?: number;
+    fee?: Balance;
   };
   transactionNftConfirmation: {
     from: string;
@@ -379,14 +393,14 @@ export type RootStackParamList = {
     proposal: Proposal;
   };
   proposalDepositPreview: {
-    fee: number;
+    fee: Balance;
     account: string;
     amount: number;
     proposal: Proposal;
   };
   proposalDepositFinish: {
     proposal: Proposal;
-    fee: number;
+    fee: Balance;
     txhash: string;
     amount: number;
   };
@@ -426,14 +440,14 @@ export type RootStackParamList = {
   stakingDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   stakingUnDelegate: {
     validator: string;
@@ -452,14 +466,14 @@ export type RootStackParamList = {
   stakingUnDelegatePreview: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   stakingUnDelegateFinish: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
   popupNotification: {
     bannerId: PopupNotificationBannerId;
@@ -871,7 +885,15 @@ export type ErrorModalImage =
 
 export type Modals = {
   splash: undefined;
+  notEnoughGas: {
+    gasLimit: Balance;
+    currentAmount: Balance;
+    onClose?: () => void;
+  };
   pin: undefined;
+  raffleAgreement: {
+    onClose?: () => void;
+  };
   noInternet: {showClose?: boolean};
   loading: {
     text?: string;
@@ -948,6 +970,9 @@ export type Modals = {
     onClose?: () => void;
     variant?: CaptchaType;
   };
+  lockedTokensInfo: {
+    onClose?: () => void;
+  };
 };
 
 export interface NftAttribute {
@@ -1012,3 +1037,101 @@ export enum AdjustTrackingAuthorizationStatus {
   userAuthorizedAccess = 3,
   statusNotAvailable = -1,
 }
+
+export type BalanceConstructor = IBalance | Decimal | number | string;
+
+export interface IBalance {
+  readonly raw: Decimal;
+  toNumber: () => number;
+  toFloat: () => number;
+  toFloatString: () => string;
+  toString: () => string;
+  toHex: () => string;
+  isPositive: () => this is IBalance;
+  toBalanceString: () => string;
+  operate: (
+    value: BalanceConstructor,
+    operation: 'add' | 'mul' | 'div' | 'sub',
+  ) => IBalance;
+  compare: (
+    value: BalanceConstructor,
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
+  ) => boolean;
+}
+
+export enum ValidUrlProtocol {
+  haqq = 'haqq',
+  etherium = 'etherium',
+  wc = 'wc',
+}
+
+export interface IWidgetBase {
+  component: string;
+}
+
+export interface ITransactionsWidget extends IWidgetBase {
+  component: 'Transactions';
+}
+
+export interface ITransactionsShortWidget extends IWidgetBase {
+  component: 'TransactionsShort';
+}
+
+export interface IRafflesWidget extends IWidgetBase {
+  component: 'Raffles';
+}
+
+export interface IStakingWidget extends IWidgetBase {
+  component: 'Staking';
+}
+
+export interface IGovernanceWidget extends IWidgetBase {
+  component: 'Governance';
+}
+
+export interface ILayoutWidget extends IWidgetBase {
+  component: 'Layout';
+  direction: 'horizontal' | 'vertical';
+  child: IWidget[];
+}
+
+export interface IAdWidget extends IWidgetBase, Banner {
+  component: 'Ad';
+  target?: string;
+}
+
+export interface IBannerWidget extends IWidgetBase, Banner {
+  component: 'Banner';
+  target?: string;
+}
+
+export type IWidget =
+  | ITransactionsWidget
+  | ITransactionsShortWidget
+  | IRafflesWidget
+  | IStakingWidget
+  | IGovernanceWidget
+  | ILayoutWidget
+  | IAdWidget
+  | IBannerWidget;
+
+export interface MarkupResponse {
+  blocks: ILayoutWidget;
+  created_at: string;
+  id: string;
+  screen: string;
+  status: string;
+  updated_at: string;
+  version: number;
+}
+
+export type SendTransactionError = {
+  reason: string;
+  code: string;
+  error: {
+    code: number;
+  };
+  method: string;
+  transaction: SendTransactionRequest;
+  transactionHash: string;
+};

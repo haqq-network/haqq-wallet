@@ -15,6 +15,7 @@ import {
 import {StakingUnDelegateFinishScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-finish';
 import {StakingUnDelegateFormScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-form';
 import {StakingUnDelegatePreviewScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-preview';
+import {Balance} from '@app/services/balance';
 import {ScreenOptionType, ValidatorItem} from '@app/types';
 
 export enum StakingUnDelegateStackRoutes {
@@ -32,14 +33,14 @@ export type StakingUnDelegateStackParamList = HomeStackParamList & {
   [StakingUnDelegateStackRoutes.StakingUnDelegatePreview]: {
     account: string;
     amount: number;
-    fee: number;
+    fee: Balance;
     validator: ValidatorItem;
   };
   [StakingUnDelegateStackRoutes.StakingUnDelegateFinish]: {
     txhash: string;
     validator: ValidatorItem;
     amount: number;
-    fee: number;
+    fee: Balance;
   };
 };
 

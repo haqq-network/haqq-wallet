@@ -1,11 +1,11 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
-  awaitForBluetooth,
   awaitForLedger,
   awaitForPopupClosed,
   getProviderInstanceForWallet,
 } from '@app/helpers';
+import {getMinAmount} from '@app/helpers/get-min-amount';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -13,16 +13,16 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
-import {MIN_AMOUNT} from '@app/variables/common';
 
 export async function onStakingRewards() {
   const cosmos = new Cosmos(app.provider!);
   const visible = Wallet.getAllVisible();
   const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
   const delegators: any = {};
+  const minAmount = getMinAmount();
 
   for (const row of rewards) {
-    if (row.amount > MIN_AMOUNT) {
+    if (row.amount > minAmount.toFloat()) {
       delegators[row.delegator] = (delegators[row.delegator] ?? []).concat(
         row.validator,
       );
@@ -65,7 +65,6 @@ export async function onStakingRewards() {
           ]),
       );
       try {
-        await awaitForBluetooth();
         await awaitForLedger(transport);
       } catch (e) {
         if (e === '27010') {

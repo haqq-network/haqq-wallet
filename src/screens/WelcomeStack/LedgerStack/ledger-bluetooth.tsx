@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
-import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
+import {State} from '@haqq/provider-ledger-react-native';
 import {Subscription} from 'rxjs';
 
 import {LedgerBluetooth} from '@app/components/ledger-bluetooth';
@@ -12,6 +12,7 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
+import {SystemDialog} from '@app/services/system-dialog';
 
 export const LedgerBluetoothScreen = memo(() => {
   const navigation = useTypedNavigation<LedgerStackParamList>();
@@ -47,7 +48,8 @@ export const LedgerBluetoothScreen = memo(() => {
       subscription.current?.unsubscribe();
     }
     setLoading(true);
-    const sub = await tryToInitBt();
+    const sub = await SystemDialog.tryToInitBt();
+    // @ts-ignore
     subscription.current = sub.subscribe({
       next: (state: State) => {
         switch (state) {

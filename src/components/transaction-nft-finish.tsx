@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -18,9 +18,9 @@ import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
+import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
 import {NftItem} from '@app/types';
-import {WEI} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: Transaction | null;
@@ -43,6 +43,10 @@ export const TransactionNftFinish = ({
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
+
+  const fee = useMemo(() => {
+    return new Balance(transaction?.fee ?? 0);
+  }, [transaction]);
 
   return (
     <PopupContainer style={styles.container}>
@@ -77,7 +81,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={(transaction?.fee ?? 0) * WEI} />
+      <NetworkFee fee={fee} />
 
       <Spacer />
 

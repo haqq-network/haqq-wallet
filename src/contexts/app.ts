@@ -27,8 +27,11 @@ import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
+import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -65,7 +68,10 @@ class App extends AsyncEventEmitter {
   private user: User;
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balance: Map<string, number> = new Map();
+  private _balance: Map<string, Balance> = new Map();
+  private _stakingBalance: Map<string, Balance> = new Map();
+  private _vestingBalance: Map<string, Record<VestingMetadataType, Balance>> =
+    new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -297,7 +303,7 @@ class App extends AsyncEventEmitter {
   set theme(value) {
     VariablesString.set('theme', value);
 
-    this.emit('theme', value);
+    this.emit(Events.onThemeChanged, value);
 
     if (AppTheme.system === value) {
       const scheme = this._systemTheme;
@@ -322,7 +328,7 @@ class App extends AsyncEventEmitter {
 
     if (systemColorScheme !== this._systemTheme) {
       this._systemTheme = systemColorScheme;
-      this.emit('theme', systemColorScheme);
+      this.emit(Events.onThemeChanged, systemColorScheme);
     }
 
     StatusBar.setBarStyle(
@@ -389,13 +395,15 @@ class App extends AsyncEventEmitter {
   }
 
   async auth() {
-    const close = showModal('pin');
+    await SystemDialog.getResult(async () => {
+      const close = showModal('pin');
 
-    await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
+      await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
-    if (this.authenticated) {
-      close();
-    }
+      if (this.authenticated) {
+        close();
+      }
+    });
   }
 
   async makeBiometryAuth() {
@@ -483,22 +491,83 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  onWalletsBalance(balance: Record<string, number>) {
+  onWalletsBalance(balance: Record<string, Balance>) {
     let changed = false;
     for (const entry of Object.entries(balance)) {
-      if (this._balance.get(entry[0]) !== entry[1]) {
+      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
         this._balance.set(entry[0], entry[1]);
         changed = true;
       }
     }
 
     if (changed) {
-      this.emit('balance');
+      this.emit(Events.onBalanceSync);
     }
   }
 
-  getBalance(address: string) {
-    return this._balance.get(address) ?? 0;
+  async onWalletsStakingBalance(balance: Record<string, Balance>) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
+        this._stakingBalance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit(Events.onStakingBalanceSync);
+    }
+  }
+
+  onWalletsVestingBalance(
+    balance: Record<string, Record<VestingMetadataType, Balance>>,
+  ) {
+    let changed = false;
+    for (const entry of Object.entries(balance)) {
+      const balances = this._vestingBalance.get(entry[0]);
+      const lockedChanged = !balances?.[VestingMetadataType.locked]?.compare(
+        entry[1]?.[VestingMetadataType.locked],
+        'eq',
+      );
+      const unvestedChanged = !balances?.[
+        VestingMetadataType.unvested
+      ]?.compare(entry[1]?.[VestingMetadataType.unvested], 'eq');
+      const vestedChanged = !balances?.[VestingMetadataType.vested]?.compare(
+        entry[1]?.[VestingMetadataType.vested],
+        'eq',
+      );
+
+      if (lockedChanged || unvestedChanged || vestedChanged) {
+        this._vestingBalance.set(entry[0], entry[1]);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      this.emit(Events.onVestingBalanceSync);
+    }
+  }
+
+  getBalance(address: string): Balance {
+    return this._balance.get(address) ?? Balance.Empty;
+  }
+
+  getStakingBalance(address: string): Balance {
+    return this._stakingBalance.get(address) ?? Balance.Empty;
+  }
+
+  getVestingBalance(address: string): Record<VestingMetadataType, Balance> {
+    const balances = this._vestingBalance.get(address);
+
+    const locked = balances?.[VestingMetadataType.locked] ?? Balance.Empty;
+    const unvested = balances?.[VestingMetadataType.unvested] ?? Balance.Empty;
+    const vested = balances?.[VestingMetadataType.vested] ?? Balance.Empty;
+
+    return {
+      locked,
+      unvested,
+      vested,
+    };
   }
 
   handleDynamicLink(link: DynamicLink | null) {

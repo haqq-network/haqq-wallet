@@ -17,7 +17,7 @@ export const HomeScreenTabBarIcon = ({
   const name = useMemo(() => {
     switch (route) {
       case 'homeFeed':
-        return IconsName.wallet;
+        return IconsName.home;
       case 'homeEarn':
         return IconsName.staking;
       case 'homeStaking':

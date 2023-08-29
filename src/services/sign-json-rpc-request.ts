@@ -3,10 +3,9 @@ import {TransactionRequest} from '@haqq/provider-base';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {
-  awaitForBluetooth,
+  awaitForLedger,
   getProviderInstanceForWallet,
   hideModal,
-  showModal,
 } from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
@@ -106,10 +105,11 @@ export class SignJsonRpcRequest {
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForBluetooth();
-      showModal('ledgerAttention');
-    }
+    const checkLedger = async () => {
+      if ((wallet as Wallet)?.type === WalletType.ledgerBt) {
+        await awaitForLedger(instanceProvider);
+      }
+    };
 
     const path = wallet.path || '/';
     let result: string | undefined;
@@ -125,7 +125,12 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
       case EIP155_SIGNING_METHODS.ETH_SIGN:
         const message = getSignParamsMessage(request.params);
-        result = await instanceProvider.signPersonalMessage(path, message);
+        const signPersonalMessageResult = instanceProvider.signPersonalMessage(
+          path,
+          message,
+        );
+        await checkLedger();
+        result = await signPersonalMessageResult;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
@@ -133,7 +138,7 @@ export class SignJsonRpcRequest {
         const typedData = getSignTypedDataParamsData(request.params);
         if (isEthTypedData(typedData)) {
           const cosmos = new Cosmos(app.provider!);
-          const signedMessageHash = await cosmos.signTypedData(
+          const signTypedDataResult = cosmos.signTypedData(
             path,
             instanceProvider,
             typedData.domain,
@@ -141,6 +146,8 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
+          await checkLedger();
+          const signedMessageHash = await signTypedDataResult;
 
           if (wallet.type === WalletType.ledgerBt) {
             result = signedMessageHash;
@@ -172,10 +179,12 @@ export class SignJsonRpcRequest {
           sendTransactionRequest.chainId = chainId;
         }
 
-        const signedTransaction = await instanceProvider.signTransaction(
+        const sendTransactionResult = instanceProvider.signTransaction(
           path,
           sendTransactionRequest,
         );
+        await checkLedger();
+        const signedTransaction = await sendTransactionResult;
 
         const tx = await rpcProvider.sendTransaction(signedTransaction);
         result = tx.hash;
@@ -190,10 +199,12 @@ export class SignJsonRpcRequest {
           signTransactionRequest.chainId = chainId;
         }
 
-        result = await instanceProvider.signTransaction(
+        const signTransactionResult = instanceProvider.signTransaction(
           path,
           signTransactionRequest,
         );
+        await checkLedger();
+        result = await signTransactionResult;
         break;
       default:
         throw new Error(

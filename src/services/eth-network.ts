@@ -10,6 +10,7 @@ import {calcFeeWei} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {getDefaultChainId} from '@app/network';
+import {Balance} from '@app/services/balance';
 import {WEI} from '@app/variables/common';
 
 export class EthNetwork {
@@ -36,6 +37,7 @@ export class EthNetwork {
         value: '0x' + value.toString('hex'),
         maxFeePerGas: gasPrice.toHexString(),
         maxPriorityFeePerGas: gasPrice.toHexString(),
+        data,
       } as Deferrable<TransactionRequest>);
 
       estimateGas = new BN(resp._hex, 16);
@@ -72,13 +74,14 @@ export class EthNetwork {
     };
   }
 
-  static async getBalance(address: string) {
+  static async getBalance(address: string): Promise<Balance> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
       const balance = await rpcProvider.getBalance(address);
-      return Number(utils.formatEther(balance));
+      const balanceWithWEI = new Balance(balance._hex);
+      return new Balance(balanceWithWEI);
     } catch (e) {
-      return 0;
+      return Balance.Empty;
     }
   }
 
@@ -120,9 +123,10 @@ export class EthNetwork {
     from: string,
     to: string,
     amount: number,
+    data = '0x',
   ): Promise<{
     fee: number;
-    feeWei: number;
+    feeWei: Balance;
     feeData: FeeData;
     estimateGas: BigNumberish;
   }> {
@@ -134,6 +138,7 @@ export class EthNetwork {
         from,
         to,
         amount,
+        data,
       } as Deferrable<TransactionRequest>),
     ]);
 
@@ -141,7 +146,7 @@ export class EthNetwork {
 
     return {
       fee: feeWei / WEI,
-      feeWei,
+      feeWei: new Balance(String(feeWei)),
       feeData: result[0],
       estimateGas: result[1],
     };
