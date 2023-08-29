@@ -41,8 +41,7 @@ platform :android do
         project_slug: 'faucet-app',
         version: current_build_number.to_s,
         app_identifier: 'com.haqq.wallet',
-        build: current_build_number,
-        dist: current_build_number,
+        build: current_build_number.to_s,
         sourcemap: ['index.android.bundle', 'index.android.bundle.map'],
         rewrite: true
       )
@@ -178,8 +177,7 @@ platform :ios do
       project_slug: 'faucet-app',
       version: current_build_number.to_s,
       app_identifier: app_identifier,
-      build: current_build_number,
-      dist: current_build_number,
+      build: current_build_number.to_s,
       sourcemap: ['main.jsbundle', 'main.jsbundle.map'],
       rewrite: true
     )
