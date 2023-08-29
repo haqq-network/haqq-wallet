@@ -53,7 +53,7 @@ export class LoggerService {
   captureException(
     error: unknown,
     source: string = 'unknown',
-    context: any = {},
+    context: Record<string, any> = {},
   ) {
     if (!error) {
       this.log(
@@ -65,9 +65,11 @@ export class LoggerService {
     }
     this.error('captureException', source, error, context);
     try {
-      Sentry.captureException(error, {
-        tags: {source},
-        extra: context,
+      Sentry.captureException(error, scope => {
+        scope.clear();
+        scope.setTag('source', source);
+        scope.setExtras(context);
+        return scope;
       });
     } catch (e) {
       this.error(
