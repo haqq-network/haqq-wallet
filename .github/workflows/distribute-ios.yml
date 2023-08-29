@@ -138,4 +138,3 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
-          SENTRY_AUTH_KEY: ${{ secrets.SENTRY_AUTH_KEY }}
