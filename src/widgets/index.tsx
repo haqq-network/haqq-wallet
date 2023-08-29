@@ -74,6 +74,9 @@ export const WidgetRoot = memo(() => {
   ): ReactNode[] => {
     return widgets.map(widget => {
       const component = WidgetMap[widget.component];
+      if (!component) {
+        return null;
+      }
 
       if (widget.component === 'Layout') {
         const layoutComponent = WidgetMap[widget.component as 'Layout'];

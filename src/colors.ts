@@ -81,6 +81,8 @@ import {
   LIGHT_TEXT_YELLOW_1,
   LIGHT_TWITTER_BG,
   LIGHT_TWITTER_TEXT,
+  SHADOW_COLOR_3_DARK,
+  SHADOW_COLOR_3_LIGHT,
   TRANSPARENT,
 } from '@app/variables/common';
 
@@ -126,6 +128,7 @@ export enum Color {
   socialDiscordText = 'socialDiscordText',
   socialAppleBg = 'socialAppleBg',
   socialAppleText = 'socialAppleText',
+  shadowColor3 = 'shadowColor3',
 }
 
 const styled = new Set(Object.keys(Color));
@@ -184,6 +187,7 @@ const light: Record<Color, string> = {
   [Color.socialDiscordText]: LIGHT_DISCORD_TEXT,
   [Color.socialAppleBg]: LIGHT_APPLE_BG,
   [Color.socialAppleText]: LIGHT_APPLE_TEXT,
+  [Color.shadowColor3]: SHADOW_COLOR_3_LIGHT,
 };
 
 const dark: Record<Color, string> = {
@@ -228,4 +232,5 @@ const dark: Record<Color, string> = {
   [Color.socialDiscordText]: DARK_DISCORD_TEXT,
   [Color.socialAppleBg]: DARK_APPLE_BG,
   [Color.socialAppleText]: DARK_APPLE_TEXT,
+  [Color.shadowColor3]: SHADOW_COLOR_3_DARK,
 };

@@ -4,7 +4,6 @@ import {TouchableOpacity, TouchableOpacityProps} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {SHADOW_COLOR_3} from '@app/variables/common';
 
 type Props = {
   children: ReactNode;
@@ -31,14 +30,14 @@ export const ShadowCard = ({
 const styles = createTheme({
   wrapper: {
     borderRadius: 13,
-    shadowColor: SHADOW_COLOR_3,
+    shadowColor: Color.shadowColor3,
     shadowOffset: {
       width: 0,
       height: 6,
     },
     backgroundColor: Color.bg1,
     shadowRadius: 24,
-    shadowOpacity: 0.15,
+    shadowOpacity: 1,
     elevation: 13,
 
     paddingVertical: 16,
