@@ -4,6 +4,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
+  FileDownloadEvent,
   WebViewNavigation,
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
@@ -76,6 +77,8 @@ export interface Web3BrowserProps {
 
   onPressRemoveBookmark(url: string): void;
 
+  onFileDownload(event: FileDownloadEvent): void;
+
   addSiteToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 
@@ -104,6 +107,7 @@ export const Web3Browser = ({
   onPressAddBookmark,
   onPressRemoveBookmark,
   addSiteToSearchHistory,
+  onFileDownload,
 }: Web3BrowserProps) => {
   const userAgent = useRef(getUserAgent()).current;
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
@@ -312,6 +316,7 @@ export const Web3Browser = ({
           testID={'web3-browser-webview'}
           applicationNameForUserAgent={'HAQQ Wallet'}
           injectedJavaScriptBeforeContentLoaded={injectedJSBeforeContentLoaded}
+          onFileDownload={onFileDownload}
         />
       </View>
       <Web3BrowserActionMenu
