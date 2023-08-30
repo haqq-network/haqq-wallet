@@ -658,6 +658,20 @@ export const SettingsTestScreen = () => {
         }}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={8} />
+      <Button
+        title="Cloudflare Turnstile"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({type: CaptchaType.turnstile});
+            Alert.alert('result', result);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', err?.message);
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
       <Title text="Realm" />
       <Button
         title={`clear news cache [RSS: ${rssNewsCount} | OUR:${newsCount}]`}
