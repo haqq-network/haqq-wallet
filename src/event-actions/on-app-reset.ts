@@ -32,11 +32,8 @@ export async function onAppReset() {
   }
   WalletConnectSessionMetadata.removeAll();
 
-  const keys = await RNAsyncStorage.getAllKeys();
-  for (const key of keys) {
-    await RNAsyncStorage.removeItem(key);
-  }
-  await app.getUser().resetUserData();
+  await RNAsyncStorage.clear();
+  app.getUser().resetUserData();
   app.onboarded = false;
   await resetGenericPassword();
 

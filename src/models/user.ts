@@ -3,7 +3,6 @@ import {EventEmitter} from 'events';
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
 
-import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -133,8 +132,7 @@ export class User extends EventEmitter {
     return new User(user as UserType & Realm.Object<UserType>);
   }
 
-  async resetUserData() {
-    await awaitForRealm();
+  resetUserData() {
     realm.write(() => {
       this._raw.pinAttempts = null;
       this._raw.pinBanned = null;
