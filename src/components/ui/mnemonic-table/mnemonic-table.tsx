@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {SecurityView} from '@app/components/security-view';
 import {CopyButton} from '@app/components/ui/copy-button';
 import {Icon} from '@app/components/ui/icon';
 import {Text} from '@app/components/ui/text';
@@ -19,7 +20,7 @@ interface MnemonicTableProps {
 export function MnemonicTable({mnemonic, testID}: MnemonicTableProps) {
   const words = useMemo(() => mnemonic.split(' '), [mnemonic]);
   return (
-    <>
+    <SecurityView>
       <View style={styles.mnemonics}>
         <View style={styles.column}>
           {words.slice(0, words.length / 2).map((t, i) => (
@@ -49,7 +50,7 @@ export function MnemonicTable({mnemonic, testID}: MnemonicTableProps) {
         <Icon name="copy" i22 color={Color.textGreen1} />
         <Text t9 style={styles.copyText} i18n={I18N.copy} />
       </CopyButton>
-    </>
+    </SecurityView>
   );
 }
 
