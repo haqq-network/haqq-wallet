@@ -13,6 +13,7 @@ import shajs from 'sha.js';
 import {CaptchaType} from '@app/components/captcha';
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
   awaitForLedger,
@@ -42,7 +43,7 @@ import {EthNetwork} from '@app/services';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals, WalletType} from '@app/types';
-import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   Logger.log('setBackgroundMessageHandler', remoteMessage);
@@ -293,6 +294,7 @@ const Title = ({text = ''}) => (
 export const SettingsTestScreen = () => {
   const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
+  const [deeplink, setDeeplink] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
@@ -318,6 +320,21 @@ export const SettingsTestScreen = () => {
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
   };
+
+  const onPressDeepLink = useCallback(async () => {
+    try {
+      const handled = await onDeepLink(deeplink);
+      if (handled) {
+        toastMessage('✅ link successfully handled');
+      } else {
+        toastMessage('❌ not handled');
+      }
+    } catch (err) {
+      if (isError(err)) {
+        Alert.alert('onDeepLink error', JSON.stringify(err, null, 2));
+      }
+    }
+  }, [deeplink]);
 
   const onPressOpenInAppBrowser = () => {
     openInAppBrowser(browserUrl);
@@ -495,6 +512,20 @@ export const SettingsTestScreen = () => {
         title="wallet connect"
         disabled={!wc}
         onPress={onPressWc}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Title text="Deeplink" />
+      <Input
+        placeholder="wc:, haqq:, ethereum:"
+        value={deeplink}
+        onChangeText={setDeeplink}
+      />
+      <Spacer height={8} />
+      <Button
+        title="call onDeepLink"
+        disabled={!deeplink}
+        onPress={onPressDeepLink}
         variant={ButtonVariant.contained}
       />
       <Title text="Browser" />
