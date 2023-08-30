@@ -34,4 +34,6 @@ declare module '@env' {
   export const AIRDROP_GASDROP_CAMPAIGN_ID: string;
   export const GOOGLE_PLAY_PACKAGE: string;
   export const APPSTORE_APP_ID: string;
+  export const TURNSTILE_URL: string;
+  export const TURNSTILE_SITEKEY: string;
 }
