@@ -135,6 +135,7 @@
     "@babel/preset-typescript": "7.22.5",
     "@babel/runtime": "7.22.6",
     "@react-native-community/eslint-config": "3.2.0",
+    "@sentry/cli": "2.20.5",
     "@tsconfig/react-native": "3.0.2",
     "@types/bn.js": "5.1.1",
     "@types/create-hash": "1.2.2",

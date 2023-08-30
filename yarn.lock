@@ -3843,6 +3843,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/cli@npm:2.20.5":
+  version: 2.20.5
+  resolution: "@sentry/cli@npm:2.20.5"
+  dependencies:
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.7
+    progress: ^2.0.3
+    proxy-from-env: ^1.1.0
+    which: ^2.0.2
+  bin:
+    sentry-cli: bin/sentry-cli
+  checksum: 4822e58e944e74b5982ea657c0d622d8ec40e9df371d4ba1da4f3c3a29b1c1e7a2556c0a8e63a92aee7e23d701ddf2311cbd0a6ae7751d3e7313b423f3430daf
+  languageName: node
+  linkType: hard
+
 "@sentry/core@npm:7.57.0":
   version: 7.57.0
   resolution: "@sentry/core@npm:7.57.0"
@@ -9568,6 +9583,7 @@ __metadata:
     "@react-navigation/bottom-tabs": 6.5.8
     "@react-navigation/native": 6.1.7
     "@react-navigation/stack": 6.3.17
+    "@sentry/cli": 2.20.5
     "@sentry/react-native": 5.7.1
     "@tradle/react-native-http": 2.0.1
     "@tsconfig/react-native": 3.0.2
