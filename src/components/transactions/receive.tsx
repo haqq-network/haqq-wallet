@@ -35,7 +35,7 @@ export const TransactionReceive = ({
         </View>
         <DataContent
           style={styles.infoContainer}
-          title={I18N.transactionSendTitle}
+          titleI18n={I18N.transactionReceiveTitle}
           subtitle={subtitle}
           short
         />
