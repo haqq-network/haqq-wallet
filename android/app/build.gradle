@@ -101,7 +101,7 @@ android {
     applicationId "com.haqq.wallet"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 197
+    versionCode 198
     versionName "1.4.7"
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
