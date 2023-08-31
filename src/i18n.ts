@@ -739,6 +739,7 @@ export enum I18N {
   notEnoughGasDescription1,
   notEnoughGasDescription3,
   browserActionMenuClose,
+  earnTicketAlreadyRecieved,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1516,6 +1517,7 @@ const en: Record<I18N, string> = {
   [I18N.timerSec]: 'Sec',
   [I18N.raffleTicketRecieved]: 'You have successfully claimed your reward',
   [I18N.earnTicketRecieved]: 'The ticket has been received',
+  [I18N.earnTicketAlreadyRecieved]: 'The ticket already received',
   [I18N.raffleDetailsTimerFinishTitle]: 'Raffle is end',
   [I18N.raffleDetailsTimerProgressTitle]: 'The raffle will end in',
   [I18N.raffleRewardСongratulations]: 'Сongratulations!',
