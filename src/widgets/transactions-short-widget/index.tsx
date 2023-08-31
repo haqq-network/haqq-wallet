@@ -17,14 +17,35 @@ export const TransactionsShortWidgetWrapper = memo(() => {
 
   const calculateInfo = () => {
     const sendedSum = transactions
-      .filter(transaction => transaction.source === TransactionSource.send)
+      .filter(transaction => {
+        const isSend = transaction.source === TransactionSource.send;
+        if (!isSend) {
+          return false;
+        }
+        const isFromMyWallet =
+          transaction.from && adressList.includes(transaction.from);
+        const isToMyWallet =
+          transaction.to && adressList.includes(transaction.to);
+        return isSend && !(isFromMyWallet && isToMyWallet);
+      })
       .reduce((acc, current) => {
         //@ts-ignore
         return acc + (current?.value ?? 0);
       }, 0);
 
     const receivedSum = transactions
-      .filter(transaction => transaction.source === TransactionSource.receive)
+      .filter(transaction => {
+        const isRecieve = transaction.source === TransactionSource.receive;
+        if (!isRecieve) {
+          return false;
+        }
+        const isFromMyWallet =
+          transaction.from && adressList.includes(transaction.from);
+        const isToMyWallet =
+          transaction.to && adressList.includes(transaction.to);
+
+        return isRecieve && !(isFromMyWallet && isToMyWallet);
+      })
       .reduce((acc, current) => {
         //@ts-ignore
         return acc + (current?.value ?? 0);

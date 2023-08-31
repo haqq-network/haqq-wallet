@@ -15,11 +15,15 @@ import {
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
+import {
+  TransactionListReceive,
+  TransactionListSend,
+  TransactionSource,
+} from '@app/types';
 
 export type Props = {
-  item: Transaction;
+  item: TransactionListSend | TransactionListReceive;
   onPress: (hash: string) => void;
   wallets: Realm.Results<Wallet>;
 };
@@ -48,10 +52,8 @@ const DisplayMap: {[key: string]: IMapItem} = {
 
 export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
   const isSend = useMemo(() => {
-    return wallets
-      .map(wallet => wallet.address.toLowerCase())
-      .includes(item.from.toLowerCase());
-  }, [wallets, item.from]);
+    return item.source === TransactionSource.send;
+  }, [item.source]);
   const DisplayMapItem = useMemo(
     () => DisplayMap[isSend ? 'send' : 'receive'],
     [isSend],
