@@ -46,6 +46,7 @@ async function loadTransactionsFromExplorerWithProvider(
         headers: {
           accept: 'application/json',
         },
+        timeout: 10000,
       },
     );
 

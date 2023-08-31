@@ -78,6 +78,11 @@ const settingsOptions = {
   tabBarIcon: tabBarIcon('homeSettings'),
 };
 
+const navigationOptions = {
+  ...screenOptions,
+  unmountOnBlur: true,
+};
+
 export const HomeScreen = () => {
   const provider = useProvider();
   const navigation = useTypedNavigation();
@@ -97,7 +102,7 @@ export const HomeScreen = () => {
   }, [navigation]);
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator screenOptions={navigationOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedScreen}

@@ -133,6 +133,10 @@ export class WalletConnect extends EventEmitter {
     let resp: PairingTypes.Struct;
 
     try {
+      if (!uri?.startsWith('wc:')) {
+        uri = `wc:${uri}`;
+      }
+
       resp = await this._core.pairing.pair({uri});
 
       if (!resp) {

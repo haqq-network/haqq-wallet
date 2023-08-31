@@ -191,8 +191,8 @@ export const App = () => {
           await migrationWallets();
         }
       })
-      .then(() => hideModal('splash'))
       .then(() => awaitForEventDone(Events.onAppLoggedId))
+      .then(() => hideModal('splash'))
       .catch(async e => {
         Logger.captureException(e, 'app init');
       })

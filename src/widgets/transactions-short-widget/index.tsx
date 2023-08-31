@@ -2,32 +2,37 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {useTypedNavigation} from '@app/hooks';
-import {Transaction} from '@app/models/transaction';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
+import {TransactionSource} from '@app/types';
 import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/transactions-short-widget';
 
 export const TransactionsShortWidgetWrapper = memo(() => {
-  const wallets = Wallet.addressList();
-  const transactions = Transaction.getAll().snapshot();
+  const adressList = Wallet.addressList();
+  const transactions = useTransactionList(adressList);
   const navigation = useTypedNavigation();
 
   const [received, setReceived] = useState(0);
   const [spend, setSpend] = useState(0);
 
-  const calculateInfo = useCallback(() => {
-    wallets.map(wallet => {
-      const receivedSum = transactions
-        .filtered('to = $0', wallet.toLocaleLowerCase())
-        .sum('value');
+  const calculateInfo = () => {
+    const sendedSum = transactions
+      .filter(transaction => transaction.source === TransactionSource.send)
+      .reduce((acc, current) => {
+        //@ts-ignore
+        return acc + (current?.value ?? 0);
+      }, 0);
 
-      const sendedSum = transactions
-        .filtered('from = $0', wallet.toLocaleLowerCase())
-        .sum('value');
+    const receivedSum = transactions
+      .filter(transaction => transaction.source === TransactionSource.receive)
+      .reduce((acc, current) => {
+        //@ts-ignore
+        return acc + (current?.value ?? 0);
+      }, 0);
 
-      setReceived(prev => prev + receivedSum);
-      setSpend(prev => prev + sendedSum);
-    });
-  }, []);
+    setReceived(receivedSum);
+    setSpend(sendedSum);
+  };
 
   const openTotalInfo = useCallback(() => {
     navigation.navigate('totalValueInfo');

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {HCAPTCHA_SITE_KEY} from '@env';
+import {HCAPTCHA_SITE_KEY, TURNSTILE_SITEKEY, TURNSTILE_URL} from '@env';
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
@@ -12,6 +12,7 @@ import {AppTheme} from '@app/types';
 
 import {Hcaptcha} from './hcaptcha';
 import {SliderCaptcha} from './slider-captcha/slider-captcha';
+import {Turnstile} from './turnstile';
 import {First} from './ui';
 
 export type CaptchaDataTypes = (
@@ -27,6 +28,7 @@ export enum CaptchaType {
   hcaptcha,
   slider,
   ocaptcha,
+  turnstile,
 }
 
 export interface CaptchaProps {
@@ -81,6 +83,22 @@ export const Captcha = ({
             />
           </>
         )}
+        {type === CaptchaType.turnstile && (
+          <>
+            <View style={styles.whiteBox2} />
+            <Turnstile
+              url={TURNSTILE_URL}
+              siteKey={TURNSTILE_SITEKEY}
+              showLoading
+              onMessage={onMessage}
+              theme={theme}
+              style={styles.hcaptcha}
+              containerStyle={styles.hcaptchaContainer}
+              backgroundColor={'transparent'}
+              languageCode={languageCode}
+            />
+          </>
+        )}
       </First>
     </View>
   );
@@ -110,6 +128,16 @@ const styles = createTheme({
     height: () => getWindowHeight() * 0.185,
     backgroundColor: getColor(Color.bg1),
     transform: [{translateX: -2}, {translateY: 2}],
+    zIndex: 2,
+    elevation: 2,
+  },
+  whiteBox2: {
+    position: 'absolute',
+    borderRadius: 15,
+    width: () => getWindowWidth() * 0.355,
+    height: () => getWindowHeight() * 0.155,
+    backgroundColor: getColor(Color.bg1),
+    transform: [{translateY: 5}],
     zIndex: 2,
     elevation: 2,
   },
