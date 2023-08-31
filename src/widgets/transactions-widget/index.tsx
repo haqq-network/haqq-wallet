@@ -1,21 +1,37 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
 import {useTypedNavigation} from '@app/hooks';
-import {Transaction} from '@app/models/transaction';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
+import {
+  TransactionListReceive,
+  TransactionListSend,
+  TransactionSource,
+} from '@app/types';
 import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-widget';
 
 export const TransactionsWidgetWrapper = memo(() => {
   const navigation = useTypedNavigation();
   const wallets = useMemo(() => Wallet.getAll(), []);
+  const adressList = Wallet.addressList();
+  const transactions = useTransactionList(adressList);
 
   const openTotalInfo = useCallback(() => {
     navigation.navigate('totalValueInfo');
   }, [navigation]);
 
-  const lastThreeTransactions = useMemo(
-    () => Transaction.getAll().snapshot().sorted('createdAt', true).slice(0, 3),
-    [],
+  const lastThreeTransactions = useMemo<
+    (TransactionListSend | TransactionListReceive)[]
+  >(
+    () =>
+      transactions
+        .filter(item =>
+          [TransactionSource.send, TransactionSource.receive].includes(
+            item.source,
+          ),
+        )
+        .slice(0, 3) as (TransactionListSend | TransactionListReceive)[],
+    [transactions],
   );
 
   const onRowPress = useCallback(

@@ -5,13 +5,13 @@ import {StyleSheet} from 'react-native';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
+import {TransactionListReceive, TransactionListSend} from '@app/types';
 import {TransactionRowWidget} from '@app/widgets/transactions-widget/transaction-row-widget';
 
 type Props = {
   onPress: () => void;
-  lastTransactions: Transaction[];
+  lastTransactions: (TransactionListSend | TransactionListReceive)[];
   onRowPress: (hash: string) => void;
   wallets: Realm.Results<Wallet>;
 };

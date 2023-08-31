@@ -48,7 +48,7 @@ const WidgetMap: IWidgetMap = {
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
 };
 
-export const WidgetRoot = memo(() => {
+export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const [data, setData] = useState<IWidget[]>([]);
 
   useEffectAsync(async () => {
@@ -62,7 +62,7 @@ export const WidgetRoot = memo(() => {
     if (response.blocks) {
       setData([response.blocks]);
     }
-  }, []);
+  }, [lastUpdate]);
 
   if (!data) {
     return null;
