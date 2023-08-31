@@ -615,6 +615,21 @@ export const SettingsTestScreen = () => {
       />
       <Spacer height={8} />
       <Button
+        title="Show oauth captcha"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({type: CaptchaType.ocaptcha});
+            Alert.alert('result', result);
+            Clipboard.setString(result);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', err?.message);
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
         title="Show puzzle captcha"
         onPress={async () => {
           try {

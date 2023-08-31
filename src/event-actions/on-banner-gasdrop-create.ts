@@ -46,9 +46,9 @@ export async function onBannerGasdropCreate() {
         claimCode: link_info.code as string,
       });
     }
-
-    VariablesBool.set('gasdropTaken', true);
   } catch (e) {
     Logger.captureException(e, 'onBannerGasdropCreate');
+  } finally {
+    VariablesBool.set('gasdropTaken', true);
   }
 }
