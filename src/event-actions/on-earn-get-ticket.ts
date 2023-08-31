@@ -64,57 +64,65 @@ export async function onEarnGetTicket(raffleId: string) {
     leadingAccount?.address ?? '',
   );
 
-  const iface = new utils.Interface(abi);
-  const data = iface.encodeFunctionData('participateUser', [
-    {
-      participant: response.participant,
-      deadline: response.deadline,
-    },
-    Buffer.from(response.signature, 'hex'),
-  ]);
+  if (!response?.tx_hash) {
+    const iface = new utils.Interface(abi);
+    const data = iface.encodeFunctionData('participateUser', [
+      {
+        participant: response.participant,
+        deadline: response.deadline,
+      },
+      Buffer.from(response.signature, 'hex'),
+    ]);
 
-  const unsignedTx = await EthNetwork.populateTransaction(
-    leadingAccount.address,
-    raffleId,
-    new BN(0),
-    data,
-    250000,
-  );
+    const unsignedTx = await EthNetwork.populateTransaction(
+      leadingAccount.address,
+      raffleId,
+      new BN(0),
+      data,
+      250000,
+    );
 
-  const signedTx = await provider.signTransaction(
-    leadingAccount.path!,
-    unsignedTx,
-  );
+    const signedTx = await provider.signTransaction(
+      leadingAccount.path!,
+      unsignedTx,
+    );
 
-  let txHash = null;
-  try {
-    const {hash} = await EthNetwork.sendTransaction(signedTx);
-    txHash = hash;
-  } catch (err) {
-    if (isSendTransactionError(err) && err.code === 'INSUFFICIENT_FUNDS') {
-      logger.log('dont have fee', err);
-      showModal('notEnoughGas', {
-        gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
-        currentAmount: app.getBalance(leadingAccount.address),
-      });
-    } else if (isSendTransactionError(err)) {
-      logger.error('error', err);
-      showModal('error', {
-        title: getText(I18N.modalRewardErrorTitle),
-        description: err?.reason,
-        close: getText(I18N.modalRewardErrorClose),
-      });
-    } else {
-      logger.captureException(err, 'onEarnGetTicket sendTransaction', {
-        raffleId,
-      });
-      throw err;
+    let txHash = null;
+    try {
+      const {hash} = await EthNetwork.sendTransaction(signedTx);
+      txHash = hash;
+    } catch (err) {
+      if (isSendTransactionError(err) && err.code === 'INSUFFICIENT_FUNDS') {
+        logger.log('dont have fee', err);
+        showModal('notEnoughGas', {
+          gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
+          currentAmount: app.getBalance(leadingAccount.address),
+        });
+      } else if (isSendTransactionError(err)) {
+        logger.error('error', err);
+        showModal('error', {
+          title: getText(I18N.modalRewardErrorTitle),
+          description: err?.reason,
+          close: getText(I18N.modalRewardErrorClose),
+        });
+      } else {
+        logger.captureException(err, 'onEarnGetTicket sendTransaction', {
+          raffleId,
+        });
+        throw err;
+      }
     }
+
+    if (txHash) {
+      await sleep(6000);
+      sendNotification(I18N.earnTicketRecieved);
+    }
+
+    await Backend.instance.contestsResult(raffleId, response.signature, txHash);
+  } else {
+    sendNotification(I18N.earnTicketAlreadyRecieved);
   }
 
-  await sleep(6000);
-  await Backend.instance.contestsResult(raffleId, response.signature, txHash);
-  sendNotification(I18N.earnTicketRecieved);
-  app.emit(Events.onRaffleTicket, response);
+  app.emit(Events.onRaffleTicket);
   return response;
 }
