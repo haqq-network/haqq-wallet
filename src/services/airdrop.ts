@@ -134,9 +134,11 @@ export class Airdrop {
     campaign_id: string,
     campaign_secret: string,
     wallet: string,
+    adid: string | undefined,
   ): Promise<GetDynamicLinkResponse> {
     const body = JSON.stringify({
       wallet,
+      adid,
     });
 
     const campaign_secret_buffer = new Uint8Array(
