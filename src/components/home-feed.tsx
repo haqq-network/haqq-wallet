@@ -10,12 +10,12 @@ import {sleep} from '@app/utils';
 import {WidgetRoot} from '@app/widgets';
 
 export const HomeFeed = memo(() => {
-  const [forceUpdate, forceUpdateFunc] = useState({});
+  const [lastUpdateTimestamp, setLastUpdate] = useState(Date.now());
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    forceUpdateFunc({});
+    setLastUpdate(Date.now());
     await sleep(500);
     setRefreshing(false);
   }, []);
@@ -30,7 +30,7 @@ export const HomeFeed = memo(() => {
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />
-      <WidgetRoot forceUpdate={forceUpdate} />
+      <WidgetRoot lastUpdate={lastUpdateTimestamp} />
     </ScrollView>
   );
 });
