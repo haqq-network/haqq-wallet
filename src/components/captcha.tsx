@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
+import {Ocaptcha} from '@app/components/ocaptcha/ocaptcha';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
@@ -26,6 +27,7 @@ export type CaptchaDataTypes = (
 export enum CaptchaType {
   hcaptcha,
   slider,
+  ocaptcha,
   turnstile,
 }
 
@@ -63,6 +65,7 @@ export const Captcha = ({
       <View onTouchEnd={onPressOutside} style={styles.overlay} />
       <First>
         {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+        {type === CaptchaType.ocaptcha && <Ocaptcha onData={onData} />}
         {type === CaptchaType.hcaptcha && (
           <>
             <View style={styles.whiteBox} />
