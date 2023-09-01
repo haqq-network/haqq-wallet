@@ -22,6 +22,7 @@ declare module '@env' {
   export const METADATA_URL: string;
   export const GENERATE_SHARES_URL: string;
   export const IS_SSS_ENABLED: string;
+  export const IS_STAKED_VESTED_ENABLED: string;
   export const AIRDROP_TESTEDGE2_URL: string;
   export const AIRDROP_MAINNET_URL: string;
   export const ENABLE_SKIP_PIN_ON_LOGIN: string;
