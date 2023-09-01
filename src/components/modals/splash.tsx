@@ -1,6 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 
 import {View} from 'react-native';
+import Animated, {FadeIn} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
@@ -26,12 +27,14 @@ export const SplashModal = memo(({}: SplashModalProps) => {
     <View style={styles.container}>
       <Waiting />
       {showDescription && (
-        <Text
-          t10
-          i18n={I18N.splashDescription}
-          style={styles.description}
-          color={Color.textBase3}
-        />
+        <Animated.View style={styles.descriptionWrapper} entering={FadeIn}>
+          <Text
+            t10
+            i18n={I18N.splashDescription}
+            style={styles.description}
+            color={Color.textBase3}
+          />
+        </Animated.View>
       )}
     </View>
   );
@@ -44,9 +47,11 @@ const styles = createTheme({
     justifyContent: 'center',
     backgroundColor: Color.graphicGreen2,
   },
-  description: {
+  descriptionWrapper: {
     position: 'absolute',
     bottom: 40,
+  },
+  description: {
     textAlign: 'center',
   },
 });
