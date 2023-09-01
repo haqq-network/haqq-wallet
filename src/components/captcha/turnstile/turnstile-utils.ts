@@ -28,10 +28,6 @@ const WEB_VIEW_LOGGER = DEBUG_VARS.enableCaptchaLogger
   : '';
 
 export const generateWebViewContent = (props: TurnstileProps) => {
-  if (props.theme && typeof props.theme === 'string') {
-    props.theme = `"${props.theme}"`;
-  }
-
   const {siteKey, theme, languageCode, backgroundColor} = props;
 
   const apiUrl =
@@ -47,19 +43,17 @@ export const generateWebViewContent = (props: TurnstileProps) => {
   <script src="${apiUrl}" async defer></script>
   ${WEB_VIEW_LOGGER}
 </head>
-<body>
-    <body style="background-color: ${backgroundColor}; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
+<body style="background-color: ${backgroundColor}; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
     <div onclick="window.ReactNativeWebView.postMessage('click-outside')" style="background-color: none;align-self: center; display: flex; align-items: center; justify-content: center;flex: 1; height: 100vh; overflow: hidden;">
       <div onclick="function (event) {event.stopPropagation()}" id="myWidget" style="padding: 2px;"></div>
     </div>
-</body>
     <script>
       // This function is called when the Turnstile script is loaded and ready to be used.
       // The function name matches the "onload=..." parameter.
       function onLoadCallback() {
           turnstile.render('#myWidget', {
             sitekey: '${siteKey}',
-            theme: ${theme},
+            theme: '${theme}',
             language: '${languageCode}',
             size: "compact",
             callback: (token) => {

@@ -37,8 +37,8 @@ import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
 
+import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../../ui';
 import {CaptchaDataTypes} from '../captcha';
-import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../ui';
 
 export interface SliderCaptchaProps {
   onData(token: CaptchaDataTypes): void;
