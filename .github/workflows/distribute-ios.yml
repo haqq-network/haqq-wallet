@@ -17,6 +17,13 @@ on:
           - false
           - true
 
+      IS_STAKED_VESTED_ENABLED:
+        type: choice
+        description: IS_STAKED_VESTED_ENABLED
+        options:
+          - false
+          - true
+
       IS_WELCOME_NEWS_ENABLED:
         type: choice
         description: IS_WELCOME_NEWS_ENABLED
@@ -110,6 +117,7 @@ jobs:
           echo "AIRDROP_GASDROP_SECRET=${{secrets.AIRDROP_GASDROP_SECRET}}" >> .env
           echo "AIRDROP_GASDROP_CAMPAIGN_ID=${{secrets.AIRDROP_GASDROP_CAMPAIGN_ID}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
+          echo "IS_STAKED_VESTED_ENABLED=${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}" >> .env
           echo "IS_WELCOME_NEWS_ENABLED=${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
