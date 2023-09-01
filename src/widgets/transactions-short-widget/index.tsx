@@ -40,11 +40,9 @@ export const TransactionsShortWidgetWrapper = memo(() => {
             ...acc,
             send: acc.send + (current.value ?? 0) + (current.fee ?? 0),
           };
-        }
-        if (current.source === TransactionSource.receive) {
+        } else {
           return {...acc, receive: acc.receive + (current.value ?? 0)};
         }
-        return acc;
       },
       {send: 0, receive: 0},
     );
