@@ -4,6 +4,7 @@ import {utils} from 'ethers';
 
 import {calcFee} from '@app/helpers';
 import {realm} from '@app/models/index';
+import {Balance} from '@app/services/balance';
 
 export class Transaction extends Realm.Object {
   static schema = {
@@ -98,7 +99,7 @@ export class Transaction extends Realm.Object {
       contractAddress?: string;
     },
     providerId: string,
-    fee: number = 0,
+    fee: Balance = Balance.Empty,
   ) {
     const exists = Transaction.getById(transaction.hash.toLowerCase());
 
@@ -117,7 +118,7 @@ export class Transaction extends Realm.Object {
             ? transaction.contractAddress.toLowerCase()
             : null,
           value: parseFloat(utils.formatEther(transaction.value)),
-          fee: fee,
+          fee: fee.toNumber(),
           providerId,
           chainId: String(transaction.chainId),
           createdAt: exists
