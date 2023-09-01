@@ -45,19 +45,6 @@ export const Captcha = ({
   type = CaptchaType.slider,
   onData,
 }: CaptchaProps) => {
-  Logger.log(
-    JSON.stringify(
-      {
-        HCAPTCHA_SITE_KEY,
-        RECAPTCHA_V2_SITEKEY,
-        RECAPTCHA_V2_URL,
-        TURNSTILE_SITEKEY,
-        TURNSTILE_URL,
-      },
-      null,
-      2,
-    ),
-  );
   const appTheme = useTheme();
   const theme = appTheme === AppTheme.dark ? 'dark' : 'light';
 
@@ -156,7 +143,7 @@ const styles = createTheme({
     borderRadius: 15,
     width: () => getWindowWidth() * 0.45,
     height: () => getWindowHeight() * 0.185,
-    backgroundColor: getColor(Color.bg1),
+    backgroundColor: getColor(Color.bg2),
     transform: [{translateX: -2}, {translateY: 2}],
     zIndex: 2,
     elevation: 2,
