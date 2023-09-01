@@ -42,6 +42,9 @@ on:
       IS_WELCOME_NEWS_ENABLED:
         required: true
         type: string
+      IS_STAKED_VESTED_ENABLED:
+        required: true
+        type: string
 
 jobs:
   build:
