@@ -36,7 +36,10 @@ export const TransactionsShortWidgetWrapper = memo(() => {
     const info = filteredTransactions.reduce(
       (acc, current) => {
         if (current.source === TransactionSource.send) {
-          return {...acc, send: acc.send + (current.value ?? 0)};
+          return {
+            ...acc,
+            send: acc.send + (current.value ?? 0) + (current.fee ?? 0),
+          };
         }
         if (current.source === TransactionSource.receive) {
           return {...acc, receive: acc.receive + (current.value ?? 0)};
