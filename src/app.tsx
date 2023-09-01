@@ -183,11 +183,9 @@ export const App = () => {
   );
 
   useEffect(() => {
-    const splashTimer = setTimeout(
-      () => hideModal('splash'),
-      SPLASH_TIMEOUT_MS,
-    );
-
+    const splashTimer = setTimeout(() => {
+      hideModal('splash');
+    }, SPLASH_TIMEOUT_MS);
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
