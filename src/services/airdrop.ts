@@ -1,6 +1,7 @@
 import {AIRDROP_MAINNET_URL, AIRDROP_TESTEDGE2_URL} from '@env';
 import {HMAC} from 'fast-sha256';
 
+import {CaptchaType} from '@app/components/captcha';
 import {getHttpResponse} from '@app/utils';
 
 export type ClaimResponse =
@@ -65,11 +66,20 @@ export class Airdrop {
     return AIRDROP_MAINNET_URL;
   }
 
+  async captchaSession(): Promise<{captcha: CaptchaType; session: string}> {
+    const response = await fetch(`${this.getRemoteUrl()}/mobile/session`, {
+      method: 'POST',
+      headers: Airdrop.headers,
+    });
+    return await getHttpResponse(response);
+  }
+
   async claim(
     wallet: string,
     signature: string,
     claim_code: string,
-    hcaptcha_token: string,
+    session: string,
+    captcha: string,
   ): Promise<{}> {
     const request = await fetch(`${this.getRemoteUrl()}/mobile/claim`, {
       method: 'POST',
@@ -78,7 +88,8 @@ export class Airdrop {
         wallet,
         signature,
         claim_code,
-        hcaptcha_token,
+        session,
+        captcha,
       }),
     });
 

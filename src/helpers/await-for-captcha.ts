@@ -4,45 +4,57 @@ import {app} from '@app/contexts';
 import {ModalName, hideModal, showModal} from './modal';
 
 export interface AwaitForCaptchaParams {
-  type?: CaptchaType;
+  variant?: CaptchaType;
+}
+
+export interface AwaitForCaptchaResult {
+  token: string;
+  variant: CaptchaType;
 }
 
 export const awaitForCaptcha = ({
-  type = CaptchaType.hcaptcha,
-}: AwaitForCaptchaParams): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    showModal('captcha', {variant: type});
+  variant = CaptchaType.hcaptcha,
+}: AwaitForCaptchaParams): Promise<AwaitForCaptchaResult> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      showModal('captcha', {variant});
 
-    const onData = (data: CaptchaDataTypes) => {
-      hideModal('captcha');
+      const onData = (data: CaptchaDataTypes) => {
+        app.off('captcha-data', onData);
+        app.off('hideModal', onHideModal);
 
-      if (!data) {
-        reject('data is null');
-      }
+        hideModal('captcha');
 
-      app.off('captcha-data', onData);
-      app.off('hideModal', onHideModal);
+        if (!data) {
+          reject('data is null');
+        }
 
-      switch (data) {
-        case 'cancel':
-        case 'chalcancel':
-        case 'chalexpired':
-        case 'error':
-        case 'expired':
-        case 'click-outside':
-          return reject?.(data);
-        default:
-          return resolve?.(data);
-      }
-    };
+        switch (data) {
+          case 'cancel':
+          case 'chalcancel':
+          case 'chalexpired':
+          case 'error':
+          case 'expired':
+          case 'click-outside':
+            return reject?.(data);
+          default:
+            return resolve?.({
+              token: data,
+              variant,
+            });
+        }
+      };
 
-    const onHideModal = (event: {type: ModalName}) => {
-      if (event?.type === 'captcha') {
-        onData('cancel');
-      }
-    };
+      const onHideModal = (event: {type: ModalName}) => {
+        if (event?.type === 'captcha') {
+          onData('cancel');
+        }
+      };
 
-    app.on('captcha-data', onData);
-    app.on('hideModal', onHideModal);
+      app.on('captcha-data', onData);
+      app.on('hideModal', onHideModal);
+    } catch (err) {
+      reject(err);
+    }
   });
 };

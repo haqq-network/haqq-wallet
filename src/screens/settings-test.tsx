@@ -40,6 +40,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
+import {Airdrop} from '@app/services/airdrop';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals, WalletType} from '@app/types';
@@ -635,11 +636,13 @@ export const SettingsTestScreen = () => {
         title="Show hcaptcha captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.hcaptcha});
-            Alert.alert('result', result);
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.hcaptcha,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
@@ -649,12 +652,14 @@ export const SettingsTestScreen = () => {
         title="Show oauth captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.ocaptcha});
-            Alert.alert('result', result);
-            Clipboard.setString(result);
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.ocaptcha,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
+            Clipboard.setString(result.token);
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
@@ -664,11 +669,11 @@ export const SettingsTestScreen = () => {
         title="Show puzzle captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.slider});
-            Alert.alert('result', result);
+            const result = await awaitForCaptcha({variant: CaptchaType.slider});
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
@@ -678,11 +683,13 @@ export const SettingsTestScreen = () => {
         title="Cloudflare Turnstile"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.turnstile});
-            Alert.alert('result', result);
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.turnstile,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
@@ -693,12 +700,35 @@ export const SettingsTestScreen = () => {
         onPress={async () => {
           try {
             const result = await awaitForCaptcha({
-              type: CaptchaType.recaptcha2,
+              variant: CaptchaType.recaptcha2,
             });
-            Alert.alert('result', result);
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Show random captcha"
+        onPress={async () => {
+          try {
+            const {captcha, session} = await Airdrop.instance.captchaSession();
+            if (!captcha) {
+              throw new Error('Captcha not available');
+            }
+            const result = await awaitForCaptcha({
+              variant: captcha,
+            });
+            Alert.alert(
+              'result',
+              JSON.stringify({captcha, session, result}, null, 2),
+            );
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
