@@ -101,6 +101,7 @@ export const HomeEarnScreen = () => {
         Wallet.addressList(),
         uid,
       );
+      setRaffles([]);
       setRaffles(prepareRaffles(response));
     } catch (err) {
       Logger.captureException(

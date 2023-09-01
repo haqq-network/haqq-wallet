@@ -1,4 +1,5 @@
 import {AIRDROP_GASDROP_CAMPAIGN_ID, AIRDROP_GASDROP_SECRET} from '@env';
+import {Adjust} from 'react-native-adjust';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -23,11 +24,22 @@ export async function onBannerGasdropCreate() {
       return;
     }
 
+    const adid: string | undefined = await new Promise(resolve => {
+      Adjust.getAdid(resp => {
+        resolve(resp);
+      });
+    });
+
     const link_info = await Airdrop.instance.gasdrop_code(
       AIRDROP_GASDROP_CAMPAIGN_ID,
       AIRDROP_GASDROP_SECRET,
       account.address,
+      adid,
     );
+
+    if (!link_info.code) {
+      throw new Error('No code');
+    }
 
     const info = await Airdrop.instance.campaign_code(link_info.code);
 

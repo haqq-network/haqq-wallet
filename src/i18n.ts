@@ -739,6 +739,7 @@ export enum I18N {
   notEnoughGasDescription1,
   notEnoughGasDescription3,
   browserActionMenuClose,
+  earnTicketAlreadyRecieved,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1516,6 +1517,7 @@ const en: Record<I18N, string> = {
   [I18N.timerSec]: 'Sec',
   [I18N.raffleTicketRecieved]: 'You have successfully claimed your reward',
   [I18N.earnTicketRecieved]: 'The ticket has been received',
+  [I18N.earnTicketAlreadyRecieved]: 'The ticket already received',
   [I18N.raffleDetailsTimerFinishTitle]: 'Raffle is end',
   [I18N.raffleDetailsTimerProgressTitle]: 'The raffle will end in',
   [I18N.raffleRewardСongratulations]: 'Сongratulations!',
@@ -1600,8 +1602,8 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
   [I18N.lockedTokensInfoDescription]:
     'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
-  [I18N.totalValueScreenTitle]: 'Total value',
-  [I18N.totalValueAccount]: 'Total account value',
+  [I18N.totalValueScreenTitle]: 'Transactions',
+  [I18N.totalValueAccount]: 'Total balance',
   [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
   [I18N.modalDontHaveFeeClose]: 'Close',
   [I18N.notEnoughGasTitle]: 'Not enough gas',
