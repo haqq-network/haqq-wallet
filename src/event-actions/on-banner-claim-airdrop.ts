@@ -1,5 +1,4 @@
 import {Color} from '@app/colors';
-import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
@@ -45,8 +44,13 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     } catch (e) {
       return;
     }
-    const captchaKey = await awaitForCaptcha({
-      type: CaptchaType.hcaptcha,
+
+    const captchaSession = await Airdrop.instance.captchaSession();
+    if (!captchaSession?.captcha) {
+      throw new Error('Captcha not available');
+    }
+    const captcha = await awaitForCaptcha({
+      variant: captchaSession.captcha,
     });
 
     const wallet = Wallet.getById(walletId);
@@ -62,7 +66,13 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     }
     const signature = await result;
 
-    await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
+    await Airdrop.instance.claim(
+      walletId,
+      signature,
+      claimCode,
+      captchaSession.session,
+      captcha.token,
+    );
     app.emit(Events.onAppReviewRequest);
 
     banner.update({

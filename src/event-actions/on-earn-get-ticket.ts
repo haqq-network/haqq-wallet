@@ -42,14 +42,14 @@ export async function onEarnGetTicket(raffleId: string) {
     throw new Error('User declined raffle agreement');
   }
 
-  const session = await awaitForCaptcha({type: CaptchaType.slider});
+  const captcha = await awaitForCaptcha({variant: CaptchaType.slider});
 
   const uid = await getUid();
   const provider = await getProviderInstanceForWallet(leadingAccount);
 
   const result = provider.signPersonalMessage(
     leadingAccount?.path ?? '',
-    `${raffleId}:${uid}:${session}`,
+    `${raffleId}:${uid}:${captcha.token}`,
   );
   if (leadingAccount.type === WalletType.ledgerBt) {
     await awaitForLedger(provider);
@@ -59,7 +59,7 @@ export async function onEarnGetTicket(raffleId: string) {
   const response = await Backend.instance.contestParticipateUser(
     raffleId,
     uid,
-    session,
+    captcha.token,
     signature,
     leadingAccount?.address ?? '',
   );

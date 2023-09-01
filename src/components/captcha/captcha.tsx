@@ -24,11 +24,11 @@ export type CaptchaDataTypes =
   | string;
 
 export enum CaptchaType {
-  hcaptcha,
-  slider,
-  ocaptcha,
-  turnstile,
-  recaptcha2,
+  hcaptcha = 'hcaptcha',
+  slider = 'slider',
+  ocaptcha = 'ocaptcha',
+  turnstile = 'turnstile',
+  recaptcha2 = 'recaptcha2',
 }
 
 export interface CaptchaProps {
