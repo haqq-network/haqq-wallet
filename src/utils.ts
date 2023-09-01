@@ -638,8 +638,15 @@ export const openInAppBrowser = (
   });
 };
 
-export const openWeb3Browser = (url: string) => {
-  navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
+export const openWeb3Browser = (
+  url: string,
+  showClose: boolean | undefined = false,
+) => {
+  navigator.navigate('web3BrowserPopup', {
+    url: onUrlSubmit(url),
+    popup: true,
+    showClose,
+  });
 };
 
 export const requestTrackingAuthorization = () => {

@@ -125,6 +125,7 @@ export type RootStackParamList = {
   web3browser: {
     url: string;
     popup?: boolean;
+    showClose?: boolean;
   };
   web3BrowserPopup: RootStackParamList['web3browser'];
   browserHomePage: undefined;

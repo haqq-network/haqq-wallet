@@ -46,6 +46,7 @@ export interface Web3BrowserProps {
   showActionMenu: boolean;
   popup?: boolean;
   userProvider: Provider;
+  showClose: boolean;
 
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
 
@@ -108,6 +109,7 @@ export const Web3Browser = ({
   onPressRemoveBookmark,
   addSiteToSearchHistory,
   onFileDownload,
+  showClose,
 }: Web3BrowserProps) => {
   const userAgent = useRef(getUserAgent()).current;
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
@@ -290,6 +292,8 @@ export const Web3Browser = ({
         onPressGoForward={onPressGoForward}
         onPressHeaderUrl={onPressHeaderUrl}
         onPressHeaderWallet={onPressHeaderWallet}
+        showClose={showClose}
+        onPressClose={onPressClose}
       />
       <View style={styles.webviewContainer}>
         <WebView

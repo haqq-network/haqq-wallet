@@ -22,6 +22,7 @@ interface Web3BrowserHeaderProps {
   walletAddress?: string;
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
+  showClose: boolean;
 
   onPressMore(): void;
 
@@ -34,6 +35,8 @@ interface Web3BrowserHeaderProps {
   onPressGoForward(): void;
 
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
+
+  onPressClose(): void;
 }
 
 export const Web3BrowserHeader = ({
@@ -46,6 +49,8 @@ export const Web3BrowserHeader = ({
   onPressGoBack,
   onPressGoForward,
   onPressHeaderWallet,
+  onPressClose,
+  showClose,
 }: Web3BrowserHeaderProps) => {
   const clearSiteUrl = useMemo(() => clearUrl(siteUrl), [siteUrl]);
 
@@ -64,6 +69,22 @@ export const Web3BrowserHeader = ({
   }, [onPressHeaderWallet, walletAddress]);
 
   const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];
+
+  const rightIcon = useMemo(() => {
+    if (showClose) {
+      return (
+        <IconButton onLayout={onMoreIconLayout} onPress={onPressClose}>
+          <Icon color={Color.graphicBase1} name={IconsName.close} />
+        </IconButton>
+      );
+    }
+
+    return (
+      <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
+        <Icon color={Color.graphicBase1} name={IconsName.more} />
+      </IconButton>
+    );
+  }, [onMoreIconLayout, onPressMore, onPressClose, showClose]);
 
   return (
     <View style={stylesHeaderWithRule}>
@@ -99,9 +120,7 @@ export const Web3BrowserHeader = ({
         </Text>
       </TouchableOpacity>
       <Spacer width={15} />
-      <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
-        <Icon color={Color.graphicBase1} name={IconsName.more} />
-      </IconButton>
+      {rightIcon}
       {!!walletAddress && (
         <>
           <Spacer width={15} />

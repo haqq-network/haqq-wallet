@@ -27,7 +27,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {sendNotification} from '@app/services';
 
 export const Web3BrowserScreen = () => {
-  const {url, popup} = useTypedRoute<'web3browser'>().params;
+  const {url, popup, showClose = false} = useTypedRoute<'web3browser'>().params;
   const navigation = useTypedNavigation();
   const [showActionMenu, setShowActionMenu] = useState(false);
   const toggleActionMenu = useCallback(
@@ -197,6 +197,7 @@ export const Web3BrowserScreen = () => {
       onPressRemoveBookmark={onPressRemoveBookmark}
       addSiteToSearchHistory={addSiteToSearchHistory}
       onFileDownload={onFileDownload}
+      showClose={showClose}
     />
   );
 };

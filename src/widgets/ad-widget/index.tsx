@@ -53,10 +53,10 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
     if (link.startsWith('haqq:')) {
       const isHandled = onDeepLink(link);
       if (!isHandled) {
-        openWeb3Browser(link);
+        openWeb3Browser(link, true);
       }
     } else {
-      openWeb3Browser(link);
+      openWeb3Browser(link, true);
     }
     setLoading(false);
   }, [banner]);
