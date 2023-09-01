@@ -2,13 +2,17 @@ import React, {useCallback, useMemo, useRef} from 'react';
 
 import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native';
 import WebView from 'react-native-webview';
-import {WebViewMessageEvent} from 'react-native-webview/lib/WebViewTypes';
+import {
+  ShouldStartLoadRequest,
+  WebViewMessageEvent,
+} from 'react-native-webview/lib/WebViewTypes';
 
 import {Color} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {getUserAgent} from '@app/services/version';
+import {openInAppBrowser} from '@app/utils';
 
 import {
   generateWebViewContent,
@@ -35,7 +39,23 @@ export const ReCaptchaV2 = (props: ReCaptchaV2Props) => {
     [props],
   );
 
-  Logger.log('generateTheWebViewContent', generateTheWebViewContent);
+  const onShouldStartLoadWithRequest = useCallback(
+    (event: ShouldStartLoadRequest) => {
+      if (
+        (props.url && event?.url?.startsWith(props.url)) ||
+        event?.url?.startsWith('https://www.google.com/recaptcha')
+      ) {
+        return true;
+      }
+
+      if (event.url !== 'about:blank') {
+        hideModal('captcha');
+        openInAppBrowser(event.url);
+      }
+      return false;
+    },
+    [props.url],
+  );
 
   // This shows ActivityIndicator till webview loads ReCaptchaV2 images
   const renderLoading = useCallback(
@@ -50,7 +70,7 @@ export const ReCaptchaV2 = (props: ReCaptchaV2Props) => {
   const onMessage = useCallback(
     (event: WebViewMessageEvent) => {
       if (DEBUG_VARS.enableCaptchaLogger) {
-        const handled = WebViewLogger.handleEvent(event, 'ReCaptchaV2Props');
+        const handled = WebViewLogger.handleEvent(event, 'ReCaptchaV2');
         if (handled) {
           return;
         }
@@ -62,6 +82,7 @@ export const ReCaptchaV2 = (props: ReCaptchaV2Props) => {
 
   return (
     <WebView
+      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       userAgent={userAgent}
       scrollEnabled={false}
       originWhitelist={['*']}

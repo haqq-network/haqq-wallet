@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 
 import {
   HCAPTCHA_SITE_KEY,
+  HCAPTCHA_URL,
   RECAPTCHA_V2_SITEKEY,
   RECAPTCHA_V2_URL,
   TURNSTILE_SITEKEY,
@@ -11,16 +12,12 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
-import {Ocaptcha} from '@app/components/ocaptcha/ocaptcha';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 
-import {Hcaptcha} from './hcaptcha';
-import {ReCaptchaV2} from './re-captcha-v2';
-import {SliderCaptcha} from './slider-captcha/slider-captcha';
-import {Turnstile} from './turnstile';
-import {First} from './ui';
+import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
+import {First} from '../ui';
 
 export type CaptchaDataTypes =
   | ('error' | 'expired' | 'chalcancel' | 'chalexpired' | 'click-outside')
@@ -48,6 +45,19 @@ export const Captcha = ({
   type = CaptchaType.slider,
   onData,
 }: CaptchaProps) => {
+  Logger.log(
+    JSON.stringify(
+      {
+        HCAPTCHA_SITE_KEY,
+        RECAPTCHA_V2_SITEKEY,
+        RECAPTCHA_V2_URL,
+        TURNSTILE_SITEKEY,
+        TURNSTILE_URL,
+      },
+      null,
+      2,
+    ),
+  );
   const appTheme = useTheme();
   const theme = appTheme === AppTheme.dark ? 'dark' : 'light';
 
@@ -74,6 +84,7 @@ export const Captcha = ({
             <View style={styles.whiteBox} />
             <Hcaptcha
               siteKey={HCAPTCHA_SITE_KEY}
+              url={HCAPTCHA_URL}
               showLoading
               size={'compact'}
               onMessage={onMessage}

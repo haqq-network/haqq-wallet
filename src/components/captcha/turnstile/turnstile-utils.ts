@@ -28,10 +28,6 @@ const WEB_VIEW_LOGGER = DEBUG_VARS.enableCaptchaLogger
   : '';
 
 export const generateWebViewContent = (props: TurnstileProps) => {
-  if (props.theme && typeof props.theme === 'string') {
-    props.theme = `"${props.theme}"`;
-  }
-
   const {siteKey, theme, languageCode, backgroundColor} = props;
 
   const apiUrl =
@@ -57,7 +53,7 @@ export const generateWebViewContent = (props: TurnstileProps) => {
       function onLoadCallback() {
           turnstile.render('#myWidget', {
             sitekey: '${siteKey}',
-            theme: ${theme},
+            theme: '${theme}',
             language: '${languageCode}',
             size: "compact",
             callback: (token) => {
