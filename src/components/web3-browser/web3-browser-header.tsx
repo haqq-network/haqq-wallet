@@ -22,7 +22,7 @@ interface Web3BrowserHeaderProps {
   walletAddress?: string;
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
-  showClose: boolean;
+  popup: boolean;
 
   onPressMore(): void;
 
@@ -50,7 +50,7 @@ export const Web3BrowserHeader = ({
   onPressGoForward,
   onPressHeaderWallet,
   onPressClose,
-  showClose,
+  popup,
 }: Web3BrowserHeaderProps) => {
   const clearSiteUrl = useMemo(() => clearUrl(siteUrl), [siteUrl]);
 
@@ -71,7 +71,7 @@ export const Web3BrowserHeader = ({
   const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];
 
   const rightIcon = useMemo(() => {
-    if (showClose) {
+    if (popup) {
       return (
         <IconButton onLayout={onMoreIconLayout} onPress={onPressClose}>
           <Icon color={Color.graphicBase1} name={IconsName.close} />
@@ -84,7 +84,7 @@ export const Web3BrowserHeader = ({
         <Icon color={Color.graphicBase1} name={IconsName.more} />
       </IconButton>
     );
-  }, [onMoreIconLayout, onPressMore, onPressClose, showClose]);
+  }, [onMoreIconLayout, onPressMore, onPressClose, popup]);
 
   return (
     <View style={stylesHeaderWithRule}>

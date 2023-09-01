@@ -42,10 +42,10 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
     if (link.startsWith('haqq:')) {
       const isHandled = onDeepLink(link);
       if (!isHandled) {
-        openWeb3Browser(link, true);
+        openWeb3Browser(link);
       }
     } else {
-      openWeb3Browser(link, true);
+      openWeb3Browser(link);
     }
     setLoading(false);
   }, [banner]);

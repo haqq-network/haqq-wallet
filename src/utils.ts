@@ -638,14 +638,10 @@ export const openInAppBrowser = (
   });
 };
 
-export const openWeb3Browser = (
-  url: string,
-  showClose: boolean | undefined = false,
-) => {
+export const openWeb3Browser = (url: string) => {
   navigator.navigate('web3BrowserPopup', {
     url: onUrlSubmit(url),
     popup: true,
-    showClose,
   });
 };
 
