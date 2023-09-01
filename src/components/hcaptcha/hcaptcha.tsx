@@ -1,22 +1,14 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
-import {
-  ActivityIndicator,
-  Linking,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native';
 import WebView from 'react-native-webview';
-import {
-  ShouldStartLoadRequest,
-  WebViewMessageEvent,
-} from 'react-native-webview/lib/WebViewTypes';
+import {WebViewMessageEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {Color} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
+import {getUserAgent} from '@app/services/version';
 
 import {generateWebViewContent, patchPostMessageJsCode} from './hcaptcha-utils';
 
@@ -44,6 +36,7 @@ export interface HcaptchaProps {
 }
 
 export const Hcaptcha = (props: HcaptchaProps) => {
+  const userAgent = useRef(getUserAgent()).current;
   const generateTheWebViewContent = useMemo(
     () => generateWebViewContent(props),
     [props],
@@ -57,17 +50,6 @@ export const Hcaptcha = (props: HcaptchaProps) => {
       </View>
     ),
     [props.loadingIndicatorColor],
-  );
-
-  const onShouldStartLoadWithRequest = useCallback(
-    (event: ShouldStartLoadRequest) => {
-      if (event.url.slice(0, 24) === 'https://www.hcaptcha.com') {
-        Linking.openURL(event.url);
-        return false;
-      }
-      return true;
-    },
-    [],
   );
 
   const onMessage = useCallback(
@@ -85,9 +67,9 @@ export const Hcaptcha = (props: HcaptchaProps) => {
 
   return (
     <WebView
+      userAgent={userAgent}
       scrollEnabled={false}
       originWhitelist={['*']}
-      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       mixedContentMode={'always'}
       onMessage={onMessage}
       javaScriptEnabled

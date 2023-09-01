@@ -687,6 +687,22 @@ export const SettingsTestScreen = () => {
         }}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={8} />
+      <Button
+        title="Google recaptcha v2"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({
+              type: CaptchaType.recaptcha2,
+            });
+            Alert.alert('result', result);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', err?.message);
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
       <Title text="Realm" />
       <Button
         title={`clear news cache [RSS: ${rssNewsCount} | OUR:${newsCount}]`}

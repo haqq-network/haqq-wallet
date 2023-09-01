@@ -1,6 +1,12 @@
 import React, {useCallback} from 'react';
 
-import {HCAPTCHA_SITE_KEY, TURNSTILE_SITEKEY, TURNSTILE_URL} from '@env';
+import {
+  HCAPTCHA_SITE_KEY,
+  RECAPTCHA_V2_SITEKEY,
+  RECAPTCHA_V2_URL,
+  TURNSTILE_SITEKEY,
+  TURNSTILE_URL,
+} from '@env';
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
@@ -11,24 +17,21 @@ import {useTheme} from '@app/hooks';
 import {AppTheme} from '@app/types';
 
 import {Hcaptcha} from './hcaptcha';
+import {ReCaptchaV2} from './re-captcha-v2';
 import {SliderCaptcha} from './slider-captcha/slider-captcha';
 import {Turnstile} from './turnstile';
 import {First} from './ui';
 
-export type CaptchaDataTypes = (
-  | 'error'
-  | 'expired'
-  | 'chalcancel'
-  | 'chalexpired'
-  | 'click-outside'
-) &
-  string;
+export type CaptchaDataTypes =
+  | ('error' | 'expired' | 'chalcancel' | 'chalexpired' | 'click-outside')
+  | string;
 
 export enum CaptchaType {
   hcaptcha,
   slider,
   ocaptcha,
   turnstile,
+  recaptcha2,
 }
 
 export interface CaptchaProps {
@@ -99,6 +102,22 @@ export const Captcha = ({
             />
           </>
         )}
+        {type === CaptchaType.recaptcha2 && (
+          <>
+            <View style={styles.whiteBox3} />
+            <ReCaptchaV2
+              showLoading
+              siteKey={RECAPTCHA_V2_SITEKEY}
+              url={RECAPTCHA_V2_URL}
+              theme={theme}
+              onMessage={onMessage}
+              style={styles.hcaptcha}
+              containerStyle={styles.hcaptchaContainer}
+              backgroundColor={'transparent'}
+              languageCode={languageCode}
+            />
+          </>
+        )}
       </First>
     </View>
   );
@@ -137,7 +156,17 @@ const styles = createTheme({
     width: () => getWindowWidth() * 0.355,
     height: () => getWindowHeight() * 0.155,
     backgroundColor: getColor(Color.bg1),
-    transform: [{translateY: 5}],
+    transform: [{translateY: 2}],
+    zIndex: 2,
+    elevation: 2,
+  },
+  whiteBox3: {
+    position: 'absolute',
+    borderRadius: 15,
+    width: () => getWindowWidth() * 0.45,
+    height: () => getWindowHeight() * 0.185,
+    backgroundColor: getColor(Color.bg1),
+    transform: [{translateX: -3}, {translateY: 6}],
     zIndex: 2,
     elevation: 2,
   },

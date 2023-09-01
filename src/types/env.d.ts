@@ -36,4 +36,6 @@ declare module '@env' {
   export const APPSTORE_APP_ID: string;
   export const TURNSTILE_URL: string;
   export const TURNSTILE_SITEKEY: string;
+  export const RECAPTCHA_V2_URL: string;
+  export const RECAPTCHA_V2_SITEKEY: string;
 }

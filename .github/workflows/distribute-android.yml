@@ -99,6 +99,8 @@ jobs:
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
           echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
           echo "TURNSTILE_SITEKEY=${{secrets.TURNSTILE_SITEKEY}}" >> .env
+          echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
+          echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env

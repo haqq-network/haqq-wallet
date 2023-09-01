@@ -13,9 +13,9 @@ import {getUserAgent} from '@app/services/version';
 import {
   generateWebViewContent,
   patchPostMessageJsCode,
-} from './turnstile-utils';
+} from './re-captcha-v2-utils';
 
-export interface TurnstileProps {
+export interface ReCaptchaV2Props {
   onMessage?: (event: any) => void;
   siteKey: string;
   style?: StyleProp<ViewStyle>;
@@ -28,14 +28,16 @@ export interface TurnstileProps {
   theme?: 'dark' | 'light' | 'auto' | string;
 }
 
-export const Turnstile = (props: TurnstileProps) => {
+export const ReCaptchaV2 = (props: ReCaptchaV2Props) => {
   const userAgent = useRef(getUserAgent()).current;
   const generateTheWebViewContent = useMemo(
     () => generateWebViewContent(props),
     [props],
   );
 
-  // This shows ActivityIndicator till webview loads Turnstile images
+  Logger.log('generateTheWebViewContent', generateTheWebViewContent);
+
+  // This shows ActivityIndicator till webview loads ReCaptchaV2 images
   const renderLoading = useCallback(
     () => (
       <View style={styles.loadingOverlay}>
@@ -48,7 +50,7 @@ export const Turnstile = (props: TurnstileProps) => {
   const onMessage = useCallback(
     (event: WebViewMessageEvent) => {
       if (DEBUG_VARS.enableCaptchaLogger) {
-        const handled = WebViewLogger.handleEvent(event, 'Turnstile');
+        const handled = WebViewLogger.handleEvent(event, 'ReCaptchaV2Props');
         if (handled) {
           return;
         }
