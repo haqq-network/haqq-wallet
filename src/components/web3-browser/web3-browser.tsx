@@ -290,6 +290,8 @@ export const Web3Browser = ({
         onPressGoForward={onPressGoForward}
         onPressHeaderUrl={onPressHeaderUrl}
         onPressHeaderWallet={onPressHeaderWallet}
+        popup={popup ?? false}
+        onPressClose={onPressClose}
       />
       <View style={styles.webviewContainer}>
         <WebView
