@@ -16,9 +16,9 @@ export const TransactionsShortWidgetWrapper = memo(() => {
   const transactions = useTransactionList(adressList);
   // We should filter transactions between our local wallets
   const filteredTransactions = transactions.filter(transaction => {
-    const sourceBlackList = [TransactionSource.date, TransactionSource.unknown];
-    const isInBlacklist = sourceBlackList.includes(transaction.source);
-    if (isInBlacklist) {
+    const sourceWhiteList = [TransactionSource.send, TransactionSource.receive];
+    const isInWhiteList = sourceWhiteList.includes(transaction.source);
+    if (!isInWhiteList) {
       return false;
     }
 
@@ -35,7 +35,7 @@ export const TransactionsShortWidgetWrapper = memo(() => {
   const calculateInfo = () => {
     const info = filteredTransactions.reduce(
       (acc, current) => {
-        if (current.source === TransactionSource.send) {
+        if (adressList.includes(current.from?.toLowerCase())) {
           return {
             ...acc,
             send: acc.send + (current.value ?? 0) + (current.fee ?? 0),
