@@ -64,6 +64,7 @@ import {
   StackPresentationTypes,
 } from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
+import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {Spacer} from './components/ui';
 import {getModalScreenOptions} from './helpers/get-modal-screen-options';
@@ -182,6 +183,11 @@ export const App = () => {
   );
 
   useEffect(() => {
+    const splashTimer = setTimeout(
+      () => hideModal('splash'),
+      SPLASH_TIMEOUT_MS,
+    );
+
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
@@ -192,15 +198,21 @@ export const App = () => {
         }
       })
       .then(() => awaitForEventDone(Events.onAppLoggedId))
-      .then(() => hideModal('splash'))
+      .then(() => {
+        clearTimeout(splashTimer);
+        hideModal('splash');
+      })
       .catch(async e => {
         Logger.captureException(e, 'app init');
       })
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
-        hideModal('splash');
         setInitialized(true);
       });
+
+    return () => {
+      clearTimeout(splashTimer);
+    };
   }, []);
 
   const [initialized, setInitialized] = useState(false);
