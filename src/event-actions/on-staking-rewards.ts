@@ -13,6 +13,7 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
+import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export async function onStakingRewards() {
   const cosmos = new Cosmos(app.provider!);
@@ -109,5 +110,5 @@ export async function onStakingRewards() {
 
   setTimeout(() => {
     app.emit(Events.onStakingSync);
-  }, 10000);
+  }, AWAIT_NEW_BLOCK_MS);
 }
