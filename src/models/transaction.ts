@@ -23,6 +23,7 @@ export class Transaction extends Realm.Object {
       confirmed: {type: 'bool', default: false},
       providerId: 'string',
       chainId: 'string',
+      feeHex: 'string',
     },
     primaryKey: 'hash',
   };
@@ -39,6 +40,7 @@ export class Transaction extends Realm.Object {
   confirmed!: boolean;
   providerId!: string;
   chainId!: string;
+  feeHex!: string;
 
   get feeFormatted() {
     return this.fee.toFixed(15);
@@ -118,7 +120,8 @@ export class Transaction extends Realm.Object {
             ? transaction.contractAddress.toLowerCase()
             : null,
           value: parseFloat(utils.formatEther(transaction.value)),
-          fee: fee.toNumber(),
+          fee: fee.toEther(),
+          feeHex: fee.toHex(),
           providerId,
           chainId: String(transaction.chainId),
           createdAt: exists
