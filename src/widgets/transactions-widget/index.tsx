@@ -4,6 +4,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
 import {
+  OnTransactionRowPress,
   TransactionListReceive,
   TransactionListSend,
   TransactionSource,
@@ -26,17 +27,21 @@ export const TransactionsWidgetWrapper = memo(() => {
     () =>
       transactions
         .filter(item =>
-          [TransactionSource.send, TransactionSource.receive].includes(
-            item.source,
-          ),
+          [
+            TransactionSource.send,
+            TransactionSource.receive,
+            TransactionSource.contract,
+          ].includes(item.source),
         )
         .slice(0, 3) as (TransactionListSend | TransactionListReceive)[],
     [transactions],
   );
 
-  const onRowPress = useCallback(
-    (hash: string) => {
+  const onRowPress: OnTransactionRowPress = useCallback(
+    (hash, params) => {
+      const screenParams = params || {};
       navigation.navigate('transactionDetail', {
+        ...screenParams,
         hash,
       });
     },

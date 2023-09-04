@@ -9,6 +9,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {OnTransactionRowPress} from '@app/types';
 
 export const TotalValueInfoScreen = () => {
   const navigation = useTypedNavigation();
@@ -39,9 +40,11 @@ export const TotalValueInfoScreen = () => {
   const vestedBalance = useRef(Balance.Empty).current;
   const lockedBalance = useRef(Balance.Empty).current;
 
-  const onPressRow = useCallback(
-    (hash: string) => {
+  const onPressRow: OnTransactionRowPress = useCallback(
+    (hash, params) => {
+      const screenParams = params || {};
       navigation.navigate('transactionDetail', {
+        ...screenParams,
         hash,
       });
     },

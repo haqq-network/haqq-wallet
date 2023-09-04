@@ -9,6 +9,15 @@ import {
   TransactionSource,
 } from '@app/types';
 
+const getSource = (transaction: Transaction, source: string[]) => {
+  if (transaction.input.includes('0x') && transaction.input.length > 2) {
+    return TransactionSource.contract;
+  }
+  return source.includes(transaction.from.toLowerCase())
+    ? TransactionSource.send
+    : TransactionSource.receive;
+};
+
 export function prepareTransactions(
   source: string[],
   transactions: Transaction[] | Results<Transaction>,
@@ -32,9 +41,7 @@ export function prepareTransactions(
       k,
       (hash.get(k) ?? []).concat({
         ...row.toJSON(),
-        source: source.includes(row.from.toLowerCase())
-          ? TransactionSource.send
-          : TransactionSource.receive,
+        source: getSource(row, source),
       }),
     );
   }

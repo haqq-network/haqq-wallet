@@ -24,6 +24,7 @@ export class Transaction extends Realm.Object {
       providerId: 'string',
       chainId: 'string',
       feeHex: 'string',
+      input: 'string',
     },
     primaryKey: 'hash',
   };
@@ -41,6 +42,7 @@ export class Transaction extends Realm.Object {
   providerId!: string;
   chainId!: string;
   feeHex!: string;
+  input!: string;
 
   get feeFormatted() {
     return this.fee.toFixed(15);
@@ -99,6 +101,7 @@ export class Transaction extends Realm.Object {
       timeStamp?: number | string;
       confirmations?: number | string;
       contractAddress?: string;
+      input: string;
     },
     providerId: string,
     fee: Balance = Balance.Empty,
@@ -131,6 +134,7 @@ export class Transaction extends Realm.Object {
           confirmed: transaction.confirmations
             ? parseInt(String(transaction.confirmations), 10) > 10
             : false,
+          input: transaction.input,
         },
         Realm.UpdateMode.Modified,
       );

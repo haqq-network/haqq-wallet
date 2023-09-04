@@ -24,6 +24,7 @@ type TransactionDetailProps = {
   transaction: Transaction;
   provider: (Provider & Realm.Object<unknown, never>) | null;
   onPressInfo: () => void;
+  contractName?: string;
 };
 
 export const TransactionDetail = ({
@@ -32,14 +33,25 @@ export const TransactionDetail = ({
   transaction,
   provider,
   onPressInfo,
+  contractName,
 }: TransactionDetailProps) => {
   const isSent = source === TransactionSource.send;
+  const isContract = source === TransactionSource.contract;
   const to = isSent ? transaction.to : ' ';
   const from = transaction?.from ? transaction.from : ' ';
 
-  const title = isSent
-    ? I18N.transactionDetailSent
-    : I18N.transactionDetailRecive;
+  const title = useMemo(() => {
+    const titleMap = {
+      [TransactionSource.send]: I18N.transactionDetailSent,
+      [TransactionSource.receive]: I18N.transactionDetailRecive,
+      [TransactionSource.contract]: I18N.transactionContractTitle,
+      // Only for ts check. Possible values is: send, receive, contract
+      [TransactionSource.date]: I18N.empty,
+      [TransactionSource.unknown]: I18N.empty,
+    };
+
+    return titleMap[source];
+  }, [source]);
 
   const splitted = useMemo(
     () => splitAddress(isSent ? to : from),
@@ -77,17 +89,21 @@ export const TransactionDetail = ({
       onClose={onCloseBottomSheet}
       i18nTitle={title}
       closeDistance={closeDistance}>
-      <Text
-        i18n={I18N.transactionDetailTotalAmount}
-        t14
-        style={styles.amount}
-      />
-      <Text
-        t6
-        color={isSent ? Color.textRed1 : Color.textGreen1}
-        style={styles.sum}>
-        {total} ISLM
-      </Text>
+      {!isContract && (
+        <>
+          <Text
+            i18n={I18N.transactionDetailTotalAmount}
+            t14
+            style={styles.amount}
+          />
+          <Text
+            t6
+            color={isSent ? Color.textRed1 : Color.textGreen1}
+            style={styles.sum}>
+            {total} ISLM
+          </Text>
+        </>
+      )}
       <View style={styles.infoContainer}>
         <DataContent
           title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
@@ -95,24 +111,34 @@ export const TransactionDetail = ({
           reversed
           short
         />
-        <DataContent
-          title={
-            <>
-              {splitted[0]}
-              <Text color={Color.textBase2}>{splitted[1]}</Text>
-              {splitted[2]}
-            </>
-          }
-          numberOfLines={2}
-          subtitleI18n={
-            isSent
-              ? I18N.transactionDetailSentTo
-              : I18N.transactionDetailReciveFrom
-          }
-          reversed
-          short
-          onPress={onPressAddress}
-        />
+        {!isContract && (
+          <DataContent
+            title={
+              <>
+                {splitted[0]}
+                <Text color={Color.textBase2}>{splitted[1]}</Text>
+                {splitted[2]}
+              </>
+            }
+            numberOfLines={2}
+            subtitleI18n={
+              isSent
+                ? I18N.transactionDetailSentTo
+                : I18N.transactionDetailReciveFrom
+            }
+            reversed
+            short
+            onPress={onPressAddress}
+          />
+        )}
+        {isContract && contractName && (
+          <DataContent
+            subtitle={'Contract name'}
+            title={contractName}
+            numberOfLines={2}
+            reversed
+          />
+        )}
         <DataContent
           title={
             <>
@@ -125,7 +151,6 @@ export const TransactionDetail = ({
                 />
               </View>
               <Text t11>
-                {' '}
                 Islamic Coin <Text color={Color.textBase2}>(ISLM)</Text>
               </Text>
             </>
@@ -142,18 +167,28 @@ export const TransactionDetail = ({
             short
           />
         )}
-        <DataContent
-          title={`${cleanNumber(transaction.value)} ISLM`}
-          subtitleI18n={I18N.transactionDetailAmount}
-          reversed
-          short
-        />
+        {!isContract && (
+          <DataContent
+            title={`${cleanNumber(transaction.value)} ISLM`}
+            subtitleI18n={I18N.transactionDetailAmount}
+            reversed
+            short
+          />
+        )}
         <DataContent
           title={fee}
           subtitleI18n={I18N.transactionDetailNetworkFee}
           reversed
           short
         />
+        {isContract && (
+          <DataContent
+            subtitleI18n={I18N.transactionDetailTransactionType}
+            titleI18n={I18N.transactionDetailTransactionTypeDescription}
+            numberOfLines={2}
+            reversed
+          />
+        )}
       </View>
       <IconButton onPress={onPressInfo} style={styles.iconButton}>
         <Icon name="block" color={Color.graphicBase1} />

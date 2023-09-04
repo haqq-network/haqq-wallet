@@ -1,6 +1,8 @@
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
+import {I18N, getText} from '@app/i18n';
+import {Cosmos} from '@app/services/cosmos';
 
 export type IndexerUpdatesResponse = {
   balance: Record<string, string>;
@@ -32,5 +34,19 @@ export class Indexer {
       'updates',
       [accounts, updated].filter(Boolean),
     );
+  }
+
+  async getContractName(address: string): Promise<string> {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    const info = await jsonrpcRequest<{name: string} | null>(
+      app.provider.indexer,
+      'address',
+      [Cosmos.addressToBech32(address)],
+    );
+
+    return info?.name ?? getText(I18N.transactionContractDefaultName);
   }
 }

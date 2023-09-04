@@ -2,14 +2,19 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
+import {TransactionContract} from '@app/components/transactions/contract';
 import {TransactionDate} from '@app/components/transactions/date';
 import {TransactionReceive} from '@app/components/transactions/receive';
 import {TransactionSend} from '@app/components/transactions/send';
-import {TransactionList, TransactionSource} from '@app/types';
+import {
+  OnTransactionRowPress,
+  TransactionList,
+  TransactionSource,
+} from '@app/types';
 
 export type TransactionPreviewProps = {
   item: TransactionList;
-  onPress: (hash: string) => void;
+  onPress: OnTransactionRowPress;
 };
 
 export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
@@ -21,6 +26,8 @@ export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
         return <TransactionSend item={item} onPress={onPress} />;
       case TransactionSource.receive:
         return <TransactionReceive item={item} onPress={onPress} />;
+      case TransactionSource.contract:
+        return <TransactionContract item={item} onPress={onPress} />;
       default:
         return null;
     }

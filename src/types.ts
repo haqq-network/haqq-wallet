@@ -57,6 +57,7 @@ export enum TransactionSource {
   date,
   send,
   receive,
+  contract,
 }
 
 export enum PopupNotificationBannerTypes {
@@ -73,6 +74,10 @@ export type TransactionListReceive = Transaction & {
   source: TransactionSource.receive;
 };
 
+export type TransactionListContract = Transaction & {
+  source: TransactionSource.contract;
+};
+
 export type TransactionListDate = {
   hash: string;
   date: Date;
@@ -83,7 +88,8 @@ export type TransactionListDate = {
 export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
-  | TransactionListDate;
+  | TransactionListDate
+  | TransactionListContract;
 
 export type TransactionResponse = Awaited<
   ReturnType<EthNetwork['transferTransaction']>
@@ -307,6 +313,7 @@ export type RootStackParamList = {
   };
   transactionDetail: {
     hash: string;
+    contractName?: string;
   };
   inAppBrowser: {
     url: string;
@@ -1129,3 +1136,8 @@ export type SendTransactionError = {
   transaction: SendTransactionRequest;
   transactionHash: string;
 };
+
+export type OnTransactionRowPress = (
+  hash: string,
+  params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
+) => void;

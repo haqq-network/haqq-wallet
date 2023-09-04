@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {formatDistance} from 'date-fns';
 import {TouchableWithoutFeedback, View} from 'react-native';
@@ -14,17 +14,21 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Indexer} from '@app/services/indexer';
 import {
+  OnTransactionRowPress,
+  TransactionListContract,
   TransactionListReceive,
   TransactionListSend,
   TransactionSource,
 } from '@app/types';
 
 export type Props = {
-  item: TransactionListSend | TransactionListReceive;
-  onPress: (hash: string) => void;
+  item: TransactionListSend | TransactionListReceive | TransactionListContract;
+  onPress: OnTransactionRowPress;
   wallets: Realm.Results<Wallet>;
 };
 
@@ -36,38 +40,51 @@ type IMapItem = {
 };
 
 const DisplayMap: {[key: string]: IMapItem} = {
-  send: {
+  [TransactionSource.send]: {
     iconName: IconsName.arrow_send,
     title: I18N.transactionSendTitle,
     sumTextColor: Color.textRed1,
     amountText: I18N.transactionNegativeAmountText,
   },
-  receive: {
+  [TransactionSource.receive]: {
     iconName: IconsName.arrow_receive,
     title: I18N.transactionReceiveTitle,
+    sumTextColor: Color.textGreen1,
+    amountText: I18N.transactionPositiveAmountText,
+  },
+  [TransactionSource.contract]: {
+    iconName: IconsName.contract,
+    title: I18N.transactionContractTitle,
     sumTextColor: Color.textGreen1,
     amountText: I18N.transactionPositiveAmountText,
   },
 };
 
 export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
-  const isSend = useMemo(() => {
-    return item.source === TransactionSource.send;
+  const [contractName, setContractName] = useState('');
+
+  useEffectAsync(async () => {
+    const name = await Indexer.instance.getContractName(item.to);
+    setContractName(name);
+  }, []);
+
+  const showWallet = useMemo(() => {
+    return (
+      item.source === TransactionSource.send ||
+      item.source === TransactionSource.contract
+    );
   }, [item.source]);
-  const DisplayMapItem = useMemo(
-    () => DisplayMap[isSend ? 'send' : 'receive'],
-    [isSend],
-  );
+  const DisplayMapItem = useMemo(() => DisplayMap[item.source], [item.source]);
   const handlePress = useCallback(() => {
-    onPress(item.hash);
-  }, [item.hash, onPress]);
+    onPress(item.hash, {contractName});
+  }, [item.hash, onPress, contractName]);
   const currentWallet = useMemo(() => {
     return wallets.find(
       wallet =>
-        item[isSend ? 'from' : 'to'].toLowerCase() ===
+        item[showWallet ? 'from' : 'to'].toLowerCase() ===
         wallet.address.toLowerCase(),
     );
-  }, [isSend, item, wallets]);
+  }, [showWallet, item, wallets]);
   const subtitle = useMemo(
     () =>
       formatDistance(item.createdAt, Date.now(), {
@@ -115,12 +132,14 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
           }
           short
         />
-        <Text
-          t11
-          color={DisplayMapItem.sumTextColor}
-          i18n={DisplayMapItem.amountText}
-          i18params={{value: cleanNumber(item.value)}}
-        />
+        {item.source !== TransactionSource.contract && (
+          <Text
+            t11
+            color={DisplayMapItem.sumTextColor}
+            i18n={DisplayMapItem.amountText}
+            i18params={{value: cleanNumber(item.value)}}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
