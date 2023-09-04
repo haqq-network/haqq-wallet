@@ -12,6 +12,9 @@ export const StakingDelegateFinishScreen = () => {
 
   const onDone = useCallback(async () => {
     app.emit(Events.onStakingSync);
+    setTimeout(() => {
+      app.emit(Events.onStakingSync);
+    }, 10000);
     await awaitForEventDone(Events.onAppReviewRequest);
     navigation.getParent()?.goBack();
   }, [navigation]);

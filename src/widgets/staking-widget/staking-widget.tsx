@@ -20,7 +20,7 @@ type Props = {
 export const StakingWidget = memo(
   ({onPress, onGetReward, rewardAmount}: Props) => {
     const canGetRewards = useMemo(
-      () => rewardAmount.toNumber() >= 1 / NUM_PRECISION,
+      () => rewardAmount.toFloat() >= 1 / NUM_PRECISION,
       [rewardAmount],
     );
 
