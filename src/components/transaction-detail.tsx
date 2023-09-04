@@ -13,6 +13,7 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {IS_IOS} from '@app/variables/common';
@@ -61,6 +62,11 @@ export const TransactionDetail = ({
 
     return `+ ${cleanNumber(transaction.value)}`;
   }, [transaction, source]);
+
+  const fee = useMemo(
+    () => new Balance(transaction.feeHex || transaction.fee).toWeiString(),
+    [transaction],
+  );
 
   if (!transaction) {
     return null;
@@ -143,7 +149,7 @@ export const TransactionDetail = ({
           short
         />
         <DataContent
-          title={`${transaction.feeFormatted} ISLM`}
+          title={fee}
           subtitleI18n={I18N.transactionDetailNetworkFee}
           reversed
           short
