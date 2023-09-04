@@ -2431,9 +2431,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-ledger-react-native@npm:0.0.18":
-  version: 0.0.18
-  resolution: "@haqq/provider-ledger-react-native@npm:0.0.18"
+"@haqq/provider-ledger-react-native@npm:0.0.19":
+  version: 0.0.19
+  resolution: "@haqq/provider-ledger-react-native@npm:0.0.19"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ledgerhq/hw-app-eth": 6.30.0
@@ -2447,7 +2447,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-ble-plx: "*"
-  checksum: 822f3a6fcbf130c0f60d3d588c439d9e480cab2eef33a4faa16a5ab96fec730b1b42ad7e0af9b9e78d9ba78e3466f6f4cc400a9f209a6be85070fbb6597ba9f8
+  checksum: 2b92eb16d88e06f2393fbc18c8cc92459470e2b4c1d871f3398c2d1923a89d1e305bd3274cb62572e3c24d74d6930835768521eb6fd3914bfcb34130634c395a
   languageName: node
   linkType: hard
 
@@ -9562,7 +9562,7 @@ __metadata:
     "@haqq/encryption-react-native": 0.0.3
     "@haqq/provider-base": 0.0.18
     "@haqq/provider-hot-react-native": 0.0.6
-    "@haqq/provider-ledger-react-native": 0.0.18
+    "@haqq/provider-ledger-react-native": 0.0.19
     "@haqq/provider-mnemonic-react-native": 0.0.11
     "@haqq/provider-sss-react-native": 0.0.9
     "@haqq/provider-web3-utils": 0.0.14

@@ -71,7 +71,7 @@ export async function onStakingRewards() {
         if (e === '27010') {
           await awaitForPopupClosed('ledgerLocked');
         }
-        transport.abort();
+        return transport.abort();
       }
     }
   }
