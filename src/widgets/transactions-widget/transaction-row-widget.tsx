@@ -62,29 +62,40 @@ const DisplayMap: {[key: string]: IMapItem} = {
 
 export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
   const [contractName, setContractName] = useState('');
+  const adressList = Wallet.addressList();
 
   useEffectAsync(async () => {
     const name = await Indexer.instance.getContractName(item.to);
     setContractName(name);
   }, []);
 
-  const showWallet = useMemo(() => {
+  const isSend = useMemo(() => {
     return (
-      item.source === TransactionSource.send ||
-      item.source === TransactionSource.contract
+      item.source === TransactionSource.send || adressList.includes(item.from)
     );
-  }, [item.source]);
-  const DisplayMapItem = useMemo(() => DisplayMap[item.source], [item.source]);
+  }, [item.source, adressList, item.from]);
+  const DisplayMapItem = useMemo(() => {
+    if (isSend && item.source === TransactionSource.contract) {
+      const sendMap = DisplayMap[TransactionSource.send];
+      const contractMap = DisplayMap[TransactionSource.contract];
+      return {
+        ...sendMap,
+        iconName: contractMap.iconName,
+        title: contractMap.title,
+      };
+    }
+    return DisplayMap[item.source];
+  }, [item.source, isSend]);
   const handlePress = useCallback(() => {
     onPress(item.hash, {contractName});
   }, [item.hash, onPress, contractName]);
   const currentWallet = useMemo(() => {
     return wallets.find(
       wallet =>
-        item[showWallet ? 'from' : 'to'].toLowerCase() ===
+        item[isSend ? 'from' : 'to'].toLowerCase() ===
         wallet.address.toLowerCase(),
     );
-  }, [showWallet, item, wallets]);
+  }, [isSend, item, wallets]);
   const subtitle = useMemo(
     () =>
       formatDistance(item.createdAt, Date.now(), {

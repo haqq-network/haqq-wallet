@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
@@ -7,6 +7,7 @@ import {DataContent, Icon, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 
@@ -21,6 +22,11 @@ export const TransactionContract = ({
   onPress,
 }: TransactionPreviewProps) => {
   const [contractName, setContractName] = useState('');
+  const adressList = Wallet.addressList();
+
+  const isSend = useMemo(() => {
+    return adressList.includes(item.from);
+  }, [adressList, item.from]);
 
   useEffectAsync(async () => {
     const name = await Indexer.instance.getContractName(item.to);
@@ -49,8 +55,12 @@ export const TransactionContract = ({
         {!!item.value && (
           <Text
             t11
-            color={Color.textRed1}
-            i18n={I18N.transactionNegativeAmountText}
+            color={isSend ? Color.textRed1 : Color.textGreen1}
+            i18n={
+              isSend
+                ? I18N.transactionNegativeAmountText
+                : I18N.transactionPositiveAmountText
+            }
             i18params={{value: cleanNumber(item.value)}}
           />
         )}
