@@ -134,7 +134,7 @@ export class Transaction extends Realm.Object {
           confirmed: transaction.confirmations
             ? parseInt(String(transaction.confirmations), 10) > 10
             : false,
-          input: transaction.input,
+          input: transaction.input ?? '0x',
         },
         Realm.UpdateMode.Modified,
       );
