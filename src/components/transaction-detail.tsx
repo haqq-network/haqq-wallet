@@ -12,6 +12,7 @@ import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {TransactionSource} from '@app/types';
@@ -35,7 +36,9 @@ export const TransactionDetail = ({
   onPressInfo,
   contractName,
 }: TransactionDetailProps) => {
-  const isSent = source === TransactionSource.send;
+  const adressList = Wallet.addressList();
+  const isSent =
+    source === TransactionSource.send || adressList.includes(transaction.from);
   const isContract = source === TransactionSource.contract;
   const to = isSent ? transaction.to : ' ';
   const from = transaction?.from ? transaction.from : ' ';
@@ -68,12 +71,18 @@ export const TransactionDetail = ({
       return '';
     }
 
-    if ([TransactionSource.send, TransactionSource.contract].includes(source)) {
+    if (source === TransactionSource.contract) {
+      return `${isSent ? '-' : '+'} ${cleanNumber(
+        transaction.value + (isSent ? transaction.fee : 0),
+      )}`;
+    }
+
+    if (source === TransactionSource.send) {
       return `- ${cleanNumber(transaction.value + transaction.fee)}`;
     }
 
     return `+ ${cleanNumber(transaction.value)}`;
-  }, [transaction, source]);
+  }, [transaction, source, isSent]);
 
   const fee = useMemo(
     () => new Balance(transaction.feeHex || transaction.fee).toWeiString(),
