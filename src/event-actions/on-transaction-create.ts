@@ -16,6 +16,7 @@ export async function onTransactionCreate(
     timeStamp?: number | string;
     confirmations?: number | string;
     contractAddress?: string;
+    input: string;
   },
   providerId: string,
   fee: Balance,

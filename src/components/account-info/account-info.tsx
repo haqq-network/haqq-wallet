@@ -10,7 +10,7 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {TransactionList} from '@app/types';
+import {ContractNameMap, TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
@@ -35,6 +35,7 @@ export type AccountInfoProps = {
   onSend: () => void;
   onReceive: () => void;
   onPressRow: (hash: string) => void;
+  contractNameMap: ContractNameMap;
 };
 
 const PAGE_ITEMS_COUNT = 15;
@@ -51,6 +52,7 @@ export const AccountInfo = ({
   onSend,
   onReceive,
   onPressRow,
+  contractNameMap,
 }: AccountInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
@@ -123,8 +125,14 @@ export const AccountInfo = ({
     ],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(
-    ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
-    [onPressRow],
+    ({item}) => (
+      <TransactionRow
+        contractNameMap={contractNameMap}
+        item={item}
+        onPress={onPressRow}
+      />
+    ),
+    [contractNameMap, onPressRow],
   );
   const renderListEmptyComponent = useCallback(
     () => (
