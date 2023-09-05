@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 
 import {View} from 'react-native';
 
@@ -13,16 +13,28 @@ import {NUM_PRECISION} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
-  onGetReward: () => void;
+  onGetReward: () => Promise<void>;
   rewardAmount: Balance;
 };
 
 export const StakingWidget = memo(
   ({onPress, onGetReward, rewardAmount}: Props) => {
+    const [loading, setLoading] = useState(false);
     const canGetRewards = useMemo(
       () => rewardAmount.toEther() >= 1 / NUM_PRECISION,
       [rewardAmount],
     );
+
+    const onPressGetReward = useCallback(async () => {
+      try {
+        if (canGetRewards) {
+          setLoading(true);
+          await onGetReward();
+        }
+      } finally {
+        setLoading(false);
+      }
+    }, [canGetRewards, onGetReward]);
 
     return (
       <ShadowCard onPress={onPress} style={styles.wrapper}>
@@ -44,8 +56,9 @@ export const StakingWidget = memo(
             variant={ButtonVariant.second}
             size={ButtonSize.small}
             disabled={!canGetRewards}
+            loading={loading}
             circleBorders
-            onPress={onGetReward}
+            onPress={onPressGetReward}
           />
         </View>
       </ShadowCard>
