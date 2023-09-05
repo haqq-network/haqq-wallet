@@ -7,7 +7,9 @@ import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
+  ContractNameMap,
   OnTransactionRowPress,
+  TransactionListContract,
   TransactionListReceive,
   TransactionListSend,
 } from '@app/types';
@@ -15,9 +17,14 @@ import {TransactionRowWidget} from '@app/widgets/transactions-widget/transaction
 
 type Props = {
   onPress: () => void;
-  lastTransactions: (TransactionListSend | TransactionListReceive)[];
+  lastTransactions: (
+    | TransactionListSend
+    | TransactionListReceive
+    | TransactionListContract
+  )[];
   onRowPress: OnTransactionRowPress;
   wallets: Realm.Results<Wallet>;
+  contractNameMap: ContractNameMap;
 };
 
 export const TransactionsWidget = ({
@@ -25,6 +32,7 @@ export const TransactionsWidget = ({
   lastTransactions,
   onRowPress,
   wallets,
+  contractNameMap,
 }: Props) => {
   if (lastTransactions.length === 0) {
     return null;
@@ -39,6 +47,7 @@ export const TransactionsWidget = ({
             item={item}
             onPress={onRowPress}
             wallets={wallets}
+            contractNameMap={contractNameMap}
           />
         );
       })}

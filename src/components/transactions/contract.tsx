@@ -1,37 +1,30 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Indexer} from '@app/services/indexer';
 import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 
 export type TransactionPreviewProps = {
   item: TransactionListContract;
   onPress: OnTransactionRowPress;
-  contractName?: string;
+  contractName: string;
 };
 
 export const TransactionContract = ({
   item,
   onPress,
+  contractName,
 }: TransactionPreviewProps) => {
-  const [contractName, setContractName] = useState('');
   const adressList = Wallet.addressList();
 
   const isSend = useMemo(() => {
     return adressList.includes(item.from);
   }, [adressList, item.from]);
-
-  useEffectAsync(async () => {
-    const name = await Indexer.instance.getContractName(item.to);
-    setContractName(name);
-  }, []);
 
   const handlePress = useCallback(() => {
     onPress(item.hash, {contractName});

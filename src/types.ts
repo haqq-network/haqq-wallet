@@ -1141,3 +1141,5 @@ export type OnTransactionRowPress = (
   hash: string,
   params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
 ) => void;
+
+export type ContractNameMap = Record<string, string>;

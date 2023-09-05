@@ -7,6 +7,7 @@ import {TransactionDate} from '@app/components/transactions/date';
 import {TransactionReceive} from '@app/components/transactions/receive';
 import {TransactionSend} from '@app/components/transactions/send';
 import {
+  ContractNameMap,
   OnTransactionRowPress,
   TransactionList,
   TransactionSource,
@@ -15,9 +16,14 @@ import {
 export type TransactionPreviewProps = {
   item: TransactionList;
   onPress: OnTransactionRowPress;
+  contractNameMap: ContractNameMap;
 };
 
-export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
+export const TransactionRow = ({
+  item,
+  onPress,
+  contractNameMap,
+}: TransactionPreviewProps) => {
   const element = useMemo(() => {
     switch (item.source) {
       case TransactionSource.date:
@@ -27,11 +33,17 @@ export const TransactionRow = ({item, onPress}: TransactionPreviewProps) => {
       case TransactionSource.receive:
         return <TransactionReceive item={item} onPress={onPress} />;
       case TransactionSource.contract:
-        return <TransactionContract item={item} onPress={onPress} />;
+        return (
+          <TransactionContract
+            contractName={contractNameMap[item.to]}
+            item={item}
+            onPress={onPress}
+          />
+        );
       default:
         return null;
     }
-  }, [item, onPress]);
+  }, [item, onPress, contractNameMap]);
 
   return <View key={`TransactionRow_${item.hash}`}>{element}</View>;
 };

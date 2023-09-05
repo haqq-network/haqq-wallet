@@ -3,6 +3,7 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
+import {ContractNameMap} from '@app/types';
 
 export type IndexerUpdatesResponse = {
   balance: Record<string, string>;
@@ -48,5 +49,34 @@ export class Indexer {
     );
 
     return info?.name ?? getText(I18N.transactionContractDefaultName);
+  }
+
+  async getContractNames(addresses: string[]): Promise<ContractNameMap> {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    if (addresses.length === 0) {
+      return Promise.reject('Empty addresses');
+    }
+
+    const info = await jsonrpcRequest<{name: string; id: string}[]>(
+      app.provider.indexer,
+      'addresses',
+      [addresses.map(Cosmos.addressToBech32)],
+    );
+
+    if (!Array.isArray(info)) {
+      return {};
+    }
+
+    const map = addresses.reduce((acc, item) => {
+      acc[item] =
+        info.find(infoItem => infoItem.id === Cosmos.addressToBech32(item))
+          ?.name ?? getText(I18N.transactionContractDefaultName);
+      return acc;
+    }, {} as ContractNameMap);
+
+    return map;
   }
 }

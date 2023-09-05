@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
 import {TouchableWithoutFeedback, View} from 'react-native';
@@ -14,11 +14,10 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Indexer} from '@app/services/indexer';
 import {
+  ContractNameMap,
   OnTransactionRowPress,
   TransactionListContract,
   TransactionListReceive,
@@ -30,6 +29,7 @@ export type Props = {
   item: TransactionListSend | TransactionListReceive | TransactionListContract;
   onPress: OnTransactionRowPress;
   wallets: Realm.Results<Wallet>;
+  contractNameMap: ContractNameMap;
 };
 
 type IMapItem = {
@@ -60,14 +60,17 @@ const DisplayMap: {[key: string]: IMapItem} = {
   },
 };
 
-export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
-  const [contractName, setContractName] = useState('');
+export const TransactionRowWidget = ({
+  item,
+  onPress,
+  wallets,
+  contractNameMap,
+}: Props) => {
   const adressList = Wallet.addressList();
-
-  useEffectAsync(async () => {
-    const name = await Indexer.instance.getContractName(item.to);
-    setContractName(name);
-  }, []);
+  const contractName = useMemo(
+    () => contractNameMap[item.to],
+    [contractNameMap, item.to],
+  );
 
   const isSend = useMemo(() => {
     return (
