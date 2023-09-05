@@ -11,6 +11,7 @@ const LEDGER_PROVIDER_EVENTS = [
   'signPersonalMessage',
   'signTransaction',
   'abortCall',
+  'disconnect',
 ];
 
 export const awaitForLedger = async (transport: ProviderInterface) => {
