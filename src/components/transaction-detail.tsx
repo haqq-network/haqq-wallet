@@ -68,7 +68,7 @@ export const TransactionDetail = ({
       return '';
     }
 
-    if (source === TransactionSource.send) {
+    if ([TransactionSource.send, TransactionSource.contract].includes(source)) {
       return `- ${cleanNumber(transaction.value + transaction.fee)}`;
     }
 
@@ -89,7 +89,7 @@ export const TransactionDetail = ({
       onClose={onCloseBottomSheet}
       i18nTitle={title}
       closeDistance={closeDistance}>
-      {!isContract && (
+      {!total && (
         <>
           <Text
             i18n={I18N.transactionDetailTotalAmount}
@@ -99,9 +99,10 @@ export const TransactionDetail = ({
           <Text
             t6
             color={isSent ? Color.textRed1 : Color.textGreen1}
-            style={styles.sum}>
-            {total} ISLM
-          </Text>
+            style={styles.sum}
+            i18n={I18N.transactionConfirmationAmount}
+            i18params={{amount: total}}
+          />
         </>
       )}
       <View style={styles.infoContainer}>
@@ -133,7 +134,7 @@ export const TransactionDetail = ({
         )}
         {isContract && contractName && (
           <DataContent
-            subtitle={'Contract name'}
+            subtitleI18n={I18N.transactionDetailContractName}
             title={contractName}
             numberOfLines={2}
             reversed
@@ -169,7 +170,8 @@ export const TransactionDetail = ({
         )}
         {!isContract && (
           <DataContent
-            title={`${cleanNumber(transaction.value)} ISLM`}
+            titleI18n={I18N.transactionConfirmationAmount}
+            titleI18nParams={{amount: cleanNumber(transaction.value)}}
             subtitleI18n={I18N.transactionDetailAmount}
             reversed
             short

@@ -563,7 +563,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.input = '';
+        newObject.input = '0x';
       }
     }
     logger.log('migration finish');

@@ -746,6 +746,7 @@ export enum I18N {
   transactionDetailTransactionTypeDescription,
   transactionContractNamePrefix,
   transactionContractDefaultName,
+  transactionDetailContractName,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1284,6 +1285,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionDetailNetworkFee]: 'Network Fee',
   [I18N.transactionDetailCryptocurrency]: 'Cryptocurrency',
   [I18N.transactionDetailTransactionType]: 'Transaction type',
+  [I18N.transactionDetailContractName]: 'Contract name',
   [I18N.transactionDetailTransactionTypeDescription]:
     'The operation of interaction with the contract. You only pay for gas',
   [I18N.walletCreateAddAccount]: 'Add accounts',

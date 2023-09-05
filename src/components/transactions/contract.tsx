@@ -3,8 +3,8 @@ import React, {useCallback, useState} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataContent, Icon} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {DataContent, Icon, Text} from '@app/components/ui';
+import {cleanNumber, createTheme} from '@app/helpers';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Indexer} from '@app/services/indexer';
@@ -13,6 +13,7 @@ import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 export type TransactionPreviewProps = {
   item: TransactionListContract;
   onPress: OnTransactionRowPress;
+  contractName?: string;
 };
 
 export const TransactionContract = ({
@@ -45,6 +46,14 @@ export const TransactionContract = ({
           }}
           short
         />
+        {!!item.value && (
+          <Text
+            t11
+            color={Color.textRed1}
+            i18n={I18N.transactionNegativeAmountText}
+            i18params={{value: cleanNumber(item.value)}}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

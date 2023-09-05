@@ -132,7 +132,7 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
           }
           short
         />
-        {item.source !== TransactionSource.contract && (
+        {!!item.value && (
           <Text
             t11
             color={DisplayMapItem.sumTextColor}
