@@ -87,7 +87,12 @@ export class Backend {
     session: string,
     signature: string,
     address: string,
-  ): Promise<{signature: string; participant: string; deadline: number}> {
+  ): Promise<{
+    signature: string;
+    participant: string;
+    deadline: number;
+    tx_hash: string;
+  }> {
     const request = await fetch(
       `${this.getRemoteUrl()}contests/${contest}/participate`,
       {

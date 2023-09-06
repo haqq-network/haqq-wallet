@@ -15,6 +15,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
@@ -54,7 +55,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 67,
+  schemaVersion: 69,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -531,6 +532,38 @@ export const realm = new Realm({
         const newObject = newObjects[objectIndex];
         newObject.tmEndpoints = [];
         newObject.evmEndpoints = [];
+      }
+    }
+
+    if (oldRealm.schemaVersion < 68) {
+      logger.log('migration step #22');
+      const oldObjects = oldRealm.objects<{fee: number}>('Transaction');
+      const newObjects = newRealm.objects<{feeHex: string}>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        const oldObject = oldObjects[objectIndex];
+        newObject.feeHex = new Balance(oldObject.fee).toHex();
+      }
+    }
+    if (oldRealm.schemaVersion < 69) {
+      logger.log('migration step #22');
+      const oldObjects = oldRealm.objects('Transaction');
+      const newObjects = newRealm.objects<{input: string}>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.input = '0x';
       }
     }
     logger.log('migration finish');

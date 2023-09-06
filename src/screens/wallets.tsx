@@ -24,10 +24,8 @@ export const WalletsWrapper = () => {
     SessionTypes.Struct[][]
   >([]);
   const showLockedTokens = useMemo(
-    () =>
-      visible?.length === 1 &&
-      isFeatureEnabled(Feature.lockedStakedVestedTokens),
-    [visible?.length],
+    () => isFeatureEnabled(Feature.lockedStakedVestedTokens),
+    [],
   );
 
   useEffect(() => {

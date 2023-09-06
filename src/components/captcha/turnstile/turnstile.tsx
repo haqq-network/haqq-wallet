@@ -1,12 +1,6 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
-import {
-  ActivityIndicator,
-  Linking,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native';
 import WebView from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
@@ -15,8 +9,10 @@ import {
 
 import {Color} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
+import {getUserAgent} from '@app/services/version';
+import {openInAppBrowser} from '@app/utils';
 
 import {
   generateWebViewContent,
@@ -37,12 +33,11 @@ export interface TurnstileProps {
 }
 
 export const Turnstile = (props: TurnstileProps) => {
+  const userAgent = useRef(getUserAgent()).current;
   const generateTheWebViewContent = useMemo(
     () => generateWebViewContent(props),
     [props],
   );
-
-  Logger.log('generateTheWebViewContent', generateTheWebViewContent);
 
   // This shows ActivityIndicator till webview loads Turnstile images
   const renderLoading = useCallback(
@@ -56,19 +51,26 @@ export const Turnstile = (props: TurnstileProps) => {
 
   const onShouldStartLoadWithRequest = useCallback(
     (event: ShouldStartLoadRequest) => {
-      if (event.url.slice(0, 24) === 'https://www.Turnstile.com') {
-        Linking.openURL(event.url);
-        return false;
+      if (
+        (props.url && event?.url?.startsWith(props.url)) ||
+        event?.url?.startsWith('https://challenges.cloudflare.com')
+      ) {
+        return true;
       }
-      return true;
+
+      if (event.url !== 'about:blank') {
+        hideModal('captcha');
+        openInAppBrowser(event.url);
+      }
+      return false;
     },
-    [],
+    [props.url],
   );
 
   const onMessage = useCallback(
     (event: WebViewMessageEvent) => {
       if (DEBUG_VARS.enableCaptchaLogger) {
-        const handled = WebViewLogger.handleEvent(event, 'HCapthca');
+        const handled = WebViewLogger.handleEvent(event, 'Turnstile');
         if (handled) {
           return;
         }
@@ -78,11 +80,14 @@ export const Turnstile = (props: TurnstileProps) => {
     [props],
   );
 
+  Logger.log(generateTheWebViewContent);
+
   return (
     <WebView
+      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+      userAgent={userAgent}
       scrollEnabled={false}
       originWhitelist={['*']}
-      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       mixedContentMode={'always'}
       onMessage={onMessage}
       javaScriptEnabled

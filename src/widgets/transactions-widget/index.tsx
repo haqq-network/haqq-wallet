@@ -1,26 +1,64 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 
 import {useTypedNavigation} from '@app/hooks';
-import {Transaction} from '@app/models/transaction';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
+import {Indexer} from '@app/services/indexer';
+import {
+  OnTransactionRowPress,
+  TransactionListContract,
+  TransactionListReceive,
+  TransactionListSend,
+  TransactionSource,
+} from '@app/types';
 import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-widget';
 
 export const TransactionsWidgetWrapper = memo(() => {
   const navigation = useTypedNavigation();
   const wallets = useMemo(() => Wallet.getAll(), []);
+  const adressList = Wallet.addressList();
+  const transactions = useTransactionList(adressList);
+  const [contractNameMap, setContractNameMap] = useState({});
 
   const openTotalInfo = useCallback(() => {
     navigation.navigate('totalValueInfo');
   }, [navigation]);
 
-  const lastThreeTransactions = useMemo(
-    () => Transaction.getAll().snapshot().sorted('createdAt', true).slice(0, 3),
-    [],
+  const lastThreeTransactions = useMemo<
+    (TransactionListSend | TransactionListReceive | TransactionListContract)[]
+  >(
+    () =>
+      transactions
+        .filter(item =>
+          [
+            TransactionSource.send,
+            TransactionSource.receive,
+            TransactionSource.contract,
+          ].includes(item.source),
+        )
+        .slice(0, 3) as (
+        | TransactionListSend
+        | TransactionListReceive
+        | TransactionListContract
+      )[],
+    [transactions],
   );
 
-  const onRowPress = useCallback(
-    (hash: string) => {
+  useEffectAsync(async () => {
+    const names = lastThreeTransactions
+      .filter(({source}) => source === TransactionSource.contract)
+      .map(item => (item as TransactionListContract).to);
+    const uniqueNames = [...new Set(names)];
+    const info = await Indexer.instance.getContractNames(uniqueNames);
+    setContractNameMap(info);
+  }, []);
+
+  const onRowPress: OnTransactionRowPress = useCallback(
+    (hash, params) => {
+      const screenParams = params || {};
       navigation.navigate('transactionDetail', {
+        ...screenParams,
         hash,
       });
     },
@@ -33,6 +71,7 @@ export const TransactionsWidgetWrapper = memo(() => {
       lastTransactions={lastThreeTransactions}
       onRowPress={onRowPress}
       wallets={wallets}
+      contractNameMap={contractNameMap}
     />
   );
 });

@@ -24,6 +24,7 @@ export const RafflesWidgetWrapper = memo(() => {
         Wallet.addressList(),
         uid,
       );
+      setRaffles([]);
       setRaffles(prepareRaffles(response));
     } catch (err) {
       Logger.captureException(

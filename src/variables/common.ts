@@ -240,3 +240,6 @@ export const LIGHT_DISCORD_TEXT = '#FFFFFF';
 
 export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
+
+export const SPLASH_TIMEOUT_MS = 30_000;
+export const AWAIT_NEW_BLOCK_MS = 10_000;

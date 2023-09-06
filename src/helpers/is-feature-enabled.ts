@@ -1,4 +1,4 @@
-import {IS_SSS_ENABLED} from '@env';
+import {IS_SSS_ENABLED, IS_STAKED_VESTED_ENABLED} from '@env';
 
 import {app} from '@app/contexts';
 
@@ -31,7 +31,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.rtl:
       return false;
     case Feature.lockedStakedVestedTokens:
-      return app.isDeveloper;
+      return IS_STAKED_VESTED_ENABLED === 'true' || app.isDeveloper;
     default:
       return false;
   }

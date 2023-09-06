@@ -639,7 +639,10 @@ export const openInAppBrowser = (
 };
 
 export const openWeb3Browser = (url: string) => {
-  navigator.navigate('web3BrowserPopup', {url: onUrlSubmit(url), popup: true});
+  navigator.navigate('web3BrowserPopup', {
+    url: onUrlSubmit(url),
+    popup: true,
+  });
 };
 
 export const requestTrackingAuthorization = () => {

@@ -8,16 +8,19 @@ import {Indexer} from '@app/services/indexer';
 
 export async function onWalletsBalanceCheck() {
   try {
-    let balances = [];
+    let balances: [string, Balance][] = [];
 
-    if (app.provider.indexer) {
-      let lastBalanceUpdates = VariablesDate.get(
-        `indexer_${app.provider.cosmosChainId}`,
-      );
+    let lastBalanceUpdates = VariablesDate.get(
+      `indexer_${app.provider.cosmosChainId}`,
+    );
 
-      let accounts = Wallet.getAll().map(w =>
-        Cosmos.addressToBech32(w.address),
-      );
+    const wallets = Wallet.getAll();
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not available');
+      }
+
+      let accounts = wallets.map(w => Cosmos.addressToBech32(w.address));
       const updates = await Indexer.instance.updates(
         accounts,
         lastBalanceUpdates,
@@ -32,13 +35,12 @@ export async function onWalletsBalanceCheck() {
         `indexer_${app.provider.cosmosChainId}`,
         new Date(updates.last_update),
       );
-    } else {
+    } catch (e) {
       balances = await Promise.all(
         Wallet.getAll().map(w =>
-          EthNetwork.getBalance(w.address).then(balance => [
-            w.address,
-            balance,
-          ]),
+          EthNetwork.getBalance(w.address).then(
+            balance => [w.address, balance] as [string, Balance],
+          ),
         ),
       );
     }

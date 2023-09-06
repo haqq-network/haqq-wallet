@@ -3,6 +3,7 @@ import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
+import {Balance} from '@app/services/balance';
 import {fetchWithTimeout, getHttpResponse} from '@app/utils';
 
 export async function onTransactionsLoad(address: string) {
@@ -24,7 +25,7 @@ export async function onTransactionsLoad(address: string) {
       Events.onTransactionCreate,
       row.row,
       row.providerId,
-      row.fee,
+      new Balance(row.fee),
     );
   }
 }

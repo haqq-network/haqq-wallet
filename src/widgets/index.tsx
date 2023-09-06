@@ -12,7 +12,6 @@ import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
 import {LayoutWidgetWrapper} from '@app/widgets/layout-widget';
 import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
 import {StakingWidgetWrapper} from '@app/widgets/staking-widget';
-import {TransactionsShortWidgetWrapper} from '@app/widgets/transactions-short-widget';
 import {TransactionsWidgetWrapper} from '@app/widgets/transactions-widget';
 
 type IWidgetMap = {
@@ -28,9 +27,7 @@ const WidgetMap: IWidgetMap = {
   Transactions: params => (
     <TransactionsWidgetWrapper key={generateUUID()} {...params} />
   ),
-  TransactionsShort: params => (
-    <TransactionsShortWidgetWrapper key={generateUUID()} {...params} />
-  ),
+  TransactionsShort: () => null,
   Raffles: params => <RafflesWidgetWrapper key={generateUUID()} {...params} />,
   Staking: params => <StakingWidgetWrapper key={generateUUID()} {...params} />,
   Governance: params => (
@@ -48,7 +45,7 @@ const WidgetMap: IWidgetMap = {
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
 };
 
-export const WidgetRoot = memo(() => {
+export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const [data, setData] = useState<IWidget[]>([]);
 
   useEffectAsync(async () => {
@@ -62,7 +59,7 @@ export const WidgetRoot = memo(() => {
     if (response.blocks) {
       setData([response.blocks]);
     }
-  }, []);
+  }, [lastUpdate]);
 
   if (!data) {
     return null;

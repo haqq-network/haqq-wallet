@@ -1,7 +1,7 @@
 import {app} from '@app/contexts/app';
 import {Modals} from '@app/types';
 
-type ModalName = Extract<keyof Modals, string>;
+export type ModalName = Extract<keyof Modals, string>;
 
 export function showModal(
   modalName: ModalName,

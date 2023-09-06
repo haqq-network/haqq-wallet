@@ -375,6 +375,7 @@ export enum I18N {
   transactionDetailAmount,
   transactionDetailNetworkFee,
   transactionDetailCryptocurrency,
+  transactionDetailTransactionType,
   transactionConfirmationSend,
   transactionConfirmationAmount,
   transactionConfirmationHAQQ,
@@ -739,6 +740,13 @@ export enum I18N {
   notEnoughGasDescription1,
   notEnoughGasDescription3,
   browserActionMenuClose,
+  earnTicketAlreadyRecieved,
+  splashDescription,
+  transactionContractTitle,
+  transactionDetailTransactionTypeDescription,
+  transactionContractNamePrefix,
+  transactionContractDefaultName,
+  transactionDetailContractName,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1070,6 +1078,9 @@ const en: Record<I18N, string> = {
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.transactionReceiveTitle]: 'Received',
+  [I18N.transactionContractTitle]: 'Contract interaction',
+  [I18N.transactionContractNamePrefix]: 'name: {{value}}',
+  [I18N.transactionContractDefaultName]: 'HAQQ Network Contract',
   [I18N.transactionPositiveAmountText]: `+ {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionNegativeAmountText]: `- {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
@@ -1273,6 +1284,10 @@ const en: Record<I18N, string> = {
   [I18N.transactionDetailAmount]: 'Amount',
   [I18N.transactionDetailNetworkFee]: 'Network Fee',
   [I18N.transactionDetailCryptocurrency]: 'Cryptocurrency',
+  [I18N.transactionDetailTransactionType]: 'Transaction type',
+  [I18N.transactionDetailContractName]: 'Contract name',
+  [I18N.transactionDetailTransactionTypeDescription]:
+    'The operation of interaction with the contract. You only pay for gas',
   [I18N.walletCreateAddAccount]: 'Add accounts',
   [I18N.walletCreateImportAndCreate]: 'Import and create new accounts',
   [I18N.walletCreateNew]: 'Create new',
@@ -1516,6 +1531,7 @@ const en: Record<I18N, string> = {
   [I18N.timerSec]: 'Sec',
   [I18N.raffleTicketRecieved]: 'You have successfully claimed your reward',
   [I18N.earnTicketRecieved]: 'The ticket has been received',
+  [I18N.earnTicketAlreadyRecieved]: 'The ticket already received',
   [I18N.raffleDetailsTimerFinishTitle]: 'Raffle is end',
   [I18N.raffleDetailsTimerProgressTitle]: 'The raffle will end in',
   [I18N.raffleRewardСongratulations]: 'Сongratulations!',
@@ -1600,8 +1616,8 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
   [I18N.lockedTokensInfoDescription]:
     'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
-  [I18N.totalValueScreenTitle]: 'Total value',
-  [I18N.totalValueAccount]: 'Total account value',
+  [I18N.totalValueScreenTitle]: 'Transactions',
+  [I18N.totalValueAccount]: 'Total balance',
   [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
   [I18N.modalDontHaveFeeClose]: 'Close',
   [I18N.notEnoughGasTitle]: 'Not enough gas',
@@ -1613,4 +1629,5 @@ const en: Record<I18N, string> = {
   [I18N.notEnoughGasDescription4]: 'you only have {{currentAmount}} aISLM',
   [I18N.notEnoughGasDescription5]: ' on your account.',
   [I18N.browserActionMenuClose]: 'Close',
+  [I18N.splashDescription]: '🌙 Sabr...\nYour wallet is awakening',
 };

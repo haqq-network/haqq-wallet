@@ -16,6 +16,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
@@ -68,7 +69,11 @@ export const WalletCard = memo(
         return Balance.Empty.toEther();
       }
 
-      return balance.operate(stakingBalance, 'add').toEther();
+      if (isFeatureEnabled(Feature.lockedStakedVestedTokens)) {
+        return balance.operate(stakingBalance, 'add').toEther();
+      }
+
+      return balance.toEther();
     }, [balance, stakingBalance]);
 
     const locked = useMemo(() => {

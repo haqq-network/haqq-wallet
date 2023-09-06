@@ -93,6 +93,7 @@ export enum IconsName {
   coin = 'coin',
   staking_thin = 'staking_thin',
   home = 'home',
+  contract = 'contract',
 }
 
 export type IconSize =
