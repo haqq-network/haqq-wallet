@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {ScrollView} from 'react-native';
 
@@ -8,7 +8,7 @@ import {LockedTokensWrapper} from '@app/screens/locked-tokens';
 import {WalletsWrapper} from '@app/screens/wallets';
 import {WidgetRoot} from '@app/widgets';
 
-export const HomeFeed = () => {
+export const HomeFeed = memo(() => {
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainerStyle}
@@ -19,7 +19,7 @@ export const HomeFeed = () => {
       <WidgetRoot />
     </ScrollView>
   );
-};
+});
 
 const styles = createTheme({
   contentContainerStyle: {flex: 0, paddingBottom: 20},

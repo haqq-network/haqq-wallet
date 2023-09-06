@@ -21,6 +21,7 @@
     "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true"
   },
   "dependencies": {
+    "@birdwingo/react-native-spinning-numbers": "1.0.5",
     "@ethersproject/shims": "5.7.0",
     "@evmos/provider": "0.3.1",
     "@evmos/transactions": "0.2.13",
@@ -115,6 +116,7 @@
     "react-native-system-navigation-bar": "2.6.1",
     "react-native-touch-id": "4.4.1",
     "react-native-webview": "11.13.0",
+    "react-timer-mixin": "0.13.4",
     "readable-stream": "4.4.2",
     "realm": "11.10.1",
     "rive-react-native": "^4.1.2",
