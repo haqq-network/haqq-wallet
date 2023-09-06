@@ -6,6 +6,7 @@ import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
+import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -19,7 +20,7 @@ export const SignupNetworksScreen = () => {
   const navigation = useTypedNavigation();
 
   const onLogin = useCallback(
-    async (provider: SssProviders) => {
+    async (provider: SssProviders, skipCheck: boolean = false) => {
       let creds;
       switch (provider) {
         case SssProviders.apple:
@@ -36,6 +37,17 @@ export const SignupNetworksScreen = () => {
       let nextScreen = app.onboarded
         ? 'signupStoreWallet'
         : 'onboardingSetupPin';
+
+      if (!skipCheck) {
+        const hasPermissions = await verifyCloud(provider);
+        if (!hasPermissions) {
+          navigation.navigate('cloudProblems', {
+            sssProvider: provider,
+            onNext: () => onLogin(provider, true),
+          });
+          return;
+        }
+      }
 
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
