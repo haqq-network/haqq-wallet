@@ -25,6 +25,7 @@ export const OnboardingFinishScreen = () => {
   const onEnd = useCallback(() => {
     if (route.params.onboarding) {
       WalletConnect.instance.init();
+      app.emit(Events.onBlockRequestCheck);
       navigation.replace('home');
       requestAnimationFrame(() => {
         app.emit(Events.onAppStarted);

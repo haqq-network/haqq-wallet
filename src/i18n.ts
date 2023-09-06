@@ -747,6 +747,8 @@ export enum I18N {
   transactionContractNamePrefix,
   transactionContractDefaultName,
   transactionDetailContractName,
+  blockRequestOk,
+  blockRequestErrorTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1630,4 +1632,6 @@ const en: Record<I18N, string> = {
   [I18N.notEnoughGasDescription5]: ' on your account.',
   [I18N.browserActionMenuClose]: 'Close',
   [I18N.splashDescription]: '🌙 Sabr...\nYour wallet is awakening',
+  [I18N.blockRequestErrorTitle]: 'Something went wrong',
+  [I18N.blockRequestOk]: 'OK',
 };

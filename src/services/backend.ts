@@ -34,6 +34,21 @@ export class Backend {
     return app.backend;
   }
 
+  async blockRequest(
+    blockRequest: string,
+    wallets: string[],
+    uid: string,
+  ): Promise<{result: boolean; error?: string}> {
+    Logger.log(
+      'api blockRequest',
+      JSON.stringify({blockRequest, wallets, uid}, null, 2),
+    );
+
+    return {
+      result: true,
+    };
+  }
+
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
     const request = await fetch(`${this.getRemoteUrl()}contests`, {
       method: 'POST',
