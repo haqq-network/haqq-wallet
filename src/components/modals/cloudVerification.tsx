@@ -8,7 +8,7 @@ import {Spacer, Text} from '@app/components/ui';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Modals} from '@app/types';
 import {ProviderNameMap} from '@app/variables/common';
 
@@ -30,9 +30,7 @@ export const CloudVerification = memo(
               i18params={{value: ProviderNameMap[sssProvider]}}
             />
             <Spacer height={8} />
-            <Text t11 center>
-              {getText(I18N.cloudVerificationDescription)}
-            </Text>
+            <Text t11 center i18n={I18N.cloudVerificationDescription} />
             <Spacer height={20} />
             <View style={styles.animationWrapper}>
               <RiveWrapper
