@@ -7,7 +7,7 @@ export class RssNews extends Realm.Object implements RssNewsItem {
     properties: {
       id: 'string',
       title: 'string',
-      preview: 'string',
+      preview: 'string?',
       description: 'string',
       url: 'string',
       viewed: 'bool?',
@@ -19,7 +19,7 @@ export class RssNews extends Realm.Object implements RssNewsItem {
   };
   id!: string;
   title!: string;
-  preview!: string;
+  preview?: string;
   description!: string;
   url!: string;
   createdAt!: Date;
@@ -29,14 +29,29 @@ export class RssNews extends Realm.Object implements RssNewsItem {
 
   static create(id: string, params: Omit<Partial<RssNews>, 'id'>) {
     const exists = RssNews.getById(id);
+
+    const getField = (
+      fieldName: keyof RssNewsItem,
+      defaultValue: string | Date | boolean = '',
+      //@ts-ignore
+    ) => exists?.[fieldName] ?? params?.[fieldName] ?? defaultValue;
+
+    const newItem: RssNewsItem = {
+      id: id.toLowerCase(),
+      title: getField('title'),
+      preview: getField('preview', undefined),
+      description: getField('description'),
+      url: getField('url'),
+      createdAt: getField('createdAt', new Date()),
+      updatedAt: getField('updatedAt', new Date()),
+      viewed: getField('viewed', false),
+      status: getField('status', 'unknown'),
+    };
+
     realm.write(() => {
       realm.create<RssNews>(
         RssNews.schema.name,
-        {
-          ...(exists ?? {}),
-          ...params,
-          id: id.toLowerCase(),
-        },
+        newItem,
         Realm.UpdateMode.Modified,
       );
     });
