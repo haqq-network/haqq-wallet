@@ -30,6 +30,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
 import {PopupHeader} from '@app/components';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
@@ -42,6 +43,7 @@ import {I18N, getText} from '@app/i18n';
 import {navigator} from '@app/navigator';
 import {AccountDetailScreen} from '@app/screens/account-detail';
 import {AccountInfoScreen} from '@app/screens/account-info';
+import {CloudProblemsScreen} from '@app/screens/cloud-problems';
 import {GovernanceScreen} from '@app/screens/governance';
 import {NewsScreen} from '@app/screens/news';
 import {NewsDetailScreen} from '@app/screens/news-detail';
@@ -173,6 +175,13 @@ const withoutHeader = {
 };
 
 const totalValueInfoOptions = getModalScreenOptions(I18N.totalValueScreenTitle);
+
+const cloudProblemsScreenOptions = {
+  headerShown: true,
+  header: PopupHeader,
+  headerRight: DismissPopupButton,
+  presentation: 'modal' as StackPresentationTypes,
+};
 
 export const App = () => {
   const theme = useTheme();
@@ -334,6 +343,11 @@ export const App = () => {
               />
               {/* Modals group */}
               <Stack.Group screenOptions={stackScreenOptions}>
+                <Stack.Screen
+                  name="cloudProblems"
+                  component={themeUpdaterHOC(CloudProblemsScreen)}
+                  options={cloudProblemsScreenOptions}
+                />
                 <Stack.Screen
                   name="web3BrowserPopup"
                   component={themeUpdaterHOC(Web3BrowserPopup)}

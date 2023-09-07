@@ -124,6 +124,7 @@ export type WalletInitialData =
   | {type: 'empty'};
 
 export type RootStackParamList = {
+  cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
@@ -973,6 +974,9 @@ export type Modals = {
   };
   lockedTokensInfo: {
     onClose?: () => void;
+  };
+  cloudVerification: {
+    sssProvider: SssProviders;
   };
 };
 

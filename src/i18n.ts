@@ -747,13 +747,19 @@ export enum I18N {
   transactionContractNamePrefix,
   transactionContractDefaultName,
   transactionDetailContractName,
+  cloudVerificationTitle,
+  cloudVerificationDescription,
+  cloudProblemsTitle,
+  cloudProblemsDescription,
+  cloudProblemsActionButton,
+  cloudProblemsSecondaryButton,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
   let str = en[key];
   if (params) {
     return Object.entries(params).reduce(
-      (memo, [k, v]) => memo.replace(`{{${k}}}`, v),
+      (memo, [k, v]) => memo.replaceAll(`{{${k}}}`, v),
       str,
     );
   }
@@ -1630,4 +1636,11 @@ const en: Record<I18N, string> = {
   [I18N.notEnoughGasDescription5]: ' on your account.',
   [I18N.browserActionMenuClose]: 'Close',
   [I18N.splashDescription]: '🌙 Sabr...\nYour wallet is awakening',
+  [I18N.cloudVerificationTitle]: 'Trying to access your {{value}}',
+  [I18N.cloudVerificationDescription]: 'It will take a few seconds',
+  [I18N.cloudProblemsTitle]: 'We were unable to access your {{value}}',
+  [I18N.cloudProblemsDescription]:
+    'We were unable to connect to your {{value}} where a backup file of your account is stored. Please check that your {{value}} is working correctly or restore your account using your mnemonic phrase.',
+  [I18N.cloudProblemsActionButton]: 'Check access to {{value}}',
+  [I18N.cloudProblemsSecondaryButton]: 'Restore with mnemonic phrase',
 };

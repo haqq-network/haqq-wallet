@@ -2,6 +2,8 @@ import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
+import {SssProviders} from '@app/services/provider-sss';
+
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
 
@@ -243,3 +245,9 @@ export const LIGHT_DISCORD_BG = '#603ACB';
 
 export const SPLASH_TIMEOUT_MS = 30_000;
 export const AWAIT_NEW_BLOCK_MS = 10_000;
+
+export const ProviderNameMap = {
+  [SssProviders.apple]: 'iCloud',
+  [SssProviders.google]: '\nGoogle Drive',
+  [SssProviders.custom]: '\nCustom provider',
+};
