@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {makeID} from '@haqq/shared-react-native';
 
 import {
   ChooseAccount,
@@ -14,7 +15,6 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, WalletType} from '@app/types';
-import {randomNumber} from '@app/utils';
 
 const PAGE_SIZE = 5;
 
@@ -85,9 +85,7 @@ export const ChooseAccountScreen = memo(() => {
   useEffectAsync(async () => {
     setLoading(true);
     try {
-      const generatedPassword = String(
-        randomNumber(0, 10_000_000) + randomNumber(0, 10_000_000),
-      );
+      const generatedPassword = String(makeID(10));
       const passwordPromise = () => Promise.resolve(generatedPassword);
 
       mnemonicProvider.current = await ProviderMnemonicReactNative.initialize(
