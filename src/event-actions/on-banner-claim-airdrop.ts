@@ -9,6 +9,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getUid} from '@app/helpers/get-uid';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
@@ -65,13 +66,14 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       await awaitForLedger(walletProvider);
     }
     const signature = await result;
-
+    const uid = await getUid();
     await Airdrop.instance.claim(
       walletId,
       signature,
       claimCode,
       captchaSession.session,
       captcha.token,
+      uid,
     );
     app.emit(Events.onAppReviewRequest);
 
