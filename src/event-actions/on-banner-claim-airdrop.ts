@@ -10,6 +10,7 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getUid} from '@app/helpers/get-uid';
+import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
@@ -67,6 +68,8 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     }
     const signature = await result;
     const uid = await getUid();
+    const adid = await getAdjustAdid();
+
     await Airdrop.instance.claim(
       walletId,
       signature,
@@ -74,6 +77,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       captchaSession.session,
       captcha.token,
       uid,
+      adid,
     );
     app.emit(Events.onAppReviewRequest);
 
