@@ -13,7 +13,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-export type LedgerAccountsFooterProps = {
+type ChooseAccountFooterProps = {
   count: number;
   loading: boolean;
   loadMore: () => void;
@@ -24,7 +24,7 @@ export const ChooseAccountFooter = ({
   loading,
   count,
   onAdd,
-}: LedgerAccountsFooterProps) => {
+}: ChooseAccountFooterProps) => {
   return (
     <View style={styles.container}>
       <Text

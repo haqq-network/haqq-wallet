@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {View} from 'react-native';
 
@@ -29,9 +29,9 @@ export const ChooseAccountRow = ({
   onPress,
   index,
 }: LedgerAccountsRowProps) => {
-  const onPressButton = () => {
+  const onPressButton = useCallback(() => {
     onPress(item);
-  };
+  }, [onPress, item]);
 
   return (
     <View style={styles.container}>

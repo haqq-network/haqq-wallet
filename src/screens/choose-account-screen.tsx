@@ -16,6 +16,8 @@ import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, WalletType} from '@app/types';
 import {randomNumber} from '@app/utils';
 
+const PAGE_SIZE = 5;
+
 export const ChooseAccountScreen = memo(() => {
   const navigation = useTypedNavigation();
   const params = useTypedRoute<'chooseAccount'>().params;
@@ -61,7 +63,7 @@ export const ChooseAccountScreen = memo(() => {
       setLoading(true);
       let index = 0;
       let result = reset ? [] : addresses;
-      while (index < 5) {
+      while (index < PAGE_SIZE) {
         if (generator.current) {
           const item = (await generator.current.next()).value;
           result.push(item);
