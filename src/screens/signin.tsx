@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
+import {ChooseAccountScreen} from '@app/screens/choose-account-screen';
 import {OnboardingBiometryScreen} from '@app/screens/onboarding-biometry';
 import {OnboardingFinishScreen} from '@app/screens/onboarding-finish';
 import {OnboardingRepeatPinScreen} from '@app/screens/onboarding-repeat-pin';
@@ -38,6 +39,12 @@ export const SignInScreen = () => {
     <SignInStack.Navigator
       screenOptions={popupScreenOptions}
       initialRouteName={inittialRouteName}>
+      <SignInStack.Screen
+        name="chooseAccount"
+        component={ChooseAccountScreen}
+        options={{title: getText(I18N.ledgerChooseAccount)}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
+      />
       <SignInStack.Screen
         name="signinNetworks"
         component={SignInNetworksScreen}

@@ -30,7 +30,7 @@ export const SignInRestoreScreen = () => {
       }
 
       if (utils.isValidMnemonic(seed.trim().toLowerCase())) {
-        navigation.push(nextScreen, {
+        navigation.push('chooseAccount', {
           type: 'mnemonic',
           mnemonic: seed.trim().toLowerCase(),
         });

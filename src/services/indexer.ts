@@ -79,4 +79,17 @@ export class Indexer {
 
     return map;
   }
+
+  async getBalances(accounts: string[]): Promise<Record<string, string>> {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    const response = await jsonrpcRequest<IndexerUpdatesResponse>(
+      app.provider.indexer,
+      'balances',
+      [accounts],
+    );
+    return response.balance || {};
+  }
 }
