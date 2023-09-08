@@ -1,7 +1,8 @@
-import React, {ReactNode, memo, useState} from 'react';
+import React, {ReactNode, memo, useCallback, useEffect, useState} from 'react';
 
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
@@ -48,7 +49,8 @@ const WidgetMap: IWidgetMap = {
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const [data, setData] = useState<IWidget[]>([]);
 
-  useEffectAsync(async () => {
+  const requestMarkup = useCallback(async (blockRequest?: string) => {
+    Logger.log('widget requestMarkup', {blockRequest});
     const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
     const uid = await getUid();
     const response = await Backend.instance.markup({
@@ -59,7 +61,15 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
     if (response.blocks) {
       setData([response.blocks]);
     }
-  }, [lastUpdate]);
+  }, []);
+
+  useEffect(() => {
+    requestMarkup();
+    app.on(Events.onRequestMarkup, requestMarkup);
+    return () => {
+      app.off(Events.onRequestMarkup, requestMarkup);
+    };
+  }, [lastUpdate, requestMarkup]);
 
   if (!data) {
     return null;

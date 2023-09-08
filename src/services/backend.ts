@@ -34,6 +34,30 @@ export class Backend {
     return app.backend;
   }
 
+  async blockRequest(
+    code: string,
+    wallets: string[],
+    uid: string,
+  ): Promise<{result: boolean; error?: string}> {
+    const request = await fetch(`${this.getRemoteUrl()}block/request`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        wallets,
+        code,
+        uid,
+      }),
+    });
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
+  }
+
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
     const request = await fetch(`${this.getRemoteUrl()}contests`, {
       method: 'POST',
