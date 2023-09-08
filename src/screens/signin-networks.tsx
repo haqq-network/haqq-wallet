@@ -7,6 +7,7 @@ import {getMetadataValue} from '@haqq/shared-react-native';
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
+import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {Cloud} from '@app/services/cloud';
 import {
@@ -20,7 +21,7 @@ export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
 
   const onLogin = useCallback(
-    async (provider: SssProviders) => {
+    async (provider: SssProviders, skipCheck: boolean = false) => {
       let creds;
       switch (provider) {
         case SssProviders.apple:
@@ -57,6 +58,17 @@ export const SignInNetworksScreen = () => {
         const cloud = new Cloud();
 
         const account = await accountInfo(creds.privateKey as string);
+
+        if (!skipCheck) {
+          const hasPermissions = await verifyCloud(provider);
+          if (!hasPermissions) {
+            navigation.navigate('cloudProblems', {
+              sssProvider: provider,
+              onNext: () => onLogin(provider, true),
+            });
+            return;
+          }
+        }
 
         const share = await cloud.getItem(
           `haqq_${account.address.toLowerCase()}`,

@@ -124,6 +124,7 @@ export type WalletInitialData =
   | {type: 'empty'};
 
 export type RootStackParamList = {
+  cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
@@ -974,6 +975,9 @@ export type Modals = {
   lockedTokensInfo: {
     onClose?: () => void;
   };
+  cloudVerification: {
+    sssProvider: SssProviders;
+  };
 };
 
 export interface NftAttribute {
@@ -1014,7 +1018,7 @@ export interface TokenItem {
 export interface BaseNewsItem {
   id: string;
   title: string;
-  preview: string;
+  preview?: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
@@ -1024,6 +1028,7 @@ export interface BaseNewsItem {
 
 export interface NewsItem extends BaseNewsItem {
   content: string;
+  publishedAt: Date;
 }
 
 export interface RssNewsItem extends BaseNewsItem {
