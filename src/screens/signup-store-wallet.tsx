@@ -60,6 +60,7 @@ export const SignUpStoreWalletScreen = () => {
           },
           name,
         );
+
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {

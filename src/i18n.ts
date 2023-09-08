@@ -753,6 +753,11 @@ export enum I18N {
   cloudProblemsDescription,
   cloudProblemsActionButton,
   cloudProblemsSecondaryButton,
+  chooseAccountBasicTab,
+  chooseAccountLedgerTab,
+  chooseAccountLoadInfo,
+  chooseAccountAddOneAccountText,
+  chooseAccountAddManyAccountsText,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1643,4 +1648,10 @@ const en: Record<I18N, string> = {
     'We were unable to connect to your {{value}} where a backup file of your account is stored. Please check that your {{value}} is working correctly or restore your account using your mnemonic phrase.',
   [I18N.cloudProblemsActionButton]: 'Check access to {{value}}',
   [I18N.cloudProblemsSecondaryButton]: 'Restore with mnemonic phrase',
+  [I18N.chooseAccountBasicTab]: 'Basic',
+  [I18N.chooseAccountLedgerTab]: 'Ledger',
+  [I18N.chooseAccountLoadInfo]:
+    'At the first time, we show only first 5 accounts. If you want to see the next 5 accounts then click the Load more button',
+  [I18N.chooseAccountAddOneAccountText]: 'Add {{value}} account',
+  [I18N.chooseAccountAddManyAccountsText]: 'Add {{value}} accounts',
 };

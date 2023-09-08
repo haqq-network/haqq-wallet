@@ -174,6 +174,7 @@ export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
 
 export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
+export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
 export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';

@@ -124,6 +124,10 @@ export type WalletInitialData =
   | {type: 'empty'};
 
 export type RootStackParamList = {
+  chooseAccount: {
+    type: 'mnemonic';
+    mnemonic: string;
+  };
   cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
@@ -737,6 +741,12 @@ export type LedgerAccountItem = {
   publicKey: string;
   exists: boolean;
   balance: number;
+};
+
+export type ChooseAccountItem = AddWalletParams & {
+  name: string;
+  balance: Balance;
+  exists?: boolean;
 };
 
 export interface WalletConnectParsedAccount {

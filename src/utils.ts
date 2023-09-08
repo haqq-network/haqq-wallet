@@ -126,7 +126,7 @@ export const generateGradientColors = () => {
   ].map(color => HSBToHEX(color[0], color[1], color[2]));
 };
 
-function randomNumber(min: number, max: number) {
+export function randomNumber(min: number, max: number) {
   return Math.ceil(Math.random() * (max - min) + min);
 }
 
