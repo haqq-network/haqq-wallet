@@ -72,6 +72,8 @@ const browserOptions = {
   ...TransitionPresets.ModalSlideFromBottomIOS,
   headerShown: false,
   tabBarIcon: tabBarIcon('homeBrowser'),
+  lazy: false,
+  unmountOnBlur: false,
 };
 
 const settingsOptions = {
