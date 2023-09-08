@@ -8,7 +8,7 @@ import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 
 export async function onBlockRequestCheck() {
-  const blockRequest = VariablesString.get('block_request');
+  const blockRequest = VariablesString.get('block_code');
   Logger.log('onBlockRequestCheck', {blockRequest});
 
   try {
@@ -21,6 +21,7 @@ export async function onBlockRequestCheck() {
       );
 
       if (response.result) {
+        VariablesString.remove('block_code');
         app.emit(Events.onRequestMarkup, blockRequest);
       } else if (response.error) {
         Logger.error('onBlockRequest request error', response);

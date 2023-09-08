@@ -11,8 +11,8 @@ export async function onDynamicLink(link: DynamicLink | null) {
   if (link && 'url' in link) {
     const parsedUrl = url.parse(link.url, true);
 
-    if (typeof parsedUrl?.query?.block_request === 'string') {
-      VariablesString.set('block_request', parsedUrl.query.block_request);
+    if (typeof parsedUrl?.query?.block_code === 'string') {
+      VariablesString.set('block_code', parsedUrl.query.block_code);
     }
 
     if (parsedUrl.query.claim_code) {
