@@ -192,10 +192,19 @@ export class Backend {
     return resp;
   }
 
-  async getRemoteConfig(): Promise<RemoteConfigTypes> {
+  async getRemoteConfig(
+    wallets: string[],
+    uid: string,
+    version: string,
+  ): Promise<RemoteConfigTypes> {
     const response = await fetch(`${this.getRemoteUrl()}config`, {
-      method: 'GET',
+      method: 'POST',
       headers: Backend.headers,
+      body: JSON.stringify({
+        uid,
+        wallets,
+        version,
+      }),
     });
 
     return await getHttpResponse<RemoteConfigTypes>(response);
@@ -242,12 +251,16 @@ export class Backend {
     return await getHttpResponse<NewsUpdatesResponse>(newsResp);
   }
 
-  async createNotificationToken(token: string): Promise<{id: string}> {
+  async createNotificationToken(
+    token: string,
+    uid: string,
+  ): Promise<{id: string}> {
     const req = await fetch(`${this.getRemoteUrl()}notification_token`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
         token,
+        uid,
       }),
     });
 

@@ -1,4 +1,7 @@
+import {getUid} from '@app/helpers/get-uid';
 import {VariablesString} from '@app/models/variables-string';
+import {Wallet} from '@app/models/wallet';
+import {getAppVersion} from '@app/services/version';
 import {isValidJSON} from '@app/utils';
 
 import {RemoteConfigTypes} from './remote-config-types';
@@ -24,7 +27,14 @@ export class RemoteConfig {
       if (RemoteConfig.isInited) {
         return RemoteConfig.getAll();
       }
-      const config = await Backend.instance.getRemoteConfig();
+      const uid = await getUid();
+      const wallets = Wallet.getAll().map(wallet => wallet.address);
+      const version = getAppVersion();
+      const config = await Backend.instance.getRemoteConfig(
+        wallets,
+        uid,
+        version,
+      );
       Logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
