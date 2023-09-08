@@ -1,9 +1,9 @@
 import {AIRDROP_GASDROP_CAMPAIGN_ID, AIRDROP_GASDROP_SECRET} from '@env';
-import {Adjust} from 'react-native-adjust';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
+import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {Refferal} from '@app/models/refferal';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
@@ -24,11 +24,7 @@ export async function onBannerGasdropCreate() {
       return;
     }
 
-    const adid: string | undefined = await new Promise(resolve => {
-      Adjust.getAdid(resp => {
-        resolve(resp);
-      });
-    });
+    const adid = await getAdjustAdid();
 
     const link_info = await Airdrop.instance.gasdrop_code(
       AIRDROP_GASDROP_CAMPAIGN_ID,
