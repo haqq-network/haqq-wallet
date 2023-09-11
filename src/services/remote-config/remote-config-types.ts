@@ -1,5 +1,7 @@
 import {SessionTypes} from '@walletconnect/types';
 
+import {RootStackParamList} from '@app/types';
+
 export type WalletConnectAllowedNamespaces = Omit<
   SessionTypes.Namespaces,
   'accounts'
@@ -13,6 +15,7 @@ export interface RemoteConfigTypes {
   indexer_endpoints: Record<string, string>;
   ios_version: string;
   android_version: string;
+  welcome_screen: keyof RootStackParamList;
   version: number;
   transfer_min_amount: string;
 }
