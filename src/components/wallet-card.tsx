@@ -172,7 +172,10 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <AnimateNumber value={parseFloat(total.toFixed(2))} />
+        <AnimateNumber
+          value={parseFloat(total.toFixed(2))}
+          initialValue={parseFloat(total.toFixed(2))}
+        />
         {showLockedTokens && stakingBalance?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>

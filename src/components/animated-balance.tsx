@@ -11,8 +11,8 @@ import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {
   value: number;
-  delay?: number;
   precision?: number;
+  initialValue?: number;
 };
 type State = {value: number};
 
@@ -26,7 +26,6 @@ export class AnimateNumber extends Component<Props, State> {
     interval: 60,
     steps: 4,
     value: 0,
-    initialValue: 0,
     onFinish: () => {},
     precision: 2,
   };
@@ -37,7 +36,7 @@ export class AnimateNumber extends Component<Props, State> {
   direction: boolean = true;
 
   state = {
-    value: 0,
+    value: this.props.initialValue || 0,
   };
 
   static TimingFunctions = {
@@ -51,9 +50,6 @@ export class AnimateNumber extends Component<Props, State> {
     this.startFrom = this.state.value;
     this.endWith = this.props.value;
     this.dirty = true;
-    setTimeout(() => {
-      this.startAnimate();
-    }, this.props.delay ?? 0);
   }
 
   componentWillUpdate(nextProps: Props) {
@@ -71,11 +67,11 @@ export class AnimateNumber extends Component<Props, State> {
     const propsValue = this.props.value.toFixed(this.props.precision);
     const stateValue = this.state.value.toFixed(this.props.precision);
     if (this.direction === true) {
-      if (parseFloat(stateValue) <= parseFloat(propsValue)) {
+      if (parseFloat(stateValue) < parseFloat(propsValue)) {
         this.startAnimate();
       }
     } else if (this.direction === false) {
-      if (parseFloat(stateValue) >= parseFloat(propsValue)) {
+      if (parseFloat(stateValue) > parseFloat(propsValue)) {
         this.startAnimate();
       }
     }
