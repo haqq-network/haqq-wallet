@@ -7,19 +7,24 @@ const TEST_FILE_SIZE_BYTES = 256;
 
 export const verifyCloud = async (sssProvider: SssProviders) => {
   showModal('cloudVerification', {sssProvider});
-  const cloud = new Cloud();
+  try {
+    const cloud = new Cloud();
 
-  const hasWritePermissions = await cloud.setItem(
-    'haqq_test',
-    '0'.repeat(TEST_FILE_SIZE_BYTES),
-  );
-  const hasReadPermissions =
-    ((await cloud.getItem('haqq_test'))?.length || 0) > 0;
-  const testFileWasRemoved = await cloud.removeItem('haqq_test');
+    const hasWritePermissions = await cloud.setItem(
+      'haqq_test',
+      '0'.repeat(TEST_FILE_SIZE_BYTES),
+    );
+    const hasReadPermissions =
+      ((await cloud.getItem('haqq_test'))?.length || 0) > 0;
+    const testFileWasRemoved = await cloud.removeItem('haqq_test');
 
-  await sleep(1000);
-  hideModal('cloudVerification');
-  return Boolean(
-    hasWritePermissions && hasReadPermissions && testFileWasRemoved,
-  );
+    await sleep(1000);
+    return Boolean(
+      hasWritePermissions && hasReadPermissions && testFileWasRemoved,
+    );
+  } catch (err) {
+    return false;
+  } finally {
+    hideModal('cloudVerification');
+  }
 };
