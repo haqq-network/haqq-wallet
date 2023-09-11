@@ -13,7 +13,6 @@ import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
@@ -29,9 +28,6 @@ export const SignInNetworksScreen = () => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
-          break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
           break;
       }
 
