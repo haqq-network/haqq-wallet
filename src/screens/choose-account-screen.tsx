@@ -98,6 +98,7 @@ export const ChooseAccountScreen = memo(() => {
 
       await loadMore();
     } catch (error) {
+      Logger.captureException(error, 'chooseAccount');
       switch (error) {
         case 'wallet_already_exists':
           showModal('errorAccountAdded');
@@ -108,7 +109,6 @@ export const ChooseAccountScreen = memo(() => {
             Logger.log('error.message', error.message);
             showModal('errorCreateAccount');
             goBack();
-            Logger.captureException(error, 'restoreStore');
           }
       }
     } finally {
