@@ -12,7 +12,6 @@ import {I18N, getText} from '@app/i18n';
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
@@ -28,9 +27,6 @@ export const SignupNetworksScreen = () => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
-          break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
           break;
       }
 

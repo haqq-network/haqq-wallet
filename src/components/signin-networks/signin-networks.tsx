@@ -25,7 +25,6 @@ export type SssNetworksProps = {
 export const SigninNetworks = ({onLogin, onSkip}: SssNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
-  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -46,16 +45,6 @@ export const SigninNetworks = ({onLogin, onSkip}: SssNetworksProps) => {
       await onLogin(SssProviders.apple);
     } finally {
       setIsApple(false);
-    }
-  }, [onLogin]);
-
-  const onPressLoginCustom = useCallback(async () => {
-    try {
-      setIsCustom(true);
-
-      await onLogin(SssProviders.custom);
-    } finally {
-      setIsCustom(false);
     }
   }, [onLogin]);
 
@@ -93,13 +82,6 @@ export const SigninNetworks = ({onLogin, onSkip}: SssNetworksProps) => {
         disabled={isLoading && !isGoogle}
         onPress={onPressLoginGoogle}
         variant={SocialButtonVariant.google}
-      />
-      <Spacer height={10} />
-      <Button
-        onPress={onPressLoginCustom}
-        loading={isCustom}
-        i18n={I18N.customNetwork}
-        variant={ButtonVariant.contained}
       />
       <Spacer height={10} />
       <Text

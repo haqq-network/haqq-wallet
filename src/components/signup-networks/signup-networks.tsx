@@ -9,7 +9,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
@@ -31,7 +30,6 @@ export const SignupNetworks = ({
 }: SssNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
-  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -55,15 +53,6 @@ export const SignupNetworks = ({
     }
   }, [onLogin]);
 
-  const onPressLoginCustom = useCallback(async () => {
-    try {
-      setIsCustom(true);
-
-      await onLogin(SssProviders.custom);
-    } finally {
-      setIsCustom(false);
-    }
-  }, [onLogin]);
   return (
     <PopupContainer style={styles.container}>
       <Spacer centered>
@@ -99,17 +88,6 @@ export const SignupNetworks = ({
             disabled={isLoading && !isGoogle}
             onPress={onPressLoginGoogle}
             variant={SocialButtonVariant.google}
-          />
-        </>
-      )}
-      {app.isDeveloper && (
-        <>
-          <Spacer height={10} />
-          <Button
-            onPress={onPressLoginCustom}
-            loading={isCustom}
-            i18n={I18N.customNetwork}
-            variant={ButtonVariant.contained}
           />
         </>
       )}

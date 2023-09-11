@@ -8,7 +8,6 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 
@@ -25,9 +24,6 @@ export const SssMigrateNetworksScreen = () => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
-          break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
           break;
       }
       if (creds.privateKey) {
