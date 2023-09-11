@@ -80,6 +80,8 @@ export class Airdrop {
     claim_code: string,
     session: string,
     captcha: string,
+    uid: string,
+    adid: string | undefined,
   ): Promise<{}> {
     const request = await fetch(`${this.getRemoteUrl()}/mobile/claim`, {
       method: 'POST',
@@ -90,6 +92,8 @@ export class Airdrop {
         claim_code,
         session,
         captcha,
+        uid,
+        adid,
       }),
     });
 

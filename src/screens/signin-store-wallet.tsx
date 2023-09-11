@@ -75,10 +75,7 @@ export const SignInStoreWalletScreen = () => {
 
             await mnemonicProvider.setMnemonicSaved();
 
-            await createWalletsForProvider(
-              mnemonicProvider,
-              WalletType.mnemonic,
-            );
+            // Wallets were created on previous step
             break;
           case 'sss':
             const storage = await getProviderStorage();

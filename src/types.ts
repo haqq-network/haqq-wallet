@@ -124,6 +124,11 @@ export type WalletInitialData =
   | {type: 'empty'};
 
 export type RootStackParamList = {
+  chooseAccount: {
+    type: 'mnemonic';
+    mnemonic: string;
+  };
+  cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
@@ -738,6 +743,12 @@ export type LedgerAccountItem = {
   balance: number;
 };
 
+export type ChooseAccountItem = AddWalletParams & {
+  name: string;
+  balance: Balance;
+  exists?: boolean;
+};
+
 export interface WalletConnectParsedAccount {
   // eg '0x7ee0375a10acc7d0e3cdf1c21c9409be7a9dff7b'
   address: string;
@@ -974,6 +985,9 @@ export type Modals = {
   lockedTokensInfo: {
     onClose?: () => void;
   };
+  cloudVerification: {
+    sssProvider: SssProviders;
+  };
 };
 
 export interface NftAttribute {
@@ -1014,7 +1028,7 @@ export interface TokenItem {
 export interface BaseNewsItem {
   id: string;
   title: string;
-  preview: string;
+  preview?: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
@@ -1024,6 +1038,7 @@ export interface BaseNewsItem {
 
 export interface NewsItem extends BaseNewsItem {
   content: string;
+  publishedAt: Date;
 }
 
 export interface RssNewsItem extends BaseNewsItem {

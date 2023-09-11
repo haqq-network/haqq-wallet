@@ -26,6 +26,7 @@ export async function onAppLoggedIn() {
   );
 
   if (app.onboarded) {
+    app.emit(Events.onBlockRequestCheck);
     await WalletConnect.instance.init();
   }
 }
