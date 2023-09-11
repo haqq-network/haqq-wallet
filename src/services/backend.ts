@@ -1,3 +1,5 @@
+import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
+
 import {app} from '@app/contexts';
 import {
   MarkupResponse,
@@ -351,11 +353,15 @@ export class Backend {
     uid,
     screen,
     chainId,
+    platform,
+    version,
   }: {
     wallets: string[];
     uid: string;
     screen: string;
     chainId: string;
+    platform: PlatformOSType;
+    version: string;
   }): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
@@ -365,6 +371,8 @@ export class Backend {
         uid,
         screen,
         chainId,
+        platform,
+        version,
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);
