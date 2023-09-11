@@ -249,5 +249,5 @@ export const AWAIT_NEW_BLOCK_MS = 10_000;
 
 export const ProviderNameMap = {
   [SssProviders.apple]: 'iCloud',
-  [SssProviders.google]: 'Google Drive',
+  [SssProviders.google]: '\nGoogle Drive',
 };
