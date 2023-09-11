@@ -358,7 +358,7 @@ export class Backend {
     uid: string;
     screen: string;
     chainId: string;
-    platform: 'ios' | 'android' | 'macos' | undefined;
+    platform: 'ios' | 'android' | undefined;
     version: string;
   }): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
