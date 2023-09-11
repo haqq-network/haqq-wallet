@@ -351,11 +351,15 @@ export class Backend {
     uid,
     screen,
     chainId,
+    platform,
+    version,
   }: {
     wallets: string[];
     uid: string;
     screen: string;
     chainId: string;
+    platform: 'ios' | 'android' | 'macos' | undefined;
+    version: string;
   }): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
@@ -365,6 +369,8 @@ export class Backend {
         uid,
         screen,
         chainId,
+        platform,
+        version,
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);
