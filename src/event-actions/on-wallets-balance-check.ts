@@ -26,16 +26,17 @@ export async function onWalletsBalanceCheck() {
         lastBalanceUpdates,
       );
 
-      balances = Object.entries(updates.balance).map(b => [
-        Cosmos.bech32ToAddress(b[0]),
-        new Balance(b[1]),
-      ]);
+      balances = Object.entries(updates.balance).map(b => {
+        Logger.log('🟣 getBalance', Cosmos.bech32ToAddress(b[0]), b[1]);
+        return [Cosmos.bech32ToAddress(b[0]), new Balance(b[1])];
+      });
 
       VariablesDate.set(
         `indexer_${app.provider.cosmosChainId}`,
         new Date(updates.last_update),
       );
     } catch (e) {
+      Logger.error('onWalletsBalanceCheck', e);
       balances = await Promise.all(
         Wallet.getAll().map(w =>
           EthNetwork.getBalance(w.address).then(
