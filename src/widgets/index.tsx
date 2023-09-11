@@ -57,6 +57,7 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
       wallets,
       screen: 'home',
       uid,
+      chainId: app.provider.cosmosChainId,
     });
     if (response.blocks) {
       setData([response.blocks]);
