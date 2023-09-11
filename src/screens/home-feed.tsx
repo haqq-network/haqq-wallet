@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {HomeFeed} from '@app/components/home-feed';
 
-export const HomeFeedScreen = () => {
+export const HomeFeedScreen = memo(() => {
   return <HomeFeed />;
-};
+});

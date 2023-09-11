@@ -1727,6 +1727,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@birdwingo/react-native-spinning-numbers@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@birdwingo/react-native-spinning-numbers@npm:1.0.5"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-native: ">=0.70.0"
+    react-native-reanimated: ">=2.12.0"
+  checksum: f739ad49ce35ecba6efaa1da560ebeab11fc9bf7a59c93f6d1e0b7e200cce7007f06eac082ff1d2e7beebff46520c955606939600a52c6f6b6f8f3aed27a3ba6
+  languageName: node
+  linkType: hard
+
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -9555,6 +9566,7 @@ __metadata:
     "@babel/preset-env": 7.22.9
     "@babel/preset-typescript": 7.22.5
     "@babel/runtime": 7.22.6
+    "@birdwingo/react-native-spinning-numbers": 1.0.5
     "@ethersproject/shims": 5.7.0
     "@evmos/provider": 0.3.1
     "@evmos/transactions": 0.2.13
@@ -9682,6 +9694,7 @@ __metadata:
     react-native-touch-id: 4.4.1
     react-native-webview: 11.13.0
     react-test-renderer: 18.2.0
+    react-timer-mixin: 0.13.4
     readable-stream: 4.4.2
     realm: 11.10.1
     rive-react-native: ^4.1.2
@@ -14801,6 +14814,13 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 6b6980ced93fa2b72662d5e4ab3b4896833586940047ce52ca9aca801e5432adf05fcbe28289b0af3ce6a2a7c590974e25dcc8aa43d0de658bfe8bbcd686f958
+  languageName: node
+  linkType: hard
+
+"react-timer-mixin@npm:0.13.4":
+  version: 0.13.4
+  resolution: "react-timer-mixin@npm:0.13.4"
+  checksum: ff82e1f90fab1ab4569017572b29fd0fdf0ebdfbf7a9580927a7f6737913046af39005bc82a0d8c6628cd999aecb66f411d331fd4dee70c4dba5a995b9d2032b
   languageName: node
   linkType: hard
 

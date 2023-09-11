@@ -4,6 +4,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
+import {AnimateNumber} from '@app/components/animated-balance';
 import {
   BlurView,
   Card,
@@ -63,17 +64,16 @@ export const WalletCard = memo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
-
     const total = useMemo(() => {
       if (!balance) {
-        return Balance.Empty.toBalanceString();
+        return Balance.Empty.toEther();
       }
 
       if (isFeatureEnabled(Feature.lockedStakedVestedTokens)) {
-        return balance.operate(stakingBalance, 'add').toBalanceString();
+        return balance.operate(stakingBalance, 'add').toEther();
       }
 
-      return balance.toBalanceString();
+      return balance.toEther();
     }, [balance, stakingBalance]);
 
     const locked = useMemo(() => {
@@ -172,9 +172,7 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-          {total}
-        </Text>
+        <AnimateNumber value={parseFloat(total.toFixed(2))} />
         {showLockedTokens && stakingBalance?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>
