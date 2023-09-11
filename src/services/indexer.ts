@@ -60,20 +60,21 @@ export class Indexer {
       return Promise.reject('Empty addresses');
     }
 
-    const info = await jsonrpcRequest<{name: string; id: string}[]>(
+    const response = await jsonrpcRequest<{name: string; id: string}[]>(
       app.provider.indexer,
       'addresses',
       [addresses.map(Cosmos.addressToBech32)],
     );
 
-    if (!Array.isArray(info)) {
-      return {};
-    }
-
     const map = addresses.reduce((acc, item) => {
-      acc[item] =
-        info.find(infoItem => infoItem.id === Cosmos.addressToBech32(item))
-          ?.name ?? getText(I18N.transactionContractDefaultName);
+      const responseExist = Array.isArray(response) && response.length > 0;
+      const newValue = responseExist
+        ? response.find(
+            infoItem => infoItem.id === Cosmos.addressToBech32(item),
+          )?.name
+        : null;
+
+      acc[item] = newValue ?? getText(I18N.transactionContractDefaultName);
       return acc;
     }, {} as ContractNameMap);
 

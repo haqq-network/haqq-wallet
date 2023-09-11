@@ -1,8 +1,16 @@
-import React, {ReactNode, memo, useCallback, useEffect, useState} from 'react';
+import React, {
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
@@ -47,22 +55,41 @@ const WidgetMap: IWidgetMap = {
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
-  const [data, setData] = useState<IWidget[]>([]);
+  const dataCached = useRef(
+    VariablesString.get('widget_blocks') || '[]',
+  ).current;
 
-  const requestMarkup = useCallback(async (blockRequest?: string) => {
-    Logger.log('widget requestMarkup', {blockRequest});
-    const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
-    const uid = await getUid();
-    const response = await Backend.instance.markup({
-      wallets,
-      screen: 'home',
-      uid,
-      chainId: app.provider.cosmosChainId,
-    });
-    if (response.blocks) {
-      setData([response.blocks]);
-    }
-  }, []);
+  const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
+
+  const requestMarkup = useCallback(
+    async (blockRequest?: string) => {
+      Logger.log('widget requestMarkup', {blockRequest});
+      const wallets = Wallet.getAll().map(wallet =>
+        wallet.address.toLowerCase(),
+      );
+      const uid = await getUid();
+      const response = await Backend.instance.markup({
+        wallets,
+        screen: 'home',
+        uid,
+        chainId: app.provider.cosmosChainId,
+      });
+
+      if (!response.blocks) {
+        return Logger.error('widget request: not found blocks', response);
+      }
+
+      const blocks = [response.blocks];
+
+      const blocksAreEqual = JSON.stringify(blocks) === JSON.stringify(data);
+
+      if (!blocksAreEqual) {
+        setData(blocks);
+        VariablesString.set('widget_blocks', JSON.stringify(blocks));
+      }
+    },
+    [data],
+  );
 
   useEffect(() => {
     requestMarkup();
