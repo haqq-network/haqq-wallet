@@ -76,11 +76,7 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
         screen: 'home',
         uid,
         chainId: app.provider.cosmosChainId,
-        platform: Platform.OS
-          ios: 'ios',
-          android: 'android',
-          macos: 'macos',
-        }),
+        platform: Platform.OS,
         version: getAppVersion(),
       });
 

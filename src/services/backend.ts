@@ -1,3 +1,5 @@
+import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
+
 import {app} from '@app/contexts';
 import {
   MarkupResponse,
@@ -358,7 +360,7 @@ export class Backend {
     uid: string;
     screen: string;
     chainId: string;
-    platform: 'ios' | 'android' | undefined;
+    platform: PlatformOSType;
     version: string;
   }): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
