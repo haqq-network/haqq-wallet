@@ -101,6 +101,7 @@ export const SignInStoreWalletScreen = () => {
 
         navigation.navigate(nextScreen ?? 'onboardingFinish');
       } catch (error) {
+        Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
             showModal('errorAccountAdded');
@@ -111,7 +112,6 @@ export const SignInStoreWalletScreen = () => {
               Logger.log('error.message', error.message);
               showModal('errorCreateAccount');
               goBack();
-              Logger.captureException(error, 'restoreStore');
             }
         }
       }
