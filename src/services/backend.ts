@@ -350,10 +350,12 @@ export class Backend {
     wallets,
     uid,
     screen,
+    chainId,
   }: {
     wallets: string[];
     uid: string;
     screen: string;
+    chainId: string;
   }): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
@@ -362,6 +364,7 @@ export class Backend {
         wallets,
         uid,
         screen,
+        chainId,
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);
