@@ -189,6 +189,8 @@ const styles = createTheme({
     paddingVertical: 2,
     flexDirection: 'row',
     alignItems: 'center',
+    maxHeight: 58,
+    height: 58,
   },
   infoContainer: {
     marginLeft: 12,
