@@ -1,9 +1,4 @@
-import {
-  ENVIRONMENT,
-  HAQQ_BACKEND,
-  IS_DEVELOPMENT,
-  IS_WELCOME_NEWS_ENABLED,
-} from '@env';
+import {ENVIRONMENT, HAQQ_BACKEND, IS_DEVELOPMENT} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -129,13 +124,6 @@ class App extends AsyncEventEmitter {
 
     if (!VariablesBool.exists('isDeveloper')) {
       VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
-    }
-
-    if (!VariablesBool.exists('isWelcomeNewsEnabled')) {
-      VariablesBool.set(
-        'isWelcomeNewsEnabled',
-        IS_WELCOME_NEWS_ENABLED === 'true',
-      );
     }
   }
 
@@ -278,14 +266,6 @@ class App extends AsyncEventEmitter {
 
   set isDeveloper(value) {
     VariablesBool.set('isDeveloper', value);
-  }
-
-  get isWelcomeNewsEnabled() {
-    return VariablesBool.get('isWelcomeNewsEnabled') ?? false;
-  }
-
-  set isWelcomeNewsEnabled(value) {
-    VariablesBool.set('isWelcomeNewsEnabled', value);
   }
 
   get currentTheme() {

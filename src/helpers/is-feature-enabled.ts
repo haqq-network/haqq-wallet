@@ -8,7 +8,6 @@ export enum Feature {
   governanceAndStaking,
   nft,
   tokens,
-  abnews,
   // right to left
   rtl,
   lockedStakedVestedTokens,
@@ -26,8 +25,6 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
       return app.isDeveloper;
     case Feature.tokens:
       return app.isDeveloper;
-    case Feature.abnews:
-      return app.isWelcomeNewsEnabled;
     case Feature.rtl:
       return false;
     case Feature.lockedStakedVestedTokens:

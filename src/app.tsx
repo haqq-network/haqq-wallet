@@ -37,6 +37,7 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
+import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -297,11 +298,7 @@ export const App = () => {
       return 'home';
     }
 
-    if (app.isWelcomeNewsEnabled) {
-      return 'welcomeNews';
-    }
-
-    return 'welcome';
+    return getWelcomeScreen();
   }, [isPinReseted]);
 
   const onUnhandledAction = useCallback((action: NavigationAction) => {

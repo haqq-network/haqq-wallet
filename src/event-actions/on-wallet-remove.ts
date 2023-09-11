@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -21,7 +21,7 @@ export async function onWalletRemove(address: string) {
       await onAppReset();
       await onWalletReset();
       navigator.reset({
-        routes: [{name: app.isWelcomeNewsEnabled ? 'welcomeNews' : 'welcome'}],
+        routes: [{name: getWelcomeScreen()}],
       });
     }
 
