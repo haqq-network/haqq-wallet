@@ -7,7 +7,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -26,7 +26,8 @@ export const SignInStoreWalletScreen = () => {
 
   useEffect(() => {
     const goBack = () => {
-      navigation.getParent()?.goBack();
+      hideModal('loading');
+      navigation.replace('signin', {next: ''});
     };
     setTimeout(async () => {
       try {
