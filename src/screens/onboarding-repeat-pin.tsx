@@ -27,5 +27,12 @@ export const OnboardingRepeatPinScreen = () => {
     [navigation, route.params],
   );
 
-  return <OnboardingRepeatPin onSetPin={onSetPin} />;
+  const onError = useCallback(
+    (errorText: string) => {
+      navigation.navigate('onboardingSetupPin', {errorText, ...route.params});
+    },
+    [navigation, route.params],
+  );
+
+  return <OnboardingRepeatPin onSetPin={onSetPin} onError={onError} />;
 };

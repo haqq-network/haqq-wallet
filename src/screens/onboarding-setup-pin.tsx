@@ -6,7 +6,7 @@ import {vibrate} from '@app/services/haptic';
 
 export const OnboardingSetupPinScreen = () => {
   const navigation = useTypedNavigation();
-  const route = useTypedRoute<'onboardingSetupPin'>().params;
+  const params = useTypedRoute<'onboardingSetupPin'>().params;
 
   const [pin, setPin] = useState('');
   const onKeyboard = useCallback((value: number) => {
@@ -21,12 +21,18 @@ export const OnboardingSetupPinScreen = () => {
   useEffect(() => {
     if (pin.length === 6) {
       navigation.navigate('onboardingRepeatPin', {
-        ...route,
+        ...params,
         currentPin: pin,
       });
       setPin('');
     }
-  }, [navigation, pin, route]);
+  }, [navigation, pin, params]);
 
-  return <OnboardingSetupPin onKeyboard={onKeyboard} pin={pin} />;
+  return (
+    <OnboardingSetupPin
+      onKeyboard={onKeyboard}
+      pin={pin}
+      errorText={params.errorText}
+    />
+  );
 };
