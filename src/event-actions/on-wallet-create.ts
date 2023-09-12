@@ -25,10 +25,9 @@ export async function onWalletCreate(wallet: Wallet) {
       wallet.update({subscription});
     }
 
-    EthNetwork.getBalance(wallet.address).then(balance => {
-      app.onWalletsBalance({
-        [wallet.address]: balance,
-      });
+    const balance = await EthNetwork.getBalance(wallet.address);
+    app.onWalletsBalance({
+      [wallet.address]: balance,
     });
 
     await Promise.all([

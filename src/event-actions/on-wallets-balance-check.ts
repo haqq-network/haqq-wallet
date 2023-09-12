@@ -1,7 +1,6 @@
 import {app} from '@app/contexts';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
@@ -38,11 +37,10 @@ export async function onWalletsBalanceCheck() {
     } catch (e) {
       Logger.error('onWalletsBalanceCheck', e);
       balances = await Promise.all(
-        Wallet.getAll().map(w =>
-          EthNetwork.getBalance(w.address).then(
-            balance => [w.address, balance] as [string, Balance],
-          ),
-        ),
+        Wallet.getAll().map(w => {
+          const balance = app.getBalance(w.address);
+          return [w.address, balance];
+        }),
       );
     }
 
