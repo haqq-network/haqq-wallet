@@ -1384,9 +1384,9 @@ const en: Record<I18N, string> = {
   [I18N.sssLoginLaterTitle]:
     "Are you sure you don't want to enable social login?",
   [I18N.sssNetworkWeb3AuthDescription]:
-    'Web3Auth does not store any data related to your social logins.',
+    'HAQQ Wallet does not store any data related to your social logins.',
   [I18N.signinNetworkDisclaimer]:
-    'Web3Auth does not store any data related to your social logins.',
+    'HAQQ Wallet does not store any data related to your social logins.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.sssMigrateAgreementAgree]: 'Understood',
@@ -1441,7 +1441,7 @@ const en: Record<I18N, string> = {
     "Сongratulations! You've successfully connected your social network.",
   [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
   [I18N.sssMigrateAgrementDescription]:
-    'We use Web3Auth technology. Web3Auth does not store any data related to your social logins.',
+    'We use Web3Auth technology. HAQQ Wallet does not store any data related to your social logins.',
   [I18N.sssMigrateAgrementWarning1]:
     'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
   [I18N.sssMigrateAgrementWarning2]:
