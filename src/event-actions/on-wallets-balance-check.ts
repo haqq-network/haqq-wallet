@@ -27,7 +27,6 @@ export async function onWalletsBalanceCheck() {
       );
 
       balances = Object.entries(updates.balance).map(b => {
-        Logger.log('🟣 getBalance', Cosmos.bech32ToAddress(b[0]), b[1]);
         return [Cosmos.bech32ToAddress(b[0]), new Balance(b[1])];
       });
 
