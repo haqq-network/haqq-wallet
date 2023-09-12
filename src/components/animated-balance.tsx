@@ -27,7 +27,7 @@ export class AnimateNumber extends Component<Props, State> {
     steps: 4,
     value: 0,
     onFinish: () => {},
-    precision: 2,
+    precision: 4,
   };
   dirty: boolean = false;
   startFrom: number = 0;
@@ -97,7 +97,7 @@ export class AnimateNumber extends Component<Props, State> {
     );
   }
 
-  round = (num: number, places: number) => {
+  round = (num: number, places: number | undefined = 4) => {
     //@ts-ignore
     return Number(Math.round(num + 'e+' + places) + 'e-' + places);
   };
@@ -108,7 +108,7 @@ export class AnimateNumber extends Component<Props, State> {
       let total = this.round(
         parseFloat(this.state.value.toFixed(this.props.precision)) +
           parseFloat(value.toFixed(this.props.precision)),
-        2,
+        this.props.precision,
       );
 
       this.direction = value > 0;

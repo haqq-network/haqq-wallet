@@ -7,7 +7,6 @@ import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {ETH_HD_SHORT_PATH, LEDGER_APP} from '@app/variables/common';
 
@@ -44,7 +43,7 @@ export const LedgerAccountsScreen = () => {
             `${ETH_HD_SHORT_PATH}/${i}`,
           );
 
-          const balance = await EthNetwork.getBalance(data.address);
+          const balance = app.getBalance(data.address);
 
           addressList.push({
             address: data.address.toLowerCase(),

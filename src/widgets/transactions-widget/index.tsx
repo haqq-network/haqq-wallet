@@ -50,8 +50,10 @@ export const TransactionsWidgetWrapper = memo(() => {
       .filter(({source}) => source === TransactionSource.contract)
       .map(item => (item as TransactionListContract).to);
     const uniqueNames = [...new Set(names)];
-    const info = await Indexer.instance.getContractNames(uniqueNames);
-    setContractNameMap(info);
+    if (uniqueNames.length > 0) {
+      const info = await Indexer.instance.getContractNames(uniqueNames);
+      setContractNameMap(info);
+    }
   }, []);
 
   const onRowPress: OnTransactionRowPress = useCallback(
