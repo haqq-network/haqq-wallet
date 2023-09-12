@@ -10,7 +10,6 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {EthNetwork} from '@app/services';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -56,7 +55,7 @@ export const SssStoreWalletScreen = () => {
           const {address} = await provider.getAccountInfo(hdPath);
 
           if (!Wallet.getById(address)) {
-            const balance = await EthNetwork.getBalance(address);
+            const balance = app.getBalance(address);
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {
