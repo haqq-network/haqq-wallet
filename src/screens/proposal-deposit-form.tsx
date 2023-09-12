@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
+import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
@@ -13,9 +13,8 @@ export const ProposalDepositFormScreen = () => {
   const [balance, setBalance] = useState(Balance.Empty);
 
   useEffect(() => {
-    EthNetwork.getBalance(account).then(newBalance => {
-      setBalance(newBalance);
-    });
+    const newBalance = app.getBalance(account);
+    setBalance(newBalance);
   }, [account]);
 
   const onAmount = useCallback(

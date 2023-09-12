@@ -47,8 +47,10 @@ export const AccountInfoScreen = () => {
       .filter(({input}) => input.includes('0x') && input.length > 2)
       .map(item => item.to);
     const uniqueNames = [...new Set(names)];
-    const info = await Indexer.instance.getContractNames(uniqueNames);
-    setContractNameMap(info);
+    if (uniqueNames.length > 0) {
+      const info = await Indexer.instance.getContractNames(uniqueNames);
+      setContractNameMap(info);
+    }
   }, []);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
