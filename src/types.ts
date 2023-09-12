@@ -292,7 +292,7 @@ export type RootStackParamList = {
       | 'signinStoreWallet'
       | 'ledgerStoreWallet';
   } & WalletInitialData;
-  onboardingSetupPin: WalletInitialData;
+  onboardingSetupPin: WalletInitialData & {errorText?: string};
   onboardingFinish: undefined;
   signupStoreWallet: WalletInitialData;
   signinStoreWallet: WalletInitialData;
