@@ -81,7 +81,7 @@ export class Airdrop {
     session: string,
     captcha: string,
     uid: string,
-    adid: string | undefined,
+    adid: string | null,
   ): Promise<{}> {
     const request = await fetch(`${this.getRemoteUrl()}/mobile/claim`, {
       method: 'POST',
@@ -149,7 +149,7 @@ export class Airdrop {
     campaign_id: string,
     campaign_secret: string,
     wallet: string,
-    adid: string | undefined,
+    adid: string | null,
   ): Promise<GetDynamicLinkResponse> {
     const body = JSON.stringify({
       wallet,
