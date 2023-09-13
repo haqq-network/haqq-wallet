@@ -7,15 +7,11 @@ import React, {
   useState,
 } from 'react';
 
-import {Platform} from 'react-native';
-
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {getUid} from '@app/helpers/get-uid';
+import {getAppInfo} from '@app/helpers/get-app-info';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
-import {getAppVersion} from '@app/services/version';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {AdWidget} from '@app/widgets/ad-widget';
@@ -67,18 +63,8 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const requestMarkup = useCallback(
     async (blockRequest?: string) => {
       Logger.log('widget requestMarkup', {blockRequest});
-      const wallets = Wallet.getAll().map(wallet =>
-        wallet.address.toLowerCase(),
-      );
-      const uid = await getUid();
-      const response = await Backend.instance.markup({
-        wallets,
-        screen: 'home',
-        uid,
-        chainId: app.provider.cosmosChainId,
-        platform: Platform.OS,
-        version: getAppVersion(),
-      });
+      const appInfo = await getAppInfo();
+      const response = await Backend.instance.markup('home', appInfo);
 
       if (!response.blocks) {
         return Logger.error('widget request: not found blocks', response);

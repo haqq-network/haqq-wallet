@@ -14,9 +14,6 @@ declare module '@env' {
   export const HCAPTCHA_SITE_KEY: string;
   export const HCAPTCHA_URL: string;
   export const GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
-  export const SSS_GOOGLE_IOS: string;
-  export const SSS_GOOGLE_ANDROID: string;
-  export const SSS_APPLE: string;
   export const METADATA_URL: string;
   export const GENERATE_SHARES_URL: string;
   export const IS_SSS_ENABLED: string;
