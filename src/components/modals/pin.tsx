@@ -37,7 +37,9 @@ export const PinModal = () => {
           app.failureEnter();
           if (app.canEnter) {
             pinRef.current?.reset(
-              `wrong pin ${PIN_BANNED_ATTEMPTS - app.pinAttempts} left`,
+              getText(I18N.pinAttempts, {
+                value: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
+              }),
             );
           } else {
             pinRef.current?.locked(app.pinBanned);

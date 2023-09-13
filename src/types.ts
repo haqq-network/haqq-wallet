@@ -118,6 +118,7 @@ export type WalletInitialData =
       type: 'sss';
       sssPrivateKey: string | null;
       sssCloudShare: string | null;
+      sssLocalShare: string | null;
       verifier: string;
       token: string;
     }
@@ -534,6 +535,7 @@ export type RootStackParamList = {
   sssStoreWallet: {
     privateKey: string;
     cloudShare: string | null;
+    localShare: string | null;
     questionAnswer: string | null;
     token: string;
     verifier: string;

@@ -64,6 +64,7 @@ export const SignupNetworksScreen = () => {
         verifier: creds.verifier,
         sssCloudShare: null,
         provider: provider,
+        sssLocalShare: null,
       });
     },
     [navigation],

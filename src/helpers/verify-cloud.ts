@@ -9,6 +9,7 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
   showModal('cloudVerification', {sssProvider});
   try {
     const cloud = new Cloud();
+    await sleep(1000);
 
     const hasWritePermissions = await cloud.setItem(
       'haqq_test',
@@ -18,7 +19,6 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
       ((await cloud.getItem('haqq_test'))?.length || 0) > 0;
     const testFileWasRemoved = await cloud.removeItem('haqq_test');
 
-    await sleep(1000);
     return Boolean(
       hasWritePermissions && hasReadPermissions && testFileWasRemoved,
     );

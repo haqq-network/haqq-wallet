@@ -25,7 +25,7 @@ export const SignupPinScreen = () => {
           const securityQuestion = await getMetadataValue(
             METADATA_URL,
             route.params.sssPrivateKey,
-            'securityQuestion',
+            'socialShareIndex',
           );
 
           if (!securityQuestion) {

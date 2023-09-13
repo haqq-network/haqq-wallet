@@ -45,6 +45,7 @@ export const SssMigrateStoreScreen = () => {
         const provider = await ProviderSSSReactNative.initialize(
           route.params.privateKey,
           null,
+          null,
           entropy,
           route.params.verifier,
           route.params.token,

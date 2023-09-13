@@ -760,6 +760,7 @@ export enum I18N {
   chooseAccountLoadInfo,
   chooseAccountAddOneAccountText,
   chooseAccountAddManyAccountsText,
+  pinAttempts,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1658,4 +1659,5 @@ const en: Record<I18N, string> = {
     'At the first time, we show only first 5 accounts. If you want to see the next 5 accounts then click the Load more button',
   [I18N.chooseAccountAddOneAccountText]: 'Add {{value}} account',
   [I18N.chooseAccountAddManyAccountsText]: 'Add {{value}} accounts',
+  [I18N.pinAttempts]: 'wrong pin {{value}} left',
 };
