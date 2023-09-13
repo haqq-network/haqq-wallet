@@ -31,7 +31,7 @@
     "@haqq/provider-hot-react-native": "0.0.6",
     "@haqq/provider-ledger-react-native": "0.0.19",
     "@haqq/provider-mnemonic-react-native": "0.0.11",
-    "@haqq/provider-sss-react-native": "0.0.9",
+    "@haqq/provider-sss-react-native": "0.0.11",
     "@haqq/provider-web3-utils": "0.0.14",
     "@haqq/shared-react-native": "0.0.8",
     "@invertase/react-native-apple-authentication": "^2.2.2",

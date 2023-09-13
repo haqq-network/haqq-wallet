@@ -16,6 +16,7 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
       return await ProviderSSSReactNative.initialize(
         params.sssPrivateKey || null,
         params.sssCloudShare || null,
+        params.sssLocalShare || null,
         null,
         params.verifier,
         params.token,

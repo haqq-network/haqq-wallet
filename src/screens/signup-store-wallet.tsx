@@ -16,9 +16,7 @@ export const SignUpStoreWalletScreen = () => {
   const route = useTypedRoute<'createStoreWallet'>();
 
   const goBack = useCallback(() => {
-    navigation.reset({
-      routes: [{name: 'welcome'}, {name: 'signup', params: {next: 'restore'}}],
-    });
+    navigation.replace('signup', {next: ''});
   }, [navigation]);
 
   useEffect(() => {
