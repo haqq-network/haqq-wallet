@@ -1,19 +1,25 @@
-import React, {useCallback, useRef} from 'react';
-
-import {METADATA_URL} from '@env';
-import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
+import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export const SignInPinScreen = () => {
   const pinRef = useRef<PinInterface>();
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'signinPin'>();
+
+  useEffect(() => {
+    if (app.pinBanned) {
+      pinRef.current?.locked(app.pinBanned);
+    }
+  }, []);
 
   const onPin = useCallback(
     async (password: string) => {
@@ -23,17 +29,10 @@ export const SignInPinScreen = () => {
             throw new SssError('signinNotExists');
           }
 
-          const securityQuestion = await getMetadataValue(
-            METADATA_URL,
+          const sssLocalShare = await decryptLocalShare(
             route.params.sssPrivateKey,
-            'securityQuestion',
+            password,
           );
-
-          if (!securityQuestion) {
-            throw new SssError('signinNotExists');
-          }
-
-          await decryptShare(JSON.parse(securityQuestion), password);
 
           if (app.onboarded) {
             navigation.navigate('signinStoreWallet', {
@@ -41,6 +40,7 @@ export const SignInPinScreen = () => {
               type: 'sss',
               sssPrivateKey: route.params.sssPrivateKey,
               sssCloudShare: null,
+              sssLocalShare,
             });
           } else {
             navigation.navigate('onboardingSetupPin', {
@@ -48,11 +48,22 @@ export const SignInPinScreen = () => {
               type: 'sss',
               sssPrivateKey: route.params.sssPrivateKey,
               sssCloudShare: null,
+              sssLocalShare,
             });
           }
         } catch (e) {
           vibrate(HapticEffects.error);
-          pinRef.current?.reset?.();
+
+          app.failureEnter();
+          if (app.canEnter) {
+            pinRef.current?.reset(
+              getText(I18N.pinAttempts, {
+                value: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
+              }),
+            );
+          } else {
+            pinRef.current?.locked(app.pinBanned);
+          }
 
           if (e instanceof Error) {
             if ('code' in e && e.code === 2103) {
