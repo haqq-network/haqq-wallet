@@ -3,6 +3,7 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
+import {AccessListish} from '@haqq/provider-base';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -1160,3 +1161,42 @@ export type OnTransactionRowPress = (
 ) => void;
 
 export type ContractNameMap = Record<string, string>;
+
+export type HaqqCosmosAddress = `haqq${string}`;
+
+export type JsonRpcTransactionRequest = {
+  to?: string;
+  from?: string;
+  nonce?: string;
+  gasLimit?: string;
+  gasPrice?: string;
+  data?: string;
+  value?: string;
+  chainId?: number;
+  type?: number;
+  maxPriorityFeePerGas?: string;
+  maxFeePerGas?: string;
+  customData?: Record<string, any>;
+  ccipReadEnabled?: boolean;
+  accessList?: AccessListish;
+};
+
+export enum AddressType {
+  wallet = 'wallet',
+  contract = 'contract',
+  unknown = 'unknown',
+}
+
+export interface VerifyAddressResponse {
+  id: string;
+  addressType: AddressType;
+  name?: string | null;
+  symbol?: string | null;
+  decimals?: number | null;
+  isErc20?: boolean | null;
+  isErc721?: boolean | null;
+  isErc1155?: boolean | null;
+  isInWhiteList?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}

@@ -1,4 +1,5 @@
 import {PATTERNS_SOURCE} from '@env';
+import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -27,12 +28,15 @@ import {Events} from './events';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N} from './i18n';
 import {navigator} from './navigator';
+import {Cosmos} from './services/cosmos';
 import {
   AdjustTrackingAuthorizationStatus,
   EthType,
   EthTypedData,
+  JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
+  VerifyAddressResponse,
   WalletConnectParsedAccount,
 } from './types';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
@@ -719,3 +723,47 @@ export async function fetchWithTimeout(
 }
 
 export const decimalToHex = (value: string) => new Decimal(value).toHex();
+
+export const getTransactionFromJsonRpcRequest = (
+  request: PartialJsonRpcRequest,
+): Partial<JsonRpcTransactionRequest> | undefined => {
+  if (
+    [
+      EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
+      EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
+    ].includes(request.method)
+  ) {
+    return Array.isArray(request.params) ? request.params[0] : request.params;
+  }
+};
+
+export const verifyAddress = async (address: string) => {
+  if (!app.provider.indexer || !address) {
+    return null;
+  }
+
+  try {
+    return await jsonrpcRequest<VerifyAddressResponse | null>(
+      app.provider.indexer,
+      'address',
+      [Cosmos.addressToBech32(`${address}`)],
+    );
+  } catch (err) {
+    Logger.error('verifyAddress', err);
+    return null;
+  }
+};
+
+export function isContractTransaction(
+  tx: JsonRpcTransactionRequest | undefined,
+): boolean {
+  if (!tx || !tx.to) {
+    return false;
+  }
+
+  if (tx.data && tx.data !== '0x' && !/^0x0+$/.test(tx.data)) {
+    return true;
+  }
+
+  return false;
+}

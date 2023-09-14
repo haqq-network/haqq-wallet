@@ -14,7 +14,7 @@ export function useRemoteConfigVar<K extends keyof RemoteConfigTypes>(key: K) {
     };
 
     asyncTask();
-  });
+  }, [key]);
 
   return variable as RemoteConfigTypes[K] | undefined;
 }

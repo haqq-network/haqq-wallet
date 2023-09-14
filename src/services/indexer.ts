@@ -3,10 +3,10 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
-import {ContractNameMap} from '@app/types';
+import {ContractNameMap, HaqqCosmosAddress} from '@app/types';
 
 export type IndexerUpdatesResponse = {
-  balance: Record<string, string>;
+  balance: Record<HaqqCosmosAddress, string>;
   last_update: string;
 };
 
