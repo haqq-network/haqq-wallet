@@ -1,148 +1,119 @@
+import {makeAutoObservable} from 'mobx';
+import {makePersistable} from 'mobx-persist-store';
+
 import {Color} from '@app/colors';
-import {realm} from '@app/models/index';
 
 import UUID = Realm.BSON.UUID;
 
-export class BannerButton extends Realm.Object {
-  static schema = {
-    name: 'BannerButton',
-    properties: {
-      id: 'uuid',
-      title: 'string',
-      event: 'string',
-      params: 'string{}',
-      color: 'string',
-      backgroundColor: 'string',
-    },
-  };
-  id!: UUID;
-  title!: string;
-  event!:
+export type BannerButton = {
+  id: UUID;
+  title: string;
+  event:
     | 'claimCode'
     | 'close'
     | 'notificationsTurnOn'
     | 'notificationsTopicSubscribe';
-  params!: object;
-  color!: string;
-  backgroundColor!: string;
-}
+  params: object;
+  color: string;
+  backgroundColor: string;
+};
 
-export class Banner extends Realm.Object {
-  static schema = {
-    name: 'Banner',
-    properties: {
-      id: 'string',
-      type: 'string',
-      title: 'string',
-      description: 'string?',
-      buttons: {
-        type: 'list',
-        objectType: 'BannerButton',
-      },
-      isUsed: {type: 'bool', default: false},
-      snoozedUntil: 'date?',
-      titleColor: 'string?',
-      descriptionColor: 'string?',
-      closeButtonColor: 'string?',
-      backgroundColorFrom: 'string?',
-      backgroundColorTo: 'string?',
-      backgroundBorder: 'string?',
-      backgroundImage: 'string?',
-      defaultEvent: 'string?',
-      defaultParams: 'string{}',
-      closeEvent: 'string?',
-      closeParams: 'string{}',
-      priority: {type: 'double', default: 0},
-    },
-    primaryKey: 'id',
-  };
-  id!: string;
-  type!: 'claimCode' | 'notifications' | 'notificationsTopic' | 'trackActivity';
-  title!: string;
-  description: string;
-  buttons: BannerButton[];
-  titleColor: string | Color;
-  descriptionColor: string | Color;
-  backgroundColorFrom: string;
-  backgroundColorTo: string;
-  backgroundImage: string;
-  backgroundBorder: string | Color;
-  closeButtonColor: string | Color;
-  isUsed: boolean;
-  snoozedUntil: Date;
-  defaultEvent: string;
-  defaultParams: object;
-  closeEvent: string;
-  closeParams: object;
-  priority: number;
+export type Banner = {
+  id: string;
+  type: 'claimCode' | 'notifications' | 'notificationsTopic' | 'trackActivity';
+  title: string;
+  description?: string;
+  buttons?: BannerButton[];
+  titleColor?: string | Color;
+  descriptionColor?: string | Color;
+  backgroundColorFrom?: string;
+  backgroundColorTo?: string;
+  backgroundImage?: string;
+  backgroundBorder?: string | Color;
+  closeButtonColor?: string | Color;
+  isUsed?: boolean;
+  snoozedUntil?: Date;
+  defaultEvent?: string;
+  defaultParams?: object;
+  closeEvent?: string;
+  closeParams?: object;
+  priority?: number;
+};
 
-  static create(
-    params: Omit<Partial<Banner>, 'buttons'> & {
-      id: string;
-      buttons?: Array<Partial<BannerButton>>;
-    },
-  ) {
-    const exists = Banner.getById(params.id);
+class BannerStore {
+  banners: Banner[] = [];
 
-    const buttons = exists ? exists.buttons : [];
+  constructor(shouldSkipPersisting: boolean = false) {
+    makeAutoObservable(this);
+    if (!shouldSkipPersisting) {
+      makePersistable(this, {
+        name: this.constructor.name,
+        properties: ['banners'],
+      });
+    }
+  }
 
-    realm.write(() => {
-      realm.create(
-        Banner.schema.name,
-        {
-          ...exists?.toJSON(),
-          ...params,
-          buttons: params.buttons || buttons,
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+  create(params: Banner) {
+    const existingBanner = this.getById(params.id);
+    const buttons = existingBanner ? existingBanner.buttons : [];
+    const newBanner = {
+      ...existingBanner,
+      ...params,
+      buttons: params.buttons || buttons,
+    };
+
+    this.banners.push(newBanner);
+
     return params.id;
   }
 
-  static remove(id: string) {
-    const obj = realm.objectForPrimaryKey<Banner>(Banner.schema.name, id);
-
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
-      });
+  remove(id: string | undefined) {
+    if (!id) {
+      return false;
     }
-  }
-
-  static removeAll() {
-    const items = Banner.getAll();
-
-    for (const item of items) {
-      realm.write(() => {
-        realm.delete(item);
-      });
+    const bannerToRemove = this.getById(id);
+    if (!bannerToRemove) {
+      return false;
     }
+    this.banners = this.banners.filter(
+      banner => banner.id !== bannerToRemove.id,
+    );
+    return true;
   }
 
-  static getAll() {
-    return realm.objects<Banner>(Banner.schema.name);
+  removeAll() {
+    this.banners = [];
   }
 
-  static getAvailable() {
-    return Banner.getAll().filtered('isUsed = false').sorted('priority', true);
+  getAll() {
+    return this.banners;
   }
 
-  static getById(id: string) {
-    return realm.objectForPrimaryKey<Banner>(Banner.schema.name, id);
+  getAvailable() {
+    return this.banners
+      .filter(banner => !banner.isUsed)
+      .sort(banner => banner.priority || 0);
   }
 
-  update(params: Omit<Partial<Banner>, 'id'>) {
-    realm.write(() => {
-      realm.create(
-        Banner.schema.name,
-        {
-          ...this.toJSON(),
-          ...params,
-          id: this.id,
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+  getById(id: string) {
+    return this.banners.find(banner => banner.id === id);
+  }
+
+  update(id: string | undefined, params: Omit<Partial<Banner>, 'id'>) {
+    if (!id) {
+      return false;
+    }
+    const bannerToUpdate = this.getById(id);
+    if (!bannerToUpdate) {
+      return false;
+    }
+    const bannersWithoutOldValue = this.banners.filter(
+      banner => banner.id !== bannerToUpdate.id,
+    );
+    this.banners = [...bannersWithoutOldValue, {...bannerToUpdate, ...params}];
+    return true;
   }
 }
+
+const instance = new BannerStore(Boolean(process.env.JEST_WORKER_ID));
+export {instance as Banner};

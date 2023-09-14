@@ -81,10 +81,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     );
     app.emit(Events.onAppReviewRequest);
 
-    banner.update({
-      isUsed: true,
-    });
-
+    Banner.remove(banner.id);
     onTrackEvent(AdjustEvents.claimFetched, {
       claimCode: claimCode,
     });
@@ -119,9 +116,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     if (e instanceof AirdropError) {
       if (e.code === AirdropErrorCode.adressAlreadyUsed) {
-        banner?.update({
-          isUsed: true,
-        });
+        Banner.remove(banner?.id);
       }
       showModal('error', {
         title: getText(I18N.modalRewardErrorTitle),

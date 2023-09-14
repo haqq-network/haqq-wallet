@@ -1,7 +1,6 @@
 import Realm from 'realm';
 
 import {AddressBook} from '@app/models/address-book';
-import {Banner, BannerButton} from '@app/models/banner';
 import {Contact} from '@app/models/contact';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
@@ -44,8 +43,6 @@ export const realm = new Realm({
     Provider,
     StakingMetadata,
     Refferal,
-    Banner,
-    BannerButton,
     NftCollection,
     AddressBook,
     News,

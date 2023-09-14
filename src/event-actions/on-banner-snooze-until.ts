@@ -10,7 +10,7 @@ export async function onBannerSnoozeUntil(id: string) {
     throw new Error('Banner not found');
   }
 
-  banner.update({
+  Banner.update(id, {
     snoozedUntil: addMinutes(new Date(), SNOOZE_WALLET_BACKUP_MINUTES),
   });
 }
