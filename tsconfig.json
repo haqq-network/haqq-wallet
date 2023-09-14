@@ -5,15 +5,9 @@
     "strictPropertyInitialization": false,
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "src/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ],
+      "@app/*": ["src/*"],
+      "@assets/*": ["assets/*"]
     }
   },
-  "typeRoots": [
-    "./src/types"
-  ],
+  "typeRoots": ["./src/types"]
 }

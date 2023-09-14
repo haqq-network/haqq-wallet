@@ -2,6 +2,7 @@ import RNFS from 'react-native-fs';
 
 import {IS_ANDROID} from '@app/variables/common';
 
+// https://github.com/MetaMask/mobile-provider
 export const InpageBridgeWeb3 = {
   script: '',
   async loadScript() {
