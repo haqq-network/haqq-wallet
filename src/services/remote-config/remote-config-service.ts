@@ -1,12 +1,8 @@
-import {getUid} from '@app/helpers/get-uid';
+import {getAppInfo} from '@app/helpers/get-app-info';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet} from '@app/models/wallet';
-import {getAppVersion} from '@app/services/version';
+import {Backend} from '@app/services/backend';
+import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
 import {isValidJSON} from '@app/utils';
-
-import {RemoteConfigTypes} from './remote-config-types';
-
-import {Backend} from '../backend';
 
 const KEY = 'remote-config-cache';
 
@@ -27,14 +23,8 @@ export class RemoteConfig {
       if (RemoteConfig.isInited) {
         return RemoteConfig.getAll();
       }
-      const uid = await getUid();
-      const wallets = Wallet.getAll().map(wallet => wallet.address);
-      const version = getAppVersion();
-      const config = await Backend.instance.getRemoteConfig(
-        wallets,
-        uid,
-        version,
-      );
+      const appInfo = await getAppInfo();
+      const config = await Backend.instance.getRemoteConfig(appInfo);
       Logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));

@@ -2488,9 +2488,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-sss-react-native@npm:0.0.9":
-  version: 0.0.9
-  resolution: "@haqq/provider-sss-react-native@npm:0.0.9"
+"@haqq/provider-sss-react-native@npm:0.0.11":
+  version: 0.0.11
+  resolution: "@haqq/provider-sss-react-native@npm:0.0.11"
   dependencies:
     "@ethersproject/bytes": 5.7.0
     "@ethersproject/transactions": 5.7.0
@@ -2503,7 +2503,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-encrypted-storage: "*"
-  checksum: 7159f09391237971a446644bb3c6dd43fa153705fbb6ee0b27062aa7958b28a3e2c9a4629e563549150545d12949be867a842941de56839397c77948f4e52b40
+  checksum: 05a886b8408759be76945806140a3ec41dba891bbdbe402c6a6f1cd91f121598cd6a586d327615ebd01c63f6ff6c1596da7762ba979e1252445a5a77567d8160
   languageName: node
   linkType: hard
 
@@ -9585,7 +9585,7 @@ __metadata:
     "@haqq/provider-hot-react-native": 0.0.6
     "@haqq/provider-ledger-react-native": 0.0.19
     "@haqq/provider-mnemonic-react-native": 0.0.11
-    "@haqq/provider-sss-react-native": 0.0.9
+    "@haqq/provider-sss-react-native": 0.0.11
     "@haqq/provider-web3-utils": 0.0.14
     "@haqq/shared-react-native": 0.0.8
     "@invertase/react-native-apple-authentication": ^2.2.2

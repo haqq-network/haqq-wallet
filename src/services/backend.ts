@@ -1,6 +1,5 @@
-import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
-
 import {app} from '@app/contexts';
+import {AppInfo} from '@app/helpers/get-app-info';
 import {
   MarkupResponse,
   NewsRow,
@@ -218,19 +217,11 @@ export class Backend {
     return resp;
   }
 
-  async getRemoteConfig(
-    wallets: string[],
-    uid: string,
-    version: string,
-  ): Promise<RemoteConfigTypes> {
+  async getRemoteConfig(appInfo: AppInfo): Promise<RemoteConfigTypes> {
     const response = await fetch(`${this.getRemoteUrl()}config`, {
       method: 'POST',
       headers: Backend.headers,
-      body: JSON.stringify({
-        uid,
-        wallets,
-        version,
-      }),
+      body: JSON.stringify(appInfo),
     });
 
     return await getHttpResponse<RemoteConfigTypes>(response);
@@ -348,31 +339,13 @@ export class Backend {
     return await getHttpResponse<T>(req);
   }
 
-  async markup({
-    wallets,
-    uid,
-    screen,
-    chainId,
-    platform,
-    version,
-  }: {
-    wallets: string[];
-    uid: string;
-    screen: string;
-    chainId: string;
-    platform: PlatformOSType;
-    version: string;
-  }): Promise<MarkupResponse> {
+  async markup(screen: string, appInfo: AppInfo): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
-        wallets,
-        uid,
         screen,
-        chainId,
-        platform,
-        version,
+        ...appInfo,
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);

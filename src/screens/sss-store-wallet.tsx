@@ -29,6 +29,7 @@ export const SssStoreWalletScreen = () => {
         const provider = await ProviderSSSReactNative.initialize(
           route.params.privateKey,
           route.params.cloudShare,
+          route.params.localShare,
           null,
           route.params.verifier,
           route.params.token,

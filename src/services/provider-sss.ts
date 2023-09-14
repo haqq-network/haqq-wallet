@@ -1,18 +1,13 @@
-import {
-  GENERATE_SHARES_URL,
-  SSS_APPLE,
-  SSS_GOOGLE_ANDROID,
-  SSS_GOOGLE_IOS,
-} from '@env';
+import {GENERATE_SHARES_URL} from '@env';
 import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
 import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
-import {Platform} from 'react-native';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export enum SssProviders {
   google = 'google',
@@ -23,14 +18,13 @@ export async function onLoginGoogle() {
   const authState = await getGoogleTokens();
   const authInfo = parseJwt(authState.idToken);
 
-  return await onAuthorized(
-    Platform.select({
-      ios: SSS_GOOGLE_IOS,
-      android: SSS_GOOGLE_ANDROID,
-    }) as string,
-    authInfo.email,
-    authState.idToken,
-  );
+  const verifier = RemoteConfig.get('sss_google');
+
+  if (!verifier) {
+    throw new Error('sss_google is not set');
+  }
+
+  return await onAuthorized(verifier, authInfo.email, authState.idToken);
 }
 
 export async function onLoginApple() {
@@ -47,7 +41,13 @@ export async function onLoginApple() {
 
   const authInfo = parseJwt(identityToken);
 
-  return await onAuthorized(SSS_APPLE, authInfo.email, identityToken);
+  const verifier = RemoteConfig.get('sss_apple');
+
+  if (!verifier) {
+    throw new Error('sss_apple is not set');
+  }
+
+  return await onAuthorized(verifier, authInfo.email, identityToken);
 }
 
 export type Creds = {

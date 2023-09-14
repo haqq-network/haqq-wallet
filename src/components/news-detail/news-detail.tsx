@@ -254,11 +254,10 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
 const styles = createTheme({
   container: {
     paddingHorizontal: 20,
-    flex: 1,
   },
   preview: {
-    minHeight: 200,
-    flex: 1,
+    aspectRatio: 16 / 9,
+    width: '100%',
     borderRadius: 12,
   },
   image: {

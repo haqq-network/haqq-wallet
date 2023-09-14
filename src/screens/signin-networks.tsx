@@ -84,6 +84,7 @@ export const SignInNetworksScreen = () => {
           token: creds.token,
           verifier: creds.verifier,
           sssCloudShare: share,
+          sssLocalShare: null,
         });
       } catch (e) {
         Logger.log('error', e, e instanceof SssError);
@@ -95,6 +96,7 @@ export const SignInNetworksScreen = () => {
             token: creds.token,
             verifier: creds.verifier,
             sssCloudShare: null,
+            sssLocalShare: null,
           });
         }
       }
