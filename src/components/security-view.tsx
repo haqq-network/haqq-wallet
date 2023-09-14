@@ -1,12 +1,10 @@
-import React, {ReactNode, memo, useEffect, useState} from 'react';
+import {ReactNode, memo, useEffect, useState} from 'react';
 
 import {
   AppState,
   AppStateStatus,
   NativeEventSubscription,
   Platform,
-  StyleSheet,
-  View,
 } from 'react-native';
 
 type Props = {
@@ -40,11 +38,5 @@ export const SecurityView = memo(({children}: Props) => {
   if (inBlur || appState !== 'active') {
     return null;
   }
-  return <View style={styles.wrapper}>{children}</View>;
-});
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
+  return children;
 });

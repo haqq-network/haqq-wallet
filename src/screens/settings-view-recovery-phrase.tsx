@@ -19,9 +19,7 @@ export const SettingsViewRecoveryPhraseScreen = () => {
       account: accountId,
       getPassword: app.getPassword.bind(app),
     });
-
     const phrase = await provider.getMnemonicPhrase();
-
     setMnemonic(phrase ?? '');
   }, [accountId]);
 
