@@ -1,14 +1,10 @@
 declare module '@env' {
   export const PROVIDER_NETWORK: string;
-  export const PROVIDER_WS_NETWORK: string;
   export const PROVIDER_CHAIN_ID: string;
   export const SENTRY_DSN: string;
-  export const NETWORK_EXPLORER: string;
   export const PATTERNS_SOURCE: string;
   export const ENVIRONMENT: string;
   export const IS_DEVELOPMENT: string;
-  export const PUSH_NOTIFICATIONS_URL: string;
-  export const PROVIDER_BASE_PACKAGE: string;
   export const WALLET_CONNECT_PROJECT_ID: string;
   export const WALLET_CONNECT_RELAY_URL: string;
   export const HCAPTCHA_SITE_KEY: string;
@@ -18,9 +14,7 @@ declare module '@env' {
   export const GENERATE_SHARES_URL: string;
   export const IS_SSS_ENABLED: string;
   export const IS_STAKED_VESTED_ENABLED: string;
-  export const AIRDROP_TESTEDGE2_URL: string;
   export const AIRDROP_MAINNET_URL: string;
-  export const ENABLE_SKIP_PIN_ON_LOGIN: string;
   export const HAQQ_BACKEND: string;
   export const HAQQ_BACKEND_DEV: string;
 

@@ -5,6 +5,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData} from '@app/types';
 
 export async function getProviderForNewWallet(params: WalletInitialData) {
@@ -23,8 +24,14 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
         app.getPassword.bind(app),
         storage,
         {
-          metadataUrl: METADATA_URL,
-          generateSharesUrl: GENERATE_SHARES_URL,
+          metadataUrl: RemoteConfig.get_env(
+            'sss_metadata_url',
+            METADATA_URL,
+          ) as string,
+          generateSharesUrl: RemoteConfig.get_env(
+            'sss_generate_shares_url',
+            GENERATE_SHARES_URL,
+          ) as string,
         },
       );
     }

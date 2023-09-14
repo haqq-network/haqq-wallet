@@ -11,6 +11,7 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {RemoteConfig} from '@app/services/remote-config';
 import {WalletType} from '@app/types';
 
 export const SssMigrateStoreScreen = () => {
@@ -51,7 +52,16 @@ export const SssMigrateStoreScreen = () => {
           route.params.token,
           app.getPassword.bind(app),
           storage,
-          {metadataUrl: METADATA_URL, generateSharesUrl: GENERATE_SHARES_URL},
+          {
+            metadataUrl: RemoteConfig.get_env(
+              'sss_metadata_url',
+              METADATA_URL,
+            ) as string,
+            generateSharesUrl: RemoteConfig.get_env(
+              'sss_generate_shares_url',
+              GENERATE_SHARES_URL,
+            ) as string,
+          },
         );
 
         const wallets = Wallet.getAll();

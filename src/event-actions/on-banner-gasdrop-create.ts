@@ -8,6 +8,7 @@ import {Refferal} from '@app/models/refferal';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Airdrop} from '@app/services/airdrop';
+import {RemoteConfig} from '@app/services/remote-config';
 import {AdjustEvents} from '@app/types';
 
 export async function onBannerGasdropCreate() {
@@ -27,8 +28,11 @@ export async function onBannerGasdropCreate() {
     const adid = await getAdjustAdid();
 
     const link_info = await Airdrop.instance.gasdrop_code(
-      AIRDROP_GASDROP_CAMPAIGN_ID,
-      AIRDROP_GASDROP_SECRET,
+      RemoteConfig.get_env(
+        'airdrop_gasdrop_campaign_id',
+        AIRDROP_GASDROP_CAMPAIGN_ID,
+      ),
+      RemoteConfig.get_env('airdrop_gasdrop_secret', AIRDROP_GASDROP_SECRET),
       account.address,
       adid,
     );

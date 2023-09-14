@@ -48,6 +48,17 @@ export class RemoteConfig {
     }
   }
 
+  public static get_env<K extends keyof RemoteConfigTypes>(
+    key: K,
+    env: string | undefined,
+  ) {
+    if (env) {
+      return env;
+    }
+
+    return RemoteConfig.get(key);
+  }
+
   public static get<K extends keyof RemoteConfigTypes>(
     key: K,
   ): RemoteConfigTypes[K] | undefined {

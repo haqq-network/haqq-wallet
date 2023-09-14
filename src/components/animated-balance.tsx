@@ -29,21 +29,19 @@ export class AnimateNumber extends Component<Props, State> {
     onFinish: () => {},
     precision: 4,
   };
-  dirty: boolean = false;
-  startFrom: number = 0;
-  endWith: number = 0;
-  // Positive => true, negative => false
-  direction: boolean = true;
-
-  state = {
-    value: this.props.initialValue || 0,
-  };
-
   static TimingFunctions = {
     // You can add new timing functions here
     linear: (interval: number): number => {
       return interval;
     },
+  };
+  dirty: boolean = false;
+  startFrom: number = 0;
+  endWith: number = 0;
+  // Positive => true, negative => false
+  direction: boolean = true;
+  state = {
+    value: this.props.initialValue || 0,
   };
 
   componentDidMount() {

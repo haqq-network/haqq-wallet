@@ -285,18 +285,6 @@ export class WalletConnect extends EventEmitter {
     });
   }
 
-  private redirect() {
-    const isWalletConnectFromDeepLink = VariablesBool.get(
-      'isWalletConnectFromDeepLink',
-    );
-    if (isWalletConnectFromDeepLink) {
-      VariablesBool.set('isWalletConnectFromDeepLink', false);
-      setTimeout(() => {
-        AppUtils.goBack();
-      }, 500);
-    }
-  }
-
   onWalletRemove(accountId: string) {
     try {
       const sessionsAccouts = filterWalletConnectSessionsByAddress(
@@ -311,6 +299,18 @@ export class WalletConnect extends EventEmitter {
       }
     } catch (err) {
       logger.captureException(err, 'wc:onWalletRemove', {accountId});
+    }
+  }
+
+  private redirect() {
+    const isWalletConnectFromDeepLink = VariablesBool.get(
+      'isWalletConnectFromDeepLink',
+    );
+    if (isWalletConnectFromDeepLink) {
+      VariablesBool.set('isWalletConnectFromDeepLink', false);
+      setTimeout(() => {
+        AppUtils.goBack();
+      }, 500);
     }
   }
 

@@ -44,12 +44,6 @@ export class Provider extends Realm.Object {
     return this.cosmosChainId.split('-')[1];
   }
 
-  setEvmEndpoint(endpoint: string) {
-    realm.write(() => {
-      this.ethRpcEndpoint = endpoint;
-    });
-  }
-
   static create(params: Partial<Provider>) {
     let id = generateUUID();
     realm.write(() => {
@@ -101,6 +95,12 @@ export class Provider extends Realm.Object {
       return null;
     }
     return Provider.getByEthChainId(parseInt(ethChainIdHex, 16));
+  }
+
+  setEvmEndpoint(endpoint: string) {
+    realm.write(() => {
+      this.ethRpcEndpoint = endpoint;
+    });
   }
 
   update(params: Partial<Provider>) {

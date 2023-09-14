@@ -8,6 +8,7 @@ import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignupPinScreen = () => {
   const pinRef = useRef<PinInterface>();
@@ -23,7 +24,7 @@ export const SignupPinScreen = () => {
           }
 
           const securityQuestion = await getMetadataValue(
-            METADATA_URL,
+            RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
             route.params.sssPrivateKey,
             'socialShareIndex',
           );

@@ -19,6 +19,7 @@ import {
 import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
+import {RemoteConfig} from '@app/services/remote-config';
 
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
@@ -146,7 +147,10 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function getPatternName(pattern: string) {
-  return `${PATTERNS_SOURCE}${pattern}@3x.png`;
+  return `${RemoteConfig.get_env(
+    'pattern_source',
+    PATTERNS_SOURCE,
+  )}${pattern}@3x.png`;
 }
 
 export function shuffleWords(words: Map<string, string>) {

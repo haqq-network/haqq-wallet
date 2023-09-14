@@ -15,6 +15,7 @@ import {
   onLoginApple,
   onLoginGoogle,
 } from '@app/services/provider-sss';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignInNetworksScreen = () => {
   const navigation = useTypedNavigation();
@@ -37,7 +38,7 @@ export const SignInNetworksScreen = () => {
         }
 
         const walletInfo = await getMetadataValue(
-          METADATA_URL,
+          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',
         );
