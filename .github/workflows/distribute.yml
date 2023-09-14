@@ -43,7 +43,6 @@ jobs:
     needs:
       - test
 
-
   build_ios:
     name: Build and distribute iOS app
     uses: ./.github/workflows/distribute-ios.yml
