@@ -1,7 +1,8 @@
-import {AIRDROP_MAINNET_URL, AIRDROP_TESTEDGE2_URL} from '@env';
+import {AIRDROP_MAINNET_URL} from '@env';
 import {HMAC} from 'fast-sha256';
 
 import {CaptchaType} from '@app/components/captcha';
+import {RemoteConfig} from '@app/services/remote-config';
 import {getHttpResponse} from '@app/utils';
 
 export type ClaimResponse =
@@ -50,10 +51,6 @@ export class AirdropError {
 export class Airdrop {
   static instance = new Airdrop();
 
-  static networks = {
-    54211: AIRDROP_TESTEDGE2_URL,
-    11235: AIRDROP_MAINNET_URL,
-  };
   static headers = {
     accept: 'application/json, text/plain, */*',
     'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
@@ -62,8 +59,7 @@ export class Airdrop {
   };
 
   getRemoteUrl() {
-    Logger.log('AIRDROP_MAINNET_URL ', AIRDROP_MAINNET_URL);
-    return AIRDROP_MAINNET_URL;
+    return RemoteConfig.get_env('airdrop_url', AIRDROP_MAINNET_URL);
   }
 
   async captchaSession(): Promise<{captcha: CaptchaType; session: string}> {
@@ -146,11 +142,19 @@ export class Airdrop {
   }
 
   async gasdrop_code(
-    campaign_id: string,
-    campaign_secret: string,
+    campaign_id: string | undefined,
+    campaign_secret: string | undefined,
     wallet: string,
     adid: string | null,
   ): Promise<GetDynamicLinkResponse> {
+    if (!campaign_id) {
+      throw new Error('campaign_id is undefined');
+    }
+
+    if (!campaign_secret) {
+      throw new Error('campaign_secret is undefined');
+    }
+
     const body = JSON.stringify({
       wallet,
       adid,

@@ -76,7 +76,14 @@ export async function onAuthorized(
   const nodeDetailsRequest = await jsonrpcRequest<{
     isNew: boolean;
     shares: [string, string][];
-  }>(GENERATE_SHARES_URL, 'shares', [verifier, token, false]);
+  }>(
+    RemoteConfig.get_env(
+      'sss_generate_shares_url',
+      GENERATE_SHARES_URL,
+    ) as string,
+    'shares',
+    [verifier, token, false],
+  );
 
   const tmpPk = await generateEntropy(32);
   const shares = await Promise.all(

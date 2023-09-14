@@ -8,14 +8,17 @@ interface LoggerOptions {
 
 const BG_GREEN_TEXT_WHITE_BOLD = __DEV__ ? '\x1b[42m\x1b[37m\x1b[1m' : '';
 const RESET = __DEV__ ? '\x1b[0m' : '';
-export class LoggerService {
-  private _tag?: string = '';
-  private _stringifyJson?: boolean;
-  private _emodji?: string;
 
-  public get emodji() {
-    return this._emodji || '';
+export class LoggerService {
+  private _stringifyJson?: boolean;
+
+  constructor(tag?: string, options?: LoggerOptions) {
+    this._tag = tag;
+    this._stringifyJson = options?.stringifyJson;
+    this._emodji = options?.emodjiPrefix;
   }
+
+  private _tag?: string = '';
 
   public get tag() {
     if (this._tag) {
@@ -24,10 +27,10 @@ export class LoggerService {
     return `${this.emodji}`;
   }
 
-  constructor(tag?: string, options?: LoggerOptions) {
-    this._tag = tag;
-    this._stringifyJson = options?.stringifyJson;
-    this._emodji = options?.emodjiPrefix;
+  private _emodji?: string;
+
+  public get emodji() {
+    return this._emodji || '';
   }
 
   create(tag: string, options?: LoggerOptions) {

@@ -20,4 +20,10 @@ export interface RemoteConfigTypes {
   transfer_min_amount: string;
   sss_apple: string;
   sss_google: string;
+  airdrop_url: string;
+  airdrop_gasdrop_secret: string;
+  airdrop_gasdrop_campaign_id: string;
+  pattern_source: string;
+  sss_generate_shares_url: string;
+  sss_metadata_url: string;
 }

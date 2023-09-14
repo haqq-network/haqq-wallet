@@ -85,7 +85,6 @@ jobs:
           echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribution" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
@@ -93,17 +92,10 @@ jobs:
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
-          echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
-          echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
-          echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
-          echo "AIRDROP_TESTEDGE2_URL=${{secrets.AIRDROP_TESTEDGE2_URL}}" >> .env
-          echo "AIRDROP_MAINNET_URL=${{secrets.AIRDROP_MAINNET_URL}}" >> .env
           echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
           echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
-          echo "AIRDROP_GASDROP_SECRET=${{secrets.AIRDROP_GASDROP_SECRET}}" >> .env
-          echo "AIRDROP_GASDROP_CAMPAIGN_ID=${{secrets.AIRDROP_GASDROP_CAMPAIGN_ID}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
           echo "IS_STAKED_VESTED_ENABLED=${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env

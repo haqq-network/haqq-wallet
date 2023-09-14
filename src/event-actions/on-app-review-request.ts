@@ -6,6 +6,7 @@ import {VariablesDate} from '@app/models/variables-date';
 const REQUEST_REVIEW_DAYS_INTERVAL = 7;
 
 const logger = Logger.create('onAppReviewRequest');
+
 export async function onAppReviewRequest() {
   try {
     if (!InAppReview.isAvailable()) {

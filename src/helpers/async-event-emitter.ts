@@ -38,6 +38,7 @@ const logger = Logger.create('AsyncEventEmitter');
  *   .then(() => Logger.log('event done'));
  */
 export class AsyncEventEmitter extends EventEmitter {
+  off = this.removeListener;
   private listenerMap = new WeakMap<
     (...args: any[]) => void,
     (...args: any[]) => void
@@ -135,6 +136,4 @@ export class AsyncEventEmitter extends EventEmitter {
     this.listenerMap.set(listener, wrappedListener);
     return super.once(eventName, wrappedListener);
   }
-
-  off = this.removeListener;
 }
