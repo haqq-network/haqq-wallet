@@ -41,7 +41,7 @@ module.exports = {
   ].filter(Boolean),
   watcher: {
     healthCheck: {
-      enabled: true
-    }
-  }
+      enabled: true,
+    },
+  },
 };
