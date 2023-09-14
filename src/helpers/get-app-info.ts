@@ -10,7 +10,7 @@ import {getAppVersion} from '@app/services/version';
 export type AppInfo = {
   wallets: string[];
   uid: string;
-  chainId: string;
+  chain_id: string;
   platform: PlatformOSType;
   version: string;
   adid: string | null;
@@ -23,7 +23,7 @@ export async function getAppInfo(): Promise<AppInfo> {
   return {
     wallets,
     uid,
-    chainId: app.provider.cosmosChainId,
+    chain_id: app.provider.cosmosChainId,
     platform: Platform.OS,
     version: getAppVersion(),
     adid,
