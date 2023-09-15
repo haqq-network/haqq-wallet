@@ -4,11 +4,20 @@ import Decimal from 'decimal.js';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataView, Spacer, Text} from '@app/components/ui';
+import {DataView, Icon, InfoBlock, Spacer, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
-import {getHostnameFromUrl} from '@app/utils';
+import {
+  AddressType,
+  JsonRpcMetadata,
+  PartialJsonRpcRequest,
+  VerifyAddressResponse,
+} from '@app/types';
+import {
+  getHostnameFromUrl,
+  getTransactionFromJsonRpcRequest,
+  isContractTransaction,
+} from '@app/utils';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
@@ -16,14 +25,16 @@ import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 interface WalletConnectTransactionInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
+  verifyAddressResponse: VerifyAddressResponse | null;
 }
 
 export const JsonRpcTransactionInfo = ({
   request,
   metadata,
+  verifyAddressResponse,
 }: WalletConnectTransactionInfoProps) => {
   const params = useMemo(
-    () => (Array.isArray(request.params) ? request.params[0] : request.params),
+    () => getTransactionFromJsonRpcRequest(request),
     [request],
   );
 
@@ -60,6 +71,20 @@ export const JsonRpcTransactionInfo = ({
     [demicalAmount, demicalEstimateFee],
   );
 
+  const isContract = useMemo(
+    () =>
+      verifyAddressResponse?.addressType === AddressType.contract ||
+      isContractTransaction(params),
+    [params, verifyAddressResponse],
+  );
+
+  const isInWhiteList = useMemo(
+    () => !!verifyAddressResponse?.isInWhiteList,
+    [verifyAddressResponse],
+  );
+
+  const showSignContratAttention = isContract && !isInWhiteList;
+
   return (
     <>
       <Text t5 i18n={I18N.walletConnectSignTransactionForSignature} />
@@ -80,6 +105,18 @@ export const JsonRpcTransactionInfo = ({
       </View>
 
       <Spacer height={24} />
+
+      {showSignContratAttention && (
+        <>
+          <InfoBlock
+            error
+            icon={<Icon name={'warning'} color={Color.textRed1} />}
+            i18n={I18N.signContratAttention}
+            style={styles.signContractAttention}
+          />
+          <Spacer height={24} />
+        </>
+      )}
 
       <Text
         t11
@@ -157,5 +194,8 @@ const styles = createTheme({
   },
   fromImage: {
     marginHorizontal: 4,
+  },
+  signContractAttention: {
+    width: '100%',
   },
 });

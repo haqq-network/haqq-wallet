@@ -4,6 +4,7 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
+import {HaqqCosmosAddress} from '@app/types';
 
 export async function onWalletsBalanceCheck() {
   try {
@@ -26,7 +27,10 @@ export async function onWalletsBalanceCheck() {
       );
 
       balances = Object.entries(updates.balance).map(b => {
-        return [Cosmos.bech32ToAddress(b[0]), new Balance(b[1])];
+        return [
+          Cosmos.bech32ToAddress(b[0] as HaqqCosmosAddress),
+          new Balance(b[1]),
+        ];
       });
 
       VariablesDate.set(

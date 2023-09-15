@@ -49,7 +49,11 @@ import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
 import {Provider} from '@app/models/provider';
-import {DepositResponse, StakingParamsResponse} from '@app/types';
+import {
+  DepositResponse,
+  HaqqCosmosAddress,
+  StakingParamsResponse,
+} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -88,10 +92,10 @@ export class Cosmos {
   }
 
   static addressToBech32(address: string) {
-    return converter('haqq').toBech32(address);
+    return converter('haqq').toBech32(address) as HaqqCosmosAddress;
   }
 
-  static bech32ToAddress(address: string) {
+  static bech32ToAddress(address: HaqqCosmosAddress) {
     return converter('haqq').toHex(address).toLowerCase();
   }
 

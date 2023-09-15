@@ -761,6 +761,7 @@ export enum I18N {
   chooseAccountAddOneAccountText,
   chooseAccountAddManyAccountsText,
   pinAttempts,
+  signContratAttention,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1660,4 +1661,6 @@ const en: Record<I18N, string> = {
   [I18N.chooseAccountAddOneAccountText]: 'Add {{value}} account',
   [I18N.chooseAccountAddManyAccountsText]: 'Add {{value}} accounts',
   [I18N.pinAttempts]: 'wrong pin {{value}} left',
+  [I18N.signContratAttention]:
+    'This smart contract has not been approved by the IslamicCoin team. Signing the contract is at your own discretion',
 };
