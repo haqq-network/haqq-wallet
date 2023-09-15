@@ -3,7 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {View} from 'react-native';
 
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -16,6 +16,7 @@ export const SignUpStoreWalletScreen = () => {
   const route = useTypedRoute<'createStoreWallet'>();
 
   const goBack = useCallback(() => {
+    hideModal('loading');
     navigation.replace('signup', {next: ''});
   }, [navigation]);
 
