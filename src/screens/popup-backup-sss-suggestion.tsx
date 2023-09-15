@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {addMinutes} from 'date-fns';
 
@@ -9,7 +9,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {navigator} from '@app/navigator';
 import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
-export const BackupSssSuggestionScreen = () => {
+export const BackupSssSuggestionScreen = memo(() => {
   const {goBack} = useTypedNavigation();
   const {accountId} = useTypedRoute<'backupSssSuggestion'>().params;
 
@@ -51,4 +51,4 @@ export const BackupSssSuggestionScreen = () => {
       )}
     </BottomPopupContainer>
   );
-};
+});

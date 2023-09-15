@@ -448,7 +448,7 @@ export const App = () => {
               />
               <Stack.Screen
                 name="backupSssSuggestion"
-                component={themeUpdaterHOC(BackupSssSuggestionScreen)}
+                component={BackupSssSuggestionScreen}
                 options={actionsSheet}
               />
               <Stack.Screen
