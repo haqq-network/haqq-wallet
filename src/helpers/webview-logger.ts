@@ -1,5 +1,12 @@
 import {WebViewMessageEvent} from 'react-native-webview';
 
+export type WebViewLogType = 'log' | 'error' | 'warn';
+
+export type WebViewLogEvent = {
+  msg: any[];
+  type: WebViewLogType;
+};
+
 const script = `
   if(!window._webViewLoggerInjected){
     var origLog = console.log;
@@ -28,15 +35,23 @@ const LOGS_TYPE_EMOJI_MAP = {
   warn: '🟡',
 };
 
-const handleEvent = (event: WebViewMessageEvent, prefix = 'WebView') => {
+const checkData = (data: any): data is WebViewLogEvent => {
+  return !!data?.msg && ['log', 'error', 'warn'].includes(data.type);
+};
+
+const handleEvent = (event: WebViewMessageEvent, prefix: string) => {
   try {
     const data = JSON.parse(event?.nativeEvent?.data);
-    if (data.msg && data.type) {
-      // @ts-ignore
-      const logger = Logger[data.type];
-      // @ts-ignore
+    if (checkData(data)) {
       const emoji = LOGS_TYPE_EMOJI_MAP[data.type];
-      logger(`${emoji} [${prefix}]:`, ...data.msg);
+      Logger[data.type].call(
+        Logger,
+        emoji,
+        `[${prefix}]:`,
+        event?.nativeEvent?.url,
+        '\n\n',
+        ...data.msg,
+      );
       return true;
     }
   } catch (e) {}

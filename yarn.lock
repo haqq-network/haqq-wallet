@@ -9701,7 +9701,7 @@ __metadata:
     react-native-svg: 13.10.0
     react-native-system-navigation-bar: 2.6.1
     react-native-touch-id: 4.4.1
-    react-native-webview: 11.13.0
+    react-native-webview: 13.6.0
     react-test-renderer: 18.2.0
     react-timer-mixin: 0.13.4
     readable-stream: 4.4.2
@@ -14718,15 +14718,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-webview@npm:11.13.0":
-  version: 11.13.0
-  resolution: "react-native-webview@npm:11.13.0"
+"react-native-webview@npm:13.6.0":
+  version: 13.6.0
+  resolution: "react-native-webview@npm:13.6.0"
   dependencies:
     escape-string-regexp: 2.0.0
     invariant: 2.2.4
   peerDependencies:
-    react-native: ">=0.60"
-  checksum: 0e70cba3cb44be2802b6ee488a79e72095d5607c3cc82c837138477fdcd16daed06cc5e590d13e80135f1dd167cbc1fcd9acb1b1354e350dfec3d3c29ec76772
+    react: "*"
+    react-native: "*"
+  checksum: f7220fb18dcf5e9631674831ac8beb3bc4b99863f812676c25394a3cce487975b05c8fc795b0ee4ff1ead43da304ddea104f5e6683ea3f4c3a135b14ae193069
   languageName: node
   linkType: hard
 
