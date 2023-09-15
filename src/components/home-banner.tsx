@@ -43,11 +43,11 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent, banner.closeParams);
+    await onPress(banner.id, banner.closeEvent || '', banner.closeParams);
   }, [banner, onPress]);
 
   const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent, banner.defaultParams);
+    await onPress(banner.id, banner.defaultEvent || '', banner.defaultParams);
   }, [banner, onPress]);
 
   const onPressBanner = useCallback(
@@ -82,7 +82,10 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
           />
         ) : (
           <LinearGradient
-            colors={[banner.backgroundColorFrom, banner.backgroundColorTo]}
+            colors={[
+              banner.backgroundColorFrom || '',
+              banner.backgroundColorTo || '',
+            ]}
             start={GRADIENT_START}
             end={GRADIENT_END}
             style={styles.inner}
@@ -102,7 +105,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         <Spacer height={12} />
         {banner.buttons && (
           <Inline gap={20}>
-            {banner.buttons.map(button => (
+            {banner.buttons.map((button: BannerButton) => (
               <Button
                 key={banner.id}
                 loading={loading}
@@ -134,7 +137,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     return null;
   }
 
-  if (!banner.buttons.length && banner.defaultEvent) {
+  if (!banner.buttons?.length && banner.defaultEvent) {
     return <TouchableOpacity onPress={onPressBack}>{elem}</TouchableOpacity>;
   }
 
