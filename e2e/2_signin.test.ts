@@ -2,7 +2,7 @@ import {device} from 'detox';
 import {utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
-import {setupWallet} from './helpers/setupWallet';
+import {restoreWallet} from './helpers/restoreWallet';
 import {PIN} from './test-variables';
 
 describe('Signin', () => {
@@ -17,7 +17,7 @@ describe('Signin', () => {
   });
 
   it('should create and backup phrase', async () => {
-    await setupWallet(mnemonic, PIN);
+    await restoreWallet(mnemonic, PIN);
 
     await ensureWalletIsVisible(mnemonic);
   });

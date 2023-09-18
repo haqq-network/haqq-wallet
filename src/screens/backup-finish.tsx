@@ -10,7 +10,7 @@ export const BackupFinishScreen = () => {
 
   const onSubmit = () => {
     onTrackEvent(AdjustEvents.backupCompleted);
-    navigation.replace('home');
+    navigation.navigate('home');
   };
 
   return <BackupFinish onSubmit={onSubmit} testID="backup_finish" />;

@@ -18,6 +18,7 @@ export type MenuNavigationButtonProps = {
   hideArrow?: boolean;
   checked?: boolean;
   disabled?: boolean;
+  testID?: string;
 };
 
 export const MenuNavigationButton = ({
@@ -27,6 +28,7 @@ export const MenuNavigationButton = ({
   hideArrow = false,
   checked = false,
   disabled = false,
+  testID,
 }: MenuNavigationButtonProps) => {
   const WrapperComponent = useMemo(
     () => (disabled ? View : TouchableWithoutFeedback),
@@ -34,7 +36,7 @@ export const MenuNavigationButton = ({
   );
   return (
     // @ts-ignore
-    <WrapperComponent disabled={!onPress} onPress={onPress}>
+    <WrapperComponent testID={testID} disabled={!onPress} onPress={onPress}>
       <View style={[styles.container, style]}>
         <View style={styles.content}>{children}</View>
         {!!checked && <Icon i24 name="check" color={Color.graphicGreen1} />}

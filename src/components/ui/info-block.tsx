@@ -23,6 +23,7 @@ export type InfoBlockProps = {
   warning?: boolean;
   error?: boolean;
   border?: boolean;
+  testID?: string;
 };
 
 export const InfoBlock = ({
@@ -36,6 +37,7 @@ export const InfoBlock = ({
   border,
   bottom,
   bottomContainerStyle,
+  testID,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [
@@ -62,7 +64,7 @@ export const InfoBlock = ({
   );
 
   return (
-    <View style={containerStyle}>
+    <View testID={testID} style={containerStyle}>
       <View style={styles.contentContainer}>
         {icon}
         {/* @ts-expect-error */}

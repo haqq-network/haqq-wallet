@@ -1,33 +1,20 @@
 import {by, element, expect, waitFor} from 'detox';
 
-export const setupWallet = async (mnemonic: string, PIN: string) => {
+export const createWallet = async (PIN: string) => {
   await expect(element(by.id('welcome'))).toBeVisible();
   await expect(element(by.id('welcome_signup'))).toBeVisible();
 
-  await element(by.id('welcome_signin')).tap();
-  await element(by.id('signin_network_skip')).tap();
-  await expect(element(by.id('signin_agreement'))).toBeVisible();
-  await expect(element(by.id('signin_agreement_agree'))).toBeVisible();
+  await element(by.id('welcome_signup')).tap();
+  await expect(element(by.id('signup_agreement'))).toBeVisible();
+  await expect(element(by.id('signup_agreement_agree'))).toBeVisible();
 
-  await element(by.id('signin_agreement_agree')).tap();
+  await element(by.id('signup_agreement_agree')).tap();
 
-  await expect(element(by.id('signin_restore'))).toBeVisible();
-
-  await element(by.id('signin_restore_input')).tap();
-  await element(by.id('signin_restore_input')).replaceText(mnemonic);
-
-  await element(by.id('signin_restore_submit')).tap();
-
-  // Choose account flow
-  await element(by.id('wallet_add_1')).tap();
-  await element(by.text('Ledger')).tap();
-  await expect(element(by.id('wallet_remove_1'))).toBeVisible();
-  await element(by.text('Basic')).tap();
-  await element(by.id('wallet_remove_1')).tap();
-  await expect(element(by.id('choose_account_next'))).not.toBeVisible();
-  await element(by.id('wallet_add_1')).tap();
-  await element(by.id('choose_account_next')).tap();
-
+  await element(by.id('sss_login_later')).tap();
+  // Modal window
+  await element(
+    by.label('Accept').and(by.type('_UIAlertControllerActionView')),
+  ).tap();
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
   for (const num of PIN.split('')) {

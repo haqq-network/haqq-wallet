@@ -2,7 +2,7 @@ import {by, device, element, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
-import {setupWallet} from './helpers/setupWallet';
+import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
@@ -17,7 +17,7 @@ describe('Routine', () => {
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
     milkWallet = new Wallet(SOURCE_WALLET, PROVIDER);
-    await setupWallet(mnemonic, PIN);
+    await restoreWallet(mnemonic, PIN);
   });
 
   it('should create and backup phrase', async () => {

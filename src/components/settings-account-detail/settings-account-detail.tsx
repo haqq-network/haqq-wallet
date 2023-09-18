@@ -74,6 +74,7 @@ export const SettingsAccountDetail = ({
         <First>
           {!wallet.mnemonicSaved && wallet.type === WalletType.mnemonic && (
             <InfoBlock
+              testID="recovery_warning"
               border
               warning
               icon={<Icon name={'warning'} color={Color.textYellow1} />}
@@ -87,6 +88,7 @@ export const SettingsAccountDetail = ({
                     i18n={I18N.settingsAccountDetailPharse}
                     variant={ButtonVariant.second}
                     onPress={onPressPharse}
+                    testID="recovery_pharse"
                   />
                   <Spacer width={10} />
                   <Button
@@ -153,7 +155,9 @@ export const SettingsAccountDetail = ({
         />
       </MenuNavigationButton>
       {wallet.type === WalletType.mnemonic && wallet.accountId && (
-        <MenuNavigationButton onPress={onViewingRecoveryPhrase}>
+        <MenuNavigationButton
+          testID="view_recovery_phrase"
+          onPress={onViewingRecoveryPhrase}>
           <DataContent
             titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
             subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
