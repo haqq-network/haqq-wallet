@@ -60,6 +60,7 @@ export const ChooseAccountRow = ({
           size={ButtonSize.small}
           i18n={I18N.cancel}
           onPress={onPressButton}
+          testID={`wallet_remove_${index}`}
         />
       ) : (
         <Button
@@ -67,6 +68,7 @@ export const ChooseAccountRow = ({
           size={ButtonSize.small}
           i18n={I18N.ledgerAccountsAdd}
           onPress={onPressButton}
+          testID={`wallet_add_${index}`}
         />
       )}
     </View>

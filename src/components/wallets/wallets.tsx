@@ -71,6 +71,7 @@ export const Wallets = ({
         height={isFeatureEnabled(Feature.lockedStakedVestedTokens) ? 12 : 24}
       />
       <Animated.ScrollView
+        testID={testID}
         pagingEnabled
         horizontal
         showsVerticalScrollIndicator={false}

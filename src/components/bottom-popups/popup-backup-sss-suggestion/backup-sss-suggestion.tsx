@@ -47,7 +47,7 @@ export const BackupSssSuggestion = ({
   });
 
   return (
-    <View style={styles.sub}>
+    <View style={styles.sub} testID="backup_sss_suggestion">
       <Image source={suggestionImage} style={styles.suggestionImage} />
       <Spacer height={20} />
       <Text t7 center i18n={I18N.backupSssSuggestionTitle} />
@@ -72,6 +72,7 @@ export const BackupSssSuggestion = ({
         onPress={onSkip}
         size={ButtonSize.middle}
         style={styles.margin}
+        testID="backup_sss_suggestion_skip_button"
       />
     </View>
   );

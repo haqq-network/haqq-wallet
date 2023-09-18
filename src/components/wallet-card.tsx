@@ -146,6 +146,7 @@ export const WalletCard = memo(
           {enableProtectionWarning && (
             <>
               <IconButton
+                testID="wallet_without_protection_button"
                 onPress={onProtection}
                 style={styles.withoutProtection}>
                 <Text

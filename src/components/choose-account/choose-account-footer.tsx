@@ -40,6 +40,7 @@ export const ChooseAccountFooter = ({
         i18n={I18N.ledgerAccountsLoadMore}
         variant={ButtonVariant.second}
         size={ButtonSize.middle}
+        testID={`load_more${loading ? '_loading' : ''}`}
       />
       {count > 0 && (
         <>
@@ -54,6 +55,7 @@ export const ChooseAccountFooter = ({
             i18params={{value: String(count)}}
             variant={ButtonVariant.contained}
             size={ButtonSize.middle}
+            testID="choose_account_next"
           />
         </>
       )}
