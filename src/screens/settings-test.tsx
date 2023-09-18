@@ -257,14 +257,14 @@ const TEST_URLS: Partial<Link>[] = [
     url: 'https://vesting.haqq.network',
     icon: 'https://vesting.haqq.network/assets/favicon.svg',
   },
-  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
-  {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-  {title: 'new safe', url: 'https://new.safe.testedge2.haqq.network'},
+  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
   {
     title: 'metamask test dapp',
     url: 'https://metamask.github.io/test-dapp/',
   },
+  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
+  {title: 'app uniswap', url: 'https://app.uniswap.org'},
+  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
   {
     title: 'ChainList app',
     url: 'https://chainlist.org/',
