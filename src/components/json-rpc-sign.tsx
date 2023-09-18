@@ -10,7 +10,11 @@ import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
+import {
+  JsonRpcMetadata,
+  PartialJsonRpcRequest,
+  VerifyAddressResponse,
+} from '@app/types';
 
 export interface WalletConnectSignProps {
   isTransaction: boolean;
@@ -19,6 +23,7 @@ export interface WalletConnectSignProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   wallet: Wallet;
+  verifyAddressResponse: VerifyAddressResponse | null;
 
   onPressSign(): void;
 
@@ -32,6 +37,7 @@ export const JsonRpcSign = ({
   request,
   rejectLoading,
   signLoading,
+  verifyAddressResponse,
   onPressReject,
   onPressSign,
 }: WalletConnectSignProps) => {
@@ -47,7 +53,11 @@ export const JsonRpcSign = ({
         <Spacer height={32} />
 
         {isTransaction && (
-          <JsonRpcTransactionInfo metadata={metadata} request={request} />
+          <JsonRpcTransactionInfo
+            metadata={metadata}
+            request={request}
+            verifyAddressResponse={verifyAddressResponse}
+          />
         )}
 
         {!isTransaction && (

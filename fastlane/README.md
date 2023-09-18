@@ -1,4 +1,5 @@
-## fastlane documentation
+fastlane documentation
+----
 
 # Installation
 
@@ -28,13 +29,18 @@ Android Production App
 [bundle exec] fastlane android patch_build
 ```
 
+
+
 ### android distribute
 
 ```sh
 [bundle exec] fastlane android distribute
 ```
 
----
+
+
+----
+
 
 ## iOS
 
@@ -52,11 +58,15 @@ IOS Production App
 [bundle exec] fastlane ios test
 ```
 
+
+
 ### ios patch_build
 
 ```sh
 [bundle exec] fastlane ios patch_build
 ```
+
+
 
 ### ios distribute
 
@@ -64,7 +74,9 @@ IOS Production App
 [bundle exec] fastlane ios distribute
 ```
 
----
+
+
+----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 

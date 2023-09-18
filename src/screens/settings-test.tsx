@@ -6,6 +6,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
+import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import shajs from 'sha.js';
@@ -292,7 +293,7 @@ const Title = ({text = ''}) => (
   </>
 );
 
-export const SettingsTestScreen = () => {
+export const SettingsTestScreen = observer(() => {
   const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
   const [deeplink, setDeeplink] = useState('');
@@ -759,7 +760,7 @@ export const SettingsTestScreen = () => {
       <Spacer height={20} />
     </ScrollView>
   );
-};
+});
 
 const styles = createTheme({
   container: {

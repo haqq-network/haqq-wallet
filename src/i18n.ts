@@ -761,6 +761,7 @@ export enum I18N {
   chooseAccountAddOneAccountText,
   chooseAccountAddManyAccountsText,
   pinAttempts,
+  signContratAttention,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1045,7 +1046,7 @@ const en: Record<I18N, string> = {
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
   [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
-    'Enter or paste your recovery phrase',
+    'Type or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
   [I18N.settingsAccountRemoveTitle]:
@@ -1624,9 +1625,8 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
-  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this application`,
-  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is
-  this application.`,
+  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application`,
+  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application.`,
   [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
   [I18N.lockedTokensInfoDescription]:
     'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
@@ -1660,4 +1660,6 @@ const en: Record<I18N, string> = {
   [I18N.chooseAccountAddOneAccountText]: 'Add {{value}} account',
   [I18N.chooseAccountAddManyAccountsText]: 'Add {{value}} accounts',
   [I18N.pinAttempts]: 'wrong pin {{value}} left',
+  [I18N.signContratAttention]:
+    'This smart contract has not been approved by the IslamicCoin team. Signing the contract is at your own discretion',
 };

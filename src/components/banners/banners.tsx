@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {ScrollView, View} from 'react-native';
-import {Results} from 'realm';
 
 import {HomeBanner, HomeBannerProps} from '@app/components/home-banner';
 import {createTheme, getWindowWidth} from '@app/helpers';
@@ -11,7 +10,7 @@ import {Banner} from '@app/models/banner';
 import {First, Spacer} from '../ui';
 
 export type BannersProps = {
-  banners: Results<Banner>;
+  banners: Banner[];
   onPressBanner: HomeBannerProps['onPress'];
 };
 export const Banners = ({banners, onPressBanner}: BannersProps) => {

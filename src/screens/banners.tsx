@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {Banners} from '@app/components/banners';
 import {onBannerAction} from '@app/event-actions/on-banner-action';
-import {useBanners} from '@app/hooks/use-banners';
+import {Banner} from '@app/models/banner';
 
-export const BannersWrapper = () => {
-  const banners = useBanners();
-
+export const BannersWrapper = observer(() => {
   const onPressBannerAction = useCallback(
     async (id: string, event: string, params: Record<string, any> = {}) => {
       await onBannerAction(id, event, params);
@@ -14,5 +14,7 @@ export const BannersWrapper = () => {
     [],
   );
 
-  return <Banners banners={banners} onPressBanner={onPressBannerAction} />;
-};
+  return (
+    <Banners banners={Banner.banners} onPressBanner={onPressBannerAction} />
+  );
+});

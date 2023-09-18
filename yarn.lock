@@ -9658,6 +9658,9 @@ __metadata:
     markdown-it: 13.0.1
     metro-minify-terser: 0.77.0
     metro-react-native-babel-preset: 0.77.0
+    mobx: 6.10.2
+    mobx-persist-store: 1.1.3
+    mobx-react: 9.0.1
     obj-multiplex: 1.0.0
     patch-package: 7.0.2
     pbkdf2: ^3.1.2
@@ -9688,6 +9691,7 @@ __metadata:
     react-native-linear-gradient: 2.7.3
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-markdown-package: ^1.8.2
+    react-native-mmkv: 2.10.2
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-prompt-android: 1.1.0
     react-native-qr-decode-image-camera: 1.1.3
@@ -12759,6 +12763,56 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mobx-persist-store@npm:1.1.3":
+  version: 1.1.3
+  resolution: "mobx-persist-store@npm:1.1.3"
+  peerDependencies:
+    mobx: "*"
+  checksum: 62111f12aead0d3b849e8f2f3da74f1d5dd0b1bd6c4e1acfa3698d32faccd6de380aa9d1898d6f3539d0f58f14ae769a0080df9955aed0d4d5c178a00573207e
+  languageName: node
+  linkType: hard
+
+"mobx-react-lite@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "mobx-react-lite@npm:4.0.4"
+  dependencies:
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    mobx: ^6.9.0
+    react: ^16.8.0 || ^17 || ^18
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: a0104357b8db5a4d208251401d6530d47fba0ebadd9ad19f24bd687165dc8776a0b11d9155b93b4aa7f050613d44e24e94cb5a2ef309b4fb1d6aa891552b1875
+  languageName: node
+  linkType: hard
+
+"mobx-react@npm:9.0.1":
+  version: 9.0.1
+  resolution: "mobx-react@npm:9.0.1"
+  dependencies:
+    mobx-react-lite: ^4.0.4
+  peerDependencies:
+    mobx: ^6.9.0
+    react: ^16.8.0 || ^17 || ^18
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: b0677a6ca2f55ff5adc3b9052a511b2cd9f1f2484bd40a390f2c345936c00b1086631f2458e07efb782d2289b668dcfbbcfe84be56acf5283d95bfb9650efd98
+  languageName: node
+  linkType: hard
+
+"mobx@npm:6.10.2":
+  version: 6.10.2
+  resolution: "mobx@npm:6.10.2"
+  checksum: 14d6f1db4e3a61c823510ea130229c96bd4958b77d81057ac1abc6a439703eaf3ea2289192ef205b4250d3adb1d83a439ad56d5e53f2b967c6e62a6bccc23d8a
+  languageName: node
+  linkType: hard
+
 "moment@npm:^2.19.3":
   version: 2.29.4
   resolution: "moment@npm:2.29.4"
@@ -14547,6 +14601,16 @@ __metadata:
     react-native-lightbox: ^0.7.0
     simple-markdown: ^0.7.1
   checksum: be0e07de4839eb6eba3fbd9aab1379d392ca697e04ddc8d28cfa7969655e2aeef1260a686bd7dd48ab6121279c9058cf7b35aca6a64f9463942d7ad8027a0177
+  languageName: node
+  linkType: hard
+
+"react-native-mmkv@npm:2.10.2":
+  version: 2.10.2
+  resolution: "react-native-mmkv@npm:2.10.2"
+  peerDependencies:
+    react: "*"
+    react-native: ">=0.71.0"
+  checksum: ba1759c6898293db9db2ab1b9bb239840f4902d5a8f53672e02eeb23a81e15cb7f6b32d716bc46747868d8c241d3daad6b15af60a5d5cc7716af1d2c1597c17e
   languageName: node
   linkType: hard
 
@@ -17192,7 +17256,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.0.0":
+"use-sync-external-store@npm:^1.0.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
