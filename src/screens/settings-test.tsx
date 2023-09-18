@@ -27,6 +27,7 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getUid} from '@app/helpers/get-uid';
+import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -304,6 +305,7 @@ export const SettingsTestScreen = observer(() => {
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
   const [backend, setBackend] = useState(app.backend);
   const [uid, setUid] = useState<null | string>(null);
+  const [adid, setAdid] = useState<null | string>(null);
   const [leadingAccount, setLeadingAccount] = useState(
     VariablesString.get('leadingAccount'),
   );
@@ -311,6 +313,10 @@ export const SettingsTestScreen = observer(() => {
   useEffect(() => {
     getUid().then(id => {
       setUid(id);
+    });
+
+    getAdjustAdid().then(id => {
+      setAdid(id);
     });
   }, []);
 
@@ -468,6 +474,20 @@ export const SettingsTestScreen = observer(() => {
               toastMessage('Copied to clipboard');
             }}>
             {uid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
+      {adid && (
+        <>
+          <Title text="adid" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(adid);
+              toastMessage('Copied to clipboard');
+            }}>
+            {adid}
           </Text>
           <Spacer height={8} />
         </>
