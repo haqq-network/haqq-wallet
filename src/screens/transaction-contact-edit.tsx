@@ -14,7 +14,7 @@ export const TransactionContactEditScreen = () => {
     return true;
   }, [goBack]);
   const onSubmit = (newName: string) => {
-    contact?.update({name: newName});
+    Contact.update(contact?.account, {name: newName});
     goBack();
   };
 

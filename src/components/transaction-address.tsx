@@ -37,7 +37,7 @@ export type TransactionAddressProps = {
   initial?: string;
   loading?: boolean;
   filteredWallets?: Realm.Results<Wallet>;
-  contacts?: Realm.Results<Contact>;
+  contacts?: Contact[];
   address: string;
   onAddress: (address: string) => void;
   setAddress: (address: string) => void;

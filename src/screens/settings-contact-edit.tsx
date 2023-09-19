@@ -40,7 +40,7 @@ export const SettingsContactEditScreen = () => {
         visible: true,
       });
     } else {
-      contact.update({
+      Contact.update(contact.account, {
         name: newName || inputName,
       });
     }

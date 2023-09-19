@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import prompt from 'react-native-prompt-android';
 
 import {TransactionFinish} from '@app/components/transaction-finish';
@@ -14,7 +15,7 @@ import {Transaction} from '@app/models/transaction';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
-export const TransactionFinishScreen = () => {
+export const TransactionFinishScreen = observer(() => {
   const {navigate, getParent, goBack} = useTypedNavigation();
   useAndroidBackHandler(() => {
     goBack();
@@ -26,15 +27,7 @@ export const TransactionFinishScreen = () => {
     Transaction.getById(hash),
   );
 
-  const [contact, setContact] = useState(
-    Contact.getById(transaction?.to ?? ''),
-  );
-
-  useEffect(() => {
-    if (contact?.account !== transaction?.to) {
-      setContact(Contact.getById(transaction?.to ?? ''));
-    }
-  }, [contact?.account, transaction?.to]);
+  const contact = Contact.getById(transaction?.to ?? '');
 
   const short = useMemo(
     () => shortAddress(transaction?.to ?? ''),
@@ -59,7 +52,7 @@ export const TransactionFinishScreen = () => {
         }),
         value => {
           if (contact) {
-            contact.update({
+            Contact.update(contact.account, {
               name: value,
             });
             sendNotification(I18N.transactionFinishContactUpdated);
@@ -70,7 +63,6 @@ export const TransactionFinishScreen = () => {
               visible: true,
             });
             sendNotification(I18N.transactionFinishContactAdded);
-            setContact(Contact.getById(transaction?.to ?? ''));
           }
         },
         {
@@ -96,4 +88,4 @@ export const TransactionFinishScreen = () => {
       testID="transaction_finish"
     />
   );
-};
+});

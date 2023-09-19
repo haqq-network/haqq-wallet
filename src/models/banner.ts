@@ -63,7 +63,7 @@ class BannerStore {
     };
 
     if (existingBanner) {
-      this.update(existingBanner.id, existingBanner);
+      this.update(existingBanner.id, params);
     } else {
       this.banners.push(newBanner);
     }

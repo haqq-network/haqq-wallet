@@ -55,7 +55,7 @@ export const TransactionNftFinishScreen = () => {
         }),
         value => {
           if (contact) {
-            contact.update({
+            Contact.update(contact.account, {
               name: value,
             });
             sendNotification(I18N.transactionFinishContactUpdated);

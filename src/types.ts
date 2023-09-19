@@ -1200,3 +1200,8 @@ export interface VerifyAddressResponse {
   updatedAt: string;
   createdAt: string;
 }
+
+export interface MobXStoreFromRealm {
+  realmSchemaName: string;
+  migrate: () => void;
+}
