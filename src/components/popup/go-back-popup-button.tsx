@@ -9,7 +9,10 @@ import {DEFAULT_HITSLOP} from '@app/variables/common';
 export const GoBackPopupButton = () => {
   const navigation = useNavigation();
   return (
-    <IconButton onPress={navigation.goBack} hitSlop={DEFAULT_HITSLOP}>
+    <IconButton
+      onPress={navigation.goBack}
+      hitSlop={DEFAULT_HITSLOP}
+      testID="go_back">
       <Icon i24 name="arrow_back" color={Color.graphicBase1} />
     </IconButton>
   );

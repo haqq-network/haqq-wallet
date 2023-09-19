@@ -103,6 +103,7 @@ export const SignupNetworks = ({
         i18n={I18N.sssLoginLater}
         variant={ButtonVariant.text}
         textColor={Color.textRed1}
+        testID="sss_login_later"
       />
     </PopupContainer>
   );

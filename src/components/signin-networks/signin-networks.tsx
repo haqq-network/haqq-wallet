@@ -95,6 +95,7 @@ export const SigninNetworks = ({onLogin, onSkip}: SssNetworksProps) => {
         onPress={onSkip}
         i18n={I18N.signinNetworksSkip}
         variant={ButtonVariant.contained}
+        testID="signin_network_skip"
       />
     </PopupContainer>
   );

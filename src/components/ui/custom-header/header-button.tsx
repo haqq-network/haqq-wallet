@@ -16,6 +16,7 @@ export type HeaderButtonProps = {
   icon?: IconProps['name'];
   text?: string;
   i18n?: I18N;
+  testID?: string;
 };
 
 export const HeaderButton = ({
@@ -25,10 +26,12 @@ export const HeaderButton = ({
   icon,
   text,
   i18n,
+  testID,
 }: HeaderButtonProps) => {
   if (icon) {
     return (
       <IconButton
+        testID={testID}
         disabled={disabled}
         onPress={() => onPress?.()}
         hitSlop={DEFAULT_HITSLOP}>
@@ -39,7 +42,7 @@ export const HeaderButton = ({
 
   if (text || i18n) {
     return (
-      <Pressable onPress={() => !disabled && onPress?.()}>
+      <Pressable testID={testID} onPress={() => !disabled && onPress?.()}>
         {/* @ts-expect-error */}
         <Text i18n={i18n} t10 color={disabled ? Color.textBase2 : color} center>
           {text || ''}
