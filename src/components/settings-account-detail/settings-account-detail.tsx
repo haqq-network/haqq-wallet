@@ -154,16 +154,20 @@ export const SettingsAccountDetail = ({
           subtitleI18n={I18N.settingsAccountDetailChangeStyleSubtitle}
         />
       </MenuNavigationButton>
-      {wallet.type === WalletType.mnemonic && wallet.accountId && (
-        <MenuNavigationButton
-          testID="view_recovery_phrase"
-          onPress={onViewingRecoveryPhrase}>
-          <DataContent
-            titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
-            subtitleI18n={I18N.settingsAccountDetailViewRecoveryPhraseSubtitle}
-          />
-        </MenuNavigationButton>
-      )}
+      {(wallet.type === WalletType.mnemonic ||
+        wallet.type === WalletType.sss) &&
+        wallet.accountId && (
+          <MenuNavigationButton
+            testID="view_recovery_phrase"
+            onPress={onViewingRecoveryPhrase}>
+            <DataContent
+              titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
+              subtitleI18n={
+                I18N.settingsAccountDetailViewRecoveryPhraseSubtitle
+              }
+            />
+          </MenuNavigationButton>
+        )}
       <MenuNavigationButton hideArrow>
         <DataContent
           titleI18n={I18N.settingsAccountDetailHideTitle}
