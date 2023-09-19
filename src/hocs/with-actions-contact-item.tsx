@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {Alert} from 'react-native';
 
@@ -22,28 +22,11 @@ export interface ComponentProps extends Omit<ContactFlatListProps, 'data'> {
 
 export const withActionsContactItem = (
   Component: React.FC<ListContactProps>,
-  {nextScreen = 'settingsContactEdit', subscribeOnContacts = true}: settings,
+  {nextScreen = 'settingsContactEdit'}: settings,
 ) => {
   return ({filterText, ...props}: ComponentProps) => {
     const {navigate} = useTypedNavigation();
-
-    const [contactsList, setContactsList] = useState(
-      Contact.getAll().snapshot(),
-    );
-
-    useEffect(() => {
-      if (subscribeOnContacts) {
-        const contacts = Contact.getAll();
-        const callback = () => {
-          setContactsList(contacts.snapshot());
-        };
-
-        contacts.addListener(callback);
-        return () => {
-          contacts.removeListener(callback);
-        };
-      }
-    }, []);
+    const contactsList = Contact.getAll();
 
     const contactsFilteredList = useMemo(() => {
       if (filterText) {

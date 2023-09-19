@@ -41,6 +41,7 @@ import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Contact} from '@app/models/contact';
 import {navigator} from '@app/navigator';
 import {AccountDetailScreen} from '@app/screens/account-detail';
 import {AccountInfoScreen} from '@app/screens/account-info';
@@ -203,6 +204,8 @@ export const App = () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
+          // MobX stores migration
+          await Promise.all([Contact.migrate()]);
         }
       })
       .then(() => awaitForEventDone(Events.onAppLoggedId))

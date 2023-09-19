@@ -1,7 +1,6 @@
 import Realm from 'realm';
 
-import {AddressBook} from '@app/models/address-book';
-import {Contact} from '@app/models/contact';
+import {ContactRealmObject} from '@app/models/contact';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
@@ -39,12 +38,11 @@ export const realm = new Realm({
     Wallet,
     UserSchema,
     Transaction,
-    Contact,
+    ContactRealmObject,
     Provider,
     StakingMetadata,
     Refferal,
     NftCollection,
-    AddressBook,
     News,
     VariablesDate,
     VariablesBool,
@@ -52,7 +50,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 70,
+  schemaVersion: 71,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -563,6 +561,6 @@ export const realm = new Realm({
         newObject.input = '0x';
       }
     }
-    logger.log('migration finish');
+    logger.log('realm migration finished');
   },
 });

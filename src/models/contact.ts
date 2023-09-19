@@ -1,11 +1,23 @@
+import {makeAutoObservable} from 'mobx';
+import {makePersistable} from 'mobx-persist-store';
+
+import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models';
+import {MobXStoreFromRealm} from '@app/types';
 
 export enum ContactType {
   address = 'address',
   contract = 'contract',
 }
 
-export class Contact extends Realm.Object {
+export type Contact = {
+  account: string;
+  name: string;
+  type?: ContactType;
+  visible?: boolean;
+};
+
+export class ContactRealmObject extends Realm.Object {
   static schema = {
     name: 'Contact',
     properties: {
@@ -16,71 +28,112 @@ export class Contact extends Realm.Object {
     },
     primaryKey: 'account',
   };
-  account!: string;
-  name!: string;
-  type: ContactType;
-  visible: boolean;
+}
 
-  static create(address: string, params: Omit<Partial<Contact>, 'address'>) {
-    const exists = Contact.getById(address);
-    realm.write(() => {
-      realm.create<Contact>(
-        Contact.schema.name,
-        {
-          ...(exists ?? {}),
-          ...params,
-          account: address.toLowerCase(),
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+class ContactStore implements MobXStoreFromRealm {
+  realmSchemaName = ContactRealmObject.schema.name;
+  contacts: Contact[] = [];
 
-    return address;
-  }
-
-  static remove(address: string) {
-    const obj = realm.objectForPrimaryKey<Contact>(
-      Contact.schema.name,
-      address,
-    );
-
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
+  constructor(shouldSkipPersisting: boolean = false) {
+    makeAutoObservable(this);
+    if (!shouldSkipPersisting) {
+      makePersistable(this, {
+        name: this.constructor.name,
+        properties: ['contacts'],
       });
     }
   }
 
-  static getAll() {
-    return realm.objects<Contact>(Contact.schema.name);
+  migrate = async () => {
+    await awaitForRealm();
+    const realmData = realm.objects<Contact>(this.realmSchemaName);
+    if (realmData.length > 0) {
+      realmData.forEach(item => {
+        this.create(item.account, {
+          name: item.name || '',
+          type: item.type,
+          visible: item.visible,
+        });
+        realm.write(() => {
+          realm.delete(item);
+        });
+      });
+    }
+  };
+
+  create(
+    account: Contact['account'],
+    params: Omit<Partial<Contact>, 'account'>,
+  ) {
+    const id = account.toLowerCase();
+    const existingContact = this.getById(id);
+    const newContact = {
+      ...existingContact,
+      ...params,
+      account: id,
+      name: params.name || '',
+    };
+
+    if (existingContact) {
+      this.update(existingContact.account, params);
+    } else {
+      this.contacts.push(newContact);
+    }
+
+    return id;
   }
 
-  static getById(address: string) {
-    return realm.objectForPrimaryKey<Contact>(
-      Contact.schema.name,
-      address.toLowerCase(),
+  remove(account: string) {
+    if (!account) {
+      return false;
+    }
+    const contactToRemove = this.getById(account);
+    if (!contactToRemove) {
+      return false;
+    }
+    this.contacts = this.contacts.filter(
+      contact => contact.account !== contactToRemove.account,
+    );
+    return true;
+  }
+
+  getAll() {
+    return this.contacts;
+  }
+
+  getById(account: string) {
+    return (
+      this.contacts.find(
+        contact => contact.account === account.toLowerCase(),
+      ) ?? null
     );
   }
 
-  static removeAll() {
-    const contacts = realm.objects<Contact>(Contact.schema.name);
-
-    realm.write(() => {
-      realm.delete(contacts);
-    });
+  removeAll() {
+    this.contacts = [];
   }
 
-  update(params: Partial<Contact>) {
-    realm.write(() => {
-      realm.create(
-        Contact.schema.name,
-        {
-          ...this.toJSON(),
-          ...params,
-          account: this.account,
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+  update(
+    account: Contact['account'] | undefined,
+    params: Omit<Partial<Contact>, 'account'>,
+  ) {
+    if (!account) {
+      return false;
+    }
+    const contactToUpdate = this.getById(account);
+    if (!contactToUpdate) {
+      return false;
+    }
+    const contactsWithoutOldValue = this.contacts.filter(
+      contact => contact.account !== contactToUpdate.account,
+    );
+    this.contacts = [
+      ...contactsWithoutOldValue,
+      {...contactToUpdate, ...params},
+    ];
+    return true;
   }
 }
+
+const instance = new ContactStore(Boolean(process.env.JEST_WORKER_ID));
+export {instance as Contact};

@@ -27,8 +27,6 @@ export enum Events {
   onWalletSssSaved = 'onWalletSssSaved',
   onDynamicLink = 'onDynamicLink',
   onPushNotification = 'onPushNotification',
-  onAddressBookCreate = 'onAddressBookCreate',
-  onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
   onNeedUpdate = 'onNeedUpdate',
   onAppReviewRequest = 'onAppReviewRequest',

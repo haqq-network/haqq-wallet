@@ -102,10 +102,8 @@ JsonRpcProvider.prototype.send = async function (method, params) {
 
 const Wrapped = Sentry.wrap(App);
 
-const KEY = 'ENCRYPTION_KEY_FROM_ENV';
 const storage = new MMKV({
   id: 'mmkv-storage',
-  encryptionKey: KEY,
 });
 
 configurePersistable(
