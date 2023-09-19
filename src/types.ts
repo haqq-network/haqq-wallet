@@ -497,6 +497,7 @@ export type RootStackParamList = {
   };
   settingsViewRecoveryPhrase: {
     accountId: string;
+    type: WalletType;
   };
   settingsSecurity: undefined;
   walletSelector: {

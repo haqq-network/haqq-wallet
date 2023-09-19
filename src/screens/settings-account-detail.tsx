@@ -50,9 +50,10 @@ export const SettingsAccountDetailScreen = () => {
     if (wallet?.accountId) {
       navigation.navigate('settingsViewRecoveryPhrase', {
         accountId: wallet.accountId,
+        type: wallet.type,
       });
     }
-  }, [navigation, wallet?.accountId]);
+  }, [navigation, wallet?.accountId, wallet?.type]);
 
   const onRemove = useCallback(() => {
     vibrate(HapticEffects.warning);
