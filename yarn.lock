@@ -2411,17 +2411,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/encryption-react-native@npm:0.0.3":
-  version: 0.0.3
-  resolution: "@haqq/encryption-react-native@npm:0.0.3"
+"@haqq/encryption-react-native@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@haqq/encryption-react-native@npm:0.0.4"
   dependencies:
     base-64: ^1.0.0
     polyfill-crypto.getrandomvalues: ^1.0.0
-    react-native-aes-crypto: 2.1.0
+    react-native-aes-crypto: 3.0.1
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: d8afe65d084a62bfdd91f9c7e930cc90a6e764b4c131c968e536e2b2c13476b2fb3365af70862a48c63312afde23f2030fc242775e5681233344a5d3e342afd6
+  checksum: c0ebd01f7778a9116455cbbd58dd98e6e4f85e552cb8b9d170125c19823b388d9ad48f2f3f94c2fc3f862ef833a373c2928d75e71fa32420945c1fd16bcf67fb
   languageName: node
   linkType: hard
 
@@ -2517,20 +2517,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/shared-react-native@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@haqq/shared-react-native@npm:0.0.8"
+"@haqq/shared-react-native@npm:0.0.9":
+  version: 0.0.9
+  resolution: "@haqq/shared-react-native@npm:0.0.9"
   dependencies:
     base-64: ^1.0.0
     bn.js: 5.2.1
     json-stable-stringify: 1.0.2
     polyfill-crypto.getrandomvalues: ^1.0.0
-    react-native-aes-crypto: 2.1.0
+    react-native-aes-crypto: 3.0.1
   peerDependencies:
     "@haqq/provider-web3-utils": 0.0.10
     react: "*"
     react-native: "*"
-  checksum: 07e1e0e7fbefbc443df6bc060f493cdd5af03df8774785741d24f7b660239c909f16ce74cb37420de37f1ae88e5af79051735de2c03c07678f59c67ef5d980d7
+  checksum: 9a2d52ce97a9291a30cb11324cc68c9af427a04ddf1def9c018ff6c94a28694d9aa07c8c1d2296dcfdc2df85fb187c70391759d0340466ed534ba5824c8d9014
   languageName: node
   linkType: hard
 
@@ -9580,14 +9580,14 @@ __metadata:
     "@evmos/provider": 0.3.1
     "@evmos/transactions": 0.2.13
     "@expo/react-native-action-sheet": ^4.0.1
-    "@haqq/encryption-react-native": 0.0.3
+    "@haqq/encryption-react-native": 0.0.4
     "@haqq/provider-base": 0.0.18
     "@haqq/provider-hot-react-native": 0.0.6
     "@haqq/provider-ledger-react-native": 0.0.19
     "@haqq/provider-mnemonic-react-native": 0.0.11
     "@haqq/provider-sss-react-native": 0.0.11
     "@haqq/provider-web3-utils": 0.0.14
-    "@haqq/shared-react-native": 0.0.8
+    "@haqq/shared-react-native": 0.0.9
     "@invertase/react-native-apple-authentication": ^2.2.2
     "@metamask/phishing-controller": ^3.0.0
     "@react-native-async-storage/async-storage": 1.19.0
@@ -9671,7 +9671,7 @@ __metadata:
     react-native: 0.71.12
     react-native-adjust: ^4.33.0
     react-native-adjust-oaid: ^4.33.0
-    react-native-aes-crypto: 2.1.1
+    react-native-aes-crypto: 3.0.1
     react-native-base64: 0.2.1
     react-native-ble-plx: 2.0.3
     react-native-camera: 4.2.1
@@ -14329,17 +14329,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-aes-crypto@npm:2.1.0":
-  version: 2.1.0
-  resolution: "react-native-aes-crypto@npm:2.1.0"
-  checksum: 906f971de5d53617ebf542a4e979bec675fd9272e8bf0504ffb3af1669a504d089261f77460242a05745db5c170dc38055292dad15bee7e4894abc83df2b5393
-  languageName: node
-  linkType: hard
-
-"react-native-aes-crypto@npm:2.1.1":
-  version: 2.1.1
-  resolution: "react-native-aes-crypto@npm:2.1.1"
-  checksum: 9d0d1ad6f76367445b2d58d7c3d53b1988ce88ba6e71b0422f66dca1607e7ca38da717c991ed27173e906ce91f8c3cacb9ca267e6ec9cdc1f423a8b24974bcaa
+"react-native-aes-crypto@npm:3.0.1":
+  version: 3.0.1
+  resolution: "react-native-aes-crypto@npm:3.0.1"
+  checksum: 7e852a471fe80ddcdba3df9d79dee50b22f82a5a00fb7fda230cd01f6e963dde5fb63929067ca1e604c34a922f24a711bb6874d672f55da0584e59dde6dc3096
   languageName: node
   linkType: hard
 
