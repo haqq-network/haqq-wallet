@@ -145,6 +145,7 @@ export const JsonRpcSignScreen = () => {
       wallet={wallet!}
       metadata={metadata}
       request={request}
+      chainId={chainId}
       verifyAddressResponse={verifyAddressResponse}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
