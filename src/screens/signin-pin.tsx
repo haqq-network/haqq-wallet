@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
@@ -15,7 +16,8 @@ export const SignInPinScreen = () => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'signinPin'>();
 
-  useEffect(() => {
+  useEffectAsync(async () => {
+    await app.rehydrateUserAttempts();
     if (app.pinBanned) {
       pinRef.current?.locked(app.pinBanned);
     }

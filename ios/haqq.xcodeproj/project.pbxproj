@@ -39,7 +39,6 @@
 		210F818C29110E66002A27EB /* String+split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818B29110E66002A27EB /* String+split.swift */; };
 		210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F818F29112548002A27EB /* Data+hexEncodedString.swift */; };
 		210F81AD29112EDC002A27EB /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AC29112EDC002A27EB /* Mnemonic.swift */; };
-		210F81AF29113FFF002A27EB /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210F81AE29113FFF002A27EB /* HDKey.swift */; };
 		211199A52939DBE900657915 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 211199A42939DBE900657915 /* GoogleService-Info.plist */; };
 		2129B78329CACF69005C0CCA /* overview.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2129B78229CACF69005C0CCA /* overview.storyboard */; };
 		212B00FB294AD39900E57091 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 212B00FA294AD39900E57091 /* Toast.m */; };
@@ -57,16 +56,11 @@
 		21AB3DC52A0E45BE002D9727 /* thumbs_up.riv in Resources */ = {isa = PBXBuildFile; fileRef = 21AB3DC42A0E45BE002D9727 /* thumbs_up.riv */; };
 		21ACB2AAD6B240CDAA97ADAB /* card-circles-0@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA95EFE063F4706BDA031ED /* card-circles-0@3x.png */; };
 		21C67EFA6CBB4CFB8FDC7ECA /* backup-sss-suggestion-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B3DFA376404A5894560199 /* backup-sss-suggestion-dark@2x.png */; };
-		21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A7892910DB9D00399978 /* EthUtils.m */; };
-		21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D7A78B2910DBA900399978 /* EthUtils.swift */; };
 		21E6B18929115B240055570A /* HDKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18829115B240055570A /* HDKey.swift */; };
-		21E6B18B291224440055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18A291224440055570A /* Wallet.swift */; };
 		21E6B18D291227E20055570A /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18C291227E20055570A /* Wallet.swift */; };
 		21E6B18F291247A60055570A /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B18E291247A60055570A /* logger.swift */; };
 		21F04B142A42AB210048922A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F04B132A42AB210048922A /* AppDelegate.swift */; };
 		21F04B162A42B99D0048922A /* UIDevice+isJailBroken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */; };
-		21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */; };
-		21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */; };
 		21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */; };
 		269FDEB110975FAA48908707 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF7A8588211C7750BA341AD /* libPods-haqq.a */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
@@ -209,7 +203,6 @@
 		210F818F29112548002A27EB /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
 		210F81AB29112EDC002A27EB /* haqqTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "haqqTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		210F81AC29112EDC002A27EB /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
-		210F81AE29113FFF002A27EB /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
 		211199A12939D73200657915 /* haqq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = haqq.entitlements; path = haqq/haqq.entitlements; sourceTree = "<group>"; };
 		211199A42939DBE900657915 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2129B78229CACF69005C0CCA /* overview.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = overview.storyboard; sourceTree = "<group>"; };
@@ -225,16 +218,11 @@
 		2142F4A829BAE9A600CD8EE6 /* Cloud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cloud.m; sourceTree = "<group>"; };
 		2142F4AA29BAE9B300CD8EE6 /* Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
 		21AB3DC42A0E45BE002D9727 /* thumbs_up.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = thumbs_up.riv; sourceTree = "<group>"; };
-		21D7A7892910DB9D00399978 /* EthUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EthUtils.m; sourceTree = "<group>"; };
-		21D7A78B2910DBA900399978 /* EthUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthUtils.swift; sourceTree = "<group>"; };
 		21E6B18829115B240055570A /* HDKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDKey.swift; sourceTree = "<group>"; };
-		21E6B18A291224440055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18C291227E20055570A /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		21E6B18E291247A60055570A /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
 		21F04B132A42AB210048922A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		21F04B152A42B99D0048922A /* UIDevice+isJailBroken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+isJailBroken.swift"; sourceTree = "<group>"; };
-		21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mnemonic.swift; sourceTree = "<group>"; };
-		21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicWordlist.swift; sourceTree = "<group>"; };
 		21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+modelName.swift"; sourceTree = "<group>"; };
 		22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-SemiBold.ttf"; path = "../assets/fonts/ElMessiri-SemiBold.ttf"; sourceTree = "<group>"; };
 		237ACC1D53D140F093CE4102 /* bluetooth-powered-off.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off.png"; path = "../assets/images/bluetooth-powered-off.png"; sourceTree = "<group>"; };
@@ -422,16 +410,11 @@
 				1AC1D57A2A570001003C40E6 /* AppUtils */,
 				2142F4A729BAE97900CD8EE6 /* Cloud */,
 				212B00F9294AD37800E57091 /* Toast */,
-				21D7A7882910DA8B00399978 /* EthUtils */,
 				210E9B932907F07B00AC3C34 /* Version */,
 				210DBD1F28E6A8BE0036A851 /* Haptic */,
-				210F81AE29113FFF002A27EB /* HDKey.swift */,
-				21E6B18A291224440055570A /* Wallet.swift */,
 				21E6B18E291247A60055570A /* logger.swift */,
 				212B0100294AE0AB00E57091 /* variables.swift */,
 				212B0102294AE1A600E57091 /* Theme.swift */,
-				21F2B8C02987B87A0098FAF9 /* Mnemonic.swift */,
-				21F2B8C22987B8A70098FAF9 /* MnemonicWordlist.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -495,15 +478,6 @@
 				21AB3DC42A0E45BE002D9727 /* thumbs_up.riv */,
 			);
 			path = animations;
-			sourceTree = "<group>";
-		};
-		21D7A7882910DA8B00399978 /* EthUtils */ = {
-			isa = PBXGroup;
-			children = (
-				21D7A7892910DB9D00399978 /* EthUtils.m */,
-				21D7A78B2910DBA900399978 /* EthUtils.swift */,
-			);
-			path = EthUtils;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -1081,8 +1055,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21E6B18B291224440055570A /* Wallet.swift in Sources */,
-				210F81AF29113FFF002A27EB /* HDKey.swift in Sources */,
 				210DBD2328E6A8E70036A851 /* Haptic.swift in Sources */,
 				212B00FD294AD3B700E57091 /* Toast.swift in Sources */,
 				212B00FF294ADDB800E57091 /* ToastView.swift in Sources */,
@@ -1093,8 +1065,6 @@
 				210DBD2128E6A8D90036A851 /* Haptic.m in Sources */,
 				210F819029112548002A27EB /* Data+hexEncodedString.swift in Sources */,
 				21F04B162A42B99D0048922A /* UIDevice+isJailBroken.swift in Sources */,
-				21F2B8C12987B87B0098FAF9 /* Mnemonic.swift in Sources */,
-				21F2B8C32987B8A70098FAF9 /* MnemonicWordlist.swift in Sources */,
 				210E9B972907F0A400AC3C34 /* Version.swift in Sources */,
 				1AC1D5802A570202003C40E6 /* AppUtils.swift in Sources */,
 				212B0103294AE1A600E57091 /* Theme.swift in Sources */,
@@ -1104,9 +1074,7 @@
 				212B0101294AE0AB00E57091 /* variables.swift in Sources */,
 				1A2F92BD2A7B943500569DFF /* BooleanConfig.swift in Sources */,
 				1A2F92BF2A7B94F400569DFF /* AppNativeConfig.m in Sources */,
-				21D7A78A2910DB9D00399978 /* EthUtils.m in Sources */,
 				212B00FB294AD39900E57091 /* Toast.m in Sources */,
-				21D7A78C2910DBA900399978 /* EthUtils.swift in Sources */,
 				1A2F92BB2A7B8EF000569DFF /* AppNativeConfig.swift in Sources */,
 				21F04B142A42AB210048922A /* AppDelegate.swift in Sources */,
 			);
@@ -1200,7 +1168,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
@@ -1238,7 +1206,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";

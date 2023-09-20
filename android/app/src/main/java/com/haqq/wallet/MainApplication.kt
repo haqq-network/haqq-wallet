@@ -7,7 +7,6 @@ import com.facebook.react.config.ReactFeatureFlags
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.cloud.CloudPackage
 import com.haqq.wallet.version.VersionPackage
-import com.haqq.wallet.ethutils.EthUtilsPackage
 import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
@@ -29,7 +28,6 @@ class MainApplication : Application(), ReactApplication {
       // packages.add(new MyReactNativePackage());
       packages.add(HapticPackage())
       packages.add(VersionPackage())
-      packages.add(EthUtilsPackage())
       packages.add(ToastPackage())
       packages.add(CloudPackage())
       packages.add(AppUtilsPackage())
