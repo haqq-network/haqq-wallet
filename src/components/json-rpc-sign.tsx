@@ -24,6 +24,7 @@ export interface WalletConnectSignProps {
   metadata: JsonRpcMetadata;
   wallet: Wallet;
   verifyAddressResponse: VerifyAddressResponse | null;
+  chainId?: number;
 
   onPressSign(): void;
 
@@ -38,6 +39,7 @@ export const JsonRpcSign = ({
   rejectLoading,
   signLoading,
   verifyAddressResponse,
+  chainId,
   onPressReject,
   onPressSign,
 }: WalletConnectSignProps) => {
@@ -56,6 +58,7 @@ export const JsonRpcSign = ({
           <JsonRpcTransactionInfo
             metadata={metadata}
             request={request}
+            chainId={chainId}
             verifyAddressResponse={verifyAddressResponse}
           />
         )}

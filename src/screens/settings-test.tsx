@@ -26,6 +26,7 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
@@ -45,7 +46,7 @@ import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals, WalletType} from '@app/types';
+import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
 import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -297,6 +298,9 @@ const Title = ({text = ''}) => (
 export const SettingsTestScreen = observer(() => {
   const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
+  const [rawSignData, setRawSignData] = useState('');
+  const [signData, setSignData] = useState<PartialJsonRpcRequest>();
+  const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [deeplink, setDeeplink] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
@@ -520,6 +524,37 @@ export const SettingsTestScreen = observer(() => {
         variant={ButtonVariant.contained}
       />
 
+      <Spacer height={8} />
+      <Title text="Raw Sign Request" />
+      <Input
+        placeholder="{ method: 'eth_sendTransactrion', params: [...] }"
+        value={rawSignData}
+        error={!isValidRawSignData}
+        onChangeText={data => {
+          setRawSignData(data);
+          try {
+            setSignData(JSON.parse(data));
+            setValidRawSignData(true);
+          } catch (e) {
+            setValidRawSignData(false);
+          }
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="sign request"
+        disabled={!isValidRawSignData}
+        onPress={() => {
+          awaitForJsonRpcSign({
+            metadata: {
+              url: 'https://shell.haqq.network',
+              iconUrl: 'https://shell.haqq.network/assets/favicon.svg',
+            },
+            request: signData!,
+          });
+        }}
+        variant={ButtonVariant.contained}
+      />
       <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input
