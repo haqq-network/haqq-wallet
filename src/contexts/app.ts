@@ -557,6 +557,10 @@ class App extends AsyncEventEmitter {
       this.emit(Events.onNeedUpdate);
     }
   }
+
+  async rehydrateUserAttempts() {
+    await this.user.rehydrate();
+  }
 }
 
 export const app = new App();
