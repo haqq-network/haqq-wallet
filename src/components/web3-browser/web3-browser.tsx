@@ -1,7 +1,7 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {BackHandler, SafeAreaView, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
   FileDownloadEvent,
@@ -12,6 +12,7 @@ import {
 import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
 import {Provider} from '@app/models/provider';
@@ -20,7 +21,6 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getUserAgent} from '@app/services/version';
-import {IS_ANDROID} from '@app/variables/common';
 
 import {
   InpageBridgeWeb3,
@@ -251,7 +251,7 @@ export const Web3Browser = ({
     setWebviewNavigationData(navState);
   }, []);
 
-  const onAndroidBackPress = useCallback(() => {
+  useAndroidBackHandler(() => {
     if (webviewRef.current) {
       if (webviewNavigationData?.canGoBack) {
         webviewRef.current.goBack();
@@ -262,18 +262,6 @@ export const Web3Browser = ({
     }
     return false;
   }, [webviewNavigationData?.canGoBack, webviewRef]);
-
-  useEffect(() => {
-    if (IS_ANDROID) {
-      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
-      return () => {
-        BackHandler.removeEventListener(
-          'hardwareBackPress',
-          onAndroidBackPress,
-        );
-      };
-    }
-  }, [onAndroidBackPress]);
 
   useEffect(() => {
     InpageBridgeWeb3.loadScript().then(script => {
@@ -328,6 +316,7 @@ export const Web3Browser = ({
         <WebView
           contentMode={'mobile'}
           webviewDebuggingEnabled={__DEV__}
+          pullToRefreshEnabled
           javaScriptCanOpenWindowsAutomatically
           setSupportMultipleWindows
           sharedCookiesEnabled
