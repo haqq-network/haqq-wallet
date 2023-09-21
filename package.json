@@ -10,6 +10,7 @@
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "typescript:check": "tsc",
     "prettier:check": "prettier --check ./src",
+    "prettier:format": "prettier --write ./src",
     "postinstall": "patch-package && node_modules/.bin/rn-nodeify --install stream,http,https,os,vm,crypto,url --yarn --hack && hooks/install",
     "ts-coverage": "typescript-coverage-report",
     "link-assets": "npx react-native-asset",
