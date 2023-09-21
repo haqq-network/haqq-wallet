@@ -19,6 +19,8 @@ import {
   changeWebViewUrlJS,
   detectDeeplink,
   detectDeeplinkAndNavigate,
+  detectDynamicLink,
+  detectDynamicLinkAndNavigate,
   showPhishingAlert,
 } from '@app/helpers/web3-browser-utils';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -134,13 +136,17 @@ export const InAppBrowser = ({
       }
 
       if (await detectDeeplinkAndNavigate(nextUrl)) {
-        return;
+        return onPressClose();
+      }
+
+      if (await detectDynamicLinkAndNavigate(nextUrl)) {
+        return onPressClose();
       }
 
       const js = changeWebViewUrlJS(nextUrl);
       webviewRef?.current?.injectJavaScript(js);
     },
-    [phishingController, webviewRef],
+    [onPressClose, phishingController, webviewRef],
   );
 
   const onShouldStartLoadWithRequest = useCallback(
@@ -165,6 +171,11 @@ export const InAppBrowser = ({
       }
 
       if (detectDeeplink(nextUrl)) {
+        go(nextUrl);
+        return false;
+      }
+
+      if (detectDynamicLink(nextUrl)) {
         go(nextUrl);
         return false;
       }

@@ -762,6 +762,10 @@ export enum I18N {
   chooseAccountAddManyAccountsText,
   pinAttempts,
   signContratAttention,
+  dynamicLinkDetactedTitle,
+  dynamicLinkDetactedDescription,
+  dynamicLinkDetactedIgnore,
+  dynamicLinkDetactedAllow,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1662,4 +1666,8 @@ const en: Record<I18N, string> = {
   [I18N.pinAttempts]: 'wrong pin {{value}} left',
   [I18N.signContratAttention]:
     'This smart contract has not been approved by the IslamicCoin team. Signing the contract is at your own discretion',
+  [I18N.dynamicLinkDetactedTitle]: 'DynamicLink detected',
+  [I18N.dynamicLinkDetactedDescription]: 'This website has been open \n{{url}}',
+  [I18N.dynamicLinkDetactedIgnore]: 'Ignore',
+  [I18N.dynamicLinkDetactedAllow]: 'Allow',
 };
