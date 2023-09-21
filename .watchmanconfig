@@ -1,7 +1,0 @@
-{
-  "fsevents_latency": 0.05,
-  "fsevents_try_resync": "true",
-  "prefer_split_fsevents_watcher": "true",
-  "ignore_dirs": ["Pods", ".git"],
-  "idle_reap_age_seconds": 600
-}
