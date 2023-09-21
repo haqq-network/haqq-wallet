@@ -111,6 +111,8 @@
 	<string>App uses bluetooth to find, connect and communicate with Ledger Nano devices</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use camera for recognize QR code</string>
+	<key>NSCrossWebsiteTrackingUsageDescription</key>
+	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -167,7 +169,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCrossWebsiteTrackingUsageDescription</key>
-	<true/>
 </dict>
 </plist>
