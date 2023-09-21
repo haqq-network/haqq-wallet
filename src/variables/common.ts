@@ -251,3 +251,5 @@ export const ProviderNameMap = {
   [SssProviders.apple]: 'iCloud',
   [SssProviders.google]: '\nGoogle Drive',
 };
+
+export const STORE_REHYDRATION_TIMEOUT_MS = 2000;

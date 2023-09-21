@@ -15,8 +15,6 @@ import './src/event-actions';
 import {Overview} from './src/overview';
 import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
-import {MMKV} from 'react-native-mmkv'
-import {configurePersistable} from 'mobx-persist-store'
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -101,21 +99,6 @@ JsonRpcProvider.prototype.send = async function (method, params) {
 };
 
 const Wrapped = Sentry.wrap(App);
-
-const storage = new MMKV({
-  id: 'mmkv-storage',
-});
-
-configurePersistable(
-  {
-    storage: {
-      setItem: (key, data) => storage.set(key, data),
-      getItem: (key) => storage.getString(key),
-      removeItem: (key) => storage.delete(key),
-    },
-  },
-  { delay: 0, fireImmediately: true },
-);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 

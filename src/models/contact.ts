@@ -1,9 +1,11 @@
-import {makeAutoObservable} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
+import {makeAutoObservable, when} from 'mobx';
+import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models';
+import {storage} from '@app/services/mmkv';
 import {MobXStoreFromRealm} from '@app/types';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 export enum ContactType {
   address = 'address',
@@ -40,12 +42,21 @@ class ContactStore implements MobXStoreFromRealm {
       makePersistable(this, {
         name: this.constructor.name,
         properties: ['contacts'],
+        storage: storage,
       });
     }
   }
 
+  get isHydrated() {
+    return isHydrated(this);
+  }
+
   migrate = async () => {
     await awaitForRealm();
+    await when(() => !!this.isHydrated, {
+      timeout: STORE_REHYDRATION_TIMEOUT_MS,
+    });
+
     const realmData = realm.objects<Contact>(this.realmSchemaName);
     if (realmData.length > 0) {
       realmData.forEach(item => {

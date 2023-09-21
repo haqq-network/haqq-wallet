@@ -1205,4 +1205,5 @@ export interface VerifyAddressResponse {
 export interface MobXStoreFromRealm {
   realmSchemaName: string;
   migrate: () => void;
+  isHydrated: boolean;
 }
