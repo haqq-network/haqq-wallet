@@ -7,15 +7,16 @@ on:
         type: choice
         description: IS_STAKED_VESTED_ENABLED
         options:
-          - false
           - true
+          - false
 
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
         options:
-          - false
           - true
+          - false
+
 jobs:
   test:
     name: Tests
