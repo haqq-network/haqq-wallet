@@ -21,6 +21,7 @@ import {
   detectDeeplinkAndNavigate,
   showPhishingAlert,
 } from '@app/helpers/web3-browser-utils';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {getUserAgent} from '@app/services/version';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
@@ -173,6 +174,22 @@ export const InAppBrowser = ({
     [go, phishingController],
   );
 
+  const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
+    setNavigationEvent(navState);
+  }, []);
+
+  useAndroidBackHandler(() => {
+    if (webviewRef.current) {
+      if (navigationEvent?.canGoBack) {
+        webviewRef.current.goBack();
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }, [navigationEvent?.canGoBack, webviewRef]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -203,14 +220,20 @@ export const InAppBrowser = ({
       </View>
       <View style={styles.webviewContainer}>
         <WebView
-          bounces={false}
-          scrollEnabled
-          // @ts-ignore
-          sendCookies
-          useWebkit
-          javascriptEnabled
-          allowsInlineMediaPlayback
+          contentMode={'mobile'}
+          webviewDebuggingEnabled={__DEV__}
+          pullToRefreshEnabled
+          javaScriptCanOpenWindowsAutomatically
+          setSupportMultipleWindows
+          sharedCookiesEnabled
+          useSharedProcessPool
+          useWebView2
+          javaScriptEnabled
+          cacheEnabled
+          domStorageEnabled
           allowsBackForwardNavigationGestures
+          thirdPartyCookiesEnabled
+          allowsInlineMediaPlayback
           allowsFullscreenVideo
           allowsLinkPreview
           mediaPlaybackRequiresUserAction
@@ -224,6 +247,7 @@ export const InAppBrowser = ({
           renderError={renderError}
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          onNavigationStateChange={onNavigationStateChange}
           source={{uri: url}}
           decelerationRate={'normal'}
           testID={'in-app-browser-webview'}
