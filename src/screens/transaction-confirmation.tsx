@@ -27,8 +27,6 @@ export const TransactionConfirmationScreen = () => {
   }, [navigation]);
   const route = useTypedRoute<'transactionConfirmation'>();
 
-  Logger.log('route.params.amount', route.params.amount.toFloat());
-
   const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),

@@ -34,12 +34,12 @@ export class EthNetwork {
 
     const transaction = {
       to: to,
-      value: '0x' + value.toHex(),
+      value: value.toHex(),
       nonce,
       type: 2,
       maxFeePerGas: estimate.gasPrice.toHex(),
       maxPriorityFeePerGas: estimate.gasPrice.toHex(),
-      gasLimit: '0x' + estimate.estimateGas.toHex(),
+      gasLimit: estimate.estimateGas.toHex(),
       data,
       chainId: EthNetwork.chainId,
     };
@@ -107,7 +107,7 @@ export class EthNetwork {
   static async estimateTransaction(
     from: string,
     to: string,
-    amount: Balance,
+    value: Balance,
     data = '0x',
     minGas: Balance = MIN_GAS_LIMIT,
   ): Promise<{
@@ -123,20 +123,13 @@ export class EthNetwork {
     const estGas = await rpcProvider.estimateGas({
       from,
       to,
-      amount: '0x' + amount.toHex(),
+      value: value.toHex(),
       data,
       maxFeePerGas: gasPrice.toHex(),
       maxPriorityFeePerGas: gasPrice.toHex(),
     } as Deferrable<TransactionRequest>);
 
     const estimateGas = new Balance(estGas._hex).max(minGas);
-
-    Logger.log(
-      'estimateGas',
-      new Balance(estGas._hex),
-      estimateGas.toFloat(),
-      gasPrice.toFloat(),
-    );
 
     return {
       feeWei: estimateGas.operate(gasPrice, 'mul'),

@@ -14,7 +14,7 @@ export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
     if (currency === 'aISLM') {
       return fee.toWeiString();
     }
-    return fee.toEtherString();
+    return fee.toBalanceString(8);
   }, [fee, currency]);
 
   return (

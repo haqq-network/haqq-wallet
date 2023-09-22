@@ -85,7 +85,7 @@ export const TransactionDetail = ({
   }, [transaction, source, isSent]);
 
   const fee = useMemo(
-    () => new Balance(transaction.feeHex || transaction.fee).toWeiString(),
+    () => new Balance(transaction.feeHex || transaction.fee).toBalanceString(8),
     [transaction],
   );
 
