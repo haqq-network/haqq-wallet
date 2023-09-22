@@ -1,30 +1,94 @@
+import {getUid} from '@app/helpers/get-uid';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
+import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {Backend} from '@app/services/backend';
-import {RemoteMessage} from '@app/types';
+import {RaffleStatus, RemoteMessage} from '@app/types';
+import {WEI} from '@app/variables/common';
 
-export async function onPushNotification(message: RemoteMessage) {
-  if (message.data.type === 'news' && message.data.id) {
-    const exists = News.getById(message.data.id);
+enum PushNotificationTypes {
+  news = 'news',
+  raffle = 'raffle',
+}
 
-    if (!exists) {
-      const row = await Backend.instance.news_row(message.data.id);
+type Data = {
+  type: PushNotificationTypes;
+  id: string;
+};
 
-      News.create(row.id, {
-        title: row.title,
-        preview: row.preview,
-        description: row.description,
-        content: row.content,
-        status: row.status,
-        createdAt: new Date(row.created_at),
-        updatedAt: new Date(row.updated_at),
-        publishedAt: new Date(row.published_at),
-      });
+const logger = Logger.create('onPushNotification');
 
-      VariablesBool.set('isNewNews', true);
-    }
+export async function onPushNotification(message: RemoteMessage<Data>) {
+  const {id, type} = message.data || {};
 
-    navigator.navigate('newsDetail', {id: message.data.id});
+  if (!(id && type)) {
+    return logger.warn(
+      '"id" or "type" is not defined',
+      JSON.stringify({message}, null, 2),
+    );
+  }
+
+  switch (type) {
+    case PushNotificationTypes.news:
+      const newsItem = News.getById(id);
+
+      if (!newsItem) {
+        const row = await Backend.instance.news_row(message.data.id);
+
+        News.create(row.id, {
+          title: row.title,
+          preview: row.preview,
+          description: row.description,
+          content: row.content,
+          status: row.status,
+          createdAt: new Date(row.created_at),
+          updatedAt: new Date(row.updated_at),
+          publishedAt: new Date(row.published_at),
+        });
+
+        VariablesBool.set('isNewNews', true);
+      }
+
+      navigator.navigate('newsDetail', {id: message.data.id});
+      break;
+    case PushNotificationTypes.raffle:
+      let uid = await getUid();
+      const response = await Backend.instance.contests(
+        Wallet.addressList(),
+        uid,
+      );
+      const raffleItem = response?.find(it => it.id === id);
+
+      if (raffleItem) {
+        const prevIslmCount =
+          response
+            ?.filter?.(it => it.status === RaffleStatus.closed)
+            .reduce(
+              (prev, curr) =>
+                prev +
+                (parseInt(curr.budget, 16) / WEI / curr.winners) *
+                  curr.winner_tickets,
+              0,
+            ) || 0;
+
+        const prevTicketsCount =
+          response
+            ?.filter?.(it => it.status === RaffleStatus.closed)
+            .reduce((prev, curr) => prev + curr.winner_tickets, 0) || 0;
+
+        navigator.navigate('raffleDetails', {
+          item: raffleItem,
+          prevIslmCount,
+          prevTicketsCount,
+        });
+      }
+
+      break;
+    default:
+      logger.warn(
+        'not supported "type" argument',
+        JSON.stringify({message}, null, 2),
+      );
   }
 }
