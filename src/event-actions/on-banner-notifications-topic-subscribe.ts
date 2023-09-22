@@ -1,18 +1,12 @@
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Banner} from '@app/models/banner';
-import {VariablesBool} from '@app/models/variables-bool';
-import {PushNotifications} from '@app/services/push-notifications';
-import {AdjustEvents} from '@app/types';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
+
+import {onNotificationsTopicSubscribe} from './on-notifications-topic-subscribe';
 
 export async function onBannerNotificationsTopicSubscribe(
   id: string,
-  topic: string,
+  topic: PushNotificationTopicsEnum,
 ) {
-  await PushNotifications.instance.subscribeToTopic(topic);
-
-  VariablesBool.set(`notificationsTopic:${topic}`, true);
-
-  onTrackEvent(AdjustEvents.pushChannelSubscribe, {topic});
-
+  await onNotificationsTopicSubscribe(topic);
   Banner.remove(id);
 }
