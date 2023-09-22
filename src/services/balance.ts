@@ -3,7 +3,11 @@ import Decimal from 'decimal.js';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
 import {BalanceConstructor, IBalance} from '@app/types';
-import {NUM_DELIMITER, NUM_PRECISION} from '@app/variables/common';
+import {
+  NUM_DELIMITER,
+  NUM_PRECISION,
+  WEI_PRECISION,
+} from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
 
@@ -12,7 +16,7 @@ export class Balance implements IBalance {
   private bnRaw = zeroBN;
   private _precission: number;
 
-  constructor(balance: BalanceConstructor, precission = 18) {
+  constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
     this._precission = precission;
     if (Decimal.isDecimal(balance)) {
       this.bnRaw = balance;

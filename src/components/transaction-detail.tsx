@@ -17,7 +17,7 @@ import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {TransactionSource} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, LONG_NUM_PRECISION} from '@app/variables/common';
 
 type TransactionDetailProps = {
   source: TransactionSource;
@@ -85,7 +85,10 @@ export const TransactionDetail = ({
   }, [transaction, source, isSent]);
 
   const fee = useMemo(
-    () => new Balance(transaction.feeHex || transaction.fee).toBalanceString(8),
+    () =>
+      new Balance(transaction.feeHex || transaction.fee).toBalanceString(
+        LONG_NUM_PRECISION,
+      ),
     [transaction],
   );
 

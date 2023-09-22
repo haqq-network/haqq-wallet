@@ -17,6 +17,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {splitAddress} from '@app/utils';
+import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   testID?: string;
@@ -56,7 +57,7 @@ export const TransactionConfirmation = ({
         i18n={I18N.transactionConfirmationTotalAmount}
       />
       <Text t11 color={Color.textBase1} center style={styles.sum}>
-        {fee.operate(amount, 'add').toBalanceString(8)}
+        {fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION)}
       </Text>
       <Text
         t11
@@ -101,12 +102,12 @@ export const TransactionConfirmation = ({
           </DataView>
           <DataView label="Amount">
             <Text t11 color={Color.textBase1}>
-              {amount.toBalanceString(8)}
+              {amount.toBalanceString(LONG_NUM_PRECISION)}
             </Text>
           </DataView>
           <DataView label="Network Fee">
             <Text t11 color={Color.textBase1}>
-              {fee.toBalanceString(8)}
+              {fee.toBalanceString(LONG_NUM_PRECISION)}
             </Text>
           </DataView>
         </View>
