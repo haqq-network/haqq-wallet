@@ -1,16 +1,23 @@
 import Decimal from 'decimal.js';
 
 import {cleanNumber} from '@app/helpers/clean-number';
+import {I18N, getText} from '@app/i18n';
 import {BalanceConstructor, IBalance} from '@app/types';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {
+  NUM_DELIMITER,
+  NUM_PRECISION,
+  WEI_PRECISION,
+} from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
+  private _precission: number;
 
-  constructor(balance: BalanceConstructor) {
+  constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
+    this._precission = precission;
     if (Decimal.isDecimal(balance)) {
       this.bnRaw = balance;
       return;
@@ -36,7 +43,7 @@ export class Balance implements IBalance {
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new Decimal(balance * WEI);
+      this.bnRaw = new Decimal(balance * 10 ** this._precission);
       return;
     }
   }
@@ -59,8 +66,8 @@ export class Balance implements IBalance {
   /**
    * Convert balance to float according to WEI
    */
-  toFloat = () => {
-    const float = this.bnRaw.div(WEI).toNumber();
+  toFloat = (precission: number = this._precission) => {
+    const float = this.bnRaw.div(10 ** precission).toNumber();
     return float;
   };
 
@@ -68,17 +75,24 @@ export class Balance implements IBalance {
    * Convert balance to float string according to cleanNumber helper
    * @example 123.45
    */
-  toFloatString = () => {
-    return cleanNumber(this.toFloat());
+  toFloatString = (
+    fixed = NUM_PRECISION,
+    precission: number = this._precission,
+  ) => {
+    return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
 
   /**
    * Convert balance to float string according to cleanNumber helper and append currency name
    * @example 123.45 ISLM
    */
-  toBalanceString = () => {
-    const suffix = ` ${CURRENCY_NAME}`;
-    return this.toFloatString() + suffix;
+  toBalanceString = (
+    fixed = NUM_PRECISION,
+    precission: number = this._precission,
+  ) => {
+    return getText(I18N.amountISLM, {
+      amount: this.toFloatString(fixed, precission),
+    });
   };
 
   toString = () => {
@@ -106,16 +120,12 @@ export class Balance implements IBalance {
     value: BalanceConstructor | undefined | null,
     operation: 'add' | 'mul' | 'div' | 'sub',
   ) => {
-    if (!value) {
+    const bnRaw = this.getBnRaw(value);
+
+    if (!bnRaw) {
       return this;
     }
 
-    let bnRaw: Decimal;
-    if (value instanceof Balance) {
-      bnRaw = value.bnRaw;
-    } else {
-      bnRaw = new Balance(value).bnRaw;
-    }
     const result = this.bnRaw[operation](bnRaw);
     return new Balance(result);
   };
@@ -130,27 +140,72 @@ export class Balance implements IBalance {
     value: BalanceConstructor | undefined | null,
     operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
   ) => {
-    if (!value) {
+    const bnRaw = this.getBnRaw(value);
+
+    if (!bnRaw) {
       return false;
     }
-    let bnRaw: Decimal;
-    if (value instanceof Balance) {
-      bnRaw = value.bnRaw;
-    } else {
-      bnRaw = new Balance(value).bnRaw;
-    }
+
     return this.bnRaw[operation](bnRaw);
+  };
+
+  /**
+   * Return max value of two balances
+   * @param {(BalanceConstructor | undefined | null)} value Balance instance
+   * @returns Balance instance
+   */
+  max = (value: BalanceConstructor | undefined | null): Balance => {
+    const bnRaw = this.getBnRaw(value);
+
+    if (!bnRaw) {
+      return this;
+    }
+
+    const result = Decimal.max(this.bnRaw, bnRaw);
+    return new Balance(result);
+  };
+
+  /**
+   * Return min value of two balances
+   * @param {(BalanceConstructor | undefined | null)} value Balance instance
+   * @returns Balance instance
+   */
+  min = (value: BalanceConstructor | undefined | null): Balance => {
+    const bnRaw = this.getBnRaw(value);
+
+    if (!bnRaw) {
+      return this;
+    }
+
+    const result = Decimal.min(this.bnRaw, bnRaw);
+    return new Balance(result);
+  };
+
+  private getBnRaw = (
+    value: BalanceConstructor | undefined | null,
+  ): Decimal | null => {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Balance) {
+      return value.bnRaw;
+    } else {
+      return new Balance(value).bnRaw;
+    }
   };
 
   toEther = () => this.toFloat();
   toEtherString = () => this.toBalanceString();
   toWei = () => this.toNumber();
   toWeiString = () => {
-    const float = this.toWei();
-    const suffix = ` a${CURRENCY_NAME}`;
-    return float + suffix;
+    return getText(I18N.amountAISLM, {
+      amount: String(this.toWei()),
+    });
   };
 }
 
 export const MIN_AMOUNT = new Balance(0.001);
 export const FEE_AMOUNT = new Balance(0.00001);
+export const MIN_GAS_LIMIT = new Balance(21_000, 0);
+export const BALANCE_MULTIPLIER = new Balance(1.2, 0);

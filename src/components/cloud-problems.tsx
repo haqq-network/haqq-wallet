@@ -12,7 +12,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
-import {ProviderNameMap} from '@app/variables/common';
+import {ProviderNameMap} from '@app/variables/sss';
 
 type Props = {
   provider: SssProviders;

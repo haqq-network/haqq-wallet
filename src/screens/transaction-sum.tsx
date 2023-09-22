@@ -38,7 +38,7 @@ export const TransactionSumScreen = () => {
   }, [event, onAddress]);
 
   const onAmount = useCallback(
-    (amount: number) => {
+    (amount: Balance) => {
       navigation.navigate('transactionConfirmation', {
         fee,
         from: route.params.from,
@@ -63,7 +63,7 @@ export const TransactionSumScreen = () => {
     const estimateFee = await EthNetwork.estimateTransaction(
       route.params.from,
       to,
-      b.toFloat(),
+      b,
     );
     setFee(estimateFee.feeWei);
   }, [route.params.from, to]);

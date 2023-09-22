@@ -4,7 +4,6 @@ import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
-import BN from 'bn.js';
 import {utils} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
@@ -44,6 +43,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
+import {Balance} from '@app/services/balance';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
@@ -391,9 +391,9 @@ export const SettingsTestScreen = observer(() => {
     const unsignedTx = await EthNetwork.populateTransaction(
       wallet.address,
       contract,
-      new BN(100000000000000),
+      new Balance(100000000000000, 0),
       data,
-      250000,
+      new Balance(250000, 0),
     );
 
     const result = transport.signTransaction(wallet.path!, unsignedTx);

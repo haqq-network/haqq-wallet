@@ -38,6 +38,16 @@ describe('Balance Test Suite', () => {
       const balance = new Balance(number);
       expect(balance.toNumber()).toEqual(number * WEI);
     });
+    it('should handle number with precission', () => {
+      const number = 123.456;
+      const balance = new Balance(number, 0);
+      expect(balance.toNumber()).toEqual(number);
+    });
+    it('should handle number with precission 2', () => {
+      const number = 123.456;
+      const balance = new Balance(number, 3);
+      expect(balance.toNumber()).toEqual(123456);
+    });
     it('should handle empty balance instance', () => {
       const balance = new Balance(Balance.Empty);
       expect(balance.toNumber()).toEqual(Balance.Empty.toNumber());
@@ -118,6 +128,14 @@ describe('Balance Test Suite', () => {
         const hexString = '242.0370638288085';
         expect(balance.toBalanceString()).toEqual(
           hexString.slice(0, 6) + ' ' + CURRENCY_NAME,
+        );
+      });
+      it('should return a valid balance string (long) with fixed', () => {
+        const hex = '0xd1ef0632f5aad553e';
+        const balance = new Balance(hex);
+        const hexString = '242.0370638288085';
+        expect(balance.toBalanceString(4)).toEqual(
+          hexString.slice(0, 7) + ' ' + CURRENCY_NAME,
         );
       });
       it('should return a valid balance string (short)', () => {
@@ -379,6 +397,20 @@ describe('Balance Test Suite', () => {
         const balance = new Balance(5000 / WEI);
         expect(balance.toWeiString()).toEqual('5000 a' + CURRENCY_NAME);
       });
+    });
+
+    it('should return max answer', () => {
+      const first = new Balance(-1);
+      const second = new Balance(1);
+      expect(first.max(second).toHex()).toEqual(second.toHex());
+      expect(second.max(first).toHex()).toEqual(second.toHex());
+    });
+
+    it('should return min answer', () => {
+      const first = new Balance(-1);
+      const second = new Balance(1);
+      expect(first.min(second).toHex()).toEqual(first.toHex());
+      expect(second.min(first).toHex()).toEqual(first.toHex());
     });
   });
 });
