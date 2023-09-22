@@ -7,6 +7,7 @@ import {
 import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 
 export const PopupNotificationNewsScreen = () => {
   const route = useTypedRoute<'popupNotificationNews'>();
@@ -14,7 +15,10 @@ export const PopupNotificationNewsScreen = () => {
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTopicSubscribe(route.params.bannerId, 'news');
+      await onBannerNotificationsTopicSubscribe(
+        route.params.bannerId,
+        PushNotificationTopicsEnum.news,
+      );
       close();
       goBack();
     },
@@ -23,7 +27,10 @@ export const PopupNotificationNewsScreen = () => {
 
   const onClickNotNow = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTopicSnooze(route.params.bannerId, 'news');
+      await onBannerNotificationsTopicSnooze(
+        route.params.bannerId,
+        PushNotificationTopicsEnum.news,
+      );
       close();
       goBack();
     },

@@ -2,6 +2,8 @@ import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
+
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
 
@@ -254,3 +256,7 @@ export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
   'haqq.page.link',
   'preview.page.link',
 ];
+
+export const TRANSACTION_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.transactions}`;
+export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.news}`;
+export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;

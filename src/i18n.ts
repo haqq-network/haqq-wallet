@@ -767,6 +767,8 @@ export enum I18N {
   dynamicLinkDetactedDescription,
   dynamicLinkDetactedIgnore,
   dynamicLinkDetactedAllow,
+  rafflePushNotification,
+  rafflePushNotificationsDescription,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1510,6 +1512,9 @@ const en: Record<I18N, string> = {
   [I18N.newsPushNotification]: 'Newsletter notifications',
   [I18N.newsPushNotificationsDescription]:
     'Get the latest news and updates about Islamic Coin and the HAQQ Wallet',
+  [I18N.rafflePushNotification]: 'Raffle notifications',
+  [I18N.rafflePushNotificationsDescription]:
+    'We will notify you about the start of new raffles and if you win',
   [I18N.transactionPushNotification]: 'Transaction Push-Notifications',
   [I18N.transactionPushNotificationsDescription]:
     'Get notified about deposits, withdrawals and successful transactions',

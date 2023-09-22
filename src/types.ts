@@ -1204,6 +1204,20 @@ export interface VerifyAddressResponse {
 
 export interface MobXStoreFromRealm {
   realmSchemaName: string;
-  migrate: () => void;
   isHydrated: boolean;
+  migrate: () => void;
+}
+
+export interface MobXStoreItem {
+  id: string;
+}
+
+export interface MobXStore<TData extends MobXStoreItem> {
+  data: Record<string, TData>;
+  getById(id: string): TData;
+  getAll(): TData[];
+  create(id: string, item: TData): void;
+  update(id: string, item: Partial<TData>): boolean;
+  remove(id: string): boolean;
+  removeAll(): void;
 }
