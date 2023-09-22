@@ -802,8 +802,8 @@ export interface EthTypedData {
   };
 }
 
-export interface RemoteMessage {
-  data: Record<string, any>;
+export interface RemoteMessage<TData = Record<string, any>> {
+  data: TData;
   from: string;
   messageId: string;
   notification: {body: string; title: string};
