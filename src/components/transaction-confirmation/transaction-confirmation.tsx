@@ -21,7 +21,7 @@ import {splitAddress} from '@app/utils';
 interface TransactionConfirmationProps {
   testID?: string;
   to: string;
-  amount: number;
+  amount: Balance;
   fee: Balance;
   contact: Contact | null;
   error?: string;
@@ -41,7 +41,6 @@ export const TransactionConfirmation = ({
   onConfirmTransaction,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
-  const balanceAmount = new Balance(amount);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -56,16 +55,9 @@ export const TransactionConfirmation = ({
         style={styles.subtitle}
         i18n={I18N.transactionConfirmationTotalAmount}
       />
-      <Text
-        t11
-        color={Color.textBase1}
-        center
-        style={styles.sum}
-        i18n={I18N.transactionConfirmationSum}
-        i18params={{
-          sum: `${+fee.operate(balanceAmount, 'add').toFloat().toFixed(8)}`,
-        }}
-      />
+      <Text t11 color={Color.textBase1} center style={styles.sum}>
+        {fee.operate(amount, 'add').toBalanceString(8)}
+      </Text>
       <Text
         t11
         color={Color.textBase2}
@@ -108,16 +100,13 @@ export const TransactionConfirmation = ({
             </Text>
           </DataView>
           <DataView label="Amount">
-            <Text
-              t11
-              color={Color.textBase1}
-              i18n={I18N.transactionConfirmationAmount}
-              i18params={{amount: `${+amount.toFixed(8)}`}}
-            />
+            <Text t11 color={Color.textBase1}>
+              {amount.toBalanceString(8)}
+            </Text>
           </DataView>
           <DataView label="Network Fee">
             <Text t11 color={Color.textBase1}>
-              {fee.toWeiString()}
+              {fee.toBalanceString(8)}
             </Text>
           </DataView>
         </View>

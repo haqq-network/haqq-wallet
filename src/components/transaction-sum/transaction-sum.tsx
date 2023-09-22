@@ -18,7 +18,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Balance, FEE_AMOUNT} from '@app/services/balance';
+import {BALANCE_MULTIPLIER, Balance, FEE_AMOUNT} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {CURRENCY_NAME} from '@app/variables/common';
 
@@ -28,7 +28,7 @@ export type TransactionSumProps = {
   to: string;
   from: string;
   contact: Contact | null;
-  onAmount: (amount: number) => void;
+  onAmount: (amount: Balance) => void;
   onContact: () => void;
   testID?: string;
 };
@@ -43,11 +43,7 @@ export const TransactionSum = ({
   testID,
 }: TransactionSumProps) => {
   const transactionFee = useMemo(() => {
-    const doubledFee = fee.operate(fee, 'add');
-    const maximumFee = doubledFee.compare(FEE_AMOUNT, 'gt')
-      ? doubledFee
-      : FEE_AMOUNT;
-    return new Balance(maximumFee);
+    return fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT);
   }, [fee]);
 
   const amounts = useSumAmount();
@@ -71,7 +67,7 @@ export const TransactionSum = ({
   );
 
   const onDone = useCallback(() => {
-    onAmount(parseFloat(amounts.amount));
+    onAmount(new Balance(parseFloat(amounts.amount)));
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {

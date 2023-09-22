@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
-import Decimal from 'decimal.js';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
@@ -16,7 +15,6 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents} from '@app/types';
-import {WEI} from '@app/variables/common';
 
 export const TransactionLedgerScreen = () => {
   const route = useTypedRoute<'transactionLedger'>();
@@ -56,7 +54,7 @@ export const TransactionLedgerScreen = () => {
           transport.current!,
           wallet.path!,
           route.params.to,
-          new Decimal(route.params.amount).mul(WEI).toFixed(),
+          route.params.amount,
         );
 
         if (transaction) {

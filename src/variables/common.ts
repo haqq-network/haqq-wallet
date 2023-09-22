@@ -194,6 +194,7 @@ export const IS_IOS = Platform.OS === 'ios';
 export const WEI = 10 ** 18;
 
 export const NUM_PRECISION = 2;
+export const NUM_DELIMITER = ' ';
 
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
