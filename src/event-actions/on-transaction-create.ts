@@ -3,6 +3,7 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
+import {Balance} from '@app/services/balance';
 
 export async function onTransactionCreate(
   transactionRaw: {
@@ -15,9 +16,10 @@ export async function onTransactionCreate(
     timeStamp?: number | string;
     confirmations?: number | string;
     contractAddress?: string;
+    input: string;
   },
   providerId: string,
-  fee: number,
+  fee: Balance,
 ) {
   const txId = Transaction.create(transactionRaw, providerId, fee);
 

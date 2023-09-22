@@ -34,6 +34,9 @@ export const OnboardingFinishScreen = memo(() => {
       WalletConnect.instance.init();
       app.onboarded = true;
 
+      app.emit(Events.onBlockRequestCheck);
+      navigation.replace('home');
+
       requestAnimationFrame(() => {
         app.emit(Events.onAppStarted);
       });

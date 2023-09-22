@@ -1,5 +1,4 @@
 import {Color} from '@app/colors';
-import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
@@ -10,6 +9,8 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {getUid} from '@app/helpers/get-uid';
+import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
@@ -45,8 +46,13 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     } catch (e) {
       return;
     }
-    const captchaKey = await awaitForCaptcha({
-      type: CaptchaType.hcaptcha,
+
+    const captchaSession = await Airdrop.instance.captchaSession();
+    if (!captchaSession?.captcha) {
+      throw new Error('Captcha not available');
+    }
+    const captcha = await awaitForCaptcha({
+      variant: captchaSession.captcha,
     });
 
     const wallet = Wallet.getById(walletId);
@@ -61,14 +67,21 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       await awaitForLedger(walletProvider);
     }
     const signature = await result;
+    const uid = await getUid();
+    const adid = await getAdjustAdid();
 
-    await Airdrop.instance.claim(walletId, signature, claimCode, captchaKey);
+    await Airdrop.instance.claim(
+      walletId,
+      signature,
+      claimCode,
+      captchaSession.session,
+      captcha.token,
+      uid,
+      adid,
+    );
     app.emit(Events.onAppReviewRequest);
 
-    banner.update({
-      isUsed: true,
-    });
-
+    Banner.remove(banner.id);
     onTrackEvent(AdjustEvents.claimFetched, {
       claimCode: claimCode,
     });
@@ -103,9 +116,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     if (e instanceof AirdropError) {
       if (e.code === AirdropErrorCode.adressAlreadyUsed) {
-        banner?.update({
-          isUsed: true,
-        });
+        Banner.remove(banner?.id);
       }
       showModal('error', {
         title: getText(I18N.modalRewardErrorTitle),

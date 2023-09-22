@@ -7,7 +7,7 @@ export class News extends Realm.Object implements NewsItem {
     properties: {
       id: 'string',
       title: 'string',
-      preview: 'string',
+      preview: 'string?',
       description: 'string',
       content: 'string',
       publishedAt: 'date?',
@@ -20,7 +20,7 @@ export class News extends Realm.Object implements NewsItem {
   };
   id!: string;
   title!: string;
-  preview!: string;
+  preview?: string;
   description!: string;
   content!: string;
   publishedAt: Date;
@@ -31,16 +31,28 @@ export class News extends Realm.Object implements NewsItem {
 
   static create(id: string, params: Omit<Partial<News>, 'id'>) {
     const exists = News.getById(id);
+
+    const getField = (
+      fieldName: keyof NewsItem,
+      defaultValue: string | Date | boolean = '',
+      //@ts-ignore
+    ) => exists?.[fieldName] ?? params?.[fieldName] ?? defaultValue;
+
+    const newItem: NewsItem = {
+      id: id.toLowerCase(),
+      title: getField('title'),
+      preview: getField('preview', undefined),
+      description: getField('description'),
+      content: getField('content'),
+      publishedAt: getField('publishedAt', new Date()),
+      createdAt: getField('createdAt', new Date()),
+      updatedAt: getField('updatedAt', new Date()),
+      viewed: getField('viewed', false),
+      status: getField('status', 'unknown'),
+    };
+
     realm.write(() => {
-      realm.create<News>(
-        News.schema.name,
-        {
-          ...(exists ?? {}),
-          ...params,
-          id: id.toLowerCase(),
-        },
-        Realm.UpdateMode.Modified,
-      );
+      realm.create<News>(News.schema.name, newItem, Realm.UpdateMode.Modified);
     });
 
     return id;

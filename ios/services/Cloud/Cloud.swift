@@ -130,6 +130,11 @@ class RNCloud: NSObject {
     let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
     
+    do {
+      try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: false);
+    } catch {
+      // Directory already exist, nothing to do here
+    }
     if fileManager.fileExists(atPath: fileUrl.path) == true {
         return
     }

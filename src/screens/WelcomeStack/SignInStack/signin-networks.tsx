@@ -7,6 +7,7 @@ import {getMetadataValue} from '@haqq/shared-react-native';
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
+import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {
   SignInStackParamList,
@@ -16,15 +17,15 @@ import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignInNetworksScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onLogin = useCallback(
-    async (provider: SssProviders) => {
+    async (provider: SssProviders, skipCheck: boolean = false) => {
       let creds;
       switch (provider) {
         case SssProviders.apple:
@@ -32,9 +33,6 @@ export const SignInNetworksScreen = memo(() => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
-          break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
           break;
       }
 
@@ -44,7 +42,7 @@ export const SignInNetworksScreen = memo(() => {
         }
 
         const walletInfo = await getMetadataValue(
-          METADATA_URL,
+          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',
         );
@@ -61,6 +59,17 @@ export const SignInNetworksScreen = memo(() => {
         const cloud = new Cloud();
 
         const account = await accountInfo(creds.privateKey as string);
+
+        if (!skipCheck) {
+          const hasPermissions = await verifyCloud(provider);
+          if (!hasPermissions) {
+            navigation.navigate('cloudProblems', {
+              sssProvider: provider,
+              onNext: () => onLogin(provider, true),
+            });
+            return;
+          }
+        }
 
         const share = await cloud.getItem(
           `haqq_${account.address.toLowerCase()}`,
@@ -80,6 +89,7 @@ export const SignInNetworksScreen = memo(() => {
           token: creds.token,
           verifier: creds.verifier,
           sssCloudShare: share,
+          sssLocalShare: null,
         });
       } catch (e) {
         Logger.log('error', e, e instanceof SssError);
@@ -92,6 +102,7 @@ export const SignInNetworksScreen = memo(() => {
             token: creds.token,
             verifier: creds.verifier,
             sssCloudShare: null,
+            sssLocalShare: null,
           });
         }
       }

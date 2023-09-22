@@ -3,6 +3,7 @@ import React from 'react';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
+import {AccessListish} from '@haqq/provider-base';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -59,6 +60,7 @@ export enum TransactionSource {
   date,
   send,
   receive,
+  contract,
 }
 
 export enum PopupNotificationBannerTypes {
@@ -75,6 +77,10 @@ export type TransactionListReceive = Transaction & {
   source: TransactionSource.receive;
 };
 
+export type TransactionListContract = Transaction & {
+  source: TransactionSource.contract;
+};
+
 export type TransactionListDate = {
   hash: string;
   date: Date;
@@ -85,7 +91,8 @@ export type TransactionListDate = {
 export type TransactionList =
   | TransactionListSend
   | TransactionListReceive
-  | TransactionListDate;
+  | TransactionListDate
+  | TransactionListContract;
 
 export type TransactionResponse = Awaited<
   ReturnType<EthNetwork['transferTransaction']>
@@ -108,6 +115,7 @@ export type WalletInitialData =
       type: 'sss';
       sssPrivateKey: string | null;
       sssCloudShare: string | null;
+      sssLocalShare: string | null;
       verifier: string;
       token: string;
     }
@@ -124,6 +132,11 @@ export type LedgerWalletInitialData = {
 };
 
 export type RootStackParamList = {
+  chooseAccount: {
+    type: 'mnemonic';
+    mnemonic: string;
+  };
+  cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
@@ -287,7 +300,7 @@ export type RootStackParamList = {
       | 'signinStoreWallet'
       | 'ledgerStoreWallet';
   } & WalletInitialData;
-  onboardingSetupPin: WalletInitialData;
+  onboardingSetupPin: WalletInitialData & {errorText?: string};
   onboardingFinish: undefined;
   signupStoreWallet: WalletInitialData;
   signinStoreWallet: WalletInitialData;
@@ -313,6 +326,7 @@ export type RootStackParamList = {
   };
   transactionDetail: {
     hash: string;
+    contractName?: string;
   };
   inAppBrowser: {
     url: string;
@@ -489,6 +503,7 @@ export type RootStackParamList = {
   };
   settingsViewRecoveryPhrase: {
     accountId: string;
+    type: WalletType;
   };
   settingsSecurity: undefined;
   walletSelector: {
@@ -528,6 +543,7 @@ export type RootStackParamList = {
   sssStoreWallet: {
     privateKey: string;
     cloudShare: string | null;
+    localShare: string | null;
     questionAnswer: string | null;
     token: string;
     verifier: string;
@@ -735,6 +751,12 @@ export type LedgerAccountItem = {
   publicKey: string;
   exists: boolean;
   balance: number;
+};
+
+export type ChooseAccountItem = AddWalletParams & {
+  name: string;
+  balance: Balance;
+  exists?: boolean;
 };
 
 export interface WalletConnectParsedAccount {
@@ -973,6 +995,9 @@ export type Modals = {
   lockedTokensInfo: {
     onClose?: () => void;
   };
+  cloudVerification: {
+    sssProvider: SssProviders;
+  };
 };
 
 export interface NftAttribute {
@@ -1013,7 +1038,7 @@ export interface TokenItem {
 export interface BaseNewsItem {
   id: string;
   title: string;
-  preview: string;
+  preview?: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;
@@ -1023,6 +1048,7 @@ export interface BaseNewsItem {
 
 export interface NewsItem extends BaseNewsItem {
   content: string;
+  publishedAt: Date;
 }
 
 export interface RssNewsItem extends BaseNewsItem {
@@ -1135,3 +1161,55 @@ export type SendTransactionError = {
   transaction: SendTransactionRequest;
   transactionHash: string;
 };
+
+export type OnTransactionRowPress = (
+  hash: string,
+  params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
+) => void;
+
+export type ContractNameMap = Record<string, string>;
+
+export type HaqqCosmosAddress = `haqq${string}`;
+
+export type JsonRpcTransactionRequest = {
+  to?: string;
+  from?: string;
+  nonce?: string;
+  gasLimit?: string;
+  gasPrice?: string;
+  data?: string;
+  value?: string;
+  chainId?: number;
+  type?: number;
+  maxPriorityFeePerGas?: string;
+  maxFeePerGas?: string;
+  customData?: Record<string, any>;
+  ccipReadEnabled?: boolean;
+  accessList?: AccessListish;
+};
+
+export enum AddressType {
+  wallet = 'wallet',
+  contract = 'contract',
+  unknown = 'unknown',
+}
+
+export interface VerifyAddressResponse {
+  id: string;
+  addressType: AddressType;
+  name?: string | null;
+  symbol?: string | null;
+  decimals?: number | null;
+  isErc20?: boolean | null;
+  isErc721?: boolean | null;
+  isErc1155?: boolean | null;
+  isInWhiteList?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface MobXStoreFromRealm {
+  realmSchemaName: string;
+  migrate: () => void;
+  isHydrated: boolean;
+}

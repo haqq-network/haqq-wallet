@@ -85,11 +85,18 @@ const browserOptions = {
   ...TransitionPresets.ModalSlideFromBottomIOS,
   headerShown: false,
   tabBarIcon: tabBarIcon('homeBrowser'),
+  lazy: false,
+  unmountOnBlur: false,
 };
 
 const settingsOptions = {
   headerShown: false,
   tabBarIcon: tabBarIcon('homeSettings'),
+};
+
+const navigationOptions = {
+  ...screenOptions,
+  unmountOnBlur: true,
 };
 
 export const HomeScreen = memo(() => {
@@ -111,7 +118,7 @@ export const HomeScreen = memo(() => {
   }, [navigation]);
 
   return (
-    <Tab.Navigator detachInactiveScreens screenOptions={screenOptions}>
+    <Tab.Navigator detachInactiveScreens screenOptions={navigationOptions}>
       <Tab.Screen
         name="homeFeed"
         component={HomeFeedStack}

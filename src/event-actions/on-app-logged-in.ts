@@ -1,5 +1,6 @@
 import {Image} from 'react-native';
 
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Wallet} from '@app/models/wallet';
@@ -18,11 +19,14 @@ export async function onAppLoggedIn() {
     Logger.error('onAppLoggedIn Image.prefetch error', err);
   });
 
-  await Promise.race(
+  Promise.race(
     wallets.map(wallet =>
       awaitForEventDone(Events.onTransactionsLoad, wallet.address),
     ),
   );
 
-  await WalletConnect.instance.init();
+  if (app.onboarded) {
+    app.emit(Events.onBlockRequestCheck);
+    await WalletConnect.instance.init();
+  }
 }

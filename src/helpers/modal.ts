@@ -5,7 +5,7 @@ import {Modals} from '@app/types';
 import {makeID} from '@app/utils';
 import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
-type ModalName = Extract<keyof Modals, string>;
+export type ModalName = Extract<keyof Modals, string>;
 
 class ModalController {
   private navigationInstance: ReturnType<typeof createNavigationContainerRef>;
@@ -23,29 +23,31 @@ class ModalController {
   };
 
   showModal = (modalName: ModalName, params: Modals[ModalName] = {}) => {
+    console.log('show');
     if (!this.navigationInstance) {
       return () => {};
     }
     app.emit('showModal', {type: modalName, ...params});
     if (this.isReady()) {
       //@ts-ignore
-      this.navigationInstance.navigate(MODAL_SCREEN_NAME, {
-        type: modalName,
-        uid: makeID(6),
-        ...params,
-      });
+      // this.navigationInstance.navigate(MODAL_SCREEN_NAME, {
+      //   type: modalName,
+      //   uid: makeID(6),
+      //   ...params,
+      // });
     }
 
     return () => hideModal(modalName);
   };
 
   hideModal = (modalName: ModalName) => {
+    console.log('hide');
     if (!this.navigationInstance) {
       return;
     }
     app.emit('hideModal', {type: modalName});
     if (this.isReady()) {
-      this.navigationInstance.goBack();
+      // this.navigationInstance.goBack();
     }
   };
 }

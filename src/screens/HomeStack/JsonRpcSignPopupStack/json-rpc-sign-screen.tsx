@@ -1,16 +1,24 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
+import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {getUserAddressFromJRPCRequest, isError} from '@app/utils';
+import {VerifyAddressResponse} from '@app/types';
+import {
+  getTransactionFromJsonRpcRequest,
+  getUserAddressFromJRPCRequest,
+  isError,
+  verifyAddress,
+} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export const JsonRpcSignScreen = memo(() => {
@@ -18,6 +26,9 @@ export const JsonRpcSignScreen = memo(() => {
   const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
+  const [verifyAddressResponse, setVerifyAddressResponse] =
+    useState<VerifyAddressResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useTypedNavigation<HomeStackParamList>();
   const {metadata, request, chainId, selectedAccount} =
     useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
@@ -59,6 +70,7 @@ export const JsonRpcSignScreen = memo(() => {
         chainId,
       );
       app.emit('json-rpc-sign-success', result);
+      navigation.goBack();
     } catch (err) {
       if (isError(err)) {
         onPressReject(err.message);
@@ -67,10 +79,31 @@ export const JsonRpcSignScreen = memo(() => {
           chainId,
         });
       }
-    } finally {
-      navigation.goBack();
     }
   }, [chainId, isAllowed, navigation, onPressReject, request, wallet]);
+
+  const checkContractAddress = useCallback(async () => {
+    if (isTransaction) {
+      const params = getTransactionFromJsonRpcRequest(request);
+
+      if (params?.from) {
+        const info = await verifyAddress(params.from);
+        if (info) {
+          setVerifyAddressResponse(info);
+        }
+      }
+    }
+  }, [isTransaction, request]);
+
+  useEffectAsync(async () => {
+    try {
+      await checkContractAddress();
+    } catch (err) {
+      Logger.captureException(err, 'JsonRpcSignScreen:checkContractAddress');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [checkContractAddress]);
 
   useEffect(() => {
     const host = getHost(metadata.url);
@@ -102,6 +135,10 @@ export const JsonRpcSignScreen = memo(() => {
     }
   }, [onPressReject, request, selectedAccount]);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <JsonRpcSign
       rejectLoading={rejectLoading}
@@ -110,6 +147,8 @@ export const JsonRpcSignScreen = memo(() => {
       wallet={wallet!}
       metadata={metadata}
       request={request}
+      chainId={chainId}
+      verifyAddressResponse={verifyAddressResponse}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
     />

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -6,6 +6,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import BN from 'bn.js';
 import {utils} from 'ethers';
+import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import shajs from 'sha.js';
@@ -13,6 +14,7 @@ import shajs from 'sha.js';
 import {CaptchaType} from '@app/components/captcha';
 import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
   awaitForLedger,
@@ -24,7 +26,9 @@ import {
   showModal,
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
+import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {getUid} from '@app/helpers/get-uid';
+import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -40,10 +44,11 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
 import {EthNetwork} from '@app/services';
+import {Airdrop} from '@app/services/airdrop';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals, WalletType} from '@app/types';
-import {makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
+import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   Logger.log('setBackgroundMessageHandler', remoteMessage);
@@ -255,14 +260,14 @@ const TEST_URLS: Partial<Link>[] = [
     url: 'https://vesting.haqq.network',
     icon: 'https://vesting.haqq.network/assets/favicon.svg',
   },
-  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
-  {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-  {title: 'new safe', url: 'https://new.safe.testedge2.haqq.network'},
+  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
   {
     title: 'metamask test dapp',
     url: 'https://metamask.github.io/test-dapp/',
   },
+  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
+  {title: 'app uniswap', url: 'https://app.uniswap.org'},
+  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
   {
     title: 'ChainList app',
     url: 'https://chainlist.org/',
@@ -291,9 +296,13 @@ const Title = ({text = ''}) => (
   </>
 );
 
-export const SettingsTestScreen = memo(() => {
+export const SettingsTestScreen = observer(() => {
   const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
+  const [rawSignData, setRawSignData] = useState('');
+  const [signData, setSignData] = useState<PartialJsonRpcRequest>();
+  const [isValidRawSignData, setValidRawSignData] = useState(false);
+  const [deeplink, setDeeplink] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation<SettingsStackParamList>();
@@ -301,6 +310,7 @@ export const SettingsTestScreen = memo(() => {
   const [rssNewsCount, setRssNewsCount] = useState(RssNews.getAll().length);
   const [backend, setBackend] = useState(app.backend);
   const [uid, setUid] = useState<null | string>(null);
+  const [adid, setAdid] = useState<null | string>(null);
   const [leadingAccount, setLeadingAccount] = useState(
     VariablesString.get('leadingAccount'),
   );
@@ -308,6 +318,10 @@ export const SettingsTestScreen = memo(() => {
   useEffect(() => {
     getUid().then(id => {
       setUid(id);
+    });
+
+    getAdjustAdid().then(id => {
+      setAdid(id);
     });
   }, []);
 
@@ -319,6 +333,21 @@ export const SettingsTestScreen = memo(() => {
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
   };
+
+  const onPressDeepLink = useCallback(async () => {
+    try {
+      const handled = await onDeepLink(deeplink);
+      if (handled) {
+        toastMessage('✅ link successfully handled');
+      } else {
+        toastMessage('❌ not handled');
+      }
+    } catch (err) {
+      if (isError(err)) {
+        Alert.alert('onDeepLink error', JSON.stringify(err, null, 2));
+      }
+    }
+  }, [deeplink]);
 
   const onPressOpenInAppBrowser = () => {
     openInAppBrowser(browserUrl);
@@ -454,6 +483,20 @@ export const SettingsTestScreen = memo(() => {
           <Spacer height={8} />
         </>
       )}
+      {adid && (
+        <>
+          <Title text="adid" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(adid);
+              toastMessage('Copied to clipboard');
+            }}>
+            {adid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
       <Title text="user agent" />
       <Text
         t11
@@ -483,6 +526,37 @@ export const SettingsTestScreen = memo(() => {
       />
 
       <Spacer height={8} />
+      <Title text="Raw Sign Request" />
+      <Input
+        placeholder="{ method: 'eth_sendTransactrion', params: [...] }"
+        value={rawSignData}
+        error={!isValidRawSignData}
+        onChangeText={data => {
+          setRawSignData(data);
+          try {
+            setSignData(JSON.parse(data));
+            setValidRawSignData(true);
+          } catch (e) {
+            setValidRawSignData(false);
+          }
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="sign request"
+        disabled={!isValidRawSignData}
+        onPress={() => {
+          awaitForJsonRpcSign({
+            metadata: {
+              url: 'https://shell.haqq.network',
+              iconUrl: 'https://shell.haqq.network/assets/favicon.svg',
+            },
+            request: signData!,
+          });
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
       <Title text="WalletConnect" />
       <Input
         placeholder="wc:"
@@ -496,6 +570,20 @@ export const SettingsTestScreen = memo(() => {
         title="wallet connect"
         disabled={!wc}
         onPress={onPressWc}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Title text="Deeplink" />
+      <Input
+        placeholder="wc:, haqq:, ethereum:"
+        value={deeplink}
+        onChangeText={setDeeplink}
+      />
+      <Spacer height={8} />
+      <Button
+        title="call onDeepLink"
+        disabled={!deeplink}
+        onPress={onPressDeepLink}
         variant={ButtonVariant.contained}
       />
       <Title text="Browser" />
@@ -605,11 +693,30 @@ export const SettingsTestScreen = memo(() => {
         title="Show hcaptcha captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.hcaptcha});
-            Alert.alert('result', result);
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.hcaptcha,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Show oauth captcha"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.ocaptcha,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
+            Clipboard.setString(result.token);
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}
@@ -619,11 +726,66 @@ export const SettingsTestScreen = memo(() => {
         title="Show puzzle captcha"
         onPress={async () => {
           try {
-            const result = await awaitForCaptcha({type: CaptchaType.slider});
-            Alert.alert('result', result);
+            const result = await awaitForCaptcha({variant: CaptchaType.slider});
+            Alert.alert('result', JSON.stringify(result, null, 2));
           } catch (err) {
             // @ts-ignore
-            Alert.alert('Error', err?.message);
+            Alert.alert('Error', JSON.stringify(err));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Cloudflare Turnstile"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.turnstile,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', JSON.stringify(err));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Google recaptcha v2"
+        onPress={async () => {
+          try {
+            const result = await awaitForCaptcha({
+              variant: CaptchaType.recaptcha2,
+            });
+            Alert.alert('result', JSON.stringify(result, null, 2));
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', JSON.stringify(err));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Show random captcha"
+        onPress={async () => {
+          try {
+            const {captcha, session} = await Airdrop.instance.captchaSession();
+            if (!captcha) {
+              throw new Error('Captcha not available');
+            }
+            const result = await awaitForCaptcha({
+              variant: captcha,
+            });
+            Alert.alert(
+              'result',
+              JSON.stringify({captcha, session, result}, null, 2),
+            );
+          } catch (err) {
+            // @ts-ignore
+            Alert.alert('Error', JSON.stringify(err));
           }
         }}
         variant={ButtonVariant.contained}

@@ -375,6 +375,7 @@ export enum I18N {
   transactionDetailAmount,
   transactionDetailNetworkFee,
   transactionDetailCryptocurrency,
+  transactionDetailTransactionType,
   transactionConfirmationSend,
   transactionConfirmationAmount,
   transactionConfirmationHAQQ,
@@ -738,13 +739,36 @@ export enum I18N {
   notEnoughGasDescription2,
   notEnoughGasDescription1,
   notEnoughGasDescription3,
+  browserActionMenuClose,
+  earnTicketAlreadyRecieved,
+  splashDescription,
+  transactionContractTitle,
+  transactionDetailTransactionTypeDescription,
+  transactionContractNamePrefix,
+  transactionContractDefaultName,
+  transactionDetailContractName,
+  blockRequestOk,
+  blockRequestErrorTitle,
+  cloudVerificationTitle,
+  cloudVerificationDescription,
+  cloudProblemsTitle,
+  cloudProblemsDescription,
+  cloudProblemsActionButton,
+  cloudProblemsSecondaryButton,
+  chooseAccountBasicTab,
+  chooseAccountLedgerTab,
+  chooseAccountLoadInfo,
+  chooseAccountAddOneAccountText,
+  chooseAccountAddManyAccountsText,
+  pinAttempts,
+  signContratAttention,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
   let str = en[key];
   if (params) {
     return Object.entries(params).reduce(
-      (memo, [k, v]) => memo.replace(`{{${k}}}`, v),
+      (memo, [k, v]) => memo.replaceAll(`{{${k}}}`, v),
       str,
     );
   }
@@ -1022,7 +1046,7 @@ const en: Record<I18N, string> = {
   [I18N.signinRestoreWalletTextFieldError]: 'Incorrect address',
   [I18N.signinRestoreWalletTextFieldLabel]: 'Backup phrase',
   [I18N.signinRestoreWalletTextFieldPlaceholder]:
-    'Enter or paste your recovery phrase',
+    'Type or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
   [I18N.settingsAccountRemoveTitle]:
@@ -1069,6 +1093,9 @@ const en: Record<I18N, string> = {
   [I18N.sent]: 'Sent',
   [I18N.transactionSendTitle]: 'Sent',
   [I18N.transactionReceiveTitle]: 'Received',
+  [I18N.transactionContractTitle]: 'Contract interaction',
+  [I18N.transactionContractNamePrefix]: 'name: {{value}}',
+  [I18N.transactionContractDefaultName]: 'HAQQ Network Contract',
   [I18N.transactionPositiveAmountText]: `+ {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionNegativeAmountText]: `- {{value}} ${CURRENCY_NAME}`,
   [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
@@ -1272,6 +1299,10 @@ const en: Record<I18N, string> = {
   [I18N.transactionDetailAmount]: 'Amount',
   [I18N.transactionDetailNetworkFee]: 'Network Fee',
   [I18N.transactionDetailCryptocurrency]: 'Cryptocurrency',
+  [I18N.transactionDetailTransactionType]: 'Transaction type',
+  [I18N.transactionDetailContractName]: 'Contract name',
+  [I18N.transactionDetailTransactionTypeDescription]:
+    'The operation of interaction with the contract. You only pay for gas',
   [I18N.walletCreateAddAccount]: 'Add accounts',
   [I18N.walletCreateImportAndCreate]: 'Import and create new accounts',
   [I18N.walletCreateNew]: 'Create new',
@@ -1355,9 +1386,9 @@ const en: Record<I18N, string> = {
   [I18N.sssLoginLaterTitle]:
     "Are you sure you don't want to enable social login?",
   [I18N.sssNetworkWeb3AuthDescription]:
-    'Web3Auth does not store any data related to your social logins.',
+    'HAQQ Wallet does not store any data related to your social logins.',
   [I18N.signinNetworkDisclaimer]:
-    'Web3Auth does not store any data related to your social logins.',
+    'HAQQ Wallet does not store any data related to your social logins.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.sssMigrateAgreementAgree]: 'Understood',
@@ -1412,7 +1443,7 @@ const en: Record<I18N, string> = {
     "Сongratulations! You've successfully connected your social network.",
   [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
   [I18N.sssMigrateAgrementDescription]:
-    'We use Web3Auth technology. Web3Auth does not store any data related to your social logins.',
+    'We use Web3Auth technology. HAQQ Wallet does not store any data related to your social logins.',
   [I18N.sssMigrateAgrementWarning1]:
     'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
   [I18N.sssMigrateAgrementWarning2]:
@@ -1515,6 +1546,7 @@ const en: Record<I18N, string> = {
   [I18N.timerSec]: 'Sec',
   [I18N.raffleTicketRecieved]: 'You have successfully claimed your reward',
   [I18N.earnTicketRecieved]: 'The ticket has been received',
+  [I18N.earnTicketAlreadyRecieved]: 'The ticket already received',
   [I18N.raffleDetailsTimerFinishTitle]: 'Raffle is end',
   [I18N.raffleDetailsTimerProgressTitle]: 'The raffle will end in',
   [I18N.raffleRewardСongratulations]: 'Сongratulations!',
@@ -1593,22 +1625,41 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
-  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is this application`,
-  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor for any promotion and prizes mentioned is
-  this application.`,
+  [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application`,
+  [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application.`,
   [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
   [I18N.lockedTokensInfoDescription]:
     'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
-  [I18N.totalValueScreenTitle]: 'Total value',
-  [I18N.totalValueAccount]: 'Total account value',
+  [I18N.totalValueScreenTitle]: 'Transactions',
+  [I18N.totalValueAccount]: 'Total balance',
   [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
   [I18N.modalDontHaveFeeClose]: 'Close',
   [I18N.notEnoughGasTitle]: 'Not enough gas',
   [I18N.notEnoughGasDescription]:
-    'Currently, a transaction **requires {{gasLimit}} aISLM**, but **you only have {{currentAmount}} aISLM** on your account.',
+    'Currently, a transaction **requires {{gasLimit}}**, but **you only have {{currentAmount}}** on your account.',
   [I18N.notEnoughGasDescription1]: 'Currently, a transaction ',
-  [I18N.notEnoughGasDescription2]: 'requires {{gasLimit}} aISLM',
+  [I18N.notEnoughGasDescription2]: 'requires {{gasLimit}}',
   [I18N.notEnoughGasDescription3]: ', but ',
-  [I18N.notEnoughGasDescription4]: 'you only have {{currentAmount}} aISLM',
+  [I18N.notEnoughGasDescription4]: 'you only have {{currentAmount}}',
   [I18N.notEnoughGasDescription5]: ' on your account.',
+  [I18N.browserActionMenuClose]: 'Close',
+  [I18N.splashDescription]: '🌙 Sabr...\nYour wallet is awakening',
+  [I18N.blockRequestErrorTitle]: 'Something went wrong',
+  [I18N.blockRequestOk]: 'OK',
+  [I18N.cloudVerificationTitle]: 'Trying to access your {{value}}',
+  [I18N.cloudVerificationDescription]: 'It will take a few seconds',
+  [I18N.cloudProblemsTitle]: 'We were unable to access your {{value}}',
+  [I18N.cloudProblemsDescription]:
+    'We were unable to connect to your {{value}} where a backup file of your account is stored. Please check that your {{value}} is working correctly or restore your account using your mnemonic phrase.',
+  [I18N.cloudProblemsActionButton]: 'Check access to {{value}}',
+  [I18N.cloudProblemsSecondaryButton]: 'Restore with mnemonic phrase',
+  [I18N.chooseAccountBasicTab]: 'Basic',
+  [I18N.chooseAccountLedgerTab]: 'Ledger',
+  [I18N.chooseAccountLoadInfo]:
+    'At the first time, we show only first 5 accounts. If you want to see the next 5 accounts then click the Load more button',
+  [I18N.chooseAccountAddOneAccountText]: 'Add {{value}} account',
+  [I18N.chooseAccountAddManyAccountsText]: 'Add {{value}} accounts',
+  [I18N.pinAttempts]: 'wrong pin {{value}} left',
+  [I18N.signContratAttention]:
+    'This smart contract has not been approved by the IslamicCoin team. Signing the contract is at your own discretion',
 };

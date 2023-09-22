@@ -11,9 +11,10 @@ export function useSumAmount(
   initialMaxSum = Balance.Empty,
   minAmount = getMinAmount(),
 ) {
-  const [{amount, amountText}, setAmount] = useState({
+  const [{amount, amountText, changed}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum.isPositive() ? initialSum.toString() : '',
+    changed: false,
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
   const minimumAmountConst = getMinAmount();
@@ -25,7 +26,7 @@ export function useSumAmount(
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (amount) {
+    if (amount && changed) {
       const errorArray = validate.single(amount.toFloat(), {
         numericality: {
           notValid: 'Invalid number',
@@ -40,7 +41,7 @@ export function useSumAmount(
       const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
       setError(newString);
     }
-  }, [amount, minAmount, maxAmount]);
+  }, [changed, amount, minAmount, maxAmount]);
 
   return {
     isValid:
@@ -55,10 +56,12 @@ export function useSumAmount(
       const a =
         Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
         minimumAmountConst.toFloat();
-      setAmount({
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      setAmount(({changed}) => ({
         amountText: String(a),
         amount: maxAmount,
-      });
+        changed: changed,
+      }));
     },
     setAmount(text: string) {
       if (text.match(/^[0-9].*/)) {
@@ -78,11 +81,13 @@ export function useSumAmount(
         setAmount({
           amountText: textFormatted,
           amount: new Balance(+textFormatted),
+          changed: true,
         });
       } else if (text === '') {
         setAmount({
           amountText: '',
           amount: Balance.Empty,
+          changed: true,
         });
       }
     },

@@ -16,6 +16,7 @@ export interface StackedVestedTokensProps {
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
   balance: Balance | undefined;
+
   onPressInfo(): void;
 }
 

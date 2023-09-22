@@ -61,10 +61,11 @@ export const SettingsAccountDetailScreen = memo(() => {
         ManageAccountsStackRoutes.SettingsViewRecoveryPhrase,
         {
           accountId: wallet.accountId,
+          type: wallet.type,
         },
       );
     }
-  }, [navigation, wallet?.accountId]);
+  }, [navigation, wallet?.accountId, wallet?.type]);
 
   const onRemove = useCallback(() => {
     vibrate(HapticEffects.warning);

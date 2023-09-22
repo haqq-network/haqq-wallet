@@ -2,7 +2,7 @@ import {useCallback, useEffect} from 'react';
 
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -23,12 +23,8 @@ export const SignUpStoreWalletScreen = () => {
   >();
 
   const goBack = useCallback(() => {
-    navigation.reset({
-      routes: [
-        {name: WelcomeStackRoutes.Welcome},
-        {name: WelcomeStackRoutes.SignUp, params: {next: 'restore'}},
-      ],
-    });
+    hideModal('loading');
+    navigation.replace(WelcomeStackRoutes.SignUp);
   }, [navigation]);
 
   useEffect(() => {

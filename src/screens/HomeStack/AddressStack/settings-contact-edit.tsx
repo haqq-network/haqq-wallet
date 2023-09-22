@@ -46,7 +46,7 @@ export const SettingsContactEditScreen = memo(() => {
         visible: true,
       });
     } else {
-      contact.update({
+      Contact.update(contact.account, {
         name: newName || inputName,
       });
     }

@@ -7,6 +7,7 @@ import {PermissionsAndroid} from 'react-native';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
+import {getUid} from '@app/helpers/get-uid';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
@@ -57,9 +58,10 @@ export class PushNotifications extends EventEmitter {
 
     if (enabled) {
       const token = await messaging().getToken();
-
+      const uid = await getUid();
       const subscription = await Backend.instance.createNotificationToken(
         token,
+        uid,
       );
 
       if (subscription) {

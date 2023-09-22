@@ -1,7 +1,7 @@
 /**
  * @format
  */
-import './global'
+import './global';
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat'
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
@@ -16,16 +16,16 @@ import {Overview} from './src/overview';
 import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
 
-if(!global.BigInt){
+if (!global.BigInt) {
   const BigInt = require('big-integer');
-  
+
   Object.assign(global, {
     BigInt: BigInt,
   });
 }
 
 import './src/event-actions';
-import { IS_IOS } from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
 import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
 import { enableScreens,enableFreeze } from 'react-native-screens';
@@ -40,7 +40,7 @@ try {
   I18nManager.allowRTL(isRTLEnabled);
   I18nManager.forceRTL(isRTLEnabled);
   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-} catch (e){}
+} catch (e) {}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
@@ -54,7 +54,7 @@ if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
       // We recommend adjusting this value in production.
       tracesSampleRate: 1.0,
       environment: ENVIRONMENT ?? 'development',
-      enableWatchdogTerminationTracking: false
+      enableWatchdogTerminationTracking: false,
     });
   } catch (e) {
     console.log('sentry init failed');

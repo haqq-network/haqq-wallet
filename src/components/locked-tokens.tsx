@@ -13,6 +13,7 @@ export interface LockedTokensProps {
   availableBalance: Balance;
   lockedBalance: Balance;
   totalBalance: Balance;
+
   onForwardPress(): void;
 }
 

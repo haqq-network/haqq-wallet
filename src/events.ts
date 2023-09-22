@@ -27,8 +27,6 @@ export enum Events {
   onWalletSssSaved = 'onWalletSssSaved',
   onDynamicLink = 'onDynamicLink',
   onPushNotification = 'onPushNotification',
-  onAddressBookCreate = 'onAddressBookCreate',
-  onAddressBookSync = 'onAddressBookSync',
   onRaffleTicket = 'onRaffleTicket',
   onNeedUpdate = 'onNeedUpdate',
   onAppReviewRequest = 'onAppReviewRequest',
@@ -44,6 +42,8 @@ export enum Events {
   onSyncAppBalances = 'onSyncAppBalances',
   onWalletVisibilityChange = 'onWalletVisibilityChange',
   onThemeChanged = 'onThemeChanged',
+  onBlockRequestCheck = 'onBlockRequestCheck',
+  onRequestMarkup = 'onRequestMarkup',
 }
 
 export enum WalletConnectEvents {

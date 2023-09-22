@@ -92,6 +92,7 @@ export const WalletProtection = ({
           style={styles.button}
           variant={ButtonVariant.contained}
           i18n={I18N.walletProtectionPharse}
+          testID="protect_pharse_button"
         />
         <Spacer width={10} />
         <Button

@@ -26,6 +26,7 @@ export const HomeSettings = memo(({theme}: Props) => {
         icon="wallet"
         title={I18N.homeSettingsAccounts}
         next={SettingsStackRoutes.SettingsAccounts}
+        testID="settings_manage_accounts"
       />
 
       <SettingsButton

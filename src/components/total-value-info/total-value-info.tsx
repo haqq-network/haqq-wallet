@@ -9,7 +9,7 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {TransactionList} from '@app/types';
+import {ContractNameMap, TransactionList} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 
@@ -31,6 +31,7 @@ export type TotalValueInfoProps = {
   stakingBalance: Balance | undefined;
   onPressInfo: () => void;
   onPressRow: (hash: string) => void;
+  contractNameMap: ContractNameMap;
 };
 
 const PAGE_ITEMS_COUNT = 15;
@@ -44,6 +45,7 @@ export const TotalValueInfo = ({
   vestedBalance,
   onPressInfo,
   onPressRow,
+  contractNameMap,
 }: TotalValueInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
@@ -110,8 +112,14 @@ export const TotalValueInfo = ({
     ],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(
-    ({item}) => <TransactionRow item={item} onPress={onPressRow} />,
-    [onPressRow],
+    ({item}) => (
+      <TransactionRow
+        contractNameMap={contractNameMap}
+        item={item}
+        onPress={onPressRow}
+      />
+    ),
+    [contractNameMap, onPressRow],
   );
   const renderListEmptyComponent = useCallback(
     () => (

@@ -12,9 +12,9 @@ import {
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SssMigrateNetworksScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
@@ -33,13 +33,10 @@ export const SssMigrateNetworksScreen = memo(() => {
         case SssProviders.google:
           creds = await onLoginGoogle();
           break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
-          break;
       }
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
-          METADATA_URL,
+          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',
         );

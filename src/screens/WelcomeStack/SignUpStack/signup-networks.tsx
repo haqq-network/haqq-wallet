@@ -6,6 +6,7 @@ import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
+import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -15,15 +16,15 @@ import {
 import {
   SssProviders,
   onLoginApple,
-  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignupNetworksScreen = memo(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
 
   const onLogin = useCallback(
-    async (provider: SssProviders) => {
+    async (provider: SssProviders, skipCheck: boolean = false) => {
       let creds;
       switch (provider) {
         case SssProviders.apple:
@@ -32,18 +33,26 @@ export const SignupNetworksScreen = memo(() => {
         case SssProviders.google:
           creds = await onLoginGoogle();
           break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
-          break;
       }
 
       let nextScreen = app.onboarded
         ? SignUpStackRoutes.SignupStoreWallet
         : SignUpStackRoutes.OnboardingSetupPin;
 
+      if (!skipCheck) {
+        const hasPermissions = await verifyCloud(provider);
+        if (!hasPermissions) {
+          navigation.navigate('cloudProblems', {
+            sssProvider: provider,
+            onNext: () => onLogin(provider, true),
+          });
+          return;
+        }
+      }
+
       if (creds.privateKey) {
         const walletInfo = await getMetadataValue(
-          METADATA_URL,
+          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',
         );
@@ -68,6 +77,8 @@ export const SignupNetworksScreen = memo(() => {
         token: creds.token,
         verifier: creds.verifier,
         sssCloudShare: null,
+        provider: provider,
+        sssLocalShare: null,
       });
     },
     [navigation],

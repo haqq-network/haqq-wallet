@@ -13,6 +13,7 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
+import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export async function onStakingRewards() {
   const cosmos = new Cosmos(app.provider!);
@@ -70,7 +71,7 @@ export async function onStakingRewards() {
         if (e === '27010') {
           await awaitForPopupClosed('ledgerLocked');
         }
-        transport.abort();
+        return transport.abort();
       }
     }
   }
@@ -106,4 +107,8 @@ export async function onStakingRewards() {
 
   rewards.forEach(r => StakingMetadata.remove(r.hash));
   app.emit(Events.onAppReviewRequest);
+
+  setTimeout(() => {
+    app.emit(Events.onStakingSync);
+  }, AWAIT_NEW_BLOCK_MS);
 }

@@ -95,6 +95,7 @@ export const CustomHeader = forwardRef<
               text={textLeft}
               icon={iconLeft}
               i18n={i18nTextLeft}
+              testID={'go_back'}
             />
             <Text t8 i18n={title} center />
             <HeaderButton

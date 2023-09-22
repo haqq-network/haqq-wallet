@@ -1,17 +1,19 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
 import {Backend} from '@app/services/backend';
+import {WalletConnect} from '@app/services/wallet-connect';
 
 import {onAppReset} from './on-app-reset';
 import {onWalletReset} from './on-wallet-reset';
 
 export async function onWalletRemove(address: string) {
   try {
+    WalletConnect.instance.onWalletRemove(address);
     const wallets = Wallet.addressList();
 
     // last wallet removed
@@ -19,7 +21,7 @@ export async function onWalletRemove(address: string) {
       await onAppReset();
       await onWalletReset();
       navigator.reset({
-        routes: [{name: app.isWelcomeNewsEnabled ? 'welcomeNews' : 'welcome'}],
+        routes: [{name: getWelcomeScreen()}],
       });
     }
 

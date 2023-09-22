@@ -53,13 +53,8 @@ type Props = {
   isWelcomeNewsEnabled: boolean;
 };
 const WelcomeStack = memo(({isWelcomeNewsEnabled}: Props) => {
-  const initialRouteName = useMemo(
-    () =>
-      isWelcomeNewsEnabled
-        ? WelcomeStackRoutes.WelcomeNews
-        : WelcomeStackRoutes.Welcome,
-    [isWelcomeNewsEnabled],
-  );
+  console.log(isWelcomeNewsEnabled);
+  const initialRouteName = useMemo(() => WelcomeStackRoutes.WelcomeNews, []);
 
   return (
     <Stack.Navigator

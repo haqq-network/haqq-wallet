@@ -24,6 +24,10 @@ export const TransactionDetailScreen = memo(() => {
   const source = useMemo(() => {
     const visible = Wallet.getAllVisible().map(w => w.address);
 
+    if (transaction?.input.includes('0x') && transaction.input.length > 2) {
+      return TransactionSource.contract;
+    }
+
     return visible.includes(transaction?.from.toLowerCase() ?? '')
       ? TransactionSource.send
       : TransactionSource.receive;
@@ -60,6 +64,7 @@ export const TransactionDetailScreen = memo(() => {
       transaction={transaction}
       onCloseBottomSheet={onCloseBottomSheet}
       onPressInfo={onPressInfo}
+      contractName={route.params?.contractName}
     />
   );
 });

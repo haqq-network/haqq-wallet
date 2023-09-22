@@ -4,6 +4,7 @@ import {utils} from 'ethers';
 
 import {calcFee} from '@app/helpers';
 import {realm} from '@app/models/index';
+import {Balance} from '@app/services/balance';
 
 export class Transaction extends Realm.Object {
   static schema = {
@@ -22,6 +23,8 @@ export class Transaction extends Realm.Object {
       confirmed: {type: 'bool', default: false},
       providerId: 'string',
       chainId: 'string',
+      feeHex: 'string',
+      input: 'string',
     },
     primaryKey: 'hash',
   };
@@ -38,6 +41,8 @@ export class Transaction extends Realm.Object {
   confirmed!: boolean;
   providerId!: string;
   chainId!: string;
+  feeHex!: string;
+  input!: string;
 
   get feeFormatted() {
     return this.fee.toFixed(15);
@@ -96,9 +101,10 @@ export class Transaction extends Realm.Object {
       timeStamp?: number | string;
       confirmations?: number | string;
       contractAddress?: string;
+      input: string;
     },
     providerId: string,
-    fee: number = 0,
+    fee: Balance = Balance.Empty,
   ) {
     const exists = Transaction.getById(transaction.hash.toLowerCase());
 
@@ -117,7 +123,8 @@ export class Transaction extends Realm.Object {
             ? transaction.contractAddress.toLowerCase()
             : null,
           value: parseFloat(utils.formatEther(transaction.value)),
-          fee: fee,
+          fee: fee.toEther(),
+          feeHex: fee.toHex(),
           providerId,
           chainId: String(transaction.chainId),
           createdAt: exists
@@ -127,6 +134,7 @@ export class Transaction extends Realm.Object {
           confirmed: transaction.confirmations
             ? parseInt(String(transaction.confirmations), 10) > 10
             : false,
+          input: transaction.input ?? '0x',
         },
         Realm.UpdateMode.Modified,
       );

@@ -12,6 +12,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignupPinScreen = memo(() => {
   const pinRef = useRef<PinInterface>();
@@ -30,9 +31,9 @@ export const SignupPinScreen = memo(() => {
           }
 
           const securityQuestion = await getMetadataValue(
-            METADATA_URL,
+            RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
             route.params.sssPrivateKey,
-            'securityQuestion',
+            'socialShareIndex',
           );
 
           if (!securityQuestion) {

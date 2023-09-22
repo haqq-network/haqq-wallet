@@ -2,8 +2,8 @@ import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
@@ -133,8 +133,9 @@ export class User extends EventEmitter {
     return new User(user as UserType & Realm.Object<UserType>);
   }
 
-  async resetUserData() {
-    await awaitForRealm();
+  resetUserData() {
+    const data = {pinAttempts: null, pinBanned: null};
+    EncryptedStorage.setItem('user_data', JSON.stringify(data));
     realm.write(() => {
       this._raw.pinAttempts = null;
       this._raw.pinBanned = null;
@@ -142,6 +143,8 @@ export class User extends EventEmitter {
   }
 
   successEnter() {
+    const data = {pinAttempts: 0, pinBanned: null};
+    EncryptedStorage.setItem('user_data', JSON.stringify(data));
     realm.write(() => {
       this._raw.pinBanned = null;
       this._raw.pinAttempts = 0;
@@ -162,6 +165,26 @@ export class User extends EventEmitter {
             PIN_BANNED_TIMEOUT_SECONDS,
         );
       }
+
+      const data = {
+        pinAttempts: this._raw.pinAttempts,
+        pinBanned: this._raw.pinBanned,
+      };
+      EncryptedStorage.setItem('user_data', JSON.stringify(data));
+    });
+  }
+
+  async rehydrate() {
+    const dataRaw = await EncryptedStorage.getItem('user_data');
+    const dataParsed = dataRaw
+      ? JSON.parse(dataRaw)
+      : {
+          pinAttempts: this._raw.pinAttempts,
+          pinBanned: this._raw.pinBanned,
+        };
+    realm.write(() => {
+      this._raw.pinBanned = dataParsed.pinBanned;
+      this._raw.pinAttempts = dataParsed.pinAttempts;
     });
   }
 

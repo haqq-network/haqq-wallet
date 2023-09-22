@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
+import {ChooseAccountScreen} from '@app/screens/choose-account-screen';
 import {
   WelcomeStackParamList,
   WelcomeStackRoutes,
@@ -145,6 +146,13 @@ const SignInStack = memo(() => {
         name={SignInStackRoutes.OnboardingSetupPin}
         component={OnboardingStackGenerated}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="chooseAccount"
+        component={ChooseAccountScreen}
+        options={{title: getText(I18N.ledgerChooseAccount)}}
+        initialParams={{nextScreen: 'signinStoreWallet'}}
       />
     </Stack.Navigator>
   );

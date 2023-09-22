@@ -73,21 +73,21 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
         ) : (
           <LinearGradient
             colors={[
-              getColor(banner.backgroundColorFrom) || Color.bg1,
-              getColor(banner.backgroundColorTo) || Color.bg1,
+              getColor(banner.backgroundColorFrom || Color.bg1),
+              getColor(banner.backgroundColorTo || Color.bg1),
             ]}
             start={GRADIENT_START}
             end={GRADIENT_END}
             style={styles.inner}
           />
         )}
-        <Text color={getColor(banner.titleColor) ?? Color.textBase3} t10>
+        <Text color={getColor(banner.titleColor ?? Color.textBase3)} t10>
           {banner.title}
         </Text>
         {banner.description && (
           <Text
             style={styles.description}
-            color={getColor(banner.descriptionColor) ?? Color.textBase2}
+            color={getColor(banner.descriptionColor ?? Color.textBase2)}
             t14>
             {banner.description}
           </Text>
@@ -113,7 +113,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
           <IconButton style={styles.closeButton} onPress={onPressClose}>
             <Icon
               name="close_circle"
-              color={getColor(banner.closeButtonColor) ?? Color.graphicBase3}
+              color={getColor(banner.closeButtonColor ?? Color.graphicBase3)}
             />
           </IconButton>
         )}

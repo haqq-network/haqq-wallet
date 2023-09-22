@@ -4,6 +4,7 @@ import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Contact} from '@app/models/contact';
 import {
   TransactionStackParamList,
@@ -63,18 +64,15 @@ export const TransactionSumScreen = memo(() => {
     });
   }, [event, navigation, to]);
 
-  useEffect(() => {
-    EthNetwork.getBalance(route.params.from)
-      .then(b => {
-        setBalance(b);
-        return b;
-      })
-      .then(b =>
-        EthNetwork.estimateTransaction(route.params.from, to, b.toFloat()),
-      )
-      .then(estimateFee => {
-        setFee(estimateFee.feeWei);
-      });
+  useEffectAsync(async () => {
+    const b = app.getBalance(route.params.from);
+    setBalance(b);
+    const estimateFee = await EthNetwork.estimateTransaction(
+      route.params.from,
+      to,
+      b.toFloat(),
+    );
+    setFee(estimateFee.feeWei);
   }, [route.params.from, to]);
 
   return (

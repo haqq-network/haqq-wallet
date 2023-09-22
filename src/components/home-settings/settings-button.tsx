@@ -20,6 +20,7 @@ export type SettingsButtonProps = {
   rightTitle?: string;
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 };
 
 export const SettingsButton = ({
@@ -28,6 +29,7 @@ export const SettingsButton = ({
   next,
   style,
   rightTitle,
+  testID,
 }: SettingsButtonProps) => {
   const navigation = useTypedNavigation<SettingsStackParamList>();
 
@@ -36,7 +38,7 @@ export const SettingsButton = ({
   const onClickButton = () => navigation.navigate(next);
 
   return (
-    <MenuNavigationButton onPress={onClickButton} style={style}>
+    <MenuNavigationButton testID={testID} onPress={onClickButton} style={style}>
       <View style={styles.container}>
         <Icon i24 name={icon} color={Color.graphicBase1} />
         <DataContent titleI18n={title} style={styles.text} />

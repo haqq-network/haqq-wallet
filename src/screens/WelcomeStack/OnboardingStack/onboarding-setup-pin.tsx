@@ -35,5 +35,11 @@ export const OnboardingSetupPinScreen = memo(() => {
     }
   }, [navigation, pin, route]);
 
-  return <OnboardingSetupPin onKeyboard={onKeyboard} pin={pin} />;
+  return (
+    <OnboardingSetupPin
+      onKeyboard={onKeyboard}
+      pin={pin}
+      errorText={route.errorText}
+    />
+  );
 });

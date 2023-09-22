@@ -40,6 +40,7 @@ export class Balance implements IBalance {
       return;
     }
   }
+
   /**
    * Raw BN.js instance of balance
    * @readonly

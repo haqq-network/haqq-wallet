@@ -83,9 +83,8 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
 
   const onSuccess = useCallback(
     async (e: BarCodeReadEvent) => {
-      const newCode = e.data?.trim?.()?.toLowerCase?.();
-      const currentCode = code?.trim?.()?.toLowerCase?.();
-      if (!isProcessing.current && e.data && newCode !== currentCode) {
+      const newCode = e.data?.trim?.();
+      if (!isProcessing.current && e.data && newCode !== code) {
         isProcessing.current = true;
         try {
           await handleQRData(newCode);

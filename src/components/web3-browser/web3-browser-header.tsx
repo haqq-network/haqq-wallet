@@ -10,7 +10,7 @@ import {Wallet} from '@app/models/wallet';
 import {IS_ANDROID} from '@app/variables/common';
 
 import {clearUrl} from '../../helpers/web3-browser-utils';
-import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
+import {Icon, IconButton, IconsName, Spacer, Text} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
 export interface Web3BrowserPressHeaderEvent {
@@ -22,7 +22,7 @@ interface Web3BrowserHeaderProps {
   walletAddress?: string;
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
-  popup?: boolean;
+  popup: boolean;
 
   onPressMore(): void;
 
@@ -34,23 +34,23 @@ interface Web3BrowserHeaderProps {
 
   onPressGoForward(): void;
 
-  onPressClose(): void;
-
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
+
+  onPressClose(): void;
 }
 
 export const Web3BrowserHeader = ({
   walletAddress,
   webviewNavigationData,
   siteUrl,
-  popup,
-  onPressClose,
   onPressMore,
   onPressHeaderUrl,
   onMoreIconLayout,
   onPressGoBack,
   onPressGoForward,
   onPressHeaderWallet,
+  onPressClose,
+  popup,
 }: Web3BrowserHeaderProps) => {
   const clearSiteUrl = useMemo(() => clearUrl(siteUrl), [siteUrl]);
 
@@ -69,6 +69,22 @@ export const Web3BrowserHeader = ({
   }, [onPressHeaderWallet, walletAddress]);
 
   const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];
+
+  const rightIcon = useMemo(() => {
+    if (popup) {
+      return (
+        <IconButton onLayout={onMoreIconLayout} onPress={onPressClose}>
+          <Icon color={Color.graphicBase1} name={IconsName.close} />
+        </IconButton>
+      );
+    }
+
+    return (
+      <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
+        <Icon color={Color.graphicBase1} name={IconsName.more} />
+      </IconButton>
+    );
+  }, [onMoreIconLayout, onPressMore, onPressClose, popup]);
 
   return (
     <View style={stylesHeaderWithRule}>
@@ -104,16 +120,7 @@ export const Web3BrowserHeader = ({
         </Text>
       </TouchableOpacity>
       <Spacer width={15} />
-      <First>
-        {popup && (
-          <IconButton onPress={onPressClose}>
-            <Icon color={Color.graphicBase2} name={IconsName.close_circle} />
-          </IconButton>
-        )}
-        <IconButton onLayout={onMoreIconLayout} onPress={onPressMore}>
-          <Icon color={Color.graphicBase1} name={IconsName.more} />
-        </IconButton>
-      </First>
+      {rightIcon}
       {!!walletAddress && (
         <>
           <Spacer width={15} />

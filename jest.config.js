@@ -11,6 +11,8 @@ module.exports = {
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  transformIgnorePatterns: ["node_modules/(?!(react-native|@haqq|@react-native)/)"],
-  setupFilesAfterEnv: ["./__tests__/init.ts"],
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@haqq|@react-native)/)',
+  ],
+  setupFilesAfterEnv: ['./__tests__/init.ts'],
 };

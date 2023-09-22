@@ -11,7 +11,6 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
-import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {ETH_HD_SHORT_PATH, LEDGER_APP} from '@app/variables/common';
 
@@ -51,7 +50,7 @@ export const LedgerAccountsScreen = memo(() => {
             `${ETH_HD_SHORT_PATH}/${i}`,
           );
 
-          const balance = await EthNetwork.getBalance(data.address);
+          const balance = app.getBalance(data.address);
 
           addressList.push({
             address: data.address.toLowerCase(),

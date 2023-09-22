@@ -91,6 +91,7 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 android {
   ndkVersion rootProject.ext.ndkVersion
 
@@ -100,8 +101,8 @@ android {
     applicationId "com.haqq.wallet"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 193
-    versionName "1.4.7"
+    versionCode 213
+    versionName "1.4.8"
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
       appAuthRedirectScheme    : 'haqq'

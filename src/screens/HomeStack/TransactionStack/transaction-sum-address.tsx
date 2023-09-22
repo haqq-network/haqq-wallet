@@ -21,7 +21,7 @@ export const TransactionSumAddressScreen = memo(() => {
     TransactionStackRoutes.TransactionSumAddress
   >();
   const wallets = useWalletsVisible();
-  const contacts = useRef(Contact.getAll().snapshot()).current;
+  const contacts = useRef(Contact.getAll()).current;
 
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {

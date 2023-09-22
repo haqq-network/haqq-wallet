@@ -14,11 +14,13 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {prepareTransactions, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
 import {Transaction} from '@app/models/transaction';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {Balance} from '@app/services/balance';
+import {Indexer} from '@app/services/indexer';
 import {TransactionList} from '@app/types';
 
 export const AccountInfoScreen = memo(() => {
@@ -49,6 +51,18 @@ export const AccountInfoScreen = memo(() => {
       app.providerId,
     );
   }, [route.params.accountId]);
+  const [contractNameMap, setContractNameMap] = useState({});
+
+  useEffectAsync(async () => {
+    const names = transactions
+      .filter(({input}) => input.includes('0x') && input.length > 2)
+      .map(item => item.to);
+    const uniqueNames = [...new Set(names)];
+    if (uniqueNames.length > 0) {
+      const info = await Indexer.instance.getContractNames(uniqueNames);
+      setContractNameMap(info);
+    }
+  }, []);
 
   const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
     prepareTransactions([route.params.accountId], transactions.snapshot()),
@@ -117,6 +131,7 @@ export const AccountInfoScreen = memo(() => {
       onReceive={onReceive}
       onSend={onSend}
       onPressRow={onPressRow}
+      contractNameMap={contractNameMap}
     />
   );
 });

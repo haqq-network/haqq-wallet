@@ -1,11 +1,12 @@
 module.exports = function (api) {
   api.cache(true);
-  const currentEnv = process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
-  const isTestEnv = !!process.env.JEST_WORKER_ID;
+  const currentEnv =
+    process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
+  const isTestEnv = !!process.env.SDKROOT && process.env.SDKROOT.includes("iPhoneSimulator");
 
   const presets = [
     'module:metro-react-native-babel-preset',
-    '@babel/preset-typescript'
+    '@babel/preset-typescript',
   ];
   const plugins = [
     [
@@ -32,11 +33,11 @@ module.exports = function (api) {
   ];
 
   if (currentEnv === 'production' && !isTestEnv) {
-    plugins.push(["react-remove-properties", {"properties": ["testID"]}]);
+    plugins.push(['react-remove-properties', {properties: ['testID']}]);
   }
 
   return {
     presets,
-    plugins
+    plugins,
   };
-}
+};

@@ -34,10 +34,12 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
+import {Contact} from '@app/models/contact';
 import {navigator} from '@app/navigator';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
+import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {migrationWallets} from './models/migration-wallets';
 
@@ -62,6 +64,9 @@ export const App = () => {
   );
 
   useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      hideModal('splash');
+    }, SPLASH_TIMEOUT_MS);
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
@@ -69,6 +74,8 @@ export const App = () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
+          // MobX stores migration
+          await Promise.all([Contact.migrate()]);
         }
       })
       .then(() => {
@@ -78,7 +85,10 @@ export const App = () => {
         app.addListener(Events.onIsWelcomeNewsChanged, setIsWelcomeNewsEnabled);
         awaitForEventDone(Events.onAppLoggedId);
       })
-      .then(() => hideModal('splash'))
+      .then(() => {
+        clearTimeout(splashTimer);
+        hideModal('splash');
+      })
       .catch(async e => {
         Logger.captureException(e, 'app init');
       })
@@ -88,6 +98,7 @@ export const App = () => {
       });
 
     return () => {
+      clearTimeout(splashTimer);
       app.removeAllListeners(Events.onOnboardedChanged);
       app.removeAllListeners(Events.onIsWelcomeNewsChanged);
     };

@@ -1,7 +1,7 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {SafeAreaView, View} from 'react-native';
+import {BackHandler, SafeAreaView, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
   FileDownloadEvent,
@@ -20,6 +20,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getUserAgent} from '@app/services/version';
+import {IS_ANDROID} from '@app/variables/common';
 
 import {
   InpageBridgeWeb3,
@@ -183,13 +184,15 @@ export const Web3Browser = ({
     () =>
       `
       ${WebViewLogger.script}
-      ${inpageBridgeWeb3}
+      document.addEventListener("DOMContentLoaded", function(event) {
+        ${inpageBridgeWeb3}
+        console.log('ethereum loaded:', !!window.ethereum);
+        if(window.ethereum) {
+          window.ethereum.isMetaMask = false;
+          window.ethereum.isHaqqWallet = true;
+        }
+      });
       ${WebViewEventsJS.getWindowInformation}
-      console.log('ethereum loaded:', !!window.ethereum);
-      if(window.ethereum) {
-        window.ethereum.isMetaMask = false;
-        window.ethereum.isHaqqWallet = true;
-      }
       true;`,
     [inpageBridgeWeb3],
   );
@@ -244,6 +247,34 @@ export const Web3Browser = ({
     [],
   );
 
+  const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
+    setWebviewNavigationData(navState);
+  }, []);
+
+  const onAndroidBackPress = useCallback(() => {
+    if (webviewRef.current) {
+      if (webviewNavigationData?.canGoBack) {
+        webviewRef.current.goBack();
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }, [webviewNavigationData?.canGoBack, webviewRef]);
+
+  useEffect(() => {
+    if (IS_ANDROID) {
+      BackHandler.addEventListener('hardwareBackPress', onAndroidBackPress);
+      return () => {
+        BackHandler.removeEventListener(
+          'hardwareBackPress',
+          onAndroidBackPress,
+        );
+      };
+    }
+  }, [onAndroidBackPress]);
+
   useEffect(() => {
     InpageBridgeWeb3.loadScript().then(script => {
       setInpageBridgeWeb3(script);
@@ -281,25 +312,33 @@ export const Web3Browser = ({
   return (
     <ContainerComponent style={[styles.container, !popup && styles.marginTop]}>
       <Web3BrowserHeader
-        popup={popup}
         walletAddress={walletAddress}
         webviewNavigationData={webviewNavigationData!}
         siteUrl={siteUrl}
         onPressMore={onPressMore}
-        onPressClose={onPressClose}
         onMoreIconLayout={onMoreIconLayout}
         onPressGoBack={onPressGoBack}
         onPressGoForward={onPressGoForward}
         onPressHeaderUrl={onPressHeaderUrl}
         onPressHeaderWallet={onPressHeaderWallet}
+        popup={popup ?? false}
+        onPressClose={onPressClose}
       />
       <View style={styles.webviewContainer}>
         <WebView
+          contentMode={'mobile'}
+          webviewDebuggingEnabled={__DEV__}
+          javaScriptCanOpenWindowsAutomatically
+          setSupportMultipleWindows
+          sharedCookiesEnabled
+          useSharedProcessPool
+          useWebView2
+          javaScriptEnabled
+          cacheEnabled
+          domStorageEnabled
+          allowsBackForwardNavigationGestures
+          thirdPartyCookiesEnabled
           incognito={DEBUG_VARS.enableWeb3BrowserIncognito}
-          // @ts-ignore
-          sendCookies
-          useWebkit
-          javascriptEnabled
           allowsInlineMediaPlayback
           dataDetectorTypes={'all'}
           originWhitelist={['*']}
@@ -317,6 +356,7 @@ export const Web3Browser = ({
           applicationNameForUserAgent={'HAQQ Wallet'}
           injectedJavaScriptBeforeContentLoaded={injectedJSBeforeContentLoaded}
           onFileDownload={onFileDownload}
+          onNavigationStateChange={onNavigationStateChange}
         />
       </View>
       <Web3BrowserActionMenu
@@ -326,6 +366,8 @@ export const Web3Browser = ({
         currentSessionOrigin={currentSession?.origin}
         moreIconLayout={moreIconLayout}
         isSiteInBookmarks={isSiteInBookmarks}
+        popup={popup}
+        onPressClose={onPressClose}
         toggleActionMenu={toggleActionMenu}
         onPressProviders={onPressProviders}
         onPressHome={onPressHome}

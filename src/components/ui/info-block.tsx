@@ -21,11 +21,14 @@ export type InfoBlockProps = {
   style?: StyleProp<ViewStyle>;
   bottomContainerStyle?: StyleProp<ViewStyle>;
   warning?: boolean;
+  error?: boolean;
   border?: boolean;
+  testID?: string;
 };
 
 export const InfoBlock = ({
   warning,
+  error,
   children,
   i18n,
   i18params,
@@ -34,6 +37,7 @@ export const InfoBlock = ({
   border,
   bottom,
   bottomContainerStyle,
+  testID,
 }: InfoBlockProps) => {
   const containerStyle = useMemo(
     () => [
@@ -41,9 +45,11 @@ export const InfoBlock = ({
       warning && !border && styles.warningContainer,
       border && styles.border,
       warning && border && styles.warningBorder,
+      error && styles.errorContainer,
+      error && border && styles.errorBorder,
       style,
     ],
-    [border, style, warning],
+    [border, error, style, warning],
   );
 
   const textStyle = useMemo(
@@ -52,12 +58,13 @@ export const InfoBlock = ({
   );
 
   const textColor = useMemo(
-    () => (warning ? Color.textYellow1 : Color.textBase1),
-    [warning],
+    () =>
+      warning ? Color.textYellow1 : error ? Color.textRed1 : Color.textBase1,
+    [error, warning],
   );
 
   return (
-    <View style={containerStyle}>
+    <View testID={testID} style={containerStyle}>
       <View style={styles.contentContainer}>
         {icon}
         {/* @ts-expect-error */}
@@ -105,5 +112,11 @@ const styles = createTheme({
   },
   warningBorder: {
     borderColor: Color.textYellow1,
+  },
+  errorContainer: {
+    backgroundColor: Color.bg7,
+  },
+  errorBorder: {
+    borderColor: Color.textRed1,
   },
 });

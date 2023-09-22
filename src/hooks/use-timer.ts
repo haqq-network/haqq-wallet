@@ -14,7 +14,7 @@ export const useTimer = ({
   end,
   updateInterval,
 }: UseTimerParams) => {
-  const intervalId = useRef<NodeJS.Timer>();
+  const intervalId = useRef(0 as unknown as NodeJS.Timeout);
   const isLastIntervalUpdate = useRef(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isFinish, setFinish] = useState(false);

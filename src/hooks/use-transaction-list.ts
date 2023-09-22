@@ -7,6 +7,7 @@ import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
+
 /**
  * @example
  *  const adressList = useMemo(() => Wallet.addressList(), []);

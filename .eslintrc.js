@@ -8,7 +8,7 @@ module.exports = {
     'react-native',
     'import',
     'prettier',
-    'jest'
+    'jest',
   ],
   overrides: [
     {
@@ -64,6 +64,6 @@ module.exports = {
     },
   },
   globals: {
-    Logger: 'readonly'
-  }
+    Logger: 'readonly',
+  },
 };

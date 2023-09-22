@@ -20,6 +20,7 @@ import {
 import {BluetoothPoweredOff} from '@app/components/modals/bluetooth-powered-off';
 import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthorized';
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
+import {CloudVerification} from '@app/components/modals/cloudVerification';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
@@ -37,7 +38,7 @@ export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
 > = {
-  type: Extract<ModalName, string>;
+  type: keyof Modals;
   modal: ModalsList[ModalName];
   onClose: (modal: Extract<ModalName, string>) => void;
 };
@@ -119,6 +120,8 @@ export const ModalWrapper = ({
         return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
       case 'notEnoughGas':
         return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
+      case 'cloudVerification':
+        return <CloudVerification {...modal} />;
       default:
         return null;
     }

@@ -159,32 +159,16 @@ export class SignJsonRpcRequest {
         }
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
-        let sendTransactionRequest: TransactionRequest = request.params[0];
-
-        const {address} = await instanceProvider.getAccountInfo(path);
-        const nonce = await rpcProvider.getTransactionCount(address, 'latest');
-        const {_hex: estimateGas} = await rpcProvider.estimateGas({
-          ...sendTransactionRequest,
-          from: address,
-        });
-        sendTransactionRequest = {
-          ...sendTransactionRequest,
-          maxFeePerGas: sendTransactionRequest.gasPrice,
-          gasLimit: estimateGas,
-          nonce,
-          type: 2,
+        const signRequest: PartialJsonRpcRequest = {
+          ...request,
+          method: EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
         };
 
-        if (chainId) {
-          sendTransactionRequest.chainId = chainId;
-        }
-
-        const sendTransactionResult = instanceProvider.signTransaction(
-          path,
-          sendTransactionRequest,
+        const signedTransaction = await SignJsonRpcRequest.signEIP155Request(
+          wallet,
+          signRequest,
+          chainId,
         );
-        await checkLedger();
-        const signedTransaction = await sendTransactionResult;
 
         const tx = await rpcProvider.sendTransaction(signedTransaction);
         result = tx.hash;
@@ -192,8 +176,27 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         let signTransactionRequest: TransactionRequest = request.params[0];
 
-        delete signTransactionRequest.from;
-        delete signTransactionRequest.type;
+        const {address} = await instanceProvider.getAccountInfo(path);
+        const nonce = await rpcProvider.getTransactionCount(address, 'latest');
+
+        const gasPrice = await rpcProvider.getGasPrice();
+        const {_hex: estimateGas} = await rpcProvider.estimateGas({
+          ...signTransactionRequest,
+          from: address,
+        });
+
+        signTransactionRequest = {
+          ...signTransactionRequest,
+          nonce,
+          type: 2,
+          gasLimit: estimateGas,
+          maxFeePerGas: gasPrice._hex,
+          maxPriorityFeePerGas: gasPrice._hex,
+        };
+
+        if (signTransactionRequest.gasPrice) {
+          delete signTransactionRequest.gasPrice;
+        }
 
         if (chainId) {
           signTransactionRequest.chainId = chainId;

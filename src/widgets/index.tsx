@@ -1,8 +1,16 @@
-import React, {ReactNode, memo, useState} from 'react';
+import React, {
+  ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import {getUid} from '@app/helpers/get-uid';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {Wallet} from '@app/models/wallet';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {getAppInfo} from '@app/helpers/get-app-info';
+import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
@@ -12,7 +20,6 @@ import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
 import {LayoutWidgetWrapper} from '@app/widgets/layout-widget';
 import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
 import {StakingWidgetWrapper} from '@app/widgets/staking-widget';
-import {TransactionsShortWidgetWrapper} from '@app/widgets/transactions-short-widget';
 import {TransactionsWidgetWrapper} from '@app/widgets/transactions-widget';
 
 type IWidgetMap = {
@@ -28,9 +35,7 @@ const WidgetMap: IWidgetMap = {
   Transactions: params => (
     <TransactionsWidgetWrapper key={generateUUID()} {...params} />
   ),
-  TransactionsShort: params => (
-    <TransactionsShortWidgetWrapper key={generateUUID()} {...params} />
-  ),
+  TransactionsShort: () => null,
   Raffles: params => <RafflesWidgetWrapper key={generateUUID()} {...params} />,
   Staking: params => <StakingWidgetWrapper key={generateUUID()} {...params} />,
   Governance: params => (
@@ -48,21 +53,42 @@ const WidgetMap: IWidgetMap = {
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
 };
 
-export const WidgetRoot = memo(() => {
-  const [data, setData] = useState<IWidget[]>([]);
+export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
+  const dataCached = useRef(
+    VariablesString.get('widget_blocks') || '[]',
+  ).current;
 
-  useEffectAsync(async () => {
-    const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
-    const uid = await getUid();
-    const response = await Backend.instance.markup({
-      wallets,
-      screen: 'home',
-      uid,
-    });
-    if (response.blocks) {
-      setData([response.blocks]);
-    }
-  }, []);
+  const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
+
+  const requestMarkup = useCallback(
+    async (blockRequest?: string) => {
+      Logger.log('widget requestMarkup', {blockRequest});
+      const appInfo = await getAppInfo();
+      const response = await Backend.instance.markup('home', appInfo);
+
+      if (!response.blocks) {
+        return Logger.error('widget request: not found blocks', response);
+      }
+
+      const blocks = [response.blocks];
+
+      const blocksAreEqual = JSON.stringify(blocks) === JSON.stringify(data);
+
+      if (!blocksAreEqual) {
+        setData(blocks);
+        VariablesString.set('widget_blocks', JSON.stringify(blocks));
+      }
+    },
+    [data],
+  );
+
+  useEffect(() => {
+    requestMarkup();
+    app.on(Events.onRequestMarkup, requestMarkup);
+    return () => {
+      app.off(Events.onRequestMarkup, requestMarkup);
+    };
+  }, [lastUpdate, requestMarkup]);
 
   if (!data) {
     return null;

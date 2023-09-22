@@ -9,7 +9,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
@@ -31,7 +30,6 @@ export const SignupNetworks = ({
 }: SssNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
-  const [isCustom, setIsCustom] = useState(false);
 
   const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
 
@@ -55,15 +53,6 @@ export const SignupNetworks = ({
     }
   }, [onLogin]);
 
-  const onPressLoginCustom = useCallback(async () => {
-    try {
-      setIsCustom(true);
-
-      await onLogin(SssProviders.custom);
-    } finally {
-      setIsCustom(false);
-    }
-  }, [onLogin]);
   return (
     <PopupContainer style={styles.container}>
       <Spacer centered>
@@ -102,17 +91,6 @@ export const SignupNetworks = ({
           />
         </>
       )}
-      {app.isDeveloper && (
-        <>
-          <Spacer height={10} />
-          <Button
-            onPress={onPressLoginCustom}
-            loading={isCustom}
-            i18n={I18N.customNetwork}
-            variant={ButtonVariant.contained}
-          />
-        </>
-      )}
       <Spacer height={10} />
       <Text
         t15
@@ -125,6 +103,7 @@ export const SignupNetworks = ({
         i18n={I18N.sssLoginLater}
         variant={ButtonVariant.text}
         textColor={Color.textRed1}
+        testID="sss_login_later"
       />
     </PopupContainer>
   );

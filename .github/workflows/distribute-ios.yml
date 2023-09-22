@@ -17,9 +17,9 @@ on:
           - false
           - true
 
-      IS_WELCOME_NEWS_ENABLED:
+      IS_STAKED_VESTED_ENABLED:
         type: choice
-        description: IS_WELCOME_NEWS_ENABLED
+        description: IS_STAKED_VESTED_ENABLED
         options:
           - false
           - true
@@ -32,7 +32,7 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
-      IS_WELCOME_NEWS_ENABLED:
+      IS_STAKED_VESTED_ENABLED:
         required: true
         type: string
 
@@ -85,7 +85,6 @@ jobs:
           echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "PATTERNS_SOURCE=${{secrets.PATTERNS_SOURCE}}" >> .env
           echo "ENVIRONMENT=distribution" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
@@ -93,26 +92,19 @@ jobs:
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
           echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
-          echo "CUSTOM_JWT_TOKEN=${{secrets.CUSTOM_JWT_TOKEN}}" >> .env
-          echo "SSS_GOOGLE_IOS=${{secrets.SSS_GOOGLE_IOS}}" >> .env
-          echo "SSS_GOOGLE_ANDROID=${{secrets.SSS_GOOGLE_ANDROID}}" >> .env
-          echo "SSS_APPLE=${{secrets.SSS_APPLE}}" >> .env
-          echo "SSS_CUSTOM=${{secrets.SSS_CUSTOM}}" >> .env
-          echo "METADATA_URL=${{secrets.METADATA_URL}}" >> .env
-          echo "GENERATE_SHARES_URL=${{secrets.GENERATE_SHARES_URL}}" >> .env
-          echo "PUSH_NOTIFICATIONS_URL=${{secrets.PUSH_NOTIFICATIONS_URL}}" >> .env
-          echo "AIRDROP_TESTEDGE2_URL=${{secrets.AIRDROP_TESTEDGE2_URL}}" >> .env
-          echo "AIRDROP_MAINNET_URL=${{secrets.AIRDROP_MAINNET_URL}}" >> .env
           echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
           echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
-          echo "AIRDROP_GASDROP_SECRET=${{secrets.AIRDROP_GASDROP_SECRET}}" >> .env
-          echo "AIRDROP_GASDROP_CAMPAIGN_ID=${{secrets.AIRDROP_GASDROP_CAMPAIGN_ID}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
-          echo "IS_WELCOME_NEWS_ENABLED=${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}" >> .env
+          echo "IS_STAKED_VESTED_ENABLED=${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
+          echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
+          echo "TURNSTILE_SITEKEY=${{secrets.TURNSTILE_SITEKEY}}" >> .env
+          echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
+          echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
+          echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env

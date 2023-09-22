@@ -3,12 +3,12 @@ name: Distribute apps
 on:
   workflow_dispatch:
     inputs:
-      IS_WELCOME_NEWS_ENABLED:
+      IS_STAKED_VESTED_ENABLED:
         type: choice
-        description: IS_WELCOME_NEWS_ENABLED
+        description: IS_STAKED_VESTED_ENABLED
         options:
-          - true
           - false
+          - true
 
       IS_SSS_ENABLED:
         type: choice
@@ -39,10 +39,9 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      IS_WELCOME_NEWS_ENABLED: ${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}
+      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
     needs:
       - test
-
 
   build_ios:
     name: Build and distribute iOS app
@@ -51,7 +50,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      IS_WELCOME_NEWS_ENABLED: ${{github.event.inputs.IS_WELCOME_NEWS_ENABLED}}
+      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
     needs:
       - test
 

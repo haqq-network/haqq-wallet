@@ -2,6 +2,8 @@ import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
+import {SssProviders} from '@app/services/provider-sss';
+
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
 
@@ -172,6 +174,7 @@ export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
 
 export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
+export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
 export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
@@ -242,3 +245,13 @@ export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
 
 export const MODAL_SCREEN_NAME = 'modal';
+
+export const SPLASH_TIMEOUT_MS = 30_000;
+export const AWAIT_NEW_BLOCK_MS = 10_000;
+
+export const ProviderNameMap = {
+  [SssProviders.apple]: 'iCloud',
+  [SssProviders.google]: '\nGoogle Drive',
+};
+
+export const STORE_REHYDRATION_TIMEOUT_MS = 2000;

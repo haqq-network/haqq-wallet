@@ -9,7 +9,7 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
-import {DataContent, Icon, IconButton, IconsName} from '../ui';
+import {DataContent, First, Icon, IconButton, IconsName} from '../ui';
 
 const ACTION_MENU_WIDTH = 220;
 const ACTION_MENU_PADDING_HORIZONTAL = 16;
@@ -21,6 +21,9 @@ interface Web3BrowserActionMenuProps {
   currentProvider: Provider;
   currentSessionOrigin?: string;
   moreIconLayout: Partial<LayoutRectangle>;
+  popup?: boolean;
+
+  onPressClose(): void;
 
   toggleActionMenu(): void;
 
@@ -48,6 +51,8 @@ export const Web3BrowserActionMenu = ({
   moreIconLayout,
   isSiteInBookmarks,
   currentSessionOrigin,
+  popup,
+  onPressClose,
   toggleActionMenu,
   onPressProviders,
   onPressHome,
@@ -94,10 +99,20 @@ export const Web3BrowserActionMenu = ({
                 <View style={styles.moreButtonSeparator} />
               </>
             )}
-            <IconButton style={styles.actionMenuButton} onPress={onPressHome}>
-              <DataContent short titleI18n={I18N.browserActionMenuHome} />
-              <Icon name={IconsName.global} color={Color.graphicBase1} />
-            </IconButton>
+            <First>
+              {!!popup && (
+                <IconButton
+                  style={styles.actionMenuButton}
+                  onPress={onPressClose}>
+                  <DataContent short titleI18n={I18N.browserActionMenuClose} />
+                  <Icon name={IconsName.close} color={Color.graphicBase1} />
+                </IconButton>
+              )}
+              <IconButton style={styles.actionMenuButton} onPress={onPressHome}>
+                <DataContent short titleI18n={I18N.browserActionMenuHome} />
+                <Icon name={IconsName.global} color={Color.graphicBase1} />
+              </IconButton>
+            </First>
             <View style={styles.moreButtonSeparator} />
             {!isSiteInBookmarks && (
               <>

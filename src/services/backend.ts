@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {AppInfo} from '@app/helpers/get-app-info';
 import {
   MarkupResponse,
   NewsRow,
@@ -32,6 +33,30 @@ export class Backend {
 
   getRemoteUrl() {
     return app.backend;
+  }
+
+  async blockRequest(
+    code: string,
+    wallets: string[],
+    uid: string,
+  ): Promise<{result: boolean; error?: string}> {
+    const request = await fetch(`${this.getRemoteUrl()}block/request`, {
+      method: 'POST',
+      headers: Backend.headers,
+      body: JSON.stringify({
+        wallets,
+        code,
+        uid,
+      }),
+    });
+
+    const resp = await getHttpResponse(request);
+
+    if (request.status !== 200) {
+      throw new Error(resp.error);
+    }
+
+    return resp;
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
@@ -87,7 +112,12 @@ export class Backend {
     session: string,
     signature: string,
     address: string,
-  ): Promise<{signature: string; participant: string; deadline: number}> {
+  ): Promise<{
+    signature: string;
+    participant: string;
+    deadline: number;
+    tx_hash: string;
+  }> {
     const request = await fetch(
       `${this.getRemoteUrl()}contests/${contest}/participate`,
       {
@@ -187,10 +217,11 @@ export class Backend {
     return resp;
   }
 
-  async getRemoteConfig(): Promise<RemoteConfigTypes> {
+  async getRemoteConfig(appInfo: AppInfo): Promise<RemoteConfigTypes> {
     const response = await fetch(`${this.getRemoteUrl()}config`, {
-      method: 'GET',
+      method: 'POST',
       headers: Backend.headers,
+      body: JSON.stringify(appInfo),
     });
 
     return await getHttpResponse<RemoteConfigTypes>(response);
@@ -237,12 +268,16 @@ export class Backend {
     return await getHttpResponse<NewsUpdatesResponse>(newsResp);
   }
 
-  async createNotificationToken(token: string): Promise<{id: string}> {
+  async createNotificationToken(
+    token: string,
+    uid: string,
+  ): Promise<{id: string}> {
     const req = await fetch(`${this.getRemoteUrl()}notification_token`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
         token,
+        uid,
       }),
     });
 
@@ -304,22 +339,13 @@ export class Backend {
     return await getHttpResponse<T>(req);
   }
 
-  async markup({
-    wallets,
-    uid,
-    screen,
-  }: {
-    wallets: string[];
-    uid: string;
-    screen: string;
-  }): Promise<MarkupResponse> {
+  async markup(screen: string, appInfo: AppInfo): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
-        wallets,
-        uid,
         screen,
+        ...appInfo,
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);

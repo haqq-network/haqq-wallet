@@ -229,7 +229,12 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
     <PopupContainer style={styles.container} onScroll={onScroll}>
       {item.preview && (
         <>
-          <Image source={{uri: item.preview}} style={styles.preview} />
+          <Image
+            resizeMode={'cover'}
+            source={{uri: item.preview}}
+            style={styles.preview}
+            borderRadius={12}
+          />
           <Spacer height={24} />
         </>
       )}
@@ -251,8 +256,8 @@ const styles = createTheme({
     paddingHorizontal: 20,
   },
   preview: {
-    height: 200,
-    flex: 1,
+    aspectRatio: 16 / 9,
+    width: '100%',
     borderRadius: 12,
   },
   image: {

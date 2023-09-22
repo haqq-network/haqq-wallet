@@ -15,13 +15,21 @@ import {
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
+import {
+  ContractNameMap,
+  OnTransactionRowPress,
+  TransactionListContract,
+  TransactionListReceive,
+  TransactionListSend,
+  TransactionSource,
+} from '@app/types';
 
 export type Props = {
-  item: Transaction;
-  onPress: (hash: string) => void;
+  item: TransactionListSend | TransactionListReceive | TransactionListContract;
+  onPress: OnTransactionRowPress;
   wallets: Realm.Results<Wallet>;
+  contractNameMap: ContractNameMap;
 };
 
 type IMapItem = {
@@ -32,33 +40,58 @@ type IMapItem = {
 };
 
 const DisplayMap: {[key: string]: IMapItem} = {
-  send: {
+  [TransactionSource.send]: {
     iconName: IconsName.arrow_send,
     title: I18N.transactionSendTitle,
     sumTextColor: Color.textRed1,
     amountText: I18N.transactionNegativeAmountText,
   },
-  receive: {
+  [TransactionSource.receive]: {
     iconName: IconsName.arrow_receive,
     title: I18N.transactionReceiveTitle,
     sumTextColor: Color.textGreen1,
     amountText: I18N.transactionPositiveAmountText,
   },
+  [TransactionSource.contract]: {
+    iconName: IconsName.contract,
+    title: I18N.transactionContractTitle,
+    sumTextColor: Color.textGreen1,
+    amountText: I18N.transactionPositiveAmountText,
+  },
 };
 
-export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
-  const isSend = useMemo(() => {
-    return wallets
-      .map(wallet => wallet.address.toLowerCase())
-      .includes(item.from.toLowerCase());
-  }, [wallets, item.from]);
-  const DisplayMapItem = useMemo(
-    () => DisplayMap[isSend ? 'send' : 'receive'],
-    [isSend],
+export const TransactionRowWidget = ({
+  item,
+  onPress,
+  wallets,
+  contractNameMap,
+}: Props) => {
+  const adressList = Wallet.addressList();
+  const contractName = useMemo(
+    () => contractNameMap[item.to],
+    [contractNameMap, item.to],
   );
+
+  const isSend = useMemo(() => {
+    return (
+      item.source === TransactionSource.send || adressList.includes(item.from)
+    );
+  }, [item.source, adressList, item.from]);
+  const DisplayMapItem = useMemo(() => {
+    if (isSend && item.source === TransactionSource.contract) {
+      const sendMap = DisplayMap[TransactionSource.send];
+      const contractMap = DisplayMap[TransactionSource.contract];
+      return {
+        ...sendMap,
+        iconName: contractMap.iconName,
+        title: contractMap.title,
+      };
+    }
+    return DisplayMap[item.source];
+  }, [item.source, isSend]);
   const handlePress = useCallback(() => {
-    onPress(item.hash);
-  }, [item.hash, onPress]);
+    onPress(item.hash, {contractName});
+  }, [item.hash, onPress, contractName]);
   const currentWallet = useMemo(() => {
     return wallets.find(
       wallet =>
@@ -113,12 +146,14 @@ export const TransactionRowWidget = ({item, onPress, wallets}: Props) => {
           }
           short
         />
-        <Text
-          t11
-          color={DisplayMapItem.sumTextColor}
-          i18n={DisplayMapItem.amountText}
-          i18params={{value: cleanNumber(item.value)}}
-        />
+        {!!item.value && (
+          <Text
+            t11
+            color={DisplayMapItem.sumTextColor}
+            i18n={DisplayMapItem.amountText}
+            i18params={{value: cleanNumber(item.value)}}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -154,6 +189,8 @@ const styles = createTheme({
     paddingVertical: 2,
     flexDirection: 'row',
     alignItems: 'center',
+    maxHeight: 58,
+    height: 58,
   },
   infoContainer: {
     marginLeft: 12,

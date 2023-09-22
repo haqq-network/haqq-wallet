@@ -101,22 +101,19 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     filteredChildren?.[activeTabIndex],
   );
 
-  const onTabPress = useCallback(
-    (tab: TabType, index: number) => {
-      setActiveTabIndex(index);
-      setActiveTab(tab);
-      onTabChange?.(tab?.props?.name);
-    },
-    [onTabChange],
-  );
+  const onTabPress = useCallback((tab: TabType, index: number) => {
+    setActiveTabIndex(index);
+    setActiveTab(tab);
+    onTabChange?.(tab?.props?.name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const tab = filteredChildren[activeTabIndex];
     if (tab) {
       setActiveTab(filteredChildren[activeTabIndex]);
-      onTabChange?.(tab?.props?.name);
     }
-  }, [activeTab, filteredChildren, activeTabIndex, onTabChange]);
+  }, [activeTab, filteredChildren, activeTabIndex]);
 
   switch (variant) {
     case TopTabNavigatorVariant.small:

@@ -1,9 +1,8 @@
+import {getAppInfo} from '@app/helpers/get-app-info';
 import {VariablesString} from '@app/models/variables-string';
+import {Backend} from '@app/services/backend';
+import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
 import {isValidJSON} from '@app/utils';
-
-import {RemoteConfigTypes} from './remote-config-types';
-
-import {Backend} from '../backend';
 
 const KEY = 'remote-config-cache';
 
@@ -24,7 +23,8 @@ export class RemoteConfig {
       if (RemoteConfig.isInited) {
         return RemoteConfig.getAll();
       }
-      const config = await Backend.instance.getRemoteConfig();
+      const appInfo = await getAppInfo();
+      const config = await Backend.instance.getRemoteConfig(appInfo);
       Logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
@@ -46,6 +46,17 @@ export class RemoteConfig {
     } else {
       logger.error('remote config is empty', config);
     }
+  }
+
+  public static get_env<K extends keyof RemoteConfigTypes>(
+    key: K,
+    env: string | undefined,
+  ) {
+    if (env) {
+      return env;
+    }
+
+    return RemoteConfig.get(key);
   }
 
   public static get<K extends keyof RemoteConfigTypes>(

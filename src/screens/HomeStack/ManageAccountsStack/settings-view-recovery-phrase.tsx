@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
 import {Loading} from '@app/components/ui';
@@ -10,11 +11,13 @@ import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
 } from '@app/screens/HomeStack/ManageAccountsStack';
+import {Cloud} from '@app/services/cloud';
+import {WalletType} from '@app/types';
 
 import {PinGuardScreen} from '../../pin-guard';
 
 export const SettingsViewRecoveryPhraseScreen = memo(() => {
-  const {accountId} = useTypedRoute<
+  const {accountId, type} = useTypedRoute<
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsViewRecoveryPhrase
   >().params;
@@ -22,15 +25,28 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
   const [mnemonic, setMnemonic] = useState<string>('');
 
   const onEnter = useCallback(async () => {
-    const provider = new ProviderMnemonicReactNative({
-      account: accountId,
-      getPassword: app.getPassword.bind(app),
-    });
+    switch (type) {
+      case WalletType.mnemonic:
+        const providerMnemonic = new ProviderMnemonicReactNative({
+          account: accountId,
+          getPassword: app.getPassword.bind(app),
+        });
+        const phraseMnemonic = await providerMnemonic.getMnemonicPhrase();
+        setMnemonic(phraseMnemonic ?? '');
+        break;
+      case WalletType.sss:
+        const storage = new Cloud();
+        const providerSss = new ProviderSSSReactNative({
+          storage,
+          account: accountId,
+          getPassword: app.getPassword.bind(app),
+        });
 
-    const phrase = await provider.getMnemonicPhrase();
-
-    setMnemonic(phrase ?? '');
-  }, [accountId]);
+        const phraseSss = await providerSss.getMnemonicPhrase();
+        setMnemonic(phraseSss ?? '');
+        break;
+    }
+  }, [accountId, type]);
 
   return (
     <PinGuardScreen onEnter={onEnter}>

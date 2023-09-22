@@ -10,6 +10,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {Raffle, RaffleStatus} from '@app/types';
+import {sleep} from '@app/utils';
 import {WEI} from '@app/variables/common';
 import {RafflesWidget} from '@app/widgets/raffles.widget/raffles-widget';
 
@@ -24,6 +25,7 @@ export const RafflesWidgetWrapper = memo(() => {
         Wallet.addressList(),
         uid,
       );
+      setRaffles([]);
       setRaffles(prepareRaffles(response));
     } catch (err) {
       Logger.captureException(
@@ -47,6 +49,8 @@ export const RafflesWidgetWrapper = memo(() => {
   const onPressGetTicket = useCallback(async (raffle: Raffle) => {
     try {
       await onEarnGetTicket(raffle.id);
+      await sleep(2000);
+      await loadRaffles();
     } catch (e) {
       Logger.captureException(e, 'onPressGetTicket');
       throw e;

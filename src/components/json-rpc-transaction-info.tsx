@@ -1,29 +1,57 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import Decimal from 'decimal.js';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataView, Spacer, Text} from '@app/components/ui';
+import {
+  DataView,
+  First,
+  Icon,
+  InfoBlock,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
-import {getHostnameFromUrl} from '@app/utils';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {Provider} from '@app/models/provider';
+import {getDefaultNetwork} from '@app/network';
+import {Balance} from '@app/services/balance';
+import {
+  AddressType,
+  JsonRpcMetadata,
+  PartialJsonRpcRequest,
+  VerifyAddressResponse,
+} from '@app/types';
+import {
+  getHostnameFromUrl,
+  getTransactionFromJsonRpcRequest,
+  isContractTransaction,
+} from '@app/utils';
+import {WEI} from '@app/variables/common';
 
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 
 interface WalletConnectTransactionInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
+  verifyAddressResponse: VerifyAddressResponse | null;
+  chainId?: number;
 }
 
 export const JsonRpcTransactionInfo = ({
   request,
   metadata,
+  verifyAddressResponse,
+  chainId,
 }: WalletConnectTransactionInfoProps) => {
+  const [calculatedFee, setCalculatedFee] = useState(Balance.Empty);
+  const [isFeeLoading, setFeeLoading] = useState(true);
+
   const params = useMemo(
-    () => (Array.isArray(request.params) ? request.params[0] : request.params),
+    () => getTransactionFromJsonRpcRequest(request),
     [request],
   );
 
@@ -45,11 +73,6 @@ export const JsonRpcTransactionInfo = ({
     [demicalAmount],
   );
 
-  const estimateFee = useMemo(
-    () => cleanNumber(demicalEstimateFee.toString(), ' ', 2),
-    [demicalEstimateFee],
-  );
-
   const total = useMemo(
     () =>
       cleanNumber(
@@ -59,6 +82,41 @@ export const JsonRpcTransactionInfo = ({
       ),
     [demicalAmount, demicalEstimateFee],
   );
+
+  const isContract = useMemo(
+    () =>
+      verifyAddressResponse?.addressType === AddressType.contract ||
+      isContractTransaction(params),
+    [params, verifyAddressResponse],
+  );
+
+  const isInWhiteList = useMemo(
+    () => !!verifyAddressResponse?.isInWhiteList,
+    [verifyAddressResponse],
+  );
+
+  const showSignContratAttention = isContract && !isInWhiteList;
+
+  useEffectAsync(async () => {
+    try {
+      if (params) {
+        setFeeLoading(true);
+        const provider = chainId && Provider.getByEthChainId(chainId);
+        const rpcProvider = provider
+          ? await getRpcProvider(provider)
+          : getDefaultNetwork();
+        const {_hex} = await rpcProvider.estimateGas(params);
+        setCalculatedFee(new Balance(_hex));
+      }
+    } catch (err) {
+      Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
+        params,
+        chainId,
+      });
+    } finally {
+      setFeeLoading(false);
+    }
+  }, [chainId]);
 
   return (
     <>
@@ -80,6 +138,18 @@ export const JsonRpcTransactionInfo = ({
       </View>
 
       <Spacer height={24} />
+
+      {showSignContratAttention && (
+        <>
+          <InfoBlock
+            error
+            icon={<Icon name={'warning'} color={Color.textRed1} />}
+            i18n={I18N.signContratAttention}
+            style={styles.signContractAttention}
+          />
+          <Spacer height={24} />
+        </>
+      )}
 
       <Text
         t11
@@ -136,10 +206,12 @@ export const JsonRpcTransactionInfo = ({
           />
         </DataView>
         <DataView label="Network Fee">
-          <Text t11 color={Color.textBase1}>
-            {/* TODO: Migrate to estimateFee.toWeiString() */}
-            {`${estimateFee} a${CURRENCY_NAME}`}
-          </Text>
+          <First>
+            {isFeeLoading && <ActivityIndicator />}
+            <Text t11 color={Color.textBase1}>
+              {calculatedFee.toWeiString()}
+            </Text>
+          </First>
         </DataView>
       </View>
     </>
@@ -157,5 +229,8 @@ const styles = createTheme({
   },
   fromImage: {
     marginHorizontal: 4,
+  },
+  signContractAttention: {
+    width: '100%',
   },
 });

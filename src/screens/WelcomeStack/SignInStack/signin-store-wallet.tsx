@@ -6,7 +6,7 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -16,10 +16,12 @@ import {
   SignInStackParamList,
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
+import {RemoteConfig} from '@app/services/remote-config';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = memo(() => {
+  console.log('SignInStoreWalletScreen');
   const navigation = useTypedNavigation<SignInStackParamList>();
   const {nextScreen, ...params} = useTypedRoute<
     SignInStackParamList,
@@ -27,12 +29,15 @@ export const SignInStoreWalletScreen = memo(() => {
   >().params;
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    console.log('here');
+    // showModal('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
     const goBack = () => {
-      navigation.getParent()?.goBack();
+      console.log('goback');
+      hideModal('loading');
+      navigation.replace('signin', {next: ''});
     };
     setTimeout(async () => {
       try {
@@ -81,10 +86,7 @@ export const SignInStoreWalletScreen = memo(() => {
 
             await mnemonicProvider.setMnemonicSaved();
 
-            await createWalletsForProvider(
-              mnemonicProvider,
-              WalletType.mnemonic,
-            );
+            // Wallets were created on previous step
             break;
           case 'sss':
             const storage = await getProviderStorage();
@@ -92,14 +94,21 @@ export const SignInStoreWalletScreen = memo(() => {
             const sssProvider = await ProviderSSSReactNative.initialize(
               params.sssPrivateKey,
               params.sssCloudShare,
+              params.sssLocalShare,
               null,
               params.verifier,
               params.token,
               app.getPassword.bind(app),
               storage,
               {
-                metadataUrl: METADATA_URL,
-                generateSharesUrl: GENERATE_SHARES_URL,
+                metadataUrl: RemoteConfig.get_env(
+                  'sss_metadata_url',
+                  METADATA_URL,
+                ) as string,
+                generateSharesUrl: RemoteConfig.get_env(
+                  'sss_generate_shares_url',
+                  GENERATE_SHARES_URL,
+                ) as string,
               },
             );
 
@@ -107,19 +116,21 @@ export const SignInStoreWalletScreen = memo(() => {
             break;
         }
 
+        console.log('next');
         navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
       } catch (error) {
+        console.log(error);
+        Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            // showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              showModal('errorCreateAccount');
+              // showModal('errorCreateAccount');
               goBack();
-              Logger.captureException(error, 'restoreStore');
             }
         }
       }

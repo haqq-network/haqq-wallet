@@ -1,8 +1,6 @@
 import Realm from 'realm';
 
-import {AddressBook} from '@app/models/address-book';
-import {Banner, BannerButton} from '@app/models/banner';
-import {Contact} from '@app/models/contact';
+import {ContactRealmObject} from '@app/models/contact';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
@@ -15,6 +13,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
@@ -39,14 +38,11 @@ export const realm = new Realm({
     Wallet,
     UserSchema,
     Transaction,
-    Contact,
+    ContactRealmObject,
     Provider,
     StakingMetadata,
     Refferal,
-    Banner,
-    BannerButton,
     NftCollection,
-    AddressBook,
     News,
     VariablesDate,
     VariablesBool,
@@ -54,7 +50,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 67,
+  schemaVersion: 71,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -533,6 +529,38 @@ export const realm = new Realm({
         newObject.evmEndpoints = [];
       }
     }
-    logger.log('migration finish');
+
+    if (oldRealm.schemaVersion < 68) {
+      logger.log('migration step #22');
+      const oldObjects = oldRealm.objects<{fee: number}>('Transaction');
+      const newObjects = newRealm.objects<{feeHex: string}>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        const oldObject = oldObjects[objectIndex];
+        newObject.feeHex = new Balance(oldObject.fee).toHex();
+      }
+    }
+    if (oldRealm.schemaVersion < 69) {
+      logger.log('migration step #22');
+      const oldObjects = oldRealm.objects('Transaction');
+      const newObjects = newRealm.objects<{input: string}>('Transaction');
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.input = '0x';
+      }
+    }
+    logger.log('realm migration finished');
   },
 });

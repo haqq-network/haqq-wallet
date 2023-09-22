@@ -23,7 +23,7 @@ export const TransactionAddressScreen = memo(() => {
 
   const [loading, setLoading] = React.useState(false);
   const wallets = useWalletsVisible();
-  const contacts = useRef(Contact.getAll().snapshot()).current;
+  const contacts = useRef(Contact.getAll()).current;
 
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {

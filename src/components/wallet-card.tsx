@@ -4,6 +4,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
+import {AnimateNumber} from '@app/components/animated-balance';
 import {
   BlurView,
   Card,
@@ -15,6 +16,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
@@ -62,13 +64,16 @@ export const WalletCard = memo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
-
     const total = useMemo(() => {
       if (!balance) {
-        return Balance.Empty.toBalanceString();
+        return Balance.Empty.toEther();
       }
 
-      return balance.operate(stakingBalance, 'add').toBalanceString();
+      if (isFeatureEnabled(Feature.lockedStakedVestedTokens)) {
+        return balance.operate(stakingBalance, 'add').toEther();
+      }
+
+      return balance.toEther();
     }, [balance, stakingBalance]);
 
     const locked = useMemo(() => {
@@ -141,6 +146,7 @@ export const WalletCard = memo(
           {enableProtectionWarning && (
             <>
               <IconButton
+                testID="wallet_without_protection_button"
                 onPress={onProtection}
                 style={styles.withoutProtection}>
                 <Text
@@ -167,9 +173,7 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <Text t0 color={Color.textBase3} numberOfLines={1} adjustsFontSizeToFit>
-          {total}
-        </Text>
+        <AnimateNumber value={total} initialValue={total} />
         {showLockedTokens && stakingBalance?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>

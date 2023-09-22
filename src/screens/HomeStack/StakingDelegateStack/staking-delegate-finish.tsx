@@ -9,6 +9,7 @@ import {
   StakingDelegateStackParamList,
   StakingDelegateStackRoutes,
 } from '@app/screens/HomeStack/StakingDelegateStack';
+import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export const StakingDelegateFinishScreen = memo(() => {
   const navigation = useTypedNavigation<StakingDelegateStackParamList>();
@@ -19,6 +20,9 @@ export const StakingDelegateFinishScreen = memo(() => {
 
   const onDone = useCallback(async () => {
     app.emit(Events.onStakingSync);
+    setTimeout(() => {
+      app.emit(Events.onStakingSync);
+    }, AWAIT_NEW_BLOCK_MS);
     await awaitForEventDone(Events.onAppReviewRequest);
     navigation.getParent()?.goBack();
   }, [navigation]);

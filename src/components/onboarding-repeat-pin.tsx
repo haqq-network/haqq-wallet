@@ -16,9 +16,13 @@ import {vibrate} from '@app/services/haptic';
 
 type OnboardingRepeatPinProps = {
   onSetPin: (pin: string) => void;
+  onError: (error: string) => void;
 };
 
-export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
+export const OnboardingRepeatPin = ({
+  onSetPin,
+  onError,
+}: OnboardingRepeatPinProps) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const route = useTypedRoute<
@@ -43,11 +47,11 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
         onSetPin(pin);
       } else {
         const invalidCode = getText(I18N.onboardingRepeatPinInvalidCode);
-        setError(invalidCode);
         setPin('');
+        onError(invalidCode);
       }
     }
-  }, [pin, currentPin, route, onSetPin]);
+  }, [pin, currentPin, route, onSetPin, onError]);
 
   return (
     <PopupContainer style={styles.container}>
@@ -68,7 +72,7 @@ export const OnboardingRepeatPin = ({onSetPin}: OnboardingRepeatPinProps) => {
           <View style={[styles.dot, pin.length >= 5 && styles.active]} />
           <View style={[styles.dot, pin.length >= 6 && styles.active]} />
         </View>
-        <ErrorText e2 style={styles.error}>
+        <ErrorText e2 center>
           {error ? error : ' '}
         </ErrorText>
       </Spacer>
@@ -103,9 +107,6 @@ const styles = createTheme({
   active: {
     backgroundColor: Color.textGreen1,
     transform: [{scale: 1}],
-  },
-  error: {
-    justifyContent: 'center',
   },
   t11: {
     marginBottom: () => verticalScale(5),

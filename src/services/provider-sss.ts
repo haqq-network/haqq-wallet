@@ -1,74 +1,30 @@
-import {
-  CUSTOM_JWT_TOKEN,
-  GENERATE_SHARES_URL,
-  SSS_APPLE,
-  SSS_CUSTOM,
-  SSS_GOOGLE_ANDROID,
-  SSS_GOOGLE_IOS,
-} from '@env';
+import {GENERATE_SHARES_URL} from '@env';
 import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
 import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
-import {Platform} from 'react-native';
-import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
-import {getHttpResponse} from '@app/utils';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export enum SssProviders {
   google = 'google',
   apple = 'apple',
-  custom = 'custom',
-}
-
-export async function onLoginCustom() {
-  const email = await new Promise((resolve, reject) => {
-    prompt(
-      'Enter email',
-      'some name@haqq',
-      [
-        {text: 'Cancel', onPress: () => reject(), style: 'cancel'},
-        {text: 'OK', onPress: e => resolve(e)},
-      ],
-      {
-        type: 'plain-text',
-        cancelable: false,
-      },
-    );
-  });
-
-  const token = await fetch(CUSTOM_JWT_TOKEN, {
-    method: 'POST',
-    headers: {
-      accept: 'application/json, text/plain, */*',
-      'content-type': 'application/json;charset=UTF-8',
-    },
-    body: JSON.stringify({
-      email,
-    }),
-  });
-
-  const authState = await getHttpResponse(token);
-
-  const authInfo = parseJwt(authState.idToken);
-  return await onAuthorized(SSS_CUSTOM, authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {
   const authState = await getGoogleTokens();
   const authInfo = parseJwt(authState.idToken);
 
-  return await onAuthorized(
-    Platform.select({
-      ios: SSS_GOOGLE_IOS,
-      android: SSS_GOOGLE_ANDROID,
-    }) as string,
-    authInfo.email,
-    authState.idToken,
-  );
+  const verifier = RemoteConfig.get('sss_google');
+
+  if (!verifier) {
+    throw new Error('sss_google is not set');
+  }
+
+  return await onAuthorized(verifier, authInfo.email, authState.idToken);
 }
 
 export async function onLoginApple() {
@@ -85,7 +41,13 @@ export async function onLoginApple() {
 
   const authInfo = parseJwt(identityToken);
 
-  return await onAuthorized(SSS_APPLE, authInfo.email, identityToken);
+  const verifier = RemoteConfig.get('sss_apple');
+
+  if (!verifier) {
+    throw new Error('sss_apple is not set');
+  }
+
+  return await onAuthorized(verifier, authInfo.email, identityToken);
 }
 
 export type Creds = {
@@ -114,7 +76,14 @@ export async function onAuthorized(
   const nodeDetailsRequest = await jsonrpcRequest<{
     isNew: boolean;
     shares: [string, string][];
-  }>(GENERATE_SHARES_URL, 'shares', [verifier, token, false]);
+  }>(
+    RemoteConfig.get_env(
+      'sss_generate_shares_url',
+      GENERATE_SHARES_URL,
+    ) as string,
+    'shares',
+    [verifier, token, false],
+  );
 
   const tmpPk = await generateEntropy(32);
   const shares = await Promise.all(
