@@ -253,3 +253,8 @@ export const ProviderNameMap = {
 };
 
 export const STORE_REHYDRATION_TIMEOUT_MS = 2000;
+
+export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
+  'haqq.page.link',
+  'preview.page.link',
+];

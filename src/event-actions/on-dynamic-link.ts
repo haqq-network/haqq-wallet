@@ -7,9 +7,9 @@ import {VariablesString} from '@app/models/variables-string';
 import {Airdrop} from '@app/services/airdrop';
 import {AdjustEvents, DynamicLink} from '@app/types';
 
-export async function onDynamicLink(link: DynamicLink | null) {
+export async function onDynamicLink(link: Partial<DynamicLink> | null) {
   if (link && 'url' in link) {
-    const parsedUrl = url.parse(link.url, true);
+    const parsedUrl = url.parse(link.url!, true);
 
     if (typeof parsedUrl?.query?.block_code === 'string') {
       VariablesString.set('block_code', parsedUrl.query.block_code);

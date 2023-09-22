@@ -1,8 +1,13 @@
+import URL from 'url';
+
 import {JsonRpcRequest} from 'json-rpc-engine';
 import {Alert, Linking} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
+import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
+import {I18N, getText} from '@app/i18n';
 import {isValidUrl} from '@app/utils';
+import {HAQQ_DYNAMIC_LINKS_HOSTNAME} from '@app/variables/common';
 
 import {
   WebViewEventsEnum,
@@ -124,6 +129,41 @@ export const showPhishingAlert = () => {
         {text: 'Continue', style: 'destructive', onPress: () => resolve(true)},
       ],
     );
+  });
+};
+
+export const detectDynamicLink = (url: string) => {
+  const {hostname, query} = URL.parse(url, true);
+  return (
+    !!hostname &&
+    typeof query.link === 'string' &&
+    HAQQ_DYNAMIC_LINKS_HOSTNAME.includes(hostname)
+  );
+};
+
+export const detectDynamicLinkAndNavigate = async (url: string) => {
+  return new Promise(resolve => {
+    const {query} = URL.parse(url, true);
+    if (detectDynamicLink(url)) {
+      Alert.alert(
+        getText(I18N.dynamicLinkDetactedTitle),
+        getText(I18N.dynamicLinkDetactedDescription, {url}),
+        [
+          {
+            text: getText(I18N.dynamicLinkDetactedIgnore),
+            style: 'destructive',
+            onPress: () => resolve(true),
+          },
+          {
+            text: getText(I18N.dynamicLinkDetactedAllow),
+            onPress: async () => {
+              await onDynamicLink({url: query.link as string});
+              resolve(true);
+            },
+          },
+        ],
+      );
+    }
   });
 };
 

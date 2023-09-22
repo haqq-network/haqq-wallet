@@ -17,6 +17,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
+import {navigator} from '@app/navigator';
 import {
   createJsonRpcLoggerMiddleWare,
   createJsonRpcMiddleware,
@@ -30,6 +31,8 @@ import {
   changeWebViewUrlJS,
   detectDeeplink,
   detectDeeplinkAndNavigate,
+  detectDynamicLink,
+  detectDynamicLinkAndNavigate,
   emitToEthereumJS,
   getOriginFromUrl,
   isJsonRpcRequest,
@@ -128,7 +131,11 @@ export class Web3BrowserHelper extends EventEmitter {
     }
 
     if (await detectDeeplinkAndNavigate(url)) {
-      return;
+      return navigator.goBack();
+    }
+
+    if (await detectDynamicLinkAndNavigate(url)) {
+      return navigator.goBack();
     }
 
     if (getOriginFromUrl(url) !== this.origin) {
@@ -161,6 +168,11 @@ export class Web3BrowserHelper extends EventEmitter {
     }
 
     if (detectDeeplink(url)) {
+      this.go(url);
+      return false;
+    }
+
+    if (detectDynamicLink(url)) {
       this.go(url);
       return false;
     }
