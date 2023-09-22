@@ -1,17 +1,13 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
-import {FeeData} from '@ethersproject/abstract-provider/src.ts';
 import {Deferrable} from '@ethersproject/properties';
 import {ProviderInterface} from '@haqq/provider-base';
-import BN from 'bn.js';
-import {BigNumber, BigNumberish, utils} from 'ethers';
+import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {calcFeeWei} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {getDefaultChainId} from '@app/network';
-import {Balance} from '@app/services/balance';
-import {WEI} from '@app/variables/common';
+import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
@@ -20,41 +16,30 @@ export class EthNetwork {
   static async populateTransaction(
     from: string,
     to: string,
-    value: BN,
+    value: Balance,
     data: string = '0x',
-    minGas = 21000,
+    minGas = MIN_GAS_LIMIT,
   ) {
     const rpcProvider = await getRpcProvider(app.provider);
 
     const nonce = await rpcProvider.getTransactionCount(from, 'latest');
-    const gasPrice = await rpcProvider.getGasPrice();
 
-    let estimateGas;
-    try {
-      const resp = await rpcProvider.estimateGas({
-        from,
-        to,
-        value: '0x' + value.toString('hex'),
-        maxFeePerGas: gasPrice.toHexString(),
-        maxPriorityFeePerGas: gasPrice.toHexString(),
-        data,
-      } as Deferrable<TransactionRequest>);
-
-      estimateGas = new BN(resp._hex, 16);
-    } catch (e) {
-      estimateGas = new BN(minGas);
-    }
-
-    estimateGas = BN.max(estimateGas, new BN(minGas));
+    const estimate = await EthNetwork.estimateTransaction(
+      from,
+      to,
+      value,
+      data,
+      minGas,
+    );
 
     const transaction = {
       to: to,
-      value: '0x' + value.toString('hex'),
+      value: value.toHex(),
       nonce,
       type: 2,
-      maxFeePerGas: gasPrice._hex,
-      maxPriorityFeePerGas: gasPrice._hex,
-      gasLimit: '0x' + estimateGas.toString('hex'),
+      maxFeePerGas: estimate.gasPrice.toHex(),
+      maxPriorityFeePerGas: estimate.gasPrice.toHex(),
+      gasLimit: estimate.estimateGas.toHex(),
       data,
       chainId: EthNetwork.chainId,
     };
@@ -122,33 +107,34 @@ export class EthNetwork {
   static async estimateTransaction(
     from: string,
     to: string,
-    amount: number,
+    value: Balance,
     data = '0x',
+    minGas: Balance = MIN_GAS_LIMIT,
   ): Promise<{
-    fee: number;
     feeWei: Balance;
-    feeData: FeeData;
-    estimateGas: BigNumberish;
+    gasPrice: Balance;
+    estimateGas: Balance;
   }> {
     const rpcProvider = await getRpcProvider(app.provider);
 
-    const result = await Promise.all([
-      rpcProvider.getFeeData(),
-      rpcProvider.estimateGas({
-        from,
-        to,
-        amount,
-        data,
-      } as Deferrable<TransactionRequest>),
-    ]);
+    const getGasPrice = await rpcProvider.getGasPrice();
+    const gasPrice = new Balance(getGasPrice._hex);
 
-    const feeWei = calcFeeWei(result[0].gasPrice!, result[1]);
+    const estGas = await rpcProvider.estimateGas({
+      from,
+      to,
+      value: value.toHex(),
+      data,
+      maxFeePerGas: gasPrice.toHex(),
+      maxPriorityFeePerGas: gasPrice.toHex(),
+    } as Deferrable<TransactionRequest>);
+
+    const estimateGas = new Balance(estGas._hex).max(minGas);
 
     return {
-      fee: feeWei / WEI,
-      feeWei: new Balance(String(feeWei)),
-      feeData: result[0],
-      estimateGas: result[1],
+      feeWei: estimateGas.operate(gasPrice, 'mul'),
+      gasPrice,
+      estimateGas,
     };
   }
 
@@ -156,13 +142,13 @@ export class EthNetwork {
     transport: ProviderInterface,
     hdPath: string,
     to: string,
-    amount: string | number,
+    amount: Balance,
   ) {
     const {address} = await transport.getAccountInfo(hdPath);
     const transaction = await EthNetwork.populateTransaction(
       address,
       to,
-      new BN(amount),
+      amount,
     );
     const signedTx = await transport.signTransaction(hdPath, transaction);
 

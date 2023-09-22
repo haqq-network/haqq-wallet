@@ -96,7 +96,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
 
       <View style={styles.providerContainer}>
         <Text

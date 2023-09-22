@@ -10,7 +10,7 @@ import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Modals} from '@app/types';
-import {ProviderNameMap} from '@app/variables/common';
+import {ProviderNameMap} from '@app/variables/sss';
 
 export const CloudVerification = memo(
   ({sssProvider}: Modals['cloudVerification']) => {

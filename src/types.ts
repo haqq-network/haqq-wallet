@@ -348,7 +348,7 @@ export type RootStackParamList = {
   transactionConfirmation: {
     from: string;
     to: string;
-    amount: number;
+    amount: Balance;
     fee?: Balance;
   };
   transactionNftConfirmation: {
@@ -360,8 +360,8 @@ export type RootStackParamList = {
   transactionLedger: {
     from: string;
     to: string;
-    amount: number;
-    fee?: number;
+    amount: Balance;
+    fee?: Balance;
   };
   transactionSumAddress: {
     to: string;

@@ -1,4 +1,3 @@
-import BN from 'bn.js';
 import {utils} from 'ethers';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -77,9 +76,9 @@ export async function onEarnGetTicket(raffleId: string) {
     const unsignedTx = await EthNetwork.populateTransaction(
       leadingAccount.address,
       raffleId,
-      new BN(0),
+      Balance.Empty,
       data,
-      250000,
+      new Balance(250000, 0),
     );
 
     const signedTx = await provider.signTransaction(
