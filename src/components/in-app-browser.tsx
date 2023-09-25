@@ -136,7 +136,7 @@ export const InAppBrowser = ({
       }
 
       if (await detectDeeplinkAndNavigate(nextUrl)) {
-        return onPressClose();
+        return;
       }
 
       if (await detectDynamicLinkAndNavigate(nextUrl)) {

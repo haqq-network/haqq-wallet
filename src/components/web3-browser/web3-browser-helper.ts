@@ -131,7 +131,7 @@ export class Web3BrowserHelper extends EventEmitter {
     }
 
     if (await detectDeeplinkAndNavigate(url)) {
-      return navigator.goBack();
+      return;
     }
 
     if (await detectDynamicLinkAndNavigate(url)) {
