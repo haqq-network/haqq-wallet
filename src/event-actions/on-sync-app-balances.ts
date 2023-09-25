@@ -12,6 +12,6 @@ export async function onSyncAppBalances() {
       onStakingSync(),
     ]);
   } catch (err) {
-    Logger.captureException(err, 'onSyncAppBalances');
+    Logger.captureException(err, Events.onSyncAppBalances);
   }
 }
