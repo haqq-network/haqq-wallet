@@ -260,3 +260,5 @@ export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
 export const TRANSACTION_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.transactions}`;
 export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.news}`;
 export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;
+
+export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
