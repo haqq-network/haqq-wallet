@@ -5,7 +5,7 @@ import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
 export async function onStakingSync() {
-  Logger.log('onStakingSync');
+  Logger.log(Events.onStakingSync);
   const cosmos = new Cosmos(app.provider!);
   const addressList = Wallet.getAllVisible().map(w =>
     Cosmos.addressToBech32(w.address),

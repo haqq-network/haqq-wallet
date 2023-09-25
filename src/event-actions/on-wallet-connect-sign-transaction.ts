@@ -1,3 +1,4 @@
+import {Events} from '@app/events';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
@@ -24,7 +25,9 @@ export async function onWalletConnectSignTransaction(
     }
   } catch (err) {
     if (isError(err)) {
-      Logger.captureException(err, 'onWalletConnectSignTransaction', {event});
+      Logger.captureException(err, Events.onWalletConnectSignTransaction, {
+        event,
+      });
       await WalletConnect.instance.rejectSessionRequest(
         event.id,
         event.topic,

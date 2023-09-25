@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -21,6 +22,6 @@ export async function onWalletsStakingBalanceCheck() {
 
     await app.onWalletsStakingBalance(Object.fromEntries(balances));
   } catch (e) {
-    Logger.error('onWalletsStakingBalanceCheck', e);
+    Logger.error(Events.onWalletsStakingBalanceCheck, e);
   }
 }
