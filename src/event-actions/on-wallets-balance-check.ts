@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
@@ -39,7 +40,7 @@ export async function onWalletsBalanceCheck() {
         new Date(updates.last_update),
       );
     } catch (e) {
-      Logger.error('onWalletsBalanceCheck', e);
+      Logger.error(Events.onWalletsBalanceCheck, e);
 
       balances = await Promise.all(
         Wallet.getAll().map(w =>
@@ -52,6 +53,6 @@ export async function onWalletsBalanceCheck() {
 
     app.onWalletsBalance(Object.fromEntries(balances));
   } catch (e) {
-    Logger.error('onWalletsBalanceCheck', e);
+    Logger.error(Events.onWalletsBalanceCheck, e);
   }
 }

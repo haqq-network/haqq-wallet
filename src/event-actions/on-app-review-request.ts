@@ -1,11 +1,12 @@
 import {differenceInDays} from 'date-fns';
 import InAppReview from 'react-native-in-app-review';
 
+import {Events} from '@app/events';
 import {VariablesDate} from '@app/models/variables-date';
 
 const REQUEST_REVIEW_DAYS_INTERVAL = 7;
 
-const logger = Logger.create('onAppReviewRequest');
+const logger = Logger.create(Events.onAppReviewRequest);
 
 export async function onAppReviewRequest() {
   try {
@@ -40,7 +41,7 @@ export async function onAppReviewRequest() {
       VariablesDate.set('lastInAppReviewDate', new Date());
     }
   } catch (err) {
-    logger.captureException(err, 'onAppReviewRequest', {
+    logger.captureException(err, Events.onAppReviewRequest, {
       // @ts-ignore
       code: err.code,
     });
