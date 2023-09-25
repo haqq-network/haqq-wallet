@@ -1,3 +1,4 @@
+import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -17,7 +18,7 @@ type Data = {
   id: string;
 };
 
-const logger = Logger.create('onPushNotification');
+const logger = Logger.create(Events.onPushNotification);
 
 export async function onPushNotification(message: RemoteMessage<Data>) {
   const {id, type} = message.data || {};
