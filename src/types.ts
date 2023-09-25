@@ -1107,6 +1107,7 @@ export interface IStakingWidget extends IWidgetBase {
 
 export interface IGovernanceWidget extends IWidgetBase {
   component: 'Governance';
+  link?: string;
 }
 
 export interface ILayoutWidget extends IWidgetBase {

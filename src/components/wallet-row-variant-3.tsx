@@ -31,10 +31,7 @@ export const WalletRowVariant3 = ({
     [item.address, onPress],
   );
 
-  const addressString = useMemo(
-    () => item.address.replace(/^0x/, '').slice(0, 4),
-    [item.address],
-  );
+  const addressString = useMemo(() => item.address.slice(-4), [item.address]);
 
   return (
     <TouchableOpacity style={containerStyle} onPress={pressCard}>
