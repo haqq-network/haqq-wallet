@@ -30,4 +30,5 @@ declare module '@env' {
   // https://www.google.com/recaptcha/admin/create
   export const RECAPTCHA_V2_URL: string;
   export const RECAPTCHA_V2_SITEKEY: string;
+  export const MMKV_KEY: string;
 }
