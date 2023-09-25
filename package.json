@@ -126,7 +126,7 @@
     "react-native-webview": "13.6.0",
     "react-timer-mixin": "0.13.4",
     "readable-stream": "4.4.2",
-    "realm": "12.1.0",
+    "realm": "11.10.1",
     "rive-react-native": "^4.1.2",
     "rxjs": "7.8.1",
     "sha.js": "2.4.11",
