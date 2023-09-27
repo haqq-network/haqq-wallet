@@ -12,6 +12,7 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {
   SignInStackParamList,
   SignInStackRoutes,
@@ -21,7 +22,6 @@ import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = memo(() => {
-  console.log('SignInStoreWalletScreen');
   const navigation = useTypedNavigation<SignInStackParamList>();
   const {nextScreen, ...params} = useTypedRoute<
     SignInStackParamList,
@@ -29,15 +29,14 @@ export const SignInStoreWalletScreen = memo(() => {
   >().params;
 
   useEffect(() => {
-    console.log('here');
-    // showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
     const goBack = () => {
-      console.log('goback');
       hideModal('loading');
-      navigation.replace('signin', {next: ''});
+      //@ts-ignore
+      navigation.replace(WelcomeStackRoutes.SignIn, {next: ''});
     };
     setTimeout(async () => {
       try {
@@ -116,20 +115,19 @@ export const SignInStoreWalletScreen = memo(() => {
             break;
         }
 
-        console.log('next');
-        navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
+        //@ts-ignore
+        navigation.navigate(nextScreen ?? 'onboardingFinish', params);
       } catch (error) {
-        console.log(error);
         Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
-            // showModal('errorAccountAdded');
+            showModal('errorAccountAdded');
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              // showModal('errorCreateAccount');
+              showModal('errorCreateAccount');
               goBack();
             }
         }

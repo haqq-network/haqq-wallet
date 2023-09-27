@@ -1,59 +1,46 @@
-import {createNavigationContainerRef} from '@react-navigation/native';
+import {makeAutoObservable} from 'mobx';
 
-import {app} from '@app/contexts/app';
+import {ModalState} from '@app/screens/modals-screen';
 import {Modals} from '@app/types';
 import {makeID} from '@app/utils';
-import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
 export type ModalName = Extract<keyof Modals, string>;
 
-class ModalController {
-  private navigationInstance: ReturnType<typeof createNavigationContainerRef>;
+class ModalStore {
+  modals: ModalState[] = [];
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-  init = () => {
-    const navigation = createNavigationContainerRef();
-    this.navigationInstance = navigation;
+  private isExist = (type: ModalName) => !!this.findByType(type);
+
+  private findByType = (type: ModalName) =>
+    this.modals.find(modal => modal.type === type);
+
+  private removeByType = (type: ModalName) => {
+    const filtered = this.modals.filter(modal => modal.type !== type);
+    this.modals = filtered;
   };
 
-  isReady = () => {
-    return (
-      this.navigationInstance.isReady() &&
-      this.navigationInstance?.current?.getRootState?.() !== undefined
-    );
+  showModal = (type: ModalName, params: Modals[ModalName] = {}) => {
+    const newModal: ModalState = {type, ...params, uid: makeID(6)};
+    if (this.isExist(newModal.type)) {
+      this.removeByType(newModal.type);
+    }
+    this.modals = [...this.modals, newModal];
+
+    return () => this.hideModal(type);
   };
 
-  showModal = (modalName: ModalName, params: Modals[ModalName] = {}) => {
-    console.log('show');
-    if (!this.navigationInstance) {
-      return () => {};
-    }
-    app.emit('showModal', {type: modalName, ...params});
-    if (this.isReady()) {
-      //@ts-ignore
-      // this.navigationInstance.navigate(MODAL_SCREEN_NAME, {
-      //   type: modalName,
-      //   uid: makeID(6),
-      //   ...params,
-      // });
-    }
-
-    return () => hideModal(modalName);
-  };
-
-  hideModal = (modalName: ModalName) => {
-    console.log('hide');
-    if (!this.navigationInstance) {
-      return;
-    }
-    app.emit('hideModal', {type: modalName});
-    if (this.isReady()) {
-      // this.navigationInstance.goBack();
+  hideModal = (type: ModalName) => {
+    if (this.isExist(type)) {
+      this.removeByType(type);
     }
   };
 }
 
-const instance = new ModalController();
+const instance = new ModalStore();
 
 export const showModal = instance.showModal;
 export const hideModal = instance.hideModal;
-export {instance as ModalController};
+export {instance as ModalStore};

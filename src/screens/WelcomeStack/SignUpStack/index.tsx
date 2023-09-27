@@ -8,6 +8,7 @@ import {
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
+import {CloudProblemsScreen} from '@app/screens/cloud-problems';
 import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
 import {
   OnboardingStack,
@@ -28,6 +29,7 @@ export enum SignUpStackRoutes {
   SignUpPin = 'signupPin',
   OnboardingSetupPin = 'onboardingSetupPin',
   SignupStoreWallet = 'signupStoreWallet',
+  SignupCloudProblems = 'cloudProblems',
 }
 
 export type SignUpStackParamList = WelcomeStackParamList & {
@@ -45,6 +47,10 @@ export type SignUpStackParamList = WelcomeStackParamList & {
   [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;
   [SignUpStackRoutes.SignupStoreWallet]: WalletInitialData & {
     nextScreen?: SignUpStackRoutes;
+  };
+  [SignUpStackRoutes.SignupCloudProblems]: {
+    sssProvider: SssProviders;
+    onNext: () => void;
   };
 };
 
@@ -120,6 +126,11 @@ const SignUpStack = memo(() => {
         name={SignUpStackRoutes.SignupStoreWallet}
         component={SignUpStoreWalletScreen}
         options={{...screenOptionsSignupStoreWallet, animation: 'none'}}
+      />
+      <Stack.Screen
+        name={SignUpStackRoutes.SignupCloudProblems}
+        component={CloudProblemsScreen}
+        options={hideBack}
       />
 
       <Stack.Screen

@@ -30,13 +30,16 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     }));
 
     useEffect(() => {
-      AppState.addEventListener('change', state => {
+      const listener = AppState.addEventListener('change', state => {
         if (state === 'active') {
           lottieRef?.current?.resume();
         }
       });
-    });
+      return () => {
+        listener.remove();
+      };
+    }, []);
 
-    return <Lottie {...props} ref={lottieRef} />;
+    return <Lottie {...props} ref={lottieRef} renderMode="HARDWARE" />;
   },
 );

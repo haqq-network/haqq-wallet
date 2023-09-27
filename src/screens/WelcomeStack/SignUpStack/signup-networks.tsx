@@ -42,7 +42,7 @@ export const SignupNetworksScreen = memo(() => {
       if (!skipCheck) {
         const hasPermissions = await verifyCloud(provider);
         if (!hasPermissions) {
-          navigation.navigate('cloudProblems', {
+          navigation.navigate(SignUpStackRoutes.SignupCloudProblems, {
             sssProvider: provider,
             onNext: () => onLogin(provider, true),
           });
@@ -59,18 +59,10 @@ export const SignupNetworksScreen = memo(() => {
 
         if (walletInfo) {
           nextScreen = SignUpStackRoutes.SignUpNetworkExists;
-          navigation.navigate(nextScreen, {
-            type: 'sss',
-            sssPrivateKey: creds.privateKey,
-            token: creds.token,
-            verifier: creds.verifier,
-            sssCloudShare: null,
-            provider: provider,
-          });
-          return;
         }
       }
 
+      //@ts-ignore
       navigation.navigate(nextScreen, {
         type: 'sss',
         sssPrivateKey: creds.privateKey,

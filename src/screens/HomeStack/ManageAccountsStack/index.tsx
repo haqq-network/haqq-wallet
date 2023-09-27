@@ -12,6 +12,7 @@ import {SettingsAccountStyleScreen} from '@app/screens/HomeStack/ManageAccountsS
 import {SettingsAccountsScreen} from '@app/screens/HomeStack/ManageAccountsStack/settings-accounts';
 import {SettingsViewRecoveryPhraseScreen} from '@app/screens/HomeStack/ManageAccountsStack/settings-view-recovery-phrase';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
+import {WalletType} from '@app/types';
 
 export enum ManageAccountsStackRoutes {
   SettingsAccounts = 'settingsAccounts_',
@@ -35,6 +36,7 @@ export type ManageAccountsStackParamList = HomeStackParamList &
     };
     [ManageAccountsStackRoutes.SettingsViewRecoveryPhrase]: {
       accountId: string;
+      type: WalletType;
     };
   };
 

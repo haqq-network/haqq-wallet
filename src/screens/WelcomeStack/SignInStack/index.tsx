@@ -6,6 +6,7 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
 import {ChooseAccountScreen} from '@app/screens/choose-account-screen';
+import {CloudProblemsScreen} from '@app/screens/cloud-problems';
 import {
   WelcomeStackParamList,
   WelcomeStackRoutes,
@@ -38,6 +39,8 @@ export enum SignInStackRoutes {
   SigninStoreWallet = 'signinStoreWallet',
   SigninNotExists = 'signinNotExists',
   SigninNotRecovery = 'signinNotRecovery',
+  SigninCloudProblems = 'cloudProblems',
+  SigninChooseAccount = 'chooseAccount',
 }
 
 export type SignInStackParamList = WelcomeStackParamList & {
@@ -56,6 +59,16 @@ export type SignInStackParamList = WelcomeStackParamList & {
     email?: string;
   };
   [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
+  [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
+  [SignInStackRoutes.SigninCloudProblems]: {
+    sssProvider: SssProviders;
+    onNext: () => void;
+  };
+  [SignInStackRoutes.SigninChooseAccount]: {
+    nextScreen?: SignInStackRoutes;
+    type: 'mnemonic';
+    mnemonic: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();
@@ -149,10 +162,16 @@ const SignInStack = memo(() => {
       />
 
       <Stack.Screen
-        name="chooseAccount"
+        name={SignInStackRoutes.SigninChooseAccount}
         component={ChooseAccountScreen}
         options={{title: getText(I18N.ledgerChooseAccount)}}
-        initialParams={{nextScreen: 'signinStoreWallet'}}
+        initialParams={{nextScreen: SignInStackRoutes.SigninStoreWallet}}
+      />
+
+      <Stack.Screen
+        name={SignInStackRoutes.SigninCloudProblems}
+        component={CloudProblemsScreen}
+        options={{...hideBack, ...screenOptions}}
       />
     </Stack.Navigator>
   );

@@ -44,7 +44,7 @@ export const SignupNetworkExistsScreen = memo(() => {
       nextScreen = SignUpStackRoutes.SignUpPin;
     } else {
       nextScreen = app.onboarded
-        ? SignUpStackRoutes.SignUpPin
+        ? SignUpStackRoutes.SignupStoreWallet
         : SignUpStackRoutes.OnboardingSetupPin;
 
       nextParams.sssCloudShare = share;
@@ -67,7 +67,7 @@ export const SignupNetworkExistsScreen = memo(() => {
           style: 'destructive',
           onPress: () => {
             const nextScreen = app.onboarded
-              ? SignUpStackRoutes.SignUpPin
+              ? SignUpStackRoutes.SignupStoreWallet
               : SignUpStackRoutes.OnboardingSetupPin;
 
             // @ts-ignore

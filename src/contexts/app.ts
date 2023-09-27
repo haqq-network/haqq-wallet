@@ -269,15 +269,6 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isDeveloper', value);
   }
 
-  get isWelcomeNewsEnabled() {
-    return VariablesBool.get('isWelcomeNewsEnabled') ?? false;
-  }
-
-  set isWelcomeNewsEnabled(value) {
-    this.emit(Events.onIsWelcomeNewsChanged, value);
-    VariablesBool.set('isWelcomeNewsEnabled', value);
-  }
-
   get currentTheme() {
     return this.theme === AppTheme.system
       ? this._systemTheme ?? AppTheme.light

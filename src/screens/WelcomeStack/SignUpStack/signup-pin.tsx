@@ -8,11 +8,14 @@ import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N, getText} from '@app/i18n';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
+import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export const SignupPinScreen = memo(() => {
   const pinRef = useRef<PinInterface>();
@@ -50,6 +53,19 @@ export const SignupPinScreen = memo(() => {
             ...route.params,
           });
         } catch (e) {
+          vibrate(HapticEffects.error);
+
+          app.failureEnter();
+          if (app.canEnter) {
+            pinRef.current?.reset(
+              getText(I18N.pinAttempts, {
+                value: String(PIN_BANNED_ATTEMPTS - app.pinAttempts),
+              }),
+            );
+          } else {
+            pinRef.current?.locked(app.pinBanned);
+          }
+
           if (e instanceof Error) {
             if ('code' in e && e.code === 2103) {
               throw new Error('wrong_password');

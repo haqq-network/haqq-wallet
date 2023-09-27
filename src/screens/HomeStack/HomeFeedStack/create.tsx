@@ -4,8 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {basicScreenOptions} from '@app/screens';
-import {ModalsScreenConnected} from '@app/screens/modals-screen';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
@@ -49,12 +47,6 @@ export const CreateStack = memo(() => {
           hide: true,
           event: AdjustEvents.accountAdded,
         }}
-      />
-
-      <SignUpStack.Screen
-        component={ModalsScreenConnected}
-        name={WelcomeStackRoutes.Modal}
-        options={{presentation: 'fullScreenModal', animation: 'fade'}}
       />
     </SignUpStack.Navigator>
   );

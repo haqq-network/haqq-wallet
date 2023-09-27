@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo} from 'react';
 
 import {
   NativeStackNavigationOptions,
@@ -8,7 +8,6 @@ import {
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {basicScreenOptions} from '@app/screens';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
-import {ModalState, ModalsScreenConnected} from '@app/screens/modals-screen';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
@@ -18,7 +17,6 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
-import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
@@ -26,7 +24,6 @@ export enum WelcomeStackRoutes {
   SignUp = 'signup',
   Ledger = 'ledger',
   SignIn = 'signin',
-  Modal = MODAL_SCREEN_NAME,
   NewsDetail = 'newsDetail',
 }
 
@@ -39,7 +36,6 @@ export type WelcomeStackParamList = {
   };
   [WelcomeStackRoutes.Ledger]: undefined;
   [WelcomeStackRoutes.SignIn]: undefined;
-  [WelcomeStackRoutes.Modal]: ModalState;
   [WelcomeStackRoutes.NewsDetail]: {id: string};
 };
 
@@ -50,12 +46,9 @@ const modalOptions: NativeStackNavigationOptions = {
 };
 
 type Props = {
-  isWelcomeNewsEnabled: boolean;
+  initialRouteName: WelcomeStackRoutes.Welcome | WelcomeStackRoutes.WelcomeNews;
 };
-const WelcomeStack = memo(({isWelcomeNewsEnabled}: Props) => {
-  console.log(isWelcomeNewsEnabled);
-  const initialRouteName = useMemo(() => WelcomeStackRoutes.WelcomeNews, []);
-
+const WelcomeStack = memo(({initialRouteName}: Props) => {
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
@@ -86,12 +79,6 @@ const WelcomeStack = memo(({isWelcomeNewsEnabled}: Props) => {
         component={themeUpdaterHOC(SignInStack)}
         name={WelcomeStackRoutes.SignIn}
         options={modalOptions}
-      />
-
-      <Stack.Screen
-        component={themeUpdaterHOC(ModalsScreenConnected)}
-        name={WelcomeStackRoutes.Modal}
-        options={{presentation: 'fullScreenModal', animation: 'fade'}}
       />
     </Stack.Navigator>
   );

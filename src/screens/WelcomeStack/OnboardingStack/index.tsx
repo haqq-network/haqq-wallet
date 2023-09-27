@@ -34,6 +34,7 @@ export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
     currentPin: string;
     nextScreen: AnyRouteFromParent;
+    errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
     currentPin: string;

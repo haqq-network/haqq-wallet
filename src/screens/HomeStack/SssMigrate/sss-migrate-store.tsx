@@ -17,7 +17,6 @@ import {
 } from '@app/screens/HomeStack/SssMigrate';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SssMigrateStoreScreen = memo(() => {
   const route = useTypedRoute<
@@ -34,12 +33,28 @@ export const SssMigrateStoreScreen = memo(() => {
     setTimeout(async () => {
       try {
         const storage = await getProviderStorage();
+        const getPassword = app.getPassword.bind(app);
+
+        const mnemonicProvider = new ProviderMnemonicReactNative({
+          account: route.params.accountId,
+          getPassword,
+        });
+
+        const mnemonic = await mnemonicProvider.getMnemonicPhrase();
+
+        let entropy = mnemonicToEntropy(mnemonic);
+
+        if (entropy.startsWith('0x')) {
+          entropy = entropy.slice(2);
+        }
+
+        entropy = entropy.padStart(64, '0');
 
         const provider = await ProviderSSSReactNative.initialize(
           route.params.privateKey,
-          route.params.cloudShare,
-          route.params.localShare,
           null,
+          null,
+          entropy,
           route.params.verifier,
           route.params.token,
           app.getPassword.bind(app),
@@ -56,57 +71,26 @@ export const SssMigrateStoreScreen = memo(() => {
           },
         );
 
-        let canNext = true;
-        let index = 0;
+        const wallets = Wallet.getAll();
 
-        while (canNext) {
-          const total = Wallet.getAll().length;
-
-          const name =
-            total === 0
-              ? MAIN_ACCOUNT_NAME
-              : getText(I18N.signinStoreWalletAccountNumber, {
-                  number: `${total + 1}`,
-                });
-
-          const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;
-
-          const {address} = await provider.getAccountInfo(hdPath);
-
-          if (!Wallet.getById(address)) {
-            const balance = app.getBalance(address);
-            canNext = balance.isPositive() || index === 0;
-
-            if (canNext) {
-              await Wallet.create(
-                {
-                  address: address,
-                  type: WalletType.sss,
-                  path: hdPath,
-                  accountId: provider.getIdentifier(),
-                },
-                name,
-              );
-            }
+        for (const wallet of wallets) {
+          if (
+            wallet.accountId === route.params.accountId &&
+            wallet.type === WalletType.mnemonic
+          ) {
+            wallet.update({
+              type: WalletType.sss,
+              accountId: provider.getIdentifier(),
+            });
           }
-
-          index += 1;
         }
 
-        navigation.navigate('sssFinish');
+        navigation.navigate(SssMigrateStackRoutes.SssMigrateFinish);
       } catch (e) {
-        Logger.log(e);
-        switch (e) {
-          case 'wallet_already_exists':
-            showModal('errorAccountAdded');
-            navigation.goBack();
-            break;
-          default:
-            if (e instanceof Error) {
-              showModal('errorCreateAccount');
-              navigation.goBack();
-              Logger.captureException(e, 'SssStoreWalletScreen');
-            }
+        if (e instanceof Error) {
+          showModal('errorCreateAccount');
+          navigation.goBack();
+          Logger.captureException(e, 'SssMigrateStoreScreen');
         }
       }
     }, 350);

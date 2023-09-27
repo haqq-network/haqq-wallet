@@ -12,6 +12,10 @@ import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/screens/WelcomeStack/SignInStack';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, WalletType} from '@app/types';
@@ -19,8 +23,11 @@ import {ChooseAccountItem, WalletType} from '@app/types';
 const PAGE_SIZE = 5;
 
 export const ChooseAccountScreen = memo(() => {
-  const navigation = useTypedNavigation();
-  const params = useTypedRoute<'chooseAccount'>().params;
+  const navigation = useTypedNavigation<SignInStackParamList>();
+  const params = useTypedRoute<
+    SignInStackParamList,
+    SignInStackRoutes.SigninChooseAccount
+  >().params;
 
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<ChooseAccountItem[]>([]);
@@ -164,7 +171,7 @@ export const ChooseAccountScreen = memo(() => {
         await mnemonicProvider.current.clean();
       }
     } catch (err) {}
-    navigation.navigate('onboardingSetupPin', {...params});
+    navigation.navigate(SignInStackRoutes.OnboardingSetupPin, {...params});
   }, [walletsToCreate, params, navigation]);
 
   return (

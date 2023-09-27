@@ -33,7 +33,6 @@ export enum Events {
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
   onOnboardedChanged = 'onOnboardedChanged',
-  onIsWelcomeNewsChanged = 'onIsWelcomeNewsChanged',
   onBalanceSync = 'onBalanceSync',
   onVestingBalanceSync = 'onVestingBalanceSync',
   onStakingBalanceSync = 'onStakingBalanceSync',

@@ -54,8 +54,7 @@ const appTheme = createTheme({
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
-  const [onboarded, setOnboarded] = useState(false);
-  const [isWelcomeNewsEnabled, setIsWelcomeNewsEnabled] = useState(false);
+  const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
 
   const navTheme = useMemo(
@@ -80,9 +79,9 @@ export const App = () => {
       })
       .then(() => {
         setOnboarded(app.onboarded);
-        setIsWelcomeNewsEnabled(app.isWelcomeNewsEnabled);
-        app.addListener(Events.onOnboardedChanged, setOnboarded);
-        app.addListener(Events.onIsWelcomeNewsChanged, setIsWelcomeNewsEnabled);
+        app.addListener(Events.onOnboardedChanged, value =>
+          setOnboarded(value),
+        );
         awaitForEventDone(Events.onAppLoggedId);
       })
       .then(() => {
@@ -100,7 +99,6 @@ export const App = () => {
     return () => {
       clearTimeout(splashTimer);
       app.removeAllListeners(Events.onOnboardedChanged);
-      app.removeAllListeners(Events.onIsWelcomeNewsChanged);
     };
   }, []);
 
@@ -188,7 +186,6 @@ export const App = () => {
             onStateChange={onStateChange}>
             <RootStack
               onboarded={onboarded}
-              isWelcomeNewsEnabled={isWelcomeNewsEnabled}
               isPinReseted={isPinReseted}
               isReady={initialized}
             />

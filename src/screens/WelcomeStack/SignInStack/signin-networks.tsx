@@ -63,7 +63,7 @@ export const SignInNetworksScreen = memo(() => {
         if (!skipCheck) {
           const hasPermissions = await verifyCloud(provider);
           if (!hasPermissions) {
-            navigation.navigate('cloudProblems', {
+            navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
               sssProvider: provider,
               onNext: () => onLogin(provider, true),
             });

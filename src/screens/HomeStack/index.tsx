@@ -4,7 +4,6 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import {TransitionPresets} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
 import {Results} from 'realm';
@@ -12,7 +11,6 @@ import {Results} from 'realm';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {Wallet} from '@app/models/wallet';
 import {basicScreenOptions} from '@app/screens';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
@@ -29,7 +27,6 @@ import {WalletProtectionPopupScreen} from '@app/screens/HomeStack/wallet-protect
 import {WalletConnectApprovalStack} from '@app/screens/HomeStack/WalletConnectApprovalStack';
 import {WalletConnectApplicationDetailsPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-details-popup';
 import {WalletConnectApplicationListPopupScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-list-popup';
-import {ModalsScreen} from '@app/screens/modals-screen';
 import {BackupNotificationScreen} from '@app/screens/popup-backup-notification';
 import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notification';
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
@@ -45,14 +42,12 @@ import {
   PopupNotificationBannerId,
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
-import {MODAL_SCREEN_NAME} from '@app/variables/common';
 
 export enum HomeStackRoutes {
   Home = 'home',
-  Modal = MODAL_SCREEN_NAME,
-  Create = 'create',
-  Ledger = 'ledger',
-  SignIn = 'signin',
+  Create = '_create',
+  Ledger = '_ledger',
+  SignIn = '_signin',
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
   AccountDetail = 'accountDetail',
@@ -76,7 +71,6 @@ export enum HomeStackRoutes {
 
 export type HomeStackParamList = {
   [HomeStackRoutes.Home]: undefined;
-  [HomeStackRoutes.Modal]: undefined;
   [HomeStackRoutes.Create]: undefined;
   [HomeStackRoutes.Ledger]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
@@ -97,7 +91,7 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {hash: string};
+  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -158,151 +152,143 @@ const inAppBrowserOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   header: () => <Spacer height={StatusBar.currentHeight} />,
   headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
-  ...TransitionPresets.ModalSlideFromBottomIOS,
 };
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeStack = memo(() => {
   return (
-    <>
-      <Stack.Navigator
-        screenOptions={navigatorOptions}
-        initialRouteName={HomeStackRoutes.Home}>
-        <Stack.Screen
-          component={themeUpdaterHOC(HomeScreen)}
-          name={HomeStackRoutes.Home}
-          options={basicScreenOptions}
-        />
-        <Stack.Screen
-          name={HomeStackRoutes.Create}
-          component={CreateStack}
-          options={modalOptions}
-        />
-        <Stack.Screen
-          name={HomeStackRoutes.Ledger}
-          component={LedgerStack}
-          options={modalOptions}
-        />
-        <Stack.Screen
-          name={HomeStackRoutes.SignIn}
-          component={SignInStack}
-          options={modalOptions}
-        />
-        <Stack.Screen
-          name={HomeStackRoutes.AccountInfo}
-          component={AccountInfoScreen}
-          options={getWalletTitle}
-        />
+    <Stack.Navigator
+      screenOptions={navigatorOptions}
+      initialRouteName={HomeStackRoutes.Home}>
+      <Stack.Screen
+        component={HomeScreen}
+        name={HomeStackRoutes.Home}
+        options={basicScreenOptions}
+      />
+      <Stack.Screen
+        name={HomeStackRoutes.AccountInfo}
+        component={AccountInfoScreen}
+        options={getWalletTitle}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.Transaction}
-          component={TransactionStack}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.Transaction}
+        component={TransactionStack}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.AccountDetail}
-          component={AccountDetailScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.AccountDetail}
+        component={AccountDetailScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.Backup}
-          component={BackupStack}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.Backup}
+        component={BackupStack}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.WalletProtectionPopup}
-          component={WalletProtectionPopupScreen}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.WalletProtectionPopup}
+        component={WalletProtectionPopupScreen}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.WalletConnectApplicationDetailsPopup}
-          component={WalletConnectApplicationDetailsPopupScreen}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.WalletConnectApplicationDetailsPopup}
+        component={WalletConnectApplicationDetailsPopupScreen}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.WalletConnectApplicationListPopup}
-          component={WalletConnectApplicationListPopupScreen}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.WalletConnectApplicationListPopup}
+        component={WalletConnectApplicationListPopupScreen}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.TransactionDetail}
-          component={TransactionDetailScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.TransactionDetail}
+        component={TransactionDetailScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.InAppBrowser}
-          component={InAppBrowserScreen}
-          options={inAppBrowserOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.InAppBrowser}
+        component={InAppBrowserScreen}
+        options={inAppBrowserOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.WalletConnect}
-          component={WalletConnectApprovalStack}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.WalletConnect}
+        component={WalletConnectApprovalStack}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.SssMigrate}
-          component={SssMigrateStack}
-          options={modalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.SssMigrate}
+        component={SssMigrateStack}
+        options={modalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.BackupNotification}
-          component={BackupNotificationScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.BackupNotification}
+        component={BackupNotificationScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.JsonRpcSign}
-          component={JsonRpcSignPopupStack}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.JsonRpcSign}
+        component={JsonRpcSignPopupStack}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.BackupSssNotification}
-          component={BackupSssNotificationScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.BackupSssNotification}
+        component={BackupSssNotificationScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.PopupNotificationNews}
-          component={PopupNotificationNewsScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.PopupNotificationNews}
+        component={PopupNotificationNewsScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.PopupNotification}
-          component={PopupNotificationScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.PopupNotification}
+        component={PopupNotificationScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.PopupTrackActivity}
-          component={PopupTrackActivityScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.PopupTrackActivity}
+        component={PopupTrackActivityScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.Web3BrowserPopup}
-          component={Web3BrowserPopupScreen}
-          options={fullScreenModalOptions}
-        />
+      <Stack.Screen
+        name={HomeStackRoutes.Web3BrowserPopup}
+        component={Web3BrowserPopupScreen}
+        options={fullScreenModalOptions}
+      />
 
-        <Stack.Screen
-          name={HomeStackRoutes.Modal}
-          component={ModalsScreen}
-          options={fullScreenModalOptions}
-        />
-      </Stack.Navigator>
-    </>
+      <Stack.Screen
+        name={HomeStackRoutes.Create}
+        component={CreateStack}
+        options={modalOptions}
+      />
+      <Stack.Screen
+        name={HomeStackRoutes.Ledger}
+        component={LedgerStack}
+        options={modalOptions}
+      />
+      <Stack.Screen
+        name={HomeStackRoutes.SignIn}
+        component={SignInStack}
+        options={modalOptions}
+      />
+    </Stack.Navigator>
   );
 });
 

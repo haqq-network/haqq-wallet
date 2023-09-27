@@ -35,7 +35,6 @@ export const OnboardingFinishScreen = memo(() => {
       app.onboarded = true;
 
       app.emit(Events.onBlockRequestCheck);
-      navigation.replace('home');
 
       requestAnimationFrame(() => {
         app.emit(Events.onAppStarted);

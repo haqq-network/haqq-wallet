@@ -34,7 +34,7 @@ export const SignInRestoreScreen = memo(() => {
       }
 
       if (utils.isValidMnemonic(seed.trim().toLowerCase())) {
-        navigation.push('chooseAccount', {
+        navigation.push(SignInStackRoutes.SigninChooseAccount, {
           type: 'mnemonic',
           mnemonic: seed.trim().toLowerCase(),
         });

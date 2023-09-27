@@ -34,7 +34,7 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap source={animation} autoPlay loop={false} />
+        <LottieWrap source={animation} autoPlay={true} loop={false} />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />
       <Button

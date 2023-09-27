@@ -31,7 +31,6 @@ export const OnboardingBiometryScreen = memo(() => {
       } else {
         // TODO: Найти типы
         // @ts-ignore
-        console.log(nextScreen, params);
         navigation.navigate(nextScreen, params);
       }
     });
