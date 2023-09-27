@@ -70,15 +70,12 @@ export const SssStoreWalletScreen = () => {
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {
-              await Wallet.create(
-                {
-                  address: address,
-                  type: WalletType.sss,
-                  path: hdPath,
-                  accountId: provider.getIdentifier(),
-                },
-                name,
-              );
+              await Wallet.create(name, {
+                address: address,
+                type: WalletType.sss,
+                path: hdPath,
+                accountId: provider.getIdentifier(),
+              });
             }
           }
 

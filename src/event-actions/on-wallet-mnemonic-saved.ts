@@ -16,7 +16,7 @@ export async function onWalletMnemonicSaved(accountId: string) {
 
   for (const wallet of wallets) {
     if (wallet.accountId === accountId && wallet.type === WalletType.mnemonic) {
-      wallet.update({mnemonicSaved});
+      Wallet.update(wallet.address, {mnemonicSaved});
     }
   }
 }

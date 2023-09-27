@@ -32,15 +32,12 @@ export async function createWalletsForProvider(
       canNext = balance.isPositive() || index === 0;
 
       if (canNext) {
-        await Wallet.create(
-          {
-            address: address,
-            type: walletType,
-            path: hdPath,
-            accountId: provider.getIdentifier(),
-          },
-          name,
-        );
+        Wallet.create(name, {
+          address: address,
+          type: walletType,
+          path: hdPath,
+          accountId: provider.getIdentifier(),
+        });
       } else {
         canNext = false;
       }

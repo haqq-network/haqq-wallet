@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {FlatList, View} from 'react-native';
-import {Results} from 'realm';
 
 import {Color, getColor} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
@@ -12,7 +11,7 @@ import {Wallet} from '@app/models/wallet';
 
 type SettingsAccountsProps = {
   onPressRow: (address: string) => void;
-  rows: Wallet[] | Results<Wallet>;
+  rows: Wallet[];
 };
 
 export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {

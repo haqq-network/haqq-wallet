@@ -1,25 +1,23 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
 import {getProviderInstanceForWallet} from '@app/helpers';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {StakingMetadata} from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
-export const StakingUnDelegateFormScreen = () => {
+export const StakingUnDelegateFormScreen = observer(() => {
   const navigation = useTypedNavigation();
   const {validator, account} = useTypedRoute<'stakingUnDelegateForm'>().params;
   const {operator_address} = validator;
   const cosmos = useCosmos();
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [fee, setFee] = useState<Balance | null>(null);
 
@@ -88,4 +86,4 @@ export const StakingUnDelegateFormScreen = () => {
       unboundingTime={unboundingTime}
     />
   );
-};
+});

@@ -25,7 +25,7 @@ export async function migrationWallets() {
         {},
       );
 
-      wallet.update({
+      Wallet.update(wallet.address, {
         data: '',
         version: 2,
         accountId: provider.getIdentifier(),
@@ -50,12 +50,14 @@ export async function migrationWallets() {
         await provider.setMnemonicSaved();
       }
 
-      const rootAddress = wallets.filtered(
-        `rootAddress = '${wallet.rootAddress}' AND type = '${WalletType.mnemonic}'`,
+      const rootAddress = wallets.filter(
+        w =>
+          w.rootAddress === wallet.rootAddress &&
+          w.type === WalletType.mnemonic,
       );
 
       for (const w of rootAddress) {
-        w.update({
+        Wallet.update(w.address, {
           data: '',
           version: 2,
           accountId: provider.getIdentifier(),

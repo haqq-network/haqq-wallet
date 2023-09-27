@@ -6,7 +6,6 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Results} from 'realm';
 
 import {Spacer} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
@@ -20,7 +19,7 @@ import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
-  wallets: Wallet[] | Results<Wallet>;
+  wallets: Wallet[];
   balance: WalletBalance;
   walletConnectSessions: SessionTypes.Struct[][];
   showLockedTokens: boolean;

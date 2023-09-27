@@ -57,15 +57,12 @@ export const SignInStoreWalletScreen = () => {
 
             const {address} = await provider.getAccountInfo('');
 
-            await Wallet.create(
-              {
-                path: '',
-                address: address,
-                type: WalletType.hot,
-                accountId: provider.getIdentifier().toLowerCase(),
-              },
-              name,
-            );
+            await Wallet.create(name, {
+              path: '',
+              address: address,
+              type: WalletType.hot,
+              accountId: provider.getIdentifier().toLowerCase(),
+            });
             break;
           case 'mnemonic':
             const mnemonicProvider =

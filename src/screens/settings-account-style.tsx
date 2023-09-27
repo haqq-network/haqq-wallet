@@ -1,15 +1,17 @@
 import React, {useCallback, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {SettingsAccountStyle} from '@app/components/settings-account-style';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 
-export const SettingsAccountStyleScreen = () => {
+export const SettingsAccountStyleScreen = observer(() => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<'settingsAccountStyle'>();
 
-  const wallet = useWallet(route.params.address) as Wallet;
+  const wallet = Wallet.getById(route.params.address) as Wallet;
   const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
@@ -29,9 +31,15 @@ export const SettingsAccountStyleScreen = () => {
   );
 
   const onPressApply = useCallback(() => {
-    wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2], pattern);
+    Wallet.setCardStyle(wallet.address, {
+      cardStyle,
+      colorFrom: colors[0],
+      colorTo: colors[1],
+      colorPattern: colors[2],
+      pattern,
+    });
     navigation.goBack();
-  }, [cardStyle, colors, navigation, wallet, pattern]);
+  }, [cardStyle, colors, navigation, pattern, wallet.address]);
 
   return (
     <SettingsAccountStyle
@@ -47,4 +55,4 @@ export const SettingsAccountStyleScreen = () => {
       wallet={wallet}
     />
   );
-};
+});

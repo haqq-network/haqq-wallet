@@ -39,7 +39,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     try {
       walletId = await awaitForWallet({
-        wallets: visible.snapshot(),
+        wallets: visible,
         title: I18N.stakingDelegateAccountTitle,
         suggestedAddress: referral?.wallet,
       });

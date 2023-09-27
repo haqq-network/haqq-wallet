@@ -30,9 +30,7 @@ export async function onStakingRewards() {
     }
   }
 
-  const exists = visible.filter(
-    w => w.isValid() && w.cosmosAddress in delegators,
-  );
+  const exists = visible.filter(w => w.cosmosAddress in delegators);
 
   const queue = exists
     .filter(w => w.type !== WalletType.ledgerBt)
@@ -51,7 +49,7 @@ export async function onStakingRewards() {
   while (ledger.length) {
     const current = ledger.shift();
 
-    if (current && current.isValid()) {
+    if (current) {
       const transport = await getProviderInstanceForWallet(current);
       queue.push(
         cosmos

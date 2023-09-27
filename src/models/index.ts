@@ -12,7 +12,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
-import {Wallet} from '@app/models/wallet';
+import {WalletRealmObject} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
@@ -35,7 +35,7 @@ export const realm = new Realm({
     Web3BrowserBookmark,
     Web3BrowserSearchHistory,
     WalletConnectSessionMetadata,
-    Wallet,
+    WalletRealmObject,
     UserSchema,
     Transaction,
     ContactRealmObject,

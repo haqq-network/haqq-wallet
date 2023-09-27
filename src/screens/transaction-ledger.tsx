@@ -43,7 +43,7 @@ export const TransactionLedgerScreen = () => {
 
   const tryToSingTransaction = useCallback(async () => {
     const wallet = Wallet.getById(route.params.from);
-    if (wallet && wallet.isValid()) {
+    if (wallet) {
       try {
         await awaitForBluetooth();
 

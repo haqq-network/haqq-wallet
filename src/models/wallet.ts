@@ -1,7 +1,12 @@
+import {makeAutoObservable, when} from 'mobx';
+import {isHydrated, makePersistable} from 'mobx-persist-store';
+
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {Cosmos} from '@app/services/cosmos';
+import {storage} from '@app/services/mmkv';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
@@ -11,17 +16,43 @@ import {
   DEFAULT_CARD_PATTERN,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
+  STORE_REHYDRATION_TIMEOUT_MS,
 } from '@app/variables/common';
 
 import {realm} from './index';
 import {
   AddWalletParams,
+  MobXStoreFromRealm,
   WalletCardPattern,
   WalletCardStyle,
+  WalletCardStyleT,
   WalletType,
 } from '../types';
 
-export class Wallet extends Realm.Object {
+export type Wallet = {
+  address: string;
+  name: string;
+  data: string;
+  mnemonicSaved: boolean;
+  socialLinkEnabled: boolean;
+  cardStyle: WalletCardStyle;
+  colorFrom: string;
+  colorTo: string;
+  colorPattern: string;
+  pattern: string;
+  isHidden: boolean;
+  isMain: boolean;
+  type: WalletType;
+  deviceId?: string;
+  path?: string;
+  rootAddress?: string;
+  subscription: string | null;
+  version: number;
+  accountId: string | null;
+  cosmosAddress: string;
+};
+
+export class WalletRealmObject extends Realm.Object {
   static schema = {
     name: 'Wallet',
     properties: {
@@ -47,82 +78,54 @@ export class Wallet extends Realm.Object {
     },
     primaryKey: 'address',
   };
-  address!: string;
-  name!: string;
-  data!: string;
-  mnemonicSaved!: boolean;
-  socialLinkEnabled!: boolean;
-  cardStyle!: WalletCardStyle;
-  colorFrom!: string;
-  colorTo!: string;
-  colorPattern!: string;
-  pattern!: string;
-  isHidden!: boolean;
-  isMain!: boolean;
-  type!: WalletType;
-  deviceId: string | undefined;
-  path: string | undefined;
-  rootAddress: string | undefined;
-  subscription: string | null;
-  version: number;
-  accountId: string | null;
+}
 
-  _cosmosAddress: string = '';
+class WalletStore implements MobXStoreFromRealm {
+  _cosmosAddress = '';
+  realmSchemaName = WalletRealmObject.schema.name;
+  wallets: Wallet[] = [];
 
-  get cosmosAddress() {
-    if (!this._cosmosAddress) {
-      this._cosmosAddress = Cosmos.addressToBech32(this.address);
+  constructor(shouldSkipPersisting: boolean = false) {
+    makeAutoObservable(this);
+    if (!shouldSkipPersisting) {
+      makePersistable(this, {
+        name: this.constructor.name,
+        properties: ['wallets'],
+        storage: storage,
+      });
     }
-
-    return this._cosmosAddress;
   }
 
-  static getSize() {
-    return realm.objects<Wallet>(Wallet.schema.name).length;
+  get isHydrated() {
+    return isHydrated(this);
   }
 
-  static addressList() {
-    return realm.objects<Wallet>(Wallet.schema.name).map(w => w.address);
-  }
+  migrate = async () => {
+    await awaitForRealm();
+    await when(() => !!this.isHydrated, {
+      timeout: STORE_REHYDRATION_TIMEOUT_MS,
+    });
 
-  static getAll() {
-    return realm.objects<Wallet>(Wallet.schema.name);
-  }
-
-  static getAllVisible() {
-    return Wallet.getAll().filtered('isHidden != true');
-  }
-
-  static getForAccount(accountId: string) {
-    return Wallet.getAll().filtered(`accountId = '${accountId.toLowerCase()}'`);
-  }
-
-  static getById(id: string = '') {
-    if (!id) {
-      return null;
+    const realmData = realm.objects<Wallet>(this.realmSchemaName);
+    if (realmData.length > 0) {
+      realmData.forEach(item => {
+        this.create(item.name, {
+          address: item.address,
+          accountId: item.accountId || '',
+          path: item.path || '',
+          type: item.type,
+        });
+        realm.write(() => {
+          realm.delete(item);
+        });
+      });
     }
+  };
 
-    const item = realm.objectForPrimaryKey<Wallet>(
-      Wallet.schema.name,
-      id.toLowerCase(),
-    );
-
-    if (!item) {
-      return null;
-    }
-
-    return item;
-  }
-
-  static async create(
-    walletParams: AddWalletParams,
+  async create(
     name = '',
+    walletParams: AddWalletParams,
   ): Promise<Wallet | null> {
-    const exist = Wallet.getById(walletParams.address);
-    if (exist) {
-      throw new Error('wallet_already_exists');
-    }
-
     const cards = Object.keys(WalletCardStyle);
     const cardStyle = cards[
       Math.floor(Math.random() * cards.length)
@@ -139,18 +142,13 @@ export class Wallet extends Realm.Object {
           : CARD_RHOMBUS_TOTAL),
     )}`;
 
-    const wallets = realm.objects<Wallet>(Wallet.schema.name);
-    const usedColors = new Set(wallets.map(w => w.colorFrom));
+    const usedColors = new Set(this.wallets.map(w => w.colorFrom));
 
     let availableColors = (
       cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
     ).filter(c => !usedColors.has(c[0]));
 
-    let colors = [
-      DEFAULT_CARD_BACKGROUND,
-      DEFAULT_CARD_BACKGROUND,
-      DEFAULT_CARD_PATTERN,
-    ];
+    let colors: string[];
     if (availableColors.length) {
       colors =
         availableColors[Math.floor(Math.random() * availableColors.length)];
@@ -161,86 +159,91 @@ export class Wallet extends Realm.Object {
           : generateGradientColors();
     }
 
-    let wallet = null;
-    realm.write(() => {
-      wallet = realm.create<Wallet>(Wallet.schema.name, {
-        data: '',
-        address: walletParams.address.toLowerCase(),
-        mnemonicSaved: false,
-        socialLinkEnabled: false,
-        name: name,
-        pattern,
-        cardStyle,
-        colorFrom: colors[0],
-        colorTo: colors[1],
-        colorPattern: colors[2],
-        type: walletParams.type,
-        path: walletParams.path,
-        accountId: walletParams.accountId,
-        version: 2,
-      });
-    });
+    const existingWallet = this.getById(walletParams.address);
+    const newWallet = {
+      ...existingWallet,
+      data: '',
+      address: walletParams.address.toLowerCase(),
+      mnemonicSaved: false,
+      socialLinkEnabled: false,
+      name: name,
+      pattern,
+      cardStyle,
+      colorFrom: colors[0],
+      colorTo: colors[1],
+      colorPattern: colors[2],
+      type: walletParams.type,
+      path: walletParams.path,
+      accountId: walletParams.accountId,
+      version: 2,
+      isHidden: false,
+      isMain: false,
+      subscription: null,
+      cosmosAddress: Cosmos.addressToBech32(walletParams.address.toLowerCase()),
+    };
 
-    if (!wallet) {
-      throw new Error('wallet_error');
-    }
+    app.emit(Events.onWalletCreate, newWallet); // TODO
 
-    app.emit(Events.onWalletCreate, wallet);
-
-    return wallet;
+    return newWallet;
   }
 
-  static async remove(address: string) {
-    const obj = Wallet.getById(address);
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
-      });
+  getById(id: string = '') {
+    return this.wallets.find(wallet => wallet.address === id) ?? null;
+  }
 
+  getSize() {
+    return this.wallets.length;
+  }
+
+  addressList() {
+    return this.wallets.map(w => w.address);
+  }
+
+  getAll() {
+    return this.wallets;
+  }
+
+  getAllVisible() {
+    return this.wallets.filter(w => !w.isHidden);
+  }
+
+  getForAccount(accountId: string) {
+    return this.wallets.filter(w => (w.accountId = accountId.toLowerCase()));
+  }
+
+  async remove(address: string) {
+    const obj = this.getById(address);
+    if (obj) {
+      this.wallets.filter(w => w.address !== address);
       await awaitForEventDone(Events.onWalletRemove, address);
     }
   }
 
-  static removeAll() {
-    const wallets = realm.objects<Wallet>(Wallet.schema.name);
-
-    realm.write(() => {
-      realm.delete(wallets);
-    });
+  removeAll() {
+    this.wallets = [];
   }
 
-  async toggleIsHidden() {
-    this.update({isHidden: !this.isHidden});
-    await awaitForEventDone(Events.onWalletVisibilityChange);
+  async toggleIsHidden(address: string = '') {
+    const wallet = this.getById(address);
+    if (wallet) {
+      this.update(address, {isHidden: !wallet.isHidden});
+      await awaitForEventDone(Events.onWalletVisibilityChange);
+    }
   }
 
-  update(params: Partial<Wallet>) {
-    realm.write(() => {
-      realm.create(
-        Wallet.schema.name,
-        {
-          ...this.toJSON(),
-          ...params,
-          address: this.address,
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+  update(address: string, params: Partial<Wallet>) {
+    const wallet = this.getById(address);
+
+    if (wallet) {
+      const otherWallets = this.wallets.filter(w => w.address !== address);
+      this.wallets = [...otherWallets, {...wallet, ...params}];
+    }
   }
 
-  setCardStyle(
-    cardStyle: WalletCardStyle,
-    colorFrom: string,
-    colorTo: string,
-    colorPattern: string,
-    pattern: string,
-  ) {
-    realm.write(() => {
-      this.cardStyle = cardStyle;
-      this.colorFrom = colorFrom;
-      this.colorTo = colorTo;
-      this.colorPattern = colorPattern;
-      this.pattern = pattern;
-    });
+  setCardStyle(address: string = '', params: Partial<WalletCardStyleT>) {
+    this.update(address, params);
   }
 }
+
+const instance = new WalletStore(Boolean(process.env.JEST_WORKER_ID));
+export {instance as Wallet};
