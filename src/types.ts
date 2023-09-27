@@ -1222,3 +1222,51 @@ export interface MobXStore<TData extends MobXStoreItem> {
   remove(id: string): boolean;
   removeAll(): void;
 }
+
+export enum ExplorerStatusEnum {
+  success = '1',
+  error = '0',
+}
+
+export interface ExplorerBaseTransaction {
+  blockNumber: number;
+  confirmations: number;
+  from: string;
+  gasPrice: string;
+  gasUsed: number;
+  hash: string;
+  input: string;
+  timeStamp: string;
+  to: string;
+  value: string;
+}
+
+export interface ExplorerTransaction extends ExplorerBaseTransaction {
+  blockHash: string;
+  contractAddress: string;
+  cumulativeGasUsed: number;
+  gas: number;
+  isError: ExplorerStatusEnum;
+  nonce: string;
+  transactionIndex: string;
+  txreceipt_status: ExplorerStatusEnum;
+}
+
+export interface ExplorerLogDetail {
+  address: string;
+  data: string;
+  topics: string[];
+}
+
+export interface ExplorerTransactionInfo extends ExplorerBaseTransaction {
+  gasLimit: string;
+  logs: ExplorerLogDetail[];
+  revertReason: string;
+  success: boolean;
+}
+
+export interface ExplorerApiResponse<T> {
+  message: string;
+  result: T | null;
+  status: ExplorerStatusEnum;
+}
