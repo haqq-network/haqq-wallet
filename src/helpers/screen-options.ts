@@ -20,8 +20,9 @@ export const popupScreenOptions = {
 export const popupScreenOptionsWithMargin: NativeStackNavigationOptions = {
   header: PopupHeader,
   gestureEnabled: false,
+  // TODO: hasNotch
   //@ts-ignore
-  headerStyle: {marginTop: 14},
+  headerStyle: {marginTop: Platform.OS === 'ios' ? 48 : 14},
 };
 
 export const hideBack: NativeStackNavigationOptions = {

@@ -2,6 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
@@ -34,6 +35,7 @@ const screenOptions = {
   ...popupScreenOptionsWithMargin,
   headerShown: true,
   title: getText(I18N.homeWalletTitle),
+  headerRight: QrScannerButton,
 };
 
 const HomeFeedStack = memo(() => {
