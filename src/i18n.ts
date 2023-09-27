@@ -588,6 +588,7 @@ export enum I18N {
   rewardCreatingFirstAccount,
   rewardBannerClaim,
   amountISLM,
+  amountAISLM,
   editBookmarksTitle,
   editBookmarksRemoveAlert,
   delete,
@@ -762,6 +763,12 @@ export enum I18N {
   chooseAccountAddManyAccountsText,
   pinAttempts,
   signContratAttention,
+  dynamicLinkDetactedTitle,
+  dynamicLinkDetactedDescription,
+  dynamicLinkDetactedIgnore,
+  dynamicLinkDetactedAllow,
+  rafflePushNotification,
+  rafflePushNotificationsDescription,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1476,6 +1483,7 @@ const en: Record<I18N, string> = {
   [I18N.rewardCreatingFirstAccount]: 'Reward for creating the first account',
   [I18N.rewardBannerClaim]: 'Claim reward',
   [I18N.amountISLM]: '{{amount}} ISLM',
+  [I18N.amountAISLM]: '{{amount}} aISLM',
   [I18N.browserActionMenuProviders]: 'Providers',
   [I18N.browserActionMenuHome]: 'Home',
   [I18N.browserActionMenuAddToBookmarks]: 'Add to Bookmarks',
@@ -1504,6 +1512,9 @@ const en: Record<I18N, string> = {
   [I18N.newsPushNotification]: 'Newsletter notifications',
   [I18N.newsPushNotificationsDescription]:
     'Get the latest news and updates about Islamic Coin and the HAQQ Wallet',
+  [I18N.rafflePushNotification]: 'Raffle notifications',
+  [I18N.rafflePushNotificationsDescription]:
+    'We will notify you about the start of new raffles and if you win',
   [I18N.transactionPushNotification]: 'Transaction Push-Notifications',
   [I18N.transactionPushNotificationsDescription]:
     'Get notified about deposits, withdrawals and successful transactions',
@@ -1662,4 +1673,8 @@ const en: Record<I18N, string> = {
   [I18N.pinAttempts]: 'wrong pin {{value}} left',
   [I18N.signContratAttention]:
     'This smart contract has not been approved by the IslamicCoin team. Signing the contract is at your own discretion',
+  [I18N.dynamicLinkDetactedTitle]: 'DynamicLink detected',
+  [I18N.dynamicLinkDetactedDescription]: 'This website has been open \n{{url}}',
+  [I18N.dynamicLinkDetactedIgnore]: 'Ignore',
+  [I18N.dynamicLinkDetactedAllow]: 'Allow',
 };

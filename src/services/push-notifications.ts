@@ -19,6 +19,7 @@ import {SystemDialog} from './system-dialog';
 export enum PushNotificationTopicsEnum {
   news = 'news',
   transactions = 'transactions',
+  raffle = 'raffle',
 }
 
 export class PushNotifications extends EventEmitter {

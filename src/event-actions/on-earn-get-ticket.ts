@@ -1,4 +1,3 @@
-import BN from 'bn.js';
 import {utils} from 'ethers';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -18,8 +17,12 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 import {WalletType} from '@app/types';
 import {isSendTransactionError, sleep} from '@app/utils';
+import {RAFFLE_TOPIC_VARIABLE_NAME} from '@app/variables/common';
+
+import {onNotificationsTopicSubscribe} from './on-notifications-topic-subscribe';
 
 const abi = [
   'function participateUser(tuple(address participant, uint256 deadline) permit, bytes signature) external',
@@ -28,6 +31,14 @@ const abi = [
 const logger = Logger.create('onEarnGetTicket', {stringifyJson: true});
 
 export async function onEarnGetTicket(raffleId: string) {
+  const raffleNotificationEnabled = VariablesBool.get(
+    RAFFLE_TOPIC_VARIABLE_NAME,
+  );
+
+  if (!raffleNotificationEnabled) {
+    onNotificationsTopicSubscribe(PushNotificationTopicsEnum.raffle);
+  }
+
   const leadingAccount = getLeadingAccount();
 
   if (!leadingAccount) {
@@ -77,9 +88,9 @@ export async function onEarnGetTicket(raffleId: string) {
     const unsignedTx = await EthNetwork.populateTransaction(
       leadingAccount.address,
       raffleId,
-      new BN(0),
+      Balance.Empty,
       data,
-      250000,
+      new Balance(250000, 0),
     );
 
     const signedTx = await provider.signTransaction(

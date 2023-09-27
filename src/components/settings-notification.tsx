@@ -10,18 +10,22 @@ export interface SettingsNotificationProps {
   hasNotificationPermission: boolean;
   transactionPushNotificationEnabled: boolean;
   newsPushNotificationEnabled: boolean;
+  rafflePushNotificationEnabled: boolean;
   onToggleTransactionPushNotification: (event: SwitchChangeEvent) => void;
   onToggleNewsPushNotification: (event: SwitchChangeEvent) => void;
   onPressGoToPhoneSettings: () => void;
+  onToggleRafflePushNotification: (event: SwitchChangeEvent) => void;
 }
 
 export const SettingsNotification = ({
   hasNotificationPermission,
   transactionPushNotificationEnabled,
   newsPushNotificationEnabled,
+  rafflePushNotificationEnabled,
   onToggleTransactionPushNotification,
   onToggleNewsPushNotification,
   onPressGoToPhoneSettings,
+  onToggleRafflePushNotification,
 }: SettingsNotificationProps) => {
   if (!hasNotificationPermission) {
     return (
@@ -56,6 +60,19 @@ export const SettingsNotification = ({
         <Switch
           value={newsPushNotificationEnabled}
           onChange={onToggleNewsPushNotification}
+        />
+      </MenuNavigationButton>
+
+      <MenuNavigationButton hideArrow onPress={() => {}}>
+        <DataContent
+          style={styles.dataContent}
+          titleI18n={I18N.rafflePushNotification}
+          subtitleI18n={I18N.rafflePushNotificationsDescription}
+        />
+        <Spacer />
+        <Switch
+          value={rafflePushNotificationEnabled}
+          onChange={onToggleRafflePushNotification}
         />
       </MenuNavigationButton>
     </View>

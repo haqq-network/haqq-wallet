@@ -7,8 +7,6 @@ export enum Events {
   onWalletSssCheck = 'onWalletSssCheck',
   onWalletMnemonicCheck = 'onWalletMnemonicCheck',
   onWalletMnemonicSaved = 'onWalletMnemonicSaved',
-  onPushSubscriptionAdd = 'onPushSubscriptionAdd',
-  onPushSubscriptionRemove = 'onPushSubscriptionRemove',
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',

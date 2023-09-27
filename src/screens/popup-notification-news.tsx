@@ -8,6 +8,7 @@ import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-not
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 
 export const PopupNotificationNewsScreen = memo(() => {
   const route = useTypedRoute<
@@ -18,7 +19,10 @@ export const PopupNotificationNewsScreen = memo(() => {
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTopicSubscribe(route.params.bannerId, 'news');
+      await onBannerNotificationsTopicSubscribe(
+        route.params.bannerId,
+        PushNotificationTopicsEnum.news,
+      );
       close();
       goBack();
     },
@@ -27,7 +31,10 @@ export const PopupNotificationNewsScreen = memo(() => {
 
   const onClickNotNow = useCallback(
     async (close: () => void) => {
-      await onBannerNotificationsTopicSnooze(route.params.bannerId, 'news');
+      await onBannerNotificationsTopicSnooze(
+        route.params.bannerId,
+        PushNotificationTopicsEnum.news,
+      );
       close();
       goBack();
     },

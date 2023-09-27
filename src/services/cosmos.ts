@@ -49,6 +49,7 @@ import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
 import {Provider} from '@app/models/provider';
+import {Balance} from '@app/services/balance';
 import {
   DepositResponse,
   HaqqCosmosAddress,
@@ -70,6 +71,14 @@ export type GetValidatorResponse = {
 export type BroadcastTransactionResponse = {
   tx_response: CosmosTxV1beta1TxResponse;
 };
+
+export interface ParamsResponse {
+  param: {
+    subspace: string;
+    key: string;
+    value: string;
+  };
+}
 
 export class Cosmos {
   static fee: Fee = {
@@ -171,6 +180,12 @@ export class Cosmos {
   async getProposals(): Promise<ProposalsResponse> {
     return this.getQuery(
       generateEndpointProposals() + '?pagination.reverse=true',
+    );
+  }
+
+  async getParams(subspace: string, key: string): Promise<ParamsResponse> {
+    return this.getQuery(
+      `/cosmos/params/v1beta1/params?subspace=${subspace}&key=${key}`,
     );
   }
 
@@ -360,21 +375,35 @@ export class Cosmos {
   }
 
   async getFee(data: object, account: Sender) {
+    let totalAmount = new Balance(parseInt(Cosmos.fee.amount, 10), 0);
+    let baseGas = new Balance(parseInt(Cosmos.fee.gas, 10), 0);
     try {
+      const params = await this.getParams('feemarket', 'BaseFee');
+      const baseFee = new Balance(
+        parseInt(params.param.value.replaceAll('"', ''), 10),
+        0,
+      );
+
       const resp = await this.postSimulate(data, account);
 
       if (!resp.gas_info) {
-        return {...Cosmos.fee};
+        return {
+          ...Cosmos.fee,
+          amount: baseFee.operate(baseGas, 'mul').toString(),
+        };
       }
+
+      const gas = new Balance(
+        parseInt(resp.gas_info.gas_used, 10) * 1.2,
+        0,
+      ).max(baseGas);
+
+      const amount = baseFee.operate(gas, 'mul').max(totalAmount);
 
       return {
         ...Cosmos.fee,
-        gas: String(
-          Math.max(
-            parseInt(Cosmos.fee.gas, 10),
-            parseInt(resp.gas_info.gas_used, 10) * 1.2,
-          ),
-        ),
+        amount: amount.toString(),
+        gas: gas.toString(),
       };
     } catch (e) {
       Logger.captureException(e, 'getFee');
@@ -577,6 +606,8 @@ export class Cosmos {
       },
       sender,
     );
+
+    Logger.log('fee', fee);
 
     const memo = '';
 

@@ -14,15 +14,15 @@ on:
         type: choice
         description: IS_SSS_ENABLED
         options:
-          - false
           - true
+          - false
 
       IS_STAKED_VESTED_ENABLED:
         type: choice
         description: IS_STAKED_VESTED_ENABLED
         options:
-          - false
           - true
+          - false
 
   workflow_call:
     inputs:
@@ -93,6 +93,7 @@ jobs:
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
+          echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
 
       - name: Install Fastlane
         run: |

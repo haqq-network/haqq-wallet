@@ -1,8 +1,8 @@
-import {NUM_PRECISION} from '@app/variables/common';
+import {NUM_DELIMITER, NUM_PRECISION} from '@app/variables/common';
 
 export function cleanNumber(
   number: string | number,
-  delimiter = ' ',
+  delimiter = NUM_DELIMITER,
   precision = NUM_PRECISION,
 ) {
   if (!number) {
@@ -10,7 +10,7 @@ export function cleanNumber(
   }
   const num = parseFloat(String(number).trim().replace(/ /g, ''));
   let pr = precision;
-  if (num < 1 / Math.pow(10, NUM_PRECISION)) {
+  if (num < 1 / Math.pow(10, precision)) {
     pr += 1;
   }
 
@@ -19,10 +19,10 @@ export function cleanNumber(
   const raw = Math.floor(num * prec) / prec;
   const [a, f] = String(raw.toFixed(pr)).split('.');
   const aFormatted = a.replace(/\B(?=(\d{3})+(?!\d))/g, delimiter);
-
-  if (!f) {
+  const fFormatted = f ? f.replace(/0+$/, '') : '';
+  if (!fFormatted) {
     return aFormatted;
   }
 
-  return `${aFormatted}.${f}`;
+  return `${aFormatted}.${fFormatted}`;
 }

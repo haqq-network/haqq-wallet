@@ -48,7 +48,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionConfirmation]: {
     from: string;
     to: string;
-    amount: number;
+    amount: Balance;
     fee?: Balance;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {

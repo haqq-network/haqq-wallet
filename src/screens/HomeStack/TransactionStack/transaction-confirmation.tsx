@@ -1,7 +1,5 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
-import Decimal from 'decimal.js';
-
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -24,7 +22,6 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
-import {WEI} from '@app/variables/common';
 
 export const TransactionConfirmationScreen = memo(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -67,7 +64,7 @@ export const TransactionConfirmationScreen = memo(() => {
           provider,
           wallet.path!,
           route.params.to,
-          new Decimal(route.params.amount).mul(WEI).toFixed(),
+          route.params.amount,
         );
 
         if (wallet.type === WalletType.ledgerBt) {
@@ -97,7 +94,7 @@ export const TransactionConfirmationScreen = memo(() => {
         Logger.captureException(e, 'transaction-confirmation', {
           from: route.params.from,
           to: route.params.to,
-          amount: route.params.amount,
+          amount: route.params.amount.toHex(),
           id: errorId,
           walletType: wallet.type,
         });

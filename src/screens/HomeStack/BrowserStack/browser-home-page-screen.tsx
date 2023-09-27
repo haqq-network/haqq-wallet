@@ -36,11 +36,11 @@ export const BrowserHomePageScreen = memo(() => {
   const bookmarks = useWeb3BrowserBookmark();
   const searchHistory = useWeb3BrowserSearchHistory();
   const favouriteLinks = useMemo(
-    () => bookmarks.map(item => item),
+    () => bookmarks.toJSON() as unknown as Link[],
     [bookmarks],
   );
   const recentLinks = useMemo(
-    () => searchHistory.map(item => item),
+    () => searchHistory.toJSON() as unknown as Link[],
     [searchHistory],
   );
   const [focused, setFocused] = React.useState(false);

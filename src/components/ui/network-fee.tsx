@@ -4,6 +4,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 export type NetworkFeeProps = {
   fee: Balance;
@@ -14,7 +15,7 @@ export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
     if (currency === 'aISLM') {
       return fee.toWeiString();
     }
-    return fee.toEtherString();
+    return fee.toBalanceString(LONG_NUM_PRECISION);
   }, [fee, currency]);
 
   return (

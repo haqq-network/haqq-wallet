@@ -260,7 +260,7 @@ const styles = createTheme({
   },
   ticketButton: {
     marginLeft: 8,
-    width: 95,
+    minWidth: 95,
   },
   timerButton: {
     minWidth: 85,

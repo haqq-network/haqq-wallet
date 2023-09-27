@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useEffect, useRef} from 'react';
 
 import {ProviderInterface} from '@haqq/provider-base';
-import Decimal from 'decimal.js';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
@@ -20,7 +19,6 @@ import {
 } from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {AdjustEvents} from '@app/types';
-import {WEI} from '@app/variables/common';
 
 export const TransactionLedgerScreen = memo(() => {
   const transport = useRef<ProviderInterface | null>(null);
@@ -61,7 +59,7 @@ export const TransactionLedgerScreen = memo(() => {
           transport.current!,
           wallet.path!,
           route.params.to,
-          new Decimal(route.params.amount).mul(WEI).toFixed(),
+          route.params.amount,
         );
 
         if (transaction) {

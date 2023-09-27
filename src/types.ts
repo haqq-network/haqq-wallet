@@ -354,7 +354,7 @@ export type RootStackParamList = {
   transactionConfirmation: {
     from: string;
     to: string;
-    amount: number;
+    amount: Balance;
     fee?: Balance;
   };
   transactionNftConfirmation: {
@@ -366,8 +366,8 @@ export type RootStackParamList = {
   transactionLedger: {
     from: string;
     to: string;
-    amount: number;
-    fee?: number;
+    amount: Balance;
+    fee?: Balance;
   };
   transactionSumAddress: {
     to: string;
@@ -808,8 +808,8 @@ export interface EthTypedData {
   };
 }
 
-export interface RemoteMessage {
-  data: Record<string, any>;
+export interface RemoteMessage<TData = Record<string, any>> {
+  data: TData;
   from: string;
   messageId: string;
   notification: {body: string; title: string};
@@ -1113,6 +1113,7 @@ export interface IStakingWidget extends IWidgetBase {
 
 export interface IGovernanceWidget extends IWidgetBase {
   component: 'Governance';
+  link?: string;
 }
 
 export interface ILayoutWidget extends IWidgetBase {
@@ -1210,6 +1211,20 @@ export interface VerifyAddressResponse {
 
 export interface MobXStoreFromRealm {
   realmSchemaName: string;
-  migrate: () => void;
   isHydrated: boolean;
+  migrate: () => void;
+}
+
+export interface MobXStoreItem {
+  id: string;
+}
+
+export interface MobXStore<TData extends MobXStoreItem> {
+  data: Record<string, TData>;
+  getById(id: string): TData;
+  getAll(): TData[];
+  create(id: string, item: TData): void;
+  update(id: string, item: Partial<TData>): boolean;
+  remove(id: string): boolean;
+  removeAll(): void;
 }

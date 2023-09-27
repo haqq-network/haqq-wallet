@@ -2,7 +2,7 @@ import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
-import {SssProviders} from '@app/services/provider-sss';
+import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -191,9 +191,12 @@ export const STORE_PAGE_URL = Platform.select({
 });
 
 export const IS_IOS = Platform.OS === 'ios';
-export const WEI = 10 ** 18;
+export const WEI_PRECISION = 18;
+export const WEI = 10 ** WEI_PRECISION;
 
+export const LONG_NUM_PRECISION = 8;
 export const NUM_PRECISION = 2;
+export const NUM_DELIMITER = ' ';
 
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
@@ -247,9 +250,15 @@ export const LIGHT_DISCORD_BG = '#603ACB';
 export const SPLASH_TIMEOUT_MS = 30_000;
 export const AWAIT_NEW_BLOCK_MS = 10_000;
 
-export const ProviderNameMap = {
-  [SssProviders.apple]: 'iCloud',
-  [SssProviders.google]: '\nGoogle Drive',
-};
-
 export const STORE_REHYDRATION_TIMEOUT_MS = 2000;
+
+export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
+  'haqq.page.link',
+  'preview.page.link',
+];
+
+export const TRANSACTION_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.transactions}`;
+export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.news}`;
+export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;
+
+export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
