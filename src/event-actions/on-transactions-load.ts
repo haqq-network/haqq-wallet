@@ -1,10 +1,10 @@
 import {Events} from '@app/events';
 import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
-import {fetchWithTimeout, getHttpResponse} from '@app/utils';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getAll().filter(p => !!p.explorer);
@@ -36,26 +36,16 @@ async function loadTransactionsFromExplorerWithProvider(
 ) {
   try {
     const p = Provider.getById(providerId);
+    const explorer = getExplorerInstanceForProvider(providerId);
+    const rows = await explorer.accountTxList(address);
 
-    if (!p?.explorer) {
+    if (!rows.result) {
       return [];
     }
 
-    const txList = await fetchWithTimeout(
-      `${p.explorer}api?module=account&action=txlist&address=${address}`,
-      {
-        headers: {
-          accept: 'application/json',
-        },
-        timeout: 10000,
-      },
-    );
-
-    const rows = await getHttpResponse(txList);
-
     return rows.result
-      .filter((row: any) => !Transaction.getById(row.hash))
-      .map((row: any) => ({
+      .filter(row => !Transaction.getById(row.hash))
+      .map(row => ({
         row: {...row, chainId: String(p?.ethChainId)},
         providerId,
         fee: calcFee(row.gasPrice, row.gasUsed),
