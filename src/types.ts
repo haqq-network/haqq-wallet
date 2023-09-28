@@ -1058,7 +1058,12 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type BalanceConstructor = IBalance | Decimal | number | string;
+export type BalanceConstructor =
+  | HexNumber
+  | IBalance
+  | Decimal
+  | number
+  | string;
 
 export interface IBalance {
   readonly raw: Decimal;
@@ -1165,6 +1170,20 @@ export type OnTransactionRowPress = (
 export type ContractNameMap = Record<string, string>;
 
 export type HaqqCosmosAddress = `haqq${string}`;
+export type HaqqEthereumAddress = `0x${string}` | string;
+export type HexNumber = `0x${string}`;
+
+export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
+export type IndexerTime = Record<HaqqCosmosAddress, number>;
+export interface BalanceData {
+  balance: Balance;
+  vested: Balance;
+  staked: Balance;
+  // next time to unlock vested tokens
+  unlock: Date;
+}
+
+export type IndexerBalanceData = Record<HaqqEthereumAddress, BalanceData>;
 
 export type JsonRpcTransactionRequest = {
   to?: string;

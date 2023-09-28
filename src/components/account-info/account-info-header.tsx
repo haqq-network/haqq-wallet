@@ -28,7 +28,6 @@ const CARD_RADIUS = 8;
 export type AccountInfoProps = {
   wallet: Wallet;
   balance: Balance | undefined;
-  unvestedBalance: Balance | undefined;
   lockedBalance: Balance | undefined;
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
@@ -40,7 +39,6 @@ export type AccountInfoProps = {
 export const AccountInfoHeader = ({
   wallet,
   balance,
-  unvestedBalance,
   lockedBalance,
   vestedBalance,
   stakingBalance,
@@ -54,8 +52,8 @@ export const AccountInfoHeader = ({
   );
 
   const totalBalance = useMemo(
-    () => balance?.operate(stakingBalance, 'add')?.toFloatString() ?? '0',
-    [balance, stakingBalance],
+    () => balance?.operate(lockedBalance, 'add')?.toFloatString() ?? '0',
+    [balance, lockedBalance],
   );
 
   return (
@@ -88,7 +86,6 @@ export const AccountInfoHeader = ({
         {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
           <StackedVestedTokens
             balance={balance}
-            unvestedBalance={unvestedBalance}
             lockedBalance={lockedBalance}
             vestedBalance={vestedBalance}
             stakingBalance={stakingBalance}

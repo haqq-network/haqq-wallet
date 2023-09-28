@@ -1,5 +1,4 @@
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {
   VestingMetadata,
   VestingMetadataType,
@@ -14,7 +13,7 @@ export async function onVestingSync() {
     Cosmos.addressToBech32(w.address),
   );
   await sync(addressList, cosmos);
-  app.emit(Events.onWalletsVestingBalanceCheck);
+  // app.emit(Events.onWalletsVestingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {

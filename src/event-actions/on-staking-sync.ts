@@ -11,7 +11,7 @@ export async function onStakingSync() {
     Cosmos.addressToBech32(w.address),
   );
   await sync(addressList, cosmos);
-  app.emit(Events.onWalletsStakingBalanceCheck);
+  // app.emit(Events.onWalletsStakingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {

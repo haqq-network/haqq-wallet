@@ -13,7 +13,6 @@ import {StackedVestedTokens} from '../stacked-vested-tokens';
 
 export type TotalValueInfoProps = {
   balance: Balance;
-  unvestedBalance: Balance | undefined;
   lockedBalance: Balance | undefined;
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
@@ -21,7 +20,6 @@ export type TotalValueInfoProps = {
 };
 
 export const TotalValueInfoHeader = ({
-  unvestedBalance,
   vestedBalance,
   stakingBalance,
   balance,
@@ -48,7 +46,6 @@ export const TotalValueInfoHeader = ({
         {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
           <StackedVestedTokens
             balance={balance}
-            unvestedBalance={unvestedBalance}
             lockedBalance={lockedBalance}
             vestedBalance={vestedBalance}
             stakingBalance={stakingBalance}

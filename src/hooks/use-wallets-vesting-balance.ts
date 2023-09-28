@@ -2,14 +2,13 @@ import {useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 
 import {usePrevious} from './use-previous';
 
 export type WalletVestingBalance = {
-  [key: string]: Record<VestingMetadataType, Balance> | undefined;
+  [key: string]: Balance | undefined;
 };
 
 const getVestingBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {

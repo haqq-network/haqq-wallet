@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
+import {HexNumber} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -262,3 +263,5 @@ export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTo
 export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;
 
 export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
+
+export const ZERO_HEX_NUMBER: HexNumber = '0x0';

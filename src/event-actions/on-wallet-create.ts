@@ -10,6 +10,7 @@ import {getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
 
@@ -27,7 +28,12 @@ export async function onWalletCreate(wallet: Wallet) {
 
     const balance = await EthNetwork.getBalance(wallet.address);
     app.onWalletsBalance({
-      [wallet.address]: balance,
+      [wallet.address]: {
+        balance,
+        staked: Balance.Empty,
+        vested: Balance.Empty,
+        unlock: new Date(0),
+      },
     });
 
     await Promise.all([

@@ -1,4 +1,3 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
   StakingMetadata,
@@ -20,7 +19,11 @@ export async function onWalletsStakingBalanceCheck() {
       return [w.address, total];
     });
 
-    await app.onWalletsStakingBalance(Object.fromEntries(balances));
+    Logger.log(
+      Events.onWalletsStakingBalanceCheck,
+      Object.fromEntries(balances),
+    );
+    // await app.onWalletsStakingBalance(Object.fromEntries(balances));
   } catch (e) {
     Logger.error(Events.onWalletsStakingBalanceCheck, e);
   }
