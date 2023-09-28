@@ -66,7 +66,7 @@ export const SssStoreWalletScreen = () => {
           const {address} = await provider.getAccountInfo(hdPath);
 
           if (!Wallet.getById(address)) {
-            const balance = app.getBalance(address);
+            const balance = app.getAvailableBalance(address);
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {

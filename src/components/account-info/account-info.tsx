@@ -26,26 +26,30 @@ enum TabNames {
 export type AccountInfoProps = {
   transactionsList: TransactionList[];
   wallet: Wallet;
-  balance: Balance | undefined;
-  lockedBalance: Balance | undefined;
-  vestedBalance: Balance | undefined;
-  stakingBalance: Balance | undefined;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
   onPressRow: (hash: string) => void;
   contractNameMap: ContractNameMap;
+  available: Balance;
+  locked: Balance;
+  staked: Balance;
+  total: Balance;
+  vested: Balance;
+  unlock: Date;
 };
 
 const PAGE_ITEMS_COUNT = 15;
 
 export const AccountInfo = ({
   wallet,
-  balance,
   transactionsList,
-  stakingBalance,
-  lockedBalance,
-  vestedBalance,
+  available,
+  locked,
+  staked,
+  total,
+  unlock,
+  vested,
   onPressInfo,
   onSend,
   onReceive,
@@ -80,10 +84,12 @@ export const AccountInfo = ({
       <>
         <AccountInfoHeader
           wallet={wallet}
-          balance={balance}
-          lockedBalance={lockedBalance}
-          vestedBalance={vestedBalance}
-          stakingBalance={stakingBalance}
+          available={available}
+          locked={locked}
+          staked={staked}
+          total={total}
+          unlock={unlock}
+          vested={vested}
           onPressInfo={onPressInfo}
           onSend={onSend}
           onReceive={onReceive}
@@ -110,10 +116,12 @@ export const AccountInfo = ({
     ),
     [
       wallet,
-      balance,
-      lockedBalance,
-      vestedBalance,
-      stakingBalance,
+      available,
+      locked,
+      staked,
+      total,
+      unlock,
+      vested,
       onPressInfo,
       onSend,
       onReceive,

@@ -3,17 +3,17 @@ import {useEffect, useState} from 'react';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/services/balance';
+import {BalanceData, HaqqEthereumAddress} from '@app/types';
 
 import {usePrevious} from './use-previous';
 
 export type WalletBalance = {
-  [key: string]: Balance | undefined;
+  [key: HaqqEthereumAddress]: BalanceData;
 };
 
 const getBalance = (wallets: Wallet[] | Realm.Results<Wallet>) => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getBalance(w.address)]),
+    wallets.map(w => [w.address, app.getBalanceData(w.address)]),
   );
 };
 

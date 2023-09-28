@@ -16,13 +16,13 @@ export interface StackedVestedTokensProps {
   lockedBalance?: Balance;
   vestedBalance?: Balance;
   stakingBalance?: Balance;
-  balance?: Balance;
+  availableBalance?: Balance;
 
   onPressInfo(): void;
 }
 
 export function StackedVestedTokens({
-  balance = Balance.Empty,
+  availableBalance = Balance.Empty,
   lockedBalance = Balance.Empty,
   stakingBalance = Balance.Empty,
   vestedBalance = Balance.Empty,
@@ -60,7 +60,7 @@ export function StackedVestedTokens({
             t10
             color={Color.textBase1}
             i18n={I18N.lockedTokensAvailable}
-            i18params={{count: balance?.toFloatString() ?? '0'}}
+            i18params={{count: availableBalance?.toFloatString() ?? '0'}}
           />
         </View>
         {lockedBalance?.isPositive() && (

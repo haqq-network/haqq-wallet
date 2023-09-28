@@ -26,11 +26,15 @@ import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
+import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N} from './i18n';
+import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {Balance} from './services/balance';
 import {Cosmos} from './services/cosmos';
 import {
   AdjustTrackingAuthorizationStatus,
+  BalanceData,
   EthType,
   EthTypedData,
   JsonRpcTransactionRequest,
@@ -767,3 +771,31 @@ export function isContractTransaction(
 
   return false;
 }
+
+export const calculateBalances = (
+  data: WalletBalance,
+  wallets: Realm.Results<Wallet>,
+): BalanceData => {
+  const result: Partial<BalanceData> = wallets.reduce(
+    (acc, curr) => {
+      const {available, locked, staked, total, vested} = data[curr.address];
+
+      return {
+        staked: staked.operate(acc.staked, 'add'),
+        vested: vested.operate(acc.vested, 'add'),
+        available: available.operate(acc.available, 'add'),
+        total: total.operate(acc.total, 'add'),
+        locked: locked.operate(acc.locked, 'add'),
+      };
+    },
+    {
+      staked: Balance.Empty,
+      vested: Balance.Empty,
+      available: Balance.Empty,
+      total: Balance.Empty,
+      locked: Balance.Empty,
+    },
+  );
+  result.unlock = new Date(0);
+  return result as BalanceData;
+};

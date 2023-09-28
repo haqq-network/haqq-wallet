@@ -9,10 +9,7 @@ import {prepareTransactions, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Transaction} from '@app/models/transaction';
-import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {TransactionList} from '@app/types';
 
@@ -22,35 +19,10 @@ export const AccountInfoScreen = () => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const vestingBalance = useWalletsVestingBalance([wallet!]);
-  const stakingBalances = useWalletsStakingBalance([wallet!]);
-  const currentBalance = useMemo(
+  const {available, locked, staked, total, unlock, vested} = useMemo(
     () => balances[wallet?.address!],
-    [balances, wallet?.address],
+    [balances, wallet],
   );
-  const staked = useMemo(
-    () => stakingBalances?.[wallet?.address!],
-    [stakingBalances, wallet],
-  );
-  const vested = useMemo(
-    () => vestingBalance?.[wallet?.address!],
-    [vestingBalance, wallet],
-  );
-  const locked = useMemo(() => {
-    if (staked && !vested) {
-      staked;
-    }
-
-    if (!staked && vested) {
-      return vested;
-    }
-
-    if (!staked || !vested) {
-      return Balance.Empty;
-    }
-
-    return staked.operate(vested, 'add');
-  }, [staked, vested]);
 
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
@@ -126,16 +98,18 @@ export const AccountInfoScreen = () => {
   return (
     <AccountInfo
       wallet={wallet}
-      balance={currentBalance}
       transactionsList={transactionsList}
-      lockedBalance={locked}
-      vestedBalance={vested}
-      stakingBalance={staked}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}
+      available={available}
+      locked={locked}
+      staked={staked}
+      total={total}
+      unlock={unlock}
+      vested={vested}
     />
   );
 };

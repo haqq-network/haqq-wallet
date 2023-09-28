@@ -7,8 +7,6 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
@@ -17,8 +15,6 @@ export const WalletsWrapper = () => {
   const navigation = useTypedNavigation();
   const visible = useWalletsVisible();
   const balance = useWalletsBalance(visible);
-  const stakingBalance = useWalletsStakingBalance(visible);
-  const vestingBalance = useWalletsVestingBalance(visible);
   const {activeSessions} = useWalletConnectSessions();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
@@ -113,8 +109,6 @@ export const WalletsWrapper = () => {
       wallets={visible}
       walletConnectSessions={walletConnectSessions}
       showLockedTokens={showLockedTokens}
-      stakingBalance={stakingBalance}
-      vestingBalance={vestingBalance}
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}

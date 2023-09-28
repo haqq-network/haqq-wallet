@@ -39,7 +39,7 @@ export const HomeEarnScreen = () => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
       Balance.Empty,
     ),
   });
@@ -72,7 +72,7 @@ export const HomeEarnScreen = () => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+        (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
         Balance.Empty,
       );
 
