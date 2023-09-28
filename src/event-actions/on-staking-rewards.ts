@@ -1,10 +1,6 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {
-  awaitForLedger,
-  awaitForPopupClosed,
-  getProviderInstanceForWallet,
-} from '@app/helpers';
+import {awaitForPopupClosed, getProviderInstanceForWallet} from '@app/helpers';
 import {getMinAmount} from '@app/helpers/get-min-amount';
 import {
   StakingMetadata,
@@ -66,7 +62,7 @@ export async function onStakingRewards() {
           ]),
       );
       try {
-        await awaitForLedger(transport);
+        // await awaitForLedger(transport);
       } catch (e) {
         if (e === '27010') {
           await awaitForPopupClosed('ledgerLocked');

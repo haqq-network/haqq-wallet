@@ -4,7 +4,6 @@ import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
-  awaitForLedger,
   awaitForPopupClosed,
   getProviderInstanceForWallet,
   showModal,
@@ -18,7 +17,6 @@ import {EthNetwork, sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {WalletType} from '@app/types';
 import {isSendTransactionError, sleep} from '@app/utils';
 import {RAFFLE_TOPIC_VARIABLE_NAME} from '@app/variables/common';
 
@@ -58,14 +56,10 @@ export async function onEarnGetTicket(raffleId: string) {
   const uid = await getUid();
   const provider = await getProviderInstanceForWallet(leadingAccount);
 
-  const result = provider.signPersonalMessage(
+  const signature = await provider.signPersonalMessage(
     leadingAccount?.path ?? '',
     `${raffleId}:${uid}:${captcha.token}`,
   );
-  if (leadingAccount.type === WalletType.ledgerBt) {
-    await awaitForLedger(provider);
-  }
-  const signature = await result;
 
   const response = await Backend.instance.contestParticipateUser(
     raffleId,

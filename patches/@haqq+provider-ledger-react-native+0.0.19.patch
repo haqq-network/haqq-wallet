@@ -1,0 +1,211 @@
+diff --git a/node_modules/@haqq/provider-ledger-react-native/dist/provider.js b/node_modules/@haqq/provider-ledger-react-native/dist/provider.js
+index 1569504..03fe97d 100644
+--- a/node_modules/@haqq/provider-ledger-react-native/dist/provider.js
++++ b/node_modules/@haqq/provider-ledger-react-native/dist/provider.js
+@@ -122,7 +122,7 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                         resp = { publicKey: '', address: '' };
+                         _a.label = 1;
+                     case 1:
+-                        _a.trys.push([1, 6, , 7]);
++                        _a.trys.push([1, 7, , 8]);
+                         this.stop = false;
+                         return [4 /*yield*/, this.awaitForTransport(this._options.deviceId)];
+                     case 2:
+@@ -130,29 +130,33 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                         if (!transport) {
+                             throw new Error('can_not_connected');
+                         }
+-                        if (!this._options.appName) return [3 /*break*/, 4];
++                        if (!this._options.appName) return [3 /*break*/, 5];
+                         return [4 /*yield*/, (0, commands_1.suggestApp)(transport, this._options.appName)];
+                     case 3:
+                         _a.sent();
+-                        _a.label = 4;
++                        this.onDisconnectTransport();
++                        return [4 /*yield*/, this.awaitForTransport(this._options.deviceId)];
+                     case 4:
++                        transport = _a.sent();
++                        _a.label = 5;
++                    case 5:
+                         eth = new hw_app_eth_1.default(transport);
+                         return [4 /*yield*/, eth.getAddress(hdPath)];
+-                    case 5:
++                    case 6:
+                         response = _a.sent();
+                         resp = {
+                             publicKey: (0, provider_base_1.compressPublicKey)(response.publicKey),
+                             address: response.address,
+                         };
+                         this.emit('getPublicKeyForHDPath', true);
+-                        return [3 /*break*/, 7];
+-                    case 6:
++                        return [3 /*break*/, 8];
++                    case 7:
+                         e_1 = _a.sent();
+                         if (e_1 instanceof Error) {
+                             this.catchError(e_1, 'getPublicKeyForHDPath');
+                         }
+-                        return [3 /*break*/, 7];
+-                    case 7: return [2 /*return*/, resp];
++                        return [3 /*break*/, 8];
++                    case 8: return [2 /*return*/, resp];
+                 }
+             });
+         });
+@@ -166,7 +170,7 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                         resp = '';
+                         _a.label = 1;
+                     case 1:
+-                        _a.trys.push([1, 7, , 8]);
++                        _a.trys.push([1, 8, , 9]);
+                         this.stop = false;
+                         unsignedTx = ethers_1.utils
+                             .serializeTransaction(transaction)
+@@ -180,26 +184,30 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                         if (!transport) {
+                             throw new Error('can_not_connected');
+                         }
+-                        if (!this._options.appName) return [3 /*break*/, 5];
++                        if (!this._options.appName) return [3 /*break*/, 6];
+                         return [4 /*yield*/, (0, commands_1.suggestApp)(transport, this._options.appName)];
+                     case 4:
+                         _a.sent();
+-                        _a.label = 5;
++                        this.onDisconnectTransport();
++                        return [4 /*yield*/, this.awaitForTransport(this._options.deviceId)];
+                     case 5:
++                        transport = _a.sent();
++                        _a.label = 6;
++                    case 6:
+                         eth = new hw_app_eth_1.default(transport);
+                         return [4 /*yield*/, eth.signTransaction(hdPath, unsignedTx, resolution)];
+-                    case 6:
++                    case 7:
+                         signature = _a.sent();
+                         resp = ethers_1.utils.serializeTransaction(transaction, __assign(__assign({}, signature), { r: '0x' + signature.r, s: '0x' + signature.s, v: parseInt(signature.v, 10) }));
+                         this.emit('signTransaction', true);
+-                        return [3 /*break*/, 8];
+-                    case 7:
++                        return [3 /*break*/, 9];
++                    case 8:
+                         e_2 = _a.sent();
+                         if (e_2 instanceof Error) {
+                             this.catchError(e_2, 'signTransaction');
+                         }
+-                        return [3 /*break*/, 8];
+-                    case 8: return [2 /*return*/, resp];
++                        return [3 /*break*/, 9];
++                    case 9: return [2 /*return*/, resp];
+                 }
+             });
+         });
+@@ -375,7 +383,7 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                     case 5:
+                         e_6 = _d.sent();
+                         this.emit('awaitForTransport', new Date(), e_6, attempts);
+-                        return [4 /*yield*/, (0, sleep_1.sleep)(1000)];
++                        return [4 /*yield*/, (0, sleep_1.sleep)(250)];
+                     case 6:
+                         _d.sent();
+                         attempts += 1;
+@@ -398,7 +406,6 @@ var ProviderLedgerReactNative = /** @class */ (function (_super) {
+                     case '27010':
+                         this.emit(source, false, e.message, e.name, '27010');
+                         throw new Error('ledger_locked');
+-                        break;
+                     case '27013':
+                         this.emit(source, false, e.message, e.name, '27013');
+                         throw new Error('ledger_rejected');
+diff --git a/node_modules/@haqq/provider-ledger-react-native/dist/types.js b/node_modules/@haqq/provider-ledger-react-native/dist/types.js
+index 1eb8d9e..0192230 100644
+--- a/node_modules/@haqq/provider-ledger-react-native/dist/types.js
++++ b/node_modules/@haqq/provider-ledger-react-native/dist/types.js
+@@ -27,4 +27,4 @@ var State;
+      * Bluetooth is currently powered on and available to use.
+      */
+     State["PoweredOn"] = "PoweredOn";
+-})(State = exports.State || (exports.State = {}));
++})(State || (exports.State = State = {}));
+diff --git a/node_modules/@haqq/provider-ledger-react-native/src/provider.ts b/node_modules/@haqq/provider-ledger-react-native/src/provider.ts
+index 77ec77b..b38ec75 100644
+--- a/node_modules/@haqq/provider-ledger-react-native/src/provider.ts
++++ b/node_modules/@haqq/provider-ledger-react-native/src/provider.ts
+@@ -1,14 +1,15 @@
+ import {TransactionRequest} from '@ethersproject/abstract-provider';
+ import {
+-  compressPublicKey,
+-  stringToUtf8Bytes,
+   BytesLike,
+   Provider,
+   ProviderInterface,
++  compressPublicKey,
++  stringToUtf8Bytes,
+ } from '@haqq/provider-base';
+ import AppEth, {ledgerService} from '@ledgerhq/hw-app-eth';
+ import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
+-import {utils, UnsignedTransaction} from 'ethers';
++import {UnsignedTransaction, utils} from 'ethers';
++
+ import {suggestApp} from './commands';
+ import {getDeviceConnection} from './get-device-connection';
+ import {sleep} from './sleep';
+@@ -30,16 +31,18 @@ export class ProviderLedgerReactNative
+     try {
+       this.stop = false;
+ 
+-      const transport = await this.awaitForTransport(this._options.deviceId);
++      let transport = await this.awaitForTransport(this._options.deviceId);
+       if (!transport) {
+         throw new Error('can_not_connected');
+       }
+ 
+       if (this._options.appName) {
+         await suggestApp(transport, this._options.appName);
++        this.onDisconnectTransport();
++        transport = await this.awaitForTransport(this._options.deviceId);
+       }
+ 
+-      const eth = new AppEth(transport);
++      const eth = new AppEth(transport!);
+ 
+       const response = await eth.getAddress(hdPath);
+ 
+@@ -69,7 +72,7 @@ export class ProviderLedgerReactNative
+         {},
+       );
+ 
+-      const transport = await this.awaitForTransport(this._options.deviceId);
++      let transport = await this.awaitForTransport(this._options.deviceId);
+ 
+       if (!transport) {
+         throw new Error('can_not_connected');
+@@ -77,9 +80,11 @@ export class ProviderLedgerReactNative
+ 
+       if (this._options.appName) {
+         await suggestApp(transport, this._options.appName);
++        this.onDisconnectTransport();
++        transport = await this.awaitForTransport(this._options.deviceId);
+       }
+ 
+-      const eth = new AppEth(transport);
++      const eth = new AppEth(transport!);
+ 
+       const signature = await eth.signTransaction(
+         hdPath,
+@@ -242,7 +247,7 @@ export class ProviderLedgerReactNative
+         }
+       } catch (e) {
+         this.emit('awaitForTransport', new Date(), e, attempts);
+-        await sleep(1000);
++        await sleep(250);
+         attempts += 1;
+       }
+     }
+@@ -268,7 +273,6 @@ export class ProviderLedgerReactNative
+           case '27010':
+             this.emit(source, false, e.message, e.name, '27010');
+             throw new Error('ledger_locked');
+-            break;
+           case '27013':
+             this.emit(source, false, e.message, e.name, '27013');
+             throw new Error('ledger_rejected');

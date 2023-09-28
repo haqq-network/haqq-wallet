@@ -4,8 +4,6 @@ import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {
   abortProviderInstanceForWallet,
-  awaitForBluetooth,
-  awaitForLedger,
   awaitForPopupClosed,
   awaitForWallet,
   getProviderInstanceForWallet,
@@ -90,7 +88,7 @@ export const StakingInfoScreen = () => {
           const transport = await getProviderInstanceForWallet(current);
 
           try {
-            await awaitForBluetooth();
+            // await awaitForBluetooth();
 
             queue.push(
               cosmos
@@ -101,7 +99,7 @@ export const StakingInfoScreen = () => {
                 )
                 .then(() => [current.cosmosAddress, operator_address]),
             );
-            await awaitForLedger(transport);
+            // await awaitForLedger(transport);
           } catch (e) {
             if (e === '27010') {
               await awaitForPopupClosed('ledgerLocked');

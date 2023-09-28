@@ -16,7 +16,6 @@ import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
-  awaitForLedger,
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
@@ -46,7 +45,7 @@ import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
+import {Link, Modals, PartialJsonRpcRequest} from '@app/types';
 import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -396,11 +395,7 @@ export const SettingsTestScreen = observer(() => {
       new Balance(250000, 0),
     );
 
-    const result = transport.signTransaction(wallet.path!, unsignedTx);
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForLedger(transport);
-    }
-    const signedTx = await result;
+    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
