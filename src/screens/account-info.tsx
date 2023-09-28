@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -10,6 +10,7 @@ import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
+import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
@@ -21,18 +22,35 @@ export const AccountInfoScreen = () => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const unvestedBalance = useRef(Balance.Empty).current;
-  const vestedBalance = useRef(Balance.Empty).current;
-  const lockedBalance = useRef(Balance.Empty).current;
+  const vestingBalance = useWalletsVestingBalance([wallet!]);
   const stakingBalances = useWalletsStakingBalance([wallet!]);
   const currentBalance = useMemo(
     () => balances[wallet?.address!],
     [balances, wallet?.address],
   );
-  const stakingBalance = useMemo(
+  const staked = useMemo(
     () => stakingBalances?.[wallet?.address!],
-    [stakingBalances, wallet?.address],
+    [stakingBalances, wallet],
   );
+  const vested = useMemo(
+    () => vestingBalance?.[wallet?.address!],
+    [vestingBalance, wallet],
+  );
+  const locked = useMemo(() => {
+    if (staked && !vested) {
+      staked;
+    }
+
+    if (!staked && vested) {
+      return vested;
+    }
+
+    if (!staked || !vested) {
+      return Balance.Empty;
+    }
+
+    return staked.operate(vested, 'add');
+  }, [staked, vested]);
 
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
@@ -110,10 +128,9 @@ export const AccountInfoScreen = () => {
       wallet={wallet}
       balance={currentBalance}
       transactionsList={transactionsList}
-      unvestedBalance={unvestedBalance}
-      lockedBalance={lockedBalance}
-      vestedBalance={vestedBalance}
-      stakingBalance={stakingBalance}
+      lockedBalance={locked}
+      vestedBalance={vested}
+      stakingBalance={staked}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}

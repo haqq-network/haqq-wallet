@@ -5,12 +5,15 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
+import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Balance} from '@app/services/balance';
 
 export function LockedTokensWrapper() {
   const visible = useWalletsVisible();
   const balances = useWalletsBalance(visible);
   const stakingBalances = useWalletsStakingBalance(visible);
+  const vestingBalance = useWalletsVestingBalance(visible);
+
   const navigation = useTypedNavigation();
   const availableBalance = useMemo(
     () =>
@@ -21,7 +24,7 @@ export function LockedTokensWrapper() {
     [balances],
   );
 
-  const lockedBalance = useMemo(
+  const staked = useMemo(
     () =>
       Object.values(stakingBalances).reduce(
         (prev, curr) => prev?.operate(curr, 'add'),
@@ -30,9 +33,34 @@ export function LockedTokensWrapper() {
     [stakingBalances],
   );
 
+  const vested = useMemo(
+    () =>
+      Object.values(vestingBalance).reduce(
+        (prev, curr) => prev?.operate(curr, 'add'),
+        Balance.Empty,
+      ) ?? Balance.Empty,
+    [vestingBalance],
+  );
+
+  const locked = useMemo(() => {
+    if (staked && !vested) {
+      staked;
+    }
+
+    if (!staked && vested) {
+      return vested;
+    }
+
+    if (!staked || !vested) {
+      return Balance.Empty;
+    }
+
+    return staked.operate(vested, 'add');
+  }, [staked, vested]);
+
   const totalBalance = useMemo(
-    () => availableBalance?.operate(lockedBalance, 'add'),
-    [availableBalance, lockedBalance],
+    () => availableBalance?.operate(locked, 'add'),
+    [availableBalance, locked],
   );
 
   const onForwardPress = useCallback(
@@ -50,7 +78,7 @@ export function LockedTokensWrapper() {
   return (
     <LockedTokens
       availableBalance={availableBalance}
-      lockedBalance={lockedBalance}
+      lockedBalance={locked}
       totalBalance={totalBalance}
       onForwardPress={onForwardPress}
     />

@@ -27,7 +27,6 @@ export type AccountInfoProps = {
   transactionsList: TransactionList[];
   wallet: Wallet;
   balance: Balance | undefined;
-  unvestedBalance: Balance | undefined;
   lockedBalance: Balance | undefined;
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
@@ -45,7 +44,6 @@ export const AccountInfo = ({
   balance,
   transactionsList,
   stakingBalance,
-  unvestedBalance,
   lockedBalance,
   vestedBalance,
   onPressInfo,
@@ -83,7 +81,6 @@ export const AccountInfo = ({
         <AccountInfoHeader
           wallet={wallet}
           balance={balance}
-          unvestedBalance={unvestedBalance}
           lockedBalance={lockedBalance}
           vestedBalance={vestedBalance}
           stakingBalance={stakingBalance}
@@ -114,7 +111,6 @@ export const AccountInfo = ({
     [
       wallet,
       balance,
-      unvestedBalance,
       lockedBalance,
       vestedBalance,
       stakingBalance,

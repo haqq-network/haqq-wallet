@@ -25,7 +25,6 @@ enum TabNames {
 export type TotalValueInfoProps = {
   transactionsList: TransactionList[];
   balance: Balance;
-  unvestedBalance: Balance | undefined;
   lockedBalance: Balance | undefined;
   vestedBalance: Balance | undefined;
   stakingBalance: Balance | undefined;
@@ -41,7 +40,6 @@ export const TotalValueInfo = ({
   transactionsList,
   lockedBalance,
   stakingBalance,
-  unvestedBalance,
   vestedBalance,
   onPressInfo,
   onPressRow,
@@ -77,7 +75,6 @@ export const TotalValueInfo = ({
           balance={balance}
           lockedBalance={lockedBalance}
           stakingBalance={stakingBalance}
-          unvestedBalance={unvestedBalance}
           vestedBalance={vestedBalance}
           onPressInfo={onPressInfo}
         />
@@ -107,7 +104,6 @@ export const TotalValueInfo = ({
       onPressInfo,
       onTabChange,
       stakingBalance,
-      unvestedBalance,
       vestedBalance,
     ],
   );

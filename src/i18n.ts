@@ -769,6 +769,8 @@ export enum I18N {
   dynamicLinkDetactedAllow,
   rafflePushNotification,
   rafflePushNotificationsDescription,
+  lockedTokensVested,
+  lockedTokensStaked,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1677,4 +1679,6 @@ const en: Record<I18N, string> = {
   [I18N.dynamicLinkDetactedDescription]: 'This website has been open \n{{url}}',
   [I18N.dynamicLinkDetactedIgnore]: 'Ignore',
   [I18N.dynamicLinkDetactedAllow]: 'Allow',
+  [I18N.lockedTokensVested]: 'Vested: {{count}}',
+  [I18N.lockedTokensStaked]: 'Staked: {{count}}',
 };

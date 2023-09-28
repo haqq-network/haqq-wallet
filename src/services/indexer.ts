@@ -3,11 +3,20 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
-import {ContractNameMap, HaqqCosmosAddress} from '@app/types';
+import {ContractNameMap, IndexerBalance, IndexerTime} from '@app/types';
 
 export type IndexerUpdatesResponse = {
-  balance: Record<HaqqCosmosAddress, string>;
+  addresses: string[];
+  balance: IndexerBalance;
+  staked: IndexerBalance;
+  vested: IndexerBalance;
+  // next time for unlock vested tokens
+  unlock: IndexerTime;
   last_update: string;
+  // TODO: add types
+  nfts: unknown[];
+  tokens: unknown[];
+  transactions: unknown[];
 };
 
 export class Indexer {
