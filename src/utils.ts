@@ -778,15 +778,18 @@ export const calculateBalances = (
 ): BalanceData => {
   return wallets.reduce(
     (acc, curr) => {
-      const {available, locked, staked, total, vested} = data[curr.address];
+      const {available, locked, staked, total, vested, avaliableForStake} =
+        data[curr.address] ?? {};
 
       return {
-        staked: staked.operate(acc.staked, 'add'),
-        vested: vested.operate(acc.vested, 'add'),
-        available: available.operate(acc.available, 'add'),
-        total: total.operate(acc.total, 'add'),
-        locked: locked.operate(acc.locked, 'add'),
-        avaliableForStake: available.operate(acc.avaliableForStake, 'add'),
+        staked: staked?.operate(acc.staked, 'add') ?? Balance.Empty,
+        vested: vested?.operate(acc.vested, 'add') ?? Balance.Empty,
+        available: available?.operate(acc.available, 'add') ?? Balance.Empty,
+        total: total?.operate(acc.total, 'add') ?? Balance.Empty,
+        locked: locked?.operate(acc.locked, 'add') ?? Balance.Empty,
+        avaliableForStake:
+          avaliableForStake?.operate(acc.avaliableForStake, 'add') ??
+          Balance.Empty,
         unlock: acc.unlock,
       };
     },

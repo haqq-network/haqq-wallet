@@ -30,14 +30,14 @@ const parseIndexerBalances = (
 ): IndexerBalanceData => {
   return Wallet.getAll().reduce((acc, w) => {
     const cosmosAddress = Cosmos.addressToBech32(w.address);
-    const staked = data.staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const vested = data.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const available = data.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const total = data.total?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const locked = data.locked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const staked = data?.staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const vested = data?.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const available = data?.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const total = data?.total?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const locked = data?.locked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const avaliableForStake =
-      data.available_for_stake?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const unlock = Number(data.unlock?.[cosmosAddress]) ?? 0;
+      data?.available_for_stake?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
 
     return {
       ...acc,

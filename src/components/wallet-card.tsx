@@ -25,7 +25,7 @@ import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
 export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
-  balance: BalanceData;
+  balance?: BalanceData;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
@@ -46,8 +46,9 @@ export const WalletCard = memo(
     onPressWalletConnect,
     onPressProtection,
     onPressAccountInfo,
-    balance: {locked, total},
+    balance,
   }: BalanceProps) => {
+    const {locked, total} = balance ?? {};
     const [cardState, setCardState] = useState('loading');
     const screenWidth = useWindowDimensions().width;
     const enableProtectionWarning =
@@ -174,7 +175,7 @@ export const WalletCard = memo(
                 t15
                 color={Color.textBase3}
                 i18n={I18N.walletCardLocked}
-                i18params={{count: locked.toEtherString()}}
+                i18params={{count: locked?.toEtherString() ?? '0'}}
               />
             </View>
           </>
