@@ -4,7 +4,6 @@ import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
-import {AnimateNumber} from '@app/components/animated-balance';
 import {
   BlurView,
   Card,
@@ -15,7 +14,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {cleanNumber, createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -158,7 +157,14 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <AnimateNumber value={parsedTotal} initialValue={parsedTotal} />
+        <Text
+          t0
+          color={Color.textBase3}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          i18n={I18N.amountISLM}
+          i18params={{amount: cleanNumber(parsedTotal)}}
+        />
         {showLockedTokens && locked?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>
