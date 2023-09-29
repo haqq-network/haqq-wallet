@@ -82,10 +82,11 @@ export interface ParamsResponse {
 
 export class Cosmos {
   static fee: Fee = {
-    amount: '5000',
-    gas: '1400000',
+    amount: '2000000000',
+    gas: '2000000',
     denom: 'aISLM',
   };
+
   public stop = false;
   private _provider: Provider;
 
@@ -246,6 +247,8 @@ export class Cosmos {
   generatePostSimulate(message: object, account: Sender) {
     const messages = Array.isArray(message) ? message : [message];
 
+    Logger.log('account-> pubkey', account.pubkey);
+
     return JSON.stringify({
       tx: {
         body: {
@@ -259,12 +262,12 @@ export class Cosmos {
           signer_infos: [
             {
               public_key: {
-                '@type': '/cosmos.crypto.secp256k1.PubKey',
+                '@type': '/ethermint.crypto.v1.ethsecp256k1.PubKey',
                 key: account.pubkey,
               },
               mode_info: {
                 single: {
-                  mode: 'SIGN_MODE_LEGACY_AMINO_JSON',
+                  mode: 'SIGN_MODE_DIRECT', // SIGN_MODE_LEGACY_AMINO_JSON
                 },
               },
               sequence: account.sequence,
@@ -385,6 +388,8 @@ export class Cosmos {
       );
 
       const resp = await this.postSimulate(data, account);
+
+      Logger.log('resp', resp);
 
       if (!resp.gas_info) {
         return {

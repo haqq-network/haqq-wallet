@@ -30,10 +30,10 @@ export const TotalValueInfoHeader = ({
       <First>
         {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
           <StackedVestedTokens
-            availableBalance={balance.available}
-            lockedBalance={balance.locked}
-            vestedBalance={balance.vested}
-            stakingBalance={balance.staked}
+            availableBalance={balance?.available}
+            lockedBalance={balance?.locked}
+            vestedBalance={balance?.vested}
+            stakingBalance={balance?.staked}
             onPressInfo={onPressInfo}
           />
         )}

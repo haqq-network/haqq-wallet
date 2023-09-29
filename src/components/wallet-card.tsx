@@ -207,7 +207,7 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lokedTokensContainer: {
-    transform: [{translateY: -5}],
+    // transform: [{translateY: 0}],
   },
   container: {
     justifyContent: 'space-between',

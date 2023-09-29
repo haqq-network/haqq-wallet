@@ -68,52 +68,6 @@ export async function onWalletsBalanceCheck() {
       lastBalanceUpdates,
     );
 
-    Logger.log('🟣 FROM BACKEND \n', JSON.stringify(updates, null, 2));
-    Logger.log(
-      '🟢 PARSED DATA \n',
-      JSON.stringify(
-        Object.entries(parseIndexerBalances(updates)).map(([address, data]) => {
-          return {
-            address,
-            cosmos: Cosmos.addressToBech32(address),
-            staked: {
-              string: data.staked.toString(),
-              original: data.staked.originalValue,
-              toBalanceString: data.staked.toBalanceString(),
-            },
-            vested: {
-              string: data.vested.toString(),
-              original: data.vested.originalValue,
-              toBalanceString: data.vested.toBalanceString(),
-            },
-            available: {
-              string: data.available.toString(),
-              original: data.available.originalValue,
-              toBalanceString: data.available.toBalanceString(),
-            },
-            total: {
-              string: data.total.toString(),
-              original: data.total.originalValue,
-              toBalanceString: data.total.toBalanceString(),
-            },
-            locked: {
-              string: data.locked.toString(),
-              original: data.locked.originalValue,
-              toBalanceString: data.locked.toBalanceString(),
-            },
-            avaliableForStake: {
-              string: data.avaliableForStake.toString(),
-              original: data.avaliableForStake.originalValue,
-              toBalanceString: data.avaliableForStake.toBalanceString(),
-            },
-            unlock: data.unlock.toISOString(),
-          };
-        }),
-        null,
-        2,
-      ),
-    );
-
     VariablesDate.set(
       `indexer_${app.provider.cosmosChainId}`,
       new Date(updates.last_update),

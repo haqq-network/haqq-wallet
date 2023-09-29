@@ -61,7 +61,7 @@ export const HomeStakingScreen = () => {
       const stakingSum = new Balance(sumReduce(delegations));
       const unDelegationSum = new Balance(sumReduce(unDelegations));
       const availableSum = visible.reduce(
-        (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
+        (acc, w) => acc.operate(app.getAvailableForStakeBalance(w.address), 'add'),
         Balance.Empty,
       );
 

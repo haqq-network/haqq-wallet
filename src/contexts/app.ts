@@ -511,6 +511,10 @@ class App extends AsyncEventEmitter {
     return this._balances.get(address)?.available ?? Balance.Empty;
   }
 
+  getAvailableForStakeBalance(address: HaqqEthereumAddress): Balance {
+    return this._balances.get(address)?.avaliableForStake ?? Balance.Empty;
+  }
+
   getStakingBalance(address: string): Balance {
     return this._balances.get(address)?.staked ?? Balance.Empty;
   }
