@@ -374,6 +374,14 @@ export class Cosmos {
       extension,
     );
 
+    Logger.log(
+      'rawTx',
+      msg.legacyAmino.body.toObject(),
+      msg.legacyAmino.authInfo.toObject(),
+      extension,
+      signature,
+    );
+
     return await this.broadcastTransaction(rawTx);
   }
 
