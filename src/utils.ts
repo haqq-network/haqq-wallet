@@ -776,7 +776,7 @@ export const calculateBalances = (
   data: WalletBalance,
   wallets: Realm.Results<Wallet>,
 ): BalanceData => {
-  const result: Partial<BalanceData> = wallets.reduce(
+  return wallets.reduce(
     (acc, curr) => {
       const {available, locked, staked, total, vested} = data[curr.address];
 
@@ -786,6 +786,8 @@ export const calculateBalances = (
         available: available.operate(acc.available, 'add'),
         total: total.operate(acc.total, 'add'),
         locked: locked.operate(acc.locked, 'add'),
+        avaliableForStake: available.operate(acc.avaliableForStake, 'add'),
+        unlock: acc.unlock,
       };
     },
     {
@@ -794,8 +796,8 @@ export const calculateBalances = (
       available: Balance.Empty,
       total: Balance.Empty,
       locked: Balance.Empty,
+      avaliableForStake: Balance.Empty,
+      unlock: new Date(0),
     },
   );
-  result.unlock = new Date(0);
-  return result as BalanceData;
 };
