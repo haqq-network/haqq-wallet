@@ -55,7 +55,7 @@ export const ProposalDepositForm = ({
         onMax={onPressMax}
       />
       <Spacer />
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}

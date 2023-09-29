@@ -79,7 +79,7 @@ export const StakingDelegateForm = ({
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       {localStatus === ValidatorStatus.inactive ||
         (localStatus === ValidatorStatus.jailed && (
           <>
