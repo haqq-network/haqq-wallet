@@ -107,7 +107,7 @@ export async function onEarnGetTicket(raffleId: string) {
         logger.log('dont have fee', err);
         showModal('notEnoughGas', {
           gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
-          currentAmount: app.getBalance(leadingAccount.address),
+          currentAmount: app.getAvailableBalance(leadingAccount.address),
         });
       } else if (isSendTransactionError(err)) {
         logger.error('error', err);

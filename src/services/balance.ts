@@ -15,8 +15,10 @@ export class Balance implements IBalance {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
   private _precission: number;
+  public originalValue: any;
 
   constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
+    this.originalValue = balance;
     this._precission = precission;
     if (Decimal.isDecimal(balance)) {
       this.bnRaw = balance;

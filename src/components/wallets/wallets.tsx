@@ -17,15 +17,11 @@ import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
-import {WalletStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {WalletVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Wallet} from '@app/models/wallet';
 
 export type WalletsProps = {
   wallets: Wallet[] | Results<Wallet>;
   balance: WalletBalance;
-  stakingBalance: WalletStakingBalance;
-  vestingBalance: WalletVestingBalance;
   walletConnectSessions: SessionTypes.Struct[][];
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
@@ -42,8 +38,6 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
-  stakingBalance,
-  vestingBalance,
   walletConnectSessions,
   showLockedTokens,
   onPressSend,
@@ -85,8 +79,6 @@ export const Wallets = ({
               testID={`${testID}_${w.address}`}
               wallet={w}
               balance={balance[w.address]}
-              stakingBalance={stakingBalance[w.address]}
-              vestingBalance={vestingBalance[w.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               onPressSend={onPressSend}

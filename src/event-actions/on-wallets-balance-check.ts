@@ -2,60 +2,56 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
-import {BalanceData, IndexerBalanceData} from '@app/types';
+import {IndexerBalanceData} from '@app/types';
 import {ZERO_HEX_NUMBER} from '@app/variables/common';
 
-const getEmptyBalances = async (fetchBalanceFromEthNetwork = false) => {
-  const wallets = await Wallet.getAll();
-
-  const balancesPromises = wallets.map(async w => {
-    let balance = Balance.Empty;
-
-    if (fetchBalanceFromEthNetwork) {
-      try {
-        balance = await EthNetwork.getBalance(w.address);
-      } catch (e) {
-        Logger.error('getEmptyBalances', e);
-      }
-    }
-
+export const getEmptyBalances = (): IndexerBalanceData => {
+  return Wallet.getAll().reduce((acc, w) => {
     return {
+      ...acc,
       [w.address]: {
-        balance,
         staked: Balance.Empty,
         vested: Balance.Empty,
+        available: Balance.Empty,
+        total: Balance.Empty,
+        locked: Balance.Empty,
+        avaliableForStake: Balance.Empty,
         unlock: new Date(0),
-      } as BalanceData,
+      },
     };
-  });
-
-  const balancesArray = await Promise.all(balancesPromises);
-
-  return Object.assign({}, ...balancesArray) as IndexerBalanceData;
+  }, {});
 };
 
-const parseIndexerBalances = (data: IndexerUpdatesResponse) => {
+const parseIndexerBalances = (
+  data: IndexerUpdatesResponse,
+): IndexerBalanceData => {
   return Wallet.getAll().reduce((acc, w) => {
     const cosmosAddress = Cosmos.addressToBech32(w.address);
-    const balance = data.balance?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const staked = data.staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const vested = data.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const unlock = Number(data.unlock?.[cosmosAddress]) ?? 0;
+    const staked = data?.staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const vested = data?.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const available = data?.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const total = data?.total?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const locked = data?.locked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const avaliableForStake =
+      data?.available_for_stake?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
+    const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
 
     return {
       ...acc,
       [w.address]: {
-        balance: new Balance(balance),
         staked: new Balance(staked),
         vested: new Balance(vested),
+        available: new Balance(available),
+        total: new Balance(total),
+        locked: new Balance(locked),
+        avaliableForStake: new Balance(avaliableForStake),
         unlock: new Date(unlock * 1000),
-      } as BalanceData,
+      },
     };
-  }, {} as IndexerBalanceData);
+  }, {});
 };
 
 export async function onWalletsBalanceCheck() {
@@ -74,6 +70,7 @@ export async function onWalletsBalanceCheck() {
       accounts,
       lastBalanceUpdates,
     );
+
     VariablesDate.set(
       `indexer_${app.provider.cosmosChainId}`,
       new Date(updates.last_update),
@@ -81,6 +78,6 @@ export async function onWalletsBalanceCheck() {
     app.onWalletsBalance(parseIndexerBalances(updates));
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
-    app.onWalletsBalance(await getEmptyBalances());
+    app.onWalletsBalance(getEmptyBalances());
   }
 }

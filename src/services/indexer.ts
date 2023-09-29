@@ -10,6 +10,10 @@ export type IndexerUpdatesResponse = {
   balance: IndexerBalance;
   staked: IndexerBalance;
   vested: IndexerBalance;
+  available: IndexerBalance;
+  locked: IndexerBalance;
+  total: IndexerBalance;
+  available_for_stake: IndexerBalance;
   // next time for unlock vested tokens
   unlock: IndexerTime;
   last_update: string;

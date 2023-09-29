@@ -1176,9 +1176,12 @@ export type HexNumber = `0x${string}`;
 export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
 export interface BalanceData {
-  balance: Balance;
   vested: Balance;
   staked: Balance;
+  available: Balance;
+  total: Balance;
+  locked: Balance;
+  avaliableForStake: Balance;
   // next time to unlock vested tokens
   unlock: Date;
 }

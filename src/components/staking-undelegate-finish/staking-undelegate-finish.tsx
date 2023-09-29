@@ -75,7 +75,7 @@ export const StakingUnDelegateFinish = ({
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       <Spacer />
       <Inline gap={12}>
         <IconButton onPress={onPressHash} style={styles.button}>

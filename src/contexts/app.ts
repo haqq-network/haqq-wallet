@@ -14,6 +14,7 @@ import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
+import {getEmptyBalances} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
@@ -479,43 +480,39 @@ class App extends AsyncEventEmitter {
   }
 
   onWalletsBalance(balances: IndexerBalanceData) {
-    let balanceChanged = false;
-    let stakingChanged = false;
-    let vestingChanged = false;
+    let changed = false;
 
     for (const [address, data] of Object.entries(balances)) {
       const prevBalance = this._balances.get(address);
 
-      if (!prevBalance?.balance.compare(data.balance, 'eq')) {
-        balanceChanged = true;
+      if (
+        !prevBalance?.available?.compare(data.available, 'eq') ||
+        !prevBalance?.staked?.compare(data.staked, 'eq') ||
+        !prevBalance?.vested?.compare(data.vested, 'eq') ||
+        !prevBalance?.total?.compare(data.total, 'eq') ||
+        !prevBalance?.locked?.compare(data.locked, 'eq') ||
+        !prevBalance?.avaliableForStake?.compare(data.avaliableForStake, 'eq')
+      ) {
+        this._balances.set(address, data);
+        changed = true;
       }
-
-      if (!prevBalance?.staked.compare(data.staked, 'eq')) {
-        stakingChanged = true;
-      }
-
-      if (!prevBalance?.vested.compare(data.vested, 'eq')) {
-        stakingChanged = true;
-      }
-
-      this._balances.set(address, data);
     }
 
-    if (balanceChanged) {
+    if (changed) {
       this.emit(Events.onBalanceSync);
-    }
-
-    if (stakingChanged) {
-      this.emit(Events.onStakingBalanceSync);
-    }
-
-    if (vestingChanged) {
-      this.emit(Events.onVestingBalanceSync);
     }
   }
 
-  getBalance(address: HaqqEthereumAddress): Balance {
-    return this._balances.get(address)?.balance ?? Balance.Empty;
+  getBalanceData(address: HaqqEthereumAddress) {
+    return this._balances.get(address) || getEmptyBalances()[address];
+  }
+
+  getAvailableBalance(address: HaqqEthereumAddress): Balance {
+    return this._balances.get(address)?.available ?? Balance.Empty;
+  }
+
+  getAvailableForStakeBalance(address: HaqqEthereumAddress): Balance {
+    return this._balances.get(address)?.avaliableForStake ?? Balance.Empty;
   }
 
   getStakingBalance(address: string): Balance {
@@ -524,6 +521,14 @@ class App extends AsyncEventEmitter {
 
   getVestingBalance(address: string): Balance {
     return this._balances.get(address)?.vested ?? Balance.Empty;
+  }
+
+  getTotalBalance(address: string): Balance {
+    return this._balances.get(address)?.total ?? Balance.Empty;
+  }
+
+  getLockedBalance(address: string): Balance {
+    return this._balances.get(address)?.locked ?? Balance.Empty;
   }
 
   handleDynamicLink(link: DynamicLink | null) {

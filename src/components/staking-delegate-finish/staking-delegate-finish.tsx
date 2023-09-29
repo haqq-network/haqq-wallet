@@ -66,7 +66,7 @@ export const StakingDelegateFinish = ({
       <Text t13 center style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       <Spacer minHeight={28} />
       <Button
         style={styles.margin}

@@ -1,22 +1,18 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
-import {app} from '@app/contexts';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
 export const StakingDelegateFormScreen = () => {
   const navigation = useTypedNavigation();
   const {account, validator} = useTypedRoute<'stakingDelegateForm'>().params;
-
-  const [balance, setBalance] = useState(Balance.Empty);
+  const wallet = useWallet(account);
+  const balances = useWalletsBalance([wallet!]);
+  const currentBalance = useMemo(() => balances[account], [balances, account]);
   const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
-
-  useEffect(() => {
-    const newBalance = app.getBalance(account);
-    setBalance(newBalance);
-  }, [account]);
 
   const onAmount = useCallback(
     (amount: number) => {
@@ -35,7 +31,7 @@ export const StakingDelegateFormScreen = () => {
       validator={validator}
       account={account}
       onAmount={onAmount}
-      balance={balance}
+      balance={currentBalance.avaliableForStake}
       fee={fee}
     />
   );

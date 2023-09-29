@@ -26,11 +26,15 @@ import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
+import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N} from './i18n';
+import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {Balance} from './services/balance';
 import {Cosmos} from './services/cosmos';
 import {
   AdjustTrackingAuthorizationStatus,
+  BalanceData,
   EthType,
   EthTypedData,
   JsonRpcTransactionRequest,
@@ -767,3 +771,36 @@ export function isContractTransaction(
 
   return false;
 }
+
+export const calculateBalances = (
+  data: WalletBalance,
+  wallets: Realm.Results<Wallet>,
+): BalanceData => {
+  return wallets.reduce(
+    (acc, curr) => {
+      const {available, locked, staked, total, vested, avaliableForStake} =
+        data[curr.address] ?? {};
+
+      return {
+        staked: staked?.operate(acc.staked, 'add') ?? Balance.Empty,
+        vested: vested?.operate(acc.vested, 'add') ?? Balance.Empty,
+        available: available?.operate(acc.available, 'add') ?? Balance.Empty,
+        total: total?.operate(acc.total, 'add') ?? Balance.Empty,
+        locked: locked?.operate(acc.locked, 'add') ?? Balance.Empty,
+        avaliableForStake:
+          avaliableForStake?.operate(acc.avaliableForStake, 'add') ??
+          Balance.Empty,
+        unlock: acc.unlock,
+      };
+    },
+    {
+      staked: Balance.Empty,
+      vested: Balance.Empty,
+      available: Balance.Empty,
+      total: Balance.Empty,
+      locked: Balance.Empty,
+      avaliableForStake: Balance.Empty,
+      unlock: new Date(0),
+    },
+  );
+};

@@ -8,11 +8,11 @@ import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
+
+import {onWalletsBalanceCheck} from './on-wallets-balance-check';
 
 export async function onWalletCreate(wallet: Wallet) {
   try {
@@ -26,15 +26,7 @@ export async function onWalletCreate(wallet: Wallet) {
       wallet.update({subscription});
     }
 
-    const balance = await EthNetwork.getBalance(wallet.address);
-    app.onWalletsBalance({
-      [wallet.address]: {
-        balance,
-        staked: Balance.Empty,
-        vested: Balance.Empty,
-        unlock: new Date(0),
-      },
-    });
+    await onWalletsBalanceCheck();
 
     await Promise.all([
       onTransactionsLoad(wallet.address),
