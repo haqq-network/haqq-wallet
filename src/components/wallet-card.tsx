@@ -112,6 +112,7 @@ export const WalletCard = memo(
             style={styles.name}
             ellipsizeMode="tail"
             numberOfLines={1}
+            suppressHighlighting={true}
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
@@ -165,6 +166,8 @@ export const WalletCard = memo(
           adjustsFontSizeToFit
           i18n={I18N.amountISLM}
           i18params={{amount: cleanNumber(parsedTotal)}}
+          onPress={onAccountInfo}
+          suppressHighlighting={true}
         />
         {showLockedTokens && locked?.isPositive() && (
           <>
@@ -176,6 +179,8 @@ export const WalletCard = memo(
                 color={Color.textBase3}
                 i18n={I18N.walletCardLocked}
                 i18params={{count: locked?.toEtherString() ?? '0'}}
+                onPress={onAccountInfo}
+                suppressHighlighting={true}
               />
             </View>
           </>

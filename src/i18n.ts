@@ -1640,9 +1640,9 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensTotalValue]: 'Total value',
   [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application`,
   [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application.`,
-  [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
+  [I18N.lockedTokensInfoTitle]: 'What does "Locked" mean',
   [I18N.lockedTokensInfoDescription]:
-    'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
+    'Locked tokens are the sum of your tokens - vested tokens and tokens staked by you, including tokens that are in an unbonded period. \n\nVested tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Vested tokens are unlocked according to the schedule',
   [I18N.totalValueScreenTitle]: 'Transactions',
   [I18N.totalValueAccount]: 'Total balance',
   [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
