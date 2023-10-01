@@ -78,6 +78,6 @@ export async function onWalletsBalanceCheck() {
     app.onWalletsBalance(parseIndexerBalances(updates));
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
-    app.onWalletsBalance(getEmptyBalances());
+    // app.onWalletsBalance(getEmptyBalances());
   }
 }
