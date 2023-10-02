@@ -1,12 +1,14 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
+import {getProviderInstanceForWallet} from '@app/helpers';
 import {
   useCosmos,
   useTypedNavigation,
   useTypedRoute,
   useWallet,
 } from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
@@ -18,16 +20,7 @@ export const StakingUnDelegateFormScreen = () => {
   const cosmos = useCosmos();
   const wallet = useWallet(account);
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-
-  useEffect(() => {
-    cosmos.getStakingParams().then(resp => {
-      const regex = /(\d+)s/gm;
-      const m = regex.exec(resp.params.unbonding_time);
-      if (m) {
-        setUnboundingTime(parseInt(m[1], 10) * 1000);
-      }
-    });
-  }, [cosmos]);
+  const [fee, setFee] = useState(new Balance(Cosmos.fee.amount));
 
   const balance = useMemo(() => {
     const delegations =
@@ -40,7 +33,27 @@ export const StakingUnDelegateFormScreen = () => {
     return new Balance(delegation?.amount ?? 0);
   }, [operator_address, wallet?.cosmosAddress]);
 
-  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
+  useEffectAsync(async () => {
+    const instance = await getProviderInstanceForWallet(wallet!);
+    const f = await cosmos.simulateUndelegate(
+      instance,
+      wallet?.path!,
+      validator.operator_address,
+      balance,
+    );
+    Logger.log('f.amount', f.amount);
+    setFee(new Balance(f.amount));
+  }, [cosmos, wallet, validator, balance]);
+
+  useEffect(() => {
+    cosmos.getStakingParams().then(resp => {
+      const regex = /(\d+)s/gm;
+      const m = regex.exec(resp.params.unbonding_time);
+      if (m) {
+        setUnboundingTime(parseInt(m[1], 10) * 1000);
+      }
+    });
+  }, [cosmos]);
 
   const onAmount = useCallback(
     (amount: number) => {

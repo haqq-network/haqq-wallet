@@ -18,7 +18,7 @@ export const getEmptyBalances = (): IndexerBalanceData => {
         available: Balance.Empty,
         total: Balance.Empty,
         locked: Balance.Empty,
-        avaliableForStake: Balance.Empty,
+        availableForStake: Balance.Empty,
         unlock: new Date(0),
       },
     };
@@ -35,7 +35,7 @@ const parseIndexerBalances = (
     const available = data?.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const total = data?.total?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const locked = data?.locked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const avaliableForStake =
+    const availableForStake =
       data?.available_for_stake?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
 
@@ -47,7 +47,7 @@ const parseIndexerBalances = (
         available: new Balance(available),
         total: new Balance(total),
         locked: new Balance(locked),
-        avaliableForStake: new Balance(avaliableForStake),
+        availableForStake: new Balance(availableForStake),
         unlock: new Date(unlock * 1000),
       },
     };

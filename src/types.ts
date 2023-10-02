@@ -1181,7 +1181,7 @@ export interface BalanceData {
   available: Balance;
   total: Balance;
   locked: Balance;
-  avaliableForStake: Balance;
+  availableForStake: Balance;
   // next time to unlock vested tokens
   unlock: Date;
 }

@@ -39,15 +39,11 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const transactionFee = useMemo(() => {
-    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
-    return new Balance(maximumFee);
-  }, [fee]);
+  const transactionFee = useMemo(() => fee.max(FEE_AMOUNT), [fee]);
 
-  const maxAmount = useMemo(
-    () => balance.operate(transactionFee, 'sub'),
-    [balance, transactionFee],
-  );
+  const maxAmount = useMemo(() => {
+    return balance.operate(transactionFee, 'sub');
+  }, [balance, transactionFee]);
 
   const amounts = useSumAmount(Balance.Empty, maxAmount, new Balance(0.01));
 

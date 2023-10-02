@@ -37,10 +37,7 @@ export class Balance implements IBalance {
         return;
       }
 
-      const isNegative = balance.startsWith('-');
-      this.bnRaw = new Decimal(
-        (isNegative ? '-0x' : '0x') + balance.replace('-', ''),
-      );
+      this.bnRaw = new Decimal(balance);
       return;
     }
 

@@ -400,9 +400,10 @@ export class Cosmos {
       Logger.log('resp', resp);
 
       if (!resp.gas_info) {
+        const amount = baseFee.operate(baseGas, 'mul');
         return {
           ...Cosmos.fee,
-          amount: baseFee.operate(baseGas, 'mul').toString(),
+          amount: amount.toString(),
         };
       }
 
@@ -412,7 +413,6 @@ export class Cosmos {
       ).max(baseGas);
 
       const amount = baseFee.operate(gas, 'mul').max(totalAmount);
-
       return {
         ...Cosmos.fee,
         amount: amount.toString(),
@@ -532,6 +532,34 @@ export class Cosmos {
     return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
+  async simulateUndelegate(
+    transport: ProviderInterface,
+    hdPath: string,
+    address: string,
+    amount: Balance,
+  ) {
+    const sender = await this.getSender(transport, hdPath);
+
+    const params = {
+      validatorAddress: address,
+      amount: amount.raw.toFixed(),
+      denom: 'aISLM',
+    };
+
+    return this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgUndelegate',
+        ...createMsgUndelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
+  }
+
   async delegate(
     transport: ProviderInterface,
     hdPath: string,
@@ -564,6 +592,33 @@ export class Cosmos {
     const msg = createTxMsgDelegate(this.haqqChain, sender, fee, memo, params);
 
     return await this.sendMsg(transport, hdPath, sender, msg);
+  }
+
+  async simulateDelegate(
+    transport: ProviderInterface,
+    hdPath: string,
+    address: string,
+    amount: Balance,
+  ) {
+    const sender = await this.getSender(transport, hdPath);
+    const params = {
+      validatorAddress: address,
+      amount: amount.raw.toFixed(),
+      denom: 'aISLM',
+    };
+
+    return this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgDelegate',
+        ...createMsgDelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
   }
 
   async multipleWithdrawDelegatorReward(

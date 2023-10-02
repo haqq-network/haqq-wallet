@@ -491,7 +491,7 @@ class App extends AsyncEventEmitter {
         !prevBalance?.vested?.compare(data.vested, 'eq') ||
         !prevBalance?.total?.compare(data.total, 'eq') ||
         !prevBalance?.locked?.compare(data.locked, 'eq') ||
-        !prevBalance?.avaliableForStake?.compare(data.avaliableForStake, 'eq')
+        !prevBalance?.availableForStake?.compare(data.availableForStake, 'eq')
       ) {
         this._balances.set(address, data);
         changed = true;
@@ -512,7 +512,7 @@ class App extends AsyncEventEmitter {
   }
 
   getAvailableForStakeBalance(address: HaqqEthereumAddress): Balance {
-    return this._balances.get(address)?.avaliableForStake ?? Balance.Empty;
+    return this._balances.get(address)?.availableForStake ?? Balance.Empty;
   }
 
   getStakingBalance(address: string): Balance {
