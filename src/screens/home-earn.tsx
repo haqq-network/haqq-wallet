@@ -13,7 +13,7 @@ import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
 import {sumReduce} from '@app/helpers/staking';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -33,7 +33,7 @@ const initData = {
 
 export const HomeEarnScreen = observer(() => {
   const navigation = useTypedNavigation();
-  const visible = Wallet.getAllVisible();
+  const visible = useWalletsVisible();
   const [raffles, setRaffles] = useState<null | Raffle[]>(null);
   const [isRafflesLoading, setIsRafflesLoading] = useState<boolean>(false);
 

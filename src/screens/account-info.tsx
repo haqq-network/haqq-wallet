@@ -7,11 +7,10 @@ import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {prepareTransactions, showModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Transaction} from '@app/models/transaction';
-import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {TransactionList} from '@app/types';
@@ -20,7 +19,7 @@ export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<'accountInfo'>();
   const navigation = useTypedNavigation();
   const accountId = useMemo(() => route.params.accountId, [route]);
-  const wallet = Wallet.getById(accountId);
+  const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
   const {available, locked, staked, total, unlock, vested} = useMemo(
     () => balances[wallet?.address!],

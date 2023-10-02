@@ -8,8 +8,7 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {Wallet} from '@app/models/wallet';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {Cosmos} from '@app/services/cosmos';
 
 export const ProposalDepositPreviewScreen = observer(() => {
@@ -17,7 +16,7 @@ export const ProposalDepositPreviewScreen = observer(() => {
   const {fee, account, amount, proposal} =
     useTypedRoute<'proposalDepositPreview'>().params;
 
-  const wallet = Wallet.getById(account);
+  const wallet = useWallet(account);
 
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);

@@ -4,10 +4,9 @@ import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
-import {Wallet} from '@app/models/wallet';
 
 // TODO:
 export const TransactionNftConfirmationScreen = observer(() => {
@@ -17,7 +16,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const wallet = Wallet.getById(route.params.from);
+  const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
     [route.params.to],

@@ -12,12 +12,11 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents, WalletType} from '@app/types';
@@ -32,7 +31,7 @@ export const TransactionConfirmationScreen = observer(() => {
   }, [navigation]);
   const route = useTypedRoute<'transactionConfirmation'>();
 
-  const wallet = Wallet.getById(route.params.from);
+  const wallet = useWallet(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
     [route.params.to],

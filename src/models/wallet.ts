@@ -161,7 +161,6 @@ class WalletStore implements MobXStoreFromRealm {
 
     const existingWallet = this.getById(walletParams.address);
     const newWallet = {
-      ...existingWallet,
       data: '',
       address: walletParams.address.toLowerCase(),
       mnemonicSaved: false,
@@ -180,9 +179,16 @@ class WalletStore implements MobXStoreFromRealm {
       isMain: false,
       subscription: null,
       cosmosAddress: Cosmos.addressToBech32(walletParams.address.toLowerCase()),
+      ...existingWallet,
     };
 
-    app.emit(Events.onWalletCreate, newWallet); // TODO
+    if (existingWallet) {
+      this.update(existingWallet.address, walletParams);
+    } else {
+      this.wallets.push(newWallet);
+    }
+
+    app.emit(Events.onWalletCreate, newWallet);
 
     return newWallet;
   }

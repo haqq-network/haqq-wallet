@@ -9,12 +9,11 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 
@@ -26,7 +25,7 @@ const initData = {
 };
 
 export const HomeStakingScreen = observer(() => {
-  const visible = Wallet.getAllVisible();
+  const visible = useWalletsVisible();
 
   const [data, setData] = useState({
     ...initData,

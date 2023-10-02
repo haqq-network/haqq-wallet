@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {SettingsAccountEdit} from '@app/components/settings-account-edit';
+import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {Wallet} from '@app/models/wallet';
@@ -11,7 +12,7 @@ export const SettingsAccountEditScreen = observer(() => {
   const navigation = useTypedNavigation();
   const {address} = useTypedRoute<'settingsAccountEdit'>().params;
 
-  const wallet = Wallet.getById(address);
+  const wallet = useWallet(address);
   const [inputName, setInputName] = useState(wallet?.name ?? '');
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
 

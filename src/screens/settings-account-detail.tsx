@@ -7,6 +7,7 @@ import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
+import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
@@ -19,7 +20,7 @@ export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation();
   const params = useTypedRoute<'settingsAccountDetail'>().params;
   const {address} = params;
-  const wallet = Wallet.getById(address);
+  const wallet = useWallet(address);
 
   const onPressRename = useCallback(() => {
     navigation.navigate('settingsAccountEdit', params);

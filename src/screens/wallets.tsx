@@ -5,19 +5,15 @@ import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
-import {Wallet} from '@app/models/wallet';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation();
-  const visible = Wallet.getAllVisible();
+  const visible = useWalletsVisible();
   const balance = useWalletsBalance(visible);
   const {activeSessions} = useWalletConnectSessions();
   const [walletConnectSessions, setWalletConnectSessions] = useState<
