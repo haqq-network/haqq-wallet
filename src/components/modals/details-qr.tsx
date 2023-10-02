@@ -18,7 +18,6 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useWallet} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
@@ -32,7 +31,8 @@ export interface DetailsQrModalProps {
 export const DetailsQrModal = observer(
   ({address, onClose}: Modals['cardDetailsQr']) => {
     const svg = useRef();
-    const wallet = useWallet(address) as Wallet;
+    // TODO wallet can be null
+    const wallet = Wallet.getById(address) as Wallet;
     const {width} = useWindowDimensions();
 
     const onCopy = () => {

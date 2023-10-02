@@ -102,7 +102,7 @@ class WalletStore implements MobXStoreFromRealm {
 
   migrate = async () => {
     await awaitForRealm();
-    await when(() => !!this.isHydrated, {
+    await when(() => this.isHydrated, {
       timeout: STORE_REHYDRATION_TIMEOUT_MS,
     });
 

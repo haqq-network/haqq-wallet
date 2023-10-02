@@ -10,13 +10,9 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
@@ -27,7 +23,7 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [error, setError] = useState('');
   const cosmos = useCosmos();
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
