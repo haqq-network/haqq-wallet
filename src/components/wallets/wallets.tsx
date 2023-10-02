@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
@@ -15,13 +15,14 @@ import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
+import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export type WalletsProps = {
   wallets: Wallet[];
   balance: WalletBalance;
-  walletConnectSessions: SessionTypes.Struct[][];
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -37,7 +38,6 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
-  walletConnectSessions,
   showLockedTokens,
   onPressSend,
   onPressQR,
@@ -57,6 +57,18 @@ export const Wallets = ({
     },
     [dimensions],
   );
+  const {activeSessions} = useWalletConnectSessions();
+  const [walletConnectSessions, setWalletConnectSessions] = useState<
+    SessionTypes.Struct[][]
+  >([]);
+
+  useEffect(() => {
+    setWalletConnectSessions(
+      wallets.map(wallet =>
+        filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
+      ),
+    );
+  }, [wallets, activeSessions]);
 
   return (
     <>

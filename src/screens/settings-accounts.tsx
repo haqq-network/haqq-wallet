@@ -3,11 +3,12 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 
 import {SettingsAccounts} from '@app/components/settings-accounts';
-import {useTypedNavigation, useWalletsList} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
+import {Wallet} from '@app/models/wallet';
 
 export const SettingsAccountsScreen = observer(() => {
   const navigation = useTypedNavigation();
-  const wallets = useWalletsList();
+  const wallets = Wallet.getAll();
 
   const onPressRow = useCallback(
     (address: string) => {

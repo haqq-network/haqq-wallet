@@ -3,9 +3,10 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
-import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 
 export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation();
@@ -16,7 +17,7 @@ export const TransactionAddressScreen = observer(() => {
   const route = useTypedRoute<'transactionAddress'>();
 
   const [loading, setLoading] = React.useState(false);
-  const wallets = useWalletsVisible();
+  const wallets = Wallet.getAllVisible();
   const contacts = useRef(Contact.getAll()).current;
 
   const [address, setAddress] = useState(route.params?.to || '');

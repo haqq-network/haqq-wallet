@@ -9,12 +9,7 @@ import {getWindowHeight, showModal} from '@app/helpers';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWalletsVisible,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
@@ -34,7 +29,7 @@ export const ProposalScreen = observer(() => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const cosmos = useCosmos();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
 
   const onDepositSubmit = async (address: string) => {
     navigate('proposalDeposit', {

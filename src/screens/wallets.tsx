@@ -1,36 +1,23 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {SessionTypes} from '@walletconnect/types';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
-import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
+import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
   const balance = useWalletsBalance(visible);
-  const {activeSessions} = useWalletConnectSessions();
-  const [walletConnectSessions, setWalletConnectSessions] = useState<
-    SessionTypes.Struct[][]
-  >([]);
   const showLockedTokens = useMemo(
     () => isFeatureEnabled(Feature.lockedStakedVestedTokens),
     [],
   );
-
-  useEffect(() => {
-    setWalletConnectSessions(
-      visible.map(wallet =>
-        filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
-      ),
-    );
-  }, [visible, activeSessions]);
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -107,7 +94,6 @@ export const WalletsWrapper = observer(() => {
     <Wallets
       balance={balance}
       wallets={visible}
-      walletConnectSessions={walletConnectSessions}
       showLockedTokens={showLockedTokens}
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
