@@ -8,10 +8,16 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {getDefaultChainId} from '@app/network';
 import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {storage} from '@app/services/mmkv';
+
+const BALANCE_CACHE_KEY = 'balance_storage';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
+
+  private static getBalanceCacheKey = (address: string) =>
+    BALANCE_CACHE_KEY + address.toLowerCase();
 
   static async populateTransaction(
     from: string,
@@ -62,11 +68,22 @@ export class EthNetwork {
   static async getBalance(address: string): Promise<Balance> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
-      const balance = await rpcProvider.getBalance(address);
-      const balanceWithWEI = new Balance(balance._hex);
-      return new Balance(balanceWithWEI);
+      const balanceResponse = await rpcProvider.getBalance(address);
+      const balanceWithWEI = new Balance(balanceResponse._hex);
+      const balance = new Balance(balanceWithWEI);
+
+      // Caching balance
+      const key = this.getBalanceCacheKey(address);
+      const value = balance.toHex();
+      storage.setItem(key, value);
+
+      return balance;
     } catch (e) {
-      return Balance.Empty;
+      // Trying to find cached balance for this wallet
+      const key = this.getBalanceCacheKey(address);
+      const possibleBalance = storage.getItem(key) as string | undefined;
+
+      return new Balance(possibleBalance ?? Balance.Empty);
     }
   }
 

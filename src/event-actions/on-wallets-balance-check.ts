@@ -5,8 +5,11 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
+import {storage} from '@app/services/mmkv';
 import {IndexerBalanceData} from '@app/types';
 import {ZERO_HEX_NUMBER} from '@app/variables/common';
+
+const BALANCE_CACHE_KEY = 'balance_storage_indexer';
 
 export const getEmptyBalances = (): IndexerBalanceData => {
   return Wallet.getAll().reduce((acc, w) => {
@@ -75,9 +78,25 @@ export async function onWalletsBalanceCheck() {
       `indexer_${app.provider.cosmosChainId}`,
       new Date(updates.last_update),
     );
-    app.onWalletsBalance(parseIndexerBalances(updates));
+
+    const result = parseIndexerBalances(updates);
+
+    //Caching balances
+    const value = JSON.stringify(updates);
+    storage.setItem(BALANCE_CACHE_KEY, value);
+
+    app.onWalletsBalance(result);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
-    // app.onWalletsBalance(getEmptyBalances());
+
+    // Trying to find cached balances
+    const balancesRaw = storage.getItem(BALANCE_CACHE_KEY) as
+      | string
+      | undefined;
+    if (balancesRaw) {
+      const updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
+      const result = parseIndexerBalances(updates);
+      app.onWalletsBalance(result);
+    }
   }
 }
