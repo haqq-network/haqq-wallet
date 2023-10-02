@@ -899,6 +899,11 @@ export type ErrorModalImage =
     }
   | {};
 
+/**
+ * @description When adding a new modal, popup, or bottom sheet,
+ * ensure to declare the modal props, for example,
+ * at `src/screens/settings-test.tsx` inside the `getTestModals` function.
+ */
 export type Modals = {
   splash: undefined;
   notEnoughGas: {
@@ -991,6 +996,7 @@ export type Modals = {
   };
   cloudVerification: {
     sssProvider: SssProviders;
+    showClose?: boolean;
   };
 };
 

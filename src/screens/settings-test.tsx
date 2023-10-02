@@ -6,7 +6,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {utils} from 'ethers';
 import {observer} from 'mobx-react';
-import {Alert, ScrollView} from 'react-native';
+import {Alert, Platform, ScrollView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import shajs from 'sha.js';
 
@@ -43,32 +43,59 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
-import {Balance} from '@app/services/balance';
+import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
-import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {
+  generateMockBanner,
+  isError,
+  makeID,
+  openInAppBrowser,
+  openWeb3Browser,
+} from '@app/utils';
+
+const logger = Logger.create('SettingsTestScreen', {
+  emodjiPrefix: '🔵',
+  stringifyJson: true,
+});
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  Logger.log('setBackgroundMessageHandler', remoteMessage);
+  logger.log('setBackgroundMessageHandler', remoteMessage);
 });
 
 messaging()
   .getInitialNotification()
   .then(remoteMessage => {
     if (remoteMessage) {
-      Logger.log('getInitialNotification', remoteMessage);
+      logger.log('getInitialNotification', remoteMessage);
     }
   });
 
-const getTestModals = (): Partial<Modals> => {
+type TestModals = {
+  [key in keyof Modals]: Modals[key] | null;
+};
+
+// When adding a new modal, popup, or bottom sheet, ensure to declare the modal props example in this function.
+const getTestModals = (): TestModals => {
   const wallets = Wallet.getAllVisible();
   const firstWalletAddress = wallets[0].address;
   const providers = Provider.getAll();
   const firstProviderId = providers[0].id;
-  const modals: Partial<Modals> = {
-    // splash: undefined,
-    // pin: undefined,
+
+  // Generate props for modals
+  const modals: TestModals = {
+    // Modals that are not currently being used are set to null.
+    splash: null,
+    pin: null,
+    // The following modals are conditionally rendered based on certain circumstances.
+    // They are placed here for better visibility and easier understanding.
+    cardDetailsQr: null,
+    walletsBottomSheet: null,
+    providersBottomSheet: null,
+    // Other modals props.
     noInternet: {showClose: true},
     loading: {
       text: 'a few moment later...',
@@ -82,86 +109,103 @@ const getTestModals = (): Partial<Modals> => {
       close: 'OK',
     },
     qr: {
-      onClose: () => {},
+      onClose: () => logger.log('qr closed'),
       qrWithoutFrom: false,
     },
     bluetoothPoweredOff: {
-      onClose: () => {},
+      onClose: () => logger.log('bluetoothPoweredOff closed'),
     },
     bluetoothUnauthorized: {
-      onClose: () => {},
+      onClose: () => logger.log('bluetoothUnauthorized closed'),
     },
     domainBlocked: {
-      onClose: () => {},
+      onClose: () => logger.log('domainBlocked closed'),
       domain: 'example.com',
     },
     ledgerNoApp: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerNoApp closed'),
       onRetry: Promise.resolve,
     },
     ledgerAttention: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerAttention closed'),
     },
     ledgerLocked: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerLocked closed'),
     },
     errorAccountAdded: {
-      onClose: () => {},
+      onClose: () => logger.log('errorAccountAdded closed'),
     },
     errorCreateAccount: {
-      onClose: () => {},
+      onClose: () => logger.log('errorCreateAccount closed'),
     },
     claimOnMainnet: {
-      onClose: () => {},
-      onChange: () => {},
+      onClose: () => logger.log('claimOnMainnet closed'),
+      onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
     },
     transactionError: {
-      onClose: () => {},
+      onClose: () => logger.log('transactionError closed'),
       message: 'Something went wrong',
     },
     locationUnauthorized: {
-      onClose: () => {},
+      onClose: () => logger.log('locationUnauthorized closed'),
     },
     raffleAgreement: {
-      onClose: () => {},
+      onClose: () => logger.log('raffleAgreement closed'),
     },
     captcha: {
-      onClose: () => {},
+      onClose: () => logger.log('captcha closed'),
       variant: CaptchaType.slider,
+    },
+    cloudVerification: {
+      showClose: true,
+      sssProvider: Platform.select({
+        android: SssProviders.google,
+        default: SssProviders.apple,
+      }),
+    },
+    lockedTokensInfo: {
+      onClose: () => logger.log('lockedTokensInfo closed'),
+    },
+    notEnoughGas: {
+      currentAmount: app.getBalanceData(firstWalletAddress).available,
+      gasLimit: MIN_GAS_LIMIT,
+      onClose: () => logger.log('notEnoughGas closed'),
     },
   };
 
   if (wallets.length) {
     modals.walletsBottomSheet = {
-      onClose: () => {},
       wallets,
-      closeDistance: () => getWindowHeight() / 6,
       title: I18N.welcomeTitle,
       autoSelectWallet: false,
       eventSuffix: '-test',
+      closeDistance: () => getWindowHeight() / 6,
+      onClose: () => logger.log('walletsBottomSheet closed'),
     };
   }
 
   if (firstWalletAddress) {
     modals.cardDetailsQr = {
       address: firstWalletAddress,
-      onClose: () => {},
+      onClose: () => logger.log('cardDetailsQr closed'),
     };
   }
 
   if (firstProviderId) {
     modals.providersBottomSheet = {
-      onClose: () => {},
       title: I18N.welcomeTitle,
       providers,
       initialProviderId: firstProviderId,
-      closeDistance: () => getWindowHeight() / 6,
       eventSuffix: '-test',
+      closeDistance: () => getWindowHeight() / 6,
+      onClose: () => logger.log('providersBottomSheet closed'),
     };
   }
 
-  return modals;
+  return Object.fromEntries(
+    Object.entries(modals).filter(([_, v]) => !!v),
+  ) as TestModals;
 };
 
 const abi = [
@@ -280,7 +324,7 @@ const BACKENDS = [
 
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
-  Logger.log('params', params);
+  logger.log('params', params);
   const data = iface.encodeFunctionData(func, params);
 
   const resp = await EthNetwork.call(to, data);
@@ -363,17 +407,17 @@ export const SettingsTestScreen = observer(() => {
     ]);
 
     const resp = await EthNetwork.call(contract, data);
-    Logger.log('resp', resp);
+    logger.log('resp', resp);
     const r = iface.decodeFunctionResult('tokensOfOwner', resp);
 
-    Logger.log(JSON.stringify(r));
+    logger.log(JSON.stringify(r));
   };
 
   const onMintContract = async () => {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData('mintNFTs', [1]);
 
-    Logger.log('data', data);
+    logger.log('data', data);
 
     const walletId = await awaitForWallet({
       wallets: Wallet.getAll().snapshot(),
@@ -401,19 +445,19 @@ export const SettingsTestScreen = observer(() => {
       await awaitForLedger(transport);
     }
     const signedTx = await result;
-    Logger.log('signedTx', signedTx);
+    logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
 
-    Logger.log('resp', resp);
+    logger.log('resp', resp);
     const r = iface.decodeFunctionData('mintNFTs', resp.data);
 
-    Logger.log(JSON.stringify(r));
+    logger.log(JSON.stringify(r));
   };
 
   const onCheckContract = useCallback(async () => {
     const code = await EthNetwork.getCode(contract);
-    Logger.log('code', code);
+    logger.log('code', code);
 
     const interfaces = await callContract(
       contract,
@@ -421,13 +465,13 @@ export const SettingsTestScreen = observer(() => {
       0x80ac58cd,
     );
 
-    Logger.log('interfaces', ...interfaces);
+    logger.log('interfaces', ...interfaces);
 
     const name = await callContract(contract, 'name');
-    Logger.log('name', ...name);
+    logger.log('name', ...name);
 
     const symbol = await callContract(contract, 'symbol');
-    Logger.log('symbol', ...symbol);
+    logger.log('symbol', ...symbol);
   }, [contract]);
 
   const onResetUid = useCallback(async () => {
@@ -669,6 +713,16 @@ export const SettingsTestScreen = observer(() => {
       />
 
       <Title text="Services" />
+      <Button
+        title="Create test banner"
+        onPress={async () => {
+          vibrate(HapticEffects.impactLight);
+          await Banner.create(generateMockBanner());
+          toastMessage('banner created');
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
       <Button
         title="clear banners"
         onPress={onClearBanners}

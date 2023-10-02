@@ -25,9 +25,11 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
+import {shortAddress} from './helpers/short-address';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N} from './i18n';
+import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {Balance} from './services/balance';
@@ -803,4 +805,38 @@ export const calculateBalances = (
       unlock: new Date(0),
     },
   );
+};
+
+export const generateMockBanner = (): Banner => {
+  const id = generateUUID();
+
+  return {
+    id,
+    type: BannerType.test,
+    title: `Mock Banner Title ${shortAddress(id)}`,
+    description: 'Mock Banner Description',
+    buttons: [
+      {
+        id: new Realm.BSON.UUID(),
+        title: 'Button Title',
+        event: BannerButtonEvent.test,
+        params: {banner_id: id, type: 'button press event'},
+        color: 'textBase1',
+        backgroundColor: 'bg1',
+      },
+    ],
+    titleColor: 'textBase1',
+    descriptionColor: 'textBase1',
+    backgroundColorFrom: '#1B6EE5',
+    backgroundColorTo: '#2C8EEB',
+    backgroundBorder: 'bg4',
+    closeButtonColor: 'textRed1',
+    isUsed: false,
+    snoozedUntil: new Date(),
+    defaultEvent: BannerButtonEvent.test,
+    defaultParams: {banner_id: id, type: 'default event'},
+    closeEvent: BannerButtonEvent.test,
+    closeParams: {banner_id: id, type: 'close event'},
+    priority: 1,
+  };
 };
