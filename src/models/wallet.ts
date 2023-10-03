@@ -214,7 +214,7 @@ class WalletStore implements MobXStoreFromRealm {
   }
 
   getForAccount(accountId: string) {
-    return this.wallets.filter(w => (w.accountId = accountId.toLowerCase()));
+    return this.wallets.filter(w => (w.accountId.toLowerCase() = accountId.toLowerCase()));
   }
 
   async remove(address: string) {
