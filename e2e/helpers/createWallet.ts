@@ -1,6 +1,6 @@
 import {by, element, expect, waitFor} from 'detox';
 
-export const createWallet = async (PIN: string) => {
+export const createWallet = async (PIN: string, attempt: number = 1) => {
   await expect(element(by.id('welcome'))).toBeVisible();
   await expect(element(by.id('welcome_signup'))).toBeVisible();
 
@@ -50,12 +50,14 @@ export const createWallet = async (PIN: string) => {
   await element(by.id('onboarding_finish_finish')).tap();
 
   // Skip BackupSssSuggestion modal
-  await waitFor(element(by.id('backup_sss_suggestion')))
-    .toBeVisible()
-    .withTimeout(15000);
+  if (attempt < 2) {
+    await waitFor(element(by.id('backup_sss_suggestion')))
+      .toBeVisible()
+      .withTimeout(15000);
 
-  await element(by.id('backup_sss_suggestion_skip_button')).tap();
-  await element(
-    by.label('Accept').and(by.type('_UIAlertControllerActionView')),
-  ).tap();
+    await element(by.id('backup_sss_suggestion_skip_button')).tap();
+    await element(
+      by.label('Accept').and(by.type('_UIAlertControllerActionView')),
+    ).tap();
+  }
 };
