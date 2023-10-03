@@ -24,7 +24,7 @@ import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;
-  fee: Balance;
+  fee: Balance | null;
   to: string;
   from: string;
   contact: Contact | null;
@@ -43,7 +43,9 @@ export const TransactionSum = ({
   testID,
 }: TransactionSumProps) => {
   const transactionFee = useMemo(() => {
-    return fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT);
+    return fee !== null
+      ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
+      : Balance.Empty;
   }, [fee]);
 
   const amounts = useSumAmount();

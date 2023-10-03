@@ -26,7 +26,7 @@ export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
-  fee: Balance;
+  fee: Balance | null;
   balance: Balance;
 };
 
@@ -39,7 +39,10 @@ export const StakingDelegateForm = ({
   fee,
   balance,
 }: StakingDelegateFormProps) => {
-  const transactionFee = useMemo(() => fee.max(FEE_AMOUNT), [fee]);
+  const transactionFee = useMemo(
+    () => (fee !== null ? fee.max(FEE_AMOUNT) : Balance.Empty),
+    [fee],
+  );
 
   const maxAmount = useMemo(() => {
     return balance.operate(transactionFee, 'sub');
@@ -90,7 +93,7 @@ export const StakingDelegateForm = ({
       <Spacer height={16} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
-        disabled={!amounts.isValid}
+        disabled={!amounts.isValid || fee === null}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />

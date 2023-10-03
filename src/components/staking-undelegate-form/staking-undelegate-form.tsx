@@ -22,7 +22,7 @@ import {CURRENCY_NAME} from '@app/variables/common';
 export type StakingDelegateFormProps = {
   balance: Balance;
   onAmount: (amount: number) => void;
-  fee: Balance;
+  fee: Balance | null;
   unboundingTime: number;
 };
 
@@ -69,7 +69,7 @@ export const StakingUnDelegateForm = ({
       />
       <Spacer height={16} />
       <Button
-        disabled={!amounts.isValid}
+        disabled={!amounts.isValid || fee === null}
         variant={ButtonVariant.contained}
         i18n={I18N.stakingUnDelegateFormPreview}
         onPress={onDone}
