@@ -10,12 +10,13 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
+import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
 import {VerifyAddressResponse} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
-  isError,
   verifyAddress,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -53,7 +54,7 @@ export const JsonRpcSignScreen = () => {
   );
 
   const onPressReject = useCallback(
-    async (err?: Error | string) => {
+    async (err?: EthSignErrorDataDetails | string) => {
       setRejectLoading(true);
       app.emit('json-rpc-sign-reject', err);
       navigation.goBack();
@@ -74,14 +75,30 @@ export const JsonRpcSignScreen = () => {
       );
       app.emit('json-rpc-sign-success', result);
       navigation.goBack();
-    } catch (err) {
-      if (isError(err)) {
-        onPressReject(err);
-        Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
-          request,
-          chainId,
+    } catch (e) {
+      const err = e as EthSignErrorDataDetails;
+      const txInfo = err?.transaction;
+      const errCode = err?.code;
+      if (
+        !!txInfo?.gasLimit &&
+        !!txInfo?.maxFeePerGas &&
+        errCode === 'INSUFFICIENT_FUNDS'
+      ) {
+        err.handled = true;
+        const fee = new Balance(txInfo.gasLimit).operate(
+          new Balance(txInfo.maxFeePerGas),
+          'mul',
+        );
+        showModal('notEnoughGas', {
+          gasLimit: fee,
+          currentAmount: app.getAvailableBalance(wallet!.address),
         });
       }
+      onPressReject(err);
+      Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
+        request,
+        chainId,
+      });
     }
   }, [chainId, isAllowed, navigation, onPressReject, request, wallet]);
 
@@ -100,15 +117,13 @@ export const JsonRpcSignScreen = () => {
 
   useEffectAsync(async () => {
     try {
-      if (!hideContractAttention) {
-        await checkContractAddress();
-      }
+      await checkContractAddress();
     } catch (err) {
       Logger.captureException(err, 'JsonRpcSignScreen:checkContractAddress');
     } finally {
       setIsLoading(false);
     }
-  }, [checkContractAddress]);
+  }, []);
 
   useEffect(() => {
     const host = getHost(metadata.url);

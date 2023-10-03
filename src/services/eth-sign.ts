@@ -10,6 +10,7 @@ import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 import {Balance} from './balance';
 
 export type EthSignErrorDataDetails = {
+  handled?: boolean;
   message?: string;
   reason?: string;
   code?: string;
@@ -32,6 +33,12 @@ export class EthSignError extends Error {
   constructor(message: string, data?: EthSignErrorData) {
     super(message);
     this.data = data;
+  }
+
+  // handled is `true` when JsonRpcSignScreen notify user about error by modal
+  // https://github.com/haqq-network/haqq-wallet/blob/main/src/screens/json-rpc-sign-screen.tsx#L87
+  get isHandled() {
+    return this.data?.details?.handled;
   }
 
   toString() {
@@ -62,7 +69,7 @@ const prepareTransaction = async (from: string, tx: TransactionRequest) => {
 };
 
 export class EthSign {
-  static async personal_sign(wallet: Wallet | string, message: string) {
+  static async personalSign(wallet: Wallet | string, message: string) {
     if (!wallet || !message) {
       throw new EthSignError('Invalid params', {
         method: EIP155_SIGNING_METHODS.PERSONAL_SIGN,
@@ -80,10 +87,27 @@ export class EthSign {
     });
   }
 
-  static async eth_signTransaction(
+  static async sign(wallet: Wallet | string, message: string) {
+    if (!wallet || !message) {
+      throw new EthSignError('Invalid params', {
+        method: EIP155_SIGNING_METHODS.ETH_SIGN,
+      });
+    }
+    const address = getWalletAddress(wallet);
+    return await awaitForJsonRpcSign({
+      metadata: HAQQ_METADATA,
+      chainId: app.provider.ethChainId,
+      request: {
+        method: EIP155_SIGNING_METHODS.ETH_SIGN,
+        params: [address, stringToHex(message)],
+      },
+      selectedAccount: address,
+    });
+  }
+
+  static async signTransaction(
     wallet: Wallet | string,
     tx: TransactionRequest,
-    hideContractAttention = false,
   ) {
     if (!wallet || !tx) {
       throw new EthSignError('Invalid params');
@@ -101,7 +125,7 @@ export class EthSign {
           params: [preparedTx],
         },
         selectedAccount: address,
-        hideContractAttention,
+        hideContractAttention: true,
       });
     } catch (e) {
       const error = e as EthSignErrorDataDetails;
@@ -112,10 +136,9 @@ export class EthSign {
     }
   }
 
-  static async eth_sendTransaction(
+  static async sendTransaction(
     wallet: Wallet | string,
     tx: TransactionRequest,
-    hideContractAttention = false,
   ) {
     if (!wallet || !tx) {
       throw new EthSignError('Invalid params');
@@ -133,7 +156,7 @@ export class EthSign {
           params: [preparedTx],
         },
         selectedAccount: address,
-        hideContractAttention,
+        hideContractAttention: true,
       });
     } catch (e) {
       const error = e as EthSignErrorDataDetails;
@@ -152,15 +175,15 @@ export class EthSign {
     return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
   }
 
-  static async eth_signTypedData() {
+  static async signTypedData() {
     throw new Error('not implemented');
   }
 
-  static async eth_signTypedData_v3() {
+  static async signTypedData_v3() {
     throw new Error('not implemented');
   }
 
-  static async eth_signTypedData_v4() {
+  static async signTypedData_v4() {
     throw new Error('not implemented');
   }
 }

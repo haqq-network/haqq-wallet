@@ -171,12 +171,18 @@ export const JsonRpcTransactionInfo = ({
       <Spacer height={28} />
 
       <View style={styles.info}>
-        <DataView label="Type of operation">
+        <DataView i18n={I18N.transactionInfoTypeOperation}>
           <Text t11 color={Color.textBase1}>
-            <Text children={'Sending funds'} />
+            <Text
+              i18n={
+                isContract
+                  ? I18N.transactionInfoContractInteraction
+                  : I18N.transactionInfoSendingFunds
+              }
+            />
           </Text>
         </DataView>
-        <DataView label="Cryptocurrency">
+        <DataView i18n={I18N.transactionInfoCryptocurrency}>
           <Text t11 color={Color.textBase1}>
             <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
             <Text
@@ -185,16 +191,7 @@ export const JsonRpcTransactionInfo = ({
             />
           </Text>
         </DataView>
-        <DataView label="Network">
-          <Text t11 color={Color.textBase1}>
-            <Text i18n={I18N.transactionConfirmationHAQQ} />{' '}
-            <Text
-              color={Color.textBase2}
-              i18n={I18N.transactionConfirmationHQ}
-            />
-          </Text>
-        </DataView>
-        <DataView label="Amount">
+        <DataView i18n={I18N.transactionInfoAmount}>
           <Text
             t11
             color={Color.textBase1}
@@ -202,7 +199,7 @@ export const JsonRpcTransactionInfo = ({
             i18params={{amount}}
           />
         </DataView>
-        <DataView label="Network Fee">
+        <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
             <Text t11 color={Color.textBase1}>
@@ -211,6 +208,7 @@ export const JsonRpcTransactionInfo = ({
           </First>
         </DataView>
       </View>
+      <Spacer height={10} />
     </>
   );
 };

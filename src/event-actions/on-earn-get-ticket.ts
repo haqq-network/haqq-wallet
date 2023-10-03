@@ -11,7 +11,6 @@ import {I18N, getText} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Balance} from '@app/services/balance';
 import {EthSign} from '@app/services/eth-sign';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 import {isEthSignError, sleep} from '@app/utils';
@@ -52,7 +51,7 @@ export async function onEarnGetTicket(raffleId: string) {
 
   const uid = await getUid();
 
-  const signature = await EthSign.personal_sign(
+  const signature = await EthSign.personalSign(
     leadingAccount,
     `${raffleId}:${uid}:${captcha.token}`,
   );
@@ -76,14 +75,10 @@ export async function onEarnGetTicket(raffleId: string) {
     ]);
 
     try {
-      const txHash = await EthSign.eth_sendTransaction(
-        leadingAccount,
-        {
-          data,
-          to: raffleId,
-        },
-        true,
-      );
+      const txHash = await EthSign.sendTransaction(leadingAccount, {
+        data,
+        to: raffleId,
+      });
 
       if (txHash) {
         await sleep(6000);
@@ -96,21 +91,12 @@ export async function onEarnGetTicket(raffleId: string) {
         txHash,
       );
     } catch (err) {
-      if (isEthSignError(err)) {
-        const txInfo = err.data?.details?.transaction;
-        const errCode = err?.data?.details?.code;
-        if (txInfo?.gasLimit && errCode === 'INSUFFICIENT_FUNDS') {
-          showModal('notEnoughGas', {
-            gasLimit: new Balance(txInfo.gasLimit),
-            currentAmount: app.getAvailableBalance(leadingAccount.address),
-          });
-        } else {
-          showModal('error', {
-            title: getText(I18N.modalRewardErrorTitle),
-            description: err.message,
-            close: getText(I18N.modalRewardErrorClose),
-          });
-        }
+      if (isEthSignError(err) && !err.isHandled) {
+        showModal('error', {
+          title: getText(I18N.modalRewardErrorTitle),
+          description: err.message,
+          close: getText(I18N.modalRewardErrorClose),
+        });
       }
 
       logger.captureException(err, 'onEarnGetTicket sendTransaction', {
