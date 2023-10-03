@@ -30,7 +30,9 @@ export const TransactionAddressScreen = observer(() => {
       return wallets;
     }
 
-    return wallets.filter(w => w.address === address || w.name === address);
+    return wallets.filter(
+      w => w.address.includes(address) || w.name.includes(address),
+    );
   }, [address, wallets]);
 
   const onDone = useCallback(
