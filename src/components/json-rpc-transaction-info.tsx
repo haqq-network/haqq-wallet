@@ -13,12 +13,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
-import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
-import {getDefaultNetwork} from '@app/network';
 import {Balance} from '@app/services/balance';
+import {EthSign} from '@app/services/eth-sign';
 import {
   AddressType,
   JsonRpcMetadata,
@@ -34,11 +32,12 @@ import {WEI} from '@app/variables/common';
 
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 
-interface WalletConnectTransactionInfoProps {
+interface JsonRpcTransactionInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   verifyAddressResponse: VerifyAddressResponse | null;
   chainId?: number;
+  hideContractAttention?: boolean;
 }
 
 export const JsonRpcTransactionInfo = ({
@@ -46,7 +45,8 @@ export const JsonRpcTransactionInfo = ({
   metadata,
   verifyAddressResponse,
   chainId,
-}: WalletConnectTransactionInfoProps) => {
+  hideContractAttention,
+}: JsonRpcTransactionInfoProps) => {
   const [calculatedFee, setCalculatedFee] = useState(Balance.Empty);
   const [isFeeLoading, setFeeLoading] = useState(true);
 
@@ -95,18 +95,15 @@ export const JsonRpcTransactionInfo = ({
     [verifyAddressResponse],
   );
 
-  const showSignContratAttention = isContract && !isInWhiteList;
+  const showSignContratAttention =
+    !hideContractAttention && isContract && !isInWhiteList;
 
   useEffectAsync(async () => {
     try {
       if (params) {
         setFeeLoading(true);
-        const provider = chainId && Provider.getByEthChainId(chainId);
-        const rpcProvider = provider
-          ? await getRpcProvider(provider)
-          : getDefaultNetwork();
-        const {_hex} = await rpcProvider.estimateGas(params);
-        setCalculatedFee(new Balance(_hex));
+        const estimatedGas = await EthSign.calculateGasPrice(params);
+        setCalculatedFee(estimatedGas);
       }
     } catch (err) {
       Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
@@ -209,7 +206,7 @@ export const JsonRpcTransactionInfo = ({
           <First>
             {isFeeLoading && <ActivityIndicator />}
             <Text t11 color={Color.textBase1}>
-              {calculatedFee.toWeiString()}
+              {calculatedFee.toBalanceString()}
             </Text>
           </First>
         </DataView>

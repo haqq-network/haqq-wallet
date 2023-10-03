@@ -29,8 +29,13 @@ export const JsonRpcSignScreen = () => {
     useState<VerifyAddressResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useTypedNavigation();
-  const {metadata, request, chainId, selectedAccount} =
-    useTypedRoute<'jsonRpcSign'>().params || {};
+  const {
+    metadata,
+    request,
+    chainId,
+    selectedAccount,
+    hideContractAttention = false,
+  } = useTypedRoute<'jsonRpcSign'>().params || {};
 
   const isTransaction = useMemo(
     () =>
@@ -48,9 +53,9 @@ export const JsonRpcSignScreen = () => {
   );
 
   const onPressReject = useCallback(
-    async (errMsg?: string) => {
+    async (err?: Error | string) => {
       setRejectLoading(true);
-      app.emit('json-rpc-sign-reject', errMsg);
+      app.emit('json-rpc-sign-reject', err);
       navigation.goBack();
     },
     [navigation],
@@ -71,7 +76,7 @@ export const JsonRpcSignScreen = () => {
       navigation.goBack();
     } catch (err) {
       if (isError(err)) {
-        onPressReject(err.message);
+        onPressReject(err);
         Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
           request,
           chainId,
@@ -95,7 +100,9 @@ export const JsonRpcSignScreen = () => {
 
   useEffectAsync(async () => {
     try {
-      await checkContractAddress();
+      if (!hideContractAttention) {
+        await checkContractAddress();
+      }
     } catch (err) {
       Logger.captureException(err, 'JsonRpcSignScreen:checkContractAddress');
     } finally {
@@ -147,6 +154,7 @@ export const JsonRpcSignScreen = () => {
       request={request}
       chainId={chainId}
       verifyAddressResponse={verifyAddressResponse}
+      hideContractAttention={hideContractAttention}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
     />

@@ -8,7 +8,11 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
-import {getHostnameFromUrl, getSignTypedDataParamsData} from '@app/utils';
+import {
+  getHostnameFromUrl,
+  getSignParamsMessage,
+  getSignTypedDataParamsData,
+} from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {JsonViewer} from './json-viewer';
@@ -24,7 +28,8 @@ interface WalletConnectSignInfoProps {
 const getMessageByRequest = (request: PartialJsonRpcRequest) => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-      const personalSignMessage: string = request.params?.[0] || '';
+      const personalSignMessage: string =
+        getSignParamsMessage(request.params) || '';
       if (personalSignMessage?.startsWith?.('0x')) {
         return {
           text: Buffer.from(personalSignMessage?.slice(2), 'hex').toString(
@@ -34,7 +39,7 @@ const getMessageByRequest = (request: PartialJsonRpcRequest) => {
       }
       return {text: personalSignMessage};
     case EIP155_SIGNING_METHODS.ETH_SIGN:
-      const ethSignMessage: string = request.params?.[0] || '';
+      const ethSignMessage: string = getSignParamsMessage(request.params) || '';
       if (ethSignMessage?.startsWith?.('0x')) {
         return {
           text: Buffer.from(ethSignMessage?.slice(2), 'hex').toString('utf8'),

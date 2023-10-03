@@ -3,23 +3,18 @@ import {utils} from 'ethers';
 import {CaptchaType} from '@app/components/captcha';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {
-  awaitForLedger,
-  awaitForPopupClosed,
-  getProviderInstanceForWallet,
-  showModal,
-} from '@app/helpers';
+import {awaitForPopupClosed, showModal} from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {I18N, getText} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
-import {EthNetwork, sendNotification} from '@app/services';
+import {sendNotification} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
+import {EthSign} from '@app/services/eth-sign';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {WalletType} from '@app/types';
-import {isSendTransactionError, sleep} from '@app/utils';
+import {isEthSignError, sleep} from '@app/utils';
 import {RAFFLE_TOPIC_VARIABLE_NAME} from '@app/variables/common';
 
 import {onNotificationsTopicSubscribe} from './on-notifications-topic-subscribe';
@@ -56,16 +51,11 @@ export async function onEarnGetTicket(raffleId: string) {
   const captcha = await awaitForCaptcha({variant: CaptchaType.slider});
 
   const uid = await getUid();
-  const provider = await getProviderInstanceForWallet(leadingAccount);
 
-  const result = provider.signPersonalMessage(
-    leadingAccount?.path ?? '',
+  const signature = await EthSign.personal_sign(
+    leadingAccount,
     `${raffleId}:${uid}:${captcha.token}`,
   );
-  if (leadingAccount.type === WalletType.ledgerBt) {
-    await awaitForLedger(provider);
-  }
-  const signature = await result;
 
   const response = await Backend.instance.contestParticipateUser(
     raffleId,
@@ -85,51 +75,51 @@ export async function onEarnGetTicket(raffleId: string) {
       Buffer.from(response.signature, 'hex'),
     ]);
 
-    const unsignedTx = await EthNetwork.populateTransaction(
-      leadingAccount.address,
-      raffleId,
-      Balance.Empty,
-      data,
-      new Balance(250000, 0),
-    );
-
-    const signedTx = await provider.signTransaction(
-      leadingAccount.path!,
-      unsignedTx,
-    );
-
-    let txHash = null;
     try {
-      const {hash} = await EthNetwork.sendTransaction(signedTx);
-      txHash = hash;
-    } catch (err) {
-      if (isSendTransactionError(err) && err.code === 'INSUFFICIENT_FUNDS') {
-        logger.log('dont have fee', err);
-        showModal('notEnoughGas', {
-          gasLimit: new Balance(err.transaction.gasLimit.toHexString()),
-          currentAmount: app.getAvailableBalance(leadingAccount.address),
-        });
-      } else if (isSendTransactionError(err)) {
-        logger.error('error', err);
-        showModal('error', {
-          title: getText(I18N.modalRewardErrorTitle),
-          description: err?.reason,
-          close: getText(I18N.modalRewardErrorClose),
-        });
-      } else {
-        logger.captureException(err, 'onEarnGetTicket sendTransaction', {
-          raffleId,
-        });
-        throw err;
+      const txHash = await EthSign.eth_sendTransaction(
+        leadingAccount,
+        {
+          data,
+          to: raffleId,
+        },
+        true,
+      );
+
+      if (txHash) {
+        await sleep(6000);
+        sendNotification(I18N.earnTicketRecieved);
       }
-    }
 
-    if (txHash) {
-      await sleep(6000);
-      sendNotification(I18N.earnTicketRecieved);
-    }
+      await Backend.instance.contestsResult(
+        raffleId,
+        response.signature,
+        txHash,
+      );
+    } catch (err) {
+      if (isEthSignError(err)) {
+        const txInfo = err.data?.details?.transaction;
+        const errCode = err?.data?.details?.code;
+        if (txInfo?.gasLimit && errCode === 'INSUFFICIENT_FUNDS') {
+          showModal('notEnoughGas', {
+            gasLimit: new Balance(txInfo.gasLimit),
+            currentAmount: app.getAvailableBalance(leadingAccount.address),
+          });
+        } else {
+          showModal('error', {
+            title: getText(I18N.modalRewardErrorTitle),
+            description: err.message,
+            close: getText(I18N.modalRewardErrorClose),
+          });
+        }
+      }
 
-    await Backend.instance.contestsResult(raffleId, response.signature, txHash);
+      logger.captureException(err, 'onEarnGetTicket sendTransaction', {
+        raffleId,
+      });
+
+      await Backend.instance.contestsResult(raffleId, response.signature, null);
+      throw err;
+    }
   } else {
     sendNotification(I18N.earnTicketAlreadyRecieved);
   }
