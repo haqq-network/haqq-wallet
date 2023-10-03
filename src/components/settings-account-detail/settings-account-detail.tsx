@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
-import {Switch, View, useWindowDimensions} from 'react-native';
+import {Switch, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -20,6 +20,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -33,6 +34,11 @@ type SettingsAccountDetailProps = {
   onPressPharse(): void;
   onPressSocial(): void;
 };
+const CONTAINER_MARGIN = 20;
+const CARD_PADDING = 16;
+const CARD_ASPECT_RATIO = 0.6336633663; // height / width from figma
+const CARD_MASK_ASPECT_RATIO = 0.547528517; // height / width from figma
+const CARD_MASK_PADDING = 20;
 
 export const SettingsAccountDetail = ({
   wallet,
@@ -43,16 +49,25 @@ export const SettingsAccountDetail = ({
   onPressPharse,
   onPressSocial,
 }: SettingsAccountDetailProps) => {
-  const cardWidth = useWindowDimensions().width - 72;
-  const cardMaskWidth = useWindowDimensions().width - 112;
-  const cardMaskHeight = cardMaskWidth * 0.547528517;
+  const cardWidth = useCalculatedDimensionsValue(
+    ({width}) => width - CONTAINER_MARGIN * 2 - CARD_PADDING * 2,
+  );
+  const cardHeight = useMemo(() => cardWidth * CARD_ASPECT_RATIO, [cardWidth]);
+  const cardMaskWidth = useMemo(
+    () => cardWidth - CARD_MASK_PADDING * 2,
+    [cardWidth],
+  );
+  const cardMaskHeight = useMemo(
+    () => cardMaskWidth * CARD_MASK_ASPECT_RATIO,
+    [cardMaskWidth],
+  );
 
   return (
     <PopupContainer style={styles.container}>
       <View style={[styles.header, wallet.isHidden && styles.opacity]}>
         <Card
           width={cardWidth}
-          height={cardMaskHeight + 40}
+          height={cardHeight}
           style={styles.card}
           pattern={wallet.pattern}
           colorFrom={wallet.colorFrom}
@@ -191,19 +206,20 @@ const styles = createTheme({
     marginBottom: 12,
   },
   container: {
-    marginHorizontal: 20,
+    marginHorizontal: CONTAINER_MARGIN,
   },
   header: {
     marginTop: 15,
     backgroundColor: Color.bg8,
     borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    padding: CARD_PADDING,
     marginBottom: 10,
   },
   headerName: {
     marginBottom: 4,
   },
-  cardMask: {margin: 4},
+  cardMask: {
+    margin: 4,
+  },
   opacity: {opacity: 0.5},
 });

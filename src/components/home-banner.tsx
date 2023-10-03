@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {Banner, BannerButton} from '@app/models/banner';
+import {Banner, BannerButton, BannerButtonEvent} from '@app/models/banner';
 import {sleep} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
@@ -31,7 +31,7 @@ export interface HomeBannerProps {
   style?: StyleProp<ViewStyle>;
   onPress: (
     id: string,
-    event: string,
+    event: BannerButtonEvent,
     params?: object,
     button?: BannerButton,
   ) => Promise<void>;
@@ -43,11 +43,19 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
-    await onPress(banner.id, banner.closeEvent || '', banner.closeParams);
+    await onPress(
+      banner.id,
+      banner.closeEvent || BannerButtonEvent.empty,
+      banner.closeParams,
+    );
   }, [banner, onPress]);
 
   const onPressBack = useCallback(async () => {
-    await onPress(banner.id, banner.defaultEvent || '', banner.defaultParams);
+    await onPress(
+      banner.id,
+      banner.defaultEvent || BannerButtonEvent.empty,
+      banner.defaultParams,
+    );
   }, [banner, onPress]);
 
   const onPressBanner = useCallback(

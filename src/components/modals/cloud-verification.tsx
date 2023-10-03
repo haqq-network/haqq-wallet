@@ -4,16 +4,16 @@ import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
-import {Spacer, Text} from '@app/components/ui';
+import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Modals} from '@app/types';
 import {ProviderNameMap} from '@app/variables/sss';
 
 export const CloudVerification = memo(
-  ({sssProvider}: Modals['cloudVerification']) => {
+  ({sssProvider, showClose = false}: Modals['cloudVerification']) => {
     const cloudAnimationName = useThemeSelector({
       light: 'cloud_verification_light',
       dark: 'cloud_verification_dark',
@@ -34,12 +34,20 @@ export const CloudVerification = memo(
             <Spacer height={20} />
             <View style={styles.animationWrapper}>
               <RiveWrapper
-                width={295}
-                height={164}
+                width={169}
+                height={101}
                 resourceName={cloudAnimationName}
                 autoplay={true}
               />
             </View>
+            {showClose && (
+              <Button
+                variant={ButtonVariant.second}
+                title={'OK'}
+                onPress={() => hideModal('cloudVerification')}
+                style={styles.closeButton}
+              />
+            )}
           </View>
         )}
       </BottomPopupContainer>
@@ -59,5 +67,9 @@ const styles = createTheme({
   animationWrapper: {
     width: 295,
     height: 164,
+  },
+  closeButton: {
+    width: '100%',
+    marginTop: 10,
   },
 });
