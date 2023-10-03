@@ -248,6 +248,8 @@ export const LIGHT_DISCORD_TEXT = '#FFFFFF';
 export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
 
+export const CARD_ACTION_CONTAINER_BG = 'rgba(255, 255, 255, 0.15)';
+
 export const SPLASH_TIMEOUT_MS = 30_000;
 export const AWAIT_NEW_BLOCK_MS = 10_000;
 
