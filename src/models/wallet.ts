@@ -81,7 +81,6 @@ export class WalletRealmObject extends Realm.Object {
 }
 
 class WalletStore implements MobXStoreFromRealm {
-  _cosmosAddress = '';
   realmSchemaName = WalletRealmObject.schema.name;
   wallets: Wallet[] = [];
 
