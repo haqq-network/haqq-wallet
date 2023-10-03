@@ -68,11 +68,11 @@ export async function onWalletsBalanceCheck() {
       throw new Error('Indexer is not available');
     }
 
-      let accounts = wallets.map(w => w.cosmosAddress);
-      const updates = await Indexer.instance.updates(
-        accounts,
-        lastBalanceUpdates,
-      );
+    let accounts = wallets.map(w => w.cosmosAddress);
+    const updates = await Indexer.instance.updates(
+      accounts,
+      lastBalanceUpdates,
+    );
 
     VariablesDate.set(
       `indexer_${app.provider.cosmosChainId}`,

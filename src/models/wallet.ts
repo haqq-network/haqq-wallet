@@ -213,13 +213,17 @@ class WalletStore implements MobXStoreFromRealm {
   }
 
   getForAccount(accountId: string) {
-    return this.wallets.filter(w => (w.accountId.toLowerCase() = accountId.toLowerCase()));
+    return this.wallets.filter(
+      w => w.accountId?.toLowerCase() === accountId.toLowerCase(),
+    );
   }
 
   async remove(address: string) {
     const obj = this.getById(address);
     if (obj) {
-      this.wallets.filter(w => w.address.toLowerCase() !== address.toLowerCase());
+      this.wallets.filter(
+        w => w.address.toLowerCase() !== address.toLowerCase(),
+      );
       await awaitForEventDone(Events.onWalletRemove, address);
     }
   }
@@ -240,7 +244,9 @@ class WalletStore implements MobXStoreFromRealm {
     const wallet = this.getById(address);
 
     if (wallet) {
-      const otherWallets = this.wallets.filter(w => w.address.toLowerCase() !== address.toLowerCase());
+      const otherWallets = this.wallets.filter(
+        w => w.address.toLowerCase() !== address.toLowerCase(),
+      );
       this.wallets = [...otherWallets, {...wallet, ...params}];
     }
   }
