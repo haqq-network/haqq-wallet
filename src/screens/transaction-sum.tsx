@@ -27,7 +27,7 @@ export const TransactionSumScreen = () => {
     () => balances[route.params.from],
     [balances, route],
   );
-  const [fee, setFee] = useState(Balance.Empty);
+  const [fee, setFee] = useState<Balance | null>(null);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
@@ -44,12 +44,14 @@ export const TransactionSumScreen = () => {
 
   const onAmount = useCallback(
     (amount: Balance) => {
-      navigation.navigate('transactionConfirmation', {
-        fee,
-        from: route.params.from,
-        to,
-        amount,
-      });
+      if (fee !== null) {
+        navigation.navigate('transactionConfirmation', {
+          fee,
+          from: route.params.from,
+          to,
+          amount,
+        });
+      }
     },
     [fee, navigation, route.params.from, to],
   );
@@ -70,7 +72,7 @@ export const TransactionSumScreen = () => {
       b,
     );
     setFee(estimateFee.feeWei);
-  }, [route.params.from, to]);
+  }, [to]);
 
   return (
     <TransactionSum

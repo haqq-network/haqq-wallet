@@ -13,7 +13,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {splitAddress} from '@app/utils';
@@ -23,7 +23,7 @@ interface TransactionConfirmationProps {
   testID?: string;
   to: string;
   amount: Balance;
-  fee: Balance;
+  fee: Balance | null;
   contact: Contact | null;
   error?: string;
 
@@ -57,7 +57,9 @@ export const TransactionConfirmation = ({
         i18n={I18N.transactionConfirmationTotalAmount}
       />
       <Text t11 color={Color.textBase1} center style={styles.sum}>
-        {fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION)}
+        {fee === null
+          ? getText(I18N.estimatingGas)
+          : fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION)}
       </Text>
       <Text
         t11
@@ -107,7 +109,9 @@ export const TransactionConfirmation = ({
           </DataView>
           <DataView label="Network Fee">
             <Text t11 color={Color.textBase1}>
-              {fee.toBalanceString(LONG_NUM_PRECISION)}
+              {fee === null
+                ? getText(I18N.estimatingGas)
+                : fee.toBalanceString(LONG_NUM_PRECISION)}
             </Text>
           </DataView>
         </View>
@@ -118,7 +122,7 @@ export const TransactionConfirmation = ({
         )}
       </Spacer>
       <Button
-        disabled={!fee.isPositive() && !disabled}
+        disabled={!fee?.isPositive() && !disabled}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onConfirmTransaction}
