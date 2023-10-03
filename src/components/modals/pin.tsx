@@ -65,6 +65,7 @@ export const PinModal = () => {
               color={Color.textBase2}
               i18n={I18N.modalPinForgotCode}
               style={page.additionButtonText}
+              testID="forgot_the_code"
             />
           </TouchableOpacity>
         }
