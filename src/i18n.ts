@@ -771,6 +771,7 @@ export enum I18N {
   rafflePushNotificationsDescription,
   lockedTokensVested,
   lockedTokensStaked,
+  estimatingGas,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1681,4 +1682,5 @@ const en: Record<I18N, string> = {
   [I18N.dynamicLinkDetactedAllow]: 'Allow',
   [I18N.lockedTokensVested]: 'Vested: {{count}}',
   [I18N.lockedTokensStaked]: 'Staked: {{count}}',
+  [I18N.estimatingGas]: 'Estimating...',
 };
