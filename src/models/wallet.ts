@@ -241,7 +241,7 @@ class WalletStore implements MobXStoreFromRealm {
     const wallet = this.getById(address);
 
     if (wallet) {
-      const otherWallets = this.wallets.filter(w => w.address !== address);
+      const otherWallets = this.wallets.filter(w => w.address.toLowerCase() !== address.toLowerCase());
       this.wallets = [...otherWallets, {...wallet, ...params}];
     }
   }
