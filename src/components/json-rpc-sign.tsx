@@ -16,7 +16,7 @@ import {
   VerifyAddressResponse,
 } from '@app/types';
 
-export interface WalletConnectSignProps {
+export interface JsonRpcSignProps {
   isTransaction: boolean;
   rejectLoading: boolean;
   signLoading: boolean;
@@ -25,6 +25,7 @@ export interface WalletConnectSignProps {
   wallet: Wallet;
   verifyAddressResponse: VerifyAddressResponse | null;
   chainId?: number;
+  hideContractAttention?: boolean;
 
   onPressSign(): void;
 
@@ -39,10 +40,11 @@ export const JsonRpcSign = ({
   rejectLoading,
   signLoading,
   verifyAddressResponse,
+  hideContractAttention,
   chainId,
   onPressReject,
   onPressSign,
-}: WalletConnectSignProps) => {
+}: JsonRpcSignProps) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -60,6 +62,7 @@ export const JsonRpcSign = ({
             request={request}
             chainId={chainId}
             verifyAddressResponse={verifyAddressResponse}
+            hideContractAttention={hideContractAttention}
           />
         )}
 

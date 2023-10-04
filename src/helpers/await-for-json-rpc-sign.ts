@@ -5,6 +5,7 @@ import {RootStackParamList} from '@app/types';
 export type AwaitJsonRpcSignParams = RootStackParamList['jsonRpcSign'];
 
 export class AwaitJsonRpcSignError {
+  name = 'AwaitJsonRpcSignError';
   message?: string;
 
   constructor(message?: string) {
@@ -12,12 +13,9 @@ export class AwaitJsonRpcSignError {
   }
 }
 
-export async function awaitForJsonRpcSign({
-  chainId,
-  request,
-  metadata,
-  selectedAccount,
-}: AwaitJsonRpcSignParams): Promise<string> {
+export async function awaitForJsonRpcSign(
+  params: AwaitJsonRpcSignParams,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
       app.removeListener('json-rpc-sign-success', onAction);
@@ -29,19 +27,18 @@ export async function awaitForJsonRpcSign({
       resolve(address);
     };
 
-    const onReject = (message: string) => {
+    const onReject = (error: Error | string) => {
       removeAllListeners();
-      reject(new AwaitJsonRpcSignError(message || 'rejected by user'));
+      if (typeof error === 'string') {
+        reject(new AwaitJsonRpcSignError(error || 'rejected by user'));
+      } else {
+        reject(error);
+      }
     };
 
     app.addListener('json-rpc-sign-success', onAction);
     app.addListener('json-rpc-sign-reject', onReject);
 
-    return navigator.navigate('jsonRpcSign', {
-      metadata,
-      request,
-      chainId,
-      selectedAccount,
-    });
+    return navigator.navigate('jsonRpcSign', params);
   });
 }
