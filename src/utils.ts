@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
@@ -422,7 +423,7 @@ export const getHostnameFromUrl = (url: string | undefined) => {
     return '';
   }
   // run against regex
-  const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  const matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   // extract hostname (will be null if no match is found)
   return matches?.[1] || '';
 };
