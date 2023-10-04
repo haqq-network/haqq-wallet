@@ -1,4 +1,5 @@
 interface DebugVars {
+  enableAwaitJsonRpcSignLogger: boolean;
   enableAsyncEventEmitterLogs: boolean;
   enableHttpErrorDetails: any;
   enableSentry: boolean;
@@ -21,20 +22,22 @@ const production: DebugVars = {
   allowAnySourcesForWalletConnectLogin: false,
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: false,
+  enableAwaitJsonRpcSignLogger: false,
   enableAsyncEventEmitterLogs: true,
 };
 
 const debug: DebugVars = {
-  enableSentry: !__DEV__,
+  enableSentry: false,
   enableWeb3BrowserIncognito: false,
   enableWalletConnectLogger: false,
-  enableCaptchaLogger: __DEV__,
+  enableCaptchaLogger: true,
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: true,
   allowAnySourcesForWalletConnectLogin: false,
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
+  enableAwaitJsonRpcSignLogger: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

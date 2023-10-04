@@ -1303,3 +1303,18 @@ export interface ExplorerApiResponse<T> {
   result: T | null;
   status: ExplorerStatusEnum;
 }
+
+export interface EIPTypedData {
+  types: object;
+  primaryType: string;
+  domain: {
+    name: string;
+    version: string;
+    chainId: number;
+    verifyingContract: string;
+    salt: string;
+  };
+  message: object;
+}
+
+export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;
