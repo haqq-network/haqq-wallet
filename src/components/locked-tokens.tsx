@@ -41,15 +41,19 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
           i18n={I18N.lockedTokensAvailable}
           i18params={{count: available?.toFloatString() ?? '0'}}
         />
-        <Spacer width={8} />
-        <Icon i18 color={Color.graphicBase2} name={IconsName.lock} />
-        <Spacer width={4} />
-        <Text
-          t14
-          color={Color.textBase2}
-          i18n={I18N.lockedTokensLocked}
-          i18params={{count: locked?.toFloatString() ?? '0'}}
-        />
+        {locked?.isPositive() && (
+          <>
+            <Spacer width={8} />
+            <Icon i18 color={Color.graphicBase2} name={IconsName.lock} />
+            <Spacer width={4} />
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.lockedTokensLocked}
+              i18params={{count: locked?.toFloatString() ?? '0'}}
+            />
+          </>
+        )}
       </View>
     </View>
   );

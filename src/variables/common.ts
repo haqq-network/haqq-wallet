@@ -3,7 +3,7 @@ import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {HexNumber} from '@app/types';
+import {HexNumber, JsonRpcMetadata} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -268,3 +268,8 @@ export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
 
 export const ZERO_HEX_NUMBER: HexNumber = '0x0';
 export const FEE_ESTIMATING_TIMEOUT_MS = 5000;
+
+export const HAQQ_METADATA: JsonRpcMetadata = {
+  url: 'https://haqq.network',
+  iconUrl: 'https://haqq.network/icon.png',
+};

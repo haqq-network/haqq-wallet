@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
@@ -8,18 +9,24 @@ import {
   NUM_PRECISION,
   WEI_PRECISION,
 } from '@app/variables/common';
-
 const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
   private _precission: number;
-  public originalValue: any;
+  public originalValue: BalanceConstructor;
 
   constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
     this.originalValue = balance;
     this._precission = precission;
+
+    if (BigNumber.isBigNumber(balance)) {
+      const {_hex} = BigNumber.from(balance);
+      this.bnRaw = new Decimal(_hex);
+      return;
+    }
+
     if (Decimal.isDecimal(balance)) {
       this.bnRaw = balance;
       return;
@@ -202,6 +209,9 @@ export class Balance implements IBalance {
       amount: String(this.toWei()),
     });
   };
+  toBigNumberish(): BigNumberish {
+    return BigNumber.from(this.toHex());
+  }
 }
 
 export const MIN_AMOUNT = new Balance(0.001);
