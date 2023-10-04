@@ -3,6 +3,7 @@ import {TransactionRequest} from '@haqq/provider-base';
 import {app} from '@app/contexts';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {Wallet} from '@app/models/wallet';
+import {EIPTypedData} from '@app/types';
 import {stringToHex} from '@app/utils';
 import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -87,30 +88,14 @@ export class EthSign {
     });
   }
 
-  static async sign(wallet: Wallet | string, message: string) {
-    if (!wallet || !message) {
-      throw new EthSignError('Invalid params', {
-        method: EIP155_SIGNING_METHODS.ETH_SIGN,
-      });
-    }
-    const address = getWalletAddress(wallet);
-    return await awaitForJsonRpcSign({
-      metadata: HAQQ_METADATA,
-      chainId: app.provider.ethChainId,
-      request: {
-        method: EIP155_SIGNING_METHODS.ETH_SIGN,
-        params: [address, stringToHex(message)],
-      },
-      selectedAccount: address,
-    });
-  }
-
   static async signTransaction(
     wallet: Wallet | string,
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
-      throw new EthSignError('Invalid params');
+      throw new EthSignError('Invalid params', {
+        method: EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
+      });
     }
 
     const address = getWalletAddress(wallet);
@@ -141,7 +126,9 @@ export class EthSign {
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
-      throw new EthSignError('Invalid params');
+      throw new EthSignError('Invalid params', {
+        method: EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
+      });
     }
 
     const address = getWalletAddress(wallet);
@@ -161,7 +148,7 @@ export class EthSign {
     } catch (e) {
       const error = e as EthSignErrorDataDetails;
       throw new EthSignError(error.reason! || error.message!, {
-        method: EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
+        method: EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
         details: error,
       });
     }
@@ -175,15 +162,32 @@ export class EthSign {
     return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
   }
 
-  static async signTypedData() {
-    throw new Error('not implemented');
-  }
+  static async signTypedData(wallet: Wallet | string, typedData: EIPTypedData) {
+    if (!wallet || !typedData) {
+      throw new EthSignError('Invalid params', {
+        method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
+      });
+    }
 
-  static async signTypedData_v3() {
-    throw new Error('not implemented');
-  }
+    const address = getWalletAddress(wallet);
 
-  static async signTypedData_v4() {
-    throw new Error('not implemented');
+    try {
+      return await awaitForJsonRpcSign({
+        metadata: HAQQ_METADATA,
+        chainId: app.provider.ethChainId,
+        request: {
+          method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
+          params: [address, typedData],
+        },
+        selectedAccount: address,
+        hideContractAttention: true,
+      });
+    } catch (e) {
+      const error = e as EthSignErrorDataDetails;
+      throw new EthSignError(error.reason! || error.message!, {
+        method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
+        details: error,
+      });
+    }
   }
 }

@@ -4,21 +4,31 @@ import * as Sentry from '@sentry/react-native';
 interface LoggerOptions {
   stringifyJson?: boolean;
   emodjiPrefix?: '🟢' | '🔵' | '🟣' | '🔴' | '⚪️' | '🟡' | '🟠' | '🟤' | '⚫️';
+  /**
+   *  @default enabled true
+   */
+  enabled?: boolean;
 }
 
 const BG_GREEN_TEXT_WHITE_BOLD = __DEV__ ? '\x1b[42m\x1b[37m\x1b[1m' : '';
 const RESET = __DEV__ ? '\x1b[0m' : '';
 
 export class LoggerService {
+  private _enabled?: boolean;
   private _stringifyJson?: boolean;
+  private _tag?: string = '';
+  private _emodji?: string;
 
   constructor(tag?: string, options?: LoggerOptions) {
     this._tag = tag;
     this._stringifyJson = options?.stringifyJson;
     this._emodji = options?.emodjiPrefix;
+    this._enabled = options?.enabled ?? true;
   }
 
-  private _tag?: string = '';
+  public get emodji() {
+    return this._emodji || '';
+  }
 
   public get tag() {
     if (this._tag) {
@@ -27,30 +37,32 @@ export class LoggerService {
     return `${this.emodji}`;
   }
 
-  private _emodji?: string;
-
-  public get emodji() {
-    return this._emodji || '';
-  }
-
   create(tag: string, options?: LoggerOptions) {
     return new LoggerService(tag, options);
   }
 
   log(...args: any[]) {
-    console.log(this.tag, ...this._prepareArgs(...args));
+    if (this._enabled) {
+      console.log(this.tag, ...this._prepareArgs(...args));
+    }
   }
 
   warn(...args: any[]) {
-    console.warn(this.tag, ...this._prepareArgs(...args));
+    if (this._enabled) {
+      console.warn(this.tag, ...this._prepareArgs(...args));
+    }
   }
 
   error(...args: any[]) {
-    console.error(this.tag, ...this._prepareArgs(...args));
+    if (this._enabled) {
+      console.error(this.tag, ...this._prepareArgs(...args));
+    }
   }
 
   trace(message?: any, ...optionalParams: any[]) {
-    console.trace(message, ...optionalParams);
+    if (this._enabled) {
+      console.trace(message, ...optionalParams);
+    }
   }
 
   captureException(
@@ -71,6 +83,7 @@ export class LoggerService {
       Sentry.captureException(error, scope => {
         scope.clear();
         scope.setTag('source', source);
+        scope.setTag('tag', this._tag);
         scope.setExtras(context);
         return scope;
       });
