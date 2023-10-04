@@ -183,7 +183,7 @@ export const WalletCard = memo(
             <View style={styles.openDetailsIconContainer}>
               <Icon
                 i16
-                name="arrow_forward"
+                name={IconsName.arrow_forward}
                 color={Color.graphicBase3}
                 style={styles.openDetailsIcon}
               />
