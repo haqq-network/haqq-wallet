@@ -29,7 +29,7 @@ export function getLeadingAccount() {
     const walletType = walletTypes[index];
 
     const wallet = wallets
-      .filter(w => w.type === walletType)
+      .filter(w => w.type === walletType && !w.isHidden)
       // if path undefined for some reason then function equals strings
       .sort((a, b) => a.path?.localeCompare(b.path || '') || 0);
     if (wallet.length) {

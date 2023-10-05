@@ -30,8 +30,11 @@ export const TransactionAddressScreen = observer(() => {
       return wallets;
     }
 
+    const lowerCaseAddress = address.toLowerCase();
     return wallets.filter(
-      w => w.address.includes(address) || w.name.includes(address),
+      w =>
+        w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.name.toLowerCase().includes(lowerCaseAddress),
     );
   }, [address, wallets]);
 
