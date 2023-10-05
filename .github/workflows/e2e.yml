@@ -26,7 +26,7 @@ on:
 
       OS:
         type: choice
-        description: Platform for e2e
+        description: Platform for e2e test
         options:
           - ios
           - android
@@ -48,7 +48,7 @@ on:
 
 jobs:
   build:
-    name: Run e2e for both platforms
+    name: Run e2e test for selected platform
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
@@ -121,3 +121,9 @@ jobs:
 
       - name: Run tests
         run: yarn detox:${{github.event.inputs.OS}}:test && killall node
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Detox Artifacts
+          path: /artifacts
+          retention-days: 3
