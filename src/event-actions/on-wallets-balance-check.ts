@@ -68,7 +68,7 @@ export async function onWalletsBalanceCheck() {
       throw new Error('Indexer is not available');
     }
 
-    let accounts = wallets.map(w => Cosmos.addressToBech32(w.address));
+    let accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,

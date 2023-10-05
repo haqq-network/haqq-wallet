@@ -1,20 +1,23 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {ProposalDepositPreview} from '@app/components/proposal-deposit-preview';
 import {app} from '@app/contexts';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
-export const ProposalDepositPreviewScreen = () => {
+export const ProposalDepositPreviewScreen = observer(() => {
   const navigation = useTypedNavigation();
   const {fee, account, amount, proposal} =
     useTypedRoute<'proposalDepositPreview'>().params;
 
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
 
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -53,7 +56,7 @@ export const ProposalDepositPreviewScreen = () => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
@@ -67,4 +70,4 @@ export const ProposalDepositPreviewScreen = () => {
       error={error}
     />
   );
-};
+});

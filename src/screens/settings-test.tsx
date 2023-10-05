@@ -397,7 +397,7 @@ export const SettingsTestScreen = observer(() => {
     logger.log('data', data);
 
     const walletId = await awaitForWallet({
-      wallets: Wallet.getAll().snapshot(),
+      wallets: Wallet.getAll(),
       title: I18N.stakingDelegateAccountTitle,
     });
 
@@ -475,7 +475,7 @@ export const SettingsTestScreen = observer(() => {
   }, [showActionSheetWithOptions]);
 
   const onSetLeadingAccount = useCallback(() => {
-    const wallets = Wallet.getAll().snapshot();
+    const wallets = Wallet.getAll();
     const walletsKeys = wallets.map(
       wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
     );

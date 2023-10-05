@@ -28,11 +28,12 @@ export function getLeadingAccount() {
   while (!leadingAccount && index < walletTypes.length) {
     const walletType = walletTypes[index];
 
-    const w = wallets
-      .filtered(`type = '${walletType}' and isHidden = false`)
-      .sorted('path');
-    if (w.length) {
-      leadingAccount = w[0].address;
+    const wallet = wallets
+      .filter(w => w.type === walletType && !w.isHidden)
+      // if path undefined for some reason then function equals strings
+      .sort((a, b) => a.path?.localeCompare(b.path || '') || 0);
+    if (wallet.length) {
+      leadingAccount = wallet[0].address;
     }
     index += 1;
   }

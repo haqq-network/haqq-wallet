@@ -1,11 +1,14 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {TransactionAddress} from '@app/components/transaction-address';
-import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 
-export const TransactionAddressScreen = () => {
+export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -14,7 +17,7 @@ export const TransactionAddressScreen = () => {
   const route = useTypedRoute<'transactionAddress'>();
 
   const [loading, setLoading] = React.useState(false);
-  const wallets = useWalletsVisible();
+  const wallets = Wallet.getAllVisible();
   const contacts = useRef(Contact.getAll()).current;
 
   const [address, setAddress] = useState(route.params?.to || '');
@@ -24,12 +27,15 @@ export const TransactionAddressScreen = () => {
     }
 
     if (!address) {
-      return wallets.snapshot();
+      return wallets;
     }
 
-    return wallets
-      .filtered('address CONTAINS[c] $0 or name CONTAINS[c] $0', address)
-      .snapshot();
+    const lowerCaseAddress = address.toLowerCase();
+    return wallets.filter(
+      w =>
+        w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.name.toLowerCase().includes(lowerCaseAddress),
+    );
   }, [address, wallets]);
 
   const onDone = useCallback(
@@ -76,4 +82,4 @@ export const TransactionAddressScreen = () => {
       testID="transaction_address"
     />
   );
-};
+});
