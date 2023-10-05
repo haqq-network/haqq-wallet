@@ -37,7 +37,7 @@ export const NotEnoughGas = ({
               t12
               i18n={I18N.notEnoughGasDescription2}
               i18params={{
-                gasLimit: gasLimit?.toWeiString(),
+                gasLimit: gasLimit?.toBalanceString(),
               }}
             />
             {getText(I18N.notEnoughGasDescription3)}
@@ -45,7 +45,7 @@ export const NotEnoughGas = ({
               t12
               i18n={I18N.notEnoughGasDescription4}
               i18params={{
-                currentAmount: currentAmount?.toWeiString(),
+                currentAmount: currentAmount?.toBalanceString(),
               }}
             />
             {getText(I18N.notEnoughGasDescription5)}

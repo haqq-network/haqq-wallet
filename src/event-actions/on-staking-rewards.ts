@@ -1,10 +1,6 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {
-  awaitForLedger,
-  awaitForPopupClosed,
-  getProviderInstanceForWallet,
-} from '@app/helpers';
+import {getProviderInstanceForWallet} from '@app/helpers';
 import {getMinAmount} from '@app/helpers/get-min-amount';
 import {
   StakingMetadata,
@@ -12,7 +8,6 @@ import {
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
-import {WalletType} from '@app/types';
 import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export async function onStakingRewards() {
@@ -32,47 +27,16 @@ export async function onStakingRewards() {
 
   const exists = visible.filter(w => w.cosmosAddress in delegators);
 
-  const queue = exists
-    .filter(w => w.type !== WalletType.ledgerBt)
-    .map(async w => {
-      const provider = await getProviderInstanceForWallet(w);
-      await cosmos.multipleWithdrawDelegatorReward(
-        provider,
-        w.path!,
-        delegators[w.cosmosAddress],
-      );
-      return [w.cosmosAddress, delegators[w.cosmosAddress]];
-    });
+  const queue = exists.map(async w => {
+    const provider = await getProviderInstanceForWallet(w);
+    await cosmos.multipleWithdrawDelegatorReward(
+      provider,
+      w.path!,
+      delegators[w.cosmosAddress],
+    );
 
-  const ledger = exists.filter(w => w.type === WalletType.ledgerBt);
-
-  while (ledger.length) {
-    const current = ledger.shift();
-
-    if (current) {
-      const transport = await getProviderInstanceForWallet(current);
-      queue.push(
-        cosmos
-          .multipleWithdrawDelegatorReward(
-            transport,
-            current.path!,
-            delegators[current.cosmosAddress],
-          )
-          .then(() => [
-            current.cosmosAddress,
-            delegators[current.cosmosAddress],
-          ]),
-      );
-      try {
-        await awaitForLedger(transport);
-      } catch (e) {
-        if (e === '27010') {
-          await awaitForPopupClosed('ledgerLocked');
-        }
-        return transport.abort();
-      }
-    }
-  }
+    return [w.cosmosAddress, delegators[w.cosmosAddress]];
+  });
 
   const responses = await Promise.all(
     queue.map(p =>

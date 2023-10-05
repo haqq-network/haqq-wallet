@@ -1,9 +1,10 @@
 import React from 'react';
 
+import {BigNumber} from '@ethersproject/bignumber';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
-import {AccessListish} from '@haqq/provider-base';
+import {AccessListish, BigNumberish} from '@haqq/provider-base';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -23,6 +24,7 @@ import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
 import {SssProviders} from './services/provider-sss';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
+import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export enum AdjustEvents {
   accountCreated = 'q3vxmg',
@@ -529,6 +531,7 @@ export type RootStackParamList = {
     metadata: JsonRpcMetadata;
     chainId?: number;
     selectedAccount?: string;
+    hideContractAttention?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {
@@ -784,7 +787,7 @@ export interface DynamicLink {
 }
 
 export type PartialJsonRpcRequest = {
-  method: string;
+  method: EIP155_SIGNING_METHODS | string;
   params?: any;
 };
 
@@ -1073,6 +1076,8 @@ export enum AdjustTrackingAuthorizationStatus {
 }
 
 export type BalanceConstructor =
+  | BigNumber
+  | BigNumberish
   | HexNumber
   | IBalance
   | Decimal
@@ -1306,3 +1311,18 @@ export interface ExplorerApiResponse<T> {
   result: T | null;
   status: ExplorerStatusEnum;
 }
+
+export interface EIPTypedData {
+  types: object;
+  primaryType: string;
+  domain: {
+    name: string;
+    version: string;
+    chainId: number;
+    verifyingContract: string;
+    salt: string;
+  };
+  message: object;
+}
+
+export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;

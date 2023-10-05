@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
@@ -34,6 +35,7 @@ import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {Balance} from './services/balance';
 import {Cosmos} from './services/cosmos';
+import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
   BalanceData,
@@ -247,7 +249,8 @@ export function callbackWrapper<T extends Array<any>>(
  */
 export function getSignParamsMessage(params: string[]) {
   const message = params.filter(p => !utils.isAddress(p))[0];
-  return Buffer.from(message.slice(2), 'hex').toString('utf8');
+  const parsedMessage = message?.startsWith('0x') ? message.slice(2) : message;
+  return Buffer.from(parsedMessage, 'hex').toString('utf8');
 }
 
 function removeUnusedTypes(typedData: EthTypedData): EthTypedData {
@@ -420,7 +423,7 @@ export const getHostnameFromUrl = (url: string | undefined) => {
     return '';
   }
   // run against regex
-  const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  const matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   // extract hostname (will be null if no match is found)
   return matches?.[1] || '';
 };
@@ -632,6 +635,10 @@ export function isAbortControllerError(err: any): err is Error {
   return isError(err) && err.name === 'AbortError';
 }
 
+export function isEthSignError(err: any): err is EthSignError {
+  return err?.name === 'EthSignError';
+}
+
 export interface InAppBrowserOptions {
   title?: string;
   onPageLoaded?: () => void;
@@ -729,6 +736,10 @@ export async function fetchWithTimeout(
 }
 
 export const decimalToHex = (value: string) => new Decimal(value).toHex();
+export const stringToHex = (value: string) =>
+  Buffer.from(value, 'utf8').toString('hex');
+export const hexToString = (value: string) =>
+  Buffer.from(value, 'hex').toString('utf8');
 
 export const getTransactionFromJsonRpcRequest = (
   request: PartialJsonRpcRequest,
@@ -737,9 +748,20 @@ export const getTransactionFromJsonRpcRequest = (
     [
       EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
       EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
-    ].includes(request.method)
+    ].includes(request.method as EIP155_SIGNING_METHODS)
   ) {
-    return Array.isArray(request.params) ? request.params[0] : request.params;
+    const params: Partial<JsonRpcTransactionRequest> = Array.isArray(
+      request.params,
+    )
+      ? request.params[0]
+      : request.params;
+
+    delete params.gasLimit;
+    delete params.gasPrice;
+    delete params.maxFeePerGas;
+    delete params.maxPriorityFeePerGas;
+
+    return params;
   }
 };
 
