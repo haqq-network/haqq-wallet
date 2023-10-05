@@ -47,7 +47,7 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const amountInEther = '0.0017';
+    const amountInEther = '0.002';
     const tx = {
       to: wallet.address,
       value: utils.parseEther(amountInEther),
