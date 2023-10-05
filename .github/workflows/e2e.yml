@@ -102,7 +102,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          eval yarn detox:${{github.event.inputs.OS}}:build && killall node
+          yarn detox:${{github.event.inputs.OS}}:build && killall node
         env:
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
@@ -120,4 +120,4 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
       - name: Run tests
-        run: eval yarn detox:${{github.event.inputs.OS}}:test && killall node
+        run: yarn detox:${{github.event.inputs.OS}}:test && killall node
