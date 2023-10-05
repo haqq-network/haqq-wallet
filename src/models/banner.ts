@@ -6,14 +6,32 @@ import {storage} from '@app/services/mmkv';
 
 import UUID = Realm.BSON.UUID;
 
+export enum BannerButtonEvent {
+  claimCode = 'claimCode',
+  close = 'close',
+  notificationNews = 'notificationNews',
+  notificationsEnable = 'notificationsEnable',
+  notificationsSnooze = 'notificationsSnooze',
+  notificationsTopicSubscribe = 'notificationsTopicSubscribe',
+  notificationsTopicSnooze = 'notificationsTopicSnooze',
+  trackActivityClick = 'trackActivityClick',
+  trackActivityClose = 'trackActivityClose',
+  test = 'test',
+  empty = '',
+}
+
+export enum BannerType {
+  claimCode = 'claimCode',
+  notifications = 'notifications',
+  notificationsTopic = 'notificationsTopic',
+  trackActivity = 'trackActivity',
+  test = 'test',
+}
+
 export type BannerButton = {
   id: UUID;
   title: string;
-  event:
-    | 'claimCode'
-    | 'close'
-    | 'notificationsTurnOn'
-    | 'notificationsTopicSubscribe';
+  event: BannerButtonEvent;
   params: object;
   color: string;
   backgroundColor: string;
@@ -21,7 +39,7 @@ export type BannerButton = {
 
 export type Banner = {
   id: string;
-  type: 'claimCode' | 'notifications' | 'notificationsTopic' | 'trackActivity';
+  type: BannerType;
   title: string;
   description?: string;
   buttons?: BannerButton[];
@@ -34,9 +52,9 @@ export type Banner = {
   closeButtonColor?: string | Color;
   isUsed?: boolean;
   snoozedUntil?: Date;
-  defaultEvent?: string;
+  defaultEvent?: BannerButtonEvent;
   defaultParams?: object;
-  closeEvent?: string;
+  closeEvent?: BannerButtonEvent;
   closeParams?: object;
   priority?: number;
 };

@@ -27,11 +27,12 @@ const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
   wallet: Wallet;
-  balance: Balance | undefined;
-  unvestedBalance: Balance | undefined;
-  lockedBalance: Balance | undefined;
-  vestedBalance: Balance | undefined;
-  stakingBalance: Balance | undefined;
+  available: Balance;
+  locked: Balance;
+  staked: Balance;
+  total: Balance;
+  vested: Balance;
+  unlock: Date;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
@@ -39,11 +40,11 @@ export type AccountInfoProps = {
 
 export const AccountInfoHeader = ({
   wallet,
-  balance,
-  unvestedBalance,
-  lockedBalance,
-  vestedBalance,
-  stakingBalance,
+  locked,
+  staked,
+  total,
+  vested,
+  available,
   onPressInfo,
   onSend,
   onReceive,
@@ -51,11 +52,6 @@ export const AccountInfoHeader = ({
   const formattedAddress = useMemo(
     () => shortAddress(wallet.address, '•'),
     [wallet.address],
-  );
-
-  const totalBalance = useMemo(
-    () => balance?.operate(stakingBalance, 'add')?.toFloatString() ?? '0',
-    [balance, stakingBalance],
   );
 
   return (
@@ -70,7 +66,7 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text t3 i18n={I18N.amountISLM} i18params={{amount: totalBalance}} />
+          <Text t3 children={total.toBalanceString()} />
           <CopyButton value={wallet.address} style={styles.copyButton}>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
@@ -87,11 +83,10 @@ export const AccountInfoHeader = ({
       <First>
         {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
           <StackedVestedTokens
-            balance={balance}
-            unvestedBalance={unvestedBalance}
-            lockedBalance={lockedBalance}
-            vestedBalance={vestedBalance}
-            stakingBalance={stakingBalance}
+            availableBalance={available}
+            lockedBalance={locked}
+            vestedBalance={vested}
+            stakingBalance={staked}
             onPressInfo={onPressInfo}
           />
         )}

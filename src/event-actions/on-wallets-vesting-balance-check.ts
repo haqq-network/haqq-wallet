@@ -1,4 +1,3 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {
   VestingMetadata,
@@ -42,7 +41,11 @@ export async function onWalletsVestingBalanceCheck() {
       return [w.address, balance];
     });
 
-    await app.onWalletsVestingBalance(Object.fromEntries(balances));
+    Logger.log(
+      Events.onWalletsVestingBalanceCheck,
+      Object.fromEntries(balances),
+    );
+    // await app.onWalletsVestingBalance(Object.fromEntries(balances));
   } catch (e) {
     Logger.error(Events.onWalletsVestingBalanceCheck, e);
   }

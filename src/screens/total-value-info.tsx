@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
@@ -7,15 +7,14 @@ import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {
   OnTransactionRowPress,
   TransactionListContract,
   TransactionSource,
 } from '@app/types';
+import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = () => {
   const navigation = useTypedNavigation();
@@ -23,28 +22,10 @@ export const TotalValueInfoScreen = () => {
   const adressList = useMemo(() => Wallet.addressList(), []);
   const transactionsList = useTransactionList(adressList);
   const balances = useWalletsBalance(wallets);
-  const stakingBalances = useWalletsStakingBalance(wallets);
-  const balance = useMemo(
-    () =>
-      Object.values(balances).reduce(
-        (prev, curr) => prev?.operate(curr, 'add'),
-        Balance.Empty,
-      ) ?? Balance.Empty,
-    [balances],
+  const calculatedBalance = useMemo(
+    () => calculateBalances(balances, wallets),
+    [balances, wallets],
   );
-
-  const stakingBalance = useMemo(
-    () =>
-      Object.values(stakingBalances).reduce(
-        (prev, curr) => prev?.operate(curr, 'add'),
-        Balance.Empty,
-      ) ?? Balance.Empty,
-    [stakingBalances],
-  );
-
-  const unvestedBalance = useRef(Balance.Empty).current;
-  const vestedBalance = useRef(Balance.Empty).current;
-  const lockedBalance = useRef(Balance.Empty).current;
 
   const [contractNameMap, setContractNameMap] = useState({});
 
@@ -78,12 +59,8 @@ export const TotalValueInfoScreen = () => {
 
   return (
     <TotalValueInfo
-      balance={balance}
-      lockedBalance={lockedBalance}
+      balance={calculatedBalance}
       transactionsList={transactionsList}
-      stakingBalance={stakingBalance}
-      unvestedBalance={unvestedBalance}
-      vestedBalance={vestedBalance}
       onPressInfo={onPressInfo}
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}

@@ -10,12 +10,13 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
+import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
 import {VerifyAddressResponse} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
-  isError,
   verifyAddress,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -29,8 +30,13 @@ export const JsonRpcSignScreen = () => {
     useState<VerifyAddressResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useTypedNavigation();
-  const {metadata, request, chainId, selectedAccount} =
-    useTypedRoute<'jsonRpcSign'>().params || {};
+  const {
+    metadata,
+    request,
+    chainId,
+    selectedAccount,
+    hideContractAttention = false,
+  } = useTypedRoute<'jsonRpcSign'>().params || {};
 
   const isTransaction = useMemo(
     () =>
@@ -48,9 +54,9 @@ export const JsonRpcSignScreen = () => {
   );
 
   const onPressReject = useCallback(
-    async (errMsg?: string) => {
+    async (err?: EthSignErrorDataDetails | string) => {
       setRejectLoading(true);
-      app.emit('json-rpc-sign-reject', errMsg);
+      app.emit('json-rpc-sign-reject', err);
       navigation.goBack();
     },
     [navigation],
@@ -69,14 +75,30 @@ export const JsonRpcSignScreen = () => {
       );
       app.emit('json-rpc-sign-success', result);
       navigation.goBack();
-    } catch (err) {
-      if (isError(err)) {
-        onPressReject(err.message);
-        Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
-          request,
-          chainId,
+    } catch (e) {
+      const err = e as EthSignErrorDataDetails;
+      const txInfo = err?.transaction;
+      const errCode = err?.code;
+      if (
+        !!txInfo?.gasLimit &&
+        !!txInfo?.maxFeePerGas &&
+        errCode === 'INSUFFICIENT_FUNDS'
+      ) {
+        err.handled = true;
+        const fee = new Balance(txInfo.gasLimit).operate(
+          new Balance(txInfo.maxFeePerGas),
+          'mul',
+        );
+        showModal('notEnoughGas', {
+          gasLimit: fee,
+          currentAmount: app.getAvailableBalance(wallet!.address),
         });
       }
+      onPressReject(err);
+      Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
+        request,
+        chainId,
+      });
     }
   }, [chainId, isAllowed, navigation, onPressReject, request, wallet]);
 
@@ -101,7 +123,7 @@ export const JsonRpcSignScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [checkContractAddress]);
+  }, []);
 
   useEffect(() => {
     const host = getHost(metadata.url);
@@ -147,6 +169,7 @@ export const JsonRpcSignScreen = () => {
       request={request}
       chainId={chainId}
       verifyAddressResponse={verifyAddressResponse}
+      hideContractAttention={hideContractAttention}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
     />

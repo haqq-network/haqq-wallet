@@ -1,9 +1,10 @@
 import React from 'react';
 
+import {BigNumber} from '@ethersproject/bignumber';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
-import {AccessListish} from '@haqq/provider-base';
+import {AccessListish, BigNumberish} from '@haqq/provider-base';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -23,6 +24,7 @@ import {CaptchaType} from './components/captcha';
 import {Transaction} from './models/transaction';
 import {SssProviders} from './services/provider-sss';
 import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
+import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export enum AdjustEvents {
   accountCreated = 'q3vxmg',
@@ -529,6 +531,7 @@ export type RootStackParamList = {
     metadata: JsonRpcMetadata;
     chainId?: number;
     selectedAccount?: string;
+    hideContractAttention?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {
@@ -776,7 +779,7 @@ export interface DynamicLink {
 }
 
 export type PartialJsonRpcRequest = {
-  method: string;
+  method: EIP155_SIGNING_METHODS | string;
   params?: any;
 };
 
@@ -899,6 +902,11 @@ export type ErrorModalImage =
     }
   | {};
 
+/**
+ * @description When adding a new modal, popup, or bottom sheet,
+ * ensure to declare the modal props, for example,
+ * at `src/screens/settings-test.tsx` inside the `getTestModals` function.
+ */
 export type Modals = {
   splash: undefined;
   notEnoughGas: {
@@ -991,6 +999,7 @@ export type Modals = {
   };
   cloudVerification: {
     sssProvider: SssProviders;
+    showClose?: boolean;
   };
 };
 
@@ -1058,7 +1067,14 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type BalanceConstructor = IBalance | Decimal | number | string;
+export type BalanceConstructor =
+  | BigNumber
+  | BigNumberish
+  | HexNumber
+  | IBalance
+  | Decimal
+  | number
+  | string;
 
 export interface IBalance {
   readonly raw: Decimal;
@@ -1165,6 +1181,23 @@ export type OnTransactionRowPress = (
 export type ContractNameMap = Record<string, string>;
 
 export type HaqqCosmosAddress = `haqq${string}`;
+export type HaqqEthereumAddress = `0x${string}` | string;
+export type HexNumber = `0x${string}`;
+
+export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
+export type IndexerTime = Record<HaqqCosmosAddress, number>;
+export interface BalanceData {
+  vested: Balance;
+  staked: Balance;
+  available: Balance;
+  total: Balance;
+  locked: Balance;
+  availableForStake: Balance;
+  // next time to unlock vested tokens
+  unlock: Date;
+}
+
+export type IndexerBalanceData = Record<HaqqEthereumAddress, BalanceData>;
 
 export type JsonRpcTransactionRequest = {
   to?: string;
@@ -1222,3 +1255,66 @@ export interface MobXStore<TData extends MobXStoreItem> {
   remove(id: string): boolean;
   removeAll(): void;
 }
+
+export enum ExplorerStatusEnum {
+  success = '1',
+  error = '0',
+}
+
+export interface ExplorerBaseTransaction {
+  blockNumber: number;
+  confirmations: number;
+  from: string;
+  gasPrice: string;
+  gasUsed: number;
+  hash: string;
+  input: string;
+  timeStamp: string;
+  to: string;
+  value: string;
+}
+
+export interface ExplorerTransaction extends ExplorerBaseTransaction {
+  blockHash: string;
+  contractAddress: string;
+  cumulativeGasUsed: number;
+  gas: number;
+  isError: ExplorerStatusEnum;
+  nonce: string;
+  transactionIndex: string;
+  txreceipt_status: ExplorerStatusEnum;
+}
+
+export interface ExplorerLogDetail {
+  address: string;
+  data: string;
+  topics: string[];
+}
+
+export interface ExplorerTransactionInfo extends ExplorerBaseTransaction {
+  gasLimit: string;
+  logs: ExplorerLogDetail[];
+  revertReason: string;
+  success: boolean;
+}
+
+export interface ExplorerApiResponse<T> {
+  message: string;
+  result: T | null;
+  status: ExplorerStatusEnum;
+}
+
+export interface EIPTypedData {
+  types: object;
+  primaryType: string;
+  domain: {
+    name: string;
+    version: string;
+    chainId: number;
+    verifyingContract: string;
+    salt: string;
+  };
+  message: object;
+}
+
+export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;

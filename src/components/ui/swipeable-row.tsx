@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Animated} from 'react-native';
 import {Swipeable} from 'react-native-gesture-handler';
@@ -23,19 +23,21 @@ export const SwipeableRow = ({
     ref.current?.close();
   }, [item]);
 
-  const rActions = useMemo(
-    () => (progress: Animated.AnimatedInterpolation<number>) => (
-      <SwipeableButtonList
-        item={item}
-        rightActions={rightActions}
-        progress={progress}
-      />
-    ),
+  const renderRightActions = useCallback(
+    (progress: Animated.AnimatedInterpolation<number>) => {
+      return (
+        <SwipeableButtonList
+          item={item}
+          rightActions={rightActions}
+          progress={progress}
+        />
+      );
+    },
     [item, rightActions],
   );
 
   return (
-    <Swipeable ref={ref} renderRightActions={rActions}>
+    <Swipeable ref={ref} renderRightActions={renderRightActions}>
       {children}
     </Swipeable>
   );

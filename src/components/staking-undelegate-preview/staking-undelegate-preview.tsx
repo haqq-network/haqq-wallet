@@ -57,9 +57,13 @@ export const StakingUnDelegatePreview = ({
         color={Color.textBase2}
         style={styles.subtitle}
       />
-      <Text t3 center style={styles.sum}>
-        {cleanNumber(amount)} ISLM
-      </Text>
+      <Text
+        t3
+        center
+        style={styles.sum}
+        i18n={I18N.amountISLM}
+        i18params={{amount: cleanNumber(amount)}}
+      />
       <Text
         t11
         center
@@ -72,11 +76,15 @@ export const StakingUnDelegatePreview = ({
       </Text>
       <View style={styles.info}>
         <DataView i18n={I18N.stakingUnDelegatePreviewAmount}>
-          <Text t11>{cleanNumber(amount)} ISLM</Text>
+          <Text
+            t11
+            i18n={I18N.amountISLM}
+            i18params={{amount: cleanNumber(amount)}}
+          />
         </DataView>
         <DataView i18n={I18N.stakingUnDelegatePreviewNetworkFee}>
           <Text t11 color={Color.textBase1}>
-            {fee.toWeiString()}
+            {fee.toBalanceString(8)}
           </Text>
         </DataView>
       </View>

@@ -2,9 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -20,9 +21,13 @@ export const TransactionSumScreen = () => {
   const route = useTypedRoute<'transactionSum'>();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
-
-  const [balance, setBalance] = useState(Balance.Empty);
-  const [fee, setFee] = useState(Balance.Empty);
+  const wallet = useWallet(route.params.from);
+  const balances = useWalletsBalance([wallet!]);
+  const currentBalance = useMemo(
+    () => balances[route.params.from],
+    [balances, route],
+  );
+  const [fee, setFee] = useState<Balance | null>(null);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
@@ -39,12 +44,14 @@ export const TransactionSumScreen = () => {
 
   const onAmount = useCallback(
     (amount: Balance) => {
-      navigation.navigate('transactionConfirmation', {
-        fee,
-        from: route.params.from,
-        to,
-        amount,
-      });
+      if (fee !== null) {
+        navigation.navigate('transactionConfirmation', {
+          fee,
+          from: route.params.from,
+          to,
+          amount,
+        });
+      }
     },
     [fee, navigation, route.params.from, to],
   );
@@ -58,20 +65,19 @@ export const TransactionSumScreen = () => {
   }, [event, navigation, to]);
 
   useEffectAsync(async () => {
-    const b = app.getBalance(route.params.from);
-    setBalance(b);
+    const b = app.getAvailableBalance(route.params.from);
     const estimateFee = await EthNetwork.estimateTransaction(
       route.params.from,
       to,
       b,
     );
     setFee(estimateFee.feeWei);
-  }, [route.params.from, to]);
+  }, [to]);
 
   return (
     <TransactionSum
       contact={contact}
-      balance={balance}
+      balance={currentBalance.available}
       fee={fee}
       to={to}
       from={route.params.from}

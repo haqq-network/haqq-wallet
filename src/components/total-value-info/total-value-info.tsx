@@ -8,8 +8,7 @@ import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
-import {Balance} from '@app/services/balance';
-import {ContractNameMap, TransactionList} from '@app/types';
+import {BalanceData, ContractNameMap, TransactionList} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 
@@ -24,11 +23,7 @@ enum TabNames {
 
 export type TotalValueInfoProps = {
   transactionsList: TransactionList[];
-  balance: Balance;
-  unvestedBalance: Balance | undefined;
-  lockedBalance: Balance | undefined;
-  vestedBalance: Balance | undefined;
-  stakingBalance: Balance | undefined;
+  balance: BalanceData;
   onPressInfo: () => void;
   onPressRow: (hash: string) => void;
   contractNameMap: ContractNameMap;
@@ -39,10 +34,6 @@ const PAGE_ITEMS_COUNT = 15;
 export const TotalValueInfo = ({
   balance,
   transactionsList,
-  lockedBalance,
-  stakingBalance,
-  unvestedBalance,
-  vestedBalance,
   onPressInfo,
   onPressRow,
   contractNameMap,
@@ -73,14 +64,7 @@ export const TotalValueInfo = ({
   const renderListHeader = useCallback(
     () => (
       <>
-        <TotalValueInfoHeader
-          balance={balance}
-          lockedBalance={lockedBalance}
-          stakingBalance={stakingBalance}
-          unvestedBalance={unvestedBalance}
-          vestedBalance={vestedBalance}
-          onPressInfo={onPressInfo}
-        />
+        <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
         {isFeatureEnabled(Feature.nft) && (
           <TopTabNavigator
             contentContainerStyle={styles.tabsContentContainerStyle}
@@ -101,15 +85,7 @@ export const TotalValueInfo = ({
         )}
       </>
     ),
-    [
-      balance,
-      lockedBalance,
-      onPressInfo,
-      onTabChange,
-      stakingBalance,
-      unvestedBalance,
-      vestedBalance,
-    ],
+    [balance, onPressInfo, onTabChange],
   );
   const renderItem: ListRenderItem<TransactionList> = useCallback(
     ({item}) => (

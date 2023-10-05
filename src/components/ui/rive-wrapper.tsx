@@ -1,6 +1,12 @@
 import React from 'react';
 
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  DimensionValue,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Rive, {
   Alignment,
   Fit,
@@ -11,8 +17,8 @@ import Rive, {
 import {XOR} from 'rive-react-native/src/helpers';
 
 type RiveWrapperProps = {
-  width: number | `${string}%`;
-  height: number | `${string}%`;
+  width: DimensionValue;
+  height: DimensionValue;
   style?: StyleProp<ViewStyle>;
   onPlay?: (animationName: string, isStateMachine: boolean) => void;
   onPause?: (animationName: string, isStateMachine: boolean) => void;

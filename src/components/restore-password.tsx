@@ -72,6 +72,7 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
         i18n={I18N.restorePasswordResetWallet}
         onPress={onClickReset}
         style={page.button}
+        testID="reset_wallet"
       />
     </BottomSheet>
   );

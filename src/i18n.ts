@@ -769,6 +769,16 @@ export enum I18N {
   dynamicLinkDetactedAllow,
   rafflePushNotification,
   rafflePushNotificationsDescription,
+  lockedTokensVested,
+  lockedTokensStaked,
+  estimatingGas,
+  transactionInfoSendingFunds,
+  transactionInfoContractInteraction,
+  transactionInfoTypeOperation,
+  transactionInfoCryptocurrency,
+  transactionInfoNetwork,
+  transactionInfoAmount,
+  transactionInfoNetworkFee,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1638,9 +1648,9 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensTotalValue]: 'Total value',
   [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application`,
   [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application.`,
-  [I18N.lockedTokensInfoTitle]: 'What does "Tokens locked" mean',
+  [I18N.lockedTokensInfoTitle]: 'What does "Locked" mean',
   [I18N.lockedTokensInfoDescription]:
-    'Locked tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Locked tokens are unlocked according to the schedule',
+    'Locked tokens are the sum of your tokens - vested tokens and tokens staked by you, including tokens that are in an unbonded period. \n\nVested tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Vested tokens are unlocked according to the schedule',
   [I18N.totalValueScreenTitle]: 'Transactions',
   [I18N.totalValueAccount]: 'Total balance',
   [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
@@ -1677,4 +1687,14 @@ const en: Record<I18N, string> = {
   [I18N.dynamicLinkDetactedDescription]: 'This website has been open \n{{url}}',
   [I18N.dynamicLinkDetactedIgnore]: 'Ignore',
   [I18N.dynamicLinkDetactedAllow]: 'Allow',
+  [I18N.lockedTokensVested]: 'Vested: {{count}}',
+  [I18N.lockedTokensStaked]: 'Staked: {{count}}',
+  [I18N.estimatingGas]: 'Estimating...',
+  [I18N.transactionInfoContractInteraction]: 'Contract interaction',
+  [I18N.transactionInfoSendingFunds]: 'Sending funds',
+  [I18N.transactionInfoTypeOperation]: 'Type of operation',
+  [I18N.transactionInfoCryptocurrency]: 'Cryptocurrency',
+  [I18N.transactionInfoNetwork]: 'Network',
+  [I18N.transactionInfoAmount]: 'Amount',
+  [I18N.transactionInfoNetworkFee]: 'Network Fee',
 };

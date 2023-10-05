@@ -12,12 +12,14 @@ import {
 } from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
+import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
 export const TransactionConfirmationScreen = () => {
   const navigation = useTypedNavigation();
@@ -34,15 +36,27 @@ export const TransactionConfirmationScreen = () => {
   );
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
+  const [fee, setFee] = useState<Balance | null>(null);
 
-  useEffect(() => {
-    EthNetwork.estimateTransaction(
+  useLayoutEffectAsync(async () => {
+    const timer = setTimeout(
+      () => setFee(route.params.fee ?? Balance.Empty),
+      FEE_ESTIMATING_TIMEOUT_MS,
+    );
+
+    const result = await EthNetwork.estimateTransaction(
       route.params.from,
       route.params.to,
       route.params.amount,
-    ).then(result => setFee(result.feeWei));
-  }, [route.params.from, route.params.to, route.params.amount]);
+    );
+
+    clearTimeout(timer);
+    setFee(result.feeWei);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   const onConfirmTransaction = useCallback(async () => {
     if (wallet) {

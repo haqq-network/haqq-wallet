@@ -7,9 +7,9 @@ import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {createTheme} from '@app/helpers';
+import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {NUM_PRECISION} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -21,7 +21,7 @@ export const StakingWidget = memo(
   ({onPress, onGetReward, rewardAmount}: Props) => {
     const [loading, setLoading] = useState(false);
     const canGetRewards = useMemo(
-      () => rewardAmount.toEther() >= 1 / NUM_PRECISION,
+      () => rewardAmount.compare(getMinStakingRewardAmount(), 'gte'),
       [rewardAmount],
     );
 

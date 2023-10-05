@@ -1,6 +1,6 @@
 import {Image} from 'react-native';
 
-import {Banner} from '@app/models/banner';
+import {Banner, BannerButtonEvent, BannerType} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
 import {Airdrop} from '@app/services/airdrop';
 
@@ -26,12 +26,12 @@ export async function onBannerAddClaimCode(claimCode: string) {
       id: claimCode,
       title: info.title,
       description: info.description,
-      type: 'claimCode',
+      type: BannerType.claimCode,
       buttons: [
         {
           id: new Realm.BSON.UUID(),
           title: info.button_title,
-          event: 'claimCode',
+          event: BannerButtonEvent.claimCode,
           params: {
             claim_code: claimCode,
           },

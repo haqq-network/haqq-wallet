@@ -1,10 +1,13 @@
 import React, {memo, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {View, useWindowDimensions} from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color} from '@app/colors';
-import {AnimateNumber} from '@app/components/animated-balance';
 import {
   BlurView,
   Card,
@@ -15,21 +18,23 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {cleanNumber, createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
+import {BalanceData} from '@app/types';
+import {
+  CARD_ACTION_CONTAINER_BG,
+  IS_IOS,
+  SHADOW_COLOR_1,
+  SYSTEM_BLUR_2,
+} from '@app/variables/common';
 
 export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
-  balance: Balance | undefined;
-  stakingBalance: Balance | undefined;
-  vestingBalance: Record<VestingMetadataType, Balance> | undefined;
+  balance?: BalanceData;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
@@ -43,16 +48,16 @@ export const WalletCard = memo(
   ({
     testID,
     wallet,
-    balance,
     walletConnectSessions,
     showLockedTokens,
-    stakingBalance,
     onPressSend,
     onPressQR,
     onPressWalletConnect,
     onPressProtection,
     onPressAccountInfo,
+    balance,
   }: BalanceProps) => {
+    const {locked, total} = balance ?? {};
     const [cardState, setCardState] = useState('loading');
     const screenWidth = useWindowDimensions().width;
     const enableProtectionWarning =
@@ -64,24 +69,13 @@ export const WalletCard = memo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
-    const total = useMemo(() => {
-      if (!balance) {
+    const parsedTotal = useMemo(() => {
+      if (!total) {
         return Balance.Empty.toEther();
       }
 
-      if (isFeatureEnabled(Feature.lockedStakedVestedTokens)) {
-        return balance.operate(stakingBalance, 'add').toEther();
-      }
-
-      return balance.toEther();
-    }, [balance, stakingBalance]);
-
-    const locked = useMemo(() => {
-      if (!stakingBalance) {
-        return Balance.Empty.toFloatString();
-      }
-      return stakingBalance.toFloatString();
-    }, [stakingBalance]);
+      return total.toEther();
+    }, [total]);
 
     const onQr = () => {
       onPressQR(wallet.address);
@@ -127,6 +121,7 @@ export const WalletCard = memo(
             style={styles.name}
             ellipsizeMode="tail"
             numberOfLines={1}
+            suppressHighlighting={true}
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
@@ -173,8 +168,30 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <AnimateNumber value={total} initialValue={total} />
-        {showLockedTokens && stakingBalance?.isPositive() && (
+        <View style={styles.row}>
+          <Text
+            t0
+            color={Color.textBase3}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            i18n={I18N.amountISLM}
+            i18params={{amount: cleanNumber(parsedTotal)}}
+            onPress={onAccountInfo}
+            suppressHighlighting={true}
+          />
+          <TouchableWithoutFeedback onPress={onAccountInfo}>
+            <View style={styles.openDetailsIconContainer}>
+              <Icon
+                i16
+                name={IconsName.arrow_forward}
+                color={Color.graphicBase3}
+                style={styles.openDetailsIcon}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+
+        {showLockedTokens && locked?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>
               <Icon i16 color={Color.textBase3} name={IconsName.lock} />
@@ -183,7 +200,9 @@ export const WalletCard = memo(
                 t15
                 color={Color.textBase3}
                 i18n={I18N.walletCardLocked}
-                i18params={{count: locked}}
+                i18params={{count: locked?.toEtherString() ?? '0'}}
+                onPress={onAccountInfo}
+                suppressHighlighting={true}
               />
             </View>
           </>
@@ -222,7 +241,20 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lokedTokensContainer: {
-    transform: [{translateY: -5}],
+    transform: [{translateY: -4}],
+  },
+  openDetailsIconContainer: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    width: 24,
+    borderRadius: 8,
+    transform: [{translateY: -4}],
+    backgroundColor: CARD_ACTION_CONTAINER_BG,
+  },
+  openDetailsIcon: {
+    transform: [{translateX: -4}],
   },
   container: {
     justifyContent: 'space-between',

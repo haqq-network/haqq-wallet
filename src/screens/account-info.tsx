@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Collection, CollectionChangeSet} from 'realm';
 
@@ -9,9 +9,7 @@ import {prepareTransactions, showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
 import {Transaction} from '@app/models/transaction';
-import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {TransactionList} from '@app/types';
 
@@ -21,17 +19,9 @@ export const AccountInfoScreen = () => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const unvestedBalance = useRef(Balance.Empty).current;
-  const vestedBalance = useRef(Balance.Empty).current;
-  const lockedBalance = useRef(Balance.Empty).current;
-  const stakingBalances = useWalletsStakingBalance([wallet!]);
-  const currentBalance = useMemo(
+  const {available, locked, staked, total, unlock, vested} = useMemo(
     () => balances[wallet?.address!],
-    [balances, wallet?.address],
-  );
-  const stakingBalance = useMemo(
-    () => stakingBalances?.[wallet?.address!],
-    [stakingBalances, wallet?.address],
+    [balances, wallet],
   );
 
   const transactions = useMemo(() => {
@@ -108,17 +98,18 @@ export const AccountInfoScreen = () => {
   return (
     <AccountInfo
       wallet={wallet}
-      balance={currentBalance}
       transactionsList={transactionsList}
-      unvestedBalance={unvestedBalance}
-      lockedBalance={lockedBalance}
-      vestedBalance={vestedBalance}
-      stakingBalance={stakingBalance}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}
+      available={available}
+      locked={locked}
+      staked={staked}
+      total={total}
+      unlock={unlock}
+      vested={vested}
     />
   );
 };

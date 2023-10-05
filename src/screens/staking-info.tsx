@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
@@ -8,6 +8,8 @@ import {
   awaitForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers';
+import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
+import {reduceAmounts} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useMinAmount} from '@app/hooks/use-min-amount';
 import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
@@ -17,6 +19,7 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {sendNotification} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {WalletType} from '@app/types';
 
 export const StakingInfoScreen = () => {
@@ -33,6 +36,18 @@ export const StakingInfoScreen = () => {
   const [rewards, setRewards] = useState<StakingMetadata[]>([]);
   const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
   const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
+
+  const canGetRewards = useMemo(() => {
+    if (!rewards?.length) {
+      return false;
+    }
+
+    const totalRewards = reduceAmounts(rewards);
+    return new Balance(totalRewards).compare(
+      getMinStakingRewardAmount(),
+      'gte',
+    );
+  }, [rewards]);
 
   useEffect(() => {
     const r = StakingMetadata.getAllByValidator(operator_address);
@@ -61,8 +76,8 @@ export const StakingInfoScreen = () => {
     };
   }, [visible]);
 
-  const onWithdrawDelegatorReward = useCallback(async () => {
-    if (rewards?.length) {
+  const onPressGetReward = useCallback(async () => {
+    if (canGetRewards) {
       setWithdrawDelegatorRewardProgress(true);
       const delegators = new Set(rewards.map(r => r.delegator));
       const exists = visible.filter(w => delegators.has(w.cosmosAddress));
@@ -141,11 +156,11 @@ export const StakingInfoScreen = () => {
       sendNotification(I18N.stakingInfoRewardIsReceived);
       setWithdrawDelegatorRewardProgress(false);
     }
-  }, [cosmos, rewards, operator_address, visible]);
+  }, [canGetRewards, rewards, visible, cosmos, operator_address]);
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address).toFloat() >= minAmount.toFloat(),
+      v => app.getAvailableBalance(v.address).toFloat() >= minAmount.toFloat(),
     );
 
     if (!available?.length) {
@@ -189,13 +204,14 @@ export const StakingInfoScreen = () => {
   return (
     <StakingInfo
       withdrawDelegatorRewardProgress={withdrawDelegatorRewardProgress}
+      rewards={rewards}
       validator={validator}
+      delegations={delegated}
+      unDelegations={undelegated}
+      canGetRewards={canGetRewards}
       onDelegate={onDelegate}
       onUnDelegate={onUnDelegate}
-      onWithdrawDelegatorReward={onWithdrawDelegatorReward}
-      unDelegations={undelegated}
-      delegations={delegated}
-      rewards={rewards}
+      onPressGetReward={onPressGetReward}
     />
   );
 };

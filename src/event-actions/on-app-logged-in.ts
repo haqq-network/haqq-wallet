@@ -3,6 +3,7 @@ import {Image} from 'react-native';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {prefetchBrowserLinkIcons} from '@app/helpers/prefetch-browser-link-icons';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {getPatternName} from '@app/utils';
@@ -11,6 +12,7 @@ import {getPatternName} from '@app/utils';
  * @description Called when user logged in. Used to prefetch images and load transactions
  */
 export async function onAppLoggedIn() {
+  prefetchBrowserLinkIcons();
   const wallets = Wallet.getAllVisible();
 
   await Promise.all(

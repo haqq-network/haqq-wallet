@@ -3,6 +3,7 @@ import {EventEmitter} from 'events';
 import {HAQQ_BACKEND} from '@env';
 import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
+import {Adjust} from 'react-native-adjust';
 
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -69,6 +70,8 @@ export class PushNotifications extends EventEmitter {
         VariablesString.set('notificationToken', subscription.id);
         VariablesBool.set('notifications', true);
       }
+
+      Adjust.setPushToken(token);
 
       onTrackEvent(AdjustEvents.pushNotifications);
     }

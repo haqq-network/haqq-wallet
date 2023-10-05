@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
@@ -25,12 +26,19 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
+import {shortAddress} from './helpers/short-address';
 import {onUrlSubmit} from './helpers/web3-browser-utils';
+import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N} from './i18n';
+import {Banner, BannerButtonEvent, BannerType} from './models/banner';
+import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {Balance} from './services/balance';
 import {Cosmos} from './services/cosmos';
+import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
+  BalanceData,
   EthType,
   EthTypedData,
   JsonRpcTransactionRequest,
@@ -241,7 +249,8 @@ export function callbackWrapper<T extends Array<any>>(
  */
 export function getSignParamsMessage(params: string[]) {
   const message = params.filter(p => !utils.isAddress(p))[0];
-  return Buffer.from(message.slice(2), 'hex').toString('utf8');
+  const parsedMessage = message?.startsWith('0x') ? message.slice(2) : message;
+  return Buffer.from(parsedMessage, 'hex').toString('utf8');
 }
 
 function removeUnusedTypes(typedData: EthTypedData): EthTypedData {
@@ -414,7 +423,7 @@ export const getHostnameFromUrl = (url: string | undefined) => {
     return '';
   }
   // run against regex
-  const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+  const matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   // extract hostname (will be null if no match is found)
   return matches?.[1] || '';
 };
@@ -626,6 +635,10 @@ export function isAbortControllerError(err: any): err is Error {
   return isError(err) && err.name === 'AbortError';
 }
 
+export function isEthSignError(err: any): err is EthSignError {
+  return err?.name === 'EthSignError';
+}
+
 export interface InAppBrowserOptions {
   title?: string;
   onPageLoaded?: () => void;
@@ -723,6 +736,10 @@ export async function fetchWithTimeout(
 }
 
 export const decimalToHex = (value: string) => new Decimal(value).toHex();
+export const stringToHex = (value: string) =>
+  Buffer.from(value, 'utf8').toString('hex');
+export const hexToString = (value: string) =>
+  Buffer.from(value, 'hex').toString('utf8');
 
 export const getTransactionFromJsonRpcRequest = (
   request: PartialJsonRpcRequest,
@@ -731,9 +748,20 @@ export const getTransactionFromJsonRpcRequest = (
     [
       EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
       EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
-    ].includes(request.method)
+    ].includes(request.method as EIP155_SIGNING_METHODS)
   ) {
-    return Array.isArray(request.params) ? request.params[0] : request.params;
+    const params: Partial<JsonRpcTransactionRequest> = Array.isArray(
+      request.params,
+    )
+      ? request.params[0]
+      : request.params;
+
+    delete params.gasLimit;
+    delete params.gasPrice;
+    delete params.maxFeePerGas;
+    delete params.maxPriorityFeePerGas;
+
+    return params;
   }
 };
 
@@ -767,3 +795,70 @@ export function isContractTransaction(
 
   return false;
 }
+
+export const calculateBalances = (
+  data: WalletBalance,
+  wallets: Realm.Results<Wallet>,
+): BalanceData => {
+  return wallets.reduce(
+    (acc, curr) => {
+      const {available, locked, staked, total, vested, availableForStake} =
+        data[curr.address] ?? {};
+
+      return {
+        staked: staked?.operate(acc.staked, 'add') ?? Balance.Empty,
+        vested: vested?.operate(acc.vested, 'add') ?? Balance.Empty,
+        available: available?.operate(acc.available, 'add') ?? Balance.Empty,
+        total: total?.operate(acc.total, 'add') ?? Balance.Empty,
+        locked: locked?.operate(acc.locked, 'add') ?? Balance.Empty,
+        availableForStake:
+          availableForStake?.operate(acc.availableForStake, 'add') ??
+          Balance.Empty,
+        unlock: acc.unlock,
+      };
+    },
+    {
+      staked: Balance.Empty,
+      vested: Balance.Empty,
+      available: Balance.Empty,
+      total: Balance.Empty,
+      locked: Balance.Empty,
+      availableForStake: Balance.Empty,
+      unlock: new Date(0),
+    },
+  );
+};
+
+export const generateMockBanner = (): Banner => {
+  const id = generateUUID();
+
+  return {
+    id,
+    type: BannerType.test,
+    title: `Mock Banner Title ${shortAddress(id)}`,
+    description: 'Mock Banner Description',
+    buttons: [
+      {
+        id: new Realm.BSON.UUID(),
+        title: 'Button Title',
+        event: BannerButtonEvent.test,
+        params: {banner_id: id, type: 'button press event'},
+        color: 'textBase1',
+        backgroundColor: 'bg1',
+      },
+    ],
+    titleColor: 'textBase1',
+    descriptionColor: 'textBase1',
+    backgroundColorFrom: '#1B6EE5',
+    backgroundColorTo: '#2C8EEB',
+    backgroundBorder: 'bg4',
+    closeButtonColor: 'textRed1',
+    isUsed: false,
+    snoozedUntil: new Date(),
+    defaultEvent: BannerButtonEvent.test,
+    defaultParams: {banner_id: id, type: 'default event'},
+    closeEvent: BannerButtonEvent.test,
+    closeParams: {banner_id: id, type: 'close event'},
+    priority: 1,
+  };
+};

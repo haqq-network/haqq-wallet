@@ -41,6 +41,7 @@ export const PopupContainer = ({
       contentContainerStyle={propStyle}
       overScrollMode="never"
       bounces={false}
+      scrollEventThrottle={16}
       {...props}>
       {children}
     </ScrollView>

@@ -9,13 +9,18 @@ import UIKit
 import React
 import FirebaseCore
 import AVFoundation
+#if DEBUG
+#if FB_SONARKIT_ENABLED
+import FlipperKit
+#endif
+#endif
 
 func clearKeychainIfNecessary() {
   // Checks whether or not this is the first time the app is run
   if UserDefaults.standard.bool(forKey: "HAS_RUN_BEFORE") == false {
     // Set the appropriate value so we don't clear next time the app is launched
     UserDefaults.standard.set(true, forKey: "HAS_RUN_BEFORE")
-    
+
     let accounts = [
       "mnemonic_accounts",
       "mnemonic_saved",
@@ -26,14 +31,14 @@ func clearKeychainIfNecessary() {
       "ledger_accounts",
       "ledger_saved"
     ]
-    
+
     for account in accounts {
       let removeQuery: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: account,
         kSecReturnData as String: kCFBooleanTrue as Any
       ]
-      
+
       let removeStatus = SecItemDelete(removeQuery as CFDictionary)
     }
   }
@@ -45,7 +50,7 @@ let OVERVIEW_FADE_DURATION = 0.5;
 @UIApplicationMain
 class AppDelegate: RCTAppDelegate {
   var overview: RCTRootView!;
-  
+
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = getModuleName()
     clearKeychainIfNecessary();
@@ -56,31 +61,31 @@ class AppDelegate: RCTAppDelegate {
     RNSplashScreen.show();
     return app;
   }
-  
+
   // call after `super.application`
   func initOverview(){
     overview = RCTRootView.init(frame: self.window.frame, bridge: self.bridge, moduleName: "overview", initialProperties: self.initialProps);
     overview.tag = OVERVIEW_TAG;
     overview.alpha = 0;
   }
-  
+
   private func startObservingAppState() {
     NotificationCenter.default.addObserver(self, selector: #selector(onAppBackground), name: UIApplication.willResignActiveNotification, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(onAppActive), name: UIApplication.didBecomeActiveNotification, object: nil)
   }
-  
+
   private func stopObservingAppState() {
     NotificationCenter.default.removeObserver(self)
   }
-  
+
   @objc private func onAppBackground(notification: NSNotification) {
     showOverview();
   }
-  
+
   @objc private func onAppActive(notification: NSNotification) {
     hideOverview();
   }
-  
+
   func showOverview() {
     let systemDialogEnabled = BooleanConfig.shared.storage[.systemDialogEnabled];
     if(systemDialogEnabled == true){
@@ -91,25 +96,19 @@ class AppDelegate: RCTAppDelegate {
       self.overview.alpha = 1
     })
   }
-  
+
   func hideOverview() {
     guard let view = self.window.viewWithTag(OVERVIEW_TAG) else {
       return
     }
-    
+
     UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
       view.alpha = 0
     }) { _ in
       view.removeFromSuperview()
     }
   }
-  
-  @objc
-  func concurrentRootEnabled() -> Bool {
-    // Switch this bool to turn on and off the concurrent root
-    return true
-  }
-  
+
   override func sourceURL(for bridge: RCTBridge!) -> URL! {
 #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
@@ -117,15 +116,15 @@ class AppDelegate: RCTAppDelegate {
     return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
 #endif
   }
-  
+
   override func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
     return RCTLinkingManager.application(application, open: url, options: options)
   }
-  
+
   func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
     return RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
   }
-  
+
   func getModuleName() -> String {
     if UIDevice.current.isJailBroken {
       return "jailbreak"

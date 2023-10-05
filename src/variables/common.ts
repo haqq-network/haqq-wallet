@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
+import {HexNumber, JsonRpcMetadata} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -247,6 +248,8 @@ export const LIGHT_DISCORD_TEXT = '#FFFFFF';
 export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
 
+export const CARD_ACTION_CONTAINER_BG = 'rgba(255, 255, 255, 0.15)';
+
 export const SPLASH_TIMEOUT_MS = 30_000;
 export const AWAIT_NEW_BLOCK_MS = 10_000;
 
@@ -262,3 +265,11 @@ export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTo
 export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;
 
 export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
+
+export const ZERO_HEX_NUMBER: HexNumber = '0x0';
+export const FEE_ESTIMATING_TIMEOUT_MS = 5000;
+
+export const HAQQ_METADATA: JsonRpcMetadata = {
+  url: 'https://haqq.network',
+  iconUrl: 'https://haqq.network/icon.png',
+};

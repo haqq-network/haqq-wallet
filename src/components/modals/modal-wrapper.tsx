@@ -20,7 +20,7 @@ import {
 import {BluetoothPoweredOff} from '@app/components/modals/bluetooth-powered-off';
 import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthorized';
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
-import {CloudVerification} from '@app/components/modals/cloudVerification';
+import {CloudVerification} from '@app/components/modals/cloud-verification';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';

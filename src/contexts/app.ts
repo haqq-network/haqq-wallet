@@ -14,10 +14,12 @@ import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
+import {getEmptyBalances} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -25,13 +27,22 @@ import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
-import {AppLanguage, AppTheme, BiometryType, DynamicLink} from '../types';
+import {
+  AppLanguage,
+  AppTheme,
+  BalanceData,
+  BiometryType,
+  DynamicLink,
+  HaqqEthereumAddress,
+  IndexerBalanceData,
+} from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK,
@@ -63,6 +74,7 @@ class App extends AsyncEventEmitter {
   private user: User;
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
+  private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
   private _balance: Map<string, Balance> = new Map();
   private _stakingBalance: Map<string, Balance> = new Map();
   private _vestingBalance: Map<string, Record<VestingMetadataType, Balance>> =
@@ -162,6 +174,10 @@ class App extends AsyncEventEmitter {
         ? MAIN_NETWORK
         : TEST_NETWORK)
     );
+  }
+
+  get cosmos() {
+    return new Cosmos(app.provider);
   }
 
   set providerId(value) {
@@ -469,11 +485,21 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  onWalletsBalance(balance: Record<string, Balance>) {
+  onWalletsBalance(balances: IndexerBalanceData) {
     let changed = false;
-    for (const entry of Object.entries(balance)) {
-      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
-        this._balance.set(entry[0], entry[1]);
+
+    for (const [address, data] of Object.entries(balances)) {
+      const prevBalance = this._balances.get(address);
+
+      if (
+        !prevBalance?.available?.compare(data.available, 'eq') ||
+        !prevBalance?.staked?.compare(data.staked, 'eq') ||
+        !prevBalance?.vested?.compare(data.vested, 'eq') ||
+        !prevBalance?.total?.compare(data.total, 'eq') ||
+        !prevBalance?.locked?.compare(data.locked, 'eq') ||
+        !prevBalance?.availableForStake?.compare(data.availableForStake, 'eq')
+      ) {
+        this._balances.set(address, data);
         changed = true;
       }
     }
@@ -483,69 +509,32 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  async onWalletsStakingBalance(balance: Record<string, Balance>) {
-    let changed = false;
-    for (const entry of Object.entries(balance)) {
-      if (!this._stakingBalance.get(entry[0])?.compare(entry[1], 'eq')) {
-        this._stakingBalance.set(entry[0], entry[1]);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      this.emit(Events.onStakingBalanceSync);
-    }
+  getBalanceData(address: HaqqEthereumAddress) {
+    return this._balances.get(address) || getEmptyBalances()[address];
   }
 
-  onWalletsVestingBalance(
-    balance: Record<string, Record<VestingMetadataType, Balance>>,
-  ) {
-    let changed = false;
-    for (const entry of Object.entries(balance)) {
-      const balances = this._vestingBalance.get(entry[0]);
-      const lockedChanged = !balances?.[VestingMetadataType.locked]?.compare(
-        entry[1]?.[VestingMetadataType.locked],
-        'eq',
-      );
-      const unvestedChanged = !balances?.[
-        VestingMetadataType.unvested
-      ]?.compare(entry[1]?.[VestingMetadataType.unvested], 'eq');
-      const vestedChanged = !balances?.[VestingMetadataType.vested]?.compare(
-        entry[1]?.[VestingMetadataType.vested],
-        'eq',
-      );
-
-      if (lockedChanged || unvestedChanged || vestedChanged) {
-        this._vestingBalance.set(entry[0], entry[1]);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      this.emit(Events.onVestingBalanceSync);
-    }
+  getAvailableBalance(address: HaqqEthereumAddress): Balance {
+    return this._balances.get(address)?.available ?? Balance.Empty;
   }
 
-  getBalance(address: string): Balance {
-    return this._balance.get(address) ?? Balance.Empty;
+  getAvailableForStakeBalance(address: HaqqEthereumAddress): Balance {
+    return this._balances.get(address)?.availableForStake ?? Balance.Empty;
   }
 
   getStakingBalance(address: string): Balance {
-    return this._stakingBalance.get(address) ?? Balance.Empty;
+    return this._balances.get(address)?.staked ?? Balance.Empty;
   }
 
-  getVestingBalance(address: string): Record<VestingMetadataType, Balance> {
-    const balances = this._vestingBalance.get(address);
+  getVestingBalance(address: string): Balance {
+    return this._balances.get(address)?.vested ?? Balance.Empty;
+  }
 
-    const locked = balances?.[VestingMetadataType.locked] ?? Balance.Empty;
-    const unvested = balances?.[VestingMetadataType.unvested] ?? Balance.Empty;
-    const vested = balances?.[VestingMetadataType.vested] ?? Balance.Empty;
+  getTotalBalance(address: string): Balance {
+    return this._balances.get(address)?.total ?? Balance.Empty;
+  }
 
-    return {
-      locked,
-      unvested,
-      vested,
-    };
+  getLockedBalance(address: string): Balance {
+    return this._balances.get(address)?.locked ?? Balance.Empty;
   }
 
   handleDynamicLink(link: DynamicLink | null) {
@@ -560,6 +549,10 @@ class App extends AsyncEventEmitter {
 
   async rehydrateUserAttempts() {
     await this.user.rehydrate();
+  }
+
+  async getRpcProvider() {
+    return await getRpcProvider(this.provider);
   }
 }
 

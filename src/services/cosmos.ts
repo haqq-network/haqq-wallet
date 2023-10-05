@@ -48,10 +48,12 @@ import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
+import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {
   DepositResponse,
+  EIPTypedData,
   HaqqCosmosAddress,
   StakingParamsResponse,
 } from '@app/types';
@@ -63,6 +65,8 @@ import {
 } from '@app/types/cosmos';
 import {getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
+
+import {EthSign} from './eth-sign';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -82,10 +86,11 @@ export interface ParamsResponse {
 
 export class Cosmos {
   static fee: Fee = {
-    amount: '5000',
-    gas: '1400000',
+    amount: '2000000000',
+    gas: '2000000',
     denom: 'aISLM',
   };
+
   public stop = false;
   private _provider: Provider;
 
@@ -246,6 +251,8 @@ export class Cosmos {
   generatePostSimulate(message: object, account: Sender) {
     const messages = Array.isArray(message) ? message : [message];
 
+    Logger.log('account-> pubkey', account.pubkey);
+
     return JSON.stringify({
       tx: {
         body: {
@@ -259,12 +266,12 @@ export class Cosmos {
           signer_infos: [
             {
               public_key: {
-                '@type': '/cosmos.crypto.secp256k1.PubKey',
+                '@type': '/ethermint.crypto.v1.ethsecp256k1.PubKey',
                 key: account.pubkey,
               },
               mode_info: {
                 single: {
-                  mode: 'SIGN_MODE_LEGACY_AMINO_JSON',
+                  mode: 'SIGN_MODE_DIRECT', // SIGN_MODE_LEGACY_AMINO_JSON
                 },
               },
               sequence: account.sequence,
@@ -291,7 +298,9 @@ export class Cosmos {
     transport: ProviderInterface,
     hdPath: string,
   ): Promise<Sender> {
-    const {address, publicKey} = await transport.getAccountInfo(hdPath);
+    const {address, publicKey} = await ledgerTransportCbWrapper(transport, () =>
+      transport.getAccountInfo(hdPath),
+    );
 
     const accInfo = await this.getAccountInfo(
       cosmosAddress(address, COSMOS_PREFIX),
@@ -337,18 +346,7 @@ export class Cosmos {
         body: protoTxNamespace.txn.TxBody;
         authInfo: protoTxNamespace.txn.AuthInfo;
       };
-      eipToSign: {
-        types: object;
-        primaryType: string;
-        domain: {
-          name: string;
-          version: string;
-          chainId: number;
-          verifyingContract: string;
-          salt: string;
-        };
-        message: object;
-      };
+      eipToSign: EIPTypedData;
     },
   ) {
     const signature = await this.signTypedData(
@@ -359,16 +357,38 @@ export class Cosmos {
       msg.eipToSign.message,
     );
 
+    return await this.sendSignedMsg(signature!, sender, msg);
+  }
+
+  async sendSignedMsg(
+    signature: string,
+    sender: Sender,
+    msg: {
+      legacyAmino: {
+        body: protoTxNamespace.txn.TxBody;
+        authInfo: protoTxNamespace.txn.AuthInfo;
+      };
+      eipToSign: EIPTypedData;
+    },
+  ) {
     const extension = signatureToWeb3Extension(
       this.haqqChain,
       sender,
-      signature!,
+      signature,
     );
 
     const rawTx = createTxRawEIP712(
       msg.legacyAmino.body,
       msg.legacyAmino.authInfo,
       extension,
+    );
+
+    Logger.log(
+      'rawTx',
+      msg.legacyAmino.body.toObject(),
+      msg.legacyAmino.authInfo.toObject(),
+      extension,
+      signature,
     );
 
     return await this.broadcastTransaction(rawTx);
@@ -386,10 +406,13 @@ export class Cosmos {
 
       const resp = await this.postSimulate(data, account);
 
+      Logger.log('resp', resp);
+
       if (!resp.gas_info) {
+        const amount = baseFee.operate(baseGas, 'mul');
         return {
           ...Cosmos.fee,
-          amount: baseFee.operate(baseGas, 'mul').toString(),
+          amount: amount.toString(),
         };
       }
 
@@ -399,7 +422,6 @@ export class Cosmos {
       ).max(baseGas);
 
       const amount = baseFee.operate(gas, 'mul').max(totalAmount);
-
       return {
         ...Cosmos.fee,
         amount: amount.toString(),
@@ -519,6 +541,34 @@ export class Cosmos {
     return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
+  async simulateUndelegate(
+    transport: ProviderInterface,
+    hdPath: string,
+    address: string,
+    amount: Balance,
+  ) {
+    const sender = await this.getSender(transport, hdPath);
+
+    const params = {
+      validatorAddress: address,
+      amount: amount.raw.toFixed(),
+      denom: 'aISLM',
+    };
+
+    return this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgUndelegate',
+        ...createMsgUndelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
+  }
+
   async delegate(
     transport: ProviderInterface,
     hdPath: string,
@@ -553,6 +603,33 @@ export class Cosmos {
     return await this.sendMsg(transport, hdPath, sender, msg);
   }
 
+  async simulateDelegate(
+    transport: ProviderInterface,
+    hdPath: string,
+    address: string,
+    amount: Balance,
+  ) {
+    const sender = await this.getSender(transport, hdPath);
+    const params = {
+      validatorAddress: address,
+      amount: amount.raw.toFixed(),
+      denom: 'aISLM',
+    };
+
+    return this.getFee(
+      {
+        '@type': '/cosmos.staking.v1beta1.MsgDelegate',
+        ...createMsgDelegate(
+          sender.accountAddress,
+          params.validatorAddress,
+          params.amount,
+          params.denom,
+        ).value,
+      },
+      sender,
+    );
+  }
+
   async multipleWithdrawDelegatorReward(
     transport: ProviderInterface,
     hdPath: string,
@@ -582,7 +659,9 @@ export class Cosmos {
       params,
     );
 
-    return await this.sendMsg(transport, hdPath, sender, msg);
+    const {address: from} = await transport.getAccountInfo(hdPath);
+    const signature = await EthSign.signTypedData(from, msg.eipToSign);
+    await this.sendSignedMsg(signature, sender, msg);
   }
 
   async withdrawDelegatorReward(
@@ -619,6 +698,10 @@ export class Cosmos {
       params,
     );
 
-    return await this.sendMsg(transport, hdPath, sender, msg);
+    const {address: from} = await ledgerTransportCbWrapper(transport, () =>
+      transport.getAccountInfo(hdPath),
+    );
+    const signature = await EthSign.signTypedData(from, msg.eipToSign);
+    return await this.sendSignedMsg(signature, sender, msg);
   }
 }
