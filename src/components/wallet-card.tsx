@@ -1,7 +1,11 @@
 import React, {memo, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {View, useWindowDimensions} from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -20,7 +24,12 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {BalanceData} from '@app/types';
-import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
+import {
+  CARD_ACTION_CONTAINER_BG,
+  IS_IOS,
+  SHADOW_COLOR_1,
+  SYSTEM_BLUR_2,
+} from '@app/variables/common';
 
 export type BalanceProps = {
   testID?: string;
@@ -159,16 +168,29 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <Text
-          t0
-          color={Color.textBase3}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          i18n={I18N.amountISLM}
-          i18params={{amount: cleanNumber(parsedTotal)}}
-          onPress={onAccountInfo}
-          suppressHighlighting={true}
-        />
+        <View style={styles.row}>
+          <Text
+            t0
+            color={Color.textBase3}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            i18n={I18N.amountISLM}
+            i18params={{amount: cleanNumber(parsedTotal)}}
+            onPress={onAccountInfo}
+            suppressHighlighting={true}
+          />
+          <TouchableWithoutFeedback onPress={onAccountInfo}>
+            <View style={styles.openDetailsIconContainer}>
+              <Icon
+                i16
+                name={IconsName.arrow_forward}
+                color={Color.graphicBase3}
+                style={styles.openDetailsIcon}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+
         {showLockedTokens && locked?.isPositive() && (
           <>
             <View style={[styles.row, styles.lokedTokensContainer]}>
@@ -220,6 +242,19 @@ const styles = createTheme({
   },
   lokedTokensContainer: {
     transform: [{translateY: -4}],
+  },
+  openDetailsIconContainer: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    width: 24,
+    borderRadius: 8,
+    transform: [{translateY: -4}],
+    backgroundColor: CARD_ACTION_CONTAINER_BG,
+  },
+  openDetailsIcon: {
+    transform: [{translateX: -4}],
   },
   container: {
     justifyContent: 'space-between',
