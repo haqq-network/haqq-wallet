@@ -147,7 +147,9 @@ export const BackupVerify = ({
             style={styles.buttonStyle}
             title={words.get(val) ?? ''}
             onPress={onPressWord(val)}
-            testID={`${testID}_word_${words.get(val)}`}
+            testID={`${testID}_word_${words.get(val)}_${
+              selected.includes(val) ? 'disabled' : 'enabled'
+            }`}
           />
         ))}
       </View>

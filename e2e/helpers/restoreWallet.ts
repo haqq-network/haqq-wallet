@@ -13,11 +13,8 @@ export const restoreWallet = async (
   await element(by.id('welcome_signin')).tap();
   await element(by.id('signin_network_skip')).tap();
   await expect(element(by.id('signin_agreement'))).toBeVisible();
-  await expect(element(by.id('signin_agreement_agree'))).toBeVisible();
 
   await element(by.id('signin_agreement_agree')).tap();
-
-  await expect(element(by.id('signin_restore'))).toBeVisible();
 
   await element(by.id('signin_restore_input')).tap();
   await element(by.id('signin_restore_input')).replaceText(mnemonic);

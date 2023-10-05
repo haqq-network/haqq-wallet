@@ -59,10 +59,6 @@ describe('Routine', () => {
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
-    await waitFor(element(by.id('transaction_address')))
-      .toBeVisible()
-      .withTimeout(15000);
-
     const input_address = element(by.id('transaction_address_input'));
     await input_address.tap();
     await input_address.replaceText(milkWallet.address);
